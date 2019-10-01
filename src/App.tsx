@@ -14,6 +14,7 @@ import {
   View,
   Text,
   StatusBar,
+  NativeModules,
 } from 'react-native';
 
 import {
@@ -25,6 +26,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 const App: () => ReactNode = () => {
+  NativeModules.HDWallet.addEvent('var 1', 'var 2');
   return (
     <>
       <StatusBar barStyle="dark-content" />

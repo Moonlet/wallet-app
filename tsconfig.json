@@ -2,6 +2,7 @@
     "compilerOptions": {
       "allowJs": true,
       "allowSyntheticDefaultImports": true,
+      "experimentalDecorators": true,
       "esModuleInterop": true,
       "isolatedModules": true,
       "jsx": "react",

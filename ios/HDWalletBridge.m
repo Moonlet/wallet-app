@@ -1,5 +1,5 @@
 //
-//  HDWAlletBridge.m
+//  HdWalletBridge.m
 //  Moonlet
 //
 //  Created by George Burduhos on 01/10/2019.
@@ -10,8 +10,17 @@
 
 #import <React/RCTBridgeModule.h>
 
-@interface RCT_EXTERN_MODULE(HDWallet, NSObject)
+@interface RCT_EXTERN_MODULE(HdWallet, NSObject)
 
-RCT_EXTERN_METHOD(addEvent:(NSString *)name location:(NSString *)location)
+
+
+
+RCT_EXTERN_METHOD(generateWallet: (RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(loadWallets: (NSArray)mnemonics resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+
+RCT_EXTERN_METHOD(getAccounts: (NSInteger)walletIndex blockchain:(NSString)name accountIndexes:(NSArray)indexes resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+
 
 @end
+ 

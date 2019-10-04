@@ -24,6 +24,7 @@
     "react-navigation-tabs": "^2.5.5",
     "react-redux": "^7.1.1",
     "redux": "^4.0.4",
+    "redux-thunk": "^2.3.0",
     "typescript": "^3.6.3"
   },
   "devDependencies": {

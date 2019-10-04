@@ -1,4 +1,4 @@
-import { ADD_MONEYZ } from '../constants';
+export const ADD_MONEYZ = 'ADD_MONEYZ';
 
 export function addMoney(sum: number) {
   return {

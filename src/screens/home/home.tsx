@@ -1,48 +1,57 @@
 import React from 'react';
-import { connect } from 'react-redux'
-import { Button, View, Text } from 'react-native';
+import { Button, View, Text, TextInput } from 'react-native';
 import {
   NavigationParams,
   NavigationScreenProp,
   NavigationState,
 } from 'react-navigation';
+import {
+  mapStateToProps,
+  mapDispatchToProps,
+} from '../../utils/redux-decorators';
+
 import { addMoney } from '../../redux/actions/wallet';
-
-const mapStateToProps = (state: any) => {
-  return { money: state.wallet.money }; 
-}
-
-const mapDispatchToProps = (dispatch: any, ownProps: any) => {
-  return {
-    addMoney: () => {
-      dispatch(addMoney(100)) 
-    }
-  }
-}
+import { fetchPrice } from '../../redux/actions/market';
 
 interface Props {
-  navigation: NavigationScreenProp<NavigationState, NavigationParams>,
-  money: number,
-  addMoney: any
+  navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+  money: number;
+  ethusd: number;
+  addMoney: any;
+  fetchEthPrice: any;
 }
 
-class HomeScreen extends React.Component<Props> {
+@mapStateToProps(state => ({
+  money: state.wallet.money,
+  ethusd: state.market.price.eth
+}))
+@mapDispatchToProps((dispatch: any) => ({
+  addMoney: () => {
+    dispatch(addMoney(100));
+  },
+  fetchEthPrice: () => {
+    dispatch(fetchPrice());
+  }
+}))
+export default class HomeScreen extends React.Component<Props> {
+  constructor(props: Props) {
+    super(props);
+
+    this.props.fetchEthPrice();
+  }
+
   render() {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Home Screen</Text>
+        <Text>ETH: {this.props.ethusd}</Text>
         <Text>Money: {this.props.money}</Text>
         <Button
           title="Go to Settings"
           onPress={() => this.props.navigation.navigate('Settings')}
         />
-        <Button
-          title="Add money"
-          onPress={() => this.props.addMoney()}
-        />
+        <Button title="Add money" onPress={() => this.props.addMoney()} />
       </View>
     );
   }
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)

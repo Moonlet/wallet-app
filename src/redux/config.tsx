@@ -1,10 +1,17 @@
-import { createStore, combineReducers } from 'redux';
-import walletReducer from './reducers/wallet';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk'
 
-const rootReducer = combineReducers({ wallet: walletReducer });
+import walletReducer from './reducers/wallet';
+import marketReducer from './reducers/market';
+
+
+const rootReducer = combineReducers({
+  wallet: walletReducer,
+  market: marketReducer,
+});
 
 const configureStore = () => {
-  return createStore(rootReducer);
+  return createStore(rootReducer, applyMiddleware(thunk));
 };
 
 export default configureStore;

@@ -1,9 +1,12 @@
 /**
  * @format
  */
-
 import { AppRegistry } from 'react-native';
-import App from './src/ap';
+import App from './src/app';
 import { name as appName } from './app.json';
+
+// TODO remove this when fixed
+import { YellowBox } from 'react-native';
+YellowBox.ignoreWarnings(['RCTRootView cancelTouches']);
 
 AppRegistry.registerComponent(appName, () => App);

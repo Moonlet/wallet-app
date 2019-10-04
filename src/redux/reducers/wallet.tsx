@@ -1,7 +1,7 @@
-import { ADD_MONEYZ } from '../constants';
+import { ADD_MONEYZ } from '../actions/wallet';
 
 const initialState = {
-  money: 0,
+  money: 22,
 };
 
 const walletReducer = (state = initialState, action: any) => {

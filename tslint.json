@@ -1,0 +1,10 @@
+{
+    "extends": ["tslint:latest", "tslint-config-prettier"],
+    "rules": {
+        "ordered-imports": false,
+        "object-literal-sort-keys": false,
+        "no-submodule-imports": false,
+        "react-no-dangerous-html": [true]
+    },
+    "rulesDirectory": ["node_modules/tslint-microsoft-contrib"]
+}

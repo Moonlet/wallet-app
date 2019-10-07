@@ -1,10 +1,10 @@
-export interface Store {
+export interface IState {
     wallet: {
-        money: number
-    },
+        money: number;
+    };
     market: {
         price: {
-            eth: number
-        }
-    }
+            eth: number;
+        };
+    };
 }

@@ -1,0 +1,16 @@
+apple_id("george.burduhos@gmail.com") # Your Apple email address
+
+team_id("8T5TG4TVDY") # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
+
+itc_team_id("120535067")
+
+for_lane :beta do
+    app_identifier "com.moonlet.beta"
+end
+
+for_lane :release do
+    app_identifier "com.moonlet"
+end

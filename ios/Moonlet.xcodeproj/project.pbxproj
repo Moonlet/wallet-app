@@ -12,8 +12,6 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		5EF7680F234369BE000E4BE6 /* HDWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EF7680E234369BE000E4BE6 /* HDWallet.swift */; };
-		5EF7681123436A53000E4BE6 /* HDWalletBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EF7681023436A53000E4BE6 /* HDWalletBridge.m */; };
 		C60A4428990276F5EC0491A3 /* libPods-MoonletTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 34EED895B8FD525A41C8F40A /* libPods-MoonletTests.a */; };
 		CE23E31C6F51E5365242DCA9 /* libPods-Moonlet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC119FFD29BB5166DDF87BE1 /* libPods-Moonlet.a */; };
 /* End PBXBuildFile section */
@@ -43,9 +41,6 @@
 		34EED895B8FD525A41C8F40A /* libPods-MoonletTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MoonletTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C6D17A4352F21F7364810D9 /* libPods-Moonlet-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Moonlet-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5B9A90ADA56304A149E24B78 /* Pods-Moonlet-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-tvOSTests/Pods-Moonlet-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		5EF7680D234369BD000E4BE6 /* Moonlet-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Moonlet-Bridging-Header.h"; sourceTree = "<group>"; };
-		5EF7680E234369BE000E4BE6 /* HDWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDWallet.swift; sourceTree = "<group>"; };
-		5EF7681023436A53000E4BE6 /* HDWalletBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = HDWalletBridge.m; sourceTree = "<group>"; };
 		9A8E724B343F514BBD4CA0CF /* Pods-MoonletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoonletTests.release.xcconfig"; path = "Target Support Files/Pods-MoonletTests/Pods-MoonletTests.release.xcconfig"; sourceTree = "<group>"; };
 		B1117D8A38327073F5E95CC8 /* Pods-Moonlet-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet-tvOSTests/Pods-Moonlet-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
 		BC119FFD29BB5166DDF87BE1 /* libPods-Moonlet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Moonlet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,13 +97,10 @@
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
-				5EF7680E234369BE000E4BE6 /* HDWallet.swift */,
-				5EF7681023436A53000E4BE6 /* HDWalletBridge.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
-				5EF7680D234369BD000E4BE6 /* Moonlet-Bridging-Header.h */,
 			);
 			name = Moonlet;
 			sourceTree = "<group>";
@@ -365,9 +357,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				5EF7681123436A53000E4BE6 /* HDWalletBridge.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				5EF7680F234369BE000E4BE6 /* HDWallet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,7 +388,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = E4C370DABDB01B6170B93335 /* Pods-MoonletTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -422,7 +411,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9A8E724B343F514BBD4CA0CF /* Pods-MoonletTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = MoonletTests/Info.plist;

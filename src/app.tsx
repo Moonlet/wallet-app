@@ -10,17 +10,6 @@ const AppContainer = createAppContainer(RootNavigation);
 const store = configureStore();
 
 const App = () => {
-    // NativeModules.HdWallet.generateWallet().then(response => {
-    //     // console.log('resolve response', response);
-    // });
-
-    // NativeModules.HdWallet.loadWallets(['menmonic 1', 'mnemonic 2']).then(response => {
-    //     // console.log('resolve', response);
-    // });
-    // NativeModules.HdWallet.getAccounts(1, 'eth', [1, 2, 3]).then(response => {
-    //     // console.log('resolve', response);
-    // });
-
     return (
         <Provider store={store}>
             <AppContainer />

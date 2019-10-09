@@ -1,5 +1,5 @@
 import { connect as _connect } from 'react-redux';
-import { IState } from '../types/store';
+import { IState } from '../types/state';
 import { Dispatch } from 'redux';
 
 const defaultMergeProps = (

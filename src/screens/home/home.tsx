@@ -5,6 +5,7 @@ import { mapStateToProps, mapDispatchToProps } from '../../utils/redux-decorator
 
 import { addMoney } from '../../redux/actions/wallet';
 import { fetchPrice } from '../../redux/actions/market';
+import { AppContext } from '../../app-context';
 
 interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -27,6 +28,9 @@ interface IProps {
     }
 }))
 export default class HomeScreen extends React.Component<IProps> {
+    public static contextType = AppContext;
+    public context!: React.ContextType<typeof AppContext>;
+
     constructor(props: IProps) {
         super(props);
 
@@ -39,6 +43,7 @@ export default class HomeScreen extends React.Component<IProps> {
                 <Text>Home Screen</Text>
                 <Text>ETH: {this.props.ethusd}</Text>
                 <Text>Money: {this.props.money}</Text>
+                <Text>Context: {JSON.stringify(this.context)}</Text>
                 <Button
                     title="Go to Settings"
                     onPress={() => this.props.navigation.navigate('Settings')}

@@ -1,6 +1,4 @@
-import { ADD_MONEYZ } from '../redux/actions/wallet';
-
-export interface IAddMoney {
+export interface IAction<D = any> {
     type: string;
-    money: number;
+    data: D;
 }

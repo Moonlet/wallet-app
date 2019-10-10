@@ -1,0 +1,170 @@
+name: CI
+on:
+  push:
+    branches:
+    - git-actions
+    
+  # Master branch workflow
+  beta:
+    jobs:
+      - ios_build_and_deploy_beta:
+          filters:
+            branches:
+              only: git-actions
+
+
+
+jobs:
+    ios_build_and_deploy_beta:
+    environment:
+      FASTLANE_LANE: ios beta
+      ENVIRONMENT: beta
+     macos:
+      xcode: "10.1.0"
+    working_directory: ~/src/ios
+    steps:
+      - checkout:
+          path: ~/src
+
+      - *react_restore_dependencies_cache
+      - *react_install_dependencies
+      - *react_save_dependencies_cache
+
+      - *fastlane_restore_dependencies_cache
+      - run:
+          name: Install Gems
+          command: |
+            pwd
+            bundle check || sudo bundle install --path vendor/bundle
+      - *fastlane_save_dependencies_cache
+
+      - *cocoapods_restore_dependencies_cache
+      - *cocoapods_install_dependencies
+      - *cocoapods_save_dependencies_cache
+
+      - run:
+          name: Run Fastlane
+          working_directory: ~/src/ios/fastlane
+          command: bundle exec fastlane $FASTLANE_LANE
+
+# ##########################################
+#
+# Here are common definitions
+#
+# #########################################
+references:
+
+####
+  ## Cache dependencies for faster builds
+  ####
+  react_restore_dependencies_cache: &react_restore_dependencies_cache
+    restore_cache:
+      name: Restore React Dependencies Cache
+      keys:
+        - react-v4-dependencies-{{ arch }}-{{ checksum "~/src/yarn.lock" }}
+          # fallback to using the latest cache if no exact match is found
+        - react-v4-dependencies-{{ arch }}-
+
+  react_save_dependencies_cache: &react_save_dependencies_cache
+    save_cache:
+      name: Store React Dependencies Cache
+      paths:
+        - ~/src/node_modules
+      key: react-v4-dependencies-{{ arch }}-{{ checksum "~/src/yarn.lock" }}
+
+  fastlane_restore_dependencies_cache: &fastlane_restore_dependencies_cache
+    restore_cache:
+      name: Restore Fastlane Dependencies Cache
+      keys:
+        - bundle-v3-dependencies-{{ arch }}-{{ checksum "Gemfile.lock" }}
+          # fallback to using the latest cache if no exact match is found
+        - bundle-v3-dependencies-{{ arch }}-
+
+  fastlane_save_dependencies_cache: &fastlane_save_dependencies_cache
+    save_cache:
+      name: Save Fastlane Dependencies Cache
+      paths:
+        - vendor/bundle
+      key: bundle-v3-dependencies-{{ arch }}-{{ checksum "Gemfile.lock" }}
+
+  gradle_restore_dependencies_cache: &gradle_restore_dependencies_cache
+    restore_cache:
+      name: Restore Gradle Dependencies Cache
+      # use increasingly general patterns to restore cache
+      keys:
+        - gradle-v2-dependencies-{{ arch }}-1
+        - gradle-v2-dependencies-{{ arch }}-
+
+  gradle_save_dependencies_cache: &gradle_save_dependencies_cache
+    save_cache:
+      name: Save Gradle Dependencies Cache
+      paths:
+        - ~/.gradle
+      # TODO: currently we need to increment the key ourselves, which is not a huge problem as we don't add android dependencies too often
+      # and even if we forget, the build will just start do run slower, that's it
+      key: gradle-v2-dependencies-{{ arch }}-1
+
+  # Install dependencies but fail if lockfile is out of sync with package.json
+  react_install_dependencies: &react_install_dependencies
+    run:
+      name: Install React Dependencies
+      working_dir: ~/src
+      command: npm install  --frozen-lockfile
+
+  fastlane_install_dependencies: &fastlane_install_dependencies
+    run:
+      name: Install Fastlane Dependencies
+      command: bundle install
+  cocoapods_restore_dependencies_cache: &cocoapods_restore_dependencies_cache
+    restore_cache:
+      name: Restore CocoaPods Dependencies Cache
+      key: v3-pods-{{ arch }}-{{ checksum "Podfile.lock" }}
+
+  cocoapods_save_dependencies_cache: &cocoapods_save_dependencies_cache
+    save_cache:
+      name: Save cocoapods dependencies
+      key: v3-pods-{{ arch }}-{{ checksum "Podfile.lock" }}
+      paths:
+        - ./ios
+
+  cocoapods_install_dependencies: &cocoapods_install_dependencies
+    run:
+      name: Install CocoaPods
+      command: |
+        curl https://cocoapods-specs.circleci.com/fetch-cocoapods-repo-from-s3.sh | bash -s cf
+        pod install
+
+  ####
+  ## Definitions of common steps found in multiple jobs
+  ####
+
+
+# # common build steps for ios
+#   ios_build_and_deploy: &ios_build_and_deploy
+#     macos:
+#       xcode: "10.1.0"
+#     working_directory: ~/src/ios
+#     steps:
+#       - checkout:
+#           path: ~/src
+
+#       - *react_restore_dependencies_cache
+#       - *react_install_dependencies
+#       - *react_save_dependencies_cache
+
+#       - *fastlane_restore_dependencies_cache
+#       - run:
+#           name: Install Gems
+#           command: |
+#             pwd
+#             bundle check || sudo bundle install --path vendor/bundle
+#       - *fastlane_save_dependencies_cache
+
+#       - *cocoapods_restore_dependencies_cache
+#       - *cocoapods_install_dependencies
+#       - *cocoapods_save_dependencies_cache
+
+#       - run:
+#           name: Run Fastlane
+#           working_directory: ~/src/ios/fastlane
+#           command: bundle exec fastlane $FASTLANE_LANE

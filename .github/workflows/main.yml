@@ -8,4 +8,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Build and test
-        run: cd ios/fastlane && ls -l
+        run: cd ios && bundle install
+        run: cd fastlane && bundle exec fastlane beta

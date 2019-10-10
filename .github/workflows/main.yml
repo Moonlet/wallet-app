@@ -18,7 +18,6 @@ jobs:
     ios_build_and_deploy_beta:
     environment:
       FASTLANE_LANE: ios beta
-      ENVIRONMENT: beta
      macos:
       xcode: "10.1.0"
     working_directory: ~/src/ios

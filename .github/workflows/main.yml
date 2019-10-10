@@ -23,21 +23,21 @@ jobs:
       - checkout:
           path: ~/src
 
-      - *react_restore_dependencies_cache
-      - *react_install_dependencies
-      - *react_save_dependencies_cache
+      # - *react_restore_dependencies_cache
+      # - *react_install_dependencies
+      # - *react_save_dependencies_cache
 
-      - *fastlane_restore_dependencies_cache
+      # - *fastlane_restore_dependencies_cache
       - run:
           name: Install Gems
           command: |
             pwd
             bundle check || sudo bundle install --path vendor/bundle
-      - *fastlane_save_dependencies_cache
+      # - *fastlane_save_dependencies_cache
 
-      - *cocoapods_restore_dependencies_cache
-      - *cocoapods_install_dependencies
-      - *cocoapods_save_dependencies_cache
+      # - *cocoapods_restore_dependencies_cache
+      # - *cocoapods_install_dependencies
+      # - *cocoapods_save_dependencies_cache
 
       - run:
           name: Run Fastlane

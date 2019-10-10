@@ -109,31 +109,6 @@ platform :ios do
     sh("curl", "-X", "POST", url , "-H" , "accept:application/ld+json", "-H", "Content-Type:application/json", "-d", json);
 
 
-    slack(
-      slack_url: "https://hooks.slack.com/services/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",
-      message: "App successfully released on *iOS*! :rocket:",
-      channel: "#general",
-      payload: {
-        "Version": get_version_number(target: "soundmix") + " (" + get_build_number.to_s + ")",
-        "Release Notes": changelog
-      },
-      default_payloads: [:git_branch],
-      attachment_properties: {
-        "fallback": "Install from https://itunes.apple.com/us/app/soundmix/id1439041185",
-        "color": "warning",
-        "actions": [
-          {
-            "type": "button",
-            "text": "Download on iOS :arrow_down:",
-            "url": "https://itunes.apple.com/us/app/soundmix/id1439041185"
-          }
-        ]
-      }
-    )
-
-
-
-
 
   end
   

@@ -8,4 +8,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Build and test
-        run: cd ios | ls -l
+        run: cd ios && ls -l

@@ -1,5 +1,11 @@
-name: CI
-on:
-  push:
-    jobs:
-      run: bundle exec fastlane beta
+on: push
+name: Deploy Beta iOS
+jobs:
+  test:
+    name: Beta iOS
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Build and test
+        run: cd ios/fastlane | bundle exec fastlane beta

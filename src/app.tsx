@@ -9,7 +9,7 @@ const AppContainer = createAppContainer(RootNavigation);
 
 const store = configureStore();
 
-// dummy commit 1
+// dummy commit 2
 
 const App = () => {
     return (

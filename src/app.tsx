@@ -9,6 +9,8 @@ const AppContainer = createAppContainer(RootNavigation);
 
 const store = configureStore();
 
+// dummy commit 1
+
 const App = () => {
     return (
         <Provider store={store}>

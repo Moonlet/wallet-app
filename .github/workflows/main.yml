@@ -10,8 +10,7 @@ jobs:
       - name: Bundle install
         run: cd ios && bundle install
       - name: Run fastlane beta
-      - uses: actions/checkout@master
+        run: cd ios/fastlane && bundle exec fastlane beta
         with: 
           MATCH_PASSWORD: "${{ secrets.MATCH_PASSWORD }}"
           FASTLANE_PASSWORD: "${{ secrets.FASTLANE_PASSWORD }}"
-        run: cd ios/fastlane && bundle exec fastlane beta

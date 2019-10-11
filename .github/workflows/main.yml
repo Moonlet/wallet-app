@@ -6,13 +6,13 @@ jobs:
     runs-on: macOS-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        run: actions/checkout@master
+          - uses: webfactory/ssh-agent@v0.1.1
+              with:
+                ssh-private-key: ${{ secrets.SSH_CERTS }}
       - name: Dependencies install
         run: cd ios && bundle install
-      - name: Generate ssh key 
-        uses: webfactory/ssh-agent@v0.1.1
-          with:
-            ssh-private-key: ${{ secrets.SSH_CERTS }}
+
       - name: Run fastlane beta
         run: cd ios/fastlane && bundle exec fastlane beta --verbose
    

@@ -5,10 +5,12 @@ jobs:
     name: Beta iOS
     runs-on: macOS-latest
     steps:
-      - actions/checkout@master
+      - actions/checkout@v1
       - uses: webfactory/ssh-agent@v0.1.1
         with:
         ssh-private-key: ${{ secrets.SSH_CERTS }}
+      - name: Checkout
+        uses: actions/checkout@master
       - name: Dependencies install
         run: cd ios && bundle install
 

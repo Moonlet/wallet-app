@@ -5,7 +5,7 @@ jobs:
     name: Beta iOS
     runs-on: macOS-latest
     steps:
-      - actions/checkout@v1
+      - name: Set ssh key
       - uses: webfactory/ssh-agent@v0.1.1
         with:
         ssh-private-key: ${{ secrets.SSH_CERTS }}

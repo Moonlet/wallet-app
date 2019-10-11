@@ -43,7 +43,7 @@ platform :ios do
     match(type: "appstore")
   end
     cocoapods(
-      podfile: './ios/Podfile'
+      podfile: './Podfile'
     )
     get_push_certificate
     gym(workspace: "Moonlet.xcworkspace", scheme: "Moonlet_beta", export_method: "app-store")

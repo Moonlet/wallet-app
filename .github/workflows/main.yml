@@ -7,11 +7,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
-      - name: Bundle install
+      - name: Dependencies install
         run: cd ios && bundle install
+      - name: Generate ssh key 
+        uses: webfactory/ssh-agent@v0.1.1
+          with:
+            ssh-private-key: ${{ secrets.SSH_CERTS }}
       - name: Run fastlane beta
-        env: 
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
         run: cd ios/fastlane && bundle exec fastlane beta --verbose
    

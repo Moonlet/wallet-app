@@ -7,9 +7,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
-      - name: Hello world
-        run: echo Hello world $MATCH_PASSWORD $middle_name 
       - name: Bundle install
         run: cd ios && bundle install
       - name: Run fastlane beta
+        env: 
+          MATCH_PASSWORD: TN49qUTz[B
+          FASTLANE_PASSWORD: wivwaf-zymxo6-rIvbim
         run: cd ios/fastlane && bundle exec fastlane beta

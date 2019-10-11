@@ -18,6 +18,8 @@ jobs:
         uses: actions/checkout@master
       - name: Dependencies install
         run: cd ios && bundle install
+      - name: node v
+        run: node -v
       - name: NPM install
         run: npm i
       - name: Cocoapods install

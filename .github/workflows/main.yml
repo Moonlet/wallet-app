@@ -1,7 +1,7 @@
 on: push
 name: Deploy Beta iOS
 jobs:
-  test:
+  beta:
     name: Beta iOS
     runs-on: macOS-latest
     steps:

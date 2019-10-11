@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@master
       - name: Dependencies install
         run: cd ios && bundle install
-      - name: Dependencies install
+      - name: NPM install
         run: npm i
       - name: Run fastlane beta
         run: cd ios/fastlane && bundle exec fastlane beta --verbose

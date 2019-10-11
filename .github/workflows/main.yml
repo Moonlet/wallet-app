@@ -5,6 +5,9 @@ jobs:
     name: Beta iOS
     runs-on: macOS-latest
     steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
       - uses: actions/checkout@v1
       - name: Setup key
         uses: webfactory/ssh-agent@v0.1.1
@@ -18,8 +21,6 @@ jobs:
         uses: actions/checkout@master
       - name: Dependencies install
         run: cd ios && bundle install
-      - name: node v
-        run: node -v
       - name: NPM install
         run: npm i
       - name: Cocoapods install

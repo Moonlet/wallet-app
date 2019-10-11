@@ -7,9 +7,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Setup key
-           uses: webfactory/ssh-agent@v0.1.1
-           with:
-                ssh-private-key: ${{ secrets.SSH_CERTS }}
+        uses: webfactory/ssh-agent@v0.1.1
+        with:
+              ssh-private-key: ${{ secrets.SSH_CERTS }}
       - name: Checkout
         uses: actions/checkout@master
       - name: Dependencies install

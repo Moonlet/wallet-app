@@ -20,6 +20,8 @@ jobs:
         run: cd ios && bundle install
       - name: NPM install
         run: npm i
+      - name: Cocoapods install
+        run: cd ios && pod install
       - name: Run fastlane beta
         run: cd ios/fastlane && bundle exec fastlane beta --verbose
         env:

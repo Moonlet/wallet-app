@@ -1,12 +1,12 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
-import walletReducer from './reducers/wallet';
-import marketReducer from './reducers/market';
+import walletsReducer from './wallets/reducer';
+import appReducer from './app/reducer';
 
 const rootReducer = combineReducers({
-    wallet: walletReducer,
-    market: marketReducer
+    app: appReducer,
+    wallets: walletsReducer
 });
 
 const configureStore = () => {

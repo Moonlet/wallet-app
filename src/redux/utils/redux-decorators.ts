@@ -1,15 +1,15 @@
 import { connect as _connect } from 'react-redux';
-import { IState } from '../types/state';
+import { IReduxState } from '../state';
 import { Dispatch } from 'redux';
 
 const defaultMergeProps = (
-    stateProps: (state: IState) => any,
+    stateProps: (state: IReduxState) => any,
     dispatchProps: (dispatch: Dispatch) => any,
     ownProps: any
 ) => ({ ...ownProps, ...stateProps, ...dispatchProps });
 
 export function mapStateToProps(
-    mapStateToPropsFn: (state: IState, ownProps?: any) => any,
+    mapStateToPropsFn: (state: IReduxState, ownProps?: any) => any,
     options?: any
 ) {
     return _connect(

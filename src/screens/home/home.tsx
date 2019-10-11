@@ -1,40 +1,28 @@
 import React from 'react';
 import { Button, View, Text } from 'react-native';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
-import { mapStateToProps, mapDispatchToProps } from '../../utils/redux-decorators';
-
-import { addMoney } from '../../redux/actions/wallet';
-import { fetchPrice } from '../../redux/actions/market';
-import { AppContext } from '../../app-context';
+import { mapStateToProps, mapDispatchToProps } from '../../redux/utils/redux-decorators';
+import { IReduxState } from '../../redux/state';
+import { IWalletState } from '../../redux/wallets/state';
 
 interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     money: number;
     ethusd: number;
-    addMoney: any;
-    fetchEthPrice: any;
 }
 
-@mapStateToProps(state => ({
-    money: state.wallet.money,
-    ethusd: state.market.price.eth
-}))
-@mapDispatchToProps((dispatch: any) => ({
-    addMoney: () => {
-        dispatch(addMoney(100));
-    },
-    fetchEthPrice: () => {
-        dispatch(fetchPrice());
-    }
-}))
-export default class HomeScreen extends React.Component<IProps> {
-    public static contextType = AppContext;
-    public context!: React.ContextType<typeof AppContext>;
+interface IReduxProps {
+    wallet: IWalletState;
+}
 
-    constructor(props: IProps) {
+@mapStateToProps(
+    (state: IReduxState): IReduxProps => ({
+        wallet: state.wallets[state.app.currentWalletIndex]
+    })
+)
+export default class HomeScreen extends React.Component<IProps & IReduxProps> {
+    constructor(props: IProps & IReduxProps) {
         super(props);
-
-        this.props.fetchEthPrice();
     }
 
     public render() {

@@ -11,7 +11,7 @@ jobs:
         run: cd ios && bundle install
       - name: Run fastlane beta
         env: 
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        run: echo Hello world $MATCH_PASSWORD $FASTLANE_PASSWORD
+          MATCH_PASSWORD: TN49qUTz[B
+          FASTLANE_PASSWORD: wivwaf-zymxo6-rIvbim
+        run: cd ios/fastlane && bundle exec fastlane beta
    

@@ -10,6 +10,8 @@ jobs:
         uses: webfactory/ssh-agent@v0.1.1
         with:
               ssh-private-key: ${{ secrets.SSH_CERTS }}
+      - name: Add to host
+        run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
       - name: Checkout
         uses: actions/checkout@master
       - name: Dependencies install

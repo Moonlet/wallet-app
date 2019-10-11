@@ -36,7 +36,12 @@ export default class HomeScreen extends React.Component<IProps & IReduxProps> {
                     title="Go to Settings"
                     onPress={() => this.props.navigation.navigate('Settings')}
                 />
-                <Button title="Add money" onPress={() => this.props.addMoney()} />
+                <Button
+                    title="Add money"
+                    onPress={() => {
+                        /* */
+                    }}
+                />
             </View>
         );
     }

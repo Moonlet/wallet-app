@@ -17,7 +17,7 @@ jobs:
       - name: Dependencies install
         run: cd ios && bundle install
       - name: Run fastlane beta
-        run: cd ios/fastlane && bundle exec fastlane beta --verbose
+        uses: cd ios/fastlane && bundle exec fastlane beta --verbose
         with:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}

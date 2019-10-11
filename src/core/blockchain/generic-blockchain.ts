@@ -1,4 +1,4 @@
-import { IAccountState } from '../../redux/state';
+import { IAccountState } from '../../redux/wallets/state';
 
 export abstract class GenericBlockchain {
     public readonly DERIVATION_PATH: string = '';

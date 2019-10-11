@@ -1,10 +1,9 @@
-import { IAccountState } from '../../../redux/state';
 import { IWallet } from '../types';
-
 import HDKey from 'hdkey';
 import { Mnemonic } from './mnemonic';
 import { Blockchain } from '../../blockchain/types';
 import { BlockchainFactory } from '../../blockchain/blockchain-factory';
+import { IAccountState } from '../../../redux/wallets/state';
 
 export class HDWallet implements IWallet {
     public static async loadFromStorage(walletId: string): Promise<HDWallet> {

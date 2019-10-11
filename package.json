@@ -12,6 +12,7 @@
         "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore"
     },
     "dependencies": {
+        "@zilliqa-js/crypto": "^0.8.1-alpha.0",
         "bip39": "^3.0.2",
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.14.0",

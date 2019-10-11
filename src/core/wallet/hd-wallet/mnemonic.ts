@@ -1,7 +1,7 @@
 import { generateMnemonic, validateMnemonic, wordlists, mnemonicToSeedSync } from 'bip39';
 
 export class Mnemonic {
-    public static generate(words: number = 24): string {
+    public static generate(words: number = 256): string {
         return generateMnemonic(words, undefined, wordlists.EN);
     }
 

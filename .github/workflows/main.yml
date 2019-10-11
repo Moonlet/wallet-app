@@ -7,9 +7,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
-        with:
-        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       - name: Hello world
+        with: MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         run: echo Hello world $MATCH_PASSWORD $middle_name 
       - name: Bundle install
         run: cd ios && bundle install

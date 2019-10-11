@@ -10,6 +10,8 @@ jobs:
         uses: webfactory/ssh-agent@v0.1.1
         with:
           ssh-private-key: ${{ secrets.SSH_CERTS }}
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
       - name: Add to host
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
       - name: Checkout
@@ -17,7 +19,4 @@ jobs:
       - name: Dependencies install
         run: cd ios && bundle install
       - name: Run fastlane beta
-        uses: cd ios/fastlane && bundle exec fastlane beta --verbose
-        with:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        run: cd ios/fastlane && bundle exec fastlane beta --verbose

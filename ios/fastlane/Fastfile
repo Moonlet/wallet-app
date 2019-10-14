@@ -48,8 +48,8 @@ platform :ios do
   end
 
 
-    get_push_certificate(app_identifier: "com.moonlet.beta")
-    gym(workspace: "Moonlet.xcworkspace", xcargs: "-allowProvisioningUpdates", scheme: "Moonlet_beta", export_method: "app-store")
+    get_push_certificate(app_identifier: "com.moonlet")
+    gym(workspace: "Moonlet.xcworkspace", xcargs: "-allowProvisioningUpdates", scheme: "Moonlet", export_method: "app-store")
     
     pilot(
       changelog: changelog,

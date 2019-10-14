@@ -33,6 +33,7 @@ platform :ios do
     )
     match(
       type: "development",
+      app_identifier: "com.moonlet.beta",
       keychain_name: "CI",
       keychain_password: "ZZufLh7z8S"
     )

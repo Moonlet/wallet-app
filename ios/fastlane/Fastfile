@@ -51,7 +51,7 @@ platform :ios do
     get_push_certificate(app_identifier: "com.moonlet.beta")
     sync_code_signing(type: "appstore") 
     build_app(scheme: "Moonlet_beta",
-      workspace: "Moonlet.xcworkspace")
+      workspace: "Moonlet.xcworkspace",export_xcargs: "-allowProvisioningUpdates")
       upload_to_testflight
     #gym(workspace: "Moonlet.xcworkspace", xcargs: "-allowProvisioningUpdates", scheme: "Moonlet_beta", export_method: "app-store")
     

@@ -29,7 +29,8 @@ platform :ios do
       password: "ZZufLh7z8S",
       default_keychain: true,
       unlock: true,
-      timeout: 3600
+      timeout: 3600,
+      add_to_search_list: true
     )
 
     match(
@@ -42,7 +43,6 @@ platform :ios do
   end
 
 
-    enable_automatic_code_signing
     get_push_certificate(app_identifier: "com.moonlet.beta")
     gym(workspace: "Moonlet.xcworkspace", xcargs: "-allowProvisioningUpdates", scheme: "Moonlet_beta", export_method: "app-store")
     

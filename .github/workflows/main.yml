@@ -24,7 +24,7 @@ jobs:
       - name: Cocoapods install
         run: cd ios && pod install
       - name: Select Xcode
-        run: xcversion install 10
+        run: xcversion select 11.1
         env:
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
       - name: Run fastlane beta

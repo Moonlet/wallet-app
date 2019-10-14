@@ -1,5 +1,5 @@
-import HomeScreen from './screens/home/home';
-import SettingsScreen from './screens/settings/settings';
+import HomeScreen from '../screens/home/home';
+import SettingsScreen from '../screens/settings/settings';
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 
 const mainTabsOptions: any = {
@@ -14,7 +14,8 @@ const mainTabsOptions: any = {
         indicatorStyle: {
             display: 'none'
         }
-    }
+    },
+    swipeEnabled: false
 };
 
 // TODO: fix deprecation warning related to react-native-gestures

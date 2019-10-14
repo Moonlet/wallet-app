@@ -264,14 +264,17 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 8T5TG4TVDY;
 						LastSwiftMigration = 1100;
+						ProvisioningStyle = Automatic;
 					};
 					5E0012B2234DF52E00B2335A = {
 						DevelopmentTeam = 8T5TG4TVDY;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -562,6 +565,7 @@
 			baseConfigurationReference = E4C370DABDB01B6170B93335 /* Pods-MoonletTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -585,6 +589,7 @@
 			baseConfigurationReference = 9A8E724B343F514BBD4CA0CF /* Pods-MoonletTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = MoonletTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -606,7 +611,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 25;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 98;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				INFOPLIST_FILE = Moonlet/Info.plist;
@@ -631,7 +637,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 25;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 98;
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				INFOPLIST_FILE = Moonlet/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -653,7 +660,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 25;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 98;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				INFOPLIST_FILE = "Moonlet/Moonlet_beta-Info.plist";
@@ -677,7 +685,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 25;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 98;
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				INFOPLIST_FILE = "Moonlet/Moonlet_beta-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

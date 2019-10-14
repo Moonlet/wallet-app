@@ -43,10 +43,9 @@ platform :ios do
   end
 
 
+    enable_automatic_code_signing
     get_push_certificate(app_identifier: "com.moonlet.beta")
-    gym(workspace: "Moonlet.xcworkspace", scheme: "Moonlet_beta", export_method: "app-store", export_options: {
-      provisioningProfiles: {}
-    })
+    gym(workspace: "Moonlet.xcworkspace", scheme: "Moonlet_beta", export_method: "app-store")
     
     pilot(
       changelog: changelog,

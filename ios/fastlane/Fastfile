@@ -38,11 +38,12 @@ platform :ios do
     )
     match(
       type: "appstore",
+      app_identifier: "com.moonlet.beta",
       keychain_name: "CI",
       keychain_password: "ZZufLh7z8S"
     )
   else
-    match(type: "appstore")
+    match(type: "appstore",app_identifier: "com.moonlet.beta")
   end
 
 

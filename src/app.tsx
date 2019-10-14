@@ -13,7 +13,7 @@ const store = configureStore();
 const App = () => {
     return (
         <Provider store={store}>
-            <AppContext.Provider value={{ plugins: { wallet: 'asd' } }}>
+            <AppContext.Provider value={{}}>
                 <AppContainer />
             </AppContext.Provider>
         </Provider>

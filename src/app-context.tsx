@@ -1,12 +1,6 @@
 import React from 'react';
 
 export interface IAppContext {
-    plugins: {
-        wallet: any;
-    };
+    tbd?: string;
 }
-export const AppContext: React.Context<IAppContext> = React.createContext<IAppContext>({
-    plugins: {
-        wallet: undefined
-    }
-});
+export const AppContext: React.Context<IAppContext> = React.createContext<IAppContext>({});

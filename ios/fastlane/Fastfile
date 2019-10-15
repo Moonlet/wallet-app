@@ -23,36 +23,12 @@ platform :ios do
     increment_build_number(build_number: number_of_commits)
     changelog = changelog_from_git_commits(commits_count: 1)
 
-    # if is_ci
-    # create_keychain(
-    #   name: "CI",
-    #   password: "ZZufLh7z8S",
-    #   default_keychain: true,
-    #   unlock: true,
-    #   timeout: 3600
-    # )
-  #   match(
-  #     type: "development",
-  #     app_identifier: "com.moonlet.beta",
-  #     keychain_name: "CI",
-  #     keychain_password: "ZZufLh7z8S"
-  #   )
-  #   match(
-  #     type: "appstore",
-  #     app_identifier: "com.moonlet.beta",
-  #     keychain_name: "CI",
-  #     keychain_password: "ZZufLh7z8S"
-  #   )
-  # else
-    match(type: "development", app_identifier: "com.moonlet.beta")
+ 
     match(type: "appstore", app_identifier: "com.moonlet.beta")
-  # end
-
-
-    get_push_certificate(app_identifier: "com.moonlet.beta")
+ 
+   get_push_certificate(app_identifier: "com.moonlet.beta")
 
     gym(workspace: "Moonlet.xcworkspace", 
-      export_xcargs: "-allowProvisioningUpdates", 
       scheme: "Moonlet_beta", 
       export_method: "app-store",
       export_options: {

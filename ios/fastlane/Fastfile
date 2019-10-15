@@ -50,7 +50,17 @@ platform :ios do
 
     get_push_certificate(app_identifier: "com.moonlet.beta")
 
-    gym(workspace: "Moonlet.xcworkspace", export_xcargs: "-allowProvisioningUpdates", scheme: "Moonlet_beta", export_method: "app-store")
+    gym(workspace: "Moonlet.xcworkspace", 
+      clean: true,
+      xcargs: "-allowProvisioningUpdates", 
+      scheme: "Moonlet_beta", 
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.moonlet.beta" => "match AppStore com.moonlet.beta"
+        },
+        "signingStyle": "manual"
+      })
     
     pilot(
       changelog: changelog,

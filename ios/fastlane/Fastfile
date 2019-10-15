@@ -44,14 +44,14 @@ platform :ios do
   #     keychain_password: "ZZufLh7z8S"
   #   )
   # else
-    match(type: "appstore",app_identifier: "com.moonlet.beta")
+    match(type: "development")
+    match(type: "appstore", app_identifier: "com.moonlet.beta")
   # end
 
 
     get_push_certificate(app_identifier: "com.moonlet.beta")
-    update_project_team(teamid: "8T5TG4TVDY")
 
-    gym(workspace: "Moonlet.xcworkspace", xcargs: "-allowProvisioningUpdates", scheme: "Moonlet_beta", export_method: "app-store")
+    gym(workspace: "Moonlet.xcworkspace", export_xcargs: "-allowProvisioningUpdates", scheme: "Moonlet_beta", export_method: "app-store")
     
     pilot(
       changelog: changelog,

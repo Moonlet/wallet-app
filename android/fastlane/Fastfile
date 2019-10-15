@@ -21,18 +21,130 @@ platform :android do
     gradle(task: "test")
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
+ 
+
+  desc "Submit a new Beta Build to AppCenter"
   lane :beta do
-    gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
+    version_code = increment_version_code(
+        gradle_file_path: "app/build.gradle",
+        version_code: number_of_commits # take only the nr of master commits
+    )
+
+    gradle(task: "clean")
+
+    gradle(
+      task: "assemble",
+      flavor: "beta",
+      build_type: "Release"
+    )
+
+    changelog = changelog_from_git_commits(commits_count: 1)
+    
+    appcenter_upload(
+      api_token: "e4df475deac37d0207ffa1d854cc9369c1b1e127",
+      owner_name: "soundmix",
+      app_name: "Soundmix-Beta",
+      apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
+      release_notes: changelog,
+      group: "All-users-of-Soundmix-Beta"
+    )
+
+    slack(
+      slack_url: "https://hooks.slack.com/services/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",
+      message: "New version available on *Android*! :fuelpump:",
+      payload: {
+        "Version": get_version_name + " (" + version_code.to_s + ")",
+        "Release Notes": changelog
+      },
+      default_payloads: [:git_branch],
+      attachment_properties: {
+        "fallback": "Download at " + lane_context[SharedValues::APPCENTER_DOWNLOAD_LINK],
+        "color": "good",
+        "actions": [
+          {
+            "type": "button",
+            "text": "Download on Android :arrow_down:",
+            "url": lane_context[SharedValues::APPCENTER_DOWNLOAD_LINK]
+          },
+          {
+            "type": "button",
+            "text": "Opt-in for :moneybag: to work",
+            "url": "https://play.google.com/apps/internaltest/4700763360218347023"
+          }
+        ]
+      }
+    )
   end
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
+    ensure_git_branch(
+      branch: 'master'
+    )
+
+    # make sure we have the latest code
+    ensure_git_status_clean
+    
+    version_code = increment_version_code(
+        gradle_file_path: "app/build.gradle",
+        version_code: number_of_commits # take only the nr of stable commits
+    ).to_s
+
+    version_name = get_version_name
+
+    # tag the current commit. it will fail if there are duplicates, 
+    # thus making sure we don't release the same version twice
+    current_commit = ENV['CIRCLE_SHA1']
+    version_tag = "android/v#{version_name}"
+    add_git_tag(
+      tag: version_tag,
+      commit: current_commit
+    )
+
+    # read the details from the changelog
+    changelog = read_changelog(
+      changelog_path: '../CHANGELOG.md',	# Specify path to CHANGELOG.md
+      section_identifier: "[Unreleased]",	  # Specify what section to read
+      excluded_markdown_elements: ['###']	# Specify which markdown elements should be excluded
+    )
+    changelogWithMarkdown = read_changelog(
+      changelog_path: '../CHANGELOG.md',	# Specify path to CHANGELOG.md
+      section_identifier: "[Unreleased]",	  # Specify what section to read
+    )
+
+    gradle(task: "clean")
+
+    gradle(
+      task: "assemble",
+      flavor: "stable",
+      build_type: "Release"
+    )
+
+    # save changelog to folder so the next call can upload them to the store
+    File.write("metadata/android/en-US/changelogs/#{version_code}.txt", changelog)
+
+    upload_to_play_store(track: "production")
+
+    # also create a github release so it's easier to track changes
+    set_github_release(
+      repository_name: 'soundmix-live/mobile-app',
+      api_token: ENV['GITHUB_TOKEN'],
+      tag_name: version_tag,
+      name: 'android/v' + version_name,
+      description: changelogWithMarkdown
+    )
+
+    url = ENV["SOUNDMIX_API_HOST"] + "/versions?apikey=" + ENV["SOUNDMIX_API_KEY"]
+    json = {
+      "platform" =>"android",
+      "platformVersion" => min_sdk_version,
+      "appVersion" => get_version_name,
+      "url" => "https://play.google.com/store/apps/details?id=live.soundmix",
+      "notes" => changelog,
+      "versionStatus" => "pending"
+    }.to_json()
+    sh("curl", "-X", "POST", url , "-H" , "accept:application/ld+json", "-H", "Content-Type:application/json", "-d", json);
+
+   
   end
 end

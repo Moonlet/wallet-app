@@ -349,7 +349,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\nexport NODE_OPTIONS=\"--max_old_space_size=4096\"\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		5E7467352355942B0052B81C /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -404,7 +404,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh";
+			shellScript = "export NODE_BINARY=node\nexport NODE_OPTIONS=\"--max_old_space_size=4096\"\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
 		7C52CCB53DA976EE0CEE632D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

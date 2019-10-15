@@ -7,7 +7,7 @@ jobs:
     steps:
       - uses: actions/setup-node@v1
         with:
-          node-version: "10.11.0"
+          node-version: "10.x"
       - uses: actions/checkout@v1
       - name: Setup key
         uses: webfactory/ssh-agent@v0.1.1

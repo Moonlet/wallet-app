@@ -41,38 +41,11 @@ platform :android do
     changelog = changelog_from_git_commits(commits_count: 1)
     
     appcenter_upload(
-      api_token: "e4df475deac37d0207ffa1d854cc9369c1b1e127",
-      owner_name: "soundmix",
-      app_name: "Soundmix-Beta",
+      api_token: "fb2a10702cc385175fbd69ec9519bbde29114ff2",
+      owner_name: "moonlet",
+      app_name: "Moonlet-Beta",
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      release_notes: changelog,
-      group: "All-users-of-Soundmix-Beta"
-    )
-
-    slack(
-      slack_url: "https://hooks.slack.com/services/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",
-      message: "New version available on *Android*! :fuelpump:",
-      payload: {
-        "Version": get_version_name + " (" + version_code.to_s + ")",
-        "Release Notes": changelog
-      },
-      default_payloads: [:git_branch],
-      attachment_properties: {
-        "fallback": "Download at " + lane_context[SharedValues::APPCENTER_DOWNLOAD_LINK],
-        "color": "good",
-        "actions": [
-          {
-            "type": "button",
-            "text": "Download on Android :arrow_down:",
-            "url": lane_context[SharedValues::APPCENTER_DOWNLOAD_LINK]
-          },
-          {
-            "type": "button",
-            "text": "Opt-in for :moneybag: to work",
-            "url": "https://play.google.com/apps/internaltest/4700763360218347023"
-          }
-        ]
-      }
+      release_notes: changelog
     )
   end
 

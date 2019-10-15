@@ -52,7 +52,6 @@ platform :ios do
     get_push_certificate(app_identifier: "com.moonlet.beta")
 
     gym(workspace: "Moonlet.xcworkspace", 
-      clean: true,
       export_xcargs: "-allowProvisioningUpdates", 
       scheme: "Moonlet_beta", 
       export_method: "app-store",

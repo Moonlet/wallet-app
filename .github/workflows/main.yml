@@ -23,6 +23,8 @@ jobs:
         run: npm i
       - name: Cocoapods install
         run: cd ios && pod install
+      - name: node node-versio
+        run: node -v
       - name: Run fastlane beta
         run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane beta --verbose
         env:

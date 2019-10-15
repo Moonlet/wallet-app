@@ -44,6 +44,7 @@ platform :ios do
   #     keychain_password: "ZZufLh7z8S"
   #   )
   # else
+    match(type: "development", app_identifier: "com.moonlet.beta")
     match(type: "appstore", app_identifier: "com.moonlet.beta")
   # end
 
@@ -52,7 +53,7 @@ platform :ios do
 
     gym(workspace: "Moonlet.xcworkspace", 
       clean: true,
-      xcargs: "-allowProvisioningUpdates", 
+      export_xcargs: "-allowProvisioningUpdates", 
       scheme: "Moonlet_beta", 
       export_method: "app-store",
       export_options: {

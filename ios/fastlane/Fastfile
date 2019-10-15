@@ -44,7 +44,6 @@ platform :ios do
   #     keychain_password: "ZZufLh7z8S"
   #   )
   # else
-    match(type: "development")
     match(type: "appstore", app_identifier: "com.moonlet.beta")
   # end
 

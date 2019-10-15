@@ -24,7 +24,7 @@ jobs:
       - name: Cocoapods install
         run: cd ios && pod install
       - name: Run fastlane beta
-        run: cd ios/fastlane && bundle exec fastlane beta --verbose
+        run: xcversion select 10.3 && cd ios/fastlane && bundle exec fastlane beta --verbose
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}

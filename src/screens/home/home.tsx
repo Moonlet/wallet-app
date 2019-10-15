@@ -4,7 +4,7 @@ import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-n
 import { mapStateToProps, mapDispatchToProps } from '../../redux/utils/redux-decorators';
 import { IReduxState } from '../../redux/state';
 import { IWalletState } from '../../redux/wallets/state';
-
+import { Icon } from '../../components/icon';
 interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     money: number;
@@ -36,6 +36,8 @@ export default class HomeScreen extends React.Component<IProps & IReduxProps> {
                     title="Go to Settings"
                     onPress={() => this.props.navigation.navigate('Settings')}
                 />
+
+                <Icon name="bin" size={25} />
                 <Button
                     title="Add money"
                     onPress={() => {

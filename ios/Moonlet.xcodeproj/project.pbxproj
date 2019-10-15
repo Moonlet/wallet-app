@@ -17,6 +17,8 @@
 		5E0012B7234DF52E00B2335A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		5E0012BB234DF52E00B2335A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		5E0012BC234DF52E00B2335A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
+		97676FB02355A70900A5262D /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97676FAF2355A70900A5262D /* icons.ttf */; };
+		97676FB12355A70900A5262D /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97676FAF2355A70900A5262D /* icons.ttf */; };
 		B2D43936A20EA4074D11C300 /* Pods_Moonlet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +51,7 @@
 		5C4CC37B0E80B21C7C248D98 /* Pods-Moonlet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet/Pods-Moonlet.debug.xcconfig"; sourceTree = "<group>"; };
 		5E0012C1234DF52E00B2335A /* Moonlet_beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moonlet_beta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E0012C3234DF5F100B2335A /* Moonlet_beta-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Moonlet_beta-Info.plist"; path = "Moonlet/Moonlet_beta-Info.plist"; sourceTree = "<group>"; };
+		97676FAF2355A70900A5262D /* icons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icons.ttf; path = ../../resources/fonts/icons.ttf; sourceTree = "<group>"; };
 		9A8E724B343F514BBD4CA0CF /* Pods-MoonletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoonletTests.release.xcconfig"; path = "Target Support Files/Pods-MoonletTests/Pods-MoonletTests.release.xcconfig"; sourceTree = "<group>"; };
 		A22B0918C6B3BA9BD3E84232 /* Pods_MoonletTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MoonletTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B1117D8A38327073F5E95CC8 /* Pods-Moonlet-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet-tvOSTests/Pods-Moonlet-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -157,6 +160,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				97676FAE2355A59600A5262D /* Resources */,
 				13B07FAE1A68108700A75B9A /* Moonlet */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* MoonletTests */,
@@ -177,6 +181,14 @@
 				5E0012C1234DF52E00B2335A /* Moonlet_beta.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		97676FAE2355A59600A5262D /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				97676FAF2355A70900A5262D /* icons.ttf */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -298,6 +310,7 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				97676FB02355A70900A5262D /* icons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +320,7 @@
 			files = (
 				5E0012BB234DF52E00B2335A /* Images.xcassets in Resources */,
 				5E0012BC234DF52E00B2335A /* LaunchScreen.xib in Resources */,
+				97676FB12355A70900A5262D /* icons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -374,6 +388,7 @@
 				"${BUILT_PRODUCTS_DIR}/RNGestureHandler/RNGestureHandler.framework",
 				"${BUILT_PRODUCTS_DIR}/RNReanimated/RNReanimated.framework",
 				"${BUILT_PRODUCTS_DIR}/RNScreens/RNScreens.framework",
+				"${BUILT_PRODUCTS_DIR}/RNVectorIcons/RNVectorIcons.framework",
 				"${BUILT_PRODUCTS_DIR}/React-Core/React.framework",
 				"${BUILT_PRODUCTS_DIR}/React-CoreModules/CoreModules.framework",
 				"${BUILT_PRODUCTS_DIR}/React-RCTActionSheet/RCTActionSheet.framework",
@@ -402,6 +417,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNGestureHandler.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNReanimated.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNScreens.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNVectorIcons.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CoreModules.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTActionSheet.framework",

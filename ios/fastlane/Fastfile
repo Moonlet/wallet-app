@@ -30,6 +30,7 @@ platform :ios do
 
     gym(workspace: "Moonlet.xcworkspace", 
       scheme: "Moonlet_beta", 
+      compileBitcode: false,
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {

@@ -144,7 +144,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* Moonlet.app */,
-				5E7467442355942B0052B81C /* Moonlet_beta.app */,
+				5E7467442355942B0052B81C /* Moonlet beta.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -199,7 +199,7 @@
 			);
 			name = Moonlet_beta;
 			productName = Moonlet;
-			productReference = 5E7467442355942B0052B81C /* Moonlet_beta.app */;
+			productReference = 5E7467442355942B0052B81C /* Moonlet beta.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -556,7 +556,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 98;
 				DEAD_CODE_STRIPPING = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Moonlet/Info.plist;
@@ -586,7 +586,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 98;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Moonlet/Info.plist;
@@ -615,7 +615,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 98;
 				DEAD_CODE_STRIPPING = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Moonlet/Moonlet_beta-Info.plist";
@@ -626,7 +626,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.moonlet.beta;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Moonlet beta";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Moonlet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -645,7 +645,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 98;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Moonlet/Moonlet_beta-Info.plist";
@@ -656,7 +656,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.moonlet.beta;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Moonlet beta";
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.moonlet.beta";
 				SWIFT_OBJC_BRIDGING_HEADER = "Moonlet-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

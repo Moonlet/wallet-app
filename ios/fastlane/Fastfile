@@ -30,13 +30,14 @@ platform :ios do
 
     gym(workspace: "Moonlet.xcworkspace", 
       scheme: "Moonlet_beta", 
-      compileBitcode: false,
+      
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
           "com.moonlet.beta" => "match AppStore com.moonlet.beta"
         },
-        "signingStyle": "manual"
+        "signingStyle": "manual",
+        compileBitcode: false
       })
     
     pilot(

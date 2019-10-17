@@ -23,7 +23,7 @@ jobs:
       - name: Add to host
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
       - name: Dependencies install
-        run: bundle install
+        run: cd android && bundle install
       - name: NPM install
         run: npm i
       - name: Gety sign ssh-keys

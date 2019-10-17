@@ -42,8 +42,8 @@ jobs:
         run: npm i
       - name: Cocoapods install
         run: cd ios && pod install
-      - name: Generate fonts
-        run: npm run generate-fonts
+      - name: Generate fonts and icons
+        run: npm run generate-icons
       - name: Run fastlane beta
         run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane beta
         env:

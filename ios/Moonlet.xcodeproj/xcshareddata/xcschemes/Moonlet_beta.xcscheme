@@ -5,22 +5,6 @@
    <BuildAction
       parallelizeBuildables = "YES"
       buildImplicitDependencies = "YES">
-      <BuildActionEntries>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5E0012B2234DF52E00B2335A"
-               BuildableName = "Moonlet_beta.app"
-               BlueprintName = "Moonlet_beta"
-               ReferencedContainer = "container:Moonlet.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-      </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
@@ -44,7 +28,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5E0012B2234DF52E00B2335A"
+            BlueprintIdentifier = "5E7A088F2358A3840036C459"
             BuildableName = "Moonlet_beta.app"
             BlueprintName = "Moonlet_beta"
             ReferencedContainer = "container:Moonlet.xcodeproj">
@@ -57,16 +41,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5E0012B2234DF52E00B2335A"
+            BlueprintIdentifier = "5E7A088F2358A3840036C459"
             BuildableName = "Moonlet_beta.app"
             BlueprintName = "Moonlet_beta"
             ReferencedContainer = "container:Moonlet.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

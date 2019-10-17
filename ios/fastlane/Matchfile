@@ -1,9 +1,9 @@
 git_url("git@gitlab.com:moonlet/moonlet-ios-certificates.git")
 git_branch("master")
+
 type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
 app_identifier(["com.moonlet", "com.moonlet.beta"])
-
-username("george.burduhos@gmail.com") # Your Apple Developer Portal username
+username("publishers@moonlet.xyz") # Your Apple Developer Portal username
 
 # For all available options run `fastlane match --help`
 # Remove the # in the beginning of the line to enable the other options

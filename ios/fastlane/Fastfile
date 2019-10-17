@@ -17,20 +17,45 @@ default_platform(:ios)
 
 platform :ios do
   
-  lane :certificates do 
-    match(type: "development")
-    match(type: "appstore")
-  end
-
   desc "Submit new Beta build to Testflight"
   lane :beta do
 
     increment_build_number(build_number: number_of_commits)
     changelog = changelog_from_git_commits(commits_count: 1)
 
-    match(type: "appstore")
-    get_push_certificate
-    gym(workspace: "Moonlet.xcworkspace", scheme: "Moonlet_beta", export_method: "app-store")
+    match(type: "development")
+    if is_ci
+      create_keychain(
+        name: "CI",
+        password: "ZZufLh7z8S",
+        default_keychain: true,
+        unlock: true,
+        timeout: 3600,
+        add_to_search_list: true
+      )
+
+      match(
+        type: "appstore",
+        keychain_name: "CI",
+        keychain_password: "ZZufLh7z8S"
+      )
+
+    else
+      match(type: "appstore")
+    end
+ 
+   get_push_certificate(app_identifier: "com.moonlet.beta")
+
+    gym(workspace: "Moonlet.xcworkspace", 
+      scheme: "Moonlet_beta", 
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.moonlet.beta" => "match AppStore com.moonlet.beta"
+        },
+        "signingStyle": "manual",
+        compileBitcode: false
+      })
     
     pilot(
       changelog: changelog,
@@ -81,33 +106,21 @@ platform :ios do
     increment_build_number(build_number: appstore_build)
 
     match(type: "appstore")
-    get_push_certificate(app_identifier: "live.soundmix")
-    gym(workspace: "soundmix.xcworkspace", scheme: "soundmix", export_method: "app-store")
+    get_push_certificate(app_identifier: "com.moonlet")
+    gym(workspace: "Moonlet.xcworkspace", scheme: "Moonlet", export_method: "app-store")
     
     File.write("metadata/en-US/release_notes.txt", changelog)
 
-    upload_to_app_store(force: true, app_identifier: "live.soundmix", submit_for_review: true, phased_release: false, automatic_release: true)
+    upload_to_app_store(force: true, app_identifier: "com.moonlet", submit_for_review: true, phased_release: false, automatic_release: true)
    
     # also create a github release so it's easier to track changes
     set_github_release(
-      repository_name: 'soundmix-live/mobile-app',
+      repository_name: 'Moonlet/wallet-app',
       api_token: ENV['GITHUB_TOKEN'],
       tag_name: version_tag,
       name: 'ios/v' + version_name,
       description: changelogWithMarkdown
     )
-
-    url = ENV["SOUNDMIX_API_HOST"] + "/versions?apikey=" + ENV["SOUNDMIX_API_KEY"]
-    json = {
-      "platform" =>"ios",
-      "platformVersion" => deployment_target,
-      "appVersion" => get_version_number(target:"soundmix"),
-      "url" => "https://itunes.apple.com/us/app/soundmix/id1439041185",
-      "notes" => changelog,
-      "versionStatus" => "pending"
-    }.to_json()
-    sh("curl", "-X", "POST", url , "-H" , "accept:application/ld+json", "-H", "Content-Type:application/json", "-d", json);
-
 
 
   end

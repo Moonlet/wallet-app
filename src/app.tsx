@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { createAppContainer } from 'react-navigation';
 import configureStore from './redux/config';
 import { RootNavigation } from './navigation/navigation';
+
 import { darkTheme } from './styles/themes/dark-theme';
 import { ThemeContext } from './core/theme/theme-contex';
 

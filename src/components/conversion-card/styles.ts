@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import COLORS from '../../styles/colors';
+import { COLORS } from '../../styles/colors';
 
 export default StyleSheet.create({
     container: {
@@ -13,12 +13,12 @@ export default StyleSheet.create({
         flex: 1
     },
     conversionLabel: {
-        color: COLORS.lightGray
+        color: COLORS.LIGHT_GRAY
     },
     changeUp: {
-        color: COLORS.hotGreen
+        color: COLORS.HOT_GREEN
     },
     changeDown: {
-        color: COLORS.hotRed
+        color: COLORS.HOT_RED
     }
 });

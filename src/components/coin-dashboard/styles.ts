@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import COLORS from '../../styles/colors';
+import { COLORS } from '../../styles/colors';
 
 export default StyleSheet.create({
     container: {
@@ -16,13 +16,13 @@ export default StyleSheet.create({
         flexDirection: 'row'
     },
     text: {
-        color: COLORS.white
+        color: COLORS.WHITE
     },
     mainText: {
         fontSize: 34
     },
     icon: {
-        color: COLORS.primary
+        color: COLORS.AQUA
     },
     addButton: {
         marginTop: 20,

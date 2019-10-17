@@ -1,12 +1,5 @@
 import { StyleSheet } from 'react-native';
-import COLORS from '../../styles/colors';
-
-const header = {
-    height: 50,
-    backgroundColor: '#999999',
-
-    alignSelf: 'stretch'
-};
+import { COLORS } from '../../styles/colors';
 
 export default StyleSheet.create({
     container: {
@@ -15,7 +8,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'flex-start',
         backgroundColor: '#121212',
-        ...StyleSheet.absoluteFill
+        ...StyleSheet.absoluteFillObject
     },
     balancesContainer: {
         height: 160
@@ -38,9 +31,9 @@ export default StyleSheet.create({
         margin: 4
     },
     blockchainButtonActive: {
-        backgroundColor: COLORS.gray
+        backgroundColor: COLORS.GRAY
     },
     blockchainButtonTextActive: {
-        color: COLORS.primary
+        color: COLORS.AQUA
     }
 });

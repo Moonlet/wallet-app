@@ -13,6 +13,11 @@ jobs:
   #       run: bundle install
   #     - name: NPM install
   #       run: npm i
+  #     - name: Gety sign ssh-keys
+  #       run: git clone git@gitlab.com:moonlet/moonlet-playstore-key.git .
+  #       env:
+  #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+
   beta-ios:
     name: Beta Release iOS
     runs-on: macOS-latest

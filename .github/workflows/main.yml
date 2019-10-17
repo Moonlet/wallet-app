@@ -22,7 +22,7 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_CERTS }}
       - name: Gety sign ssh-keys
-        run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git .
+        run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git . && ls
   # beta-ios:
   #   name: Beta Release iOS
   #   runs-on: macOS-latest

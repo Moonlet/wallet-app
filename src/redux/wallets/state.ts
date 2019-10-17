@@ -5,7 +5,7 @@ export interface IWalletState {
     id: string;
     type: WalletType;
     accounts: IAccountState[];
-    transactions: Map<string, ITransactionState>;
+    transactions?: Map<string, ITransactionState>;
 }
 
 export interface IAccountState {

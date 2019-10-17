@@ -4,6 +4,9 @@ use_frameworks!
 
 target 'Moonlet' do
   # Pods for Moonlet
+  
+  target 'Moonlet_beta'
+
   pod 'FBLazyVector', :path => "../node_modules/react-native/Libraries/FBLazyVector"
   pod 'FBReactNativeSpec', :path => "../node_modules/react-native/Libraries/FBReactNativeSpec"
   pod 'RCTRequired', :path => "../node_modules/react-native/Libraries/RCTRequired"
@@ -35,10 +38,6 @@ target 'Moonlet' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  target 'Moonlet_beta' do
-    inherit! :search_paths
-    # Pods for testing
-  end
 
   use_native_modules!
 end

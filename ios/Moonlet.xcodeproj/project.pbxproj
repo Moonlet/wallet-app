@@ -31,19 +31,12 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Moonlet/main.m; sourceTree = "<group>"; };
 		1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Moonlet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28AF99820AAFEB28EEA5D672 /* Pods_Moonlet_Moonlet_beta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Moonlet_Moonlet_beta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4D01AD3CDD0550F6DE13764E /* Pods-Moonlet-Moonlet_beta.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-Moonlet_beta.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta.release.xcconfig"; sourceTree = "<group>"; };
-		5B9A90ADA56304A149E24B78 /* Pods-Moonlet-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-tvOSTests/Pods-Moonlet-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		5C4CC37B0E80B21C7C248D98 /* Pods-Moonlet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet/Pods-Moonlet.debug.xcconfig"; sourceTree = "<group>"; };
 		5E0012C3234DF5F100B2335A /* Moonlet_beta-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Moonlet_beta-Info.plist"; path = "Moonlet/Moonlet_beta-Info.plist"; sourceTree = "<group>"; };
 		97676FAF2355A70900A5262D /* icons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icons.ttf; path = ../../resources/fonts/icons.ttf; sourceTree = "<group>"; };
-		9A8E724B343F514BBD4CA0CF /* Pods-MoonletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoonletTests.release.xcconfig"; path = "Target Support Files/Pods-MoonletTests/Pods-MoonletTests.release.xcconfig"; sourceTree = "<group>"; };
 		A75EC3B76B489075D033B115 /* Pods-Moonlet-Moonlet_beta.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-Moonlet_beta.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta.release.xcconfig"; sourceTree = "<group>"; };
-		B1117D8A38327073F5E95CC8 /* Pods-Moonlet-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet-tvOSTests/Pods-Moonlet-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		D9FD60FD3FB4D218DFE003C3 /* Pods-Moonlet-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet-tvOS/Pods-Moonlet-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		E4C370DABDB01B6170B93335 /* Pods-MoonletTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoonletTests.debug.xcconfig"; path = "Target Support Files/Pods-MoonletTests/Pods-MoonletTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
-		ED8499F539CC4E25C2CD646F /* Pods-Moonlet-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-tvOS/Pods-Moonlet-tvOS.release.xcconfig"; sourceTree = "<group>"; };
 		FF4BFDC69F263F5B95A69624 /* Pods-Moonlet-Moonlet_beta.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-Moonlet_beta.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -96,7 +89,6 @@
 		5E3E1B1E23584F2D008D627E /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
-				4D01AD3CDD0550F6DE13764E /* Pods-Moonlet-Moonlet_beta.release.xcconfig */,
 			);
 			name = "Recovered References";
 			sourceTree = "<group>";
@@ -104,12 +96,6 @@
 		7107F8720087660A5DB1CD8E /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				D9FD60FD3FB4D218DFE003C3 /* Pods-Moonlet-tvOS.debug.xcconfig */,
-				ED8499F539CC4E25C2CD646F /* Pods-Moonlet-tvOS.release.xcconfig */,
-				B1117D8A38327073F5E95CC8 /* Pods-Moonlet-tvOSTests.debug.xcconfig */,
-				5B9A90ADA56304A149E24B78 /* Pods-Moonlet-tvOSTests.release.xcconfig */,
-				E4C370DABDB01B6170B93335 /* Pods-MoonletTests.debug.xcconfig */,
-				9A8E724B343F514BBD4CA0CF /* Pods-MoonletTests.release.xcconfig */,
 				5C4CC37B0E80B21C7C248D98 /* Pods-Moonlet.debug.xcconfig */,
 				076C2E782A324A2E10C83052 /* Pods-Moonlet.release.xcconfig */,
 				FF4BFDC69F263F5B95A69624 /* Pods-Moonlet-Moonlet_beta.debug.xcconfig */,
@@ -555,7 +541,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 98;
 				DEAD_CODE_STRIPPING = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Moonlet/Info.plist;
@@ -585,7 +571,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 98;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Moonlet/Info.plist;
@@ -614,7 +600,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 98;
 				DEAD_CODE_STRIPPING = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Moonlet/Moonlet_beta-Info.plist";
@@ -636,7 +622,6 @@
 		};
 		5E7467432355942B0052B81C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 4D01AD3CDD0550F6DE13764E /* Pods-Moonlet-Moonlet_beta.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -644,7 +629,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 98;
-				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "Moonlet/Moonlet_beta-Info.plist";

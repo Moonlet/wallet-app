@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, ScrollView, Dimensions, Animated } from 'react-native';
+import { View, ScrollView, Dimensions, Animated, TouchableOpacity } from 'react-native';
 import { Text } from '../../library/text';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
-import CoinBalanceCard from '../../components/coin-balance-card/coin-balance-card';
-import CoinDashboard from '../../components/coin-dashboard/coin-dashboard';
+import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
+import { CoinDashboard } from '../../components/coin-dashboard/coin-dashboard';
 import { mapStateToProps } from '../../redux/utils/redux-decorators';
 import { IReduxState } from '../../redux/state';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
-import { BLOCKCHAIN_COINS } from '../../core/constants';
+import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
 
 import styles from './style.js';
 
@@ -28,9 +28,10 @@ interface IState {
     coins: Blockchain[];
 }
 
-const FADE_ANIMATION_DURATION = 100;
+const FADE_ANIMATION_DURATION = 50;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCROLL_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.5);
+const ANIMATED_BC_SELECTION = true;
 
 const calculateBalances = (accounts: IAccountState[]) =>
     accounts.reduce(
@@ -53,9 +54,10 @@ const calculateBalances = (accounts: IAccountState[]) =>
         wallet: state.wallets[state.app.currentWalletIndex]
     })
 )
-export default class HomeScreen extends React.Component<IProps & IReduxProps, IState> {
+export class DashboardScreen extends React.Component<IProps & IReduxProps, IState> {
     public initialIndex = 0;
     public dashboardOpacity = new Animated.Value(1);
+    public balancesScrollView: any;
 
     constructor(props: IProps & IReduxProps) {
         super(props);
@@ -97,43 +99,45 @@ export default class HomeScreen extends React.Component<IProps & IReduxProps, IS
         });
     };
 
+    public setActiveCoin = (i: number) => {
+        if (ANIMATED_BC_SELECTION) {
+            this.setState({
+                coinIndex: i
+            });
+        }
+
+        if (this.balancesScrollView) {
+            this.balancesScrollView.scrollTo({ x: SCROLL_CARD_WIDTH * i, ANIMATED_BC_SELECTION });
+        }
+    };
+
     public render() {
         return (
             <View style={styles.container}>
-                <View style={styles.header}>
+                <View>
                     <Text>some header</Text>
                 </View>
                 <View style={styles.balancesContainer}>
                     <ScrollView
+                        ref={ref => (this.balancesScrollView = ref)}
                         onMomentumScrollEnd={this.handleScrollEnd}
                         horizontal
                         disableIntervalMomentum={true}
                         overScrollMode={'never'}
                         centerContent={true}
-                        // pagingEnabled
                         snapToAlignment={'start'}
                         snapToInterval={SCROLL_CARD_WIDTH}
                         contentContainerStyle={{ marginTop: 36 }}
                         showsHorizontalScrollIndicator={false}
                         snapToStart={false}
                         snapToEnd={false}
-                        decelerationRate={'fast'}
-                        // contentInset={{
-                        //     left: (SCREEN_WIDTH - SCROLL_CARD_WIDTH) / 2,
-                        //     right: (SCREEN_WIDTH - SCROLL_CARD_WIDTH) / 2,
-                        //     top: 0,
-                        //     bottom: 0
-                        // }}
-                        // contentOffset={{
-                        //     x: this.initialIndex * SCROLL_CARD_WIDTH - SCROLL_CARD_WIDTH / 2,
-                        //     y: 0
-                        // }}
+                        decelerationRate={0.8}
                     >
                         <View style={{ width: (SCREEN_WIDTH - SCROLL_CARD_WIDTH) / 2 }} />
                         {this.state.coins.map((coin, i) => (
                             <CoinBalanceCard
                                 balance={this.state.balance[this.state.coins[i]].amount}
-                                currency={BLOCKCHAIN_COINS[this.state.coins[i]]}
+                                currency={BLOCKCHAIN_INFO[this.state.coins[i]].coin}
                                 width={SCROLL_CARD_WIDTH}
                                 key={i}
                                 toCurrency="USD"
@@ -157,6 +161,27 @@ export default class HomeScreen extends React.Component<IProps & IReduxProps, IS
                         blockchain={this.state.coins[this.state.coinIndex]}
                     />
                 </Animated.View>
+
+                <View style={styles.blockchainSelectorContainer}>
+                    {this.state.coins.map((coin, i) => (
+                        <TouchableOpacity
+                            key={i}
+                            style={[
+                                styles.blockchainButton,
+                                this.state.coinIndex === i && styles.blockchainButtonActive
+                            ]}
+                            onPress={() => this.setActiveCoin(i)}
+                        >
+                            <Text
+                                style={
+                                    this.state.coinIndex === i && styles.blockchainButtonTextActive
+                                }
+                            >
+                                {BLOCKCHAIN_INFO[this.state.coins[i]].coin}
+                            </Text>
+                        </TouchableOpacity>
+                    ))}
+                </View>
             </View>
         );
     }

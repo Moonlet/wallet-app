@@ -1,5 +1,5 @@
-import HomeScreen from '../screens/home/home';
-import SettingsScreen from '../screens/settings/settings';
+import { DashboardScreen } from '../screens/dashboard/dashboard';
+import { SettingsScreen } from '../screens/settings/settings';
 import { createMaterialTopTabNavigator } from 'react-navigation-tabs';
 
 const mainTabsOptions: any = {
@@ -23,7 +23,7 @@ const mainTabsOptions: any = {
 // https://github.com/facebook/react-native/commit/36307d87e1974aff1abac598da2fd11c4e8e23c1
 export const RootNavigation = createMaterialTopTabNavigator(
     {
-        Home: { screen: HomeScreen },
+        Dashboard: { screen: DashboardScreen },
         Settings: { screen: SettingsScreen }
     },
     mainTabsOptions

@@ -16,7 +16,7 @@ const mapStateToProps = (state: any) => ({
     change: state.market.change.daily
 });
 
-const ConversionCard = (props: IProps) => {
+export const ConversionCardComponent = (props: IProps) => {
     const change = props.change[props.fromCurrency][props.toCurrency] || 0;
 
     return (
@@ -35,7 +35,7 @@ const ConversionCard = (props: IProps) => {
     );
 };
 
-export default connect(
+export const ConversionCard = connect(
     mapStateToProps,
     null
-)(ConversionCard);
+)(ConversionCardComponent);

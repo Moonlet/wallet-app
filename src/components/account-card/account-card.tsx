@@ -3,7 +3,8 @@ import { View } from 'react-native';
 import { Text, TextSmall } from '../../library/text';
 import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
-import { BLOCKCHAIN_COINS } from '../../core/constants';
+import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
+import { Icon } from '../icon';
 import Convert from '../convert/convert';
 
 import styles from './style.js';
@@ -13,17 +14,17 @@ interface IProps {
     blockchain: Blockchain;
 }
 
-const AccountCard = (props: IProps) => {
+export const AccountCard = (props: IProps) => {
     return (
         <View style={styles.container}>
-            <Text>LOGO</Text>
+            <Icon name="money-wallet-1" size={25} style={styles.icon} />
             <View style={styles.accountInfoContainer}>
                 <Text>
-                    {props.account.balance} {BLOCKCHAIN_COINS[props.account.blockchain]}
+                    {props.account.balance} {BLOCKCHAIN_INFO[props.account.blockchain].coin}
                     <TextSmall>
                         {'  '} $
                         <Convert
-                            from={BLOCKCHAIN_COINS[props.account.blockchain]}
+                            from={BLOCKCHAIN_INFO[props.account.blockchain].coin}
                             to="USD"
                             style={{ fontSize: 12, marginLeft: 82 }}
                         >
@@ -33,9 +34,7 @@ const AccountCard = (props: IProps) => {
                 </Text>
                 <TextSmall>{props.account.address} </TextSmall>
             </View>
-            <Text>></Text>
+            <Icon name="arrow-right-1" size={25} style={styles.icon} />
         </View>
     );
 };
-
-export default AccountCard;

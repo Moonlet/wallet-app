@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
-import { Text, TextSmall } from '../../library/text';
-import ConversionCard from '../conversion-card/conversion-card';
-import AccountCard from '../account-card/account-card';
+import { ConversionCard } from '../conversion-card/conversion-card';
+import { AccountCard } from '../account-card/account-card';
 import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
-import { BLOCKCHAIN_COINS } from '../../core/constants';
+import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
+import { Icon } from '../icon';
 
 import styles from './style.js';
 
@@ -16,23 +16,22 @@ interface IProps {
 
 const conversionCards = ['USD', 'BTC', 'ETH'];
 
-const CoinHoldings = (props: IProps) => (
+export const CoinDashboard = (props: IProps) => (
     <View style={styles.container}>
         <View style={styles.exchangeCardContainer}>
             {conversionCards.map(
                 (toCurrency, i) =>
-                    BLOCKCHAIN_COINS[props.blockchain] !== toCurrency && (
+                    BLOCKCHAIN_INFO[props.blockchain].coin !== toCurrency && (
                         <ConversionCard
                             key={i}
-                            fromCurrency={BLOCKCHAIN_COINS[props.blockchain]}
+                            fromCurrency={BLOCKCHAIN_INFO[props.blockchain].coin}
                             toCurrency={toCurrency}
-                            change={0.0032}
                         />
                     )
             )}
         </View>
-        <View style={{ height: 42 }}>
-            <Text>Add account</Text>
+        <View style={styles.addButton}>
+            <Icon name="add" size={25} style={styles.icon} />
         </View>
         <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>
             {props.accounts &&
@@ -42,5 +41,3 @@ const CoinHoldings = (props: IProps) => (
         </ScrollView>
     </View>
 );
-
-export default CoinHoldings;

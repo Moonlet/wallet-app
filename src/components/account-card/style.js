@@ -19,5 +19,8 @@ export default StyleSheet.create({
         flexDirection: 'column',
         flex: 1,
         marginHorizontal: 8
+    },
+    icon: {
+        color: COLORS.primary
     }
 });

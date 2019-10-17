@@ -13,7 +13,7 @@ interface IProps {
     active: boolean;
 }
 
-const CoinBalanceCard = (props: IProps) => (
+export const CoinBalanceCard = (props: IProps) => (
     <View style={[styles.container, { width: props.width }]}>
         <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
             <Text style={[styles.mainText, !props.active && styles.darkerText]}>
@@ -33,5 +33,3 @@ const CoinBalanceCard = (props: IProps) => (
         </View>
     </View>
 );
-
-export default CoinBalanceCard;

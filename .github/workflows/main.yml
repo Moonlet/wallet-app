@@ -13,14 +13,18 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
-      - name: Dependencies install
-        run: cd ios && bundle install
-      - name: NPM install
-        run: npm i
       - name: Setup key
         uses: webfactory/ssh-agent@v0.1.1
         with:
           ssh-private-key: ${{ secrets.SSH_CERTS }}
+      - name: Add to host
+        run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+      - name: Checkout
+        uses: actions/checkout@master
+      - name: Dependencies install
+        run: cd android && bundle install
+      - name: NPM install
+        run: npm i
       - name: Gety sign ssh-keys
         run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git . && ls
   # beta-ios:
@@ -37,8 +41,8 @@ jobs:
   #         ssh-private-key: ${{ secrets.SSH_CERTS }}
   #     - name: Add to host
   #       run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-  #     - name: Checkout
-  #       uses: actions/checkout@master
+  # - name: Checkout
+  #   uses: actions/checkout@master
   #     - name: Dependencies install
   #       run: cd ios && bundle install
   #     - name: NPM install

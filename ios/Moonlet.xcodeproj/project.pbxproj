@@ -16,6 +16,8 @@
 		5E7A08982358A3840036C459 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		5E7A08992358A3840036C459 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		5E7A08A22358A3D80036C459 /* Pods_Moonlet_Moonlet_beta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E7A08A12358A3D80036C459 /* Pods_Moonlet_Moonlet_beta.framework */; };
+		5E7A08A82358A82D0036C459 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
+		5E7A08A92358A82D0036C459 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		B2D43936A20EA4074D11C300 /* Pods_Moonlet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */; };
 /* End PBXBuildFile section */
 
@@ -235,6 +237,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E7A08A82358A82D0036C459 /* main.jsbundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				5E3E1B262358858B008D627E /* LaunchScreen.xib in Resources */,
 			);
@@ -244,6 +247,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5E7A08A92358A82D0036C459 /* main.jsbundle in Resources */,
 				5E7A08982358A3840036C459 /* Images.xcassets in Resources */,
 				5E7A08992358A3840036C459 /* LaunchScreen.xib in Resources */,
 			);

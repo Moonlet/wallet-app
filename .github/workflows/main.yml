@@ -5,51 +5,50 @@ on:
       
 name: Deploy Beta iOS and Android
 jobs:
-  # beta-android:
-  #   name: Beta Release Android
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - uses: actions/setup-node@v1
-  #       with:
-  #         node-version: "10.x"
-  #     - name: Dependencies install
-  #       run: bundle install
-  #     - name: NPM install
-  #       run: npm i
-  #     - name: Setup key
-  #       uses: webfactory/ssh-agent@v0.1.1
-  #       with:
-  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
-  #     - name: Gety sign ssh-keys
-  #       run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git .
-
-  beta-ios:
-    name: Beta Release iOS
-    runs-on: macOS-latest
+  beta-android:
+    name: Beta Release Android
+    runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
-      - uses: actions/checkout@v1
+      - name: Dependencies install
+        run: bundle install
+      - name: NPM install
+        run: npm i
       - name: Setup key
         uses: webfactory/ssh-agent@v0.1.1
         with:
           ssh-private-key: ${{ secrets.SSH_CERTS }}
-      - name: Add to host
-        run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-      - name: Checkout
-        uses: actions/checkout@master
-      - name: Dependencies install
-        run: cd ios && bundle install
-      - name: NPM install
-        run: npm i
-      - name: Cocoapods install
-        run: cd ios && pod install
-      - name: Generate fonts and icons
-        run: npm run generate-icons
-      - name: Run fastlane beta
-        run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane beta
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+      - name: Gety sign ssh-keys
+        run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git .
+  # beta-ios:
+  #   name: Beta Release iOS
+  #   runs-on: macOS-latest
+  #   steps:
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - uses: actions/checkout@v1
+  #     - name: Setup key
+  #       uses: webfactory/ssh-agent@v0.1.1
+  #       with:
+  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
+  #     - name: Add to host
+  #       run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+  #     - name: Checkout
+  #       uses: actions/checkout@master
+  #     - name: Dependencies install
+  #       run: cd ios && bundle install
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Cocoapods install
+  #       run: cd ios && pod install
+  #     - name: Generate fonts and icons
+  #       run: npm run generate-icons
+  #     - name: Run fastlane beta
+  #       run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane beta
+  #       env:
+  #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  #         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}

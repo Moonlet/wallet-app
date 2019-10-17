@@ -3,10 +3,12 @@ import thunk from 'redux-thunk';
 
 import walletsReducer from './wallets/reducer';
 import appReducer from './app/reducer';
+import marketReducer from './market/reducer';
 
 const rootReducer = combineReducers({
     app: appReducer,
-    wallets: walletsReducer
+    wallets: walletsReducer,
+    market: marketReducer
 });
 
 const configureStore = () => {

@@ -7,14 +7,17 @@ import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
 import { Icon } from '../icon';
 import Convert from '../convert/convert';
 
-import styles from './style.js';
+import stylesProvider from './styles';
+import { withTheme } from '../../core/theme/with-theme';
 
 interface IProps {
     account: IAccountState;
     blockchain: Blockchain;
+    styles: ReturnType<typeof stylesProvider>;
 }
 
-export const AccountCard = (props: IProps) => {
+export const AccountCardComponent = (props: IProps) => {
+    const styles = props.styles;
     return (
         <View style={styles.container}>
             <Icon name="money-wallet-1" size={25} style={styles.icon} />
@@ -38,3 +41,5 @@ export const AccountCard = (props: IProps) => {
         </View>
     );
 };
+
+export const AccountCard = withTheme(AccountCardComponent, stylesProvider);

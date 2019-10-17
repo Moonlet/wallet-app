@@ -3,10 +3,10 @@ import { IAccountState } from '../../redux/wallets/state';
 export abstract class GenericBlockchain {
     public readonly DERIVATION_PATH: string = '';
 
-    private networkId: number;
+    // private networkId: number;
 
     constructor(networkId?: number) {
-        this.networkId = networkId || 1; // 1 is generally mainnet
+        // this.networkId = networkId || 1; // 1 is generally mainnet
     }
 
     public abstract getAccountFromPrivateKey(privateKey: string, index: number): IAccountState;

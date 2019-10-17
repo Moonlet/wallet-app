@@ -11,7 +11,12 @@
         "noEmit": true,
         "strict": true,
         "target": "esnext",
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        "noUnusedLocals": true,
+        "typeRoots": ["node_modules/@types"],
+        "types": ["jest"],
+        "skipLibCheck": true
     },
+    "include": ["src"],
     "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
 }

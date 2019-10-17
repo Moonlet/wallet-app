@@ -1,10 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Text, TextSmall } from '../../library/text';
+import { TextSmall } from '../../library/text';
 import { connect } from 'react-redux';
 import Convert from '../convert/convert';
 
-import styles from './style.js';
+import styles from './styles';
 
 interface IProps {
     fromCurrency: string;

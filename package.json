@@ -7,7 +7,7 @@
         "emulator": "cd ~/Library/Android/sdk/tools/; emulator -avd `emulator -list-avds | awk '{print $1}'`",
         "android": "npm run generate-icons && react-native run-android",
         "ios": "npm run generate-icons && react-native run-ios",
-        "start": "react-native start",
+        "start": "tsc -w & react-native start",
         "test": "jest",
         "lint": "tslint --fix 'src/**/*.{ts,tsx}'",
         "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore"
@@ -43,7 +43,7 @@
         "@react-native-community/eslint-config": "^0.0.5",
         "@types/enzyme": "^3.10.3",
         "@types/hdkey": "^0.7.1",
-        "@types/jest": "^24.0.18",
+        "@types/jest": "^24.0.19",
         "@types/react": "^16.9.5",
         "@types/react-native": "^0.60.17",
         "@types/react-redux": "^7.1.4",
@@ -66,7 +66,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "lint-staged"
+            "pre-commit": "tsc & lint-staged"
         }
     },
     "lint-staged": {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Text } from '../../library/text';
 import { connect } from 'react-redux';
 
-import styles from './style.js';
+// import styles from './styles';
 
 interface IProps {
     from: string;

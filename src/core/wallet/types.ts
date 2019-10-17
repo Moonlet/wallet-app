@@ -1,5 +1,5 @@
-import { IAccountState } from '../../redux/state';
 import { Blockchain } from '../blockchain/types';
+import { IAccountState } from '../../redux/wallets/state';
 
 export enum WalletType {
     HD = 'HD',

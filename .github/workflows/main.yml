@@ -13,10 +13,12 @@ jobs:
   #       run: bundle install
   #     - name: NPM install
   #       run: npm i
+  #     - name: Setup key
+  #       uses: webfactory/ssh-agent@v0.1.1
+  #       with:
+  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
   #     - name: Gety sign ssh-keys
-  #       run: git clone git@gitlab.com:moonlet/moonlet-playstore-key.git .
-  #       env:
-  #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  #       run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git .
 
   beta-ios:
     name: Beta Release iOS

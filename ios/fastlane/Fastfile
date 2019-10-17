@@ -23,19 +23,23 @@ platform :ios do
     increment_build_number(build_number: number_of_commits)
     changelog = changelog_from_git_commits(commits_count: 1)
 
+    match(type: "development")
     if is_ci
       create_keychain(
         name: "CI",
         password: "ZZufLh7z8S",
         default_keychain: true,
         unlock: true,
-        timeout: 3600
+        timeout: 3600,
+        add_to_search_list: true
       )
+
       match(
         type: "appstore",
         keychain_name: "CI",
         keychain_password: "ZZufLh7z8S"
       )
+
     else
       match(type: "appstore")
     end
@@ -48,8 +52,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          "com.moonlet.beta" => "match AppStore com.moonlet.beta",
-          "com.moonlet" => "match AppStore com.moonlet"
+          "com.moonlet.beta" => "match AppStore com.moonlet.beta"
         },
         "signingStyle": "manual",
         compileBitcode: false

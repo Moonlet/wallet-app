@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5E0012B2234DF52E00B2335A"
+               BlueprintIdentifier = "5E7467342355942B0052B81C"
                BuildableName = "Moonlet_beta.app"
                BlueprintName = "Moonlet_beta"
                ReferencedContainer = "container:Moonlet.xcodeproj">
@@ -44,7 +44,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5E0012B2234DF52E00B2335A"
+            BlueprintIdentifier = "5E7467342355942B0052B81C"
             BuildableName = "Moonlet_beta.app"
             BlueprintName = "Moonlet_beta"
             ReferencedContainer = "container:Moonlet.xcodeproj">
@@ -61,7 +61,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "5E0012B2234DF52E00B2335A"
+            BlueprintIdentifier = "5E7467342355942B0052B81C"
             BuildableName = "Moonlet_beta.app"
             BlueprintName = "Moonlet_beta"
             ReferencedContainer = "container:Moonlet.xcodeproj">

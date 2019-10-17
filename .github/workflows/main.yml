@@ -1,8 +1,20 @@
 on: push
-name: Deploy Beta iOS
+name: Deploy Beta iOS and Android
 jobs:
-  beta:
-    name: Beta iOS
+  # beta-android:
+  #   name: Beta Release Android
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - name: Dependencies install
+  #       run: bundle install
+  #     - name: NPM install
+  #       run: npm i
+  beta-ios:
+    name: Beta Release iOS
     runs-on: macOS-latest
     steps:
       - uses: actions/setup-node@v1

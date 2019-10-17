@@ -11,9 +11,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		22340AE6144CDDC9F20FB63E /* Pods_MoonletTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A22B0918C6B3BA9BD3E84232 /* Pods_MoonletTests.framework */; };
-		5E0012B6234DF52E00B2335A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		5E0012B7234DF52E00B2335A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		44EEDE6EFA83A4C0263D5891 /* Pods_Moonlet_Moonlet_beta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28AF99820AAFEB28EEA5D672 /* Pods_Moonlet_Moonlet_beta.framework */; };
 		5E0012BB234DF52E00B2335A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		5E0012BC234DF52E00B2335A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		97676FB02355A70900A5262D /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97676FAF2355A70900A5262D /* icons.ttf */; };
@@ -23,9 +21,6 @@
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* MoonletTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MoonletTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		00E356F21AD99517003FC87E /* MoonletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MoonletTests.m; sourceTree = "<group>"; };
 		076C2E782A324A2E10C83052 /* Pods-Moonlet.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet.release.xcconfig"; path = "Target Support Files/Pods-Moonlet/Pods-Moonlet.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Moonlet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moonlet.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Moonlet/AppDelegate.h; sourceTree = "<group>"; };
@@ -35,25 +30,21 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Moonlet/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Moonlet/main.m; sourceTree = "<group>"; };
 		1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Moonlet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4C6D17A4352F21F7364810D9 /* libPods-Moonlet-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Moonlet-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		28AF99820AAFEB28EEA5D672 /* Pods_Moonlet_Moonlet_beta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Moonlet_Moonlet_beta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D01AD3CDD0550F6DE13764E /* Pods-Moonlet-Moonlet_beta.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-Moonlet_beta.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta.release.xcconfig"; sourceTree = "<group>"; };
 		5B9A90ADA56304A149E24B78 /* Pods-Moonlet-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-tvOSTests/Pods-Moonlet-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
 		5C4CC37B0E80B21C7C248D98 /* Pods-Moonlet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet/Pods-Moonlet.debug.xcconfig"; sourceTree = "<group>"; };
-		5E0012C1234DF52E00B2335A /* Moonlet_beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moonlet_beta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E0012C3234DF5F100B2335A /* Moonlet_beta-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Moonlet_beta-Info.plist"; path = "Moonlet/Moonlet_beta-Info.plist"; sourceTree = "<group>"; };
 		97676FAF2355A70900A5262D /* icons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icons.ttf; path = ../../resources/fonts/icons.ttf; sourceTree = "<group>"; };
 		9A8E724B343F514BBD4CA0CF /* Pods-MoonletTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoonletTests.release.xcconfig"; path = "Target Support Files/Pods-MoonletTests/Pods-MoonletTests.release.xcconfig"; sourceTree = "<group>"; };
-		A22B0918C6B3BA9BD3E84232 /* Pods_MoonletTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MoonletTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A75EC3B76B489075D033B115 /* Pods-Moonlet-Moonlet_beta.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-Moonlet_beta.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta.release.xcconfig"; sourceTree = "<group>"; };
 		B1117D8A38327073F5E95CC8 /* Pods-Moonlet-tvOSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-tvOSTests.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet-tvOSTests/Pods-Moonlet-tvOSTests.debug.xcconfig"; sourceTree = "<group>"; };
-		BDE1C89EB030BF0498AE3A89 /* Pods_Moonlet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Moonlet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9FD60FD3FB4D218DFE003C3 /* Pods-Moonlet-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet-tvOS/Pods-Moonlet-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
-		E4954DAF39B45455FF131FBA /* Pods-Moonlet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet/Pods-Moonlet.debug.xcconfig"; sourceTree = "<group>"; };
 		E4C370DABDB01B6170B93335 /* Pods-MoonletTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MoonletTests.debug.xcconfig"; path = "Target Support Files/Pods-MoonletTests/Pods-MoonletTests.debug.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		ED8499F539CC4E25C2CD646F /* Pods-Moonlet-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-tvOS.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-tvOS/Pods-Moonlet-tvOS.release.xcconfig"; sourceTree = "<group>"; };
-		F4061EA61A1B979C2733B6B1 /* Pods_MoonletTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MoonletTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FD1861BAD97CFC1690C82E4C /* libPods-Moonlet-tvOSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Moonlet-tvOSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FF4BFDC69F263F5B95A69624 /* Pods-Moonlet-Moonlet_beta.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-Moonlet_beta.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,7 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				621EBA66FD07136AFD78F5AC /* Pods_Moonlet_Moonlet_beta.framework in Frameworks */,
+				44EEDE6EFA83A4C0263D5891 /* Pods_Moonlet_Moonlet_beta.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,7 +70,6 @@
 		13B07FAE1A68108700A75B9A /* Moonlet */ = {
 			isa = PBXGroup;
 			children = (
-				5E746733235468E40052B81C /* MoonletRelease.entitlements */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -97,12 +87,18 @@
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
 				ED2971642150620600B7C4FE /* JavaScriptCore.framework */,
-				4C6D17A4352F21F7364810D9 /* libPods-Moonlet-tvOS.a */,
-				FD1861BAD97CFC1690C82E4C /* libPods-Moonlet-tvOSTests.a */,
 				1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */,
-				A22B0918C6B3BA9BD3E84232 /* Pods_MoonletTests.framework */,
+				28AF99820AAFEB28EEA5D672 /* Pods_Moonlet_Moonlet_beta.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5E3E1B1E23584F2D008D627E /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				4D01AD3CDD0550F6DE13764E /* Pods-Moonlet-Moonlet_beta.release.xcconfig */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		7107F8720087660A5DB1CD8E /* Pods */ = {
@@ -116,6 +112,8 @@
 				9A8E724B343F514BBD4CA0CF /* Pods-MoonletTests.release.xcconfig */,
 				5C4CC37B0E80B21C7C248D98 /* Pods-Moonlet.debug.xcconfig */,
 				076C2E782A324A2E10C83052 /* Pods-Moonlet.release.xcconfig */,
+				FF4BFDC69F263F5B95A69624 /* Pods-Moonlet-Moonlet_beta.debug.xcconfig */,
+				A75EC3B76B489075D033B115 /* Pods-Moonlet-Moonlet_beta.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -136,6 +134,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				7107F8720087660A5DB1CD8E /* Pods */,
+				5E3E1B1E23584F2D008D627E /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -146,7 +145,6 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* Moonlet.app */,
-				5E7467442355942B0052B81C /* Moonlet beta.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -193,7 +191,7 @@
 				5E74673A2355942B0052B81C /* Frameworks */,
 				5E74673C2355942B0052B81C /* Resources */,
 				5E74673F2355942B0052B81C /* Bundle React Native code and images */,
-				5E7467402355942B0052B81C /* [CP] Embed Pods Frameworks */,
+				4E8CF94235E8435BFD8E9320 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -201,7 +199,6 @@
 			);
 			name = Moonlet_beta;
 			productName = Moonlet;
-			productReference = 5E7467442355942B0052B81C /* Moonlet beta.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -282,62 +279,7 @@
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		5E7467352355942B0052B81C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-Moonlet-Moonlet_beta-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5E7467362355942B0052B81C /* Start Packager */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Start Packager";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		5E74673F2355942B0052B81C /* Bundle React Native code and images */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Bundle React Native code and images";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
-		};
-		7C52CCB53DA976EE0CEE632D /* [CP] Embed Pods Frameworks */ = {
+		4E8CF94235E8435BFD8E9320 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -405,7 +347,62 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E1D05210438E788D9AB11EBE /* [CP] Embed Pods Frameworks */ = {
+		5E7467352355942B0052B81C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Moonlet-Moonlet_beta-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		5E7467362355942B0052B81C /* Start Packager */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Start Packager";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		5E74673F2355942B0052B81C /* Bundle React Native code and images */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Bundle React Native code and images";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
+		};
+		7C52CCB53DA976EE0CEE632D /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -419,6 +416,7 @@
 				"${BUILT_PRODUCTS_DIR}/RNGestureHandler/RNGestureHandler.framework",
 				"${BUILT_PRODUCTS_DIR}/RNReanimated/RNReanimated.framework",
 				"${BUILT_PRODUCTS_DIR}/RNScreens/RNScreens.framework",
+				"${BUILT_PRODUCTS_DIR}/RNVectorIcons/RNVectorIcons.framework",
 				"${BUILT_PRODUCTS_DIR}/React-Core/React.framework",
 				"${BUILT_PRODUCTS_DIR}/React-CoreModules/CoreModules.framework",
 				"${BUILT_PRODUCTS_DIR}/React-RCTActionSheet/RCTActionSheet.framework",
@@ -447,6 +445,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNGestureHandler.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNReanimated.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNScreens.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RNVectorIcons.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/React.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CoreModules.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RCTActionSheet.framework",
@@ -528,8 +527,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5E7467382355942B0052B81C /* AppDelegate.m in Sources */,
-				5E7467392355942B0052B81C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -609,7 +606,7 @@
 		};
 		5E7467422355942B0052B81C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = AD955CFAC1CDD2D18E7D9993 /* Pods-Moonlet-Moonlet_beta.debug.xcconfig */;
+			baseConfigurationReference = FF4BFDC69F263F5B95A69624 /* Pods-Moonlet-Moonlet_beta.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;

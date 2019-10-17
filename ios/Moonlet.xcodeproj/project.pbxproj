@@ -16,8 +16,6 @@
 		5E7A08982358A3840036C459 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		5E7A08992358A3840036C459 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		5E7A08A22358A3D80036C459 /* Pods_Moonlet_Moonlet_beta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E7A08A12358A3D80036C459 /* Pods_Moonlet_Moonlet_beta.framework */; };
-		5E7A08A62358A46A0036C459 /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E7A08A52358A46A0036C459 /* icons.ttf */; };
-		5E7A08A72358A46A0036C459 /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E7A08A52358A46A0036C459 /* icons.ttf */; };
 		B2D43936A20EA4074D11C300 /* Pods_Moonlet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */; };
 /* End PBXBuildFile section */
 
@@ -37,7 +35,6 @@
 		5E0012C3234DF5F100B2335A /* Moonlet_beta-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Moonlet_beta-Info.plist"; path = "Moonlet/Moonlet_beta-Info.plist"; sourceTree = "<group>"; };
 		5E7A089F2358A3840036C459 /* Moonlet_beta.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Moonlet_beta.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E7A08A12358A3D80036C459 /* Pods_Moonlet_Moonlet_beta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Moonlet_Moonlet_beta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5E7A08A52358A46A0036C459 /* icons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icons.ttf; path = ../../resources/fonts/icons.ttf; sourceTree = "<group>"; };
 		A75EC3B76B489075D033B115 /* Pods-Moonlet-Moonlet_beta.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-Moonlet_beta.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -144,7 +141,6 @@
 		97676FAE2355A59600A5262D /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				5E7A08A52358A46A0036C459 /* icons.ttf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -241,7 +237,6 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				5E3E1B262358858B008D627E /* LaunchScreen.xib in Resources */,
-				5E7A08A62358A46A0036C459 /* icons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,7 +246,6 @@
 			files = (
 				5E7A08982358A3840036C459 /* Images.xcassets in Resources */,
 				5E7A08992358A3840036C459 /* LaunchScreen.xib in Resources */,
-				5E7A08A72358A46A0036C459 /* icons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

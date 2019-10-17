@@ -1,7 +1,7 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { Text } from 'react-native';
 
-import styles from './style.js';
+import styles from './styles';
 
 const formatter = /(\d)(?=(\d{3})+(?!\d))/g;
 

@@ -1,4 +1,3 @@
-import HDKey from 'hdkey';
 import { GenericBlockchain } from './generic-blockchain';
 import { Blockchain } from './types';
 import * as Util from 'ethereumjs-util';

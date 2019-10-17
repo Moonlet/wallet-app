@@ -10,7 +10,7 @@ import { IWalletState, IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
 
-import styles from './style.js';
+import styles from './styles';
 
 interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;

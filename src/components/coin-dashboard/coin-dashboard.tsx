@@ -7,7 +7,7 @@ import { Blockchain } from '../../core/blockchain/types';
 import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
 import { Icon } from '../icon';
 
-import styles from './style.js';
+import styles from './styles';
 
 interface IProps {
     blockchain: Blockchain;

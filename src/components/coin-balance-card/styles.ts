@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import COLORS from '../../styles/colors';
+import { COLORS } from '../../styles/colors';
 
 export default StyleSheet.create({
     container: {
@@ -7,11 +7,11 @@ export default StyleSheet.create({
         paddingTop: 10,
         paddingBottom: 10,
         alignItems: 'center',
-        color: '#FFF'
-        //width: 200
+        color: COLORS.WHITE
+        // width: 200
     },
     darkerText: {
-        color: COLORS.lightGray
+        color: COLORS.LIGHT_GRAY
     },
     mainText: {
         fontSize: 34

@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import Convert from '../convert/convert';
 import { Text } from '../../library/text';
 
-import styles from './style.js';
+import styles from './styles';
 
 interface IProps {
     currency: string;

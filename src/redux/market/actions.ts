@@ -2,3 +2,4 @@
 // export const WALLET_CREATE = 'WALLET_CREATE';
 
 // action creators
+export {};

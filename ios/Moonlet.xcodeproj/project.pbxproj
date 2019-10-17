@@ -13,11 +13,11 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		44EEDE6EFA83A4C0263D5891 /* Pods_Moonlet_Moonlet_beta.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 28AF99820AAFEB28EEA5D672 /* Pods_Moonlet_Moonlet_beta.framework */; };
 		5E0012BB234DF52E00B2335A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		5E0012BC234DF52E00B2335A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		5E3E1B1F2358582D008D627E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
-		5E3E1B202358583B008D627E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		5E3E1B2123585E5E008D627E /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97676FAF2355A70900A5262D /* icons.ttf */; };
+		5E3E1B2223585E6F008D627E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
+		5E3E1B2323585E74008D627E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		97676FB02355A70900A5262D /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97676FAF2355A70900A5262D /* icons.ttf */; };
-		97676FB12355A70900A5262D /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 97676FAF2355A70900A5262D /* icons.ttf */; };
 		B2D43936A20EA4074D11C300 /* Pods_Moonlet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */; };
 /* End PBXBuildFile section */
 
@@ -245,8 +245,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5E0012BB234DF52E00B2335A /* Images.xcassets in Resources */,
-				5E0012BC234DF52E00B2335A /* LaunchScreen.xib in Resources */,
-				97676FB12355A70900A5262D /* icons.ttf in Resources */,
+				5E3E1B2223585E6F008D627E /* LaunchScreen.xib in Resources */,
+				5E3E1B2123585E5E008D627E /* icons.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -515,7 +515,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5E3E1B202358583B008D627E /* main.m in Sources */,
+				5E3E1B2323585E74008D627E /* main.m in Sources */,
 				5E3E1B1F2358582D008D627E /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

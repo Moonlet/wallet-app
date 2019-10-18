@@ -1,4 +1,8 @@
-on: push
+on: 
+  push:
+    branches:
+      - master
+      
 name: Deploy Beta iOS and Android
 jobs:
   # beta-android:

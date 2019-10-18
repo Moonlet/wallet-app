@@ -11,7 +11,7 @@ export class BlockchainFactory {
             case Blockchain.ZILLIQA:
                 return new Zilliqa(networkId);
             default:
-                throw new Error(`${this.constructor.name}: ${blockchain} implementation not found`);
+                throw new Error(`BlockchainFactory: ${blockchain} implementation not found`);
         }
     }
 }

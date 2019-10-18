@@ -62,3 +62,4 @@ buck-out/
 .vscode
 .history
 resources/fonts
+coverage

@@ -3,5 +3,6 @@ module.exports = {
     moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
     transformIgnorePatterns: ['node_modules/?!(react-navigation)'],
     setupFiles: ['./jest.setup.js'],
-    roots: ['src/']
+    roots: ['src/'],
+    collectCoverage: true
 };

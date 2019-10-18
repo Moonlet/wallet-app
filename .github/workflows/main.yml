@@ -27,7 +27,7 @@ jobs:
       - name: NPM install
         run: npm i
       - name: Get sign ssh-keys
-        run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git && ls
+        run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
   # beta-ios:
   #   name: Beta Release iOS
   #   runs-on: macOS-latest

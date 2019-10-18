@@ -4,6 +4,7 @@ on: [pull_request]
 
 jobs:
   build:
+    name: Run checks
     runs-on: ubuntu-latest
     steps:
     - uses: actions/setup-node@v1
@@ -15,10 +16,11 @@ jobs:
     - name: Run Lint
       run: npm run lint
     - name: Run Type checker
-      run: npm tsc
+      run: npx tsc
     - name: Run Unit Tests
       run: npm test
-    - uses: codecov/codecov-action@v1.0.3
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1.0.3
       with:
         token: ${{secrets.CODECOV_TOKEN}} 
         flags: unittests

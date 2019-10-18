@@ -9,7 +9,7 @@ const mainTabsOptions: any = {
             fontSize: 12
         },
         style: {
-            backgroundColor: 'rgba(35, 35, 38, 0.72)'
+            backgroundColor: 'rgba(35, 35, 38, 1)'
         },
         indicatorStyle: {
             display: 'none'

@@ -7,7 +7,7 @@
         "emulator": "cd ~/Library/Android/sdk/tools/; emulator -avd `emulator -list-avds | awk '{print $1}'`",
         "android": "npm run generate-icons && react-native run-android",
         "ios": "npm run generate-icons && react-native run-ios",
-        "start": "tsc -w & react-native start",
+        "start": "(tsc -w & react-native start)",
         "test": "jest",
         "lint": "tslint --fix 'src/**/*.{ts,tsx}'",
         "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore"

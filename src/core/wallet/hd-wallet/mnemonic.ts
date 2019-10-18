@@ -1,8 +1,9 @@
 import { generateMnemonic, validateMnemonic, wordlists, mnemonicToSeedSync } from 'bip39';
 
 export class Mnemonic {
-    public static generate(words: number = 256): string {
-        return generateMnemonic(words, undefined, wordlists.EN);
+    public static generate(words: 12 | 24 = 24): string {
+        const strength = words === 24 ? 256 : 128;
+        return generateMnemonic(strength, undefined, wordlists.EN);
     }
 
     public static verify(mnemonic: string): boolean {

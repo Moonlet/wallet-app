@@ -1,10 +1,10 @@
 coverage:
-  range: "40...100"
+  range: "50...100"
 
   status:
     project:
       default:
-        target: 40%
+        target: 50%
     patch:
       default:
         target: 80%

@@ -17,6 +17,8 @@ jobs:
       run: npm run lint
     - name: Run Type checker
       run: npx tsc
+    - name: Generate Icon
+      run: npm run generate-icons
     - name: Run Unit Tests
       run: npm test
     - name: Upload coverage to Codecov

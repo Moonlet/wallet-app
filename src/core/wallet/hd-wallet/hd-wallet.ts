@@ -13,7 +13,12 @@ export class HDWallet implements IWallet {
     private hdkey: HDKey;
 
     constructor(mnemonic: string) {
-        this.mnemonic = mnemonic;
+        if (Mnemonic.verify(mnemonic)) {
+            this.mnemonic = mnemonic;
+        } else {
+            throw new Error('Invalid mnemonic.');
+        }
+
         this.hdkey = HDKey.fromMasterSeed(Mnemonic.toSeed(this.mnemonic));
     }
 
@@ -38,7 +43,9 @@ export class HDWallet implements IWallet {
             return Promise.reject(
                 `${this.constructor.name}.getAccounts(): indexTo must be a positive number.`
             );
-        } else if (indexTo < index) {
+        }
+
+        if (indexTo < index) {
             return Promise.reject(
                 `${
                     this.constructor.name
@@ -46,14 +53,22 @@ export class HDWallet implements IWallet {
             );
         }
 
-        const accounts = [];
-        const blockchainInstance = BlockchainFactory.get(blockchain);
-        const key = this.hdkey.derive(blockchainInstance.DERIVATION_PATH);
-        for (let i = index; i <= indexTo; i++) {
-            const privateKey = key.derive(`m/${i}`).privateKey.toString('hex');
-            accounts.push(blockchainInstance.getAccountFromPrivateKey(privateKey, i));
+        try {
+            const accounts = [];
+            const blockchainInstance = BlockchainFactory.get(blockchain);
+            const key = this.hdkey.derive(blockchainInstance.DERIVATION_PATH);
+            for (let i = index; i <= indexTo; i++) {
+                const privateKey = key.derive(`m/${i}`).privateKey.toString('hex');
+                accounts.push(blockchainInstance.getAccountFromPrivateKey(privateKey, i));
+            }
+            return Promise.resolve(accounts);
+        } catch (e) {
+            if (e.message.indexOf('implementation not found')) {
+                return Promise.reject('Blockchain implementation not found.');
+            } else {
+                return Promise.reject('There was an error while generating the accounts.');
+            }
         }
-        return Promise.resolve(accounts);
     }
 
     public sign(blockchain: Blockchain, accountIndex: number, tx: string): Promise<string> {

@@ -3,7 +3,8 @@ import { View } from 'react-native';
 import Convert from '../convert/convert';
 import { Text } from '../../library/text';
 
-import styles from './styles';
+import stylesProvider from './styles';
+import { withTheme } from '../../core/theme/with-theme';
 
 interface IProps {
     currency: string;
@@ -11,25 +12,28 @@ interface IProps {
     toCurrency: string;
     width: number;
     active: boolean;
+    styles: ReturnType<typeof stylesProvider>;
 }
 
-export const CoinBalanceCard = (props: IProps) => (
-    <View style={[styles.container, { width: props.width }]}>
+export const CoinBalanceCardComponent = (props: IProps) => (
+    <View style={[props.styles.container, { width: props.width }]}>
         <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={[styles.mainText, !props.active && styles.darkerText]}>
+            <Text style={[props.styles.mainText, !props.active && props.styles.darkerText]}>
                 {props.balance}
             </Text>
-            <Text style={!props.active && styles.darkerText}> {props.currency}</Text>
+            <Text style={!props.active && props.styles.darkerText}> {props.currency}</Text>
         </View>
         <View style={{ flexDirection: 'row' }}>
             <Convert
                 from={props.currency}
                 to={props.toCurrency}
-                style={!props.active && styles.darkerText}
+                style={!props.active && props.styles.darkerText}
             >
                 {props.balance}
             </Convert>
-            <Text style={!props.active && styles.darkerText}> {props.toCurrency}</Text>
+            <Text style={!props.active && props.styles.darkerText}> {props.toCurrency}</Text>
         </View>
     </View>
 );
+
+export const CoinBalanceCard = withTheme(CoinBalanceCardComponent, stylesProvider);

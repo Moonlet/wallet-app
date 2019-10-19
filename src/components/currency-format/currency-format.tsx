@@ -1,7 +1,5 @@
 import React from 'react';
-import { Text } from 'react-native';
-
-import styles from './styles';
+import { Text } from '../../library/text';
 
 const formatter = /(\d)(?=(\d{3})+(?!\d))/g;
 
@@ -16,7 +14,7 @@ const CurrencyFormat = (props: IProps) => {
     let output = props.decimals ? value.toFixed(2) : '' + value;
     output = output.replace(formatter, '$1,');
 
-    return <Text style={styles.text}>{output}</Text>;
+    return <Text>{output}</Text>;
 };
 
 export default CurrencyFormat;

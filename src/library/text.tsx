@@ -1,11 +1,16 @@
 import React from 'react';
 import ReactNative from 'react-native';
 
-const defaultStyle = {
-    color: '#FFFFFF',
+import { withTheme } from '../core/theme/with-theme';
+import { ITheme } from '../core/theme/itheme';
+
+// TODO refactor this
+
+const defaultStyleProvider = (theme: ITheme) => ({
+    color: theme.colors.text,
     fontFamily: 'System',
-    fontSize: 16
-};
+    fontSize: theme.fontSize.regular
+});
 
 const mergeStyle = (baseStyle: any, newStyle: any) => {
     let style;
@@ -23,8 +28,8 @@ const getProps = (props: any) => ({
     children: props.children
 });
 
-const Text = (props: any) => {
-    return <ReactNative.Text style={mergeStyle(defaultStyle, props.style)} {...getProps(props)} />;
+const TextComponent = (props: any) => {
+    return <ReactNative.Text style={mergeStyle(props.styles, props.style)} {...getProps(props)} />;
 };
 
 const TextSmall = (props: any) => {
@@ -42,5 +47,7 @@ const TextSmall = (props: any) => {
         />
     );
 };
+
+const Text = withTheme(TextComponent, defaultStyleProvider);
 
 export { Text, TextSmall };

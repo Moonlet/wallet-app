@@ -7,18 +7,20 @@ import { Blockchain } from '../../core/blockchain/types';
 import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
 import { Icon } from '../icon';
 
-import styles from './styles';
+import stylesProvider from './styles';
+import { withTheme } from '../../core/theme/with-theme';
 
 interface IProps {
     blockchain: Blockchain;
     accounts?: IAccountState[];
+    styles: ReturnType<typeof stylesProvider>;
 }
 
 const conversionCards = ['USD', 'BTC', 'ETH'];
 
-export const CoinDashboard = (props: IProps) => (
-    <View style={styles.container}>
-        <View style={styles.exchangeCardContainer}>
+export const CoinDashboardComponent = (props: IProps) => (
+    <View style={props.styles.container}>
+        <View style={props.styles.exchangeCardContainer}>
             {conversionCards.map(
                 (toCurrency, i) =>
                     BLOCKCHAIN_INFO[props.blockchain].coin !== toCurrency && (
@@ -30,8 +32,8 @@ export const CoinDashboard = (props: IProps) => (
                     )
             )}
         </View>
-        <View style={styles.addButton}>
-            <Icon name="add" size={25} style={styles.icon} />
+        <View style={props.styles.addButton}>
+            <Icon name="add" size={25} style={props.styles.icon} />
         </View>
         <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>
             {props.accounts &&
@@ -41,3 +43,4 @@ export const CoinDashboard = (props: IProps) => (
         </ScrollView>
     </View>
 );
+export const CoinDashboard = withTheme(CoinDashboardComponent, stylesProvider);

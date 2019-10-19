@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`coin dashboard component renders correctly 1`] = `
+"<View style={{...}}>
+  <View style={{...}}>
+    <Connect(Component) fromCurrency=\\"ZIL\\" toCurrency=\\"USD\\" />
+    <Connect(Component) fromCurrency=\\"ZIL\\" toCurrency=\\"BTC\\" />
+    <Connect(Component) fromCurrency=\\"ZIL\\" toCurrency=\\"ETH\\" />
+  </View>
+  <View style={{...}}>
+    <Icon name=\\"add\\" size={25} style={{...}} allowFontScaling={false} />
+  </View>
+  <ScrollViewMock style={{...}}>
+    <Component account={{...}} blockchain=\\"ZILLIQA\\" />
+  </ScrollViewMock>
+</View>"
+`;

@@ -10,7 +10,7 @@ import { Icon } from '../icon';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 
-interface IProps {
+export interface IProps {
     blockchain: Blockchain;
     accounts?: IAccountState[];
     styles: ReturnType<typeof stylesProvider>;

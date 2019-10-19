@@ -2,34 +2,42 @@ import React from 'react';
 import { Text } from '../../library/text';
 import { connect } from 'react-redux';
 
-// import styles from './styles';
-
-interface IProps {
+export interface IProps {
+    amount: number;
     from: string;
     to: string;
-    children: any;
     usdPrices: any;
+    displayCurrency?: boolean;
     decimals?: number;
     style?: any;
+}
+
+export interface IReduxProps {
+    usdPrices: any;
 }
 
 const mapStateToProps = (state: any) => ({
     usdPrices: state.market.usdPrices
 });
 
-// TODO: add currecy formatter
-const roundToDecimals = (value: number, decimals: number) =>
-    Math.round(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
-
-const Convert = (props: IProps) => {
+export const ConvertComponent = (props: IProps & IReduxProps) => {
     const conversion = props.usdPrices[props.from] / props.usdPrices[props.to] || 0;
-    const amount = (parseFloat(props.children) || 0) * conversion;
-    const decimals = props.decimals ? props.decimals : amount > 1 ? 2 : 6;
+    const amount = (props.amount || 0) * conversion;
 
-    return <Text style={props.style}>{roundToDecimals(amount, decimals)}</Text>;
+    const formatOptions = props.displayCurrency
+        ? {
+              currency: props.to
+          }
+        : {};
+
+    return (
+        <Text style={props.style} format={formatOptions}>
+            {amount}
+        </Text>
+    );
 };
 
-export default connect(
+export const Convert = connect(
     mapStateToProps,
     null
-)(Convert);
+)(ConvertComponent);

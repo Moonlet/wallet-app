@@ -1,12 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
-import Convert from '../convert/convert';
+import { Convert } from '../convert/convert';
 import { Text } from '../../library/text';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 
-interface IProps {
+export interface IProps {
     currency: string;
     balance: number;
     toCurrency: string;
@@ -18,7 +18,7 @@ interface IProps {
 export const CoinBalanceCardComponent = (props: IProps) => (
     <View style={[props.styles.container, { width: props.width }]}>
         <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-            <Text style={[props.styles.mainText, !props.active && props.styles.darkerText]}>
+            <Text style={[props.styles.mainText, !props.active && props.styles.darkerText]} format>
                 {props.balance}
             </Text>
             <Text style={!props.active && props.styles.darkerText}> {props.currency}</Text>
@@ -28,10 +28,9 @@ export const CoinBalanceCardComponent = (props: IProps) => (
                 from={props.currency}
                 to={props.toCurrency}
                 style={!props.active && props.styles.darkerText}
-            >
-                {props.balance}
-            </Convert>
-            <Text style={!props.active && props.styles.darkerText}> {props.toCurrency}</Text>
+                amount={props.balance}
+                displayCurrency={true}
+            />
         </View>
     </View>
 );

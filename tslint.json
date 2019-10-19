@@ -4,7 +4,8 @@
         "ordered-imports": false,
         "object-literal-sort-keys": false,
         "no-submodule-imports": false,
-        "react-no-dangerous-html": [true]
+        "react-no-dangerous-html": [true],
+        "no-unused-expression": false
     },
     "rulesDirectory": ["node_modules/tslint-microsoft-contrib"]
 }

@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`text library components renders correctly formated text 1`] = `
+"<Text style={{...}}>
+  100.13
+</Text>"
+`;
+
+exports[`text library components renders correctly regular text 1`] = `
+"<Text style={{...}}>
+  dummy
+</Text>"
+`;
+
+exports[`text library components renders correctly small text 1`] = `
+"<Component style={{...}}>
+  dummy
+</Component>"
+`;

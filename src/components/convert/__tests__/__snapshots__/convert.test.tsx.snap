@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`convert component doesnt throw when props missing 1`] = `
+"<Component style={[undefined]} format={{...}}>
+  0
+</Component>"
+`;
+
+exports[`convert component renders correctly 1`] = `
+"<Component style={[undefined]} format={{...}}>
+  3130905.3427246176
+</Component>"
+`;

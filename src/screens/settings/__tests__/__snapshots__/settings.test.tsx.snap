@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`settings screen component renders correctly 1`] = `
+"<View style={{...}}>
+  <Text>
+    Settings Screen
+  </Text>
+</View>"
+`;

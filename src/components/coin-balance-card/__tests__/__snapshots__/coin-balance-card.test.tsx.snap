@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`coin balance component renders correctly 1`] = `
+"<View style={{...}}>
+  <View style={{...}}>
+    <Component style={{...}} format={true}>
+      100
+    </Component>
+    <Component style={false}>
+       
+      ZIL
+    </Component>
+  </View>
+  <View style={{...}}>
+    <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"ETH\\" style={false} amount={100} displayCurrency={true} />
+  </View>
+</View>"
+`;

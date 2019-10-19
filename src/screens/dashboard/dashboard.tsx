@@ -13,14 +13,12 @@ import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 
-interface IProps {
+export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    money: number;
-    ethusd: number;
     styles: ReturnType<typeof stylesProvider>;
 }
 
-interface IReduxProps {
+export interface IReduxProps {
     wallet: IWalletState;
 }
 
@@ -165,7 +163,7 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
                     />
                 </Animated.View>
 
-                <View style={styles.blockchainSelectorContainer}>
+                <View style={styles.blockchainSelectorContainer} testID="blockchainSelector">
                     {this.state.coins.map((coin, i) => (
                         <TouchableOpacity
                             key={i}

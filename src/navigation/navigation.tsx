@@ -14,7 +14,7 @@ const mainTabsOptions: any = {
             fontSize: 12
         },
         style: {
-            backgroundColor: '#232326',
+            backgroundColor: COLORS.SHARK_GRAY,
             padding: 6,
             height: 60
         },

@@ -14,6 +14,6 @@ jest.mock('react-navigation', () => {
 
 jest.mock('react-navigation-tabs', () => {
     return {
-        createMaterialTopTabNavigator: jest.fn()
+        createBottomTabNavigator: jest.fn()
     };
 });

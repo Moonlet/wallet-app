@@ -38,7 +38,7 @@ const menuIcon = (icon: string) => ({ focused }: any) => (
     <Icon name={icon} size={25} style={{ color: focused ? COLORS.AQUA : COLORS.LIGHT_GRAY }} />
 );
 
-// TODO: fix deprecation warning related to react-native-gestures
+// TODO: fix deprecation warning related to react-native-gestures !
 // https://github.com/kmagiera/react-native-gesture-handler/pull/657
 // https://github.com/facebook/react-native/commit/36307d87e1974aff1abac598da2fd11c4e8e23c1
 export const RootNavigation = createBottomTabNavigator(

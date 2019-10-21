@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - master
-      - ios-build-number
 
 name: Deploy Beta iOS and Android
 jobs:

@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - android-ci
+      - master
 
 name: Deploy Beta iOS and Android
 jobs:

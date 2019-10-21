@@ -131,7 +131,7 @@ android {
         applicationId "com.moonlet"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 58
         versionName "1.0"
     }
     splits {
@@ -149,6 +149,14 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (project.hasProperty('MOONLET_RELEASE_STORE_FILE')) {
+                storeFile file(MOONLET_RELEASE_STORE_FILE)
+                storePassword System.getenv("KEYSTORE_PASSWORD")
+                keyAlias MOONLET_RELEASE_KEY_ALIAS
+                keyPassword System.getenv("KEYSTORE_PASSWORD")
+            }
+        }
     }
     buildTypes {
         debug {
@@ -160,6 +168,19 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+        // Specifies one flavor dimension.
+    flavorDimensions "version"
+    productFlavors {
+        beta {
+            dimension "version"
+            applicationIdSuffix ".beta"
+            versionNameSuffix "-beta"
+        }
+        
+        stable {
+          //no config needed, as this is the default. just need to specify it here in order to build it
         }
     }
     // applicationVariants are e.g. debug, release

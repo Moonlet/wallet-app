@@ -45,7 +45,8 @@ platform :android do
       owner_name: "moonlet",
       app_name: "Moonlet-Beta",
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
-      release_notes: changelog
+      release_notes: changelog,
+      notify_testers: true
     )
   end
 

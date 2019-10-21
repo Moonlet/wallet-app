@@ -1,12 +1,11 @@
-import { StyleSheet } from 'react-native';
-import { COLORS } from '../../styles/colors';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: COLORS.cardBackground,
-            borderRadius: 6,
+            backgroundColor: theme.colors.cardBackground,
+            borderRadius: Platform.OS === 'ios' ? 6 : 0,
             height: 80,
             display: 'flex',
             justifyContent: 'space-between',
@@ -23,6 +22,6 @@ export default (theme: ITheme) =>
             marginHorizontal: 8
         },
         icon: {
-            color: theme.colors.primary
+            color: theme.colors.accent
         }
     });

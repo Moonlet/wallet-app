@@ -13,7 +13,7 @@ export abstract class GenericBlockchain {
     public abstract getBalance(address: string): Promise<any>;
     public abstract sendTransaction(): Promise<any>;
 
-    public rpcCall(method: string, params: any[]): Promise<any> {
+    public rpcCall(method: string, params?: any[]): Promise<any> {
         return Promise.resolve();
     }
 }

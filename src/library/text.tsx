@@ -1,11 +1,17 @@
 import React from 'react';
 import ReactNative from 'react-native';
 
-const defaultStyle = {
-    color: '#FFFFFF',
+import { withTheme } from '../core/theme/with-theme';
+import { ITheme } from '../core/theme/itheme';
+import { formatNumber } from '../core/utils/format-number';
+
+// TODO reconsider this
+
+export const defaultStyleProvider = (theme: ITheme) => ({
+    color: theme.colors.text,
     fontFamily: 'System',
-    fontSize: 16
-};
+    fontSize: theme.fontSize.regular
+});
 
 const mergeStyle = (baseStyle: any, newStyle: any) => {
     let style;
@@ -19,20 +25,24 @@ const mergeStyle = (baseStyle: any, newStyle: any) => {
     return style;
 };
 
-const getProps = (props: any) => ({
-    children: props.children
-});
+export const TextComponent = (props: any) => {
+    let text = props.children;
 
-const Text = (props: any) => {
-    return <ReactNative.Text style={mergeStyle(defaultStyle, props.style)} {...getProps(props)} />;
+    if (props.format) {
+        const amount = parseFloat(text);
+        text = formatNumber(amount, props.format);
+    }
+    return (
+        <ReactNative.Text style={mergeStyle(props.styles, props.style)}>{text}</ReactNative.Text>
+    );
 };
 
-const TextSmall = (props: any) => {
+export const TextSmall = (props: any) => {
     delete props.style;
 
     return (
         <Text
-            {...getProps(props)}
+            children={props.children}
             style={mergeStyle(
                 {
                     fontSize: 12
@@ -43,4 +53,4 @@ const TextSmall = (props: any) => {
     );
 };
 
-export { Text, TextSmall };
+export const Text = withTheme(TextComponent, defaultStyleProvider);

@@ -4,21 +4,21 @@ import { Text } from '../../library/text';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
 import { CoinDashboard } from '../../components/coin-dashboard/coin-dashboard';
-import { mapStateToProps } from '../../redux/utils/redux-decorators';
 import { IReduxState } from '../../redux/state';
+import { connect } from 'react-redux';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
 
-import styles from './styles';
+import stylesProvider from './styles';
+import { withTheme } from '../../core/theme/with-theme';
 
-interface IProps {
+export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    money: number;
-    ethusd: number;
+    styles: ReturnType<typeof stylesProvider>;
 }
 
-interface IReduxProps {
+export interface IReduxProps {
     wallet: IWalletState;
 }
 
@@ -49,12 +49,11 @@ const calculateBalances = (accounts: IAccountState[]) =>
         { coins: [], balance: {} }
     );
 
-@mapStateToProps(
-    (state: IReduxState): IReduxProps => ({
-        wallet: state.wallets[state.app.currentWalletIndex]
-    })
-)
-export class DashboardScreen extends React.Component<IProps & IReduxProps, IState> {
+const mapStateToProps = (state: IReduxState) => ({
+    wallet: state.wallets[state.app.currentWalletIndex]
+});
+
+export class DashboardScreenComponent extends React.Component<IProps & IReduxProps, IState> {
     public initialIndex = 0;
     public dashboardOpacity = new Animated.Value(1);
     public balancesScrollView: any;
@@ -112,6 +111,8 @@ export class DashboardScreen extends React.Component<IProps & IReduxProps, IStat
     };
 
     public render() {
+        const styles = this.props.styles;
+
         return (
             <View style={styles.container}>
                 <View>
@@ -162,7 +163,7 @@ export class DashboardScreen extends React.Component<IProps & IReduxProps, IStat
                     />
                 </Animated.View>
 
-                <View style={styles.blockchainSelectorContainer}>
+                <View style={styles.blockchainSelectorContainer} testID="blockchainSelector">
                     {this.state.coins.map((coin, i) => (
                         <TouchableOpacity
                             key={i}
@@ -186,3 +187,8 @@ export class DashboardScreen extends React.Component<IProps & IReduxProps, IStat
         );
     }
 }
+
+export const DashboardScreen = connect(
+    mapStateToProps,
+    null
+)(withTheme(DashboardScreenComponent, stylesProvider));

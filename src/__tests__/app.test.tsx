@@ -5,6 +5,6 @@ import App from '../app';
 // Note: test renderer must be required after react-native.
 import { shallow } from 'enzyme';
 
-it('renders correctly', () => {
+test('renders correctly', () => {
     shallow(<App />);
 });

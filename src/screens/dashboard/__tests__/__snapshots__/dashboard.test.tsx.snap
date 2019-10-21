@@ -1,0 +1,136 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dashboard screen component handles scroll correctly 1`] = `
+"<View style={{...}}>
+  <View>
+    <Component>
+      some header
+    </Component>
+  </View>
+  <View style={{...}}>
+    <ScrollViewMock onMomentumScrollEnd={[Function]} horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" snapToInterval={375} contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
+      <View style={{...}} />
+      <Component balance={15764} currency=\\"ZIL\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <Component balance={3.5} currency=\\"ETH\\" width={375} toCurrency=\\"USD\\" active={true} />
+      <Component balance={220} currency=\\"ATOM\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <Component balance={1234} currency=\\"XLM\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <View style={{...}} />
+    </ScrollViewMock>
+  </View>
+  <AnimatedComponent style={{...}}>
+    <Component accounts={{...}} blockchain=\\"ETHEREUM\\" />
+  </AnimatedComponent>
+  <View style={{...}} testID=\\"blockchainSelector\\">
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={false}>
+        ZIL
+      </Component>
+    </TouchableOpacity>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={{...}}>
+        ETH
+      </Component>
+    </TouchableOpacity>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={false}>
+        ATOM
+      </Component>
+    </TouchableOpacity>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={false}>
+        XLM
+      </Component>
+    </TouchableOpacity>
+  </View>
+</View>"
+`;
+
+exports[`dashboard screen component renders correctly 1`] = `
+"<View style={{...}}>
+  <View>
+    <Component>
+      some header
+    </Component>
+  </View>
+  <View style={{...}}>
+    <ScrollViewMock onMomentumScrollEnd={[Function]} horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" snapToInterval={375} contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
+      <View style={{...}} />
+      <Component balance={15764} currency=\\"ZIL\\" width={375} toCurrency=\\"USD\\" active={true} />
+      <Component balance={3.5} currency=\\"ETH\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <Component balance={220} currency=\\"ATOM\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <Component balance={1234} currency=\\"XLM\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <View style={{...}} />
+    </ScrollViewMock>
+  </View>
+  <AnimatedComponent style={{...}}>
+    <Component accounts={{...}} blockchain=\\"ZILLIQA\\" />
+  </AnimatedComponent>
+  <View style={{...}} testID=\\"blockchainSelector\\">
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={{...}}>
+        ZIL
+      </Component>
+    </TouchableOpacity>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={false}>
+        ETH
+      </Component>
+    </TouchableOpacity>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={false}>
+        ATOM
+      </Component>
+    </TouchableOpacity>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={false}>
+        XLM
+      </Component>
+    </TouchableOpacity>
+  </View>
+</View>"
+`;
+
+exports[`dashboard screen component swtiches to correct coin on press 1`] = `
+"<View style={{...}}>
+  <View>
+    <Component>
+      some header
+    </Component>
+  </View>
+  <View style={{...}}>
+    <ScrollViewMock onMomentumScrollEnd={[Function]} horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" snapToInterval={375} contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
+      <View style={{...}} />
+      <Component balance={15764} currency=\\"ZIL\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <Component balance={3.5} currency=\\"ETH\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <Component balance={220} currency=\\"ATOM\\" width={375} toCurrency=\\"USD\\" active={true} />
+      <Component balance={1234} currency=\\"XLM\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <View style={{...}} />
+    </ScrollViewMock>
+  </View>
+  <AnimatedComponent style={{...}}>
+    <Component accounts={{...}} blockchain=\\"COSMOS\\" />
+  </AnimatedComponent>
+  <View style={{...}} testID=\\"blockchainSelector\\">
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={false}>
+        ZIL
+      </Component>
+    </TouchableOpacity>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={false}>
+        ETH
+      </Component>
+    </TouchableOpacity>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={{...}}>
+        ATOM
+      </Component>
+    </TouchableOpacity>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Component style={false}>
+        XLM
+      </Component>
+    </TouchableOpacity>
+  </View>
+</View>"
+`;

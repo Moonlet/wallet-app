@@ -1,5 +1,6 @@
 export interface ITheme {
     dark: boolean;
+    shadowGradient: string[];
 
     fontSize: {
         small: number;

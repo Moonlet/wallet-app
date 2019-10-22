@@ -3,6 +3,7 @@ import { COLORS } from '../colors';
 
 export const darkTheme: ITheme = {
     dark: true,
+    shadowGradient: ['#00000000', '#000000CC'],
 
     fontSize: {
         small: 12,

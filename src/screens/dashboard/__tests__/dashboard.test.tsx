@@ -54,7 +54,8 @@ const props: IProps & IReduxProps = {
             }
         ]
     },
-    styles: styleProvider(darkTheme)
+    styles: styleProvider(darkTheme),
+    theme: darkTheme
 };
 
 jest.useFakeTimers();

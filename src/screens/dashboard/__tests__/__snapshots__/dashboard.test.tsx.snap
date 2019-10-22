@@ -20,28 +20,30 @@ exports[`dashboard screen component handles scroll correctly 1`] = `
   <AnimatedComponent style={{...}}>
     <Component accounts={{...}} blockchain=\\"ETHEREUM\\" />
   </AnimatedComponent>
-  <View style={{...}} testID=\\"blockchainSelector\\">
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={false}>
-        ZIL
-      </Component>
-    </TouchableOpacity>
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={{...}}>
-        ETH
-      </Component>
-    </TouchableOpacity>
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={false}>
-        ATOM
-      </Component>
-    </TouchableOpacity>
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={false}>
-        XLM
-      </Component>
-    </TouchableOpacity>
-  </View>
+  <LinearGradient colors={{...}} locations={{...}} style={{...}} start={{...}} end={{...}}>
+    <View style={{...}} testID=\\"blockchainSelector\\">
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={false}>
+          ZIL
+        </Component>
+      </TouchableOpacity>
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={{...}}>
+          ETH
+        </Component>
+      </TouchableOpacity>
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={false}>
+          ATOM
+        </Component>
+      </TouchableOpacity>
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={false}>
+          XLM
+        </Component>
+      </TouchableOpacity>
+    </View>
+  </LinearGradient>
 </View>"
 `;
 
@@ -65,28 +67,30 @@ exports[`dashboard screen component renders correctly 1`] = `
   <AnimatedComponent style={{...}}>
     <Component accounts={{...}} blockchain=\\"ZILLIQA\\" />
   </AnimatedComponent>
-  <View style={{...}} testID=\\"blockchainSelector\\">
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={{...}}>
-        ZIL
-      </Component>
-    </TouchableOpacity>
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={false}>
-        ETH
-      </Component>
-    </TouchableOpacity>
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={false}>
-        ATOM
-      </Component>
-    </TouchableOpacity>
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={false}>
-        XLM
-      </Component>
-    </TouchableOpacity>
-  </View>
+  <LinearGradient colors={{...}} locations={{...}} style={{...}} start={{...}} end={{...}}>
+    <View style={{...}} testID=\\"blockchainSelector\\">
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={{...}}>
+          ZIL
+        </Component>
+      </TouchableOpacity>
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={false}>
+          ETH
+        </Component>
+      </TouchableOpacity>
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={false}>
+          ATOM
+        </Component>
+      </TouchableOpacity>
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={false}>
+          XLM
+        </Component>
+      </TouchableOpacity>
+    </View>
+  </LinearGradient>
 </View>"
 `;
 
@@ -110,27 +114,29 @@ exports[`dashboard screen component swtiches to correct coin on press 1`] = `
   <AnimatedComponent style={{...}}>
     <Component accounts={{...}} blockchain=\\"COSMOS\\" />
   </AnimatedComponent>
-  <View style={{...}} testID=\\"blockchainSelector\\">
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={false}>
-        ZIL
-      </Component>
-    </TouchableOpacity>
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={false}>
-        ETH
-      </Component>
-    </TouchableOpacity>
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={{...}}>
-        ATOM
-      </Component>
-    </TouchableOpacity>
-    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Component style={false}>
-        XLM
-      </Component>
-    </TouchableOpacity>
-  </View>
+  <LinearGradient colors={{...}} locations={{...}} style={{...}} start={{...}} end={{...}}>
+    <View style={{...}} testID=\\"blockchainSelector\\">
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={false}>
+          ZIL
+        </Component>
+      </TouchableOpacity>
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={false}>
+          ETH
+        </Component>
+      </TouchableOpacity>
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={{...}}>
+          ATOM
+        </Component>
+      </TouchableOpacity>
+      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <Component style={false}>
+          XLM
+        </Component>
+      </TouchableOpacity>
+    </View>
+  </LinearGradient>
 </View>"
 `;

@@ -1,4 +1,6 @@
 import { Platform, NativeModules } from 'react-native';
+import 'intl';
+import 'intl/locale-data/jsonp/en-US';
 
 interface INumberFormatOptions {
     locale?: string;
@@ -12,16 +14,18 @@ const significantDecimalsNumber = (amount: number) => (amount > 1 ? 2 : amount >
 // list of currencies to be displayed using js formatter
 const formattedCurrencies = ['USD', 'EUR'];
 
-export const formatNumber = (amount: number, options: INumberFormatOptions = {}) => {
-    const locale =
-        Platform.OS === 'ios'
-            ? NativeModules.SettingsManager.settings.AppleLocale
-            : NativeModules.I18nManager.localeIdentifier;
+const deviceLocale =
+    Platform.OS === 'ios'
+        ? NativeModules.SettingsManager.settings.AppleLocale
+        : NativeModules.I18nManager.localeIdentifier;
 
+const detectedLocale = deviceLocale ? deviceLocale.replace(/_/g, '-') : null;
+
+export const formatNumber = (amount: number, options: INumberFormatOptions = {}) => {
     const displayFormatCurrency =
         options.currency && formattedCurrencies.indexOf(options.currency) !== -1;
 
-    const formattedNumber = new Intl.NumberFormat(options.locale || locale || 'en-US', {
+    const formattedNumber = new Intl.NumberFormat(options.locale || detectedLocale || 'en-US', {
         style: displayFormatCurrency ? 'currency' : 'decimal',
         currency: displayFormatCurrency ? options.currency : undefined,
         minimumFractionDigits: options.minimumFractionDigits || 0,

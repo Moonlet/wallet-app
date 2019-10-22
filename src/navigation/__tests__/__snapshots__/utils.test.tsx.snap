@@ -8,8 +8,6 @@ exports[`NavigationUtils DummyScreen renders corectly 1`] = `
 </View>"
 `;
 
-exports[`NavigationUtils menuIcon renders corectly 1`] = `"<Icon name=\\"accounting-coins-stack\\" size={25} style={{...}} allowFontScaling={false} />"`;
-
 exports[`NavigationUtils menuIcon renders corectly: focused 1`] = `"<Icon name=\\"accounting-coins-stack\\" size={25} style={{...}} allowFontScaling={false} />"`;
 
 exports[`NavigationUtils menuIcon renders corectly: unfocused 1`] = `"<Icon name=\\"accounting-coins-stack\\" size={25} style={{...}} allowFontScaling={false} />"`;

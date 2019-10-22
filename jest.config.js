@@ -4,6 +4,5 @@ module.exports = {
     transformIgnorePatterns: ['node_modules/?!(react-navigation)'],
     setupFiles: ['./jest.setup.js'],
     roots: ['src/'],
-    collectCoverage: true,
-    testPathIgnorePatterns: ['<rootDir>/src/navigation/']
+    collectCoverage: true
 };

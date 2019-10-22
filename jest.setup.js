@@ -1,5 +1,6 @@
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
+import { NativeModules } from 'react-native';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -17,3 +18,5 @@ jest.mock('react-navigation-tabs', () => {
         createBottomTabNavigator: jest.fn()
     };
 });
+
+NativeModules.SettingsManager = { settings: { AppleLocale: 'en-US' } };

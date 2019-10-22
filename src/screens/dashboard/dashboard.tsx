@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
+import { ITheme } from '../../core/theme/itheme';
 import LinearGradient from 'react-native-linear-gradient';
 
 import stylesProvider from './styles';
@@ -17,6 +18,7 @@ import { withTheme } from '../../core/theme/with-theme';
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     styles: ReturnType<typeof stylesProvider>;
+    theme: ITheme;
 }
 
 export interface IReduxProps {
@@ -165,7 +167,7 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
                 </Animated.View>
 
                 <LinearGradient
-                    colors={['#00000000', '#000000CC']}
+                    colors={this.props.theme.shadowGradient}
                     locations={[0, 0.5]}
                     style={styles.selectorGradientContainer}
                 >

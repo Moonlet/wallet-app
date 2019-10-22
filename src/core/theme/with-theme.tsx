@@ -7,7 +7,7 @@ export const withTheme = (Comp: any, styleProvider: (theme: ITheme) => any) => {
         const theme = React.useContext(ThemeContext);
 
         return (
-            <Comp {...props} styles={styleProvider(theme)}>
+            <Comp {...props} styles={styleProvider(theme)} theme={theme}>
                 {props.children}
             </Comp>
         );

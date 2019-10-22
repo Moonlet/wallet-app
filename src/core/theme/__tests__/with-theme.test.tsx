@@ -27,7 +27,8 @@ describe('Theme:withTheme', () => {
                 div: {
                     backgroundColor: darkTheme.colors.primary
                 }
-            }
+            },
+            theme: darkTheme
         });
     });
 });

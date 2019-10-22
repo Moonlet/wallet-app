@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
+import LinearGradient from 'react-native-linear-gradient';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
@@ -163,26 +164,33 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
                     />
                 </Animated.View>
 
-                <View style={styles.blockchainSelectorContainer} testID="blockchainSelector">
-                    {this.state.coins.map((coin, i) => (
-                        <TouchableOpacity
-                            key={i}
-                            style={[
-                                styles.blockchainButton,
-                                this.state.coinIndex === i && styles.blockchainButtonActive
-                            ]}
-                            onPress={() => this.setActiveCoin(i)}
-                        >
-                            <Text
-                                style={
-                                    this.state.coinIndex === i && styles.blockchainButtonTextActive
-                                }
+                <LinearGradient
+                    colors={['#00000000', '#000000CC']}
+                    locations={[0, 0.5]}
+                    style={styles.selectorGradientContainer}
+                >
+                    <View style={styles.blockchainSelectorContainer} testID="blockchainSelector">
+                        {this.state.coins.map((coin, i) => (
+                            <TouchableOpacity
+                                key={i}
+                                style={[
+                                    styles.blockchainButton,
+                                    this.state.coinIndex === i && styles.blockchainButtonActive
+                                ]}
+                                onPress={() => this.setActiveCoin(i)}
                             >
-                                {BLOCKCHAIN_INFO[this.state.coins[i]].coin}
-                            </Text>
-                        </TouchableOpacity>
-                    ))}
-                </View>
+                                <Text
+                                    style={
+                                        this.state.coinIndex === i &&
+                                        styles.blockchainButtonTextActive
+                                    }
+                                >
+                                    {BLOCKCHAIN_INFO[this.state.coins[i]].coin}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </View>
+                </LinearGradient>
             </View>
         );
     }

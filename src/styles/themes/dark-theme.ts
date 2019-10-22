@@ -18,6 +18,7 @@ export const darkTheme: ITheme = {
         positive: COLORS.HOT_GREEN,
         negative: COLORS.HOT_RED,
 
-        cardBackground: COLORS.DARK_GRAY
+        cardBackground: COLORS.DARK_GRAY,
+        appBackground: COLORS.COD_GRAY
     }
 };

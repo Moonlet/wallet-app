@@ -16,5 +16,6 @@ export interface ITheme {
         negative: string;
 
         cardBackground: string;
+        appBackground: string;
     };
 }

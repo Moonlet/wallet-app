@@ -8,20 +8,30 @@ export default (theme: ITheme) =>
             paddingTop: 40,
             alignItems: 'center',
             justifyContent: 'flex-start',
-            backgroundColor: '#121212',
+            backgroundColor: theme.colors.appBackground,
             ...StyleSheet.absoluteFillObject
         },
         balancesContainer: {
             height: 160
         },
+        selectorGradientContainer: {
+            position: 'absolute',
+            flex: 1,
+            left: 0,
+            right: 0,
+            height: 100,
+            bottom: 0,
+            zIndex: 1,
+            opacity: 0.87,
+            justifyContent: 'flex-end'
+        },
         blockchainSelectorContainer: {
             backgroundColor: theme.colors.cardBackground,
             borderRadius: 20,
             height: 40,
-            alignSelf: 'stretch',
-            margin: 12,
-            marginTop: 8,
-            flexDirection: 'row'
+            flexDirection: 'row',
+            marginBottom: 12,
+            marginHorizontal: 12
         },
         blockchainButton: {
             flex: 1,

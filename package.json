@@ -5,7 +5,7 @@
     "scripts": {
         "generate-icons": "mkdir -p resources/fonts && icon-font-generator ./src/assets/icons/svg/*.svg -o resources/fonts --height 1024 --types ttf",
         "emulator": "cd ~/Library/Android/sdk/tools/; emulator -avd `emulator -list-avds | awk '{print $1}'`",
-        "android": "npm run generate-icons && react-native run-android",
+        "android": "npm run generate-icons && react-native run-android --variant=betaDebug --appIdSuffix=beta",
         "ios": "npm run generate-icons && react-native run-ios",
         "start": "(tsc -w & react-native start)",
         "test": "jest",
@@ -20,6 +20,7 @@
         "enzyme-adapter-react-16": "^1.14.0",
         "ethereumjs-util": "^6.1.0",
         "hdkey": "^1.1.1",
+        "intl": "^1.2.5",
         "react": "16.9.0",
         "react-native": "0.61.1",
         "react-native-gesture-handler": "^1.4.1",

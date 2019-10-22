@@ -1,4 +1,3 @@
-import { NativeModules } from 'react-native';
 import { formatNumber } from '../format-number';
 
 const tests = [
@@ -31,18 +30,7 @@ const tests = [
     }
 ];
 
-let settingsManager: any;
-
 describe('format number function', () => {
-    beforeAll(() => {
-        settingsManager = NativeModules.SettingsManager;
-        NativeModules.SettingsManager = { settings: { AppleLocale: 'en-US' } };
-    });
-
-    afterAll(() => {
-        NativeModules.SettingsManager = settingsManager;
-    });
-
     tests.forEach(t => {
         it('should format number correctly', () => {
             expect(formatNumber(t.amount, t.options)).toBe(t.result);

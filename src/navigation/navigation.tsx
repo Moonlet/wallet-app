@@ -47,8 +47,10 @@ export const navigationConfig = {
     },
     Settings: {
         screen: SettingsScreen,
+        headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('cog')
+            tabBarIcon: menuIcon('cog'),
+            title: 'Settings'
         })
     }
 };

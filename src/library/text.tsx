@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactNative from 'react-native';
+import * as ReactNative from 'react-native';
 
 import { withTheme } from '../core/theme/with-theme';
 import { ITheme } from '../core/theme/itheme';
@@ -38,7 +38,7 @@ export const TextComponent = (props: any) => {
 };
 
 export const TextSmall = (props: any) => {
-    delete props.style;
+    // delete props.style;
 
     return (
         <Text

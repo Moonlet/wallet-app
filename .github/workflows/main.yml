@@ -2,62 +2,86 @@ on:
   push:
     branches:
       - master
+      - extension-setup
 
-name: Deploy Beta iOS and Android
+name: Deploy Beta
 jobs:
-  beta-android:
-    name: Beta Release Android
+  # beta-android:
+  #   name: Beta Release Android app
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - uses: actions/setup-ruby@v1
+  #       with:
+  #         ruby-version: "2.x"
+  #     - name: Setup key
+  #       uses: webfactory/ssh-agent@v0.1.1
+  #       with:
+  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
+  #     - name: Add to host
+  #       run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+  #     - name: Dependencies install
+  #       run: cd android && bundle install
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Get sign ssh-keys
+  #       run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
+  #     - name: Generate fonts and icons
+  #       run: npm run generate-icons
+  #     - name: Run fastlane beta
+  #       run: cd android/fastlane && bundle exec fastlane beta
+  # beta-ios:
+  #   name: Beta Release iOS app
+  #   runs-on: macOS-latest
+  #   steps:
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - uses: actions/checkout@v1
+  #     - name: Setup key
+  #       uses: webfactory/ssh-agent@v0.1.1
+  #       with:
+  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
+  #     - name: Add to host
+  #       run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+  #     - name: Checkout
+  #       uses: actions/checkout@master
+  #     - name: Dependencies install
+  #       run: cd ios && bundle install
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Cocoapods install
+  #       run: cd ios && pod install
+  #     - name: Generate fonts and icons
+  #       run: npm run generate-icons
+  #     - name: Run fastlane beta
+  #       run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane beta
+  #       env:
+  #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  #         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+  beta-ext-chrome: 
+    name: Beta release Chrome extension
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "10.x"
-      - uses: actions/setup-ruby@v1
-        with:
-          ruby-version: "2.x"
-      - name: Setup key
-        uses: webfactory/ssh-agent@v0.1.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_CERTS }}
-      - name: Add to host
-        run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-      - name: Dependencies install
-        run: cd android && bundle install
-      - name: NPM install
-        run: npm i
-      - name: Get sign ssh-keys
-        run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
-      - name: Generate fonts and icons
-        run: npm run generate-icons
-      - name: Run fastlane beta
-        run: cd android/fastlane && bundle exec fastlane beta
-  beta-ios:
-    name: Beta Release iOS
-    runs-on: macOS-latest
-    steps:
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
       - uses: actions/checkout@v1
-      - name: Setup key
-        uses: webfactory/ssh-agent@v0.1.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_CERTS }}
-      - name: Add to host
-        run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-      - name: Checkout
-        uses: actions/checkout@master
-      - name: Dependencies install
-        run: cd ios && bundle install
       - name: NPM install
         run: npm i
-      - name: Cocoapods install
-        run: cd ios && pod install
-      - name: Generate fonts and icons
+      - name: Generate icons
         run: npm run generate-icons
-      - name: Run fastlane beta
-        run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane beta
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+      - name: Build extension
+        run: npm run ext:build:beta:chrome
+      - name: Create extenion zip
+        run: cd extension/build/beta/chrome && zip -r ./extension.zip ./
+      - uses: trmcnvn/chrome-addon@v1
+        with:
+          extension: fppojmnjpgbjelbjpdhgnhjahaimpjeh
+          zip: build/beta/chrome/extension.zip
+          client-id: ${{ secrets.CHROME_CLIENT_ID }}
+          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}

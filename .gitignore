@@ -63,3 +63,4 @@ buck-out/
 .history
 resources/fonts
 coverage
+extension/build

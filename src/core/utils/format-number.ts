@@ -17,7 +17,9 @@ const formattedCurrencies = ['USD', 'EUR'];
 const deviceLocale =
     Platform.OS === 'ios'
         ? NativeModules.SettingsManager.settings.AppleLocale
-        : NativeModules.I18nManager.localeIdentifier;
+        : Platform.OS === 'android'
+        ? NativeModules.I18nManager.localeIdentifier
+        : window.navigator.language;
 
 const detectedLocale = deviceLocale ? deviceLocale.replace(/_/g, '-') : null;
 

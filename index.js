@@ -1,4 +1,4 @@
-import { AppRegistry } from 'react-native';
+import { AppRegistry, Platform } from 'react-native';
 import App from './src/app';
 import { name as appName } from './app.json';
 
@@ -7,3 +7,7 @@ import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['RCTRootView cancelTouches']);
 
 AppRegistry.registerComponent(appName, () => App);
+
+if (Platform.OS === 'web') {
+    AppRegistry.runApplication(appName, { rootTag: document.getElementById('root') });
+}

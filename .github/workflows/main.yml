@@ -75,13 +75,13 @@ jobs:
       - name: Generate icons
         run: npm run generate-icons
       - name: Build extension
-        run: npm run ext:build:beta:chrome
+        run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
       - name: Create extenion zip
         run: cd extension/build/beta/chrome && zip -r ./extension.zip ./
       - uses: trmcnvn/chrome-addon@v1
         with:
           extension: fppojmnjpgbjelbjpdhgnhjahaimpjeh
-          zip: build/beta/chrome/extension.zip
+          zip: extension/build/beta/chrome/extension.zip
           client-id: ${{ secrets.CHROME_CLIENT_ID }}
           client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
           refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}

@@ -8,7 +8,7 @@
         "android": "npm run generate-icons && react-native run-android --variant=betaDebug --appIdSuffix=beta",
         "ios": "npm run generate-icons && react-native run-ios",
         "ext": "NODE_ENV=development webpack --mode development --config ./extension/webpack.config.js --watch",
-        "ext:build": "BUILD=$(git rev-list --count master) webpack -p --config ./extension/webpack.config.babel.js",
+        "ext:build": "webpack -p --config ./extension/webpack.config.babel.js",
         "ext:build:beta:chrome": "TARGET=beta BROWSER=chrome npm run ext:build",
         "ext:build:beta:firefox": "TARGET=beta BROWSER=firefox npm run ext:build",
         "start": "(tsc -w & react-native start)",

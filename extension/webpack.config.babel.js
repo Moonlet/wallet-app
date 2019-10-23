@@ -83,8 +83,7 @@ module.exports = {
         }),
         new CopyPlugin([
             { from: './resources', to: './browser-action/resources' },
-            { from: './extension/icons', to: './icons' },
-            { from: './extension/manifest.json', to: '.' }
+            { from: './extension/icons', to: './icons' }
         ]),
         new WebpackExtensionManifestPlugin({
             config: {

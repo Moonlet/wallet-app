@@ -7,7 +7,7 @@ on:
 name: Deploy Beta
 jobs:
   # beta-android:
-  #   name: Beta Release Android app
+  #   name: Android app
   #   runs-on: ubuntu-latest
   #   steps:
   #     - uses: actions/checkout@v1
@@ -34,7 +34,7 @@ jobs:
   #     - name: Run fastlane beta
   #       run: cd android/fastlane && bundle exec fastlane beta
   # beta-ios:
-  #   name: Beta Release iOS app
+  #   name: iOS app
   #   runs-on: macOS-latest
   #   steps:
   #     - uses: actions/setup-node@v1
@@ -63,7 +63,7 @@ jobs:
   #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
   #         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
   beta-ext-chrome: 
-    name: Beta release Chrome extension
+    name: Chrome extension
     runs-on: ubuntu-latest
     steps:
       - uses: actions/setup-node@v1
@@ -78,7 +78,8 @@ jobs:
         run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
       - name: Create extenion zip
         run: cd extension/build/beta/chrome && zip -r ./extension.zip ./
-      - uses: trmcnvn/chrome-addon@v1
+      - name: Deploy to Chrome store
+        uses: trmcnvn/chrome-addon@v1
         with:
           extension: fppojmnjpgbjelbjpdhgnhjahaimpjeh
           zip: extension/build/beta/chrome/extension.zip

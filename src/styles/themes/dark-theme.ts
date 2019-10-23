@@ -12,6 +12,7 @@ export const darkTheme: ITheme = {
     },
 
     colors: {
+        black: COLORS.BLACK,
         primary: COLORS.GRAY,
         accent: COLORS.AQUA,
         text: COLORS.WHITE,

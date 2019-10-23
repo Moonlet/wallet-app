@@ -9,6 +9,7 @@ export interface ITheme {
     };
 
     colors: {
+        black: string;
         primary: string;
         accent: string;
         text: string;

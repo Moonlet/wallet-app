@@ -21,3 +21,11 @@ jest.mock('react-navigation-tabs', () => {
 
 NativeModules.SettingsManager = { settings: { AppleLocale: 'en_US' } };
 NativeModules.I18nManager = { localeIdentifier: 'en-US' };
+
+jest.mock('react-native-device-info', () => {
+    return {
+        getVersion: jest.fn()
+    };
+});
+
+NativeModules.SettingsManager = { settings: { AppleLocale: 'en-US' } };

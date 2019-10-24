@@ -1,9 +1,133 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`settings screen component renders correctly 1`] = `
-"<View style={{...}}>
-  <Text>
-    Settings Screen
-  </Text>
-</View>"
+"<ScrollViewMock style={{...}}>
+  <View>
+    <View>
+      <Component style={{...}}>
+        SECURITY
+      </Component>
+    </View>
+    <View style={{...}}>
+      <Component style={{...}}>
+        Pin Login
+      </Component>
+      <View style={{...}}>
+        <Switch testID=\\"pin-login\\" onValueChange={[Function]} value={true} />
+      </View>
+    </View>
+    <View style={{...}} />
+    <View style={{...}}>
+      <Component style={{...}}>
+        TouchID
+      </Component>
+      <View style={{...}}>
+        <Switch testID=\\"touch-id\\" onValueChange={[Function]} value={true} />
+      </View>
+    </View>
+    <View style={{...}} />
+    <TouchableOpacity testID=\\"secret-phrase\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+      <Component style={{...}}>
+        Reveal secret phrase
+      </Component>
+      <View style={{...}}>
+        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
+    <TouchableOpacity testID=\\"backup-wallet\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+      <Component style={{...}}>
+        Backup your wallet
+      </Component>
+      <View style={{...}}>
+        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
+    <View style={{...}}>
+      <Component style={{...}}>
+        SETUP
+      </Component>
+    </View>
+    <TouchableOpacity testID=\\"manage-wallet\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+      <Component style={{...}}>
+        Manage your wallet
+      </Component>
+      <View style={{...}}>
+        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
+    <TouchableOpacity testID=\\"default-currency\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+      <Component style={{...}}>
+        Default currency
+      </Component>
+      <View style={{...}}>
+        <Component style={{...}} />
+        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
+    <TouchableOpacity testID=\\"default-network\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+      <Component style={{...}}>
+        Default network
+      </Component>
+      <View style={{...}}>
+        <Component style={{...}} />
+        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
+    <View style={{...}}>
+      <Component style={{...}}>
+        SUPPORT
+      </Component>
+    </View>
+    <TouchableOpacity testID=\\"report-issue\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+      <Component style={{...}}>
+        Report issue
+      </Component>
+      <View style={{...}}>
+        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
+    <View style={{...}}>
+      <Component style={{...}}>
+        TOOLS
+      </Component>
+    </View>
+    <TouchableOpacity testID=\\"developer-options\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+      <Component style={{...}}>
+        Developer options
+      </Component>
+      <View style={{...}}>
+        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
+    <View style={{...}}>
+      <Component style={{...}}>
+        ABOUT
+      </Component>
+    </View>
+    <TouchableOpacity testID=\\"terms-conditions\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+      <Component style={{...}}>
+        Terms &amp; conditions
+      </Component>
+      <View style={{...}}>
+        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
+    <View style={{...}}>
+      <Component style={{...}}>
+        Application version
+      </Component>
+      <View style={{...}}>
+        <Component style={{...}} />
+      </View>
+    </View>
+  </View>
+</ScrollViewMock>"
 `;

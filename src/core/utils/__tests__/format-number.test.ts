@@ -1,4 +1,5 @@
 import { formatNumber } from '../format-number';
+import { Platform } from 'react-native';
 
 const tests = [
     {
@@ -32,7 +33,17 @@ const tests = [
 
 describe('format number function', () => {
     tests.forEach(t => {
-        it('should format number correctly', () => {
+        it('should format number correctly on iOS', () => {
+            expect(formatNumber(t.amount, t.options)).toBe(t.result);
+        });
+
+        it('should format number correctly on Android', () => {
+            Platform.OS = 'android';
+            expect(formatNumber(t.amount, t.options)).toBe(t.result);
+        });
+
+        it('should format number correctly on web', () => {
+            Platform.OS = 'web';
             expect(formatNumber(t.amount, t.options)).toBe(t.result);
         });
     });

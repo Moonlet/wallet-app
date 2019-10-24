@@ -5,9 +5,29 @@ on:
 
 name: Deploy Beta
 jobs:
+  unit-tests:
+    name: Unit tests 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - name: NPM install
+        run: npm i
+      - name: Generate icons
+        run: npm run generate-icons
+      - name: Run unit tests
+        run: npm test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1.0.3
+        with:
+          token: ${{secrets.CODECOV_TOKEN}} 
+          flags: unittests
   beta-android:
     name: Android app
     runs-on: ubuntu-latest
+    needs: unit-tests
     steps:
       - uses: actions/checkout@v1
       - uses: actions/setup-node@v1
@@ -35,6 +55,7 @@ jobs:
   beta-ios:
     name: iOS app
     runs-on: macOS-latest
+    needs: unit-tests
     steps:
       - uses: actions/setup-node@v1
         with:
@@ -64,6 +85,7 @@ jobs:
   beta-ext-chrome: 
     name: Chrome extension
     runs-on: ubuntu-latest
+    needs: unit-tests
     steps:
       - uses: actions/setup-node@v1
         with:

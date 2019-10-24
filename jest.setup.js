@@ -19,4 +19,5 @@ jest.mock('react-navigation-tabs', () => {
     };
 });
 
-NativeModules.SettingsManager = { settings: { AppleLocale: 'en-US' } };
+NativeModules.SettingsManager = { settings: { AppleLocale: 'en_US' } };
+NativeModules.I18nManager = { localeIdentifier: 'en-US' };

@@ -11,7 +11,7 @@
         "ext:build": "webpack -p --config ./extension/webpack.config.babel.js",
         "ext:build:beta:chrome": "TARGET=beta BROWSER=chrome npm run ext:build",
         "ext:build:beta:firefox": "TARGET=beta BROWSER=firefox npm run ext:build",
-        "start": "(tsc -w & react-native start)",
+        "start": "(tsc -w --noEmit & react-native start)",
         "test": "jest",
         "lint": "tslint --fix '{src,extension}/**/*.{ts,tsx}'",
         "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore"

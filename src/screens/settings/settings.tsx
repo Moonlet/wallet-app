@@ -14,6 +14,7 @@ export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     styles: ReturnType<typeof stylesProvider>;
     theme: ITheme;
+    mock: () => void;
 }
 
 export interface IReduxProps {
@@ -26,33 +27,43 @@ const mapStateToProps = (state: IReduxState) => ({});
 export class SettingsScreenComponent extends React.Component<IProps & IReduxProps> {
     public pinLoginSwitch = () => {
         // pin login
+        this.props.mock();
     };
     public touchIdSwitch = () => {
         // touch Id
+        this.props.mock();
     };
     public revealPassphraseTouch = () => {
         // open reveal Passphrase screen
+        this.props.mock();
     };
     public backupWalletTouch = () => {
         // backup wallet
+        this.props.mock();
     };
     public manageWalletTouch = () => {
         // manage wallet
+        this.props.mock();
     };
     public defaultCurrencyTouch = () => {
         // set default currency
+        this.props.mock();
     };
     public defaultNetworkTouch = () => {
         // set default network
+        this.props.mock();
     };
     public developerOptionsTouch = () => {
         // developer options touch
+        this.props.mock();
     };
     public reportIssueTouch = () => {
         // report an issue
+        this.props.mock();
     };
     public termsAndConditionsTouch = () => {
         // open terms
+        this.props.mock();
     };
 
     public render() {
@@ -67,21 +78,29 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
                     <View style={styles.rowContainer}>
                         <Text style={styles.textRow}>Pin Login</Text>
                         <View style={styles.switch}>
-                            <Switch onValueChange={this.pinLoginSwitch} value={true} />
+                            <Switch
+                                testID={'pin-login'}
+                                onValueChange={this.pinLoginSwitch}
+                                value={true}
+                            />
                         </View>
                     </View>
                     <View style={styles.divider} />
                     <View style={styles.rowContainer}>
                         <Text style={styles.textRow}>TouchID</Text>
                         <View style={styles.switch}>
-                            <Switch onValueChange={this.touchIdSwitch} value={true} />
+                            <Switch
+                                testID={'touch-id'}
+                                onValueChange={this.touchIdSwitch}
+                                value={true}
+                            />
                         </View>
                     </View>
                     <View style={styles.divider} />
                     <TouchableOpacity
-                        key={'secret-phrase'}
+                        testID={'secret-phrase'}
                         style={styles.rowContainer}
-                        onPress={() => this.revealPassphraseTouch}
+                        onPress={this.revealPassphraseTouch}
                     >
                         <Text style={styles.textRow}>Reveal secret phrase</Text>
                         <View style={styles.rightContainer}>
@@ -90,9 +109,9 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
                     </TouchableOpacity>
                     <View style={styles.divider} />
                     <TouchableOpacity
-                        key={'backup-wallet'}
+                        testID={'backup-wallet'}
                         style={styles.rowContainer}
-                        onPress={() => this.backupWalletTouch}
+                        onPress={this.backupWalletTouch}
                     >
                         <Text style={styles.textRow}>Backup your wallet</Text>
                         <View style={styles.rightContainer}>
@@ -104,9 +123,9 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
                         <Text style={styles.textHeader}>SETUP</Text>
                     </View>
                     <TouchableOpacity
-                        key={'manage-wallet'}
+                        testID={'manage-wallet'}
                         style={styles.rowContainer}
-                        onPress={() => this.manageWalletTouch}
+                        onPress={this.manageWalletTouch}
                     >
                         <Text style={styles.textRow}>Manage your wallet</Text>
                         <View style={styles.rightContainer}>
@@ -115,9 +134,9 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
                     </TouchableOpacity>
                     <View style={styles.divider} />
                     <TouchableOpacity
-                        key={'default-currency'}
+                        testID={'default-currency'}
                         style={styles.rowContainer}
-                        onPress={() => this.defaultCurrencyTouch}
+                        onPress={this.defaultCurrencyTouch}
                     >
                         <Text style={styles.textRow}>Default currency</Text>
                         <View style={styles.rightContainer}>
@@ -127,9 +146,9 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
                     </TouchableOpacity>
                     <View style={styles.divider} />
                     <TouchableOpacity
-                        key={'default-network'}
+                        testID={'default-network'}
                         style={styles.rowContainer}
-                        onPress={() => this.defaultNetworkTouch}
+                        onPress={this.defaultNetworkTouch}
                     >
                         <Text style={styles.textRow}>Default network</Text>
                         <View style={styles.rightContainer}>
@@ -142,9 +161,9 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
                         <Text style={styles.textHeader}>SUPPORT</Text>
                     </View>
                     <TouchableOpacity
-                        key={'report-issue'}
+                        testID={'report-issue'}
                         style={styles.rowContainer}
-                        onPress={() => this.reportIssueTouch}
+                        onPress={this.reportIssueTouch}
                     >
                         <Text style={styles.textRow}>Report issue</Text>
                         <View style={styles.rightContainer}>
@@ -156,9 +175,9 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
                         <Text style={styles.textHeader}>TOOLS</Text>
                     </View>
                     <TouchableOpacity
-                        key={'developer-options'}
+                        testID={'developer-options'}
                         style={styles.rowContainer}
-                        onPress={() => this.developerOptionsTouch}
+                        onPress={this.developerOptionsTouch}
                     >
                         <Text style={styles.textRow}>Developer options</Text>
                         <View style={styles.rightContainer}>
@@ -170,9 +189,9 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
                         <Text style={styles.textHeader}>ABOUT</Text>
                     </View>
                     <TouchableOpacity
-                        key={'terms-conditions'}
+                        testID={'terms-conditions'}
                         style={styles.rowContainer}
-                        onPress={() => this.termsAndConditionsTouch}
+                        onPress={this.termsAndConditionsTouch}
                     >
                         <Text style={styles.textRow}>Terms & conditions</Text>
                         <View style={styles.rightContainer}>

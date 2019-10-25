@@ -14,6 +14,10 @@ const props: IProps & IReduxProps = {
     theme: darkTheme,
     mock: jest.fn()
 };
+beforeEach(() => {
+    // @ts-ignore
+    props.mock.mockClear();
+});
 
 describe('settings screen component', () => {
     const wrapper = shallow(<SettingsScreenComponent {...props} />);
@@ -23,7 +27,7 @@ describe('settings screen component', () => {
     });
     it('Pin login switch tapped', () => {
         wrapper.find('[testID="pin-login"]').simulate('valueChange');
-        expect(props.mock).toHaveBeenCalled();
+        expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Touch id switch tapped', () => {
         wrapper.find('[testID="touch-id"]').simulate('valueChange');
@@ -31,34 +35,34 @@ describe('settings screen component', () => {
     });
     it('Secret phrase', () => {
         wrapper.find('[testID="secret-phrase"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalled();
+        expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Backup Wallet', () => {
         wrapper.find('[testID="backup-wallet"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalled();
+        expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Manage Wallet', () => {
         wrapper.find('[testID="manage-wallet"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalled();
+        expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Default currency', () => {
         wrapper.find('[testID="default-currency"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalled();
+        expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Default network', () => {
         wrapper.find('[testID="default-network"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalled();
+        expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Report issue', () => {
         wrapper.find('[testID="report-issue"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalled();
+        expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Developer options', () => {
         wrapper.find('[testID="developer-options"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalled();
+        expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Terms & conditions', () => {
         wrapper.find('[testID="terms-conditions"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalled();
+        expect(props.mock).toHaveBeenCalledTimes(1);
     });
 });

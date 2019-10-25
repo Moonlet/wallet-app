@@ -40,7 +40,7 @@ export default (theme: ITheme) =>
             width: '100%',
             height: 1,
             marginTop: 8,
-            backgroundColor: theme.colors.black
+            backgroundColor: theme.colors.settingsDivider
         },
         rightContainer: {
             flexDirection: 'row',

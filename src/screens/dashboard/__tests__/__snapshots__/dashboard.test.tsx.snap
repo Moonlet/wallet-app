@@ -18,7 +18,7 @@ exports[`dashboard screen component handles scroll correctly 1`] = `
     </ScrollViewMock>
   </View>
   <AnimatedComponent style={{...}}>
-    <Component accounts={{...}} blockchain=\\"ETHEREUM\\" />
+    <Component accounts={{...}} blockchain=\\"ETHEREUM\\" navigation={{...}} />
   </AnimatedComponent>
   <LinearGradient colors={{...}} locations={{...}} style={{...}} start={{...}} end={{...}}>
     <View style={{...}} testID=\\"blockchainSelector\\">
@@ -65,7 +65,7 @@ exports[`dashboard screen component renders correctly 1`] = `
     </ScrollViewMock>
   </View>
   <AnimatedComponent style={{...}}>
-    <Component accounts={{...}} blockchain=\\"ZILLIQA\\" />
+    <Component accounts={{...}} blockchain=\\"ZILLIQA\\" navigation={{...}} />
   </AnimatedComponent>
   <LinearGradient colors={{...}} locations={{...}} style={{...}} start={{...}} end={{...}}>
     <View style={{...}} testID=\\"blockchainSelector\\">
@@ -112,7 +112,7 @@ exports[`dashboard screen component swtiches to correct coin on press 1`] = `
     </ScrollViewMock>
   </View>
   <AnimatedComponent style={{...}}>
-    <Component accounts={{...}} blockchain=\\"COSMOS\\" />
+    <Component accounts={{...}} blockchain=\\"COSMOS\\" navigation={{...}} />
   </AnimatedComponent>
   <LinearGradient colors={{...}} locations={{...}} style={{...}} start={{...}} end={{...}}>
     <View style={{...}} testID=\\"blockchainSelector\\">

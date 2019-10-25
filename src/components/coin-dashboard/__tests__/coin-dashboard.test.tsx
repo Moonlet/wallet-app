@@ -8,6 +8,10 @@ import styleProvider from '../styles';
 import { shallow } from 'enzyme';
 
 const props: IProps = {
+    // @ts-ignore
+    navigation: {
+        navigate: jest.fn()
+    },
     accounts: [
         {
             index: 1,
@@ -25,5 +29,15 @@ describe('coin dashboard component', () => {
     it('renders correctly', () => {
         const wrapper = shallow(<CoinDashboardComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();
+    });
+
+    it('navigates to create new wallet', () => {
+        const wrapper = shallow(<CoinDashboardComponent {...props} />);
+        wrapper.find('[testID="button-create-wallet"]').simulate('Press');
+        expect(props.navigation.navigate).toHaveBeenCalledWith(
+            'CreateWalletNavigation',
+            {},
+            'navigate-action'
+        );
     });
 });

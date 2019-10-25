@@ -8,7 +8,7 @@ export const darkTheme: ITheme = {
     fontSize: {
         small: 12,
         regular: 16,
-        large: 34
+        large: 20
     },
 
     colors: {

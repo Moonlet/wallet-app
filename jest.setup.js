@@ -9,13 +9,23 @@ jest.mock('react-navigation', () => {
     return {
         createAppContainer: jest.fn().mockReturnValue(function NavigationContainer(props) {
             return null;
-        })
+        }),
+        createSwitchNavigator: jest.fn(),
+        NavigationActions: {
+            navigate: jest.fn().mockReturnValue('navigate-action')
+        }
     };
 });
 
 jest.mock('react-navigation-tabs', () => {
     return {
         createBottomTabNavigator: jest.fn()
+    };
+});
+
+jest.mock('react-navigation-stack', () => {
+    return {
+        createStackNavigator: jest.fn()
     };
 });
 

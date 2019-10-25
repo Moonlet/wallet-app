@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`library button renders correctly 1`] = `
+"<TouchableOpacity onPress={[undefined]} style={{...}} activeOpacity={0.2}>
+  <Component style={{...}}>
+    dummy
+  </Component>
+</TouchableOpacity>"
+`;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, Dimensions, Animated, TouchableOpacity } from 'react-native';
-import { Text } from '../../library/text';
+import { Text } from '../../library';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
 import { CoinDashboard } from '../../components/coin-dashboard/coin-dashboard';
@@ -163,6 +163,7 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
                             account => account.blockchain === this.state.coins[this.state.coinIndex]
                         )}
                         blockchain={this.state.coins[this.state.coinIndex]}
+                        navigation={this.props.navigation}
                     />
                 </Animated.View>
 

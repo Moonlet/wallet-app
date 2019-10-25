@@ -8,10 +8,12 @@ exports[`coin dashboard component renders correctly 1`] = `
     <Connect(Component) fromCurrency=\\"ZIL\\" toCurrency=\\"ETH\\" />
   </View>
   <View style={{...}}>
-    <Icon name=\\"add\\" size={25} style={{...}} allowFontScaling={false} />
+    <TouchableOpacity testID=\\"button-create-wallet\\" onPress={[Function: onPress]} activeOpacity={0.2}>
+      <Icon name=\\"add\\" size={25} style={{...}} allowFontScaling={false} />
+    </TouchableOpacity>
   </View>
   <ScrollViewMock style={{...}}>
-    <Component account={{...}} blockchain=\\"ZILLIQA\\" />
+    <Component account={{...}} navigation={{...}} blockchain=\\"ZILLIQA\\" />
   </ScrollViewMock>
 </View>"
 `;

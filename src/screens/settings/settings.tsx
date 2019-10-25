@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Switch, TouchableOpacity } from 'react-native';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
-import { Text } from '../../library/text';
+import { Text } from '../../library';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';

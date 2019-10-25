@@ -22,6 +22,10 @@ export interface IReduxProps {
     network: string;
 }
 
+export const mockFunction = () => {
+    return { type: 'dummy' };
+};
+
 const mapStateToProps = (state: IReduxState) => ({});
 
 export class SettingsScreenComponent extends React.Component<IProps & IReduxProps> {
@@ -213,5 +217,7 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
 
 export const SettingsScreen = connect(
     mapStateToProps,
-    null
+    {
+        mock: mockFunction
+    }
 )(withTheme(SettingsScreenComponent, stylesProvider));

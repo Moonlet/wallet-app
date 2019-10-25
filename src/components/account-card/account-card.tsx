@@ -51,4 +51,4 @@ export const AccountCardComponent = (props: IProps) => {
     );
 };
 
-export const AccountCard = withTheme(AccountCardComponent, stylesProvider);
+export const AccountCard = withTheme(stylesProvider)(AccountCardComponent);

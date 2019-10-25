@@ -3,9 +3,9 @@
 exports[`coin dashboard component renders correctly 1`] = `
 "<View style={{...}}>
   <View style={{...}}>
-    <Connect(Component) fromCurrency=\\"ZIL\\" toCurrency=\\"USD\\" />
-    <Connect(Component) fromCurrency=\\"ZIL\\" toCurrency=\\"BTC\\" />
-    <Connect(Component) fromCurrency=\\"ZIL\\" toCurrency=\\"ETH\\" />
+    <withTheme(Connect(ConversionCardComponent)) fromCurrency=\\"ZIL\\" toCurrency=\\"USD\\" />
+    <withTheme(Connect(ConversionCardComponent)) fromCurrency=\\"ZIL\\" toCurrency=\\"BTC\\" />
+    <withTheme(Connect(ConversionCardComponent)) fromCurrency=\\"ZIL\\" toCurrency=\\"ETH\\" />
   </View>
   <View style={{...}}>
     <TouchableOpacity testID=\\"button-create-wallet\\" onPress={[Function: onPress]} activeOpacity={0.2}>
@@ -13,7 +13,7 @@ exports[`coin dashboard component renders correctly 1`] = `
     </TouchableOpacity>
   </View>
   <ScrollViewMock style={{...}}>
-    <Component account={{...}} navigation={{...}} blockchain=\\"ZILLIQA\\" />
+    <withTheme(AccountCardComponent) account={{...}} navigation={{...}} blockchain=\\"ZILLIQA\\" />
   </ScrollViewMock>
 </View>"
 `;

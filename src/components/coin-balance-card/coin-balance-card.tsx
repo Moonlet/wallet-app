@@ -35,4 +35,4 @@ export const CoinBalanceCardComponent = (props: IProps) => (
     </View>
 );
 
-export const CoinBalanceCard = withTheme(CoinBalanceCardComponent, stylesProvider);
+export const CoinBalanceCard = withTheme(stylesProvider)(CoinBalanceCardComponent);

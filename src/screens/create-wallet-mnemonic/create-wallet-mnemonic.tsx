@@ -49,9 +49,8 @@ export const CreateWalletMnemonicScreenComponent = (props: IProps) => (
     </View>
 );
 
-export const CreateWalletMnemonicScreen = withTheme(
-    CreateWalletMnemonicScreenComponent,
-    stylesProvider
+export const CreateWalletMnemonicScreen = withTheme(stylesProvider)(
+    CreateWalletMnemonicScreenComponent
 );
 
 CreateWalletMnemonicScreen.navigationOptions = navigationOptions;

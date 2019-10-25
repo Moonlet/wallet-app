@@ -82,4 +82,4 @@ export const CoinDashboardComponent = (props: IProps) => (
         </ScrollView>
     </View>
 );
-export const CoinDashboard = withTheme(CoinDashboardComponent, stylesProvider);
+export const CoinDashboard = withTheme(stylesProvider)(CoinDashboardComponent);

@@ -18,4 +18,4 @@ export const GoBackButtonComponent = (props: IProps) => (
     </TouchableOpacity>
 );
 
-export const GoBackButton = withTheme(GoBackButtonComponent, stylesProvider);
+export const GoBackButton = withTheme(stylesProvider)(GoBackButtonComponent);

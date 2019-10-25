@@ -3,13 +3,13 @@
 exports[`coin balance component renders correctly 1`] = `
 "<View style={{...}}>
   <View style={{...}}>
-    <Component style={{...}} format={true}>
+    <withTheme(TextComponent) style={{...}} format={true}>
       100
-    </Component>
-    <Component style={false}>
+    </withTheme(TextComponent)>
+    <withTheme(TextComponent) style={false}>
        
       ZIL
-    </Component>
+    </withTheme(TextComponent)>
   </View>
   <View style={{...}}>
     <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"ETH\\" style={false} amount={100} displayCurrency={true} />

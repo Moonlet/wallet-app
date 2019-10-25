@@ -7,27 +7,27 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       <Image style={{...}} source={{...}} />
     </View>
     <View style={{...}}>
-      <Component large={true} style={{...}}>
+      <withTheme(TextComponent) large={true} style={{...}}>
         Welcome to Moonlet!
-      </Component>
-      <Component style={{...}} darker={true}>
+      </withTheme(TextComponent)>
+      <withTheme(TextComponent) style={{...}} darker={true}>
         We’ll generate this section once you create, recover or connect a wallet
-      </Component>
+      </withTheme(TextComponent)>
     </View>
   </View>
   <View style={{...}}>
     <View style={{...}}>
-      <Component style={{...}}>
+      <withTheme(ButtonComponent) style={{...}}>
         Recover
-      </Component>
-      <Component style={{...}}>
+      </withTheme(ButtonComponent)>
+      <withTheme(ButtonComponent) style={{...}}>
         Connect
-      </Component>
+      </withTheme(ButtonComponent)>
     </View>
     <View style={{...}}>
-      <Component testID=\\"button-create\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+      <withTheme(ButtonComponent) testID=\\"button-create\\" style={{...}} primary={true} onPress={[Function: onPress]}>
         Create
-      </Component>
+      </withTheme(ButtonComponent)>
     </View>
   </View>
 </View>"

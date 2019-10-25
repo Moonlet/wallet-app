@@ -2,18 +2,18 @@
 
 exports[`creat wallet terms screen component renders correctly 1`] = `
 "<View style={{...}}>
-  <Component>
+  <withTheme(TextComponent)>
     Mnemonic
-  </Component>
-  <Component testID=\\"button-next\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+  </withTheme(TextComponent)>
+  <withTheme(ButtonComponent) testID=\\"button-next\\" style={{...}} primary={true} onPress={[Function: onPress]}>
     Dashboard
-  </Component>
+  </withTheme(ButtonComponent)>
 </View>"
 `;
 
 exports[`creat wallet terms screen component sets correct navigation options 1`] = `
 Object {
-  "headerLeft": <Unknown
+  "headerLeft": <withTheme(GoBackButtonComponent)
     onPress={[Function]}
   />,
   "title": "Wallet mnemonic",

@@ -81,4 +81,4 @@ export class OnboardingScreenComponent extends React.Component<IProps> {
     }
 }
 
-export const OnboardingScreen = withTheme(OnboardingScreenComponent, stylesProvider);
+export const OnboardingScreen = withTheme(stylesProvider)(OnboardingScreenComponent);

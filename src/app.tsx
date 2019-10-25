@@ -15,7 +15,7 @@ const App = () => {
     return (
         <Provider store={store}>
             <ThemeContext.Provider value={darkTheme}>
-                <AppContainer />
+                <AppContainer theme="dark" />
             </ThemeContext.Provider>
         </Provider>
     );

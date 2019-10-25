@@ -6,6 +6,7 @@ import { Convert } from '../convert/convert';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
+import { smartConnect } from '../../core/utils/smart-connect';
 
 export interface IReduxProps {
     change: any;
@@ -38,7 +39,10 @@ export const ConversionCardComponent = (props: IProps & IReduxProps) => {
     );
 };
 
-export const ConversionCard = connect(
-    mapStateToProps,
-    null
-)(withTheme(ConversionCardComponent, stylesProvider));
+export const ConversionCard = smartConnect(ConversionCardComponent, [
+    connect(
+        mapStateToProps,
+        null
+    ),
+    withTheme(stylesProvider)
+]);

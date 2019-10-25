@@ -48,4 +48,4 @@ export const TextComponent = (props: ITextProps) => {
     return <ReactNative.Text style={getStyle(props)}>{text}</ReactNative.Text>;
 };
 
-export const Text = withTheme(TextComponent, stylesProvider);
+export const Text = withTheme(stylesProvider)(TextComponent);

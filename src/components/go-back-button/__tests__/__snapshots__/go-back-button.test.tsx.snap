@@ -3,8 +3,8 @@
 exports[`header go back button renders correctly 1`] = `
 "<TouchableOpacity onPress={[undefined]} style={{...}} activeOpacity={0.2}>
   <Icon name=\\"arrow-left-1\\" size={20} style={{...}} allowFontScaling={false} />
-  <Component>
+  <withTheme(TextComponent)>
     Back
-  </Component>
+  </withTheme(TextComponent)>
 </TouchableOpacity>"
 `;

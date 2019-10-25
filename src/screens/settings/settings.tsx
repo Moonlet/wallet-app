@@ -9,6 +9,7 @@ import { ITheme } from '../../core/theme/itheme';
 import { Icon } from '../../components/icon';
 import { connect } from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
+import { smartConnect } from '../../core/utils/smart-connect';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -215,9 +216,12 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
     }
 }
 
-export const SettingsScreen = connect(
-    mapStateToProps,
-    {
-        mock: mockFunction
-    }
-)(withTheme(SettingsScreenComponent, stylesProvider));
+export const SettingsScreen = smartConnect(SettingsScreenComponent, [
+    connect(
+        mapStateToProps,
+        {
+            mock: mockFunction
+        }
+    ),
+    withTheme(stylesProvider)
+]);

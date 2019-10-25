@@ -57,6 +57,6 @@ export const CreateWalletTermsScreenComponent = (props: IProps) => (
     </View>
 );
 
-export const CreateWalletTermsScreen = withTheme(CreateWalletTermsScreenComponent, stylesProvider);
+export const CreateWalletTermsScreen = withTheme(stylesProvider)(CreateWalletTermsScreenComponent);
 
 CreateWalletTermsScreen.navigationOptions = navigationOptions;

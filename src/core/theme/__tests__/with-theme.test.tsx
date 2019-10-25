@@ -12,11 +12,11 @@ describe('Theme:withTheme', () => {
             }
         }
 
-        const CompWithTheme = withTheme(Comp, (theme: ITheme) => ({
+        const CompWithTheme = withTheme((theme: ITheme) => ({
             div: {
                 backgroundColor: theme.colors.primary
             }
-        }));
+        }))(Comp);
 
         const renderedComp = shallow(<CompWithTheme prop1="value1" prop2="value2" />);
         expect(renderedComp.getElement().props).toEqual({

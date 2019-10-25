@@ -10,6 +10,7 @@ import { COLORS } from '../styles/colors';
 import { CreateWalletTermsScreen } from '../screens/create-wallet-terms/create-wallet-terms';
 import { CreateWalletMnemonicScreen } from '../screens/create-wallet-mnemonic/create-wallet-mnemonic';
 import { DummyScreen, menuIcon } from './utils';
+import { AccountScreen } from '../screens/account/account';
 
 const mainTabbedNavigationOptions: any = {
     tabBarPosition: 'bottom',
@@ -43,7 +44,10 @@ export const WalletNavigation = createStackNavigator(
             }
         },
         Account: {
-            screen: DummyScreen
+            screen: AccountScreen,
+            navigationOptions: {
+                header: null
+            }
         }
     },
     {

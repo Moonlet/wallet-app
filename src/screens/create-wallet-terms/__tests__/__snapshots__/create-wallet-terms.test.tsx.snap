@@ -8,9 +8,9 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
     </View>
   </View>
   <View style={{...}}>
-    <Component testID=\\"button-accept\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+    <withTheme(ButtonComponent) testID=\\"button-accept\\" style={{...}} primary={true} onPress={[Function: onPress]}>
       Accept
-    </Component>
+    </withTheme(ButtonComponent)>
   </View>
 </View>"
 `;
@@ -23,7 +23,7 @@ Object {
 `;
 
 exports[`creat wallet terms screen component sets correct navigation options 2`] = `
-<Unknown
+<withTheme(GoBackButtonComponent)
   onPress={[Function]}
 />
 `;

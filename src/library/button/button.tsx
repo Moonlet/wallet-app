@@ -24,4 +24,4 @@ export const ButtonComponent = (props: IButtonProps) => (
     </TouchableOpacity>
 );
 
-export const Button = withTheme(ButtonComponent, stylesProvider);
+export const Button = withTheme(stylesProvider)(ButtonComponent);

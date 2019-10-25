@@ -12,6 +12,7 @@ const manifest = require('./manifest');
 const BUILD = process.env.BUILD || 0;
 const BROWSER = process.env.BROWSER || 'chrome';
 const TARGET = process.env.TARGET || 'release';
+const VERSION = `${pkg.version}.${BUILD}`;
 
 // This is needed for webpack to compile JavaScript.
 // Many OSS React Native packages are not compiled to ES5 before being
@@ -79,7 +80,8 @@ module.exports = {
             filename: 'browser-action/index.html'
         }),
         new webpack.DefinePlugin({
-            __DEV__: false
+            __DEV__: false,
+            'process.env.VERSION': `"${VERSION}"`
         }),
         new CopyPlugin([
             { from: './resources', to: './browser-action/resources' },
@@ -88,7 +90,7 @@ module.exports = {
         new WebpackExtensionManifestPlugin({
             config: {
                 base: manifest[TARGET][BROWSER],
-                extend: { version: `${pkg.version}.${BUILD}` }
+                extend: { version: VERSION }
             }
         }),
         new WriteFilePlugin()
@@ -117,7 +119,11 @@ module.exports = {
         // This will only alias the exact import "react-native"
         alias: {
             'react-native$': 'react-native-web',
-            'react-native-linear-gradient$': 'react-native-web-linear-gradient'
+            'react-native-linear-gradient$': 'react-native-web-linear-gradient',
+            'react-native-device-info$': path.resolve(
+                __dirname,
+                'modules-mocks/react-native-device-info'
+            )
         },
         // If you're working on a multi-platform React Native app, web-specific
         // module implementations should be written in files using the extension

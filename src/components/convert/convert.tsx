@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from '../../library/text';
+import { Text } from '../../library';
 import { connect } from 'react-redux';
 
 export interface IProps {

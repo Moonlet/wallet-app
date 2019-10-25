@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Convert } from '../convert/convert';
-import { Text } from '../../library/text';
+import { Text } from '../../library';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';

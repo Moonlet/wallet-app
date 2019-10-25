@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`creat wallet terms screen component renders correctly 1`] = `
+"<View style={{...}}>
+  <Component>
+    Mnemonic
+  </Component>
+  <Component testID=\\"button-next\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+    Dashboard
+  </Component>
+</View>"
+`;
+
+exports[`creat wallet terms screen component sets correct navigation options 1`] = `
+Object {
+  "headerLeft": <Unknown
+    onPress={[Function]}
+  />,
+  "title": "Wallet mnemonic",
+}
+`;

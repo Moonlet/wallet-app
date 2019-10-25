@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text } from '../../library/text';
+import { Text } from '../../library';
 
 const formatter = /(\d)(?=(\d{3})+(?!\d))/g;
 

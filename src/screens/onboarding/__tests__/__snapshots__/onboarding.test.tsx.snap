@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`creat wallet terms screen component renders correctly 1`] = `
+"<View style={{...}}>
+  <View style={{...}}>
+    <View style={{...}}>
+      <Image style={{...}} source={{...}} />
+    </View>
+    <View style={{...}}>
+      <Component large={true} style={{...}}>
+        Welcome to Moonlet!
+      </Component>
+      <Component style={{...}} darker={true}>
+        We’ll generate this section once you create, recover or connect a wallet
+      </Component>
+    </View>
+  </View>
+  <View style={{...}}>
+    <View style={{...}}>
+      <Component style={{...}}>
+        Recover
+      </Component>
+      <Component style={{...}}>
+        Connect
+      </Component>
+    </View>
+    <View style={{...}}>
+      <Component testID=\\"button-create\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+        Create
+      </Component>
+    </View>
+  </View>
+</View>"
+`;

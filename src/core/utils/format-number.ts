@@ -2,7 +2,7 @@ import { Platform, NativeModules } from 'react-native';
 import 'intl';
 import 'intl/locale-data/jsonp/en-US';
 
-interface INumberFormatOptions {
+export interface INumberFormatOptions {
     locale?: string;
     currency?: string;
     minimumFractionDigits?: number;

@@ -2,7 +2,7 @@ import React from 'react';
 import { ThemeContext } from './theme-contex';
 import { ITheme } from './itheme';
 
-export const withTheme = (Comp: any, styleProvider: (theme: ITheme) => any) => {
+export const withTheme: any = (Comp: any, styleProvider: (theme: ITheme) => any) => {
     return (props: any) => {
         const theme = React.useContext(ThemeContext);
 

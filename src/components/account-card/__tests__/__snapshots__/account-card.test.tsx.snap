@@ -1,24 +1,24 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`account card component renders correctly 1`] = `
-"<View style={{...}}>
+"<TouchableOpacity testID=\\"account-card\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
   <Icon name=\\"money-wallet-1\\" size={25} style={{...}} allowFontScaling={false} />
   <View style={{...}}>
     <View style={{...}}>
       <Component format={{...}}>
         12332
       </Component>
-      <TextSmall>
+      <Component small={true}>
           
          $
         <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"USD\\" style={{...}} amount={12332} />
-      </TextSmall>
+      </Component>
     </View>
-    <TextSmall>
+    <Component small={true}>
       zil1vs74hw5k21233h432kj321l3k21b
        
-    </TextSmall>
+    </Component>
   </View>
   <Icon name=\\"arrow-right-1\\" size={25} style={{...}} allowFontScaling={false} />
-</View>"
+</TouchableOpacity>"
 `;

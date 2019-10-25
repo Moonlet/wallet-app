@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`creat wallet terms screen component renders correctly 1`] = `
+"<View style={{...}}>
+  <View style={{...}}>
+    <View style={{...}}>
+      <Image source={{...}} />
+    </View>
+  </View>
+  <View style={{...}}>
+    <Component testID=\\"button-accept\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+      Accept
+    </Component>
+  </View>
+</View>"
+`;
+
+exports[`creat wallet terms screen component sets correct navigation options 1`] = `
+Object {
+  "headerLeft": [Function],
+  "title": "Wallet terms",
+}
+`;
+
+exports[`creat wallet terms screen component sets correct navigation options 2`] = `
+<Unknown
+  onPress={[Function]}
+/>
+`;

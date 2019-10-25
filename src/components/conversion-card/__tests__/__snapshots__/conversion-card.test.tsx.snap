@@ -2,26 +2,26 @@
 
 exports[`conversion card component renders correctly 1`] = `
 "<View style={{...}}>
-  <TextSmall style={{...}}>
+  <Component small={true} style={{...}}>
     ZIL
     ETH
-  </TextSmall>
+  </Component>
   <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"ETH\\" amount={1} />
-  <TextSmall style={{...}}>
+  <Component small={true} style={{...}}>
     0.0216
-  </TextSmall>
+  </Component>
 </View>"
 `;
 
 exports[`conversion card component renders correctly negative values 1`] = `
 "<View style={{...}}>
-  <TextSmall style={{...}}>
+  <Component small={true} style={{...}}>
     ZIL
     ETH
-  </TextSmall>
+  </Component>
   <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"ETH\\" amount={1} />
-  <TextSmall style={{...}}>
+  <Component small={true} style={{...}}>
     -0.0216
-  </TextSmall>
+  </Component>
 </View>"
 `;

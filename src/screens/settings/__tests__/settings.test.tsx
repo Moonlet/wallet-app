@@ -1,6 +1,6 @@
 import 'react-native';
 import React from 'react';
-import { SettingsScreenComponent, IProps, IReduxProps } from '../settings';
+import { SettingsScreenComponent, IProps, IReduxProps, mockFunction } from '../settings';
 import { shallow } from 'enzyme';
 import styleProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';
@@ -20,6 +20,9 @@ beforeEach(() => {
 });
 
 describe('settings screen component', () => {
+    // test mock function
+    expect(mockFunction()).toEqual({ type: 'dummy' });
+
     const wrapper = shallow(<SettingsScreenComponent {...props} />);
 
     it('renders correctly', () => {

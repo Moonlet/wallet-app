@@ -21,6 +21,8 @@ jobs:
       run: npx tsc
     - name: Run Unit Tests
       run: npm test
+    - name: Build extension
+      run: npm run ext:build:beta:chrome
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1.0.3
       with:

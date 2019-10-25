@@ -12,7 +12,6 @@ export const darkTheme: ITheme = {
     },
 
     colors: {
-        black: COLORS.BLACK,
         primary: COLORS.GRAY,
         accent: COLORS.AQUA,
         text: COLORS.WHITE,
@@ -21,6 +20,7 @@ export const darkTheme: ITheme = {
         negative: COLORS.HOT_RED,
 
         cardBackground: COLORS.DARK_GRAY,
-        appBackground: COLORS.COD_GRAY
+        appBackground: COLORS.COD_GRAY,
+        settingsDivider: COLORS.BLACK
     }
 };

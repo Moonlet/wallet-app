@@ -9,7 +9,7 @@ export interface ITheme {
     };
 
     colors: {
-        black: string;
+        settingsDivider: string;
         primary: string;
         accent: string;
         text: string;

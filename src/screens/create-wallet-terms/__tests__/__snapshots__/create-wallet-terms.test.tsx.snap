@@ -23,7 +23,9 @@ Object {
 `;
 
 exports[`creat wallet terms screen component sets correct navigation options 2`] = `
-<withTheme(GoBackButtonComponent)
+<withTheme(HeaderLeftComponent)
+  icon="arrow-left-1"
   onPress={[Function]}
+  text="Back"
 />
 `;

@@ -8,14 +8,16 @@ import { Icon } from '../icon';
 
 export interface IProps {
     onPress?: any;
+    icon?: string;
+    text?: string;
     styles: ReturnType<typeof stylesProvider>;
 }
 
-export const GoBackButtonComponent = (props: IProps) => (
+export const HeaderLeftComponent = (props: IProps) => (
     <TouchableOpacity onPress={props.onPress} style={[props.styles.button]}>
-        <Icon name="arrow-left-1" size={20} style={props.styles.icon} />
-        <Text>Back</Text>
+        {props.icon && <Icon name={props.icon} size={20} style={props.styles.icon} />}
+        {props.text && <Text>{props.text}</Text>}
     </TouchableOpacity>
 );
 
-export const GoBackButton = withTheme(stylesProvider)(GoBackButtonComponent);
+export const HeaderLeft = withTheme(stylesProvider)(HeaderLeftComponent);

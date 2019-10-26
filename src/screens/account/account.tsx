@@ -41,6 +41,10 @@ export const mapStateToProps = (
     };
 };
 
+export const navigationOptions = {
+    title: 'Account'
+};
+
 export const AccountScreen = smartConnect(AccountScreenComponent, [
     connect(
         mapStateToProps,
@@ -48,3 +52,5 @@ export const AccountScreen = smartConnect(AccountScreenComponent, [
     ),
     withTheme(stylesProvider)
 ]);
+
+AccountScreen.navigationOptions = navigationOptions;

@@ -91,6 +91,7 @@ describe('dashboard screen component', () => {
 
         const wrapper = shallow(<DashboardScreenComponent {...props} />);
         const instance = wrapper.instance();
+
         // @ts-ignore
         instance.handleScrollEnd({ nativeEvent: { contentOffset: { x: 0 } } });
 
@@ -109,10 +110,21 @@ describe('dashboard screen component', () => {
 
     it('swtiches to correct coin on press', () => {
         const wrapper = shallow(<DashboardScreenComponent {...props} />);
+
+        // @ts-ignore
+        wrapper.instance().balancesScrollView = {
+            scrollTo: jest.fn()
+        };
+
         const selectionButton = wrapper.find('[testID="blockchainSelector"]').childAt(2);
         selectionButton.simulate('press');
         // @ts-ignore
         expect(wrapper.state().coinIndex).toBe(2);
+        // @ts-ignore
+        expect(wrapper.instance().balancesScrollView.scrollTo).toBeCalledWith({
+            ANIMATED_BC_SELECTION: true,
+            x: 750
+        });
         expect(wrapper.debug()).toMatchSnapshot();
     });
 });

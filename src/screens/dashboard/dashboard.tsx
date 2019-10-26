@@ -15,6 +15,8 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme } from '../../core/theme/with-theme';
+import { HeaderLeft } from '../../components/header-left/header-left';
+import { HeaderRight } from '../../components/header-right/header-right';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -119,9 +121,6 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
 
         return (
             <View style={styles.container}>
-                <View>
-                    <Text>some header</Text>
-                </View>
                 <View style={styles.balancesContainer}>
                     <ScrollView
                         ref={ref => (this.balancesScrollView = ref)}
@@ -132,7 +131,7 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
                         centerContent={true}
                         snapToAlignment={'start'}
                         snapToInterval={SCROLL_CARD_WIDTH}
-                        contentContainerStyle={{ marginTop: 36 }}
+                        contentContainerStyle={{ marginTop: 16 }}
                         showsHorizontalScrollIndicator={false}
                         snapToStart={false}
                         snapToEnd={false}
@@ -200,6 +199,12 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
     }
 }
 
+export const navigationOptions = {
+    title: 'Wallet 1',
+    headerLeft: <HeaderLeft icon="saturn-icon" />,
+    headerRight: <HeaderRight icon="single-man-hierachy" />
+};
+
 export const DashboardScreen = smartConnect(DashboardScreenComponent, [
     connect(
         mapStateToProps,
@@ -207,3 +212,5 @@ export const DashboardScreen = smartConnect(DashboardScreenComponent, [
     ),
     withTheme(stylesProvider)
 ]);
+
+DashboardScreen.navigationOptions = navigationOptions;

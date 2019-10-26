@@ -12,7 +12,7 @@ export default (theme: ITheme) =>
             ...StyleSheet.absoluteFillObject
         },
         balancesContainer: {
-            height: 160
+            height: 140
         },
         selectorGradientContainer: {
             position: 'absolute',

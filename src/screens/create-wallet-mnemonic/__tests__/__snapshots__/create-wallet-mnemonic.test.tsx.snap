@@ -13,9 +13,6 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
 
 exports[`creat wallet terms screen component sets correct navigation options 1`] = `
 Object {
-  "headerLeft": <withTheme(GoBackButtonComponent)
-    onPress={[Function]}
-  />,
   "title": "Wallet mnemonic",
 }
 `;

@@ -1,10 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`header go back button renders correctly 1`] = `
-"<TouchableOpacity onPress={[undefined]} style={{...}} activeOpacity={0.2}>
-  <Icon name=\\"arrow-left-1\\" size={20} style={{...}} allowFontScaling={false} />
+"<TouchableOpacity onPress={[Function: mockConstructor]} style={{...}} activeOpacity={0.2}>
+  <Icon name=\\"cog\\" size={20} style={{...}} allowFontScaling={false} />
   <withTheme(TextComponent)>
-    Back
+    text
   </withTheme(TextComponent)>
 </TouchableOpacity>"
 `;

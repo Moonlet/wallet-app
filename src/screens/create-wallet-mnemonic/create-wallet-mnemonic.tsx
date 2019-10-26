@@ -11,7 +11,6 @@ import { Button } from '../../library/button/button';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
-import { GoBackButton } from '../../components/go-back-button/go-back-button';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -19,14 +18,7 @@ export interface IProps {
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
-    title: 'Wallet mnemonic',
-    headerLeft: (
-        <GoBackButton
-            onPress={() => {
-                navigation.goBack(null);
-            }}
-        />
-    )
+    title: 'Wallet mnemonic'
 });
 
 export const CreateWalletMnemonicScreenComponent = (props: IProps) => (

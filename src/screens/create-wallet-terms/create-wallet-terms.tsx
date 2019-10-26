@@ -5,29 +5,12 @@ import { Button } from '../../library/button/button';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
-import { GoBackButton } from '../../components/go-back-button/go-back-button';
+import { HeaderLeft } from '../../components/header-left/header-left';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     styles: ReturnType<typeof stylesProvider>;
 }
-
-export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: () => {
-        if (navigation.state && navigation.state.params && navigation.state.params.goBack) {
-            return (
-                <GoBackButton
-                    onPress={() => {
-                        navigation.state.params.goBack(navigation);
-                    }}
-                />
-            );
-        }
-
-        return null;
-    },
-    title: 'Wallet terms'
-});
 
 export const CreateWalletTermsScreenComponent = (props: IProps) => (
     <View style={props.styles.container}>
@@ -56,6 +39,25 @@ export const CreateWalletTermsScreenComponent = (props: IProps) => (
         </View>
     </View>
 );
+
+export const navigationOptions = ({ navigation }: any) => ({
+    headerLeft: () => {
+        if (navigation.state && navigation.state.params && navigation.state.params.goBack) {
+            return (
+                <HeaderLeft
+                    icon="arrow-left-1"
+                    text="Back"
+                    onPress={() => {
+                        navigation.state.params.goBack(navigation);
+                    }}
+                />
+            );
+        }
+
+        return null;
+    },
+    title: 'Wallet terms'
+});
 
 export const CreateWalletTermsScreen = withTheme(stylesProvider)(CreateWalletTermsScreenComponent);
 

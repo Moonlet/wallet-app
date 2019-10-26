@@ -2,11 +2,6 @@
 
 exports[`dashboard screen component handles scroll correctly 1`] = `
 "<View style={{...}}>
-  <View>
-    <withTheme(TextComponent)>
-      some header
-    </withTheme(TextComponent)>
-  </View>
   <View style={{...}}>
     <ScrollViewMock onMomentumScrollEnd={[Function]} horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" snapToInterval={375} contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
       <View style={{...}} />
@@ -49,11 +44,6 @@ exports[`dashboard screen component handles scroll correctly 1`] = `
 
 exports[`dashboard screen component renders correctly 1`] = `
 "<View style={{...}}>
-  <View>
-    <withTheme(TextComponent)>
-      some header
-    </withTheme(TextComponent)>
-  </View>
   <View style={{...}}>
     <ScrollViewMock onMomentumScrollEnd={[Function]} horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" snapToInterval={375} contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
       <View style={{...}} />
@@ -96,11 +86,6 @@ exports[`dashboard screen component renders correctly 1`] = `
 
 exports[`dashboard screen component swtiches to correct coin on press 1`] = `
 "<View style={{...}}>
-  <View>
-    <withTheme(TextComponent)>
-      some header
-    </withTheme(TextComponent)>
-  </View>
   <View style={{...}}>
     <ScrollViewMock onMomentumScrollEnd={[Function]} horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" snapToInterval={375} contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
       <View style={{...}} />

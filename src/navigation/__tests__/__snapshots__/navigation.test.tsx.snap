@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Navigation configuration default stack configuration is ok 1`] = `
+Object {
+  "headerLeft": <withTheme(HeaderLeftComponent)
+    icon="arrow-left-1"
+    onPress={[Function]}
+    text="Back"
+  />,
+  "headerStyle": Object {
+    "backgroundColor": "#111111",
+    "borderBottomWidth": 0,
+  },
+  "headerTitleStyle": Object {
+    "fontWeight": "bold",
+  },
+}
+`;
+
+exports[`Navigation configuration default stack configuration should not display back button if there is nowhere to go back to 1`] = `
+Object {
+  "headerLeft": null,
+  "headerStyle": Object {
+    "backgroundColor": "#111111",
+    "borderBottomWidth": 0,
+  },
+  "headerTitleStyle": Object {
+    "fontWeight": "bold",
+  },
+}
+`;

@@ -20,7 +20,7 @@ import { HeaderLeft } from '../components/header-left/header-left';
 
 interface IDefaultNavOptions {
     navigation: any;
-    theme: Theme.dark | Theme.light;
+    theme: Theme;
 }
 
 export const themes: { dark: ITheme; light: ITheme } = {

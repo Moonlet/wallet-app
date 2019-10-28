@@ -7,5 +7,10 @@ module.exports = {
                 legacy: true
             }
         ]
-    ]
+    ],
+    env: {
+        test: {
+            plugins: ['dynamic-import-node']
+        }
+    }
 };

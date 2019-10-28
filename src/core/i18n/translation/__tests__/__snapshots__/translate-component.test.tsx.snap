@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Translate component it renders corectly 1`] = `
+"<withTheme(TextComponent) text=\\"TEST\\">
+  TEST RESULT
+</withTheme(TextComponent)>"
+`;
+
+exports[`Translate component it renders corectly 2`] = `"<TranslateComponent text=\\"TEST\\" params=\\"PARAMS\\" count={123} styles={{...}} theme={{...}} />"`;

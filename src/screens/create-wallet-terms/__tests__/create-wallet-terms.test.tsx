@@ -23,10 +23,17 @@ describe('creat wallet terms screen component', () => {
         expect(wrapper.debug()).toMatchSnapshot();
     });
 
-    it('navigates to next screen', () => {
+    it('navigates correctly', () => {
         const wrapper = shallow(<CreateWalletTermsScreenComponent {...props} />);
+
         wrapper.find('[testID="button-accept"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledTimes(1);
+        expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletMnemonic');
+
+        wrapper.find('[testID="button-tos"]').simulate('Press');
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Tos');
+
+        wrapper.find('[testID="button-privacy-policy"]').simulate('Press');
+        expect(props.navigation.navigate).toHaveBeenCalledWith('PrivacyPolicy');
     });
 
     it('sets correct navigation options', () => {

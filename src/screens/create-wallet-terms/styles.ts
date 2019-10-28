@@ -4,22 +4,56 @@ import { ITheme } from '../../core/theme/itheme';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            padding: 0,
-            paddingTop: 40,
+            paddingHorizontal: 16,
             alignItems: 'center',
-            justifyContent: 'flex-start',
+            justifyContent: 'space-between',
             backgroundColor: theme.colors.appBackground,
             ...StyleSheet.absoluteFillObject
         },
 
-        bottomButton: {
-            marginHorizontal: 6,
-            marginTop: 20
+        topContainer: {
+            flex: 1,
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+            alignSelf: 'stretch'
         },
 
-        buttonsContainer: {
-            margin: 26,
+        bottomContainer: {
+            flex: 0,
+            justifyContent: 'center',
             alignSelf: 'stretch',
-            height: '30%'
+            alignItems: 'center',
+            marginBottom: 60
+        },
+
+        bottomButton: {
+            width: '80%',
+            marginTop: 40
+        },
+
+        rowContainer: {
+            flexDirection: 'row',
+            paddingVertical: 12,
+            justifyContent: 'space-between',
+            alignSelf: 'stretch'
+        },
+
+        rightContainer: {
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            flex: 0,
+            paddingRight: 8
+        },
+
+        divider: {
+            width: '100%',
+            height: 1,
+            backgroundColor: theme.colors.settingsDivider
+        },
+
+        icon: {
+            color: theme.colors.accent,
+            fontWeight: 'bold'
         }
     });

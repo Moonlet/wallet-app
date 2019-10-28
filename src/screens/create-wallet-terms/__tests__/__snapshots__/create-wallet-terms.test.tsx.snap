@@ -3,11 +3,32 @@
 exports[`creat wallet terms screen component renders correctly 1`] = `
 "<View style={{...}}>
   <View style={{...}}>
+    <withTheme(TextComponent) darker={true} style={{...}}>
+      Make sure you review our Privacy policy and Terms of service
+    </withTheme(TextComponent)>
     <View style={{...}}>
       <Image source={{...}} />
     </View>
   </View>
   <View style={{...}}>
+    <TouchableOpacity testID=\\"button-tos\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <withTheme(TextComponent)>
+        Terms of service
+      </withTheme(TextComponent)>
+      <View style={{...}}>
+        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
+    <TouchableOpacity testID=\\"button-privacy-policy\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <withTheme(TextComponent)>
+        Privacy policy
+      </withTheme(TextComponent)>
+      <View style={{...}}>
+        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
     <withTheme(ButtonComponent) testID=\\"button-accept\\" style={{...}} primary={true} onPress={[Function: onPress]}>
       Accept
     </withTheme(ButtonComponent)>
@@ -18,7 +39,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
 exports[`creat wallet terms screen component sets correct navigation options 1`] = `
 Object {
   "headerLeft": [Function],
-  "title": "Wallet terms",
+  "title": "Create",
 }
 `;
 

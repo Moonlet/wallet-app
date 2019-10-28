@@ -17,6 +17,8 @@ import { lightTheme } from '../styles/themes/light-theme';
 import { ITheme } from '../core/theme/itheme';
 import { Theme } from '../core/theme/themes';
 import { HeaderLeft } from '../components/header-left/header-left';
+import { TosScreen } from '../screens/tos/tos';
+import { PrivacyPolicyScreen } from '../screens/privacy-policy/privacy-policy';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -126,6 +128,12 @@ export const CreateWalletNavigation = createStackNavigator(
         },
         CreateWalletMnemonic: {
             screen: CreateWalletMnemonicScreen
+        },
+        Tos: {
+            screen: TosScreen
+        },
+        PrivacyPolicy: {
+            screen: PrivacyPolicyScreen
         }
     },
     {
@@ -147,7 +155,7 @@ export const RootNavigation = createSwitchNavigator(
         CreateWalletNavigation
     },
     {
-        // initialRouteName: 'OnboardingScreen'
-        initialRouteName: 'MainNavigation'
+        initialRouteName: 'CreateWalletNavigation'
+        // initialRouteName: 'MainNavigation'
     }
 );

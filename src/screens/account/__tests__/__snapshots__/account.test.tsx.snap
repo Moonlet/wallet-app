@@ -10,12 +10,10 @@ exports[`AccountScreen renders correctly 1`] = `
       10900
     </CurrencyFormat>
     <withTheme(TextComponent) style={{...}}>
-       
-      ZIL
+       ZIL
     </withTheme(TextComponent)>
     <withTheme(TextComponent) style={{...}}>
-      $
-       
+      $ 
     </withTheme(TextComponent)>
     <CurrencyFormat symbol=\\"ZIL\\" decimals=\\"2\\" style={{...}}>
       88.18

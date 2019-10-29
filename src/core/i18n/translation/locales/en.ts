@@ -1,5 +1,5 @@
 import { ITranslations } from '../types';
-console.log();
+
 export const translation: ITranslations = {
     texts: {
         App: {

@@ -48,7 +48,7 @@ const mainTabbedNavigationOptions: any = {
             dark: darkTheme.colors.accent
         },
         inactiveTintColor: {
-            dark: darkTheme.colors.textDarker
+            dark: darkTheme.colors.textSecondary
         }
     },
 

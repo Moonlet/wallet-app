@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CurrencyFormat renders corectly 1`] = `
+"<withTheme(TextComponent) style={[undefined]}>
+  123.123
+</withTheme(TextComponent)>"
+`;
+
+exports[`CurrencyFormat renders corectly 2`] = `
+"<withTheme(TextComponent) style={[undefined]}>
+  123.12
+</withTheme(TextComponent)>"
+`;

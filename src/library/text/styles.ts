@@ -9,7 +9,7 @@ export default (theme: ITheme) =>
             fontSize: theme.fontSize.regular
         },
         darker: {
-            color: theme.colors.textDarker
+            color: theme.colors.textSecondary
         },
         small: {
             fontSize: theme.fontSize.small

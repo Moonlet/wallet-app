@@ -1,9 +1,15 @@
 import { ITranslations } from '../types';
-
+console.log();
 export const translation: ITranslations = {
     texts: {
         App: {
-            labels: {}
+            labels: {
+                // plase try to add keys in alphabetic order
+                receive: 'Receive',
+                send: 'Send',
+                transactions: 'Transactions'
+                // plase try to add keys in alphabetic order
+            }
         }
     },
     plural: (n: number, ord?: boolean) => {

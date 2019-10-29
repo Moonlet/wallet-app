@@ -10,7 +10,7 @@ export default (theme: ITheme) =>
             alignItems: 'center'
         },
         darkerText: {
-            color: theme.colors.textDarker
+            color: theme.colors.textSecondary
         },
         mainText: {
             fontSize: 34

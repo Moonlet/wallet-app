@@ -7,14 +7,15 @@ interface IProps {
     symbol?: string;
     decimals?: string;
     children: any;
+    style?: any;
 }
 
-const CurrencyFormat = (props: IProps) => {
+export const CurrencyFormat = (props: IProps) => {
     const value = parseFloat(props.children);
     let output = props.decimals ? value.toFixed(2) : '' + value;
     output = output.replace(formatter, '$1,');
 
-    return <Text>{output}</Text>;
+    return <Text style={props.style}>{output}</Text>;
 };
 
 export default CurrencyFormat;

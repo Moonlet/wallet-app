@@ -14,7 +14,7 @@ export default (theme: ITheme) =>
             flex: 1
         },
         conversionLabel: {
-            color: theme.colors.textDarker
+            color: theme.colors.textSecondary
         },
         changeUp: {
             color: theme.colors.positive

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
+import { StatusBar } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import configureStore from './redux/config';
 import { RootNavigation } from './navigation/navigation';
@@ -43,6 +44,8 @@ export default class App extends React.Component<{}, IState> {
     }
 
     public render() {
+        // decide the bar style on lightTheme
+        StatusBar.setBarStyle('light-content', true);
         if (this.state.appReady) {
             return (
                 <Provider store={store}>

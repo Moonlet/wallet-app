@@ -8,9 +8,10 @@ import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { ITheme } from '../../core/theme/itheme';
 import { Icon } from '../../components/icon';
+import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
-import { smartConnect } from '../../core/utils/smart-connect';
+import { HeaderLeft } from '../../components/header-left/header-left';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -220,10 +221,17 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
     }
 }
 
-export const SettingsScreen = connect(
-    mapStateToProps,
-    {
-        mock: mockFunction,
-        setPinLogin
-    }
-)(withTheme(SettingsScreenComponent, stylesProvider));
+export const navigationOptions = {
+    title: 'Settings',
+    headerLeft: <HeaderLeft icon="saturn-icon" />
+};
+
+export const SettingsScreen = smartConnect(SettingsScreenComponent, [
+    connect(
+        mapStateToProps,
+        { mock: mockFunction, setPinLogin }
+    ),
+    withTheme(stylesProvider)
+]);
+
+SettingsScreen.navigationOptions = navigationOptions;

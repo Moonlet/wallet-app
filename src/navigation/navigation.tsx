@@ -91,6 +91,19 @@ export const WalletNavigation = createStackNavigator(
     }
 );
 
+// wallet navigation stack
+export const SettingsNavigation = createStackNavigator(
+    {
+        Settings: {
+            screen: SettingsScreen
+        }
+    },
+    {
+        initialRouteName: 'Settings',
+        defaultNavigationOptions: defaultStackNavigationOptions
+    }
+);
+
 // main dashboard navigation
 export const navigationConfig = {
     Wallet: {
@@ -112,7 +125,7 @@ export const navigationConfig = {
         })
     },
     Settings: {
-        screen: SettingsScreen,
+        screen: SettingsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
             tabBarIcon: menuIcon('cog')

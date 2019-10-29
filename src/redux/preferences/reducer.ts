@@ -13,6 +13,8 @@ export default (state: IPrefState = intialState, action: IAction): IPrefState =>
         case PREF_SET_PIN:
             newState.pinLogin = !state.pinLogin;
             break;
+        default:
+            break;
     }
     return newState;
 };

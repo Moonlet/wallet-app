@@ -6,4 +6,5 @@ export interface IReduxState {
     app: IAppState;
     wallets: IWalletState[];
     preferences: IPrefState;
+    _persist: object;
 }

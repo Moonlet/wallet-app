@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { StatusBar } from 'react-native';
 import { createAppContainer } from 'react-navigation';
-import configureStore from './redux/config';
+import store from './redux/config';
 import { RootNavigation } from './navigation/navigation';
 
 import { darkTheme } from './styles/themes/dark-theme';
@@ -11,36 +11,36 @@ import { loadTranslations } from './core/i18n';
 
 const AppContainer = createAppContainer(RootNavigation);
 
-const store = configureStore();
+// const store = configureStore();
 
 interface IState {
     appReady: boolean;
-    translationsLoaded: boolean;
-    reduxStateLoaded: boolean;
 }
 export default class App extends React.Component<{}, IState> {
+    private translationsLoaded: boolean = false;
+    private reduxStateLoaded: boolean = false;
+
     constructor(props: any) {
         super(props);
         this.state = {
-            appReady: false,
-            translationsLoaded: false,
-            reduxStateLoaded: true
+            appReady: false
         };
 
         loadTranslations('en').then(() => {
-            this.setAppState({ translationsLoaded: true });
+            this.translationsLoaded = true;
+            this.updateAppReady();
+        });
+
+        store.subscribe(() => {
+            if (store.getState()._persist.rehydrated === true) {
+                this.reduxStateLoaded = true;
+                this.updateAppReady();
+            }
         });
     }
 
-    public setAppState<K extends keyof IState>(state: Pick<IState, K>) {
-        const newState = {
-            ...this.state,
-            ...state
-        };
-
-        if (newState.translationsLoaded && newState.reduxStateLoaded) {
-            this.setState({ ...state, appReady: true });
-        }
+    public updateAppReady() {
+        this.setState({ appReady: this.translationsLoaded && this.reduxStateLoaded });
     }
 
     public render() {

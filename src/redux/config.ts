@@ -1,7 +1,7 @@
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
-import { persistReducer } from 'redux-persist';
+import { persistStore, persistReducer } from 'redux-persist';
 import { AsyncStorage } from 'react-native';
 import walletsReducer from './wallets/reducer';
 import appReducer from './app/reducer';
@@ -15,8 +15,8 @@ const composeEnhancers = composeWithDevTools({
 const persistConfig = {
     key: 'root',
     version: 1,
-    storage: AsyncStorage,
-    whitelist: ['preferences'] // only user and activity information will be persisted
+    storage: AsyncStorage
+    // whitelist: ['preferences'] // only user and activity information will be persisted
 };
 
 const rootReducer = combineReducers({
@@ -26,19 +26,12 @@ const rootReducer = combineReducers({
     preferences: prefReducer
 });
 
-const configureStore = () =>
-    createStore(
-        persistReducer(persistConfig, rootReducer),
-        {},
-        composeEnhancers(applyMiddleware(thunk))
-    );
+const store = createStore(
+    persistReducer(persistConfig, rootReducer),
+    {},
+    composeEnhancers(applyMiddleware(thunk))
+);
 
-// const persist = persistStore(
-//     createStore(
-//         persistReducer(persistConfig, rootReducer),
-//         {},
-//         composeEnhancers(applyMiddleware(thunk))
-//     )
-// );
+export default store;
 
-export default configureStore;
+export const persistor = persistStore(store);

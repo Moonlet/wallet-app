@@ -1,3 +1,4 @@
-export interface IAppState {
+export interface IPrefState {
     currency: string;
+    pinLogin: boolean;
 }

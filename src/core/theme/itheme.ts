@@ -13,7 +13,8 @@ export interface ITheme {
         primary: string;
         accent: string;
         text: string;
-        textDarker: string;
+        textSecondary: string;
+        textTertiary: string;
         positive: string;
         negative: string;
 

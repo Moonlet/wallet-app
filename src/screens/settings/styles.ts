@@ -16,7 +16,7 @@ export default (theme: ITheme) =>
             marginTop: 16
         },
         textHeader: {
-            color: theme.colors.textDarker,
+            color: theme.colors.textSecondary,
             fontSize: 13,
             lineHeight: 18
         },
@@ -26,7 +26,7 @@ export default (theme: ITheme) =>
         },
         textRowValue: {
             fontSize: 15,
-            color: theme.colors.textDarker,
+            color: theme.colors.textSecondary,
             lineHeight: 16,
             paddingRight: 8
         },

@@ -3,8 +3,13 @@ import { shallow } from 'enzyme';
 import { AccountScreenComponent, AccountScreen, mapStateToProps } from '../account';
 import stylesProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';
+import { loadTranslations } from '../../../core/i18n';
 
 export default describe('AccountScreen', () => {
+    beforeAll(async () => {
+        await loadTranslations('en');
+    });
+
     test('renders correctly', () => {
         const props = {
             styles: stylesProvider(darkTheme),

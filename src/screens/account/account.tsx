@@ -9,7 +9,6 @@ import { withTheme } from '../../core/theme/with-theme';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { Text, Button } from '../../library';
-import CurrencyFormat from '../../components/currency-format/currency-format';
 import { translate, Translate } from '../../core/i18n';
 import { Icon } from '../../components/icon';
 
@@ -29,15 +28,12 @@ export class AccountScreenComponent extends React.Component<IReduxProps & IExter
             <ScrollView style={styles.container}>
                 <Text style={styles.address}>zil1f6...1234f3</Text>
                 <View style={styles.balanceContainer}>
-                    <CurrencyFormat symbol="ZIL" decimals="2" style={styles.balance}>
+                    <Text style={styles.balance} format={{ currency: 'ZIL' }}>
                         10900
-                    </CurrencyFormat>
-                    <Text style={styles.balance}> ZIL</Text>
-
-                    <Text style={styles.balanceSymbolFiat}>$ </Text>
-                    <CurrencyFormat symbol="ZIL" decimals="2" style={styles.balance}>
+                    </Text>
+                    <Text style={styles.balanceSymbolFiat} format={{ currency: 'USD' }}>
                         88.18
-                    </CurrencyFormat>
+                    </Text>
                 </View>
 
                 <View style={styles.buttonsContainer}>

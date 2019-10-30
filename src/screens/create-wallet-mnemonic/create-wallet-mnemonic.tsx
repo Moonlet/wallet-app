@@ -21,33 +21,6 @@ export interface IProps {
 export const CreateWalletMnemonicScreenComponent = (props: IProps) => {
     const mnemonic: string[] = Mnemonic.generate().split(' ');
 
-    // const mnemonic = [
-    //     'pyramid',
-    //     'wonder',
-    //     'swing',
-    //     'file',
-    //     'promote',
-    //     'end',
-    //     'crush',
-    //     'enemy',
-    //     'abandon',
-    //     'abstract',
-    //     'eye',
-    //     'frozen',
-    //     'scissors',
-    //     'radar',
-    //     'dolphin',
-    //     'primary',
-    //     'stumble',
-    //     'suit',
-    //     'naive',
-    //     'color',
-    //     'abstract',
-    //     'crowd',
-    //     'tiger',
-    //     'boil'
-    // ];
-
     return (
         <View style={props.styles.container}>
             <View style={props.styles.topContainer}>

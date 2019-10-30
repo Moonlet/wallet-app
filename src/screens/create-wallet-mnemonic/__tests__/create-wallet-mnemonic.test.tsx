@@ -8,6 +8,7 @@ import { darkTheme } from '../../../styles/themes/dark-theme';
 import styleProvider from '../styles';
 
 import { shallow } from 'enzyme';
+import { Mnemonic } from '../../../core/wallet/hd-wallet/mnemonic';
 
 const props: IProps = {
     // @ts-ignore
@@ -17,7 +18,15 @@ const props: IProps = {
     styles: styleProvider(darkTheme)
 };
 
+jest.mock('../../../core/wallet/hd-wallet/mnemonic');
+
 describe('creat wallet terms screen component', () => {
+    beforeAll(() => {
+        Mnemonic.generate = jest.fn(
+            () => '1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24'
+        );
+    });
+
     it('renders correctly', () => {
         const wrapper = shallow(<CreateWalletMnemonicScreenComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();

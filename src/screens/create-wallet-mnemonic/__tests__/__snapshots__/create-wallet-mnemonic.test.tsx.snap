@@ -8,132 +8,132 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
         <withTheme(TextComponent) small={true} style={{...}}>
           1
           . 
-          pyramid
+          1
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           2
           . 
-          wonder
+          2
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           3
           . 
-          swing
+          3
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           4
           . 
-          file
+          4
         </withTheme(TextComponent)>
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) small={true} style={{...}}>
           5
           . 
-          promote
+          5
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           6
           . 
-          end
+          6
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           7
           . 
-          crush
+          7
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           8
           . 
-          enemy
+          8
         </withTheme(TextComponent)>
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) small={true} style={{...}}>
           9
           . 
-          abandon
+          9
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           10
           . 
-          abstract
+          10
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           11
           . 
-          eye
+          11
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           12
           . 
-          frozen
+          12
         </withTheme(TextComponent)>
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) small={true} style={{...}}>
           13
           . 
-          scissors
+          13
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           14
           . 
-          radar
+          14
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           15
           . 
-          dolphin
+          15
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           16
           . 
-          primary
+          16
         </withTheme(TextComponent)>
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) small={true} style={{...}}>
           17
           . 
-          stumble
+          17
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           18
           . 
-          suit
+          18
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           19
           . 
-          naive
+          19
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           20
           . 
-          color
+          20
         </withTheme(TextComponent)>
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) small={true} style={{...}}>
           21
           . 
-          abstract
+          21
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           22
           . 
-          crowd
+          22
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           23
           . 
-          tiger
+          23
         </withTheme(TextComponent)>
         <withTheme(TextComponent) small={true} style={{...}}>
           24
           . 
-          boil
+          24
         </withTheme(TextComponent)>
       </View>
     </View>

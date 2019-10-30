@@ -6,18 +6,12 @@ exports[`AccountScreen renders correctly 1`] = `
     zil1f6...1234f3
   </withTheme(TextComponent)>
   <View style={{...}}>
-    <CurrencyFormat symbol=\\"ZIL\\" decimals=\\"2\\" style={{...}}>
+    <withTheme(TextComponent) style={{...}} format={{...}}>
       10900
-    </CurrencyFormat>
-    <withTheme(TextComponent) style={{...}}>
-       ZIL
     </withTheme(TextComponent)>
-    <withTheme(TextComponent) style={{...}}>
-      $ 
-    </withTheme(TextComponent)>
-    <CurrencyFormat symbol=\\"ZIL\\" decimals=\\"2\\" style={{...}}>
+    <withTheme(TextComponent) style={{...}} format={{...}}>
       88.18
-    </CurrencyFormat>
+    </withTheme(TextComponent)>
   </View>
   <View style={{...}}>
     <withTheme(ButtonComponent) style={{...}}>

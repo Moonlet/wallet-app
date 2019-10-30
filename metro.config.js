@@ -13,5 +13,8 @@ module.exports = {
                 inlineRequires: false
             }
         })
+    },
+    resolver: {
+        extraNodeModules: require('node-libs-react-native')
     }
 };

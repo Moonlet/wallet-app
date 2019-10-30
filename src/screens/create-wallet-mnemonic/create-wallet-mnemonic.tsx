@@ -11,6 +11,7 @@ import { Button } from '../../library/button/button';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
+import { Mnemonic } from '../../core/wallet/hd-wallet/mnemonic';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -18,34 +19,34 @@ export interface IProps {
 }
 
 export const CreateWalletMnemonicScreenComponent = (props: IProps) => {
-    // const mnemonic = Mnemonic.generate();
+    const mnemonic: string[] = Mnemonic.generate().split(' ');
 
-    const mnemonic = [
-        'pyramid',
-        'wonder',
-        'swing',
-        'file',
-        'promote',
-        'end',
-        'crush',
-        'enemy',
-        'abandon',
-        'abstract',
-        'eye',
-        'frozen',
-        'scissors',
-        'radar',
-        'dolphin',
-        'primary',
-        'stumble',
-        'suit',
-        'naive',
-        'color',
-        'abstract',
-        'crowd',
-        'tiger',
-        'boil'
-    ];
+    // const mnemonic = [
+    //     'pyramid',
+    //     'wonder',
+    //     'swing',
+    //     'file',
+    //     'promote',
+    //     'end',
+    //     'crush',
+    //     'enemy',
+    //     'abandon',
+    //     'abstract',
+    //     'eye',
+    //     'frozen',
+    //     'scissors',
+    //     'radar',
+    //     'dolphin',
+    //     'primary',
+    //     'stumble',
+    //     'suit',
+    //     'naive',
+    //     'color',
+    //     'abstract',
+    //     'crowd',
+    //     'tiger',
+    //     'boil'
+    // ];
 
     return (
         <View style={props.styles.container}>

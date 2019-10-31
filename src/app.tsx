@@ -2,21 +2,24 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { StatusBar } from 'react-native';
 import { createAppContainer } from 'react-navigation';
-import store from './redux/config';
 import { RootNavigation } from './navigation/navigation';
-
+import configureStore from './redux/config';
+import { PersistGate } from 'redux-persist/integration/react';
 import { darkTheme } from './styles/themes/dark-theme';
 import { ThemeContext } from './core/theme/theme-contex';
 import { loadTranslations } from './core/i18n';
-
+import { persistStore } from 'redux-persist';
 const AppContainer = createAppContainer(RootNavigation);
 
-// const store = configureStore();
+const store = configureStore();
+const persistor = persistStore(store);
 
 interface IState {
     appReady: boolean;
 }
+
 export default class App extends React.Component<{}, IState> {
+    //    public unsubscribe =
     private translationsLoaded: boolean = false;
     private reduxStateLoaded: boolean = false;
 
@@ -30,7 +33,6 @@ export default class App extends React.Component<{}, IState> {
             this.translationsLoaded = true;
             this.updateAppReady();
         });
-
         store.subscribe(() => {
             if (store.getState()._persist.rehydrated === true) {
                 this.reduxStateLoaded = true;
@@ -47,11 +49,14 @@ export default class App extends React.Component<{}, IState> {
         // decide the bar style on lightTheme
         StatusBar.setBarStyle('light-content', true);
         if (this.state.appReady) {
+            //            this.unsubscribe();
             return (
                 <Provider store={store}>
-                    <ThemeContext.Provider value={darkTheme}>
-                        <AppContainer theme="dark" />
-                    </ThemeContext.Provider>
+                    <PersistGate loading={null} persistor={persistor}>
+                        <ThemeContext.Provider value={darkTheme}>
+                            <AppContainer theme="dark" />
+                        </ThemeContext.Provider>
+                    </PersistGate>
                 </Provider>
             );
         } else {

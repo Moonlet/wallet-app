@@ -2,12 +2,12 @@ import { IPrefState } from './state';
 import { IAction } from '../types';
 import { PREF_SET_PIN } from './actions';
 
-const intialState: IPrefState = {
+const initialState: IPrefState = {
     currency: 'USD',
     pinLogin: true
 };
 
-export default (state: IPrefState = intialState, action: IAction): IPrefState => {
+export default (state: IPrefState = initialState, action: IAction): IPrefState => {
     const newState = { ...state };
     switch (action.type) {
         case PREF_SET_PIN:

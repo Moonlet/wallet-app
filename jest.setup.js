@@ -1,6 +1,7 @@
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 import { NativeModules } from 'react-native';
+import { randomBytes } from 'crypto';
 
 Enzyme.configure({ adapter: new Adapter() });
 
@@ -36,6 +37,13 @@ NativeModules.RNRandomBytes = { seed: 'a' };
 jest.mock('react-native-device-info', () => {
     return {
         getVersion: jest.fn()
+    };
+});
+
+jest.mock('react-native-randombytes', () => {
+    const randomBytes = require('crypto').randomBytes;
+    return {
+        randomBytes: jest.fn(randomBytes)
     };
 });
 

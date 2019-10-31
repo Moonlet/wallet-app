@@ -26,10 +26,11 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<IProps,
         };
     }
 
-    async componentDidMount() {
-        const mnemonic = await Mnemonic.generate();
-        this.setState({
-            mnemonic: mnemonic.split(' ')
+    public async componentDidMount() {
+        Mnemonic.generate().then(mnemonic => {
+            this.setState({
+                mnemonic: mnemonic.split(' ')
+            });
         });
     }
 

@@ -1,5 +1,5 @@
 import { validateMnemonic, wordlists, mnemonicToSeedSync, entropyToMnemonic } from 'bip39';
-//@ts-ignore
+// @ts-ignore
 import { randomBytes } from 'react-native-randombytes';
 
 const getRandomBytes: any = (n: number) => {
@@ -19,8 +19,8 @@ export class Mnemonic {
         const randomBytesNr = words === 24 ? 32 : 16;
 
         try {
-            const randomBytes = await getRandomBytes(randomBytesNr);
-            const mnemonic = entropyToMnemonic(randomBytes, wordlists.EN);
+            const bytes = await getRandomBytes(randomBytesNr);
+            const mnemonic = entropyToMnemonic(bytes, wordlists.EN);
             return mnemonic;
         } catch (e) {
             throw new Error(e);

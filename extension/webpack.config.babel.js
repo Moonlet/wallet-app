@@ -35,7 +35,8 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/react-native-tab-view'),
         path.resolve(appDirectory, 'node_modules/react-native-safe-area-view'),
         path.resolve(appDirectory, 'node_modules/react-native-vector-icons'),
-        path.resolve(appDirectory, 'node_modules/react-native-gesture-handler')
+        path.resolve(appDirectory, 'node_modules/react-native-gesture-handler'),
+        path.resolve(appDirectory, 'node_modules/@react-native-community/async-storage')
         //path.resolve(appDirectory, 'node_modules/react-native-uncompiled')
     ],
     use: {

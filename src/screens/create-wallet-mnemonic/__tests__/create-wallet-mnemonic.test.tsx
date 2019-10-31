@@ -10,6 +10,7 @@ import styleProvider from '../styles';
 import { shallow } from 'enzyme';
 import { loadTranslations } from '../../../core/i18n';
 import { Mnemonic } from '../../../core/wallet/hd-wallet/mnemonic';
+import { testUtils } from '../../../core/utils/test';
 
 const props: IProps = {
     // @ts-ignore
@@ -29,8 +30,9 @@ describe('creat wallet terms screen component', () => {
         await loadTranslations('en');
     });
 
-    it('renders correctly', () => {
+    it('renders correctly', async () => {
         const wrapper = shallow(<CreateWalletMnemonicScreenComponent {...props} />);
+        await testUtils.delay();
         expect(wrapper.debug()).toMatchSnapshot();
     });
 

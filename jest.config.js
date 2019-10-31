@@ -5,6 +5,7 @@ module.exports = {
     setupFiles: ['./jest.setup.js'],
     roots: ['src/'],
     collectCoverage: true,
+    collectCoverageFrom: ['./src/**/*.{ts,tsx}', '!./src/core/utils/test/'],
     globals: {
         window: {
             navigator: {

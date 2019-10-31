@@ -9,7 +9,6 @@ export interface ITheme {
     };
 
     colors: {
-        settingsDivider: string;
         primary: string;
         accent: string;
         text: string;
@@ -18,7 +17,10 @@ export interface ITheme {
         positive: string;
         negative: string;
 
+        settingsDivider: string;
         cardBackground: string;
         appBackground: string;
+        inputBackground: string;
+        disabledButton: string;
     };
 }

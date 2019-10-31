@@ -8,6 +8,7 @@ import { withTheme } from '../../core/theme/with-theme';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { Text } from '../../library';
 import { Icon } from '../../components/icon';
+import { translate } from '../../core/i18n';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -18,7 +19,7 @@ export const CreateWalletTermsScreenComponent = (props: IProps) => (
     <View style={props.styles.container}>
         <View style={props.styles.topContainer}>
             <Text darker style={{ textAlign: 'center', marginTop: 60 }}>
-                Make sure you review our Privacy policy and Terms of service
+                <Text>{translate('CreateWalletTos.body')}</Text>
             </Text>
             <View
                 style={{
@@ -37,7 +38,7 @@ export const CreateWalletTermsScreenComponent = (props: IProps) => (
                 style={props.styles.rowContainer}
                 onPress={() => props.navigation.navigate('Tos')}
             >
-                <Text>Terms of service</Text>
+                <Text>{translate('App.labels.tos')}</Text>
                 <View style={props.styles.rightContainer}>
                     <Icon name="arrow-right-1" size={16} style={props.styles.icon} />
                 </View>
@@ -49,7 +50,7 @@ export const CreateWalletTermsScreenComponent = (props: IProps) => (
                 style={props.styles.rowContainer}
                 onPress={() => props.navigation.navigate('PrivacyPolicy')}
             >
-                <Text>Privacy policy</Text>
+                <Text>{translate('App.labels.privacyPolicy')}</Text>
                 <View style={props.styles.rightContainer}>
                     <Icon name="arrow-right-1" size={16} style={props.styles.icon} />
                 </View>
@@ -63,7 +64,7 @@ export const CreateWalletTermsScreenComponent = (props: IProps) => (
                     props.navigation.navigate('CreateWalletMnemonic');
                 }}
             >
-                Accept
+                {translate('App.labels.accept')}
             </Button>
         </View>
     </View>

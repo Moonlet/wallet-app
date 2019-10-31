@@ -67,7 +67,9 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<IProps,
                         style={props.styles.bottomButton}
                         primary
                         onPress={() => {
-                            props.navigation.navigate('CreateWalletConfirmMnemonic');
+                            props.navigation.navigate('CreateWalletConfirmMnemonic', {
+                                mnemonic: this.state.mnemonic
+                            });
                         }}
                     >
                         {translate('App.labels.next')}

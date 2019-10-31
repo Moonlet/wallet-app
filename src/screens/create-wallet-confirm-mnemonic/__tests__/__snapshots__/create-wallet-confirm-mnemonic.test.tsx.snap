@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`creat wallet terms screen component renders correctly 1`] = `
+"<View style={{...}}>
+  <View style={{...}}>
+    <withTheme(TextComponent) darker={true} style={{...}}>
+      To make sure you have written down all of your recovery words, please enter the following:
+    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <TextInput style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Word #5\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TextInput style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Word #8\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TextInput style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Word #10\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+    </View>
+    <withTheme(TextComponent) darker={true} small={true}>
+      orbit 
+      feel 
+      remember 
+    </withTheme(TextComponent)>
+  </View>
+  <View style={{...}}>
+    <withTheme(ButtonComponent) testID=\\"button-confirm\\" style={{...}} primary={true} disabled={true} onPress={[Function: onPress]}>
+      Confirm
+    </withTheme(ButtonComponent)>
+  </View>
+</View>"
+`;

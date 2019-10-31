@@ -22,6 +22,8 @@ export const darkTheme: ITheme = {
 
         cardBackground: COLORS.DARK_GRAY,
         appBackground: COLORS.COD_GRAY,
-        settingsDivider: COLORS.BLACK
+        settingsDivider: COLORS.BLACK,
+        inputBackground: COLORS.TUNDORA_GRAY,
+        disabledButton: COLORS.LIGHT_GRAY
     }
 };

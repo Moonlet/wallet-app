@@ -4,7 +4,9 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
 "<View style={{...}}>
   <View style={{...}}>
     <withTheme(TextComponent) darker={true} style={{...}}>
-      Make sure you review our Privacy policy and Terms of service
+      <withTheme(TextComponent)>
+        Make sure you review our Privacy policy and Terms of service
+      </withTheme(TextComponent)>
     </withTheme(TextComponent)>
     <View style={{...}}>
       <Image source={{...}} />

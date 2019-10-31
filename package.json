@@ -31,6 +31,7 @@
         "react-native-device-info": "^4.0.1",
         "react-native-gesture-handler": "^1.4.1",
         "react-native-linear-gradient": "^2.5.6",
+        "react-native-randombytes": "^3.5.3",
         "react-native-reanimated": "git+https://github.com/kmagiera/react-native-reanimated",
         "react-native-screens": "^2.0.0-alpha.3",
         "react-native-vector-icons": "^6.6.0",
@@ -44,7 +45,8 @@
         "redux": "^4.0.4",
         "redux-thunk": "^2.3.0",
         "typescript": "^3.6.3",
-        "uuid": "^3.3.3"
+        "uuid": "^3.3.3",
+        "vm-browserify": "^1.1.0"
     },
     "devDependencies": {
         "@babel/core": "^7.6.2",
@@ -93,7 +95,13 @@
         }
     },
     "lint-staged": {
-        "*.{ts,tsx,scss,json,js}": ["npm run prettier", "git add"],
-        "*.{ts,tsx}": ["npm run lint", "git add"]
+        "*.{ts,tsx,scss,json,js}": [
+            "npm run prettier",
+            "git add"
+        ],
+        "*.{ts,tsx}": [
+            "npm run lint",
+            "git add"
+        ]
     }
 }

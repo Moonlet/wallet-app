@@ -5,11 +5,44 @@ export const translation: ITranslations = {
         App: {
             labels: {
                 // plase try to add keys in alphabetic order
+                accept: 'Accept',
+                confirm: 'Confirm',
+                next: 'Next',
+                privacyPolicy: 'Privacy policy',
                 receive: 'Receive',
+                secure: 'Secure',
                 send: 'Send',
-                transactions: 'Transactions'
+                tos: 'Terms of service',
+                transactions: 'Transactions',
+                understand: 'I understand'
                 // plase try to add keys in alphabetic order
             }
+        },
+        CreateWalletTos: {
+            body: 'Make sure you review our Privacy policy and Terms of service'
+        },
+        CreateWalletMnemonic: {
+            body: 'Please save the recovery phrase and keep it in a safe place. The recovery phrase is the only way to restore your Moonlet wallet in case you lose your phone or forget your password.'
+        },
+        CreateWalletMnemonicConfirm: {
+            body: 'To make sure you have written down all of your recovery words, please enter the following:',
+            errors: {
+                tryAgain: 'Please try again'
+            }
+        },
+        SetPassword: {
+            body: '10 or more characters long, at least 1 number, 1 lowercase character and UPPERCASE character.',
+            password: 'password',
+            confirmPassword: 'confirm password',
+            errors: {
+                passwordsDontMatch: 'Passwords dont match',
+                invalidPassword: 'Invalid password'
+            }
+        },
+        SetPasswordConfirm: {
+            body: 'You need to setup a password to secure your wallet.',
+            checkboxLabel: 'Do not lose this password. Moonlet will not be able to reset it for you.'
+            
         }
     },
     plural: (n: number, ord?: boolean) => {

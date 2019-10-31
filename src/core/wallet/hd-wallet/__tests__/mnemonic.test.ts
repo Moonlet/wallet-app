@@ -16,16 +16,16 @@ describe('Mnemonic', () => {
             }
         };
 
-        test('with no params', () => {
-            validateMnemonic(Mnemonic.generate(), 24);
+        test('with no params', async () => {
+            validateMnemonic(await Mnemonic.generate(), 24);
         });
 
-        test('with 12 words', () => {
-            validateMnemonic(Mnemonic.generate(12), 12);
+        test('with 12 words', async () => {
+            validateMnemonic(await Mnemonic.generate(12), 12);
         });
 
-        test('with 24 words', () => {
-            validateMnemonic(Mnemonic.generate(24), 24);
+        test('with 24 words', async() => {
+            validateMnemonic(await Mnemonic.generate(24), 24);
         });
     });
 

@@ -24,7 +24,7 @@ describe('Mnemonic', () => {
             validateMnemonic(await Mnemonic.generate(12), 12);
         });
 
-        test('with 24 words', async() => {
+        test('with 24 words', async () => {
             validateMnemonic(await Mnemonic.generate(24), 24);
         });
     });

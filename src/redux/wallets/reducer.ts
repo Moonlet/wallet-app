@@ -83,11 +83,5 @@ const intialState: IWalletState[] = [
 ];
 
 export default (state: IWalletState[] = intialState, action: IAction) => {
-    // switch (action.type) {
-
-    //     default:
-    //         return state;
-    // }
-
     return state;
 };

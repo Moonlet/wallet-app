@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`preferences reducer should set initial state 1`] = `
+Object {
+  "currency": "USD",
+  "pinLogin": true,
+}
+`;

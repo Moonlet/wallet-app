@@ -3,25 +3,17 @@ import * as actions from '../actions';
 
 describe('preferences reducer', () => {
     test('should set initial state', () => {
-        const initialState = {
-            currency: 'USD',
-            pinLogin: true
-        };
         expect(
-            reducer(initialState, {
+            reducer(undefined as any, {
                 type: '',
                 data: ''
             })
-        ).toEqual({ currency: 'USD', pinLogin: true });
+        ).toMatchSnapshot();
     });
 
     test('should handle PREF_SET_PIN', () => {
-        const initialState = {
-            currency: 'USD',
-            pinLogin: true
-        };
         expect(
-            reducer(initialState, {
+            reducer(undefined as any, {
                 type: actions.PREF_SET_PIN,
                 data: ''
             })

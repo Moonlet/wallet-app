@@ -4,8 +4,8 @@ import { ITheme } from '../../core/theme/itheme';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            padding: 0,
-            paddingTop: 0,
+            paddingTop: 18,
+            paddingBottom: 18,
             paddingLeft: 16,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,

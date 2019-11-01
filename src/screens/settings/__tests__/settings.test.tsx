@@ -12,7 +12,9 @@ const props: IProps & IReduxProps = {
     },
     styles: styleProvider(darkTheme),
     theme: darkTheme,
-    mock: jest.fn()
+    mock: jest.fn(),
+    pinLogin: true,
+    setPinLogin: jest.fn()
 };
 beforeEach(() => {
     // @ts-ignore
@@ -30,7 +32,7 @@ describe('settings screen component', () => {
     });
     it('Pin login switch tapped', () => {
         wrapper.find('[testID="pin-login"]').simulate('valueChange');
-        expect(props.mock).toHaveBeenCalledTimes(1);
+        expect(props.setPinLogin).toHaveBeenCalledTimes(1);
     });
     it('Touch id switch tapped', () => {
         wrapper.find('[testID="touch-id"]').simulate('valueChange');

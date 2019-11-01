@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`market reducer should set initial state 1`] = `
+Object {
+  "change": Object {
+    "daily": Object {
+      "ATOM": Object {
+        "BTC": -0.0045,
+        "ETH": -0.0016,
+        "USD": 0.0045,
+      },
+      "BTC": Object {
+        "BTC": 0,
+        "ETH": -0.0016,
+        "USD": 0.0043,
+      },
+      "ETH": Object {
+        "BTC": 0.0045,
+        "ETH": 0,
+        "USD": 0.0143,
+      },
+      "USD": Object {
+        "BTC": 0.0045,
+        "ETH": -0.0016,
+        "USD": 0,
+      },
+      "XLM": Object {
+        "BTC": 0.0033,
+        "ETH": -0.0016,
+        "USD": 0.0045,
+      },
+      "ZIL": Object {
+        "BTC": 0.0045,
+        "ETH": 0.0216,
+        "USD": 0.0002,
+      },
+    },
+  },
+  "usdPrices": Object {
+    "ATOM": 3.03,
+    "BTC": 8349.75,
+    "ETH": 182.25,
+    "USD": 1,
+    "XLM": 0.06122,
+    "ZIL": 0.005821,
+  },
+}
+`;

@@ -3,36 +3,42 @@ import { ScrollView, View, Switch, TouchableOpacity } from 'react-native';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { Text } from '../../library';
 import { IReduxState } from '../../redux/state';
+import { setPinLogin } from '../../redux/preferences/actions';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { ITheme } from '../../core/theme/itheme';
 import { Icon } from '../../components/icon';
+import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
-import { smartConnect } from '../../core/utils/smart-connect';
+import { HeaderLeft } from '../../components/header-left/header-left';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     styles: ReturnType<typeof stylesProvider>;
     theme: ITheme;
-    mock: () => void;
 }
 
 export interface IReduxProps {
     currency: string;
     network: string;
+    pinLogin: boolean;
+    setPinLogin: () => void;
+    mock: () => void;
 }
 
 export const mockFunction = () => {
     return { type: 'dummy' };
 };
 
-const mapStateToProps = (state: IReduxState) => ({});
+const mapStateToProps = (state: IReduxState) => ({
+    pinLogin: state.preferences.pinLogin
+});
 
 export class SettingsScreenComponent extends React.Component<IProps & IReduxProps> {
     public pinLoginSwitch = () => {
         // pin login
-        this.props.mock();
+        this.props.setPinLogin();
     };
     public touchIdSwitch = () => {
         // touch Id
@@ -73,7 +79,6 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
 
     public render() {
         const styles = this.props.styles;
-
         return (
             <ScrollView style={styles.container}>
                 <View>
@@ -86,7 +91,7 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
                             <Switch
                                 testID={'pin-login'}
                                 onValueChange={this.pinLoginSwitch}
-                                value={true}
+                                value={this.props.pinLogin}
                             />
                         </View>
                     </View>
@@ -216,12 +221,17 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
     }
 }
 
+export const navigationOptions = {
+    title: 'Settings',
+    headerLeft: <HeaderLeft icon="saturn-icon" />
+};
+
 export const SettingsScreen = smartConnect(SettingsScreenComponent, [
     connect(
         mapStateToProps,
-        {
-            mock: mockFunction
-        }
+        { mock: mockFunction, setPinLogin }
     ),
     withTheme(stylesProvider)
 ]);
+
+SettingsScreen.navigationOptions = navigationOptions;

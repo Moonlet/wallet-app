@@ -24,5 +24,14 @@ export default (theme: ITheme) =>
 
         textPrimary: {
             color: theme.colors.appBackground
+        },
+
+        buttonDisabled: {
+            backgroundColor: theme.colors.disabledButton,
+            borderColor: theme.colors.disabledButton
+        },
+
+        textDisabled: {
+            color: theme.colors.cardBackground
         }
     });

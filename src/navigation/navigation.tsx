@@ -4,21 +4,24 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createSwitchNavigator } from 'react-navigation';
 
-import { DashboardScreen } from '../screens/dashboard/dashboard';
-import { SettingsScreen } from '../screens/settings/settings';
-import { OnboardingScreen } from '../screens/onboarding/onboarding';
-
-import { CreateWalletTermsScreen } from '../screens/create-wallet-terms/create-wallet-terms';
-import { CreateWalletMnemonicScreen } from '../screens/create-wallet-mnemonic/create-wallet-mnemonic';
-import { DummyScreen, menuIcon } from './utils';
-import { AccountScreen } from '../screens/account/account';
 import { darkTheme } from '../styles/themes/dark-theme';
 import { lightTheme } from '../styles/themes/light-theme';
 import { ITheme } from '../core/theme/itheme';
 import { Theme } from '../core/theme/themes';
 import { HeaderLeft } from '../components/header-left/header-left';
+import { DummyScreen, menuIcon } from './utils';
+
+import { DashboardScreen } from '../screens/dashboard/dashboard';
+import { SettingsScreen } from '../screens/settings/settings';
+import { OnboardingScreen } from '../screens/onboarding/onboarding';
+import { CreateWalletTermsScreen } from '../screens/create-wallet-terms/create-wallet-terms';
+import { CreateWalletMnemonicScreen } from '../screens/create-wallet-mnemonic/create-wallet-mnemonic';
+import { AccountScreen } from '../screens/account/account';
 import { TosScreen } from '../screens/tos/tos';
 import { PrivacyPolicyScreen } from '../screens/privacy-policy/privacy-policy';
+import { CreateWalletConfirmMnemonicScreen } from '../screens/create-wallet-confirm-mnemonic/create-wallet-confirm-mnemonic';
+import { SetPasswordConfirmScreen } from '../screens/set-password-confirm/set-password-confirm';
+import { SetPasswordScreen } from '../screens/set-password/set-password';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -147,6 +150,15 @@ export const CreateWalletNavigation = createStackNavigator(
         },
         PrivacyPolicy: {
             screen: PrivacyPolicyScreen
+        },
+        CreateWalletConfirmMnemonic: {
+            screen: CreateWalletConfirmMnemonicScreen
+        },
+        SetPasswordConfirm: {
+            screen: SetPasswordConfirmScreen
+        },
+        SetPassword: {
+            screen: SetPasswordScreen
         }
     },
     {

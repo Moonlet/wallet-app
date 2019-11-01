@@ -1,15 +1,14 @@
 import { validateMnemonic, wordlists, mnemonicToSeedSync, entropyToMnemonic } from 'bip39';
-// @ts-ignore
-import { randomBytes } from 'react-native-randombytes';
+import { NativeModules } from 'react-native';
 
 const getRandomBytes: any = (n: number) => {
     return new Promise((resolve, reject) => {
-        randomBytes(n, (err: any, bytes: Buffer) => {
+        NativeModules.RNRandomBytes.randomBytes(n, (err: any, base64Bytes: string) => {
             if (err) {
                 reject(err);
                 return;
             }
-            resolve(bytes);
+            resolve(new Buffer(base64Bytes, 'base64'));
         });
     });
 };

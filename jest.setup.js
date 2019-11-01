@@ -32,7 +32,6 @@ jest.mock('react-navigation-stack', () => {
 
 NativeModules.SettingsManager = { settings: { AppleLocale: 'en_US' } };
 NativeModules.I18nManager = { localeIdentifier: 'en-US' };
-NativeModules.RNRandomBytes = { seed: 'a' };
 
 jest.mock('react-native-device-info', () => {
     return {
@@ -40,11 +39,7 @@ jest.mock('react-native-device-info', () => {
     };
 });
 
-jest.mock('react-native-randombytes', () => {
-    const randomBytes = require('crypto').randomBytes;
-    return {
-        randomBytes: jest.fn(randomBytes)
-    };
-});
-
+NativeModules.RNRandomBytes = {
+    randomBytes: jest.fn(randomBytes)
+};
 NativeModules.SettingsManager = { settings: { AppleLocale: 'en-US' } };

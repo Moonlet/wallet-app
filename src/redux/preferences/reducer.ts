@@ -8,13 +8,13 @@ const initialState: IPrefState = {
 };
 
 export default (state: IPrefState = initialState, action: IAction): IPrefState => {
-    const newState = { ...state };
     switch (action.type) {
         case PREF_SET_PIN:
-            newState.pinLogin = !state.pinLogin;
+            state = { ...state }; // use this for each case and avoid setting it as general
+            state.pinLogin = !state.pinLogin;
             break;
         default:
             break;
     }
-    return newState;
+    return state;
 };

@@ -24,7 +24,7 @@ describe('Blockchain:Ethereum', () => {
 
         expect(result).toEqual({
             index: 1,
-            blockchain: Blockchain.ETHEREUM,
+            blockchain: Blockchain.ZILLIQA,
             address: 'BECH32_ADDRESS',
             publicKey: 'PUBLIC_KEY'
         });

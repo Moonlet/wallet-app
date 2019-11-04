@@ -13,11 +13,18 @@ import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { ITheme } from '../../core/theme/itheme';
 import { translate } from '../../core/i18n';
+import { connect } from 'react-redux';
+import { smartConnect } from '../../core/utils/smart-connect';
+import { createHDWallet } from '../../redux/wallets/actions';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     styles: ReturnType<typeof stylesProvider>;
     theme: ITheme;
+}
+
+export interface IReduxProps {
+    createHDWallet: (mnemonic: string, callback: () => any) => void;
 }
 
 /**
@@ -42,10 +49,11 @@ const getWordInput = (
         selectionColor={theme.colors.accent}
         key={n}
         onChangeText={callback}
+        testID={`input-password-${n}`}
     />
 );
 
-export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps) => {
+export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IReduxProps) => {
     // TODO: no mnemonic? where to?
     const mnemonic =
         props.navigation.state &&
@@ -119,10 +127,12 @@ export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps) => {
                             setError(true);
                             return;
                         }
-                        props.navigation.navigate(
-                            'MainNavigation',
-                            {},
-                            NavigationActions.navigate({ routeName: 'Dashboard' })
+                        props.createHDWallet(mnemonic.join(' '), () =>
+                            props.navigation.navigate(
+                                'MainNavigation',
+                                {},
+                                NavigationActions.navigate({ routeName: 'Dashboard' })
+                            )
                         );
                     }}
                 >
@@ -137,8 +147,17 @@ export const navigationOptions = ({ navigation }: any) => ({
     title: 'Create'
 });
 
-export const CreateWalletConfirmMnemonicScreen = withTheme(stylesProvider)(
-    CreateWalletConfirmMnemonicScreenComponent
+export const CreateWalletConfirmMnemonicScreen = smartConnect(
+    CreateWalletConfirmMnemonicScreenComponent,
+    [
+        connect(
+            null,
+            {
+                createHDWallet
+            }
+        ),
+        withTheme(stylesProvider)
+    ]
 );
 
 CreateWalletConfirmMnemonicScreen.navigationOptions = navigationOptions;

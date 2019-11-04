@@ -23,7 +23,7 @@ interface IReduxProps {
 
 export class AccountScreenComponent extends React.Component<IReduxProps & IExternalProps> {
     public render() {
-        const { styles } = this.props;
+        const { styles, navigation } = this.props;
         return (
             <ScrollView style={styles.container}>
                 <Text style={styles.address}>zil1f6...1234f3</Text>
@@ -37,7 +37,14 @@ export class AccountScreenComponent extends React.Component<IReduxProps & IExter
                 </View>
 
                 <View style={styles.buttonsContainer}>
-                    <Button style={styles.button}>{translate('App.labels.send')}</Button>
+                    <Button
+                        style={styles.button}
+                        onPress={() => {
+                            navigation.navigate('Send');
+                        }}
+                    >
+                        {translate('App.labels.send')}
+                    </Button>
                     <Button style={styles.button}>{translate('App.labels.receive')}</Button>
                 </View>
 

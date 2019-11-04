@@ -17,6 +17,7 @@ import { OnboardingScreen } from '../screens/onboarding/onboarding';
 import { CreateWalletTermsScreen } from '../screens/create-wallet-terms/create-wallet-terms';
 import { CreateWalletMnemonicScreen } from '../screens/create-wallet-mnemonic/create-wallet-mnemonic';
 import { AccountScreen } from '../screens/account/account';
+import { SendScreen } from '../screens/send/send';
 import { TosScreen } from '../screens/tos/tos';
 import { PrivacyPolicyScreen } from '../screens/privacy-policy/privacy-policy';
 import { CreateWalletConfirmMnemonicScreen } from '../screens/create-wallet-confirm-mnemonic/create-wallet-confirm-mnemonic';
@@ -86,6 +87,9 @@ export const WalletNavigation = createStackNavigator(
         },
         Account: {
             screen: AccountScreen
+        },
+        Send: {
+            screen: SendScreen
         }
     },
     {

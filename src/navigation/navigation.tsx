@@ -184,7 +184,7 @@ export const RootNavigation = createSwitchNavigator(
         CreateWalletNavigation
     },
     {
-        initialRouteName: 'CreateWalletNavigation'
+        initialRouteName: 'OnboardingScreen'
         // initialRouteName: 'MainNavigation'
     }
 );

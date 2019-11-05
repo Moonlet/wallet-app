@@ -14,7 +14,7 @@ export class Zilliqa extends GenericBlockchain {
             index,
             publicKey: getPubKeyFromPrivateKey(privateKey),
             address: toBech32Address(getAddressFromPrivateKey(privateKey)),
-            blockchain: Blockchain.ETHEREUM
+            blockchain: Blockchain.ZILLIQA
         };
     }
 

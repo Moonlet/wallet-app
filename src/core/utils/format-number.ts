@@ -31,6 +31,8 @@ const getLocale = () => {
 };
 
 export const formatNumber = (amount: number, options: INumberFormatOptions = {}) => {
+    amount = Number(amount) || 0;
+
     const displayFormatCurrency =
         options.currency && formattedCurrencies.indexOf(options.currency) !== -1;
 

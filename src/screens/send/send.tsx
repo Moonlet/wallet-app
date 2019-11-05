@@ -31,7 +31,22 @@ interface IState {
     blockchain: Blockchain;
 }
 
+const navigationOptions = ({ navigation }: any) => ({
+    headerLeft: () => {
+        return (
+            <HeaderLeft
+                icon="close"
+                text="Close"
+                onPress={() => {
+                    navigation.goBack();
+                }}
+            />
+        );
+    },
+    title: 'Send'
+});
 export class SendScreenComponent extends React.Component<IProps, IState> {
+    public static navigationOptions = navigationOptions;
     constructor(props: IProps) {
         super(props);
 
@@ -140,20 +155,3 @@ export const SendScreen = smartConnect(SendScreenComponent, [
     ),
     withTheme(stylesProvider)
 ]);
-
-export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: () => {
-        return (
-            <HeaderLeft
-                icon="close"
-                text="Close"
-                onPress={() => {
-                    navigation.goBack();
-                }}
-            />
-        );
-    },
-    title: 'Send'
-});
-
-SendScreen.navigationOptions = navigationOptions;

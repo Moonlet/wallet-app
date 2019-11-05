@@ -5,8 +5,9 @@ import { darkTheme } from '../../../styles/themes/dark-theme';
 import styleProvider from '../styles';
 
 import { shallow } from 'enzyme';
+import { IThemeProps } from '../../../core/theme/with-theme';
 
-const props: IProps & IReduxProps = {
+const props: IProps & IReduxProps & IThemeProps<ReturnType<typeof styleProvider>> = {
     fromCurrency: 'ZIL',
     toCurrency: 'ETH',
     change: {

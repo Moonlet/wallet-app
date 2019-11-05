@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Convert } from '../convert/convert';
 
 import stylesProvider from './styles';
-import { withTheme } from '../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 
 export interface IReduxProps {
@@ -15,14 +15,15 @@ export interface IReduxProps {
 export interface IProps {
     fromCurrency: string;
     toCurrency: string;
-    styles: ReturnType<typeof stylesProvider>;
 }
 
 const mapStateToProps = (state: any) => ({
     change: state.market.change.daily
 });
 
-export const ConversionCardComponent = (props: IProps & IReduxProps) => {
+export const ConversionCardComponent = (
+    props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+) => {
     const change = props.change[props.fromCurrency][props.toCurrency];
 
     return (
@@ -39,7 +40,7 @@ export const ConversionCardComponent = (props: IProps & IReduxProps) => {
     );
 };
 
-export const ConversionCard = smartConnect(ConversionCardComponent, [
+export const ConversionCard = smartConnect<IProps>(ConversionCardComponent, [
     connect(
         mapStateToProps,
         null

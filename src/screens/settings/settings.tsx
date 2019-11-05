@@ -35,7 +35,12 @@ const mapStateToProps = (state: IReduxState) => ({
     pinLogin: state.preferences.pinLogin
 });
 
+const navigationOptions = {
+    title: 'Settings',
+    headerLeft: <HeaderLeft icon="saturn-icon" />
+};
 export class SettingsScreenComponent extends React.Component<IProps & IReduxProps> {
+    public static navigationOptions = navigationOptions;
     public pinLoginSwitch = () => {
         // pin login
         this.props.setPinLogin();
@@ -221,11 +226,6 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
     }
 }
 
-export const navigationOptions = {
-    title: 'Settings',
-    headerLeft: <HeaderLeft icon="saturn-icon" />
-};
-
 export const SettingsScreen = smartConnect(SettingsScreenComponent, [
     connect(
         mapStateToProps,
@@ -233,5 +233,3 @@ export const SettingsScreen = smartConnect(SettingsScreenComponent, [
     ),
     withTheme(stylesProvider)
 ]);
-
-SettingsScreen.navigationOptions = navigationOptions;

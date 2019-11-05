@@ -11,6 +11,12 @@ jobs:
       with:
         node-version: "10.x"
     - uses: actions/checkout@v1
+    - name: Cache node modules
+      uses: actions/cache@v1
+      id: cache
+      with:
+        path: node_modules
+        key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
     - name: NPM install
       run: npm i
     - name: Run Lint

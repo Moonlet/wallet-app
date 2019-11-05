@@ -21,7 +21,13 @@ export interface IReduxProps {
     account: IAccountState;
 }
 
+const navigationOptions = {
+    title: 'Account'
+};
+
 export class AccountScreenComponent extends React.Component<IReduxProps & IProps> {
+    public static navigationOptions = navigationOptions;
+
     public render() {
         const { styles, navigation } = this.props;
         return (
@@ -94,10 +100,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps): IReduxPro
     };
 };
 
-export const navigationOptions = {
-    title: 'Account'
-};
-
 export const AccountScreen = smartConnect(AccountScreenComponent, [
     connect(
         mapStateToProps,
@@ -105,5 +107,3 @@ export const AccountScreen = smartConnect(AccountScreenComponent, [
     ),
     withTheme(stylesProvider)
 ]);
-
-AccountScreen.navigationOptions = navigationOptions;

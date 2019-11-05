@@ -10,7 +10,7 @@
         "module": "esnext",
         "moduleResolution": "node",
         "noEmit": false,
-        "strict": true,
+        "strict": false,
         "target": "esnext",
         "resolveJsonModule": true,
         "noUnusedLocals": true,
@@ -24,6 +24,7 @@
         "babel.config.js",
         "metro.config.js",
         "jest.config.js",
-        "src/__mocks__"
+        "src/**/__mocks__",
+        "src/**/__tests__"
     ]
 }

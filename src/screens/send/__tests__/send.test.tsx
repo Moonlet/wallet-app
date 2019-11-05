@@ -25,7 +25,7 @@ export default describe('SendScreen', () => {
 
         wrapper.setState({
             isValidAddress: true,
-            amount: 1
+            amount: '1'
         });
         expect(wrapper.debug()).toMatchSnapshot();
     });
@@ -40,7 +40,7 @@ export default describe('SendScreen', () => {
         const wrapper = shallow(<SendScreenComponent {...props} />);
         wrapper.setState({
             isValidAddress: true,
-            amount: 1
+            amount: '1'
         });
 
         wrapper.find('[testID="confirm-payment"]').simulate('Press');

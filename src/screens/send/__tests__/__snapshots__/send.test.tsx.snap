@@ -13,7 +13,7 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
       <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
     </View>
     <View style={{...}}>
-      <TextInput testID=\\"fee\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"0\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" editable={false} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TextInput testID=\\"fee\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" editable={false} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
     </View>
     <View style={{...}}>
       <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: onPress]}>
@@ -70,7 +70,7 @@ exports[`SendScreen renders correctly 2`] = `
       <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
     </View>
     <View style={{...}}>
-      <TextInput testID=\\"fee\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"0\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" editable={false} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TextInput testID=\\"fee\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" editable={false} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
     </View>
     <View style={{...}}>
       <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={false} onPress={[Function: onPress]}>

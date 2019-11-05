@@ -60,7 +60,6 @@ export default describe('SendScreen', () => {
         const instanceOf: any = renderer.create(<SendScreenComponent {...props} />).getInstance();
         instanceOf.verifyAddress('address');
         expect(instanceOf.state.address).toEqual('address');
-        expect(instanceOf.state.isValidAddress).toBe(true);
     });
     test('should change state if amount is entered', () => {
         const instanceOf: any = renderer.create(<SendScreenComponent {...props} />).getInstance();

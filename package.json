@@ -20,6 +20,7 @@
         "@react-native-community/async-storage": "^1.6.2",
         "@types/react-native-vector-icons": "^6.4.4",
         "@zilliqa-js/crypto": "^0.8.1-alpha.0",
+        "@zilliqa-js/util": "^0.8.3",
         "bip39": "^3.0.2",
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.14.0",

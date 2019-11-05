@@ -11,6 +11,12 @@ class TestClass extends GenericBlockchain {
     public sendTransaction(): Promise<any> {
         throw new Error();
     }
+    public isValidAddress(address: string): boolean {
+        return true;
+    }
+    public getFeeForAmount(amound: string): string {
+        return '';
+    }
 }
 
 export default describe('GenericBlockchain', () => {

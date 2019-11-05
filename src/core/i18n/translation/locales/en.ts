@@ -7,6 +7,7 @@ export const translation: ITranslations = {
                 // plase try to add keys in alphabetic order
                 accept: 'Accept',
                 confirm: 'Confirm',
+                confirmPayment: 'Confirm payment',
                 next: 'Next',
                 privacyPolicy: 'Privacy policy',
                 receive: 'Receive',
@@ -46,6 +47,11 @@ export const translation: ITranslations = {
             body: 'You need to setup a password to secure your wallet.',
             checkboxLabel:
                 'Do not lose this password. Moonlet will not be able to reset it for you.'
+        },
+        Send: {
+            inputAddress: 'Search public addresses or domain names',
+            amount: 'Amount',
+            recipientLabel: 'Recipient'
         }
     },
     plural: (n: number, ord?: boolean) => {

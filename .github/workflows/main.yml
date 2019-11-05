@@ -35,7 +35,6 @@ jobs:
     name: Android app
     runs-on: ubuntu-latest
     container: 
-      image: ubuntu-latest
       options: --sysctl fs.inotify.max_user_watches=524288
     needs: unit-tests
     steps:

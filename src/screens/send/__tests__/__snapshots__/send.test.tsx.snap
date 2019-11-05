@@ -1,0 +1,82 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SendScreen Button should be disabled if amount is 0 1`] = `
+"<View style={{...}}>
+  <withTheme(TextComponent) style={{...}}>
+    Reusable component
+  </withTheme(TextComponent)>
+  <View style={{...}}>
+    <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+  </View>
+  <View style={{...}}>
+    <View style={{...}}>
+      <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+    </View>
+    <View style={{...}}>
+      <TextInput testID=\\"fee\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"0\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" editable={false} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+    </View>
+    <View style={{...}}>
+      <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: onPress]}>
+        Confirm payment
+      </withTheme(ButtonComponent)>
+    </View>
+  </View>
+</View>"
+`;
+
+exports[`SendScreen renders correctly - no amount and fee should be present 1`] = `
+"<View style={{...}}>
+  <withTheme(TextComponent) style={{...}}>
+    Reusable component
+  </withTheme(TextComponent)>
+  <View style={{...}}>
+    <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+  </View>
+</View>"
+`;
+
+exports[`SendScreen renders correctly - no amount and fee should be present 2`] = `
+"<View style={{...}}>
+  <withTheme(TextComponent) style={{...}}>
+    Reusable component
+  </withTheme(TextComponent)>
+  <View style={{...}}>
+    <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+  </View>
+</View>"
+`;
+
+exports[`SendScreen renders correctly 1`] = `
+"<View style={{...}}>
+  <withTheme(TextComponent) style={{...}}>
+    Reusable component
+  </withTheme(TextComponent)>
+  <View style={{...}}>
+    <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+  </View>
+</View>"
+`;
+
+exports[`SendScreen renders correctly 2`] = `
+"<View style={{...}}>
+  <withTheme(TextComponent) style={{...}}>
+    Reusable component
+  </withTheme(TextComponent)>
+  <View style={{...}}>
+    <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+  </View>
+  <View style={{...}}>
+    <View style={{...}}>
+      <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+    </View>
+    <View style={{...}}>
+      <TextInput testID=\\"fee\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"0\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" editable={false} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+    </View>
+    <View style={{...}}>
+      <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={false} onPress={[Function: onPress]}>
+        Confirm payment
+      </withTheme(ButtonComponent)>
+    </View>
+  </View>
+</View>"
+`;

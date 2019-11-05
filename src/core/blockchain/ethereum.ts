@@ -25,4 +25,14 @@ export class Ethereum extends GenericBlockchain {
     public sendTransaction(): Promise<any> {
         throw new Error('Method not implemented.');
     }
+
+    public isValidAddress(address: string): boolean {
+        if (address.length === 40) {
+            return true;
+        }
+        return false;
+    }
+    public getFeeForAmount(amount: string): string {
+        return '0.001';
+    }
 }

@@ -12,16 +12,16 @@ import { Text, Button } from '../../library';
 import { translate, Translate } from '../../core/i18n';
 import { Icon } from '../../components/icon';
 
-interface IExternalProps {
+export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     styles: ReturnType<typeof stylesProvider>;
 }
 
-interface IReduxProps {
+export interface IReduxProps {
     account: IAccountState;
 }
 
-export class AccountScreenComponent extends React.Component<IReduxProps & IExternalProps> {
+export class AccountScreenComponent extends React.Component<IReduxProps & IProps> {
     public render() {
         const { styles, navigation } = this.props;
         return (
@@ -38,6 +38,7 @@ export class AccountScreenComponent extends React.Component<IReduxProps & IExter
 
                 <View style={styles.buttonsContainer}>
                     <Button
+                        testID="button-send"
                         style={styles.button}
                         onPress={() => {
                             navigation.navigate('Send');
@@ -84,10 +85,7 @@ export class AccountScreenComponent extends React.Component<IReduxProps & IExter
     }
 }
 
-export const mapStateToProps = (
-    state: IReduxState,
-    ownProps: IExternalProps
-): IReduxProps & IExternalProps => {
+export const mapStateToProps = (state: IReduxState, ownProps: IProps): IReduxProps & IProps => {
     const account = {} as any;
 
     return {

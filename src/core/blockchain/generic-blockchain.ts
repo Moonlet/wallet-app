@@ -12,6 +12,8 @@ export abstract class GenericBlockchain {
     public abstract getAccountFromPrivateKey(privateKey: string, index: number): IAccountState;
     public abstract getBalance(address: string): Promise<any>;
     public abstract sendTransaction(): Promise<any>;
+    public abstract isValidAddress(address: string): boolean;
+    public abstract getFeeForAmount(amount: string): string;
 
     public rpcCall(method: string, params?: any[]): Promise<any> {
         return Promise.resolve();

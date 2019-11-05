@@ -59,7 +59,13 @@ const mapStateToProps = (state: IReduxState) => ({
     wallet: state.wallets[state.app.currentWalletIndex]
 });
 
+const navigationOptions = {
+    title: 'Wallet 1',
+    headerLeft: <HeaderLeft icon="saturn-icon" />,
+    headerRight: <HeaderRight icon="single-man-hierachy" />
+};
 export class DashboardScreenComponent extends React.Component<IProps & IReduxProps, IState> {
+    public static navigationOptions = navigationOptions;
     public initialIndex = 0;
     public dashboardOpacity = new Animated.Value(1);
     public balancesScrollView: any;
@@ -199,12 +205,6 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
     }
 }
 
-export const navigationOptions = {
-    title: 'Wallet 1',
-    headerLeft: <HeaderLeft icon="saturn-icon" />,
-    headerRight: <HeaderRight icon="single-man-hierachy" />
-};
-
 export const DashboardScreen = smartConnect(DashboardScreenComponent, [
     connect(
         mapStateToProps,
@@ -212,5 +212,3 @@ export const DashboardScreen = smartConnect(DashboardScreenComponent, [
     ),
     withTheme(stylesProvider)
 ]);
-
-DashboardScreen.navigationOptions = navigationOptions;

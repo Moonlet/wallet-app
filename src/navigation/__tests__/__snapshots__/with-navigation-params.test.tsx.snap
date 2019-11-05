@@ -1,0 +1,40 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Theme:withTheme withTheme works properly navigation without params on state: navigation without params on state 1`] = `
+Object {
+  "children": undefined,
+  "navigation": Object {
+    "state": Object {},
+  },
+}
+`;
+
+exports[`Theme:withTheme withTheme works properly navigation without state: navigation without state 1`] = `
+Object {
+  "children": undefined,
+  "navigation": Object {},
+}
+`;
+
+exports[`Theme:withTheme withTheme works properly no navigation prop: no navigation prop 1`] = `
+Object {
+  "children": undefined,
+  "navigation": undefined,
+}
+`;
+
+exports[`Theme:withTheme withTheme works properly valid navigation: valid navigation 1`] = `
+Object {
+  "children": undefined,
+  "navigation": Object {
+    "state": Object {
+      "params": Object {
+        "param1": "value1",
+        "param2": "value2",
+      },
+    },
+  },
+  "param1": "value1",
+  "param2": "value2",
+}
+`;

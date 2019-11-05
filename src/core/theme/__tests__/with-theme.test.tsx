@@ -7,6 +7,13 @@ import { darkTheme } from '../../../styles/themes/dark-theme';
 describe('Theme:withTheme', () => {
     test('withTheme works properly', () => {
         class Comp extends React.Component {
+            public static staticProperty = {
+                staticProp: 'staticProp'
+            };
+            public static fn() {
+                return 'static function';
+            }
+
             public render() {
                 return <div />;
             }
@@ -17,6 +24,9 @@ describe('Theme:withTheme', () => {
                 backgroundColor: theme.colors.primary
             }
         }))(Comp);
+
+        expect(CompWithTheme.fn).toBe(Comp.fn);
+        expect(CompWithTheme.staticProperty).toBe(Comp.staticProperty);
 
         const renderedComp = shallow(<CompWithTheme prop1="value1" prop2="value2" />);
         expect(renderedComp.getElement().props).toEqual({

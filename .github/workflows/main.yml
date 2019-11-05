@@ -26,10 +26,12 @@ jobs:
       - name: Run unit tests
         run: npm test
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1.0.3
-        with:
-          token: ${{secrets.CODECOV_TOKEN}} 
-          flags: unittests
+        env: 
+          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+        run: |-
+          curl -s https://codecov.io/bash | bash -s -- \
+          -F "unittests" \
+          -Z || echo 'Codecov upload failed'
   beta-android:
     name: Android app
     runs-on: ubuntu-latest

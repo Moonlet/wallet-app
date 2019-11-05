@@ -30,8 +30,11 @@ jobs:
     - name: Build extension
       run: npm run ext:build:beta:chrome
     - name: Upload coverage to Codecov
-      run: npx codecov --commit=$GITHUB_SHA --branch=${GITHUB_REF#refs/heads/} --flags=unittests
       env: 
         CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+      run: |-
+        curl -s https://codecov.io/bash | bash -s -- \
+        -F "unittests" \
+        -Z || echo 'Codecov upload failed'
 
     

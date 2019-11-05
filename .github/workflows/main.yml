@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - master
-      - "action-improvements"
 
 name: Deploy Beta
 jobs:

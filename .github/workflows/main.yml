@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - master
-      - action-improvements
+      - "action-improvements"
 
 name: Deploy Beta
 jobs:
@@ -14,6 +14,12 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - name: NPM install
         run: npm i
       - name: Generate icons
@@ -47,6 +53,12 @@ jobs:
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
       - name: Dependencies install
         run: cd android && bundle install
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - name: NPM install
         run: npm i
       - name: Get sign ssh-keys
@@ -74,6 +86,12 @@ jobs:
         uses: actions/checkout@master
       - name: Dependencies install
         run: cd ios && bundle install
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
       - name: NPM install
         run: npm i
       - name: Cocoapods install

@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - action-improvements
 
 name: Deploy Beta
 jobs:
@@ -26,7 +27,9 @@ jobs:
           flags: unittests
   beta-android:
     name: Android app
-    runs-on: ubuntu-latest
+    container: 
+      image: ubuntu-latest
+      options: --sysctl fs.inotify.max_user_watches=524288
     needs: unit-tests
     steps:
       - uses: actions/checkout@v1

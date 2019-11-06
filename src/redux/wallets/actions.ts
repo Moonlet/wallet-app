@@ -6,6 +6,9 @@ import { IAction } from '../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { appSwitchWallet } from '../app/actions';
+import uuidv4 from 'uuid/v4';
+import { getPassword } from '../../core/secure/keychain';
+import { storeEncrypted } from '../../core/secure/storage';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -30,14 +33,27 @@ export const createHDWallet = (mnemonic: string, callback?: () => any) => async 
         Promise.all([
             wallet.getAccounts(Blockchain.ETHEREUM, 0),
             wallet.getAccounts(Blockchain.ZILLIQA, 0)
-        ]).then(data => {
+        ]).then(async data => {
+            const walletId = uuidv4();
+
             dispatch(
                 addWallet({
-                    id: 'hdWallet',
+                    id: walletId,
                     type: WalletType.HD,
                     accounts: data[0].concat(data[1])
                 })
             );
+
+            const passwordCredentials = await getPassword();
+            let passwordHash = '';
+
+            if (passwordCredentials) {
+                passwordHash = passwordCredentials.password;
+            } else {
+                // password not in keychain? request pass
+            }
+
+            await storeEncrypted(mnemonic, walletId, passwordHash);
 
             dispatch(appSwitchWallet(getState().wallets.length - 1));
             callback && callback();

@@ -9,6 +9,7 @@ import { HeaderLeft } from '../../components/header-left/header-left';
 import { Text } from '../../library';
 import { Icon } from '../../components/icon';
 import { translate } from '../../core/i18n';
+import { setPassword } from '../../core/secure/keychain';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -61,7 +62,9 @@ export const CreateWalletTermsScreenComponent = (props: IProps) => (
                 style={props.styles.bottomButton}
                 primary
                 onPress={() => {
-                    props.navigation.navigate('CreateWalletMnemonic');
+                    setPassword('some random password').then(() => {
+                        props.navigation.navigate('CreateWalletMnemonic');
+                    });
                 }}
             >
                 {translate('App.labels.accept')}

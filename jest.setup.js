@@ -43,3 +43,9 @@ NativeModules.RNRandomBytes = {
     randomBytes: jest.fn(randomBytes)
 };
 NativeModules.SettingsManager = { settings: { AppleLocale: 'en-US' } };
+NativeModules.Aes = {
+    pbkdf2: jest.fn().mockReturnValue('hashedkey'),
+    randomKey: jest.fn(() => Promise.resolve('randomKey')),
+    encrypt: jest.fn(() => Promise.resolve('encrypted')),
+    decrypt: jest.fn().mockReturnValue('data')
+};

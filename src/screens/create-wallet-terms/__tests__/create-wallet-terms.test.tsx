@@ -18,6 +18,14 @@ const props: IProps = {
     styles: styleProvider(darkTheme)
 };
 
+jest.mock('../../../core/secure/keychain', () => {
+    return {
+        setPassword: () => Promise.resolve()
+    };
+});
+
+const flushPromises = () => new Promise(setImmediate);
+
 describe('creat wallet terms screen component', () => {
     beforeAll(async () => {
         await loadTranslations('en');
@@ -28,16 +36,17 @@ describe('creat wallet terms screen component', () => {
         expect(wrapper.debug()).toMatchSnapshot();
     });
 
-    it('navigates correctly', () => {
+    it('navigates correctly', async () => {
         const wrapper = shallow(<CreateWalletTermsScreenComponent {...props} />);
 
         wrapper.find('[testID="button-accept"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletMnemonic');
-
         wrapper.find('[testID="button-tos"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('Tos');
-
         wrapper.find('[testID="button-privacy-policy"]').simulate('Press');
+
+        await flushPromises();
+
+        expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletMnemonic');
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Tos');
         expect(props.navigation.navigate).toHaveBeenCalledWith('PrivacyPolicy');
     });
 

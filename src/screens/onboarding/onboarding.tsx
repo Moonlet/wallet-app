@@ -62,7 +62,9 @@ export class OnboardingScreenComponent extends React.Component<IProps> {
 
                 <View style={styles.buttonsContainer}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Button style={styles.button}>Recover</Button>
+                        <Button style={styles.button} testID="button-recover">
+                            Recover
+                        </Button>
                         <Button style={styles.button}>Connect</Button>
                     </View>
                     <View style={{ flexDirection: 'row' }}>

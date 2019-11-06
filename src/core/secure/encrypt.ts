@@ -2,9 +2,9 @@ import { NativeModules } from 'react-native';
 const Aes = NativeModules.Aes;
 
 const SALT = 'moonlet-app';
-const HASH_LENGTH = 512;
+const HASH_LENGTH = 256;
 const HASH_COST = 5000;
-const IV_LENGTH = 32;
+const IV_LENGTH = 16;
 const SEPARATOR = '!';
 
 export const hash = async (text: string) => Aes.pbkdf2(text, SALT, HASH_COST, HASH_LENGTH);

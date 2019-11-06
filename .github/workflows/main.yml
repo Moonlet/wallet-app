@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - sentry
 
 name: Deploy Beta
 jobs:
@@ -68,6 +69,8 @@ jobs:
         run: npm run generate-icons
       - name: Run fastlane beta
         run: cd android/fastlane && bundle exec fastlane beta
+        env: 
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   beta-ios:
     name: iOS app
     runs-on: macOS-latest
@@ -104,6 +107,7 @@ jobs:
         env:
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   beta-ext-chrome: 
     name: Chrome extension
     runs-on: ubuntu-latest

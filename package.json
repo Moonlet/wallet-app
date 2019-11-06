@@ -6,7 +6,9 @@
         "generate-icons": "mkdir -p resources/fonts && icon-font-generator ./src/assets/icons/svg/*.svg -o resources/fonts --height 1024 --types ttf",
         "emulator": "cd ~/Library/Android/sdk/tools/; emulator -avd `emulator -list-avds | awk '{print $1}'`",
         "android": "npm run generate-icons && react-native run-android --variant=betaDebug --appIdSuffix=beta",
-        "ios": "npm run generate-icons && react-native run-ios",
+        "ios": "npm run ios:before-run && react-native run-ios",
+        "ios:pod-install": "cd ios && pod install",
+        "ios:before-run": "npm run generate-icons & npm run ios:pod-install",
         "ext": "NODE_ENV=development webpack --mode development --config ./extension/webpack.config.js --watch",
         "ext:build": "webpack -p --config ./extension/webpack.config.babel.js",
         "ext:build:beta:chrome": "TARGET=beta BROWSER=chrome npm run ext:build",
@@ -18,6 +20,7 @@
     },
     "dependencies": {
         "@react-native-community/async-storage": "^1.6.2",
+        "@sentry/react-native": "^1.0.9",
         "@types/react-native-vector-icons": "^6.4.4",
         "@zilliqa-js/crypto": "^0.8.1-alpha.0",
         "@zilliqa-js/util": "^0.8.3",
@@ -106,7 +109,13 @@
         }
     },
     "lint-staged": {
-        "*.{ts,tsx,scss,json,js}": ["npm run prettier", "git add"],
-        "*.{ts,tsx}": ["npm run lint", "git add"]
+        "*.{ts,tsx,scss,json,js}": [
+            "npm run prettier",
+            "git add"
+        ],
+        "*.{ts,tsx}": [
+            "npm run lint",
+            "git add"
+        ]
     }
 }

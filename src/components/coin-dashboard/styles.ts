@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -9,12 +10,13 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             alignSelf: 'stretch',
             flex: 1,
-            margin: 12,
-            marginBottom: 4
+            marginBottom: BASE_DIMENSION / 2,
+            borderWidth: 1
         },
         exchangeCardContainer: {
             display: 'flex',
-            flexDirection: 'row'
+            flexDirection: 'row',
+            marginHorizontal: -BASE_DIMENSION / 2
         },
         icon: {
             color: theme.colors.accent

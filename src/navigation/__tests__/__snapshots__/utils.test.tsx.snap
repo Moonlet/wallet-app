@@ -5,6 +5,12 @@ exports[`NavigationUtils DummyScreen renders corectly 1`] = `
   <Text style={{...}}>
     some screen
   </Text>
+  <withTheme(ButtonComponent) onPress={[Function: onPress]}>
+    JS Crash
+  </withTheme(ButtonComponent)>
+  <withTheme(ButtonComponent) onPress={[Function: onPress]}>
+    Native crash
+  </withTheme(ButtonComponent)>
 </View>"
 `;
 

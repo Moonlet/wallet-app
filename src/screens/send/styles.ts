@@ -25,7 +25,7 @@ export default (theme: ITheme) =>
         inputAddress: {
             flex: 1,
             color: theme.colors.text,
-            paddingRight: 40
+            paddingRight: 15
         },
         receipientLabel: {
             paddingLeft: 15,
@@ -68,5 +68,13 @@ export default (theme: ITheme) =>
             flex: 1,
             paddingTop: 52,
             backgroundColor: theme.colors.appBackground
+        },
+        icon: {
+            color: theme.colors.accent,
+            marginHorizontal: 0
+        },
+        qrButton: {
+            flexDirection: 'row',
+            marginRight: 5
         }
     });

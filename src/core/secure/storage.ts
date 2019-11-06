@@ -9,7 +9,7 @@ export const storeEncrypted = async (data: string, key: string, hash: string) =>
     try {
         await AsyncStorage.setItem(`${KEY_PREFIX}${key}`, encryptedData);
     } catch (e) {
-        // saving error
+        return Promise.reject();
     }
 };
 
@@ -20,8 +20,8 @@ export const readEncrypted = async (key: string, hash: string) => {
             const data = await decrypt(encryptedData, hash);
             return data;
         }
-        return 'xxxxx';
+        return Promise.reject(`No data in storage for key ${KEY_PREFIX}${key}`);
     } catch (e) {
-        // error reading value
+        return Promise.reject(e);
     }
 };

@@ -1,10 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            padding: 0,
+            paddingHorizontal: BASE_DIMENSION * 2,
             paddingTop: 40,
             alignItems: 'center',
             justifyContent: 'flex-start',
@@ -31,7 +32,7 @@ export default (theme: ITheme) =>
             height: 40,
             flexDirection: 'row',
             marginBottom: 12,
-            marginHorizontal: 12
+            marginHorizontal: BASE_DIMENSION * 2
         },
         blockchainButton: {
             flex: 1,
@@ -39,7 +40,7 @@ export default (theme: ITheme) =>
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 16,
-            margin: 4
+            margin: BASE_DIMENSION / 2
         },
         blockchainButtonActive: {
             backgroundColor: theme.colors.primary

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, KeyboardAvoidingView } from 'react-native';
 import { Text } from '../../library';
 import {
     NavigationParams,
@@ -91,7 +91,7 @@ export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IRedu
     );
 
     return (
-        <View style={props.styles.container}>
+        <KeyboardAvoidingView style={props.styles.container}>
             <View style={props.styles.topContainer}>
                 <Text darker style={{ textAlign: 'center' }}>
                     {translate('CreateWalletMnemonicConfirm.body')}
@@ -143,7 +143,7 @@ export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IRedu
                     {translate('App.labels.confirm')}
                 </Button>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     );
 };
 CreateWalletConfirmMnemonicScreenComponent.navigationOptions = navigationOptions;

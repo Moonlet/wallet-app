@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`creat wallet terms screen component renders correctly 1`] = `
-"<View style={{...}}>
+"<KeyboardAvoidingView style={{...}} enabled={true} keyboardVerticalOffset={0}>
   <View style={{...}}>
     <withTheme(TextComponent) darker={true} style={{...}}>
       To make sure you have written down all of your recovery words, please enter the following:
@@ -22,11 +22,11 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       Confirm
     </withTheme(ButtonComponent)>
   </View>
-</View>"
+</KeyboardAvoidingView>"
 `;
 
 exports[`creat wallet terms screen component validates mnemonic words 1`] = `
-"<View style={{...}}>
+"<KeyboardAvoidingView style={{...}} enabled={true} keyboardVerticalOffset={0}>
   <View style={{...}}>
     <withTheme(TextComponent) darker={true} style={{...}}>
       To make sure you have written down all of your recovery words, please enter the following:
@@ -47,5 +47,5 @@ exports[`creat wallet terms screen component validates mnemonic words 1`] = `
       Confirm
     </withTheme(ButtonComponent)>
   </View>
-</View>"
+</KeyboardAvoidingView>"
 `;

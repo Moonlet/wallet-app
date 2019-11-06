@@ -17,7 +17,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
   </View>
   <View style={{...}}>
     <View style={{...}}>
-      <withTheme(ButtonComponent) style={{...}}>
+      <withTheme(ButtonComponent) style={{...}} testID=\\"button-recover\\">
         Recover
       </withTheme(ButtonComponent)>
       <withTheme(ButtonComponent) style={{...}}>

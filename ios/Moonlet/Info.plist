@@ -41,6 +41,8 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>This allows you to securely login to Moonlet.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>icons.ttf</string>

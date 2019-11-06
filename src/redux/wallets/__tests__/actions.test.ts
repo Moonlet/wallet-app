@@ -1,5 +1,26 @@
 import { addWallet, createHDWallet } from '../actions';
 
+jest.mock('../../../core/secure/keychain', () => {
+    return {
+        getPassword: () => Promise.resolve({ password: 'pass' })
+    };
+});
+
+jest.mock('../../../core/secure/storage', () => {
+    return {
+        storeEncrypted: () => Promise.resolve()
+    };
+});
+
+jest.mock('uuid/v4', () => {
+    return {
+        __esModule: true,
+        default: () => 'uuid'
+    };
+});
+
+const flushPromises = () => new Promise(setImmediate);
+
 describe('wallet actions', () => {
     test('addWallet actions return correct object', () => {
         // @ts-ignore
@@ -32,13 +53,15 @@ describe('wallet actions', () => {
                             '0310a8a9ad39c2c9a878bf1a42895ee122806d1f4cf510f604d274b04f5a5854cc'
                     }
                 ],
-                id: 'hdWallet',
+                id: 'uuid',
                 type: 'HD'
             },
             type: 'WALLET_ADD'
         };
 
         await createHDWallet(mnemonic, callback)(dispatch, getState);
+
+        await flushPromises();
 
         expect(callback).toHaveBeenCalled();
         expect(dispatch).toBeCalledWith(response);

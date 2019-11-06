@@ -27,10 +27,6 @@ export interface IReduxProps {
     createHDWallet: (mnemonic: string, callback: () => any) => void;
 }
 
-const navigationOptions = ({ navigation }: any) => ({
-    title: 'Create'
-});
-
 /**
  * draws a textinput for a random mnemonic word
  * @param n {number}
@@ -131,13 +127,13 @@ export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IRedu
                             setError(true);
                             return;
                         }
-                        props.createHDWallet(mnemonic.join(' '), () =>
+                        props.createHDWallet(mnemonic.join(' '), () => {
                             props.navigation.navigate(
                                 'MainNavigation',
                                 {},
                                 NavigationActions.navigate({ routeName: 'Dashboard' })
-                            )
-                        );
+                            );
+                        });
                     }}
                 >
                     {translate('App.labels.confirm')}
@@ -146,7 +142,10 @@ export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IRedu
         </View>
     );
 };
-CreateWalletConfirmMnemonicScreenComponent.navigationOptions = navigationOptions;
+
+export const navigationOptions = ({ navigation }: any) => ({
+    title: 'Create'
+});
 
 export const CreateWalletConfirmMnemonicScreen = smartConnect(
     CreateWalletConfirmMnemonicScreenComponent,
@@ -160,3 +159,5 @@ export const CreateWalletConfirmMnemonicScreen = smartConnect(
         withTheme(stylesProvider)
     ]
 );
+
+CreateWalletConfirmMnemonicScreenComponent.navigationOptions = navigationOptions;

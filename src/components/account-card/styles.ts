@@ -1,5 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -10,8 +11,7 @@ export default (theme: ITheme) =>
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginBottom: 8,
-            marginHorizontal: 4,
+            marginBottom: BASE_DIMENSION,
             flexDirection: 'row',
             padding: 12
         },
@@ -19,7 +19,7 @@ export default (theme: ITheme) =>
             display: 'flex',
             flexDirection: 'column',
             flex: 1,
-            marginHorizontal: 8
+            marginHorizontal: BASE_DIMENSION
         },
         icon: {
             color: theme.colors.accent

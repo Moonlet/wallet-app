@@ -32,8 +32,7 @@ export default (theme: ITheme) =>
         },
 
         confirmTextContainer: {
-            flexDirection: 'row',
-            width: '80%'
+            flexDirection: 'row'
         },
 
         icon: {

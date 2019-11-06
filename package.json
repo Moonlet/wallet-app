@@ -20,6 +20,7 @@
     },
     "dependencies": {
         "@react-native-community/async-storage": "^1.6.2",
+        "@sentry/browser": "^5.7.1",
         "@sentry/react-native": "^1.0.9",
         "@types/react-native-vector-icons": "^6.4.4",
         "@zilliqa-js/crypto": "^0.8.1-alpha.0",

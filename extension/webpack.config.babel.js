@@ -23,8 +23,8 @@ const babelLoaderConfiguration = {
     test: /\.js$/,
     // Add every directory that needs to be compiled by Babel during the build.
     include: [
-        path.resolve(appDirectory, 'index.js'),
-        path.resolve(appDirectory, 'src'),
+        // path.resolve(appDirectory, 'index.web.js'),
+        // path.resolve(appDirectory, 'src'),
         path.resolve(appDirectory, 'node_modules/@react-navigation'),
         path.resolve(appDirectory, 'node_modules/react-navigation'),
         path.resolve(appDirectory, 'node_modules/react-navigation-stack'),
@@ -38,7 +38,7 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/react-native-gesture-handler'),
         path.resolve(appDirectory, 'node_modules/@react-native-community/async-storage'),
         path.resolve(appDirectory, 'node_modules/react-native-keychain')
-        //path.resolve(appDirectory, 'node_modules/react-native-uncompiled')
+        // path.resolve(appDirectory, 'node_modules/react-native-uncompiled')
     ],
     use: {
         loader: 'babel-loader',
@@ -122,6 +122,7 @@ module.exports = {
         alias: {
             'react-native$': 'react-native-web',
             'react-native-linear-gradient$': 'react-native-web-linear-gradient',
+            '@sentry/react-native$': '@sentry/browser',
             'react-native-device-info$': path.resolve(
                 __dirname,
                 'modules-mocks/react-native-device-info'

@@ -8,6 +8,8 @@ const props: IProps = {
     onQrCodeScanned: jest.fn()
 };
 
+jest.mock('react-native-camera-kit');
+
 describe('qr code modal ', () => {
     beforeAll(async () => {
         await loadTranslations('en');

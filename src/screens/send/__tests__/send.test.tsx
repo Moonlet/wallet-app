@@ -4,7 +4,6 @@ import { SendScreenComponent, IProps } from '../send';
 import stylesProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import { loadTranslations } from '../../../core/i18n';
-import renderer from 'react-test-renderer';
 
 const props: IProps = {
     // @ts-ignore
@@ -57,18 +56,18 @@ export default describe('SendScreen', () => {
     });
 
     test('should change state if address is entered', () => {
-        const instanceOf: any = renderer.create(<SendScreenComponent {...props} />).getInstance();
-        instanceOf.verifyAddress('address');
-        expect(instanceOf.state.address).toEqual('address');
+        const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
+        wrapper.verifyAddress('address');
+        expect(wrapper.state.address).toEqual('address');
     });
     test('should change state if amount is entered', () => {
-        const instanceOf: any = renderer.create(<SendScreenComponent {...props} />).getInstance();
-        instanceOf.addAmount('1');
-        expect(instanceOf.state.amount).toEqual('1');
+        const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
+        wrapper.addAmount('1');
+        expect(wrapper.state.amount).toEqual('1');
     });
     test('should calculate fee is amount is entered', () => {
-        const instanceOf: any = renderer.create(<SendScreenComponent {...props} />).getInstance();
-        instanceOf.addAmount('1');
-        expect(instanceOf.state.fee).toEqual('0.001ZIL');
+        const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
+        wrapper.addAmount('1');
+        expect(wrapper.state.fee).toEqual('0.001ZIL');
     });
 });

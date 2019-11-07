@@ -52,6 +52,10 @@ export const translation: ITranslations = {
             inputAddress: 'Search public addresses or domain names',
             amount: 'Amount',
             recipientLabel: 'Recipient'
+        },
+        Receive: {
+            clipboardBtn: 'Copy to clipboard',
+            copiedBtn: 'Copied'
         }
     },
     plural: (n: number, ord?: boolean) => {

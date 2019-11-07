@@ -37,4 +37,9 @@ export default describe('AccountScreen', () => {
         wrapper.find('[testID="button-send"]').simulate('Press');
         expect(props.navigation.navigate).toHaveBeenCalledWith('Send');
     });
+    test('Receive button goes on the proper screen', () => {
+        const wrapper = shallow(<AccountScreenComponent {...props} />);
+        wrapper.find('[testID="button-receive"]').simulate('Press');
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Receive', { address: 'value' });
+    });
 });

@@ -52,7 +52,15 @@ export class AccountScreenComponent extends React.Component<IReduxProps & IProps
                     >
                         {translate('App.labels.send')}
                     </Button>
-                    <Button style={styles.button}>{translate('App.labels.receive')}</Button>
+                    <Button
+                        testID="button-receive"
+                        style={styles.button}
+                        onPress={() => {
+                            navigation.navigate('Receive', { address: 'value' });
+                        }}
+                    >
+                        {translate('App.labels.receive')}
+                    </Button>
                 </View>
 
                 <View style={styles.transactionsContainer}>

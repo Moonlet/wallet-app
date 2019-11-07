@@ -17,7 +17,7 @@ exports[`AccountScreen renders correctly 1`] = `
     <withTheme(ButtonComponent) testID=\\"button-send\\" style={{...}} onPress={[Function: onPress]}>
       Send
     </withTheme(ButtonComponent)>
-    <withTheme(ButtonComponent) style={{...}}>
+    <withTheme(ButtonComponent) testID=\\"button-receive\\" style={{...}} onPress={[Function: onPress]}>
       Receive
     </withTheme(ButtonComponent)>
   </View>

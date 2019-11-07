@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -35,7 +35,7 @@ export default (theme: ITheme) =>
         },
         inputBoxAddress: {
             height: 44,
-            borderRadius: 6,
+            borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
@@ -46,7 +46,7 @@ export default (theme: ITheme) =>
         },
         inputBox: {
             height: 44,
-            borderRadius: 6,
+            borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,

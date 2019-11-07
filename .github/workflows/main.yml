@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - master
-      - sentry
 
 name: Deploy Beta
 jobs:

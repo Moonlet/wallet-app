@@ -1,13 +1,14 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingTop: 18,
-            paddingBottom: 18,
-            paddingLeft: 15,
-            paddingRight: 15,
+            paddingTop: BASE_DIMENSION * 2,
+            paddingBottom: BASE_DIMENSION * 2,
+            paddingLeft: BASE_DIMENSION * 2,
+            paddingRight: BASE_DIMENSION * 2,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
             ...StyleSheet.absoluteFillObject
@@ -25,10 +26,10 @@ export default (theme: ITheme) =>
         inputAddress: {
             flex: 1,
             color: theme.colors.text,
-            paddingRight: 15
+            paddingRight: BASE_DIMENSION * 2
         },
         receipientLabel: {
-            paddingLeft: 15,
+            paddingLeft: BASE_DIMENSION * 2,
             marginTop: 10,
             color: theme.colors.textSecondary
         },
@@ -59,7 +60,7 @@ export default (theme: ITheme) =>
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'center',
-            marginBottom: 5
+            marginBottom: BASE_DIMENSION / 2
         },
         bottomButton: {
             width: '90%'
@@ -75,6 +76,6 @@ export default (theme: ITheme) =>
         },
         qrButton: {
             flexDirection: 'row',
-            marginRight: 5
+            marginRight: BASE_DIMENSION / 2
         }
     });

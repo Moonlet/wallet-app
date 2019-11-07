@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity } from 'react-native';
+import { View, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { Icon } from '../../components/icon';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { IReduxState } from '../../redux/state';
@@ -32,7 +32,6 @@ interface IState {
     fee: string;
     isValidAddress: boolean;
     blockchain: Blockchain;
-    openQrCode: boolean;
 }
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -60,13 +59,11 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
             amount: '',
             fee: '',
             isValidAddress: false,
-            blockchain: Blockchain.ZILLIQA,
-            openQrCode: false
+            blockchain: Blockchain.ZILLIQA
         };
     }
 
     public onPressQrCodeIcon = async () => {
-        this.setState({ openQrCode: true });
         if (this.qrCodeScanner) {
             this.qrCodeScanner.open();
         }
@@ -116,9 +113,14 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
                             this.verifyAddress(text);
                         }}
                     />
-                    <TouchableOpacity onPress={this.onPressQrCodeIcon} style={[styles.qrButton]}>
-                        <Icon name="qr-code-scan" size={20} style={styles.icon} />
-                    </TouchableOpacity>
+                    {Platform.OS !== 'web' ? (
+                        <TouchableOpacity
+                            onPress={this.onPressQrCodeIcon}
+                            style={[styles.qrButton]}
+                        >
+                            <Icon name="qr-code-scan" size={20} style={styles.icon} />
+                        </TouchableOpacity>
+                    ) : null}
                 </View>
                 {this.state.isValidAddress ? (
                     <View style={styles.basicFields}>

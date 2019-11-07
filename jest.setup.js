@@ -31,7 +31,10 @@ jest.mock('react-navigation-stack', () => {
 });
 
 NativeModules.SettingsManager = { settings: { AppleLocale: 'en_US' } };
-NativeModules.I18nManager = { localeIdentifier: 'en-US' };
+NativeModules.I18nManager = {
+    localeIdentifier: 'en-US',
+    getConstants: jest.fn().mockReturnValue({ isRTL: false, doLeftAndRightSwapInRTL: true })
+};
 
 jest.mock('react-native-device-info', () => {
     return {

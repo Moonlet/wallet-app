@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { SendScreenComponent, IProps } from '../send';
+import { SendScreenComponent, IProps, navigationOptions } from '../send';
 import stylesProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import { loadTranslations } from '../../../core/i18n';
@@ -80,5 +80,25 @@ export default describe('SendScreen', () => {
         const wrapper: any = shallow(<SendScreenComponent {...props} />);
         wrapper.instance().onQrCodeScanned('address');
         expect(wrapper.debug()).toMatchSnapshot();
+    });
+
+    test('onChangeText', () => {
+        const wrapper: any = shallow(<SendScreenComponent {...props} />);
+        wrapper.find('[testID="input-address"]').simulate('changeText', 'pass1');
+        expect(wrapper.debug()).toMatchSnapshot();
+
+        wrapper.setState({
+            isValidAddress: true
+        });
+        wrapper.find('[testID="amount"]').simulate('changeText', '10');
+
+        expect(wrapper.debug()).toMatchSnapshot();
+    });
+
+    test('sets correct navigation options', () => {
+        const navigationProp = { navigation: { state: { params: { goBack: jest.fn() } } } };
+        const options = navigationOptions(navigationProp);
+        expect(options).toMatchSnapshot();
+        expect(options.headerLeft()).toMatchSnapshot();
     });
 });

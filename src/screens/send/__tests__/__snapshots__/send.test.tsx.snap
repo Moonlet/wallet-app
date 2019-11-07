@@ -43,6 +43,55 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
 </View>"
 `;
 
+exports[`SendScreen onChangeText 1`] = `
+"<View style={{...}}>
+  <withTheme(TextComponent) style={{...}}>
+    Reusable component
+  </withTheme(TextComponent)>
+  <withTheme(TextComponent) style={{...}}>
+    Recipient
+  </withTheme(TextComponent)>
+  <View style={{...}}>
+    <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"pass1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+    <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
+      <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
+    </TouchableOpacity>
+  </View>
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
+</View>"
+`;
+
+exports[`SendScreen onChangeText 2`] = `
+"<View style={{...}}>
+  <withTheme(TextComponent) style={{...}}>
+    Reusable component
+  </withTheme(TextComponent)>
+  <withTheme(TextComponent) style={{...}}>
+    Recipient
+  </withTheme(TextComponent)>
+  <View style={{...}}>
+    <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"pass1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+    <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
+      <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
+    </TouchableOpacity>
+  </View>
+  <View style={{...}}>
+    <View style={{...}}>
+      <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"10\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+    </View>
+    <View style={{...}}>
+      <TextInput testID=\\"fee\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"0.001ZIL\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" editable={false} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+    </View>
+    <View style={{...}}>
+      <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={false} onPress={[Function: onPress]}>
+        Confirm payment
+      </withTheme(ButtonComponent)>
+    </View>
+  </View>
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
+</View>"
+`;
+
 exports[`SendScreen renders correctly - no amount and fee should be present 1`] = `
 "<View style={{...}}>
   <withTheme(TextComponent) style={{...}}>
@@ -114,6 +163,21 @@ exports[`SendScreen renders correctly 2`] = `
   </View>
   <QrModalReaderComponent onQrCodeScanned={[Function]} />
 </View>"
+`;
+
+exports[`SendScreen sets correct navigation options 1`] = `
+Object {
+  "headerLeft": [Function],
+  "title": "Send",
+}
+`;
+
+exports[`SendScreen sets correct navigation options 2`] = `
+<withTheme(HeaderLeftComponent)
+  icon="close"
+  onPress={[Function]}
+  text="Close"
+/>
 `;
 
 exports[`SendScreen should Call verify address 1`] = `

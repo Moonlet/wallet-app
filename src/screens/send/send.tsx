@@ -34,7 +34,7 @@ interface IState {
     blockchain: Blockchain;
 }
 
-const navigationOptions = ({ navigation }: any) => ({
+export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: () => {
         return (
             <HeaderLeft

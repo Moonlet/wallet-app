@@ -1,5 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`SendScreen Buton should open qr-code 1`] = `
+"<View style={{...}}>
+  <withTheme(TextComponent) style={{...}}>
+    Reusable component
+  </withTheme(TextComponent)>
+  <View style={{...}}>
+    <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+    <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
+      <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
+    </TouchableOpacity>
+  </View>
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
+</View>"
+`;
+
 exports[`SendScreen Button should be disabled if amount is 0 1`] = `
 "<View style={{...}}>
   <withTheme(TextComponent) style={{...}}>
@@ -7,7 +22,7 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
   </withTheme(TextComponent)>
   <View style={{...}}>
     <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-    <TouchableOpacity onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
+    <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
       <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
   </View>
@@ -35,7 +50,7 @@ exports[`SendScreen renders correctly - no amount and fee should be present 1`] 
   </withTheme(TextComponent)>
   <View style={{...}}>
     <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-    <TouchableOpacity onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
+    <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
       <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
   </View>
@@ -50,7 +65,7 @@ exports[`SendScreen renders correctly - no amount and fee should be present 2`] 
   </withTheme(TextComponent)>
   <View style={{...}}>
     <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-    <TouchableOpacity onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
+    <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
       <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
   </View>
@@ -65,7 +80,7 @@ exports[`SendScreen renders correctly 1`] = `
   </withTheme(TextComponent)>
   <View style={{...}}>
     <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-    <TouchableOpacity onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
+    <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
       <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
   </View>
@@ -80,7 +95,7 @@ exports[`SendScreen renders correctly 2`] = `
   </withTheme(TextComponent)>
   <View style={{...}}>
     <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-    <TouchableOpacity onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
+    <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
       <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
   </View>
@@ -96,6 +111,24 @@ exports[`SendScreen renders correctly 2`] = `
         Confirm payment
       </withTheme(ButtonComponent)>
     </View>
+  </View>
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
+</View>"
+`;
+
+exports[`SendScreen should Call verify address 1`] = `
+"<View style={{...}}>
+  <withTheme(TextComponent) style={{...}}>
+    Reusable component
+  </withTheme(TextComponent)>
+  <withTheme(TextComponent) style={{...}}>
+    Recipient
+  </withTheme(TextComponent)>
+  <View style={{...}}>
+    <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"address\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+    <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
+      <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
+    </TouchableOpacity>
   </View>
   <QrModalReaderComponent onQrCodeScanned={[Function]} />
 </View>"

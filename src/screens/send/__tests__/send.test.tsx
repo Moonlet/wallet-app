@@ -54,6 +54,12 @@ export default describe('SendScreen', () => {
         });
         expect(wrapper.debug()).toMatchSnapshot();
     });
+    test('Buton should open qr-code', () => {
+        const wrapper = shallow(<SendScreenComponent {...props} />);
+
+        wrapper.find('[testID="qrcode-icon"]').simulate('Press');
+        expect(wrapper.debug()).toMatchSnapshot();
+    });
 
     test('should change state if address is entered', () => {
         const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
@@ -69,5 +75,10 @@ export default describe('SendScreen', () => {
         const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
         wrapper.addAmount('1');
         expect(wrapper.state.fee).toEqual('0.001ZIL');
+    });
+    test('should Call verify address', () => {
+        const wrapper: any = shallow(<SendScreenComponent {...props} />);
+        wrapper.instance().onQrCodeScanned('address');
+        expect(wrapper.debug()).toMatchSnapshot();
     });
 });

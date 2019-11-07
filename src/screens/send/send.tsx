@@ -64,9 +64,7 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
     }
 
     public onPressQrCodeIcon = async () => {
-        if (this.qrCodeScanner) {
-            this.qrCodeScanner.open();
-        }
+        this.qrCodeScanner.open();
     };
 
     public verifyAddress = (text: string) => {
@@ -115,6 +113,7 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
                     />
                     {Platform.OS !== 'web' ? (
                         <TouchableOpacity
+                            testID="qrcode-icon"
                             onPress={this.onPressQrCodeIcon}
                             style={[styles.qrButton]}
                         >

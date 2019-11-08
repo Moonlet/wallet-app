@@ -96,7 +96,7 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
                         }, [])}
                     </View>
                     <Text darker style={{ marginTop: 20 }}>
-                        {translate('CreateWalletMnemonic.body')}zz
+                        {translate('CreateWalletMnemonic.body')}
                     </Text>
                 </View>
                 <View style={props.styles.bottomContainer}>

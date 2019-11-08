@@ -2,6 +2,7 @@
 
 exports[`app reducer should set initial state 1`] = `
 Object {
-  "currentWalletIndex": 0,
+  "currentWalletIndex": 1,
+  "tosVersion": 0,
 }
 `;

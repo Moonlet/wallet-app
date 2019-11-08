@@ -2,7 +2,8 @@ import React from 'react';
 import {
     CreateWalletTermsScreenComponent,
     IProps,
-    navigationOptions
+    navigationOptions,
+    IReduxProps
 } from '../create-wallet-terms';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import styleProvider from '../styles';
@@ -10,12 +11,14 @@ import styleProvider from '../styles';
 import { shallow } from 'enzyme';
 import { loadTranslations } from '../../../core/i18n';
 
-const props: IProps = {
+const props: IProps & IReduxProps = {
     // @ts-ignore
     navigation: {
-        navigate: jest.fn()
+        navigate: jest.fn(),
+        pop: jest.fn()
     },
-    styles: styleProvider(darkTheme)
+    styles: styleProvider(darkTheme),
+    appSetTosVersion: jest.fn()
 };
 
 jest.mock('../../../core/secure/keychain', () => {
@@ -39,27 +42,20 @@ describe('creat wallet terms screen component', () => {
     it('navigates correctly', async () => {
         const wrapper = shallow(<CreateWalletTermsScreenComponent {...props} />);
 
-        wrapper.find('[testID="button-accept"]').simulate('Press');
         wrapper.find('[testID="button-tos"]').simulate('Press');
         wrapper.find('[testID="button-privacy-policy"]').simulate('Press');
+        wrapper.find('[testID="button-accept"]').simulate('Press');
 
         await flushPromises();
 
-        expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletMnemonic');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('Tos');
         expect(props.navigation.navigate).toHaveBeenCalledWith('PrivacyPolicy');
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Tos');
+        expect(props.navigation.pop).toHaveBeenCalledTimes(1);
     });
 
     it('sets correct navigation options', () => {
         const navigationProp = { navigation: { state: { params: { goBack: jest.fn() } } } };
         const options = navigationOptions(navigationProp);
         expect(options).toMatchSnapshot();
-        expect(options.headerLeft()).toMatchSnapshot();
-    });
-
-    it('does not have a back button if no goBack param is set', () => {
-        const navigationProp = { navigation: {} };
-        const options = navigationOptions(navigationProp);
-        expect(options.headerLeft()).toBe(null);
     });
 });

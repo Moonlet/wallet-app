@@ -40,15 +40,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
 
 exports[`creat wallet terms screen component sets correct navigation options 1`] = `
 Object {
-  "headerLeft": [Function],
-  "title": "Create",
+  "headerLeft": null,
+  "title": "Terms and conditions",
 }
-`;
-
-exports[`creat wallet terms screen component sets correct navigation options 2`] = `
-<withTheme(HeaderLeftComponent)
-  icon="arrow-left-1"
-  onPress={[Function]}
-  text="Back"
-/>
 `;

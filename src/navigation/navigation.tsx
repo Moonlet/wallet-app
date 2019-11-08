@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { createStackNavigator } from 'react-navigation-stack';
+import { createStackNavigator, StackViewStyleInterpolator } from 'react-navigation-stack';
 import { createSwitchNavigator } from 'react-navigation';
 
 import { darkTheme } from '../styles/themes/dark-theme';
@@ -23,6 +23,7 @@ import { PrivacyPolicyScreen } from '../screens/privacy-policy/privacy-policy';
 import { CreateWalletConfirmMnemonicScreen } from '../screens/create-wallet-confirm-mnemonic/create-wallet-confirm-mnemonic';
 import { SetPasswordConfirmScreen } from '../screens/set-password-confirm/set-password-confirm';
 import { SetPasswordScreen } from '../screens/set-password/set-password';
+import { Animated } from 'react-native';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -166,8 +167,21 @@ export const CreateWalletNavigation = createStackNavigator(
         }
     },
     {
-        initialRouteName: 'CreateWalletTerms',
-        defaultNavigationOptions: defaultStackNavigationOptions
+        initialRouteName: 'CreateWalletMnemonic',
+        defaultNavigationOptions: defaultStackNavigationOptions,
+        // disable transitiona animation for CreateWalletTerms screen
+        transitionConfig: (a, b, c) => ({
+            transitionSpec: {
+                timing: Animated.timing,
+                useNativeDriver: true
+            },
+            screenInterpolator: sceneProps => {
+                if (sceneProps.scene.route.routeName === 'CreateWalletTerms') {
+                    return null;
+                }
+                return StackViewStyleInterpolator.forHorizontal(sceneProps);
+            }
+        })
     }
 );
 

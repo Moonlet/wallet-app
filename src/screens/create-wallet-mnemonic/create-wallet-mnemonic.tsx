@@ -8,6 +8,11 @@ import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { Mnemonic } from '../../core/wallet/hd-wallet/mnemonic';
 import { translate } from '../../core/i18n';
+import { HeaderLeft } from '../../components/header-left/header-left';
+import { connect } from 'react-redux';
+import { smartConnect } from '../../core/utils/smart-connect';
+import { IReduxState } from '../../redux/state';
+import { TOS_VERSION } from '../../core/constants/app';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -18,12 +23,45 @@ interface IState {
     mnemonic: string[];
 }
 
-export class CreateWalletMnemonicScreenComponent extends React.Component<IProps, IState> {
+export interface IReduxProps {
+    tosVersion: number;
+}
+
+export const navigationOptions = ({ navigation }: any) => ({
+    headerLeft: () => {
+        if (navigation.state && navigation.state.params && navigation.state.params.goBack) {
+            return (
+                <HeaderLeft
+                    icon="arrow-left-1"
+                    text="Back"
+                    onPress={() => {
+                        navigation.state.params.goBack(navigation);
+                    }}
+                />
+            );
+        }
+
+        return null;
+    },
+    title: 'Create'
+});
+
+export class CreateWalletMnemonicScreenComponent extends React.Component<
+    IProps,
+    IState,
+    IReduxProps
+> {
+    public static navigationOptions = navigationOptions;
+
     constructor(props: any) {
         super(props);
         this.state = {
             mnemonic: new Array(24).fill('')
         };
+
+        if (!props.tosVersion || TOS_VERSION > props.tosVersion) {
+            props.navigation.navigate('CreateWalletTerms');
+        }
     }
 
     public async componentDidMount() {
@@ -58,7 +96,7 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<IProps,
                         }, [])}
                     </View>
                     <Text darker style={{ marginTop: 20 }}>
-                        {translate('CreateWalletMnemonic.body')}
+                        {translate('CreateWalletMnemonic.body')}zz
                     </Text>
                 </View>
                 <View style={props.styles.bottomContainer}>
@@ -80,12 +118,12 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<IProps,
     }
 }
 
-export const navigationOptions = ({ navigation }: any) => ({
-    title: 'Create'
-});
-
-export const CreateWalletMnemonicScreen = withTheme(stylesProvider)(
-    CreateWalletMnemonicScreenComponent
-);
-
-CreateWalletMnemonicScreen.navigationOptions = navigationOptions;
+export const CreateWalletMnemonicScreen = smartConnect(CreateWalletMnemonicScreenComponent, [
+    connect(
+        (state: IReduxState) => ({
+            tosVersion: state.app.tosVersion
+        }),
+        null
+    ),
+    withTheme(stylesProvider)
+]);

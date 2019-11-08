@@ -1,22 +1,30 @@
 import React from 'react';
 import { View, Image, TouchableOpacity } from 'react-native';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { NavigationParams, NavigationState } from 'react-navigation';
+import { NavigationStackProp } from 'react-navigation-stack';
 import { Button } from '../../library/button/button';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
-import { HeaderLeft } from '../../components/header-left/header-left';
 import { Text } from '../../library';
 import { Icon } from '../../components/icon';
 import { translate } from '../../core/i18n';
 import { setPassword } from '../../core/secure/keychain';
+import { connect } from 'react-redux';
+import { smartConnect } from '../../core/utils/smart-connect';
+import { appSetTosVersion } from '../../redux/app/actions';
+import { TOS_VERSION } from '../../core/constants/app';
 
 export interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    navigation: NavigationStackProp<NavigationState, NavigationParams>;
     styles: ReturnType<typeof stylesProvider>;
 }
 
-export const CreateWalletTermsScreenComponent = (props: IProps) => (
+export interface IReduxProps {
+    appSetTosVersion: (n: number) => void;
+}
+
+export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) => (
     <View style={props.styles.container}>
         <View style={props.styles.topContainer}>
             <Text darker style={{ textAlign: 'center', marginTop: 60 }}>
@@ -62,8 +70,9 @@ export const CreateWalletTermsScreenComponent = (props: IProps) => (
                 style={props.styles.bottomButton}
                 primary
                 onPress={() => {
+                    props.appSetTosVersion(TOS_VERSION);
                     setPassword('some random password').then(() => {
-                        props.navigation.navigate('CreateWalletMnemonic');
+                        props.navigation.pop();
                     });
                 }}
             >
@@ -74,24 +83,18 @@ export const CreateWalletTermsScreenComponent = (props: IProps) => (
 );
 
 export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: () => {
-        if (navigation.state && navigation.state.params && navigation.state.params.goBack) {
-            return (
-                <HeaderLeft
-                    icon="arrow-left-1"
-                    text="Back"
-                    onPress={() => {
-                        navigation.state.params.goBack(navigation);
-                    }}
-                />
-            );
-        }
-
-        return null;
-    },
-    title: 'Create'
+    title: 'Terms and conditions',
+    headerLeft: null
 });
 
-export const CreateWalletTermsScreen = withTheme(stylesProvider)(CreateWalletTermsScreenComponent);
+CreateWalletTermsScreenComponent.navigationOptions = navigationOptions;
 
-CreateWalletTermsScreen.navigationOptions = navigationOptions;
+export const CreateWalletTermsScreen = smartConnect(CreateWalletTermsScreenComponent, [
+    connect(
+        null,
+        dispatch => ({
+            appSetTosVersion: (tosVersion: number) => dispatch(appSetTosVersion(tosVersion))
+        })
+    ),
+    withTheme(stylesProvider)
+]);

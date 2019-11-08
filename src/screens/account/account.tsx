@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
-
 import stylesProvider from './styles';
 import { IAccountState } from '../../redux/wallets/state';
 import { IReduxState } from '../../redux/state';

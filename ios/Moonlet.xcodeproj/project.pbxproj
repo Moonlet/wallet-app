@@ -392,6 +392,7 @@
 				"${BUILT_PRODUCTS_DIR}/Yoga/yoga.framework",
 				"${BUILT_PRODUCTS_DIR}/glog/glog.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-aes/react_native_aes.framework",
+				"${BUILT_PRODUCTS_DIR}/react-native-camera-kit/react_native_camera_kit.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-randombytes/react_native_randombytes.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -430,6 +431,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/yoga.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_aes.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_camera_kit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_randombytes.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -478,6 +480,7 @@
 				"${BUILT_PRODUCTS_DIR}/Yoga/yoga.framework",
 				"${BUILT_PRODUCTS_DIR}/glog/glog.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-aes/react_native_aes.framework",
+				"${BUILT_PRODUCTS_DIR}/react-native-camera-kit/react_native_camera_kit.framework",
 				"${BUILT_PRODUCTS_DIR}/react-native-randombytes/react_native_randombytes.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
@@ -516,6 +519,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/yoga.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_aes.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_camera_kit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/react_native_randombytes.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -626,7 +630,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 120;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
@@ -657,7 +661,7 @@
 				CODE_SIGN_ENTITLEMENTS = Moonlet/MoonletRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 120;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				ENABLE_BITCODE = NO;
@@ -685,7 +689,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 120;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
@@ -716,7 +720,7 @@
 				CODE_SIGN_ENTITLEMENTS = Moonlet/MoonletRelease.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 98;
+				CURRENT_PROJECT_VERSION = 120;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 8T5TG4TVDY;
 				ENABLE_BITCODE = NO;

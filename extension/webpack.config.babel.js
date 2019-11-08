@@ -131,7 +131,7 @@ module.exports = {
         // If you're working on a multi-platform React Native app, web-specific
         // module implementations should be written in files using the extension
         // `.web.js`.
-        extensions: ['.web.js', '.js', '.ts', '.tsx', '.web.ts', '.web.tsx']
+        extensions: ['.web.js', '.js', '.web.ts', '.ts', '.web.tsx', '.tsx']
     },
 
     devtool: 'inline-source-map',

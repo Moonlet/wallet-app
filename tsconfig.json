@@ -16,7 +16,8 @@
         "noUnusedLocals": true,
         "typeRoots": ["node_modules/@types"],
         "types": ["jest"],
-        "skipLibCheck": true
+        "skipLibCheck": true,
+        "noImplicitAny": false
     },
     "include": ["src"],
     "exclude": [

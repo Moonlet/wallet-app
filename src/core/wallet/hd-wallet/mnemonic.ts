@@ -8,7 +8,7 @@ const getRandomBytes: any = (n: number) => {
                 reject(err);
                 return;
             }
-            resolve(new Buffer(base64Bytes, 'base64'));
+            resolve(Buffer.from(base64Bytes, 'base64'));
         });
     });
 };

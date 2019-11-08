@@ -20,6 +20,7 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
     }
 
     public open = async () => {
+        // TODO: hadle exceptions (promise rejection)
         const success = await CameraKitCamera.checkDeviceCameraAuthorizationStatus();
         if (success) {
             this.setState({ isVisible: true });
@@ -41,6 +42,7 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
                     }}
                 >
                     <CameraKitCameraScreen
+                        testID="CameraKitCameraScreen"
                         actions={{ leftButtonText: 'Cancel' }}
                         onBottomButtonPressed={event =>
                             this.setState({

@@ -1,19 +1,11 @@
 import React from 'react';
-import { QrModalReaderComponent, IProps } from '../qr-modal';
-import { loadTranslations } from '../../../core/i18n';
+import { QrModalReaderComponent } from '../qr-modal.web';
 
 import { shallow } from 'enzyme';
 
-const props: IProps = {
-    onQrCodeScanned: jest.fn()
-};
-
-describe('qr code modal ', () => {
-    beforeAll(async () => {
-        await loadTranslations('en');
-    });
+describe('qr code modal web', () => {
     test('renders correctly', () => {
-        const wrapper = shallow(<QrModalReaderComponent {...props} />);
+        const wrapper = shallow(<QrModalReaderComponent />);
         expect(wrapper.debug()).toMatchSnapshot();
     });
 });

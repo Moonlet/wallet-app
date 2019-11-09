@@ -1,13 +1,14 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingTop: 18,
-            paddingBottom: 18,
-            paddingLeft: 15,
-            paddingRight: 15,
+            paddingTop: BASE_DIMENSION * 2,
+            paddingBottom: BASE_DIMENSION * 2,
+            paddingLeft: BASE_DIMENSION * 2,
+            paddingRight: BASE_DIMENSION * 2,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
             ...StyleSheet.absoluteFillObject
@@ -25,16 +26,16 @@ export default (theme: ITheme) =>
         inputAddress: {
             flex: 1,
             color: theme.colors.text,
-            paddingRight: 40
+            paddingRight: BASE_DIMENSION * 2
         },
         receipientLabel: {
-            paddingLeft: 15,
+            paddingLeft: BASE_DIMENSION * 2,
             marginTop: 10,
             color: theme.colors.textSecondary
         },
         inputBoxAddress: {
             height: 44,
-            borderRadius: 6,
+            borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
@@ -45,7 +46,7 @@ export default (theme: ITheme) =>
         },
         inputBox: {
             height: 44,
-            borderRadius: 6,
+            borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
@@ -59,7 +60,7 @@ export default (theme: ITheme) =>
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'center',
-            marginBottom: 5
+            marginBottom: BASE_DIMENSION / 2
         },
         bottomButton: {
             width: '90%'
@@ -68,5 +69,13 @@ export default (theme: ITheme) =>
             flex: 1,
             paddingTop: 52,
             backgroundColor: theme.colors.appBackground
+        },
+        icon: {
+            color: theme.colors.accent,
+            marginHorizontal: 0
+        },
+        qrButton: {
+            flexDirection: 'row',
+            marginRight: BASE_DIMENSION / 2
         }
     });

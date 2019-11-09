@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, TouchableOpacity, Platform } from 'react-native';
+import { Icon } from '../../components/icon';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
@@ -14,6 +15,8 @@ import { translate } from '../../core/i18n';
 import { Blockchain } from '../../core/blockchain/types';
 import { BlockchainFactory } from '../../core/blockchain/blockchain-factory';
 import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
+
+import { QrModalReader } from '../../components/qr-modal/qr-modal';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -31,7 +34,7 @@ interface IState {
     blockchain: Blockchain;
 }
 
-const navigationOptions = ({ navigation }: any) => ({
+export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: () => {
         return (
             <HeaderLeft
@@ -47,6 +50,7 @@ const navigationOptions = ({ navigation }: any) => ({
 });
 export class SendScreenComponent extends React.Component<IProps, IState> {
     public static navigationOptions = navigationOptions;
+    public qrCodeScanner: any;
     constructor(props: IProps) {
         super(props);
 
@@ -58,6 +62,10 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
             blockchain: Blockchain.ZILLIQA
         };
     }
+
+    public onPressQrCodeIcon = async () => {
+        this.qrCodeScanner.open();
+    };
 
     public verifyAddress = (text: string) => {
         const blockchainInstance = BlockchainFactory.get(this.state.blockchain);
@@ -75,6 +83,10 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
                 BLOCKCHAIN_INFO[this.state.blockchain].coin
         });
     };
+    public onQrCodeScanned = (value: string) => {
+        this.verifyAddress(value);
+    };
+
     public render() {
         const styles = this.props.styles;
         const theme = this.props.theme;
@@ -99,6 +111,15 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
                             this.verifyAddress(text);
                         }}
                     />
+                    {Platform.OS !== 'web' ? (
+                        <TouchableOpacity
+                            testID="qrcode-icon"
+                            onPress={this.onPressQrCodeIcon}
+                            style={[styles.qrButton]}
+                        >
+                            <Icon name="qr-code-scan" size={20} style={styles.icon} />
+                        </TouchableOpacity>
+                    ) : null}
                 </View>
                 {this.state.isValidAddress ? (
                     <View style={styles.basicFields}>
@@ -143,6 +164,11 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
                         </View>
                     </View>
                 ) : null}
+
+                <QrModalReader
+                    ref={ref => (this.qrCodeScanner = ref)}
+                    onQrCodeScanned={this.onQrCodeScanned}
+                />
             </View>
         );
     }

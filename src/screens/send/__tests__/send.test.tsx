@@ -1,10 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { SendScreenComponent, IProps } from '../send';
+import { SendScreenComponent, IProps, navigationOptions } from '../send';
 import stylesProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import { loadTranslations } from '../../../core/i18n';
-import renderer from 'react-test-renderer';
 
 const props: IProps = {
     // @ts-ignore
@@ -55,20 +54,51 @@ export default describe('SendScreen', () => {
         });
         expect(wrapper.debug()).toMatchSnapshot();
     });
+    test('Buton should open qr-code', () => {
+        const wrapper = shallow(<SendScreenComponent {...props} />);
+
+        wrapper.find('[testID="qrcode-icon"]').simulate('Press');
+        expect(wrapper.debug()).toMatchSnapshot();
+    });
 
     test('should change state if address is entered', () => {
-        const instanceOf: any = renderer.create(<SendScreenComponent {...props} />).getInstance();
-        instanceOf.verifyAddress('address');
-        expect(instanceOf.state.address).toEqual('address');
+        const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
+        wrapper.verifyAddress('address');
+        expect(wrapper.state.address).toEqual('address');
     });
     test('should change state if amount is entered', () => {
-        const instanceOf: any = renderer.create(<SendScreenComponent {...props} />).getInstance();
-        instanceOf.addAmount('1');
-        expect(instanceOf.state.amount).toEqual('1');
+        const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
+        wrapper.addAmount('1');
+        expect(wrapper.state.amount).toEqual('1');
     });
     test('should calculate fee is amount is entered', () => {
-        const instanceOf: any = renderer.create(<SendScreenComponent {...props} />).getInstance();
-        instanceOf.addAmount('1');
-        expect(instanceOf.state.fee).toEqual('0.001ZIL');
+        const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
+        wrapper.addAmount('1');
+        expect(wrapper.state.fee).toEqual('0.001ZIL');
+    });
+    test('should Call verify address', () => {
+        const wrapper: any = shallow(<SendScreenComponent {...props} />);
+        wrapper.instance().onQrCodeScanned('address');
+        expect(wrapper.debug()).toMatchSnapshot();
+    });
+
+    test('onChangeText', () => {
+        const wrapper: any = shallow(<SendScreenComponent {...props} />);
+        wrapper.find('[testID="input-address"]').simulate('changeText', 'pass1');
+        expect(wrapper.debug()).toMatchSnapshot();
+
+        wrapper.setState({
+            isValidAddress: true
+        });
+        wrapper.find('[testID="amount"]').simulate('changeText', '10');
+
+        expect(wrapper.debug()).toMatchSnapshot();
+    });
+
+    test('sets correct navigation options', () => {
+        const navigationProp = { navigation: { state: { params: { goBack: jest.fn() } } } };
+        const options = navigationOptions(navigationProp);
+        expect(options).toMatchSnapshot();
+        expect(options.headerLeft()).toMatchSnapshot();
     });
 });

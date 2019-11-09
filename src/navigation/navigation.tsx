@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { createStackNavigator, StackViewStyleInterpolator } from 'react-navigation-stack';
+import { createStackNavigator } from 'react-navigation-stack';
 import { createSwitchNavigator } from 'react-navigation';
 
 import { darkTheme } from '../styles/themes/dark-theme';
@@ -9,7 +9,7 @@ import { lightTheme } from '../styles/themes/light-theme';
 import { ITheme } from '../core/theme/itheme';
 import { Theme } from '../core/theme/themes';
 import { HeaderLeft } from '../components/header-left/header-left';
-import { DummyScreen, menuIcon } from './utils';
+import { DummyScreen, menuIcon, removeAnimation } from './utils';
 
 import { DashboardScreen } from '../screens/dashboard/dashboard';
 import { SettingsScreen } from '../screens/settings/settings';
@@ -170,17 +170,12 @@ export const CreateWalletNavigation = createStackNavigator(
         initialRouteName: 'CreateWalletMnemonic',
         defaultNavigationOptions: defaultStackNavigationOptions,
         // disable transitiona animation for CreateWalletTerms screen
-        transitionConfig: (a, b, c) => ({
+        transitionConfig: () => ({
             transitionSpec: {
                 timing: Animated.timing,
                 useNativeDriver: true
             },
-            screenInterpolator: sceneProps => {
-                if (sceneProps.scene.route.routeName === 'CreateWalletTerms') {
-                    return null;
-                }
-                return StackViewStyleInterpolator.forHorizontal(sceneProps);
-            }
+            screenInterpolator: removeAnimation(['CreateWalletTerms'])
         })
     }
 );

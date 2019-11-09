@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Icon } from '../components/icon';
 import { COLORS } from '../styles/colors';
+import { StackViewStyleInterpolator } from 'react-navigation-stack';
 
 export const DummyScreen = () => (
     <View style={{ display: 'flex', justifyContent: 'center', flex: 1 }}>
@@ -13,3 +14,11 @@ export const DummyScreen = () => (
 export const menuIcon = (icon: string) => ({ focused }: any) => (
     <Icon name={icon} size={25} style={{ color: focused ? COLORS.AQUA : COLORS.LIGHT_GRAY }} />
 );
+
+// remove animation when transitioning to any of `noAnimationScreens`
+export const removeAnimation = (noAnimationScreens: string[]) => (sceneProps) => {
+    if (noAnimationScreens.indexOf(sceneProps.scene.route.routeName) !== -1) {
+        return null;
+    }
+    return StackViewStyleInterpolator.forHorizontal(sceneProps);
+}

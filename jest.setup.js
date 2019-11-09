@@ -26,7 +26,10 @@ jest.mock('react-navigation-tabs', () => {
 
 jest.mock('react-navigation-stack', () => {
     return {
-        createStackNavigator: jest.fn()
+        createStackNavigator: jest.fn(),
+        StackViewStyleInterpolator: {
+            forHorizontal: jest.fn().mockReturnValue('animation-interpolation')
+        }
     };
 });
 

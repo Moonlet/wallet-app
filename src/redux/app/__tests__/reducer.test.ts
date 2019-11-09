@@ -1,4 +1,5 @@
 import reducer from '../reducer';
+import { APP_SET_TOS_VERSION, APP_SWITCH_WALLET } from '../actions';
 
 describe('app reducer', () => {
     test('should set initial state', () => {
@@ -8,5 +9,23 @@ describe('app reducer', () => {
                 data: ''
             })
         ).toMatchSnapshot();
+    });
+
+    test('should handle APP_SWITCH_WALLET', () => {
+        expect(
+            reducer(undefined as any, {
+                type: APP_SWITCH_WALLET,
+                data: 2
+            }).currentWalletIndex
+        ).toBe(2);
+    });
+
+    test('should handle APP_SET_TOS_VERSION', () => {
+        expect(
+            reducer(undefined as any, {
+                type: APP_SET_TOS_VERSION,
+                data: 3
+            }).tosVersion
+        ).toBe(3);
     });
 });

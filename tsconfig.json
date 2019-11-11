@@ -11,7 +11,7 @@
         "moduleResolution": "node",
         "noEmit": false,
         "strict": false,
-        "target": "esnext",
+        "target": "es2018",
         "resolveJsonModule": true,
         "noUnusedLocals": true,
         "typeRoots": ["node_modules/@types"],

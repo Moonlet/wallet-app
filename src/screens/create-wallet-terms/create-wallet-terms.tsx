@@ -90,11 +90,8 @@ export const navigationOptions = ({ navigation }: any) => ({
 CreateWalletTermsScreenComponent.navigationOptions = navigationOptions;
 
 export const CreateWalletTermsScreen = smartConnect(CreateWalletTermsScreenComponent, [
-    connect(
-        null,
-        dispatch => ({
-            appSetTosVersion: (tosVersion: number) => dispatch(appSetTosVersion(tosVersion))
-        })
-    ),
+    connect(null, dispatch => ({
+        appSetTosVersion: (tosVersion: number) => dispatch(appSetTosVersion(tosVersion))
+    })),
     withTheme(stylesProvider)
 ]);

@@ -6,7 +6,7 @@ exports[`conversion card component renders correctly 1`] = `
     ZIL
     ETH
   </withTheme(TextComponent)>
-  <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"ETH\\" amount={1} />
+  <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"ETH\\" amount={{...}} />
   <withTheme(TextComponent) small={true} style={{...}}>
     0.0216
   </withTheme(TextComponent)>
@@ -19,7 +19,7 @@ exports[`conversion card component renders correctly negative values 1`] = `
     ZIL
     ETH
   </withTheme(TextComponent)>
-  <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"ETH\\" amount={1} />
+  <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"ETH\\" amount={{...}} />
   <withTheme(TextComponent) small={true} style={{...}}>
     -0.0216
   </withTheme(TextComponent)>

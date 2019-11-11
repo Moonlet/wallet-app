@@ -20,6 +20,11 @@ export class RpcClient {
             })
         };
 
-        return fetch(this.url, request).then(res => res.json());
+        // console.log("RPC client", 'request', request);
+        return fetch(this.url, request).then(async res => {
+            const response = await res.json();
+            // console.log("RPC client", 'response', response);
+            return response;
+        });
     }
 }

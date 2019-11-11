@@ -7,11 +7,13 @@ export const isValidChecksumAddress = (address: string): boolean => {
 };
 
 export const isValidAddress = (address: string): boolean => {
-    return isValidAddress(address);
+    return Util.isValidAddress(address);
 };
 
 export const publicToAddress = (publicKey: string): string => {
-    return Util.publicToAddress(Buffer.from(publicKey, 'hex')).toString('hex');
+    return Util.toChecksumAddress(
+        Util.publicToAddress(Buffer.from(publicKey, 'hex')).toString('hex')
+    );
 };
 
 export const privateToPublic = (privateKey: string): string => {
@@ -19,7 +21,9 @@ export const privateToPublic = (privateKey: string): string => {
 };
 
 export const privateToAddress = (privateKey: string): string => {
-    return Util.privateToAddress(Buffer.from(privateKey, 'hex')).toString('hext');
+    return Util.toChecksumAddress(
+        Util.privateToAddress(Buffer.from(privateKey, 'hex')).toString('hex')
+    );
 };
 
 export const getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {

@@ -11,7 +11,7 @@ exports[`account card component renders correctly 1`] = `
       <withTheme(TextComponent) small={true}>
           
          $
-        <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"USD\\" style={{...}} amount={12332} />
+        <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"USD\\" style={{...}} amount={{...}} />
       </withTheme(TextComponent)>
     </View>
     <withTheme(TextComponent) small={true}>

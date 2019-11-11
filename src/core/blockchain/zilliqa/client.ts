@@ -8,22 +8,35 @@ export class Client extends BlockchainGenericClient {
         super(chainId, networks);
     }
 
-    public getBalance(address: string): Promise<BigNumber> {
-        return this.rpc
-            .call('GetBalance', [
+    public async getBalance(address: string): Promise<BigNumber> {
+        try {
+            const response = await this.call('GetBalance', [
                 fromBech32Address(address)
                     .replace('0x', '')
                     .toLowerCase()
-            ])
-            .catch(error => {
-                if (error.message === 'Account is not created') {
-                    return Promise.resolve(0);
-                }
-                return Promise.reject(error);
-            });
+            ]);
+            return new BigNumber(response.result.balance);
+        } catch (result) {
+            if (result?.error?.message === 'Account is not created') {
+                return Promise.resolve(new BigNumber(0));
+            }
+            return Promise.reject(result);
+        }
     }
 
     public getNonce(address: string): Promise<number> {
         throw new Error('Method not implemented.');
+    }
+
+    public async call(method: string, params: any[]): Promise<any> {
+        try {
+            const result = await this.rpc.call(method, params);
+            if (result.error) {
+                return Promise.reject(result);
+            }
+            return result;
+        } catch (e) {
+            return Promise.reject(e);
+        }
     }
 }

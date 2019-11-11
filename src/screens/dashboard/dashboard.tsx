@@ -17,6 +17,7 @@ import { connect } from 'react-redux';
 import { withTheme } from '../../core/theme/with-theme';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { HeaderRight } from '../../components/header-right/header-right';
+import { getBalance } from '../../redux/wallets/actions';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -26,6 +27,8 @@ export interface IProps {
 
 export interface IReduxProps {
     wallet: IWalletState;
+
+    getBalance: typeof getBalance;
 }
 
 interface IState {
@@ -58,6 +61,10 @@ const calculateBalances = (accounts: IAccountState[]) =>
 const mapStateToProps = (state: IReduxState) => ({
     wallet: state.wallets[state.app.currentWalletIndex]
 });
+
+const mapDispatchToProps = {
+    getBalance
+};
 
 const navigationOptions = {
     title: 'Wallet 1',
@@ -206,6 +213,6 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
 }
 
 export const DashboardScreen = smartConnect(DashboardScreenComponent, [
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

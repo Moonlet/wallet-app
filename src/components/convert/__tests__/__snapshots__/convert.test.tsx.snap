@@ -8,6 +8,6 @@ exports[`convert component doesnt throw when props missing 1`] = `
 
 exports[`convert component renders correctly 1`] = `
 "<withTheme(TextComponent) style={[undefined]} format={{...}}>
-  3130905.3427246176
+  3130905.3427246177
 </withTheme(TextComponent)>"
 `;

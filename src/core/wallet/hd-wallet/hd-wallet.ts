@@ -62,7 +62,7 @@ export class HDWallet implements IWallet {
             return Promise.resolve(accounts);
         } catch (e) {
             if (e.message.indexOf('implementation not found')) {
-                return Promise.reject('Blockchain implementation not found.');
+                return Promise.reject(`Blockchain implementation not found.`);
             } else {
                 return Promise.reject('There was an error while generating the accounts.');
             }

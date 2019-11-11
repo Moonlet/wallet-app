@@ -1,0 +1,209 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`creat wallet terms screen component creates wallet and navigates to dashboard 1`] = `
+Array [
+  Array [
+    "panic club above clarify orbit resist illegal feel bus remember aspect field test bubble dog trap awesome hand room rice heavy idle faint salmon",
+    [Function],
+  ],
+]
+`;
+
+exports[`creat wallet terms screen component fills first input corectly 1`] = `ShallowWrapper {}`;
+
+exports[`creat wallet terms screen component marks errors 1`] = `ShallowWrapper {}`;
+
+exports[`creat wallet terms screen component renders correctly 1`] = `
+"<View style={{...}}>
+  <View style={{...}}>
+    <View style={{...}}>
+      <View style={{...}}>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            1.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-0\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            2.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-1\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            3.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-2\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            4.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-3\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+      </View>
+      <View style={{...}}>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            5.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-4\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            6.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-5\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            7.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-6\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            8.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-7\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+      </View>
+      <View style={{...}}>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            9.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-8\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            10.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-9\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            11.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-10\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            12.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-11\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+      </View>
+      <View style={{...}}>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            13.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-12\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            14.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-13\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            15.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-14\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            16.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-15\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+      </View>
+      <View style={{...}}>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            17.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-16\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            18.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-17\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            19.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-18\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            20.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-19\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+      </View>
+      <View style={{...}}>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            21.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-20\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            22.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-21\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            23.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-22\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+        <View style={{...}}>
+          <withTheme(TextComponent) small={true} style={{...}}>
+            24.
+          </withTheme(TextComponent)>
+          <TextInput testID=\\"input-23\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function: onChangeText]} onFocus={[Function: onFocus]} value=\\"\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+        </View>
+      </View>
+    </View>
+    <ScrollViewMock horizontal={true} overScrollMode=\\"never\\" snapToAlignment=\\"start\\" showsHorizontalScrollIndicator={false} style={{...}}>
+      <View style={{...}} />
+      <View style={{...}} />
+    </ScrollViewMock>
+  </View>
+  <View style={{...}}>
+    <withTheme(ButtonComponent) testID=\\"button-paste\\" style={{...}} onPress={[Function: onPress]}>
+      Paste
+    </withTheme(ButtonComponent)>
+    <withTheme(ButtonComponent) testID=\\"button-next\\" style={{...}} disabled={false} onPress={[Function: onPress]}>
+      Next
+    </withTheme(ButtonComponent)>
+    <withTheme(ButtonComponent) testID=\\"button-confirm\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+      Confirm
+    </withTheme(ButtonComponent)>
+  </View>
+</View>"
+`;
+
+exports[`creat wallet terms screen component sets correct navigation options 1`] = `
+<withTheme(HeaderLeftComponent)
+  icon="arrow-left-1"
+  onPress={[Function]}
+  text="Back"
+/>
+`;
+
+exports[`creat wallet terms screen component sets correct navigation options 2`] = `
+Object {
+  "headerLeft": [Function],
+  "title": "Recover",
+}
+`;

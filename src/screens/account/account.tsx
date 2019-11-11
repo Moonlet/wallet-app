@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState } from '../../redux/wallets/state';
 import { IReduxState } from '../../redux/state';
@@ -10,6 +11,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { Text, Button } from '../../library';
 import { translate, Translate } from '../../core/i18n';
 import { Icon } from '../../components/icon';
+import { AccountSettings } from './components/account-settings/account-settings';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -19,13 +21,41 @@ export interface IProps {
 export interface IReduxProps {
     account: IAccountState;
 }
+interface IState {
+    settingsVisible: boolean;
+}
+const navigationOptions = ({ navigation }: any) => ({
+    headerRight: () => {
+        return (
+            <HeaderRight
+                icon="navigation-menu-vertical"
+                onPress={
+                    navigation.state.params ? navigation.state.params.openSettingsMenu : undefined
+                }
+            />
+        );
+    }
+});
 
-const navigationOptions = {
-    title: 'Account'
-};
-
-export class AccountScreenComponent extends React.Component<IReduxProps & IProps> {
+export class AccountScreenComponent extends React.Component<IReduxProps & IProps, IState> {
     public static navigationOptions = navigationOptions;
+
+    constructor(props: IReduxProps & IProps) {
+        super(props);
+
+        this.state = {
+            settingsVisible: false
+        };
+    }
+    public componentDidMount() {
+        this.props.navigation.setParams({
+            openSettingsMenu: this.openSettingsMenu
+        });
+    }
+
+    public openSettingsMenu = () => {
+        this.setState({ settingsVisible: !this.state.settingsVisible });
+    };
 
     public render() {
         const { styles, navigation } = this.props;
@@ -93,6 +123,10 @@ export class AccountScreenComponent extends React.Component<IReduxProps & IProps
                         ))}
                     </View>
                 </View>
+                {this.state.settingsVisible ? (
+                    // onDonePressed={this.openSettingsMenu}
+                    <AccountSettings />
+                ) : null}
             </ScrollView>
         );
     }

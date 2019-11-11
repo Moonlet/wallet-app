@@ -18,6 +18,12 @@ export const translation: ITranslations = {
                 transactions: 'Transactions',
                 understand: 'I understand'
                 // plase try to add keys in alphabetic order
+            },
+            buttons: {
+                clipboardBtn: 'Copy to clipboard',
+                copiedBtn: 'Copied',
+                done: 'Done',
+                back: 'Back'
             }
         },
         CreateWalletTos: {
@@ -54,9 +60,12 @@ export const translation: ITranslations = {
             amount: 'Amount',
             recipientLabel: 'Recipient'
         },
-        Receive: {
-            clipboardBtn: 'Copy to clipboard',
-            copiedBtn: 'Copied'
+        AccounSettings: {
+            manageAccount: 'Manage account',
+            revealPrivate: 'Reveal private key',
+            revealPublic: 'Reveal public key',
+            viewOn: 'View on viewblock.io',
+            reportIssue: 'Report issue'
         }
     },
     plural: (n: number, ord?: boolean) => {

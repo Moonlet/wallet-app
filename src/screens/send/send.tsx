@@ -13,8 +13,7 @@ import { HeaderLeft } from '../../components/header-left/header-left';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { Blockchain } from '../../core/blockchain/types';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
+import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 

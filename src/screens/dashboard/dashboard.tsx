@@ -7,7 +7,6 @@ import { CoinDashboard } from '../../components/coin-dashboard/coin-dashboard';
 import { IReduxState } from '../../redux/state';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
-import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
 import { ITheme } from '../../core/theme/itheme';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -18,6 +17,7 @@ import { withTheme } from '../../core/theme/with-theme';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { HeaderRight } from '../../components/header-right/header-right';
 import { getBalance } from '../../redux/wallets/actions';
+import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;

@@ -1,4 +1,4 @@
-import { Blockchain, IBlockchain } from './types';
+import { Blockchain, IBlockchain, IBlockchainConfig } from './types';
 import { Zilliqa } from './zilliqa';
 import { Ethereum } from './ethereum';
 
@@ -11,4 +11,9 @@ export const getBlockchain = (blockchain: Blockchain): IBlockchain => {
         default:
             throw new Error(`getBlockchain: ${blockchain} implementation not found`);
     }
+};
+
+export const BLOCKCHAIN_INFO: { [blockchain: string]: IBlockchainConfig } = {
+    [Blockchain.ETHEREUM]: Ethereum.config,
+    [Blockchain.ZILLIQA]: Zilliqa.config
 };

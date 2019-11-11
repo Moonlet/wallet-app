@@ -3,13 +3,13 @@ import { View, TouchableOpacity } from 'react-native';
 import { Text } from '../../library';
 import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
-import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
 import { Icon } from '../icon';
 import { Convert } from '../convert/convert';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
+import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 
 export interface IProps {
     account: IAccountState;

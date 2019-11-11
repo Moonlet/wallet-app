@@ -151,12 +151,9 @@ CreateWalletConfirmMnemonicScreenComponent.navigationOptions = navigationOptions
 export const CreateWalletConfirmMnemonicScreen = smartConnect(
     CreateWalletConfirmMnemonicScreenComponent,
     [
-        connect(
-            null,
-            {
-                createHDWallet
-            }
-        ),
+        connect(null, {
+            createHDWallet
+        }),
         withTheme(stylesProvider)
     ]
 );

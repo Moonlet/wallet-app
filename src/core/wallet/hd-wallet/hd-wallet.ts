@@ -47,9 +47,7 @@ export class HDWallet implements IWallet {
 
         if (indexTo < index) {
             return Promise.reject(
-                `${
-                    this.constructor.name
-                }.getAccounts(): indexTo value must be greated than index value.`
+                `${this.constructor.name}.getAccounts(): indexTo value must be greated than index value.`
             );
         }
 

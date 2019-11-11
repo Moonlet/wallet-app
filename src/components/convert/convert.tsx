@@ -1,9 +1,10 @@
 import React from 'react';
 import { Text } from '../../library';
 import { connect } from 'react-redux';
+import BigNumber from 'bignumber.js';
 
 export interface IProps {
-    amount: number;
+    amount: BigNumber;
     from: string;
     to: string;
     usdPrices: any;
@@ -22,7 +23,7 @@ const mapStateToProps = (state: any) => ({
 
 export const ConvertComponent = (props: IProps & IReduxProps) => {
     const conversion = props.usdPrices[props.from] / props.usdPrices[props.to] || 0;
-    const amount = (props.amount || 0) * conversion;
+    const amount = (props.amount || new BigNumber(0)).multipliedBy(conversion);
 
     const formatOptions = props.displayCurrency
         ? {
@@ -32,12 +33,9 @@ export const ConvertComponent = (props: IProps & IReduxProps) => {
 
     return (
         <Text style={props.style} format={formatOptions}>
-            {amount}
+            {amount.toString()}
         </Text>
     );
 };
 
-export const Convert = connect(
-    mapStateToProps,
-    null
-)(ConvertComponent);
+export const Convert = connect(mapStateToProps, null)(ConvertComponent);

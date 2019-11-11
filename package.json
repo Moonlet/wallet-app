@@ -61,7 +61,7 @@
         "redux-persist": "^5.10.0",
         "redux-persist-webextension-storage": "^1.0.2",
         "redux-thunk": "^2.3.0",
-        "typescript": "^3.6.3",
+        "typescript": "^3.7.2",
         "uuid": "^3.3.3",
         "vm-browserify": "^1.1.0"
     },
@@ -91,6 +91,7 @@
         "jest": "^24.9.0",
         "lint-staged": "^9.4.1",
         "metro-react-native-babel-preset": "^0.56.0",
+        "prettier": "^1.19.1",
         "react-dom": "^16.10.2",
         "react-scripts": "^3.2.0",
         "ts-loader": "^6.2.0",

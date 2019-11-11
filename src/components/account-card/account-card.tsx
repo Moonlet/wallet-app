@@ -40,7 +40,7 @@ export const AccountCardComponent = (props: IProps) => {
                             from={BLOCKCHAIN_INFO[props.account.blockchain].coin}
                             to="USD"
                             style={{ fontSize: 12, marginLeft: 82 }}
-                            amount={props.account.balance}
+                            amount={props.account.balance.value}
                         />
                     </Text>
                 </View>

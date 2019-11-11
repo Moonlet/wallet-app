@@ -172,9 +172,6 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
 }
 
 export const SendScreen = smartConnect(SendScreenComponent, [
-    connect(
-        mapStateToProps,
-        {}
-    ),
+    connect(mapStateToProps, {}),
     withTheme(stylesProvider)
 ]);

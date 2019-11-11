@@ -3,7 +3,7 @@ import {
     IBlockchainNetwork,
     IBlockchainTransaction,
     IBlockchainAccount,
-    IBlockchainClient
+    BlockchainGenericClient
 } from './';
 
 export enum Blockchain {
@@ -18,6 +18,6 @@ export interface IBlockchain<AccountExtra = {}, TransactionExtra = {}> {
     networks: IBlockchainNetwork[];
     transaction: IBlockchainTransaction & TransactionExtra;
     account: IBlockchainAccount & AccountExtra;
-    Client: new (chainId) => IBlockchainClient;
-    getClient: (chainId: number) => IBlockchainClient;
+    Client: new (chainId) => BlockchainGenericClient;
+    getClient: (chainId: number) => BlockchainGenericClient;
 }

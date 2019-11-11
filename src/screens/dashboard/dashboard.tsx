@@ -206,9 +206,6 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
 }
 
 export const DashboardScreen = smartConnect(DashboardScreenComponent, [
-    connect(
-        mapStateToProps,
-        null
-    ),
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

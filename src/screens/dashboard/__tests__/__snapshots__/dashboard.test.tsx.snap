@@ -5,10 +5,8 @@ exports[`dashboard screen component handles scroll correctly 1`] = `
   <View style={{...}}>
     <ScrollViewMock onMomentumScrollEnd={[Function]} horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" snapToInterval={375} contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
       <View style={{...}} />
-      <withTheme(CoinBalanceCardComponent) balance={15764} currency=\\"ZIL\\" width={375} toCurrency=\\"USD\\" active={false} />
-      <withTheme(CoinBalanceCardComponent) balance={3.5} currency=\\"ETH\\" width={375} toCurrency=\\"USD\\" active={true} />
-      <withTheme(CoinBalanceCardComponent) balance={220} currency=\\"ATOM\\" width={375} toCurrency=\\"USD\\" active={false} />
-      <withTheme(CoinBalanceCardComponent) balance={1234} currency=\\"XLM\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <withTheme(CoinBalanceCardComponent) balance={{...}} currency=\\"ZIL\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <withTheme(CoinBalanceCardComponent) balance={{...}} currency=\\"ETH\\" width={375} toCurrency=\\"USD\\" active={true} />
       <View style={{...}} />
     </ScrollViewMock>
   </View>
@@ -27,16 +25,6 @@ exports[`dashboard screen component handles scroll correctly 1`] = `
           ETH
         </withTheme(TextComponent)>
       </TouchableOpacity>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={false}>
-          ATOM
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={false}>
-          XLM
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
     </View>
   </LinearGradient>
 </View>"
@@ -47,10 +35,8 @@ exports[`dashboard screen component renders correctly 1`] = `
   <View style={{...}}>
     <ScrollViewMock onMomentumScrollEnd={[Function]} horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" snapToInterval={375} contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
       <View style={{...}} />
-      <withTheme(CoinBalanceCardComponent) balance={15764} currency=\\"ZIL\\" width={375} toCurrency=\\"USD\\" active={true} />
-      <withTheme(CoinBalanceCardComponent) balance={3.5} currency=\\"ETH\\" width={375} toCurrency=\\"USD\\" active={false} />
-      <withTheme(CoinBalanceCardComponent) balance={220} currency=\\"ATOM\\" width={375} toCurrency=\\"USD\\" active={false} />
-      <withTheme(CoinBalanceCardComponent) balance={1234} currency=\\"XLM\\" width={375} toCurrency=\\"USD\\" active={false} />
+      <withTheme(CoinBalanceCardComponent) balance={{...}} currency=\\"ZIL\\" width={375} toCurrency=\\"USD\\" active={true} />
+      <withTheme(CoinBalanceCardComponent) balance={{...}} currency=\\"ETH\\" width={375} toCurrency=\\"USD\\" active={false} />
       <View style={{...}} />
     </ScrollViewMock>
   </View>
@@ -67,58 +53,6 @@ exports[`dashboard screen component renders correctly 1`] = `
       <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
         <withTheme(TextComponent) style={false}>
           ETH
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={false}>
-          ATOM
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={false}>
-          XLM
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-    </View>
-  </LinearGradient>
-</View>"
-`;
-
-exports[`dashboard screen component swtiches to correct coin on press 1`] = `
-"<View style={{...}}>
-  <View style={{...}}>
-    <ScrollViewMock onMomentumScrollEnd={[Function]} horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" snapToInterval={375} contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
-      <View style={{...}} />
-      <withTheme(CoinBalanceCardComponent) balance={15764} currency=\\"ZIL\\" width={375} toCurrency=\\"USD\\" active={false} />
-      <withTheme(CoinBalanceCardComponent) balance={3.5} currency=\\"ETH\\" width={375} toCurrency=\\"USD\\" active={false} />
-      <withTheme(CoinBalanceCardComponent) balance={220} currency=\\"ATOM\\" width={375} toCurrency=\\"USD\\" active={true} />
-      <withTheme(CoinBalanceCardComponent) balance={1234} currency=\\"XLM\\" width={375} toCurrency=\\"USD\\" active={false} />
-      <View style={{...}} />
-    </ScrollViewMock>
-  </View>
-  <AnimatedComponent style={{...}}>
-    <withTheme(CoinDashboardComponent) accounts={{...}} blockchain=\\"COSMOS\\" navigation={{...}} />
-  </AnimatedComponent>
-  <LinearGradient colors={{...}} locations={{...}} style={{...}} start={{...}} end={{...}}>
-    <View style={{...}} testID=\\"blockchainSelector\\">
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={false}>
-          ZIL
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={false}>
-          ETH
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          ATOM
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={false}>
-          XLM
         </withTheme(TextComponent)>
       </TouchableOpacity>
     </View>

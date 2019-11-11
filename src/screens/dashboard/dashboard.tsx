@@ -7,7 +7,6 @@ import { CoinDashboard } from '../../components/coin-dashboard/coin-dashboard';
 import { IReduxState } from '../../redux/state';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
-import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
 import { ITheme } from '../../core/theme/itheme';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -17,6 +16,8 @@ import { connect } from 'react-redux';
 import { withTheme } from '../../core/theme/with-theme';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { HeaderRight } from '../../components/header-right/header-right';
+import { getBalance } from '../../redux/wallets/actions';
+import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -26,6 +27,8 @@ export interface IProps {
 
 export interface IReduxProps {
     wallet: IWalletState;
+
+    getBalance: typeof getBalance;
 }
 
 interface IState {
@@ -44,11 +47,13 @@ const calculateBalances = (accounts: IAccountState[]) =>
         (out: any, account: IAccountState) => {
             if (!out.balance[account.blockchain]) {
                 out.balance[account.blockchain] = {
-                    amount: account.balance
+                    amount: account.balance.value
                 };
                 out.coins.push(account.blockchain);
             } else {
-                out.balance[account.blockchain].amount += account.balance;
+                out.balance[account.blockchain].amount = out.balance[
+                    account.blockchain
+                ].amount.plus(account.balance.value);
             }
             return out;
         },
@@ -58,6 +63,10 @@ const calculateBalances = (accounts: IAccountState[]) =>
 const mapStateToProps = (state: IReduxState) => ({
     wallet: state.wallets[state.app.currentWalletIndex]
 });
+
+const mapDispatchToProps = {
+    getBalance
+};
 
 const navigationOptions = {
     title: 'Wallet 1',
@@ -206,9 +215,6 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
 }
 
 export const DashboardScreen = smartConnect(DashboardScreenComponent, [
-    connect(
-        mapStateToProps,
-        null
-    ),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

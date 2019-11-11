@@ -227,9 +227,6 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
 }
 
 export const SettingsScreen = smartConnect(SettingsScreenComponent, [
-    connect(
-        mapStateToProps,
-        { mock: mockFunction, setPinLogin }
-    ),
+    connect(mapStateToProps, { mock: mockFunction, setPinLogin }),
     withTheme(stylesProvider)
 ]);

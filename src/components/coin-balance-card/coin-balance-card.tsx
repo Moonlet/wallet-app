@@ -5,10 +5,11 @@ import { Text } from '../../library';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
+import BigNumber from 'bignumber.js';
 
 export interface IProps {
     currency: string;
-    balance: number;
+    balance: BigNumber;
     toCurrency: string;
     width: number;
     active: boolean;

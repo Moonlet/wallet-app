@@ -1,5 +1,6 @@
 import { WalletType } from '../../core/wallet/types';
 import { Blockchain } from '../../core/blockchain/types';
+import BigNumber from 'bignumber.js';
 
 export interface IWalletState {
     id: string;
@@ -14,7 +15,12 @@ export interface IAccountState {
     address: string;
     publicKey: string;
     nonce?: number;
-    balance?: number; // bignumber
+    balance?: {
+        value: BigNumber;
+        inProgress: boolean;
+        timestamp: number;
+    };
+    balanceTimestamp?: number;
     transactions?: string[];
 }
 
@@ -23,7 +29,7 @@ export interface ITransactionState {
     date: Date;
     fromAddress: string;
     toAddress: string;
-    amount: number; // bignumber
+    amount: BigNumber;
     feeOptions: IFeeOptionsState;
     block: number;
     nonce: number;

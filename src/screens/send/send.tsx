@@ -13,8 +13,7 @@ import { HeaderLeft } from '../../components/header-left/header-left';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { Blockchain } from '../../core/blockchain/types';
-import { BlockchainFactory } from '../../core/blockchain/blockchain-factory';
-import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
+import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 
@@ -68,19 +67,16 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
     };
 
     public verifyAddress = (text: string) => {
-        const blockchainInstance = BlockchainFactory.get(this.state.blockchain);
+        const blockchainInstance = getBlockchain(this.state.blockchain);
         this.setState({ address: text });
-        if (blockchainInstance.isValidAddress(text)) {
+        if (blockchainInstance.account.isValidAddress(text)) {
             this.setState({ isValidAddress: true });
         }
     };
     public addAmount = (value: string) => {
-        const blockchainInstance = BlockchainFactory.get(this.state.blockchain);
         this.setState({
             amount: value,
-            fee:
-                blockchainInstance.getFeeForAmount(value) +
-                BLOCKCHAIN_INFO[this.state.blockchain].coin
+            fee: '0.001' + BLOCKCHAIN_INFO[this.state.blockchain].coin
         });
     };
     public onQrCodeScanned = (value: string) => {
@@ -175,9 +171,6 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
 }
 
 export const SendScreen = smartConnect(SendScreenComponent, [
-    connect(
-        mapStateToProps,
-        {}
-    ),
+    connect(mapStateToProps, {}),
     withTheme(stylesProvider)
 ]);

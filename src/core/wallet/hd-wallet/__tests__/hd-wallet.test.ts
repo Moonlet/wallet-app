@@ -2,7 +2,7 @@ import { HDWallet } from '../hd-wallet';
 import { Mnemonic } from '../mnemonic';
 import HDKey from 'hdkey';
 import { Blockchain } from '../../../blockchain/types';
-import { BlockchainFactory } from '../../../blockchain/blockchain-factory';
+import * as BlockchainFactory from '../../../blockchain/blockchain-factory';
 
 // TODO organize mocks better, right now it's a mess
 
@@ -53,9 +53,14 @@ describe('HDWallet', () => {
 
     describe('getAccounts()', () => {
         Mnemonic.verify = jest.fn().mockReturnValue(true);
-        BlockchainFactory.get = jest.fn().mockImplementation(() => ({
-            DERIVATION_PATH: 'DERIVATION_PATH',
-            getAccountFromPrivateKey: jest.fn().mockImplementation((p, i) => `ACCOUNT ${i}`)
+        // @ts-ignore
+        BlockchainFactory.getBlockchain = jest.fn().mockImplementation(() => ({
+            config: {
+                derivationPath: 'DERIVATION_PATH'
+            },
+            account: {
+                getAccountFromPrivateKey: jest.fn().mockImplementation((p, i) => `ACCOUNT ${i}`)
+            }
         }));
         HDKey.fromMasterSeed = jest.fn().mockReturnValue({
             derive: jest.fn().mockReturnValue({
@@ -108,7 +113,8 @@ describe('HDWallet', () => {
         });
 
         test('invalid blockchain', async () => {
-            BlockchainFactory.get = jest.fn().mockImplementation(() => {
+            // @ts-ignore
+            BlockchainFactory.getBlockchain = jest.fn().mockImplementation(() => {
                 throw new Error('Blockchain implementation not found.');
             });
 

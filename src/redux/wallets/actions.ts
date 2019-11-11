@@ -9,10 +9,12 @@ import { appSwitchWallet } from '../app/actions';
 import uuidv4 from 'uuid/v4';
 import { getPassword } from '../../core/secure/keychain';
 import { storeEncrypted } from '../../core/secure/storage';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
 export const ACCOUNT_CREATE = 'ACCOUNT_CREATE';
+export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -61,5 +63,41 @@ export const createHDWallet = (mnemonic: string, callback?: () => any) => async 
     } catch (e) {
         // console.log(e);
         // TODO best way to handle this?
+    }
+};
+
+export const getBalance = (
+    blockchain: Blockchain,
+    chainId: number,
+    address: string,
+    force: boolean = false
+) => async (dispatch, getState: () => IReduxState) => {
+    const state = getState();
+    const wallet = state.wallets[state.app.currentWalletIndex];
+    const account = wallet.accounts.filter(
+        acc => acc.address === address && acc.blockchain === blockchain
+    )[0];
+    const balanceInProgress = account?.balance?.inProgress;
+    const balanceTimestamp = account?.balance?.timestamp || 0;
+
+    if (force || (!balanceInProgress && balanceTimestamp + 10 * 3600 < Date.now())) {
+        dispatch({
+            type: ACCOUNT_GET_BALANCE,
+            inProgress: true
+        });
+        try {
+            const balance = await getBlockchain(blockchain)
+                .getClient(chainId)
+                .getBalance(address);
+            dispatch({
+                type: ACCOUNT_GET_BALANCE,
+                data: balance
+            });
+        } catch (error) {
+            dispatch({
+                type: ACCOUNT_GET_BALANCE,
+                error
+            });
+        }
     }
 };

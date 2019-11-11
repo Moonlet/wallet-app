@@ -3,9 +3,10 @@ import React from 'react';
 import { ConvertComponent, IProps, IReduxProps } from '../convert';
 
 import { shallow } from 'enzyme';
+import BigNumber from 'bignumber.js';
 
 const props: IProps & IReduxProps = {
-    amount: 100,
+    amount: new BigNumber(100),
     from: 'ETH',
     to: 'ZIL',
     usdPrices: {

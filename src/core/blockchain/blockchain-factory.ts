@@ -1,17 +1,19 @@
-import { Blockchain } from './types';
-import { GenericBlockchain } from './generic-blockchain';
-import { Ethereum } from './ethereum';
+import { Blockchain, IBlockchain, IBlockchainConfig } from './types';
 import { Zilliqa } from './zilliqa';
+import { Ethereum } from './ethereum';
 
-export class BlockchainFactory {
-    public static get(blockchain: Blockchain, networkId?: number): GenericBlockchain {
-        switch (blockchain) {
-            case Blockchain.ETHEREUM:
-                return new Ethereum(networkId);
-            case Blockchain.ZILLIQA:
-                return new Zilliqa(networkId);
-            default:
-                throw new Error(`BlockchainFactory: ${blockchain} implementation not found`);
-        }
+export const getBlockchain = (blockchain: Blockchain): IBlockchain => {
+    switch (blockchain) {
+        case Blockchain.ETHEREUM:
+            return Ethereum;
+        case Blockchain.ZILLIQA:
+            return Zilliqa;
+        default:
+            throw new Error(`getBlockchain: ${blockchain} implementation not found`);
     }
-}
+};
+
+export const BLOCKCHAIN_INFO: { [blockchain: string]: IBlockchainConfig } = {
+    [Blockchain.ETHEREUM]: Ethereum.config,
+    [Blockchain.ZILLIQA]: Zilliqa.config
+};

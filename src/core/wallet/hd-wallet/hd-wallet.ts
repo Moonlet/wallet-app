@@ -2,7 +2,7 @@ import { IWallet } from '../types';
 import HDKey from 'hdkey';
 import { Mnemonic } from './mnemonic';
 import { Blockchain } from '../../blockchain/types';
-import { BlockchainFactory } from '../../blockchain/blockchain-factory';
+import { getBlockchain } from '../../blockchain/blockchain-factory';
 import { IAccountState } from '../../../redux/wallets/state';
 
 export class HDWallet implements IWallet {
@@ -47,24 +47,22 @@ export class HDWallet implements IWallet {
 
         if (indexTo < index) {
             return Promise.reject(
-                `${
-                    this.constructor.name
-                }.getAccounts(): indexTo value must be greated than index value.`
+                `${this.constructor.name}.getAccounts(): indexTo value must be greated than index value.`
             );
         }
 
         try {
             const accounts = [];
-            const blockchainInstance = BlockchainFactory.get(blockchain);
-            const key = this.hdkey.derive(blockchainInstance.DERIVATION_PATH);
+            const blockchainInstance = getBlockchain(blockchain);
+            const key = this.hdkey.derive(blockchainInstance.config.derivationPath);
             for (let i = index; i <= indexTo; i++) {
                 const privateKey = key.derive(`m/${i}`).privateKey.toString('hex');
-                accounts.push(blockchainInstance.getAccountFromPrivateKey(privateKey, i));
+                accounts.push(blockchainInstance.account.getAccountFromPrivateKey(privateKey, i));
             }
             return Promise.resolve(accounts);
         } catch (e) {
             if (e.message.indexOf('implementation not found')) {
-                return Promise.reject('Blockchain implementation not found.');
+                return Promise.reject(`Blockchain implementation not found.`);
             } else {
                 return Promise.reject('There was an error while generating the accounts.');
             }

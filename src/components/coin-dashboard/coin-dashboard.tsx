@@ -4,7 +4,6 @@ import { ConversionCard } from '../conversion-card/conversion-card';
 import { AccountCard } from '../account-card/account-card';
 import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
-import { BLOCKCHAIN_INFO } from '../../core/constants/blockchain';
 import { Icon } from '../icon';
 
 import stylesProvider from './styles';
@@ -15,6 +14,7 @@ import {
     NavigationParams,
     NavigationActions
 } from 'react-navigation';
+import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 
 export interface IProps {
     blockchain: Blockchain;

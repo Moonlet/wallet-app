@@ -7,6 +7,7 @@ import { Convert } from '../convert/convert';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
+import BigNumber from 'bignumber.js';
 
 export interface IReduxProps {
     change: any;
@@ -32,7 +33,7 @@ export const ConversionCardComponent = (
                 {props.fromCurrency}
                 {props.toCurrency}
             </Text>
-            <Convert from={props.fromCurrency} to={props.toCurrency} amount={1} />
+            <Convert from={props.fromCurrency} to={props.toCurrency} amount={new BigNumber(1)} />
             <Text small style={[change >= 0 ? props.styles.changeUp : props.styles.changeDown]}>
                 {change}
             </Text>
@@ -41,9 +42,6 @@ export const ConversionCardComponent = (
 };
 
 export const ConversionCard = smartConnect<IProps>(ConversionCardComponent, [
-    connect(
-        mapStateToProps,
-        null
-    ),
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

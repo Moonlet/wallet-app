@@ -108,9 +108,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps): IReduxPro
 };
 
 export const AccountScreen = smartConnect(AccountScreenComponent, [
-    connect(
-        mapStateToProps,
-        null
-    ),
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

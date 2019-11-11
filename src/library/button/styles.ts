@@ -22,8 +22,16 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.accent
         },
 
+        buttonSecondary: {
+            borderColor: theme.colors.textSecondary
+        },
+
         textPrimary: {
             color: theme.colors.appBackground
+        },
+
+        textSecondary: {
+            color: theme.colors.text
         },
 
         buttonDisabled: {

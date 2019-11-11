@@ -16,9 +16,9 @@ export const menuIcon = (icon: string) => ({ focused }: any) => (
 );
 
 // remove animation when transitioning to any of `noAnimationScreens`
-export const removeAnimation = (noAnimationScreens: string[]) => (sceneProps) => {
+export const removeAnimation = (noAnimationScreens: string[]) => sceneProps => {
     if (noAnimationScreens.indexOf(sceneProps.scene.route.routeName) !== -1) {
         return null;
     }
     return StackViewStyleInterpolator.forHorizontal(sceneProps);
-}
+};

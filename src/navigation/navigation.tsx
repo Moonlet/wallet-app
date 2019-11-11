@@ -24,6 +24,7 @@ import { CreateWalletConfirmMnemonicScreen } from '../screens/create-wallet-conf
 import { SetPasswordConfirmScreen } from '../screens/set-password-confirm/set-password-confirm';
 import { SetPasswordScreen } from '../screens/set-password/set-password';
 import { Animated } from 'react-native';
+import { RecoverWalletScreen } from '../screens/recover-wallet/recover-wallet';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -164,10 +165,13 @@ export const CreateWalletNavigation = createStackNavigator(
         },
         SetPassword: {
             screen: SetPasswordScreen
+        },
+        RecoverWallet: {
+            screen: RecoverWalletScreen
         }
     },
     {
-        initialRouteName: 'CreateWalletMnemonic',
+        initialRouteName: 'RecoverWallet',
         defaultNavigationOptions: defaultStackNavigationOptions,
         // disable transitiona animation for CreateWalletTerms screen
         transitionConfig: () => ({
@@ -193,7 +197,7 @@ export const RootNavigation = createSwitchNavigator(
         CreateWalletNavigation
     },
     {
-        initialRouteName: 'OnboardingScreen'
+        initialRouteName: 'CreateWalletNavigation'
         // initialRouteName: 'MainNavigation'
     }
 );

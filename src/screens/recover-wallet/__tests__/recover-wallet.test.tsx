@@ -75,7 +75,7 @@ describe('creat wallet terms screen component', () => {
         expect(wrapper).toMatchSnapshot();
     });
 
-    test('generates suggestions correctly', () => {
+    test('generates suggestions correctly and sets correct mnemonic based on suggestion', () => {
         const spySetState = jest.spyOn(RecoverWalletScreenComponent.prototype, 'setState');
         const wrapper = shallow(<RecoverWalletScreenComponent {...props} />);
         const instance = wrapper.instance();
@@ -136,6 +136,37 @@ describe('creat wallet terms screen component', () => {
                 'pause',
                 'pave',
                 'payment'
+            ]
+        });
+
+        wrapper.find('[testID="button-suggestion-0"]').simulate('press');
+
+        expect(spySetState).toBeCalledWith({
+            mnemonic: [
+                'pact',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                ''
             ]
         });
     });

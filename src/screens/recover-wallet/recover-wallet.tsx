@@ -114,6 +114,7 @@ export class RecoverWalletScreenComponent extends React.Component<IProps & IRedu
                                     onPress={() => {
                                         this.fillMnemonicText(word);
                                     }}
+                                    testID={`button-suggestion-${i}`}
                                 >
                                     {word}
                                 </Button>

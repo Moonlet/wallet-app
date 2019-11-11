@@ -5,10 +5,17 @@ import { Text } from '../index';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 
+/**
+ * default:    text and border 'accent' color
+ * primary:    filled button with 'accent' color bg
+ * secondary:  text and border gray/white
+ */
+
 export interface IButtonProps {
     children?: any;
     style?: any;
     primary?: boolean;
+    secondary?: boolean;
     disabled?: boolean;
     onPress?: any;
     styles: ReturnType<typeof stylesProvider>;
@@ -21,6 +28,7 @@ export const ButtonComponent = (props: IButtonProps) => (
         style={[
             props.styles.button,
             props.primary && props.styles.buttonPrimary,
+            props.secondary && props.styles.buttonSecondary,
             props.disabled && props.styles.buttonDisabled,
             props.style
         ]}
@@ -29,6 +37,7 @@ export const ButtonComponent = (props: IButtonProps) => (
             style={[
                 props.styles.text,
                 props.primary && props.styles.textPrimary,
+                props.secondary && props.styles.textSecondary,
                 props.disabled && props.styles.textDisabled
             ]}
         >

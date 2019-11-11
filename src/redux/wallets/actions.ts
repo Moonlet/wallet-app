@@ -62,6 +62,7 @@ export const createHDWallet = (mnemonic: string, callback?: () => any) => async 
         });
     } catch (e) {
         // console.log(e);
+        // TODO best way to handle this?
     }
 };
 

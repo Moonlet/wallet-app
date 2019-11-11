@@ -9,6 +9,7 @@ export const translation: ITranslations = {
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 next: 'Next',
+                paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
                 receive: 'Receive',
                 secure: 'Secure',

@@ -9,7 +9,7 @@ import { lightTheme } from '../styles/themes/light-theme';
 import { ITheme } from '../core/theme/itheme';
 import { Theme } from '../core/theme/themes';
 import { HeaderLeft } from '../components/header-left/header-left';
-import { DummyScreen, menuIcon } from './utils';
+import { DummyScreen, menuIcon, removeAnimation } from './utils';
 
 import { DashboardScreen } from '../screens/dashboard/dashboard';
 import { SettingsScreen } from '../screens/settings/settings';
@@ -23,6 +23,7 @@ import { PrivacyPolicyScreen } from '../screens/privacy-policy/privacy-policy';
 import { CreateWalletConfirmMnemonicScreen } from '../screens/create-wallet-confirm-mnemonic/create-wallet-confirm-mnemonic';
 import { SetPasswordConfirmScreen } from '../screens/set-password-confirm/set-password-confirm';
 import { SetPasswordScreen } from '../screens/set-password/set-password';
+import { Animated } from 'react-native';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -166,8 +167,16 @@ export const CreateWalletNavigation = createStackNavigator(
         }
     },
     {
-        initialRouteName: 'CreateWalletTerms',
-        defaultNavigationOptions: defaultStackNavigationOptions
+        initialRouteName: 'CreateWalletMnemonic',
+        defaultNavigationOptions: defaultStackNavigationOptions,
+        // disable transitiona animation for CreateWalletTerms screen
+        transitionConfig: () => ({
+            transitionSpec: {
+                timing: Animated.timing,
+                useNativeDriver: true
+            },
+            screenInterpolator: removeAnimation(['CreateWalletTerms'])
+        })
     }
 );
 

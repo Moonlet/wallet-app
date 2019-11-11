@@ -150,7 +150,16 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
 `;
 
 exports[`creat wallet terms screen component sets correct navigation options 1`] = `
+<withTheme(HeaderLeftComponent)
+  icon="arrow-left-1"
+  onPress={[Function]}
+  text="Back"
+/>
+`;
+
+exports[`creat wallet terms screen component sets correct navigation options 2`] = `
 Object {
+  "headerLeft": [Function],
   "title": "Create",
 }
 `;

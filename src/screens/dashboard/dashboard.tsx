@@ -18,6 +18,7 @@ import { HeaderLeft } from '../../components/header-left/header-left';
 import { HeaderRight } from '../../components/header-right/header-right';
 import { getBalance } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { BigNumber } from 'bignumber.js';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -47,13 +48,13 @@ const calculateBalances = (accounts: IAccountState[]) =>
         (out: any, account: IAccountState) => {
             if (!out.balance[account.blockchain]) {
                 out.balance[account.blockchain] = {
-                    amount: account.balance.value
+                    amount: account?.balance?.value || new BigNumber(0)
                 };
                 out.coins.push(account.blockchain);
             } else {
                 out.balance[account.blockchain].amount = out.balance[
                     account.blockchain
-                ].amount.plus(account.balance.value);
+                ].amount.plus(account?.balance?.value || new BigNumber(0));
             }
             return out;
         },

@@ -25,7 +25,7 @@ export const AccountCardComponent = (props: IProps) => {
             testID="account-card"
             style={styles.container}
             onPress={() => {
-                props.navigation.navigate('Account');
+                props.navigation.navigate('Account', { account: props.account });
             }}
         >
             <Icon name="money-wallet-1" size={25} style={styles.icon} />

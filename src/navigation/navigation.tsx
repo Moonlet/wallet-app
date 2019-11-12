@@ -171,7 +171,7 @@ export const CreateWalletNavigation = createStackNavigator(
         }
     },
     {
-        initialRouteName: 'RecoverWallet',
+        initialRouteName: 'CreateWalletMnemonic',
         defaultNavigationOptions: defaultStackNavigationOptions,
         // disable transitiona animation for CreateWalletTerms screen
         transitionConfig: () => ({

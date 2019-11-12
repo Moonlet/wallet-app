@@ -12,6 +12,7 @@ import { Text, Button } from '../../library';
 import { translate, Translate } from '../../core/i18n';
 import { Icon } from '../../components/icon';
 import { AccountSettings } from './components/account-settings/account-settings';
+import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -19,6 +20,10 @@ export interface IProps {
 }
 
 export interface IReduxProps {
+    account: IAccountState;
+}
+
+export interface INavigationParams {
     account: IAccountState;
 }
 interface IState {
@@ -37,10 +42,13 @@ const navigationOptions = ({ navigation }: any) => ({
     }
 });
 
-export class AccountScreenComponent extends React.Component<IReduxProps & IProps, IState> {
+export class AccountScreenComponent extends React.Component<
+    INavigationProps<INavigationParams> & IReduxProps & IProps,
+    IState
+> {
     public static navigationOptions = navigationOptions;
 
-    constructor(props: IReduxProps & IProps) {
+    constructor(props: INavigationProps<INavigationParams> & IReduxProps & IProps) {
         super(props);
 
         this.state = {
@@ -61,7 +69,7 @@ export class AccountScreenComponent extends React.Component<IReduxProps & IProps
         const { styles, navigation } = this.props;
         return (
             <ScrollView style={styles.container}>
-                <Text style={styles.address}>zil1f6...1234f3</Text>
+                <Text style={styles.address}>{this.props.account.address}</Text>
                 <View style={styles.balanceContainer}>
                     <Text style={styles.balance} format={{ currency: 'ZIL' }}>
                         10900
@@ -124,8 +132,11 @@ export class AccountScreenComponent extends React.Component<IReduxProps & IProps
                     </View>
                 </View>
                 {this.state.settingsVisible ? (
-                    // onDonePressed={this.openSettingsMenu}
-                    <AccountSettings />
+                    //
+                    <AccountSettings
+                        onDonePressed={this.openSettingsMenu}
+                        account={this.props.account}
+                    />
                 ) : null}
             </ScrollView>
         );
@@ -134,7 +145,6 @@ export class AccountScreenComponent extends React.Component<IReduxProps & IProps
 
 export const mapStateToProps = (state: IReduxState, ownProps: IProps): IReduxProps & IProps => {
     const account = {} as any;
-
     return {
         ...ownProps,
         account
@@ -143,5 +153,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps): IReduxPro
 
 export const AccountScreen = smartConnect(AccountScreenComponent, [
     connect(mapStateToProps, null),
-    withTheme(stylesProvider)
+    withTheme(stylesProvider),
+    withNavigationParams()
 ]);

@@ -7,6 +7,7 @@ export const networks: IBlockchainNetwork[] = [
         mainNet: true,
         url: 'https://api.zilliqa.com/',
         explorer: {
+            name: 'Viewblock',
             getAccountUrl: addr => `https://viewblock.io/zilliqa/address/${addr}`,
             getTransactionUrl: txn => `https://viewblock.io/zilliqa/tx/${txn}`
         }
@@ -17,6 +18,7 @@ export const networks: IBlockchainNetwork[] = [
         mainNet: false,
         url: 'https://dev-api.zilliqa.com/',
         explorer: {
+            name: 'Viewblock',
             getAccountUrl: addr => `https://viewblock.io/zilliqa/address/${addr}?network=testnet`,
             getTransactionUrl: txn => `https://viewblock.io/zilliqa/tx/${txn}?network=testnet`
         }
@@ -27,6 +29,7 @@ export const networks: IBlockchainNetwork[] = [
         mainNet: false,
         url: 'http://127.0.0.1:4200/',
         explorer: {
+            name: 'Viewblock',
             getAccountUrl: () => ``,
             getTransactionUrl: () => ``
         }

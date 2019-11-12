@@ -51,7 +51,7 @@ export class ViewKeyComponent extends React.Component<IProps & IExternalProps, I
                             }}
                         >
                             <View style={styles.leftIcon}>
-                                <Icon name="bug" size={24} style={styles.icon} />
+                                <Icon name="copy" size={24} style={styles.icon} />
                             </View>
                             <Text style={styles.textRow}>
                                 {' '}

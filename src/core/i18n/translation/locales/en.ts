@@ -60,7 +60,7 @@ export const translation: ITranslations = {
             amount: 'Amount',
             recipientLabel: 'Recipient'
         },
-        AccounSettings: {
+        AccountSettings: {
             manageAccount: 'Manage account',
             revealPrivate: 'Reveal private key',
             revealPublic: 'Reveal public key',

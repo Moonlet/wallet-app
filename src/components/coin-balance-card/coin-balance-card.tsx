@@ -20,7 +20,7 @@ export const CoinBalanceCardComponent = (props: IProps) => (
     <View style={[props.styles.container, { width: props.width }]}>
         <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
             <Text style={[props.styles.mainText, !props.active && props.styles.darkerText]} format>
-                {props.balance}
+                {props.balance.toString()}
             </Text>
             <Text style={!props.active && props.styles.darkerText}> {props.currency}</Text>
         </View>

@@ -5,10 +5,11 @@ import { darkTheme } from '../../../styles/themes/dark-theme';
 import styleProvider from '../styles';
 
 import { shallow } from 'enzyme';
+import BigNumber from 'bignumber.js';
 
 const props: IProps = {
     currency: 'ZIL',
-    balance: 100,
+    balance: new BigNumber(100),
     toCurrency: 'ETH',
     width: 100,
     active: true,

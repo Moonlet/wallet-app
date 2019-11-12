@@ -11,7 +11,6 @@ import styleProvider from '../styles';
 import { shallow } from 'enzyme';
 import { loadTranslations } from '../../../core/i18n';
 import { Mnemonic } from '../../../core/wallet/hd-wallet/mnemonic';
-import { testUtils } from '../../../core/utils/test';
 
 const props: IProps & IReduxProps = {
     // @ts-ignore
@@ -49,7 +48,7 @@ describe('creat wallet terms screen component', () => {
     });
 
     test('navigates to tos when there are new tos', () => {
-        const wrapper = shallow(<RecoverWalletScreenComponent {...{ ...props, tosVersion: 0 }} />);
+        shallow(<RecoverWalletScreenComponent {...{ ...props, tosVersion: 0 }} />);
         expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletTerms');
     });
 

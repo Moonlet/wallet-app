@@ -6,6 +6,7 @@ import { Blockchain } from '../../../core/blockchain/types';
 import styleProvider from '../styles';
 
 import { shallow } from 'enzyme';
+import BigNumber from 'bignumber.js';
 
 const props: IProps = {
     // @ts-ignore
@@ -18,7 +19,11 @@ const props: IProps = {
             blockchain: Blockchain.ZILLIQA,
             address: 'zil1vs74hw5k21233h432kj321l3k21b',
             publicKey: '1',
-            balance: 12332
+            balance: {
+                value: new BigNumber(12332),
+                inProgress: false,
+                timestamp: 123
+            }
         }
     ],
     blockchain: Blockchain.ZILLIQA,

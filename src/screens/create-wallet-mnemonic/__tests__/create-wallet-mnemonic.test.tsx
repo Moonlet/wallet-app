@@ -64,9 +64,7 @@ describe('creat wallet terms screen component', () => {
     });
 
     it('navigates to tos when there are new tos', () => {
-        const wrapper = shallow(
-            <CreateWalletMnemonicScreenComponent {...{ ...props, tosVersion: 0 }} />
-        );
+        shallow(<CreateWalletMnemonicScreenComponent {...{ ...props, tosVersion: 0 }} />);
         expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletTerms');
     });
 });

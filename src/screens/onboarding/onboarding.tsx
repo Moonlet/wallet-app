@@ -16,12 +16,28 @@ export interface IProps {
 }
 
 export class OnboardingScreenComponent extends React.Component<IProps> {
+    public onPressRecover() {
+        this.props.navigation.navigate(
+            'CreateWalletNavigation',
+            {},
+            NavigationActions.navigate({
+                routeName: 'RecoverWallet',
+                params: {
+                    goBack: (
+                        navigation: NavigationScreenProp<NavigationState, NavigationParams>
+                    ) => {
+                        navigation.navigate('OnboardingScreen');
+                    }
+                }
+            })
+        );
+    }
     public onPressCreate() {
         this.props.navigation.navigate(
             'CreateWalletNavigation',
             {},
             NavigationActions.navigate({
-                routeName: 'CreateWalletTerms',
+                routeName: 'CreateWalletMnemonic',
                 params: {
                     goBack: (
                         navigation: NavigationScreenProp<NavigationState, NavigationParams>
@@ -62,7 +78,11 @@ export class OnboardingScreenComponent extends React.Component<IProps> {
 
                 <View style={styles.buttonsContainer}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Button style={styles.button} testID="button-recover">
+                        <Button
+                            style={styles.button}
+                            onPress={() => this.onPressRecover()}
+                            testID="button-recover"
+                        >
                             Recover
                         </Button>
                         <Button style={styles.button}>Connect</Button>

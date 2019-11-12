@@ -1,1 +1,1 @@
-export const TOS_VERSION = 4;
+export const TOS_VERSION = 1;

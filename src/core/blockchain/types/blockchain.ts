@@ -1,9 +1,9 @@
 import {
     IBlockchainConfig,
     IBlockchainNetwork,
-    IBlockchainTransaction,
-    IBlockchainAccount,
-    BlockchainGenericClient
+    IBlockchainAccountUtils,
+    BlockchainGenericClient,
+    IBlockchainTransactionUtils
 } from './';
 
 export enum Blockchain {
@@ -13,11 +13,11 @@ export enum Blockchain {
     STELLAR = 'STELLAR'
 }
 
-export interface IBlockchain<AccountExtra = {}, TransactionExtra = {}> {
+export interface IBlockchain<TxOptions = any, AccountExtra = {}, TransactionExtra = {}> {
     config: IBlockchainConfig;
     networks: IBlockchainNetwork[];
-    transaction: IBlockchainTransaction & TransactionExtra;
-    account: IBlockchainAccount & AccountExtra;
+    transaction: IBlockchainTransactionUtils<TxOptions> & TransactionExtra;
+    account: IBlockchainAccountUtils & AccountExtra;
     Client: new (chainId) => BlockchainGenericClient;
     getClient: (chainId: number) => BlockchainGenericClient;
 }

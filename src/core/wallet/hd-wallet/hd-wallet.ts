@@ -1,7 +1,7 @@
 import { IWallet } from '../types';
 import HDKey from 'hdkey';
 import { Mnemonic } from './mnemonic';
-import { Blockchain } from '../../blockchain/types';
+import { Blockchain, IBlockchainTransaction } from '../../blockchain/types';
 import { getBlockchain } from '../../blockchain/blockchain-factory';
 import { IAccountState } from '../../../redux/wallets/state';
 
@@ -69,7 +69,20 @@ export class HDWallet implements IWallet {
         }
     }
 
-    public sign(blockchain: Blockchain, accountIndex: number, tx: string): Promise<string> {
-        throw new Error('Method not implemented.');
+    public getPrivateKey(blockchain: Blockchain, accountIndex: number): string {
+        const blockchainInstance = getBlockchain(blockchain);
+        const key = this.hdkey.derive(blockchainInstance.config.derivationPath);
+        return key.derive(`m/${accountIndex}`).privateKey.toString('hex');
+    }
+
+    public async sign(
+        blockchain: Blockchain,
+        accountIndex: number,
+        tx: IBlockchainTransaction
+    ): Promise<any> {
+        return getBlockchain(blockchain).transaction.sign(
+            tx,
+            this.getPrivateKey(blockchain, accountIndex)
+        );
     }
 }

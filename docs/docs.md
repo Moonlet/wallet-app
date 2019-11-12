@@ -75,3 +75,7 @@ export const Example = smartConnect<IExternalProps>(ScreenComponent, [
 
 ## HOC
 --TBD--
+
+# TODO: 
+- how we name private methods inside classes (with _ prefix ?)
+- function binds (@bind Decorator ?)

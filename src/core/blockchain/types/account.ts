@@ -1,6 +1,6 @@
 import { IAccountState } from '../../../redux/wallets/state';
 
-export interface IBlockchainAccount {
+export interface IBlockchainAccountUtils {
     isValidChecksumAddress(address: string): boolean;
     isValidAddress(address: string): boolean;
 

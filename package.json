@@ -16,7 +16,8 @@
         "start": "(tsc -w --noEmit & react-native start)",
         "test": "jest",
         "lint": "tslint --fix '{src,extension}/**/*.{ts,tsx}'",
-        "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore"
+        "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore",
+        "postinstall": "jetify"
     },
     "dependencies": {
         "@react-native-community/async-storage": "^1.6.2",

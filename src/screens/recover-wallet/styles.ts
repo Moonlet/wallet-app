@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 
@@ -13,34 +13,47 @@ export default (theme: ITheme) =>
         },
 
         topContainer: {
+            // borderWidth: 1, borderColor: 'green',
             flex: 1,
-            justifyContent: 'flex-start',
-            alignItems: 'center',
+            // justifyContent: 'center',
+            // alignItems: 'center',
             alignSelf: 'stretch'
         },
 
         bottomContainer: {
             flex: 0,
-            flexDirection: 'row',
+            flexDirection: 'column',
             justifyContent: 'center',
             alignSelf: 'center',
             alignItems: 'center',
             marginBottom: 60,
+            width: '100%'
+        },
+
+        bottomButtonContainer: {
+            flex: 0,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignSelf: 'center',
+            alignItems: 'center',
             width: '80%'
         },
 
         mnemonicContainer: {
+            // borderWidth: 1, borderColor: 'green',
             backgroundColor: theme.colors.cardBackground,
             borderRadius: 6,
             alignSelf: 'stretch',
-            paddingVertical: 8,
-            paddingHorizontal: 4,
-            marginTop: 20
+            paddingTop: 2,
+            paddingBottom: 12,
+            paddingLeft: 2,
+            paddingRight: 4,
+            marginTop: 0
         },
 
         mnemonicLine: {
             flexDirection: 'row',
-            paddingVertical: 8
+            paddingVertical: Platform.OS === 'ios' ? 3 : 0
         },
 
         inputContainer: {

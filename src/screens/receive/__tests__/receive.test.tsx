@@ -1,6 +1,5 @@
 import React from 'react';
 import { shallow } from 'enzyme';
-import { Clipboard } from 'react-native';
 import { ReceiveScreenComponent, IProps } from '../receive';
 import stylesProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';

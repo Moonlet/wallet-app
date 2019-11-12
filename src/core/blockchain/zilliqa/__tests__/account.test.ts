@@ -1,5 +1,4 @@
 import { Zilliqa } from '../';
-import * as Util from 'ethereumjs-util';
 import { Blockchain } from '../../types';
 import {
     getPubKeyFromPrivateKey,

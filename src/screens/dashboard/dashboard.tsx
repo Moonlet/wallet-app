@@ -47,13 +47,13 @@ const calculateBalances = (accounts: IAccountState[]) =>
         (out: any, account: IAccountState) => {
             if (!out.balance[account.blockchain]) {
                 out.balance[account.blockchain] = {
-                    amount: account.balance.value
+                    amount: account?.balance?.value.toNumber() || 0
                 };
                 out.coins.push(account.blockchain);
             } else {
                 out.balance[account.blockchain].amount = out.balance[
                     account.blockchain
-                ].amount.plus(account.balance.value);
+                ].amount.plus(account?.balance?.value.toNumber() || 0);
             }
             return out;
         },

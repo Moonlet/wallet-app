@@ -2,9 +2,7 @@
 
 exports[`AccountScreen renders correctly 1`] = `
 "<ScrollViewMock style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    zil1f6...1234f3
-  </withTheme(TextComponent)>
+  <withTheme(TextComponent) style={{...}} />
   <View style={{...}}>
     <withTheme(TextComponent) style={{...}} format={{...}}>
       10900
@@ -65,4 +63,4 @@ exports[`AccountScreen renders correctly 1`] = `
 </ScrollViewMock>"
 `;
 
-exports[`AccountScreen renders correctly 2`] = `"<Connect(AccountScreenComponent) styles={{...}} theme={{...}} />"`;
+exports[`AccountScreen renders correctly 2`] = `"<withTheme(Connect(AccountScreenComponent)) />"`;

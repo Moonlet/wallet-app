@@ -9,5 +9,6 @@ export const COLORS = {
     LIGHT_GRAY: '#9a9a9a',
     HOT_GREEN: '#00E676',
     HOT_RED: '#E91E63',
-    AQUA: '#00DAFF'
+    AQUA: '#00DAFF',
+    FLAT_GRAY: '#4E4E53'
 };

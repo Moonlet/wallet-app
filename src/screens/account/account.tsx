@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState } from '../../redux/wallets/state';
 import { IReduxState } from '../../redux/state';
@@ -10,6 +11,8 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { Text, Button } from '../../library';
 import { translate, Translate } from '../../core/i18n';
 import { Icon } from '../../components/icon';
+import { AccountSettings } from './components/account-settings/account-settings';
+import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -20,18 +23,53 @@ export interface IReduxProps {
     account: IAccountState;
 }
 
-const navigationOptions = {
-    title: 'Account'
-};
+export interface INavigationParams {
+    account: IAccountState;
+}
+interface IState {
+    settingsVisible: boolean;
+}
+const navigationOptions = ({ navigation }: any) => ({
+    headerRight: () => {
+        return (
+            <HeaderRight
+                icon="navigation-menu-vertical"
+                onPress={
+                    navigation.state.params ? navigation.state.params.openSettingsMenu : undefined
+                }
+            />
+        );
+    }
+});
 
-export class AccountScreenComponent extends React.Component<IReduxProps & IProps> {
+export class AccountScreenComponent extends React.Component<
+    INavigationProps<INavigationParams> & IReduxProps & IProps,
+    IState
+> {
     public static navigationOptions = navigationOptions;
+
+    constructor(props: INavigationProps<INavigationParams> & IReduxProps & IProps) {
+        super(props);
+
+        this.state = {
+            settingsVisible: false
+        };
+    }
+    public componentDidMount() {
+        this.props.navigation.setParams({
+            openSettingsMenu: this.openSettingsMenu
+        });
+    }
+
+    public openSettingsMenu = () => {
+        this.setState({ settingsVisible: !this.state.settingsVisible });
+    };
 
     public render() {
         const { styles, navigation } = this.props;
         return (
             <ScrollView style={styles.container}>
-                <Text style={styles.address}>zil1f6...1234f3</Text>
+                <Text style={styles.address}>{this.props.account.address}</Text>
                 <View style={styles.balanceContainer}>
                     <Text style={styles.balance} format={{ currency: 'ZIL' }}>
                         10900
@@ -93,6 +131,13 @@ export class AccountScreenComponent extends React.Component<IReduxProps & IProps
                         ))}
                     </View>
                 </View>
+                {this.state.settingsVisible ? (
+                    //
+                    <AccountSettings
+                        onDonePressed={this.openSettingsMenu}
+                        account={this.props.account}
+                    />
+                ) : null}
             </ScrollView>
         );
     }
@@ -100,7 +145,6 @@ export class AccountScreenComponent extends React.Component<IReduxProps & IProps
 
 export const mapStateToProps = (state: IReduxState, ownProps: IProps): IReduxProps & IProps => {
     const account = {} as any;
-
     return {
         ...ownProps,
         account
@@ -109,5 +153,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps): IReduxPro
 
 export const AccountScreen = smartConnect(AccountScreenComponent, [
     connect(mapStateToProps, null),
-    withTheme(stylesProvider)
+    withTheme(stylesProvider),
+    withNavigationParams()
 ]);

@@ -22,5 +22,6 @@ export interface ITheme {
         appBackground: string;
         inputBackground: string;
         disabledButton: string;
+        modalBackground: string;
     };
 }

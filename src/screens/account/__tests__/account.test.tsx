@@ -19,7 +19,7 @@ const props: IProps & IReduxProps = {
     },
     styles: stylesProvider(darkTheme),
     theme: darkTheme,
-    account: {} as any
+    account: { address: 'value' } as any
 };
 
 export default describe('AccountScreen', () => {
@@ -41,6 +41,8 @@ export default describe('AccountScreen', () => {
     test('Receive button goes on the proper screen', () => {
         const wrapper = shallow(<AccountScreenComponent {...props} />);
         wrapper.find('[testID="button-receive"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('Receive', { address: 'value' });
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Receive', {
+            account: { address: 'value' }
+        });
     });
 });

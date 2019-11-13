@@ -8,7 +8,8 @@ import { loadTranslations } from '../../../core/i18n';
 const props: IProps = {
     // @ts-ignore
     styles: stylesProvider(darkTheme),
-    theme: darkTheme
+    theme: darkTheme,
+    account: { address: 'value' }
 };
 
 export default describe('SendScreen', () => {

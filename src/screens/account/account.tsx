@@ -13,6 +13,7 @@ import { translate, Translate } from '../../core/i18n';
 import { Icon } from '../../components/icon';
 import { AccountSettings } from './components/account-settings/account-settings';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
+import { AccountAddress } from '../../components/account-address/account-address';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -20,7 +21,7 @@ export interface IProps {
 }
 
 export interface IReduxProps {
-    account: IAccountState;
+    accountx: IAccountState;
 }
 
 export interface INavigationParams {
@@ -66,19 +67,10 @@ export class AccountScreenComponent extends React.Component<
     };
 
     public render() {
-        const { styles, navigation } = this.props;
+        const { styles, navigation, account } = this.props;
         return (
             <ScrollView style={styles.container}>
-                <Text style={styles.address}>{this.props.account.address}</Text>
-                <View style={styles.balanceContainer}>
-                    <Text style={styles.balance} format={{ currency: 'ZIL' }}>
-                        10900
-                    </Text>
-                    <Text style={styles.balanceSymbolFiat} format={{ currency: 'USD' }}>
-                        88.18
-                    </Text>
-                </View>
-
+                <AccountAddress account={account} />
                 <View style={styles.buttonsContainer}>
                     <Button
                         testID="button-send"
@@ -93,7 +85,7 @@ export class AccountScreenComponent extends React.Component<
                         testID="button-receive"
                         style={styles.button}
                         onPress={() => {
-                            navigation.navigate('Receive', { address: 'value' });
+                            navigation.navigate('Receive', { account });
                         }}
                     >
                         {translate('App.labels.receive')}
@@ -144,10 +136,10 @@ export class AccountScreenComponent extends React.Component<
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: IProps): IReduxProps & IProps => {
-    const account = {} as any;
+    const accountx = {} as any;
     return {
         ...ownProps,
-        account
+        accountx
     };
 };
 

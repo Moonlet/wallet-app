@@ -3,6 +3,18 @@
 exports[`app reducer should set initial state 1`] = `
 Object {
   "currentWalletIndex": 1,
+  "devMode": true,
+  "networks": Object {
+    "ETHEREUM": Object {
+      "mainNet": 1,
+      "testNet": 4,
+    },
+    "ZILLIQA": Object {
+      "mainNet": 1,
+      "testNet": 333,
+    },
+  },
+  "testNet": true,
   "tosVersion": 0,
 }
 `;

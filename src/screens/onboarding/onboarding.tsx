@@ -144,7 +144,7 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
 
                     <View style={{ flexDirection: 'row' }}>
                         <Button
-                            testID="button-create"
+                            testID="button-generate"
                             style={styles.bottomButton}
                             primary
                             onPress={() => this.onPressGenerateWallet()}

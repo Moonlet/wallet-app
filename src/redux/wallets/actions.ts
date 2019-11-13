@@ -47,7 +47,7 @@ export const createHDWallet = (mnemonic: string, callback?: () => any) => async 
             );
 
             const passwordCredentials = await getPassword();
-            let passwordHash = '';
+            let passwordHash = 'pass';
 
             if (passwordCredentials) {
                 passwordHash = passwordCredentials.password;
@@ -64,6 +64,7 @@ export const createHDWallet = (mnemonic: string, callback?: () => any) => async 
         // console.log(e);
         // TODO best way to handle this?
     }
+    // TODO  - error handling
 };
 
 export const getBalance = (

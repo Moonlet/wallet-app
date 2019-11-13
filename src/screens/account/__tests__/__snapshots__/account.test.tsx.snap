@@ -2,15 +2,7 @@
 
 exports[`AccountScreen renders correctly 1`] = `
 "<ScrollViewMock style={{...}}>
-  <withTheme(TextComponent) style={{...}} />
-  <View style={{...}}>
-    <withTheme(TextComponent) style={{...}} format={{...}}>
-      10900
-    </withTheme(TextComponent)>
-    <withTheme(TextComponent) style={{...}} format={{...}}>
-      88.18
-    </withTheme(TextComponent)>
-  </View>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <View style={{...}}>
     <withTheme(ButtonComponent) testID=\\"button-send\\" style={{...}} onPress={[Function: onPress]}>
       Send

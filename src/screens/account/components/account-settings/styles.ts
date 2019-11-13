@@ -24,42 +24,53 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             paddingVertical: BASE_DIMENSION
         },
+        rowChild: {
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+        },
         leftIcon: {
             flexDirection: 'row',
-            justifyContent: 'flex-start',
             alignItems: 'center',
-            flex: 1,
             paddingLeft: BASE_DIMENSION * 2,
             paddingRight: BASE_DIMENSION * 2
         },
         rightIcon: {
             flexDirection: 'row',
-            justifyContent: 'flex-end',
             alignItems: 'center',
-            flex: 1,
             paddingRight: BASE_DIMENSION
         },
         header: {
             flexDirection: 'row',
+            justifyContent: 'space-between',
             paddingTop: BASE_DIMENSION * 3
         },
-        headerButton: {
-            color: theme.colors.accent
+        headerButton: {},
+        backButtonWrapper: {
+            flex: 1
+        },
+        doneWrapper: {
+            flex: 1,
+            alignItems: 'flex-end'
+        },
+        doneButton: {
+            color: theme.colors.accent,
+            paddingRight: BASE_DIMENSION * 2
+        },
+        titleWrapper: {
+            flex: 2
         },
         title: {
             fontSize: theme.fontSize.regular,
             textAlign: 'center',
-            fontWeight: 'bold',
-            width: 200
+            fontWeight: 'bold'
         },
         icon: {
-            color: theme.colors.accent,
+            color: theme.colors.accent, // TODO: check here with Figma
             padding: 4
         },
         textRow: {
             fontSize: theme.fontSize.regular,
-            alignItems: 'flex-start',
-            textAlign: 'left',
             lineHeight: 30
         }
     });

@@ -36,32 +36,37 @@ export class ViewKeyComponent extends React.Component<IProps & IExternalProps, I
         const styles = this.props.styles;
 
         return (
-            <View style={styles.container}>
-                <View style={styles.modalContainer}>
-                    <View style={styles.contentContainer}>
-                        <Text style={styles.textRow}>{this.props.key}</Text>
-
-                        <View style={styles.divider} />
-                        <TouchableOpacity
-                            testID="copy-clipboard"
-                            style={styles.rowContainer}
-                            onPress={() => {
-                                Clipboard.setString(this.props.key);
-                                this.setState({ copied: true });
-                            }}
-                        >
-                            <View style={styles.leftIcon}>
-                                <Icon name="copy" size={24} style={styles.icon} />
-                            </View>
-                            <Text style={styles.textRow}>
-                                {' '}
-                                {this.state.copied === false
-                                    ? translate('App.buttons.clipboardBtn')
-                                    : translate('App.buttons.copiedBtn')}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+            <View style={styles.contentContainer}>
+                <View style={styles.keyWrapper}>
+                    <Text style={styles.keyText}>{this.props.key}</Text>
                 </View>
+
+                <View style={styles.tipWrapper}>
+                    <Icon name="alert" size={12} style={styles.alertIcon} />
+                    <Text style={styles.tipText}>{translate('AccountSettings.securityTip')}</Text>
+                    <Text style={styles.tipText}>{translate('AccountSettings.securityTip2')}</Text>
+                </View>
+
+                <View style={styles.divider} />
+
+                <TouchableOpacity
+                    testID="copy-clipboard"
+                    style={styles.rowContainer}
+                    onPress={() => {
+                        Clipboard.setString(this.props.key);
+                        this.setState({ copied: true });
+                    }}
+                >
+                    <View style={styles.leftIcon}>
+                        <Icon name="copy" size={24} style={styles.icon} />
+                    </View>
+                    <Text style={styles.textRow}>
+                        {' '}
+                        {this.state.copied === false
+                            ? translate('App.buttons.clipboardBtn')
+                            : translate('App.buttons.copiedBtn')}
+                    </Text>
+                </TouchableOpacity>
             </View>
         );
     }

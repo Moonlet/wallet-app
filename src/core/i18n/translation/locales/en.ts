@@ -65,7 +65,9 @@ export const translation: ITranslations = {
             revealPrivate: 'Reveal private key',
             revealPublic: 'Reveal public key',
             viewOn: 'View on viewblock.io',
-            reportIssue: 'Report issue'
+            reportIssue: 'Report issue',
+            securityTip: 'Security tip: Never disclosure your private key.',
+            securityTip2: 'Anyone with this key can take your funds forever.'
         }
     },
     plural: (n: number, ord?: boolean) => {

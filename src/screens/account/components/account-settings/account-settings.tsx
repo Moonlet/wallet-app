@@ -9,7 +9,6 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
 import { HeaderLeft } from '../../../../components/header-left/header-left';
-import { HeaderRight } from '../../../../components/header-right/header-right';
 import { ViewKey } from '../view-key/view-key';
 
 export interface IProps {
@@ -72,27 +71,33 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                 <View style={styles.container}>
                     <View style={styles.modalContainer}>
                         <View style={styles.header}>
-                            {this.state.showKeyScreen ? (
-                                <HeaderLeft
-                                    icon="arrow-left-1"
-                                    text={translate('App.buttons.back')}
-                                    onPress={() => {
-                                        this.setState({
-                                            showKeyScreen: false,
-                                            showBackButton: false,
-                                            title: translate('AccountSettings.manageAccount')
-                                        });
-                                    }}
-                                />
-                            ) : null}
-                            <Text style={styles.title}>{this.state.title}</Text>
-                            <HeaderRight
-                                text={translate('App.buttons.done')}
-                                style={styles.headerButton}
-                                onPress={() => {
-                                    this.props.onDonePressed();
-                                }}
-                            />
+                            <View style={styles.backButtonWrapper}>
+                                {this.state.showKeyScreen ? (
+                                    <HeaderLeft
+                                        icon="arrow-left-1"
+                                        text={translate('App.buttons.back')}
+                                        onPress={() => {
+                                            this.setState({
+                                                showKeyScreen: false,
+                                                showBackButton: false,
+                                                title: translate('AccountSettings.manageAccount')
+                                            });
+                                        }}
+                                    />
+                                ) : null}
+                            </View>
+
+                            <View style={styles.titleWrapper}>
+                                <Text style={styles.title}>{this.state.title}</Text>
+                            </View>
+
+                            <View style={styles.doneWrapper}>
+                                <TouchableOpacity onPress={() => this.props.onDonePressed()}>
+                                    <Text style={styles.doneButton}>
+                                        {translate('App.buttons.done')}
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                         {this.state.showKeyScreen ? (
                             <ViewKey key={this.state.key} />
@@ -106,11 +111,17 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                     <View style={styles.leftIcon}>
                                         <Icon name="key" size={24} style={styles.icon} />
                                     </View>
-                                    <Text style={styles.textRow}>
-                                        {translate('AccountSettings.revealPrivate')}
-                                    </Text>
-                                    <View style={styles.rightIcon}>
-                                        <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                                    <View style={styles.rowChild}>
+                                        <Text style={styles.textRow}>
+                                            {translate('AccountSettings.revealPrivate')}
+                                        </Text>
+                                        <View style={styles.rightIcon}>
+                                            <Icon
+                                                name="arrow-right-1"
+                                                size={16}
+                                                style={styles.icon}
+                                            />
+                                        </View>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity
@@ -121,11 +132,17 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                     <View style={styles.leftIcon}>
                                         <Icon name="eye" size={24} style={styles.icon} />
                                     </View>
-                                    <Text style={styles.textRow}>
-                                        {translate('AccountSettings.revealPublic')}
-                                    </Text>
-                                    <View style={styles.rightIcon}>
-                                        <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                                    <View style={styles.rowChild}>
+                                        <Text style={styles.textRow}>
+                                            {translate('AccountSettings.revealPublic')}
+                                        </Text>
+                                        <View style={styles.rightIcon}>
+                                            <Icon
+                                                name="arrow-right-1"
+                                                size={16}
+                                                style={styles.icon}
+                                            />
+                                        </View>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity
@@ -136,11 +153,17 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                     <View style={styles.leftIcon}>
                                         <Icon name="search" size={24} style={styles.icon} />
                                     </View>
-                                    <Text style={styles.textRow}>
-                                        {translate('AccountSettings.viewOn')}
-                                    </Text>
-                                    <View style={styles.rightIcon}>
-                                        <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                                    <View style={styles.rowChild}>
+                                        <Text style={styles.textRow}>
+                                            {translate('AccountSettings.viewOn')}
+                                        </Text>
+                                        <View style={styles.rightIcon}>
+                                            <Icon
+                                                name="arrow-right-1"
+                                                size={16}
+                                                style={styles.icon}
+                                            />
+                                        </View>
                                     </View>
                                 </TouchableOpacity>
                                 <TouchableOpacity
@@ -151,11 +174,17 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                     <View style={styles.leftIcon}>
                                         <Icon name="bug" size={24} style={styles.icon} />
                                     </View>
-                                    <Text style={styles.textRow}>
-                                        {translate('AccountSettings.reportIssue')}
-                                    </Text>
-                                    <View style={styles.rightIcon}>
-                                        <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                                    <View style={styles.rowChild}>
+                                        <Text style={styles.textRow}>
+                                            {translate('AccountSettings.reportIssue')}
+                                        </Text>
+                                        <View style={styles.rightIcon}>
+                                            <Icon
+                                                name="arrow-right-1"
+                                                size={16}
+                                                style={styles.icon}
+                                            />
+                                        </View>
                                     </View>
                                 </TouchableOpacity>
                             </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Modal, TouchableOpacity } from 'react-native';
+import { View, Modal, TouchableOpacity, Linking } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme } from '../../../../core/theme/with-theme';
 import { IAccountState } from '../../../../redux/wallets/state';
@@ -10,6 +10,7 @@ import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
 import { HeaderLeft } from '../../../../components/header-left/header-left';
 import { ViewKey } from '../view-key/view-key';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -45,7 +46,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             showKeyScreen: true,
             showBackButton: true,
             title: translate('AccountSettings.revealPrivate'),
-            key: this.props.account.publicKey
+            key: this.props.account.address // TO DO - switch to private key
         });
     };
     public revealPublicKey = () => {
@@ -57,14 +58,27 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         });
     };
     public viewOn = () => {
-        //
+        const url = getBlockchain(this.props.account.blockchain).networks[0].explorer.getAccountUrl(
+            this.props.account.address
+        );
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            }
+        });
     };
     public reportIssue = () => {
-        //
+        const url = 'https://moonlet.xyz/links/support';
+        Linking.canOpenURL(url).then(supported => {
+            if (supported) {
+                Linking.openURL(url);
+            }
+        });
     };
 
     public render() {
         const styles = this.props.styles;
+        const viewOnName = getBlockchain(this.props.account.blockchain).networks[0].explorer.name;
 
         return (
             <Modal animationType="fade" transparent={true} visible={true}>
@@ -100,7 +114,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                             </View>
                         </View>
                         {this.state.showKeyScreen ? (
-                            <ViewKey key={this.state.key} />
+                            <ViewKey key={this.state.key} value={this.state.key} />
                         ) : (
                             <View style={styles.contentContainer}>
                                 <TouchableOpacity
@@ -155,7 +169,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                     </View>
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
-                                            {translate('AccountSettings.viewOn')}
+                                            {translate('AccountSettings.viewOn') + viewOnName}
                                         </Text>
                                         <View style={styles.rightIcon}>
                                             <Icon

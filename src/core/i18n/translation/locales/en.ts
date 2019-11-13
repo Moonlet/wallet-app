@@ -64,7 +64,7 @@ export const translation: ITranslations = {
             manageAccount: 'Manage account',
             revealPrivate: 'Reveal private key',
             revealPublic: 'Reveal public key',
-            viewOn: 'View on viewblock.io',
+            viewOn: 'View on ',
             reportIssue: 'Report issue',
             securityTip: 'Security tip: Never disclosure your private key.',
             securityTip2: 'Anyone with this key can take your funds forever.'

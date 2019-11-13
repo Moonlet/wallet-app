@@ -21,15 +21,15 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 5
         },
         keyText: {
-            color: theme.colors.textSecondary, // TODO: fix
-            fontSize: 16, // TODO: fix
-            lineHeight: 24, // TODO: fix
+            color: theme.colors.textSecondary,
+            fontSize: theme.fontSize.regular,
+            lineHeight: BASE_DIMENSION * 3,
             textAlign: 'center'
         },
         tipWrapper: {
             flexDirection: 'row',
             flexWrap: 'wrap',
-            backgroundColor: 'yellow', // TODO: fix
+            backgroundColor: 'yellow',
             padding: BASE_DIMENSION * 2,
             marginHorizontal: BASE_DIMENSION * 2,
             marginBottom: BASE_DIMENSION * 3,
@@ -40,8 +40,8 @@ export default (theme: ITheme) =>
             color: theme.colors.primary
         },
         tipText: {
-            color: theme.colors.primary, // TODO: fix
-            fontSize: 12
+            color: theme.colors.primary,
+            fontSize: theme.fontSize.small
         },
         divider: {
             width: '100%',

@@ -16,7 +16,7 @@ export interface IProps {
 }
 
 export interface IExternalProps {
-    key: string;
+    value: string;
 }
 
 interface IState {
@@ -38,11 +38,18 @@ export class ViewKeyComponent extends React.Component<IProps & IExternalProps, I
         return (
             <View style={styles.contentContainer}>
                 <View style={styles.keyWrapper}>
-                    <Text style={styles.keyText}>{this.props.key}</Text>
+                    <Text
+                        style={[
+                            styles.keyText,
+                            { marginBottom: this.props.value.length >= 50 ? 16 : 90 }
+                        ]}
+                    >
+                        {this.props.value}
+                    </Text>
                 </View>
 
                 <View style={styles.tipWrapper}>
-                    <Icon name="alert" size={12} style={styles.alertIcon} />
+                    <Icon name="warning" size={12} style={styles.alertIcon} />
                     <Text style={styles.tipText}>{translate('AccountSettings.securityTip')}</Text>
                     <Text style={styles.tipText}>{translate('AccountSettings.securityTip2')}</Text>
                 </View>
@@ -53,7 +60,7 @@ export class ViewKeyComponent extends React.Component<IProps & IExternalProps, I
                     testID="copy-clipboard"
                     style={styles.rowContainer}
                     onPress={() => {
-                        Clipboard.setString(this.props.key);
+                        Clipboard.setString(this.props.value);
                         this.setState({ copied: true });
                     }}
                 >
@@ -72,4 +79,4 @@ export class ViewKeyComponent extends React.Component<IProps & IExternalProps, I
     }
 }
 
-export const ViewKey = smartConnect(ViewKeyComponent, [withTheme(stylesProvider)]);
+export const ViewKey = smartConnect<IExternalProps>(ViewKeyComponent, [withTheme(stylesProvider)]);

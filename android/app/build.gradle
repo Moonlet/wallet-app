@@ -128,6 +128,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    dexOptions {
+       javaMaxHeapSize "3g"
+    }
+
     defaultConfig {
         applicationId "com.moonlet"
         minSdkVersion rootProject.ext.minSdkVersion

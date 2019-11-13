@@ -25,6 +25,7 @@ import { SetPasswordConfirmScreen } from '../screens/set-password-confirm/set-pa
 import { SetPasswordScreen } from '../screens/set-password/set-password';
 import { Animated } from 'react-native';
 import { RecoverWalletScreen } from '../screens/recover-wallet/recover-wallet';
+import { ReceiveScreen } from '../screens/receive/receive';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -92,6 +93,9 @@ export const WalletNavigation = createStackNavigator(
         },
         Send: {
             screen: SendScreen
+        },
+        Receive: {
+            screen: ReceiveScreen
         }
     },
     {

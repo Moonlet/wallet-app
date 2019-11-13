@@ -2,11 +2,9 @@
 
 exports[`SendScreen renders correctly - button should show Copied in title 1`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <View style={{...}}>
-    <QRCode value=\\"q345234tq\\" size={300} color=\\"black\\" backgroundColor=\\"white\\" logoSize={20} logoBackgroundColor=\\"white\\" logoMargin={2} logoBorderRadius={0} ecl=\\"M\\" onError={[undefined]} gradientDirection={{...}} linearGradient={{...}} enableLinearGradient={false} quietZone={0} />
+    <QRCode value=\\"value\\" size={300} color=\\"black\\" backgroundColor=\\"white\\" logoSize={20} logoBackgroundColor=\\"white\\" logoMargin={2} logoBorderRadius={0} ecl=\\"M\\" onError={[undefined]} gradientDirection={{...}} linearGradient={{...}} enableLinearGradient={false} quietZone={0} />
   </View>
   <View style={{...}}>
     <withTheme(ButtonComponent) testID=\\"copy-clipboard\\" style={{...}} primary={true} onPress={[Function: onPress]}>
@@ -18,11 +16,9 @@ exports[`SendScreen renders correctly - button should show Copied in title 1`] =
 
 exports[`SendScreen renders correctly 1`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <View style={{...}}>
-    <QRCode value=\\"q345234tq\\" size={300} color=\\"black\\" backgroundColor=\\"white\\" logoSize={20} logoBackgroundColor=\\"white\\" logoMargin={2} logoBorderRadius={0} ecl=\\"M\\" onError={[undefined]} gradientDirection={{...}} linearGradient={{...}} enableLinearGradient={false} quietZone={0} />
+    <QRCode value=\\"value\\" size={300} color=\\"black\\" backgroundColor=\\"white\\" logoSize={20} logoBackgroundColor=\\"white\\" logoMargin={2} logoBorderRadius={0} ecl=\\"M\\" onError={[undefined]} gradientDirection={{...}} linearGradient={{...}} enableLinearGradient={false} quietZone={0} />
   </View>
   <View style={{...}}>
     <withTheme(ButtonComponent) testID=\\"copy-clipboard\\" style={{...}} primary={true} onPress={[Function: onPress]}>
@@ -34,11 +30,9 @@ exports[`SendScreen renders correctly 1`] = `
 
 exports[`SendScreen renders correctly 2`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <View style={{...}}>
-    <QRCode value=\\"q345234tq\\" size={300} color=\\"black\\" backgroundColor=\\"white\\" logoSize={20} logoBackgroundColor=\\"white\\" logoMargin={2} logoBorderRadius={0} ecl=\\"M\\" onError={[undefined]} gradientDirection={{...}} linearGradient={{...}} enableLinearGradient={false} quietZone={0} />
+    <QRCode value=\\"value\\" size={300} color=\\"black\\" backgroundColor=\\"white\\" logoSize={20} logoBackgroundColor=\\"white\\" logoMargin={2} logoBorderRadius={0} ecl=\\"M\\" onError={[undefined]} gradientDirection={{...}} linearGradient={{...}} enableLinearGradient={false} quietZone={0} />
   </View>
   <View style={{...}}>
     <withTheme(ButtonComponent) testID=\\"copy-clipboard\\" style={{...}} primary={true} onPress={[Function: onPress]}>

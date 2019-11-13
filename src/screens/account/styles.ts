@@ -10,28 +10,12 @@ export default (theme: ITheme) =>
             paddingRight: 10,
             height: 400
         },
-        address: {
-            fontSize: 30,
-            textAlign: 'center',
-            fontWeight: 'bold'
-        },
 
         balanceContainer: {
             marginTop: 10,
             flexWrap: 'wrap',
             justifyContent: 'center',
             flexDirection: 'row'
-        },
-
-        balance: {
-            fontSize: 18,
-            color: theme.colors.textSecondary
-        },
-
-        balanceSymbolFiat: {
-            fontSize: 18,
-            color: theme.colors.textSecondary,
-            marginLeft: 10
         },
 
         buttonsContainer: {

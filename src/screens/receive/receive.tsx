@@ -6,22 +6,22 @@ import { Button } from '../../library/button/button';
 import { ITheme } from '../../core/theme/itheme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { HeaderLeft } from '../../components/header-left/header-left';
-import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import QRCode from 'react-native-qrcode-svg';
-// import { withNavigationParams, INavigationProps } from '../../navigation/withNavigation';
+import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
+import { IAccountState } from '../../redux/wallets/state';
+import { AccountAddress } from '../../components/account-address/account-address';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
     theme: ITheme;
 }
-// export interface INavigationParams {
-//     address: string;
-// }
+export interface INavigationParams {
+    account: IAccountState;
+}
 
 interface IState {
     copied: boolean;
-    address: string;
 }
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -38,26 +38,29 @@ const navigationOptions = ({ navigation }: any) => ({
     },
     title: 'Receive'
 });
-export class ReceiveScreenComponent extends React.Component<IProps, IState> {
+export class ReceiveScreenComponent extends React.Component<
+    INavigationProps<INavigationParams> & IProps,
+    IState
+> {
     public static navigationOptions = navigationOptions;
 
-    constructor(props: IProps) {
+    constructor(props: INavigationProps<INavigationParams> & IProps) {
         super(props);
 
         this.state = {
-            copied: false,
-            address: 'q345234tq'
+            copied: false
         };
     }
 
     public render() {
         const styles = this.props.styles;
+        const account = this.props.account;
 
         return (
             <View style={styles.container}>
-                <Text style={styles.address}>Reusable component</Text>
+                <AccountAddress account={account} />
                 <View style={styles.qrcode}>
-                    <QRCode value={this.state.address} size={300} />
+                    <QRCode value={account.address} size={300} />
                 </View>
                 <View style={styles.bottom}>
                     <Button
@@ -65,7 +68,7 @@ export class ReceiveScreenComponent extends React.Component<IProps, IState> {
                         style={styles.bottomButton}
                         primary
                         onPress={() => {
-                            Clipboard.setString(this.state.address);
+                            Clipboard.setString(account.address);
                             this.setState({ copied: true });
                         }}
                     >
@@ -79,4 +82,7 @@ export class ReceiveScreenComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const ReceiveScreen = smartConnect(ReceiveScreenComponent, [withTheme(stylesProvider)]);
+export const ReceiveScreen = smartConnect(ReceiveScreenComponent, [
+    withTheme(stylesProvider),
+    withNavigationParams()
+]);

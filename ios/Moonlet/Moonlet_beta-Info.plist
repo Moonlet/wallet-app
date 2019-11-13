@@ -43,6 +43,8 @@
 	<string></string>
 	<key>NSCameraUsageDescription</key>
 	<string>Moonlet need to access camera to read qr-code</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Moonlet need to access photo library to read qr-code</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>icons.ttf</string>

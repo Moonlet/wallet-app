@@ -7,9 +7,9 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground,
             paddingTop: 40,
             paddingLeft: 10,
-            paddingRight: 10
+            paddingRight: 10,
+            height: 400
         },
-
         address: {
             fontSize: 30,
             textAlign: 'center',

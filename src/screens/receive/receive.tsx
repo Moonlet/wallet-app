@@ -70,8 +70,8 @@ export class ReceiveScreenComponent extends React.Component<IProps, IState> {
                         }}
                     >
                         {this.state.copied === false
-                            ? translate('Receive.clipboardBtn')
-                            : translate('Receive.copiedBtn')}
+                            ? translate('App.buttons.clipboardBtn')
+                            : translate('App.buttons.copiedBtn')}
                     </Button>
                 </View>
             </View>

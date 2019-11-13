@@ -71,7 +71,7 @@
     "devDependencies": {
         "@babel/core": "^7.6.2",
         "@babel/plugin-proposal-decorators": "^7.6.0",
-        "@babel/runtime": "^7.6.2",
+        "@babel/runtime": "^7.7.2",
         "@react-native-community/eslint-config": "^0.0.5",
         "@types/enzyme": "^3.10.3",
         "@types/ethereumjs-tx": "^2.0.0",

@@ -24,6 +24,7 @@ export const darkTheme: ITheme = {
         appBackground: COLORS.COD_GRAY,
         settingsDivider: COLORS.BLACK,
         inputBackground: COLORS.TUNDORA_GRAY,
-        disabledButton: COLORS.LIGHT_GRAY
+        disabledButton: COLORS.LIGHT_GRAY,
+        modalBackground: COLORS.FLAT_GRAY
     }
 };

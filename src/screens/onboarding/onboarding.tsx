@@ -9,13 +9,48 @@ import {
 } from 'react-navigation';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
+import { createHDWallet } from '../../redux/wallets/actions';
+import { connect } from 'react-redux';
+import { smartConnect } from '../../core/utils/smart-connect';
+import { IReduxState } from '../../redux/state';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     styles: ReturnType<typeof stylesProvider>;
 }
 
-export class OnboardingScreenComponent extends React.Component<IProps> {
+export interface IReduxProps {
+    createHDWallet: (mnemonic: string, callback: () => any) => void;
+}
+
+export class OnboardingScreenComponent extends React.Component<IProps & IReduxProps> {
+    public mnemonic = [
+        'pigeon',
+        'road',
+        'portion',
+        'echo',
+        'robust',
+        'panel',
+        'fat',
+        'dune',
+        'direct',
+        'flee',
+        'pave',
+        'tonight',
+        'govern',
+        'blue',
+        'tree',
+        'actual',
+        'palace',
+        'rude',
+        'legal',
+        'sand',
+        'width',
+        'clever',
+        'order',
+        'icon'
+    ];
+
     public onPressRecover() {
         this.props.navigation.navigate(
             'CreateWalletNavigation',
@@ -46,6 +81,15 @@ export class OnboardingScreenComponent extends React.Component<IProps> {
                     }
                 }
             })
+        );
+    }
+    public onPressGenerateWallet() {
+        this.props.createHDWallet(this.mnemonic.join(' '), () =>
+            this.props.navigation.navigate(
+                'MainNavigation',
+                {},
+                NavigationActions.navigate({ routeName: 'Dashboard' })
+            )
         );
     }
 
@@ -97,10 +141,26 @@ export class OnboardingScreenComponent extends React.Component<IProps> {
                             Create
                         </Button>
                     </View>
+
+                    <View style={{ flexDirection: 'row' }}>
+                        <Button
+                            testID="button-generate"
+                            style={styles.bottomButton}
+                            primary
+                            onPress={() => this.onPressGenerateWallet()}
+                        >
+                            Generate wallet
+                        </Button>
+                    </View>
                 </View>
             </View>
         );
     }
 }
 
-export const OnboardingScreen = withTheme(stylesProvider)(OnboardingScreenComponent);
+export const OnboardingScreen = smartConnect(OnboardingScreenComponent, [
+    connect((state: IReduxState) => ({}), {
+        createHDWallet
+    }),
+    withTheme(stylesProvider)
+]);

@@ -14,7 +14,8 @@ import { loadTranslations } from '../../../core/i18n';
 const props: IProps & IReduxProps = {
     // @ts-ignore
     navigation: {
-        navigate: jest.fn()
+        navigate: jest.fn(),
+        setParams: jest.fn()
     },
     styles: stylesProvider(darkTheme),
     theme: darkTheme,

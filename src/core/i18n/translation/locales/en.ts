@@ -18,6 +18,12 @@ export const translation: ITranslations = {
                 transactions: 'Transactions',
                 understand: 'I understand'
                 // plase try to add keys in alphabetic order
+            },
+            buttons: {
+                clipboardBtn: 'Copy to clipboard',
+                copiedBtn: 'Copied',
+                done: 'Done',
+                back: 'Back'
             }
         },
         CreateWalletTos: {
@@ -54,9 +60,14 @@ export const translation: ITranslations = {
             amount: 'Amount',
             recipientLabel: 'Recipient'
         },
-        Receive: {
-            clipboardBtn: 'Copy to clipboard',
-            copiedBtn: 'Copied'
+        AccountSettings: {
+            manageAccount: 'Manage account',
+            revealPrivate: 'Reveal private key',
+            revealPublic: 'Reveal public key',
+            viewOn: 'View on ',
+            reportIssue: 'Report issue',
+            securityTip: 'Security tip: Never disclosure your private key.',
+            securityTip2: 'Anyone with this key can take your funds forever.'
         }
     },
     plural: (n: number, ord?: boolean) => {

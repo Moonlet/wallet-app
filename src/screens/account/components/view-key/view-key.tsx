@@ -34,7 +34,6 @@ export class ViewKeyComponent extends React.Component<IProps & IExternalProps, I
 
     public render() {
         const styles = this.props.styles;
-
         return (
             <View style={styles.contentContainer}>
                 <View style={styles.keyWrapper}>

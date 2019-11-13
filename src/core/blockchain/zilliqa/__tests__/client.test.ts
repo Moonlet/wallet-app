@@ -53,8 +53,8 @@ describe('Zilliqa client', () => {
         expect.assertions(3);
     });
 
-    test('getNonce', () => {
-        const client = Zilliqa.getClient(1);
-        expect(() => client.getNonce('addr')).toThrow();
-    });
+    // test('getNonce', () => {
+    //     const client = Zilliqa.getClient(1);
+    //     expect(() => client.getNonce('addr')).toThrow();
+    // });
 });

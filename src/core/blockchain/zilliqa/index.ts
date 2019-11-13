@@ -5,7 +5,16 @@ import * as transaction from './transaction';
 import * as account from './account';
 import { IBlockchain } from '../types';
 
-export const Zilliqa: IBlockchain = {
+export interface IZilliqaTxOptions {
+    nonce?: number;
+    chainId: number;
+    gasPrice?: number;
+    gasLimit?: number;
+    data?: string;
+    code?: string;
+}
+
+export const Zilliqa: IBlockchain<IZilliqaTxOptions> = {
     config,
     networks,
     transaction,

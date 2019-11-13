@@ -1,4 +1,4 @@
-import { Blockchain } from '../blockchain/types';
+import { Blockchain, IBlockchainTransaction } from '../blockchain/types';
 import { IAccountState } from '../../redux/wallets/state';
 
 export enum WalletType {
@@ -8,5 +8,5 @@ export enum WalletType {
 
 export interface IWallet {
     getAccounts(blockchain: Blockchain, index: number, indexTo: number): Promise<IAccountState[]>;
-    sign(blockchain: Blockchain, accountIndex: number, tx: string): Promise<string>;
+    sign(blockchain: Blockchain, accountIndex: number, tx: IBlockchainTransaction): Promise<string>;
 }

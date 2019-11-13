@@ -5,7 +5,14 @@ import * as transaction from './transaction';
 import * as account from './account';
 import { IBlockchain } from '../types';
 
-export const Ethereum: IBlockchain = {
+export interface IEthereumTxOptions {
+    nonce: number;
+    chainId: number;
+    gasPrice: number;
+    gasLimit: number;
+}
+
+export const Ethereum: IBlockchain<IEthereumTxOptions> = {
     config,
     networks,
     transaction,

@@ -2,14 +2,18 @@ import { Ethereum } from '../';
 import * as Util from 'ethereumjs-util';
 import { Blockchain } from '../../types';
 
-jest.mock('ethereumjs-util', () => ({
-    privateToPublic: jest.fn().mockReturnValue('PUBLIC_KEY'),
-    privateToAddress: jest.fn().mockReturnValue('address'),
-    toChecksumAddress: jest.fn().mockReturnValue('ADDRESS'),
-    publicToAddress: jest.fn().mockReturnValue('address'),
-    isValidChecksumAddress: jest.fn().mockReturnValue(true),
-    isValidAddress: jest.fn().mockReturnValue(true)
-}));
+jest.mock('ethereumjs-util', () => {
+    const util = jest.requireActual('ethereumjs-util');
+    return {
+        ...util,
+        privateToPublic: jest.fn().mockReturnValue('PUBLIC_KEY'),
+        privateToAddress: jest.fn().mockReturnValue('address'),
+        toChecksumAddress: jest.fn().mockReturnValue('ADDRESS'),
+        publicToAddress: jest.fn().mockReturnValue('address'),
+        isValidChecksumAddress: jest.fn().mockReturnValue(true),
+        isValidAddress: jest.fn().mockReturnValue(true)
+    };
+});
 
 const clearMocks = () => {
     // @ts-ignore

@@ -37,8 +37,8 @@ describe('Ethereum client', () => {
         expect.assertions(2);
     });
 
-    test('getNonce', () => {
-        const client = Ethereum.getClient(1);
-        expect(() => client.getNonce('addr')).toThrow();
-    });
+    // test('getNonce', () => {
+    //     const client = Ethereum.getClient(1);
+    //     expect(() => client.getNonce('addr')).toThrow();
+    // });
 });

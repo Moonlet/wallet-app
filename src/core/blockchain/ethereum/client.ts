@@ -14,7 +14,15 @@ export class Client extends BlockchainGenericClient {
     }
 
     public getNonce(address: string): Promise<number> {
-        throw new Error('Method not implemented.');
+        return this.rpc
+            .call('eth_getTransactionCount', [this.fixAddress(address), 'latest'])
+            .then(res => {
+                return new BigNumber(res.result, 16).toNumber();
+            });
+    }
+
+    public sendTransaction(transaction): Promise<string> {
+        return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => res.result);
     }
 
     private fixAddress(address: string): string {

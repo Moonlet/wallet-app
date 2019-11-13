@@ -16,6 +16,7 @@ export interface ITheme {
         textTertiary: string;
         positive: string;
         negative: string;
+        error: string;
 
         settingsDivider: string;
         cardBackground: string;

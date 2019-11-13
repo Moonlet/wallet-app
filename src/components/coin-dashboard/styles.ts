@@ -10,8 +10,7 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             alignSelf: 'stretch',
             flex: 1,
-            marginBottom: BASE_DIMENSION / 2,
-            borderWidth: 1
+            marginBottom: BASE_DIMENSION / 2
         },
         exchangeCardContainer: {
             display: 'flex',

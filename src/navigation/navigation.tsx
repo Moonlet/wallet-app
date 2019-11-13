@@ -25,6 +25,7 @@ import { SetPasswordConfirmScreen } from '../screens/set-password-confirm/set-pa
 import { SetPasswordScreen } from '../screens/set-password/set-password';
 import { Animated } from 'react-native';
 import { RecoverWalletScreen } from '../screens/recover-wallet/recover-wallet';
+import { WalletsScreen } from '../screens/wallets/wallets';
 import { ReceiveScreen } from '../screens/receive/receive';
 
 interface IDefaultNavOptions {
@@ -96,6 +97,9 @@ export const WalletNavigation = createStackNavigator(
         },
         Receive: {
             screen: ReceiveScreen
+        },
+        Wallets: {
+            screen: WalletsScreen
         }
     },
     {
@@ -104,7 +108,7 @@ export const WalletNavigation = createStackNavigator(
     }
 );
 
-// wallet navigation stack
+// settings navigation stack
 export const SettingsNavigation = createStackNavigator(
     {
         Settings: {

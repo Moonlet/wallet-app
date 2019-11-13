@@ -18,14 +18,9 @@ export interface ICheckboxProps {
 
 export const CheckboxComponent = (props: ICheckboxProps) => (
     <TouchableOpacity
-        // style={props.styles.confirmTextContainer}
         disabled={props.disabled}
         onPress={props.onPress}
-        style={[
-            props.styles.container,
-            // props.disabled && props.styles.buttonDisabled,
-            props.style
-        ]}
+        style={[props.styles.container, props.style]}
     >
         <Icon
             name={props.checked ? 'check-2-thicked' : 'check-2'}

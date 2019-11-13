@@ -28,6 +28,7 @@ export interface IProps {
 
 export interface IReduxProps {
     wallet: IWalletState;
+    currentWalletIndex: number;
 
     getBalance: typeof getBalance;
 }
@@ -62,18 +63,32 @@ const calculateBalances = (accounts: IAccountState[]) =>
     );
 
 const mapStateToProps = (state: IReduxState) => ({
-    wallet: state.wallets[state.app.currentWalletIndex]
+    wallet: state.wallets[state.app.currentWalletIndex],
+    currentWalletIndex: state.app.currentWalletIndex
 });
 
 const mapDispatchToProps = {
     getBalance
 };
 
-const navigationOptions = {
-    title: 'Wallet 1',
+const MyTitle = ({ text }) => <Text style={{ fontSize: 17, fontWeight: 'bold' }}> {text}</Text>;
+const MyConnectedTitle = connect((state: IReduxState) => ({
+    text: `Wallet ${state.app.currentWalletIndex + 1}`
+}))(MyTitle);
+
+const navigationOptions = ({ navigation }: any) => ({
+    headerTitle: () => <MyConnectedTitle />,
     headerLeft: <HeaderLeft icon="saturn-icon" />,
-    headerRight: <HeaderRight icon="single-man-hierachy" />
-};
+    headerRight: (
+        <HeaderRight
+            icon="single-man-hierachy"
+            onPress={() => {
+                navigation.navigate('Wallets');
+            }}
+        />
+    )
+});
+
 export class DashboardScreenComponent extends React.Component<IProps & IReduxProps, IState> {
     public static navigationOptions = navigationOptions;
     public initialIndex = 0;

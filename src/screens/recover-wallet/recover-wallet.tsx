@@ -317,7 +317,7 @@ export class RecoverWalletScreenComponent extends React.Component<IProps & IRedu
                         testID={`input-${n}`}
                         style={[
                             this.props.styles.input,
-                            error && { borderBottomColor: this.props.theme.colors.negative }
+                            error && { borderBottomColor: this.props.theme.colors.error }
                         ]}
                         placeholderTextColor={this.props.theme.colors.textSecondary}
                         placeholder=""

@@ -19,6 +19,7 @@ export const darkTheme: ITheme = {
         textTertiary: COLORS.GRAY,
         positive: COLORS.HOT_GREEN,
         negative: COLORS.HOT_RED,
+        error: COLORS.LIGHT_RED,
 
         cardBackground: COLORS.DARK_GRAY,
         appBackground: COLORS.COD_GRAY,

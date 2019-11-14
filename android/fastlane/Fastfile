@@ -11,7 +11,7 @@
 #
 
 # Uncomment the line if you want fastlane to automatically update itself
-update_fastlane
+# update_fastlane
 
 default_platform(:android)
 
@@ -29,6 +29,7 @@ platform :android do
     gradle(
       task: "assemble",
       flavor: "beta",
+      print_command: true,
       build_type: "Release",
       properties: {
         "versionName" => package["version"],

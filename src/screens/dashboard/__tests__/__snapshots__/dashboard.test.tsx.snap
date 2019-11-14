@@ -1,35 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`dashboard screen component handles scroll correctly 1`] = `
-"<View style={{...}}>
-  <View style={{...}}>
-    <ScrollViewMock onMomentumScrollEnd={[Function]} horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" snapToInterval={375} contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
-      <View style={{...}} />
-      <withTheme(CoinBalanceCardComponent) balance={{...}} currency=\\"ZIL\\" width={375} toCurrency=\\"USD\\" active={false} />
-      <withTheme(CoinBalanceCardComponent) balance={{...}} currency=\\"ETH\\" width={375} toCurrency=\\"USD\\" active={true} />
-      <View style={{...}} />
-    </ScrollViewMock>
-  </View>
-  <AnimatedComponent style={{...}}>
-    <withTheme(CoinDashboardComponent) accounts={{...}} blockchain=\\"ETHEREUM\\" navigation={{...}} />
-  </AnimatedComponent>
-  <LinearGradient colors={{...}} locations={{...}} style={{...}} start={{...}} end={{...}}>
-    <View style={{...}} testID=\\"blockchainSelector\\">
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={false}>
-          ZIL
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          ETH
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-    </View>
-  </LinearGradient>
-</View>"
-`;
-
 exports[`dashboard screen component renders correctly 1`] = `
 "<View style={{...}}>
   <View style={{...}}>

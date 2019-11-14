@@ -98,28 +98,28 @@ describe('dashboard screen component', () => {
         expect(wrapper.debug()).toMatchSnapshot();
     });
 
-    it('handles scroll correctly', () => {
-        const screenWidth = Dimensions.get('window').width;
-        const spySetState = jest.spyOn(DashboardScreenComponent.prototype, 'setState');
+    // it('handles scroll correctly', () => {
+    //     const screenWidth = Dimensions.get('window').width;
+    //     const spySetState = jest.spyOn(DashboardScreenComponent.prototype, 'setState');
 
-        const wrapper = shallow(<DashboardScreenComponent {...props} />);
-        const instance = wrapper.instance();
+    //     const wrapper = shallow(<DashboardScreenComponent {...props} />);
+    //     const instance = wrapper.instance();
 
-        // @ts-ignore
-        instance.handleScrollEnd({ nativeEvent: { contentOffset: { x: 0 } } });
+    //     // @ts-ignore
+    //     instance.handleScrollEnd({ nativeEvent: { contentOffset: { x: 0 } } });
 
-        // dont call set state when its the same coin index
-        expect(spySetState).not.toHaveBeenCalled();
+    //     // dont call set state when its the same coin index
+    //     expect(spySetState).not.toHaveBeenCalled();
 
-        // @ts-ignore
-        instance.handleScrollEnd({
-            nativeEvent: { contentOffset: { x: Math.round(screenWidth * 0.5) } }
-        });
-        expect(spySetState).toHaveBeenCalledWith({
-            coinIndex: 1
-        });
-        expect(wrapper.debug()).toMatchSnapshot();
-    });
+    //     // @ts-ignore
+    //     instance.handleScrollEnd({
+    //         nativeEvent: { contentOffset: { x: Math.round(screenWidth * 0.5) } }
+    //     });
+    //     expect(spySetState).toHaveBeenCalledWith({
+    //         coinIndex: 1
+    //     });
+    //     expect(wrapper.debug()).toMatchSnapshot();
+    // });
 
     // it('swtiches to correct coin on press', () => {
     //     const wrapper = shallow(<DashboardScreenComponent {...props} />);

@@ -39,6 +39,10 @@ NativeModules.I18nManager = {
     getConstants: jest.fn().mockReturnValue({ isRTL: false, doLeftAndRightSwapInRTL: true })
 };
 
+NativeModules.RNGestureHandlerModule = {
+    Directions: {}
+};
+
 jest.mock('react-native-device-info', () => {
     return {
         getVersion: jest.fn()

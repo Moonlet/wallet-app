@@ -8,10 +8,13 @@ export const translation: ITranslations = {
                 accept: 'Accept',
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
+                connect: 'Connect',
+                create: 'Create',
                 next: 'Next',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
                 receive: 'Receive',
+                recover: 'Recover',
                 secure: 'Secure',
                 send: 'Send',
                 tos: 'Terms of service',
@@ -68,6 +71,11 @@ export const translation: ITranslations = {
             reportIssue: 'Report issue',
             securityTip: 'Security tip: Never disclosure your private key.',
             securityTip2: 'Anyone with this key can take your funds forever.'
+        },
+        Wallets: {
+            deleteWallet: 'Delete wallet',
+            unveil: 'Unvail phrase',
+            editName: 'Edit name'
         }
     },
     plural: (n: number, ord?: boolean) => {

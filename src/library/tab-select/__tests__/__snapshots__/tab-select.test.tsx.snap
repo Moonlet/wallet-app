@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`library checkbox renders correctly 1`] = `
+"<View style={{...}}>
+  <TouchableOpacity onPress={[Function: onPress]} style={{...}} activeOpacity={0.2}>
+    <withTheme(TextComponent) style={{...}} />
+  </TouchableOpacity>
+  <TouchableOpacity onPress={[Function: onPress]} style={{...}} activeOpacity={0.2}>
+    <withTheme(TextComponent) style={{...}} />
+  </TouchableOpacity>
+  <TouchableOpacity onPress={[Function: onPress]} style={{...}} activeOpacity={0.2}>
+    <withTheme(TextComponent) style={{...}} />
+  </TouchableOpacity>
+</View>"
+`;

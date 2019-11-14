@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Wallet screen renders correctly 1`] = `
+"<View style={{...}}>
+  <withTheme(TabSelectComponent) options={{...}} onSelectionChange={[Function: onSelectionChange]} selected=\\"HD\\" />
+  <ScrollViewMock style={{...}}>
+    <withTheme(SwipeableComponent) renderLeftActions={[Function]}>
+      <TouchableHighlight onPress={[Function: onPress]} activeOpacity={0.85} delayPressOut={100} underlayColor=\\"black\\">
+        <View style={{...}}>
+          <Icon name=\\"saturn-icon\\" size={24} style={{...}} allowFontScaling={false} />
+          <withTheme(TextComponent) style={{...}}>
+            Wallet 
+            1
+          </withTheme(TextComponent)>
+        </View>
+      </TouchableHighlight>
+    </withTheme(SwipeableComponent)>
+  </ScrollViewMock>
+  <View style={{...}}>
+    <View style={{...}}>
+      <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]}>
+        Create
+      </withTheme(ButtonComponent)>
+      <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]}>
+        Recover
+      </withTheme(ButtonComponent)>
+    </View>
+  </View>
+</View>"
+`;

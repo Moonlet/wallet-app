@@ -76,7 +76,7 @@ export class AccountScreenComponent extends React.Component<
                         testID="button-send"
                         style={styles.button}
                         onPress={() => {
-                            navigation.navigate('Send');
+                            navigation.navigate('Send', { account });
                         }}
                     >
                         {translate('App.labels.send')}

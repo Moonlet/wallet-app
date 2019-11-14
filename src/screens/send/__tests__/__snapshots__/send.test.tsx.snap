@@ -2,9 +2,7 @@
 
 exports[`SendScreen Buton should open qr-code 1`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <View style={{...}}>
     <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
     <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
@@ -17,9 +15,7 @@ exports[`SendScreen Buton should open qr-code 1`] = `
 
 exports[`SendScreen Button should be disabled if amount is 0 1`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <View style={{...}}>
     <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
     <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
@@ -45,9 +41,7 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
 
 exports[`SendScreen onChangeText 1`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <withTheme(TextComponent) style={{...}}>
     Recipient
   </withTheme(TextComponent)>
@@ -63,9 +57,7 @@ exports[`SendScreen onChangeText 1`] = `
 
 exports[`SendScreen onChangeText 2`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <withTheme(TextComponent) style={{...}}>
     Recipient
   </withTheme(TextComponent)>
@@ -94,9 +86,7 @@ exports[`SendScreen onChangeText 2`] = `
 
 exports[`SendScreen renders correctly - no amount and fee should be present 1`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <View style={{...}}>
     <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
     <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
@@ -109,9 +99,7 @@ exports[`SendScreen renders correctly - no amount and fee should be present 1`] 
 
 exports[`SendScreen renders correctly - no amount and fee should be present 2`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <View style={{...}}>
     <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
     <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
@@ -124,9 +112,7 @@ exports[`SendScreen renders correctly - no amount and fee should be present 2`] 
 
 exports[`SendScreen renders correctly 1`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <View style={{...}}>
     <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
     <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
@@ -139,9 +125,7 @@ exports[`SendScreen renders correctly 1`] = `
 
 exports[`SendScreen renders correctly 2`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <View style={{...}}>
     <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
     <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee]} style={{...}} activeOpacity={0.2}>
@@ -182,9 +166,7 @@ exports[`SendScreen sets correct navigation options 2`] = `
 
 exports[`SendScreen should Call verify address 1`] = `
 "<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    Reusable component
-  </withTheme(TextComponent)>
+  <withTheme(AccountAddressComponent) account={{...}} />
   <withTheme(TextComponent) style={{...}}>
     Recipient
   </withTheme(TextComponent)>

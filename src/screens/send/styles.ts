@@ -5,7 +5,7 @@ import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingTop: BASE_DIMENSION * 2,
+            paddingTop: 40,
             paddingBottom: BASE_DIMENSION * 2,
             paddingLeft: BASE_DIMENSION * 2,
             paddingRight: BASE_DIMENSION * 2,
@@ -30,11 +30,12 @@ export default (theme: ITheme) =>
         },
         receipientLabel: {
             paddingLeft: BASE_DIMENSION * 2,
-            marginTop: 10,
+            marginTop: 40,
             color: theme.colors.textSecondary
         },
         inputBoxAddress: {
             height: 44,
+            marginTop: 40,
             borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',

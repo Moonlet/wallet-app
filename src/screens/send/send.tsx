@@ -12,10 +12,11 @@ import { connect } from 'react-redux';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
-import { Blockchain } from '../../core/blockchain/types';
 import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
-
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
+import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
+import { IAccountState } from '../../redux/wallets/state';
+import { AccountAddress } from '../../components/account-address/account-address';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -25,12 +26,15 @@ export interface IProps {
 
 export const mapStateToProps = (state: IReduxState) => ({});
 
+export interface INavigationParams {
+    account: IAccountState;
+}
+
 interface IState {
-    address: string;
+    toAddress: string;
     amount: string;
     fee: string;
     isValidAddress: boolean;
-    blockchain: Blockchain;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -47,18 +51,20 @@ export const navigationOptions = ({ navigation }: any) => ({
     },
     title: 'Send'
 });
-export class SendScreenComponent extends React.Component<IProps, IState> {
+export class SendScreenComponent extends React.Component<
+    INavigationProps<INavigationParams> & IProps,
+    IState
+> {
     public static navigationOptions = navigationOptions;
     public qrCodeScanner: any;
-    constructor(props: IProps) {
+    constructor(props: INavigationProps<INavigationParams> & IProps) {
         super(props);
 
         this.state = {
-            address: '',
+            toAddress: '',
             amount: '',
             fee: '',
-            isValidAddress: false,
-            blockchain: Blockchain.ZILLIQA
+            isValidAddress: false
         };
     }
 
@@ -67,8 +73,8 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
     };
 
     public verifyAddress = (text: string) => {
-        const blockchainInstance = getBlockchain(this.state.blockchain);
-        this.setState({ address: text });
+        const blockchainInstance = getBlockchain(this.props.account.blockchain);
+        this.setState({ toAddress: text });
         if (blockchainInstance.account.isValidAddress(text)) {
             this.setState({ isValidAddress: true });
         }
@@ -76,7 +82,7 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
     public addAmount = (value: string) => {
         this.setState({
             amount: value,
-            fee: '0.001' + BLOCKCHAIN_INFO[this.state.blockchain].coin
+            fee: '0.001' + BLOCKCHAIN_INFO[this.props.account.blockchain].coin
         });
     };
     public onQrCodeScanned = (value: string) => {
@@ -86,14 +92,20 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
     public render() {
         const styles = this.props.styles;
         const theme = this.props.theme;
+        const account = this.props.account;
 
         return (
             <View style={styles.container}>
-                <Text style={styles.address}>Reusable component</Text>
-                {this.state.address !== '' ? (
+                <AccountAddress account={account} />
+                {this.state.toAddress !== '' ? (
                     <Text style={styles.receipientLabel}>{translate('Send.recipientLabel')}</Text>
                 ) : null}
-                <View style={styles.inputBoxAddress}>
+                <View
+                    style={[
+                        styles.inputBoxAddress,
+                        { marginTop: this.state.toAddress !== '' ? 0 : 40 }
+                    ]}
+                >
                     <TextInput
                         testID="input-address"
                         style={styles.inputAddress}
@@ -102,7 +114,7 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
-                        value={this.state.address}
+                        value={this.state.toAddress}
                         onChangeText={text => {
                             this.verifyAddress(text);
                         }}
@@ -172,5 +184,6 @@ export class SendScreenComponent extends React.Component<IProps, IState> {
 
 export const SendScreen = smartConnect(SendScreenComponent, [
     connect(mapStateToProps, {}),
-    withTheme(stylesProvider)
+    withTheme(stylesProvider),
+    withNavigationParams()
 ]);

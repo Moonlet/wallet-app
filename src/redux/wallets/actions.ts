@@ -99,8 +99,15 @@ export const getBalance = (
     const balanceTimestamp = account?.balance?.timestamp || 0;
 
     if (force || (!balanceInProgress && balanceTimestamp + 10 * 3600 < Date.now())) {
+        const data = {
+            walletId: wallet.id,
+            address,
+            blockchain
+        };
+
         dispatch({
             type: ACCOUNT_GET_BALANCE,
+            data,
             inProgress: true
         });
         try {
@@ -110,14 +117,14 @@ export const getBalance = (
             dispatch({
                 type: ACCOUNT_GET_BALANCE,
                 data: {
-                    walletId: wallet.id,
-                    address,
+                    ...data,
                     balance
                 }
             });
         } catch (error) {
             dispatch({
                 type: ACCOUNT_GET_BALANCE,
+                walletId: wallet.id,
                 error
             });
         }
@@ -132,53 +139,49 @@ export const sendTransferTransaction = (
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
     const encryptedPass = '366bf1f956e204d7bea27145b5afe34cabd6d584100e6b0b5f700230bc52a5f2';
-    WalletFactory.get(
-        state.wallets[state.app.currentWalletIndex].id,
-        WalletType.HD,
-        encryptedPass // encrypted string: pass
-    )
-        .then(async hdWallet => {
-            const nonce = await getBlockchain(account.blockchain)
-                .getClient(chainId)
-                .getNonce(account.address);
 
-            const options = {
-                nonce,
-                chainId,
-                gasPrice: FEE[account.blockchain].gasPrice,
-                gasLimit: FEE[account.blockchain].gasLimit
-            };
+    try {
+        const hdWallet = await WalletFactory.get(
+            state.wallets[state.app.currentWalletIndex].id,
+            state.wallets[state.app.currentWalletIndex].type,
+            encryptedPass
+        ); // encrypted string: pass)
 
-            const tx = {
-                from: account.address,
-                to: toAddress,
-                amount: new BigNumber(1000000000000000),
-                options
-            };
+        const nonce = await getBlockchain(account.blockchain)
+            .getClient(chainId)
+            .getNonce(account.address);
 
-            hdWallet
-                .sign(account.blockchain, account.index, tx)
-                .then(async transaction => {
-                    const publish = await getBlockchain(account.blockchain)
-                        .getClient(chainId)
-                        .sendTransaction(transaction);
-                    if (publish !== undefined) {
-                        dispatch({
-                            type: TRANSACTION_PUBLISHED,
-                            data: {
-                                hash: transaction,
-                                tx,
-                                walletId: state.wallets[state.app.currentWalletIndex].id
-                            }
-                        });
-                        return;
-                    }
-                })
-                .catch(e => {
-                    throw new Error(e);
-                });
-        })
-        .catch(e => {
-            throw new Error(e);
-        });
+        const options = {
+            nonce,
+            chainId,
+            gasPrice: FEE[account.blockchain].gasPrice,
+            gasLimit: FEE[account.blockchain].gasLimit
+        };
+
+        const tx = {
+            from: account.address,
+            to: toAddress,
+            amount: new BigNumber(1000000000000000),
+            options
+        };
+
+        const transaction = await hdWallet.sign(account.blockchain, account.index, tx);
+
+        const publish = await getBlockchain(account.blockchain)
+            .getClient(chainId)
+            .sendTransaction(transaction);
+        if (publish) {
+            dispatch({
+                type: TRANSACTION_PUBLISHED,
+                data: {
+                    hash: transaction,
+                    tx,
+                    walletId: state.wallets[state.app.currentWalletIndex].id
+                }
+            });
+            return;
+        }
+    } catch (e) {
+        throw new Error(e);
+    }
 };

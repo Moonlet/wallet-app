@@ -7,7 +7,7 @@ export interface IWalletState {
     type: WalletType;
     accounts: IAccountState[];
     transactions?: {
-        [hash: string]: ITransactionState;
+        [id: string]: ITransactionState;
     };
 }
 
@@ -21,6 +21,7 @@ export interface IAccountState {
         value: BigNumber;
         inProgress: boolean;
         timestamp: number;
+        error: any;
     };
     balanceTimestamp?: number;
 }

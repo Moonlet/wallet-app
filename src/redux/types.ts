@@ -1,4 +1,6 @@
 export interface IAction<D = any> {
     type: string;
-    data: D;
+    data?: D;
+    inProgress?: boolean;
+    error?: any;
 }

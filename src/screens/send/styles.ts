@@ -5,7 +5,7 @@ import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingTop: BASE_DIMENSION * 2,
+            paddingTop: 40,
             paddingBottom: BASE_DIMENSION * 2,
             paddingLeft: BASE_DIMENSION * 2,
             paddingRight: BASE_DIMENSION * 2,
@@ -30,7 +30,7 @@ export default (theme: ITheme) =>
         },
         receipientLabel: {
             paddingLeft: BASE_DIMENSION * 2,
-            marginTop: 10,
+            marginTop: 40,
             color: theme.colors.textSecondary
         },
         inputBoxAddress: {
@@ -77,5 +77,15 @@ export default (theme: ITheme) =>
         qrButton: {
             flexDirection: 'row',
             marginRight: BASE_DIMENSION / 2
+        },
+        buttonTransfer: {
+            marginTop: BASE_DIMENSION,
+            //  paddingRight: BASE_DIMENSION * 2,
+            alignItems: 'flex-end'
+        },
+        textTranferButton: {
+            color: theme.colors.accent,
+            lineHeight: BASE_DIMENSION * 3,
+            fontSize: theme.fontSize.small
         }
     });

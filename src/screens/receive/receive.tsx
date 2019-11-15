@@ -11,14 +11,27 @@ import QRCode from 'react-native-qrcode-svg';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { IAccountState } from '../../redux/wallets/state';
 import { AccountAddress } from '../../components/account-address/account-address';
+import { IReduxState } from '../../redux/state';
+import { connect } from 'react-redux';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
     theme: ITheme;
 }
+
 export interface INavigationParams {
+    accountIndex: number;
+}
+
+export interface IReduxProps {
     account: IAccountState;
 }
+
+export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    return {
+        account: state.wallets[state.app.currentWalletIndex].accounts[ownProps.accountIndex]
+    };
+};
 
 interface IState {
     copied: boolean;
@@ -39,12 +52,12 @@ const navigationOptions = ({ navigation }: any) => ({
     title: 'Receive'
 });
 export class ReceiveScreenComponent extends React.Component<
-    INavigationProps<INavigationParams> & IProps,
+    INavigationProps<INavigationParams> & IProps & IReduxProps,
     IState
 > {
     public static navigationOptions = navigationOptions;
 
-    constructor(props: INavigationProps<INavigationParams> & IProps) {
+    constructor(props: INavigationProps<INavigationParams> & IProps & IReduxProps) {
         super(props);
 
         this.state = {
@@ -55,7 +68,6 @@ export class ReceiveScreenComponent extends React.Component<
     public render() {
         const styles = this.props.styles;
         const account = this.props.account;
-
         return (
             <View style={styles.container}>
                 <AccountAddress account={account} />
@@ -83,6 +95,7 @@ export class ReceiveScreenComponent extends React.Component<
 }
 
 export const ReceiveScreen = smartConnect(ReceiveScreenComponent, [
+    connect(mapStateToProps, {}),
     withTheme(stylesProvider),
     withNavigationParams()
 ]);

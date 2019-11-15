@@ -64,6 +64,6 @@ describe('wallet actions', () => {
         await flushPromises();
 
         expect(callback).toHaveBeenCalled();
-        expect(dispatch).toBeCalledWith(response);
+        expect(dispatch).toMatchSnapshot();
     });
 });

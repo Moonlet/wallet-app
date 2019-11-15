@@ -68,6 +68,7 @@ export class AccountScreenComponent extends React.Component<
 
     public render() {
         const { styles, navigation, account } = this.props;
+        const accountIndex = account.index;
         return (
             <ScrollView style={styles.container}>
                 <AccountAddress account={account} />
@@ -76,7 +77,7 @@ export class AccountScreenComponent extends React.Component<
                         testID="button-send"
                         style={styles.button}
                         onPress={() => {
-                            navigation.navigate('Send');
+                            navigation.navigate('Send', { accountIndex });
                         }}
                     >
                         {translate('App.labels.send')}
@@ -85,7 +86,7 @@ export class AccountScreenComponent extends React.Component<
                         testID="button-receive"
                         style={styles.button}
                         onPress={() => {
-                            navigation.navigate('Receive', { account });
+                            navigation.navigate('Receive', { accountIndex });
                         }}
                     >
                         {translate('App.labels.receive')}

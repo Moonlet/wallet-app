@@ -10,6 +10,8 @@ import {
 import stylesProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import { loadTranslations } from '../../../core/i18n';
+import BigNumber from 'bignumber.js';
+import { Blockchain } from '../../../core/blockchain/types';
 
 const props: IProps & IReduxProps = {
     // @ts-ignore
@@ -19,7 +21,17 @@ const props: IProps & IReduxProps = {
     },
     styles: stylesProvider(darkTheme),
     theme: darkTheme,
-    account: { address: 'value' } as any
+    account: {
+        index: 1,
+        blockchain: Blockchain.ZILLIQA,
+        address: 'zil1vs74hw5k21233h432kj321l3k21b',
+        publicKey: '1',
+        balance: {
+            inProgress: false,
+            timestamp: 123,
+            value: new BigNumber(12332)
+        }
+    }
 };
 
 export default describe('AccountScreen', () => {
@@ -36,13 +48,11 @@ export default describe('AccountScreen', () => {
     test('Send button goes on the proper screen', () => {
         const wrapper = shallow(<AccountScreenComponent {...props} />);
         wrapper.find('[testID="button-send"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('Send');
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Send', { accountIndex: 1 });
     });
     test('Receive button goes on the proper screen', () => {
         const wrapper = shallow(<AccountScreenComponent {...props} />);
         wrapper.find('[testID="button-receive"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('Receive', {
-            account: { address: 'value' }
-        });
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Receive', { accountIndex: 1 });
     });
 });

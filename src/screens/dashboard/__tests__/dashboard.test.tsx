@@ -14,6 +14,7 @@ const props: IProps & IReduxProps = {
     navigation: {
         navigate: jest.fn()
     },
+    getBalance: jest.fn(),
     wallet: {
         id: 'walletId',
         type: WalletType.HD,

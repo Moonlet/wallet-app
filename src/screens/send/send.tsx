@@ -17,6 +17,8 @@ import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { IAccountState } from '../../redux/wallets/state';
 import { AccountAddress } from '../../components/account-address/account-address';
+import { AccountList } from './components/account-list/account-list';
+import { sendTransferTransaction } from '../../redux/wallets/actions';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -24,10 +26,21 @@ export interface IProps {
     theme: ITheme;
 }
 
-export const mapStateToProps = (state: IReduxState) => ({});
+export interface IReduxProps {
+    account: IAccountState;
+    accounts: IAccountState[];
+    sendTransferTransaction: typeof sendTransferTransaction;
+}
+
+export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    return {
+        account: state.wallets[state.app.currentWalletIndex].accounts[ownProps.accountIndex],
+        accounts: state.wallets[state.app.currentWalletIndex].accounts
+    };
+};
 
 export interface INavigationParams {
-    account: IAccountState;
+    accountIndex: number;
 }
 
 interface IState {
@@ -35,6 +48,7 @@ interface IState {
     amount: string;
     fee: string;
     isValidAddress: boolean;
+    showOwnAccounts: boolean;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -52,24 +66,35 @@ export const navigationOptions = ({ navigation }: any) => ({
     title: 'Send'
 });
 export class SendScreenComponent extends React.Component<
-    INavigationProps<INavigationParams> & IProps,
+    INavigationProps<INavigationParams> & IProps & IReduxProps,
     IState
 > {
     public static navigationOptions = navigationOptions;
     public qrCodeScanner: any;
-    constructor(props: INavigationProps<INavigationParams> & IProps) {
+    constructor(props: INavigationProps<INavigationParams> & IProps & IReduxProps) {
         super(props);
 
         this.state = {
             toAddress: '',
             amount: '',
             fee: '',
-            isValidAddress: false
+            isValidAddress: false,
+            showOwnAccounts: false
         };
     }
 
+    public confirmPayment = async () => {
+        this.props.sendTransferTransaction(
+            this.props.account,
+            this.state.toAddress,
+            this.state.amount
+        );
+        this.props.navigation.goBack();
+    };
+
     public onPressQrCodeIcon = async () => {
-        this.qrCodeScanner.open();
+        this.setState({ toAddress: '0xfeb8fa91f64f52ee66f7095486caaf0a1227e254', amount: '0.001' });
+        this.verifyAddress('0xfeb8fa91f64f52ee66f7095486caaf0a1227e254');
     };
 
     public verifyAddress = (text: string) => {
@@ -88,6 +113,62 @@ export class SendScreenComponent extends React.Component<
     public onQrCodeScanned = (value: string) => {
         this.verifyAddress(value);
     };
+
+    public onTransferBetweenAccounts = () => {
+        const currentState = this.state.showOwnAccounts;
+        this.setState({ showOwnAccounts: !currentState });
+    };
+
+    public onAccountSelection = (account: IAccountState) => {
+        this.setState({ toAddress: account.address, showOwnAccounts: false });
+        this.verifyAddress(account.address);
+    };
+
+    public renderBasicFields() {
+        const styles = this.props.styles;
+        const theme = this.props.theme;
+        return (
+            <View style={styles.basicFields}>
+                <View style={styles.inputBox}>
+                    <TextInput
+                        testID="amount"
+                        style={styles.input}
+                        placeholderTextColor={theme.colors.textSecondary}
+                        placeholder={translate('Send.amount')}
+                        autoCapitalize={'none'}
+                        autoCorrect={false}
+                        selectionColor={theme.colors.accent}
+                        value={this.state.amount}
+                        onChangeText={value => {
+                            this.addAmount(value);
+                        }}
+                    />
+                </View>
+                <View style={styles.inputBox}>
+                    <TextInput
+                        testID="fee"
+                        style={styles.input}
+                        placeholderTextColor={theme.colors.textSecondary}
+                        placeholder={this.state.fee}
+                        autoCorrect={false}
+                        selectionColor={theme.colors.accent}
+                        editable={false}
+                    />
+                </View>
+                <View style={styles.bottom}>
+                    <Button
+                        testID="confirm-payment"
+                        style={styles.bottomButton}
+                        primary
+                        disabled={!this.state.isValidAddress || this.state.amount === ''}
+                        onPress={this.confirmPayment}
+                    >
+                        {translate('App.labels.confirmPayment')}
+                    </Button>
+                </View>
+            </View>
+        );
+    }
 
     public render() {
         const styles = this.props.styles;
@@ -129,48 +210,26 @@ export class SendScreenComponent extends React.Component<
                         </TouchableOpacity>
                     ) : null}
                 </View>
-                {this.state.isValidAddress ? (
-                    <View style={styles.basicFields}>
-                        <View style={styles.inputBox}>
-                            <TextInput
-                                testID="amount"
-                                style={styles.input}
-                                placeholderTextColor={theme.colors.textSecondary}
-                                placeholder={translate('Send.amount')}
-                                autoCapitalize={'none'}
-                                autoCorrect={false}
-                                selectionColor={theme.colors.accent}
-                                value={this.state.amount}
-                                onChangeText={value => {
-                                    this.addAmount(value);
-                                }}
-                            />
-                        </View>
-                        <View style={styles.inputBox}>
-                            <TextInput
-                                testID="fee"
-                                style={styles.input}
-                                placeholderTextColor={theme.colors.textSecondary}
-                                placeholder={this.state.fee}
-                                autoCorrect={false}
-                                selectionColor={theme.colors.accent}
-                                editable={false}
-                            />
-                        </View>
-                        <View style={styles.bottom}>
-                            <Button
-                                testID="confirm-payment"
-                                style={styles.bottomButton}
-                                primary
-                                disabled={!this.state.isValidAddress || this.state.amount === ''}
-                                onPress={() => {
-                                    this.props.navigation.navigate('ConfirmPayment');
-                                }}
-                            >
-                                {translate('App.labels.confirmPayment')}
-                            </Button>
-                        </View>
-                    </View>
+
+                <TouchableOpacity
+                    testID="transfer-between-accounts"
+                    onPress={this.onTransferBetweenAccounts}
+                    style={[styles.buttonTransfer]}
+                >
+                    <Text style={styles.textTranferButton}>
+                        {this.state.showOwnAccounts
+                            ? translate('App.labels.close')
+                            : translate('Send.transferOwnAccounts')}
+                    </Text>
+                </TouchableOpacity>
+
+                {this.state.isValidAddress ? this.renderBasicFields() : null}
+
+                {this.state.showOwnAccounts ? (
+                    <AccountList
+                        accounts={this.props.accounts}
+                        onAccountSelection={this.onAccountSelection}
+                    />
                 ) : null}
 
                 <QrModalReader
@@ -183,7 +242,7 @@ export class SendScreenComponent extends React.Component<
 }
 
 export const SendScreen = smartConnect(SendScreenComponent, [
-    connect(mapStateToProps, {}),
+    connect(mapStateToProps, { sendTransferTransaction }),
     withTheme(stylesProvider),
     withNavigationParams()
 ]);

@@ -10,6 +10,7 @@ export const translation: ITranslations = {
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
                 create: 'Create',
+                close: 'Close',
                 next: 'Next',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
@@ -61,7 +62,8 @@ export const translation: ITranslations = {
         Send: {
             inputAddress: 'Search public addresses or domain names',
             amount: 'Amount',
-            recipientLabel: 'Recipient'
+            recipientLabel: 'Recipient',
+            transferOwnAccounts: 'Transfer between my accounts'
         },
         AccountSettings: {
             manageAccount: 'Manage account',

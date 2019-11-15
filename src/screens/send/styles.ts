@@ -78,5 +78,15 @@ export default (theme: ITheme) =>
         qrButton: {
             flexDirection: 'row',
             marginRight: BASE_DIMENSION / 2
+        },
+        buttonTransfer: {
+            marginTop: BASE_DIMENSION,
+            //  paddingRight: BASE_DIMENSION * 2,
+            alignItems: 'flex-end'
+        },
+        textTranferButton: {
+            color: theme.colors.accent,
+            lineHeight: BASE_DIMENSION * 3,
+            fontSize: theme.fontSize.small
         }
     });

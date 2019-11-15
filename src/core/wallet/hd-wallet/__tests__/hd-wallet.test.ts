@@ -23,7 +23,7 @@ describe('HDWallet', () => {
     HDKey.fromMasterSeed = jest.fn();
 
     test('loadFromStorage()', async () => {
-        const resultPromise = HDWallet.loadFromStorage('123');
+        const resultPromise = HDWallet.loadFromStorage('123', '123');
         expect(resultPromise).toBeInstanceOf(Promise);
 
         const result = await resultPromise;

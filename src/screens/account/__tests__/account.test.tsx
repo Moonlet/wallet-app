@@ -48,35 +48,11 @@ export default describe('AccountScreen', () => {
     test('Send button goes on the proper screen', () => {
         const wrapper = shallow(<AccountScreenComponent {...props} />);
         wrapper.find('[testID="button-send"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('Send', {
-            account: {
-                index: 1,
-                blockchain: Blockchain.ZILLIQA,
-                address: 'zil1vs74hw5k21233h432kj321l3k21b',
-                publicKey: '1',
-                balance: {
-                    inProgress: false,
-                    timestamp: 123,
-                    value: new BigNumber(12332)
-                }
-            }
-        });
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Send', { accountIndex: 1 });
     });
     test('Receive button goes on the proper screen', () => {
         const wrapper = shallow(<AccountScreenComponent {...props} />);
         wrapper.find('[testID="button-receive"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('Receive', {
-            account: {
-                index: 1,
-                blockchain: Blockchain.ZILLIQA,
-                address: 'zil1vs74hw5k21233h432kj321l3k21b',
-                publicKey: '1',
-                balance: {
-                    inProgress: false,
-                    timestamp: 123,
-                    value: new BigNumber(12332)
-                }
-            }
-        });
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Receive', { accountIndex: 1 });
     });
 });

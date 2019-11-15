@@ -4,10 +4,12 @@ import { Mnemonic } from './mnemonic';
 import { Blockchain, IBlockchainTransaction } from '../../blockchain/types';
 import { getBlockchain } from '../../blockchain/blockchain-factory';
 import { IAccountState } from '../../../redux/wallets/state';
+import { readEncrypted } from '../../../core/secure/storage';
 
 export class HDWallet implements IWallet {
-    public static async loadFromStorage(walletId: string): Promise<HDWallet> {
-        return Promise.resolve(new HDWallet(''));
+    public static async loadFromStorage(walletId: string, pass: string): Promise<HDWallet> {
+        const data = await readEncrypted(walletId, pass);
+        return Promise.resolve(new HDWallet(data.toString()));
     }
     private mnemonic: string;
     private hdkey: HDKey;

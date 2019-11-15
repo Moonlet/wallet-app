@@ -6,7 +6,9 @@ export interface IWalletState {
     id: string;
     type: WalletType;
     accounts: IAccountState[];
-    transactions?: Map<string, ITransactionState>;
+    transactions?: {
+        [id: string]: ITransactionState;
+    };
 }
 
 export interface IAccountState {
@@ -19,9 +21,9 @@ export interface IAccountState {
         value: BigNumber;
         inProgress: boolean;
         timestamp: number;
+        error: any;
     };
     balanceTimestamp?: number;
-    transactions?: string[];
 }
 
 export interface ITransactionState {

@@ -29,7 +29,6 @@ export interface IProps {
 export interface IReduxProps {
     wallet: IWalletState;
     currentWalletIndex: number;
-
     getBalance: typeof getBalance;
 }
 
@@ -146,6 +145,15 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
             this.balancesScrollView.scrollTo({ x: SCROLL_CARD_WIDTH * i, ANIMATED_BC_SELECTION });
         }
     };
+
+    public componentDidMount() {
+        this.props.getBalance(
+            Blockchain.ETHEREUM,
+            4,
+            '0x1b6c705252438d59DB3ADB85e3B91374377a20c9',
+            true
+        );
+    }
 
     public render() {
         const styles = this.props.styles;

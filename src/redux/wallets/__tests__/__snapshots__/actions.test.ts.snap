@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`wallet actions createHDWallet working properly 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "data": Object {
+          "accounts": Array [
+            Object {
+              "address": "0x151250cB2bB034247c8ffBeD91B7Fb1e9f3e9FFE",
+              "blockchain": "ETHEREUM",
+              "index": 0,
+              "publicKey": "22d185a1eda6240e2004a4794e50daff53eb3e5194bf21d4cca3be002688566ee2af4d5724dbe507646649193e5f8368ee63fb257147fbb2bafed87e63717c68",
+            },
+            Object {
+              "address": "0x6D179861ea6C879269Fa65b71119e86b3e075c64",
+              "blockchain": "ETHEREUM",
+              "index": 1,
+              "publicKey": "d95dadc866a4acbbf37fb7347f26ddf59955c0b978f7356861e2e7e7a17eaaa07e632630ee164969b84a196e724acbd0ad9b230276c694c0de2fb9fc05239398",
+            },
+          ],
+          "id": "uuid",
+          "type": "HD",
+        },
+        "type": "WALLET_ADD",
+      },
+    ],
+    Array [
+      Object {
+        "data": -1,
+        "type": "APP_STATE_SWITCH_WALLET",
+      },
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;

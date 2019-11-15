@@ -35,7 +35,6 @@ export default (theme: ITheme) =>
         },
         inputBoxAddress: {
             height: 44,
-            marginTop: 40,
             borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',

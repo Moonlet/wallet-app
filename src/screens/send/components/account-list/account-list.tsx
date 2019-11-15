@@ -34,22 +34,24 @@ export class AccountListComponent extends React.Component<IProps & IExternalProp
             <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>
                 {accounts &&
                     accounts.map((account: IAccountState, i: number) => (
-                        <TouchableOpacity
-                            key={i}
-                            style={styles.rowContainer}
-                            onPress={() => {
-                                this.props.onAccountSelection(account);
-                            }}
-                        >
-                            <View style={styles.leftColumn}>
-                                <Text style={styles.name}>Account {i + 1}</Text>
-                                <Text style={styles.address}>
-                                    {this.truncateMiddle(account.address)}
-                                </Text>
-                            </View>
-                            <Icon name="add-circle" size={24} style={styles.icon} />
+                        <View key={i}>
+                            <TouchableOpacity
+                                key={i}
+                                style={styles.rowContainer}
+                                onPress={() => {
+                                    this.props.onAccountSelection(account);
+                                }}
+                            >
+                                <View style={styles.leftColumn}>
+                                    <Text style={styles.name}>Account {i + 1}</Text>
+                                    <Text style={styles.address}>
+                                        {this.truncateMiddle(account.address)}
+                                    </Text>
+                                </View>
+                                <Icon name="add-circle" size={24} style={styles.icon} />
+                            </TouchableOpacity>
                             <View style={styles.divider} />
-                        </TouchableOpacity>
+                        </View>
                     ))}
             </ScrollView>
         );

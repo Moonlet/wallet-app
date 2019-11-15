@@ -32,6 +32,7 @@ export default (theme: ITheme) =>
             backgroundColor: 'rgba(0,0,0,0.4)'
         },
         icon: {
+            alignSelf: 'center',
             color: theme.colors.accent,
             padding: 4
         },

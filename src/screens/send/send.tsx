@@ -116,7 +116,7 @@ export class SendScreenComponent extends React.Component<
 
     public onTransferBetweenAccounts = () => {
         const currentState = this.state.showOwnAccounts;
-        this.setState({ showOwnAccounts: !currentState });
+        this.setState({ showOwnAccounts: !currentState, isValidAddress: false, toAddress: '' });
     };
 
     public onAccountSelection = (account: IAccountState) => {
@@ -178,15 +178,10 @@ export class SendScreenComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <AccountAddress account={account} />
-                {this.state.toAddress !== '' ? (
-                    <Text style={styles.receipientLabel}>{translate('Send.recipientLabel')}</Text>
-                ) : null}
-                <View
-                    style={[
-                        styles.inputBoxAddress,
-                        { marginTop: this.state.toAddress !== '' ? 0 : 40 }
-                    ]}
-                >
+                <Text style={styles.receipientLabel}>
+                    {this.state.toAddress !== '' ? translate('Send.recipientLabel') : ' '}
+                </Text>
+                <View style={[styles.inputBoxAddress]}>
                     <TextInput
                         testID="input-address"
                         style={styles.inputAddress}

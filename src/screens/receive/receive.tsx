@@ -13,6 +13,7 @@ import { IAccountState } from '../../redux/wallets/state';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
+import { selectCurrentWallet } from '../../redux/wallets/selectors';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -29,7 +30,7 @@ export interface IReduxProps {
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
-        account: state.wallets[state.app.currentWalletIndex].accounts[ownProps.accountIndex]
+        account: selectCurrentWallet(state).accounts[ownProps.accountIndex]
     };
 };
 

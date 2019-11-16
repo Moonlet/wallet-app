@@ -19,6 +19,7 @@ import { IAccountState } from '../../redux/wallets/state';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { AccountList } from './components/account-list/account-list';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
+import { selectCurrentWallet } from '../../redux/wallets/selectors';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -34,8 +35,8 @@ export interface IReduxProps {
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
-        account: state.wallets[state.app.currentWalletIndex].accounts[ownProps.accountIndex],
-        accounts: state.wallets[state.app.currentWalletIndex].accounts
+        account: selectCurrentWallet(state).accounts[ownProps.accountIndex],
+        accounts: selectCurrentWallet(state).accounts
     };
 };
 

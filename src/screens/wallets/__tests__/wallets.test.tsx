@@ -17,6 +17,7 @@ const props: IProps & IReduxProps = {
             {
                 id: 'walletId',
                 type: WalletType.HD,
+                name: 'some',
                 accounts: []
             }
         ],

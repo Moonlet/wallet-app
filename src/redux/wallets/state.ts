@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js';
 
 export interface IWalletState {
     id: string;
+    name: string;
     type: WalletType;
     accounts: IAccountState[];
     transactions?: {

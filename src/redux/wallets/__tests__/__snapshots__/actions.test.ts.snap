@@ -21,6 +21,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
             },
           ],
           "id": "uuid",
+          "name": "Wallet 1",
           "type": "HD",
         },
         "type": "WALLET_ADD",
@@ -28,7 +29,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
     ],
     Array [
       Object {
-        "data": -1,
+        "data": "uuid",
         "type": "APP_STATE_SWITCH_WALLET",
       },
     ],

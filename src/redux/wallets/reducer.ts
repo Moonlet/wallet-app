@@ -1,6 +1,6 @@
 import { IAction } from '../types';
 import { IWalletState, ITransactionState } from './state';
-import { WALLET_ADD, ACCOUNT_GET_BALANCE, TRANSACTION_PUBLISHED } from './actions';
+import { WALLET_ADD, WALLET_DELETE, ACCOUNT_GET_BALANCE, TRANSACTION_PUBLISHED } from './actions';
 
 const intialState: IWalletState[] = [];
 
@@ -20,6 +20,7 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
         case WALLET_ADD:
             //    return [...state, action.data];
             return [action.data]; // this will reset persisted redux wallets
+
         case ACCOUNT_GET_BALANCE: {
             return state.map(wallet =>
                 wallet.id === action.data.walletId
@@ -38,33 +39,37 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
                     : wallet
             );
         }
-        case TRANSACTION_PUBLISHED: {
-            const transaction: ITransactionState = {
-                id: action.data.hash,
-                date: new Date(),
-                fromAddress: action.data.tx.from,
-                toAddress: action.data.tx.to,
-                amount: action.data.tx.amount,
-                nonce: action.data.tx.options.nonce,
-                block: undefined,
-                feeOptions: {
-                    gasPrice: action.data.tx.options.gasPrice,
-                    gasLimit: action.data.tx.options.gasLimit,
-                    usedGas: undefined
-                }
-            };
-            return state.map(wallet =>
-                wallet.id === action.data.walletId
-                    ? {
-                          ...wallet,
-                          transactions: {
-                              ...wallet.transactions,
-                              [action.data.hash]: transaction
+        case TRANSACTION_PUBLISHED:
+            {
+                const transaction: ITransactionState = {
+                    id: action.data.hash,
+                    date: new Date(),
+                    fromAddress: action.data.tx.from,
+                    toAddress: action.data.tx.to,
+                    amount: action.data.tx.amount,
+                    nonce: action.data.tx.options.nonce,
+                    block: undefined,
+                    feeOptions: {
+                        gasPrice: action.data.tx.options.gasPrice,
+                        gasLimit: action.data.tx.options.gasLimit,
+                        usedGas: undefined
+                    }
+                };
+                return state.map(wallet =>
+                    wallet.id === action.data.walletId
+                        ? {
+                              ...wallet,
+                              transactions: {
+                                  ...wallet.transactions,
+                                  [action.data.hash]: transaction
+                              }
                           }
-                      }
-                    : wallet
-            );
-        }
+                        : wallet
+                );
+            }
+            return [...state, action.data];
+        case WALLET_DELETE:
+            return state.filter((wallet: IWalletState) => action.data !== wallet.id);
         default:
             break;
     }

@@ -94,7 +94,6 @@ export const translation: ITranslations = {
         },
         Transaction: {
             transactionID: 'Transaction ID',
-
             nonce: 'Nonce',
             statusValue: {
                 Pending: 'Pending',

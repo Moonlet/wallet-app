@@ -87,6 +87,9 @@ export const translation: ITranslations = {
             unveilPasswordRequest: 'Please type your password to unveil your recovery phrase.',
             invalidPassword: 'Invalid Password',
             viewPhrase: 'View phrase'
+        },
+        Transaction: {
+            transactionID: 'Transaction ID'
         }
     },
     plural: (n: number, ord?: boolean) => {

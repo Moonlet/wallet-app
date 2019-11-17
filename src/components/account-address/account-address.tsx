@@ -7,6 +7,7 @@ import { ITheme } from '../../core/theme/itheme';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { formatAddress } from '../../core/utils/format-address';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -21,17 +22,9 @@ export const AccountAddressComponent = (props: IProps & IExternalProps) => {
     const styles = props.styles;
     const coin = BLOCKCHAIN_INFO[props.account.blockchain].coin;
 
-    const truncateMiddle = (text: string) => {
-        let convertedStr = '';
-        convertedStr += text.substring(0, 5);
-        convertedStr += '.'.repeat(5);
-        convertedStr += text.substring(text.length - 5, text.length);
-        return convertedStr;
-    };
-
     return (
         <View style={styles.container}>
-            <Text style={styles.address}>{truncateMiddle(props.account.address)}</Text>
+            <Text style={styles.address}>{formatAddress(props.account.address)}</Text>
             <View style={styles.balanceContainer}>
                 <Text style={styles.balance} format={{ currency: coin }}>
                     {props.account.balance?.value?.toString()}

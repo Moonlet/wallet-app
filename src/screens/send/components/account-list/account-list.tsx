@@ -7,6 +7,7 @@ import { ITheme } from '../../../../core/theme/itheme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { IAccountState } from '../../../../redux/wallets/state';
+import { formatAddress } from '../../../../core/utils/format-address';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -19,14 +20,6 @@ export interface IExternalProps {
 }
 
 export class AccountListComponent extends React.Component<IProps & IExternalProps> {
-    public truncateMiddle = (text: string) => {
-        let convertedStr = '';
-        convertedStr += text.substring(0, 5);
-        convertedStr += '.'.repeat(5);
-        convertedStr += text.substring(text.length - 5, text.length);
-        return convertedStr;
-    };
-
     public render() {
         const styles = this.props.styles;
         const accounts = this.props.accounts;
@@ -45,7 +38,7 @@ export class AccountListComponent extends React.Component<IProps & IExternalProp
                                 <View style={styles.leftColumn}>
                                     <Text style={styles.name}>Account {i + 1}</Text>
                                     <Text style={styles.address}>
-                                        {this.truncateMiddle(account.address)}
+                                        {formatAddress(account.address)}
                                     </Text>
                                 </View>
                                 <Icon name="add-circle" size={24} style={styles.icon} />

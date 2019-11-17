@@ -14,6 +14,7 @@ export interface IWalletState {
 
 export interface IAccountState {
     index: number;
+    name?: string;
     blockchain: Blockchain;
     address: string;
     publicKey: string;

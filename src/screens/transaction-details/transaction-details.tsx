@@ -11,9 +11,10 @@ import { connect } from 'react-redux';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { ITransactionState, IAccountState } from '../../redux/wallets/state';
+import { formatAddress } from '../../core/utils/format-address';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -22,18 +23,18 @@ export interface IProps {
 }
 
 export interface IReduxProps {
-    transaction: ITransactionState;
     account: IAccountState;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
-        transaction: state.wallets[state.app.currentWalletIndex].accounts[ownProps.accountIndex]
+        account: state.wallets[state.app.currentWalletIndex].accounts[ownProps.accountIndex]
     };
 };
 
 export interface INavigationParams {
     accountIndex: number;
+    transaction: ITransactionState;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -48,7 +49,7 @@ export const navigationOptions = ({ navigation }: any) => ({
             />
         );
     },
-    title: 'Send'
+    title: 'Details'
 });
 export class TransactionDetailsComponent extends React.Component<
     INavigationProps<INavigationParams> & IProps & IReduxProps
@@ -68,6 +69,13 @@ export class TransactionDetailsComponent extends React.Component<
 
     public render() {
         const styles = this.props.styles;
+        const transaction = this.props.transaction;
+        const account = this.props.account;
+        const amount =
+            BLOCKCHAIN_INFO[account.blockchain].coin +
+            ' ' +
+            transaction.amount.toString().slice(0, 5);
+        const date = new Date(transaction.date.signed);
         return (
             <ScrollView style={styles.container}>
                 <TouchableOpacity
@@ -75,11 +83,54 @@ export class TransactionDetailsComponent extends React.Component<
                     style={styles.rowContainer}
                     onPress={this.goToExplorer}
                 >
-                    <Text style={styles.textRow}>{translate('Transaction.transactionID')}</Text>
-                    <View style={styles.rightContainer}>
-                        <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                    <View>
+                        <Text style={styles.textPrimary}>{transaction.id.slice(0, 40)}</Text>
+                        <Text style={styles.textSecondary}>
+                            {translate('Transaction.transactionID')}
+                        </Text>
                     </View>
+                    <Icon name="arrow-right-1" size={16} style={styles.icon} />
                 </TouchableOpacity>
+                <View style={styles.rowContainer}>
+                    <View>
+                        <Text style={styles.textPrimary}>
+                            {formatAddress(transaction.fromAddress)}
+                        </Text>
+                        <Text style={styles.textSecondary}>{translate('Transaction.from')}</Text>
+                    </View>
+                </View>
+                <View style={styles.rowContainer}>
+                    <View>
+                        <Text style={styles.textPrimary}>
+                            {formatAddress(transaction.toAddress)}
+                        </Text>
+                        <Text style={styles.textSecondary}>{translate('Transaction.to')}</Text>
+                    </View>
+                </View>
+                <View style={styles.rowContainer}>
+                    <View>
+                        <Text style={styles.textPrimary}>{date.toISOString()}</Text>
+                        <Text style={styles.textSecondary}>{translate('App.labels.date')}</Text>
+                    </View>
+                </View>
+                <View style={styles.rowContainer}>
+                    <View>
+                        <Text style={styles.textPrimary}>{amount}</Text>
+                        <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
+                    </View>
+                </View>
+                <View style={styles.rowContainer}>
+                    <View>
+                        <Text style={styles.textPrimary}>{transaction.nonce}</Text>
+                        <Text style={styles.textSecondary}>{translate('Transaction.nonce')}</Text>
+                    </View>
+                </View>
+                <View style={styles.rowContainer}>
+                    <View>
+                        <Text style={styles.textPrimary}>{transaction.status.toString()}</Text>
+                        <Text style={styles.textSecondary}>{translate('Transaction.status')}</Text>
+                    </View>
+                </View>
             </ScrollView>
         );
     }

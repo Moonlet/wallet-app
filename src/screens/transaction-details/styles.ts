@@ -5,7 +5,7 @@ import { BASE_DIMENSION } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingTop: 40,
+            paddingTop: 24,
             paddingBottom: BASE_DIMENSION * 2,
             paddingLeft: BASE_DIMENSION * 2,
             paddingRight: BASE_DIMENSION * 2,
@@ -14,23 +14,26 @@ export default (theme: ITheme) =>
             ...StyleSheet.absoluteFillObject
         },
         rowContainer: {
+            flex: 1,
             flexDirection: 'row',
-            paddingVertical: 6
+            justifyContent: 'space-between',
+            paddingVertical: BASE_DIMENSION
         },
         icon: {
             color: theme.colors.accent,
-            marginHorizontal: 0
+            marginHorizontal: 0,
+            alignSelf: 'center'
         },
-        textRow: {
-            fontSize: 16,
-            alignItems: 'center',
-            lineHeight: 30
-        },
-        rightContainer: {
-            flexDirection: 'row',
-            justifyContent: 'flex-end',
+        textPrimary: {
+            fontSize: theme.fontSize.regular,
             alignItems: 'center',
             flex: 1,
-            paddingRight: 8
+            lineHeight: BASE_DIMENSION * 3
+        },
+        textSecondary: {
+            fontSize: theme.fontSize.regular,
+            color: theme.colors.textSecondary,
+            alignItems: 'center',
+            lineHeight: BASE_DIMENSION * 3
         }
     });

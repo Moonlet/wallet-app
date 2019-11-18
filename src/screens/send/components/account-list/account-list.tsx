@@ -35,7 +35,7 @@ export class AccountListComponent extends React.Component<IProps & IExternalProp
                                     this.props.onAccountSelection(account);
                                 }}
                             >
-                                <View style={styles.leftColumn}>
+                                <View>
                                     <Text style={styles.name}>Account {i + 1}</Text>
                                     <Text style={styles.address}>
                                         {formatAddress(account.address)}

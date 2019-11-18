@@ -73,7 +73,8 @@ describe('Ethereum account', () => {
             index: 1,
             blockchain: Blockchain.ETHEREUM,
             address: 'ADDRESS',
-            publicKey: 'PUBLIC_KEY'
+            publicKey: 'PUBLIC_KEY',
+            name: 'Account 2'
         });
 
         // TODO: test with invalid privatekey, without mocks

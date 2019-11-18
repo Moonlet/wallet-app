@@ -2,7 +2,8 @@ import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
-import { IAccountState } from '../../redux/wallets/state';
+import { IAccountState, ITransactionState } from '../../redux/wallets/state';
+import { getAccountTransactions } from '../../redux/wallets/selectors';
 import { IReduxState } from '../../redux/state';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { withTheme } from '../../core/theme/with-theme';
@@ -14,6 +15,8 @@ import { Icon } from '../../components/icon';
 import { AccountSettings } from './components/account-settings/account-settings';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { AccountAddress } from '../../components/account-address/account-address';
+import { formatAddress } from '../../core/utils/format-address';
+import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -21,12 +24,21 @@ export interface IProps {
 }
 
 export interface IReduxProps {
-    accountx: IAccountState;
+    account: IAccountState;
+    transactions: { [id: string]: ITransactionState };
 }
 
+export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    return {
+        account: state.wallets[state.app.currentWalletIndex].accounts[ownProps.accountIndex],
+        transactions: getAccountTransactions(state)
+    };
+};
+
 export interface INavigationParams {
-    account: IAccountState;
+    accountIndex: number;
 }
+
 interface IState {
     settingsVisible: boolean;
 }
@@ -66,8 +78,18 @@ export class AccountScreenComponent extends React.Component<
         this.setState({ settingsVisible: !this.state.settingsVisible });
     };
 
+    public firstLine = (tx: ITransactionState, account: IAccountState) => {
+        const amount =
+            tx.amount.toString().slice(0, 5) + ' ' + BLOCKCHAIN_INFO[account.blockchain].coin + ' ';
+        const x =
+            tx.fromAddress === account.address
+                ? translate('App.labels.to')
+                : translate('App.labels.from');
+        return amount + '' + x + ' ' + formatAddress(tx.toAddress);
+    };
+
     public render() {
-        const { styles, navigation, account } = this.props;
+        const { styles, navigation, account, transactions } = this.props;
         const accountIndex = account.index;
         return (
             <ScrollView style={styles.container}>
@@ -93,37 +115,52 @@ export class AccountScreenComponent extends React.Component<
                     </Button>
                 </View>
 
-                <View style={styles.transactionsContainer}>
-                    <Translate text="App.labels.transactions" style={styles.transactionsTitle} />
+                {transactions ? (
+                    <View style={styles.transactionsContainer}>
+                        <Translate
+                            text="App.labels.transactions"
+                            style={styles.transactionsTitle}
+                        />
+                        <View>
+                            {Object.keys(transactions).map(id => {
+                                const tx = transactions[id];
+                                const date = new Date(tx.date.signed);
 
-                    <View>
-                        {['', '', ''].map(tx => (
-                            <TouchableOpacity
-                                key={Math.random()}
-                                style={styles.transactionListItem}
-                            >
-                                <Icon
-                                    name="money-wallet-1"
-                                    size={24}
-                                    style={styles.transactionIcon}
-                                />
-                                <View style={styles.transactionTextContainer}>
-                                    <Text style={styles.transactionTextPrimary}>
-                                        100 ZIL to Account1
-                                    </Text>
-                                    <Text style={styles.transactionTextSecondary}>
-                                        26/06/2019, 23:22:55
-                                    </Text>
-                                </View>
-                                <Icon
-                                    name="arrow-right-1"
-                                    size={16}
-                                    style={styles.transactionRightIcon}
-                                />
-                            </TouchableOpacity>
-                        ))}
+                                return (
+                                    <TouchableOpacity
+                                        key={id}
+                                        style={styles.transactionListItem}
+                                        onPress={() => {
+                                            navigation.navigate('TransactionDetails', {
+                                                transaction: tx,
+                                                accountIndex: account.index
+                                            });
+                                        }}
+                                    >
+                                        <Icon
+                                            name="money-wallet-1"
+                                            size={24}
+                                            style={styles.transactionIcon}
+                                        />
+                                        <View style={styles.transactionTextContainer}>
+                                            <Text style={styles.transactionTextPrimary}>
+                                                {this.firstLine(tx, account)}
+                                            </Text>
+                                            <Text style={styles.transactionTextSecondary}>
+                                                {date.toISOString()}
+                                            </Text>
+                                        </View>
+                                        <Icon
+                                            name="arrow-right-1"
+                                            size={16}
+                                            style={styles.transactionRightIcon}
+                                        />
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
                     </View>
-                </View>
+                ) : null}
                 {this.state.settingsVisible ? (
                     //
                     <AccountSettings
@@ -135,14 +172,6 @@ export class AccountScreenComponent extends React.Component<
         );
     }
 }
-
-export const mapStateToProps = (state: IReduxState, ownProps: IProps): IReduxProps & IProps => {
-    const accountx = {} as any;
-    return {
-        ...ownProps,
-        accountx
-    };
-};
 
 export const AccountScreen = smartConnect(AccountScreenComponent, [
     connect(mapStateToProps, null),

@@ -1,4 +1,4 @@
-import { WalletType } from '../../core/wallet/types';
+import { WalletType, TransactionStatus } from '../../core/wallet/types';
 import { Blockchain } from '../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 
@@ -30,13 +30,19 @@ export interface IAccountState {
 
 export interface ITransactionState {
     id: string;
-    date: Date;
+    date: {
+        created: number;
+        signed: number;
+        broadcasted: number;
+        confirmed: number;
+    };
     fromAddress: string;
     toAddress: string;
     amount: BigNumber;
     feeOptions: IFeeOptionsState;
     block: number;
     nonce: number;
+    status: TransactionStatus;
 }
 
 export interface IFeeOptionsState {

@@ -14,6 +14,8 @@ export const translation: ITranslations = {
                 create: 'Create',
                 delete: 'Delete',
                 error: 'Error',
+                date: 'Date',
+                from: 'from',
                 next: 'Next',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
@@ -23,6 +25,7 @@ export const translation: ITranslations = {
                 send: 'Send',
                 tos: 'Terms of service',
                 transactions: 'Transactions',
+                to: 'to',
                 understand: 'I understand'
                 // plase try to add keys in alphabetic order
             },
@@ -89,7 +92,11 @@ export const translation: ITranslations = {
             viewPhrase: 'View phrase'
         },
         Transaction: {
-            transactionID: 'Transaction ID'
+            transactionID: 'Transaction ID',
+            from: 'From',
+            to: 'To',
+            status: 'Status',
+            nonce: 'Nonce'
         }
     },
     plural: (n: number, ord?: boolean) => {

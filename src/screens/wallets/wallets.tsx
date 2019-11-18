@@ -7,29 +7,25 @@ import {
     NavigationActions
 } from 'react-navigation';
 import { IReduxState } from '../../redux/state';
-import { withTheme } from '../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { HeaderLeft } from '../../components/header-left/header-left';
-import { TabSelect, Text, Swipeable, Button } from '../../library';
+import { TabSelect, Text, Button } from '../../library';
 import { WalletType } from '../../core/wallet/types';
 import { IWalletState } from '../../redux/wallets/state';
 import Icon from '../../components/icon';
 
-import { ITheme } from '../../core/theme/itheme';
 import { translate } from '../../core/i18n';
 import { appSwitchWallet } from '../../redux/app/actions';
 import { PasswordModal } from '../../components/password-modal/password-modal';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import stylesProvider from './styles';
-import { hash } from '../../core/secure/encrypt';
-import { readEncrypted } from '../../core/secure/storage';
 import { deleteWallet } from '../../redux/wallets/actions';
+import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
 }
 
 export interface IReduxProps {
@@ -45,10 +41,10 @@ export interface IReduxProps {
 
 interface IState {
     selectedTab: WalletType;
-    showPasswordModal: boolean;
+    openedSwipeIndex: number;
 }
 
-export const mapStateToProps = (state: IReduxState) => {
+const mapStateToProps = (state: IReduxState) => {
     return {
         wallets: {
             // TODO reselect? https://github.com/reduxjs/reselect
@@ -67,32 +63,27 @@ const mapDispatchToProps = {
     deleteWallet
 };
 
-export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: () => {
-        return (
-            <HeaderLeft
-                icon="close"
-                text="Close"
-                onPress={() => {
-                    navigation.goBack();
-                }}
-            />
-        );
-    },
+const navigationOptions = ({ navigation }: any) => ({
+    headerLeft: <HeaderLeftClose navigation={navigation} />,
     title: 'Wallets'
 });
 
-export class WalletsScreenComponent extends React.Component<IProps & IReduxProps, IState> {
+export class WalletsScreenComponent extends React.Component<
+    IProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps,
+    IState
+> {
     public static navigationOptions = navigationOptions;
     public passwordModal = null;
     public passwordModalRef: any;
+    // public walletSwipableRef: RefObject<typeof Swipeable>[] = new Array();
+    public walletSwipableRef: any[] = new Array();
 
     constructor(props) {
         super(props);
 
         this.state = {
             selectedTab: WalletType.HD,
-            showPasswordModal: false
+            openedSwipeIndex: -1
         };
     }
 
@@ -149,6 +140,7 @@ export class WalletsScreenComponent extends React.Component<IProps & IReduxProps
             {
                 text: translate('App.labels.delete'),
                 onPress: () => {
+                    this.closeCurrentOpenedSwipable();
                     this.onDeleteConfirmed(wallet);
                 }
             }
@@ -156,34 +148,14 @@ export class WalletsScreenComponent extends React.Component<IProps & IReduxProps
     }
 
     public onDeleteConfirmed(wallet: IWalletState) {
-        // request password
-        this.setState({
-            showPasswordModal: true
-        });
-
-        this.passwordModalRef.requestPassword(async password => {
-            // verify password by decrypting mnemonic (?)
-            try {
-                const passHash = await hash(password);
-                const mnemonic = await readEncrypted(wallet.id, passHash);
-
-                if (mnemonic) {
-                    this.props.deleteWallet(wallet.id);
-                    this.setState({
-                        showPasswordModal: false
-                    });
-                }
-            } catch (e) {
-                // invalid password
-                if (e.code === 'decrypt_fail') {
-                    Alert.alert(
-                        translate('App.labels.error'),
-                        translate('Wallets.invalidPassword'),
-                        [{ text: 'Ok' }]
-                    );
-                }
+        this.passwordModalRef.requestPassword().then(
+            () => {
+                this.props.deleteWallet(wallet.id);
+            },
+            () => {
+                // @ts-ignore
             }
-        });
+        );
     }
 
     public onPressUnveil(wallet: any) {
@@ -220,6 +192,7 @@ export class WalletsScreenComponent extends React.Component<IProps & IReduxProps
                         size={32}
                         style={styles.iconActionPositive}
                         onPress={() => {
+                            this.closeCurrentOpenedSwipable();
                             this.onPressUnveil(wallet);
                         }}
                     />
@@ -237,6 +210,11 @@ export class WalletsScreenComponent extends React.Component<IProps & IReduxProps
             </View>
         );
     };
+
+    public closeCurrentOpenedSwipable() {
+        this.walletSwipableRef[this.state.openedSwipeIndex] &&
+            this.walletSwipableRef[this.state.openedSwipeIndex].close();
+    }
 
     public render() {
         const styles = this.props.styles;
@@ -259,7 +237,21 @@ export class WalletsScreenComponent extends React.Component<IProps & IReduxProps
                     {this.props.wallets[this.state.selectedTab].map((wallet, i) => {
                         return (
                             <Swipeable
+                                ref={ref => {
+                                    this.walletSwipableRef[i] = ref;
+                                }}
                                 renderLeftActions={() => this.renderLeftActions(wallet)}
+                                onSwipeableWillOpen={() => {
+                                    if (
+                                        i !== this.state.openedSwipeIndex &&
+                                        this.walletSwipableRef[this.state.openedSwipeIndex]
+                                    ) {
+                                        this.walletSwipableRef[this.state.openedSwipeIndex].close();
+                                    }
+                                    this.setState({
+                                        openedSwipeIndex: i
+                                    });
+                                }}
                                 key={i}
                             >
                                 <TouchableHighlight onPress={() => this.onSelectWallet(wallet.id)}>
@@ -326,12 +318,7 @@ export class WalletsScreenComponent extends React.Component<IProps & IReduxProps
                 <PasswordModal
                     buttonLabel={translate('Wallets.deleteWallet')}
                     infoText={translate('Wallets.deletePasswordRequest')}
-                    onReject={() => {
-                        this.setState({
-                            showPasswordModal: false
-                        });
-                    }}
-                    visible={this.state.showPasswordModal}
+                    visible={false}
                     obRef={ref => (this.passwordModalRef = ref)}
                 />
             </View>

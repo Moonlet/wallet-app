@@ -1,77 +1,55 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
+import { View } from 'react-native';
 import { Text } from '../../library';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { Button } from '../../library/button/button';
 
 import stylesProvider from './styles';
-import { withTheme } from '../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
-import { HeaderLeft } from '../../components/header-left/header-left';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { hash } from '../../core/secure/encrypt';
-import { readEncrypted } from '../../core/secure/storage';
+import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
+import { IWalletState } from '../../redux/wallets/state';
+import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
+import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
 
-export interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    styles: ReturnType<typeof stylesProvider>;
+export interface INavigationParams {
+    wallet: IWalletState;
 }
 
 interface IState {
     mnemonic: string[];
-    showPasswordModal: boolean;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: () => {
-        return (
-            <HeaderLeft
-                icon="close"
-                text="Close"
-                onPress={() => {
-                    navigation.goBack(null);
-                }}
-            />
-        );
-    },
-    title: 'View phrase'
+    headerLeft: <HeaderLeftClose navigation={navigation} />,
+    title: translate('Wallets.viewPhrase')
 });
 
-export class ViewWalletMnemonicScreenComponent extends React.Component<IProps, IState> {
+export class ViewWalletMnemonicScreenComponent extends React.Component<
+    INavigationProps<INavigationParams> & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
     public static navigationOptions = navigationOptions;
+    public passwordModal: any;
 
     constructor(props: any) {
         super(props);
         this.state = {
-            mnemonic: new Array(24).fill(''),
-            showPasswordModal: true
+            mnemonic: new Array(24).fill('')
         };
     }
 
-    public async onEnterPassword(password) {
-        const walletId = this.props.navigation.state?.params?.wallet.id;
-
-        if (!walletId) {
-            // TODO show an error?
-            this.props.navigation.goBack(null);
-        }
-
-        try {
-            const passHash = await hash(password);
-            const mnemonic = await readEncrypted(walletId, passHash);
-
-            this.setState({
-                showPasswordModal: false,
-                mnemonic: mnemonic.split(' ')
-            });
-        } catch (e) {
-            if (e.code === 'decrypt_fail') {
-                Alert.alert(translate('App.labels.error'), translate('Wallets.invalidPassword'), [
-                    { text: 'Ok' }
-                ]);
+    public componentDidMount() {
+        this.passwordModal.requestPassword().then(
+            password => {
+                this.populateMnemonic(password);
+            },
+            () => {
+                this.props.navigation.goBack(null);
             }
-        }
+        );
     }
 
     public render() {
@@ -113,19 +91,38 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<IProps, I
                 <PasswordModal
                     buttonLabel={translate('Wallets.unveil')}
                     infoText={translate('Wallets.unveilPasswordRequest')}
-                    visible={this.state.showPasswordModal}
-                    onReject={() => {
-                        this.props.navigation.goBack(null);
-                    }}
-                    onConfirm={password => {
-                        this.onEnterPassword(password);
-                    }}
+                    visible={true}
+                    obRef={ref => (this.passwordModal = ref)}
                 />
             </View>
         );
     }
+
+    private async populateMnemonic(password) {
+        const walletId = this.props.navigation.state?.params?.wallet.id;
+
+        if (!walletId) {
+            // TODO show an error?
+            this.props.navigation.goBack(null);
+        }
+
+        try {
+            const passHash = await hash(password);
+
+            const wallet = await HDWallet.loadFromStorage(walletId, passHash);
+            const mnemonic = wallet.getMnemonic();
+
+            this.setState({
+                mnemonic: mnemonic.split(' ')
+            });
+        } catch (e) {
+            // something went wrong
+            this.props.navigation.goBack(null);
+        }
+    }
 }
 
 export const ViewWalletMnemonicScreen = smartConnect(ViewWalletMnemonicScreenComponent, [
-    withTheme(stylesProvider)
+    withTheme(stylesProvider),
+    withNavigationParams()
 ]);

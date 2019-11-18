@@ -85,7 +85,8 @@ export const translation: ITranslations = {
                 'Make sure you have saved securely your recovery phrase before deleting it',
             deletePasswordRequest: 'Please type your password to delete your wallet.',
             unveilPasswordRequest: 'Please type your password to unveil your recovery phrase.',
-            invalidPassword: 'Invalid Password'
+            invalidPassword: 'Invalid Password',
+            viewPhrase: 'View phrase'
         }
     },
     plural: (n: number, ord?: boolean) => {

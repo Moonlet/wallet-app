@@ -2,11 +2,13 @@ import React from 'react';
 import { View, Modal, TouchableHighlight, TextInput, Platform } from 'react-native';
 import { translate } from '../../core/i18n';
 import Icon from '../icon';
-import { withTheme } from '../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { Button, Text } from '../../library';
 import { HeaderLeft } from '../header-left/header-left';
-import { ITheme } from '../../core/theme/itheme';
+import { Deferred } from '../../redux/utils/deferred';
+import { smartConnect } from '../../core/utils/smart-connect';
+import bind from 'bind-decorator';
 
 const STATUSBAR_HEIGHT = Platform.select({
     ios: 20,
@@ -14,41 +16,52 @@ const STATUSBAR_HEIGHT = Platform.select({
 });
 
 export interface IProps {
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
     visible: boolean;
     infoText: string;
     buttonLabel: string;
-    onReject: any;
-    onConfirm: any;
     obRef: any;
 }
 
 interface IState {
     password: string;
+    visible: boolean;
     revealPassword: boolean;
 }
 
-export class PasswordModalComponent extends React.Component<IProps, IState> {
+export class PasswordModalComponent extends React.Component<
+    IProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
     public onReject: any;
     public onConfirm: any;
+    private passwordRequestDeferred;
 
-    constructor(props: IProps) {
+    constructor(props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
         this.state = {
             password: '',
-            revealPassword: false
+            revealPassword: false,
+            visible: !!props.visible || false
         };
-
-        props.onReject && (this.onReject = props.onReject);
-        props.onConfirm && (this.onConfirm = props.onConfirm);
 
         props.obRef && props.obRef(this);
     }
 
-    public requestPassword(callback) {
-        this.onConfirm = callback;
+    public requestPassword(): Promise<string> {
+        this.passwordRequestDeferred = new Deferred();
+        this.setState({ visible: true });
+        return this.passwordRequestDeferred.promise;
+    }
+
+    @bind
+    public onEnterPassword() {
+        // validate password
+
+        this.passwordRequestDeferred && this.passwordRequestDeferred.resolve(this.state.password);
+        this.setState({
+            visible: false
+        });
     }
 
     public render() {
@@ -56,7 +69,7 @@ export class PasswordModalComponent extends React.Component<IProps, IState> {
             <Modal
                 animationType="none"
                 transparent={false}
-                visible={!!this.props.visible}
+                visible={this.state.visible}
                 presentationStyle={'overFullScreen'}
             >
                 {
@@ -73,7 +86,10 @@ export class PasswordModalComponent extends React.Component<IProps, IState> {
                         icon="close"
                         text={translate('App.labels.close')}
                         onPress={() => {
-                            this.onReject && this.onReject();
+                            this.setState({
+                                visible: false
+                            });
+                            this.passwordRequestDeferred && this.passwordRequestDeferred.reject();
                         }}
                     />
                 </View>
@@ -119,9 +135,7 @@ export class PasswordModalComponent extends React.Component<IProps, IState> {
                         <Button
                             style={this.props.styles.bottomButton}
                             primary
-                            onPress={() => {
-                                this.onConfirm && this.onConfirm(this.state.password);
-                            }}
+                            onPress={this.onEnterPassword}
                         >
                             {this.props.buttonLabel}
                         </Button>
@@ -132,4 +146,6 @@ export class PasswordModalComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const PasswordModal = withTheme(stylesProvider)(PasswordModalComponent);
+export const PasswordModal = smartConnect<IProps>(PasswordModalComponent, [
+    withTheme(stylesProvider)
+]);

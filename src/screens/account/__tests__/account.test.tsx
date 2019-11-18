@@ -49,11 +49,17 @@ export default describe('AccountScreen', () => {
     test('Send button goes on the proper screen', () => {
         const wrapper = shallow(<AccountScreenComponent {...props} />);
         wrapper.find('[testID="button-send"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('Send', { accountIndex: 1 });
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Send', {
+            accountIndex: 1,
+            blockchain: 'ZILLIQA'
+        });
     });
     test('Receive button goes on the proper screen', () => {
         const wrapper = shallow(<AccountScreenComponent {...props} />);
         wrapper.find('[testID="button-receive"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('Receive', { accountIndex: 1 });
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Receive', {
+            accountIndex: 1,
+            blockchain: 'ZILLIQA'
+        });
     });
 });

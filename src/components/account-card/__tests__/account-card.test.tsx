@@ -38,7 +38,8 @@ describe('account card component', () => {
         const wrapper = shallow(<AccountCardComponent {...props} />);
         wrapper.find('[testID="account-card"]').simulate('Press');
         expect(props.navigation.navigate).toHaveBeenCalledWith('Account', {
-            accountIndex: 1
+            accountIndex: 1,
+            blockchain: 'ZILLIQA'
         });
     });
 });

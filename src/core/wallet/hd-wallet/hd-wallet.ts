@@ -87,4 +87,8 @@ export class HDWallet implements IWallet {
             this.getPrivateKey(blockchain, accountIndex)
         );
     }
+
+    public getMnemonic() {
+        return this.mnemonic;
+    }
 }

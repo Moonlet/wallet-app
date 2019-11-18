@@ -71,7 +71,7 @@ export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) =>
                 primary
                 onPress={() => {
                     props.appSetTosVersion(TOS_VERSION);
-                    setPassword('some random password').then(() => {
+                    setPassword('pass').then(() => {
                         props.navigation.pop();
                     });
                 }}

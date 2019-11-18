@@ -28,6 +28,7 @@
         "@zilliqa-js/crypto": "^0.8.1-alpha.0",
         "@zilliqa-js/util": "^0.8.3",
         "bignumber.js": "^9.0.0",
+        "bind-decorator": "^1.0.11",
         "bip39": "^3.0.2",
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.14.0",

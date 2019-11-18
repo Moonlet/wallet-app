@@ -6,11 +6,14 @@ export const translation: ITranslations = {
             labels: {
                 // plase try to add keys in alphabetic order
                 accept: 'Accept',
+                cancel: 'Cancel',
+                close: 'Close',
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
                 create: 'Create',
-                close: 'Close',
+                delete: 'Delete',
+                error: 'Error',
                 next: 'Next',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
@@ -77,7 +80,13 @@ export const translation: ITranslations = {
         Wallets: {
             deleteWallet: 'Delete wallet',
             unveil: 'Unvail phrase',
-            editName: 'Edit name'
+            editName: 'Edit name',
+            confirmDelete:
+                'Make sure you have saved securely your recovery phrase before deleting it',
+            deletePasswordRequest: 'Please type your password to delete your wallet.',
+            unveilPasswordRequest: 'Please type your password to unveil your recovery phrase.',
+            invalidPassword: 'Invalid Password',
+            viewPhrase: 'View phrase'
         }
     },
     plural: (n: number, ord?: boolean) => {

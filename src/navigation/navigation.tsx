@@ -27,6 +27,7 @@ import { Animated } from 'react-native';
 import { RecoverWalletScreen } from '../screens/recover-wallet/recover-wallet';
 import { WalletsScreen } from '../screens/wallets/wallets';
 import { ReceiveScreen } from '../screens/receive/receive';
+import { ViewWalletMnemonicScreen } from '../screens/view-wallet-mnemonic/view-wallet-mnemonic';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -100,6 +101,9 @@ export const WalletNavigation = createStackNavigator(
         },
         Wallets: {
             screen: WalletsScreen
+        },
+        ViewWalletMnemonic: {
+            screen: ViewWalletMnemonicScreen
         }
     },
     {
@@ -205,7 +209,7 @@ export const RootNavigation = createSwitchNavigator(
         CreateWalletNavigation
     },
     {
-        initialRouteName: 'OnboardingScreen'
+        initialRouteName: 'MainNavigation'
         // initialRouteName: 'MainNavigation'
     }
 );

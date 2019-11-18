@@ -7,7 +7,7 @@ export interface INetworksOptions {
 }
 
 export interface IAppState {
-    currentWalletIndex: number;
+    currentWalletId: string;
     tosVersion: number;
     devMode: boolean;
     testNet: boolean;

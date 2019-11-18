@@ -23,7 +23,10 @@ const mapStateToProps = (state: any) => ({
 
 export const ConvertComponent = (props: IProps & IReduxProps) => {
     const conversion = props.usdPrices[props.from] / props.usdPrices[props.to] || 0;
-    const amount = (props.amount || new BigNumber(0)).multipliedBy(conversion);
+    const amount = (props.amount instanceof BigNumber
+        ? props.amount
+        : new BigNumber(props.amount || 0)
+    ).multipliedBy(conversion);
 
     const formatOptions = props.displayCurrency
         ? {

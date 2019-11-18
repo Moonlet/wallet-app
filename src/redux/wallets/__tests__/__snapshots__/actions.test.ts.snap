@@ -19,8 +19,21 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "index": 1,
               "publicKey": "d95dadc866a4acbbf37fb7347f26ddf59955c0b978f7356861e2e7e7a17eaaa07e632630ee164969b84a196e724acbd0ad9b230276c694c0de2fb9fc05239398",
             },
+            Object {
+              "address": "zil1kqj0fp7ja409llrjt4q4tja4uvue8vtp65gahs",
+              "blockchain": "ZILLIQA",
+              "index": 0,
+              "publicKey": "0310a8a9ad39c2c9a878bf1a42895ee122806d1f4cf510f604d274b04f5a5854cc",
+            },
+            Object {
+              "address": "zil1lt5t8hkzgmzfwqp2s234qpr3hn9un9zdck56wm",
+              "blockchain": "ZILLIQA",
+              "index": 1,
+              "publicKey": "0362f31a424e62c75b38534ce16a1b607dd216eae22aa4add9042b16d6750e43e8",
+            },
           ],
           "id": "uuid",
+          "name": "Wallet 1",
           "type": "HD",
         },
         "type": "WALLET_ADD",
@@ -28,7 +41,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
     ],
     Array [
       Object {
-        "data": -1,
+        "data": "uuid",
         "type": "APP_STATE_SWITCH_WALLET",
       },
     ],

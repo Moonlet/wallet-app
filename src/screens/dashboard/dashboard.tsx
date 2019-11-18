@@ -19,6 +19,7 @@ import { HeaderRight } from '../../components/header-right/header-right';
 import { getBalance } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { BigNumber } from 'bignumber.js';
+import { selectCurrentWallet } from '../../redux/wallets/selectors';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -28,7 +29,7 @@ export interface IProps {
 
 export interface IReduxProps {
     wallet: IWalletState;
-    currentWalletIndex: number;
+    walletsNr: number;
     getBalance: typeof getBalance;
 }
 
@@ -62,8 +63,8 @@ const calculateBalances = (accounts: IAccountState[]) =>
     );
 
 const mapStateToProps = (state: IReduxState) => ({
-    wallet: state.wallets[state.app.currentWalletIndex],
-    currentWalletIndex: state.app.currentWalletIndex
+    wallet: selectCurrentWallet(state),
+    walletsNr: state.wallets.length
 });
 
 const mapDispatchToProps = {
@@ -72,7 +73,7 @@ const mapDispatchToProps = {
 
 const MyTitle = ({ text }) => <Text style={{ fontSize: 17, fontWeight: 'bold' }}> {text}</Text>;
 const MyConnectedTitle = connect((state: IReduxState) => ({
-    text: `Wallet ${state.app.currentWalletIndex + 1}`
+    text: (selectCurrentWallet(state) || {}).name
 }))(MyTitle);
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -99,8 +100,13 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
 
         this.state = {
             coinIndex: this.initialIndex,
-            ...calculateBalances(props.wallet.accounts)
+            ...calculateBalances(props.wallet?.accounts || [])
         };
+
+        if (props.walletsNr < 1) {
+            // maybe check this in another screen?
+            props.navigation.navigate('OnboardingScreen');
+        }
     }
 
     public handleScrollEnd = (event: any) => {
@@ -198,7 +204,7 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
                     }}
                 >
                     <CoinDashboard
-                        accounts={this.props.wallet.accounts.filter(
+                        accounts={(this.props.wallet?.accounts || []).filter(
                             account => account.blockchain === this.state.coins[this.state.coinIndex]
                         )}
                         blockchain={this.state.coins[this.state.coinIndex]}

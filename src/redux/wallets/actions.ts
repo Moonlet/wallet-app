@@ -13,9 +13,11 @@ import { storeEncrypted } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
 import { BigNumber } from 'bignumber.js';
+import { selectCurrentWallet } from './selectors';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
+export const WALLET_DELETE = 'WALLET_DELETE';
 export const ACCOUNT_CREATE = 'ACCOUNT_CREATE';
 export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
@@ -54,12 +56,14 @@ export const createHDWallet = (mnemonic: string, callback?: () => any) => async 
             wallet.getAccounts(Blockchain.ZILLIQA, 1)
         ]).then(async data => {
             const walletId = uuidv4();
-
             dispatch(
                 addWallet({
                     id: walletId,
+                    name: `Wallet ${getState().wallets.length + 1}`,
                     type: WalletType.HD,
-                    accounts: data[0].concat(data[1])
+                    accounts: data.reduce((out, accounts) => {
+                        return out.concat(accounts);
+                    }, [])
                 })
             );
 
@@ -74,7 +78,7 @@ export const createHDWallet = (mnemonic: string, callback?: () => any) => async 
 
             await storeEncrypted(mnemonic, walletId, passwordHash);
 
-            dispatch(appSwitchWallet(getState().wallets.length - 1));
+            dispatch(appSwitchWallet(walletId));
             callback && callback();
         });
     } catch (e) {
@@ -91,7 +95,7 @@ export const getBalance = (
     force: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
-    const wallet = state.wallets[state.app.currentWalletIndex];
+    const wallet = selectCurrentWallet(state);
     const account = wallet.accounts.filter(
         acc => acc.address === address && acc.blockchain === blockchain
     )[0];
@@ -139,13 +143,10 @@ export const sendTransferTransaction = (
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
     const encryptedPass = '366bf1f956e204d7bea27145b5afe34cabd6d584100e6b0b5f700230bc52a5f2';
+    const wallet = selectCurrentWallet(state);
 
     try {
-        const hdWallet = await WalletFactory.get(
-            state.wallets[state.app.currentWalletIndex].id,
-            state.wallets[state.app.currentWalletIndex].type,
-            encryptedPass
-        ); // encrypted string: pass)
+        const hdWallet = await WalletFactory.get(wallet.id, wallet.type, encryptedPass); // encrypted string: pass)
 
         const nonce = await getBlockchain(account.blockchain)
             .getClient(chainId)
@@ -176,7 +177,7 @@ export const sendTransferTransaction = (
                 data: {
                     hash: transaction,
                     tx,
-                    walletId: state.wallets[state.app.currentWalletIndex].id
+                    walletId: wallet.id
                 }
             });
             return;
@@ -184,4 +185,21 @@ export const sendTransferTransaction = (
     } catch (e) {
         throw new Error(e);
     }
+};
+
+export const deleteWallet = walletId => (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+
+    if (state.app.currentWalletId === walletId) {
+        const nextWallet = state.wallets.find(wallet => wallet.id !== walletId);
+        const nextWalletId = nextWallet ? nextWallet.id : '';
+        dispatch(appSwitchWallet(nextWalletId));
+    }
+    dispatch({
+        type: WALLET_DELETE,
+        data: walletId
+    });
 };

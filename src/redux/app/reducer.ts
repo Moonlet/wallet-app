@@ -4,7 +4,7 @@ import { APP_SWITCH_WALLET, APP_SET_TOS_VERSION } from './actions';
 import { Blockchain } from '../../core/blockchain/types';
 
 const intialState: IAppState = {
-    currentWalletIndex: 1,
+    currentWalletId: '',
     tosVersion: 0,
     devMode: true,
     testNet: true,
@@ -23,7 +23,7 @@ const intialState: IAppState = {
 export default (state: IAppState = intialState, action: IAction): IAppState => {
     switch (action.type) {
         case APP_SWITCH_WALLET:
-            return { ...state, currentWalletIndex: action.data };
+            return { ...state, currentWalletId: action.data };
         case APP_SET_TOS_VERSION:
             return { ...state, tosVersion: action.data };
         default:

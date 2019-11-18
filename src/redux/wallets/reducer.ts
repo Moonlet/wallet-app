@@ -40,34 +40,31 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
             );
         }
         case TRANSACTION_PUBLISHED:
-            {
-                const transaction: ITransactionState = {
-                    id: action.data.hash,
-                    date: new Date(),
-                    fromAddress: action.data.tx.from,
-                    toAddress: action.data.tx.to,
-                    amount: action.data.tx.amount,
-                    nonce: action.data.tx.options.nonce,
-                    block: undefined,
-                    feeOptions: {
-                        gasPrice: action.data.tx.options.gasPrice,
-                        gasLimit: action.data.tx.options.gasLimit,
-                        usedGas: undefined
-                    }
-                };
-                return state.map(wallet =>
-                    wallet.id === action.data.walletId
-                        ? {
-                              ...wallet,
-                              transactions: {
-                                  ...wallet.transactions,
-                                  [action.data.hash]: transaction
-                              }
+            const transaction: ITransactionState = {
+                id: action.data.hash,
+                date: new Date(),
+                fromAddress: action.data.tx.from,
+                toAddress: action.data.tx.to,
+                amount: action.data.tx.amount,
+                nonce: action.data.tx.options.nonce,
+                block: undefined,
+                feeOptions: {
+                    gasPrice: action.data.tx.options.gasPrice,
+                    gasLimit: action.data.tx.options.gasLimit,
+                    usedGas: undefined
+                }
+            };
+            return state.map(wallet =>
+                wallet.id === action.data.walletId
+                    ? {
+                          ...wallet,
+                          transactions: {
+                              ...wallet.transactions,
+                              [action.data.hash]: transaction
                           }
-                        : wallet
-                );
-            }
-            return [...state, action.data];
+                      }
+                    : wallet
+            );
         case WALLET_DELETE:
             return state.filter((wallet: IWalletState) => action.data !== wallet.id);
         default:

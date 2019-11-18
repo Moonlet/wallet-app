@@ -56,13 +56,14 @@ export const createHDWallet = (mnemonic: string, callback?: () => any) => async 
             wallet.getAccounts(Blockchain.ZILLIQA, 1)
         ]).then(async data => {
             const walletId = uuidv4();
-
             dispatch(
                 addWallet({
                     id: walletId,
                     name: `Wallet ${getState().wallets.length + 1}`,
                     type: WalletType.HD,
-                    accounts: data[0].concat(data[1])
+                    accounts: data.reduce((out, accounts) => {
+                        return out.concat(accounts);
+                    }, [])
                 })
             );
 

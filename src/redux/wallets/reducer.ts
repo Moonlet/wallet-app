@@ -18,8 +18,7 @@ const newBalance = (oldBalance: any, action: any) => {
 export default (state: IWalletState[] = intialState, action: IAction) => {
     switch (action.type) {
         case WALLET_ADD:
-            //    return [...state, action.data];
-            return [action.data]; // this will reset persisted redux wallets
+            return [...state, action.data];
 
         case ACCOUNT_GET_BALANCE: {
             return state.map(wallet =>

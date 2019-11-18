@@ -6,7 +6,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { Button, Text } from '../../library';
 import { HeaderLeft } from '../header-left/header-left';
-import { Deferred } from '../../redux/utils/deferred';
+import { Deferred } from '../../core/utils/deferred';
 import { smartConnect } from '../../core/utils/smart-connect';
 import bind from 'bind-decorator';
 

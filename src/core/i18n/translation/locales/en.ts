@@ -34,6 +34,9 @@ export const translation: ITranslations = {
                 copiedBtn: 'Copied',
                 done: 'Done',
                 back: 'Back'
+            },
+            screenTitles: {
+                details: 'Details'
             }
         },
         CreateWalletTos: {
@@ -96,7 +99,13 @@ export const translation: ITranslations = {
             from: 'From',
             to: 'To',
             status: 'Status',
-            nonce: 'Nonce'
+            nonce: 'Nonce',
+            statusValue: {
+                Pending: 'Pending',
+                Failed: 'Failed',
+                Dropped: 'Dropped',
+                Success: 'Success'
+            }
         }
     },
     plural: (n: number, ord?: boolean) => {

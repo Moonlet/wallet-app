@@ -1,36 +1,48 @@
 import { IReduxState } from '../state';
 import { IWalletState } from './state';
+import { ITransactionState, IAccountState } from './state';
+import { Blockchain } from '../../core/blockchain/types';
 
 export const selectCurrentWallet = (state: IReduxState): IWalletState =>
     state.wallets.find(wallet => wallet.id === state.app.currentWalletId);
-import { ITransactionState } from './state';
 
-export const getAccountTransactions = (state: IReduxState): { [id: string]: ITransactionState } => {
-    return state.wallets[state.app.currentWalletIndex].transactions;
+export const getAccountTransactions = (
+    state: IReduxState,
+    accountIndex: number,
+    blockchain: Blockchain
+): ITransactionState[] => {
+    const account = selectCurrentWallet(state).accounts.filter(
+        acc => acc.index === accountIndex && acc.blockchain === blockchain
+    )[0];
+    const transactions = selectCurrentWallet(state).transactions;
+    if (transactions) {
+        return Object.values(selectCurrentWallet(state).transactions).filter(
+            tx => tx.fromAddress === account.address
+        );
+    }
+};
+
+export const getAccount = (
+    state: IReduxState,
+    accountIndex: number,
+    blockchain: Blockchain
+): IAccountState => {
+    return selectCurrentWallet(state).accounts.filter(
+        acc => acc.index === accountIndex && acc.blockchain === blockchain
+    )[0];
 };
 
 export const getAccountName = (
     state: IReduxState,
-    accountIndex?: number,
-    address?: string
+    blockchain: Blockchain,
+    address: string
 ): string => {
-    if (accountIndex) {
-        const account = state.wallets[state.app.currentWalletIndex].accounts[accountIndex];
-        if (account.name) {
-            return account.name;
-        } else {
-            return 'Account ' + (accountIndex + 1);
-        }
-    } else if (address) {
-        const account = state.wallets[state.app.currentWalletIndex].accounts.filter(
-            acc => acc.address === address
-        )[0];
-        if (account.name) {
-            return account.name;
-        } else {
-            return 'Account ' + (accountIndex + 1);
-        }
+    const account = selectCurrentWallet(state).accounts.filter(
+        acc => acc.address === address && acc.blockchain === blockchain
+    )[0];
+    if (account.name) {
+        return account.name;
     } else {
-        return '';
+        return 'Account ' + (account.index + 1);
     }
 };

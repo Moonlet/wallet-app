@@ -58,7 +58,7 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
                     gasLimit: action.data.tx.options.gasLimit,
                     usedGas: undefined
                 },
-                status: TransactionStatus.Pending
+                status: TransactionStatus.PENDING
             };
             return state.map(wallet =>
                 wallet.id === action.data.walletId

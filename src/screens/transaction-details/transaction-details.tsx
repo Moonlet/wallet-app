@@ -1,11 +1,9 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity, Linking } from 'react-native';
 import { Icon } from '../../components/icon';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
-import { withTheme } from '../../core/theme/with-theme';
-import { ITheme } from '../../core/theme/itheme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { HeaderLeft } from '../../components/header-left/header-left';
@@ -15,25 +13,16 @@ import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { ITransactionState, IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
-
-export interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
+import { Blockchain } from '../../core/blockchain/types';
+import { getAccount } from '../../redux/wallets/selectors';
 
 export interface IReduxProps {
     account: IAccountState;
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
-    return {
-        account: state.wallets[state.app.currentWalletIndex].accounts[ownProps.accountIndex]
-    };
-};
-
 export interface INavigationParams {
     accountIndex: number;
+    blockchain: Blockchain;
     transaction: ITransactionState;
 }
 
@@ -49,10 +38,13 @@ export const navigationOptions = ({ navigation }: any) => ({
             />
         );
     },
-    title: 'Details'
+    title: translate('App.screenTitles.details')
 });
+
 export class TransactionDetailsComponent extends React.Component<
-    INavigationProps<INavigationParams> & IProps & IReduxProps
+    INavigationProps<INavigationParams> &
+        IThemeProps<ReturnType<typeof stylesProvider>> &
+        IReduxProps
 > {
     public static navigationOptions = navigationOptions;
 
@@ -127,7 +119,9 @@ export class TransactionDetailsComponent extends React.Component<
                 </View>
                 <View style={styles.rowContainer}>
                     <View>
-                        <Text style={styles.textPrimary}>{transaction.status.toString()}</Text>
+                        <Text style={styles.textPrimary}>
+                            {translate('Transaction.statusValue.' + transaction.status.toString())}
+                        </Text>
                         <Text style={styles.textSecondary}>{translate('Transaction.status')}</Text>
                     </View>
                 </View>
@@ -135,6 +129,12 @@ export class TransactionDetailsComponent extends React.Component<
         );
     }
 }
+
+export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    return {
+        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain)
+    };
+};
 
 export const TransactionDetails = smartConnect(TransactionDetailsComponent, [
     connect(mapStateToProps, {}),

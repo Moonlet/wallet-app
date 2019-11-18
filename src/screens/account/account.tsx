@@ -3,7 +3,7 @@ import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, ITransactionState } from '../../redux/wallets/state';
-import { getAccountTransactions } from '../../redux/wallets/selectors';
+import { getAccountTransactions, getAccount } from '../../redux/wallets/selectors';
 import { IReduxState } from '../../redux/state';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { withTheme } from '../../core/theme/with-theme';
@@ -17,6 +17,7 @@ import { withNavigationParams, INavigationProps } from '../../navigation/with-na
 import { AccountAddress } from '../../components/account-address/account-address';
 import { formatAddress } from '../../core/utils/format-address';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { Blockchain } from '../../core/blockchain/types';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -25,18 +26,19 @@ export interface IProps {
 
 export interface IReduxProps {
     account: IAccountState;
-    transactions: { [id: string]: ITransactionState };
+    transactions: ITransactionState[];
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
-        account: state.wallets[state.app.currentWalletIndex].accounts[ownProps.accountIndex],
-        transactions: getAccountTransactions(state)
+        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
+        transactions: getAccountTransactions(state, ownProps.accountIndex, ownProps.blockchain)
     };
 };
 
 export interface INavigationParams {
     accountIndex: number;
+    blockchain: Blockchain;
 }
 
 interface IState {
@@ -78,19 +80,18 @@ export class AccountScreenComponent extends React.Component<
         this.setState({ settingsVisible: !this.state.settingsVisible });
     };
 
-    public firstLine = (tx: ITransactionState, account: IAccountState) => {
+    public getTransactionPrimaryText(tx: ITransactionState, account: IAccountState) {
         const amount =
             tx.amount.toString().slice(0, 5) + ' ' + BLOCKCHAIN_INFO[account.blockchain].coin + ' ';
-        const x =
+        const formattedAmount =
             tx.fromAddress === account.address
                 ? translate('App.labels.to')
                 : translate('App.labels.from');
-        return amount + '' + x + ' ' + formatAddress(tx.toAddress);
-    };
+        return amount + '' + formattedAmount + ' ' + formatAddress(tx.toAddress);
+    }
 
     public render() {
         const { styles, navigation, account, transactions } = this.props;
-        const accountIndex = account.index;
         return (
             <ScrollView style={styles.container}>
                 <AccountAddress account={account} />
@@ -99,7 +100,10 @@ export class AccountScreenComponent extends React.Component<
                         testID="button-send"
                         style={styles.button}
                         onPress={() => {
-                            navigation.navigate('Send', { accountIndex });
+                            navigation.navigate('Send', {
+                                accountIndex: account.index,
+                                blockchain: account.blockchain
+                            });
                         }}
                     >
                         {translate('App.labels.send')}
@@ -108,7 +112,10 @@ export class AccountScreenComponent extends React.Component<
                         testID="button-receive"
                         style={styles.button}
                         onPress={() => {
-                            navigation.navigate('Receive', { accountIndex });
+                            navigation.navigate('Receive', {
+                                accountIndex: account.index,
+                                blockchain: account.blockchain
+                            });
                         }}
                     >
                         {translate('App.labels.receive')}
@@ -122,18 +129,18 @@ export class AccountScreenComponent extends React.Component<
                             style={styles.transactionsTitle}
                         />
                         <View>
-                            {Object.keys(transactions).map(id => {
-                                const tx = transactions[id];
+                            {transactions.map(tx => {
                                 const date = new Date(tx.date.signed);
 
                                 return (
                                     <TouchableOpacity
-                                        key={id}
+                                        key={tx.id}
                                         style={styles.transactionListItem}
                                         onPress={() => {
                                             navigation.navigate('TransactionDetails', {
                                                 transaction: tx,
-                                                accountIndex: account.index
+                                                accountIndex: account.index,
+                                                blockchain: account.blockchain
                                             });
                                         }}
                                     >
@@ -144,7 +151,7 @@ export class AccountScreenComponent extends React.Component<
                                         />
                                         <View style={styles.transactionTextContainer}>
                                             <Text style={styles.transactionTextPrimary}>
-                                                {this.firstLine(tx, account)}
+                                                {this.getTransactionPrimaryText(tx, account)}
                                             </Text>
                                             <Text style={styles.transactionTextSecondary}>
                                                 {date.toISOString()}

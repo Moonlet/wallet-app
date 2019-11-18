@@ -21,23 +21,21 @@ platform :android do
     gradle(task: "test")
   end
 
- 
-
   desc "Submit a new Beta Build to AppCenter"
   lane :beta do
-    version_code = increment_version_code(
-        gradle_file_path: "app/build.gradle",
-        version_code: number_of_commits # take only the nr of master commits
-    )
-
     gradle(task: "clean")
 
+    package = load_json(json_path: "../package.json")
     gradle(
       task: "assemble",
       flavor: "beta",
-      build_type: "Release"
+      print_command: true,
+      build_type: "Release",
+      properties: {
+        "versionName" => package["version"],
+        "versionCode" => number_of_commits
+      }
     )
-
     changelog = changelog_from_git_commits(commits_count: 1)
     
     appcenter_upload(

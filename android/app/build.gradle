@@ -136,8 +136,8 @@ android {
         applicationId "com.moonlet"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 58
-        versionName "1.0"
+        versionCode project.versionCode as Integer
+        versionName project.versionName
         multiDexEnabled true
     }
     splits {
@@ -183,7 +183,7 @@ android {
         beta {
             dimension "version"
             applicationIdSuffix ".beta"
-            versionNameSuffix "-beta"
+            versionNameSuffix ""
         }
         
         stable {

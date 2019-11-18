@@ -69,13 +69,7 @@ describe('Ethereum account', () => {
         expect(Util.privateToAddress).toBeCalledWith(Buffer.from('PRIVATE_KEY', 'hex'));
         expect(Util.toChecksumAddress).toBeCalledWith('address');
 
-        expect(result).toEqual({
-            index: 1,
-            blockchain: Blockchain.ETHEREUM,
-            address: 'ADDRESS',
-            publicKey: 'PUBLIC_KEY',
-            name: 'Account 2'
-        });
+        expect(result).toMatchSnapshot();
 
         // TODO: test with invalid privatekey, without mocks
     });

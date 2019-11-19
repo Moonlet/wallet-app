@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Ethereum account getAccountFromPrivateKey() 1`] = `
+Object {
+  "address": "ADDRESS",
+  "blockchain": "ETHEREUM",
+  "index": 1,
+  "publicKey": "PUBLIC_KEY",
+}
+`;

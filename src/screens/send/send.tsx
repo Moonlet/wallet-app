@@ -9,7 +9,6 @@ import { Button } from '../../library/button/button';
 import { ITheme } from '../../core/theme/itheme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { HeaderLeft } from '../../components/header-left/header-left';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
@@ -19,7 +18,10 @@ import { IAccountState } from '../../redux/wallets/state';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { AccountList } from './components/account-list/account-list';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
-import { selectCurrentWallet } from '../../redux/wallets/selectors';
+import { selectCurrentWallet, getAccount } from '../../redux/wallets/selectors';
+import { formatAddress } from '../../core/utils/format-address';
+import { Blockchain } from '../../core/blockchain/types';
+import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -35,13 +37,14 @@ export interface IReduxProps {
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
-        account: selectCurrentWallet(state).accounts[ownProps.accountIndex],
+        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         accounts: selectCurrentWallet(state).accounts
     };
 };
 
 export interface INavigationParams {
     accountIndex: number;
+    blockchain: Blockchain;
 }
 
 interface IState {
@@ -53,17 +56,7 @@ interface IState {
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: () => {
-        return (
-            <HeaderLeft
-                icon="close"
-                text="Close"
-                onPress={() => {
-                    navigation.goBack();
-                }}
-            />
-        );
-    },
+    headerLeft: <HeaderLeftClose navigation={navigation} />,
     title: 'Send'
 });
 export class SendScreenComponent extends React.Component<
@@ -94,8 +87,7 @@ export class SendScreenComponent extends React.Component<
     };
 
     public onPressQrCodeIcon = async () => {
-        this.setState({ toAddress: '0xfeb8fa91f64f52ee66f7095486caaf0a1227e254', amount: '0.001' });
-        this.verifyAddress('0xfeb8fa91f64f52ee66f7095486caaf0a1227e254');
+        this.qrCodeScanner.open();
     };
 
     public verifyAddress = (text: string) => {
@@ -191,7 +183,7 @@ export class SendScreenComponent extends React.Component<
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
-                        value={this.state.toAddress}
+                        value={formatAddress(this.state.toAddress)}
                         onChangeText={text => {
                             this.verifyAddress(text);
                         }}

@@ -16,7 +16,6 @@ export default (theme: ITheme) =>
             justifyContent: 'space-between',
             paddingVertical: BASE_DIMENSION
         },
-        leftColumn: {},
         address: {
             fontSize: theme.fontSize.regular,
             color: theme.colors.textSecondary

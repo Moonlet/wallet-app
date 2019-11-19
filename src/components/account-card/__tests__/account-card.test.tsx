@@ -21,7 +21,8 @@ const props: IProps = {
         balance: {
             inProgress: false,
             timestamp: 123,
-            value: new BigNumber(12332)
+            value: new BigNumber(12332),
+            error: undefined
         }
     },
     blockchain: Blockchain.ZILLIQA,
@@ -37,17 +38,8 @@ describe('account card component', () => {
         const wrapper = shallow(<AccountCardComponent {...props} />);
         wrapper.find('[testID="account-card"]').simulate('Press');
         expect(props.navigation.navigate).toHaveBeenCalledWith('Account', {
-            account: {
-                index: 1,
-                blockchain: Blockchain.ZILLIQA,
-                address: 'zil1vs74hw5k21233h432kj321l3k21b',
-                publicKey: '1',
-                balance: {
-                    inProgress: false,
-                    timestamp: 123,
-                    value: new BigNumber(12332)
-                }
-            }
+            accountIndex: 1,
+            blockchain: 'ZILLIQA'
         });
     });
 });

@@ -2,7 +2,8 @@ import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
-import { IAccountState } from '../../redux/wallets/state';
+import { IAccountState, ITransactionState } from '../../redux/wallets/state';
+import { getAccountTransactions, getAccount } from '../../redux/wallets/selectors';
 import { IReduxState } from '../../redux/state';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { withTheme } from '../../core/theme/with-theme';
@@ -14,6 +15,9 @@ import { Icon } from '../../components/icon';
 import { AccountSettings } from './components/account-settings/account-settings';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { AccountAddress } from '../../components/account-address/account-address';
+import { formatAddress } from '../../core/utils/format-address';
+import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { Blockchain } from '../../core/blockchain/types';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -21,12 +25,22 @@ export interface IProps {
 }
 
 export interface IReduxProps {
-    accountx: IAccountState;
+    account: IAccountState;
+    transactions: ITransactionState[];
 }
 
+export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    return {
+        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
+        transactions: getAccountTransactions(state, ownProps.accountIndex, ownProps.blockchain)
+    };
+};
+
 export interface INavigationParams {
-    account: IAccountState;
+    accountIndex: number;
+    blockchain: Blockchain;
 }
+
 interface IState {
     settingsVisible: boolean;
 }
@@ -66,9 +80,18 @@ export class AccountScreenComponent extends React.Component<
         this.setState({ settingsVisible: !this.state.settingsVisible });
     };
 
+    public getTransactionPrimaryText(tx: ITransactionState, account: IAccountState) {
+        const amount =
+            tx.amount.toString().slice(0, 5) + ' ' + BLOCKCHAIN_INFO[account.blockchain].coin + ' ';
+        const formattedAmount =
+            tx.fromAddress === account.address
+                ? translate('App.labels.to').toLowerCase()
+                : translate('App.labels.from').toLowerCase();
+        return amount + '' + formattedAmount + ' ' + formatAddress(tx.toAddress);
+    }
+
     public render() {
-        const { styles, navigation, account } = this.props;
-        const accountIndex = account.index;
+        const { styles, navigation, account, transactions } = this.props;
         return (
             <ScrollView style={styles.container}>
                 <AccountAddress account={account} />
@@ -77,7 +100,10 @@ export class AccountScreenComponent extends React.Component<
                         testID="button-send"
                         style={styles.button}
                         onPress={() => {
-                            navigation.navigate('Send', { accountIndex });
+                            navigation.navigate('Send', {
+                                accountIndex: account.index,
+                                blockchain: account.blockchain
+                            });
                         }}
                     >
                         {translate('App.labels.send')}
@@ -86,44 +112,62 @@ export class AccountScreenComponent extends React.Component<
                         testID="button-receive"
                         style={styles.button}
                         onPress={() => {
-                            navigation.navigate('Receive', { accountIndex });
+                            navigation.navigate('Receive', {
+                                accountIndex: account.index,
+                                blockchain: account.blockchain
+                            });
                         }}
                     >
                         {translate('App.labels.receive')}
                     </Button>
                 </View>
 
-                <View style={styles.transactionsContainer}>
-                    <Translate text="App.labels.transactions" style={styles.transactionsTitle} />
+                {transactions ? (
+                    <View style={styles.transactionsContainer}>
+                        <Translate
+                            text="App.labels.transactions"
+                            style={styles.transactionsTitle}
+                        />
+                        <View>
+                            {transactions.map(tx => {
+                                const date = new Date(tx.date.signed);
 
-                    <View>
-                        {['', '', ''].map(tx => (
-                            <TouchableOpacity
-                                key={Math.random()}
-                                style={styles.transactionListItem}
-                            >
-                                <Icon
-                                    name="money-wallet-1"
-                                    size={24}
-                                    style={styles.transactionIcon}
-                                />
-                                <View style={styles.transactionTextContainer}>
-                                    <Text style={styles.transactionTextPrimary}>
-                                        100 ZIL to Account1
-                                    </Text>
-                                    <Text style={styles.transactionTextSecondary}>
-                                        26/06/2019, 23:22:55
-                                    </Text>
-                                </View>
-                                <Icon
-                                    name="arrow-right-1"
-                                    size={16}
-                                    style={styles.transactionRightIcon}
-                                />
-                            </TouchableOpacity>
-                        ))}
+                                return (
+                                    <TouchableOpacity
+                                        key={tx.id}
+                                        style={styles.transactionListItem}
+                                        onPress={() => {
+                                            navigation.navigate('TransactionDetails', {
+                                                transaction: tx,
+                                                accountIndex: account.index,
+                                                blockchain: account.blockchain
+                                            });
+                                        }}
+                                    >
+                                        <Icon
+                                            name="money-wallet-1"
+                                            size={24}
+                                            style={styles.transactionIcon}
+                                        />
+                                        <View style={styles.transactionTextContainer}>
+                                            <Text style={styles.transactionTextPrimary}>
+                                                {this.getTransactionPrimaryText(tx, account)}
+                                            </Text>
+                                            <Text style={styles.transactionTextSecondary}>
+                                                {date.toISOString()}
+                                            </Text>
+                                        </View>
+                                        <Icon
+                                            name="arrow-right-1"
+                                            size={16}
+                                            style={styles.transactionRightIcon}
+                                        />
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </View>
                     </View>
-                </View>
+                ) : null}
                 {this.state.settingsVisible ? (
                     //
                     <AccountSettings
@@ -135,14 +179,6 @@ export class AccountScreenComponent extends React.Component<
         );
     }
 }
-
-export const mapStateToProps = (state: IReduxState, ownProps: IProps): IReduxProps & IProps => {
-    const accountx = {} as any;
-    return {
-        ...ownProps,
-        accountx
-    };
-};
 
 export const AccountScreen = smartConnect(AccountScreenComponent, [
     connect(mapStateToProps, null),

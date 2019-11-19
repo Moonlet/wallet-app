@@ -6,6 +6,13 @@ export enum WalletType {
     HW_LEDGER = 'HW_LEDGER'
 }
 
+export enum TransactionStatus {
+    PENDING = 'PENDING',
+    FAILED = 'FAILED',
+    DROPPED = 'DROPPED',
+    SUCCESS = 'SUCCESS'
+}
+
 export interface IWallet {
     getAccounts(blockchain: Blockchain, index: number, indexTo: number): Promise<IAccountState[]>;
     sign(blockchain: Blockchain, accountIndex: number, tx: IBlockchainTransaction): Promise<string>;

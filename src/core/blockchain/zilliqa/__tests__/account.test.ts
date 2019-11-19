@@ -35,7 +35,7 @@ const clearMocks = () => {
     isBech32.mockClear();
 };
 
-describe('Ethereum account', () => {
+describe('Zilliqa account', () => {
     beforeEach(() => {
         clearMocks();
     });
@@ -74,12 +74,7 @@ describe('Ethereum account', () => {
         expect(getAddressFromPrivateKey).toBeCalledWith('PRIVATE_KEY');
         expect(toBech32Address).toBeCalledWith('address');
 
-        expect(result).toEqual({
-            index: 1,
-            blockchain: Blockchain.ZILLIQA,
-            address: 'BECH32_ADDRESS',
-            publicKey: 'PUBLIC_KEY'
-        });
+        expect(result).toMatchSnapshot();
 
         // TODO: test with invalid privatekey, without mocks
     });

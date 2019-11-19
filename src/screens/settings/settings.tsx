@@ -12,6 +12,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
 import { HeaderLeft } from '../../components/header-left/header-left';
+import { translate } from '../../core/i18n';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -35,10 +36,11 @@ const mapStateToProps = (state: IReduxState) => ({
     pinLogin: state.preferences.pinLogin
 });
 
-const navigationOptions = {
-    title: 'Settings',
+const navigationOptions = () => ({
+    title: translate('App.labels.settings'),
     headerLeft: <HeaderLeft icon="saturn-icon" />
-};
+});
+
 export class SettingsScreenComponent extends React.Component<IProps & IReduxProps> {
     public static navigationOptions = navigationOptions;
     public pinLoginSwitch = () => {

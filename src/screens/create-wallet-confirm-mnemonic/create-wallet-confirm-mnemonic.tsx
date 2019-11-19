@@ -27,8 +27,8 @@ export interface IReduxProps {
     createHDWallet: (mnemonic: string, callback: () => any) => void;
 }
 
-const navigationOptions = ({ navigation }: any) => ({
-    title: 'Create'
+const navigationOptions = () => ({
+    title: translate('App.labels.create')
 });
 
 /**

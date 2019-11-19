@@ -83,7 +83,7 @@ export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) =>
 );
 
 export const navigationOptions = ({ navigation }: any) => ({
-    title: 'Terms and conditions',
+    title: translate('App.labels.tc'),
     headerLeft: null
 });
 

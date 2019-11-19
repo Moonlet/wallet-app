@@ -57,7 +57,7 @@ export const navigationOptions = ({ navigation }: any) => ({
 
         return null;
     },
-    title: 'Recover'
+    title: translate('App.labels.recover')
 });
 
 export class RecoverWalletScreenComponent extends React.Component<IProps & IReduxProps, IState> {

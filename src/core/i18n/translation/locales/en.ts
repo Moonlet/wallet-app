@@ -13,6 +13,7 @@ export const translation: ITranslations = {
                 connect: 'Connect',
                 create: 'Create',
                 delete: 'Delete',
+                details: 'Details',
                 error: 'Error',
                 date: 'Date',
                 from: 'From',
@@ -22,12 +23,16 @@ export const translation: ITranslations = {
                 receive: 'Receive',
                 recover: 'Recover',
                 secure: 'Secure',
+                secureW: 'Secure wallet',
                 send: 'Send',
+                settings: 'Settings',
                 status: 'Status',
+                tc: 'Terms and conditions',
                 tos: 'Terms of service',
                 transactions: 'Transactions',
                 to: 'To',
-                understand: 'I understand'
+                understand: 'I understand',
+                wallets: 'Wwallets'
                 // plase try to add keys in alphabetic order
             },
             buttons: {

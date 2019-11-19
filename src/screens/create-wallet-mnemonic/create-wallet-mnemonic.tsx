@@ -43,7 +43,7 @@ export const navigationOptions = ({ navigation }: any) => ({
 
         return null;
     },
-    title: 'Create'
+    title: translate('App.labels.create')
 });
 
 export class CreateWalletMnemonicScreenComponent extends React.Component<

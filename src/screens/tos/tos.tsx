@@ -5,6 +5,7 @@ import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-n
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { Text } from '../../library';
+import { translate } from '../../core/i18n';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -17,10 +18,9 @@ export const TosScreenComponent = (props: IProps) => (
     </View>
 );
 
-export const navigationOptions = {
-    title: 'TOS'
-};
-
+export const navigationOptions = () => ({
+    title: translate('App.labels.tos')
+});
 export const TosScreen = withTheme(stylesProvider)(TosScreenComponent);
 
 TosScreen.navigationOptions = navigationOptions;

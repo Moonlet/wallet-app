@@ -57,7 +57,7 @@ interface IState {
 
 export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: 'Send'
+    title: translate('App.labels.send')
 });
 export class SendScreenComponent extends React.Component<
     INavigationProps<INavigationParams> & IProps & IReduxProps,

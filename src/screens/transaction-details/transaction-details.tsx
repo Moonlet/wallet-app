@@ -29,7 +29,7 @@ export interface INavigationParams {
 
 export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: 'Details'
+    title: translate('App.labels.details')
 });
 
 export class TransactionDetailsComponent extends React.Component<

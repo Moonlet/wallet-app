@@ -26,7 +26,7 @@ export const readEncrypted = async (key: string, hash: string) => {
     }
 };
 
-export const deleteWalletFromStorage = async (key: string) => {
+export const deleteFromStorage = async (key: string) => {
     try {
         await AsyncStorage.removeItem(`${KEY_PREFIX}${key}`);
     } catch (e) {

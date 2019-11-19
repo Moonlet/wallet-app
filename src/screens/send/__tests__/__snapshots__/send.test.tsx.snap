@@ -209,17 +209,19 @@ exports[`SendScreen renders correctly 2`] = `
 
 exports[`SendScreen sets correct navigation options 1`] = `
 Object {
-  "headerLeft": [Function],
+  "headerLeft": <HeaderLeftClose
+    navigation={
+      Object {
+        "state": Object {
+          "params": Object {
+            "goBack": [MockFunction],
+          },
+        },
+      }
+    }
+  />,
   "title": "Send",
 }
-`;
-
-exports[`SendScreen sets correct navigation options 2`] = `
-<withTheme(HeaderLeftComponent)
-  icon="close"
-  onPress={[Function]}
-  text="Close"
-/>
 `;
 
 exports[`SendScreen should Call verify address 1`] = `

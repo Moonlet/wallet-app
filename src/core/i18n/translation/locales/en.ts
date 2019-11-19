@@ -34,9 +34,6 @@ export const translation: ITranslations = {
                 copiedBtn: 'Copied',
                 done: 'Done',
                 back: 'Back'
-            },
-            screenTitles: {
-                details: 'Details'
             }
         },
         CreateWalletTos: {

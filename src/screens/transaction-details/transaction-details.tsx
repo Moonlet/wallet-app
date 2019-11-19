@@ -6,7 +6,6 @@ import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { HeaderLeft } from '../../components/header-left/header-left';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
@@ -15,6 +14,7 @@ import { ITransactionState, IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
+import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -27,18 +27,8 @@ export interface INavigationParams {
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: () => {
-        return (
-            <HeaderLeft
-                icon="close"
-                text="Close"
-                onPress={() => {
-                    navigation.goBack();
-                }}
-            />
-        );
-    },
-    title: translate('App.screenTitles.details')
+    headerLeft: <HeaderLeftClose navigation={navigation} />,
+    title: 'Details'
 });
 
 export class TransactionDetailsComponent extends React.Component<

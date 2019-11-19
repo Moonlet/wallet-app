@@ -1,6 +1,5 @@
 import { IReduxState } from '../state';
-import { IWalletState } from './state';
-import { ITransactionState, IAccountState } from './state';
+import { ITransactionState, IAccountState, IWalletState } from './state';
 import { Blockchain } from '../../core/blockchain/types';
 
 export const selectCurrentWallet = (state: IReduxState): IWalletState =>

@@ -9,7 +9,6 @@ import { Button } from '../../library/button/button';
 import { ITheme } from '../../core/theme/itheme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { HeaderLeft } from '../../components/header-left/header-left';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
@@ -19,10 +18,10 @@ import { IAccountState } from '../../redux/wallets/state';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { AccountList } from './components/account-list/account-list';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
-import { selectCurrentWallet } from '../../redux/wallets/selectors';
+import { selectCurrentWallet, getAccount } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
-import { getAccount } from '../../redux/wallets/selectors';
+import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -57,17 +56,7 @@ interface IState {
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: () => {
-        return (
-            <HeaderLeft
-                icon="close"
-                text="Close"
-                onPress={() => {
-                    navigation.goBack();
-                }}
-            />
-        );
-    },
+    headerLeft: <HeaderLeftClose navigation={navigation} />,
     title: 'Send'
 });
 export class SendScreenComponent extends React.Component<

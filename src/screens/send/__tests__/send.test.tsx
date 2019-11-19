@@ -112,6 +112,5 @@ export default describe('SendScreen', () => {
         const navigationProp = { navigation: { state: { params: { goBack: jest.fn() } } } };
         const options = navigationOptions(navigationProp);
         expect(options).toMatchSnapshot();
-        expect(options.headerLeft()).toMatchSnapshot();
     });
 });

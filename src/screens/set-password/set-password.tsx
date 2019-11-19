@@ -124,7 +124,7 @@ export const SetPasswordScreenComponent = (props: IProps) => {
 };
 
 export const navigationOptions = {
-    title: 'Secure wallet'
+    title: 'Secure Wallet'
 };
 
 export const SetPasswordScreen = withTheme(stylesProvider)(SetPasswordScreenComponent);

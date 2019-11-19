@@ -1,6 +1,7 @@
 import { IAction } from '../types';
 import { IWalletState, ITransactionState } from './state';
 import { WALLET_ADD, WALLET_DELETE, ACCOUNT_GET_BALANCE, TRANSACTION_PUBLISHED } from './actions';
+import { TransactionStatus } from '../../core/wallet/types';
 
 const intialState: IWalletState[] = [];
 
@@ -19,7 +20,7 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
     switch (action.type) {
         case WALLET_ADD:
             return [...state, action.data];
-
+        // return [action.data]; // this will reset persisted redux wallets
         case ACCOUNT_GET_BALANCE: {
             return state.map(wallet =>
                 wallet.id === action.data.walletId
@@ -41,7 +42,12 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
         case TRANSACTION_PUBLISHED:
             const transaction: ITransactionState = {
                 id: action.data.hash,
-                date: new Date(),
+                date: {
+                    created: Date.now(),
+                    signed: Date.now(),
+                    broadcasted: Date.now(),
+                    confirmed: Date.now()
+                },
                 fromAddress: action.data.tx.from,
                 toAddress: action.data.tx.to,
                 amount: action.data.tx.amount,
@@ -51,7 +57,8 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
                     gasPrice: action.data.tx.options.gasPrice,
                     gasLimit: action.data.tx.options.gasLimit,
                     usedGas: undefined
-                }
+                },
+                status: TransactionStatus.PENDING
             };
             return state.map(wallet =>
                 wallet.id === action.data.walletId

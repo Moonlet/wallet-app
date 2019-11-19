@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Zilliqa account getAccountFromPrivateKey() 1`] = `
+Object {
+  "address": "BECH32_ADDRESS",
+  "blockchain": "ZILLIQA",
+  "index": 1,
+  "publicKey": "PUBLIC_KEY",
+}
+`;

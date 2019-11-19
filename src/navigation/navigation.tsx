@@ -28,6 +28,7 @@ import { RecoverWalletScreen } from '../screens/recover-wallet/recover-wallet';
 import { WalletsScreen } from '../screens/wallets/wallets';
 import { ReceiveScreen } from '../screens/receive/receive';
 import { ViewWalletMnemonicScreen } from '../screens/view-wallet-mnemonic/view-wallet-mnemonic';
+import { TransactionDetails } from '../screens/transaction-details/transaction-details';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -104,6 +105,9 @@ export const WalletNavigation = createStackNavigator(
         },
         ViewWalletMnemonic: {
             screen: ViewWalletMnemonicScreen
+        },
+        TransactionDetails: {
+            screen: TransactionDetails
         }
     },
     {

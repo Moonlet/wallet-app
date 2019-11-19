@@ -13,7 +13,8 @@ import { IAccountState } from '../../redux/wallets/state';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
-import { selectCurrentWallet } from '../../redux/wallets/selectors';
+import { Blockchain } from '../../core/blockchain/types';
+import { getAccount } from '../../redux/wallets/selectors';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -22,6 +23,7 @@ export interface IProps {
 
 export interface INavigationParams {
     accountIndex: number;
+    blockchain: Blockchain;
 }
 
 export interface IReduxProps {
@@ -30,7 +32,7 @@ export interface IReduxProps {
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
-        account: selectCurrentWallet(state).accounts[ownProps.accountIndex]
+        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain)
     };
 };
 

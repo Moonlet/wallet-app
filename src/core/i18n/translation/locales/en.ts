@@ -14,6 +14,8 @@ export const translation: ITranslations = {
                 create: 'Create',
                 delete: 'Delete',
                 error: 'Error',
+                date: 'Date',
+                from: 'From',
                 next: 'Next',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
@@ -21,8 +23,10 @@ export const translation: ITranslations = {
                 recover: 'Recover',
                 secure: 'Secure',
                 send: 'Send',
+                status: 'Status',
                 tos: 'Terms of service',
                 transactions: 'Transactions',
+                to: 'To',
                 understand: 'I understand'
                 // plase try to add keys in alphabetic order
             },
@@ -87,6 +91,17 @@ export const translation: ITranslations = {
             unveilPasswordRequest: 'Please type your password to unveil your recovery phrase.',
             invalidPassword: 'Invalid Password',
             viewPhrase: 'View phrase'
+        },
+        Transaction: {
+            transactionID: 'Transaction ID',
+
+            nonce: 'Nonce',
+            statusValue: {
+                Pending: 'Pending',
+                Failed: 'Failed',
+                Dropped: 'Dropped',
+                Success: 'Success'
+            }
         }
     },
     plural: (n: number, ord?: boolean) => {

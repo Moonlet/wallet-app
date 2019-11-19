@@ -30,18 +30,3 @@ export const getAccount = (
         acc => acc.index === accountIndex && acc.blockchain === blockchain
     )[0];
 };
-
-export const getAccountName = (
-    state: IReduxState,
-    blockchain: Blockchain,
-    address: string
-): string => {
-    const account = selectCurrentWallet(state).accounts.filter(
-        acc => acc.address === address && acc.blockchain === blockchain
-    )[0];
-    if (account.name) {
-        return account.name;
-    } else {
-        return 'Account ' + (account.index + 1);
-    }
-};

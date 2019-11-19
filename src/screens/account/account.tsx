@@ -85,8 +85,8 @@ export class AccountScreenComponent extends React.Component<
             tx.amount.toString().slice(0, 5) + ' ' + BLOCKCHAIN_INFO[account.blockchain].coin + ' ';
         const formattedAmount =
             tx.fromAddress === account.address
-                ? translate('App.labels.to')
-                : translate('App.labels.from');
+                ? translate('App.labels.to').toLowerCase()
+                : translate('App.labels.from').toLowerCase();
         return amount + '' + formattedAmount + ' ' + formatAddress(tx.toAddress);
     }
 

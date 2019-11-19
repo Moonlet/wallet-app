@@ -15,7 +15,7 @@ export const translation: ITranslations = {
                 delete: 'Delete',
                 error: 'Error',
                 date: 'Date',
-                from: 'from',
+                from: 'From',
                 next: 'Next',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
@@ -23,9 +23,10 @@ export const translation: ITranslations = {
                 recover: 'Recover',
                 secure: 'Secure',
                 send: 'Send',
+                status: 'Status',
                 tos: 'Terms of service',
                 transactions: 'Transactions',
-                to: 'to',
+                to: 'To',
                 understand: 'I understand'
                 // plase try to add keys in alphabetic order
             },
@@ -93,9 +94,7 @@ export const translation: ITranslations = {
         },
         Transaction: {
             transactionID: 'Transaction ID',
-            from: 'From',
-            to: 'To',
-            status: 'Status',
+
             nonce: 'Nonce',
             statusValue: {
                 Pending: 'Pending',

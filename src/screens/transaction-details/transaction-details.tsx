@@ -78,7 +78,7 @@ export class TransactionDetailsComponent extends React.Component<
                         <Text style={styles.textPrimary}>
                             {formatAddress(transaction.fromAddress)}
                         </Text>
-                        <Text style={styles.textSecondary}>{translate('Transaction.from')}</Text>
+                        <Text style={styles.textSecondary}>{translate('App.labels.from')}</Text>
                     </View>
                 </View>
                 <View style={styles.rowContainer}>
@@ -86,7 +86,7 @@ export class TransactionDetailsComponent extends React.Component<
                         <Text style={styles.textPrimary}>
                             {formatAddress(transaction.toAddress)}
                         </Text>
-                        <Text style={styles.textSecondary}>{translate('Transaction.to')}</Text>
+                        <Text style={styles.textSecondary}>{translate('App.labels.to')}</Text>
                     </View>
                 </View>
                 <View style={styles.rowContainer}>
@@ -112,7 +112,7 @@ export class TransactionDetailsComponent extends React.Component<
                         <Text style={styles.textPrimary}>
                             {translate('Transaction.statusValue.' + transaction.status.toString())}
                         </Text>
-                        <Text style={styles.textSecondary}>{translate('Transaction.status')}</Text>
+                        <Text style={styles.textSecondary}>{translate('App.labels.status')}</Text>
                     </View>
                 </View>
             </ScrollView>

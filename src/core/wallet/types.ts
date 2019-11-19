@@ -7,10 +7,10 @@ export enum WalletType {
 }
 
 export enum TransactionStatus {
-    PENDING = 'Pending',
-    FAILED = 'Failed',
-    DROPPED = 'Dropped',
-    SUCCESS = 'Success'
+    PENDING = 'PENDING',
+    FAILED = 'FAILED',
+    DROPPED = 'DROPPED',
+    SUCCESS = 'SUCCESS'
 }
 
 export interface IWallet {

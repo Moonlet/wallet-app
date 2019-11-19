@@ -26,6 +26,7 @@ interface IState {
     password: string;
     visible: boolean;
     revealPassword: boolean;
+    errorMessage: string;
 }
 
 export class PasswordModalComponent extends React.Component<
@@ -42,7 +43,8 @@ export class PasswordModalComponent extends React.Component<
         this.state = {
             password: '',
             revealPassword: false,
-            visible: !!props.visible || false
+            visible: !!props.visible || false,
+            errorMessage: ''
         };
 
         props.obRef && props.obRef(this);
@@ -57,6 +59,13 @@ export class PasswordModalComponent extends React.Component<
     @bind
     public onEnterPassword() {
         // validate password
+        if (this.state.password !== 'pass') {
+            this.setState({
+                errorMessage: translate('Wallets.invalidPassword')
+            });
+
+            return;
+        }
 
         this.passwordRequestDeferred && this.passwordRequestDeferred.resolve(this.state.password);
         this.setState({
@@ -130,6 +139,9 @@ export class PasswordModalComponent extends React.Component<
                                 />
                             </TouchableHighlight>
                         </View>
+                        <Text small style={this.props.styles.errorMessage}>
+                            {this.state.errorMessage}
+                        </Text>
                     </View>
                     <View style={this.props.styles.bottomContainer}>
                         <Button

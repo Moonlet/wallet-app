@@ -9,7 +9,7 @@ import { getChainId } from '../app/selectors';
 import { appSwitchWallet } from '../app/actions';
 import uuidv4 from 'uuid/v4';
 import { getPassword } from '../../core/secure/keychain';
-import { storeEncrypted } from '../../core/secure/storage';
+import { storeEncrypted, deleteWalletFromStorage } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
 import { BigNumber } from 'bignumber.js';
@@ -202,4 +202,6 @@ export const deleteWallet = walletId => (
         type: WALLET_DELETE,
         data: walletId
     });
+
+    deleteWalletFromStorage(walletId);
 };

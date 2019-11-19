@@ -25,3 +25,11 @@ export const readEncrypted = async (key: string, hash: string) => {
         return Promise.reject(e);
     }
 };
+
+export const deleteWalletFromStorage = async (key: string) => {
+    try {
+        await AsyncStorage.removeItem(`${KEY_PREFIX}${key}`);
+    } catch (e) {
+        return Promise.reject(e);
+    }
+};

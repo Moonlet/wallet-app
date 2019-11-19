@@ -1,19 +1,17 @@
 import { Blockchain } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { BLOCKCHAIN_INFO } from '../blockchain-factory';
 
 export const convertUnit = (
     blockchain: Blockchain,
     value: BigNumber,
     fromUnit,
-    toUnit
+    toUnit,
+    info
 ): BigNumber => {
     if (fromUnit === toUnit) {
         return value;
     }
     const object = new BigNumber(value);
-
-    const info = BLOCKCHAIN_INFO[blockchain];
 
     if (info) {
         if (info.units[fromUnit] && info.units[toUnit]) {

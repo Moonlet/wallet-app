@@ -1,7 +1,5 @@
 import { Ethereum } from '../';
 import * as Util from 'ethereumjs-util';
-import { Blockchain } from '../../types';
-import BigNumber from 'bignumber.js';
 
 jest.mock('ethereumjs-util', () => {
     const util = jest.requireActual('ethereumjs-util');
@@ -12,9 +10,7 @@ jest.mock('ethereumjs-util', () => {
         toChecksumAddress: jest.fn().mockReturnValue('ADDRESS'),
         publicToAddress: jest.fn().mockReturnValue('address'),
         isValidChecksumAddress: jest.fn().mockReturnValue(true),
-        isValidAddress: jest.fn().mockReturnValue(true),
-        amountToStd: jest.fn().mockReturnValue(new BigNumber(0)),
-        amountFromStd: jest.fn().mockReturnValue(new BigNumber(0))
+        isValidAddress: jest.fn().mockReturnValue(true)
     };
 });
 
@@ -31,10 +27,6 @@ const clearMocks = () => {
     Util.isValidChecksumAddress.mockClear();
     // @ts-ignore
     Util.isValidAddress.mockClear();
-    // @ts-ignore
-    Util.amountToStd.mockClear();
-    // @ts-ignore
-    Util.amountFromStd.mockClear();
 };
 
 describe('Ethereum account', () => {

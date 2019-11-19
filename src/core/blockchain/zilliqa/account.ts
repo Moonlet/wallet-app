@@ -8,7 +8,7 @@ import { toBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { Blockchain } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { BLOCKCHAIN_INFO } from '../blockchain-factory';
+import { config } from './config';
 import { convertUnit } from '../common/account';
 
 export const isValidChecksumAddress = (address: string): boolean => {
@@ -41,16 +41,15 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
 };
 
 export const amountToStd = (value: string): BigNumber => {
-    const info = BLOCKCHAIN_INFO[Blockchain.ZILLIQA];
     return convertUnit(
         Blockchain.ZILLIQA,
         new BigNumber(Number(value)),
-        info.coin,
-        info.defaultUnit
+        config.coin,
+        config.defaultUnit,
+        config
     );
 };
 
 export const amountFromStd = (value: BigNumber): BigNumber => {
-    const info = BLOCKCHAIN_INFO[Blockchain.ZILLIQA];
-    return convertUnit(Blockchain.ZILLIQA, value, info.defaultUnit, info.coin);
+    return convertUnit(Blockchain.ZILLIQA, value, config.defaultUnit, config.coin, config);
 };

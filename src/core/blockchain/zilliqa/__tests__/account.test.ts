@@ -6,7 +6,6 @@ import {
 } from '@zilliqa-js/crypto/dist/util'; // import like this to optimize imports
 import { toBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
-import BigNumber from 'bignumber.js';
 
 jest.mock('@zilliqa-js/crypto/dist/util', () => {
     const util = jest.requireActual('@zilliqa-js/crypto/dist/util');
@@ -14,9 +13,7 @@ jest.mock('@zilliqa-js/crypto/dist/util', () => {
         ...util,
         getPubKeyFromPrivateKey: jest.fn().mockReturnValue('PUBLIC_KEY'),
         getAddressFromPrivateKey: jest.fn().mockReturnValue('address'),
-        getAddressFromPublicKey: jest.fn().mockReturnValue('address'),
-        amountToStd: jest.fn().mockReturnValue(new BigNumber(0)),
-        amountFromStd: jest.fn().mockReturnValue(new BigNumber(0))
+        getAddressFromPublicKey: jest.fn().mockReturnValue('address')
     };
 });
 
@@ -39,10 +36,6 @@ const clearMocks = () => {
     toBech32Address.mockClear();
     // @ts-ignore
     isBech32.mockClear();
-    // @ts-ignore
-    amountToStd.mockClear();
-    // @ts-ignore
-    amountFromStd.mockClear();
 };
 
 describe('Zilliqa account', () => {

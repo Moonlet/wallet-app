@@ -12,7 +12,6 @@ import { getPassword } from '../../core/secure/keychain';
 import { storeEncrypted } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
-import { BigNumber } from 'bignumber.js';
 import { selectCurrentWallet } from './selectors';
 
 // actions consts
@@ -96,6 +95,9 @@ export const getBalance = (
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const wallet = selectCurrentWallet(state);
+    if (wallet === undefined) {
+        return;
+    }
     const account = wallet.accounts.filter(
         acc => acc.address === address && acc.blockchain === blockchain
     )[0];
@@ -147,10 +149,9 @@ export const sendTransferTransaction = (
 
     try {
         const hdWallet = await WalletFactory.get(wallet.id, wallet.type, encryptedPass); // encrypted string: pass)
+        const blockchainInstance = getBlockchain(account.blockchain);
 
-        const nonce = await getBlockchain(account.blockchain)
-            .getClient(chainId)
-            .getNonce(account.address);
+        const nonce = await blockchainInstance.getClient(chainId).getNonce(account.address);
 
         const options = {
             nonce,
@@ -162,7 +163,7 @@ export const sendTransferTransaction = (
         const tx = {
             from: account.address,
             to: toAddress,
-            amount: new BigNumber(1000000000000000),
+            amount: blockchainInstance.account.amountToStd(amount),
             options
         };
 

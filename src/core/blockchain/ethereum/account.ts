@@ -1,6 +1,9 @@
 import { IAccountState } from '../../../redux/wallets/state';
 import { Blockchain } from '../types';
 import * as Util from 'ethereumjs-util';
+import { BigNumber } from 'bignumber.js';
+import { convertUnit } from '../common/account';
+import { BLOCKCHAIN_INFO } from '../blockchain-factory';
 
 export const isValidChecksumAddress = (address: string): boolean => {
     return Util.isValidChecksumAddress(address);
@@ -33,4 +36,20 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
         address: privateToAddress(privateKey),
         blockchain: Blockchain.ETHEREUM
     };
+};
+
+export const amountToStd = (value: string): BigNumber => {
+    const info = BLOCKCHAIN_INFO[Blockchain.ETHEREUM];
+
+    return convertUnit(
+        Blockchain.ETHEREUM,
+        new BigNumber(Number(value)),
+        info.coin,
+        info.defaultUnit
+    );
+};
+
+export const amountFromStd = (value: BigNumber): BigNumber => {
+    const info = BLOCKCHAIN_INFO[Blockchain.ETHEREUM];
+    return convertUnit(Blockchain.ETHEREUM, value, info.defaultUnit, info.coin);
 };

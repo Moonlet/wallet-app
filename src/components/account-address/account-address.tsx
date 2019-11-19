@@ -8,6 +8,7 @@ import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { formatAddress } from '../../core/utils/format-address';
+import { formatAmountFromAccount, amountFromAccount } from '../../core/utils/format-amount';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -27,7 +28,7 @@ export const AccountAddressComponent = (props: IProps & IExternalProps) => {
             <Text style={styles.address}>{formatAddress(props.account.address)}</Text>
             <View style={styles.balanceContainer}>
                 <Text style={styles.balance} format={{ currency: coin }}>
-                    {props.account.balance?.value?.toString()}
+                    {formatAmountFromAccount(props.account)}
                 </Text>
                 <Text style={styles.convert}>
                     {'  '} $
@@ -38,7 +39,7 @@ export const AccountAddressComponent = (props: IProps & IExternalProps) => {
                             fontSize: props.theme.fontSize.large,
                             color: props.theme.colors.textSecondary
                         }}
-                        amount={props.account.balance?.value}
+                        amount={amountFromAccount(props.account)}
                     />
                 </Text>
             </View>

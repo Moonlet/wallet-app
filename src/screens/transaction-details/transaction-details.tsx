@@ -15,6 +15,7 @@ import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
+import { formatAmountFromAccount } from '../../core/utils/format-amount';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -54,9 +55,7 @@ export class TransactionDetailsComponent extends React.Component<
         const transaction = this.props.transaction;
         const account = this.props.account;
         const amount =
-            BLOCKCHAIN_INFO[account.blockchain].coin +
-            ' ' +
-            transaction.amount.toString().slice(0, 5);
+            BLOCKCHAIN_INFO[account.blockchain].coin + ' ' + formatAmountFromAccount(account);
         const date = new Date(transaction.date.signed);
         return (
             <ScrollView style={styles.container}>

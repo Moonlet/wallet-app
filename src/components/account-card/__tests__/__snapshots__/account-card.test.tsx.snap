@@ -6,7 +6,7 @@ exports[`account card component renders correctly 1`] = `
   <View style={{...}}>
     <View style={{...}}>
       <withTheme(TextComponent) format={{...}}>
-        12332
+        0.000
       </withTheme(TextComponent)>
       <withTheme(TextComponent) small={true}>
           

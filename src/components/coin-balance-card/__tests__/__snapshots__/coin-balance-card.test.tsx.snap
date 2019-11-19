@@ -4,7 +4,7 @@ exports[`coin balance component renders correctly 1`] = `
 "<View style={{...}}>
   <View style={{...}}>
     <withTheme(TextComponent) style={{...}} format={true}>
-      100
+      {{ s: 1, e: -10, c: [ 10000 ] }}
     </withTheme(TextComponent)>
     <withTheme(TextComponent) style={false}>
        

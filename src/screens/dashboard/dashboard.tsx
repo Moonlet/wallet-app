@@ -44,23 +44,24 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCROLL_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.5);
 const ANIMATED_BC_SELECTION = true;
 
-const calculateBalances = (accounts: IAccountState[]) =>
-    accounts.reduce(
+const calculateBalances = (accounts: IAccountState[]) => {
+    return accounts.reduce(
         (out: any, account: IAccountState) => {
             if (!out.balance[account.blockchain]) {
                 out.balance[account.blockchain] = {
-                    amount: account?.balance?.value || new BigNumber(0)
+                    amount: new BigNumber(account?.balance?.value) || new BigNumber(0)
                 };
                 out.coins.push(account.blockchain);
             } else {
                 out.balance[account.blockchain].amount = out.balance[
                     account.blockchain
-                ].amount.plus(account?.balance?.value || new BigNumber(0));
+                ].amount.plus(new BigNumber(account?.balance?.value) || new BigNumber(0));
             }
             return out;
         },
         { coins: [], balance: {} }
     );
+};
 
 const mapStateToProps = (state: IReduxState) => ({
     wallet: selectCurrentWallet(state),
@@ -159,11 +160,16 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
             '0x1b6c705252438d59DB3ADB85e3B91374377a20c9',
             true
         );
+        this.props.getBalance(
+            Blockchain.ETHEREUM,
+            4,
+            '0xFEb8fA91f64f52ee66f7095486Caaf0a1227e254',
+            true
+        );
     }
 
     public render() {
         const styles = this.props.styles;
-
         return (
             <View style={styles.container}>
                 <View style={styles.balancesContainer}>
@@ -186,6 +192,7 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
                         {this.state.coins.map((coin, i) => (
                             <CoinBalanceCard
                                 balance={this.state.balance[this.state.coins[i]].amount}
+                                blockchain={this.state.coins[i]}
                                 currency={BLOCKCHAIN_INFO[this.state.coins[i]].coin}
                                 width={SCROLL_CARD_WIDTH}
                                 key={i}

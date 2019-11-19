@@ -1,4 +1,5 @@
 import { IAccountState } from '../../../redux/wallets/state';
+import { BigNumber } from 'bignumber.js';
 
 export interface IBlockchainAccountUtils {
     isValidChecksumAddress(address: string): boolean;
@@ -9,4 +10,7 @@ export interface IBlockchainAccountUtils {
     privateToPublic(privateKey: string): string;
 
     getAccountFromPrivateKey(privateKey: string, index: number): IAccountState;
+
+    amountToStd(value: string): BigNumber;
+    amountFromStd(value: BigNumber): BigNumber;
 }

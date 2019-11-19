@@ -21,6 +21,10 @@ export const getAccountTransactions = (
     }
 };
 
+export const getAccounts = (state: IReduxState, blockchain: Blockchain): IAccountState[] => {
+    return selectCurrentWallet(state).accounts.filter(acc => acc.blockchain === blockchain);
+};
+
 export const getAccount = (
     state: IReduxState,
     accountIndex: number,

@@ -18,7 +18,7 @@ import { IAccountState } from '../../redux/wallets/state';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { AccountList } from './components/account-list/account-list';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
-import { selectCurrentWallet, getAccount } from '../../redux/wallets/selectors';
+import { getAccounts, getAccount } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
@@ -38,7 +38,7 @@ export interface IReduxProps {
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        accounts: selectCurrentWallet(state).accounts
+        accounts: getAccounts(state, ownProps.blockchain)
     };
 };
 

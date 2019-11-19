@@ -52,7 +52,7 @@ const navigationOptions = ({ navigation }: any) => ({
             />
         );
     },
-    title: 'Receive'
+    title: translate('App.labels.cancel')
 });
 export class ReceiveScreenComponent extends React.Component<
     INavigationProps<INavigationParams> & IProps & IReduxProps,

@@ -32,7 +32,8 @@ export default (theme: ITheme) =>
             height: 40,
             flexDirection: 'row',
             marginBottom: 12,
-            marginHorizontal: BASE_DIMENSION * 2
+            marginHorizontal: BASE_DIMENSION * 2,
+            overflow: 'hidden'
         },
         blockchainButton: {
             flex: 1,

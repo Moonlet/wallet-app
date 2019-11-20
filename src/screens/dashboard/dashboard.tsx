@@ -159,6 +159,56 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
         });
     }
 
+    public renderBottomBlockchainNav = () => {
+        const styles = this.props.styles;
+
+        return (
+            <LinearGradient
+                colors={this.props.theme.shadowGradient}
+                locations={[0, 0.5]}
+                style={styles.selectorGradientContainer}
+            >
+                <View style={styles.blockchainSelectorContainer} testID="blockchainSelector">
+                    <ScrollView
+                        horizontal
+                        disableIntervalMomentum={true}
+                        overScrollMode={'never'}
+                        centerContent={true}
+                        snapToAlignment={'start'}
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        showsHorizontalScrollIndicator={false}
+                        snapToStart={false}
+                        snapToEnd={false}
+                        decelerationRate={0.8}
+                    >
+                        {this.state.coins.map((coin, i) => (
+                            <TouchableOpacity
+                                key={i}
+                                style={[
+                                    styles.blockchainButton,
+                                    this.state.coinIndex === i && styles.blockchainButtonActive,
+                                    {
+                                        width: this.state.coins.length > 3 ? SCREEN_WIDTH / 3 : null
+                                    }
+                                ]}
+                                onPress={() => this.setActiveCoin(i)}
+                            >
+                                <Text
+                                    style={
+                                        this.state.coinIndex === i &&
+                                        styles.blockchainButtonTextActive
+                                    }
+                                >
+                                    {BLOCKCHAIN_INFO[this.state.coins[i]].coin}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                </View>
+            </LinearGradient>
+        );
+    };
+
     public render() {
         const styles = this.props.styles;
         return (
@@ -210,33 +260,9 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
                     />
                 </Animated.View>
 
-                <LinearGradient
-                    colors={this.props.theme.shadowGradient}
-                    locations={[0, 0.5]}
-                    style={styles.selectorGradientContainer}
-                >
-                    <View style={styles.blockchainSelectorContainer} testID="blockchainSelector">
-                        {this.state.coins.map((coin, i) => (
-                            <TouchableOpacity
-                                key={i}
-                                style={[
-                                    styles.blockchainButton,
-                                    this.state.coinIndex === i && styles.blockchainButtonActive
-                                ]}
-                                onPress={() => this.setActiveCoin(i)}
-                            >
-                                <Text
-                                    style={
-                                        this.state.coinIndex === i &&
-                                        styles.blockchainButtonTextActive
-                                    }
-                                >
-                                    {BLOCKCHAIN_INFO[this.state.coins[i]].coin}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                </LinearGradient>
+                {this.state.coins && this.state.coins.length > 1
+                    ? this.renderBottomBlockchainNav()
+                    : null}
             </View>
         );
     }

@@ -59,6 +59,10 @@ export default (theme: ITheme) =>
             flex: 1,
             marginLeft: 10
         },
+        transactionAmountContainer: {
+            flexDirection: 'row',
+            alignItems: 'baseline'
+        },
         transactionTextPrimary: {
             marginLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary

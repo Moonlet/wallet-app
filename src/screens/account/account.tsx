@@ -148,12 +148,7 @@ export class AccountScreenComponent extends React.Component<
                                             style={styles.transactionIcon}
                                         />
                                         <View style={styles.transactionTextContainer}>
-                                            <View
-                                                style={{
-                                                    flexDirection: 'row',
-                                                    alignItems: 'baseline'
-                                                }}
-                                            >
+                                            <View style={styles.transactionAmountContainer}>
                                                 <Amount
                                                     amount={tx.amount}
                                                     blockchain={account.blockchain}

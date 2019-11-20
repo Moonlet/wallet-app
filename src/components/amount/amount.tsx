@@ -30,13 +30,10 @@ export const AmountComponent = (props: IExternalProps & IReduxProps) => {
         const conversion =
             props.usdPrices[BLOCKCHAIN_INFO[props.blockchain].coin] / props.usdPrices.USD || 0;
 
-        const amount = blockchainInstance.account.amountFromStd(new BigNumber(value));
+        const amount = blockchainInstance.account.amountFromStd(value);
 
         if (props.convert) {
-            return (amount instanceof BigNumber
-                ? new BigNumber(amount)
-                : new BigNumber(amount || 0)
-            ).multipliedBy(conversion);
+            return (amount || new BigNumber(0)).multipliedBy(conversion);
         }
 
         return amount;

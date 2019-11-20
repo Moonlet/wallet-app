@@ -11,11 +11,10 @@ export const convertUnit = (
     if (fromUnit === toUnit) {
         return value;
     }
-    const amount = new BigNumber(value);
 
     if (info) {
         if (info.units[fromUnit] && info.units[toUnit]) {
-            return amount.multipliedBy(info.units[fromUnit]).dividedBy(info.units[toUnit]);
+            return value.multipliedBy(info.units[fromUnit]).dividedBy(info.units[toUnit]);
         } else {
             throw new Error(`${fromUnit} or ${toUnit} is not configured as a unit.`);
         }

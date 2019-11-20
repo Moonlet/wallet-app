@@ -50,5 +50,10 @@ export default (theme: ITheme) =>
 
         bottomButton: {
             width: '100%'
+        },
+
+        errorMessage: {
+            textAlign: 'center',
+            width: '100%'
         }
     });

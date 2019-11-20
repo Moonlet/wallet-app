@@ -13,6 +13,6 @@ export default (theme: ITheme) =>
             color: theme.colors.textSecondary
         },
         mainText: {
-            fontSize: 34
+            fontSize: 28
         }
     });

@@ -59,9 +59,9 @@ export const SetPasswordConfirmScreenComponent = (props: IProps) => {
     );
 };
 
-export const navigationOptions = {
-    title: 'Secure Wallet'
-};
+const navigationOptions = () => ({
+    title: translate('Wallets.secureWallet')
+});
 
 export const SetPasswordConfirmScreen = withTheme(stylesProvider)(
     SetPasswordConfirmScreenComponent

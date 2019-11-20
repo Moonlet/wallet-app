@@ -13,6 +13,7 @@ export const translation: ITranslations = {
                 connect: 'Connect',
                 create: 'Create',
                 delete: 'Delete',
+                details: 'Details',
                 error: 'Error',
                 date: 'Date',
                 from: 'From',
@@ -23,11 +24,14 @@ export const translation: ITranslations = {
                 recover: 'Recover',
                 secure: 'Secure',
                 send: 'Send',
+                settings: 'Settings',
                 status: 'Status',
+                tc: 'Terms and conditions',
                 tos: 'Terms of service',
                 transactions: 'Transactions',
                 to: 'To',
-                understand: 'I understand'
+                understand: 'I understand',
+                wallets: 'Wallets'
                 // plase try to add keys in alphabetic order
             },
             buttons: {
@@ -90,11 +94,11 @@ export const translation: ITranslations = {
             deletePasswordRequest: 'Please type your password to delete your wallet.',
             unveilPasswordRequest: 'Please type your password to unveil your recovery phrase.',
             invalidPassword: 'Invalid Password',
-            viewPhrase: 'View phrase'
+            viewPhrase: 'View phrase',
+            secureWallet: 'Secure wallet'
         },
         Transaction: {
             transactionID: 'Transaction ID',
-
             nonce: 'Nonce',
             statusValue: {
                 Pending: 'Pending',

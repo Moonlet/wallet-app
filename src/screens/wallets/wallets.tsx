@@ -65,7 +65,7 @@ const mapDispatchToProps = {
 
 const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: 'Wallets'
+    title: translate('App.labels.wallets')
 });
 
 export class WalletsScreenComponent extends React.Component<

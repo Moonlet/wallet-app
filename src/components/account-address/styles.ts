@@ -15,6 +15,7 @@ export default (theme: ITheme) =>
             color: theme.colors.textSecondary
         },
         convert: {
+            marginLeft: 5,
             fontSize: theme.fontSize.large,
             color: theme.colors.textSecondary
         },

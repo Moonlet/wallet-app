@@ -6,10 +6,12 @@ import styleProvider from '../styles';
 
 import { shallow } from 'enzyme';
 import BigNumber from 'bignumber.js';
+import { Blockchain } from '../../../core/blockchain/types';
 
 const props: IProps = {
     currency: 'ZIL',
     balance: new BigNumber(100),
+    blockchain: Blockchain.ZILLIQA,
     toCurrency: 'ETH',
     width: 100,
     active: true,

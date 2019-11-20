@@ -1,6 +1,5 @@
 import { Ethereum } from '../';
 import * as Util from 'ethereumjs-util';
-import { Blockchain } from '../../types';
 
 jest.mock('ethereumjs-util', () => {
     const util = jest.requireActual('ethereumjs-util');

@@ -5,14 +5,8 @@ exports[`account card component renders correctly 1`] = `
   <Icon name=\\"money-wallet-1\\" size={25} style={{...}} allowFontScaling={false} />
   <View style={{...}}>
     <View style={{...}}>
-      <withTheme(TextComponent) format={{...}}>
-        12332
-      </withTheme(TextComponent)>
-      <withTheme(TextComponent) small={true}>
-          
-         $
-        <Connect(ConvertComponent) from=\\"ZIL\\" to=\\"USD\\" style={{...}} amount={{...}} />
-      </withTheme(TextComponent)>
+      <Connect(AmountComponent) amount={{...}} blockchain=\\"ZILLIQA\\" />
+      <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" convert={true} />
     </View>
     <withTheme(TextComponent) small={true}>
       zil1vs74hw5k21233h432kj321l3k21b

@@ -1,5 +1,4 @@
 import { Zilliqa } from '../';
-import { Blockchain } from '../../types';
 import {
     getPubKeyFromPrivateKey,
     getAddressFromPrivateKey,
@@ -8,11 +7,15 @@ import {
 import { toBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 
-jest.mock('@zilliqa-js/crypto/dist/util', () => ({
-    getPubKeyFromPrivateKey: jest.fn().mockReturnValue('PUBLIC_KEY'),
-    getAddressFromPrivateKey: jest.fn().mockReturnValue('address'),
-    getAddressFromPublicKey: jest.fn().mockReturnValue('address')
-}));
+jest.mock('@zilliqa-js/crypto/dist/util', () => {
+    const util = jest.requireActual('@zilliqa-js/crypto/dist/util');
+    return {
+        ...util,
+        getPubKeyFromPrivateKey: jest.fn().mockReturnValue('PUBLIC_KEY'),
+        getAddressFromPrivateKey: jest.fn().mockReturnValue('address'),
+        getAddressFromPublicKey: jest.fn().mockReturnValue('address')
+    };
+});
 
 jest.mock('@zilliqa-js/util/dist/validation', () => ({
     isBech32: jest.fn().mockReturnValue(true)

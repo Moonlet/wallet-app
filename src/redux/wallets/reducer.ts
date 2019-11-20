@@ -1,7 +1,9 @@
 import { IAction } from '../types';
-import { IWalletState, ITransactionState } from './state';
+import { IWalletState, ITransactionState, IAccountState } from './state';
 import { WALLET_ADD, WALLET_DELETE, ACCOUNT_GET_BALANCE, TRANSACTION_PUBLISHED } from './actions';
 import { TransactionStatus } from '../../core/wallet/types';
+import { REHYDRATE } from 'redux-persist';
+import BigNumber from 'bignumber.js';
 
 const intialState: IWalletState[] = [];
 
@@ -18,6 +20,25 @@ const newBalance = (oldBalance: any, action: any) => {
 
 export default (state: IWalletState[] = intialState, action: IAction) => {
     switch (action.type) {
+        case REHYDRATE:
+            return action.payload
+                ? action.payload.wallets.map((wallet: IWalletState) => ({
+                      ...wallet,
+                      accounts: wallet.accounts.map((account: IAccountState) => ({
+                          ...account,
+                          balance: {
+                              ...account.balance,
+                              value: new BigNumber(account.balance?.value || 0)
+                          }
+                      })),
+                      transactions: Object.values(wallet.transactions).map(
+                          (tx: ITransactionState) => ({
+                              ...transaction,
+                              amount: new BigNumber(tx.amount || 0)
+                          })
+                      )
+                  }))
+                : state;
         case WALLET_ADD:
             return [...state, action.data];
         // return [action.data]; // this will reset persisted redux wallets
@@ -31,7 +52,7 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
                               account.blockchain === action.data.blockchain
                                   ? {
                                         ...account,
-                                        balance: newBalance(account.balance, action) // TODO: here ce ai tu nevoie sa setezi
+                                        balance: newBalance(account.balance, action)
                                     }
                                   : account
                           )
@@ -73,6 +94,7 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
             );
         case WALLET_DELETE:
             return state.filter((wallet: IWalletState) => action.data !== wallet.id);
+
         default:
             break;
     }

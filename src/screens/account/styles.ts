@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -58,7 +59,12 @@ export default (theme: ITheme) =>
             flex: 1,
             marginLeft: 10
         },
+        transactionAmountContainer: {
+            flexDirection: 'row',
+            alignItems: 'baseline'
+        },
         transactionTextPrimary: {
+            marginLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         },
         transactionTextSecondary: {

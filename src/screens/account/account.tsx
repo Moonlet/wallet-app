@@ -16,8 +16,8 @@ import { AccountSettings } from './components/account-settings/account-settings'
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { formatAddress } from '../../core/utils/format-address';
-import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { Blockchain } from '../../core/blockchain/types';
+import { Amount } from '../../components/amount/amount';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -81,13 +81,11 @@ export class AccountScreenComponent extends React.Component<
     };
 
     public getTransactionPrimaryText(tx: ITransactionState, account: IAccountState) {
-        const amount =
-            tx.amount.toString().slice(0, 5) + ' ' + BLOCKCHAIN_INFO[account.blockchain].coin + ' ';
         const formattedAmount =
             tx.fromAddress === account.address
                 ? translate('App.labels.to').toLowerCase()
                 : translate('App.labels.from').toLowerCase();
-        return amount + '' + formattedAmount + ' ' + formatAddress(tx.toAddress);
+        return formattedAmount + ' ' + formatAddress(tx.toAddress);
     }
 
     public render() {
@@ -150,9 +148,21 @@ export class AccountScreenComponent extends React.Component<
                                             style={styles.transactionIcon}
                                         />
                                         <View style={styles.transactionTextContainer}>
-                                            <Text style={styles.transactionTextPrimary}>
-                                                {this.getTransactionPrimaryText(tx, account)}
-                                            </Text>
+                                            <View
+                                                style={{
+                                                    flexDirection: 'row',
+                                                    alignItems: 'baseline'
+                                                }}
+                                            >
+                                                <Amount
+                                                    amount={tx.amount}
+                                                    blockchain={account.blockchain}
+                                                />
+
+                                                <Text style={styles.transactionTextPrimary}>
+                                                    {this.getTransactionPrimaryText(tx, account)}
+                                                </Text>
+                                            </View>
                                             <Text style={styles.transactionTextSecondary}>
                                                 {date.toISOString()}
                                             </Text>

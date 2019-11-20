@@ -30,7 +30,13 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
                               ...account.balance,
                               value: new BigNumber(account.balance?.value || 0)
                           }
-                      }))
+                      })),
+                      transactions: Object.values(wallet.transactions).map(
+                          (tx: ITransactionState) => ({
+                              ...transaction,
+                              amount: new BigNumber(tx.amount || 0)
+                          })
+                      )
                   }))
                 : state;
         case WALLET_ADD:

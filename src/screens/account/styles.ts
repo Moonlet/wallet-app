@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -59,6 +60,7 @@ export default (theme: ITheme) =>
             marginLeft: 10
         },
         transactionTextPrimary: {
+            marginLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         },
         transactionTextSecondary: {

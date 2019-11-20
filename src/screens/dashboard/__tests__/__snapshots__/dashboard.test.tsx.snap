@@ -15,16 +15,18 @@ exports[`dashboard screen component renders correctly 1`] = `
   </AnimatedComponent>
   <LinearGradient colors={{...}} locations={{...}} style={{...}} start={{...}} end={{...}}>
     <View style={{...}} testID=\\"blockchainSelector\\">
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          ZIL
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={false}>
-          ETH
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
+      <ScrollViewMock horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            ZIL
+          </withTheme(TextComponent)>
+        </TouchableOpacity>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={false}>
+            ETH
+          </withTheme(TextComponent)>
+        </TouchableOpacity>
+      </ScrollViewMock>
     </View>
   </LinearGradient>
 </View>"

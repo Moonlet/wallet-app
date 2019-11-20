@@ -26,6 +26,9 @@ export const AmountComponent = (props: IExternalProps & IReduxProps) => {
               currency: BLOCKCHAIN_INFO[props.blockchain].coin
           };
     const convertAmount = (blockchain: Blockchain, value: BigNumber): BigNumber => {
+        if (value === undefined) {
+            return new BigNumber(0);
+        }
         const blockchainInstance = getBlockchain(blockchain);
         const conversion =
             props.usdPrices[BLOCKCHAIN_INFO[props.blockchain].coin] / props.usdPrices.USD || 0;

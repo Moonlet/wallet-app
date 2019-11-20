@@ -30,6 +30,7 @@ import { ReceiveScreen } from '../screens/receive/receive';
 import { ViewWalletMnemonicScreen } from '../screens/view-wallet-mnemonic/view-wallet-mnemonic';
 import { TransactionDetails } from '../screens/transaction-details/transaction-details';
 import { RewardsScreen } from '../screens/rewards/rewards';
+import { AccountsScreen } from '../screens/accounts/accounts';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -100,6 +101,9 @@ export const WalletNavigation = createStackNavigator(
         },
         Receive: {
             screen: ReceiveScreen
+        },
+        Accounts: {
+            screen: AccountsScreen
         },
         Wallets: {
             screen: WalletsScreen

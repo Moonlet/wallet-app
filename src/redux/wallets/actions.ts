@@ -17,9 +17,10 @@ import { selectCurrentWallet } from './selectors';
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
 export const WALLET_DELETE = 'WALLET_DELETE';
-export const ACCOUNT_CREATE = 'ACCOUNT_CREATE';
 export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
+export const ACCOUNT_ADD = 'ACCOUNT_ADD';
+export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
 
 export const FEE = {
     [Blockchain.ZILLIQA]: {
@@ -37,6 +38,20 @@ export const addWallet = (walletData: IWalletState) => {
     return {
         type: WALLET_ADD,
         data: walletData
+    };
+};
+
+export const addAccount = (walletId: string, account: IAccountState) => {
+    return {
+        type: ACCOUNT_ADD,
+        data: { walletId, account }
+    };
+};
+
+export const removeAccount = (walletId: string, account: IAccountState) => {
+    return {
+        type: ACCOUNT_REMOVE,
+        data: { walletId, account }
     };
 };
 
@@ -67,7 +82,7 @@ export const createHDWallet = (mnemonic: string, callback?: () => any) => async 
             );
 
             const passwordCredentials = await getPassword();
-            let passwordHash = 'pass';
+            let passwordHash = '698bd02da17d4671da826cf833cf23be26a74ff4dd389da3b05bd894f7d97ef5'; // hash('pass')
 
             if (passwordCredentials) {
                 passwordHash = passwordCredentials.password;

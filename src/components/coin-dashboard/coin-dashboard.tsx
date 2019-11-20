@@ -8,12 +8,7 @@ import { Icon } from '../icon';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
-import {
-    NavigationScreenProp,
-    NavigationState,
-    NavigationParams,
-    NavigationActions
-} from 'react-navigation';
+import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 
 export interface IProps {
@@ -42,29 +37,9 @@ export const CoinDashboardComponent = (props: IProps) => (
         </View>
         <View style={props.styles.addButton}>
             <TouchableOpacity
-                testID="button-create-wallet"
+                testID="button-manage-accounts"
                 onPress={() => {
-                    props.navigation.navigate(
-                        'CreateWalletNavigation',
-                        {},
-                        NavigationActions.navigate({
-                            routeName: 'CreateWalletTerms',
-                            params: {
-                                goBack: (
-                                    navigation: NavigationScreenProp<
-                                        NavigationState,
-                                        NavigationParams
-                                    >
-                                ) => {
-                                    navigation.navigate(
-                                        'MainNavigation',
-                                        {},
-                                        NavigationActions.navigate({ routeName: 'Dashboard' })
-                                    );
-                                }
-                            }
-                        })
-                    );
+                    props.navigation.navigate('Accounts', { blockchain: props.blockchain });
                 }}
             >
                 <Icon name="add" size={25} style={props.styles.icon} />

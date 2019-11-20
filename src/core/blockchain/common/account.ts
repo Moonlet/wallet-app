@@ -1,8 +1,7 @@
-import { Blockchain, IBlockchainConfig } from '../types';
+import { IBlockchainConfig } from '../types';
 import { BigNumber } from 'bignumber.js';
 
 export const convertUnit = (
-    blockchain: Blockchain,
     value: BigNumber,
     fromUnit: string,
     toUnit: string,
@@ -19,6 +18,6 @@ export const convertUnit = (
             throw new Error(`${fromUnit} or ${toUnit} is not configured as a unit.`);
         }
     } else {
-        throw new Error(`Blockchain ${blockchain} is not configured.`);
+        throw new Error(`Blockchain  is not configured.`);
     }
 };

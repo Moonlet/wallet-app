@@ -8,10 +8,8 @@ import { Blockchain } from '../../core/blockchain/types';
 import { Amount } from '../amount/amount';
 
 export interface IProps {
-    currency: string;
     blockchain: Blockchain;
     balance: BigNumber;
-    toCurrency: string;
     width: number;
     active: boolean;
     styles: ReturnType<typeof stylesProvider>;

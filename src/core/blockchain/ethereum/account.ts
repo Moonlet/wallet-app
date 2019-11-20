@@ -39,15 +39,9 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
 };
 
 export const amountToStd = (value: BigNumber | number | string): BigNumber => {
-    return convertUnit(
-        Blockchain.ETHEREUM,
-        new BigNumber(Number(value)),
-        config.coin,
-        config.defaultUnit,
-        config
-    );
+    return convertUnit(new BigNumber(Number(value)), config.coin, config.defaultUnit, config);
 };
 
 export const amountFromStd = (value: BigNumber): BigNumber => {
-    return convertUnit(Blockchain.ETHEREUM, value, config.defaultUnit, config.coin, config);
+    return convertUnit(value, config.defaultUnit, config.coin, config);
 };

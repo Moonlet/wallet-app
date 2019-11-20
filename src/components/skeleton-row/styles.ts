@@ -1,6 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, CIRCLE_SIZE, LINE_HEIGTH } from '../../styles/dimensions';
+import { BASE_DIMENSION } from '../../styles/dimensions';
+
+const CIRCLE_SIZE = 40;
+const LINE_HEIGTH = 15;
 
 export default (theme: ITheme) =>
     StyleSheet.create({

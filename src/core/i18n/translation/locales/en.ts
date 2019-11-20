@@ -102,6 +102,11 @@ export const translation: ITranslations = {
                 Dropped: 'Dropped',
                 Success: 'Success'
             }
+        },
+        Rewards: {
+            title: 'Rewards',
+            launchingSoon: 'Launching soon!',
+            newSection: 'A new section to get rewards by staking your tokens is in the work.'
         }
     },
     plural: (n: number, ord?: boolean) => {

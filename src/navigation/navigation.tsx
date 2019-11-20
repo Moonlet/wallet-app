@@ -29,6 +29,7 @@ import { WalletsScreen } from '../screens/wallets/wallets';
 import { ReceiveScreen } from '../screens/receive/receive';
 import { ViewWalletMnemonicScreen } from '../screens/view-wallet-mnemonic/view-wallet-mnemonic';
 import { TransactionDetails } from '../screens/transaction-details/transaction-details';
+import { RewardsScreen } from '../screens/rewards/rewards';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -129,6 +130,19 @@ export const SettingsNavigation = createStackNavigator(
     }
 );
 
+// rewards navigation stack
+export const RewardsNavigation = createStackNavigator(
+    {
+        Rewards: {
+            screen: RewardsScreen
+        }
+    },
+    {
+        initialRouteName: 'Rewards',
+        defaultNavigationOptions: defaultStackNavigationOptions
+    }
+);
+
 // main dashboard navigation
 export const navigationConfig = {
     Wallet: {
@@ -138,7 +152,8 @@ export const navigationConfig = {
         })
     },
     Rewards: {
-        screen: DummyScreen,
+        screen: RewardsNavigation,
+        headerTransparent: true,
         navigationOptions: () => ({
             tabBarIcon: menuIcon('accounting-coins-stack')
         })

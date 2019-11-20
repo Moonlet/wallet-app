@@ -1,6 +1,7 @@
 import { Platform, NativeModules } from 'react-native';
 import 'intl';
 import 'intl/locale-data/jsonp/en-US';
+import BigNumber from 'bignumber.js';
 
 export interface INumberFormatOptions {
     locale?: string;
@@ -30,9 +31,8 @@ const getLocale = () => {
     return deviceLocale ? deviceLocale.replace(/_/g, '-') : null;
 };
 
-export const formatNumber = (amount: number, options: INumberFormatOptions = {}) => {
-    amount = Number(amount) || 0;
-
+export const formatNumber = (amount: number | BigNumber, options: INumberFormatOptions = {}) => {
+    amount = amount instanceof BigNumber ? amount.toNumber() : Number(amount) || 0;
     const displayFormatCurrency =
         options.currency && formattedCurrencies.indexOf(options.currency) !== -1;
 

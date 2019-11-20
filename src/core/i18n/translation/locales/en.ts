@@ -23,7 +23,6 @@ export const translation: ITranslations = {
                 receive: 'Receive',
                 recover: 'Recover',
                 secure: 'Secure',
-                secureW: 'Secure wallet',
                 send: 'Send',
                 settings: 'Settings',
                 status: 'Status',
@@ -32,7 +31,7 @@ export const translation: ITranslations = {
                 transactions: 'Transactions',
                 to: 'To',
                 understand: 'I understand',
-                wallets: 'Wwallets'
+                wallets: 'Wallets'
                 // plase try to add keys in alphabetic order
             },
             buttons: {
@@ -95,7 +94,8 @@ export const translation: ITranslations = {
             deletePasswordRequest: 'Please type your password to delete your wallet.',
             unveilPasswordRequest: 'Please type your password to unveil your recovery phrase.',
             invalidPassword: 'Invalid Password',
-            viewPhrase: 'View phrase'
+            viewPhrase: 'View phrase',
+            secureWallet: 'Secure wallet'
         },
         Transaction: {
             transactionID: 'Transaction ID',

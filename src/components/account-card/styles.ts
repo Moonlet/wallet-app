@@ -21,6 +21,10 @@ export default (theme: ITheme) =>
             flex: 1,
             marginHorizontal: BASE_DIMENSION
         },
+        amountContainer: {
+            flexDirection: 'row',
+            alignItems: 'baseline'
+        },
         icon: {
             color: theme.colors.accent
         }

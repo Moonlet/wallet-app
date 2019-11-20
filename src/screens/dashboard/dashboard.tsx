@@ -154,18 +154,9 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
     };
 
     public componentDidMount() {
-        this.props.getBalance(
-            Blockchain.ETHEREUM,
-            4,
-            '0x1b6c705252438d59DB3ADB85e3B91374377a20c9',
-            true
-        );
-        this.props.getBalance(
-            Blockchain.ETHEREUM,
-            4,
-            '0xFEb8fA91f64f52ee66f7095486Caaf0a1227e254',
-            true
-        );
+        this.props.wallet?.accounts.map(account => {
+            this.props.getBalance(account.blockchain, 4, account.address, true);
+        });
     }
 
     public render() {

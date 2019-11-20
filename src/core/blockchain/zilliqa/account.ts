@@ -40,7 +40,7 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
     };
 };
 
-export const amountToStd = (value: string): BigNumber => {
+export const amountToStd = (value: BigNumber | number | string): BigNumber => {
     return convertUnit(
         Blockchain.ZILLIQA,
         new BigNumber(Number(value)),

@@ -8,14 +8,14 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
-import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { ITransactionState, IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
-import { formatAmountFromAccount } from '../../core/utils/format-amount';
+import { Amount } from '../../components/amount/amount';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -54,8 +54,7 @@ export class TransactionDetailsComponent extends React.Component<
         const styles = this.props.styles;
         const transaction = this.props.transaction;
         const account = this.props.account;
-        const amount =
-            BLOCKCHAIN_INFO[account.blockchain].coin + ' ' + formatAmountFromAccount(account);
+
         const date = new Date(transaction.date.signed);
         return (
             <ScrollView style={styles.container}>
@@ -96,7 +95,11 @@ export class TransactionDetailsComponent extends React.Component<
                 </View>
                 <View style={styles.rowContainer}>
                     <View>
-                        <Text style={styles.textPrimary}>{amount}</Text>
+                        <Amount
+                            style={styles.textPrimary}
+                            amount={transaction.amount}
+                            blockchain={account.blockchain}
+                        />
                         <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
                     </View>
                 </View>

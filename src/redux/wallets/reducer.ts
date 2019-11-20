@@ -20,6 +20,17 @@ const newBalance = (oldBalance: any, action: any) => {
 
 export default (state: IWalletState[] = intialState, action: IAction) => {
     switch (action.type) {
+        case REHYDRATE:
+            return action.payload.wallets.map((wallet: IWalletState) => ({
+                ...wallet,
+                accounts: wallet.accounts.map((account: IAccountState) => ({
+                    ...account,
+                    balance: {
+                        ...account.balance,
+                        value: new BigNumber(account.balance?.value || 0)
+                    }
+                }))
+            }));
         case WALLET_ADD:
             return [...state, action.data];
         // return [action.data]; // this will reset persisted redux wallets
@@ -75,17 +86,7 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
             );
         case WALLET_DELETE:
             return state.filter((wallet: IWalletState) => action.data !== wallet.id);
-        case REHYDRATE:
-            return action.payload.wallets.map((wallet: IWalletState) => ({
-                ...wallet,
-                accounts: wallet.accounts.map((account: IAccountState) => ({
-                    ...account,
-                    balance: {
-                        ...account.balance,
-                        value: new BigNumber(account.balance.value)
-                    }
-                }))
-            }));
+
         default:
             break;
     }

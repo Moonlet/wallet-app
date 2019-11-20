@@ -144,7 +144,16 @@ export const sendTransferTransaction = (
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
-    const encryptedPass = '366bf1f956e204d7bea27145b5afe34cabd6d584100e6b0b5f700230bc52a5f2';
+
+    // TODO  - remove after password screen is active
+    let encryptedPass = '366bf1f956e204d7bea27145b5afe34cabd6d584100e6b0b5f700230bc52a5f2';
+    const passwordCredentials = await getPassword();
+    if (passwordCredentials) {
+        encryptedPass = passwordCredentials.password;
+    } else {
+        // ask for password
+    }
+
     const wallet = selectCurrentWallet(state);
 
     try {

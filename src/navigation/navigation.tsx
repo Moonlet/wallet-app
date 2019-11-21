@@ -9,7 +9,11 @@ import { lightTheme } from '../styles/themes/light-theme';
 import { ITheme } from '../core/theme/itheme';
 import { Theme } from '../core/theme/themes';
 import { HeaderLeft } from '../components/header-left/header-left';
-import { DummyScreen, menuIcon, removeAnimation } from './utils';
+import {
+    // DummyScreen,
+    menuIcon,
+    removeAnimation
+} from './utils';
 
 import { DashboardScreen } from '../screens/dashboard/dashboard';
 import { SettingsScreen } from '../screens/settings/settings';
@@ -31,6 +35,7 @@ import { ViewWalletMnemonicScreen } from '../screens/view-wallet-mnemonic/view-w
 import { TransactionDetails } from '../screens/transaction-details/transaction-details';
 import { RewardsScreen } from '../screens/rewards/rewards';
 import { AccountsScreen } from '../screens/accounts/accounts';
+import { WatchScreen } from '../screens/watch/watch';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -147,6 +152,19 @@ export const RewardsNavigation = createStackNavigator(
     }
 );
 
+// watch navigation stack
+export const WatchNavigation = createStackNavigator(
+    {
+        Watch: {
+            screen: WatchScreen
+        }
+    },
+    {
+        initialRouteName: 'Watch',
+        defaultNavigationOptions: defaultStackNavigationOptions
+    }
+);
+
 // main dashboard navigation
 export const navigationConfig = {
     Wallet: {
@@ -163,7 +181,8 @@ export const navigationConfig = {
         })
     },
     Watch: {
-        screen: DummyScreen,
+        screen: WatchNavigation,
+        headerTransparent: true,
         navigationOptions: () => ({
             tabBarIcon: menuIcon('view-1')
         })

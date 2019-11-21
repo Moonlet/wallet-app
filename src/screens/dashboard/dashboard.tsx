@@ -20,6 +20,7 @@ import { getBalance } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { BigNumber } from 'bignumber.js';
 import { selectCurrentWallet } from '../../redux/wallets/selectors';
+import { createSelector } from 'reselect';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -47,6 +48,9 @@ const ANIMATED_BC_SELECTION = true;
 const calculateBalances = (accounts: IAccountState[]) => {
     return accounts.reduce(
         (out: any, account: IAccountState) => {
+            if (!account) {
+                return out;
+            }
             if (!out.balance[account.blockchain]) {
                 out.balance[account.blockchain] = {
                     amount: account?.balance?.value || new BigNumber(0)
@@ -90,8 +94,19 @@ const navigationOptions = ({ navigation }: any) => ({
     )
 });
 
+// `calculateBalances` gets executed only when result of parameter picker function result is changed
+const getWalletBalances = createSelector(
+    [(wallet: IWalletState) => wallet.accounts || []],
+    accounts => calculateBalances(accounts)
+);
+
 export class DashboardScreenComponent extends React.Component<IProps & IReduxProps, IState> {
     public static navigationOptions = navigationOptions;
+
+    public static getDerivedStateFromProps(props, state) {
+        // update balances if wallet accounts changes
+        return getWalletBalances(props.wallet);
+    }
     public initialIndex = 0;
     public dashboardOpacity = new Animated.Value(1);
     public balancesScrollView: any;
@@ -159,6 +174,56 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
         });
     }
 
+    public renderBottomBlockchainNav = () => {
+        const styles = this.props.styles;
+
+        return (
+            <LinearGradient
+                colors={this.props.theme.shadowGradient}
+                locations={[0, 0.5]}
+                style={styles.selectorGradientContainer}
+            >
+                <View style={styles.blockchainSelectorContainer} testID="blockchainSelector">
+                    <ScrollView
+                        horizontal
+                        disableIntervalMomentum={true}
+                        overScrollMode={'never'}
+                        centerContent={true}
+                        snapToAlignment={'start'}
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        showsHorizontalScrollIndicator={false}
+                        snapToStart={false}
+                        snapToEnd={false}
+                        decelerationRate={0.8}
+                    >
+                        {this.state.coins.map((coin, i) => (
+                            <TouchableOpacity
+                                key={i}
+                                style={[
+                                    styles.blockchainButton,
+                                    this.state.coinIndex === i && styles.blockchainButtonActive,
+                                    {
+                                        width: this.state.coins.length > 3 ? SCREEN_WIDTH / 3 : null
+                                    }
+                                ]}
+                                onPress={() => this.setActiveCoin(i)}
+                            >
+                                <Text
+                                    style={
+                                        this.state.coinIndex === i &&
+                                        styles.blockchainButtonTextActive
+                                    }
+                                >
+                                    {BLOCKCHAIN_INFO[this.state.coins[i]].coin}
+                                </Text>
+                            </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                </View>
+            </LinearGradient>
+        );
+    };
+
     public render() {
         const styles = this.props.styles;
         return (
@@ -203,40 +268,18 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
                 >
                     <CoinDashboard
                         accounts={(this.props.wallet?.accounts || []).filter(
-                            account => account.blockchain === this.state.coins[this.state.coinIndex]
+                            account =>
+                                account &&
+                                account.blockchain === this.state.coins[this.state.coinIndex]
                         )}
                         blockchain={this.state.coins[this.state.coinIndex]}
                         navigation={this.props.navigation}
                     />
                 </Animated.View>
 
-                <LinearGradient
-                    colors={this.props.theme.shadowGradient}
-                    locations={[0, 0.5]}
-                    style={styles.selectorGradientContainer}
-                >
-                    <View style={styles.blockchainSelectorContainer} testID="blockchainSelector">
-                        {this.state.coins.map((coin, i) => (
-                            <TouchableOpacity
-                                key={i}
-                                style={[
-                                    styles.blockchainButton,
-                                    this.state.coinIndex === i && styles.blockchainButtonActive
-                                ]}
-                                onPress={() => this.setActiveCoin(i)}
-                            >
-                                <Text
-                                    style={
-                                        this.state.coinIndex === i &&
-                                        styles.blockchainButtonTextActive
-                                    }
-                                >
-                                    {BLOCKCHAIN_INFO[this.state.coins[i]].coin}
-                                </Text>
-                            </TouchableOpacity>
-                        ))}
-                    </View>
-                </LinearGradient>
+                {this.state.coins && this.state.coins.length > 1
+                    ? this.renderBottomBlockchainNav()
+                    : null}
             </View>
         );
     }

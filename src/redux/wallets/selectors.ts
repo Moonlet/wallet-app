@@ -2,8 +2,15 @@ import { IReduxState } from '../state';
 import { ITransactionState, IAccountState, IWalletState } from './state';
 import { Blockchain } from '../../core/blockchain/types';
 
-export const selectCurrentWallet = (state: IReduxState): IWalletState =>
-    state.wallets.find(wallet => wallet.id === state.app.currentWalletId);
+import { createSelector } from 'reselect';
+
+export const selectCurrentWallet = createSelector(
+    [
+        (state: IReduxState): IWalletState[] => state.wallets,
+        (state: IReduxState): string => state.app.currentWalletId
+    ],
+    (wallets, currendWalletId) => wallets.find(wallet => wallet.id === currendWalletId)
+);
 
 export const getAccountTransactions = (
     state: IReduxState,

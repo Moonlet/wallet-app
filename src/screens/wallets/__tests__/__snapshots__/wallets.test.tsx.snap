@@ -5,14 +5,7 @@ exports[`Wallet screen renders correctly 1`] = `
   <withTheme(TabSelectComponent) options={{...}} onSelectionChange={[Function: onSelectionChange]} selected=\\"HD\\" />
   <ScrollViewMock style={{...}}>
     <Swipeable renderLeftActions={[Function: renderLeftActions]} onSwipeableWillOpen={[Function: onSwipeableWillOpen]} friction={1} overshootFriction={1} useNativeAnimations={true}>
-      <TouchableHighlight onPress={[Function: onPress]} activeOpacity={0.85} delayPressOut={100} underlayColor=\\"black\\">
-        <View style={{...}}>
-          <Icon name=\\"saturn-icon\\" size={24} style={{...}} allowFontScaling={false} />
-          <withTheme(TextComponent) style={{...}}>
-            some
-          </withTheme(TextComponent)>
-        </View>
-      </TouchableHighlight>
+      <withTheme(ListCardComponent) onPress={[Function: onPress]} leftIcon=\\"saturn-icon\\" label=\\"some\\" rightIcon={false} selected={false} />
     </Swipeable>
   </ScrollViewMock>
   <View style={{...}}>

@@ -20,6 +20,7 @@ import { getBalance } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { BigNumber } from 'bignumber.js';
 import { selectCurrentWallet } from '../../redux/wallets/selectors';
+import { createSelector } from 'reselect';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -47,6 +48,9 @@ const ANIMATED_BC_SELECTION = true;
 const calculateBalances = (accounts: IAccountState[]) => {
     return accounts.reduce(
         (out: any, account: IAccountState) => {
+            if (!account) {
+                return out;
+            }
             if (!out.balance[account.blockchain]) {
                 out.balance[account.blockchain] = {
                     amount: account?.balance?.value || new BigNumber(0)
@@ -90,8 +94,19 @@ const navigationOptions = ({ navigation }: any) => ({
     )
 });
 
+// `calculateBalances` gets executed only when result of parameter picker function result is changed
+const getWalletBalances = createSelector(
+    [(wallet: IWalletState) => wallet.accounts || []],
+    accounts => calculateBalances(accounts)
+);
+
 export class DashboardScreenComponent extends React.Component<IProps & IReduxProps, IState> {
     public static navigationOptions = navigationOptions;
+
+    public static getDerivedStateFromProps(props, state) {
+        // update balances if wallet accounts changes
+        return getWalletBalances(props.wallet);
+    }
     public initialIndex = 0;
     public dashboardOpacity = new Animated.Value(1);
     public balancesScrollView: any;
@@ -253,7 +268,9 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
                 >
                     <CoinDashboard
                         accounts={(this.props.wallet?.accounts || []).filter(
-                            account => account.blockchain === this.state.coins[this.state.coinIndex]
+                            account =>
+                                account &&
+                                account.blockchain === this.state.coins[this.state.coinIndex]
                         )}
                         blockchain={this.state.coins[this.state.coinIndex]}
                         navigation={this.props.navigation}

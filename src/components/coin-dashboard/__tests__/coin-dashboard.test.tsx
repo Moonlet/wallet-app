@@ -22,7 +22,8 @@ const props: IProps = {
             balance: {
                 value: new BigNumber(12332),
                 inProgress: false,
-                timestamp: 123
+                timestamp: 123,
+                error: undefined
             }
         }
     ],
@@ -38,11 +39,9 @@ describe('coin dashboard component', () => {
 
     it('navigates to create new wallet', () => {
         const wrapper = shallow(<CoinDashboardComponent {...props} />);
-        wrapper.find('[testID="button-create-wallet"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith(
-            'CreateWalletNavigation',
-            {},
-            'navigate-action'
-        );
+        wrapper.find('[testID="button-manage-accounts"]').simulate('Press');
+        expect(props.navigation.navigate).toHaveBeenCalledWith('Accounts', {
+            blockchain: Blockchain.ZILLIQA
+        });
     });
 });

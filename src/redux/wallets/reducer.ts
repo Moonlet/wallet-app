@@ -1,6 +1,13 @@
 import { IAction } from '../types';
 import { IWalletState, ITransactionState, IAccountState } from './state';
-import { WALLET_ADD, WALLET_DELETE, ACCOUNT_GET_BALANCE, TRANSACTION_PUBLISHED } from './actions';
+import {
+    WALLET_ADD,
+    WALLET_DELETE,
+    ACCOUNT_GET_BALANCE,
+    TRANSACTION_PUBLISHED,
+    ACCOUNT_ADD,
+    ACCOUNT_REMOVE
+} from './actions';
 import { TransactionStatus } from '../../core/wallet/types';
 import { REHYDRATE } from 'redux-persist';
 import BigNumber from 'bignumber.js';
@@ -31,17 +38,17 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
                               value: new BigNumber(account.balance?.value || 0)
                           }
                       })),
-                      transactions: Object.values(wallet.transactions).map(
-                          (tx: ITransactionState) => ({
-                              ...transaction,
-                              amount: new BigNumber(tx.amount || 0)
-                          })
-                      )
+                      transactions:
+                          (wallet?.transactions &&
+                              Object.values(wallet.transactions).map((tx: ITransactionState) => ({
+                                  ...transaction,
+                                  amount: new BigNumber(tx.amount || 0)
+                              }))) ||
+                          []
                   }))
                 : state;
         case WALLET_ADD:
             return [...state, action.data];
-        // return [action.data]; // this will reset persisted redux wallets
         case ACCOUNT_GET_BALANCE: {
             return state.map(wallet =>
                 wallet.id === action.data.walletId
@@ -94,6 +101,41 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
             );
         case WALLET_DELETE:
             return state.filter((wallet: IWalletState) => action.data !== wallet.id);
+
+        case ACCOUNT_ADD:
+            return state.map(wallet =>
+                wallet.id === action.data.walletId
+                    ? {
+                          ...wallet,
+                          accounts: [].concat(
+                              wallet.accounts,
+                              wallet.accounts.some(
+                                  account =>
+                                      account &&
+                                      account.address === action.data.account.address &&
+                                      account.blockchain === action.data.account.blockchain
+                              )
+                                  ? []
+                                  : [action.data.account]
+                          )
+                      }
+                    : wallet
+            );
+
+        case ACCOUNT_REMOVE:
+            return state.map(wallet =>
+                wallet.id === action.data.walletId
+                    ? {
+                          ...wallet,
+                          accounts: wallet.accounts.filter(account => {
+                              return !(
+                                  account.address === action.data.account.address &&
+                                  account.blockchain === action.data.account.blockchain
+                              );
+                          })
+                      }
+                    : wallet
+            );
 
         default:
             break;

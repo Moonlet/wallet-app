@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, ScrollView, TouchableHighlight, Alert } from 'react-native';
+import { View, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import {
     NavigationParams,
     NavigationScreenProp,
@@ -23,6 +23,7 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import stylesProvider from './styles';
 import { deleteWallet } from '../../redux/wallets/actions';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
+import { ListCard } from '../../components/list-card/list-card';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -254,29 +255,15 @@ export class WalletsScreenComponent extends React.Component<
                                 }}
                                 key={i}
                             >
-                                <TouchableHighlight onPress={() => this.onSelectWallet(wallet.id)}>
-                                    <View
-                                        style={[
-                                            styles.walletCard,
-                                            this.props.currentWalletId === wallet.id &&
-                                                styles.selectedWallet
-                                        ]}
-                                    >
-                                        <Icon
-                                            name="saturn-icon"
-                                            size={24}
-                                            style={styles.iconWallet}
-                                        />
-                                        <Text style={{ flex: 1 }}>{wallet.name}</Text>
-                                        {this.props.currentWalletId === wallet.id && (
-                                            <Icon
-                                                name="check-1"
-                                                size={18}
-                                                style={styles.iconWallet}
-                                            />
-                                        )}
-                                    </View>
-                                </TouchableHighlight>
+                                <ListCard
+                                    onPress={() => this.onSelectWallet(wallet.id)}
+                                    leftIcon="saturn-icon"
+                                    label={wallet.name}
+                                    rightIcon={
+                                        this.props.currentWalletId === wallet.id && 'check-1'
+                                    }
+                                    selected={this.props.currentWalletId === wallet.id}
+                                />
                             </Swipeable>
                         );
                     })}

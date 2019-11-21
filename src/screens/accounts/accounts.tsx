@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { View } from 'react-native';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { IReduxState } from '../../redux/state';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -19,10 +18,6 @@ import { formatAddress } from '../../core/utils/format-address';
 import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-
-export interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-}
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -135,8 +130,8 @@ export const AccountsScreenComponent = (
                         onPress={() => {
                             selected
                                 ? selectedAccounts.length > 1 &&
-                                  props.removeAccount(props.wallet.id, account)
-                                : props.addAccount(props.wallet.id, account);
+                                  props.removeAccount(props.wallet.id, props.blockchain, account)
+                                : props.addAccount(props.wallet.id, props.blockchain, account);
                         }}
                     />
                 );

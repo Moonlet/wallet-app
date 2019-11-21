@@ -111,7 +111,9 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
                               wallet.accounts,
                               wallet.accounts.some(
                                   account =>
-                                      account && account.address === action.data.account.address
+                                      account &&
+                                      account.address === action.data.account.address &&
+                                      account.blockchain === action.data.account.blockchain
                               )
                                   ? []
                                   : [action.data.account]
@@ -125,9 +127,12 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
                 wallet.id === action.data.walletId
                     ? {
                           ...wallet,
-                          accounts: wallet.accounts.filter(
-                              account => account.address !== action.data.account.address
-                          )
+                          accounts: wallet.accounts.filter(account => {
+                              return !(
+                                  account.address === action.data.account.address &&
+                                  account.blockchain === action.data.account.blockchain
+                              );
+                          })
                       }
                     : wallet
             );

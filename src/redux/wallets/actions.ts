@@ -41,17 +41,17 @@ export const addWallet = (walletData: IWalletState) => {
     };
 };
 
-export const addAccount = (walletId: string, account: IAccountState) => {
+export const addAccount = (walletId: string, blockchain: Blockchain, account: IAccountState) => {
     return {
         type: ACCOUNT_ADD,
-        data: { walletId, account }
+        data: { walletId, account, blockchain }
     };
 };
 
-export const removeAccount = (walletId: string, account: IAccountState) => {
+export const removeAccount = (walletId: string, blockchain: Blockchain, account: IAccountState) => {
     return {
         type: ACCOUNT_REMOVE,
-        data: { walletId, account }
+        data: { walletId, account, blockchain }
     };
 };
 

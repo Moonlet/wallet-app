@@ -36,6 +36,7 @@ import { TransactionDetails } from '../screens/transaction-details/transaction-d
 import { RewardsScreen } from '../screens/rewards/rewards';
 import { WatchScreen } from '../screens/watch/watch';
 import { AccountsScreen } from '../screens/accounts/accounts';
+import { WatchScreen } from '../screens/watch/watch';
 
 interface IDefaultNavOptions {
     navigation: any;

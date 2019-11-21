@@ -66,6 +66,7 @@ export class SendScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public qrCodeScanner: any;
+
     constructor(props: INavigationProps<INavigationParams> & IProps & IReduxProps) {
         super(props);
 
@@ -117,6 +118,9 @@ export class SendScreenComponent extends React.Component<
         this.setState({ toAddress: account.address, showOwnAccounts: false });
         this.verifyAddress(account.address);
     };
+    public onSelectFeePreset = (presetTitle: string) => {
+        //
+    };
 
     public renderBasicFields() {
         const styles = this.props.styles;
@@ -146,11 +150,23 @@ export class SendScreenComponent extends React.Component<
                         amount={this.props.account.balance?.value}
                         blockchain={this.props.account.blockchain}
                         title={'Cheap'}
+                        onSelect={this.onSelectFeePreset}
                     />
                     <FeePreset
                         amount={this.props.account.balance?.value}
-                        blockchain={this.props.account.blockchain}
+                        blockchain={this.onSelectFeePreset}
                         title={'Cheap'}
+                    />
+                    <FeePreset
+                        amount={this.props.account.balance?.value}
+                        blockchain={this.onSelectFeePreset}
+                        title={'Cheap'}
+                    />
+                    <FeePreset
+                        amount={this.props.account.balance?.value}
+                        blockchain={this.onSelectFeePreset}
+                        title={'Cheap'}
+                        selected
                     />
                 </View>
 

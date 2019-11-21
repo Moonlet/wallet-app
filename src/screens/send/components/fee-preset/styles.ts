@@ -13,10 +13,6 @@ export default (theme: ITheme) =>
         containerSelected: {
             backgroundColor: theme.colors.text
         },
-        feeTitle: {
-            paddingLeft: BASE_DIMENSION,
-            color: theme.colors.textSecondary
-        },
         fee: {
             color: theme.colors.textSecondary
         },
@@ -27,5 +23,8 @@ export default (theme: ITheme) =>
         containerFeeConverted: {
             flexDirection: 'row',
             alignItems: 'baseline'
+        },
+        feeTitle: {
+            color: theme.colors.textSecondary
         }
     });

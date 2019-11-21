@@ -22,7 +22,7 @@ import { getAccounts, getAccount } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
-import { FeePreset } from './components/fee-preset/fee-preset';
+import { FeeOptions } from './components/fee-options/fee-options';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -118,7 +118,8 @@ export class SendScreenComponent extends React.Component<
         this.setState({ toAddress: account.address, showOwnAccounts: false });
         this.verifyAddress(account.address);
     };
-    public onSelectFeePreset = (presetTitle: string) => {
+
+    public estimatedFees = (fees: any) => {
         //
     };
 
@@ -142,45 +143,8 @@ export class SendScreenComponent extends React.Component<
                         }}
                     />
                 </View>
-                <Text style={styles.feeTitle}>{translate('Fee.feeTitle')}</Text>
-                {/* <FeeAvanced account={this.props.account} /> */}
-                {/* <Fee account={this.props.account} /> */}
-                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-                    <FeePreset
-                        amount={this.props.account.balance?.value}
-                        blockchain={this.props.account.blockchain}
-                        title={'Cheap'}
-                        onSelect={this.onSelectFeePreset}
-                    />
-                    <FeePreset
-                        amount={this.props.account.balance?.value}
-                        blockchain={this.onSelectFeePreset}
-                        title={'Cheap'}
-                    />
-                    <FeePreset
-                        amount={this.props.account.balance?.value}
-                        blockchain={this.onSelectFeePreset}
-                        title={'Cheap'}
-                    />
-                    <FeePreset
-                        amount={this.props.account.balance?.value}
-                        blockchain={this.onSelectFeePreset}
-                        title={'Cheap'}
-                        selected
-                    />
-                </View>
 
-                <TouchableOpacity
-                    testID="advanced-fees"
-                    onPress={this.onTransferBetweenAccounts}
-                    style={[styles.buttonRightOptions]}
-                >
-                    <Text style={styles.textTranferButton}>
-                        {this.state.showOwnAccounts
-                            ? translate('App.labels.advancedSetup')
-                            : translate('App.labels.simpleSetup')}
-                    </Text>
-                </TouchableOpacity>
+                <FeeOptions account={this.props.account} estimatedFees={this.estimatedFees} />
 
                 <View style={styles.bottom}>
                     <Button

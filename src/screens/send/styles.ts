@@ -51,7 +51,7 @@ export default (theme: ITheme) =>
             alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
             paddingHorizontal: 12,
-            marginTop: 40,
+            marginTop: BASE_DIMENSION,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'
@@ -86,10 +86,5 @@ export default (theme: ITheme) =>
             color: theme.colors.accent,
             lineHeight: BASE_DIMENSION * 3,
             fontSize: theme.fontSize.small
-        },
-        feeTitle: {
-            marginTop: BASE_DIMENSION * 3,
-            paddingLeft: BASE_DIMENSION,
-            color: theme.colors.textSecondary
         }
     });

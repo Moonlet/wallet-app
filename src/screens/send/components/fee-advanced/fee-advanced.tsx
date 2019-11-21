@@ -1,26 +1,25 @@
 import React from 'react';
 import { View, TextInput } from 'react-native';
-import { IAccountState } from '../../../../redux/wallets/state';
-import { ITheme } from '../../../../core/theme/itheme';
 import stylesProvider from './styles';
-import { withTheme } from '../../../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { translate } from '../../../../core/i18n';
-import { Fee } from '../fee/fee';
-
-export interface IProps {
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
+import { FeeTotal } from '../fee-total/fee-total';
+import BigNumber from 'bignumber.js';
+import { Blockchain } from '../../../../core/blockchain/types';
 
 export interface IExternalProps {
-    account: IAccountState;
+    amount: BigNumber;
+    blockchain: Blockchain;
 }
 interface IState {
     gasPrice: number;
     gasLimit: number;
 }
-export class FeeAvancedComponent extends React.Component<IExternalProps & IProps, IState> {
-    constructor(props: IExternalProps & IProps) {
+export class FeeAvancedComponent extends React.Component<
+    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
+    constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
         this.state = {
@@ -70,8 +69,7 @@ export class FeeAvancedComponent extends React.Component<IExternalProps & IProps
                         }}
                     />
                 </View>
-
-                <Fee account={this.props.account} />
+                <FeeTotal amount={this.props.amount} blockchain={this.props.blockchain} />
             </View>
         );
     }

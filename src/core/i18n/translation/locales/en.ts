@@ -18,6 +18,7 @@ export const translation: ITranslations = {
                 error: 'Error',
                 date: 'Date',
                 from: 'From',
+                fee: 'Fee',
                 next: 'Next',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',

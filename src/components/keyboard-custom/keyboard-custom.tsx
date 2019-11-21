@@ -6,7 +6,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { Text } from '../../library';
 import { Icon } from '../icon';
 
-const words = [
+const keyboardLayout = [
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
     ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
     ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
@@ -97,10 +97,10 @@ export class KeyboardComponent extends React.Component<
                 </View>
 
                 <View style={styles.keyboardLayout}>
-                    {this.props.showNumeric && this.renderRow(words[0], false)}
-                    {this.renderRow(words[1], false)}
-                    {this.renderRow(words[2], false)}
-                    {this.renderRow(words[3], true)}
+                    {this.props.showNumeric && this.renderRow(keyboardLayout[0], false)}
+                    {this.renderRow(keyboardLayout[1], false)}
+                    {this.renderRow(keyboardLayout[2], false)}
+                    {this.renderRow(keyboardLayout[3], true)}
 
                     <TouchableOpacity style={styles.nextWordContainer}>
                         <Text style={styles.nextWordText}>Next Word</Text>

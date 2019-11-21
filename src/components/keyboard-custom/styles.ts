@@ -24,9 +24,8 @@ export default (theme: ITheme) =>
         },
         keyboardLayout: {
             backgroundColor: theme.colors.cardBackground,
-            paddingHorizontal: BASE_DIMENSION * 2,
-            paddingTop: BASE_DIMENSION,
-            paddingBottom: BASE_DIMENSION * 2
+            paddingHorizontal: BASE_DIMENSION / 2,
+            paddingBottom: BASE_DIMENSION
         },
         nextWordContainer: {
             backgroundColor: theme.colors.primary,

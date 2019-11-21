@@ -15,11 +15,10 @@ const AppContainer = createAppContainer(RootNavigation);
 
 const store = configureStore();
 const persistor = persistStore(store);
-const MIN_TIME_ANIMATION = 2;
 
 interface IState {
     appReady: boolean;
-    defaultTimer: any;
+    splashAnimationDone: boolean;
 }
 
 export default class App extends React.Component<{}, IState> {
@@ -32,7 +31,7 @@ export default class App extends React.Component<{}, IState> {
         super(props);
         this.state = {
             appReady: false,
-            defaultTimer: 1
+            splashAnimationDone: false
         };
 
         loadTranslations('en').then(() => {
@@ -52,27 +51,16 @@ export default class App extends React.Component<{}, IState> {
     }
 
     public componentDidMount() {
-        this.interval = setInterval(
-            () => this.setState({ defaultTimer: this.state.defaultTimer + 1 }),
-            1000
-        );
-    }
-
-    public componentDidUpdate() {
-        if (this.state.defaultTimer === MIN_TIME_ANIMATION) {
-            clearInterval(this.interval);
-        }
-    }
-
-    public componentWillUnmount() {
-        clearInterval(this.interval);
+        setTimeout(() => {
+            this.setState({ splashAnimationDone: true });
+        }, 1000);
     }
 
     public render() {
         // decide the bar style on lightTheme
         StatusBar.setBarStyle('light-content', true);
 
-        if (this.state.appReady && this.state.defaultTimer === MIN_TIME_ANIMATION) {
+        if (this.state.appReady && this.state.splashAnimationDone) {
             //            this.unsubscribe();
             return (
                 <Provider store={store}>

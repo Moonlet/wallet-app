@@ -24,9 +24,8 @@ export default (theme: ITheme) =>
         },
         keyboardLayout: {
             backgroundColor: theme.colors.cardBackground,
-            paddingHorizontal: BASE_DIMENSION * 2,
-            paddingTop: BASE_DIMENSION,
-            paddingBottom: BASE_DIMENSION * 2
+            paddingHorizontal: BASE_DIMENSION / 2,
+            paddingBottom: BASE_DIMENSION
         },
         nextWordContainer: {
             backgroundColor: theme.colors.primary,
@@ -53,10 +52,11 @@ export default (theme: ITheme) =>
             paddingVertical: 6
         },
         keyContainer: {
+            flex: 1,
             paddingVertical: BASE_DIMENSION,
             paddingHorizontal: BASE_DIMENSION,
             minWidth: 30,
-            // backgroundColor: 'red',
+            maxWidth: 35,
             marginHorizontal: 3,
             justifyContent: 'center',
             alignContent: 'center'

@@ -34,6 +34,7 @@ import { ReceiveScreen } from '../screens/receive/receive';
 import { ViewWalletMnemonicScreen } from '../screens/view-wallet-mnemonic/view-wallet-mnemonic';
 import { TransactionDetails } from '../screens/transaction-details/transaction-details';
 import { RewardsScreen } from '../screens/rewards/rewards';
+import { WatchScreen } from '../screens/watch/watch';
 import { AccountsScreen } from '../screens/accounts/accounts';
 import { WatchScreen } from '../screens/watch/watch';
 

@@ -8,4 +8,11 @@ export interface IBlockchainConfig {
         [unit: string]: BigNumber;
     };
     decimals: number;
+    feeOptions?: {
+        defaults: {};
+        ui: {
+            feeComponent: 'FeeTotal' | 'FeePresets';
+            feeComponentAdvanced?: '';
+        };
+    };
 }

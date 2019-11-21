@@ -1,6 +1,11 @@
 import { IBlockchainConfig } from '../types';
 import { BigNumber } from 'bignumber.js';
 
+export interface IZilliqaDefaultFees {
+    gasPrice: number;
+    gasLimit: number;
+}
+
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/313'/0'/0`,
     coin: 'ZIL',

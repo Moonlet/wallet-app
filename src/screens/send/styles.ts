@@ -29,7 +29,7 @@ export default (theme: ITheme) =>
             paddingRight: BASE_DIMENSION * 2
         },
         receipientLabel: {
-            paddingLeft: BASE_DIMENSION * 2,
+            paddingLeft: BASE_DIMENSION,
             marginTop: 40,
             color: theme.colors.textSecondary
         },
@@ -45,7 +45,7 @@ export default (theme: ITheme) =>
             alignItems: 'center'
         },
         inputBox: {
-            height: 44,
+            height: BASE_DIMENSION * 5,
             borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',
@@ -67,7 +67,7 @@ export default (theme: ITheme) =>
         },
         basicFields: {
             flex: 1,
-            paddingTop: 52,
+            paddingTop: BASE_DIMENSION * 5,
             backgroundColor: theme.colors.appBackground
         },
         icon: {
@@ -78,14 +78,18 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             marginRight: BASE_DIMENSION / 2
         },
-        buttonTransfer: {
+        buttonRightOptions: {
             marginTop: BASE_DIMENSION,
-            //  paddingRight: BASE_DIMENSION * 2,
             alignItems: 'flex-end'
         },
         textTranferButton: {
             color: theme.colors.accent,
             lineHeight: BASE_DIMENSION * 3,
             fontSize: theme.fontSize.small
+        },
+        feeTitle: {
+            marginTop: BASE_DIMENSION * 3,
+            paddingLeft: BASE_DIMENSION,
+            color: theme.colors.textSecondary
         }
     });

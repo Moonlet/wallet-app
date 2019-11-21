@@ -22,6 +22,7 @@ import { getAccounts, getAccount } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
+import { FeePreset } from './components/fee-preset/fee-preset';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -137,17 +138,34 @@ export class SendScreenComponent extends React.Component<
                         }}
                     />
                 </View>
-                <View style={styles.inputBox}>
-                    <TextInput
-                        testID="fee"
-                        style={styles.input}
-                        placeholderTextColor={theme.colors.textSecondary}
-                        placeholder={this.state.fee}
-                        autoCorrect={false}
-                        selectionColor={theme.colors.accent}
-                        editable={false}
+                <Text style={styles.feeTitle}>{translate('Fee.feeTitle')}</Text>
+                {/* <FeeAvanced account={this.props.account} /> */}
+                {/* <Fee account={this.props.account} /> */}
+                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                    <FeePreset
+                        amount={this.props.account.balance?.value}
+                        blockchain={this.props.account.blockchain}
+                        title={'Cheap'}
+                    />
+                    <FeePreset
+                        amount={this.props.account.balance?.value}
+                        blockchain={this.props.account.blockchain}
+                        title={'Cheap'}
                     />
                 </View>
+
+                <TouchableOpacity
+                    testID="advanced-fees"
+                    onPress={this.onTransferBetweenAccounts}
+                    style={[styles.buttonRightOptions]}
+                >
+                    <Text style={styles.textTranferButton}>
+                        {this.state.showOwnAccounts
+                            ? translate('App.labels.advancedSetup')
+                            : translate('App.labels.simpleSetup')}
+                    </Text>
+                </TouchableOpacity>
+
                 <View style={styles.bottom}>
                     <Button
                         testID="confirm-payment"
@@ -202,7 +220,7 @@ export class SendScreenComponent extends React.Component<
                 <TouchableOpacity
                     testID="transfer-between-accounts"
                     onPress={this.onTransferBetweenAccounts}
-                    style={[styles.buttonTransfer]}
+                    style={[styles.buttonRightOptions]}
                 >
                     <Text style={styles.textTranferButton}>
                         {this.state.showOwnAccounts

@@ -6,6 +6,7 @@ export const translation: ITranslations = {
             labels: {
                 // plase try to add keys in alphabetic order
                 accept: 'Accept',
+                avancedSetup: 'Advanced setup',
                 cancel: 'Cancel',
                 close: 'Close',
                 confirm: 'Confirm',
@@ -25,6 +26,7 @@ export const translation: ITranslations = {
                 secure: 'Secure',
                 send: 'Send',
                 settings: 'Settings',
+                simpleSetup: 'Simple setup',
                 status: 'Status',
                 tc: 'Terms and conditions',
                 tos: 'Terms of service',
@@ -54,6 +56,11 @@ export const translation: ITranslations = {
             errors: {
                 tryAgain: 'Please try again'
             }
+        },
+        Fee: {
+            feeTitle: 'Transaction fee',
+            gasPrice: 'Gas price',
+            gasLimit: 'Gas limit'
         },
         SetPassword: {
             body:

@@ -111,6 +111,9 @@ export const translation: ITranslations = {
             title: 'Rewards',
             launchingSoon: 'Launching soon!',
             newSection: 'A new section to get rewards by staking your tokens is in the work.'
+        },
+        Watch: {
+            title: 'Watch'
         }
     },
     plural: (n: number, ord?: boolean) => {

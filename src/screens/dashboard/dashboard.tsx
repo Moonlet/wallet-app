@@ -96,7 +96,7 @@ const navigationOptions = ({ navigation }: any) => ({
 
 // `calculateBalances` gets executed only when result of parameter picker function result is changed
 const getWalletBalances = createSelector(
-    [(wallet: IWalletState) => wallet.accounts || []],
+    [(wallet: IWalletState) => (wallet && wallet.accounts) || []],
     accounts => calculateBalances(accounts)
 );
 

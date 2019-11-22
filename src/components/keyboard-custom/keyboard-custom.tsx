@@ -58,13 +58,13 @@ export class KeyboardComponent extends React.Component<
                             : word;
 
                     return (
-                        <TouchableOpacity
+                        <View
                             key={index}
                             style={styles.keyContainer}
-                            onPressIn={() => this.props.handleTextUpdate(currentWord)}
+                            onTouchStart={() => this.props.handleTextUpdate(currentWord)}
                         >
                             <Text style={styles.keyText}>{currentWord}</Text>
-                        </TouchableOpacity>
+                        </View>
                     );
                 })}
 

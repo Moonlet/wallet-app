@@ -34,6 +34,10 @@ export class KeyboardComponent extends React.Component<
         };
     }
 
+    public onTouchStart = (currentWord: any) => {
+        this.props.handleTextUpdate(currentWord);
+    };
+
     public renderRow = (rowValues: any, isLastRow: boolean) => {
         const styles = this.props.styles;
 
@@ -58,13 +62,13 @@ export class KeyboardComponent extends React.Component<
                             : word;
 
                     return (
-                        <TouchableOpacity
+                        <View
                             key={index}
                             style={styles.keyContainer}
-                            onPressIn={() => this.props.handleTextUpdate(currentWord)}
+                            onTouchStart={this.onTouchStart.bind(this, currentWord)}
                         >
                             <Text style={styles.keyText}>{currentWord}</Text>
-                        </TouchableOpacity>
+                        </View>
                     );
                 })}
 

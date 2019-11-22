@@ -78,6 +78,7 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         borderBottomWidth: 0
     },
     headerTitleStyle: {
+        flex: 1,
         fontWeight: 'bold'
     },
     headerLeft:
@@ -122,7 +123,8 @@ export const WalletNavigation = createStackNavigator(
     },
     {
         initialRouteName: 'Dashboard',
-        defaultNavigationOptions: defaultStackNavigationOptions
+        defaultNavigationOptions: defaultStackNavigationOptions,
+        headerLayoutPreset: 'center'
     }
 );
 
@@ -135,7 +137,8 @@ export const SettingsNavigation = createStackNavigator(
     },
     {
         initialRouteName: 'Settings',
-        defaultNavigationOptions: defaultStackNavigationOptions
+        defaultNavigationOptions: defaultStackNavigationOptions,
+        headerLayoutPreset: 'center'
     }
 );
 
@@ -148,7 +151,8 @@ export const RewardsNavigation = createStackNavigator(
     },
     {
         initialRouteName: 'Rewards',
-        defaultNavigationOptions: defaultStackNavigationOptions
+        defaultNavigationOptions: defaultStackNavigationOptions,
+        headerLayoutPreset: 'center'
     }
 );
 
@@ -161,7 +165,8 @@ export const WatchNavigation = createStackNavigator(
     },
     {
         initialRouteName: 'Watch',
-        defaultNavigationOptions: defaultStackNavigationOptions
+        defaultNavigationOptions: defaultStackNavigationOptions,
+        headerLayoutPreset: 'center'
     }
 );
 

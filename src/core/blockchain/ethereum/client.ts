@@ -1,6 +1,7 @@
 import { BlockchainGenericClient } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
+import { config } from './config';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: number) {
@@ -23,6 +24,13 @@ export class Client extends BlockchainGenericClient {
 
     public sendTransaction(transaction): Promise<string> {
         return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => res.result);
+    }
+
+    public estimateFees(): { gasPrice: BigNumber; gasLimit: BigNumber } {
+        return {
+            gasPrice: config.feeOptions.defaults.gasPrice,
+            gasLimit: config.feeOptions.defaults.gasLimit
+        };
     }
 
     private fixAddress(address: string): string {

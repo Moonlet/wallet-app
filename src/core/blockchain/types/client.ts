@@ -21,4 +21,6 @@ export abstract class BlockchainGenericClient {
     public abstract getNonce(address: string): Promise<number>;
 
     public abstract sendTransaction(transaction: any): Promise<string>;
+
+    public abstract estimateFees(): { gasPrice: BigNumber; gasLimit: BigNumber };
 }

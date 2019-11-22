@@ -13,6 +13,7 @@ import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
 import { selectCurrentWallet } from './selectors';
+import BigNumber from 'bignumber.js';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -155,7 +156,9 @@ export const getBalance = (
 export const sendTransferTransaction = (
     account: IAccountState,
     toAddress: string,
-    amount: string
+    amount: string,
+    gasPrice: BigNumber,
+    gasLimit: BigNumber
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
@@ -180,8 +183,8 @@ export const sendTransferTransaction = (
         const options = {
             nonce,
             chainId,
-            gasPrice: FEE[account.blockchain].gasPrice,
-            gasLimit: FEE[account.blockchain].gasLimit
+            gasPrice,
+            gasLimit
         };
 
         const tx = {

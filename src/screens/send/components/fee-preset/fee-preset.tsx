@@ -11,34 +11,60 @@ export interface IExternalProps {
     amount: BigNumber;
     blockchain: Blockchain;
     title: string;
-    selected?: boolean;
-    onSelect: (title: string) => any;
+    presetKey: string;
+    selected: boolean;
+    onSelect: (key: string) => any;
 }
 
-export const FeePresetComponent = (
-    props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
-) => {
-    const styles = props.styles;
+interface IState {
+    presetSelected: boolean;
+}
 
-    return (
-        <TouchableOpacity
-            testID="advanced-fees"
-            onPress={props.onSelect(props.title)}
-            style={props.selected ? [styles.container, styles.containerSelected] : styles.container}
-        >
-            <Text style={styles.feeTitle}>{props.title}</Text>
-            <Amount style={styles.fee} amount={props.amount} blockchain={props.blockchain} />
-            <View style={styles.containerFeeConverted}>
-                <Text style={styles.feeConverted}>~</Text>
+export class FeePresetComponent extends React.Component<
+    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
+    constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+        super(props);
+        this.state = {
+            presetSelected: this.props.selected
+        };
+    }
+
+    public onPress = () => {
+        this.props.onSelect(this.props.presetKey);
+    };
+
+    public render() {
+        const styles = this.props.styles;
+        return (
+            <TouchableOpacity
+                testID="advanced-fees"
+                onPress={() => this.onPress()}
+                style={
+                    this.props.selected
+                        ? [styles.container, styles.containerSelected]
+                        : styles.container
+                }
+            >
+                <Text style={styles.feeTitle}>{this.props.title}</Text>
                 <Amount
-                    style={styles.feeConverted}
-                    amount={props.amount}
-                    blockchain={props.blockchain}
-                    convert
+                    style={styles.fee}
+                    amount={this.props.amount}
+                    blockchain={this.props.blockchain}
                 />
-            </View>
-        </TouchableOpacity>
-    );
-};
+                <View style={styles.containerFeeConverted}>
+                    <Text style={styles.feeConverted}>~</Text>
+                    <Amount
+                        style={styles.feeConverted}
+                        amount={this.props.amount}
+                        blockchain={this.props.blockchain}
+                        convert
+                    />
+                </View>
+            </TouchableOpacity>
+        );
+    }
+}
 
 export const FeePreset = withTheme(stylesProvider)(FeePresetComponent);

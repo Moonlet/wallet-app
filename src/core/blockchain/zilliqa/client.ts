@@ -2,6 +2,7 @@ import { BlockchainGenericClient } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
+import { config } from './config';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: number) {
@@ -54,5 +55,12 @@ export class Client extends BlockchainGenericClient {
         } catch (e) {
             return Promise.reject(e);
         }
+    }
+
+    public estimateFees(): { gasPrice: BigNumber; gasLimit: BigNumber } {
+        return {
+            gasPrice: config.feeOptions.defaults.gasPrice,
+            gasLimit: config.feeOptions.defaults.gasLimit
+        };
     }
 }

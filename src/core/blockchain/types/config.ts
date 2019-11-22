@@ -23,6 +23,7 @@ export interface IBlockchainConfig {
             feeComponent: 'FeeTotal' | 'FeePresets';
             feeComponentAdvanced?: 'FeeAdvanced';
             gasPriceUnit: string;
+            defaultPreset?: 'cheap' | 'standard' | 'fast' | 'fastest';
         };
     };
 }

@@ -13,10 +13,13 @@ export const translation: ITranslations = {
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
                 create: 'Create',
+                cheap: 'Cheap',
                 delete: 'Delete',
                 details: 'Details',
                 error: 'Error',
                 date: 'Date',
+                fast: 'Fast',
+                fastest: 'Fastest',
                 from: 'From',
                 fee: 'Fee',
                 next: 'Next',
@@ -27,8 +30,9 @@ export const translation: ITranslations = {
                 secure: 'Secure',
                 send: 'Send',
                 settings: 'Settings',
-                simpleSetup: 'Simple setup',
+
                 status: 'Status',
+                standard: 'Standard',
                 tc: 'Terms and conditions',
                 tos: 'Terms of service',
                 transactions: 'Transactions',
@@ -82,7 +86,9 @@ export const translation: ITranslations = {
             inputAddress: 'Search public addresses or domain names',
             amount: 'Amount',
             recipientLabel: 'Recipient',
-            transferOwnAccounts: 'Transfer between my accounts'
+            transferOwnAccounts: 'Transfer between my accounts',
+            advancedSetup: 'Advanced setup',
+            simpleSetup: 'Simple setup'
         },
         AccountSettings: {
             manageAccount: 'Manage account',

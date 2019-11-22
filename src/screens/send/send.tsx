@@ -23,6 +23,7 @@ import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
+import BigNumber from 'bignumber.js';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -54,6 +55,8 @@ interface IState {
     fee: string;
     isValidAddress: boolean;
     showOwnAccounts: boolean;
+    gasPrice: BigNumber;
+    gasLimit: BigNumber;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -75,7 +78,9 @@ export class SendScreenComponent extends React.Component<
             amount: '',
             fee: '',
             isValidAddress: false,
-            showOwnAccounts: false
+            showOwnAccounts: false,
+            gasPrice: undefined,
+            gasLimit: undefined
         };
     }
 
@@ -83,7 +88,9 @@ export class SendScreenComponent extends React.Component<
         this.props.sendTransferTransaction(
             this.props.account,
             this.state.toAddress,
-            this.state.amount
+            this.state.amount,
+            this.state.gasPrice,
+            this.state.gasLimit
         );
         this.props.navigation.goBack();
     };
@@ -119,8 +126,8 @@ export class SendScreenComponent extends React.Component<
         this.verifyAddress(account.address);
     };
 
-    public estimatedFees = (fees: any) => {
-        //
+    public calculatedFees = (gasPrice: BigNumber, gasLimit: BigNumber) => {
+        this.setState({ gasPrice, gasLimit });
     };
 
     public renderBasicFields() {
@@ -144,7 +151,7 @@ export class SendScreenComponent extends React.Component<
                     />
                 </View>
 
-                <FeeOptions account={this.props.account} estimatedFees={this.estimatedFees} />
+                <FeeOptions account={this.props.account} calculatedFees={this.calculatedFees} />
 
                 <View style={styles.bottom}>
                     <Button

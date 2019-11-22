@@ -13,19 +13,20 @@ export const config: IBlockchainConfig = {
     decimals: 4,
     feeOptions: {
         defaults: {
-            gasPrice: new BigNumber(1000),
-            gasLimit: new BigNumber(1),
+            gasPrice: new BigNumber(20000000000),
+            gasLimit: new BigNumber(21000000000000),
             gasPricePresets: {
-                cheap: new BigNumber(1),
-                standard: new BigNumber(1),
-                fast: new BigNumber(1),
-                fastest: new BigNumber(1)
+                cheap: new BigNumber(2000000000),
+                standard: new BigNumber(20000000000),
+                fast: new BigNumber(40000000000),
+                fastest: new BigNumber(120000000000)
             }
         },
         ui: {
             feeComponent: 'FeePresets',
             feeComponentAdvanced: 'FeeAdvanced',
-            gasPriceUnit: 'GWEI'
+            gasPriceUnit: 'GWEI',
+            defaultPreset: 'standard'
         }
     }
 };

@@ -13,4 +13,6 @@ export interface IBlockchainAccountUtils {
 
     amountToStd(value: BigNumber | number | string): BigNumber;
     amountFromStd(value: BigNumber): BigNumber;
+    convertToGasPriceUnit(value: BigNumber): BigNumber;
+    convertFromGasPriceUnit(value: BigNumber): BigNumber;
 }

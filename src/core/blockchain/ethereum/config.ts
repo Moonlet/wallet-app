@@ -14,7 +14,7 @@ export const config: IBlockchainConfig = {
     feeOptions: {
         defaults: {
             gasPrice: new BigNumber(20000000000),
-            gasLimit: new BigNumber(21000000000000),
+            gasLimit: new BigNumber(21000),
             gasPricePresets: {
                 cheap: new BigNumber(2000000000),
                 standard: new BigNumber(20000000000),

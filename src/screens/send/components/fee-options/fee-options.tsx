@@ -79,6 +79,15 @@ export class FeeOptionsComponent extends React.Component<
             this.state.blockchainConfig.feeOptions.defaults.gasLimit
         );
     };
+
+    public onInputAdvancedFees = (gasPrice: BigNumber, gasLimit: BigNumber) => {
+        this.setState({
+            gasPrice,
+            gasLimit
+        });
+        this.props.calculatedFees(gasPrice, gasLimit);
+    };
+
     public onAdvancedButton = () => {
         const currentState = this.state.showAdvancedOptions;
         this.setState({
@@ -89,10 +98,7 @@ export class FeeOptionsComponent extends React.Component<
     public renderSimpleFees() {
         if (this.state.blockchainConfig.feeOptions.ui.feeComponent === 'FeeTotal') {
             return (
-                <FeeTotal
-                    amount={this.props.account.balance?.value}
-                    blockchain={this.props.account.blockchain}
-                />
+                <FeeTotal amount={this.state.gasPrice} blockchain={this.props.account.blockchain} />
             );
         } else if (this.state.blockchainConfig.feeOptions.ui.feeComponent === 'FeePresets') {
             const presets = this.state.blockchainConfig.feeOptions.defaults.gasPricePresets;
@@ -119,8 +125,10 @@ export class FeeOptionsComponent extends React.Component<
         if (this.state.blockchainConfig.feeOptions.ui.feeComponentAdvanced === 'FeeAdvanced') {
             return (
                 <FeeAvanced
-                    amount={this.props.account.balance?.value}
+                    gasPrice={this.state.gasPrice}
+                    gasLimit={this.state.gasLimit}
                     blockchain={this.props.account.blockchain}
+                    onInputFees={this.onInputAdvancedFees}
                 />
             );
         }

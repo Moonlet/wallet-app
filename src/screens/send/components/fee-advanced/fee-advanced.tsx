@@ -6,14 +6,17 @@ import { translate } from '../../../../core/i18n';
 import { FeeTotal } from '../fee-total/fee-total';
 import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../../../core/blockchain/types';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 
 export interface IExternalProps {
-    amount: BigNumber;
+    gasPrice: BigNumber;
+    gasLimit: BigNumber;
     blockchain: Blockchain;
+    onInputFees: (gasPrice: BigNumber, gasLimit: BigNumber) => any;
 }
 interface IState {
-    gasPrice: number;
-    gasLimit: number;
+    inputGasPrice: string;
+    inputGasLimit: string;
 }
 export class FeeAvancedComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
@@ -21,22 +24,40 @@ export class FeeAvancedComponent extends React.Component<
 > {
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
+        const blockchainInstance = getBlockchain(this.props.blockchain);
 
         this.state = {
-            gasPrice: undefined,
-            gasLimit: undefined
+            inputGasPrice: blockchainInstance.account
+                .convertToGasPriceUnit(new BigNumber(Number(props.gasPrice)))
+                .toString(),
+            inputGasLimit: props.gasLimit.toString()
         };
     }
     public addGasPrice(value: string) {
-        throw new Error('Method not implemented.');
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+
+        this.setState({ inputGasPrice: value });
+        this.props.onInputFees(
+            blockchainInstance.account.convertFromGasPriceUnit(new BigNumber(Number(value))),
+            new BigNumber(Number(this.state.inputGasLimit))
+        );
     }
     public addGasLimit(value: string) {
-        throw new Error('Method not implemented.');
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+
+        this.setState({ inputGasLimit: value });
+        this.props.onInputFees(
+            blockchainInstance.account.convertFromGasPriceUnit(
+                new BigNumber(Number(this.state.inputGasPrice))
+            ),
+            new BigNumber(Number(value))
+        );
     }
 
     public render() {
         const styles = this.props.styles;
         const theme = this.props.theme;
+
         return (
             <View style={styles.container}>
                 <View style={[styles.inputBox, styles.inputBoxTop]}>
@@ -48,7 +69,7 @@ export class FeeAvancedComponent extends React.Component<
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
-                        value={this.state.gasPrice ? this.state.gasPrice.toString() : ''}
+                        value={this.state.inputGasPrice}
                         onChangeText={value => {
                             this.addGasPrice(value);
                         }}
@@ -63,13 +84,13 @@ export class FeeAvancedComponent extends React.Component<
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
-                        value={this.state.gasLimit ? this.state.gasLimit.toString() : ''}
+                        value={this.state.inputGasLimit.toString()}
                         onChangeText={value => {
                             this.addGasLimit(value);
                         }}
                     />
                 </View>
-                <FeeTotal amount={this.props.amount} blockchain={this.props.blockchain} />
+                <FeeTotal amount={this.props.gasPrice} blockchain={this.props.blockchain} />
             </View>
         );
     }

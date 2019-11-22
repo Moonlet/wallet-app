@@ -47,3 +47,11 @@ export const amountToStd = (value: BigNumber | number | string): BigNumber => {
 export const amountFromStd = (value: BigNumber): BigNumber => {
     return convertUnit(value, config.defaultUnit, config.coin, config);
 };
+
+export const convertToGasPriceUnit = (value: BigNumber): BigNumber => {
+    return convertUnit(value, config.defaultUnit, config.feeOptions.ui.gasPriceUnit, config);
+};
+
+export const convertFromGasPriceUnit = (value: BigNumber): BigNumber => {
+    return convertUnit(value, config.feeOptions.ui.gasPriceUnit, config.defaultUnit, config);
+};

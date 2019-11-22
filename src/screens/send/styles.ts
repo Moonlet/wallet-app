@@ -21,8 +21,7 @@ export default (theme: ITheme) =>
         },
         input: {
             flex: 1,
-            color: theme.colors.text,
-            borderColor: theme.colors.error
+            color: theme.colors.text
         },
         inputAddress: {
             flex: 1,

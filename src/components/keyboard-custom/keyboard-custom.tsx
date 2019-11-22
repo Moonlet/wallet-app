@@ -5,7 +5,13 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { Text } from '../../library';
 import { Icon } from '../icon';
-import { digitsRow, firstRow, secondRow, thirdRow } from './words';
+
+const keyboardLayout = [
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
+    ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+    ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+    ['z', 'x', 'c', 'v', 'b', 'n', 'm']
+];
 
 export interface IProps {
     showNumeric?: boolean;
@@ -28,7 +34,7 @@ export class KeyboardComponent extends React.Component<
         };
     }
 
-    public renderRow = (rowValues: any, isDigitRow: boolean, isLastRow: boolean) => {
+    public renderRow = (rowValues: any, isLastRow: boolean) => {
         const styles = this.props.styles;
 
         return (
@@ -44,15 +50,20 @@ export class KeyboardComponent extends React.Component<
                 ) : null}
 
                 {rowValues.map((word: any, index: any) => {
-                    const key = this.state.isCapsLock && !isDigitRow ? word.upper : word.lower;
+                    const currentWord =
+                        typeof word === 'string'
+                            ? this.state.isCapsLock
+                                ? word.toUpperCase()
+                                : word.toLowerCase()
+                            : word;
 
                     return (
                         <TouchableOpacity
                             key={index}
                             style={styles.keyContainer}
-                            onPress={() => this.props.handleTextUpdate(key)}
+                            onPressIn={() => this.props.handleTextUpdate(currentWord)}
                         >
-                            <Text style={styles.keyText}>{key}</Text>
+                            <Text style={styles.keyText}>{currentWord}</Text>
                         </TouchableOpacity>
                     );
                 })}
@@ -86,10 +97,10 @@ export class KeyboardComponent extends React.Component<
                 </View>
 
                 <View style={styles.keyboardLayout}>
-                    {this.props.showNumeric && this.renderRow(digitsRow, true, false)}
-                    {this.renderRow(firstRow, false, false)}
-                    {this.renderRow(secondRow, false, false)}
-                    {this.renderRow(thirdRow, false, true)}
+                    {this.props.showNumeric && this.renderRow(keyboardLayout[0], false)}
+                    {this.renderRow(keyboardLayout[1], false)}
+                    {this.renderRow(keyboardLayout[2], false)}
+                    {this.renderRow(keyboardLayout[3], true)}
 
                     <TouchableOpacity style={styles.nextWordContainer}>
                         <Text style={styles.nextWordText}>Next Word</Text>

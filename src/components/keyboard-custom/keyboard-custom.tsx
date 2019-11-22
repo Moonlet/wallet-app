@@ -34,6 +34,10 @@ export class KeyboardComponent extends React.Component<
         };
     }
 
+    public onTouchStart = (currentWord: any) => {
+        this.props.handleTextUpdate(currentWord);
+    };
+
     public renderRow = (rowValues: any, isLastRow: boolean) => {
         const styles = this.props.styles;
 

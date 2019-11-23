@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - master
-      - version
+      - androidbuildfix
 
 name: Deploy Beta
 jobs:

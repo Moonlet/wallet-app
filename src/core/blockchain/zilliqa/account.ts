@@ -10,13 +10,18 @@ import { Blockchain } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convertUnit } from '../common/account';
+import { IResultValidation } from '../../wallet/types';
 
 export const isValidChecksumAddress = (address: string): boolean => {
     return isBech32(address);
 };
 
-export const isValidAddress = (address: string): boolean => {
-    return isBech32(address);
+export const isValidAddress = (address: string): IResultValidation => {
+    if (isBech32(address)) {
+        return { valid: true };
+    } else {
+        return { valid: false, responseType: 'error' };
+    }
 };
 
 export const publicToAddress = (publicKey: string): string => {

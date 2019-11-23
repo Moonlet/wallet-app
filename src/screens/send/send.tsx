@@ -54,6 +54,7 @@ interface IState {
     amount: string;
     fee: string;
     isValidAddress: boolean;
+    addressInputValid: boolean;
     showOwnAccounts: boolean;
     gasPrice: BigNumber;
     gasLimit: BigNumber;
@@ -78,6 +79,7 @@ export class SendScreenComponent extends React.Component<
             amount: '',
             fee: '',
             isValidAddress: false,
+            addressInputValid: true,
             showOwnAccounts: false,
             gasPrice: undefined,
             gasLimit: undefined
@@ -103,7 +105,9 @@ export class SendScreenComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
         this.setState({ toAddress: text });
         if (blockchainInstance.account.isValidAddress(text)) {
-            this.setState({ isValidAddress: true });
+            this.setState({ isValidAddress: true, addressInputValid: true });
+        } else {
+            this.setState({ addressInputValid: false });
         }
     };
     public addAmount = (value: string) => {
@@ -168,6 +172,39 @@ export class SendScreenComponent extends React.Component<
         );
     }
 
+    public onPressClearInput = () => {
+        this.setState({ isValidAddress: false, toAddress: '', addressInputValid: true });
+    };
+
+    public renderRightAddressIcon() {
+        const styles = this.props.styles;
+        if (Platform.OS === 'web') {
+            return null;
+        }
+
+        if (!this.state.isValidAddress) {
+            return (
+                <TouchableOpacity
+                    testID="qrcode-icon"
+                    onPress={this.onPressQrCodeIcon}
+                    style={[styles.rightAddressButton]}
+                >
+                    <Icon name="qr-code-scan" size={20} style={styles.icon} />
+                </TouchableOpacity>
+            );
+        } else {
+            return (
+                <TouchableOpacity
+                    testID="clear-address"
+                    onPress={this.onPressClearInput}
+                    style={[styles.rightAddressButton]}
+                >
+                    <Icon name="close" size={20} style={styles.icon} />
+                </TouchableOpacity>
+            );
+        }
+    }
+
     public render() {
         const styles = this.props.styles;
         const theme = this.props.theme;
@@ -179,7 +216,7 @@ export class SendScreenComponent extends React.Component<
                 <Text style={styles.receipientLabel}>
                     {this.state.toAddress !== '' ? translate('Send.recipientLabel') : ' '}
                 </Text>
-                <View style={[styles.inputBoxAddress]}>
+                <View style={styles.inputBoxAddress}>
                     <TextInput
                         testID="input-address"
                         style={styles.inputAddress}
@@ -187,23 +224,24 @@ export class SendScreenComponent extends React.Component<
                         placeholder={translate('Send.inputAddress')}
                         autoCapitalize={'none'}
                         autoCorrect={false}
+                        editable={!this.state.isValidAddress}
                         selectionColor={theme.colors.accent}
-                        value={formatAddress(this.state.toAddress)}
+                        value={
+                            this.state.isValidAddress
+                                ? formatAddress(this.state.toAddress)
+                                : this.state.toAddress
+                        }
                         onChangeText={text => {
                             this.verifyAddress(text);
                         }}
                     />
-                    {Platform.OS !== 'web' ? (
-                        <TouchableOpacity
-                            testID="qrcode-icon"
-                            onPress={this.onPressQrCodeIcon}
-                            style={[styles.qrButton]}
-                        >
-                            <Icon name="qr-code-scan" size={20} style={styles.icon} />
-                        </TouchableOpacity>
-                    ) : null}
+                    {this.renderRightAddressIcon()}
                 </View>
-
+                {!this.state.addressInputValid ? (
+                    <Text style={styles.receipientNotValid}>
+                        {translate('Send.recipientNotValid')}
+                    </Text>
+                ) : null}
                 <TouchableOpacity
                     testID="transfer-between-accounts"
                     onPress={this.onTransferBetweenAccounts}

@@ -33,6 +33,11 @@ export default (theme: ITheme) =>
             marginTop: 40,
             color: theme.colors.textSecondary
         },
+        receipientNotValid: {
+            paddingLeft: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION,
+            color: theme.colors.error
+        },
         inputBoxAddress: {
             height: 44,
             borderRadius: BORDER_RADIUS,
@@ -74,7 +79,7 @@ export default (theme: ITheme) =>
             color: theme.colors.accent,
             marginHorizontal: 0
         },
-        qrButton: {
+        rightAddressButton: {
             flexDirection: 'row',
             marginRight: BASE_DIMENSION / 2
         },

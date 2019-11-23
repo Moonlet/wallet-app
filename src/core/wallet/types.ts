@@ -6,6 +6,11 @@ export enum WalletType {
     HW_LEDGER = 'HW_LEDGER'
 }
 
+export interface IResultValidation {
+    responseType?: 'warning' | 'error';
+    valid: boolean;
+}
+
 export enum TransactionStatus {
     PENDING = 'PENDING',
     FAILED = 'FAILED',

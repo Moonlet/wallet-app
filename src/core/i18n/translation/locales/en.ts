@@ -88,7 +88,8 @@ export const translation: ITranslations = {
             recipientLabel: 'Recipient',
             transferOwnAccounts: 'Transfer between my accounts',
             advancedSetup: 'Advanced setup',
-            simpleSetup: 'Simple setup'
+            simpleSetup: 'Simple setup',
+            recipientNotValid: 'Recipient address is invalid'
         },
         AccountSettings: {
             manageAccount: 'Manage account',

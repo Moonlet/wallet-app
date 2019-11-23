@@ -1,9 +1,10 @@
 import { IAccountState } from '../../../redux/wallets/state';
 import { BigNumber } from 'bignumber.js';
+import { IResultValidation } from '../../wallet/types';
 
 export interface IBlockchainAccountUtils {
     isValidChecksumAddress(address: string): boolean;
-    isValidAddress(address: string): boolean;
+    isValidAddress(address: string): IResultValidation;
 
     publicToAddress(publicKey: string): string;
     privateToAddress(privateKey: string): string;

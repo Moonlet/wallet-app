@@ -4,13 +4,25 @@ import * as Util from 'ethereumjs-util';
 import { BigNumber } from 'bignumber.js';
 import { convertUnit } from '../common/account';
 import { config } from './config';
+import { IResultValidation } from '../../wallet/types';
 
 export const isValidChecksumAddress = (address: string): boolean => {
     return Util.isValidChecksumAddress(address);
 };
 
-export const isValidAddress = (address: string): boolean => {
-    return Util.isValidAddress(address);
+export const isValidAddress = (address: string): IResultValidation => {
+    if (Util.isValidAddress(address)) {
+        if (isValidChecksumAddress(address)) {
+            return { valid: true };
+        } else {
+            return { valid: true, responseType: 'warning' };
+        }
+    } else {
+        return {
+            valid: false,
+            responseType: 'error'
+        };
+    }
 };
 
 export const publicToAddress = (publicKey: string): string => {

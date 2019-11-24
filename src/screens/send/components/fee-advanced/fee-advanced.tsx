@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, TextInput } from 'react-native';
+import { Text } from '../../../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { translate } from '../../../../core/i18n';
@@ -60,6 +61,7 @@ export class FeeAvancedComponent extends React.Component<
 
         return (
             <View style={styles.container}>
+                <Text style={styles.gasPriceLabel}>{translate('Fee.gasPrice')}</Text>
                 <View style={[styles.inputBox, styles.inputBoxTop]}>
                     <TextInput
                         testID="gas-price"
@@ -75,6 +77,8 @@ export class FeeAvancedComponent extends React.Component<
                         }}
                     />
                 </View>
+
+                <Text style={styles.gasLimitLabel}>{translate('Fee.gasLimit')}</Text>
                 <View style={styles.inputBox}>
                     <TextInput
                         testID="gas-limit"

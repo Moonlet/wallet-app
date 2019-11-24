@@ -26,7 +26,7 @@ export class Client extends BlockchainGenericClient {
         return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => res.result);
     }
 
-    public estimateFees(): { gasPrice: BigNumber; gasLimit: BigNumber } {
+    public estimateFees(from: string, to: string): { gasPrice: BigNumber; gasLimit: BigNumber } {
         return {
             gasPrice: config.feeOptions.defaults.gasPrice,
             gasLimit: config.feeOptions.defaults.gasLimit

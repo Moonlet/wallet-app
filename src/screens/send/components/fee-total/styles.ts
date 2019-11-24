@@ -4,20 +4,24 @@ import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
-        container: {
-            marginTop: BASE_DIMENSION * 3
-        },
+        container: {},
         feeTitle: {
             paddingLeft: BASE_DIMENSION,
-            color: theme.colors.primary
+            color: theme.colors.textSecondary
+        },
+        feeWrapper: {
+            borderRadius: BORDER_RADIUS,
+            borderWidth: 1,
+            backgroundColor: theme.colors.primary,
+            paddingLeft: BASE_DIMENSION * 2,
+            paddingVertical: BASE_DIMENSION
         },
         fee: {
-            width: '100%',
-            borderRadius: BORDER_RADIUS,
-            paddingLeft: BASE_DIMENSION,
-            lineHeight: 40,
-            backgroundColor: theme.colors.primary,
-            alignSelf: 'flex-start',
+            color: theme.colors.textSecondary,
+            fontSize: 16,
+            lineHeight: 21
+        },
+        approxSign: {
             color: theme.colors.textSecondary
         },
         feeConverted: {

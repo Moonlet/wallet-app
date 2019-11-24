@@ -1,17 +1,23 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingTop: 40,
             paddingBottom: BASE_DIMENSION * 2,
             paddingLeft: BASE_DIMENSION * 2,
             paddingRight: BASE_DIMENSION * 2,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
             ...StyleSheet.absoluteFillObject
+        },
+        keyboardAvoidance: {
+            flex: 1,
+            justifyContent: Platform.OS === 'ios' ? 'space-between' : 'flex-start'
+        },
+        accountAddress: {
+            paddingTop: 40
         },
         address: {
             fontSize: 30,
@@ -30,7 +36,7 @@ export default (theme: ITheme) =>
         },
         receipientLabel: {
             paddingLeft: BASE_DIMENSION,
-            marginTop: 40,
+            marginTop: BASE_DIMENSION * 3,
             color: theme.colors.textSecondary
         },
         receipientNotValid: {
@@ -65,7 +71,7 @@ export default (theme: ITheme) =>
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'center',
-            marginBottom: BASE_DIMENSION / 2
+            marginBottom: BASE_DIMENSION * 2
         },
         bottomButton: {
             width: '90%'
@@ -85,11 +91,12 @@ export default (theme: ITheme) =>
         },
         buttonRightOptions: {
             marginTop: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION,
             alignItems: 'flex-end'
         },
         textTranferButton: {
             color: theme.colors.accent,
-            lineHeight: BASE_DIMENSION * 3,
+            lineHeight: 21,
             fontSize: theme.fontSize.small
         }
     });

@@ -22,13 +22,15 @@ export class FeeTotalComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <Text style={styles.feeTitle}>{translate('App.labels.fee')}</Text>
-                <Amount
-                    style={styles.fee}
-                    amount={this.props.amount}
-                    blockchain={this.props.blockchain}
-                />
+                <View style={styles.feeWrapper}>
+                    <Amount
+                        style={styles.fee}
+                        amount={this.props.amount}
+                        blockchain={this.props.blockchain}
+                    />
+                </View>
                 <View style={styles.containerFeeConverted}>
-                    <Text>~</Text>
+                    <Text style={styles.approxSign}>~</Text>
                     <Amount
                         style={styles.feeConverted}
                         amount={this.props.amount}

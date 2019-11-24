@@ -57,7 +57,7 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public estimateFees(): { gasPrice: BigNumber; gasLimit: BigNumber } {
+    public estimateFees(from: string, to: string): { gasPrice: BigNumber; gasLimit: BigNumber } {
         return {
             gasPrice: config.feeOptions.defaults.gasPrice,
             gasLimit: config.feeOptions.defaults.gasLimit

@@ -11,7 +11,7 @@ export default (theme: ITheme) =>
 
         inputBox: {
             height: BASE_DIMENSION * 5,
-            marginTop: BASE_DIMENSION * 3,
+            marginBottom: BASE_DIMENSION * 3,
             borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',
@@ -24,5 +24,14 @@ export default (theme: ITheme) =>
         input: {
             flex: 1,
             color: theme.colors.text
+        },
+        gasPriceLabel: {
+            paddingLeft: BASE_DIMENSION,
+            color: theme.colors.textSecondary,
+            marginTop: BASE_DIMENSION
+        },
+        gasLimitLabel: {
+            paddingLeft: BASE_DIMENSION,
+            color: theme.colors.textSecondary
         }
     });

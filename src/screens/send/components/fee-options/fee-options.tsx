@@ -3,7 +3,7 @@ import { IAccountState } from '../../../../redux/wallets/state';
 import stylesProvider from './styles';
 import { Text } from '../../../../library';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, FlatList } from 'react-native';
 import { translate } from '../../../../core/i18n';
 import { FeeAvanced } from '../fee-advanced/fee-advanced';
 import { FeeTotal } from '../fee-total/fee-total';
@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 
 export interface IExternalProps {
     account: IAccountState;
+    toAddress: string;
     calculatedFees: (gasPrice: BigNumber, gasLimit: BigNumber) => any;
 }
 
@@ -60,7 +61,9 @@ export class FeeOptionsComponent extends React.Component<
 
     public estimatedFees = () => {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
-        const fees = blockchainInstance.getClient(this.props.chainId).estimateFees();
+        const fees = blockchainInstance
+            .getClient(this.props.chainId)
+            .estimateFees(this.props.account.address, this.props.toAddress);
         this.setState({
             gasPrice: fees.gasPrice,
             gasLimit: fees.gasLimit
@@ -96,6 +99,8 @@ export class FeeOptionsComponent extends React.Component<
     };
 
     public renderSimpleFees() {
+        const styles = this.props.styles;
+
         if (this.state.blockchainConfig.feeOptions.ui.feeComponent === 'FeeTotal') {
             return (
                 <FeeTotal amount={this.state.gasPrice} blockchain={this.props.account.blockchain} />
@@ -103,20 +108,31 @@ export class FeeOptionsComponent extends React.Component<
         } else if (this.state.blockchainConfig.feeOptions.ui.feeComponent === 'FeePresets') {
             const presets = this.state.blockchainConfig.feeOptions.defaults.gasPricePresets;
             return (
-                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-                    {Object.keys(presets).map(key => {
-                        return (
-                            <FeePreset
-                                key={key}
-                                amount={presets[key]}
-                                blockchain={this.props.account.blockchain}
-                                title={translate('App.labels.' + key)}
-                                presetKey={key}
-                                onSelect={this.onSelectFeePreset}
-                                selected={this.state.selectedPreset === key}
-                            />
-                        );
-                    })}
+                <View style={styles.containerPresets}>
+                    <FlatList
+                        contentContainerStyle={styles.list}
+                        onEndReachedThreshold={0.5}
+                        numColumns={2}
+                        scrollEnabled={false}
+                        data={Object.keys(presets)}
+                        keyExtractor={index => `${index}`}
+                        renderItem={({ item }) => {
+                            return (
+                                <FeePreset
+                                    key={item}
+                                    amount={presets[item]}
+                                    blockchain={this.props.account.blockchain}
+                                    title={translate('App.labels.' + item)}
+                                    presetKey={item}
+                                    onSelect={this.onSelectFeePreset}
+                                    selected={this.state.selectedPreset === item}
+                                />
+                            );
+                        }}
+                        horizontal={false}
+                        columnWrapperStyle={{ justifyContent: 'space-between' }}
+                        showsVerticalScrollIndicator={false}
+                    />
                 </View>
             );
         }

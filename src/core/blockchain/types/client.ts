@@ -22,11 +22,5 @@ export abstract class BlockchainGenericClient {
 
     public abstract sendTransaction(transaction: any): Promise<string>;
 
-    public abstract estimateFees(
-        from: string,
-        to: string
-    ): {
-        gasPrice: BigNumber;
-        gasLimit: BigNumber;
-    };
+    public abstract estimateFees(from: string, to: string): Promise<any>;
 }

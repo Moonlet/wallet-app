@@ -64,6 +64,7 @@ interface IState {
     addressInputValid: boolean;
     displayValidationWarning: boolean;
     showOwnAccounts: boolean;
+    insufficientFunds: boolean;
     gasPrice: BigNumber;
     gasLimit: BigNumber;
 }
@@ -87,6 +88,7 @@ export class SendScreenComponent extends React.Component<
             amount: '',
             isValidAddress: false,
             addressInputValid: true,
+            insufficientFunds: false,
             displayValidationWarning: false,
             showOwnAccounts: false,
             gasPrice: undefined,
@@ -139,8 +141,26 @@ export class SendScreenComponent extends React.Component<
     };
 
     public calculatedFees = (gasPrice: BigNumber, gasLimit: BigNumber) => {
-        this.setState({ gasPrice, gasLimit });
+        this.setState({ gasPrice, gasLimit }, () => this.availableFunds());
     };
+
+    public addAmount = (value: string) => {
+        this.setState({ amount: value }, () => this.availableFunds());
+    };
+
+    public availableFunds() {
+        const blockchainInstance = getBlockchain(this.props.account.blockchain);
+        const stdAmount = blockchainInstance.account.amountToStd(
+            new BigNumber(Number(this.state.amount))
+        );
+        this.setState({ insufficientFunds: true });
+        const completeAmount = this.state.gasPrice.plus(stdAmount);
+        if (!this.props.account.balance?.value.minus(completeAmount).isGreaterThan(0)) {
+            this.setState({ insufficientFunds: true });
+        } else {
+            this.setState({ insufficientFunds: false });
+        }
+    }
 
     public renderBasicFields() {
         const styles = this.props.styles;
@@ -158,10 +178,13 @@ export class SendScreenComponent extends React.Component<
                         selectionColor={theme.colors.accent}
                         value={this.state.amount}
                         onChangeText={value => {
-                            this.setState({ amount: value });
+                            this.addAmount(value);
                         }}
                     />
                 </View>
+                {this.state.insufficientFunds ? (
+                    <Text style={styles.displayError}>{translate('Send.insufficientFunds')}</Text>
+                ) : null}
 
                 <FeeOptions
                     account={this.props.account}
@@ -265,7 +288,7 @@ export class SendScreenComponent extends React.Component<
                             {this.renderRightAddressIcon()}
                         </View>
                         {!this.state.addressInputValid ? (
-                            <Text style={styles.receipientNotValid}>
+                            <Text style={styles.displayError}>
                                 {translate('Send.recipientNotValid')}
                             </Text>
                         ) : null}

@@ -53,17 +53,15 @@ export class FeeOptionsComponent extends React.Component<
             hasAdvancedOptions: feeOptions.ui.feeComponentAdvanced === 'FeeAdvanced',
             selectedPreset: feeOptions.ui.defaultPreset
         };
-    }
-
-    public componentDidMount() {
         this.estimatedFees();
     }
 
-    public estimatedFees = () => {
+    public estimatedFees = async () => {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
-        const fees = blockchainInstance
+        const fees = await blockchainInstance
             .getClient(this.props.chainId)
             .estimateFees(this.props.account.address, this.props.toAddress);
+
         this.setState({
             gasPrice: fees.gasPrice,
             gasLimit: fees.gasLimit

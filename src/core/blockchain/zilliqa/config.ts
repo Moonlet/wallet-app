@@ -13,7 +13,7 @@ export const config: IBlockchainConfig = {
     decimals: 3,
     feeOptions: {
         defaults: {
-            gasPrice: new BigNumber(1000),
+            gasPrice: new BigNumber(1000000000),
             gasLimit: new BigNumber(1)
         },
         ui: {

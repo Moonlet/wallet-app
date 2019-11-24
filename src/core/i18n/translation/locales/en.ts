@@ -90,6 +90,7 @@ export const translation: ITranslations = {
             advancedSetup: 'Advanced setup',
             simpleSetup: 'Simple setup',
             recipientNotValid: 'Recipient address is invalid',
+            insufficientFunds: 'Insufficient funds',
             receipientWarning: 'Warning: recipient address is not checksumed'
         },
         AccountSettings: {

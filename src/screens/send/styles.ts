@@ -39,7 +39,7 @@ export default (theme: ITheme) =>
             marginTop: BASE_DIMENSION * 3,
             color: theme.colors.textSecondary
         },
-        receipientNotValid: {
+        displayError: {
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
             color: theme.colors.error

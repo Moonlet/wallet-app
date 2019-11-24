@@ -79,16 +79,16 @@ export default describe('SendScreen', () => {
         wrapper.verifyAddress('address');
         expect(wrapper.state.toAddress).toEqual('address');
     });
-    test('should change state if amount is entered', () => {
-        const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
-        wrapper.addAmount('1');
-        expect(wrapper.state.amount).toEqual('1');
-    });
-    test('should calculate fee is amount is entered', () => {
-        const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
-        wrapper.addAmount('1');
-        expect(wrapper.state.fee).toEqual('0.001ZIL');
-    });
+    // test('should change state if amount is entered', () => {
+    //     const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
+    //     wrapper.addAmount('1');
+    //     expect(wrapper.state.amount).toEqual('1');
+    // });
+    // test('should calculate fee is amount is entered', () => {
+    //     const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
+    //     wrapper.addAmount('1');
+    //     expect(wrapper.state.fee).toEqual('0.001ZIL');
+    // });
     test('should Call verify address', () => {
         const wrapper: any = shallow(<SendScreenComponent {...props} />);
         wrapper.instance().onQrCodeScanned('address');

@@ -20,6 +20,7 @@ export const darkTheme: ITheme = {
         positive: COLORS.HOT_GREEN,
         negative: COLORS.HOT_RED,
         error: COLORS.LIGHT_RED,
+        warning: COLORS.YELLOW,
 
         cardBackground: COLORS.DARK_GRAY,
         appBackground: COLORS.COD_GRAY,

@@ -44,6 +44,11 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION,
             color: theme.colors.error
         },
+        receipientWarning: {
+            paddingLeft: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION,
+            color: theme.colors.warning
+        },
         inputBoxAddress: {
             height: 44,
             borderRadius: BORDER_RADIUS,

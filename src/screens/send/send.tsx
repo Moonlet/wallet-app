@@ -18,7 +18,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
-import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { IAccountState } from '../../redux/wallets/state';
@@ -31,6 +31,7 @@ import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
+import { IResultValidation } from '../../core/wallet/types';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -59,9 +60,9 @@ export interface INavigationParams {
 interface IState {
     toAddress: string;
     amount: string;
-    fee: string;
     isValidAddress: boolean;
     addressInputValid: boolean;
+    displayValidationWarning: boolean;
     showOwnAccounts: boolean;
     gasPrice: BigNumber;
     gasLimit: BigNumber;
@@ -84,9 +85,9 @@ export class SendScreenComponent extends React.Component<
         this.state = {
             toAddress: '',
             amount: '',
-            fee: '',
             isValidAddress: false,
             addressInputValid: true,
+            displayValidationWarning: false,
             showOwnAccounts: false,
             gasPrice: undefined,
             gasLimit: undefined
@@ -111,16 +112,16 @@ export class SendScreenComponent extends React.Component<
     public verifyAddress = (text: string) => {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
         this.setState({ toAddress: text });
-        if (blockchainInstance.account.isValidAddress(text)) {
-            this.setState({ isValidAddress: true, addressInputValid: true });
-        } else {
-            this.setState({ addressInputValid: false });
-        }
-    };
-    public addAmount = (value: string) => {
+
+        const addressValidation: IResultValidation = blockchainInstance.account.isValidAddress(
+            text
+        );
+
         this.setState({
-            amount: value,
-            fee: '0.001' + BLOCKCHAIN_INFO[this.props.account.blockchain].coin
+            isValidAddress: addressValidation.valid,
+            addressInputValid: addressValidation.valid,
+            displayValidationWarning:
+                addressValidation.valid && addressValidation.responseType === 'warning'
         });
     };
     public onQrCodeScanned = (value: string) => {
@@ -157,7 +158,7 @@ export class SendScreenComponent extends React.Component<
                         selectionColor={theme.colors.accent}
                         value={this.state.amount}
                         onChangeText={value => {
-                            this.addAmount(value);
+                            this.setState({ amount: value });
                         }}
                     />
                 </View>
@@ -184,7 +185,12 @@ export class SendScreenComponent extends React.Component<
     }
 
     public onPressClearInput = () => {
-        this.setState({ isValidAddress: false, toAddress: '', addressInputValid: true });
+        this.setState({
+            isValidAddress: false,
+            toAddress: '',
+            addressInputValid: true,
+            displayValidationWarning: false
+        });
     };
 
     public renderRightAddressIcon() {
@@ -261,6 +267,11 @@ export class SendScreenComponent extends React.Component<
                         {!this.state.addressInputValid ? (
                             <Text style={styles.receipientNotValid}>
                                 {translate('Send.recipientNotValid')}
+                            </Text>
+                        ) : null}
+                        {this.state.displayValidationWarning ? (
+                            <Text style={styles.receipientWarning}>
+                                {translate('Send.receipientWarning')}
                             </Text>
                         ) : null}
                         <TouchableOpacity

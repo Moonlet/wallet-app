@@ -40,7 +40,7 @@ describe('Ethereum account', () => {
     });
 
     test('isValidAddress()', () => {
-        expect(Ethereum.account.isValidAddress('ADDRESS')).toBe(true);
+        expect(Ethereum.account.isValidAddress('ADDRESS')).toStrictEqual({ valid: true });
         expect(Util.isValidAddress).toBeCalledWith('ADDRESS');
     });
 

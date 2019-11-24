@@ -101,7 +101,8 @@ export default describe('SendScreen', () => {
         expect(wrapper.debug()).toMatchSnapshot();
 
         wrapper.setState({
-            isValidAddress: true
+            isValidAddress: true,
+            gasPrice: new BigNumber(1)
         });
         wrapper.find('[testID="amount"]').simulate('changeText', '10');
 

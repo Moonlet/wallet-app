@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - "keyboard-fix"
 
 name: Deploy Beta
 jobs:

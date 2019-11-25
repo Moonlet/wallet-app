@@ -48,7 +48,7 @@ export class FeeOptionsComponent extends React.Component<
             feeOptions: undefined,
             blockchainConfig: BLOCKCHAIN_INFO[props.account.blockchain],
             showAdvancedOptions: false,
-            hasAdvancedOptions: feeOptions.ui.feeComponentAdvanced === 'FeeAdvanced',
+            hasAdvancedOptions: feeOptions.ui.feeComponentAdvanced === 'GasFeeAdvanced',
             selectedPreset: feeOptions.ui.defaultPreset
         };
         this.estimatedFees();
@@ -147,7 +147,7 @@ export class FeeOptionsComponent extends React.Component<
         }
     }
     public renderAdvancedFees() {
-        if (this.state.blockchainConfig.feeOptions.ui.feeComponentAdvanced === 'FeeAdvanced') {
+        if (this.state.blockchainConfig.feeOptions.ui.feeComponentAdvanced === 'GasFeeAdvanced') {
             return this.state.feeOptions ? (
                 <GasFeeAvanced
                     gasPrice={this.state.feeOptions.gasPrice}

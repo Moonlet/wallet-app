@@ -24,7 +24,7 @@ export const config: IBlockchainConfig = {
         },
         ui: {
             feeComponent: 'FeePresets',
-            feeComponentAdvanced: 'FeeAdvanced',
+            feeComponentAdvanced: 'GasFeeAdvanced',
             gasPriceUnit: 'GWEI',
             defaultPreset: 'standard'
         }

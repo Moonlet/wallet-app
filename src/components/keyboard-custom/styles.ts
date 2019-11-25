@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -23,6 +23,7 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.cardBackground
         },
         keyboardLayout: {
+            flex: 1,
             backgroundColor: theme.colors.cardBackground,
             paddingHorizontal: BASE_DIMENSION / 2,
             paddingBottom: BASE_DIMENSION
@@ -47,32 +48,34 @@ export default (theme: ITheme) =>
             fontSize: 14
         },
         rowContainer: {
+            flex: 1,
             flexDirection: 'row',
             justifyContent: 'center',
             paddingVertical: 6
         },
         keyContainer: {
             flex: 1,
+            backgroundColor: theme.colors.primary,
+            borderRadius: BORDER_RADIUS,
             paddingVertical: BASE_DIMENSION,
-            paddingHorizontal: BASE_DIMENSION,
-            minWidth: 30,
             maxWidth: 35,
             marginHorizontal: 3,
             justifyContent: 'center',
             alignContent: 'center'
         },
         keyText: {
+            flex: 1,
             fontSize: 22,
             lineHeight: 26,
             textAlign: 'center'
         },
         upperIcon: {
             justifyContent: 'center',
-            marginRight: BASE_DIMENSION * 2
+            paddingHorizontal: BASE_DIMENSION
         },
         deleteIcon: {
             justifyContent: 'center',
-            marginLeft: BASE_DIMENSION * 2
+            paddingHorizontal: BASE_DIMENSION
         },
         icon: {
             color: theme.colors.accent

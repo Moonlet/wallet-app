@@ -103,7 +103,7 @@ export default describe('SendScreen', () => {
         wrapper.setState({
             isValidAddress: true,
             feeOptions: {
-                gasPrice: new BigNumber(1)
+                feeTotal: new BigNumber(1)
             }
         });
         wrapper.find('[testID="amount"]').simulate('changeText', '10');

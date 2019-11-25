@@ -147,7 +147,7 @@ export class SendScreenComponent extends React.Component<
             new BigNumber(Number(this.state.amount))
         );
         this.setState({ insufficientFunds: true });
-        const completeAmount = this.state.feeOptions.gasPrice.plus(stdAmount);
+        const completeAmount = this.state.feeOptions.feeTotal.plus(stdAmount);
         if (!this.props.account.balance?.value.minus(completeAmount).isGreaterThan(0)) {
             this.setState({ insufficientFunds: true });
         } else {

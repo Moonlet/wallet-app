@@ -61,20 +61,23 @@ export class Client extends BlockchainGenericClient {
         try {
             const result = await this.rpc.call('GetMinimumGasPrice', []);
 
-            if (result.result) {
-                return {
-                    gasPrice: new BigNumber(Number(result.result)),
-                    gasLimit: config.feeOptions.defaults.gasLimit
-                };
-            }
+            const gasPrice = result.result
+                ? new BigNumber(Number(result.result))
+                : config.feeOptions.defaults.gasPrice;
+            const gasLimit = config.feeOptions.defaults.gasLimit;
+
             return {
-                gasPrice: config.feeOptions.defaults.gasPrice,
-                gasLimit: config.feeOptions.defaults.gasLimit
+                gasPrice,
+                gasLimit,
+                feeTotal: gasPrice.multipliedBy(gasLimit)
             };
         } catch {
             return {
                 gasPrice: config.feeOptions.defaults.gasPrice,
-                gasLimit: config.feeOptions.defaults.gasLimit
+                gasLimit: config.feeOptions.defaults.gasLimit,
+                feeTotal: config.feeOptions.defaults.gasPrice.multipliedBy(
+                    config.feeOptions.defaults.gasLimit
+                )
             };
         }
     }

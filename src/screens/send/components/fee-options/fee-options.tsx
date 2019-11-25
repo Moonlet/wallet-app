@@ -67,17 +67,21 @@ export class FeeOptionsComponent extends React.Component<
     };
 
     public onSelectFeePreset = (key: string) => {
+        const gasPrice = new BigNumber(this.state.feeOptions.presets[key]);
+        const gasLimit = new BigNumber(this.state.feeOptions.gasLimit);
         this.setState({
             selectedPreset: key,
             feeOptions: {
                 ...this.state.feeOptions,
-                gasPrice: this.state.feeOptions.presets[key],
-                gasLimit: this.state.blockchainConfig.feeOptions.defaults.gasLimit
+                gasPrice,
+                gasLimit,
+                feeTotal: gasPrice.multipliedBy(gasLimit)
             }
         });
         this.props.onFeesChanged({
-            gasPrice: this.state.feeOptions.presets[key],
-            gasLimit: this.state.blockchainConfig.feeOptions.defaults.gasLimit
+            gasPrice,
+            gasLimit,
+            feeTotal: gasPrice.multipliedBy(gasLimit)
         });
     };
 
@@ -105,28 +109,25 @@ export class FeeOptionsComponent extends React.Component<
             case 'FeeTotal':
                 return this.state.feeOptions ? (
                     <FeeTotal
-                        amount={this.state.feeOptions.gasPrice.multipliedBy(
-                            this.state.feeOptions.gasLimit
-                        )}
+                        amount={this.state.feeOptions.feeTotal}
                         blockchain={this.props.account.blockchain}
                     />
                 ) : null;
             case 'FeePresets': {
-                const presets = this.state.feeOptions.presets;
-                return presets ? (
+                return this.state.feeOptions ? (
                     <View style={styles.containerPresets}>
                         <FlatList
                             contentContainerStyle={styles.list}
                             onEndReachedThreshold={0.5}
                             numColumns={2}
                             scrollEnabled={false}
-                            data={Object.keys(presets)}
+                            data={Object.keys(this.state.feeOptions.presets)}
                             keyExtractor={index => `${index}`}
                             renderItem={({ item }) => {
                                 return (
                                     <FeePreset
                                         key={item}
-                                        amount={presets[item]}
+                                        amount={this.state.feeOptions.presets[item]}
                                         blockchain={this.props.account.blockchain}
                                         title={translate('App.labels.' + item)}
                                         presetKey={item}

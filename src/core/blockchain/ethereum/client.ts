@@ -33,7 +33,12 @@ export class Client extends BlockchainGenericClient {
             fetch('https://ethgasstation.info/json/ethgasAPI.json')
         ]);
 
-        let presets;
+        let presets: {
+            cheap: BigNumber;
+            standard: BigNumber;
+            fast: BigNumber;
+            fastest: BigNumber;
+        };
         if (results[1]) {
             const response = await results[1].json();
 
@@ -61,12 +66,16 @@ export class Client extends BlockchainGenericClient {
             };
         }
 
+        const gasPrice = presets ? presets.standard : config.feeOptions.defaults.gasPrice;
+        const gasLimit = results[0].result
+            ? new BigNumber(parseInt(results[0].result, 16))
+            : config.feeOptions.defaults.gasLimit;
+
         return {
-            gasPrice: presets ? presets.standard : config.feeOptions.defaults.gasPrice,
-            gasLimit: results[0].result
-                ? new BigNumber(parseInt(results[0].result, 16))
-                : config.feeOptions.defaults.gasLimit,
-            presets: presets ? presets : config.feeOptions.defaults.gasPricePresets
+            gasPrice,
+            gasLimit,
+            presets: presets ? presets : config.feeOptions.defaults.gasPricePresets,
+            feeTotal: gasPrice.multipliedBy(gasLimit)
         };
     }
 

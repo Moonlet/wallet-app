@@ -13,7 +13,7 @@ export interface IExternalProps {
     gasPrice: BigNumber;
     gasLimit: BigNumber;
     blockchain: Blockchain;
-    onInputFees: (gasPrice: BigNumber, gasLimit: BigNumber) => any;
+    onInputFees: (gasPrice: BigNumber, gasLimit: BigNumber, feeTotal: BigNumber) => any;
 }
 interface IState {
     inputGasPrice: string;
@@ -42,27 +42,28 @@ export class GasFeeAvancedComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.blockchain);
 
         this.setState({ inputGasPrice: value });
-        this.props.onInputFees(
-            blockchainInstance.account.convertUnit(
-                new BigNumber(value),
-                blockchainInstance.config.feeOptions.ui.gasPriceUnit,
-                blockchainInstance.config.defaultUnit
-            ),
-            new BigNumber(Number(this.state.inputGasLimit))
+
+        const gasPrice = blockchainInstance.account.convertUnit(
+            new BigNumber(value),
+            blockchainInstance.config.feeOptions.ui.gasPriceUnit,
+            blockchainInstance.config.defaultUnit
         );
+        const gasLimit = new BigNumber(Number(this.state.inputGasLimit));
+
+        this.props.onInputFees(gasPrice, gasLimit, gasPrice.multipliedBy(gasLimit));
     }
     public addGasLimit(value: string) {
         const blockchainInstance = getBlockchain(this.props.blockchain);
 
-        this.setState({ inputGasLimit: value });
-        this.props.onInputFees(
-            blockchainInstance.account.convertUnit(
-                new BigNumber(this.state.inputGasPrice),
-                blockchainInstance.config.feeOptions.ui.gasPriceUnit,
-                blockchainInstance.config.defaultUnit
-            ),
-            new BigNumber(value)
+        const gasPrice = blockchainInstance.account.convertUnit(
+            new BigNumber(this.state.inputGasPrice),
+            blockchainInstance.config.feeOptions.ui.gasPriceUnit,
+            blockchainInstance.config.defaultUnit
         );
+        const gasLimit = new BigNumber(value);
+
+        this.setState({ inputGasLimit: value });
+        this.props.onInputFees(gasPrice, gasLimit, gasPrice.multipliedBy(gasLimit));
     }
 
     public render() {

@@ -52,6 +52,11 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
         <View style={{...}}>
           <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
         </View>
+        <TouchableOpacity testID=\\"all-balance\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Add all balance
+          </withTheme(TextComponent)>
+        </TouchableOpacity>
         <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
         <View style={{...}}>
           <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: _callee]}>
@@ -132,9 +137,14 @@ exports[`SendScreen onChangeText 2`] = `
         <withTheme(TextComponent) style={{...}}>
           Insufficient funds
         </withTheme(TextComponent)>
+        <TouchableOpacity testID=\\"all-balance\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Add all balance
+          </withTheme(TextComponent)>
+        </TouchableOpacity>
         <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"pass1\\" onFeesChanged={[Function]} />
         <View style={{...}}>
-          <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={false} onPress={[Function: _callee]}>
+          <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: _callee]}>
             Confirm payment
           </withTheme(ButtonComponent)>
         </View>
@@ -251,6 +261,11 @@ exports[`SendScreen renders correctly 2`] = `
         <View style={{...}}>
           <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
         </View>
+        <TouchableOpacity testID=\\"all-balance\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Add all balance
+          </withTheme(TextComponent)>
+        </TouchableOpacity>
         <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
         <View style={{...}}>
           <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={false} onPress={[Function: _callee]}>

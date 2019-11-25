@@ -141,17 +141,28 @@ export class SendScreenComponent extends React.Component<
         this.setState({ amount: value }, () => this.availableFunds());
     };
 
+    public onAddAllBalance = () => {
+        const allBalance = this.props.account.balance?.value.minus(this.state.feeOptions.feeTotal);
+
+        if (allBalance.isGreaterThanOrEqualTo(0)) {
+            const blockchainInstance = getBlockchain(this.props.account.blockchain);
+            const amountFromStd = blockchainInstance.account.amountFromStd(
+                new BigNumber(allBalance)
+            );
+            this.setState({ amount: amountFromStd.toString() }, () => this.availableFunds());
+        }
+    };
+
     public availableFunds() {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
         const stdAmount = blockchainInstance.account.amountToStd(
-            new BigNumber(Number(this.state.amount))
+            new BigNumber(this.state.amount ? this.state.amount : 0)
         );
-        this.setState({ insufficientFunds: true });
         const completeAmount = this.state.feeOptions.feeTotal.plus(stdAmount);
-        if (!this.props.account.balance?.value.minus(completeAmount).isGreaterThan(0)) {
-            this.setState({ insufficientFunds: true });
-        } else {
+        if (this.props.account.balance?.value.minus(completeAmount).isGreaterThanOrEqualTo(0)) {
             this.setState({ insufficientFunds: false });
+        } else {
+            this.setState({ insufficientFunds: true });
         }
     }
 
@@ -216,6 +227,13 @@ export class SendScreenComponent extends React.Component<
                 {this.state.insufficientFunds ? (
                     <Text style={styles.displayError}>{translate('Send.insufficientFunds')}</Text>
                 ) : null}
+                <TouchableOpacity
+                    testID="all-balance"
+                    onPress={this.onAddAllBalance}
+                    style={[styles.buttonRightOptions]}
+                >
+                    <Text style={styles.textTranferButton}>{translate('Send.allBalance')}</Text>
+                </TouchableOpacity>
 
                 <FeeOptions
                     account={this.props.account}
@@ -228,7 +246,11 @@ export class SendScreenComponent extends React.Component<
                         testID="confirm-payment"
                         style={styles.bottomButton}
                         primary
-                        disabled={!this.state.isValidAddress || this.state.amount === ''}
+                        disabled={
+                            !this.state.isValidAddress ||
+                            this.state.amount === '' ||
+                            this.state.insufficientFunds === true
+                        }
                         onPress={this.confirmPayment}
                     >
                         {translate('App.labels.confirmPayment')}

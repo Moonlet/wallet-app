@@ -89,7 +89,8 @@ export const translation: ITranslations = {
             transferOwnAccounts: 'Transfer between my accounts',
             recipientNotValid: 'Recipient address is invalid',
             insufficientFunds: 'Insufficient funds',
-            receipientWarning: 'Warning: recipient address is not checksumed'
+            receipientWarning: 'Warning: recipient address is not checksumed',
+            allBalance: 'Add all balance'
         },
         AccountSettings: {
             manageAccount: 'Manage account',

@@ -6,7 +6,7 @@ export const translation: ITranslations = {
             labels: {
                 // plase try to add keys in alphabetic order
                 accept: 'Accept',
-                avancedSetup: 'Advanced setup',
+                advanced: 'Advanced',
                 cancel: 'Cancel',
                 close: 'Close',
                 confirm: 'Confirm',
@@ -30,7 +30,7 @@ export const translation: ITranslations = {
                 secure: 'Secure',
                 send: 'Send',
                 settings: 'Settings',
-
+                simple: 'Simple',
                 status: 'Status',
                 standard: 'Standard',
                 tc: 'Terms and conditions',
@@ -87,8 +87,6 @@ export const translation: ITranslations = {
             amount: 'Amount',
             recipientLabel: 'Recipient',
             transferOwnAccounts: 'Transfer between my accounts',
-            advancedSetup: 'Advanced setup',
-            simpleSetup: 'Simple setup',
             recipientNotValid: 'Recipient address is invalid',
             insufficientFunds: 'Insufficient funds',
             receipientWarning: 'Warning: recipient address is not checksumed'

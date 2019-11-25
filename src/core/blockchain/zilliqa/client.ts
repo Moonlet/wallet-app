@@ -57,7 +57,7 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public async estimateFees(from: string, to: string): Promise<any> {
+    public async calculatedFees(from: string, to: string): Promise<any> {
         try {
             const result = await this.rpc.call('GetMinimumGasPrice', []);
 
@@ -71,7 +71,7 @@ export class Client extends BlockchainGenericClient {
                 gasPrice: config.feeOptions.defaults.gasPrice,
                 gasLimit: config.feeOptions.defaults.gasLimit
             };
-        } catch (_) {
+        } catch {
             return {
                 gasPrice: config.feeOptions.defaults.gasPrice,
                 gasLimit: config.feeOptions.defaults.gasLimit

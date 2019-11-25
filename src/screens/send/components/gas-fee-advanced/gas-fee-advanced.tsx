@@ -19,7 +19,7 @@ interface IState {
     inputGasPrice: string;
     inputGasLimit: string;
 }
-export class FeeAvancedComponent extends React.Component<
+export class GasFeeAvancedComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
@@ -29,7 +29,11 @@ export class FeeAvancedComponent extends React.Component<
 
         this.state = {
             inputGasPrice: blockchainInstance.account
-                .convertToGasPriceUnit(new BigNumber(Number(props.gasPrice)))
+                .convertUnit(
+                    props.gasPrice,
+                    blockchainInstance.config.defaultUnit,
+                    blockchainInstance.config.feeOptions.ui.gasPriceUnit
+                )
                 .toString(),
             inputGasLimit: props.gasLimit.toString()
         };
@@ -39,7 +43,11 @@ export class FeeAvancedComponent extends React.Component<
 
         this.setState({ inputGasPrice: value });
         this.props.onInputFees(
-            blockchainInstance.account.convertFromGasPriceUnit(new BigNumber(Number(value))),
+            blockchainInstance.account.convertUnit(
+                new BigNumber(value),
+                blockchainInstance.config.feeOptions.ui.gasPriceUnit,
+                blockchainInstance.config.defaultUnit
+            ),
             new BigNumber(Number(this.state.inputGasLimit))
         );
     }
@@ -48,10 +56,12 @@ export class FeeAvancedComponent extends React.Component<
 
         this.setState({ inputGasLimit: value });
         this.props.onInputFees(
-            blockchainInstance.account.convertFromGasPriceUnit(
-                new BigNumber(Number(this.state.inputGasPrice))
+            blockchainInstance.account.convertUnit(
+                new BigNumber(this.state.inputGasPrice),
+                blockchainInstance.config.feeOptions.ui.gasPriceUnit,
+                blockchainInstance.config.defaultUnit
             ),
-            new BigNumber(Number(value))
+            new BigNumber(value)
         );
     }
 
@@ -94,10 +104,13 @@ export class FeeAvancedComponent extends React.Component<
                         }}
                     />
                 </View>
-                <FeeTotal amount={this.props.gasPrice} blockchain={this.props.blockchain} />
+                <FeeTotal
+                    amount={this.props.gasPrice.multipliedBy(this.props.gasLimit)}
+                    blockchain={this.props.blockchain}
+                />
             </View>
         );
     }
 }
 
-export const FeeAvanced = withTheme(stylesProvider)(FeeAvancedComponent);
+export const GasFeeAvanced = withTheme(stylesProvider)(GasFeeAvancedComponent);

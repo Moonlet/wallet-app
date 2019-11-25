@@ -49,7 +49,7 @@ describe('Zilliqa account', () => {
     });
 
     test('isValidAddress()', () => {
-        expect(Zilliqa.account.isValidAddress('ADDRESS')).toStrictEqual({ valid: true });
+        expect(Zilliqa.account.isValidAddress('ADDRESS')).toBe(true);
         expect(isBech32).toBeCalledWith('ADDRESS');
     });
 

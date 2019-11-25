@@ -52,7 +52,7 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
         <View style={{...}}>
           <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
         </View>
-        <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" calculatedFees={[Function]} />
+        <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
         <View style={{...}}>
           <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: _callee]}>
             Confirm payment
@@ -84,6 +84,9 @@ exports[`SendScreen onChangeText 1`] = `
       <withTheme(TextComponent) style={{...}}>
         Recipient address is invalid
       </withTheme(TextComponent)>
+      <withTheme(TextComponent) style={{...}}>
+        Warning: recipient address is not checksumed
+      </withTheme(TextComponent)>
       <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
         <withTheme(TextComponent) style={{...}}>
           Transfer between my accounts
@@ -114,6 +117,9 @@ exports[`SendScreen onChangeText 2`] = `
       <withTheme(TextComponent) style={{...}}>
         Recipient address is invalid
       </withTheme(TextComponent)>
+      <withTheme(TextComponent) style={{...}}>
+        Warning: recipient address is not checksumed
+      </withTheme(TextComponent)>
       <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
         <withTheme(TextComponent) style={{...}}>
           Transfer between my accounts
@@ -126,7 +132,7 @@ exports[`SendScreen onChangeText 2`] = `
         <withTheme(TextComponent) style={{...}}>
           Insufficient funds
         </withTheme(TextComponent)>
-        <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"pass1\\" calculatedFees={[Function]} />
+        <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"pass1\\" onFeesChanged={[Function]} />
         <View style={{...}}>
           <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={false} onPress={[Function: _callee]}>
             Confirm payment
@@ -245,7 +251,7 @@ exports[`SendScreen renders correctly 2`] = `
         <View style={{...}}>
           <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
         </View>
-        <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" calculatedFees={[Function]} />
+        <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
         <View style={{...}}>
           <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={false} onPress={[Function: _callee]}>
             Confirm payment
@@ -293,6 +299,9 @@ exports[`SendScreen should Call verify address 1`] = `
       </View>
       <withTheme(TextComponent) style={{...}}>
         Recipient address is invalid
+      </withTheme(TextComponent)>
+      <withTheme(TextComponent) style={{...}}>
+        Warning: recipient address is not checksumed
       </withTheme(TextComponent)>
       <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
         <withTheme(TextComponent) style={{...}}>

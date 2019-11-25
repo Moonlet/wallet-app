@@ -31,7 +31,6 @@ import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
-import { IResultValidation } from '../../core/wallet/types';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -61,12 +60,11 @@ interface IState {
     toAddress: string;
     amount: string;
     isValidAddress: boolean;
-    addressInputValid: boolean;
-    displayValidationWarning: boolean;
+    labelErrorAddressDisplay: boolean;
+    labelWarningAddressDisplay: boolean;
     showOwnAccounts: boolean;
     insufficientFunds: boolean;
-    gasPrice: BigNumber;
-    gasLimit: BigNumber;
+    feeOptions: any;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -87,12 +85,11 @@ export class SendScreenComponent extends React.Component<
             toAddress: '',
             amount: '',
             isValidAddress: false,
-            addressInputValid: true,
+            labelErrorAddressDisplay: false,
+            labelWarningAddressDisplay: false,
             insufficientFunds: false,
-            displayValidationWarning: false,
             showOwnAccounts: false,
-            gasPrice: undefined,
-            gasLimit: undefined
+            feeOptions: undefined
         };
     }
 
@@ -101,8 +98,7 @@ export class SendScreenComponent extends React.Component<
             this.props.account,
             this.state.toAddress,
             this.state.amount,
-            this.state.gasPrice,
-            this.state.gasLimit
+            this.state.feeOptions
         );
         this.props.navigation.goBack();
     };
@@ -115,15 +111,12 @@ export class SendScreenComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
         this.setState({ toAddress: text });
 
-        const addressValidation: IResultValidation = blockchainInstance.account.isValidAddress(
-            text
-        );
+        const addressValid = blockchainInstance.account.isValidAddress(text);
 
         this.setState({
-            isValidAddress: addressValidation.valid,
-            addressInputValid: addressValidation.valid,
-            displayValidationWarning:
-                addressValidation.valid && addressValidation.responseType === 'warning'
+            isValidAddress: addressValid,
+            labelErrorAddressDisplay: !addressValid,
+            labelWarningAddressDisplay: !blockchainInstance.account.isValidChecksumAddress(text)
         });
     };
     public onQrCodeScanned = (value: string) => {
@@ -140,8 +133,8 @@ export class SendScreenComponent extends React.Component<
         this.verifyAddress(account.address);
     };
 
-    public calculatedFees = (gasPrice: BigNumber, gasLimit: BigNumber) => {
-        this.setState({ gasPrice, gasLimit }, () => this.availableFunds());
+    public onFeesChanged = (feeOptions: any) => {
+        this.setState({ feeOptions }, () => this.availableFunds());
     };
 
     public addAmount = (value: string) => {
@@ -154,7 +147,7 @@ export class SendScreenComponent extends React.Component<
             new BigNumber(Number(this.state.amount))
         );
         this.setState({ insufficientFunds: true });
-        const completeAmount = this.state.gasPrice.plus(stdAmount);
+        const completeAmount = this.state.feeOptions.gasPrice.plus(stdAmount);
         if (!this.props.account.balance?.value.minus(completeAmount).isGreaterThan(0)) {
             this.setState({ insufficientFunds: true });
         } else {
@@ -162,57 +155,12 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    public renderBasicFields() {
-        const styles = this.props.styles;
-        const theme = this.props.theme;
-        return (
-            <View style={styles.basicFields}>
-                <View style={styles.inputBox}>
-                    <TextInput
-                        testID="amount"
-                        style={styles.input}
-                        placeholderTextColor={theme.colors.textSecondary}
-                        placeholder={translate('Send.amount')}
-                        autoCapitalize={'none'}
-                        autoCorrect={false}
-                        selectionColor={theme.colors.accent}
-                        value={this.state.amount}
-                        onChangeText={value => {
-                            this.addAmount(value);
-                        }}
-                    />
-                </View>
-                {this.state.insufficientFunds ? (
-                    <Text style={styles.displayError}>{translate('Send.insufficientFunds')}</Text>
-                ) : null}
-
-                <FeeOptions
-                    account={this.props.account}
-                    toAddress={this.state.toAddress}
-                    calculatedFees={this.calculatedFees}
-                />
-
-                <View style={styles.bottom}>
-                    <Button
-                        testID="confirm-payment"
-                        style={styles.bottomButton}
-                        primary
-                        disabled={!this.state.isValidAddress || this.state.amount === ''}
-                        onPress={this.confirmPayment}
-                    >
-                        {translate('App.labels.confirmPayment')}
-                    </Button>
-                </View>
-            </View>
-        );
-    }
-
     public onPressClearInput = () => {
         this.setState({
             isValidAddress: false,
             toAddress: '',
-            addressInputValid: true,
-            displayValidationWarning: false
+            labelErrorAddressDisplay: false,
+            labelWarningAddressDisplay: false
         });
     };
 
@@ -243,6 +191,51 @@ export class SendScreenComponent extends React.Component<
                 </TouchableOpacity>
             );
         }
+    }
+
+    public renderBasicFields() {
+        const styles = this.props.styles;
+        const theme = this.props.theme;
+        return (
+            <View style={styles.basicFields}>
+                <View style={styles.inputBox}>
+                    <TextInput
+                        testID="amount"
+                        style={styles.input}
+                        placeholderTextColor={theme.colors.textSecondary}
+                        placeholder={translate('Send.amount')}
+                        autoCapitalize={'none'}
+                        autoCorrect={false}
+                        selectionColor={theme.colors.accent}
+                        value={this.state.amount}
+                        onChangeText={value => {
+                            this.addAmount(value);
+                        }}
+                    />
+                </View>
+                {this.state.insufficientFunds ? (
+                    <Text style={styles.displayError}>{translate('Send.insufficientFunds')}</Text>
+                ) : null}
+
+                <FeeOptions
+                    account={this.props.account}
+                    toAddress={this.state.toAddress}
+                    onFeesChanged={this.onFeesChanged}
+                />
+
+                <View style={styles.bottom}>
+                    <Button
+                        testID="confirm-payment"
+                        style={styles.bottomButton}
+                        primary
+                        disabled={!this.state.isValidAddress || this.state.amount === ''}
+                        onPress={this.confirmPayment}
+                    >
+                        {translate('App.labels.confirmPayment')}
+                    </Button>
+                </View>
+            </View>
+        );
     }
 
     public render() {
@@ -287,12 +280,12 @@ export class SendScreenComponent extends React.Component<
                             />
                             {this.renderRightAddressIcon()}
                         </View>
-                        {!this.state.addressInputValid ? (
+                        {this.state.labelErrorAddressDisplay ? (
                             <Text style={styles.displayError}>
                                 {translate('Send.recipientNotValid')}
                             </Text>
                         ) : null}
-                        {this.state.displayValidationWarning ? (
+                        {this.state.labelWarningAddressDisplay ? (
                             <Text style={styles.receipientWarning}>
                                 {translate('Send.receipientWarning')}
                             </Text>

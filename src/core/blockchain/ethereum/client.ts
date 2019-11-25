@@ -2,6 +2,7 @@ import { BlockchainGenericClient } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
+import { convertUnit } from '../ethereum/account';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: number) {
@@ -26,15 +27,46 @@ export class Client extends BlockchainGenericClient {
         return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => res.result);
     }
 
-    public async estimateFees(from: string, to: string): Promise<any> {
+    public async calculatedFees(from: string, to: string): Promise<any> {
         const results = await Promise.all([
-            this.rpc.call('eth_estimateGas', [{ from, to }])
-            // this.rpc.call('eth_estimateGas', [{ from: from, to: to }])
+            this.rpc.call('eth_estimateGas', [{ from, to }]),
+            fetch('https://ethgasstation.info/json/ethgasAPI.json')
         ]);
 
+        let presets;
+        if (results[1]) {
+            const response = await results[1].json();
+
+            presets = {
+                cheap: convertUnit(
+                    new BigNumber(response.safeLow / 10),
+                    config.feeOptions.ui.gasPriceUnit,
+                    config.defaultUnit
+                ),
+                standard: convertUnit(
+                    new BigNumber(response.average / 10),
+                    config.feeOptions.ui.gasPriceUnit,
+                    config.defaultUnit
+                ),
+                fast: convertUnit(
+                    new BigNumber(response.fast / 10),
+                    config.feeOptions.ui.gasPriceUnit,
+                    config.defaultUnit
+                ),
+                fastest: convertUnit(
+                    new BigNumber(response.fastest / 10),
+                    config.feeOptions.ui.gasPriceUnit,
+                    config.defaultUnit
+                )
+            };
+        }
+
         return {
-            gasPrice: config.feeOptions.defaults.gasPrice,
-            gasLimit: results[0].result ? results[0].result : config.feeOptions.defaults.gasLimit
+            gasPrice: presets ? presets.standard : config.feeOptions.defaults.gasPrice,
+            gasLimit: results[0].result
+                ? new BigNumber(parseInt(results[0].result, 16))
+                : config.feeOptions.defaults.gasLimit,
+            presets: presets ? presets : config.feeOptions.defaults.gasPricePresets
         };
     }
 

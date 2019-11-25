@@ -5,7 +5,7 @@ import { Text } from '../../../../library';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { View, TouchableOpacity, FlatList } from 'react-native';
 import { translate } from '../../../../core/i18n';
-import { FeeAvanced } from '../fee-advanced/fee-advanced';
+import { GasFeeAvanced } from '../gas-fee-advanced/gas-fee-advanced';
 import { FeeTotal } from '../fee-total/fee-total';
 import { FeePreset } from '../fee-preset/fee-preset';
 import { IBlockchainConfig } from '../../../../core/blockchain/types';
@@ -19,12 +19,11 @@ import { connect } from 'react-redux';
 export interface IExternalProps {
     account: IAccountState;
     toAddress: string;
-    calculatedFees: (gasPrice: BigNumber, gasLimit: BigNumber) => any;
+    onFeesChanged: (feeOptions: any) => any;
 }
 
 interface IState {
-    gasPrice: BigNumber;
-    gasLimit: BigNumber;
+    feeOptions: any;
     blockchainConfig: IBlockchainConfig;
     hasAdvancedOptions: boolean;
     selectedPreset: string;
@@ -46,8 +45,7 @@ export class FeeOptionsComponent extends React.Component<
         const feeOptions = BLOCKCHAIN_INFO[this.props.account.blockchain].feeOptions;
 
         this.state = {
-            gasPrice: undefined,
-            gasLimit: undefined,
+            feeOptions: undefined,
             blockchainConfig: BLOCKCHAIN_INFO[props.account.blockchain],
             showAdvancedOptions: false,
             hasAdvancedOptions: feeOptions.ui.feeComponentAdvanced === 'FeeAdvanced',
@@ -60,33 +58,38 @@ export class FeeOptionsComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
         const fees = await blockchainInstance
             .getClient(this.props.chainId)
-            .estimateFees(this.props.account.address, this.props.toAddress);
+            .calculatedFees(this.props.account.address, this.props.toAddress);
 
         this.setState({
-            gasPrice: fees.gasPrice,
-            gasLimit: fees.gasLimit
+            feeOptions: fees
         });
-        this.props.calculatedFees(fees.gasPrice, fees.gasLimit);
+        this.props.onFeesChanged(fees);
     };
 
     public onSelectFeePreset = (key: string) => {
         this.setState({
             selectedPreset: key,
-            gasPrice: this.state.blockchainConfig.feeOptions.defaults.gasPricePresets[key],
+            feeOptions: {
+                ...this.state.feeOptions,
+                gasPrice: this.state.feeOptions.presets[key],
+                gasLimit: this.state.blockchainConfig.feeOptions.defaults.gasLimit
+            }
+        });
+        this.props.onFeesChanged({
+            gasPrice: this.state.feeOptions.presets[key],
             gasLimit: this.state.blockchainConfig.feeOptions.defaults.gasLimit
         });
-        this.props.calculatedFees(
-            this.state.blockchainConfig.feeOptions.defaults.gasPricePresets[key],
-            this.state.blockchainConfig.feeOptions.defaults.gasLimit
-        );
     };
 
     public onInputAdvancedFees = (gasPrice: BigNumber, gasLimit: BigNumber) => {
         this.setState({
-            gasPrice,
-            gasLimit
+            feeOptions: {
+                ...this.state.feeOptions,
+                gasPrice,
+                gasLimit
+            }
         });
-        this.props.calculatedFees(gasPrice, gasLimit);
+        this.props.onFeesChanged({ gasPrice, gasLimit });
     };
 
     public onAdvancedButton = () => {
@@ -98,53 +101,61 @@ export class FeeOptionsComponent extends React.Component<
 
     public renderSimpleFees() {
         const styles = this.props.styles;
-
-        if (this.state.blockchainConfig.feeOptions.ui.feeComponent === 'FeeTotal') {
-            return (
-                <FeeTotal amount={this.state.gasPrice} blockchain={this.props.account.blockchain} />
-            );
-        } else if (this.state.blockchainConfig.feeOptions.ui.feeComponent === 'FeePresets') {
-            const presets = this.state.blockchainConfig.feeOptions.defaults.gasPricePresets;
-            return (
-                <View style={styles.containerPresets}>
-                    <FlatList
-                        contentContainerStyle={styles.list}
-                        onEndReachedThreshold={0.5}
-                        numColumns={2}
-                        scrollEnabled={false}
-                        data={Object.keys(presets)}
-                        keyExtractor={index => `${index}`}
-                        renderItem={({ item }) => {
-                            return (
-                                <FeePreset
-                                    key={item}
-                                    amount={presets[item]}
-                                    blockchain={this.props.account.blockchain}
-                                    title={translate('App.labels.' + item)}
-                                    presetKey={item}
-                                    onSelect={this.onSelectFeePreset}
-                                    selected={this.state.selectedPreset === item}
-                                />
-                            );
-                        }}
-                        horizontal={false}
-                        columnWrapperStyle={{ justifyContent: 'space-between' }}
-                        showsVerticalScrollIndicator={false}
+        switch (this.state.blockchainConfig.feeOptions.ui.feeComponent) {
+            case 'FeeTotal':
+                return this.state.feeOptions ? (
+                    <FeeTotal
+                        amount={this.state.feeOptions.gasPrice.multipliedBy(
+                            this.state.feeOptions.gasLimit
+                        )}
+                        blockchain={this.props.account.blockchain}
                     />
-                </View>
-            );
+                ) : null;
+            case 'FeePresets': {
+                const presets = this.state.feeOptions.presets;
+                return presets ? (
+                    <View style={styles.containerPresets}>
+                        <FlatList
+                            contentContainerStyle={styles.list}
+                            onEndReachedThreshold={0.5}
+                            numColumns={2}
+                            scrollEnabled={false}
+                            data={Object.keys(presets)}
+                            keyExtractor={index => `${index}`}
+                            renderItem={({ item }) => {
+                                return (
+                                    <FeePreset
+                                        key={item}
+                                        amount={presets[item]}
+                                        blockchain={this.props.account.blockchain}
+                                        title={translate('App.labels.' + item)}
+                                        presetKey={item}
+                                        onSelect={this.onSelectFeePreset}
+                                        selected={this.state.selectedPreset === item}
+                                    />
+                                );
+                            }}
+                            horizontal={false}
+                            columnWrapperStyle={{ justifyContent: 'space-between' }}
+                            showsVerticalScrollIndicator={false}
+                        />
+                    </View>
+                ) : null;
+            }
+            default:
+                return null;
         }
     }
     public renderAdvancedFees() {
         if (this.state.blockchainConfig.feeOptions.ui.feeComponentAdvanced === 'FeeAdvanced') {
-            return (
-                <FeeAvanced
-                    gasPrice={this.state.gasPrice}
-                    gasLimit={this.state.gasLimit}
+            return this.state.feeOptions ? (
+                <GasFeeAvanced
+                    gasPrice={this.state.feeOptions.gasPrice}
+                    gasLimit={this.state.feeOptions.gasLimit}
                     blockchain={this.props.account.blockchain}
                     onInputFees={this.onInputAdvancedFees}
                 />
-            );
+            ) : null;
         }
     }
 
@@ -164,8 +175,8 @@ export class FeeOptionsComponent extends React.Component<
                     >
                         <Text style={styles.textTranferButton}>
                             {this.state.showAdvancedOptions
-                                ? translate('Send.simpleSetup')
-                                : translate('Send.advancedSetup')}
+                                ? translate('App.labels.simple')
+                                : translate('App.labels.advanced')}
                         </Text>
                     </TouchableOpacity>
                 ) : null}

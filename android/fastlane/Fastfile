@@ -39,7 +39,7 @@ platform :android do
     changelog = changelog_from_git_commits(commits_count: 1)
     
     appcenter_upload(
-      api_token: "fb2a10702cc385175fbd69ec9519bbde29114ff2",
+      api_token: ENV['APPCENTER_TOKEN'],
       owner_name: "moonlet",
       app_name: "Moonlet-Beta",
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],

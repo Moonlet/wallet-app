@@ -28,7 +28,7 @@ platform :ios do
     if is_ci
       create_keychain(
         name: "CI",
-        password: "ZZufLh7z8S",
+        password: ENV['KEYCHAIN_TOKEN'],
         default_keychain: true,
         unlock: true,
         timeout: 3600,
@@ -38,7 +38,7 @@ platform :ios do
       match(
         type: "appstore",
         keychain_name: "CI",
-        keychain_password: "ZZufLh7z8S"
+        keychain_password: ENV['KEYCHAIN_TOKEN']
       )
 
     else

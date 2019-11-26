@@ -1,17 +1,23 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingTop: 40,
             paddingBottom: BASE_DIMENSION * 2,
             paddingLeft: BASE_DIMENSION * 2,
             paddingRight: BASE_DIMENSION * 2,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
             ...StyleSheet.absoluteFillObject
+        },
+        keyboardAvoidance: {
+            flex: 1,
+            justifyContent: Platform.OS === 'ios' ? 'space-between' : 'flex-start'
+        },
+        accountAddress: {
+            paddingTop: 40
         },
         address: {
             fontSize: 30,
@@ -29,9 +35,19 @@ export default (theme: ITheme) =>
             paddingRight: BASE_DIMENSION * 2
         },
         receipientLabel: {
-            paddingLeft: BASE_DIMENSION * 2,
-            marginTop: 40,
+            paddingLeft: BASE_DIMENSION,
+            marginTop: BASE_DIMENSION * 3,
             color: theme.colors.textSecondary
+        },
+        displayError: {
+            paddingLeft: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION,
+            color: theme.colors.error
+        },
+        receipientWarning: {
+            paddingLeft: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION,
+            color: theme.colors.warning
         },
         inputBoxAddress: {
             height: 44,
@@ -45,13 +61,13 @@ export default (theme: ITheme) =>
             alignItems: 'center'
         },
         inputBox: {
-            height: 44,
+            height: BASE_DIMENSION * 5,
             borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
             paddingHorizontal: 12,
-            marginTop: 40,
+            marginTop: BASE_DIMENSION,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'
@@ -60,32 +76,32 @@ export default (theme: ITheme) =>
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'center',
-            marginBottom: BASE_DIMENSION / 2
+            marginBottom: BASE_DIMENSION * 2
         },
         bottomButton: {
             width: '90%'
         },
         basicFields: {
             flex: 1,
-            paddingTop: 52,
+            paddingTop: BASE_DIMENSION * 5,
             backgroundColor: theme.colors.appBackground
         },
         icon: {
             color: theme.colors.accent,
             marginHorizontal: 0
         },
-        qrButton: {
+        rightAddressButton: {
             flexDirection: 'row',
             marginRight: BASE_DIMENSION / 2
         },
-        buttonTransfer: {
+        buttonRightOptions: {
             marginTop: BASE_DIMENSION,
-            //  paddingRight: BASE_DIMENSION * 2,
+            marginBottom: BASE_DIMENSION,
             alignItems: 'flex-end'
         },
         textTranferButton: {
             color: theme.colors.accent,
-            lineHeight: BASE_DIMENSION * 3,
+            lineHeight: 21,
             fontSize: theme.fontSize.small
         }
     });

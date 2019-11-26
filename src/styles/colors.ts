@@ -11,5 +11,6 @@ export const COLORS = {
     HOT_RED: '#E91E63',
     AQUA: '#00DAFF',
     FLAT_GRAY: '#4E4E53',
-    LIGHT_RED: '#FFAB91'
+    LIGHT_RED: '#FFAB91',
+    YELLOW: '#e5e500'
 };

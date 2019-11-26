@@ -155,7 +155,8 @@ export const getBalance = (
 export const sendTransferTransaction = (
     account: IAccountState,
     toAddress: string,
-    amount: string
+    amount: string,
+    feeOptions: any
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
@@ -180,8 +181,8 @@ export const sendTransferTransaction = (
         const options = {
             nonce,
             chainId,
-            gasPrice: FEE[account.blockchain].gasPrice,
-            gasLimit: FEE[account.blockchain].gasLimit
+            gasPrice: feeOptions.gasPrice,
+            gasLimit: feeOptions.gasLimit
         };
 
         const tx = {

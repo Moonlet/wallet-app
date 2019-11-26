@@ -10,5 +10,16 @@ export const config: IBlockchainConfig = {
         LI: new BigNumber(Math.pow(10, 6)),
         ZIL: new BigNumber(Math.pow(10, 12))
     },
-    decimals: 3
+    decimals: 3,
+    feeOptions: {
+        defaults: {
+            gasPrice: new BigNumber(1000000000),
+            gasLimit: new BigNumber(1)
+        },
+        ui: {
+            feeComponent: 'FeeTotal',
+            feeComponentAdvanced: 'GasFeeAdvanced',
+            gasPriceUnit: 'LI'
+        }
+    }
 };

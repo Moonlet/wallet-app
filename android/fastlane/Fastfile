@@ -16,10 +16,7 @@
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests"
-  lane :test do
-    gradle(task: "test")
-  end
+
 
   desc "Submit a new Beta Build to AppCenter"
   lane :beta do
@@ -39,7 +36,7 @@ platform :android do
     changelog = changelog_from_git_commits(commits_count: 1)
     
     appcenter_upload(
-      api_token: "fb2a10702cc385175fbd69ec9519bbde29114ff2",
+      api_token: ENV['APPCENTER_TOKEN'],
       owner_name: "moonlet",
       app_name: "Moonlet-Beta",
       apk: lane_context[SharedValues::GRADLE_APK_OUTPUT_PATH],
@@ -48,75 +45,4 @@ platform :android do
     )
   end
 
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    ensure_git_branch(
-      branch: 'master'
-    )
-
-    # make sure we have the latest code
-    ensure_git_status_clean
-    
-    version_code = increment_version_code(
-        gradle_file_path: "app/build.gradle",
-        version_code: number_of_commits # take only the nr of stable commits
-    ).to_s
-
-    version_name = get_version_name
-
-    # tag the current commit. it will fail if there are duplicates, 
-    # thus making sure we don't release the same version twice
-    current_commit = ENV['CIRCLE_SHA1']
-    version_tag = "android/v#{version_name}"
-    add_git_tag(
-      tag: version_tag,
-      commit: current_commit
-    )
-
-    # read the details from the changelog
-    changelog = read_changelog(
-      changelog_path: '../CHANGELOG.md',	# Specify path to CHANGELOG.md
-      section_identifier: "[Unreleased]",	  # Specify what section to read
-      excluded_markdown_elements: ['###']	# Specify which markdown elements should be excluded
-    )
-    changelogWithMarkdown = read_changelog(
-      changelog_path: '../CHANGELOG.md',	# Specify path to CHANGELOG.md
-      section_identifier: "[Unreleased]",	  # Specify what section to read
-    )
-
-    gradle(task: "clean")
-
-    gradle(
-      task: "assemble",
-      flavor: "stable",
-      build_type: "Release"
-    )
-
-    # save changelog to folder so the next call can upload them to the store
-    File.write("metadata/android/en-US/changelogs/#{version_code}.txt", changelog)
-
-    upload_to_play_store(track: "production")
-
-    # also create a github release so it's easier to track changes
-    set_github_release(
-      repository_name: 'soundmix-live/mobile-app',
-      api_token: ENV['GITHUB_TOKEN'],
-      tag_name: version_tag,
-      name: 'android/v' + version_name,
-      description: changelogWithMarkdown
-    )
-
-    url = ENV["SOUNDMIX_API_HOST"] + "/versions?apikey=" + ENV["SOUNDMIX_API_KEY"]
-    json = {
-      "platform" =>"android",
-      "platformVersion" => min_sdk_version,
-      "appVersion" => get_version_name,
-      "url" => "https://play.google.com/store/apps/details?id=live.soundmix",
-      "notes" => changelog,
-      "versionStatus" => "pending"
-    }.to_json()
-    sh("curl", "-X", "POST", url , "-H" , "accept:application/ld+json", "-H", "Content-Type:application/json", "-d", json);
-
-   
-  end
 end

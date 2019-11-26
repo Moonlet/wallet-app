@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Modal } from 'react-native';
+import { View, Modal, Alert, Platform, Linking } from 'react-native';
 import { CameraKitCameraScreen, CameraKitCamera } from 'react-native-camera-kit';
+import { translate } from '../../core/i18n';
+import AndroidOpenSettings from 'react-native-android-open-settings';
 
 export interface IProps {
     onQrCodeScanned: (qrCode: string) => any;
@@ -19,11 +21,48 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
         };
     }
 
+    public openPhoneSettings() {
+        if (Platform.OS === 'ios') {
+            Linking.canOpenURL('app-settings:')
+                .then(supported => {
+                    if (supported) {
+                        return Linking.openURL('app-settings:');
+                    }
+                })
+                .catch();
+        } else {
+            AndroidOpenSettings.appDetailsSettings();
+        }
+    }
+
     public open = async () => {
-        // TODO: hadle exceptions (promise rejection)
-        const success = await CameraKitCamera.checkDeviceCameraAuthorizationStatus();
+        let success = await CameraKitCamera.checkDeviceCameraAuthorizationStatus();
+
+        if (success === -1) {
+            success = await CameraKitCamera.requestDeviceCameraAuthorization();
+        }
         if (success) {
             this.setState({ isVisible: true });
+        } else {
+            Alert.alert(
+                translate('Send.cameraDisabledTitle'),
+                translate('Send.cameraDisabledText'),
+                [
+                    {
+                        text: translate('App.labels.cancel'),
+                        onPress: () => {
+                            this.setState({ isVisible: false });
+                        },
+                        style: 'cancel'
+                    },
+                    {
+                        text: translate('App.labels.settings'),
+                        onPress: () => {
+                            this.openPhoneSettings();
+                        }
+                    }
+                ]
+            );
         }
     };
 
@@ -61,6 +100,8 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
                         offsetForScannerFrame={10}
                         heightForScannerFrame={500}
                         colorForScannerFrame={'red'}
+                        frameColor={'red'}
+                        laserColor={'white'}
                     />
                 </View>
             </Modal>

@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - master
-      - remove-app-tokens
 
 name: Deploy Beta
 jobs:

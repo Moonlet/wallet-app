@@ -1,6 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Text } from '../../library';
+import { View, TextInput } from 'react-native';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { IReduxState } from '../../redux/state';
@@ -56,12 +55,27 @@ export class WatchScreenComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <View style={styles.textInputArea}>
-                    <Text style={styles.text}>{this.state.textInput}</Text>
+                    <TextInput value={this.state.textInput} editable={false} style={styles.text} />
                 </View>
                 <KeyboardCustom
                     showNumeric={true}
                     handleTextUpdate={this.handleTextUpdate}
                     handleDeleteKey={this.handleDeleteKey}
+                    buttons={[
+                        {
+                            label: 'Paste',
+                            onPress: () => true
+                        },
+                        {
+                            label: 'Confirm',
+                            onPress: () => true,
+                            style: { color: this.props.theme.colors.accent }
+                        }
+                    ]}
+                    footerButton={{
+                        label: 'Next Word',
+                        onPress: () => true
+                    }}
                 />
             </View>
         );

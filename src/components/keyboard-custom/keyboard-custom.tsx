@@ -5,6 +5,7 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { Text } from '../../library';
 import { Icon } from '../icon';
+import { CustomKey } from './custom-key';
 
 const keyboardLayout = [
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
@@ -17,35 +18,43 @@ export interface IProps {
     showNumeric?: boolean;
     handleTextUpdate: (key: any) => void;
     handleDeleteKey: () => void;
+    buttons?: Array<{ label: string; onPress: () => void; style?: {} }>;
+    footerButton?: { label?: string; onPress: () => void; style?: {} };
 }
 
 interface IState {
     isCapsLock: boolean;
+    pressed: boolean;
 }
 
 export class KeyboardComponent extends React.Component<
     IProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
+    public panResponder = null;
+    public ref = null;
+    public viewRef = null;
+
     constructor(props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
+
         this.state = {
-            isCapsLock: false
+            isCapsLock: false,
+            pressed: false
         };
     }
 
-    public renderRow = (rowValues: any, isLastRow: boolean) => {
+    public renderRow = (rowValues: any, isLastRow?: boolean) => {
         const styles = this.props.styles;
 
         return (
             <View style={styles.rowContainer}>
-                {/* CAPS LOCK */}
                 {isLastRow ? (
                     <TouchableOpacity
-                        style={styles.upperIcon}
+                        style={styles.upperIconContainer}
                         onPress={() => this.setState({ isCapsLock: !this.state.isCapsLock })}
                     >
-                        <Icon name="saturn-icon" size={25} style={styles.icon} />
+                        <Icon name="keyboard-shift-1" size={16} style={styles.upperIcon} />
                     </TouchableOpacity>
                 ) : null}
 
@@ -58,52 +67,57 @@ export class KeyboardComponent extends React.Component<
                             : word;
 
                     return (
-                        <View
+                        <CustomKey
                             key={index}
-                            style={styles.keyContainer}
-                            onTouchStart={() => this.props.handleTextUpdate(currentWord)}
-                        >
-                            <Text style={styles.keyText}>{currentWord}</Text>
-                        </View>
+                            currentWord={currentWord}
+                            addKey={() => this.props.handleTextUpdate(currentWord)}
+                        />
                     );
                 })}
 
-                {/* DELETE */}
                 {isLastRow ? (
                     <TouchableOpacity
-                        style={styles.deleteIcon}
+                        style={styles.deleteIconContainer}
                         onPress={this.props.handleDeleteKey}
                     >
-                        <Icon name="delete-1" size={25} style={styles.icon} />
+                        <Icon name="keyboard-delete-1" size={24} style={styles.deleteIcon} />
                     </TouchableOpacity>
                 ) : null}
             </View>
         );
     };
 
+    public renderButtons = () => {
+        const styles = this.props.styles;
+
+        return this.props.buttons?.map((button: any, index: any) => (
+            <TouchableOpacity key={index} onPress={button.onPress} style={styles.headerButton}>
+                <Text style={[styles.pasteWordText, button?.style]}>{button.label}</Text>
+            </TouchableOpacity>
+        ));
+    };
+
     public render() {
         const styles = this.props.styles;
+        const footerButton = this.props.footerButton ? this.props.footerButton : null;
 
         return (
             <View style={styles.container}>
-                <View style={styles.headerButtonContainer}>
-                    <TouchableOpacity style={[styles.headerButton, { marginRight: 1 }]}>
-                        <Text style={styles.pasteWordText}>Paste</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={[styles.headerButton, { marginLeft: 1 }]}>
-                        <Text style={styles.confirmWordText}>Confirm</Text>
-                    </TouchableOpacity>
-                </View>
+                <View style={styles.headerButtonContainer}>{this.renderButtons()}</View>
 
                 <View style={styles.keyboardLayout}>
-                    {this.props.showNumeric && this.renderRow(keyboardLayout[0], false)}
-                    {this.renderRow(keyboardLayout[1], false)}
-                    {this.renderRow(keyboardLayout[2], false)}
+                    {this.props.showNumeric && this.renderRow(keyboardLayout[0])}
+                    {this.renderRow(keyboardLayout[1])}
+                    {this.renderRow(keyboardLayout[2])}
                     {this.renderRow(keyboardLayout[3], true)}
 
-                    <TouchableOpacity style={styles.nextWordContainer}>
-                        <Text style={styles.nextWordText}>Next Word</Text>
+                    <TouchableOpacity
+                        onPress={footerButton?.onPress}
+                        style={[styles.footerContainer]}
+                    >
+                        <Text style={[styles.footerText, footerButton?.style]}>
+                            {footerButton?.label}
+                        </Text>
                     </TouchableOpacity>
                 </View>
             </View>

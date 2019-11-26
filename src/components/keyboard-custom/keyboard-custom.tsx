@@ -5,6 +5,7 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { Text } from '../../library';
 import { Icon } from '../icon';
+import { CustomKey } from './custom-key';
 
 const keyboardLayout = [
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
@@ -21,16 +22,23 @@ export interface IProps {
 
 interface IState {
     isCapsLock: boolean;
+    pressed: boolean;
 }
 
 export class KeyboardComponent extends React.Component<
     IProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
+    public panResponder = null;
+    public ref = null;
+    public viewRef = null;
+
     constructor(props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
+
         this.state = {
-            isCapsLock: false
+            isCapsLock: false,
+            pressed: false
         };
     }
 
@@ -58,13 +66,11 @@ export class KeyboardComponent extends React.Component<
                             : word;
 
                     return (
-                        <View
+                        <CustomKey
                             key={index}
-                            style={styles.keyContainer}
-                            onTouchStart={() => this.props.handleTextUpdate(currentWord)}
-                        >
-                            <Text style={styles.keyText}>{currentWord}</Text>
-                        </View>
+                            currentWord={currentWord}
+                            addKey={() => this.props.handleTextUpdate(currentWord)}
+                        />
                     );
                 })}
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Platform, TouchableOpacity } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -20,20 +20,32 @@ export class CustomKeyComponent extends React.Component<
 
     public onHandlerStateChange = (event: any) => {
         if (event.nativeEvent.state === State.END) {
-            this.props.addKey(this.props.currentWord);
+            this.addKey();
         }
+    };
+
+    public addKey = () => {
+        this.props.addKey(this.props.currentWord);
     };
 
     public render() {
         const styles = this.props.styles;
 
-        return (
-            <PanGestureHandler {...this.props} onHandlerStateChange={this.onHandlerStateChange}>
-                <View style={styles.keyContainer}>
+        if (Platform.OS === 'android') {
+            return (
+                <PanGestureHandler {...this.props} onHandlerStateChange={this.onHandlerStateChange}>
+                    <View style={styles.keyContainer}>
+                        <Text style={styles.keyText}>{this.props.currentWord}</Text>
+                    </View>
+                </PanGestureHandler>
+            );
+        } else {
+            return (
+                <TouchableOpacity onPressIn={this.addKey} style={styles.keyContainer}>
                     <Text style={styles.keyText}>{this.props.currentWord}</Text>
-                </View>
-            </PanGestureHandler>
-        );
+                </TouchableOpacity>
+            );
+        }
     }
 }
 

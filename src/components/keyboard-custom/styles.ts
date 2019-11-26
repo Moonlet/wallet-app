@@ -10,8 +10,7 @@ export default (theme: ITheme) =>
             bottom: 0,
             left: 0,
             right: 0,
-            backgroundColor: theme.colors.appBackground,
-            padding: BASE_DIMENSION / 2
+            backgroundColor: theme.colors.appBackground
         },
         headerButtonContainer: {
             flexDirection: 'row',
@@ -25,22 +24,24 @@ export default (theme: ITheme) =>
         keyboardLayout: {
             flex: 1,
             backgroundColor: theme.colors.cardBackground,
-            paddingHorizontal: BASE_DIMENSION / 2,
-            paddingBottom: BASE_DIMENSION
+            padding: BASE_DIMENSION
         },
-        nextWordContainer: {
+        footerContainer: {
             backgroundColor: theme.colors.primary,
             paddingVertical: BASE_DIMENSION,
-            marginTop: BASE_DIMENSION,
-            marginHorizontal: BASE_DIMENSION * 3
+            marginVertical: BASE_DIMENSION,
+            marginHorizontal: BASE_DIMENSION * 3,
+            borderRadius: BORDER_RADIUS
         },
-        nextWordText: {
+        footerText: {
             textAlign: 'center',
-            fontSize: 14
+            fontSize: 14,
+            color: theme.colors.text
         },
         pasteWordText: {
             fontSize: 14,
-            textAlign: 'center'
+            textAlign: 'center',
+            color: theme.colors.text
         },
         confirmWordText: {
             textAlign: 'center',
@@ -55,7 +56,7 @@ export default (theme: ITheme) =>
         },
         keyContainer: {
             flex: 1,
-            backgroundColor: theme.colors.primary,
+            backgroundColor: '#666666',
             borderRadius: BORDER_RADIUS,
             paddingVertical: BASE_DIMENSION,
             maxWidth: 35,
@@ -67,17 +68,38 @@ export default (theme: ITheme) =>
             flex: 1,
             fontSize: 22,
             lineHeight: 26,
-            textAlign: 'center'
+            textAlign: 'center',
+            color: theme.colors.text
+        },
+        upperIconContainer: {
+            flex: 1,
+            backgroundColor: '#444444',
+            borderRadius: BORDER_RADIUS,
+            paddingVertical: BASE_DIMENSION,
+            maxWidth: 42,
+            justifyContent: 'center',
+            alignContent: 'center',
+            marginRight: BASE_DIMENSION
         },
         upperIcon: {
+            alignSelf: 'center',
+            color: theme.colors.text
+        },
+        deleteIconContainer: {
+            flex: 1,
+            backgroundColor: '#444444',
+            borderRadius: BORDER_RADIUS,
+            paddingVertical: BASE_DIMENSION,
+            maxWidth: 42,
             justifyContent: 'center',
-            paddingHorizontal: BASE_DIMENSION
+            alignContent: 'center',
+            marginLeft: BASE_DIMENSION
         },
         deleteIcon: {
-            justifyContent: 'center',
-            paddingHorizontal: BASE_DIMENSION
+            alignSelf: 'center',
+            color: theme.colors.text
         },
         icon: {
-            color: theme.colors.accent
+            color: theme.colors.textSecondary
         }
     });

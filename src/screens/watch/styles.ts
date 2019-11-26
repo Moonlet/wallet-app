@@ -20,6 +20,7 @@ export default (theme: ITheme) =>
         text: {
             fontSize: 16,
             lineHeight: 21,
-            textAlign: 'center'
+            textAlign: 'center',
+            color: theme.colors.text
         }
     });

@@ -27,11 +27,8 @@ export class Client extends BlockchainGenericClient {
         return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => res.result);
     }
 
-    public async calculatedFees(from: string, to: string): Promise<any> {
-        const results = await Promise.all([
-            this.rpc.call('eth_estimateGas', [{ from, to }]),
-            fetch('https://ethgasstation.info/json/ethgasAPI.json')
-        ]);
+    public async calculateFees(from: string, to: string) {
+        const results = await this.estimateFees(from, to);
 
         let presets: {
             cheap: BigNumber;
@@ -66,7 +63,7 @@ export class Client extends BlockchainGenericClient {
             };
         }
 
-        const gasPrice = presets ? presets.standard : config.feeOptions.defaults.gasPrice;
+        const gasPrice = presets?.standard || config.feeOptions.defaults.gasPrice;
         const gasLimit = results[0].result
             ? new BigNumber(parseInt(results[0].result, 16))
             : config.feeOptions.defaults.gasLimit;
@@ -77,6 +74,13 @@ export class Client extends BlockchainGenericClient {
             presets: presets ? presets : config.feeOptions.defaults.gasPricePresets,
             feeTotal: gasPrice.multipliedBy(gasLimit)
         };
+    }
+
+    private async estimateFees(from: string, to: string): Promise<any> {
+        return Promise.all([
+            this.rpc.call('eth_estimateGas', [{ from, to }]),
+            fetch('https://ethgasstation.info/json/ethgasAPI.json')
+        ]);
     }
 
     private fixAddress(address: string): string {

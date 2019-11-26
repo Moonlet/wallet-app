@@ -31,6 +31,7 @@ import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
+import bind from 'bind-decorator';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -166,14 +167,15 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    public onPressClearInput = () => {
+    @bind
+    public onPressClearInput() {
         this.setState({
             isValidAddress: false,
             toAddress: '',
             labelErrorAddressDisplay: false,
             labelWarningAddressDisplay: false
         });
-    };
+    }
 
     public renderRightAddressIcon() {
         const styles = this.props.styles;
@@ -224,9 +226,9 @@ export class SendScreenComponent extends React.Component<
                         }}
                     />
                 </View>
-                {this.state.insufficientFunds ? (
+                {this.state.insufficientFunds && (
                     <Text style={styles.displayError}>{translate('Send.insufficientFunds')}</Text>
-                ) : null}
+                )}
                 <TouchableOpacity
                     testID="all-balance"
                     onPress={this.onAddAllBalance}
@@ -302,16 +304,16 @@ export class SendScreenComponent extends React.Component<
                             />
                             {this.renderRightAddressIcon()}
                         </View>
-                        {this.state.labelErrorAddressDisplay ? (
+                        {this.state.labelErrorAddressDisplay && (
                             <Text style={styles.displayError}>
                                 {translate('Send.recipientNotValid')}
                             </Text>
-                        ) : null}
-                        {this.state.labelWarningAddressDisplay ? (
+                        )}
+                        {this.state.labelWarningAddressDisplay && (
                             <Text style={styles.receipientWarning}>
                                 {translate('Send.receipientWarning')}
                             </Text>
-                        ) : null}
+                        )}
                         <TouchableOpacity
                             testID="transfer-between-accounts"
                             onPress={this.onTransferBetweenAccounts}
@@ -324,14 +326,14 @@ export class SendScreenComponent extends React.Component<
                             </Text>
                         </TouchableOpacity>
 
-                        {this.state.isValidAddress ? this.renderBasicFields() : null}
+                        {this.state.isValidAddress && this.renderBasicFields()}
 
-                        {this.state.showOwnAccounts ? (
+                        {this.state.showOwnAccounts && (
                             <AccountList
                                 accounts={this.props.accounts}
                                 onAccountSelection={this.onAccountSelection}
                             />
-                        ) : null}
+                        )}
 
                         <QrModalReader
                             ref={ref => (this.qrCodeScanner = ref)}

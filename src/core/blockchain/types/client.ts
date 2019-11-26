@@ -22,5 +22,5 @@ export abstract class BlockchainGenericClient {
 
     public abstract sendTransaction(transaction: any): Promise<string>;
 
-    public abstract calculatedFees(from: string, to: string): Promise<any>;
+    public abstract calculateFees(from: string, to: string): Promise<any>;
 }

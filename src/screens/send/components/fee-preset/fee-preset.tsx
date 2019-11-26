@@ -31,16 +31,12 @@ export class FeePresetComponent extends React.Component<
         };
     }
 
-    public onPress = () => {
-        this.props.onSelect(this.props.presetKey);
-    };
-
     public render() {
         const styles = this.props.styles;
         return (
             <TouchableOpacity
                 testID="advanced-fees"
-                onPress={() => this.onPress()}
+                onPress={() => this.props.onSelect(this.props.presetKey)}
                 style={
                     this.props.selected
                         ? [styles.container, styles.containerSelected]

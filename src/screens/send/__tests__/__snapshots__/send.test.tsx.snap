@@ -39,7 +39,7 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
       </withTheme(TextComponent)>
       <View style={{...}}>
         <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"clear-address\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
           <Icon name=\\"close\\" size={20} style={{...}} allowFontScaling={false} />
         </TouchableOpacity>
       </View>
@@ -115,7 +115,7 @@ exports[`SendScreen onChangeText 2`] = `
       </withTheme(TextComponent)>
       <View style={{...}}>
         <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"pass1...pass1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"clear-address\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
           <Icon name=\\"close\\" size={20} style={{...}} allowFontScaling={false} />
         </TouchableOpacity>
       </View>
@@ -248,7 +248,7 @@ exports[`SendScreen renders correctly 2`] = `
       </withTheme(TextComponent)>
       <View style={{...}}>
         <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"clear-address\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
           <Icon name=\\"close\\" size={20} style={{...}} allowFontScaling={false} />
         </TouchableOpacity>
       </View>

@@ -6,17 +6,22 @@ export const translation: ITranslations = {
             labels: {
                 // plase try to add keys in alphabetic order
                 accept: 'Accept',
+                advanced: 'Advanced',
                 cancel: 'Cancel',
                 close: 'Close',
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
                 create: 'Create',
+                cheap: 'Cheap',
                 delete: 'Delete',
                 details: 'Details',
                 error: 'Error',
                 date: 'Date',
+                fast: 'Fast',
+                fastest: 'Fastest',
                 from: 'From',
+                fee: 'Fee',
                 next: 'Next',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
@@ -25,7 +30,9 @@ export const translation: ITranslations = {
                 secure: 'Secure',
                 send: 'Send',
                 settings: 'Settings',
+                simple: 'Simple',
                 status: 'Status',
+                standard: 'Standard',
                 tc: 'Terms and conditions',
                 tos: 'Terms of service',
                 transactions: 'Transactions',
@@ -55,6 +62,11 @@ export const translation: ITranslations = {
                 tryAgain: 'Please try again'
             }
         },
+        Fee: {
+            feeTitle: 'Transaction fee',
+            gasPrice: 'Gas price',
+            gasLimit: 'Gas limit'
+        },
         SetPassword: {
             body:
                 '10 or more characters long, at least 1 number, 1 lowercase character and UPPERCASE character.',
@@ -74,7 +86,11 @@ export const translation: ITranslations = {
             inputAddress: 'Search public addresses or domain names',
             amount: 'Amount',
             recipientLabel: 'Recipient',
-            transferOwnAccounts: 'Transfer between my accounts'
+            transferOwnAccounts: 'Transfer between my accounts',
+            recipientNotValid: 'Recipient address is invalid',
+            insufficientFunds: 'Insufficient funds',
+            receipientWarning: 'Warning: recipient address is not checksumed',
+            allBalance: 'Add all balance'
         },
         AccountSettings: {
             manageAccount: 'Manage account',

@@ -13,4 +13,5 @@ export interface IBlockchainAccountUtils {
 
     amountToStd(value: BigNumber | number | string): BigNumber;
     amountFromStd(value: BigNumber): BigNumber;
+    convertUnit(value: BigNumber, from: string, to: string): BigNumber;
 }

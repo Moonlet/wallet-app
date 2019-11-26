@@ -8,4 +8,22 @@ export interface IBlockchainConfig {
         [unit: string]: BigNumber;
     };
     decimals: number;
+    feeOptions: {
+        defaults: {
+            gasPrice: BigNumber;
+            gasLimit: BigNumber;
+            gasPricePresets?: {
+                cheap: BigNumber;
+                standard: BigNumber;
+                fast: BigNumber;
+                fastest: BigNumber;
+            };
+        };
+        ui: {
+            feeComponent: 'FeeTotal' | 'FeePresets';
+            feeComponentAdvanced?: 'GasFeeAdvanced';
+            gasPriceUnit: string;
+            defaultPreset?: 'cheap' | 'standard' | 'fast' | 'fastest';
+        };
+    };
 }

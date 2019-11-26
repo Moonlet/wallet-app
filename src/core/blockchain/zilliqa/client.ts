@@ -2,6 +2,7 @@ import { BlockchainGenericClient } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
+import { config } from './config';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: number) {
@@ -54,5 +55,24 @@ export class Client extends BlockchainGenericClient {
         } catch (e) {
             return Promise.reject(e);
         }
+    }
+
+    public async calculateFees(from: string, to: string) {
+        const result = await this.estimateFees();
+
+        const gasPrice = result.result
+            ? new BigNumber(Number(result.result))
+            : config.feeOptions.defaults.gasPrice;
+        const gasLimit = config.feeOptions.defaults.gasLimit;
+
+        return {
+            gasPrice,
+            gasLimit,
+            feeTotal: gasPrice.multipliedBy(gasLimit)
+        };
+    }
+
+    private async estimateFees(): Promise<any> {
+        return this.rpc.call('GetMinimumGasPrice', []);
     }
 }

@@ -1,7 +1,7 @@
 import { IBlockchainConfig } from '../types';
 import { BigNumber } from 'bignumber.js';
 
-export const convertUnit = (
+export const convert = (
     value: BigNumber,
     fromUnit: string,
     toUnit: string,

@@ -235,7 +235,7 @@ export class SendScreenComponent extends React.Component<
                         const contactData: IContactState = {
                             blockchain: account.blockchain,
                             name: inputValue,
-                            address: account.address
+                            address: formatAddress(this.state.toAddress)
                         };
 
                         this.props.addContact(contactData);

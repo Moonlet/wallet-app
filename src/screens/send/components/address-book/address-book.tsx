@@ -41,7 +41,7 @@ export class AddressBookComponent extends React.Component<IProps, IState> {
     }
 
     public componentDidMount() {
-        const contactsList = [];
+        let contactsList = [];
 
         this.props.contacts.map(contact =>
             contactsList.push({
@@ -49,6 +49,9 @@ export class AddressBookComponent extends React.Component<IProps, IState> {
                 data: [contact]
             })
         );
+
+        // sort ascending
+        contactsList = contactsList.sort((a, b) => a.title.localeCompare(b.title));
 
         this.setState({ contactsList });
     }

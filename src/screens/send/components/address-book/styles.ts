@@ -79,6 +79,7 @@ export default (theme: ITheme) =>
             fontSize: 17,
             lineHeight: 22,
             opacity: 0.87,
-            color: theme.colors.text
+            color: theme.colors.text,
+            paddingTop: BASE_DIMENSION
         }
     });

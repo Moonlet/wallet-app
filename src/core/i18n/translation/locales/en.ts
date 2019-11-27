@@ -67,14 +67,25 @@ export const translation: ITranslations = {
             gasPrice: 'Gas price',
             gasLimit: 'Gas limit'
         },
+        Password: {
+            setupPinTitle: 'Setup PIN code',
+            setupPinSubtitle: 'Please enter your new PIN code',
+            verifyPinTitle: 'Verify PIN code',
+            verifyPinSubtitle: 'Please re-enter your new PIN code',
+            pinTitleUnlock: 'Enter PIN code',
+            pinSubtitleUnlock: 'Your PIN is required to unlock Moonlet',
+            invalidPassword: 'Invalid Password',
+            genericError: 'Operation could not be completed',
+            subtitleMnemonic: 'Your PIN is required to view mnemonic',
+            subtitleDeleteWallet: 'Your PIN is required to delete wallet'
+        },
         SetPassword: {
             body:
                 '10 or more characters long, at least 1 number, 1 lowercase character and UPPERCASE character.',
             password: 'password',
             confirmPassword: 'confirm password',
             errors: {
-                passwordsDontMatch: 'Passwords dont match',
-                invalidPassword: 'Invalid password'
+                passwordsDontMatch: 'Passwords dont match'
             }
         },
         SetPasswordConfirm: {
@@ -109,9 +120,6 @@ export const translation: ITranslations = {
             editName: 'Edit name',
             confirmDelete:
                 'Make sure you have saved securely your recovery phrase before deleting it',
-            deletePasswordRequest: 'Please type your password to delete your wallet.',
-            unveilPasswordRequest: 'Please type your password to unveil your recovery phrase.',
-            invalidPassword: 'Invalid Password',
             viewPhrase: 'View phrase',
             secureWallet: 'Secure wallet'
         },

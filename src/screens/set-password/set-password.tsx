@@ -109,7 +109,7 @@ export const SetPasswordScreenComponent = (props: IProps) => {
                         }
 
                         if (!passwordStrengthRegex.test(password)) {
-                            setErrorText(translate('SetPassword.errors.invalidPassword'));
+                            setErrorText(translate('Password.invalidPassword'));
                             return;
                         }
 

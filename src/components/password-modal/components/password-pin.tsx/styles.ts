@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { ITheme } from '../../core/theme/itheme';
+import { ITheme } from '../../../../core/theme/itheme';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -41,11 +41,9 @@ export default (theme: ITheme) =>
         },
 
         bottomContainer: {
-            width: '80%',
-            flex: 0,
-            alignSelf: 'center',
-            alignItems: 'center',
-            marginBottom: 60
+            marginTop: 10,
+            flex: 1,
+            width: '80%'
         },
 
         bottomButton: {
@@ -55,11 +53,5 @@ export default (theme: ITheme) =>
         errorMessage: {
             textAlign: 'center',
             width: '100%'
-        },
-        loading: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: theme.colors.inputBackground
         }
     });

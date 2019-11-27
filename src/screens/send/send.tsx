@@ -5,7 +5,9 @@ import {
     TouchableOpacity,
     Platform,
     ScrollView,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    Image,
+    Alert
 } from 'react-native';
 import { Icon } from '../../components/icon';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
@@ -211,6 +213,36 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
+    public alertModalAddAddress() {
+        Alert.alert(translate('Send.alertTitle'), translate('Send.alertDescription'), [
+            {
+                text: translate('App.labels.cancel'),
+                onPress: () => {
+                    /* console.log('Cancel Pressed')*/
+                },
+                style: 'cancel'
+            },
+            {
+                text: translate('App.labels.save'),
+                onPress: () => {
+                    /* console.log('Save Pressed')*/
+                }
+            }
+        ]);
+    }
+
+    public renderAddAddressToBook() {
+        const styles = this.props.styles;
+
+        return (
+            <TouchableOpacity onPress={this.alertModalAddAddress}>
+                <Text style={styles.addressNotInBookText}>
+                    {translate('Send.addressNotInBook')}
+                </Text>
+            </TouchableOpacity>
+        );
+    }
+
     public renderBasicFields() {
         const styles = this.props.styles;
         const theme = this.props.theme;
@@ -331,6 +363,8 @@ export class SendScreenComponent extends React.Component<
                             </Text>
                         </TouchableOpacity>
 
+                        {this.state.isValidAddress && this.renderAddAddressToBook()}
+
                         {this.state.isValidAddress && this.renderBasicFields()}
 
                         {this.state.showOwnAccounts && (
@@ -340,13 +374,26 @@ export class SendScreenComponent extends React.Component<
                             />
                         )}
 
-                        <QrModalReader
-                            ref={ref => (this.qrCodeScanner = ref)}
-                            onQrCodeScanned={this.onQrCodeScanned}
-                        />
+                        <View style={styles.emptyAddressContainer}>
+                            <Image
+                                style={styles.logoImage}
+                                source={require('../../assets/images/png/moonlet_space.png')}
+                            />
+                            <Text style={styles.emptyAddressText}>
+                                {translate('Send.emptyAddress')}
+                            </Text>
+                            <Text style={styles.addAddressBookText}>
+                                {translate('Send.addAddressBook')}
+                            </Text>
+                        </View>
                     </KeyboardAvoidingView>
                 </ScrollView>
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />
+
+                <QrModalReader
+                    ref={ref => (this.qrCodeScanner = ref)}
+                    onQrCodeScanned={this.onQrCodeScanned}
+                />
             </View>
         );
     }

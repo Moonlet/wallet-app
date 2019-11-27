@@ -27,6 +27,7 @@ export const translation: ITranslations = {
                 privacyPolicy: 'Privacy policy',
                 receive: 'Receive',
                 recover: 'Recover',
+                save: 'Save',
                 secure: 'Secure',
                 send: 'Send',
                 settings: 'Settings',
@@ -94,7 +95,13 @@ export const translation: ITranslations = {
             receipientWarning: 'Warning: recipient address is not checksumed',
             allBalance: 'Add all balance',
             cameraDisabledTitle: 'Enable camera',
-            cameraDisabledText: 'Please enable camera on device settings'
+            cameraDisabledText: 'Please enable camera on device settings',
+            emptyAddress: 'Your address book is empty',
+            addAddressBook: 'Start to add public addresses or domain names to your address book',
+            addressNotInBook:
+                'It looks that this address is not on your address book. Click here to add it!',
+            alertTitle: 'Add it to address book',
+            alertDescription: 'Use a relevant name or an alias for this new address'
         },
         AccountSettings: {
             manageAccount: 'Manage account',

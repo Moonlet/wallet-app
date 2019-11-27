@@ -19,7 +19,7 @@ const props: IProps & IReduxProps = {
     },
     styles: styleProvider(darkTheme),
     tosVersion: 1,
-    createHDWallet: jest.fn((mnemonic, callback): any => callback()),
+    createHDWallet: jest.fn((mnemonic, password, callback): any => callback()),
     theme: darkTheme
 };
 

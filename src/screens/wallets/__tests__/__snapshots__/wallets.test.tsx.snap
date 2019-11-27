@@ -18,6 +18,6 @@ exports[`Wallet screen renders correctly 1`] = `
       </withTheme(ButtonComponent)>
     </View>
   </View>
-  <withTheme(PasswordModalComponent) buttonLabel=\\"Delete wallet\\" infoText=\\"Please type your password to delete your wallet.\\" visible={false} obRef={[Function: obRef]} />
+  <withTheme(PasswordModalComponent) subtitle=\\"Your PIN is required to delete wallet\\" obRef={[Function: obRef]} />
 </View>"
 `;

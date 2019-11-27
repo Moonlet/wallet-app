@@ -16,6 +16,7 @@ import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { createHDWallet } from '../../redux/wallets/actions';
+import { PasswordModal } from '../../components/password-modal/password-modal';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -24,7 +25,7 @@ export interface IProps {
 }
 
 export interface IReduxProps {
-    createHDWallet: (mnemonic: string, callback: () => any) => void;
+    createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
 }
 
 const navigationOptions = () => ({
@@ -131,18 +132,24 @@ export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IRedu
                             setError(true);
                             return;
                         }
-                        props.createHDWallet(mnemonic.join(' '), () =>
-                            props.navigation.navigate(
-                                'MainNavigation',
-                                {},
-                                NavigationActions.navigate({ routeName: 'Dashboard' })
-                            )
-                        );
+                        this.passwordModal.requestPassword().then(password => {
+                            props.createHDWallet(mnemonic.join(' '), password, () =>
+                                props.navigation.navigate(
+                                    'MainNavigation',
+                                    {},
+                                    NavigationActions.navigate({ routeName: 'Dashboard' })
+                                )
+                            );
+                        });
                     }}
                 >
                     {translate('App.labels.confirm')}
                 </Button>
             </View>
+            <PasswordModal
+                subtitle={translate('Password.subtitleMnemonic')}
+                obRef={ref => (this.passwordModal = ref)}
+            />
         </KeyboardAvoidingView>
     );
 };

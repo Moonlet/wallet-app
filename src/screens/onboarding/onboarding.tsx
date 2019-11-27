@@ -13,6 +13,7 @@ import { createHDWallet } from '../../redux/wallets/actions';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
+import { hash } from '../../core/secure/encrypt';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -20,7 +21,7 @@ export interface IProps {
 }
 
 export interface IReduxProps {
-    createHDWallet: (mnemonic: string, callback: () => any) => void;
+    createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
 }
 
 export class OnboardingScreenComponent extends React.Component<IProps & IReduxProps> {
@@ -83,8 +84,9 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
             })
         );
     }
-    public onPressGenerateWallet() {
-        this.props.createHDWallet(this.mnemonic.join(' '), () =>
+    public async onPressGenerateWallet() {
+        const password = await hash('123456');
+        this.props.createHDWallet(this.mnemonic.join(' '), password, () =>
             this.props.navigation.navigate(
                 'MainNavigation',
                 {},

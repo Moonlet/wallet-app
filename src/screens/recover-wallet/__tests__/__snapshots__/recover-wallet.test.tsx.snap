@@ -192,6 +192,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       </withTheme(ButtonComponent)>
     </View>
   </View>
+  <withTheme(PasswordModalComponent) subtitle=\\"Your PIN is required to view mnemonic\\" obRef={[Function: obRef]} />
 </View>"
 `;
 

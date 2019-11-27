@@ -19,6 +19,7 @@ export interface IExternalProps {
 interface IState {
     visible: boolean;
     title: string;
+    subtitle: string;
 }
 
 export class PasswordModalComponent extends React.Component<
@@ -31,7 +32,8 @@ export class PasswordModalComponent extends React.Component<
 
         this.state = {
             visible: false,
-            title: props.title ? props.title : translate('Password.pinTitleUnlock')
+            title: props.title ? props.title : translate('Password.pinTitleUnlock'),
+            subtitle: props.subtitle ? props.subtitle : translate('Password.pinSubtitleUnlock')
         };
         props.obRef && props.obRef(this);
     }
@@ -84,11 +86,7 @@ export class PasswordModalComponent extends React.Component<
                     )} */}
                 <PasswordPin
                     title={this.state.title}
-                    subtitle={
-                        this.props.subtitle
-                            ? this.props.subtitle
-                            : translate('Password.pinSubtitleUnlock')
-                    }
+                    subtitle={this.state.subtitle}
                     onPasswordEntered={this.onPasswordEntered}
                 />
             </Modal>

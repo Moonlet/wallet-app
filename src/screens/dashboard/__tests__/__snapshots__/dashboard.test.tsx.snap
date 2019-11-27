@@ -29,5 +29,6 @@ exports[`dashboard screen component renders correctly 1`] = `
       </ScrollViewMock>
     </View>
   </LinearGradient>
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
 </View>"
 `;

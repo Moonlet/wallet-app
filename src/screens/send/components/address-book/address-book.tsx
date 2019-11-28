@@ -14,6 +14,7 @@ import { translate } from '../../../../core/i18n';
 import { Blockchain } from '../../../../core/blockchain/types';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteContact, updateContactName } from '../../../../redux/contacts/actions';
+import { confirm } from '../../../../core/utils/dialog';
 
 export interface IReduxProps {
     contacts: IContactsState[];
@@ -100,8 +101,12 @@ export class AddressBookComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.action}
                     onPress={() => {
-                        this.closeCurrentOpenedSwipable();
-                        this.props.deleteContact(contact);
+                        confirm(translate('Send.deleteContact'), '')
+                            .then(() => {
+                                this.closeCurrentOpenedSwipable();
+                                this.props.deleteContact(contact);
+                            })
+                            .catch(() => {});
                     }}
                 >
                     <Icon name="bin" size={32} style={styles.iconActionNegative} />
@@ -178,7 +183,7 @@ export class AddressBookComponent extends React.Component<
             return (
                 <SafeAreaView style={styles.container}>
                     <SectionList
-                        sections={this.props.contacts as []}
+                        sections={contacts as []}
                         keyExtractor={({ item }) => item}
                         renderItem={({ item }) => this.renderContact(item)}
                         renderSectionHeader={({ section: { title } }) => (

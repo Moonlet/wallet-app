@@ -4,9 +4,8 @@ import { Icon } from '../../components/icon';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
-import { withTheme } from '../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { Button } from '../../library/button/button';
-import { ITheme } from '../../core/theme/itheme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Text } from '../../library';
@@ -15,7 +14,7 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { IAccountState, IWalletState } from '../../redux/wallets/state';
-import { addContact } from '../../redux/contacts/actions';
+import { addContact, isContactAlreadySaved } from '../../redux/contacts/actions';
 import { IContactState } from '../../redux/contacts/state';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { AccountList } from './components/account-list/account-list';
@@ -32,8 +31,6 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
 }
 
 export interface IReduxProps {
@@ -42,6 +39,7 @@ export interface IReduxProps {
     sendTransferTransaction: typeof sendTransferTransaction;
     addContact: typeof addContact;
     wallet: IWalletState;
+    isContactAlreadySaved: typeof isContactAlreadySaved;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -49,12 +47,15 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         accounts: getAccounts(state, ownProps.blockchain),
         wallet: selectCurrentWallet(state)
+        // TODO: this.state.toAddress
+        // isContactAlreadySaved: isContactAlreadySaved(state, '0xFEb...7e254')
     };
 };
 
 const mapDispatchToProps = {
     sendTransferTransaction,
-    addContact
+    addContact,
+    isContactAlreadySaved
 };
 
 export interface INavigationParams {
@@ -78,14 +79,22 @@ export const navigationOptions = ({ navigation }: any) => ({
     title: translate('App.labels.send')
 });
 export class SendScreenComponent extends React.Component<
-    INavigationProps<INavigationParams> & IProps & IReduxProps,
+    INavigationProps<INavigationParams> &
+        IProps &
+        IReduxProps &
+        IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
     public static navigationOptions = navigationOptions;
     public qrCodeScanner: any;
     public passwordModal = null;
 
-    constructor(props: INavigationProps<INavigationParams> & IProps & IReduxProps) {
+    constructor(
+        props: INavigationProps<INavigationParams> &
+            IProps &
+            IReduxProps &
+            IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
 
         this.state = {
@@ -382,7 +391,9 @@ export class SendScreenComponent extends React.Component<
                         </Text>
                     </TouchableOpacity>
 
-                    {this.state.isValidAddress && this.renderAddAddressToBook()}
+                    {this.state.isValidAddress &&
+                        !this.props.isContactAlreadySaved(formatAddress(this.state.toAddress)) &&
+                        this.renderAddAddressToBook()}
 
                     {this.state.isValidAddress && this.renderBasicFields()}
 
@@ -392,7 +403,7 @@ export class SendScreenComponent extends React.Component<
                             onAccountSelection={this.onAccountSelection}
                         />
                     ) : (
-                        <AddressBook />
+                        <AddressBook blockchain={this.props.blockchain} />
                     )}
 
                     {/* </KeyboardAvoidingView> */}

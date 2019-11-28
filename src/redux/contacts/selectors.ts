@@ -1,21 +1,25 @@
 import { IReduxState } from '../state';
-import {
-    // IContactsState,
-    IContactState
-} from './state';
-// import { Blockchain } from '../../core/blockchain/types';
+import { IContactState } from './state';
+import { Blockchain } from '../../core/blockchain/types';
 
-export const selectContacts = (state: IReduxState): IContactState[] => {
-    return Object.values(state.contacts).map((contact: IContactState) => contact);
+export const selectContacts = (state: IReduxState, blockchain: Blockchain): IContactState[] => {
+    let currentLetter = '';
+
+    return Object.values(state.contacts)
+        .map((c: IContactState) => c)
+        .filter(c => c.blockchain === blockchain)
+        .sort((a, b) => (a.name > b.name ? 1 : -1))
+        .reduce((sortedList = [], contact) => {
+            const firstLetter = contact.name[0];
+            if (firstLetter !== currentLetter) {
+                currentLetter = firstLetter;
+                sortedList.push({
+                    title: firstLetter.toUpperCase(),
+                    data: []
+                });
+            }
+
+            sortedList[sortedList.length - 1].data.push(contact);
+            return sortedList;
+        }, []);
 };
-
-// export const selectContacts = (state: IReduxState, blockchain: Blockchain): IContactsState[] => {
-//     return [state.contacts];
-
-//     // return Object.keys(state.contacts)
-//     //     .map(k => state.contacts[k])
-//     //     .filter(c => c.blockchain === blockchain);
-// };
-
-// TODO
-// check if address is already in contacts

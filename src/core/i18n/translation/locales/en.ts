@@ -101,7 +101,11 @@ export const translation: ITranslations = {
             addressNotInBook:
                 'It looks that this address is not on your address book. Click here to add it!',
             alertTitle: 'Add it to address book',
-            alertDescription: 'Use a relevant name or an alias for this new address'
+            alertDescription: 'Use a relevant name or an alias for this new address',
+            alertEditTitle: 'Edit address book name',
+            alertEditDescription: 'Use a relevant name or an alias for this address',
+            deleteContact: 'Delete contact',
+            editContactName: 'Edit name'
         },
         AccountSettings: {
             manageAccount: 'Manage account',

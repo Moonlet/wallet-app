@@ -40,12 +40,14 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2,
             color: '#E6E4EA' // theme.colors.primary
         },
-        // TODO
+
         rowContainer: {
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingVertical: BASE_DIMENSION
+            paddingVertical: BASE_DIMENSION,
+            paddingLeft: BASE_DIMENSION,
+            backgroundColor: theme.colors.appBackground
         },
         address: {
             fontSize: theme.fontSize.regular,
@@ -81,5 +83,35 @@ export default (theme: ITheme) =>
             opacity: 0.87,
             color: theme.colors.text,
             paddingTop: BASE_DIMENSION
+        },
+
+        leftActionsContainer: {
+            flexDirection: 'row'
+        },
+
+        action: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 72
+        },
+
+        iconActionPositive: {
+            height: 40,
+            color: theme.colors.accent
+        },
+
+        iconActionNegative: {
+            height: 40,
+            color: theme.colors.error
+        },
+
+        textActionPositive: {
+            fontSize: 10,
+            color: theme.colors.accent
+        },
+
+        textActionNegative: {
+            fontSize: 10,
+            color: theme.colors.error
         }
     });

@@ -15,16 +15,18 @@ import { Blockchain } from '../../../../core/blockchain/types';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteContact, updateContactName } from '../../../../redux/contacts/actions';
 import { confirm } from '../../../../core/utils/dialog';
+import { IAccountState } from '../../../../redux/wallets/state';
 
 export interface IReduxProps {
     contacts: IContactsState[];
     deleteContact: typeof deleteContact;
     updateContactName: typeof updateContactName;
-    // onAccountSelection
 }
 
 export interface IExternalProps {
     blockchain: Blockchain;
+    accounts: IAccountState[];
+    onAccountSelection: (account: IAccountState) => any;
 }
 
 interface IState {
@@ -106,7 +108,9 @@ export class AddressBookComponent extends React.Component<
                                 this.closeCurrentOpenedSwipable();
                                 this.props.deleteContact(contact);
                             })
-                            .catch(() => {});
+                            .catch(() => {
+                                //
+                            });
                     }}
                 >
                     <Icon name="bin" size={32} style={styles.iconActionNegative} />
@@ -147,8 +151,13 @@ export class AddressBookComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.rowContainer}
                     onPress={() => {
-                        // TODO
-                        // this.props.onAccountSelection(account);
+                        const foundAccount = this.props.accounts.find(
+                            account => account.address === contact.address
+                        );
+
+                        if (foundAccount) {
+                            this.props.onAccountSelection(foundAccount);
+                        }
                     }}
                 >
                     <View>

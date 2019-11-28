@@ -242,7 +242,7 @@ export class SendScreenComponent extends React.Component<
                         const contactData: IContactState = {
                             blockchain: account.blockchain,
                             name: inputValue,
-                            address: formatAddress(this.state.toAddress)
+                            address: this.state.toAddress
                         };
 
                         this.props.addContact(contactData);
@@ -390,7 +390,7 @@ export class SendScreenComponent extends React.Component<
                     </TouchableOpacity>
 
                     {this.state.isValidAddress &&
-                        !this.props.isContactAlreadySaved(formatAddress(this.state.toAddress)) &&
+                        !this.props.isContactAlreadySaved(this.state.toAddress) &&
                         this.renderAddAddressToBook()}
 
                     {this.state.isValidAddress && this.renderBasicFields()}
@@ -401,7 +401,11 @@ export class SendScreenComponent extends React.Component<
                             onAccountSelection={this.onAccountSelection}
                         />
                     ) : (
-                        <AddressBook blockchain={this.props.blockchain} />
+                        <AddressBook
+                            blockchain={this.props.blockchain}
+                            accounts={this.props.accounts}
+                            onAccountSelection={this.onAccountSelection}
+                        />
                     )}
 
                     {/* </KeyboardAvoidingView> */}

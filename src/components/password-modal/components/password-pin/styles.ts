@@ -71,20 +71,9 @@ export default (theme: ITheme) =>
             color: theme.colors.text,
             textAlign: 'center'
         },
-        resetKeyText: {
-            fontSize: 17,
-            lineHeight: 22,
-            color: theme.colors.accent,
-            textAlign: 'center'
-        },
-        checkedIcon: {
+        icon: {
             alignSelf: 'center',
-            color: theme.colors.accent,
-            marginHorizontal: BASE_DIMENSION
-        },
-        deleteIcon: {
-            alignSelf: 'center',
-            color: theme.colors.accent
+            color: theme.colors.primary
         },
         inputRow: {
             justifyContent: 'center',

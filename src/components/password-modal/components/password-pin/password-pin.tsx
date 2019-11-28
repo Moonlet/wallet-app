@@ -52,19 +52,26 @@ export class PasswordPinComponent extends React.Component<
             const resultVerificationPass = await this.props.onPasswordEntered(passHash);
             if (resultVerificationPass !== undefined) {
                 this.setState({
-                    errorMessage: resultVerificationPass
+                    errorMessage: resultVerificationPass,
+                    password: ''
                 });
+                this.startShake();
             }
-            this.startShake();
         } catch {
             this.startShake();
             this.setState({
-                errorMessage: translate('Password.genericError')
+                errorMessage: translate('Password.genericError'),
+                password: ''
             });
         }
     }
 
     public fillPassword(digit: string) {
+        if (this.state.errorMessage !== '') {
+            this.setState({
+                errorMessage: ''
+            });
+        }
         if (this.state.password.length < 6) {
             this.setState({ password: this.state.password.concat(digit) }, () => {
                 if (this.state.password.length === PASSWORD_LENGTH) {
@@ -106,32 +113,32 @@ export class PasswordPinComponent extends React.Component<
         Animated.sequence([
             Animated.timing(this.shakeAnimation, {
                 toValue: 20,
-                duration: 100,
+                duration: 50,
                 useNativeDriver: true
             }),
             Animated.timing(this.shakeAnimation, {
                 toValue: -20,
-                duration: 100,
+                duration: 50,
                 useNativeDriver: true
             }),
             Animated.timing(this.shakeAnimation, {
                 toValue: 10,
-                duration: 100,
+                duration: 50,
                 useNativeDriver: true
             }),
             Animated.timing(this.shakeAnimation, {
                 toValue: -10,
-                duration: 100,
+                duration: 50,
                 useNativeDriver: true
             }),
             Animated.timing(this.shakeAnimation, {
                 toValue: 10,
-                duration: 100,
+                duration: 50,
                 useNativeDriver: true
             }),
             Animated.timing(this.shakeAnimation, {
                 toValue: 0,
-                duration: 100,
+                duration: 50,
                 useNativeDriver: true
             })
         ]).start();
@@ -139,9 +146,6 @@ export class PasswordPinComponent extends React.Component<
 
     public renderInputDots() {
         const styles = this.props.styles;
-
-        /* TODO: after rebase replace here  icon*/
-
         return (
             <Animated.View
                 style={[styles.inputRow, { transform: [{ translateX: this.shakeAnimation }] }]}
@@ -165,32 +169,52 @@ export class PasswordPinComponent extends React.Component<
 
         return (
             <View style={styles.keyRow}>
-                <TouchableOpacity
-                    style={styles.keyContainer}
-                    onPress={() => {
-                        // show touch id
-                    }}
+                <LinearGradient
+                    colors={this.props.theme.shadowGradient}
+                    start={{ x: 0.0, y: 1.0 }}
+                    end={{ x: 1.0, y: 0.0 }}
+                    style={{ flex: 1 }}
                 >
-                    <Icon name="touch-id" size={40} style={styles.deleteIcon} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.keyContainer}
-                    onPress={() => this.fillPassword(String(ZERO))}
+                    <TouchableOpacity
+                        style={styles.keyContainer}
+                        onPress={() => {
+                            // show touch id
+                        }}
+                    >
+                        <Icon name="touch-id" size={40} style={styles.icon} />
+                    </TouchableOpacity>
+                </LinearGradient>
+                <LinearGradient
+                    colors={this.props.theme.shadowGradient}
+                    start={{ x: 0.0, y: 1.0 }}
+                    end={{ x: 1.0, y: 0.0 }}
+                    style={{ flex: 1 }}
                 >
-                    <Text style={styles.keyText}>{ZERO}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.keyContainer}
-                    onPress={() => {
-                        this.setState({
-                            password: this.state.password.slice(0, -1),
-                            errorMessage: ''
-                        });
-                    }}
+                    <TouchableOpacity
+                        style={styles.keyContainer}
+                        onPress={() => this.fillPassword(String(ZERO))}
+                    >
+                        <Text style={styles.keyText}>{ZERO}</Text>
+                    </TouchableOpacity>
+                </LinearGradient>
+                <LinearGradient
+                    colors={this.props.theme.shadowGradient}
+                    start={{ x: 0.0, y: 1.0 }}
+                    end={{ x: 1.0, y: 0.0 }}
+                    style={{ flex: 1 }}
                 >
-                    {/* TODO: after rebase replace here icon */}
-                    <Icon name="delete-1" size={24} style={styles.deleteIcon} />
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.keyContainer}
+                        onPress={() => {
+                            this.setState({
+                                password: this.state.password.slice(0, -1),
+                                errorMessage: ''
+                            });
+                        }}
+                    >
+                        <Icon name="keyboard-delete-1" size={40} style={styles.icon} />
+                    </TouchableOpacity>
+                </LinearGradient>
             </View>
         );
     };
@@ -203,7 +227,7 @@ export class PasswordPinComponent extends React.Component<
                 <Image
                     style={styles.logoImage}
                     // moonlet_space_gray
-                    source={require('../../../../assets/images/png/moonlet_space.png')}
+                    source={require('../../../../assets/images/png/moonlet_space_gray.png')}
                 />
                 <View style={styles.headerContainer}>
                     <Text style={styles.title}>{this.props.title}</Text>

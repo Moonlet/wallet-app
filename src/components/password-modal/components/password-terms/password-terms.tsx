@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Image, Platform } from 'react-native';
+import { View, Image } from 'react-native';
 import { Button, Checkbox, Text } from '../../../../library';
 
 import stylesProvider from './styles';

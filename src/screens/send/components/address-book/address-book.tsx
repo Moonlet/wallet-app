@@ -19,6 +19,7 @@ export interface IReduxProps {
     contacts: IContactsState[];
     deleteContact: typeof deleteContact;
     updateContactName: typeof updateContactName;
+    // onAccountSelection
 }
 
 export interface IExternalProps {
@@ -26,7 +27,7 @@ export interface IExternalProps {
 }
 
 interface IState {
-    openedSwipeIndex: number;
+    openedSwipeIndex: string;
 }
 
 export const mapStateToProps = (state: IReduxState, ownprops: IExternalProps) => {
@@ -51,7 +52,7 @@ export class AddressBookComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            openedSwipeIndex: -1
+            openedSwipeIndex: null
         };
     }
 
@@ -117,8 +118,9 @@ export class AddressBookComponent extends React.Component<
         );
     };
 
-    public renderItem(item: IContactState, index: number) {
+    public renderContact(contact: IContactState) {
         const styles = this.props.styles;
+        const index = contact.address;
 
         return (
             <Swipeable
@@ -126,7 +128,7 @@ export class AddressBookComponent extends React.Component<
                 ref={ref => {
                     this.walletSwipableRef[index] = ref;
                 }}
-                renderLeftActions={() => this.renderLeftActions(item)}
+                renderLeftActions={() => this.renderLeftActions(contact)}
                 onSwipeableWillOpen={() => {
                     if (
                         index !== this.state.openedSwipeIndex &&
@@ -145,8 +147,8 @@ export class AddressBookComponent extends React.Component<
                     }}
                 >
                     <View>
-                        <Text style={styles.name}>{item.name}</Text>
-                        <Text style={styles.address}>{formatAddress(item.address)}</Text>
+                        <Text style={styles.name}>{contact.name}</Text>
+                        <Text style={styles.address}>{formatAddress(contact.address)}</Text>
                     </View>
                     <Icon name="add-circle" size={24} style={styles.icon} />
                 </TouchableOpacity>
@@ -176,9 +178,9 @@ export class AddressBookComponent extends React.Component<
             return (
                 <SafeAreaView style={styles.container}>
                     <SectionList
-                        sections={contacts as []}
-                        keyExtractor={({ item, index }) => `${index}`}
-                        renderItem={({ item, index }) => this.renderItem(item, index)}
+                        sections={this.props.contacts as []}
+                        keyExtractor={({ item }) => item}
+                        renderItem={({ item }) => this.renderContact(item)}
                         renderSectionHeader={({ section: { title } }) => (
                             <Text style={styles.sectionTitle}>{title}</Text>
                         )}

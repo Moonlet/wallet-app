@@ -5,9 +5,10 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { getPassword } from '../../core/secure/keychain';
 import { Deferred } from '../../core/utils/deferred';
-import { PasswordPin } from './components/password-pin.tsx/password-pin';
+import { PasswordPin } from './components/password-pin/password-pin';
 import bind from 'bind-decorator';
 import { translate } from '../../core/i18n';
+import { PasswordTerms } from './components/password-terms/password-terms';
 
 export interface IExternalProps {
     shouldCreatePassword?: boolean;
@@ -20,6 +21,7 @@ interface IState {
     visible: boolean;
     title: string;
     subtitle: string;
+    createPassword: boolean;
 }
 
 export class PasswordModalComponent extends React.Component<
@@ -33,7 +35,8 @@ export class PasswordModalComponent extends React.Component<
         this.state = {
             visible: false,
             title: props.title ? props.title : translate('Password.pinTitleUnlock'),
-            subtitle: props.subtitle ? props.subtitle : translate('Password.pinSubtitleUnlock')
+            subtitle: props.subtitle ? props.subtitle : translate('Password.pinSubtitleUnlock'),
+            createPassword: false
         };
         props.obRef && props.obRef(this);
     }
@@ -45,11 +48,11 @@ export class PasswordModalComponent extends React.Component<
         const keychainPassword = await getPassword();
         if (keychainPassword) {
             this.setState({
-                visible: true
+                createPassword: false
             });
         } else {
             this.setState({
-                visible: true
+                createPassword: false
             });
         }
 
@@ -69,6 +72,10 @@ export class PasswordModalComponent extends React.Component<
             return verifyPassword.errorMessage;
         }
     }
+    @bind
+    public onAcknowledged() {
+        //
+    }
 
     public render() {
         return (
@@ -78,17 +85,15 @@ export class PasswordModalComponent extends React.Component<
                 visible={this.state.visible}
                 presentationStyle={'overFullScreen'}
             >
-                {/* {this.state.displayAskPassword === false &&
-                    this.state.displayCreatePassword === false && (
-                        <View style={this.props.styles.loading}>
-                            <ActivityIndicator size="large" color="#fff" />
-                        </View>
-                    )} */}
-                <PasswordPin
-                    title={this.state.title}
-                    subtitle={this.state.subtitle}
-                    onPasswordEntered={this.onPasswordEntered}
-                />
+                {this.state.createPassword ? (
+                    <PasswordTerms onAcknowledged={this.onAcknowledged} />
+                ) : (
+                    <PasswordPin
+                        title={this.state.title}
+                        subtitle={this.state.subtitle}
+                        onPasswordEntered={this.onPasswordEntered}
+                    />
+                )}
             </Modal>
         );
     }

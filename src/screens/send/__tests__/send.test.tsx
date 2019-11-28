@@ -24,7 +24,8 @@ const props: IProps = {
             timestamp: 123,
             value: new BigNumber(12332)
         }
-    }
+    },
+    isContactAlreadySaved: jest.fn()
 };
 
 export default describe('SendScreen', () => {

@@ -107,34 +107,6 @@ export class PasswordPinComponent extends React.Component<
         }
     }
 
-    public renderRow = (rowValues: any) => {
-        const styles = this.props.styles;
-
-        return (
-            <View style={styles.keyRow}>
-                {rowValues.map((digit: string, index: any) => {
-                    return (
-                        <LinearGradient
-                            key={index}
-                            colors={this.props.theme.shadowGradient}
-                            start={{ x: 0.0, y: 1.0 }}
-                            end={{ x: 1.0, y: 0.0 }}
-                            style={{ flex: 1 }}
-                        >
-                            <TouchableOpacity
-                                key={index}
-                                style={styles.keyContainer}
-                                onPress={() => this.fillPassword(digit)}
-                            >
-                                <Text style={styles.keyText}>{digit}</Text>
-                            </TouchableOpacity>
-                        </LinearGradient>
-                    );
-                })}
-            </View>
-        );
-    };
-
     public startShake() {
         Animated.sequence([
             Animated.timing(this.shakeAnimation, {
@@ -189,58 +161,88 @@ export class PasswordPinComponent extends React.Component<
             </Animated.View>
         );
     }
+    public renderRow = (rowValues: any, row: number) => {
+        const styles = this.props.styles;
+
+        return (
+            <View style={styles.keyRow}>
+                {rowValues.map((digit: string, index: any) => {
+                    return [
+                        <TouchableOpacity
+                            key={index}
+                            style={styles.keyContainer}
+                            onPress={() => this.fillPassword(digit)}
+                        >
+                            <Text style={styles.keyText}>{digit}</Text>
+                        </TouchableOpacity>,
+                        [0, 1].indexOf(index) >= 0 ? (
+                            <LinearGradient
+                                key={'gradient' + index}
+                                colors={
+                                    row === 0
+                                        ? [
+                                              this.props.theme.colors.gradientLight,
+                                              this.props.theme.colors.gradientDark
+                                          ]
+                                        : [this.props.theme.colors.gradientDark]
+                                }
+                                locations={row === 0 ? [0.5, 0.67] : [0]}
+                                style={styles.gradientRowContainer}
+                            />
+                        ) : null
+                    ];
+                })}
+            </View>
+        );
+    };
 
     public renderFooterRow = () => {
         const styles = this.props.styles;
 
         return (
             <View style={styles.keyRow}>
-                <LinearGradient
-                    colors={this.props.theme.shadowGradient}
-                    start={{ x: 0.0, y: 1.0 }}
-                    end={{ x: 1.0, y: 0.0 }}
-                    style={{ flex: 1 }}
+                <TouchableOpacity
+                    style={styles.keyContainer}
+                    onPress={() => {
+                        // show touch id
+                    }}
                 >
-                    <TouchableOpacity
-                        style={styles.keyContainer}
-                        onPress={() => {
-                            // show touch id
-                        }}
-                    >
-                        <Icon name="touch-id" size={40} style={styles.icon} />
-                    </TouchableOpacity>
-                </LinearGradient>
+                    <Icon name="touch-id" size={40} style={styles.icon} />
+                </TouchableOpacity>
                 <LinearGradient
-                    colors={this.props.theme.shadowGradient}
-                    start={{ x: 0.0, y: 1.0 }}
-                    end={{ x: 1.0, y: 0.0 }}
-                    style={{ flex: 1 }}
+                    colors={[
+                        this.props.theme.colors.gradientDark,
+                        this.props.theme.colors.gradientLight
+                    ]}
+                    locations={[0.33, 0.5]}
+                    style={styles.gradientRowContainer}
+                />
+
+                <TouchableOpacity
+                    style={styles.keyContainer}
+                    onPress={() => this.fillPassword(String(ZERO))}
                 >
-                    <TouchableOpacity
-                        style={styles.keyContainer}
-                        onPress={() => this.fillPassword(String(ZERO))}
-                    >
-                        <Text style={styles.keyText}>{ZERO}</Text>
-                    </TouchableOpacity>
-                </LinearGradient>
+                    <Text style={styles.keyText}>{ZERO}</Text>
+                </TouchableOpacity>
                 <LinearGradient
-                    colors={this.props.theme.shadowGradient}
-                    start={{ x: 0.0, y: 1.0 }}
-                    end={{ x: 1.0, y: 0.0 }}
-                    style={{ flex: 1 }}
+                    colors={[
+                        this.props.theme.colors.gradientDark,
+                        this.props.theme.colors.gradientLight
+                    ]}
+                    locations={[0.33, 0.5]}
+                    style={styles.gradientRowContainer}
+                />
+                <TouchableOpacity
+                    style={styles.keyContainer}
+                    onPress={() => {
+                        this.setState({
+                            password: this.state.password.slice(0, -1),
+                            errorMessage: ''
+                        });
+                    }}
                 >
-                    <TouchableOpacity
-                        style={styles.keyContainer}
-                        onPress={() => {
-                            this.setState({
-                                password: this.state.password.slice(0, -1),
-                                errorMessage: ''
-                            });
-                        }}
-                    >
-                        <Icon name="keyboard-delete-1" size={40} style={styles.icon} />
-                    </TouchableOpacity>
-                </LinearGradient>
+                    <Icon name="keyboard-delete-1" size={40} style={styles.icon} />
+                </TouchableOpacity>
             </View>
         );
     };
@@ -264,16 +266,42 @@ export class PasswordPinComponent extends React.Component<
                 </View>
 
                 <View style={styles.digitsLayout}>
-                    {this.renderRow(digitsLayout[0])}
-                    {/* <LinearGradient
-                        colors={this.props.theme.shadowGradient}
-                        locations={[0, 0.5]}
+                    {this.renderRow(digitsLayout[0], 0)}
+                    <LinearGradient
+                        colors={[
+                            this.props.theme.colors.gradientLight,
+                            this.props.theme.colors.gradientDark,
+                            this.props.theme.colors.gradientLight
+                        ]}
+                        locations={[0.16, 0.5, 0.84]}
+                        angle={90}
+                        useAngle={true}
                         style={styles.selectorGradientContainer}
-                    >
-                        <View></View>
-                    </LinearGradient> */}
-                    {this.renderRow(digitsLayout[1])}
-                    {this.renderRow(digitsLayout[2])}
+                    />
+                    {this.renderRow(digitsLayout[1], 1)}
+                    <LinearGradient
+                        colors={[
+                            this.props.theme.colors.gradientLight,
+                            this.props.theme.colors.gradientDark,
+                            this.props.theme.colors.gradientLight
+                        ]}
+                        locations={[0.16, 0.5, 0.84]}
+                        angle={90}
+                        useAngle={true}
+                        style={styles.selectorGradientContainer}
+                    />
+                    {this.renderRow(digitsLayout[2], 2)}
+                    <LinearGradient
+                        colors={[
+                            this.props.theme.colors.gradientLight,
+                            this.props.theme.colors.gradientDark,
+                            this.props.theme.colors.gradientLight
+                        ]}
+                        locations={[0.16, 0.5, 0.84]}
+                        angle={90}
+                        useAngle={true}
+                        style={styles.selectorGradientContainer}
+                    />
                     {this.renderFooterRow()}
                 </View>
             </View>

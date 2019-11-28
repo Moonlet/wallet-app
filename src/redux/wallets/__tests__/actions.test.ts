@@ -31,6 +31,7 @@ describe('wallet actions', () => {
         const dispatch = jest.fn();
         const getState = jest.fn((): any => ({ wallets: [] }));
         const callback = jest.fn();
+        const password = '000000';
 
         const mnemonic =
             'panic club above clarify orbit resist illegal feel bus remember aspect field test bubble dog trap awesome hand room rice heavy idle faint salmon';
@@ -59,7 +60,7 @@ describe('wallet actions', () => {
             type: 'WALLET_ADD'
         };
 
-        await createHDWallet(mnemonic, callback)(dispatch, getState);
+        await createHDWallet(mnemonic, password, callback)(dispatch, getState);
 
         await flushPromises();
 

@@ -1,34 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`dashboard screen component renders correctly 1`] = `
-"<View style={{...}}>
-  <View style={{...}}>
-    <ScrollViewMock onMomentumScrollEnd={[Function]} horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" snapToInterval={375} contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
-      <View style={{...}} />
-      <withTheme(CoinBalanceCardComponent) balance={{...}} blockchain=\\"ZILLIQA\\" currency=\\"ZIL\\" width={375} toCurrency=\\"USD\\" active={true} />
-      <withTheme(CoinBalanceCardComponent) balance={{...}} blockchain=\\"ETHEREUM\\" currency=\\"ETH\\" width={375} toCurrency=\\"USD\\" active={false} />
-      <View style={{...}} />
-    </ScrollViewMock>
-  </View>
-  <AnimatedComponent style={{...}}>
-    <withTheme(CoinDashboardComponent) accounts={{...}} blockchain=\\"ZILLIQA\\" navigation={{...}} />
-  </AnimatedComponent>
-  <LinearGradient colors={{...}} locations={{...}} style={{...}} start={{...}} end={{...}}>
-    <View style={{...}} testID=\\"blockchainSelector\\">
-      <ScrollViewMock horizontal={true} disableIntervalMomentum={true} overScrollMode=\\"never\\" centerContent={true} snapToAlignment=\\"start\\" contentContainerStyle={{...}} showsHorizontalScrollIndicator={false} snapToStart={false} snapToEnd={false} decelerationRate={0.8}>
-        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-          <withTheme(TextComponent) style={{...}}>
-            ZIL
-          </withTheme(TextComponent)>
-        </TouchableOpacity>
-        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-          <withTheme(TextComponent) style={false}>
-            ETH
-          </withTheme(TextComponent)>
-        </TouchableOpacity>
-      </ScrollViewMock>
-    </View>
-  </LinearGradient>
-  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
-</View>"
-`;
+exports[`dashboard screen component renders correctly 1`] = `"dasboard"`;

@@ -79,16 +79,17 @@ export default (theme: ITheme) =>
             justifyContent: 'center',
             flexDirection: 'row'
         },
+        gradientContainer: {
+            flexDirection: 'row',
+            alignItems: 'center'
+        },
         selectorGradientContainer: {
-            // position: 'absolute',
-            // flex: 1,
-            // left: 0,
-            // right: 0,
             height: 1,
-            // bottom: 0,
-            // zIndex: 1,
-            opacity: 0.87
-            // justifyContent: 'flex-end'
+            width: '100%'
+        },
+        gradientRowContainer: {
+            height: '100%',
+            width: 1
         },
         unchecked: {
             width: 20,

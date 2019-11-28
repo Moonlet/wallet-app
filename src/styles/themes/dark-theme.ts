@@ -27,6 +27,9 @@ export const darkTheme: ITheme = {
         settingsDivider: COLORS.BLACK,
         inputBackground: COLORS.TUNDORA_GRAY,
         disabledButton: COLORS.LIGHT_GRAY,
-        modalBackground: COLORS.FLAT_GRAY
+        modalBackground: COLORS.FLAT_GRAY,
+
+        gradientLight: COLORS.COD_GRAY,
+        gradientDark: COLORS.BLACK
     }
 };

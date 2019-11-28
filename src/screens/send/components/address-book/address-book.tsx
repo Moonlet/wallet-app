@@ -81,8 +81,8 @@ export class AddressBookComponent extends React.Component<
                             blockchain: contact.blockchain,
                             name: inputValue
                         };
-                        this.props.updateContactName(data);
                         this.closeCurrentOpenedSwipable();
+                        this.props.updateContactName(data);
                     }
                 },
                 type: 'default'
@@ -100,8 +100,8 @@ export class AddressBookComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.action}
                     onPress={() => {
-                        this.props.deleteContact(contact);
                         this.closeCurrentOpenedSwipable();
+                        this.props.deleteContact(contact);
                     }}
                 >
                     <Icon name="bin" size={32} style={styles.iconActionNegative} />

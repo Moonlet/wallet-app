@@ -1,5 +1,5 @@
 import { IAction } from '../types';
-import { IContactsState } from './state';
+import { IContactsState, IContactState } from './state';
 import { CONTACT_ADD, CONTACT_DELETE, CONTACT_UPDATE_NAME } from './actions';
 
 const intialState: IContactsState = {};
@@ -21,9 +21,15 @@ export default (state: IContactsState = intialState, action: IAction) => {
                 }, {});
 
         case CONTACT_UPDATE_NAME:
-            const newState = state;
-            newState[action.data.address] = action.data;
-            return newState;
+            return Object.values(state)
+                .map((c: IContactState) => c)
+                .reduce((final = {}, contact) => {
+                    if (contact.address === action.data.address) {
+                        contact = action.data;
+                    }
+                    final[contact.address] = contact;
+                    return final;
+                }, {});
 
         default:
             break;

@@ -17,7 +17,10 @@ export interface IExternalProps {
 
 interface IState {
     password: string;
+    title: string;
+    subtitle: string;
     errorMessage: string;
+    passToVerify: string;
 }
 
 const digitsLayout = [
@@ -32,6 +35,19 @@ export class PasswordPinComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
+    public static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.title !== prevState.title) {
+            return {
+                password: '',
+                title: nextProps.title,
+                subtitle: nextProps.subtitle,
+                errorMessage: '',
+                passToVerify: prevState.password // save the password to compare it
+            };
+        } else {
+            return null;
+        }
+    }
     public onReject: any;
     public onConfirm: any;
     private shakeAnimation: any;
@@ -41,12 +57,22 @@ export class PasswordPinComponent extends React.Component<
 
         this.state = {
             password: '',
-            errorMessage: ''
+            errorMessage: '',
+            title: props.title,
+            subtitle: props.subtitle,
+            passToVerify: ''
         };
         this.shakeAnimation = new Animated.Value(0);
     }
 
     public async onEnterPassword() {
+        if (this.state.passToVerify !== '' && this.state.passToVerify !== this.state.password) {
+            this.setState({
+                errorMessage: translate('Password.dontMatch'),
+                password: ''
+            });
+            return;
+        }
         try {
             const passHash = await hash(this.state.password);
             const resultVerificationPass = await this.props.onPasswordEntered(passHash);
@@ -230,8 +256,8 @@ export class PasswordPinComponent extends React.Component<
                     source={require('../../../../assets/images/png/moonlet_space_gray.png')}
                 />
                 <View style={styles.headerContainer}>
-                    <Text style={styles.title}>{this.props.title}</Text>
-                    <Text style={styles.subTitle}>{this.props.subtitle}</Text>
+                    <Text style={styles.title}>{this.state.title}</Text>
+                    <Text style={styles.subTitle}>{this.state.subtitle}</Text>
                     {this.renderInputDots()}
 
                     <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>

@@ -3,7 +3,7 @@ import { Modal } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { getPassword } from '../../core/secure/keychain';
+import { getPassword, setPassword } from '../../core/secure/keychain';
 import { Deferred } from '../../core/utils/deferred';
 import { PasswordPin } from './components/password-pin/password-pin';
 import bind from 'bind-decorator';
@@ -21,7 +21,9 @@ interface IState {
     visible: boolean;
     title: string;
     subtitle: string;
-    createPassword: boolean;
+    showTerms: boolean;
+    createPass: boolean;
+    verifyPass: boolean;
 }
 
 export class PasswordModalComponent extends React.Component<
@@ -36,7 +38,9 @@ export class PasswordModalComponent extends React.Component<
             visible: false,
             title: props.title ? props.title : translate('Password.pinTitleUnlock'),
             subtitle: props.subtitle ? props.subtitle : translate('Password.pinSubtitleUnlock'),
-            createPassword: false
+            showTerms: false,
+            createPass: false,
+            verifyPass: false
         };
         props.obRef && props.obRef(this);
     }
@@ -48,11 +52,11 @@ export class PasswordModalComponent extends React.Component<
         const keychainPassword = await getPassword();
         if (keychainPassword) {
             this.setState({
-                createPassword: false
+                showTerms: false
             });
         } else {
             this.setState({
-                createPassword: false
+                showTerms: true
             });
         }
 
@@ -61,6 +65,24 @@ export class PasswordModalComponent extends React.Component<
 
     @bind
     public async onPasswordEntered(value: string): Promise<string> {
+        if (this.state.createPass === true) {
+            this.setState({
+                createPass: false,
+                verifyPass: true,
+                title: translate('Password.verifyPinTitle'),
+                subtitle: translate('Password.verifyPinSubtitle')
+            });
+            return;
+        }
+        if (this.state.verifyPass === true) {
+            await setPassword(value);
+            this.passwordRequestDeferred && this.passwordRequestDeferred.resolve(value);
+            this.setState({
+                visible: false
+            });
+            return value;
+        }
+
         const verifyPassword = await this.verifyPassword(value);
         if (verifyPassword.pass) {
             this.passwordRequestDeferred && this.passwordRequestDeferred.resolve(value);
@@ -74,7 +96,13 @@ export class PasswordModalComponent extends React.Component<
     }
     @bind
     public onAcknowledged() {
-        //
+        this.setState({
+            showTerms: false,
+            createPass: true,
+            verifyPass: false,
+            subtitle: translate('Password.setupPinSubtitle'),
+            title: translate('Password.setupPinTitle')
+        });
     }
 
     public render() {
@@ -85,7 +113,7 @@ export class PasswordModalComponent extends React.Component<
                 visible={this.state.visible}
                 presentationStyle={'overFullScreen'}
             >
-                {this.state.createPassword ? (
+                {this.state.showTerms ? (
                     <PasswordTerms onAcknowledged={this.onAcknowledged} />
                 ) : (
                     <PasswordPin

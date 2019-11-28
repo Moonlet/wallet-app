@@ -86,8 +86,8 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
         );
     }
     public async onPressGenerateWallet() {
-        const password = await hash('123456');
-        setPassword(password);
+        const password = await hash('000000');
+        setPassword(password, false);
         this.props.createHDWallet(this.mnemonic.join(' '), password, () =>
             this.props.navigation.navigate(
                 'MainNavigation',

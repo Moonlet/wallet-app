@@ -77,7 +77,8 @@ export const translation: ITranslations = {
             invalidPassword: 'Invalid Password',
             genericError: 'Operation could not be completed',
             subtitleMnemonic: 'Your PIN is required to view mnemonic',
-            subtitleDeleteWallet: 'Your PIN is required to delete wallet'
+            subtitleDeleteWallet: 'Your PIN is required to delete wallet',
+            dontMatch: "PIN code doesn't match"
         },
         SetPassword: {
             body:

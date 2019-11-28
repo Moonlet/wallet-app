@@ -47,8 +47,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         accounts: getAccounts(state, ownProps.blockchain),
         wallet: selectCurrentWallet(state)
-        // TODO: this.state.toAddress
-        // isContactAlreadySaved: isContactAlreadySaved(state, '0xFEb...7e254')
     };
 };
 

@@ -21,10 +21,10 @@ export const deleteContact = (contactData: IContactState) => {
     };
 };
 
-export const updateContactName = (contactData: IContactState, newName: string) => {
+export const updateContactName = (contactData: IContactState) => {
     return {
         type: CONTACT_UPDATE_NAME,
-        data: { contactData, newName }
+        data: contactData
     };
 };
 

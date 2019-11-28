@@ -13,22 +13,17 @@ export default (state: IContactsState = intialState, action: IAction) => {
             };
 
         case CONTACT_DELETE:
-            return Object.keys(state).reduce((r, key) => {
-                if (action.data.address !== key) {
-                    r[key] = state[key];
-                }
-                return r;
-            }, {});
+            return Object.keys(state)
+                .filter(key => key !== action.data.address)
+                .reduce((result, current) => {
+                    result[current] = state[current];
+                    return result;
+                }, {});
 
         case CONTACT_UPDATE_NAME:
-            return Object.values(state).map(contact =>
-                contact === action.data.contactData
-                    ? {
-                          ...contact,
-                          name: action.data.newName
-                      }
-                    : contact
-            );
+            const newState = state;
+            newState[action.data.address] = action.data;
+            return newState;
 
         default:
             break;

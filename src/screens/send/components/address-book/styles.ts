@@ -5,6 +5,9 @@ import { pw, ph } from '../../../../styles';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
+        container: {
+            flex: 1
+        },
         contentContainer: {
             flex: 1,
             flexDirection: 'column',

@@ -75,8 +75,13 @@ export class AddressBookComponent extends React.Component<
                 text: translate('App.labels.save'),
                 onPress: (inputValue: string) => {
                     if (inputValue !== '') {
+                        const data: IContactState = {
+                            address: contact.address,
+                            blockchain: contact.blockchain,
+                            name: inputValue
+                        };
+                        this.props.updateContactName(data);
                         this.closeCurrentOpenedSwipable();
-                        this.props.updateContactName(contact, inputValue);
                     }
                 },
                 type: 'default'
@@ -94,8 +99,8 @@ export class AddressBookComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.action}
                     onPress={() => {
-                        this.closeCurrentOpenedSwipable();
                         this.props.deleteContact(contact);
+                        this.closeCurrentOpenedSwipable();
                     }}
                 >
                     <Icon name="bin" size={32} style={styles.iconActionNegative} />
@@ -169,7 +174,7 @@ export class AddressBookComponent extends React.Component<
             );
         } else {
             return (
-                <SafeAreaView style={{ flex: 1 }}>
+                <SafeAreaView style={styles.container}>
                     <SectionList
                         sections={contacts as []}
                         keyExtractor={({ item, index }) => `${index}`}

@@ -9,8 +9,7 @@ export default (theme: ITheme) =>
             paddingLeft: 15,
             paddingRight: 15,
             flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            backgroundColor: theme.colors.appBackground
         },
         address: {
             fontSize: 30,

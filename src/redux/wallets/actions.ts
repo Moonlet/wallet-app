@@ -8,7 +8,6 @@ import { IReduxState } from '../state';
 import { getChainId } from '../app/selectors';
 import { appSwitchWallet } from '../app/actions';
 import uuidv4 from 'uuid/v4';
-import { getPassword } from '../../core/secure/keychain';
 import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
@@ -17,6 +16,7 @@ import { selectCurrentWallet } from './selectors';
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
 export const WALLET_DELETE = 'WALLET_DELETE';
+export const WALLET_CHANGE_NAME = 'WALLET_CHANGE_NAME';
 export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
@@ -55,7 +55,7 @@ export const removeAccount = (walletId: string, blockchain: Blockchain, account:
     };
 };
 
-export const createHDWallet = (mnemonic: string, callback?: () => any) => async (
+export const createHDWallet = (mnemonic: string, password: string, callback?: () => any) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
@@ -81,16 +81,7 @@ export const createHDWallet = (mnemonic: string, callback?: () => any) => async 
                 })
             );
 
-            const passwordCredentials = await getPassword();
-            let passwordHash = '698bd02da17d4671da826cf833cf23be26a74ff4dd389da3b05bd894f7d97ef5'; // hash('pass')
-
-            if (passwordCredentials) {
-                passwordHash = passwordCredentials.password;
-            } else {
-                // password not in keychain? request pass
-            }
-
-            await storeEncrypted(mnemonic, walletId, passwordHash);
+            await storeEncrypted(mnemonic, walletId, password);
 
             dispatch(appSwitchWallet(walletId));
             callback && callback();
@@ -156,24 +147,16 @@ export const sendTransferTransaction = (
     account: IAccountState,
     toAddress: string,
     amount: string,
-    feeOptions: any
+    feeOptions: any,
+    password: string
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
 
-    // TODO  - remove after password screen is active
-    let encryptedPass = '366bf1f956e204d7bea27145b5afe34cabd6d584100e6b0b5f700230bc52a5f2';
-    const passwordCredentials = await getPassword();
-    if (passwordCredentials) {
-        encryptedPass = passwordCredentials.password;
-    } else {
-        // ask for password
-    }
-
     const wallet = selectCurrentWallet(state);
 
     try {
-        const hdWallet = await WalletFactory.get(wallet.id, wallet.type, encryptedPass); // encrypted string: pass)
+        const hdWallet = await WalletFactory.get(wallet.id, wallet.type, password); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
 
         const nonce = await blockchainInstance.getClient(chainId).getNonce(account.address);
@@ -230,4 +213,11 @@ export const deleteWallet = walletId => (
     });
 
     deleteFromStorage(walletId);
+};
+
+export const updateWalletName = (walletId: string, newName: string) => {
+    return {
+        type: WALLET_CHANGE_NAME,
+        data: { walletId, newName }
+    };
 };

@@ -3,279 +3,291 @@
 exports[`SendScreen Buton should open qr-code 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
-    <KeyboardAvoidingView style={{...}} behavior=\\"position\\" enabled={true} keyboardVerticalOffset={0}>
-      <View style={{...}}>
-        <withTheme(AccountAddressComponent) account={{...}} />
-      </View>
-      <withTheme(TextComponent) style={{...}}>
-         
-      </withTheme(TextComponent)>
-      <View style={{...}}>
-        <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
-          <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Transfer between my accounts
-        </withTheme(TextComponent)>
+    <View style={{...}}>
+      <withTheme(AccountAddressComponent) account={{...}} />
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+       
+    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
+        <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
       </TouchableOpacity>
-      <QrModalReaderComponent onQrCodeScanned={[Function]} />
-    </KeyboardAvoidingView>
+    </View>
+    <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}}>
+        Transfer between my accounts
+      </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <withTheme(Connect(AddressBookComponent)) blockchain=\\"ZILLIQA\\" onContactSelected={[Function]} />
   </ScrollViewMock>
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
 </View>"
 `;
 
 exports[`SendScreen Button should be disabled if amount is 0 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
-    <KeyboardAvoidingView style={{...}} behavior=\\"position\\" enabled={true} keyboardVerticalOffset={0}>
-      <View style={{...}}>
-        <withTheme(AccountAddressComponent) account={{...}} />
-      </View>
+    <View style={{...}}>
+      <withTheme(AccountAddressComponent) account={{...}} />
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+       
+    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
+        <Icon name=\\"close\\" size={20} style={{...}} allowFontScaling={false} />
+      </TouchableOpacity>
+    </View>
+    <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
       <withTheme(TextComponent) style={{...}}>
-         
+        Transfer between my accounts
       </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={[Function: onPress]} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}}>
+        It looks that this address is not on your address book. Click here to add it!
+      </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <View style={{...}}>
       <View style={{...}}>
-        <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
-          <Icon name=\\"close\\" size={20} style={{...}} allowFontScaling={false} />
-        </TouchableOpacity>
+        <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
       </View>
-      <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+      <TouchableOpacity testID=\\"all-balance\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
         <withTheme(TextComponent) style={{...}}>
-          Transfer between my accounts
+          Add all balance
         </withTheme(TextComponent)>
       </TouchableOpacity>
+      <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
       <View style={{...}}>
-        <View style={{...}}>
-          <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        </View>
-        <TouchableOpacity testID=\\"all-balance\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
-          <withTheme(TextComponent) style={{...}}>
-            Add all balance
-          </withTheme(TextComponent)>
-        </TouchableOpacity>
-        <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
-        <View style={{...}}>
-          <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: _callee]}>
-            Confirm payment
-          </withTheme(ButtonComponent)>
-        </View>
+        <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: _callee]}>
+          Confirm payment
+        </withTheme(ButtonComponent)>
       </View>
-      <QrModalReaderComponent onQrCodeScanned={[Function]} />
-    </KeyboardAvoidingView>
+    </View>
   </ScrollViewMock>
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
 </View>"
 `;
 
 exports[`SendScreen onChangeText 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
-    <KeyboardAvoidingView style={{...}} behavior=\\"position\\" enabled={true} keyboardVerticalOffset={0}>
-      <View style={{...}}>
-        <withTheme(AccountAddressComponent) account={{...}} />
-      </View>
-      <withTheme(TextComponent) style={{...}}>
-        Recipient
-      </withTheme(TextComponent)>
-      <View style={{...}}>
-        <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"pass1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
-          <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
-        </TouchableOpacity>
-      </View>
-      <withTheme(TextComponent) style={{...}}>
-        Recipient address is invalid
-      </withTheme(TextComponent)>
-      <withTheme(TextComponent) style={{...}}>
-        Warning: recipient address is not checksumed
-      </withTheme(TextComponent)>
-      <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Transfer between my accounts
-        </withTheme(TextComponent)>
+    <View style={{...}}>
+      <withTheme(AccountAddressComponent) account={{...}} />
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+      Recipient
+    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"pass1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
+        <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
       </TouchableOpacity>
-      <QrModalReaderComponent onQrCodeScanned={[Function]} />
-    </KeyboardAvoidingView>
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+      Recipient address is invalid
+    </withTheme(TextComponent)>
+    <withTheme(TextComponent) style={{...}}>
+      Warning: recipient address is not checksumed
+    </withTheme(TextComponent)>
+    <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}}>
+        Transfer between my accounts
+      </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <withTheme(Connect(AddressBookComponent)) blockchain=\\"ZILLIQA\\" onContactSelected={[Function]} />
   </ScrollViewMock>
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
 </View>"
 `;
 
 exports[`SendScreen onChangeText 2`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
-    <KeyboardAvoidingView style={{...}} behavior=\\"position\\" enabled={true} keyboardVerticalOffset={0}>
+    <View style={{...}}>
+      <withTheme(AccountAddressComponent) account={{...}} />
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+      Recipient
+    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"pass1...pass1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
+        <Icon name=\\"close\\" size={20} style={{...}} allowFontScaling={false} />
+      </TouchableOpacity>
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+      Recipient address is invalid
+    </withTheme(TextComponent)>
+    <withTheme(TextComponent) style={{...}}>
+      Warning: recipient address is not checksumed
+    </withTheme(TextComponent)>
+    <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}}>
+        Transfer between my accounts
+      </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={[Function: onPress]} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}}>
+        It looks that this address is not on your address book. Click here to add it!
+      </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <View style={{...}}>
       <View style={{...}}>
-        <withTheme(AccountAddressComponent) account={{...}} />
+        <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"10\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
       </View>
       <withTheme(TextComponent) style={{...}}>
-        Recipient
+        Insufficient funds
       </withTheme(TextComponent)>
-      <View style={{...}}>
-        <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"pass1...pass1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
-          <Icon name=\\"close\\" size={20} style={{...}} allowFontScaling={false} />
-        </TouchableOpacity>
-      </View>
-      <withTheme(TextComponent) style={{...}}>
-        Recipient address is invalid
-      </withTheme(TextComponent)>
-      <withTheme(TextComponent) style={{...}}>
-        Warning: recipient address is not checksumed
-      </withTheme(TextComponent)>
-      <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+      <TouchableOpacity testID=\\"all-balance\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
         <withTheme(TextComponent) style={{...}}>
-          Transfer between my accounts
+          Add all balance
         </withTheme(TextComponent)>
       </TouchableOpacity>
+      <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"pass1\\" onFeesChanged={[Function]} />
       <View style={{...}}>
-        <View style={{...}}>
-          <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"10\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        </View>
-        <withTheme(TextComponent) style={{...}}>
-          Insufficient funds
-        </withTheme(TextComponent)>
-        <TouchableOpacity testID=\\"all-balance\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
-          <withTheme(TextComponent) style={{...}}>
-            Add all balance
-          </withTheme(TextComponent)>
-        </TouchableOpacity>
-        <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"pass1\\" onFeesChanged={[Function]} />
-        <View style={{...}}>
-          <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: _callee]}>
-            Confirm payment
-          </withTheme(ButtonComponent)>
-        </View>
+        <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: _callee]}>
+          Confirm payment
+        </withTheme(ButtonComponent)>
       </View>
-      <QrModalReaderComponent onQrCodeScanned={[Function]} />
-    </KeyboardAvoidingView>
+    </View>
   </ScrollViewMock>
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
 </View>"
 `;
 
 exports[`SendScreen renders correctly - no amount and fee should be present 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
-    <KeyboardAvoidingView style={{...}} behavior=\\"position\\" enabled={true} keyboardVerticalOffset={0}>
-      <View style={{...}}>
-        <withTheme(AccountAddressComponent) account={{...}} />
-      </View>
-      <withTheme(TextComponent) style={{...}}>
-         
-      </withTheme(TextComponent)>
-      <View style={{...}}>
-        <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
-          <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Transfer between my accounts
-        </withTheme(TextComponent)>
+    <View style={{...}}>
+      <withTheme(AccountAddressComponent) account={{...}} />
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+       
+    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
+        <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
       </TouchableOpacity>
-      <QrModalReaderComponent onQrCodeScanned={[Function]} />
-    </KeyboardAvoidingView>
+    </View>
+    <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}}>
+        Transfer between my accounts
+      </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <withTheme(Connect(AddressBookComponent)) blockchain=\\"ZILLIQA\\" onContactSelected={[Function]} />
   </ScrollViewMock>
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
 </View>"
 `;
 
 exports[`SendScreen renders correctly - no amount and fee should be present 2`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
-    <KeyboardAvoidingView style={{...}} behavior=\\"position\\" enabled={true} keyboardVerticalOffset={0}>
-      <View style={{...}}>
-        <withTheme(AccountAddressComponent) account={{...}} />
-      </View>
-      <withTheme(TextComponent) style={{...}}>
-         
-      </withTheme(TextComponent)>
-      <View style={{...}}>
-        <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
-          <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Transfer between my accounts
-        </withTheme(TextComponent)>
+    <View style={{...}}>
+      <withTheme(AccountAddressComponent) account={{...}} />
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+       
+    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
+        <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
       </TouchableOpacity>
-      <QrModalReaderComponent onQrCodeScanned={[Function]} />
-    </KeyboardAvoidingView>
+    </View>
+    <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}}>
+        Transfer between my accounts
+      </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <withTheme(Connect(AddressBookComponent)) blockchain=\\"ZILLIQA\\" onContactSelected={[Function]} />
   </ScrollViewMock>
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
 </View>"
 `;
 
 exports[`SendScreen renders correctly 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
-    <KeyboardAvoidingView style={{...}} behavior=\\"position\\" enabled={true} keyboardVerticalOffset={0}>
-      <View style={{...}}>
-        <withTheme(AccountAddressComponent) account={{...}} />
-      </View>
-      <withTheme(TextComponent) style={{...}}>
-         
-      </withTheme(TextComponent)>
-      <View style={{...}}>
-        <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
-          <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Transfer between my accounts
-        </withTheme(TextComponent)>
+    <View style={{...}}>
+      <withTheme(AccountAddressComponent) account={{...}} />
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+       
+    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
+        <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
       </TouchableOpacity>
-      <QrModalReaderComponent onQrCodeScanned={[Function]} />
-    </KeyboardAvoidingView>
+    </View>
+    <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}}>
+        Transfer between my accounts
+      </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <withTheme(Connect(AddressBookComponent)) blockchain=\\"ZILLIQA\\" onContactSelected={[Function]} />
   </ScrollViewMock>
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
 </View>"
 `;
 
 exports[`SendScreen renders correctly 2`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
-    <KeyboardAvoidingView style={{...}} behavior=\\"position\\" enabled={true} keyboardVerticalOffset={0}>
-      <View style={{...}}>
-        <withTheme(AccountAddressComponent) account={{...}} />
-      </View>
+    <View style={{...}}>
+      <withTheme(AccountAddressComponent) account={{...}} />
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+       
+    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
+        <Icon name=\\"close\\" size={20} style={{...}} allowFontScaling={false} />
+      </TouchableOpacity>
+    </View>
+    <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
       <withTheme(TextComponent) style={{...}}>
-         
+        Transfer between my accounts
       </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <TouchableOpacity onPress={[Function: onPress]} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}}>
+        It looks that this address is not on your address book. Click here to add it!
+      </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <View style={{...}}>
       <View style={{...}}>
-        <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
-          <Icon name=\\"close\\" size={20} style={{...}} allowFontScaling={false} />
-        </TouchableOpacity>
+        <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
       </View>
-      <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+      <TouchableOpacity testID=\\"all-balance\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
         <withTheme(TextComponent) style={{...}}>
-          Transfer between my accounts
+          Add all balance
         </withTheme(TextComponent)>
       </TouchableOpacity>
+      <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
       <View style={{...}}>
-        <View style={{...}}>
-          <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        </View>
-        <TouchableOpacity testID=\\"all-balance\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
-          <withTheme(TextComponent) style={{...}}>
-            Add all balance
-          </withTheme(TextComponent)>
-        </TouchableOpacity>
-        <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
-        <View style={{...}}>
-          <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={false} onPress={[Function: _callee]}>
-            Confirm payment
-          </withTheme(ButtonComponent)>
-        </View>
+        <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={false} onPress={[Function: _callee]}>
+          Confirm payment
+        </withTheme(ButtonComponent)>
       </View>
-      <QrModalReaderComponent onQrCodeScanned={[Function]} />
-    </KeyboardAvoidingView>
+    </View>
   </ScrollViewMock>
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
 </View>"
 `;
 
@@ -299,32 +311,32 @@ Object {
 exports[`SendScreen should Call verify address 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
-    <KeyboardAvoidingView style={{...}} behavior=\\"position\\" enabled={true} keyboardVerticalOffset={0}>
-      <View style={{...}}>
-        <withTheme(AccountAddressComponent) account={{...}} />
-      </View>
-      <withTheme(TextComponent) style={{...}}>
-        Recipient
-      </withTheme(TextComponent)>
-      <View style={{...}}>
-        <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"address\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
-          <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
-        </TouchableOpacity>
-      </View>
-      <withTheme(TextComponent) style={{...}}>
-        Recipient address is invalid
-      </withTheme(TextComponent)>
-      <withTheme(TextComponent) style={{...}}>
-        Warning: recipient address is not checksumed
-      </withTheme(TextComponent)>
-      <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Transfer between my accounts
-        </withTheme(TextComponent)>
+    <View style={{...}}>
+      <withTheme(AccountAddressComponent) account={{...}} />
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+      Recipient
+    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"address\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: _callee2]} style={{...}} activeOpacity={0.2}>
+        <Icon name=\\"qr-code-scan\\" size={20} style={{...}} allowFontScaling={false} />
       </TouchableOpacity>
-      <QrModalReaderComponent onQrCodeScanned={[Function]} />
-    </KeyboardAvoidingView>
+    </View>
+    <withTheme(TextComponent) style={{...}}>
+      Recipient address is invalid
+    </withTheme(TextComponent)>
+    <withTheme(TextComponent) style={{...}}>
+      Warning: recipient address is not checksumed
+    </withTheme(TextComponent)>
+    <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}}>
+        Transfer between my accounts
+      </withTheme(TextComponent)>
+    </TouchableOpacity>
+    <withTheme(Connect(AddressBookComponent)) blockchain=\\"ZILLIQA\\" onContactSelected={[Function]} />
   </ScrollViewMock>
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
+  <QrModalReaderComponent onQrCodeScanned={[Function]} />
 </View>"
 `;

@@ -8,7 +8,6 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { hash } from '../../core/secure/encrypt';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
 import { IWalletState } from '../../redux/wallets/state';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
@@ -42,14 +41,14 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.passwordModal.requestPassword().then(
-            password => {
+        this.passwordModal
+            .requestPassword()
+            .then(password => {
                 this.populateMnemonic(password);
-            },
-            () => {
+            })
+            .catch(() => {
                 this.props.navigation.goBack(null);
-            }
-        );
+            });
     }
 
     public render() {
@@ -89,9 +88,7 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
                 </View>
 
                 <PasswordModal
-                    buttonLabel={translate('Wallets.unveil')}
-                    infoText={translate('Wallets.unveilPasswordRequest')}
-                    visible={true}
+                    subtitle={translate('Password.subtitleMnemonic')}
                     obRef={ref => (this.passwordModal = ref)}
                 />
             </View>
@@ -107,9 +104,7 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
         }
 
         try {
-            const passHash = await hash(password);
-
-            const wallet = await HDWallet.loadFromStorage(walletId, passHash);
+            const wallet = await HDWallet.loadFromStorage(walletId, password);
             const mnemonic = wallet.getMnemonic();
 
             this.setState({

@@ -9,8 +9,7 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2,
             paddingTop: 40,
             justifyContent: 'center',
-            backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            backgroundColor: theme.colors.appBackground
         },
         logoImage: {
             height: ph(20),

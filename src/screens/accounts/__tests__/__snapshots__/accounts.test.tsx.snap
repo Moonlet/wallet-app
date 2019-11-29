@@ -3,5 +3,6 @@
 exports[`Accounts screen renders correctly 1`] = `
 "<View style={{...}}>
   <withTheme(LoadingIndicatorComponent) />
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
 </View>"
 `;

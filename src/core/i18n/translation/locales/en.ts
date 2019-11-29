@@ -27,6 +27,7 @@ export const translation: ITranslations = {
                 privacyPolicy: 'Privacy policy',
                 receive: 'Receive',
                 recover: 'Recover',
+                save: 'Save',
                 secure: 'Secure',
                 send: 'Send',
                 settings: 'Settings',
@@ -67,21 +68,23 @@ export const translation: ITranslations = {
             gasPrice: 'Gas price',
             gasLimit: 'Gas limit'
         },
-        SetPassword: {
-            body:
-                '10 or more characters long, at least 1 number, 1 lowercase character and UPPERCASE character.',
-            password: 'password',
-            confirmPassword: 'confirm password',
-            errors: {
-                passwordsDontMatch: 'Passwords dont match',
-                invalidPassword: 'Invalid password'
-            }
-        },
-        SetPasswordConfirm: {
-            body: 'You need to setup a password to secure your wallet.',
-            checkboxLabel:
+        Password: {
+            setupPinTitle: 'Setup PIN code',
+            setupPinSubtitle: 'Please enter your new PIN code',
+            verifyPinTitle: 'Verify PIN code',
+            verifyPinSubtitle: 'Please re-enter your new PIN code',
+            pinTitleUnlock: 'Enter PIN code',
+            pinSubtitleUnlock: 'Your PIN is required to unlock Moonlet',
+            invalidPassword: 'Invalid Password',
+            genericError: 'Operation could not be completed',
+            subtitleMnemonic: 'Your PIN is required to view mnemonic',
+            subtitleDeleteWallet: 'Your PIN is required to delete wallet',
+            dontMatch: "PIN code doesn't match",
+            termsBody: 'You need to setup a password to secure your wallet.',
+            termsCheckboxLabel:
                 'Do not lose this password. Moonlet will not be able to reset it for you.'
         },
+
         Send: {
             inputAddress: 'Search public addresses or domain names',
             amount: 'Amount',
@@ -92,7 +95,17 @@ export const translation: ITranslations = {
             receipientWarning: 'Warning: recipient address is not checksumed',
             allBalance: 'Add all balance',
             cameraDisabledTitle: 'Enable camera',
-            cameraDisabledText: 'Please enable camera on device settings'
+            cameraDisabledText: 'Please enable camera on device settings',
+            emptyAddress: 'Your address book is empty',
+            addAddressBook: 'Start to add public addresses or domain names to your address book',
+            addressNotInBook:
+                'It looks that this address is not on your address book. Click here to add it!',
+            alertTitle: 'Add it to address book',
+            alertDescription: 'Use a relevant name or an alias for this new address',
+            alertEditTitle: 'Edit address book name',
+            alertEditDescription: 'Use a relevant name or an alias for this address',
+            deleteContact: 'Delete contact',
+            editContactName: 'Edit name'
         },
         AccountSettings: {
             manageAccount: 'Manage account',
@@ -109,11 +122,10 @@ export const translation: ITranslations = {
             editName: 'Edit name',
             confirmDelete:
                 'Make sure you have saved securely your recovery phrase before deleting it',
-            deletePasswordRequest: 'Please type your password to delete your wallet.',
-            unveilPasswordRequest: 'Please type your password to unveil your recovery phrase.',
-            invalidPassword: 'Invalid Password',
             viewPhrase: 'View phrase',
-            secureWallet: 'Secure wallet'
+            secureWallet: 'Secure wallet',
+            editTitle: 'Edit wallet name',
+            editDescription: 'Use a relevant name or an alias for this wallet'
         },
         Transaction: {
             transactionID: 'Transaction ID',

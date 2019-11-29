@@ -78,14 +78,14 @@ describe('creat wallet terms screen component', () => {
         expect(wrapper.debug()).toMatchSnapshot();
     });
 
-    it('validates mnemonic words', () => {
-        const wrapper = shallow(<CreateWalletConfirmMnemonicScreenComponent {...props} />);
-        wrapper.find('[testID="input-password-0"]').simulate('changeText', 'panic');
-        wrapper.find('[testID="input-password-1"]').simulate('changeText', 'club');
-        wrapper.find('[testID="input-password-2"]').simulate('changeText', 'above');
+    // it('validates mnemonic words', () => {
+    //     const wrapper = shallow(<CreateWalletConfirmMnemonicScreenComponent {...props} />);
+    //     wrapper.find('[testID="input-password-0"]').simulate('changeText', 'panic');
+    //     wrapper.find('[testID="input-password-1"]').simulate('changeText', 'club');
+    //     wrapper.find('[testID="input-password-2"]').simulate('changeText', 'above');
 
-        wrapper.find('[testID="button-confirm"]').simulate('press');
+    //     wrapper.find('[testID="button-confirm"]').simulate('press');
 
-        expect(wrapper.debug()).toMatchSnapshot();
-    });
+    //     expect(wrapper.debug()).toMatchSnapshot();
+    // });
 });

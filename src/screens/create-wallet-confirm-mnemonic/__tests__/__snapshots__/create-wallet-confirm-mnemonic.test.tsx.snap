@@ -22,30 +22,6 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       Confirm
     </withTheme(ButtonComponent)>
   </View>
-</KeyboardAvoidingView>"
-`;
-
-exports[`creat wallet terms screen component validates mnemonic words 1`] = `
-"<KeyboardAvoidingView style={{...}} enabled={true} keyboardVerticalOffset={0}>
-  <View style={{...}}>
-    <withTheme(TextComponent) darker={true} style={{...}}>
-      To make sure you have written down all of your recovery words, please enter the following:
-    </withTheme(TextComponent)>
-    <View style={{...}}>
-      <TextInput style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Word #1\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-0\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-      <TextInput style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Word #2\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-1\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-      <TextInput style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Word #3\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-2\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-    </View>
-    <withTheme(TextComponent) darker={true} small={true}>
-      panic 
-      club 
-      above 
-    </withTheme(TextComponent)>
-  </View>
-  <View style={{...}}>
-    <withTheme(ButtonComponent) testID=\\"button-confirm\\" style={{...}} primary={true} disabled={false} onPress={[Function: onPress]}>
-      Confirm
-    </withTheme(ButtonComponent)>
-  </View>
+  <withTheme(PasswordModalComponent) shouldCreatePassword={true} subtitle=\\"Your PIN is required to view mnemonic\\" obRef={[Function: obRef]} />
 </KeyboardAvoidingView>"
 `;

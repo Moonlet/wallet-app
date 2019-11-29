@@ -13,12 +13,12 @@ import stylesProvider from './styles';
 import { Blockchain } from '../../core/blockchain/types';
 import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
 import { selectCurrentWallet } from '../../redux/wallets/selectors';
-import { getPassword } from '../../core/secure/keychain';
 import { formatAddress } from '../../core/utils/format-address';
 import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
+import { PasswordModal } from '../../components/password-modal/password-modal';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -63,14 +63,9 @@ export const AccountsScreenComponent = (
     useEffect(() => {
         (async function getAccounts() {
             try {
-                const keychainPassword = await getPassword();
-                if (!keychainPassword) {
-                    throw new Error('Could not retreive password has from keychain');
-                }
-                const wallet = await HDWallet.loadFromStorage(
-                    props.wallet.id,
-                    keychainPassword.password
-                );
+                const password = await this.passwordModal.requestPassword();
+
+                const wallet = await HDWallet.loadFromStorage(props.wallet.id, password);
                 const hdAccounts = await wallet.getAccounts(props.blockchain, 0, 4);
                 setAccounts(hdAccounts);
 
@@ -148,6 +143,7 @@ export const AccountsScreenComponent = (
                     );
                 })
             )}
+            <PasswordModal obRef={ref => (this.passwordModal = ref)} />
         </View>
     );
 };

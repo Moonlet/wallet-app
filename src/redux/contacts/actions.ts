@@ -1,6 +1,8 @@
 import { IContactState } from './state';
-import { IReduxState } from '../state';
 import { Dispatch } from 'redux';
+import { confirm } from '../../core/utils/dialog';
+import { translate } from '../../core/i18n';
+import { IAction } from '../types';
 
 // actions consts
 export const CONTACT_ADD = 'CONTACT_ADD';
@@ -14,11 +16,17 @@ export const addContact = (contactData: IContactState) => {
     };
 };
 
-export const deleteContact = (contactData: IContactState) => {
-    return {
-        type: CONTACT_DELETE,
-        data: contactData
-    };
+export const deleteContact = (contactData: IContactState) => (dispatch: Dispatch<IAction<any>>) => {
+    confirm(translate('Send.deleteContact'), '')
+        .then(() => {
+            dispatch({
+                type: CONTACT_DELETE,
+                data: contactData
+            });
+        })
+        .catch(() => {
+            //
+        });
 };
 
 export const updateContactName = (contactData: IContactState) => {
@@ -26,12 +34,4 @@ export const updateContactName = (contactData: IContactState) => {
         type: CONTACT_UPDATE_NAME,
         data: contactData
     };
-};
-
-export const isContactAlreadySaved = (address: string) => (
-    dispatch: Dispatch,
-    getState: () => IReduxState
-) => {
-    const state = getState();
-    return Object.keys(state.contacts).some(c => c === address);
 };

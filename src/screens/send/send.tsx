@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, TextInput, TouchableOpacity, Platform, ScrollView, Alert } from 'react-native';
 import { Icon } from '../../components/icon';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -13,14 +12,15 @@ import { translate } from '../../core/i18n';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
-import { IAccountState, IWalletState } from '../../redux/wallets/state';
-import { addContact, isContactAlreadySaved } from '../../redux/contacts/actions';
-import { IContactState } from '../../redux/contacts/state';
+import { IAccountState } from '../../redux/wallets/state';
+import { addContact } from '../../redux/contacts/actions';
+import { IContactState, IContactsState } from '../../redux/contacts/state';
+import { getContacts } from '../../redux/contacts/selectors';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { AccountList } from './components/account-list/account-list';
 import { AddressBook } from './components/address-book/address-book';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
-import { getAccounts, getAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
+import { getAccounts, getAccount } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
@@ -29,31 +29,25 @@ import BigNumber from 'bignumber.js';
 import bind from 'bind-decorator';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 
-export interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-}
-
 export interface IReduxProps {
     account: IAccountState;
     accounts: IAccountState[];
     sendTransferTransaction: typeof sendTransferTransaction;
     addContact: typeof addContact;
-    wallet: IWalletState;
-    isContactAlreadySaved: typeof isContactAlreadySaved;
+    contacts: IContactsState[];
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         accounts: getAccounts(state, ownProps.blockchain),
-        wallet: selectCurrentWallet(state)
+        contacts: getContacts(state)
     };
 };
 
 const mapDispatchToProps = {
     sendTransferTransaction,
-    addContact,
-    isContactAlreadySaved
+    addContact
 };
 
 export interface INavigationParams {
@@ -78,7 +72,6 @@ export const navigationOptions = ({ navigation }: any) => ({
 });
 export class SendScreenComponent extends React.Component<
     INavigationProps<INavigationParams> &
-        IProps &
         IReduxProps &
         IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
@@ -89,7 +82,6 @@ export class SendScreenComponent extends React.Component<
 
     constructor(
         props: INavigationProps<INavigationParams> &
-            IProps &
             IReduxProps &
             IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
@@ -259,13 +251,18 @@ export class SendScreenComponent extends React.Component<
     public renderAddAddressToBook() {
         const styles = this.props.styles;
 
-        return (
-            <TouchableOpacity onPress={() => this.alertModalAddAddress()}>
-                <Text style={styles.addressNotInBookText}>
-                    {translate('Send.addressNotInBook')}
-                </Text>
-            </TouchableOpacity>
-        );
+        if (
+            this.state.isValidAddress &&
+            !this.props.contacts[`${this.props.blockchain}|${this.state.toAddress}`]
+        ) {
+            return (
+                <TouchableOpacity onPress={() => this.alertModalAddAddress()}>
+                    <Text style={styles.addressNotInBookText}>
+                        {translate('Send.addressNotInBook')}
+                    </Text>
+                </TouchableOpacity>
+            );
+        }
     }
 
     public renderBasicFields() {
@@ -389,9 +386,7 @@ export class SendScreenComponent extends React.Component<
                         </Text>
                     </TouchableOpacity>
 
-                    {this.state.isValidAddress &&
-                        !this.props.isContactAlreadySaved(this.state.toAddress) &&
-                        this.renderAddAddressToBook()}
+                    {this.renderAddAddressToBook()}
 
                     {this.state.isValidAddress && this.renderBasicFields()}
 

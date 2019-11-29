@@ -1,5 +1,5 @@
 import { IAction } from '../types';
-import { IContactsState, IContactState } from './state';
+import { IContactsState } from './state';
 import { CONTACT_ADD, CONTACT_DELETE, CONTACT_UPDATE_NAME } from './actions';
 
 const intialState: IContactsState = {};
@@ -9,27 +9,21 @@ export default (state: IContactsState = intialState, action: IAction) => {
         case CONTACT_ADD:
             return {
                 ...state,
-                [action.data.address]: action.data
+                [`${action.data.blockchain}|${action.data.address}`]: action.data
             };
 
         case CONTACT_DELETE:
-            return Object.keys(state)
-                .filter(key => key !== action.data.address)
-                .reduce((result, current) => {
-                    result[current] = state[current];
-                    return result;
-                }, {});
+            delete state[`${action.data.blockchain}|${action.data.address}`];
+            return { ...state };
 
         case CONTACT_UPDATE_NAME:
-            return Object.values(state)
-                .map((c: IContactState) => c)
-                .reduce((final = {}, contact) => {
-                    if (contact.address === action.data.address) {
-                        contact = action.data;
-                    }
-                    final[contact.address] = contact;
-                    return final;
-                }, {});
+            return {
+                ...state,
+                [`${action.data.blockchain}|${action.data.address}`]: {
+                    ...state[`${action.data.blockchain}|${action.data.address}`],
+                    name: action.data.name
+                }
+            };
 
         default:
             break;

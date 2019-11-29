@@ -18,6 +18,7 @@ import { formatAddress } from '../../core/utils/format-address';
 import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -49,6 +50,7 @@ export const AccountsScreenComponent = (
         IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     const [accounts, setAccounts] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const selectedAccounts = props.wallet.accounts.reduce((out: any, account: IAccountState) => {
         if (account.blockchain === props.blockchain) {
@@ -93,6 +95,8 @@ export const AccountsScreenComponent = (
                         })
                     );
                 });
+
+                setIsLoading(false);
             } catch (e) {
                 // console.log(e);
             }
@@ -101,41 +105,49 @@ export const AccountsScreenComponent = (
 
     return (
         <View style={props.styles.container}>
-            {accounts.map((account: IAccountState, i: number) => {
-                const selected = selectedAccounts.indexOf(account.address) !== -1;
-                const label = (
-                    <View>
-                        <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-                            <Amount
-                                amount={account.balance?.value}
-                                blockchain={account.blockchain}
-                            />
-                            <Amount
-                                style={{ fontSize: 12, marginLeft: 8 }}
-                                amount={account.balance?.value}
-                                blockchain={account.blockchain}
-                                convert
-                            />
+            {isLoading ? (
+                <LoadingIndicator />
+            ) : (
+                accounts.map((account: IAccountState, i: number) => {
+                    const selected = selectedAccounts.indexOf(account.address) !== -1;
+                    const label = (
+                        <View>
+                            <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                                <Amount
+                                    amount={account.balance?.value}
+                                    blockchain={account.blockchain}
+                                />
+                                <Amount
+                                    style={{ fontSize: 12, marginLeft: 8 }}
+                                    amount={account.balance?.value}
+                                    blockchain={account.blockchain}
+                                    convert
+                                />
+                            </View>
+                            <Text small>{formatAddress(account.address)}</Text>
                         </View>
-                        <Text small>{formatAddress(account.address)}</Text>
-                    </View>
-                );
-                return (
-                    <ListCard
-                        key={i}
-                        leftIcon="money-wallet-1"
-                        rightIcon={selected ? 'check-2-thicked' : 'check-2'}
-                        label={label}
-                        selected={selected}
-                        onPress={() => {
-                            selected
-                                ? selectedAccounts.length > 1 &&
-                                  props.removeAccount(props.wallet.id, props.blockchain, account)
-                                : props.addAccount(props.wallet.id, props.blockchain, account);
-                        }}
-                    />
-                );
-            })}
+                    );
+                    return (
+                        <ListCard
+                            key={i}
+                            leftIcon="money-wallet-1"
+                            rightIcon={selected ? 'check-2-thicked' : 'check-2'}
+                            label={label}
+                            selected={selected}
+                            onPress={() => {
+                                selected
+                                    ? selectedAccounts.length > 1 &&
+                                      props.removeAccount(
+                                          props.wallet.id,
+                                          props.blockchain,
+                                          account
+                                      )
+                                    : props.addAccount(props.wallet.id, props.blockchain, account);
+                            }}
+                        />
+                    );
+                })
+            )}
         </View>
     );
 };

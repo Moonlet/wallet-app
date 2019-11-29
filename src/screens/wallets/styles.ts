@@ -6,7 +6,8 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             padding: BASE_DIMENSION * 2,
-            ...StyleSheet.absoluteFillObject
+            ...StyleSheet.absoluteFillObject,
+            backgroundColor: theme.colors.appBackground
         },
 
         walletList: {

@@ -8,6 +8,6 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             justifyContent: 'space-between',
             backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            height: '100%'
         }
     });

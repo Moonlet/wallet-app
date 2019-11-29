@@ -10,7 +10,7 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             justifyContent: 'flex-start',
             backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            height: '100%'
         },
 
         buttonsContainer: {

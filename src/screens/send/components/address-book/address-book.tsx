@@ -34,10 +34,6 @@ export interface IExternalProps {
     onContactSelected: (contact: IContactState) => void;
 }
 
-interface IState {
-    openedSwipeIndex: string;
-}
-
 export const mapStateToProps = (state: IReduxState, ownprops: IExternalProps) => {
     return {
         contacts: selectContacts(state, ownprops.blockchain)
@@ -50,24 +46,10 @@ const mapDispatchToProps = {
 };
 
 export class AddressBookComponent extends React.Component<
-    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
+    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    public walletSwipableRef: any[] = new Array();
-
-    constructor(
-        props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
-    ) {
-        super(props);
-        this.state = {
-            openedSwipeIndex: null
-        };
-    }
-
-    public closeCurrentOpenedSwipable() {
-        this.walletSwipableRef[this.state.openedSwipeIndex] &&
-            this.walletSwipableRef[this.state.openedSwipeIndex].close();
-    }
+    public walletSwipeableRef: ReadonlyArray<string> = new Array();
+    public currentlyOpenSwipeable: string = null;
 
     public onPressUpdate(contact: IContactState) {
         const title = translate('Send.alertEditTitle');
@@ -89,7 +71,6 @@ export class AddressBookComponent extends React.Component<
                             blockchain: contact.blockchain,
                             name: inputValue
                         };
-                        this.closeCurrentOpenedSwipable();
                         this.props.updateContactName(data);
                     }
                 },
@@ -99,6 +80,11 @@ export class AddressBookComponent extends React.Component<
         const type = 'plain-text';
 
         Alert.prompt(title, message, buttons, type);
+    }
+
+    public closeCurrentOpenedSwipable() {
+        this.walletSwipeableRef[this.currentlyOpenSwipeable] &&
+            this.walletSwipeableRef[this.currentlyOpenSwipeable].close();
     }
 
     public renderLeftActions = (contact: IContactState) => {
@@ -116,7 +102,13 @@ export class AddressBookComponent extends React.Component<
                     <Text style={styles.textActionNegative}>{translate('Send.deleteContact')}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.action} onPress={() => this.onPressUpdate(contact)}>
+                <TouchableOpacity
+                    style={styles.action}
+                    onPress={() => {
+                        this.onPressUpdate(contact);
+                        this.closeCurrentOpenedSwipable();
+                    }}
+                >
                     <Icon name="pencil" size={28} style={styles.iconActionPositive} />
                     <Text style={styles.textActionPositive}>
                         {translate('Send.editContactName')}
@@ -126,26 +118,27 @@ export class AddressBookComponent extends React.Component<
         );
     };
 
+    public onSwipeableWillOpen(index: string) {
+        if (
+            index !== this.currentlyOpenSwipeable &&
+            this.walletSwipeableRef[this.currentlyOpenSwipeable]
+        ) {
+            this.closeCurrentOpenedSwipable();
+        }
+
+        this.currentlyOpenSwipeable = index;
+    }
+
     public renderContact(contact: IContactState) {
         const styles = this.props.styles;
-        const index = contact.address;
+        const index = `${contact.blockchain}|${contact.address}`;
 
         return (
             <Swipeable
                 key={index}
-                ref={ref => {
-                    this.walletSwipableRef[index] = ref;
-                }}
+                ref={ref => (this.walletSwipeableRef[index] = ref)}
                 renderLeftActions={() => this.renderLeftActions(contact)}
-                onSwipeableWillOpen={() => {
-                    if (
-                        index !== this.state.openedSwipeIndex &&
-                        this.walletSwipableRef[this.state.openedSwipeIndex]
-                    ) {
-                        this.closeCurrentOpenedSwipable();
-                    }
-                    this.setState({ openedSwipeIndex: index });
-                }}
+                onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
             >
                 <TouchableOpacity
                     style={styles.rowContainer}

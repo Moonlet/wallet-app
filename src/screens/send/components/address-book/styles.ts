@@ -31,7 +31,7 @@ export default (theme: ITheme) =>
             lineHeight: 28,
             textAlign: 'center',
             letterSpacing: 0.35,
-            opacity: 0.37,
+            opacity: 0.4,
             color: theme.colors.text,
             marginBottom: BASE_DIMENSION
         },
@@ -39,9 +39,9 @@ export default (theme: ITheme) =>
             fontSize: 17,
             lineHeight: 22,
             textAlign: 'center',
-            opacity: 0.37,
+            opacity: 0.3,
             paddingHorizontal: BASE_DIMENSION * 2,
-            color: '#E6E4EA' // theme.colors.primary
+            color: theme.colors.text
         },
 
         rowContainer: {

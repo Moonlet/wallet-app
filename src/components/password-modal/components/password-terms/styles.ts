@@ -1,14 +1,15 @@
 import { StyleSheet } from 'react-native';
-import { ITheme } from '../../core/theme/itheme';
+import { ITheme } from '../../../../core/theme/itheme';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             paddingHorizontal: 16,
+            paddingTop: 40,
+            flex: 1,
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            backgroundColor: theme.colors.appBackground
         },
 
         topContainer: {
@@ -31,26 +32,20 @@ export default (theme: ITheme) =>
             marginTop: 40
         },
 
+        confirmTextContainer: {
+            flexDirection: 'row'
+        },
+        textStyle: {
+            textAlign: 'center',
+            marginTop: 60
+        },
+        imageStyle: {
+            alignItems: 'center',
+            alignSelf: 'stretch',
+            marginTop: 40
+        },
         icon: {
             color: theme.colors.accent,
-            padding: 4
-        },
-
-        input: {
-            flex: 1,
-            color: theme.colors.text
-        },
-
-        inputBox: {
-            height: 40,
-            borderRadius: 6,
-            borderColor: 'gray',
-            alignSelf: 'stretch',
-            backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: 12,
-            marginTop: 40,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
+            paddingRight: 8
         }
     });

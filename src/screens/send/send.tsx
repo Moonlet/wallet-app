@@ -32,6 +32,7 @@ import { HeaderLeftClose } from '../../components/header-left-close/header-left-
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
 import bind from 'bind-decorator';
+import { PasswordModal } from '../../components/password-modal/password-modal';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -78,6 +79,7 @@ export class SendScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public qrCodeScanner: any;
+    public passwordModal = null;
 
     constructor(props: INavigationProps<INavigationParams> & IProps & IReduxProps) {
         super(props);
@@ -95,13 +97,16 @@ export class SendScreenComponent extends React.Component<
     }
 
     public confirmPayment = async () => {
-        this.props.sendTransferTransaction(
-            this.props.account,
-            this.state.toAddress,
-            this.state.amount,
-            this.state.feeOptions
-        );
-        this.props.navigation.goBack();
+        this.passwordModal.requestPassword().then(password => {
+            this.props.sendTransferTransaction(
+                this.props.account,
+                this.state.toAddress,
+                this.state.amount,
+                this.state.feeOptions,
+                password
+            );
+            this.props.navigation.goBack();
+        });
     };
 
     public onPressQrCodeIcon = async () => {
@@ -341,6 +346,7 @@ export class SendScreenComponent extends React.Component<
                         />
                     </KeyboardAvoidingView>
                 </ScrollView>
+                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>
         );
     }

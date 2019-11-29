@@ -67,21 +67,23 @@ export const translation: ITranslations = {
             gasPrice: 'Gas price',
             gasLimit: 'Gas limit'
         },
-        SetPassword: {
-            body:
-                '10 or more characters long, at least 1 number, 1 lowercase character and UPPERCASE character.',
-            password: 'password',
-            confirmPassword: 'confirm password',
-            errors: {
-                passwordsDontMatch: 'Passwords dont match',
-                invalidPassword: 'Invalid password'
-            }
-        },
-        SetPasswordConfirm: {
-            body: 'You need to setup a password to secure your wallet.',
-            checkboxLabel:
+        Password: {
+            setupPinTitle: 'Setup PIN code',
+            setupPinSubtitle: 'Please enter your new PIN code',
+            verifyPinTitle: 'Verify PIN code',
+            verifyPinSubtitle: 'Please re-enter your new PIN code',
+            pinTitleUnlock: 'Enter PIN code',
+            pinSubtitleUnlock: 'Your PIN is required to unlock Moonlet',
+            invalidPassword: 'Invalid Password',
+            genericError: 'Operation could not be completed',
+            subtitleMnemonic: 'Your PIN is required to view mnemonic',
+            subtitleDeleteWallet: 'Your PIN is required to delete wallet',
+            dontMatch: "PIN code doesn't match",
+            termsBody: 'You need to setup a password to secure your wallet.',
+            termsCheckboxLabel:
                 'Do not lose this password. Moonlet will not be able to reset it for you.'
         },
+
         Send: {
             inputAddress: 'Search public addresses or domain names',
             amount: 'Amount',
@@ -109,9 +111,6 @@ export const translation: ITranslations = {
             editName: 'Edit name',
             confirmDelete:
                 'Make sure you have saved securely your recovery phrase before deleting it',
-            deletePasswordRequest: 'Please type your password to delete your wallet.',
-            unveilPasswordRequest: 'Please type your password to unveil your recovery phrase.',
-            invalidPassword: 'Invalid Password',
             viewPhrase: 'View phrase',
             secureWallet: 'Secure wallet'
         },

@@ -1,14 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`creat wallet terms screen component creates wallet and navigates to dashboard 1`] = `
-Array [
-  Array [
-    "panic club above clarify orbit resist illegal feel bus remember aspect field test bubble dog trap awesome hand room rice heavy idle faint salmon",
-    [Function],
-  ],
-]
-`;
-
 exports[`creat wallet terms screen component fills first input corectly 1`] = `ShallowWrapper {}`;
 
 exports[`creat wallet terms screen component marks errors 1`] = `ShallowWrapper {}`;
@@ -192,6 +183,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       </withTheme(ButtonComponent)>
     </View>
   </View>
+  <withTheme(PasswordModalComponent) subtitle=\\"Your PIN is required to view mnemonic\\" obRef={[Function: obRef]} />
 </View>"
 `;
 

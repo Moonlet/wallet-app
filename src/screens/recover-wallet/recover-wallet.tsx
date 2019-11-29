@@ -21,6 +21,7 @@ import { TOS_VERSION } from '../../core/constants/app';
 import { ITheme } from '../../core/theme/itheme';
 import { createHDWallet } from '../../redux/wallets/actions';
 import { Mnemonic } from '../../core/wallet/hd-wallet/mnemonic';
+import { PasswordModal } from '../../components/password-modal/password-modal';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -38,7 +39,7 @@ interface IState {
 
 export interface IReduxProps {
     tosVersion: number;
-    createHDWallet: (mnemonic: string, callback: () => any) => void;
+    createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -62,6 +63,7 @@ export const navigationOptions = ({ navigation }: any) => ({
 
 export class RecoverWalletScreenComponent extends React.Component<IProps & IReduxProps, IState> {
     public static navigationOptions = navigationOptions;
+    public passwordModal = null;
     public suggestionsScrollView: any;
     public inputView: any = [];
     public keyboardDidShowListener = null;
@@ -192,19 +194,30 @@ export class RecoverWalletScreenComponent extends React.Component<IProps & IRedu
                                     return;
                                 }
 
-                                props.createHDWallet(this.state.mnemonic.join(' '), () =>
-                                    props.navigation.navigate(
-                                        'MainNavigation',
-                                        {},
-                                        NavigationActions.navigate({ routeName: 'Dashboard' })
-                                    )
-                                );
+                                this.passwordModal.requestPassword().then(password => {
+                                    props.createHDWallet(
+                                        this.state.mnemonic.join(' '),
+                                        password,
+                                        () =>
+                                            props.navigation.navigate(
+                                                'MainNavigation',
+                                                {},
+                                                NavigationActions.navigate({
+                                                    routeName: 'Dashboard'
+                                                })
+                                            )
+                                    );
+                                });
                             }}
                         >
                             {translate('App.labels.confirm')}
                         </Button>
                     </View>
                 </View>
+                <PasswordModal
+                    subtitle={translate('Password.subtitleMnemonic')}
+                    obRef={ref => (this.passwordModal = ref)}
+                />
             </View>
         );
     }

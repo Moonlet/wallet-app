@@ -8,7 +8,7 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             justifyContent: 'space-between',
             backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            flex: 1
         },
 
         topContainer: {

@@ -17,6 +17,7 @@ import { selectCurrentWallet } from './selectors';
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
 export const WALLET_DELETE = 'WALLET_DELETE';
+export const WALLET_CHANGE_NAME = 'WALLET_CHANGE_NAME';
 export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
@@ -230,4 +231,11 @@ export const deleteWallet = walletId => (
     });
 
     deleteFromStorage(walletId);
+};
+
+export const updateWAlletName = (walletData: IWalletState) => {
+    return {
+        type: WALLET_CHANGE_NAME,
+        data: walletData
+    };
 };

@@ -14,6 +14,7 @@ import { TabSelect, Text, Button } from '../../library';
 import { WalletType } from '../../core/wallet/types';
 import { IWalletState } from '../../redux/wallets/state';
 import Icon from '../../components/icon';
+import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 
 import { translate } from '../../core/i18n';
 import { appSwitchWallet } from '../../redux/app/actions';
@@ -21,13 +22,9 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import stylesProvider from './styles';
-import { deleteWallet } from '../../redux/wallets/actions';
+import { deleteWallet, updateWAlletName } from '../../redux/wallets/actions';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { ListCard } from '../../components/list-card/list-card';
-
-export interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-}
 
 export interface IReduxProps {
     wallets: {
@@ -38,11 +35,12 @@ export interface IReduxProps {
     appSwitchWallet: typeof appSwitchWallet;
     deleteWallet: typeof deleteWallet;
     walletsNr: number;
+    updateWAlletName: typeof updateWAlletName;
 }
 
 interface IState {
     selectedTab: WalletType;
-    openedSwipeIndex: number;
+    // openedSwipeIndex: number;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -61,7 +59,8 @@ const mapStateToProps = (state: IReduxState) => {
 
 const mapDispatchToProps = {
     appSwitchWallet,
-    deleteWallet
+    deleteWallet,
+    updateWAlletName
 };
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -70,21 +69,23 @@ const navigationOptions = ({ navigation }: any) => ({
 });
 
 export class WalletsScreenComponent extends React.Component<
-    IProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps,
+    INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps,
     IState
 > {
     public static navigationOptions = navigationOptions;
     public passwordModal = null;
     public passwordModalRef: any;
-    // public walletSwipableRef: RefObject<typeof Swipeable>[] = new Array();
-    public walletSwipableRef: any[] = new Array();
 
-    constructor(props) {
+    public walletSwipeableRef: ReadonlyArray<string> = new Array();
+    public currentlyOpenSwipeable: string = null;
+
+    constructor(
+        props: INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps
+    ) {
         super(props);
 
         this.state = {
-            selectedTab: WalletType.HD,
-            openedSwipeIndex: -1
+            selectedTab: WalletType.HD
         };
     }
 
@@ -164,6 +165,7 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     public onPressEdit(wallet: any) {
+        // TODO
         throw new Error('Method not implemented.');
     }
 
@@ -213,8 +215,19 @@ export class WalletsScreenComponent extends React.Component<
     };
 
     public closeCurrentOpenedSwipable() {
-        this.walletSwipableRef[this.state.openedSwipeIndex] &&
-            this.walletSwipableRef[this.state.openedSwipeIndex].close();
+        this.walletSwipeableRef[this.currentlyOpenSwipeable] &&
+            this.walletSwipeableRef[this.currentlyOpenSwipeable].close();
+    }
+
+    public onSwipeableWillOpen(index: string) {
+        if (
+            index !== this.currentlyOpenSwipeable &&
+            this.walletSwipeableRef[this.currentlyOpenSwipeable]
+        ) {
+            this.closeCurrentOpenedSwipable();
+        }
+
+        this.currentlyOpenSwipeable = index;
     }
 
     public render() {
@@ -235,25 +248,15 @@ export class WalletsScreenComponent extends React.Component<
                     selected={this.state.selectedTab}
                 />
                 <ScrollView style={styles.walletList}>
-                    {this.props.wallets[this.state.selectedTab].map((wallet, i) => {
+                    {this.props.wallets[this.state.selectedTab].map(wallet => {
+                        const index = wallet.id;
+
                         return (
                             <Swipeable
-                                ref={ref => {
-                                    this.walletSwipableRef[i] = ref;
-                                }}
+                                key={index}
+                                ref={ref => (this.walletSwipeableRef[index] = ref)}
                                 renderLeftActions={() => this.renderLeftActions(wallet)}
-                                onSwipeableWillOpen={() => {
-                                    if (
-                                        i !== this.state.openedSwipeIndex &&
-                                        this.walletSwipableRef[this.state.openedSwipeIndex]
-                                    ) {
-                                        this.walletSwipableRef[this.state.openedSwipeIndex].close();
-                                    }
-                                    this.setState({
-                                        openedSwipeIndex: i
-                                    });
-                                }}
-                                key={i}
+                                onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
                             >
                                 <ListCard
                                     onPress={() => this.onSelectWallet(wallet.id)}
@@ -315,5 +318,6 @@ export class WalletsScreenComponent extends React.Component<
 
 export const WalletsScreen = smartConnect(WalletsScreenComponent, [
     connect(mapStateToProps, mapDispatchToProps),
-    withTheme(stylesProvider)
+    withTheme(stylesProvider),
+    withNavigationParams()
 ]);

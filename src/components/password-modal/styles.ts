@@ -8,7 +8,7 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             justifyContent: 'space-between',
             backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            flex: 1
         },
 
         topContainer: {
@@ -55,11 +55,5 @@ export default (theme: ITheme) =>
         errorMessage: {
             textAlign: 'center',
             width: '100%'
-        },
-        loading: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: theme.colors.inputBackground
         }
     });

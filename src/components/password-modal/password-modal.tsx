@@ -24,6 +24,7 @@ interface IState {
     showTerms: boolean;
     createPass: boolean;
     verifyPass: boolean;
+    updatePinProps: boolean;
 }
 
 export class PasswordModalComponent extends React.Component<
@@ -36,11 +37,12 @@ export class PasswordModalComponent extends React.Component<
 
         this.state = {
             visible: false,
-            title: props.title ? props.title : translate('Password.pinTitleUnlock'),
-            subtitle: props.subtitle ? props.subtitle : translate('Password.pinSubtitleUnlock'),
+            title: props.title || translate('Password.pinTitleUnlock'),
+            subtitle: props.subtitle || translate('Password.pinSubtitleUnlock'),
             showTerms: false,
             createPass: false,
-            verifyPass: false
+            verifyPass: false,
+            updatePinProps: false
         };
         props.obRef && props.obRef(this);
     }
@@ -49,15 +51,17 @@ export class PasswordModalComponent extends React.Component<
         this.passwordRequestDeferred = new Deferred();
 
         this.setState({ visible: true });
-        const keychainPassword = await getPassword();
-        if (keychainPassword) {
-            this.setState({
-                showTerms: false
-            });
-        } else {
-            this.setState({
-                showTerms: true
-            });
+        if (this.props.shouldCreatePassword) {
+            const keychainPassword = await getPassword();
+            if (keychainPassword) {
+                this.setState({
+                    showTerms: false
+                });
+            } else {
+                this.setState({
+                    showTerms: true
+                });
+            }
         }
 
         return this.passwordRequestDeferred.promise;
@@ -69,6 +73,7 @@ export class PasswordModalComponent extends React.Component<
             this.setState({
                 createPass: false,
                 verifyPass: true,
+                updatePinProps: true,
                 title: translate('Password.verifyPinTitle'),
                 subtitle: translate('Password.verifyPinSubtitle')
             });
@@ -80,11 +85,11 @@ export class PasswordModalComponent extends React.Component<
             this.setState({
                 visible: false
             });
-            return value;
+            return;
         }
 
         const verifyPassword = await this.verifyPassword(value);
-        if (verifyPassword.pass) {
+        if (verifyPassword.valid) {
             this.passwordRequestDeferred && this.passwordRequestDeferred.resolve(value);
             this.setState({
                 visible: false
@@ -100,6 +105,7 @@ export class PasswordModalComponent extends React.Component<
             showTerms: false,
             createPass: true,
             verifyPass: false,
+            updatePinProps: false,
             subtitle: translate('Password.setupPinSubtitle'),
             title: translate('Password.setupPinTitle')
         });
@@ -117,6 +123,7 @@ export class PasswordModalComponent extends React.Component<
                     <PasswordTerms onAcknowledged={this.onAcknowledged} />
                 ) : (
                     <PasswordPin
+                        updatePinProps={this.state.updatePinProps}
                         title={this.state.title}
                         subtitle={this.state.subtitle}
                         onPasswordEntered={this.onPasswordEntered}
@@ -126,20 +133,20 @@ export class PasswordModalComponent extends React.Component<
         );
     }
 
-    private async verifyPassword(value): Promise<{ pass: string; errorMessage: string }> {
+    private async verifyPassword(value): Promise<{ valid: boolean; errorMessage: string }> {
         try {
             const passwordCredentials = await getPassword();
             if (passwordCredentials) {
                 if (value === passwordCredentials.password) {
-                    return { pass: value, errorMessage: '' };
+                    return { valid: true, errorMessage: '' };
                 } else {
-                    return { pass: null, errorMessage: translate('Password.invalidPassword') };
+                    return { valid: false, errorMessage: translate('Password.invalidPassword') };
                 }
             } else {
-                return { pass: null, errorMessage: translate('Password.genericError') };
+                return { valid: false, errorMessage: translate('Password.genericError') };
             }
         } catch {
-            return { pass: null, errorMessage: translate('Password.genericError') };
+            return { valid: false, errorMessage: translate('Password.genericError') };
         }
     }
 }

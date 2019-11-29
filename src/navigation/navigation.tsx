@@ -25,8 +25,6 @@ import { SendScreen } from '../screens/send/send';
 import { TosScreen } from '../screens/tos/tos';
 import { PrivacyPolicyScreen } from '../screens/privacy-policy/privacy-policy';
 import { CreateWalletConfirmMnemonicScreen } from '../screens/create-wallet-confirm-mnemonic/create-wallet-confirm-mnemonic';
-import { SetPasswordConfirmScreen } from '../screens/set-password-confirm/set-password-confirm';
-import { SetPasswordScreen } from '../screens/set-password/set-password';
 import { Animated } from 'react-native';
 import { RecoverWalletScreen } from '../screens/recover-wallet/recover-wallet';
 import { WalletsScreen } from '../screens/wallets/wallets';
@@ -218,12 +216,6 @@ export const CreateWalletNavigation = createStackNavigator(
         },
         CreateWalletConfirmMnemonic: {
             screen: CreateWalletConfirmMnemonicScreen
-        },
-        SetPasswordConfirm: {
-            screen: SetPasswordConfirmScreen
-        },
-        SetPassword: {
-            screen: SetPasswordScreen
         },
         RecoverWallet: {
             screen: RecoverWalletScreen

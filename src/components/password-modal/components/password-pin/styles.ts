@@ -6,8 +6,8 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             justifyContent: 'flex-start',
-            backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            flex: 1,
+            backgroundColor: theme.colors.appBackground
         },
         logoImage: {
             position: 'absolute',
@@ -91,21 +91,19 @@ export default (theme: ITheme) =>
             height: '100%',
             width: 1
         },
-        unchecked: {
+        pinInput: {
             width: 20,
             height: 20,
             borderRadius: 10,
-            borderColor: 'white',
-            borderWidth: 1,
             marginLeft: 10,
             marginRight: 10
         },
+        unchecked: {
+            borderColor: 'white',
+            borderWidth: 1
+        },
         checked: {
-            width: 20,
-            height: 20,
             backgroundColor: theme.colors.accent,
-            borderRadius: 10,
-            marginLeft: 10,
-            marginRight: 10
+            borderRadius: 10
         }
     });

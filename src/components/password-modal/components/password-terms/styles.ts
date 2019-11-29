@@ -5,10 +5,11 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             paddingHorizontal: 16,
+            paddingTop: 40,
+            flex: 1,
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            backgroundColor: theme.colors.appBackground
         },
 
         topContainer: {
@@ -34,7 +35,15 @@ export default (theme: ITheme) =>
         confirmTextContainer: {
             flexDirection: 'row'
         },
-
+        textStyle: {
+            textAlign: 'center',
+            marginTop: 60
+        },
+        imageStyle: {
+            alignItems: 'center',
+            alignSelf: 'stretch',
+            marginTop: 40
+        },
         icon: {
             color: theme.colors.accent,
             paddingRight: 8

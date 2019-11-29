@@ -78,22 +78,12 @@ export const translation: ITranslations = {
             genericError: 'Operation could not be completed',
             subtitleMnemonic: 'Your PIN is required to view mnemonic',
             subtitleDeleteWallet: 'Your PIN is required to delete wallet',
-            dontMatch: "PIN code doesn't match"
-        },
-        SetPassword: {
-            body:
-                '10 or more characters long, at least 1 number, 1 lowercase character and UPPERCASE character.',
-            password: 'password',
-            confirmPassword: 'confirm password',
-            errors: {
-                passwordsDontMatch: 'Passwords dont match'
-            }
-        },
-        SetPasswordConfirm: {
-            body: 'You need to setup a password to secure your wallet.',
-            checkboxLabel:
+            dontMatch: "PIN code doesn't match",
+            termsBody: 'You need to setup a password to secure your wallet.',
+            termsCheckboxLabel:
                 'Do not lose this password. Moonlet will not be able to reset it for you.'
         },
+
         Send: {
             inputAddress: 'Search public addresses or domain names',
             amount: 'Amount',

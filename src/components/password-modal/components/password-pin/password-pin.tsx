@@ -12,13 +12,12 @@ import LinearGradient from 'react-native-linear-gradient';
 export interface IExternalProps {
     title: string;
     subtitle: string;
-    onPasswordEntered: (value: string) => any;
+    updatePinProps: boolean;
+    onPasswordEntered: (value: string) => Promise<string>;
 }
 
 interface IState {
     password: string;
-    title: string;
-    subtitle: string;
     errorMessage: string;
     passToVerify: string;
 }
@@ -36,11 +35,9 @@ export class PasswordPinComponent extends React.Component<
     IState
 > {
     public static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.title !== prevState.title) {
+        if (nextProps.updatePinProps === true) {
             return {
                 password: '',
-                title: nextProps.title,
-                subtitle: nextProps.subtitle,
                 errorMessage: '',
                 passToVerify: prevState.password // save the password to compare it
             };
@@ -48,9 +45,7 @@ export class PasswordPinComponent extends React.Component<
             return null;
         }
     }
-    public onReject: any;
-    public onConfirm: any;
-    private shakeAnimation: any;
+    private shakeAnimation: Animated.Value;
 
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
@@ -58,8 +53,6 @@ export class PasswordPinComponent extends React.Component<
         this.state = {
             password: '',
             errorMessage: '',
-            title: props.title,
-            subtitle: props.subtitle,
             passToVerify: ''
         };
         this.shakeAnimation = new Animated.Value(0);
@@ -98,7 +91,7 @@ export class PasswordPinComponent extends React.Component<
                 errorMessage: ''
             });
         }
-        if (this.state.password.length < 6) {
+        if (this.state.password.length < PASSWORD_LENGTH) {
             this.setState({ password: this.state.password.concat(digit) }, () => {
                 if (this.state.password.length === PASSWORD_LENGTH) {
                     this.onEnterPassword();
@@ -151,11 +144,12 @@ export class PasswordPinComponent extends React.Component<
                 {[...Array(PASSWORD_LENGTH)].map((c, index) => (
                     <View
                         key={index}
-                        style={
+                        style={[
+                            styles.pinInput,
                             this.state.password.charAt(index) === ''
                                 ? styles.unchecked
                                 : styles.checked
-                        }
+                        ]}
                     />
                 ))}
             </Animated.View>
@@ -258,8 +252,8 @@ export class PasswordPinComponent extends React.Component<
                     source={require('../../../../assets/images/png/moonlet_space_gray.png')}
                 />
                 <View style={styles.headerContainer}>
-                    <Text style={styles.title}>{this.state.title}</Text>
-                    <Text style={styles.subTitle}>{this.state.subtitle}</Text>
+                    <Text style={styles.title}>{this.props.title}</Text>
+                    <Text style={styles.subTitle}>{this.props.subtitle}</Text>
                     {this.renderInputDots()}
 
                     <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>

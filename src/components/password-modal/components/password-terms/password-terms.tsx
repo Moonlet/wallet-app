@@ -19,16 +19,10 @@ export const PasswordTermsComponent = (
     return (
         <View style={props.styles.container}>
             <View style={props.styles.topContainer}>
-                <Text darker style={{ textAlign: 'center', marginTop: 60 }}>
-                    {translate('SetPasswordConfirm.body')}
+                <Text darker style={props.styles.textStyle}>
+                    {translate('Password.termsBody')}
                 </Text>
-                <View
-                    style={{
-                        alignItems: 'center',
-                        alignSelf: 'stretch',
-                        marginTop: 40
-                    }}
-                >
+                <View style={props.styles.imageStyle}>
                     <Image source={require('../../../../assets/images/png/shield.png')} />
                 </View>
             </View>
@@ -39,7 +33,7 @@ export const PasswordTermsComponent = (
                             setAcknowledged(!acknowledged);
                         }}
                         checked={acknowledged}
-                        text={translate('SetPasswordConfirm.checkboxLabel')}
+                        text={translate('Password.termsCheckboxLabel')}
                     />
                 </View>
                 <Button

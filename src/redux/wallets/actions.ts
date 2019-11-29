@@ -233,9 +233,9 @@ export const deleteWallet = walletId => (
     deleteFromStorage(walletId);
 };
 
-export const updateWAlletName = (walletData: IWalletState) => {
+export const updateWAlletName = (walletId: string, newName: string) => {
     return {
         type: WALLET_CHANGE_NAME,
-        data: walletData
+        data: { walletId, newName }
     };
 };

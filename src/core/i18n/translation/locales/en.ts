@@ -27,6 +27,7 @@ export const translation: ITranslations = {
                 privacyPolicy: 'Privacy policy',
                 receive: 'Receive',
                 recover: 'Recover',
+                save: 'Save',
                 secure: 'Secure',
                 send: 'Send',
                 settings: 'Settings',
@@ -113,7 +114,9 @@ export const translation: ITranslations = {
             unveilPasswordRequest: 'Please type your password to unveil your recovery phrase.',
             invalidPassword: 'Invalid Password',
             viewPhrase: 'View phrase',
-            secureWallet: 'Secure wallet'
+            secureWallet: 'Secure wallet',
+            editTitle: 'Edit wallet name',
+            editDescription: 'Use a relevant name or an alias for this wallet'
         },
         Transaction: {
             transactionID: 'Transaction ID',

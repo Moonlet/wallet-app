@@ -139,7 +139,14 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
             );
 
         case WALLET_CHANGE_NAME:
-            break;
+            return state.map(wallet =>
+                wallet.id === action.data.walletId
+                    ? {
+                          ...wallet,
+                          name: action.data.newName
+                      }
+                    : wallet
+            );
 
         default:
             break;

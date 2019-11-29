@@ -40,7 +40,6 @@ export interface IReduxProps {
 
 interface IState {
     selectedTab: WalletType;
-    // openedSwipeIndex: number;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -165,8 +164,29 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     public onPressEdit(wallet: any) {
-        // TODO
-        throw new Error('Method not implemented.');
+        const title = translate('Wallets.editTitle');
+        const message = translate('Wallets.editDescription');
+        const buttons = [
+            {
+                text: translate('App.labels.cancel'),
+                onPress: () => {
+                    /* console.log('Cancel Pressed')*/
+                },
+                type: 'cancel'
+            },
+            {
+                text: translate('App.labels.save'),
+                onPress: (inputValue: string) => {
+                    if (inputValue !== '') {
+                        this.props.updateWAlletName(wallet.id, inputValue);
+                    }
+                },
+                type: 'default'
+            }
+        ];
+        const type = 'plain-text';
+
+        Alert.prompt(title, message, buttons, type);
     }
 
     public onSelectWallet(walletId: string) {
@@ -204,6 +224,7 @@ export class WalletsScreenComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.action}
                     onPress={() => {
+                        this.closeCurrentOpenedSwipable();
                         this.onPressEdit(wallet);
                     }}
                 >

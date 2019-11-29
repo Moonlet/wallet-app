@@ -5,8 +5,8 @@ import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            flex: 1,
             padding: BASE_DIMENSION * 2,
-            ...StyleSheet.absoluteFillObject,
             backgroundColor: theme.colors.appBackground
         },
 

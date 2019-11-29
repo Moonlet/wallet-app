@@ -1,10 +1,14 @@
+import { SectionListData } from 'react-native';
 import { IReduxState } from '../state';
-import { IContactState, IContactsState } from './state';
+import { IContactsState } from './state';
 import { Blockchain } from '../../core/blockchain/types';
 
 export const getContacts = (state: IReduxState): IContactsState => state.contacts;
 
-export const selectContacts = (state: IReduxState, blockchain: Blockchain): IContactState[] => {
+export const selectContacts = (
+    state: IReduxState,
+    blockchain: Blockchain
+): ReadonlyArray<SectionListData<IContactsState>> => {
     let currentLetter = '';
 
     return Object.values(state.contacts)

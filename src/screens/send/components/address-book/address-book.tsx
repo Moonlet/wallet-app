@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, Image, TouchableOpacity, SafeAreaView, SectionList, Alert } from 'react-native';
+import {
+    View,
+    Image,
+    TouchableOpacity,
+    SafeAreaView,
+    SectionList,
+    SectionListData,
+    Alert
+} from 'react-native';
 import stylesProvider from './styles';
 import { IReduxState } from '../../../../redux/state';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -17,7 +25,7 @@ import { deleteContact, updateContactName } from '../../../../redux/contacts/act
 import { IAccountState } from '../../../../redux/wallets/state';
 
 export interface IReduxProps {
-    contacts: IContactsState[];
+    contacts: ReadonlyArray<SectionListData<IContactsState>>;
     deleteContact: typeof deleteContact;
     updateContactName: typeof updateContactName;
 }
@@ -102,7 +110,7 @@ export class AddressBookComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.action}
                     onPress={() => {
-                        this.props.deleteContact(contact);
+                        this.props.deleteContact(contact.blockchain, contact.address);
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
@@ -136,7 +144,7 @@ export class AddressBookComponent extends React.Component<
                         index !== this.state.openedSwipeIndex &&
                         this.walletSwipableRef[this.state.openedSwipeIndex]
                     ) {
-                        this.walletSwipableRef[this.state.openedSwipeIndex].close();
+                        this.closeCurrentOpenedSwipable();
                     }
                     this.setState({ openedSwipeIndex: index });
                 }}
@@ -185,7 +193,7 @@ export class AddressBookComponent extends React.Component<
             return (
                 <SafeAreaView style={styles.container}>
                     <SectionList
-                        sections={contacts as []}
+                        sections={contacts}
                         keyExtractor={item => `${item.blockchain}|${item.address}`}
                         renderItem={({ item }) => this.renderContact(item)}
                         renderSectionHeader={({ section: { title } }) => (

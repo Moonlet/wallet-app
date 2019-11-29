@@ -22,7 +22,7 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import stylesProvider from './styles';
-import { deleteWallet, updateWAlletName } from '../../redux/wallets/actions';
+import { deleteWallet, updateWalletName } from '../../redux/wallets/actions';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { ListCard } from '../../components/list-card/list-card';
 
@@ -35,7 +35,7 @@ export interface IReduxProps {
     appSwitchWallet: typeof appSwitchWallet;
     deleteWallet: typeof deleteWallet;
     walletsNr: number;
-    updateWAlletName: typeof updateWAlletName;
+    updateWalletName: typeof updateWalletName;
 }
 
 interface IState {
@@ -59,7 +59,7 @@ const mapStateToProps = (state: IReduxState) => {
 const mapDispatchToProps = {
     appSwitchWallet,
     deleteWallet,
-    updateWAlletName
+    updateWalletName
 };
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -178,7 +178,7 @@ export class WalletsScreenComponent extends React.Component<
                 text: translate('App.labels.save'),
                 onPress: (inputValue: string) => {
                     if (inputValue !== '') {
-                        this.props.updateWAlletName(wallet.id, inputValue);
+                        this.props.updateWalletName(wallet.id, inputValue);
                     }
                 },
                 type: 'default'

@@ -233,7 +233,7 @@ export const deleteWallet = walletId => (
     deleteFromStorage(walletId);
 };
 
-export const updateWAlletName = (walletId: string, newName: string) => {
+export const updateWalletName = (walletId: string, newName: string) => {
     return {
         type: WALLET_CHANGE_NAME,
         data: { walletId, newName }

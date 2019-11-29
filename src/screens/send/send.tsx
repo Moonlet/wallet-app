@@ -327,6 +327,24 @@ export class SendScreenComponent extends React.Component<
         );
     }
 
+    public renderListOrBook() {
+        if (this.state.showOwnAccounts) {
+            return (
+                <AccountList
+                    accounts={this.props.accounts}
+                    onAccountSelection={this.onAccountSelection}
+                />
+            );
+        } else {
+            return (
+                <AddressBook
+                    blockchain={this.props.blockchain}
+                    onContactSelected={this.onContactSelected}
+                />
+            );
+        }
+    }
+
     public render() {
         const styles = this.props.styles;
         const theme = this.props.theme;
@@ -395,17 +413,7 @@ export class SendScreenComponent extends React.Component<
 
                     {this.state.isValidAddress && this.renderBasicFields()}
 
-                    {this.state.showOwnAccounts ? (
-                        <AccountList
-                            accounts={this.props.accounts}
-                            onAccountSelection={this.onAccountSelection}
-                        />
-                    ) : (
-                        <AddressBook
-                            blockchain={this.props.blockchain}
-                            onContactSelected={this.onContactSelected}
-                        />
-                    )}
+                    {!this.state.isValidAddress && this.renderListOrBook()}
 
                     {/* </KeyboardAvoidingView> */}
                 </ScrollView>

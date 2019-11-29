@@ -142,6 +142,11 @@ export class SendScreenComponent extends React.Component<
         this.verifyAddress(account.address);
     };
 
+    public onContactSelected = (contact: IContactState) => {
+        this.setState({ toAddress: contact.address, showOwnAccounts: false });
+        this.verifyAddress(contact.address);
+    };
+
     public onFeesChanged = (feeOptions: any) => {
         this.setState({ feeOptions }, () => this.availableFunds());
     };
@@ -398,8 +403,7 @@ export class SendScreenComponent extends React.Component<
                     ) : (
                         <AddressBook
                             blockchain={this.props.blockchain}
-                            accounts={this.props.accounts}
-                            onAccountSelection={this.onAccountSelection}
+                            onContactSelected={this.onContactSelected}
                         />
                     )}
 

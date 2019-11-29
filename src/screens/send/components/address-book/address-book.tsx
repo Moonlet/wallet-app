@@ -22,7 +22,6 @@ import { translate } from '../../../../core/i18n';
 import { Blockchain } from '../../../../core/blockchain/types';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteContact, updateContactName } from '../../../../redux/contacts/actions';
-import { IAccountState } from '../../../../redux/wallets/state';
 
 export interface IReduxProps {
     contacts: ReadonlyArray<SectionListData<IContactsState>>;
@@ -32,8 +31,7 @@ export interface IReduxProps {
 
 export interface IExternalProps {
     blockchain: Blockchain;
-    accounts: IAccountState[];
-    onAccountSelection: (account: IAccountState) => any;
+    onContactSelected: (contact: IContactState) => void;
 }
 
 interface IState {
@@ -151,15 +149,7 @@ export class AddressBookComponent extends React.Component<
             >
                 <TouchableOpacity
                     style={styles.rowContainer}
-                    onPress={() => {
-                        const foundAccount = this.props.accounts.find(
-                            account => account.address === contact.address
-                        );
-
-                        if (foundAccount) {
-                            this.props.onAccountSelection(foundAccount);
-                        }
-                    }}
+                    onPress={() => this.props.onContactSelected(contact)}
                 >
                     <View>
                         <Text style={styles.name}>{contact.name}</Text>

@@ -48,7 +48,7 @@ const mapDispatchToProps = {
 export class AddressBookComponent extends React.Component<
     IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    public walletSwipeableRef: ReadonlyArray<string> = new Array();
+    public contactsSwipeableRef: ReadonlyArray<string> = new Array();
     public currentlyOpenSwipeable: string = null;
 
     public onPressUpdate(contact: IContactState) {
@@ -83,8 +83,8 @@ export class AddressBookComponent extends React.Component<
     }
 
     public closeCurrentOpenedSwipable() {
-        this.walletSwipeableRef[this.currentlyOpenSwipeable] &&
-            this.walletSwipeableRef[this.currentlyOpenSwipeable].close();
+        this.contactsSwipeableRef[this.currentlyOpenSwipeable] &&
+            this.contactsSwipeableRef[this.currentlyOpenSwipeable].close();
     }
 
     public renderLeftActions = (contact: IContactState) => {
@@ -121,7 +121,7 @@ export class AddressBookComponent extends React.Component<
     public onSwipeableWillOpen(index: string) {
         if (
             index !== this.currentlyOpenSwipeable &&
-            this.walletSwipeableRef[this.currentlyOpenSwipeable]
+            this.contactsSwipeableRef[this.currentlyOpenSwipeable]
         ) {
             this.closeCurrentOpenedSwipable();
         }
@@ -136,7 +136,7 @@ export class AddressBookComponent extends React.Component<
         return (
             <Swipeable
                 key={index}
-                ref={ref => (this.walletSwipeableRef[index] = ref)}
+                ref={ref => (this.contactsSwipeableRef[index] = ref)}
                 renderLeftActions={() => this.renderLeftActions(contact)}
                 onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
             >

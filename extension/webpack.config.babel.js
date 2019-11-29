@@ -69,25 +69,22 @@ module.exports = {
         // load any web API polyfills
         // path.resolve(appDirectory, 'polyfills-web.js'),
         // your web-specific entry file
-        'browser-action/bundle.browser-action': path.resolve(appDirectory, 'index.js'),
-        'background/bundle.background': path.resolve(
-            appDirectory,
-            'extension/background/background'
-        )
+        'bundle.browser-action': path.resolve(appDirectory, 'index.web.js'),
+        'bundle.background': path.resolve(appDirectory, 'extension/background/background')
     },
 
     plugins: [
         new HtmlWebpackPlugin({
-            chunks: ['browser-action/bundle.browser-action'],
+            chunks: ['bundle.browser-action'],
             template: './extension/browser-action/index.html',
-            filename: 'browser-action/index.html'
+            filename: 'index.html'
         }),
         new webpack.DefinePlugin({
             __DEV__: false,
             'process.env.VERSION': `"${VERSION}"`
         }),
         new CopyPlugin([
-            { from: './resources', to: './browser-action/resources' },
+            { from: './resources', to: './resources' },
             { from: './extension/icons', to: './icons' }
         ]),
         new WebpackExtensionManifestPlugin({
@@ -124,6 +121,7 @@ module.exports = {
             'react-native$': 'react-native-web',
             'react-native-linear-gradient$': 'react-native-web-linear-gradient',
             '@sentry/react-native$': '@sentry/browser',
+            'lottie-react-native$': 'react-native-web-lottie',
             'react-native-device-info$': path.resolve(
                 __dirname,
                 'modules-mocks/react-native-device-info'

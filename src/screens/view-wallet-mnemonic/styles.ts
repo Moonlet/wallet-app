@@ -7,8 +7,7 @@ export default (theme: ITheme) =>
             paddingHorizontal: 16,
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            backgroundColor: theme.colors.appBackground
         },
 
         topContainer: {

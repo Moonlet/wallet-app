@@ -10,8 +10,7 @@ export default (theme: ITheme) =>
             paddingLeft: BASE_DIMENSION * 2,
             paddingRight: BASE_DIMENSION * 2,
             flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            backgroundColor: theme.colors.appBackground
         },
         rowContainer: {
             flex: 1,

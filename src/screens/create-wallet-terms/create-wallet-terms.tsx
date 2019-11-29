@@ -9,7 +9,6 @@ import { withTheme } from '../../core/theme/with-theme';
 import { Text } from '../../library';
 import { Icon } from '../../components/icon';
 import { translate } from '../../core/i18n';
-import { setPassword } from '../../core/secure/keychain';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { appSetTosVersion } from '../../redux/app/actions';
@@ -71,9 +70,7 @@ export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) =>
                 primary
                 onPress={() => {
                     props.appSetTosVersion(TOS_VERSION);
-                    setPassword('pass').then(() => {
-                        props.navigation.pop();
-                    });
+                    props.navigation.pop();
                 }}
             >
                 {translate('App.labels.accept')}

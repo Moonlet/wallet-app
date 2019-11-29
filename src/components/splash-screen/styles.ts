@@ -5,14 +5,16 @@ import { BASE_DIMENSION } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            ...StyleSheet.absoluteFillObject,
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            height: '100%'
         },
         lottieWrapper: {
             flex: 1,
             marginHorizontal: BASE_DIMENSION * 6
         },
         lottie: {
-            marginBottom: 150
+            ...StyleSheet.absoluteFillObject,
+            height: '100%',
+            top: -150
         }
     });

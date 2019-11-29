@@ -9,8 +9,7 @@ export default (theme: ITheme) =>
             paddingLeft: BASE_DIMENSION * 2,
             paddingRight: BASE_DIMENSION * 2,
             flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            backgroundColor: theme.colors.appBackground
         },
         keyboardAvoidance: {
             flex: 1,
@@ -103,5 +102,10 @@ export default (theme: ITheme) =>
             color: theme.colors.accent,
             lineHeight: 21,
             fontSize: theme.fontSize.small
+        },
+        addressNotInBookText: {
+            fontSize: theme.fontSize.regular,
+            lineHeight: 20,
+            color: theme.colors.accent
         }
     });

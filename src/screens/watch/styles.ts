@@ -6,7 +6,7 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             backgroundColor: theme.colors.appBackground,
-            ...StyleSheet.absoluteFillObject
+            height: '100%'
         },
         textInputArea: {
             flexDirection: 'row',

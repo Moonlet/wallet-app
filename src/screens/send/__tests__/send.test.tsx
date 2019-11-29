@@ -24,7 +24,9 @@ const props: IProps = {
             timestamp: 123,
             value: new BigNumber(12332)
         }
-    }
+    },
+    blockchain: Blockchain.ZILLIQA,
+    contacts: {}
 };
 
 export default describe('SendScreen', () => {

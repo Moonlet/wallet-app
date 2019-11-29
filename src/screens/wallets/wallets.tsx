@@ -73,7 +73,6 @@ export class WalletsScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public passwordModal = null;
-    public passwordModalRef: any;
 
     public walletSwipeableRef: ReadonlyArray<string> = new Array();
     public currentlyOpenSwipeable: string = null;
@@ -149,14 +148,9 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     public onDeleteConfirmed(wallet: IWalletState) {
-        this.passwordModalRef.requestPassword().then(
-            () => {
-                this.props.deleteWallet(wallet.id);
-            },
-            () => {
-                // @ts-ignore
-            }
-        );
+        this.passwordModal.requestPassword().then(() => {
+            this.props.deleteWallet(wallet.id);
+        });
     }
 
     public onPressUnveil(wallet: any) {
@@ -327,10 +321,8 @@ export class WalletsScreenComponent extends React.Component<
                 </View>
 
                 <PasswordModal
-                    buttonLabel={translate('Wallets.deleteWallet')}
-                    infoText={translate('Wallets.deletePasswordRequest')}
-                    visible={false}
-                    obRef={ref => (this.passwordModalRef = ref)}
+                    subtitle={translate('Password.subtitleDeleteWallet')}
+                    obRef={ref => (this.passwordModal = ref)}
                 />
             </View>
         );

@@ -25,7 +25,8 @@ const props: IProps = {
             value: new BigNumber(12332)
         }
     },
-    isContactAlreadySaved: jest.fn()
+    blockchain: Blockchain.ZILLIQA,
+    contacts: {}
 };
 
 export default describe('SendScreen', () => {

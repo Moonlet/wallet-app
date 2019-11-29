@@ -123,7 +123,9 @@ export const translation: ITranslations = {
             confirmDelete:
                 'Make sure you have saved securely your recovery phrase before deleting it',
             viewPhrase: 'View phrase',
-            secureWallet: 'Secure wallet'
+            secureWallet: 'Secure wallet',
+            editTitle: 'Edit wallet name',
+            editDescription: 'Use a relevant name or an alias for this wallet'
         },
         Transaction: {
             transactionID: 'Transaction ID',

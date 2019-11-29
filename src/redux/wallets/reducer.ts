@@ -6,7 +6,8 @@ import {
     ACCOUNT_GET_BALANCE,
     TRANSACTION_PUBLISHED,
     ACCOUNT_ADD,
-    ACCOUNT_REMOVE
+    ACCOUNT_REMOVE,
+    WALLET_CHANGE_NAME
 } from './actions';
 import { TransactionStatus } from '../../core/wallet/types';
 import { REHYDRATE } from 'redux-persist';
@@ -133,6 +134,16 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
                                   account.blockchain === action.data.account.blockchain
                               );
                           })
+                      }
+                    : wallet
+            );
+
+        case WALLET_CHANGE_NAME:
+            return state.map(wallet =>
+                wallet.id === action.data.walletId
+                    ? {
+                          ...wallet,
+                          name: action.data.newName
                       }
                     : wallet
             );

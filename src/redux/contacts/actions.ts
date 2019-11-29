@@ -16,17 +16,15 @@ export const addContact = (contactData: IContactState) => {
     };
 };
 
-export const deleteContact = (contactData: IContactState) => (dispatch: Dispatch<IAction<any>>) => {
-    confirm(translate('Send.deleteContact'), '')
-        .then(() => {
-            dispatch({
-                type: CONTACT_DELETE,
-                data: contactData
-            });
-        })
-        .catch(() => {
-            //
+export const deleteContact = (contactData: IContactState) => async (
+    dispatch: Dispatch<IAction<any>>
+) => {
+    if (await confirm(translate('Send.deleteContact'), '')) {
+        dispatch({
+            type: CONTACT_DELETE,
+            data: contactData
         });
+    }
 };
 
 export const updateContactName = (contactData: IContactState) => {

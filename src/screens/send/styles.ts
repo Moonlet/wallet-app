@@ -103,5 +103,10 @@ export default (theme: ITheme) =>
             color: theme.colors.accent,
             lineHeight: 21,
             fontSize: theme.fontSize.small
+        },
+        addressNotInBookText: {
+            fontSize: theme.fontSize.regular,
+            lineHeight: 20,
+            color: theme.colors.accent
         }
     });

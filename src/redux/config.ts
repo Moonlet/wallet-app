@@ -7,6 +7,7 @@ import walletsReducer from './wallets/reducer';
 import appReducer from './app/reducer';
 import marketReducer from './market/reducer';
 import prefReducer from './preferences/reducer';
+import contactsReducer from './contacts/reducer';
 
 const composeEnhancers = composeWithDevTools({
     // options like actionSanitizer, stateSanitizer
@@ -16,7 +17,8 @@ export const rootReducer = combineReducers({
     app: appReducer,
     wallets: walletsReducer,
     market: marketReducer,
-    preferences: prefReducer
+    preferences: prefReducer,
+    contacts: contactsReducer
 });
 
 const configureStore = () => {

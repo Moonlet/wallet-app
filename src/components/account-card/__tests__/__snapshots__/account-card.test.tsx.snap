@@ -2,17 +2,21 @@
 
 exports[`account card component renders correctly 1`] = `
 "<TouchableOpacity testID=\\"account-card\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-  <Icon name=\\"money-wallet-1\\" size={25} style={{...}} allowFontScaling={false} />
+  <View style={{...}}>
+    <Icon name=\\"money-wallet-1\\" size={24} style={{...}} allowFontScaling={false} />
+  </View>
   <View style={{...}}>
     <View style={{...}}>
-      <Connect(AmountComponent) amount={{...}} blockchain=\\"ZILLIQA\\" />
+      <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" />
       <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" convert={true} />
     </View>
-    <withTheme(TextComponent) small={true}>
-      zil1vs74hw5k21233h432kj321l3k21b
+    <withTheme(TextComponent) style={{...}}>
+      zil1v...3k21b
        
     </withTheme(TextComponent)>
   </View>
-  <Icon name=\\"arrow-right-1\\" size={25} style={{...}} allowFontScaling={false} />
+  <View style={{...}}>
+    <Icon name=\\"arrow-right-1\\" size={24} style={{...}} allowFontScaling={false} />
+  </View>
 </TouchableOpacity>"
 `;

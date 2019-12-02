@@ -19,7 +19,6 @@ export default (theme: ITheme) =>
             flex: 1
         },
         label: {
-            flex: 1,
             fontSize: 18,
             lineHeight: 25,
             fontWeight: '500',

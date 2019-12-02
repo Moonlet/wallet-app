@@ -81,7 +81,8 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         lineHeight: 28,
         opacity: 0.87,
         fontWeight: 'bold',
-        color: themes[theme].colors.text
+        color: themes[theme].colors.text,
+        textAlign: 'center'
     },
     headerLeft:
         navigation.dangerouslyGetParent().state.index > 0 ? (

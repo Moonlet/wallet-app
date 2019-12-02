@@ -4,6 +4,7 @@ import { ITheme } from '../../core/theme/itheme';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            flex: 1,
             paddingTop: 40,
             paddingBottom: 18,
             paddingLeft: 15,

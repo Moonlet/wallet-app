@@ -26,17 +26,12 @@ export interface IReduxProps {
 export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) => (
     <View style={props.styles.container}>
         <View style={props.styles.topContainer}>
-            <Text darker style={{ textAlign: 'center', marginTop: 60 }}>
-                <Text>{translate('CreateWalletTos.body')}</Text>
-            </Text>
-            <View
-                style={{
-                    alignItems: 'center',
-                    alignSelf: 'stretch',
-                    marginTop: 40
-                }}
-            >
-                <Image source={require('../../assets/images/png/document.png')} />
+            <Text style={props.styles.walletTos}>{translate('CreateWalletTos.body')}</Text>
+            <View style={props.styles.docImageContainer}>
+                <Image
+                    resizeMode="contain"
+                    source={require('../../assets/images/png/document.png')}
+                />
             </View>
         </View>
 
@@ -46,10 +41,8 @@ export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) =>
                 style={props.styles.rowContainer}
                 onPress={() => props.navigation.navigate('Tos')}
             >
-                <Text>{translate('App.labels.tos')}</Text>
-                <View style={props.styles.rightContainer}>
-                    <Icon name="arrow-right-1" size={16} style={props.styles.icon} />
-                </View>
+                <Text style={props.styles.text}>{translate('App.labels.tos')}</Text>
+                <Icon name="arrow-right-1" size={16} style={props.styles.icon} />
             </TouchableOpacity>
             <View style={props.styles.divider} />
 
@@ -58,10 +51,8 @@ export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) =>
                 style={props.styles.rowContainer}
                 onPress={() => props.navigation.navigate('PrivacyPolicy')}
             >
-                <Text>{translate('App.labels.privacyPolicy')}</Text>
-                <View style={props.styles.rightContainer}>
-                    <Icon name="arrow-right-1" size={16} style={props.styles.icon} />
-                </View>
+                <Text style={props.styles.text}>{translate('App.labels.privacyPolicy')}</Text>
+                <Icon name="arrow-right-1" size={16} style={props.styles.icon} />
             </TouchableOpacity>
             <View style={props.styles.divider} />
             <Button

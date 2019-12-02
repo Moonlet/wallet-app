@@ -183,7 +183,7 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
 
     public componentDidMount() {
         this.props.wallet?.accounts.map(account => {
-            this.props.getBalance(account.blockchain, 4, account.address, true);
+            this.props.getBalance(account.blockchain, account.address, true);
         });
         this.passwordModal.requestPassword();
     }

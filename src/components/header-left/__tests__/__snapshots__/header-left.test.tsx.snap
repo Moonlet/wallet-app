@@ -2,8 +2,10 @@
 
 exports[`header go back button renders correctly 1`] = `
 "<TouchableOpacity onPress={[Function: mockConstructor]} style={{...}} activeOpacity={0.2}>
-  <Icon name=\\"cog\\" size={20} style={{...}} allowFontScaling={false} />
-  <withTheme(TextComponent)>
+  <View style={{...}}>
+    <Icon name=\\"cog\\" size={24} style={{...}} allowFontScaling={false} />
+  </View>
+  <withTheme(TextComponent) style={{...}}>
     text
   </withTheme(TextComponent)>
 </TouchableOpacity>"

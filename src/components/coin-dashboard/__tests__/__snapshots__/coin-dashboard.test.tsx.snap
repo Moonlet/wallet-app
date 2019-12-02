@@ -9,7 +9,7 @@ exports[`coin dashboard component renders correctly 1`] = `
   </View>
   <View style={{...}}>
     <TouchableOpacity testID=\\"button-manage-accounts\\" onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Icon name=\\"add\\" size={25} style={{...}} allowFontScaling={false} />
+      <Icon name=\\"add\\" size={24} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
   </View>
   <ScrollViewMock style={{...}}>

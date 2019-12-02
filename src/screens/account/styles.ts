@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, ICON_CONTAINER } from '../../styles/dimensions';
+import { BASE_DIMENSION, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -49,7 +49,7 @@ export default (theme: ITheme) =>
             justifyContent: 'flex-start',
             alignItems: 'center',
             flexDirection: 'row',
-            height: ICON_CONTAINER,
+            height: ICON_CONTAINER_SIZE,
             marginBottom: BASE_DIMENSION,
             marginTop: BASE_DIMENSION
         },

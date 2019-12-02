@@ -3,32 +3,26 @@
 exports[`creat wallet terms screen component renders correctly 1`] = `
 "<View style={{...}}>
   <View style={{...}}>
-    <withTheme(TextComponent) darker={true} style={{...}}>
-      <withTheme(TextComponent)>
-        Make sure you review our Privacy policy and Terms of service
-      </withTheme(TextComponent)>
+    <withTheme(TextComponent) style={{...}}>
+      Make sure you review our Privacy policy and Terms of service
     </withTheme(TextComponent)>
     <View style={{...}}>
-      <Image source={{...}} />
+      <Image resizeMode=\\"contain\\" source={{...}} />
     </View>
   </View>
   <View style={{...}}>
     <TouchableOpacity testID=\\"button-tos\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <withTheme(TextComponent)>
+      <withTheme(TextComponent) style={{...}}>
         Terms of service
       </withTheme(TextComponent)>
-      <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
-      </View>
+      <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
     <View style={{...}} />
     <TouchableOpacity testID=\\"button-privacy-policy\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-      <withTheme(TextComponent)>
+      <withTheme(TextComponent) style={{...}}>
         Privacy policy
       </withTheme(TextComponent)>
-      <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
-      </View>
+      <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
     <View style={{...}} />
     <withTheme(ButtonComponent) testID=\\"button-accept\\" style={{...}} primary={true} onPress={[Function: onPress]}>

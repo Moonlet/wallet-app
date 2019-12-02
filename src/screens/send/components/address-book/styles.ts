@@ -43,7 +43,6 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2,
             color: theme.colors.text
         },
-
         rowContainer: {
             flex: 1,
             flexDirection: 'row',

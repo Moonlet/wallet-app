@@ -1,28 +1,26 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, ICON_CONTAINER } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            flex: 1,
             backgroundColor: theme.colors.appBackground,
-            paddingTop: 40,
-            paddingLeft: 10,
-            paddingRight: 10,
-            height: 400
+            paddingTop: BASE_DIMENSION * 5,
+            paddingHorizontal: BASE_DIMENSION
         },
 
         balanceContainer: {
-            marginTop: 10,
+            marginTop: BASE_DIMENSION,
             flexWrap: 'wrap',
             justifyContent: 'center',
             flexDirection: 'row'
         },
 
         buttonsContainer: {
-            marginTop: 50,
-            marginLeft: 10,
-            marginRight: 10,
+            marginTop: BASE_DIMENSION * 8,
+            marginHorizontal: BASE_DIMENSION,
             flexWrap: 'wrap',
             justifyContent: 'center',
             flexDirection: 'row'
@@ -30,34 +28,38 @@ export default (theme: ITheme) =>
 
         button: {
             flex: 1,
-            marginLeft: 5,
-            marginRight: 5
+            marginHorizontal: BASE_DIMENSION / 2
         },
 
         transactionsContainer: {
-            marginTop: 50
+            paddingHorizontal: BASE_DIMENSION * 2,
+            marginTop: BASE_DIMENSION * 6
         },
 
         transactionsTitle: {
             fontSize: 22,
+            lineHeight: 28,
+            color: theme.colors.text,
+            opacity: 0.87,
             fontWeight: 'bold'
         },
+
         transactionListItem: {
             flexWrap: 'wrap',
             justifyContent: 'flex-start',
             alignItems: 'center',
             flexDirection: 'row',
-            height: 44,
-            marginBottom: 10,
-            marginTop: 10
+            height: ICON_CONTAINER,
+            marginBottom: BASE_DIMENSION,
+            marginTop: BASE_DIMENSION
         },
         transactionIcon: {
             color: theme.colors.text,
-            margin: 10
+            margin: BASE_DIMENSION
         },
         transactionTextContainer: {
             flex: 1,
-            marginLeft: 10
+            marginLeft: BASE_DIMENSION
         },
         transactionAmountContainer: {
             flexDirection: 'row',

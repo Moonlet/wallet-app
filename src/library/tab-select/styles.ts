@@ -1,25 +1,26 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { BORDER_RADIUS, BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            marginHorizontal: BASE_DIMENSION * 3,
             borderWidth: 1,
             borderColor: theme.colors.accent,
-            flexDirection: 'row',
-            width: '100%',
-            height: 40
+            flexDirection: 'row'
         },
-
         tabButton: {
-            borderWidth: 1,
-            borderColor: theme.colors.accent,
             flexBasis: 0,
             flex: 1,
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            paddingVertical: BASE_DIMENSION
         },
-        tabButtonText: {},
+        tabButtonText: {
+            fontSize: 13,
+            lineHeight: 18
+        },
         tabButtonSelected: {
             backgroundColor: theme.colors.accent
         },

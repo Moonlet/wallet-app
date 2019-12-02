@@ -18,6 +18,7 @@ Object {
     "fontWeight": "bold",
     "lineHeight": 28,
     "opacity": 0.87,
+    "textAlign": "center",
   },
 }
 `;
@@ -36,6 +37,7 @@ Object {
     "fontWeight": "bold",
     "lineHeight": 28,
     "opacity": 0.87,
+    "textAlign": "center",
   },
 }
 `;

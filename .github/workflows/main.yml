@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - "header-height-icons-size"
 
 name: Deploy Beta
 jobs:

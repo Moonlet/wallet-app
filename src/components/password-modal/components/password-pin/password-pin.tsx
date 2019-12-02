@@ -178,9 +178,12 @@ export class PasswordPinComponent extends React.Component<
                                               this.props.theme.colors.gradientLight,
                                               this.props.theme.colors.gradientDark
                                           ]
-                                        : [this.props.theme.colors.gradientDark]
+                                        : [
+                                              this.props.theme.colors.gradientDark,
+                                              this.props.theme.colors.gradientDark
+                                          ]
                                 }
-                                locations={row === 0 ? [0.5, 0.67] : [0]}
+                                locations={row === 0 ? [0.5, 0.67] : [0, 1]}
                                 style={styles.gradientRowContainer}
                             />
                         ) : null

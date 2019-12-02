@@ -64,3 +64,4 @@ buck-out/
 resources/fonts
 coverage
 extension/build
+ios/Gemfile.lock

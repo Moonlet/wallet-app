@@ -20,7 +20,8 @@ export default (theme: ITheme) =>
         },
         textSection: {
             flex: 1,
-            flexDirection: 'column'
+            flexDirection: 'column',
+            justifyContent: 'center'
         },
         launchingSoonText: {
             fontWeight: 'bold',

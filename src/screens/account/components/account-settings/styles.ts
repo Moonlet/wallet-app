@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -41,7 +41,7 @@ export default (theme: ITheme) =>
             paddingRight: BASE_DIMENSION
         },
         header: {
-            height: ICON_CONTAINER,
+            height: ICON_CONTAINER_SIZE,
             alignItems: 'center',
             flexDirection: 'row',
             justifyContent: 'space-between',
@@ -59,8 +59,8 @@ export default (theme: ITheme) =>
         backIconContainer: {
             alignItems: 'center',
             justifyContent: 'center',
-            height: ICON_CONTAINER,
-            width: ICON_CONTAINER
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE
         },
         backText: {
             fontSize: 17,

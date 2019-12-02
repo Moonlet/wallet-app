@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -23,8 +23,8 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION
         },
         iconContainer: {
-            width: ICON_CONTAINER,
-            height: ICON_CONTAINER,
+            width: ICON_CONTAINER_SIZE,
+            height: ICON_CONTAINER_SIZE,
             justifyContent: 'center',
             alignItems: 'center'
         },

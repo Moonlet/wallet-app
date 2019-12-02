@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 import { ITheme } from '../../core/theme/itheme';
 
 export default (theme: ITheme) =>
@@ -31,14 +31,14 @@ export default (theme: ITheme) =>
             borderColor: theme.colors.accent
         },
         iconLeftContainer: {
-            height: ICON_CONTAINER,
-            width: ICON_CONTAINER,
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE,
             alignItems: 'flex-start',
             justifyContent: 'center'
         },
         iconRightContainer: {
-            height: ICON_CONTAINER,
-            width: ICON_CONTAINER,
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE,
             alignItems: 'flex-end',
             justifyContent: 'center'
         },

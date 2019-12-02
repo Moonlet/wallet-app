@@ -115,7 +115,7 @@ export class PasswordModalComponent extends React.Component<
         return (
             <Modal
                 animationType="slide"
-                transparent={false}
+                transparent={true}
                 visible={this.state.visible}
                 presentationStyle={'overFullScreen'}
             >

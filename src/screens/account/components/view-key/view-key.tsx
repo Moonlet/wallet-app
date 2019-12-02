@@ -1,19 +1,16 @@
 import React from 'react';
 import { View, TouchableOpacity, Clipboard } from 'react-native';
 import stylesProvider from './styles';
-import { withTheme } from '../../../../core/theme/with-theme';
-// import { Button } from '../../../library/button/button';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Icon } from '../../../../components/icon';
-import { ITheme } from '../../../../core/theme/itheme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
-// import { withNavigationParams, INavigationProps } from '../../navigation/withNavigation';
-
-export interface IProps {
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
+import { ICON_SIZE } from '../../../../styles/dimensions';
+import {
+    withNavigationParams,
+    INavigationProps
+} from '../../../../navigation/with-navigation-params';
 
 export interface IExternalProps {
     value: string;
@@ -23,10 +20,14 @@ interface IState {
     copied: boolean;
 }
 
-export class ViewKeyComponent extends React.Component<IProps & IExternalProps, IState> {
-    constructor(props: IProps & IExternalProps) {
+export class ViewKeyComponent extends React.Component<
+    IExternalProps & INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
+    constructor(
+        props: IExternalProps & INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
-
         this.state = {
             copied: false
         };
@@ -48,7 +49,7 @@ export class ViewKeyComponent extends React.Component<IProps & IExternalProps, I
                 </View>
 
                 <View style={styles.tipWrapper}>
-                    <Icon name="warning" size={12} style={styles.alertIcon} />
+                    <Icon name="warning" size={ICON_SIZE / 2} style={styles.alertIcon} />
                     <Text style={styles.tipText}>{translate('AccountSettings.securityTip')}</Text>
                     <Text style={styles.tipText}>{translate('AccountSettings.securityTip2')}</Text>
                 </View>
@@ -64,10 +65,9 @@ export class ViewKeyComponent extends React.Component<IProps & IExternalProps, I
                     }}
                 >
                     <View style={styles.leftIcon}>
-                        <Icon name="copy" size={24} style={styles.icon} />
+                        <Icon name="copy" size={ICON_SIZE} style={styles.icon} />
                     </View>
                     <Text style={styles.textRow}>
-                        {' '}
                         {this.state.copied === false
                             ? translate('App.buttons.clipboardBtn')
                             : translate('App.buttons.copiedBtn')}
@@ -78,4 +78,7 @@ export class ViewKeyComponent extends React.Component<IProps & IExternalProps, I
     }
 }
 
-export const ViewKey = smartConnect<IExternalProps>(ViewKeyComponent, [withTheme(stylesProvider)]);
+export const ViewKey = smartConnect<IExternalProps>(ViewKeyComponent, [
+    withTheme(stylesProvider),
+    withNavigationParams()
+]);

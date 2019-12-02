@@ -1,15 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, ICON_CONTAINER } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            padding: 0,
-            paddingTop: 10,
-            alignItems: 'center',
-            alignSelf: 'stretch',
             flex: 1,
+            paddingTop: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION / 2
         },
         exchangeCardContainer: {
@@ -18,12 +15,15 @@ export default (theme: ITheme) =>
             marginHorizontal: -BASE_DIMENSION / 2
         },
         icon: {
-            color: theme.colors.accent
+            color: theme.colors.accent,
+            alignSelf: 'center'
         },
         addButton: {
-            marginTop: 20,
-            marginBottom: 12,
+            width: ICON_CONTAINER,
+            height: ICON_CONTAINER,
             alignSelf: 'flex-end',
-            marginRight: 12
+            justifyContent: 'center',
+            marginBottom: BASE_DIMENSION,
+            marginTop: BASE_DIMENSION * 3
         }
     });

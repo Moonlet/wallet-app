@@ -28,6 +28,7 @@ import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
 import bind from 'bind-decorator';
 import { PasswordModal } from '../../components/password-modal/password-modal';
+import { ICON_SIZE } from '../../styles/dimensions';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -203,7 +204,7 @@ export class SendScreenComponent extends React.Component<
                     onPress={this.onPressQrCodeIcon}
                     style={[styles.rightAddressButton]}
                 >
-                    <Icon name="qr-code-scan" size={20} style={styles.icon} />
+                    <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
                 </TouchableOpacity>
             );
         } else {
@@ -213,7 +214,7 @@ export class SendScreenComponent extends React.Component<
                     onPress={this.onPressClearInput}
                     style={[styles.rightAddressButton]}
                 >
-                    <Icon name="close" size={20} style={styles.icon} />
+                    <Icon name="close" size={ICON_SIZE} style={styles.icon} />
                 </TouchableOpacity>
             );
         }

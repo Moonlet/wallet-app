@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, ICON_CONTAINER } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -14,7 +14,7 @@ export default (theme: ITheme) =>
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingVertical: BASE_DIMENSION
+            padding: BASE_DIMENSION
         },
         address: {
             fontSize: theme.fontSize.regular,
@@ -30,10 +30,15 @@ export default (theme: ITheme) =>
             height: 1,
             backgroundColor: 'rgba(0,0,0,0.4)'
         },
+        iconContainer: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: ICON_CONTAINER,
+            width: ICON_CONTAINER
+        },
         icon: {
-            alignSelf: 'center',
             color: theme.colors.accent,
-            padding: 4
+            alignSelf: 'center'
         },
         textRow: {
             fontSize: theme.fontSize.regular,

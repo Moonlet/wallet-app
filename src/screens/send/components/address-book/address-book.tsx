@@ -22,6 +22,7 @@ import { translate } from '../../../../core/i18n';
 import { Blockchain } from '../../../../core/blockchain/types';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteContact, updateContactName } from '../../../../redux/contacts/actions';
+import { ICON_SIZE } from '../../../../styles/dimensions';
 
 export interface IReduxProps {
     contacts: ReadonlyArray<SectionListData<IContactsState>>;
@@ -148,7 +149,7 @@ export class AddressBookComponent extends React.Component<
                         <Text style={styles.name}>{contact.name}</Text>
                         <Text style={styles.address}>{formatAddress(contact.address)}</Text>
                     </View>
-                    <Icon name="add-circle" size={24} style={styles.icon} />
+                    <Icon name="add-circle" size={ICON_SIZE} style={styles.icon} />
                 </TouchableOpacity>
                 <View style={styles.divider} />
             </Swipeable>

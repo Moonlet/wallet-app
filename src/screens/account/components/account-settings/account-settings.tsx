@@ -11,6 +11,7 @@ import { translate } from '../../../../core/i18n';
 import { HeaderLeft } from '../../../../components/header-left/header-left';
 import { ViewKey } from '../view-key/view-key';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { ICON_SIZE } from '../../../../styles/dimensions';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -87,9 +88,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                         <View style={styles.header}>
                             <View style={styles.backButtonWrapper}>
                                 {this.state.showKeyScreen ? (
-                                    <HeaderLeft
-                                        icon="arrow-left-1"
-                                        text={translate('App.buttons.back')}
+                                    <TouchableOpacity
                                         onPress={() => {
                                             this.setState({
                                                 showKeyScreen: false,
@@ -97,7 +96,19 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                                 title: translate('AccountSettings.manageAccount')
                                             });
                                         }}
-                                    />
+                                        style={styles.backButtonContainer}
+                                    >
+                                        <View style={styles.backIconContainer}>
+                                            <Icon
+                                                name="arrow-left-1"
+                                                size={ICON_SIZE}
+                                                style={styles.icon}
+                                            />
+                                        </View>
+                                        <Text style={styles.backText}>
+                                            {translate('App.buttons.back')}
+                                        </Text>
+                                    </TouchableOpacity>
                                 ) : null}
                             </View>
 

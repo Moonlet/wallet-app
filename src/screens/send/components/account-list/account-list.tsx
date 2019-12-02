@@ -8,6 +8,7 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { IAccountState } from '../../../../redux/wallets/state';
 import { formatAddress } from '../../../../core/utils/format-address';
+import { ICON_SIZE } from '../../../../styles/dimensions';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -41,7 +42,7 @@ export class AccountListComponent extends React.Component<IProps & IExternalProp
                                         {formatAddress(account.address)}
                                     </Text>
                                 </View>
-                                <Icon name="add-circle" size={24} style={styles.icon} />
+                                <Icon name="add-circle" size={ICON_SIZE} style={styles.icon} />
                             </TouchableOpacity>
                             <View style={styles.divider} />
                         </View>

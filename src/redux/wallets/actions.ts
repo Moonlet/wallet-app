@@ -95,7 +95,6 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
 
 export const getBalance = (
     blockchain: Blockchain,
-    chainId: number,
     address: string,
     force: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
@@ -123,6 +122,8 @@ export const getBalance = (
             inProgress: true
         });
         try {
+            const chainId = getChainId(state, account.blockchain);
+
             const balance = await getBlockchain(blockchain)
                 .getClient(chainId)
                 .getBalance(address);

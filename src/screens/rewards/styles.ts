@@ -6,6 +6,7 @@ import { pw, ph } from '../../styles';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            flex: 1,
             paddingHorizontal: BASE_DIMENSION * 2,
             paddingTop: 40,
             justifyContent: 'center',

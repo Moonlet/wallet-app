@@ -144,6 +144,31 @@ export const translation: ITranslations = {
         },
         Watch: {
             title: 'Watch'
+        },
+        Settings: {
+            title: 'Settings',
+            security: 'SECURITY',
+            pinLogin: 'Pin Login',
+            touchID: 'TouchID',
+            manageWallet: 'Manage wallet',
+            backupWallet: 'Backup wallet',
+            setup: 'SETUP',
+            defaultCurrency: 'Default currency',
+            blockchainPortfolio: 'Blockchain portfolio',
+            support: 'SUPPORT',
+            reportIssue: 'Report issue',
+            tools: 'TOOLS',
+            networkOptions: 'Network options',
+            about: 'ABOUT',
+            termsCons: 'Terms & conditions',
+            privacyPolicy: 'Privacy policy',
+            appVersion: 'Application version',
+            signOut: 'Sign out'
+        },
+        NetworkOptions: {
+            title: 'Network Options',
+            testnet: 'Testnet',
+            mainnet: 'Mainnet'
         }
     },
     plural: (n: number, ord?: boolean) => {

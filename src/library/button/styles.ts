@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { BORDER_RADIUS, BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -7,8 +8,8 @@ export default (theme: ITheme) =>
             paddingVertical: 10,
             borderWidth: 1,
             borderColor: theme.colors.accent,
-            borderRadius: 6,
-            paddingHorizontal: 6
+            borderRadius: BORDER_RADIUS,
+            paddingHorizontal: BASE_DIMENSION
             // flex: 1,
             // flexBasis: 0
         },

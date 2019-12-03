@@ -1,24 +1,18 @@
 import React from 'react';
 import { ScrollView, View, Switch, TouchableOpacity } from 'react-native';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
-import { Text } from '../../library';
+import { INavigationProps } from '../../navigation/with-navigation-params';
+import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
 import { setPinLogin } from '../../redux/preferences/actions';
 import stylesProvider from './styles';
-import { withTheme } from '../../core/theme/with-theme';
-import { ITheme } from '../../core/theme/itheme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { Icon } from '../../components/icon';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { translate } from '../../core/i18n';
-
-export interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
+import { ICON_SIZE } from '../../styles/dimensions';
 
 export interface IReduxProps {
     currency: string;
@@ -37,11 +31,13 @@ const mapStateToProps = (state: IReduxState) => ({
 });
 
 const navigationOptions = () => ({
-    title: translate('App.labels.settings'),
+    title: translate('Settings.title'),
     headerLeft: <HeaderLeft icon="saturn-icon" />
 });
 
-export class SettingsScreenComponent extends React.Component<IProps & IReduxProps> {
+export class SettingsScreenComponent extends React.Component<
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+> {
     public static navigationOptions = navigationOptions;
     public pinLoginSwitch = () => {
         // pin login
@@ -67,12 +63,9 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
         // set default currency
         this.props.mock();
     };
-    public defaultNetworkTouch = () => {
+    public networkOptionsTouch = () => {
         // set default network
-        this.props.mock();
-    };
-    public developerOptionsTouch = () => {
-        // developer options touch
+        this.props.navigation.navigate('NetworkOptions');
         this.props.mock();
     };
     public reportIssueTouch = () => {
@@ -83,147 +76,188 @@ export class SettingsScreenComponent extends React.Component<IProps & IReduxProp
         // open terms
         this.props.mock();
     };
+    public privacyPolicyTouch = () => {
+        // open privacy policy
+        this.props.mock();
+    };
+    public signOut = () => {
+        // sign out
+        this.props.mock();
+    };
 
     public render() {
         const styles = this.props.styles;
+        const theme = this.props.theme;
+        const navigation = this.props.navigation;
+
         return (
-            <ScrollView style={styles.container}>
-                <View>
-                    <View>
-                        <Text style={styles.textHeader}>SECURITY</Text>
-                    </View>
+            <View style={styles.container}>
+                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                    <Text style={styles.textHeader}>{translate('Settings.security')}</Text>
+
                     <View style={styles.rowContainer}>
-                        <Text style={styles.textRow}>Pin Login</Text>
-                        <View style={styles.switch}>
-                            <Switch
-                                testID={'pin-login'}
-                                onValueChange={this.pinLoginSwitch}
-                                value={this.props.pinLogin}
-                            />
-                        </View>
+                        <Text style={styles.textRow}>{translate('Settings.pinLogin')}</Text>
+                        <Switch
+                            testID={'pin-login'}
+                            onValueChange={this.pinLoginSwitch}
+                            value={this.props.pinLogin}
+                            trackColor={{
+                                true: this.props.theme.colors.cardBackground,
+                                false: this.props.theme.colors.primary
+                            }}
+                            thumbColor={
+                                this.props.pinLogin ? theme.colors.accent : theme.colors.primary
+                            }
+                        />
                     </View>
+
                     <View style={styles.divider} />
+
                     <View style={styles.rowContainer}>
-                        <Text style={styles.textRow}>TouchID</Text>
-                        <View style={styles.switch}>
-                            <Switch
-                                testID={'touch-id'}
-                                onValueChange={this.touchIdSwitch}
-                                value={true}
-                            />
-                        </View>
+                        <Text style={styles.textRow}>{translate('Settings.touchID')}</Text>
+                        <Switch
+                            testID={'touch-id'}
+                            onValueChange={this.touchIdSwitch}
+                            value={true}
+                            trackColor={{
+                                true: this.props.theme.colors.cardBackground,
+                                false: this.props.theme.colors.primary
+                            }}
+                            thumbColor={theme.colors.accent}
+                        />
                     </View>
+
                     <View style={styles.divider} />
+
                     <TouchableOpacity
                         testID={'secret-phrase'}
                         style={styles.rowContainer}
                         onPress={this.revealPassphraseTouch}
                     >
-                        <Text style={styles.textRow}>Reveal secret phrase</Text>
+                        <Text style={styles.textRow}>{translate('Settings.manageWallet')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
+
                     <View style={styles.divider} />
+
                     <TouchableOpacity
                         testID={'backup-wallet'}
                         style={styles.rowContainer}
                         onPress={this.backupWalletTouch}
                     >
-                        <Text style={styles.textRow}>Backup your wallet</Text>
+                        <Text style={styles.textRow}>{translate('Settings.backupWallet')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
                     <View style={styles.divider} />
-                    <View style={{ marginTop: 20 }}>
-                        <Text style={styles.textHeader}>SETUP</Text>
-                    </View>
-                    <TouchableOpacity
-                        testID={'manage-wallet'}
-                        style={styles.rowContainer}
-                        onPress={this.manageWalletTouch}
-                    >
-                        <Text style={styles.textRow}>Manage your wallet</Text>
-                        <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={16} style={styles.icon} />
-                        </View>
-                    </TouchableOpacity>
-                    <View style={styles.divider} />
+
+                    <Text style={styles.textHeader}>{translate('Settings.setup')}</Text>
+
                     <TouchableOpacity
                         testID={'default-currency'}
                         style={styles.rowContainer}
                         onPress={this.defaultCurrencyTouch}
                     >
-                        <Text style={styles.textRow}>Default currency</Text>
+                        <Text style={styles.textRow}>{translate('Settings.defaultCurrency')}</Text>
                         <View style={styles.rightContainer}>
                             <Text style={styles.textRowValue}>{this.props.currency}</Text>
-                            <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
+
                     <View style={styles.divider} />
+
                     <TouchableOpacity
                         testID={'default-network'}
                         style={styles.rowContainer}
-                        onPress={this.defaultNetworkTouch}
+                        onPress={this.networkOptionsTouch}
                     >
-                        <Text style={styles.textRow}>Default network</Text>
+                        <Text style={styles.textRow}>
+                            {translate('Settings.blockchainPortfolio')}
+                        </Text>
                         <View style={styles.rightContainer}>
                             <Text style={styles.textRowValue}>{this.props.network}</Text>
-                            <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
+
                     <View style={styles.divider} />
-                    <View style={{ marginTop: 20 }}>
-                        <Text style={styles.textHeader}>SUPPORT</Text>
-                    </View>
+
+                    <Text style={styles.textHeader}>{translate('Settings.support')}</Text>
+
                     <TouchableOpacity
                         testID={'report-issue'}
                         style={styles.rowContainer}
                         onPress={this.reportIssueTouch}
                     >
-                        <Text style={styles.textRow}>Report issue</Text>
+                        <Text style={styles.textRow}>{translate('Settings.reportIssue')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
+
                     <View style={styles.divider} />
-                    <View style={{ marginTop: 20 }}>
-                        <Text style={styles.textHeader}>TOOLS</Text>
-                    </View>
+
+                    <Text style={styles.textHeader}>{translate('Settings.tools')}</Text>
+
                     <TouchableOpacity
                         testID={'developer-options'}
                         style={styles.rowContainer}
-                        onPress={this.developerOptionsTouch}
+                        onPress={() => navigation.navigate('NetworkOptions')}
                     >
-                        <Text style={styles.textRow}>Developer options</Text>
+                        <Text style={styles.textRow}>{translate('Settings.networkOptions')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
+
                     <View style={styles.divider} />
-                    <View style={{ marginTop: 20 }}>
-                        <Text style={styles.textHeader}>ABOUT</Text>
-                    </View>
+
+                    <Text style={styles.textHeader}>{translate('Settings.about')}</Text>
+
                     <TouchableOpacity
                         testID={'terms-conditions'}
                         style={styles.rowContainer}
                         onPress={this.termsAndConditionsTouch}
                     >
-                        <Text style={styles.textRow}>Terms & conditions</Text>
+                        <Text style={styles.textRow}>{translate('Settings.termsCons')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
+
                     <View style={styles.divider} />
+
+                    <TouchableOpacity
+                        testID={'terms-conditions'}
+                        style={styles.rowContainer}
+                        onPress={this.privacyPolicyTouch}
+                    >
+                        <Text style={styles.textRow}>{translate('Settings.privacyPolicy')}</Text>
+                        <View style={styles.rightContainer}>
+                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                        </View>
+                    </TouchableOpacity>
+
+                    <View style={styles.divider} />
+
                     <View style={styles.rowContainer}>
-                        <Text style={styles.textRow}>Application version</Text>
+                        <Text style={styles.textRow}>{translate('Settings.appVersion')}</Text>
                         <View style={styles.rightContainer}>
                             <Text style={styles.textRowValue}>{DeviceInfo.getVersion()}</Text>
                         </View>
                     </View>
-                </View>
-            </ScrollView>
+
+                    <View style={styles.divider} />
+
+                    <Button style={styles.button} onPress={this.signOut}>
+                        {translate('Settings.signOut')}
+                    </Button>
+                </ScrollView>
+            </View>
         );
     }
 }

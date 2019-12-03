@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { ITheme } from '../../../core/theme/itheme';
+import { BASE_DIMENSION } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            padding: BASE_DIMENSION * 2,
+            paddingHorizontal: BASE_DIMENSION * 2,
+            paddingVertical: BASE_DIMENSION * 3,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground
         },
@@ -32,7 +33,13 @@ export default (theme: ITheme) =>
         textRowValue: {
             fontSize: 15,
             color: theme.colors.textSecondary,
-            paddingRight: BASE_DIMENSION
+            paddingRight: 8
+        },
+        switch: {
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            flex: 1,
+            paddingRight: 0
         },
         divider: {
             width: '100%',
@@ -42,14 +49,14 @@ export default (theme: ITheme) =>
         rightContainer: {
             flex: 1,
             flexDirection: 'row',
-            justifyContent: 'flex-end',
             alignItems: 'center',
+            justifyContent: 'flex-end',
             paddingRight: BASE_DIMENSION
         },
-        icon: {
-            color: theme.colors.accent
-        },
-        button: {
-            margin: BASE_DIMENSION * 3
+        rightText: {
+            fontSize: 15,
+            lineHeight: 20,
+            color: theme.colors.textSecondary,
+            marginRight: BASE_DIMENSION * 2
         }
     });

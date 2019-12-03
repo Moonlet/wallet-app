@@ -5,7 +5,7 @@ import { BASE_DIMENSION, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         button: {
-            marginLeft: BASE_DIMENSION * 2,
+            marginLeft: BASE_DIMENSION,
             flexDirection: 'row',
             alignItems: 'center'
         },

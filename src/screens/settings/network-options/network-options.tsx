@@ -11,22 +11,23 @@ import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { INetworksOptions } from '../../../redux/app/state';
-import { setTestNet } from '../../../redux/app/actions';
+import { toggleTestNet } from '../../../redux/app/actions';
 import { ICON_SIZE } from '../../../styles/dimensions';
+import { Blockchain } from '../../../core/blockchain/types';
 
 export interface IReduxProps {
     testNet: boolean;
-    setTestNet: typeof setTestNet;
-    appNetworks: INetworksOptions;
+    toggleTestNet: typeof toggleTestNet;
+    networksOptions: INetworksOptions;
 }
 
 const mapDispatchToProps = {
-    setTestNet
+    toggleTestNet
 };
 
 const mapStateToProps = (state: IReduxState) => ({
     testNet: state.app.testNet,
-    appNetworks: state.app.networks
+    networksOptions: state.app.networks
 });
 
 const navigationOptions = () => ({
@@ -39,7 +40,7 @@ export class NetworkOptionsComponent extends React.Component<
     public static navigationOptions = navigationOptions;
 
     public render() {
-        const { styles, theme, testNet, appNetworks, navigation } = this.props;
+        const { styles, theme, testNet, networksOptions, navigation } = this.props;
 
         return (
             <View style={styles.container}>
@@ -47,7 +48,7 @@ export class NetworkOptionsComponent extends React.Component<
                     <Text style={styles.textRow}>{translate('NetworkOptions.testnet')}</Text>
                     <View style={styles.switch}>
                         <Switch
-                            onValueChange={() => this.props.setTestNet()}
+                            onValueChange={() => this.props.toggleTestNet()}
                             value={testNet}
                             trackColor={{
                                 true: this.props.theme.colors.cardBackground,
@@ -60,43 +61,44 @@ export class NetworkOptionsComponent extends React.Component<
 
                 <View style={styles.divider} />
 
-                {appNetworks
-                    ? Object.keys(appNetworks).map((network: any, index: number) => (
-                          <View key={index}>
-                              <TouchableOpacity
-                                  style={styles.rowContainer}
-                                  disabled={!testNet}
-                                  onPress={() =>
-                                      navigation.navigate('NetworkSelectionScreen', {
-                                          selectedNetwork: network,
-                                          testNet
-                                      })
-                                  }
-                              >
-                                  <Text style={styles.textRow}>{network}</Text>
-                                  <View style={styles.rightContainer}>
-                                      <Text style={styles.rightText}>
-                                          {testNet
-                                              ? getBlockchain(network).networks.find(
-                                                    n => n.chainId === appNetworks[network].testNet
-                                                ).name
-                                              : translate('NetworkOptions.mainnet')}
-                                      </Text>
-                                      <Icon
-                                          name="arrow-right-1"
-                                          size={ICON_SIZE / 2}
-                                          style={{
-                                              color: testNet
-                                                  ? theme.colors.accent
-                                                  : theme.colors.primary
-                                          }}
-                                      />
-                                  </View>
-                              </TouchableOpacity>
-                              <View style={styles.divider} />
-                          </View>
-                      ))
-                    : null}
+                {networksOptions &&
+                    Object.keys(networksOptions).map((blockchain: Blockchain, index: number) => (
+                        <View key={index}>
+                            <TouchableOpacity
+                                style={styles.rowContainer}
+                                disabled={!testNet}
+                                onPress={() =>
+                                    navigation.navigate('NetworkSelectionScreen', {
+                                        blockchain,
+                                        testNet
+                                    })
+                                }
+                            >
+                                <Text style={styles.textRow}>{blockchain}</Text>
+                                <View style={styles.rightContainer}>
+                                    <Text style={styles.rightText}>
+                                        {testNet
+                                            ? getBlockchain(blockchain).networks.find(
+                                                  network =>
+                                                      network.chainId ===
+                                                      networksOptions[blockchain].testNet
+                                              ).name
+                                            : translate('NetworkOptions.mainnet')}
+                                    </Text>
+                                    <Icon
+                                        name="arrow-right-1"
+                                        size={ICON_SIZE / 2}
+                                        style={{
+                                            color: testNet
+                                                ? theme.colors.accent
+                                                : theme.colors.primary
+                                        }}
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                            <View style={styles.divider} />
+                        </View>
+                    ))}
             </View>
         );
     }

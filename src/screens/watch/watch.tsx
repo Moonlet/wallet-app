@@ -21,7 +21,7 @@ export const mapStateToProps = (state: IReduxState) => {
 
 export const navigationOptions = () => ({
     headerLeft: <HeaderLeft icon="saturn-icon" />,
-    title: translate('Watch.title')
+    title: translate('App.labels.watch')
 });
 
 export class WatchScreenComponent extends React.Component<

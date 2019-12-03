@@ -22,48 +22,52 @@ beforeEach(() => {
     props.mock.mockClear();
 });
 
-describe('settings screen component', () => {
+export default describe('Wallet screen', () => {
     beforeAll(async () => {
         await loadTranslations('en');
     });
 
-    // test mock function
-    expect(mockFunction()).toEqual({ type: 'dummy' });
-
-    const wrapper = shallow(<SettingsScreenComponent {...props} />);
-
     it('renders correctly', () => {
+        const wrapper = shallow(<SettingsScreenComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();
     });
     it('Pin login switch tapped', () => {
+        const wrapper = shallow(<SettingsScreenComponent {...props} />);
         wrapper.find('[testID="pin-login"]').simulate('valueChange');
         expect(props.setPinLogin).toHaveBeenCalledTimes(1);
     });
     it('Touch id switch tapped', () => {
+        const wrapper = shallow(<SettingsScreenComponent {...props} />);
         wrapper.find('[testID="touch-id"]').simulate('valueChange');
         expect(props.mock).toHaveBeenCalled();
     });
     it('Backup Wallet', () => {
+        const wrapper = shallow(<SettingsScreenComponent {...props} />);
         wrapper.find('[testID="backup-wallet"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Manage Wallet', () => {
+        const wrapper = shallow(<SettingsScreenComponent {...props} />);
         wrapper.find('[testID="manage-wallet"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Default currency', () => {
+        const wrapper = shallow(<SettingsScreenComponent {...props} />);
         wrapper.find('[testID="default-currency"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Blockchain portfolio', () => {
+        const wrapper = shallow(<SettingsScreenComponent {...props} />);
         wrapper.find('[testID="blockchain-portfolio"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Report issue', () => {
+        const wrapper = shallow(<SettingsScreenComponent {...props} />);
         wrapper.find('[testID="report-issue"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Terms & conditions', () => {
+        const wrapper = shallow(<SettingsScreenComponent {...props} />);
         wrapper.find('[testID="terms-conditions"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
     });

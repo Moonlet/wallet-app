@@ -1,133 +1,89 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`settings screen component renders correctly 1`] = `
-"<ScrollViewMock style={{...}}>
-  <View>
-    <View>
-      <withTheme(TextComponent) style={{...}}>
-        SECURITY
-      </withTheme(TextComponent)>
-    </View>
+"<View style={{...}}>
+  <ScrollViewMock contentContainerStyle={{...}}>
+    <withTheme(TextComponent) style={{...}} />
     <View style={{...}}>
-      <withTheme(TextComponent) style={{...}}>
-        Pin Login
-      </withTheme(TextComponent)>
-      <View style={{...}}>
-        <Switch testID=\\"pin-login\\" onValueChange={[Function]} value={true} />
-      </View>
+      <withTheme(TextComponent) style={{...}} />
+      <Switch testID=\\"pin-login\\" onValueChange={[Function]} value={true} trackColor={{...}} thumbColor=\\"#00DAFF\\" />
     </View>
     <View style={{...}} />
     <View style={{...}}>
-      <withTheme(TextComponent) style={{...}}>
-        TouchID
-      </withTheme(TextComponent)>
-      <View style={{...}}>
-        <Switch testID=\\"touch-id\\" onValueChange={[Function]} value={true} />
-      </View>
+      <withTheme(TextComponent) style={{...}} />
+      <Switch testID=\\"touch-id\\" onValueChange={[Function]} value={true} trackColor={{...}} thumbColor=\\"#00DAFF\\" />
     </View>
     <View style={{...}} />
-    <TouchableOpacity testID=\\"secret-phrase\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
-      <withTheme(TextComponent) style={{...}}>
-        Reveal secret phrase
-      </withTheme(TextComponent)>
+    <TouchableOpacity testID=\\"manage-wallet\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}} />
       <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
     <TouchableOpacity testID=\\"backup-wallet\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
-      <withTheme(TextComponent) style={{...}}>
-        Backup your wallet
-      </withTheme(TextComponent)>
+      <withTheme(TextComponent) style={{...}} />
       <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
-    <View style={{...}}>
-      <withTheme(TextComponent) style={{...}}>
-        SETUP
-      </withTheme(TextComponent)>
-    </View>
-    <TouchableOpacity testID=\\"manage-wallet\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
-      <withTheme(TextComponent) style={{...}}>
-        Manage your wallet
-      </withTheme(TextComponent)>
-      <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
-      </View>
-    </TouchableOpacity>
-    <View style={{...}} />
+    <withTheme(TextComponent) style={{...}} />
     <TouchableOpacity testID=\\"default-currency\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
-      <withTheme(TextComponent) style={{...}}>
-        Default currency
-      </withTheme(TextComponent)>
+      <withTheme(TextComponent) style={{...}} />
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}} />
-        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
-    <TouchableOpacity testID=\\"default-network\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
-      <withTheme(TextComponent) style={{...}}>
-        Default network
-      </withTheme(TextComponent)>
+    <TouchableOpacity testID=\\"blockchain-portfolio\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}} />
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}} />
-        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
-    <View style={{...}}>
-      <withTheme(TextComponent) style={{...}}>
-        SUPPORT
-      </withTheme(TextComponent)>
-    </View>
+    <withTheme(TextComponent) style={{...}} />
     <TouchableOpacity testID=\\"report-issue\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
-      <withTheme(TextComponent) style={{...}}>
-        Report issue
-      </withTheme(TextComponent)>
+      <withTheme(TextComponent) style={{...}} />
       <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
-    <View style={{...}}>
-      <withTheme(TextComponent) style={{...}}>
-        TOOLS
-      </withTheme(TextComponent)>
-    </View>
-    <TouchableOpacity testID=\\"developer-options\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
-      <withTheme(TextComponent) style={{...}}>
-        Developer options
-      </withTheme(TextComponent)>
+    <withTheme(TextComponent) style={{...}} />
+    <TouchableOpacity testID=\\"network-options\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}} />
       <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
-    <View style={{...}}>
-      <withTheme(TextComponent) style={{...}}>
-        ABOUT
-      </withTheme(TextComponent)>
-    </View>
+    <withTheme(TextComponent) style={{...}} />
     <TouchableOpacity testID=\\"terms-conditions\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
-      <withTheme(TextComponent) style={{...}}>
-        Terms &amp; conditions
-      </withTheme(TextComponent)>
+      <withTheme(TextComponent) style={{...}} />
       <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
+    <TouchableOpacity testID=\\"privacy-policy\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}} />
+      <View style={{...}}>
+        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
     <View style={{...}}>
-      <withTheme(TextComponent) style={{...}}>
-        Application version
-      </withTheme(TextComponent)>
+      <withTheme(TextComponent) style={{...}} />
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}} />
       </View>
     </View>
-  </View>
-</ScrollViewMock>"
+    <View style={{...}} />
+    <withTheme(ButtonComponent) testID=\\"sign-out\\" style={{...}} onPress={[Function]} />
+  </ScrollViewMock>
+</View>"
 `;

@@ -64,9 +64,7 @@ export class SettingsScreenComponent extends React.Component<
         this.props.mock();
     };
     public networkOptionsTouch = () => {
-        // set default network
         this.props.navigation.navigate('NetworkOptions');
-        this.props.mock();
     };
     public reportIssueTouch = () => {
         // report an issue
@@ -82,6 +80,10 @@ export class SettingsScreenComponent extends React.Component<
     };
     public signOut = () => {
         // sign out
+        this.props.mock();
+    };
+    public blockchainPortfolioTouch = () => {
+        // blockchain portfolio
         this.props.mock();
     };
 
@@ -130,7 +132,7 @@ export class SettingsScreenComponent extends React.Component<
                     <View style={styles.divider} />
 
                     <TouchableOpacity
-                        testID={'secret-phrase'}
+                        testID={'manage-wallet'}
                         style={styles.rowContainer}
                         onPress={this.revealPassphraseTouch}
                     >
@@ -171,9 +173,9 @@ export class SettingsScreenComponent extends React.Component<
                     <View style={styles.divider} />
 
                     <TouchableOpacity
-                        testID={'default-network'}
+                        testID={'blockchain-portfolio'}
                         style={styles.rowContainer}
-                        onPress={this.networkOptionsTouch}
+                        onPress={this.blockchainPortfolioTouch}
                     >
                         <Text style={styles.textRow}>
                             {translate('Settings.blockchainPortfolio')}
@@ -204,7 +206,7 @@ export class SettingsScreenComponent extends React.Component<
                     <Text style={styles.textHeader}>{translate('Settings.tools')}</Text>
 
                     <TouchableOpacity
-                        testID={'developer-options'}
+                        testID={'network-options'}
                         style={styles.rowContainer}
                         onPress={() => navigation.navigate('NetworkOptions')}
                     >
@@ -232,7 +234,7 @@ export class SettingsScreenComponent extends React.Component<
                     <View style={styles.divider} />
 
                     <TouchableOpacity
-                        testID={'terms-conditions'}
+                        testID={'privacy-policy'}
                         style={styles.rowContainer}
                         onPress={this.privacyPolicyTouch}
                     >
@@ -253,7 +255,7 @@ export class SettingsScreenComponent extends React.Component<
 
                     <View style={styles.divider} />
 
-                    <Button style={styles.button} onPress={this.signOut}>
+                    <Button testID={'sign-out'} style={styles.button} onPress={this.signOut}>
                         {translate('Settings.signOut')}
                     </Button>
                 </ScrollView>

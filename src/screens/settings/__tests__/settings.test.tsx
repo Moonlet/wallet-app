@@ -4,6 +4,7 @@ import { SettingsScreenComponent, IProps, IReduxProps, mockFunction } from '../s
 import { shallow } from 'enzyme';
 import styleProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';
+import { loadTranslations } from '../../../core/i18n';
 
 const props: IProps & IReduxProps = {
     // @ts-ignore
@@ -22,6 +23,10 @@ beforeEach(() => {
 });
 
 describe('settings screen component', () => {
+    beforeAll(async () => {
+        await loadTranslations('en');
+    });
+
     // test mock function
     expect(mockFunction()).toEqual({ type: 'dummy' });
 
@@ -38,10 +43,6 @@ describe('settings screen component', () => {
         wrapper.find('[testID="touch-id"]').simulate('valueChange');
         expect(props.mock).toHaveBeenCalled();
     });
-    it('Secret phrase', () => {
-        wrapper.find('[testID="secret-phrase"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalledTimes(1);
-    });
     it('Backup Wallet', () => {
         wrapper.find('[testID="backup-wallet"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
@@ -54,16 +55,12 @@ describe('settings screen component', () => {
         wrapper.find('[testID="default-currency"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
     });
-    it('Default network', () => {
-        wrapper.find('[testID="default-network"]').simulate('Press');
+    it('Blockchain portfolio', () => {
+        wrapper.find('[testID="blockchain-portfolio"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Report issue', () => {
         wrapper.find('[testID="report-issue"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalledTimes(1);
-    });
-    it('Developer options', () => {
-        wrapper.find('[testID="developer-options"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
     });
     it('Terms & conditions', () => {

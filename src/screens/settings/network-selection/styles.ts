@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { ITheme } from '../../../core/theme/itheme';
+import { BASE_DIMENSION } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            padding: BASE_DIMENSION * 2,
+            paddingHorizontal: BASE_DIMENSION * 2,
+            paddingVertical: BASE_DIMENSION * 3,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground
         },
@@ -15,24 +16,17 @@ export default (theme: ITheme) =>
             paddingVertical: BASE_DIMENSION * 2,
             alignItems: 'center'
         },
-        textHeader: {
-            color: theme.colors.textSecondary,
-            fontSize: 13,
-            lineHeight: 18,
-            marginTop: BASE_DIMENSION * 2
-        },
         textRow: {
             flex: 1,
-            fontSize: 17,
-            lineHeight: 21,
+            fontSize: 20,
+            lineHeight: 25,
             letterSpacing: 0.38,
-            color: theme.colors.text,
-            opacity: 0.87
+            color: theme.colors.text
         },
         textRowValue: {
             fontSize: 15,
             color: theme.colors.textSecondary,
-            paddingRight: BASE_DIMENSION
+            paddingRight: 8
         },
         divider: {
             width: '100%',
@@ -42,14 +36,16 @@ export default (theme: ITheme) =>
         rightContainer: {
             flex: 1,
             flexDirection: 'row',
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            paddingRight: BASE_DIMENSION
+            alignItems: 'center'
+        },
+        rightText: {
+            flex: 1,
+            fontSize: 12,
+            lineHeight: 16,
+            color: theme.colors.textSecondary,
+            marginRight: BASE_DIMENSION * 2
         },
         icon: {
             color: theme.colors.accent
-        },
-        button: {
-            margin: BASE_DIMENSION * 3
         }
     });

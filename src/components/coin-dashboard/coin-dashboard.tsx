@@ -10,6 +10,7 @@ import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { ICON_SIZE } from '../../styles/dimensions';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -42,7 +43,7 @@ export const CoinDashboardComponent = (props: IProps) => (
                     props.navigation.navigate('Accounts', { blockchain: props.blockchain });
                 }}
             >
-                <Icon name="add" size={25} style={props.styles.icon} />
+                <Icon name="add" size={ICON_SIZE} style={props.styles.icon} />
             </TouchableOpacity>
         </View>
         <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>

@@ -12,8 +12,13 @@ Object {
     "borderBottomWidth": 0,
   },
   "headerTitleStyle": Object {
+    "color": "#FFF",
     "flex": 1,
+    "fontSize": 22,
     "fontWeight": "bold",
+    "lineHeight": 28,
+    "opacity": 0.87,
+    "textAlign": "center",
   },
 }
 `;
@@ -26,8 +31,13 @@ Object {
     "borderBottomWidth": 0,
   },
   "headerTitleStyle": Object {
+    "color": "#FFF",
     "flex": 1,
+    "fontSize": 22,
     "fontWeight": "bold",
+    "lineHeight": 28,
+    "opacity": 0.87,
+    "textAlign": "center",
   },
 }
 `;

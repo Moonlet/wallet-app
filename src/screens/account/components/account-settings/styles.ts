@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -41,13 +41,32 @@ export default (theme: ITheme) =>
             paddingRight: BASE_DIMENSION
         },
         header: {
+            height: ICON_CONTAINER_SIZE,
+            alignItems: 'center',
             flexDirection: 'row',
             justifyContent: 'space-between',
-            paddingTop: BASE_DIMENSION * 3
+            marginTop: BASE_DIMENSION
         },
-        headerButton: {},
         backButtonWrapper: {
             flex: 1
+        },
+        backButtonContainer: {
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center'
+        },
+        backIconContainer: {
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE
+        },
+        backText: {
+            fontSize: 17,
+            lineHeight: 22,
+            opacity: 0.87,
+            color: theme.colors.text
         },
         doneWrapper: {
             flex: 1,

@@ -1,10 +1,11 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            flex: 1,
             paddingBottom: BASE_DIMENSION * 2,
             paddingLeft: BASE_DIMENSION * 2,
             paddingRight: BASE_DIMENSION * 2,
@@ -49,7 +50,7 @@ export default (theme: ITheme) =>
             color: theme.colors.warning
         },
         inputBoxAddress: {
-            height: 44,
+            // height: ICON_CONTAINER_SIZE,
             borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',
@@ -86,10 +87,13 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground
         },
         icon: {
-            color: theme.colors.accent,
-            marginHorizontal: 0
+            color: theme.colors.accent
         },
         rightAddressButton: {
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
             flexDirection: 'row',
             marginRight: BASE_DIMENSION / 2
         },

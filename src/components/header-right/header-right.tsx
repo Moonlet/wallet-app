@@ -1,10 +1,11 @@
 import React from 'react';
-import { TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { Text } from '../../library';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { Icon } from '../icon';
+import { ICON_SIZE } from '../../styles/dimensions';
 
 export interface IProps {
     onPress?: any;
@@ -15,8 +16,12 @@ export interface IProps {
 
 export const HeaderRightComponent = (props: IProps) => (
     <TouchableOpacity onPress={props.onPress} style={[props.styles.button]}>
-        {props.text && <Text>{props.text}</Text>}
-        {props.icon && <Icon name={props.icon} size={20} style={props.styles.icon} />}
+        {props.text && <Text style={props.styles.text}>{props.text}</Text>}
+        {props.icon && (
+            <View style={props.styles.iconContainer}>
+                <Icon name={props.icon} size={ICON_SIZE} style={props.styles.icon} />
+            </View>
+        )}
     </TouchableOpacity>
 );
 

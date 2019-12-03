@@ -78,7 +78,6 @@ export default (theme: ITheme) =>
         },
 
         inputLabel: {
-            // borderWidth: 1, borderColor: 'red',
             flex: 0,
             textAlign: 'right',
             alignSelf: 'center',

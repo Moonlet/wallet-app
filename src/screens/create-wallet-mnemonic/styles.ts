@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -23,7 +24,7 @@ export default (theme: ITheme) =>
             justifyContent: 'center',
             alignSelf: 'stretch',
             alignItems: 'center',
-            marginBottom: 60
+            marginBottom: BASE_DIMENSION * 6
         },
 
         mnemonicContainer: {

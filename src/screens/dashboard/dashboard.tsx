@@ -77,7 +77,18 @@ const mapDispatchToProps = {
     getBalance
 };
 
-const MyTitle = ({ text }) => <Text style={{ fontSize: 17, fontWeight: 'bold' }}> {text}</Text>;
+const MyTitle = ({ text }) => (
+    <Text
+        style={{
+            fontSize: 22,
+            lineHeight: 28,
+            opacity: 0.87,
+            fontWeight: 'bold'
+        }}
+    >
+        {text}
+    </Text>
+);
 const MyConnectedTitle = connect((state: IReduxState) => ({
     text: (selectCurrentWallet(state) || {}).name
 }))(MyTitle);

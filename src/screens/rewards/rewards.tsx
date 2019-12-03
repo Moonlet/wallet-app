@@ -39,13 +39,16 @@ export class RewardsScreenComponent extends React.Component<
                     <SkeletonRow opacity={0.9} />
                 </View>
 
-                <Image
-                    style={styles.logoImage}
-                    source={require('../../assets/images/png/moonlet_space.png')}
-                />
-
-                <Text style={styles.launchingSoonText}>{translate('Rewards.launchingSoon')}</Text>
-                <Text style={styles.newSectionText}>{translate('Rewards.newSection')}</Text>
+                <View style={styles.textSection}>
+                    <Image
+                        style={styles.logoImage}
+                        source={require('../../assets/images/png/moonlet_space.png')}
+                    />
+                    <Text style={styles.launchingSoonText}>
+                        {translate('Rewards.launchingSoon')}
+                    </Text>
+                    <Text style={styles.newSectionText}>{translate('Rewards.newSection')}</Text>
+                </View>
 
                 <View style={styles.skeletonRow}>
                     <SkeletonRow opacity={0.7} />

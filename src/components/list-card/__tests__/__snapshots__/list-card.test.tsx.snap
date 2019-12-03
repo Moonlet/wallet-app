@@ -3,13 +3,17 @@
 exports[`CardList component renders correctly 1`] = `
 "<TouchableHighlight onPress={[Function: mockConstructor]} activeOpacity={0.85} delayPressOut={100} underlayColor=\\"black\\">
   <View style={{...}}>
-    <Icon name=\\"money-wallet-1\\" size={24} style={{...}} allowFontScaling={false} />
     <View style={{...}}>
-      <withTheme(TextComponent)>
+      <Icon name=\\"money-wallet-1\\" size={24} style={{...}} allowFontScaling={false} />
+    </View>
+    <View style={{...}}>
+      <withTheme(TextComponent) style={{...}}>
         card
       </withTheme(TextComponent)>
     </View>
-    <Icon name=\\"arrow-right-1\\" size={24} style={{...}} allowFontScaling={false} />
+    <View style={{...}}>
+      <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+    </View>
   </View>
 </TouchableHighlight>"
 `;

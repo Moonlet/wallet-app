@@ -6,6 +6,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { Text } from '../../library';
 import { Icon } from '../icon';
 import { CustomKey } from './custom-key';
+import { ICON_SIZE } from '../../styles/dimensions';
 
 const keyboardLayout = [
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
@@ -80,7 +81,7 @@ export class KeyboardComponent extends React.Component<
                         style={styles.deleteIconContainer}
                         onPress={this.props.handleDeleteKey}
                     >
-                        <Icon name="keyboard-delete-1" size={24} style={styles.deleteIcon} />
+                        <Icon name="keyboard-delete-1" size={ICON_SIZE} style={styles.deleteIcon} />
                     </TouchableOpacity>
                 ) : null}
             </View>

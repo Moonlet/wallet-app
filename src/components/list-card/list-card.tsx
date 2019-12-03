@@ -5,6 +5,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { View, TouchableHighlight } from 'react-native';
 import Icon from '../icon';
+import { ICON_SIZE } from '../../styles/dimensions';
 
 export interface IProps {
     label: string | JSX.Element;
@@ -17,16 +18,25 @@ export interface IProps {
 export const ListCardComponent = (
     props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    const label = typeof props.label === 'string' ? <Text>{props.label}</Text> : props.label;
+    const label =
+        typeof props.label === 'string' ? (
+            <Text style={props.styles.label}>{props.label}</Text>
+        ) : (
+            props.label
+        );
     return (
         <TouchableHighlight onPress={props.onPress}>
             <View style={[props.styles.card, props.selected && props.styles.selected]}>
                 {props.leftIcon && (
-                    <Icon name={props.leftIcon} size={24} style={props.styles.icon} />
+                    <View style={props.styles.iconLeftContainer}>
+                        <Icon name={props.leftIcon} size={ICON_SIZE} style={props.styles.icon} />
+                    </View>
                 )}
-                <View style={{ flex: 1 }}>{label}</View>
+                <View style={props.styles.labelContainer}>{label}</View>
                 {props.rightIcon && (
-                    <Icon name={props.rightIcon} size={24} style={props.styles.icon} />
+                    <View style={props.styles.iconRightContainer}>
+                        <Icon name={props.rightIcon} size={16} style={props.styles.icon} />
+                    </View>
                 )}
             </View>
         </TouchableHighlight>

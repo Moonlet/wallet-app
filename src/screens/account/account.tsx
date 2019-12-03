@@ -18,6 +18,7 @@ import { AccountAddress } from '../../components/account-address/account-address
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { Amount } from '../../components/amount/amount';
+import { ICON_SIZE } from '../../styles/dimensions';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -144,7 +145,7 @@ export class AccountScreenComponent extends React.Component<
                                     >
                                         <Icon
                                             name="money-wallet-1"
-                                            size={24}
+                                            size={ICON_SIZE}
                                             style={styles.transactionIcon}
                                         />
                                         <View style={styles.transactionTextContainer}>

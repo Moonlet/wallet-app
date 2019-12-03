@@ -6,8 +6,9 @@ import { pw, ph } from '../../styles';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            flex: 1,
             paddingHorizontal: BASE_DIMENSION * 2,
-            paddingTop: 40,
+            paddingTop: BASE_DIMENSION * 3,
             justifyContent: 'center',
             backgroundColor: theme.colors.appBackground
         },
@@ -17,6 +18,11 @@ export default (theme: ITheme) =>
             alignSelf: 'center',
             resizeMode: 'contain'
         },
+        textSection: {
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'center'
+        },
         launchingSoonText: {
             fontWeight: 'bold',
             fontSize: 22,
@@ -25,16 +31,15 @@ export default (theme: ITheme) =>
             letterSpacing: 0.35,
             color: theme.colors.text,
             opacity: 0.87,
-            marginBottom: BASE_DIMENSION
+            marginBottom: BASE_DIMENSION * 2
         },
         newSectionText: {
             fontSize: 17,
             lineHeight: 22,
             textAlign: 'center',
-            color: theme.colors.textSecondary,
-            marginBottom: BASE_DIMENSION * 7
+            color: theme.colors.textSecondary
         },
         skeletonRow: {
-            marginBottom: BASE_DIMENSION * 2
+            marginVertical: BASE_DIMENSION
         }
     });

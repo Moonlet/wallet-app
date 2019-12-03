@@ -13,7 +13,7 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { INetworksOptions } from '../../../redux/app/state';
 
 export interface INavigationParams {
-    selectedNetwork: Blockchain;
+    blockchain: Blockchain;
     testNet: boolean;
     appNetworks: INetworksOptions;
     setNetworkTestNetChainId: typeof setNetworkTestNetChainId;
@@ -28,7 +28,7 @@ const mapStateToProps = (state: IReduxState) => ({
 });
 
 const navigationOptions = ({ navigation }: any) => ({
-    title: navigation.state.params.selectedNetwork
+    title: navigation.state.params.blockchain
 });
 
 export class NetworkSelectionComponent extends React.Component<
@@ -38,45 +38,49 @@ export class NetworkSelectionComponent extends React.Component<
 
     public render() {
         const { styles, appNetworks } = this.props;
-        const { testNet, selectedNetwork } = this.props.navigation.state.params;
+        const { testNet, blockchain } = this.props.navigation.state.params;
 
-        const networks = getBlockchain(selectedNetwork)?.networks;
+        const networks = getBlockchain(blockchain)?.networks;
 
         return (
             <View style={styles.container}>
-                {networks
-                    ? networks.map((network: IBlockchainNetwork, index: number) =>
-                          !testNet === network.mainNet ? (
-                              <View key={index}>
-                                  <TouchableOpacity
-                                      style={styles.rowContainer}
-                                      onPress={() =>
-                                          this.props.setNetworkTestNetChainId(
-                                              selectedNetwork,
-                                              network.chainId
-                                          )
-                                      }
-                                  >
-                                      <Text style={styles.textRow}>{network.name}</Text>
-                                      <View style={styles.rightContainer}>
-                                          <Text
-                                              numberOfLines={1}
-                                              ellipsizeMode="tail"
-                                              style={styles.rightText}
-                                          >
-                                              {network.url}
-                                          </Text>
-                                          {appNetworks[selectedNetwork].testNet ===
-                                          network.chainId ? (
-                                              <Icon name="check-1" size={16} style={styles.icon} />
-                                          ) : null}
-                                      </View>
-                                  </TouchableOpacity>
-                                  <View style={styles.divider} />
-                              </View>
-                          ) : null
-                      )
-                    : null}
+                {networks &&
+                    networks.map(
+                        (network: IBlockchainNetwork, index: number) =>
+                            !testNet === network.mainNet && (
+                                <View key={index}>
+                                    <TouchableOpacity
+                                        style={styles.rowContainer}
+                                        onPress={() =>
+                                            this.props.setNetworkTestNetChainId(
+                                                blockchain,
+                                                network.chainId
+                                            )
+                                        }
+                                    >
+                                        <Text style={styles.textRow}>{network.name}</Text>
+                                        <View style={styles.rightContainer}>
+                                            <Text
+                                                numberOfLines={1}
+                                                ellipsizeMode="tail"
+                                                style={styles.rightText}
+                                            >
+                                                {network.url}
+                                            </Text>
+                                            {appNetworks[blockchain].testNet ===
+                                                network.chainId && (
+                                                <Icon
+                                                    name="check-1"
+                                                    size={16}
+                                                    style={styles.icon}
+                                                />
+                                            )}
+                                        </View>
+                                    </TouchableOpacity>
+                                    <View style={styles.divider} />
+                                </View>
+                            )
+                    )}
             </View>
         );
     }

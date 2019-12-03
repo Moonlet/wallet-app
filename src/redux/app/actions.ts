@@ -19,7 +19,7 @@ export const appSetTosVersion = (version: number) => {
     };
 };
 
-export const setTestNet = () => {
+export const toggleTestNet = () => {
     return {
         type: APP_SET_TEST_NET
     };

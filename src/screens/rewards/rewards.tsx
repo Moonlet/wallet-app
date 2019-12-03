@@ -18,7 +18,7 @@ export const mapStateToProps = (state: IReduxState) => {
 
 export const navigationOptions = () => ({
     headerLeft: <HeaderLeft icon="saturn-icon" />,
-    title: translate('Rewards.title')
+    title: translate('App.labels.rewards')
 });
 
 export class RewardsScreenComponent extends React.Component<

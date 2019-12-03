@@ -4,49 +4,56 @@ export const translation: ITranslations = {
     texts: {
         App: {
             labels: {
-                // plase try to add keys in alphabetic order
+                // please try to add keys in alphabetic order
+                about: 'About',
                 accept: 'Accept',
                 advanced: 'Advanced',
                 cancel: 'Cancel',
+                cheap: 'Cheap',
                 close: 'Close',
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
                 create: 'Create',
-                cheap: 'Cheap',
+                date: 'Date',
                 delete: 'Delete',
                 details: 'Details',
                 error: 'Error',
-                date: 'Date',
                 fast: 'Fast',
                 fastest: 'Fastest',
-                from: 'From',
                 fee: 'Fee',
+                from: 'From',
                 next: 'Next',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
                 receive: 'Receive',
                 recover: 'Recover',
+                rewards: 'Rewards',
                 save: 'Save',
                 secure: 'Secure',
+                security: 'Secutiry',
                 send: 'Send',
                 settings: 'Settings',
+                setup: 'Setup',
                 simple: 'Simple',
-                status: 'Status',
                 standard: 'Standard',
+                status: 'Status',
+                support: 'Support',
                 tc: 'Terms and conditions',
+                to: 'To',
+                tools: 'Tools',
                 tos: 'Terms of service',
                 transactions: 'Transactions',
-                to: 'To',
                 understand: 'I understand',
-                wallets: 'Wallets'
+                wallets: 'Wallets',
+                watch: 'Watch'
                 // plase try to add keys in alphabetic order
             },
             buttons: {
+                back: 'Back',
                 clipboardBtn: 'Copy to clipboard',
                 copiedBtn: 'Copied',
-                done: 'Done',
-                back: 'Back'
+                done: 'Done'
             }
         },
         CreateWalletTos: {
@@ -138,37 +145,27 @@ export const translation: ITranslations = {
             }
         },
         Rewards: {
-            title: 'Rewards',
             launchingSoon: 'Launching soon!',
             newSection: 'A new section to get rewards by staking your tokens is in the work.'
         },
-        Watch: {
-            title: 'Watch'
-        },
         Settings: {
-            title: 'Settings',
-            security: 'SECURITY',
-            pinLogin: 'Pin Login',
-            touchID: 'TouchID',
-            manageWallet: 'Manage wallet',
-            backupWallet: 'Backup wallet',
-            setup: 'SETUP',
-            defaultCurrency: 'Default currency',
-            blockchainPortfolio: 'Blockchain portfolio',
-            support: 'SUPPORT',
-            reportIssue: 'Report issue',
-            tools: 'TOOLS',
-            networkOptions: 'Network options',
-            about: 'ABOUT',
-            termsCons: 'Terms & conditions',
-            privacyPolicy: 'Privacy policy',
             appVersion: 'Application version',
-            signOut: 'Sign out'
+            backupWallet: 'Backup wallet',
+            blockchainPortfolio: 'Blockchain portfolio',
+            defaultCurrency: 'Default currency',
+            manageWallet: 'Manage wallet',
+            networkOptions: 'Network options',
+            pinLogin: 'Pin Login',
+            privacyPolicy: 'Privacy policy',
+            reportIssue: 'Report issue',
+            signOut: 'Sign out',
+            termsCons: 'Terms & conditions',
+            touchID: 'TouchID'
         },
         NetworkOptions: {
-            title: 'Network Options',
+            mainnet: 'Mainnet',
             testnet: 'Testnet',
-            mainnet: 'Mainnet'
+            title: 'Network Options'
         }
     },
     plural: (n: number, ord?: boolean) => {

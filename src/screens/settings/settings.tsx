@@ -31,7 +31,7 @@ const mapStateToProps = (state: IReduxState) => ({
 });
 
 const navigationOptions = () => ({
-    title: translate('Settings.title'),
+    title: translate('App.labels.settings'),
     headerLeft: <HeaderLeft icon="saturn-icon" />
 });
 
@@ -95,7 +95,9 @@ export class SettingsScreenComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                    <Text style={styles.textHeader}>{translate('Settings.security')}</Text>
+                    <Text style={styles.textHeader}>
+                        {translate('App.labels.security').toUpperCase()}
+                    </Text>
 
                     <View style={styles.rowContainer}>
                         <Text style={styles.textRow}>{translate('Settings.pinLogin')}</Text>
@@ -156,7 +158,9 @@ export class SettingsScreenComponent extends React.Component<
                     </TouchableOpacity>
                     <View style={styles.divider} />
 
-                    <Text style={styles.textHeader}>{translate('Settings.setup')}</Text>
+                    <Text style={styles.textHeader}>
+                        {translate('App.labels.setup').toUpperCase()}
+                    </Text>
 
                     <TouchableOpacity
                         testID={'default-currency'}
@@ -188,7 +192,9 @@ export class SettingsScreenComponent extends React.Component<
 
                     <View style={styles.divider} />
 
-                    <Text style={styles.textHeader}>{translate('Settings.support')}</Text>
+                    <Text style={styles.textHeader}>
+                        {translate('App.labels.support').toUpperCase()}
+                    </Text>
 
                     <TouchableOpacity
                         testID={'report-issue'}
@@ -203,7 +209,9 @@ export class SettingsScreenComponent extends React.Component<
 
                     <View style={styles.divider} />
 
-                    <Text style={styles.textHeader}>{translate('Settings.tools')}</Text>
+                    <Text style={styles.textHeader}>
+                        {translate('App.labels.tools').toUpperCase()}
+                    </Text>
 
                     <TouchableOpacity
                         testID={'network-options'}
@@ -218,7 +226,9 @@ export class SettingsScreenComponent extends React.Component<
 
                     <View style={styles.divider} />
 
-                    <Text style={styles.textHeader}>{translate('Settings.about')}</Text>
+                    <Text style={styles.textHeader}>
+                        {translate('App.labels.about').toUpperCase()}
+                    </Text>
 
                     <TouchableOpacity
                         testID={'terms-conditions'}

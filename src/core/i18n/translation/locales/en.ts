@@ -71,6 +71,12 @@ export const translation: ITranslations = {
                 tryAgain: 'Please try again'
             }
         },
+        CreateHardwareWallet: {
+            selectDevice: 'Device: ',
+            NANO_X: 'Ledger Nano X',
+            NANO_S: 'Ledger Nano S',
+            waitDevice: 'Waiting for device to be ready'
+        },
         Fee: {
             feeTitle: 'Transaction fee',
             gasPrice: 'Gas price',

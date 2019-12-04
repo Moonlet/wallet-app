@@ -3,7 +3,7 @@ import { IAccountState } from '../../redux/wallets/state';
 
 export enum WalletType {
     HD = 'HD',
-    HW_LEDGER = 'HW_LEDGER'
+    HW = 'HW'
 }
 
 export enum TransactionStatus {

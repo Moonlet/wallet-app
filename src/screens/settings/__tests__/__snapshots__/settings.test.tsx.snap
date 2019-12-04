@@ -10,7 +10,7 @@ exports[`Wallet screen renders correctly 1`] = `
       <withTheme(TextComponent) style={{...}}>
         Pin Login
       </withTheme(TextComponent)>
-      <Switch testID=\\"pin-login\\" onValueChange={[Function]} value={true} trackColor={{...}} thumbColor=\\"#00DAFF\\" />
+      <Switch testID=\\"pin-login\\" onValueChange={[Function: onValueChange]} value={true} trackColor={{...}} thumbColor=\\"#00DAFF\\" />
     </View>
     <View style={{...}} />
     <View style={{...}}>
@@ -41,7 +41,7 @@ exports[`Wallet screen renders correctly 1`] = `
     <withTheme(TextComponent) style={{...}}>
       SETUP
     </withTheme(TextComponent)>
-    <TouchableOpacity testID=\\"default-currency\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
       <withTheme(TextComponent) style={{...}}>
         Default currency
       </withTheme(TextComponent)>
@@ -76,7 +76,7 @@ exports[`Wallet screen renders correctly 1`] = `
     <withTheme(TextComponent) style={{...}}>
       TOOLS
     </withTheme(TextComponent)>
-    <TouchableOpacity testID=\\"network-options\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
       <withTheme(TextComponent) style={{...}}>
         Network options
       </withTheme(TextComponent)>

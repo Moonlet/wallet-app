@@ -39,7 +39,7 @@ export const translation: ITranslations = {
                 standard: 'Standard',
                 status: 'Status',
                 support: 'Support',
-                tc: 'Terms and conditions',
+                tc: 'Terms & conditions',
                 to: 'To',
                 tools: 'Tools',
                 tos: 'Terms of service',
@@ -159,7 +159,6 @@ export const translation: ITranslations = {
             privacyPolicy: 'Privacy policy',
             reportIssue: 'Report issue',
             signOut: 'Sign out',
-            termsCons: 'Terms & conditions',
             touchID: 'TouchID'
         },
         NetworkOptions: {

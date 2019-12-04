@@ -144,6 +144,12 @@ export const SettingsNavigation = createStackNavigator(
         },
         NetworkSelectionScreen: {
             screen: NetworkSelectionScreen
+        },
+        Tos: {
+            screen: TosScreen
+        },
+        PrivacyPolicy: {
+            screen: PrivacyPolicyScreen
         }
     },
     {

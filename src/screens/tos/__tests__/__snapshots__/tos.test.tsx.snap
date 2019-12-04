@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`tos screen component renders correctly 1`] = `
-"<View style={{...}}>
-  <withTheme(TextComponent)>
-    TOS blablax
-  </withTheme(TextComponent)>
-</View>"
-`;

@@ -19,6 +19,8 @@ import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { PasswordModal } from '../../components/password-modal/password-modal';
+import { themes } from '../../navigation/navigation';
+import { translate } from '../../core/i18n';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -148,9 +150,12 @@ export const AccountsScreenComponent = (
     );
 };
 
-const navigationOptions = ({ navigation }: any) => ({
+const navigationOptions = ({ navigation, theme }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: 'Accounts'
+    title: translate('App.labels.accounts'),
+    headerStyle: {
+        backgroundColor: themes[theme].colors.header
+    }
 });
 
 AccountsScreenComponent.navigationOptions = navigationOptions;

@@ -25,6 +25,7 @@ export interface ITheme {
         inputBackground: string;
         disabledButton: string;
         modalBackground: string;
+        header: string;
 
         gradientLight: string;
         gradientDark: string;

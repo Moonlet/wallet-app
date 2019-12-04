@@ -11,6 +11,7 @@ import { IBlockchainNetwork, Blockchain } from '../../../core/blockchain/types';
 import { setNetworkTestNetChainId } from '../../../redux/app/actions';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { INetworksOptions } from '../../../redux/app/state';
+import { themes } from '../../../navigation/navigation';
 
 export interface INavigationParams {
     blockchain: Blockchain;
@@ -27,8 +28,11 @@ const mapStateToProps = (state: IReduxState) => ({
     appNetworks: state.app.networks
 });
 
-const navigationOptions = ({ navigation }: any) => ({
-    title: navigation.state.params.blockchain
+const navigationOptions = ({ navigation, theme }: any) => ({
+    title: navigation.state.params.blockchain,
+    headerStyle: {
+        backgroundColor: themes[theme].colors.header
+    }
 });
 
 export class NetworkSelectionComponent extends React.Component<

@@ -36,6 +36,7 @@ import { TransactionDetails } from '../screens/transaction-details/transaction-d
 import { RewardsScreen } from '../screens/rewards/rewards';
 import { WatchScreen } from '../screens/watch/watch';
 import { AccountsScreen } from '../screens/accounts/accounts';
+import { BASE_DIMENSION } from '../styles/dimensions';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -52,10 +53,13 @@ const mainTabbedNavigationOptions: any = {
     tabBarOptions: {
         showIcon: true,
         labelStyle: {
-            fontSize: 12
+            fontSize: 12,
+            lineHeight: 15,
+            fontWeight: '500',
+            letterSpacing: 0.3
         },
         style: {
-            padding: 6,
+            padding: BASE_DIMENSION,
             height: 60
         },
         indicatorStyle: {
@@ -133,6 +137,26 @@ export const WalletNavigation = createStackNavigator(
     }
 );
 
+WalletNavigation.navigationOptions = ({ navigation }) => {
+    const { routeName } = navigation.state.routes[navigation.state.index];
+    const navigationOptions = {
+        tabBarVisible: true
+    };
+
+    if (
+        routeName === 'Account' ||
+        routeName === 'Send' ||
+        routeName === 'Receive' ||
+        routeName === 'Accounts' ||
+        routeName === 'Wallets' ||
+        routeName === 'ViewWalletMnemonic' ||
+        routeName === 'TransactionDetails'
+    ) {
+        navigationOptions.tabBarVisible = false;
+    }
+    return navigationOptions;
+};
+
 // settings navigation stack
 export const SettingsNavigation = createStackNavigator(
     {
@@ -144,6 +168,12 @@ export const SettingsNavigation = createStackNavigator(
         },
         NetworkSelectionScreen: {
             screen: NetworkSelectionScreen
+        },
+        Wallets: {
+            screen: WalletsScreen
+        },
+        ViewWalletMnemonic: {
+            screen: ViewWalletMnemonicScreen
         }
     },
     {
@@ -152,6 +182,23 @@ export const SettingsNavigation = createStackNavigator(
         headerLayoutPreset: 'center'
     }
 );
+
+SettingsNavigation.navigationOptions = ({ navigation }) => {
+    const { routeName } = navigation.state.routes[navigation.state.index];
+    const navigationOptions = {
+        tabBarVisible: true
+    };
+
+    if (
+        routeName === 'NetworkOptions' ||
+        routeName === 'NetworkSelectionScreen' ||
+        routeName === 'Wallets' ||
+        routeName === 'ViewWalletMnemonic'
+    ) {
+        navigationOptions.tabBarVisible = false;
+    }
+    return navigationOptions;
+};
 
 // rewards navigation stack
 export const RewardsNavigation = createStackNavigator(
@@ -237,7 +284,7 @@ export const CreateWalletNavigation = createStackNavigator(
     {
         initialRouteName: 'CreateWalletMnemonic',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        // disable transitiona animation for CreateWalletTerms screen
+        // disable transition animation for CreateWalletTerms screen
         transitionConfig: () => ({
             transitionSpec: {
                 timing: Animated.timing,
@@ -262,6 +309,5 @@ export const RootNavigation = createSwitchNavigator(
     },
     {
         initialRouteName: 'MainNavigation'
-        // initialRouteName: 'MainNavigation'
     }
 );

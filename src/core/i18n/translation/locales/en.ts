@@ -31,7 +31,7 @@ export const translation: ITranslations = {
                 rewards: 'Rewards',
                 save: 'Save',
                 secure: 'Secure',
-                security: 'Secutiry',
+                security: 'Security',
                 send: 'Send',
                 settings: 'Settings',
                 setup: 'Setup',

@@ -24,7 +24,7 @@ export const navigationOptions = ({ theme }: any) => ({
     }
 });
 
-export class TosScreenComponent extends React.Component<
+export class TermsConditionsScreenComponent extends React.Component<
     INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
@@ -44,7 +44,7 @@ export class TosScreenComponent extends React.Component<
     }
 }
 
-export const TosScreen = smartConnect(TosScreenComponent, [
+export const TermsConditionsScreen = smartConnect(TermsConditionsScreenComponent, [
     connect(mapStateToProps, null),
     withTheme(stylesProvider),
     withNavigationParams()

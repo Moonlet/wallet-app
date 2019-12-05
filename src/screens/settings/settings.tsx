@@ -221,7 +221,7 @@ export class SettingsScreenComponent extends React.Component<
 
                     <TouchableOpacity
                         style={styles.rowContainer}
-                        onPress={() => navigation.navigate('Tos')}
+                        onPress={() => navigation.navigate('TermsConditions')}
                     >
                         <Text style={styles.textRow}>{translate('App.labels.tc')}</Text>
                         <View style={styles.rightContainer}>

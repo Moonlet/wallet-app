@@ -23,6 +23,7 @@ export const translation: ITranslations = {
                 fastest: 'Fastest',
                 fee: 'Fee',
                 from: 'From',
+                legal: 'Legal',
                 next: 'Next',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
@@ -42,7 +43,6 @@ export const translation: ITranslations = {
                 tc: 'Terms & conditions',
                 to: 'To',
                 tools: 'Tools',
-                tos: 'Terms of service',
                 transactions: 'Transactions',
                 understand: 'I understand',
                 wallets: 'Wallets',
@@ -57,7 +57,7 @@ export const translation: ITranslations = {
             }
         },
         CreateWalletTos: {
-            body: 'Make sure you review our Privacy policy and Terms of service'
+            body: 'Make sure you review our Privacy policy and Terms & conditions'
         },
         CreateWalletMnemonic: {
             body:

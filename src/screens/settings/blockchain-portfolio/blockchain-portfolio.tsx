@@ -12,20 +12,30 @@ import { translate } from '../../../core/i18n';
 import { INetworksOptions } from '../../../redux/app/state';
 import { themes } from '../../../navigation/navigation';
 import DraggableFlatList from 'react-native-draggable-flatlist';
+import { toggleNetwork, sortNetworks } from '../../../redux/app/actions';
 
 export interface IReduxProps {
     networks: INetworksOptions;
+    toggleNetwork: typeof toggleNetwork;
+    sortNetworks: typeof sortNetworks;
 }
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+    toggleNetwork,
+    sortNetworks
+};
 
-const mapStateToProps = (state: IReduxState) => ({
-    networks: state.app.networks
-});
+const mapStateToProps = (state: IReduxState) => {
+    const networks = Object.keys(state.app.networks)
+        .reduce((array, key) => {
+            return [...array, { key, value: state.app.networks[key] }];
+        }, [])
+        .sort((a, b) => a.value.order - b.value.order);
 
-interface IState {
-    networks: string[];
-}
+    return {
+        networks
+    };
+};
 
 const navigationOptions = ({ theme }: any) => ({
     title: translate('Settings.blockchainPortfolio'),
@@ -35,41 +45,25 @@ const navigationOptions = ({ theme }: any) => ({
 });
 
 export class BlockchainPortfolioComponent extends React.Component<
-    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
 
-    constructor(
-        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
-    ) {
-        super(props);
-
-        this.state = {
-            networks: Object.keys(this.props.networks)
-        };
-    }
-
     public renderNetwork = ({ item, index, move, moveEnd, isActive }: any) => {
         const { styles, theme } = this.props;
-        const isChecked = true;
 
         return (
             <View>
                 <View style={styles.rowContainer}>
-                    <Text style={styles.blockchainName}>{item}</Text>
-                    <TouchableOpacity
-                        onPress={() => {
-                            // toggle is checked
-                        }}
-                    >
+                    <Text style={styles.blockchainName}>{item.key}</Text>
+                    <TouchableOpacity onPress={() => this.props.toggleNetwork(item.key)}>
                         <Icon
                             size={18}
-                            name={isChecked ? 'check-2-thicked' : 'check-2'}
+                            name={item.value.active ? 'check-2-thicked' : 'check-2'}
                             style={[
                                 styles.checkIcon,
                                 {
-                                    color: isChecked
+                                    color: item.value.active
                                         ? theme.colors.accent
                                         : theme.colors.textSecondary
                                 }
@@ -91,11 +85,17 @@ export class BlockchainPortfolioComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <DraggableFlatList
-                    data={this.state.networks}
+                    data={this.props.networks}
                     renderItem={this.renderNetwork}
-                    keyExtractor={(item: string, index: number) => `draggable-item-${index}`}
+                    keyExtractor={(item: any) => `${item.value.order}`}
                     scrollPercent={5}
-                    onMoveEnd={({ data }) => this.setState({ networks: data })}
+                    onMoveEnd={({ data }) =>
+                        this.props.sortNetworks(
+                            data.reduce((array, blockchain, index) => {
+                                return [...array, { blockchain: blockchain.key, order: index }];
+                            }, [])
+                        )
+                    }
                 />
             </View>
         );

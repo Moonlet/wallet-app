@@ -1,6 +1,8 @@
 export interface INetworksOptions {
     [blockchain: string]: {
         // key is for Blockchain enum
+        order: number;
+        active: boolean;
         mainNet?: number;
         testNet?: number;
     };

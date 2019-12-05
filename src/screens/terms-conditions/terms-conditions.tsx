@@ -8,13 +8,13 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { themes } from '../../navigation/navigation';
 
 export const navigationOptions = ({ theme }: any) => ({
-    title: translate('App.labels.privacyPolicy'),
+    title: translate('App.labels.tc'),
     headerStyle: {
         backgroundColor: themes[theme].colors.headerBackground
     }
 });
 
-export class PrivacyPolicyScreenComponent extends React.Component<
+export class TermsConditionsScreenComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
@@ -34,6 +34,6 @@ export class PrivacyPolicyScreenComponent extends React.Component<
     }
 }
 
-export const PrivacyPolicyScreen = smartConnect(PrivacyPolicyScreenComponent, [
+export const TermsConditionsScreen = smartConnect(TermsConditionsScreenComponent, [
     withTheme(stylesProvider)
 ]);

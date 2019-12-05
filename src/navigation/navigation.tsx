@@ -26,7 +26,7 @@ import { CreateWalletTermsScreen } from '../screens/create-wallet-terms/create-w
 import { CreateWalletMnemonicScreen } from '../screens/create-wallet-mnemonic/create-wallet-mnemonic';
 import { AccountScreen } from '../screens/account/account';
 import { SendScreen } from '../screens/send/send';
-import { TosScreen } from '../screens/tos/tos';
+import { TermsConditionsScreen } from '../screens/terms-conditions/terms-conditions';
 import { PrivacyPolicyScreen } from '../screens/privacy-policy/privacy-policy';
 import { CreateWalletConfirmMnemonicScreen } from '../screens/create-wallet-confirm-mnemonic/create-wallet-confirm-mnemonic';
 import { Animated } from 'react-native';
@@ -157,6 +157,12 @@ export const SettingsNavigation = createStackNavigator(
         BlockchainPortfolio: {
             screen: BlockchainPortfolioScreen
         },
+        TermsConditions: {
+            screen: TermsConditionsScreen
+        },
+        PrivacyPolicy: {
+            screen: PrivacyPolicyScreen
+        },
         Wallets: {
             screen: WalletsScreen
         },
@@ -245,8 +251,8 @@ export const CreateWalletNavigation = createStackNavigator(
         CreateWalletMnemonic: {
             screen: CreateWalletMnemonicScreen
         },
-        Tos: {
-            screen: TosScreen
+        TermsConditions: {
+            screen: TermsConditionsScreen
         },
         PrivacyPolicy: {
             screen: PrivacyPolicyScreen

@@ -51,9 +51,4 @@ export default describe('Wallet screen', () => {
         wrapper.find('[testID="report-issue"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
     });
-    it('Terms & conditions', () => {
-        const wrapper = shallow(<SettingsScreenComponent {...props} />);
-        wrapper.find('[testID="terms-conditions"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalledTimes(1);
-    });
 });

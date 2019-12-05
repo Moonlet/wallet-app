@@ -1,9 +1,10 @@
 import React from 'react';
-import { TosScreenComponent, IProps } from '../tos';
+import { TermsConditionsScreenComponent, IProps } from '../terms-conditions';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import styleProvider from '../styles';
 
 import { shallow } from 'enzyme';
+import { loadTranslations } from '../../../core/i18n';
 
 const props: IProps = {
     // @ts-ignore
@@ -13,9 +14,13 @@ const props: IProps = {
     styles: styleProvider(darkTheme)
 };
 
-describe('tos screen component', () => {
+describe('terms and conditions screen component', () => {
+    beforeAll(async () => {
+        await loadTranslations('en');
+    });
+
     it('renders correctly', () => {
-        const wrapper = shallow(<TosScreenComponent {...props} />);
+        const wrapper = shallow(<TermsConditionsScreenComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();
     });
 });

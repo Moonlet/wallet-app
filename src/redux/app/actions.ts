@@ -1,3 +1,5 @@
+import { Blockchain } from '../../core/blockchain/types';
+
 // actions consts
 export const APP_SWITCH_WALLET = 'APP_STATE_SWITCH_WALLET';
 export const APP_SET_TOS_VERSION = 'APP_SET_TOS_VERSION';
@@ -27,21 +29,21 @@ export const toggleTestNet = () => {
     };
 };
 
-export const setNetworkTestNetChainId = (blockchain: string, chainId: number) => {
+export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: number) => {
     return {
         type: APP_SET_NETWORK_TEST_NET_CHAIN_ID,
         data: { blockchain, chainId }
     };
 };
 
-export const toggleNetwork = (blockchain: string) => {
+export const toggleNetwork = (blockchain: Blockchain) => {
     return {
         type: APP_TOGGLE_NETWORK,
         data: { blockchain }
     };
 };
 
-export const sortNetworks = (sortedNetworks: Array<{ blockchain: number }>) => {
+export const sortNetworks = (sortedNetworks: Array<{ blockchain: Blockchain; order: number }>) => {
     return {
         type: APP_SORT_NETWORKS,
         data: { sortedNetworks }

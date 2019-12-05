@@ -21,17 +21,20 @@ import { BigNumber } from 'bignumber.js';
 import { selectCurrentWallet } from '../../redux/wallets/selectors';
 import { createSelector } from 'reselect';
 import { PasswordModal } from '../../components/password-modal/password-modal';
+import { INetworksOptions } from '../../redux/app/state';
+import { networks } from '../../core/blockchain/zilliqa/networks';
 
 export interface IReduxProps {
     wallet: IWalletState;
     walletsNr: number;
     getBalance: typeof getBalance;
+    networks: INetworksOptions;
 }
 
 interface IState {
     coinIndex: number;
     balance: any;
-    coins: Blockchain[];
+    coins: Array<{ blockchain: Blockchain; order: number }>;
 }
 
 const FADE_ANIMATION_DURATION = 50;
@@ -39,8 +42,8 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCROLL_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.5);
 const ANIMATED_BC_SELECTION = true;
 
-const calculateBalances = (accounts: IAccountState[]) => {
-    return accounts.reduce(
+const calculateBalances = (accounts: IAccountState[], blockchainNetworks: INetworksOptions) => {
+    const result = accounts.reduce(
         (out: any, account: IAccountState) => {
             if (!account) {
                 return out;
@@ -49,7 +52,12 @@ const calculateBalances = (accounts: IAccountState[]) => {
                 out.balance[account.blockchain] = {
                     amount: account?.balance?.value || new BigNumber(0)
                 };
-                out.coins.push(account.blockchain);
+                if (blockchainNetworks[account.blockchain].active) {
+                    out.coins.push({
+                        blockchain: account.blockchain,
+                        order: blockchainNetworks[account.blockchain].order
+                    });
+                }
             } else {
                 out.balance[account.blockchain].amount = out.balance[
                     account.blockchain
@@ -59,11 +67,17 @@ const calculateBalances = (accounts: IAccountState[]) => {
         },
         { coins: [], balance: {} }
     );
+
+    const coins = result.coins.sort((a, b) => a.order - b.order);
+    const balance = result.balance;
+
+    return { coins, balance };
 };
 
 const mapStateToProps = (state: IReduxState) => ({
     wallet: selectCurrentWallet(state),
-    walletsNr: state.wallets.length
+    walletsNr: state.wallets.length,
+    networks: state.app.networks
 });
 
 const mapDispatchToProps = {
@@ -99,8 +113,14 @@ const navigationOptions = ({ navigation, theme }: any) => ({
 
 // `calculateBalances` gets executed only when result of parameter picker function result is changed
 const getWalletBalances = createSelector(
-    [(wallet: IWalletState) => (wallet && wallet.accounts) || []],
-    accounts => calculateBalances(accounts)
+    [
+        (wallet: IWalletState, blockchainNetworks: INetworksOptions) => {
+            const accounts = (wallet && wallet.accounts) || [];
+            const n = blockchainNetworks || {};
+            return { accounts, n };
+        }
+    ],
+    result => calculateBalances(result.accounts, result.n)
 );
 
 export class DashboardScreenComponent extends React.Component<
@@ -111,7 +131,7 @@ export class DashboardScreenComponent extends React.Component<
 
     public static getDerivedStateFromProps(props, state) {
         // update balances if wallet accounts changes
-        return getWalletBalances(props.wallet);
+        return getWalletBalances(props.wallet, props.networks);
     }
     public passwordModal = null;
     public initialIndex = 0;
@@ -125,7 +145,7 @@ export class DashboardScreenComponent extends React.Component<
 
         this.state = {
             coinIndex: this.initialIndex,
-            ...calculateBalances(props.wallet?.accounts || [])
+            ...calculateBalances(props.wallet?.accounts || [], props.networks)
         };
 
         if (props.walletsNr < 1) {
@@ -224,7 +244,7 @@ export class DashboardScreenComponent extends React.Component<
                                         styles.blockchainButtonTextActive
                                     }
                                 >
-                                    {BLOCKCHAIN_INFO[this.state.coins[i]].coin}
+                                    {BLOCKCHAIN_INFO[this.state.coins[i].blockchain].coin}
                                 </Text>
                             </TouchableOpacity>
                         ))}
@@ -255,17 +275,20 @@ export class DashboardScreenComponent extends React.Component<
                         decelerationRate={0.8}
                     >
                         <View style={{ width: (SCREEN_WIDTH - SCROLL_CARD_WIDTH) / 2 }} />
-                        {this.state.coins.map((coin, i) => (
-                            <CoinBalanceCard
-                                balance={this.state.balance[this.state.coins[i]].amount}
-                                blockchain={this.state.coins[i]}
-                                currency={BLOCKCHAIN_INFO[this.state.coins[i]].coin}
-                                width={SCROLL_CARD_WIDTH}
-                                key={i}
-                                toCurrency="USD"
-                                active={this.state.coinIndex === i}
-                            />
-                        ))}
+                        {this.state.coins.map((coin, i) => {
+                            const blockchain = this.state.coins[i].blockchain;
+                            return (
+                                <CoinBalanceCard
+                                    balance={this.state.balance[blockchain].amount}
+                                    blockchain={blockchain}
+                                    currency={BLOCKCHAIN_INFO[blockchain].coin}
+                                    width={SCROLL_CARD_WIDTH}
+                                    key={i}
+                                    toCurrency="USD"
+                                    active={this.state.coinIndex === i}
+                                />
+                            );
+                        })}
                         <View style={{ width: (SCREEN_WIDTH - SCROLL_CARD_WIDTH) / 2 }} />
                     </ScrollView>
                 </View>
@@ -280,16 +303,17 @@ export class DashboardScreenComponent extends React.Component<
                         accounts={(this.props.wallet?.accounts || []).filter(
                             account =>
                                 account &&
-                                account.blockchain === this.state.coins[this.state.coinIndex]
+                                account.blockchain ===
+                                    this.state.coins[this.state.coinIndex].blockchain
                         )}
-                        blockchain={this.state.coins[this.state.coinIndex]}
+                        blockchain={this.state.coins[this.state.coinIndex].blockchain}
                         navigation={this.props.navigation}
                     />
                 </Animated.View>
 
-                {this.state.coins && this.state.coins.length > 1
-                    ? this.renderBottomBlockchainNav()
-                    : null}
+                {this.state.coins &&
+                    this.state.coins.length > 1 &&
+                    this.renderBottomBlockchainNav()}
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>
         );

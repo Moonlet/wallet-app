@@ -67,7 +67,8 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
         case APP_SORT_NETWORKS:
             state = { ...state };
             action.data.sortedNetworks.map(
-                network => (state.networks[network.blockchain].order = network.order)
+                (network: { blockchain: Blockchain; order: number }) =>
+                    (state.networks[network.blockchain].order = network.order)
             );
             return state;
         default:

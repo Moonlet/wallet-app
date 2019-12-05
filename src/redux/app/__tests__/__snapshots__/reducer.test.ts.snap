@@ -6,11 +6,15 @@ Object {
   "devMode": true,
   "networks": Object {
     "ETHEREUM": Object {
+      "active": true,
       "mainNet": 1,
+      "order": 0,
       "testNet": 4,
     },
     "ZILLIQA": Object {
+      "active": true,
       "mainNet": 1,
+      "order": 1,
       "testNet": 333,
     },
   },

@@ -120,6 +120,9 @@ def jscFlavor = 'org.webkit:android-jsc:+'
  */
 def enableHermes = project.ext.react.get("enableHermes", false)
 
+// WORKAROUND for com.google.gms:google-services:4.2.0: https://github.com/invertase/react-native-firebase/issues/1676#issuecomment-441243419
+com.google.gms.googleservices.GoogleServicesPlugin.config.disableVersionCheck = true
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
@@ -213,6 +216,16 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02'
     implementation 'com.android.support:multidex:1.0.3'
 
+    implementation "com.google.android.gms:play-services-base:17.0.0"
+	implementation "com.google.firebase:firebase-core:17.0.1"
+	implementation "com.google.firebase:firebase-messaging:19.0.0"
+	implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
+
+
+    // implementation "com.google.android.gms:play-services-base:16.1.0"
+    // implementation "com.google.firebase:firebase-core:16.0.9"
+    // implementation "com.google.firebase:firebase-messaging:18.0.0"
+
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/"
         debugImplementation files(hermesPath + "hermes-debug.aar")
@@ -237,3 +250,5 @@ project.ext.vectoricons = [
 ]
 
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
+
+apply plugin: 'com.google.gms.google-services'

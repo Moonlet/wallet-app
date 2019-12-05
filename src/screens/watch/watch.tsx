@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, Clipboard } from 'react-native';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { IReduxState } from '../../redux/state';
@@ -10,6 +10,9 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom';
+import { Notification } from '../../messaging/notifications';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text, Button } from '../../library';
 
 interface IState {
     textInput: any;
@@ -49,6 +52,12 @@ export class WatchScreenComponent extends React.Component<
         });
     };
 
+    public getCurrentToken = () => {
+        Notification.getToken().then(token => {
+            Clipboard.setString(token);
+        });
+    };
+
     public render() {
         const styles = this.props.styles;
 
@@ -57,6 +66,9 @@ export class WatchScreenComponent extends React.Component<
                 <View style={styles.textInputArea}>
                     <TextInput value={this.state.textInput} editable={false} style={styles.text} />
                 </View>
+                <Button onPress={this.getCurrentToken}>
+                    <Text>Copy fb token</Text>
+                </Button>
                 <KeyboardCustom
                     showNumeric={true}
                     handleTextUpdate={this.handleTextUpdate}

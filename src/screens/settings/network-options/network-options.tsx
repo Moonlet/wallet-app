@@ -72,7 +72,7 @@ export class NetworkOptionsComponent extends React.Component<
                                 style={styles.rowContainer}
                                 disabled={!testNet}
                                 onPress={() =>
-                                    navigation.navigate('NetworkSelectionScreen', {
+                                    navigation.navigate('NetworkSelection', {
                                         blockchain,
                                         testNet
                                     })

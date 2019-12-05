@@ -1,5 +1,5 @@
 // actions consts
-// export const PREF_SET_CURRENCY = 'PREF_SET_CURRENCY';
+export const PREF_SET_CURRENCY = 'PREF_SET_CURRENCY';
 export const PREF_SET_PIN = 'PREF_SET_PIN';
 
 // actions creators
@@ -7,5 +7,12 @@ export const PREF_SET_PIN = 'PREF_SET_PIN';
 export function setPinLogin() {
     return {
         type: PREF_SET_PIN
+    };
+}
+
+export function setCurrency(currency: string) {
+    return {
+        type: PREF_SET_CURRENCY,
+        data: { currency }
     };
 }

@@ -4,7 +4,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
 "<View style={{...}}>
   <View style={{...}}>
     <withTheme(TextComponent) style={{...}}>
-      Make sure you review our Privacy policy and Terms of service
+      Make sure you review our Privacy policy and Terms &amp; conditions
     </withTheme(TextComponent)>
     <View style={{...}}>
       <Image resizeMode=\\"contain\\" source={{...}} />
@@ -13,7 +13,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
   <View style={{...}}>
     <TouchableOpacity testID=\\"button-tos\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
       <withTheme(TextComponent) style={{...}}>
-        Terms of service
+        Terms &amp; conditions
       </withTheme(TextComponent)>
       <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
@@ -35,6 +35,6 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
 exports[`creat wallet terms screen component sets correct navigation options 1`] = `
 Object {
   "headerLeft": null,
-  "title": "Terms and conditions",
+  "title": "Legal",
 }
 `;

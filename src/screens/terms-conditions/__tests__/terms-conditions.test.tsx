@@ -1,5 +1,5 @@
 import React from 'react';
-import { PrivacyPolicyScreenComponent, IProps } from '../privacy-policy';
+import { TermsConditionsScreenComponent, IProps } from '../terms-conditions';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import styleProvider from '../styles';
 
@@ -14,13 +14,13 @@ const props: IProps = {
     styles: styleProvider(darkTheme)
 };
 
-describe('privacy policy screen component', () => {
+describe('terms and conditions screen component', () => {
     beforeAll(async () => {
         await loadTranslations('en');
     });
 
     it('renders correctly', () => {
-        const wrapper = shallow(<PrivacyPolicyScreenComponent {...props} />);
+        const wrapper = shallow(<TermsConditionsScreenComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();
     });
 });

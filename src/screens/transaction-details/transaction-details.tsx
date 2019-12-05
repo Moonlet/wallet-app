@@ -32,7 +32,7 @@ export const navigationOptions = ({ navigation, theme }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
     title: translate('App.labels.details'),
     headerStyle: {
-        backgroundColor: themes[theme].colors.header
+        backgroundColor: themes[theme].colors.headerBackground
     }
 });
 

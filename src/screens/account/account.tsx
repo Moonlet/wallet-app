@@ -58,7 +58,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
         );
     },
     headerStyle: {
-        backgroundColor: themes[theme].colors.header
+        backgroundColor: themes[theme].colors.headerBackground
     }
 });
 

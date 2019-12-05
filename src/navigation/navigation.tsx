@@ -135,21 +135,9 @@ export const WalletNavigation = createStackNavigator(
         initialRouteName: 'Dashboard',
         defaultNavigationOptions: defaultStackNavigationOptions,
         headerLayoutPreset: 'center',
-        navigationOptions: ({ navigation }) => {
-            const { routeName } = navigation.state.routes[navigation.state.index];
-            return {
-                tabBarVisible:
-                    routeName === 'Account' ||
-                    routeName === 'Send' ||
-                    routeName === 'Receive' ||
-                    routeName === 'Accounts' ||
-                    routeName === 'Wallets' ||
-                    routeName === 'ViewWalletMnemonic' ||
-                    routeName === 'TransactionDetails'
-                        ? false
-                        : true
-            };
-        }
+        navigationOptions: ({ navigation }) => ({
+            tabBarVisible: navigation.state.index < 1
+        })
     }
 );
 
@@ -179,19 +167,9 @@ export const SettingsNavigation = createStackNavigator(
         initialRouteName: 'Settings',
         defaultNavigationOptions: defaultStackNavigationOptions,
         headerLayoutPreset: 'center',
-        navigationOptions: ({ navigation }) => {
-            const { routeName } = navigation.state.routes[navigation.state.index];
-            return {
-                tabBarVisible:
-                    routeName === 'NetworkOptions' ||
-                    routeName === 'NetworkSelection' ||
-                    routeName === 'Wallets' ||
-                    routeName === 'ViewWalletMnemonic' ||
-                    routeName === 'SetCurrency'
-                        ? false
-                        : true
-            };
-        }
+        navigationOptions: ({ navigation }) => ({
+            tabBarVisible: navigation.state.index < 1
+        })
     }
 );
 

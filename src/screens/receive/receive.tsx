@@ -45,7 +45,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
     title: translate('App.labels.receive'),
     headerStyle: {
-        backgroundColor: themes[theme].colors.header
+        backgroundColor: themes[theme].colors.headerBackground
     }
 });
 export class ReceiveScreenComponent extends React.Component<

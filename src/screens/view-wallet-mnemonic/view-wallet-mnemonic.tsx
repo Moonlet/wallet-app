@@ -27,7 +27,7 @@ interface IState {
 export const navigationOptions = ({ theme }: any) => ({
     title: translate('Wallets.viewPhrase'),
     headerStyle: {
-        backgroundColor: themes[theme].colors.header
+        backgroundColor: themes[theme].colors.headerBackground
     }
 });
 

@@ -34,7 +34,7 @@ const mapStateToProps = (state: IReduxState) => ({
 const navigationOptions = ({ theme }: any) => ({
     title: translate('NetworkOptions.title'),
     headerStyle: {
-        backgroundColor: themes[theme].colors.header
+        backgroundColor: themes[theme].colors.headerBackground
     }
 });
 

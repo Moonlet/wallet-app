@@ -31,7 +31,7 @@ const mapStateToProps = (state: IReduxState) => ({
 const navigationOptions = ({ navigation, theme }: any) => ({
     title: navigation.state.params.blockchain,
     headerStyle: {
-        backgroundColor: themes[theme].colors.header
+        backgroundColor: themes[theme].colors.headerBackground
     }
 });
 

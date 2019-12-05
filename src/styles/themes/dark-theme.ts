@@ -28,7 +28,7 @@ export const darkTheme: ITheme = {
         inputBackground: COLORS.TUNDORA_GRAY,
         disabledButton: COLORS.LIGHT_GRAY,
         modalBackground: COLORS.FLAT_GRAY,
-        header: COLORS.SHARK_GRAY,
+        headerBackground: COLORS.SHARK_GRAY,
 
         gradientLight: COLORS.COD_GRAY,
         gradientDark: COLORS.BLACK

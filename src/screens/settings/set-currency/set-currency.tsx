@@ -30,7 +30,7 @@ const mapStateToProps = (state: IReduxState) => ({
 const navigationOptions = ({ theme }: any) => ({
     title: translate('Settings.defaultCurrency'),
     headerStyle: {
-        backgroundColor: themes[theme].colors.header
+        backgroundColor: themes[theme].colors.headerBackground
     }
 });
 

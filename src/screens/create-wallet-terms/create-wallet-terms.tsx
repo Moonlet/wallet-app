@@ -39,9 +39,9 @@ export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) =>
             <TouchableOpacity
                 testID="button-tos"
                 style={props.styles.rowContainer}
-                onPress={() => props.navigation.navigate('Tos')}
+                onPress={() => props.navigation.navigate('TermsConditions')}
             >
-                <Text style={props.styles.text}>{translate('App.labels.tos')}</Text>
+                <Text style={props.styles.text}>{translate('App.labels.tc')}</Text>
                 <Icon name="arrow-right-1" size={16} style={props.styles.icon} />
             </TouchableOpacity>
             <View style={props.styles.divider} />
@@ -70,8 +70,8 @@ export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) =>
     </View>
 );
 
-export const navigationOptions = ({ navigation }: any) => ({
-    title: translate('App.labels.tc'),
+export const navigationOptions = () => ({
+    title: translate('App.labels.legal'),
     headerLeft: null
 });
 

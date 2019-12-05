@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`privacy policy screen component renders correctly 1`] = `
+exports[`terms and conditions screen component renders correctly 1`] = `
 "<View style={{...}}>
   <Image style={{...}} source={{...}} />
   <withTheme(TextComponent) style={{...}}>

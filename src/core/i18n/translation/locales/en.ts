@@ -24,6 +24,7 @@ export const translation: ITranslations = {
                 fastest: 'Fastest',
                 fee: 'Fee',
                 from: 'From',
+                legal: 'Legal',
                 next: 'Next',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
@@ -40,10 +41,9 @@ export const translation: ITranslations = {
                 standard: 'Standard',
                 status: 'Status',
                 support: 'Support',
-                tc: 'Terms and conditions',
+                tc: 'Terms & conditions',
                 to: 'To',
                 tools: 'Tools',
-                tos: 'Terms of service',
                 transactions: 'Transactions',
                 understand: 'I understand',
                 wallets: 'Wallets',
@@ -58,7 +58,7 @@ export const translation: ITranslations = {
             }
         },
         CreateWalletTos: {
-            body: 'Make sure you review our Privacy policy and Terms of service'
+            body: 'Make sure you review our Privacy policy and Terms & conditions'
         },
         CreateWalletMnemonic: {
             body:
@@ -160,7 +160,6 @@ export const translation: ITranslations = {
             privacyPolicy: 'Privacy policy',
             reportIssue: 'Report issue',
             signOut: 'Sign out',
-            termsCons: 'Terms & conditions',
             touchID: 'TouchID'
         },
         NetworkOptions: {

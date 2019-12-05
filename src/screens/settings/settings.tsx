@@ -215,11 +215,10 @@ export class SettingsScreenComponent extends React.Component<
                     </Text>
 
                     <TouchableOpacity
-                        testID={'terms-conditions'}
                         style={styles.rowContainer}
-                        onPress={this.termsAndConditionsTouch}
+                        onPress={() => navigation.navigate('TermsConditions')}
                     >
-                        <Text style={styles.textRow}>{translate('Settings.termsCons')}</Text>
+                        <Text style={styles.textRow}>{translate('App.labels.tc')}</Text>
                         <View style={styles.rightContainer}>
                             <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
                         </View>
@@ -228,9 +227,8 @@ export class SettingsScreenComponent extends React.Component<
                     <View style={styles.divider} />
 
                     <TouchableOpacity
-                        testID={'privacy-policy'}
                         style={styles.rowContainer}
-                        onPress={this.privacyPolicyTouch}
+                        onPress={() => navigation.navigate('PrivacyPolicy')}
                     >
                         <Text style={styles.textRow}>{translate('Settings.privacyPolicy')}</Text>
                         <View style={styles.rightContainer}>

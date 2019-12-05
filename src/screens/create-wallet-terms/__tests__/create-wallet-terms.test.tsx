@@ -49,7 +49,7 @@ describe('creat wallet terms screen component', () => {
         await flushPromises();
 
         expect(props.navigation.navigate).toHaveBeenCalledWith('PrivacyPolicy');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('Tos');
+        expect(props.navigation.navigate).toHaveBeenCalledWith('TermsConditions');
         expect(props.navigation.pop).toHaveBeenCalledTimes(1);
     });
 

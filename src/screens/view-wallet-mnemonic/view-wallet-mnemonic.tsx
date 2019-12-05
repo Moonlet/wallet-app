@@ -1,7 +1,8 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Clipboard } from 'react-native';
 import { Text } from '../../library';
 import { Button } from '../../library/button/button';
+import { Icon } from '../../components/icon';
 
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -10,8 +11,9 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
 import { IWalletState } from '../../redux/wallets/state';
-import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
+import { ICON_SIZE } from '../../styles/dimensions';
+import { themes } from '../../navigation/navigation';
 
 export interface INavigationParams {
     wallet: IWalletState;
@@ -19,11 +21,14 @@ export interface INavigationParams {
 
 interface IState {
     mnemonic: string[];
+    copied: boolean;
 }
 
-export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: translate('Wallets.viewPhrase')
+export const navigationOptions = ({ theme }: any) => ({
+    title: translate('Wallets.viewPhrase'),
+    headerStyle: {
+        backgroundColor: themes[theme].colors.headerBackground
+    }
 });
 
 export class ViewWalletMnemonicScreenComponent extends React.Component<
@@ -36,7 +41,8 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
     constructor(props: any) {
         super(props);
         this.state = {
-            mnemonic: new Array(24).fill('')
+            mnemonic: new Array(24).fill(''),
+            copied: false
         };
     }
 
@@ -52,19 +58,21 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
     }
 
     public render() {
-        const props = this.props;
+        const { styles } = this.props;
+        const { copied } = this.state;
+
         return (
-            <View style={props.styles.container}>
-                <View style={props.styles.topContainer}>
-                    <View style={props.styles.mnemonicContainer}>
+            <View style={styles.container}>
+                <View style={styles.topContainer}>
+                    <View style={styles.mnemonicContainer}>
                         {this.state.mnemonic.reduce((out: any, word: string, i: number) => {
                             if (i % 4 === 0) {
                                 const line = this.state.mnemonic.slice(i, i + 4);
                                 out = [
                                     ...out,
-                                    <View style={props.styles.mnemonicLine} key={i}>
+                                    <View style={styles.mnemonicLine} key={i}>
                                         {line.map((w, k) => (
-                                            <Text small key={k} style={props.styles.mnemonicWord}>
+                                            <Text small key={k} style={styles.mnemonicWord}>
                                                 {i + k + 1}. {w}
                                             </Text>
                                         ))}
@@ -74,16 +82,26 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
                             return out;
                         }, [])}
                     </View>
+
+                    <View style={styles.tipWrapper}>
+                        <Icon name="warning" size={ICON_SIZE} style={styles.alertIcon} />
+                        <Text style={styles.tipText}>
+                            {translate('AccountSettings.securityTip')}
+                        </Text>
+                    </View>
                 </View>
-                <View style={props.styles.bottomContainer}>
+
+                <View style={styles.bottomContainer}>
                     <Button
-                        style={props.styles.bottomButton}
-                        primary
+                        disabled={copied}
                         onPress={() => {
-                            this.props.navigation.goBack(null);
+                            Clipboard.setString(this.state.mnemonic.toString().replace(/,/g, ' '));
+                            this.setState({ copied: true });
                         }}
                     >
-                        {translate('App.labels.close')}
+                        {copied
+                            ? translate('App.buttons.copiedBtn')
+                            : translate('App.buttons.clipboardBtn')}
                     </Button>
                 </View>
 

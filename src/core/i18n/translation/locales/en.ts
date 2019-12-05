@@ -7,6 +7,7 @@ export const translation: ITranslations = {
                 // please try to add keys in alphabetic order
                 about: 'About',
                 accept: 'Accept',
+                accounts: 'Accounts',
                 advanced: 'Advanced',
                 cancel: 'Cancel',
                 cheap: 'Cheap',
@@ -120,16 +121,16 @@ export const translation: ITranslations = {
             revealPublic: 'Reveal public key',
             viewOn: 'View on ',
             reportIssue: 'Report issue',
-            securityTip: 'Security tip: Never disclosure your private key.',
-            securityTip2: 'Anyone with this key can take your funds forever.'
+            securityTip:
+                'Security tip: Never disclosure your private key. Anyone with this key can take your funds forever.'
         },
         Wallets: {
             deleteWallet: 'Delete wallet',
-            unveil: 'Unvail phrase',
+            unveil: 'Unveil phrase',
             editName: 'Edit name',
             confirmDelete:
                 'Make sure you have saved securely your recovery phrase before deleting it',
-            viewPhrase: 'View phrase',
+            viewPhrase: 'Reveal secret phrase',
             secureWallet: 'Secure wallet',
             editTitle: 'Edit wallet name',
             editDescription: 'Use a relevant name or an alias for this wallet'

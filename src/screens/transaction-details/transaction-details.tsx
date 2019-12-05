@@ -16,6 +16,7 @@ import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { themes } from '../../navigation/navigation';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -27,9 +28,12 @@ export interface INavigationParams {
     transaction: ITransactionState;
 }
 
-export const navigationOptions = ({ navigation }: any) => ({
+export const navigationOptions = ({ navigation, theme }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: translate('App.labels.details')
+    title: translate('App.labels.details'),
+    headerStyle: {
+        backgroundColor: themes[theme].colors.headerBackground
+    }
 });
 
 export class TransactionDetailsComponent extends React.Component<

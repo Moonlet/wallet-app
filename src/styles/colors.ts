@@ -12,5 +12,5 @@ export const COLORS = {
     AQUA: '#00DAFF',
     FLAT_GRAY: '#4E4E53',
     LIGHT_RED: '#FFAB91',
-    YELLOW: '#e5e500'
+    YELLOW: '#F2C94C'
 };

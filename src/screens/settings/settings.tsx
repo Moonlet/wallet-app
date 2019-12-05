@@ -27,7 +27,8 @@ export const mockFunction = () => {
 };
 
 const mapStateToProps = (state: IReduxState) => ({
-    pinLogin: state.preferences.pinLogin
+    pinLogin: state.preferences.pinLogin,
+    currency: state.preferences.currency
 });
 
 const navigationOptions = () => ({
@@ -39,10 +40,7 @@ export class SettingsScreenComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
-    public pinLoginSwitch = () => {
-        // pin login
-        this.props.setPinLogin();
-    };
+
     public touchIdSwitch = () => {
         // touch Id
         this.props.mock();
@@ -58,13 +56,6 @@ export class SettingsScreenComponent extends React.Component<
     public manageWalletTouch = () => {
         // manage wallet
         this.props.mock();
-    };
-    public defaultCurrencyTouch = () => {
-        // set default currency
-        this.props.mock();
-    };
-    public networkOptionsTouch = () => {
-        this.props.navigation.navigate('NetworkOptions');
     };
     public reportIssueTouch = () => {
         // report an issue
@@ -99,7 +90,7 @@ export class SettingsScreenComponent extends React.Component<
                         <Text style={styles.textRow}>{translate('Settings.pinLogin')}</Text>
                         <Switch
                             testID={'pin-login'}
-                            onValueChange={this.pinLoginSwitch}
+                            onValueChange={() => this.props.setPinLogin()}
                             value={this.props.pinLogin}
                             trackColor={{
                                 true: this.props.theme.colors.cardBackground,
@@ -159,9 +150,8 @@ export class SettingsScreenComponent extends React.Component<
                     </Text>
 
                     <TouchableOpacity
-                        testID={'default-currency'}
                         style={styles.rowContainer}
-                        onPress={this.defaultCurrencyTouch}
+                        onPress={() => navigation.navigate('SetCurrency')}
                     >
                         <Text style={styles.textRow}>{translate('Settings.defaultCurrency')}</Text>
                         <View style={styles.rightContainer}>
@@ -209,7 +199,6 @@ export class SettingsScreenComponent extends React.Component<
                     </Text>
 
                     <TouchableOpacity
-                        testID={'network-options'}
                         style={styles.rowContainer}
                         onPress={() => navigation.navigate('NetworkOptions')}
                     >

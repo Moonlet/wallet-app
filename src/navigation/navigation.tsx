@@ -20,6 +20,7 @@ import { SettingsScreen } from '../screens/settings/settings';
 import { NetworkOptionsScreen } from '../screens/settings/network-options/network-options';
 import { NetworkSelectionScreen } from '../screens/settings/network-selection/network-selection';
 import { BlockchainPortfolioScreen } from '../screens/settings/blockchain-portfolio/blockchain-portfolio';
+import { SetCurrencyScreen } from '../screens/settings/set-currency/set-currency';
 import { OnboardingScreen } from '../screens/onboarding/onboarding';
 import { CreateWalletTermsScreen } from '../screens/create-wallet-terms/create-wallet-terms';
 import { CreateWalletMnemonicScreen } from '../screens/create-wallet-mnemonic/create-wallet-mnemonic';
@@ -143,11 +144,14 @@ export const SettingsNavigation = createStackNavigator(
         NetworkOptions: {
             screen: NetworkOptionsScreen
         },
-        NetworkSelectionScreen: {
+        NetworkSelection: {
             screen: NetworkSelectionScreen
         },
         BlockchainPortfolio: {
             screen: BlockchainPortfolioScreen
+        },
+        SetCurrency: {
+            screen: SetCurrencyScreen
         }
     },
     {

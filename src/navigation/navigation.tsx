@@ -134,29 +134,24 @@ export const WalletNavigation = createStackNavigator(
     {
         initialRouteName: 'Dashboard',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center'
+        headerLayoutPreset: 'center',
+        navigationOptions: ({ navigation }) => {
+            const { routeName } = navigation.state.routes[navigation.state.index];
+            return {
+                tabBarVisible:
+                    routeName === 'Account' ||
+                    routeName === 'Send' ||
+                    routeName === 'Receive' ||
+                    routeName === 'Accounts' ||
+                    routeName === 'Wallets' ||
+                    routeName === 'ViewWalletMnemonic' ||
+                    routeName === 'TransactionDetails'
+                        ? false
+                        : true
+            };
+        }
     }
 );
-
-WalletNavigation.navigationOptions = ({ navigation }) => {
-    const { routeName } = navigation.state.routes[navigation.state.index];
-    const navigationOptions = {
-        tabBarVisible: true
-    };
-
-    if (
-        routeName === 'Account' ||
-        routeName === 'Send' ||
-        routeName === 'Receive' ||
-        routeName === 'Accounts' ||
-        routeName === 'Wallets' ||
-        routeName === 'ViewWalletMnemonic' ||
-        routeName === 'TransactionDetails'
-    ) {
-        navigationOptions.tabBarVisible = false;
-    }
-    return navigationOptions;
-};
 
 // settings navigation stack
 export const SettingsNavigation = createStackNavigator(
@@ -183,26 +178,22 @@ export const SettingsNavigation = createStackNavigator(
     {
         initialRouteName: 'Settings',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center'
+        headerLayoutPreset: 'center',
+        navigationOptions: ({ navigation }) => {
+            const { routeName } = navigation.state.routes[navigation.state.index];
+            return {
+                tabBarVisible:
+                    routeName === 'NetworkOptions' ||
+                    routeName === 'NetworkSelection' ||
+                    routeName === 'Wallets' ||
+                    routeName === 'ViewWalletMnemonic' ||
+                    routeName === 'SetCurrency'
+                        ? false
+                        : true
+            };
+        }
     }
 );
-
-SettingsNavigation.navigationOptions = ({ navigation }) => {
-    const { routeName } = navigation.state.routes[navigation.state.index];
-    const navigationOptions = {
-        tabBarVisible: true
-    };
-
-    if (
-        routeName === 'NetworkOptions' ||
-        routeName === 'NetworkSelectionScreen' ||
-        routeName === 'Wallets' ||
-        routeName === 'ViewWalletMnemonic'
-    ) {
-        navigationOptions.tabBarVisible = false;
-    }
-    return navigationOptions;
-};
 
 // rewards navigation stack
 export const RewardsNavigation = createStackNavigator(

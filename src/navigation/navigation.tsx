@@ -37,6 +37,7 @@ import { TransactionDetails } from '../screens/transaction-details/transaction-d
 import { RewardsScreen } from '../screens/rewards/rewards';
 import { WatchScreen } from '../screens/watch/watch';
 import { AccountsScreen } from '../screens/accounts/accounts';
+import { BASE_DIMENSION } from '../styles/dimensions';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -53,10 +54,13 @@ const mainTabbedNavigationOptions: any = {
     tabBarOptions: {
         showIcon: true,
         labelStyle: {
-            fontSize: 12
+            fontSize: 12,
+            lineHeight: 15,
+            fontWeight: '500',
+            letterSpacing: 0.3
         },
         style: {
-            padding: 6,
+            padding: BASE_DIMENSION,
             height: 60
         },
         indicatorStyle: {
@@ -130,7 +134,10 @@ export const WalletNavigation = createStackNavigator(
     {
         initialRouteName: 'Dashboard',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center'
+        headerLayoutPreset: 'center',
+        navigationOptions: ({ navigation }) => ({
+            tabBarVisible: navigation.state.index < 1
+        })
     }
 );
 
@@ -146,6 +153,12 @@ export const SettingsNavigation = createStackNavigator(
         NetworkSelection: {
             screen: NetworkSelectionScreen
         },
+        Wallets: {
+            screen: WalletsScreen
+        },
+        ViewWalletMnemonic: {
+            screen: ViewWalletMnemonicScreen
+        },
         SetCurrency: {
             screen: SetCurrencyScreen
         }
@@ -153,7 +166,10 @@ export const SettingsNavigation = createStackNavigator(
     {
         initialRouteName: 'Settings',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center'
+        headerLayoutPreset: 'center',
+        navigationOptions: ({ navigation }) => ({
+            tabBarVisible: navigation.state.index < 1
+        })
     }
 );
 
@@ -241,7 +257,7 @@ export const CreateWalletNavigation = createStackNavigator(
     {
         initialRouteName: 'CreateWalletMnemonic',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        // disable transitiona animation for CreateWalletTerms screen
+        // disable transition animation for CreateWalletTerms screen
         transitionConfig: () => ({
             transitionSpec: {
                 timing: Animated.timing,
@@ -266,6 +282,5 @@ export const RootNavigation = createSwitchNavigator(
     },
     {
         initialRouteName: 'MainNavigation'
-        // initialRouteName: 'MainNavigation'
     }
 );

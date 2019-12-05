@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import { Blockchain } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
+import { themes } from '../../navigation/navigation';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -40,9 +41,12 @@ interface IState {
     copied: boolean;
 }
 
-const navigationOptions = ({ navigation }: any) => ({
+const navigationOptions = ({ navigation, theme }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: translate('App.labels.receive')
+    title: translate('App.labels.receive'),
+    headerStyle: {
+        backgroundColor: themes[theme].colors.headerBackground
+    }
 });
 export class ReceiveScreenComponent extends React.Component<
     INavigationProps<INavigationParams> & IProps & IReduxProps,

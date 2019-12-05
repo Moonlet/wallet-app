@@ -28,20 +28,22 @@ export default (theme: ITheme) =>
         },
         tipWrapper: {
             flexDirection: 'row',
-            flexWrap: 'wrap',
-            backgroundColor: 'yellow',
-            padding: BASE_DIMENSION * 2,
+            backgroundColor: theme.colors.warning,
+            padding: BASE_DIMENSION,
+            borderRadius: BORDER_RADIUS,
             marginHorizontal: BASE_DIMENSION * 2,
-            marginBottom: BASE_DIMENSION * 3,
-            borderRadius: BORDER_RADIUS
-        },
-        alertIcon: {
-            marginRight: BASE_DIMENSION,
-            color: theme.colors.primary
+            marginBottom: BASE_DIMENSION * 3
         },
         tipText: {
+            flex: 1,
+            fontSize: 13,
+            lineHeight: 18,
+            color: theme.colors.primary
+        },
+        alertIcon: {
+            alignSelf: 'center',
             color: theme.colors.primary,
-            fontSize: theme.fontSize.small
+            marginRight: BASE_DIMENSION
         },
         divider: {
             width: '100%',

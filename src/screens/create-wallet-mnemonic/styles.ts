@@ -47,5 +47,16 @@ export default (theme: ITheme) =>
 
         bottomButton: {
             width: '80%'
+        },
+
+        textContainer: {
+            flexDirection: 'row',
+            marginTop: BASE_DIMENSION * 3,
+            marginHorizontal: BASE_DIMENSION * 2
+        },
+
+        alertIcon: {
+            color: theme.colors.warning,
+            marginRight: BASE_DIMENSION
         }
     });

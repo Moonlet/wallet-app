@@ -53,10 +53,6 @@ export class SettingsScreenComponent extends React.Component<
         // backup wallet
         this.props.mock();
     };
-    public manageWalletTouch = () => {
-        // manage wallet
-        this.props.mock();
-    };
     public reportIssueTouch = () => {
         // report an issue
         this.props.mock();
@@ -125,9 +121,8 @@ export class SettingsScreenComponent extends React.Component<
                     <View style={styles.divider} />
 
                     <TouchableOpacity
-                        testID={'manage-wallet'}
                         style={styles.rowContainer}
-                        onPress={this.revealPassphraseTouch}
+                        onPress={() => navigation.navigate('Wallets')}
                     >
                         <Text style={styles.textRow}>{translate('Settings.manageWallet')}</Text>
                         <View style={styles.rightContainer}>

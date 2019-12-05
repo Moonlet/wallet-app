@@ -25,6 +25,7 @@ import stylesProvider from './styles';
 import { deleteWallet, updateWalletName } from '../../redux/wallets/actions';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { ListCard } from '../../components/list-card/list-card';
+import { themes } from '../../navigation/navigation';
 
 export interface IReduxProps {
     wallets: {
@@ -62,9 +63,12 @@ const mapDispatchToProps = {
     updateWalletName
 };
 
-const navigationOptions = ({ navigation }: any) => ({
+const navigationOptions = ({ navigation, theme }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: translate('App.labels.wallets')
+    title: translate('App.labels.wallets'),
+    headerStyle: {
+        backgroundColor: themes[theme].colors.headerBackground
+    }
 });
 
 export class WalletsScreenComponent extends React.Component<
@@ -203,16 +207,14 @@ export class WalletsScreenComponent extends React.Component<
                         {translate('Wallets.deleteWallet')}
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.action}>
-                    <Icon
-                        name="view-1"
-                        size={32}
-                        style={styles.iconActionPositive}
-                        onPress={() => {
-                            this.closeCurrentOpenedSwipable();
-                            this.onPressUnveil(wallet);
-                        }}
-                    />
+                <TouchableOpacity
+                    onPress={() => {
+                        this.closeCurrentOpenedSwipable();
+                        this.onPressUnveil(wallet);
+                    }}
+                    style={styles.action}
+                >
+                    <Icon name="view-1" size={32} style={styles.iconActionPositive} />
                     <Text style={styles.textActionPositive}>{translate('Wallets.unveil')}</Text>
                 </TouchableOpacity>
                 <TouchableOpacity

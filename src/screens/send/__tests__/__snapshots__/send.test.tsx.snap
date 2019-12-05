@@ -291,23 +291,6 @@ exports[`SendScreen renders correctly 2`] = `
 </View>"
 `;
 
-exports[`SendScreen sets correct navigation options 1`] = `
-Object {
-  "headerLeft": <HeaderLeftClose
-    navigation={
-      Object {
-        "state": Object {
-          "params": Object {
-            "goBack": [MockFunction],
-          },
-        },
-      }
-    }
-  />,
-  "title": "Send",
-}
-`;
-
 exports[`SendScreen should Call verify address 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>

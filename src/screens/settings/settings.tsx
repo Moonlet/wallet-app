@@ -121,7 +121,6 @@ export class SettingsScreenComponent extends React.Component<
                     <View style={styles.divider} />
 
                     <TouchableOpacity
-                        testID={'manage-wallet'}
                         style={styles.rowContainer}
                         onPress={() => navigation.navigate('Wallets')}
                     >

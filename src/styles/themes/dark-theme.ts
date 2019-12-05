@@ -1,5 +1,6 @@
 import { ITheme } from '../../core/theme/itheme';
 import { COLORS } from '../colors';
+import { adjustColor } from '../common';
 
 export const darkTheme: ITheme = {
     dark: true,
@@ -28,7 +29,7 @@ export const darkTheme: ITheme = {
         inputBackground: COLORS.TUNDORA_GRAY,
         disabledButton: COLORS.LIGHT_GRAY,
         modalBackground: COLORS.FLAT_GRAY,
-        headerBackground: COLORS.SHARK_GRAY,
+        headerBackground: adjustColor(COLORS.DARK_GRAY, -7),
 
         gradientLight: COLORS.COD_GRAY,
         gradientDark: COLORS.BLACK

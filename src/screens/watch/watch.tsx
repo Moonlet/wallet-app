@@ -11,7 +11,6 @@ import { connect } from 'react-redux';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom';
 import { Notification } from '../../messaging/notifications';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Text, Button } from '../../library';
 
 interface IState {

@@ -1,12 +1,15 @@
-import { ILedgerState } from './state';
+import { IConnectHardwareWalletState } from './state';
 import { IAction } from '../../types';
 import { VERIFY_ADDRESS_ON_DEVICE } from './actions';
 
-const intialState: ILedgerState = {
+const intialState: IConnectHardwareWalletState = {
     verifyAddress: false
 };
 
-export default (state: ILedgerState = intialState, action: IAction): ILedgerState => {
+export default (
+    state: IConnectHardwareWalletState = intialState,
+    action: IAction
+): IConnectHardwareWalletState => {
     switch (action.type) {
         case VERIFY_ADDRESS_ON_DEVICE:
             return { ...state, verifyAddress: action.data };

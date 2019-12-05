@@ -13,7 +13,8 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
 import { selectCurrentWallet } from './selectors';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
-import { verifyAddressOnDevice } from '../screens/ledger/actions';
+import { verifyAddressOnDevice } from '../screens/connectHardwareWallet/actions';
+import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -23,17 +24,6 @@ export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
-
-export const FEE = {
-    [Blockchain.ZILLIQA]: {
-        gasPrice: 1000,
-        gasLimit: 1
-    },
-    [Blockchain.ETHEREUM]: {
-        gasPrice: 20000000000,
-        gasLimit: 21000
-    }
-};
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -58,32 +48,24 @@ export const removeAccount = (walletId: string, blockchain: Blockchain, account:
 };
 
 export const createHWWallet = (
+    deviceId: string,
     deviceVendor: HWVendor,
     deviceModel: HWModel,
     connectionType: HWConnection,
     blockchain: Blockchain,
     pass: string
 ) => async (dispatch, getState: () => IReduxState) => {
-    const deviceId = '';
     try {
-        const walletId = uuidv4();
+        // const walletId = uuidv4();
 
-        dispatch(verifyAddressOnDevice(true));
-
-        const wallet = await WalletFactory.get(walletId, WalletType.HW, {
-            pass,
+        const wallet = await HWWalletFactory.get(
             deviceVendor,
             deviceModel,
-            connectionType,
-            deviceId
-        });
+            deviceId,
+            connectionType
+        );
 
-        // const wallet = await HWWalletFactory.get(
-        //     deviceVendor,
-        //     deviceModel,
-        //     deviceId,
-        //     connectionType
-        // );
+        dispatch(verifyAddressOnDevice(true));
     } catch (e) {
         // console.log(e);
     }

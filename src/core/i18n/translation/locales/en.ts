@@ -75,7 +75,8 @@ export const translation: ITranslations = {
             selectDevice: 'Device: ',
             NANO_X: 'Ledger Nano X',
             NANO_S: 'Ledger Nano S',
-            waitDevice: 'Waiting for device to be ready'
+            waitDevice: 'Waiting for device to be ready',
+            verifyAddress: 'Verify address on your device'
         },
         Fee: {
             feeTitle: 'Transaction fee',

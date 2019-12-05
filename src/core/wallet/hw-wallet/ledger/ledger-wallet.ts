@@ -4,8 +4,9 @@ import { IAccountState } from '../../../../redux/wallets/state';
 import { HWModel, HWConnection } from '../types';
 
 export class LedgerWallet implements IWallet {
+    private transport: Transport;
     constructor(transport: Transport) {
-        //
+        this.transport = transport;
     }
     public getAccounts(
         blockchain: Blockchain,
@@ -20,5 +21,9 @@ export class LedgerWallet implements IWallet {
         tx: IBlockchainTransaction
     ): Promise<any> {
         return;
+    }
+
+    public getTransport() {
+        return this.transport;
     }
 }

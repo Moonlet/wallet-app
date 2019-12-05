@@ -116,6 +116,7 @@ export class WalletsScreenComponent extends React.Component<
     public onPressCreateHW() {
         this.props.navigation.navigate('ConnectHardwareWallet');
     }
+
     public onPressCreate() {
         this.props.navigation.navigate(
             'CreateWalletNavigation',
@@ -315,7 +316,12 @@ export class WalletsScreenComponent extends React.Component<
                             ),
                             [WalletType.HW]: (
                                 <View style={styles.buttonContainer}>
-                                    <Button style={styles.bottomButton}>
+                                    <Button
+                                        style={styles.bottomButton}
+                                        onPress={() => {
+                                            this.onPressCreateHW();
+                                        }}
+                                    >
                                         {translate('App.labels.connect')}
                                     </Button>
                                 </View>

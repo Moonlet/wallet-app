@@ -8,14 +8,14 @@ import appReducer from './app/reducer';
 import marketReducer from './market/reducer';
 import prefReducer from './preferences/reducer';
 import contactsReducer from './contacts/reducer';
-import ledgerReducer from './screens/ledger/reducer';
+import connectHardwareWalletReducer from './screens/connectHardwareWallet/reducer';
 
 const composeEnhancers = composeWithDevTools({
     // options like actionSanitizer, stateSanitizer
 });
 
 export const screensReducer = combineReducers({
-    ledger: ledgerReducer
+    connectHardwareWallet: connectHardwareWalletReducer
 });
 
 export const rootReducer = combineReducers({

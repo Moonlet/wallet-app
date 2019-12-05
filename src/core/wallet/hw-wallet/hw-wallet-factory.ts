@@ -1,4 +1,4 @@
-import { IWallet } from '../types';
+import { IHardwareWallet } from '../types';
 import { HWVendor, HWModel, HWConnection } from './types';
 import { LedgerWallet } from './ledger/ledger-wallet';
 import { TransportFactory } from './ledger/transport-factory';
@@ -9,7 +9,7 @@ export class HWWalletFactory {
         deviceModel: HWModel,
         deviceId: string,
         connectionType: HWConnection
-    ): Promise<IWallet> {
+    ): Promise<IHardwareWallet> {
         switch (deviceVendor) {
             case HWVendor.LEDGER: {
                 try {

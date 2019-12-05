@@ -40,6 +40,10 @@ target 'Moonlet' do
 
   pod 'Firebase/Core', '~> 6.3.0', :modular_headers => true
   pod 'Firebase/Messaging', '~> 6.3.0',
+  pod 'react-native-ble-plx-swift', :path => '../node_modules/react-native-ble-plx'
+
+
+
 
   use_native_modules!
 

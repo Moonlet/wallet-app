@@ -131,7 +131,10 @@ export const WalletNavigation = createStackNavigator(
     {
         initialRouteName: 'Dashboard',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center'
+        headerLayoutPreset: 'center',
+        navigationOptions: ({ navigation }) => ({
+            tabBarVisible: navigation.state.index < 1
+        })
     }
 );
 
@@ -157,27 +160,12 @@ export const SettingsNavigation = createStackNavigator(
     {
         initialRouteName: 'Settings',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center'
+        headerLayoutPreset: 'center',
+        navigationOptions: ({ navigation }) => ({
+            tabBarVisible: navigation.state.index < 1
+        })
     }
 );
-
-SettingsNavigation.navigationOptions = ({ navigation }) => {
-    const { routeName } = navigation.state.routes[navigation.state.index];
-    const navigationOptions = {
-        tabBarVisible: true
-    };
-
-    if (
-        routeName === 'NetworkOptions' ||
-        routeName === 'NetworkSelectionScreen' ||
-        routeName === 'Wallets' ||
-        routeName === 'ViewWalletMnemonic' ||
-        routeName === 'BlockchainPortfolio'
-    ) {
-        navigationOptions.tabBarVisible = false;
-    }
-    return navigationOptions;
-};
 
 // rewards navigation stack
 export const RewardsNavigation = createStackNavigator(

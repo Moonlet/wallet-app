@@ -1,19 +1,18 @@
 import React from 'react';
 import { View, ScrollView, Dimensions, Animated, TouchableOpacity } from 'react-native';
 import { Text } from '../../library';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { INavigationProps } from '../../navigation/with-navigation-params';
 import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
 import { CoinDashboard } from '../../components/coin-dashboard/coin-dashboard';
 import { IReduxState } from '../../redux/state';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
-import { ITheme } from '../../core/theme/itheme';
 import LinearGradient from 'react-native-linear-gradient';
 
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { withTheme } from '../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { HeaderRight } from '../../components/header-right/header-right';
 import { getBalance } from '../../redux/wallets/actions';
@@ -22,12 +21,6 @@ import { BigNumber } from 'bignumber.js';
 import { selectCurrentWallet } from '../../redux/wallets/selectors';
 import { createSelector } from 'reselect';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-
-export interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -80,10 +73,13 @@ const mapDispatchToProps = {
 const MyTitle = ({ text }) => (
     <Text
         style={{
+            flex: 1,
             fontSize: 22,
             lineHeight: 28,
             opacity: 0.87,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            // color: themes[theme].colors.text,
+            textAlign: 'center'
         }}
     >
         {text}
@@ -93,16 +89,11 @@ const MyConnectedTitle = connect((state: IReduxState) => ({
     text: (selectCurrentWallet(state) || {}).name
 }))(MyTitle);
 
-const navigationOptions = ({ navigation }: any) => ({
+const navigationOptions = ({ navigation, theme }: any) => ({
     headerTitle: () => <MyConnectedTitle />,
     headerLeft: <HeaderLeft icon="saturn-icon" />,
     headerRight: (
-        <HeaderRight
-            icon="single-man-hierachy"
-            onPress={() => {
-                navigation.navigate('Wallets');
-            }}
-        />
+        <HeaderRight icon="single-man-hierachy" onPress={() => navigation.navigate('Wallets')} />
     )
 });
 
@@ -112,7 +103,10 @@ const getWalletBalances = createSelector(
     accounts => calculateBalances(accounts)
 );
 
-export class DashboardScreenComponent extends React.Component<IProps & IReduxProps, IState> {
+export class DashboardScreenComponent extends React.Component<
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
     public static navigationOptions = navigationOptions;
 
     public static getDerivedStateFromProps(props, state) {
@@ -124,7 +118,9 @@ export class DashboardScreenComponent extends React.Component<IProps & IReduxPro
     public dashboardOpacity = new Animated.Value(1);
     public balancesScrollView: any;
 
-    constructor(props: IProps & IReduxProps) {
+    constructor(
+        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
 
         this.state = {

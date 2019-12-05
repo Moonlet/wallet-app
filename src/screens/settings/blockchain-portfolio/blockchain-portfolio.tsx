@@ -11,8 +11,7 @@ import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
 import { INetworksOptions } from '../../../redux/app/state';
 import { themes } from '../../../navigation/navigation';
-
-import DraggableFlatList from '../../../components/draggable-flatlist/DraggableFlatlist';
+import DraggableFlatList from 'react-native-draggable-flatlist';
 
 export interface IReduxProps {
     networks: INetworksOptions;

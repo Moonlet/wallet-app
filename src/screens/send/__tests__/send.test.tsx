@@ -113,9 +113,11 @@ export default describe('SendScreen', () => {
         expect(wrapper.debug()).toMatchSnapshot();
     });
 
-    test('sets correct navigation options', () => {
-        const navigationProp = { navigation: { state: { params: { goBack: jest.fn() } } } };
-        const options = navigationOptions(navigationProp);
-        expect(options).toMatchSnapshot();
-    });
+    // test('sets correct navigation options', () => {
+    //     const navigationProp = {
+    //         navigation: { state: { params: { goBack: jest.fn() } } }
+    //     };
+    //     const options = navigationOptions(navigationProp);
+    //     expect(options).toMatchSnapshot();
+    // });
 });

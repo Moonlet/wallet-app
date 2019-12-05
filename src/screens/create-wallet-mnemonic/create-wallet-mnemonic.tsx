@@ -13,6 +13,8 @@ import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
 import { TOS_VERSION } from '../../core/constants/app';
+import { ICON_SIZE } from '../../styles/dimensions';
+import { Icon } from '../../components/icon';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -95,9 +97,10 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
                             return out;
                         }, [])}
                     </View>
-                    <Text darker style={{ marginTop: 20 }}>
-                        {translate('CreateWalletMnemonic.body')}
-                    </Text>
+                    <View style={props.styles.textContainer}>
+                        <Icon name="warning" size={ICON_SIZE} style={props.styles.alertIcon} />
+                        <Text darker>{translate('CreateWalletMnemonic.body')}</Text>
+                    </View>
                 </View>
                 <View style={props.styles.bottomContainer}>
                     <Button

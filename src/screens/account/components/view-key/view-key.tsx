@@ -49,9 +49,8 @@ export class ViewKeyComponent extends React.Component<
                 </View>
 
                 <View style={styles.tipWrapper}>
-                    <Icon name="warning" size={ICON_SIZE / 2} style={styles.alertIcon} />
+                    <Icon name="warning" size={ICON_SIZE} style={styles.alertIcon} />
                     <Text style={styles.tipText}>{translate('AccountSettings.securityTip')}</Text>
-                    <Text style={styles.tipText}>{translate('AccountSettings.securityTip2')}</Text>
                 </View>
 
                 <View style={styles.divider} />

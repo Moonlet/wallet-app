@@ -1,31 +1,21 @@
 import React from 'react';
 import { Image, View } from 'react-native';
-import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { IReduxState } from '../../redux/state';
 import { translate } from '../../core/i18n';
 import { Text } from '../../library';
-
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { connect } from 'react-redux';
 import { themes } from '../../navigation/navigation';
-
-export const mapStateToProps = (state: IReduxState) => {
-    return {
-        //
-    };
-};
 
 export const navigationOptions = ({ theme }: any) => ({
     title: translate('App.labels.tc'),
     headerStyle: {
-        backgroundColor: themes[theme].colors.header
+        backgroundColor: themes[theme].colors.headerBackground
     }
 });
 
 export class TermsConditionsScreenComponent extends React.Component<
-    INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
 
@@ -45,7 +35,5 @@ export class TermsConditionsScreenComponent extends React.Component<
 }
 
 export const TermsConditionsScreen = smartConnect(TermsConditionsScreenComponent, [
-    connect(mapStateToProps, null),
-    withTheme(stylesProvider),
-    withNavigationParams()
+    withTheme(stylesProvider)
 ]);

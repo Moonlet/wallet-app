@@ -38,6 +38,8 @@ target 'Moonlet' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  pod 'Firebase/Core', '~> 6.3.0'
+  pod 'Firebase/Messaging', '~> 6.3.0'
 
   use_native_modules!
 
@@ -45,6 +47,12 @@ target 'Moonlet' do
 end
 
 post_install do |installer|
+  rnfirebase = installer.pods_project.targets.find { |target| target.name == 'RNFirebase' }
+  rnfirebase.build_configurations.each do |config|
+    config.build_settings['HEADER_SEARCH_PATHS'] = '$(inherited) ${PODS_ROOT}/Headers/Public/**'
+  end
+
+
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
       config.build_settings['ENABLE_BITCODE'] = 'NO'

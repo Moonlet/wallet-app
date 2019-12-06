@@ -1,7 +1,7 @@
-import { IHardwareWallet } from '../types';
 import { HWVendor, HWModel, HWConnection } from './types';
 import { LedgerWallet } from './ledger/ledger-wallet';
 import { TransportFactory } from './ledger/transport-factory';
+import { IWallet } from '../types';
 
 export class HWWalletFactory {
     public static async get(
@@ -9,16 +9,12 @@ export class HWWalletFactory {
         deviceModel: HWModel,
         deviceId: string,
         connectionType: HWConnection
-    ): Promise<IHardwareWallet> {
+    ): Promise<IWallet> {
         switch (deviceVendor) {
             case HWVendor.LEDGER: {
                 try {
-                    const transport = await TransportFactory.get(
-                        deviceModel,
-                        connectionType,
-                        deviceId
-                    );
-                    return Promise.resolve(new LedgerWallet(transport));
+                    await TransportFactory.get(deviceModel, connectionType, deviceId); // start pairing
+                    return Promise.resolve(new LedgerWallet(deviceModel, connectionType, deviceId));
                 } catch (e) {
                     return Promise.reject(e);
                 }

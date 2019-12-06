@@ -19,7 +19,6 @@ export class BLE {
             },
             next: async e => {
                 if (e.type === 'add') {
-                    // ?????
                     callback({ name: 'deviceFound', data: e.descriptor });
                 }
             },
@@ -31,9 +30,17 @@ export class BLE {
 
     private static async requestPermissions(): Promise<boolean> {
         if (Platform.OS === 'android') {
-            await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION);
-            // todo check permission status
-            return true;
+            const granted = await PermissionsAndroid.check(
+                PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
+            );
+            if (granted) {
+                return true;
+            } else {
+                const requested = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
+                );
+                return requested === PermissionsAndroid.RESULTS.GRANTED;
+            }
         }
         return true;
     }

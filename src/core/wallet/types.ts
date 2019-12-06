@@ -14,12 +14,6 @@ export enum TransactionStatus {
 }
 
 export interface IWallet {
-    getAccounts(blockchain: Blockchain, index: number, indexTo: number): Promise<IAccountState[]>;
-    sign(blockchain: Blockchain, accountIndex: number, tx: IBlockchainTransaction): Promise<string>;
-}
-
-export interface IHardwareWallet {
-    getTransport(): Transport;
-    getAccounts(blockchain: Blockchain, index: number, indexTo: number): Promise<IAccountState[]>;
+    getAccounts(blockchain: Blockchain, index: number, indexTo?: number): Promise<IAccountState[]>;
     sign(blockchain: Blockchain, accountIndex: number, tx: IBlockchainTransaction): Promise<string>;
 }

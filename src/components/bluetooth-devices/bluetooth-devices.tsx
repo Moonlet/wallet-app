@@ -6,10 +6,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { Icon } from '../icon';
-import { TransportFactory } from '../../core/wallet/hw-wallet/ledger/transport-factory';
-import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
 import { BLE } from '../../core/wallet/hw-wallet/ledger/transport/transport-ble';
-import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 
 export interface IExternalProps {
     obRef: any;
@@ -83,7 +80,7 @@ export class BluetoothDevicesModalComponent extends React.Component<
         ) : (
             <View style={styles.header}>
                 <TouchableOpacity
-                    testID="button-manage-accounts"
+                    testID="button-close"
                     style={styles.close}
                     onPress={() => {
                         // unsubscribe

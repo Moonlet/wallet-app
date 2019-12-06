@@ -17,23 +17,23 @@ import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { ListCard } from '../../components/list-card/list-card';
 import { BluetoothDevicesModal } from '../../components/bluetooth-devices/bluetooth-devices';
-import { PasswordModal } from '../../components/password-modal/password-modal';
+import { NavigationActions } from 'react-navigation';
 
 export interface IReduxProps {
     tosVersion: number;
     verifyAddressMessage: boolean;
+    walletCreated: boolean;
     createHWWallet: (
         deviceId: string,
         deviceVendor: HWVendor,
         deviceModel: HWModel,
         connectionType: HWConnection,
-        blockchain: Blockchain,
-        password: string
+        blockchain: Blockchain
     ) => Promise<any>;
 }
 
 export interface IState {
-    connectDevice: boolean;
+    openAppOnDevice: boolean;
     device: HWModel;
     blockchain: Blockchain;
     selectConnection: boolean;
@@ -49,15 +49,25 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
+
+    public static getDerivedStateFromProps(nextProps, prevState) {
+        if (nextProps.walletCreated === true) {
+            nextProps.navigation.navigate(
+                'MainNavigation',
+                {},
+                NavigationActions.navigate({ routeName: 'Dashboard' })
+            );
+        }
+        return prevState;
+    }
     public connection: HWConnection = undefined;
     public bluetoothModal = null;
-    public passwordModal = null;
 
     constructor(props: any) {
         super(props);
 
         this.state = {
-            connectDevice: false,
+            openAppOnDevice: false,
             device: undefined,
             blockchain: undefined,
             selectConnection: undefined
@@ -109,7 +119,10 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                         key={'blockchain' + index}
                         customStyle={{ height: 60, width: 180, marginRight: 20 }}
                         onPress={() => {
-                            this.setState({ blockchain: blockchains[index] });
+                            this.setState({
+                                blockchain: blockchains[index],
+                                openAppOnDevice: true
+                            });
                         }}
                         label={blockchains[index]}
                         rightIcon={this.state.blockchain === blockchains[index] && 'check-1'}
@@ -167,12 +180,14 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
     public renderMessages() {
         const styles = this.props.styles;
         return (
-            this.state.connectDevice && (
+            this.state.openAppOnDevice && (
                 <View style={styles.activityContainer}>
                     <Text style={styles.textIndicator}>
                         {this.props.verifyAddressMessage
                             ? translate('CreateHardwareWallet.verifyAddress')
-                            : translate('CreateHardwareWallet.waitDevice')}
+                            : translate('CreateHardwareWallet.openAppOnDevice') +
+                              this.state.blockchain +
+                              translate('CreateHardwareWallet.onDevice')}
                     </Text>
                     <ActivityIndicator size="large" color="#ffffff" />
                 </View>
@@ -181,20 +196,17 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
     }
 
     public onBluetoothConnected = (deviceId: string) => {
-        this.setState;
+        this.createWallet(deviceId);
     };
 
     public createWallet(deviceId: string) {
-        this.passwordModal.requestPassword().then(password => {
-            this.props.createHWWallet(
-                deviceId,
-                HWVendor.LEDGER,
-                this.state.device,
-                this.connection,
-                this.state.blockchain,
-                password
-            );
-        });
+        this.props.createHWWallet(
+            deviceId,
+            HWVendor.LEDGER,
+            this.state.device,
+            this.connection,
+            this.state.blockchain
+        );
     }
 
     public render() {
@@ -231,10 +243,6 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                     obRef={ref => (this.bluetoothModal = ref)}
                     onComplete={this.onBluetoothConnected}
                 />
-                <PasswordModal
-                    subtitle={translate('Password.subtitleMnemonic')}
-                    obRef={ref => (this.passwordModal = ref)}
-                />
             </View>
         );
     }
@@ -244,7 +252,8 @@ export const ConnectHardwareWallet = smartConnect(ConnectHardwareWalletScreenCom
     connect(
         (state: IReduxState) => ({
             tosVersion: state.app.tosVersion,
-            verifyAddressMessage: state.screens.connectHardwareWallet.verifyAddress
+            verifyAddressMessage: state.screens.connectHardwareWallet.verifyAddress,
+            walletCreated: state.screens.connectHardwareWallet.hardwareWalletCreated
         }),
         {
             createHWWallet

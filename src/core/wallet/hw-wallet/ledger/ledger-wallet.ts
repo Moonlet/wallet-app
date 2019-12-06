@@ -2,19 +2,72 @@ import { IWallet } from '../../types';
 import { Blockchain, IBlockchainTransaction } from '../../../blockchain/types';
 import { IAccountState } from '../../../../redux/wallets/state';
 import { HWModel, HWConnection } from '../types';
+import { AppFactory } from './apps-factory';
+import { TransportFactory } from './transport-factory';
+import { timeUtils } from '../../../utils/time';
 
 export class LedgerWallet implements IWallet {
-    private transport: Transport;
-    constructor(transport: Transport) {
-        this.transport = transport;
+    private deviceId: string;
+    private deviceModel: HWModel;
+    private connectionType: HWConnection;
+
+    constructor(deviceModel: HWModel, connectionType: HWConnection, deviceId: string) {
+        this.deviceId = deviceId;
+        this.deviceModel = deviceModel;
+        this.connectionType = connectionType;
     }
-    public getAccounts(
+
+    public onAppOpen(blockchain: Blockchain): Promise<void> {
+        return new Promise(async resolve => {
+            let opened = false;
+            while (opened === false) {
+                try {
+                    const transport = await this.getTransport();
+                    const app = await AppFactory.get(blockchain, transport);
+                    if (await app.getInfo()) {
+                        opened = true;
+                    }
+                } catch {
+                    // dont handle error - keep trying until user opens the app
+                }
+                await timeUtils.delay(1000);
+            }
+            resolve();
+        });
+    }
+
+    public async getAccounts(
         blockchain: Blockchain,
         index: number,
         indexTo?: number
     ): Promise<IAccountState[]> {
-        return;
+        indexTo = indexTo || index;
+        const accounts = [];
+
+        try {
+            try {
+                await this.onAppOpen(blockchain);
+            } catch {
+                // keep trying until user opens the app
+            }
+
+            const transport = await this.getTransport();
+            const app = await AppFactory.get(blockchain, transport);
+            const address = await app.getAddress(index, 0, undefined);
+
+            const account: IAccountState = {
+                index,
+                publicKey: address.publicKey,
+                address: address.address,
+                blockchain
+            };
+            accounts.push(account);
+            return Promise.resolve(accounts);
+        } catch (e) {
+            Promise.reject('No accounts');
+        }
     }
+
     public async sign(
         blockchain: Blockchain,
         accountIndex: number,
@@ -24,6 +77,6 @@ export class LedgerWallet implements IWallet {
     }
 
     public getTransport() {
-        return this.transport;
+        return TransportFactory.get(this.deviceModel, this.connectionType, this.deviceId);
     }
 }

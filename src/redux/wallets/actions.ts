@@ -1,6 +1,6 @@
 import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
 import { Blockchain } from '../../core/blockchain/types';
-import { WalletType } from '../../core/wallet/types';
+import { WalletType, IWallet } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
 import { IAction } from '../types';
 import { Dispatch } from 'react';
@@ -13,7 +13,10 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
 import { selectCurrentWallet } from './selectors';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
-import { verifyAddressOnDevice } from '../screens/connectHardwareWallet/actions';
+import {
+    verifyAddressOnDevice,
+    hardwareWalletCreated
+} from '../screens/connectHardwareWallet/actions';
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 
 // actions consts
@@ -52,11 +55,10 @@ export const createHWWallet = (
     deviceVendor: HWVendor,
     deviceModel: HWModel,
     connectionType: HWConnection,
-    blockchain: Blockchain,
-    pass: string
+    blockchain: Blockchain
 ) => async (dispatch, getState: () => IReduxState) => {
     try {
-        // const walletId = uuidv4();
+        const walletId = uuidv4();
 
         const wallet = await HWWalletFactory.get(
             deviceVendor,
@@ -65,9 +67,23 @@ export const createHWWallet = (
             connectionType
         );
 
-        dispatch(verifyAddressOnDevice(true));
-    } catch (e) {
-        // console.log(e);
+        const account = await wallet.getAccounts(blockchain, 0);
+
+        dispatch(
+            addWallet({
+                id: walletId,
+                name: `Wallet ${getState().wallets.length + 1}`,
+                type: WalletType.HW,
+                accounts: account.reduce((out, accounts) => {
+                    return out.concat(accounts);
+                }, [])
+            })
+        );
+
+        dispatch(appSwitchWallet(walletId));
+        dispatch(hardwareWalletCreated());
+    } catch {
+        // TODO best way to handle this?
     }
 };
 

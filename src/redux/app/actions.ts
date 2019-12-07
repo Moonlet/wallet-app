@@ -43,9 +43,9 @@ export const toggleNetwork = (blockchain: Blockchain) => {
     };
 };
 
-export const sortNetworks = (sortedNetworks: Array<{ blockchain: Blockchain; order: number }>) => {
+export const sortNetworks = (networks: Array<{ blockchain: Blockchain; order: number }>) => {
     return {
         type: APP_SORT_NETWORKS,
-        data: { sortedNetworks }
+        data: { networks }
     };
 };

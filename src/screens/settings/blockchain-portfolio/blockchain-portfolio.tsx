@@ -27,9 +27,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state: IReduxState) => {
     const networks = Object.keys(state.app.networks)
-        .reduce((array, key) => {
-            return [...array, { key, value: state.app.networks[key] }];
-        }, [])
+        .reduce((array, key) => [...array, { key, value: state.app.networks[key] }], [])
         .sort((a, b) => a.value.order - b.value.order);
 
     return {
@@ -91,9 +89,13 @@ export class BlockchainPortfolioComponent extends React.Component<
                     scrollPercent={5}
                     onMoveEnd={({ data }) =>
                         this.props.sortNetworks(
-                            data.reduce((array, blockchain, index) => {
-                                return [...array, { blockchain: blockchain.key, order: index }];
-                            }, [])
+                            data.reduce(
+                                (obj, item, index) => ({
+                                    ...obj,
+                                    [item.key]: { ...item.value, order: index }
+                                }),
+                                {}
+                            )
                         )
                     }
                 />

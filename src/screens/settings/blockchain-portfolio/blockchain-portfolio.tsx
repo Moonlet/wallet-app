@@ -12,17 +12,17 @@ import { translate } from '../../../core/i18n';
 import { INetworksOptions } from '../../../redux/app/state';
 import { themes } from '../../../navigation/navigation';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import { toggleNetwork, sortNetworks } from '../../../redux/app/actions';
+import { toogleBlockchainActive, updateBlockchianOrder } from '../../../redux/app/actions';
 
 export interface IReduxProps {
     networks: INetworksOptions;
-    toggleNetwork: typeof toggleNetwork;
-    sortNetworks: typeof sortNetworks;
+    toogleBlockchainActive: typeof toogleBlockchainActive;
+    updateBlockchianOrder: typeof updateBlockchianOrder;
 }
 
 const mapDispatchToProps = {
-    toggleNetwork,
-    sortNetworks
+    toogleBlockchainActive,
+    updateBlockchianOrder
 };
 
 const mapStateToProps = (state: IReduxState) => {
@@ -54,7 +54,7 @@ export class BlockchainPortfolioComponent extends React.Component<
             <View>
                 <View style={styles.rowContainer}>
                     <Text style={styles.blockchainName}>{item.key}</Text>
-                    <TouchableOpacity onPress={() => this.props.toggleNetwork(item.key)}>
+                    <TouchableOpacity onPress={() => this.props.toogleBlockchainActive(item.key)}>
                         <Icon
                             size={18}
                             name={item.value.active ? 'check-2-thicked' : 'check-2'}
@@ -88,7 +88,7 @@ export class BlockchainPortfolioComponent extends React.Component<
                     keyExtractor={(item: any) => `${item.value.order}`}
                     scrollPercent={5}
                     onMoveEnd={({ data }) =>
-                        this.props.sortNetworks(
+                        this.props.updateBlockchianOrder(
                             data.reduce(
                                 (obj, item, index) => ({
                                     ...obj,

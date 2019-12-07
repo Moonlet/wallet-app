@@ -5,8 +5,8 @@ import {
     APP_SET_TOS_VERSION,
     APP_SET_TEST_NET,
     APP_SET_NETWORK_TEST_NET_CHAIN_ID,
-    APP_TOGGLE_NETWORK,
-    APP_SORT_NETWORKS
+    APP_TOGGLE_BLOCKCHAIN,
+    APP_UPDATE_BLOCKCHAIN_ORDER
 } from './actions';
 import { Blockchain } from '../../core/blockchain/types';
 
@@ -53,7 +53,7 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
                     }
                 }
             };
-        case APP_TOGGLE_NETWORK:
+        case APP_TOGGLE_BLOCKCHAIN:
             return {
                 ...state,
                 networks: {
@@ -64,7 +64,7 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
                     }
                 }
             };
-        case APP_SORT_NETWORKS:
+        case APP_UPDATE_BLOCKCHAIN_ORDER:
             return {
                 ...state,
                 networks: action.data.networks

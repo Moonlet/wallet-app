@@ -1,12 +1,13 @@
 import { Blockchain } from '../../core/blockchain/types';
+import { INetworksOptions } from './state';
 
 // actions consts
 export const APP_SWITCH_WALLET = 'APP_STATE_SWITCH_WALLET';
 export const APP_SET_TOS_VERSION = 'APP_SET_TOS_VERSION';
 export const APP_SET_TEST_NET = 'APP_SET_TEST_NET';
 export const APP_SET_NETWORK_TEST_NET_CHAIN_ID = 'APP_SET_NETWORK_TEST_NET_CHAIN_ID';
-export const APP_TOGGLE_NETWORK = 'APP_TOGGLE_NETWORK';
-export const APP_SORT_NETWORKS = 'APP_SORT_NETWORKS';
+export const APP_TOGGLE_BLOCKCHAIN = 'APP_TOGGLE_BLOCKCHAIN';
+export const APP_UPDATE_BLOCKCHAIN_ORDER = 'APP_UPDATE_BLOCKCHAIN_ORDER';
 
 // actions creators
 export const appSwitchWallet = (walletId: string) => {
@@ -36,16 +37,16 @@ export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: number
     };
 };
 
-export const toggleNetwork = (blockchain: Blockchain) => {
+export const toogleBlockchainActive = (blockchain: Blockchain) => {
     return {
-        type: APP_TOGGLE_NETWORK,
+        type: APP_TOGGLE_BLOCKCHAIN,
         data: { blockchain }
     };
 };
 
-export const sortNetworks = (networks: Array<{ blockchain: Blockchain; order: number }>) => {
+export const updateBlockchianOrder = (networks: INetworksOptions[]) => {
     return {
-        type: APP_SORT_NETWORKS,
+        type: APP_UPDATE_BLOCKCHAIN_ORDER,
         data: { networks }
     };
 };

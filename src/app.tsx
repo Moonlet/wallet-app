@@ -9,7 +9,7 @@ import { darkTheme } from './styles/themes/dark-theme';
 import { ThemeContext } from './core/theme/theme-contex';
 import { loadTranslations } from './core/i18n';
 import { persistStore } from 'redux-persist';
-import { SplashScreen } from './components/splash-screen/SplashScreen';
+import { SplashScreen } from './components/splash-screen/splash-screen';
 import { Notification } from './messaging/notifications';
 
 const AppContainer = createAppContainer(RootNavigation);

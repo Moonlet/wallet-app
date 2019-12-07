@@ -17,16 +17,22 @@ const intialState: IAppState = {
     testNet: true,
     networks: {
         [Blockchain.ETHEREUM]: {
-            order: 0,
-            active: true,
             testNet: 4,
             mainNet: 1
         },
         [Blockchain.ZILLIQA]: {
-            order: 1,
-            active: true,
             testNet: 333,
             mainNet: 1
+        }
+    },
+    blockchains: {
+        [Blockchain.ETHEREUM]: {
+            order: 0,
+            active: true
+        },
+        [Blockchain.ZILLIQA]: {
+            order: 1,
+            active: true
         }
     }
 };
@@ -56,18 +62,18 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
         case APP_TOGGLE_BLOCKCHAIN:
             return {
                 ...state,
-                networks: {
-                    ...state.networks,
+                blockchains: {
+                    ...state.blockchains,
                     [action.data.blockchain]: {
-                        ...state.networks[action.data.blockchain],
-                        active: !state.networks[action.data.blockchain].active
+                        ...state.blockchains[action.data.blockchain],
+                        active: !state.blockchains[action.data.blockchain].active
                     }
                 }
             };
         case APP_UPDATE_BLOCKCHAIN_ORDER:
             return {
                 ...state,
-                networks: action.data.networks
+                blockchains: action.data.blockchains
             };
         default:
             break;

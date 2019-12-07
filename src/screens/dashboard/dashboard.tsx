@@ -21,14 +21,13 @@ import { BigNumber } from 'bignumber.js';
 import { selectCurrentWallet } from '../../redux/wallets/selectors';
 import { createSelector } from 'reselect';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { INetworksOptions } from '../../redux/app/state';
-import { networks } from '../../core/blockchain/zilliqa/networks';
+import { IBlockchainsOptions } from '../../redux/app/state';
 
 export interface IReduxProps {
     wallet: IWalletState;
     walletsNr: number;
     getBalance: typeof getBalance;
-    networks: INetworksOptions;
+    blockchains: IBlockchainsOptions;
 }
 
 interface IState {
@@ -42,7 +41,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCROLL_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.5);
 const ANIMATED_BC_SELECTION = true;
 
-const calculateBalances = (accounts: IAccountState[], blockchainNetworks: INetworksOptions) => {
+const calculateBalances = (accounts: IAccountState[], blockchains: IBlockchainsOptions) => {
     const result = accounts.reduce(
         (out: any, account: IAccountState) => {
             if (!account) {
@@ -52,10 +51,10 @@ const calculateBalances = (accounts: IAccountState[], blockchainNetworks: INetwo
                 out.balance[account.blockchain] = {
                     amount: account?.balance?.value || new BigNumber(0)
                 };
-                if (blockchainNetworks[account.blockchain].active) {
+                if (blockchains[account.blockchain].active) {
                     out.coins.push({
                         blockchain: account.blockchain,
-                        order: blockchainNetworks[account.blockchain].order
+                        order: blockchains[account.blockchain].order
                     });
                 }
             } else {
@@ -77,7 +76,7 @@ const calculateBalances = (accounts: IAccountState[], blockchainNetworks: INetwo
 const mapStateToProps = (state: IReduxState) => ({
     wallet: selectCurrentWallet(state),
     walletsNr: state.wallets.length,
-    networks: state.app.networks
+    blockchains: state.app.blockchains
 });
 
 const mapDispatchToProps = {
@@ -114,13 +113,12 @@ const navigationOptions = ({ navigation, theme }: any) => ({
 // `calculateBalances` gets executed only when result of parameter picker function result is changed
 const getWalletBalances = createSelector(
     [
-        (wallet: IWalletState, blockchainNetworks: INetworksOptions) => {
-            const accounts = (wallet && wallet.accounts) || [];
-            const n = blockchainNetworks || {};
-            return { accounts, n };
-        }
+        (wallet: IWalletState, blockchains: IBlockchainsOptions) => ({
+            accounts: (wallet && wallet.accounts) || [],
+            blockchains: blockchains || {}
+        })
     ],
-    result => calculateBalances(result.accounts, result.n)
+    result => calculateBalances(result.accounts, result.blockchains)
 );
 
 export class DashboardScreenComponent extends React.Component<
@@ -131,7 +129,7 @@ export class DashboardScreenComponent extends React.Component<
 
     public static getDerivedStateFromProps(props, state) {
         // update balances if wallet accounts changes
-        return getWalletBalances(props.wallet, props.networks);
+        return getWalletBalances(props.wallet, props.blockchains);
     }
     public passwordModal = null;
     public initialIndex = 0;
@@ -145,7 +143,7 @@ export class DashboardScreenComponent extends React.Component<
 
         this.state = {
             coinIndex: this.initialIndex,
-            ...calculateBalances(props.wallet?.accounts || [], props.networks)
+            ...calculateBalances(props.wallet?.accounts || [], props.blockchains)
         };
 
         if (props.walletsNr < 1) {

@@ -1,5 +1,5 @@
 import { Blockchain } from '../../core/blockchain/types';
-import { INetworksOptions } from './state';
+import { IBlockchainsOptions } from './state';
 
 // actions consts
 export const APP_SWITCH_WALLET = 'APP_STATE_SWITCH_WALLET';
@@ -44,9 +44,9 @@ export const toogleBlockchainActive = (blockchain: Blockchain) => {
     };
 };
 
-export const updateBlockchianOrder = (networks: INetworksOptions[]) => {
+export const updateBlockchianOrder = (blockchains: IBlockchainsOptions[]) => {
     return {
         type: APP_UPDATE_BLOCKCHAIN_ORDER,
-        data: { networks }
+        data: { blockchains }
     };
 };

@@ -9,13 +9,13 @@ import { Icon } from '../../../components/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
-import { INetworksOptions } from '../../../redux/app/state';
+import { IBlockchainsOptions } from '../../../redux/app/state';
 import { themes } from '../../../navigation/navigation';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { toogleBlockchainActive, updateBlockchianOrder } from '../../../redux/app/actions';
 
 export interface IReduxProps {
-    networks: INetworksOptions;
+    blockchains: IBlockchainsOptions;
     toogleBlockchainActive: typeof toogleBlockchainActive;
     updateBlockchianOrder: typeof updateBlockchianOrder;
 }
@@ -26,12 +26,10 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state: IReduxState) => {
-    const networks = Object.keys(state.app.networks)
-        .reduce((array, key) => [...array, { key, value: state.app.networks[key] }], [])
-        .sort((a, b) => a.value.order - b.value.order);
-
     return {
-        networks
+        blockchains: Object.keys(state.app.blockchains)
+            .reduce((array, key) => [...array, { key, value: state.app.blockchains[key] }], [])
+            .sort((a, b) => a.value.order - b.value.order)
     };
 };
 
@@ -47,7 +45,7 @@ export class BlockchainPortfolioComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
 
-    public renderNetwork = ({ item, index, move, moveEnd, isActive }: any) => {
+    public renderBlockchain = ({ item, index, move, moveEnd, isActive }: any) => {
         const { styles, theme } = this.props;
 
         return (
@@ -83,8 +81,8 @@ export class BlockchainPortfolioComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <DraggableFlatList
-                    data={this.props.networks}
-                    renderItem={this.renderNetwork}
+                    data={this.props.blockchains}
+                    renderItem={this.renderBlockchain}
                     keyExtractor={(item: any) => `${item.value.order}`}
                     scrollPercent={5}
                     onMoveEnd={({ data }) =>

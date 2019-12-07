@@ -1,10 +1,15 @@
 export interface INetworksOptions {
     [blockchain: string]: {
         // key is for Blockchain enum
-        order: number;
-        active: boolean;
         mainNet?: number;
         testNet?: number;
+    };
+}
+
+export interface IBlockchainsOptions {
+    [blockchain: string]: {
+        order: number;
+        active: boolean;
     };
 }
 
@@ -14,4 +19,5 @@ export interface IAppState {
     devMode: boolean;
     testNet: boolean;
     networks: INetworksOptions;
+    blockchains: IBlockchainsOptions;
 }

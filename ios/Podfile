@@ -38,8 +38,8 @@ target 'Moonlet' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'Firebase/Core', '~> 6.3.0'
-  pod 'Firebase/Messaging', '~> 6.3.0'
+  pod 'Firebase/Core', '~> 6.3.0', :modular_headers => true
+  pod 'Firebase/Messaging', '~> 6.3.0',
 
   use_native_modules!
 

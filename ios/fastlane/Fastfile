@@ -45,7 +45,7 @@ platform :ios do
       match(type: "appstore")
     end
  
-   get_push_certificate(app_identifier: "com.moonlet.beta")
+    get_push_certificate(app_identifier: "com.moonlet.beta")
 
     gym(workspace: "Moonlet.xcworkspace", 
       scheme: "Moonlet_beta", 

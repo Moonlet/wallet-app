@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - fix_ios_app
 
 name: Deploy Beta
 jobs:

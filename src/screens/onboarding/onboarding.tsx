@@ -85,6 +85,22 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
             })
         );
     }
+    public onPressConnect() {
+        this.props.navigation.navigate(
+            'CreateWalletNavigation',
+            {},
+            NavigationActions.navigate({
+                routeName: 'ConnectHardwareWallet',
+                params: {
+                    goBack: (
+                        navigation: NavigationScreenProp<NavigationState, NavigationParams>
+                    ) => {
+                        navigation.navigate('OnboardingScreen');
+                    }
+                }
+            })
+        );
+    }
     public async onPressGenerateWallet() {
         const password = await hash('000000');
         setPassword(password, false);
@@ -133,7 +149,9 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
                         >
                             Recover
                         </Button>
-                        <Button style={styles.button}>Connect</Button>
+                        <Button style={styles.button} onPress={() => this.onPressConnect()}>
+                            Connect
+                        </Button>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <Button

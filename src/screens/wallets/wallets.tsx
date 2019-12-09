@@ -114,7 +114,20 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     public onPressCreateHW() {
-        this.props.navigation.navigate('ConnectHardwareWallet');
+        this.props.navigation.navigate(
+            'CreateWalletNavigation',
+            {},
+            NavigationActions.navigate({
+                routeName: 'ConnectHardwareWallet',
+                params: {
+                    goBack: (
+                        navigation: NavigationScreenProp<NavigationState, NavigationParams>
+                    ) => {
+                        navigation.navigate('Wallets');
+                    }
+                }
+            })
+        );
     }
 
     public onPressCreate() {

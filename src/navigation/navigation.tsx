@@ -131,9 +131,6 @@ export const WalletNavigation = createStackNavigator(
         },
         TransactionDetails: {
             screen: TransactionDetails
-        },
-        ConnectHardwareWallet: {
-            screen: ConnectHardwareWallet
         }
     },
     {
@@ -266,6 +263,9 @@ export const CreateWalletNavigation = createStackNavigator(
         },
         RecoverWallet: {
             screen: RecoverWalletScreen
+        },
+        ConnectHardwareWallet: {
+            screen: ConnectHardwareWallet
         }
     },
     {

@@ -26,7 +26,7 @@ export default (theme: ITheme) =>
             justifyContent: 'center',
             alignSelf: 'stretch',
             alignItems: 'center',
-            marginBottom: 10
+            marginBottom: 40
         },
 
         bottomButton: {

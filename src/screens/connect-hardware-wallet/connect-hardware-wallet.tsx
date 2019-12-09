@@ -18,6 +18,7 @@ import { HeaderLeftClose } from '../../components/header-left-close/header-left-
 import { ListCard } from '../../components/list-card/list-card';
 import { BluetoothDevicesModal } from '../../components/bluetooth-devices/bluetooth-devices';
 import { NavigationActions } from 'react-navigation';
+import { HeaderLeft } from '../../components/header-left/header-left';
 
 export interface IReduxProps {
     tosVersion: number;
@@ -40,7 +41,21 @@ export interface IState {
 }
 
 const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: <HeaderLeftClose navigation={navigation} />,
+    headerLeft: () => {
+        if (navigation.state && navigation.state.params && navigation.state.params.goBack) {
+            return (
+                <HeaderLeft
+                    icon="arrow-left-1"
+                    text="Back"
+                    onPress={() => {
+                        navigation.state.params.goBack(navigation);
+                    }}
+                />
+            );
+        }
+
+        return null;
+    },
     title: 'Add Wallet'
 });
 
@@ -72,6 +87,10 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
             blockchain: undefined,
             selectConnection: undefined
         };
+
+        if (!props.tosVersion || TOS_VERSION > props.tosVersion) {
+            props.navigation.navigate('CreateWalletTerms');
+        }
     }
 
     public renderConnectionTypes(connectionTypes: ConnectionType) {

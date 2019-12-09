@@ -5,7 +5,7 @@ import { TOGGLE_PIN_LOGIN, PREF_SET_CURRENCY, TOGGLE_TOUCH_ID } from './actions'
 const initialState: IPrefState = {
     currency: 'USD',
     pinLogin: true,
-    touchID: true
+    touchID: false
 };
 
 export default (state: IPrefState = initialState, action: IAction): IPrefState => {

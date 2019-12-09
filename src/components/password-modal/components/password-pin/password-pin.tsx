@@ -227,7 +227,7 @@ export class PasswordPinComponent extends React.Component<
     };
 
     public authenticate() {
-        return TouchID.authenticate('Authenticate to continue', null)
+        return TouchID.authenticate(translate('Password.authToContinue'))
             .then((success: boolean) => {
                 if (success) {
                     this.props.onBiometryLogin(true);

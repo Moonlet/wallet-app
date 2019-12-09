@@ -13,6 +13,7 @@ import DeviceInfo from 'react-native-device-info';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { translate } from '../../core/i18n';
 import { ICON_SIZE } from '../../styles/dimensions';
+import TouchID from 'react-native-touch-id';
 
 export interface IReduxProps {
     currency: string;
@@ -109,23 +110,29 @@ export class SettingsScreenComponent extends React.Component<
 
                     <View style={styles.divider} />
 
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.textRow}>{translate('Settings.touchID')}</Text>
-                        <Switch
-                            testID={'touch-id'}
-                            onValueChange={() => this.props.toggleTouchID()}
-                            value={this.props.touchID}
-                            trackColor={{
-                                true: this.props.theme.colors.cardBackground,
-                                false: this.props.theme.colors.primary
-                            }}
-                            thumbColor={
-                                this.props.touchID ? theme.colors.accent : theme.colors.primary
-                            }
-                        />
-                    </View>
+                    {TouchID.isSupported() && (
+                        <View>
+                            <View style={styles.rowContainer}>
+                                <Text style={styles.textRow}>{translate('Settings.touchID')}</Text>
+                                <Switch
+                                    testID={'touch-id'}
+                                    onValueChange={() => this.props.toggleTouchID()}
+                                    value={this.props.touchID}
+                                    trackColor={{
+                                        true: this.props.theme.colors.cardBackground,
+                                        false: this.props.theme.colors.primary
+                                    }}
+                                    thumbColor={
+                                        this.props.touchID
+                                            ? theme.colors.accent
+                                            : theme.colors.primary
+                                    }
+                                />
+                            </View>
 
-                    <View style={styles.divider} />
+                            <View style={styles.divider} />
+                        </View>
+                    )}
 
                     <TouchableOpacity
                         style={styles.rowContainer}

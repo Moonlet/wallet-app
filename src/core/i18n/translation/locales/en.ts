@@ -90,9 +90,9 @@ export const translation: ITranslations = {
             dontMatch: "PIN code doesn't match",
             termsBody: 'You need to setup a password to secure your wallet.',
             termsCheckboxLabel:
-                'Do not lose this password. Moonlet will not be able to reset it for you.'
+                'Do not lose this password. Moonlet will not be able to reset it for you.',
+            authToContinue: 'Authenticate to continue'
         },
-
         Send: {
             inputAddress: 'Search public addresses or domain names',
             amount: 'Amount',

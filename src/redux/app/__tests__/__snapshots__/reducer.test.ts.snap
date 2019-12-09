@@ -2,19 +2,25 @@
 
 exports[`app reducer should set initial state 1`] = `
 Object {
+  "blockchains": Object {
+    "ETHEREUM": Object {
+      "active": true,
+      "order": 0,
+    },
+    "ZILLIQA": Object {
+      "active": true,
+      "order": 1,
+    },
+  },
   "currentWalletId": "",
   "devMode": true,
   "networks": Object {
     "ETHEREUM": Object {
-      "active": true,
       "mainNet": 1,
-      "order": 0,
       "testNet": 4,
     },
     "ZILLIQA": Object {
-      "active": true,
       "mainNet": 1,
-      "order": 1,
       "testNet": 333,
     },
   },

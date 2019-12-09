@@ -23,6 +23,7 @@
 		70D8D14723971F4700C7612F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 70D8D14623971F4700C7612F /* GoogleService-Info.plist */; };
 		999B626EFCF64A4C9E947F78 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 57A87EF5C18748E58DF0EE85 /* libz.tbd */; };
 		B2D43936A20EA4074D11C300 /* Pods_Moonlet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */; };
+		D879E58E239E789700308FFB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 70D8D14623971F4700C7612F /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -266,6 +267,7 @@
 			files = (
 				5E7A08A92358A82D0036C459 /* main.jsbundle in Resources */,
 				5E7A08AC2358ADFE0036C459 /* icons.ttf in Resources */,
+				D879E58E239E789700308FFB /* GoogleService-Info.plist in Resources */,
 				5E7A08982358A3840036C459 /* Images.xcassets in Resources */,
 				5E7A08992358A3840036C459 /* LaunchScreen.xib in Resources */,
 			);
@@ -653,7 +655,7 @@
 			baseConfigurationReference = 5C4CC37B0E80B21C7C248D98 /* Pods-Moonlet.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_ENABLE_MODULES = YES;				
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 120;

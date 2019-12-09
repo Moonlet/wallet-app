@@ -11,10 +11,10 @@ describe('preferences reducer', () => {
         ).toMatchSnapshot();
     });
 
-    test('should handle PREF_SET_PIN', () => {
+    test('should handle TOGGLE_PIN_LOGIN', () => {
         expect(
             reducer(undefined as any, {
-                type: actions.PREF_SET_PIN,
+                type: actions.TOGGLE_PIN_LOGIN,
                 data: ''
             })
         ).toEqual({ currency: 'USD', pinLogin: false });

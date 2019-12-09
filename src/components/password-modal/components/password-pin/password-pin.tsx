@@ -5,10 +5,12 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
+import { connect } from 'react-redux';
 import { hash } from '../../../../core/secure/encrypt';
 import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
 import TouchID from 'react-native-touch-id';
+import { IReduxState } from '../../../../redux/state';
 
 // const optionalConfigObject = {
 //     title: 'Authentication Required', // Android
@@ -16,6 +18,10 @@ import TouchID from 'react-native-touch-id';
 //     fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
 //     cancelText: 'Cancel' // Android
 // };
+
+export interface IReduxProps {
+    touchID: boolean;
+}
 
 export interface IExternalProps {
     title: string;
@@ -31,6 +37,10 @@ interface IState {
     passToVerify: string;
 }
 
+const mapStateToProps = (state: IReduxState) => ({
+    touchID: state.preferences.touchID
+});
+
 const digitsLayout = [
     [1, 2, 3],
     [4, 5, 6],
@@ -40,7 +50,7 @@ const ZERO = 0;
 const PASSWORD_LENGTH = 6;
 
 export class PasswordPinComponent extends React.Component<
-    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
     public static getDerivedStateFromProps(nextProps, prevState) {
@@ -56,7 +66,9 @@ export class PasswordPinComponent extends React.Component<
     }
     private shakeAnimation: Animated.Value;
 
-    constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(
+        props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
 
         this.state = {
@@ -205,21 +217,13 @@ export class PasswordPinComponent extends React.Component<
     };
 
     public biometryAuth = () => {
-        TouchID.isSupported()
-            .then(biometryType => {
-                this.authenticate();
-
-                // if (biometryType === 'FaceID') {
-                //     this.authenticate();
-                // } else if (biometryType === 'TouchID') {
-                //     this.authenticate();
-                // } else if (biometryType === true) {
-                //     // Touch ID is supported on Android
-                // }
-            })
-            .catch(error => {
-                // Failure code if the user's device does not have touchID or faceID enabled
-            });
+        if (this.props.touchID) {
+            TouchID.isSupported()
+                .then(biometryType => this.authenticate())
+                .catch(error => {
+                    // Failure code if the user's device does not have touchID or faceID enabled
+                });
+        }
     };
 
     public authenticate() {
@@ -342,5 +346,6 @@ export class PasswordPinComponent extends React.Component<
 }
 
 export const PasswordPin = smartConnect<IExternalProps>(PasswordPinComponent, [
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

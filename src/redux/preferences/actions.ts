@@ -1,12 +1,19 @@
 // actions consts
 export const PREF_SET_CURRENCY = 'PREF_SET_CURRENCY';
-export const PREF_SET_PIN = 'PREF_SET_PIN';
+export const TOGGLE_PIN_LOGIN = 'TOGGLE_PIN_LOGIN';
+export const TOGGLE_TOUCH_ID = 'TOGGLE_TOUCH_ID';
 
 // actions creators
 
-export function setPinLogin() {
+export function togglePinLogin() {
     return {
-        type: PREF_SET_PIN
+        type: TOGGLE_PIN_LOGIN
+    };
+}
+
+export function toggleTouchID() {
+    return {
+        type: TOGGLE_TOUCH_ID
     };
 }
 

@@ -91,10 +91,10 @@ export class WalletsScreenComponent extends React.Component<
         };
     }
 
-    public componentDidUpdate(props) {
-        if (props.walletsNr < 1) {
+    public componentDidUpdate(prevProps: IReduxProps) {
+        if (this.props.walletsNr !== prevProps.walletsNr && this.props.walletsNr < 1) {
             // maybe check this in another screen?
-            props.navigation.navigate('OnboardingScreen');
+            this.props.navigation.navigate('OnboardingScreen');
         }
     }
 

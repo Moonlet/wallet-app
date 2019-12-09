@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { StatusBar, Platform } from 'react-native';
+import { StatusBar, Platform, AppRegistry } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { RootNavigation } from './navigation/navigation';
 import configureStore from './redux/config';
@@ -9,7 +9,8 @@ import { darkTheme } from './styles/themes/dark-theme';
 import { ThemeContext } from './core/theme/theme-contex';
 import { loadTranslations } from './core/i18n';
 import { persistStore } from 'redux-persist';
-import { SplashScreen } from './components/splash-screen/SplashScreen';
+import { SplashScreen } from './components/splash-screen/splash-screen';
+import { Notification } from './messaging/notifications';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -23,7 +24,6 @@ interface IState {
 
 export default class App extends React.Component<{}, IState> {
     public interval: any = null;
-    //    public unsubscribe =
     private translationsLoaded: boolean = false;
     private reduxStateLoaded: boolean = false;
 
@@ -60,6 +60,12 @@ export default class App extends React.Component<{}, IState> {
         setTimeout(() => {
             this.setState({ splashAnimationDone: true });
         }, 1000);
+
+        Notification.configure();
+
+        // const date = new Date()
+        // date.setSeconds(date.getSeconds() + 10)
+        // Notifications.scheduleNotification(date)
     }
 
     public render() {

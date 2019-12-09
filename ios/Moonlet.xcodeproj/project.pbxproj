@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
+		4916BFB1239E8FD70069285B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4916BFB0239E8FD70069285B /* GoogleService-Info.plist */; };
+		4916BFB2239E8FD70069285B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4916BFB0239E8FD70069285B /* GoogleService-Info.plist */; };
 		5E3E1B2523588585008D627E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		5E3E1B262358858B008D627E /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		5E3E1B272358858F008D627E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
@@ -20,10 +22,8 @@
 		5E7A08A92358A82D0036C459 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		5E7A08AB2358ADFE0036C459 /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E7A08AA2358ADFD0036C459 /* icons.ttf */; };
 		5E7A08AC2358ADFE0036C459 /* icons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E7A08AA2358ADFD0036C459 /* icons.ttf */; };
-		70D8D14723971F4700C7612F /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 70D8D14623971F4700C7612F /* GoogleService-Info.plist */; };
 		999B626EFCF64A4C9E947F78 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 57A87EF5C18748E58DF0EE85 /* libz.tbd */; };
 		B2D43936A20EA4074D11C300 /* Pods_Moonlet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */; };
-		D879E58E239E789700308FFB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 70D8D14623971F4700C7612F /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +38,7 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Moonlet/main.m; sourceTree = "<group>"; };
 		1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Moonlet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28AF99820AAFEB28EEA5D672 /* Pods_Moonlet_Moonlet_beta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Moonlet_Moonlet_beta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4916BFB0239E8FD70069285B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		57A87EF5C18748E58DF0EE85 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5C4CC37B0E80B21C7C248D98 /* Pods-Moonlet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet/Pods-Moonlet.debug.xcconfig"; sourceTree = "<group>"; };
 		5E0012C3234DF5F100B2335A /* Moonlet_beta-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Moonlet_beta-Info.plist"; path = "Moonlet/Moonlet_beta-Info.plist"; sourceTree = "<group>"; };
@@ -45,7 +46,6 @@
 		5E7A08A12358A3D80036C459 /* Pods_Moonlet_Moonlet_beta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Pods_Moonlet_Moonlet_beta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E7A08AA2358ADFD0036C459 /* icons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = icons.ttf; path = ../../resources/fonts/icons.ttf; sourceTree = "<group>"; };
 		70D8D14323970FCA00C7612F /* Moonlet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Moonlet.entitlements; path = Moonlet/Moonlet.entitlements; sourceTree = "<group>"; };
-		70D8D14623971F4700C7612F /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A75EC3B76B489075D033B115 /* Pods-Moonlet-Moonlet_beta.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-Moonlet_beta.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
@@ -85,6 +85,7 @@
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				5E0012C3234DF5F100B2335A /* Moonlet_beta-Info.plist */,
+				4916BFB0239E8FD70069285B /* GoogleService-Info.plist */,
 			);
 			name = Moonlet;
 			sourceTree = "<group>";
@@ -130,7 +131,6 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				70D8D14623971F4700C7612F /* GoogleService-Info.plist */,
 				97676FAE2355A59600A5262D /* Resources */,
 				13B07FAE1A68108700A75B9A /* Moonlet */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -255,7 +255,7 @@
 			files = (
 				5E7A08A82358A82D0036C459 /* main.jsbundle in Resources */,
 				5E7A08AB2358ADFE0036C459 /* icons.ttf in Resources */,
-				70D8D14723971F4700C7612F /* GoogleService-Info.plist in Resources */,
+				4916BFB1239E8FD70069285B /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				5E3E1B262358858B008D627E /* LaunchScreen.xib in Resources */,
 			);
@@ -267,7 +267,7 @@
 			files = (
 				5E7A08A92358A82D0036C459 /* main.jsbundle in Resources */,
 				5E7A08AC2358ADFE0036C459 /* icons.ttf in Resources */,
-				D879E58E239E789700308FFB /* GoogleService-Info.plist in Resources */,
+				4916BFB2239E8FD70069285B /* GoogleService-Info.plist in Resources */,
 				5E7A08982358A3840036C459 /* Images.xcassets in Resources */,
 				5E7A08992358A3840036C459 /* LaunchScreen.xib in Resources */,
 			);
@@ -399,6 +399,7 @@
 				"${BUILT_PRODUCTS_DIR}/React-jsinspector/jsinspector.framework",
 				"${BUILT_PRODUCTS_DIR}/ReactCommon/ReactCommon.framework",
 				"${BUILT_PRODUCTS_DIR}/Sentry/Sentry.framework",
+				"${BUILT_PRODUCTS_DIR}/TouchID/TouchID.framework",
 				"${BUILT_PRODUCTS_DIR}/Yoga/yoga.framework",
 				"${BUILT_PRODUCTS_DIR}/glog/glog.framework",
 				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
@@ -443,6 +444,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/jsinspector.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactCommon.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sentry.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TouchID.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/yoga.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",
@@ -497,6 +499,7 @@
 				"${BUILT_PRODUCTS_DIR}/React-jsinspector/jsinspector.framework",
 				"${BUILT_PRODUCTS_DIR}/ReactCommon/ReactCommon.framework",
 				"${BUILT_PRODUCTS_DIR}/Sentry/Sentry.framework",
+				"${BUILT_PRODUCTS_DIR}/TouchID/TouchID.framework",
 				"${BUILT_PRODUCTS_DIR}/Yoga/yoga.framework",
 				"${BUILT_PRODUCTS_DIR}/glog/glog.framework",
 				"${BUILT_PRODUCTS_DIR}/lottie-ios/Lottie.framework",
@@ -541,6 +544,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/jsinspector.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactCommon.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Sentry.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TouchID.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/yoga.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/glog.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Lottie.framework",

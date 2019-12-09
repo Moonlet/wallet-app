@@ -8,12 +8,21 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { hash } from '../../../../core/secure/encrypt';
 import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
+import TouchID from 'react-native-touch-id';
+
+// const optionalConfigObject = {
+//     title: 'Authentication Required', // Android
+//     color: '#e00606', // Android,
+//     fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
+//     cancelText: 'Cancel' // Android
+// };
 
 export interface IExternalProps {
     title: string;
     subtitle: string;
     updatePinProps: boolean;
     onPasswordEntered: (value: string) => Promise<string>;
+    onBiometryLogin: (success: boolean) => void;
 }
 
 interface IState {
@@ -56,6 +65,8 @@ export class PasswordPinComponent extends React.Component<
             passToVerify: ''
         };
         this.shakeAnimation = new Animated.Value(0);
+
+        this.biometryAuth();
     }
 
     public async onEnterPassword() {
@@ -193,17 +204,42 @@ export class PasswordPinComponent extends React.Component<
         );
     };
 
+    public biometryAuth = () => {
+        TouchID.isSupported()
+            .then(biometryType => {
+                this.authenticate();
+
+                // if (biometryType === 'FaceID') {
+                //     this.authenticate();
+                // } else if (biometryType === 'TouchID') {
+                //     this.authenticate();
+                // } else if (biometryType === true) {
+                //     // Touch ID is supported on Android
+                // }
+            })
+            .catch(error => {
+                // Failure code if the user's device does not have touchID or faceID enabled
+            });
+    };
+
+    public authenticate() {
+        return TouchID.authenticate('Authenticate to continue', null)
+            .then((success: boolean) => {
+                if (success) {
+                    this.props.onBiometryLogin(true);
+                }
+            })
+            .catch(error => {
+                //
+            });
+    }
+
     public renderFooterRow = () => {
         const styles = this.props.styles;
 
         return (
             <View style={styles.keyRow}>
-                <TouchableOpacity
-                    style={styles.keyContainer}
-                    onPress={() => {
-                        // show touch id
-                    }}
-                >
+                <TouchableOpacity style={styles.keyContainer} onPress={this.biometryAuth}>
                     <Icon name="touch-id" size={40} style={styles.icon} />
                 </TouchableOpacity>
                 <LinearGradient
@@ -251,7 +287,6 @@ export class PasswordPinComponent extends React.Component<
             <View style={styles.container}>
                 <Image
                     style={styles.logoImage}
-                    // moonlet_space_gray
                     source={require('../../../../assets/images/png/moonlet_space_gray.png')}
                 />
                 <View style={styles.headerContainer}>

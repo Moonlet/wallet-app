@@ -68,6 +68,13 @@ export class PasswordModalComponent extends React.Component<
     }
 
     @bind
+    public onBiometryLogin(success: boolean) {
+        if (success) {
+            this.setState({ visible: false });
+        }
+    }
+
+    @bind
     public async onPasswordEntered(value: string): Promise<string> {
         if (this.state.createPass === true) {
             this.setState({
@@ -127,6 +134,7 @@ export class PasswordModalComponent extends React.Component<
                         title={this.state.title}
                         subtitle={this.state.subtitle}
                         onPasswordEntered={this.onPasswordEntered}
+                        onBiometryLogin={this.onBiometryLogin}
                     />
                 )}
             </Modal>

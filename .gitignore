@@ -65,7 +65,3 @@ resources/fonts
 coverage
 extension/build
 ios/Gemfile.lock
-
-# firebase config files
-android/app/google-services.json
-ios/GoogleService-Info.plist

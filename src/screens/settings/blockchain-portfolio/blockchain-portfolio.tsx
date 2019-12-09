@@ -13,6 +13,7 @@ import { IBlockchainsOptions } from '../../../redux/app/state';
 import { themes } from '../../../navigation/navigation';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { toogleBlockchainActive, updateBlockchainOrder } from '../../../redux/app/actions';
+import { Blockchain } from '../../../core/blockchain/types';
 
 export interface IReduxProps {
     blockchains: IBlockchainsOptions;
@@ -45,7 +46,11 @@ export class BlockchainPortfolioComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
 
-    public renderBlockchain = ({ item, index, move, moveEnd, isActive }: any) => {
+    public renderBlockchain(
+        item: { key: Blockchain; value: IBlockchainsOptions },
+        move: any,
+        moveEnd: any
+    ) {
         const { styles, theme } = this.props;
 
         return (
@@ -73,7 +78,7 @@ export class BlockchainPortfolioComponent extends React.Component<
                 <View style={styles.divider} />
             </View>
         );
-    };
+    }
 
     public render() {
         const { styles } = this.props;
@@ -82,16 +87,25 @@ export class BlockchainPortfolioComponent extends React.Component<
             <View style={styles.container}>
                 <DraggableFlatList
                     data={this.props.blockchains}
-                    renderItem={this.renderBlockchain}
-                    keyExtractor={(item: any) => `${item.value.order}`}
+                    renderItem={({ item, index, move, moveEnd, isActive }) =>
+                        this.renderBlockchain(item, move, moveEnd)
+                    }
+                    keyExtractor={(item: { key: Blockchain; value: IBlockchainsOptions }) =>
+                        `${item.value.order}`
+                    }
                     scrollPercent={5}
                     onMoveEnd={({ data }) => {
                         this.props.updateBlockchainOrder(
                             Object.assign(
                                 {},
-                                ...data.map((item, index) => ({
-                                    [item.key]: { ...item.value, order: index }
-                                }))
+                                ...data.map(
+                                    (
+                                        item: { key: Blockchain; value: IBlockchainsOptions },
+                                        index: number
+                                    ) => ({
+                                        [item.key]: { ...item.value, order: index }
+                                    })
+                                )
                             )
                         );
                     }}

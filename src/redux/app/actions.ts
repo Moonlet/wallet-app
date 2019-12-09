@@ -44,7 +44,7 @@ export const toogleBlockchainActive = (blockchain: Blockchain) => {
     };
 };
 
-export const updateBlockchianOrder = (blockchains: IBlockchainsOptions[]) => {
+export const updateBlockchainOrder = (blockchains: IBlockchainsOptions[]) => {
     return {
         type: APP_UPDATE_BLOCKCHAIN_ORDER,
         data: { blockchains }

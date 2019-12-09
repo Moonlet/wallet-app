@@ -12,23 +12,23 @@ import { translate } from '../../../core/i18n';
 import { IBlockchainsOptions } from '../../../redux/app/state';
 import { themes } from '../../../navigation/navigation';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import { toogleBlockchainActive, updateBlockchianOrder } from '../../../redux/app/actions';
+import { toogleBlockchainActive, updateBlockchainOrder } from '../../../redux/app/actions';
 
 export interface IReduxProps {
     blockchains: IBlockchainsOptions;
     toogleBlockchainActive: typeof toogleBlockchainActive;
-    updateBlockchianOrder: typeof updateBlockchianOrder;
+    updateBlockchainOrder: typeof updateBlockchainOrder;
 }
 
 const mapDispatchToProps = {
     toogleBlockchainActive,
-    updateBlockchianOrder
+    updateBlockchainOrder
 };
 
 const mapStateToProps = (state: IReduxState) => {
     return {
         blockchains: Object.keys(state.app.blockchains)
-            .reduce((array, key) => [...array, { key, value: state.app.blockchains[key] }], [])
+            .map(key => ({ key, value: state.app.blockchains[key] }))
             .sort((a, b) => a.value.order - b.value.order)
     };
 };
@@ -85,17 +85,16 @@ export class BlockchainPortfolioComponent extends React.Component<
                     renderItem={this.renderBlockchain}
                     keyExtractor={(item: any) => `${item.value.order}`}
                     scrollPercent={5}
-                    onMoveEnd={({ data }) =>
-                        this.props.updateBlockchianOrder(
-                            data.reduce(
-                                (obj, item, index) => ({
-                                    ...obj,
+                    onMoveEnd={({ data }) => {
+                        this.props.updateBlockchainOrder(
+                            Object.assign(
+                                {},
+                                ...data.map((item, index) => ({
                                     [item.key]: { ...item.value, order: index }
-                                }),
-                                {}
+                                }))
                             )
-                        )
-                    }
+                        );
+                    }}
                 />
             </View>
         );

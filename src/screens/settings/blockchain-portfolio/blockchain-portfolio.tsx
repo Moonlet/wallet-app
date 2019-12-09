@@ -14,6 +14,8 @@ import { themes } from '../../../navigation/navigation';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { toogleBlockchainActive, updateBlockchainOrder } from '../../../redux/app/actions';
 import { Blockchain } from '../../../core/blockchain/types';
+import { ICON_SIZE } from '../../../styles/dimensions';
+import { capitalizeFirstLetter } from '../../../core/utils/format-string';
 
 export interface IReduxProps {
     blockchains: IBlockchainsOptions;
@@ -54,28 +56,34 @@ export class BlockchainPortfolioComponent extends React.Component<
         const { styles, theme } = this.props;
 
         return (
-            <View>
-                <View style={styles.rowContainer}>
-                    <Text style={styles.blockchainName}>{item.key}</Text>
-                    <TouchableOpacity onPress={() => this.props.toogleBlockchainActive(item.key)}>
-                        <Icon
-                            size={18}
-                            name={item.value.active ? 'check-2-thicked' : 'check-2'}
-                            style={[
-                                styles.checkIcon,
-                                {
-                                    color: item.value.active
-                                        ? theme.colors.accent
-                                        : theme.colors.textSecondary
-                                }
-                            ]}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity onLongPress={move} onPressOut={moveEnd}>
-                        <Icon size={18} name="navigation-menu" style={styles.menuIcon} />
-                    </TouchableOpacity>
+            <View style={styles.rowContainer}>
+                <View style={styles.infoContainer}>
+                    <Icon name="money-wallet-1" size={ICON_SIZE} style={styles.blockchainIcon} />
+                    <Text style={styles.blockchainName}>{capitalizeFirstLetter(item.key)}</Text>
                 </View>
-                <View style={styles.divider} />
+                <TouchableOpacity
+                    style={styles.iconContainer}
+                    onPress={() => this.props.toogleBlockchainActive(item.key)}
+                >
+                    <Icon
+                        size={18}
+                        name={item.value.active ? 'check-2-thicked' : 'check-2'}
+                        style={[
+                            {
+                                color: item.value.active
+                                    ? theme.colors.accent
+                                    : theme.colors.textSecondary
+                            }
+                        ]}
+                    />
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.iconContainer}
+                    onLongPress={move}
+                    onPressOut={moveEnd}
+                >
+                    <Icon size={18} name="navigation-menu" style={styles.menuIcon} />
+                </TouchableOpacity>
             </View>
         );
     }
@@ -87,7 +95,7 @@ export class BlockchainPortfolioComponent extends React.Component<
             <View style={styles.container}>
                 <DraggableFlatList
                     data={this.props.blockchains}
-                    renderItem={({ item, index, move, moveEnd, isActive }) =>
+                    renderItem={({ item, move, moveEnd }) =>
                         this.renderBlockchain(item, move, moveEnd)
                     }
                     keyExtractor={(item: { key: Blockchain; value: IBlockchainsOptions }) =>

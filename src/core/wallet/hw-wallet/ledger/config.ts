@@ -17,10 +17,6 @@ export const ledgerConfig: ILedgerTransportConfig = {
         NANO_X: {
             blockchains: [Blockchain.ZILLIQA, Blockchain.ETHEREUM],
             connectionTypes: ['USB', 'BLE']
-        },
-        NANO_S: {
-            blockchains: [Blockchain.ETHEREUM, Blockchain.ZILLIQA],
-            connectionTypes: ['USB']
         }
     },
     android: {

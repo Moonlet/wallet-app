@@ -67,8 +67,8 @@ export const createHWWallet = (
             connectionType
         );
 
+        dispatch(verifyAddressOnDevice(true));
         const account = await wallet.getAccounts(blockchain, 0);
-
         dispatch(
             addWallet({
                 id: walletId,

@@ -246,7 +246,6 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             (this.state.device && this.connection && this.state.blockchain) ===
                             undefined
                         }
-                        primary
                         onPress={async () => {
                             if (this.connection === HWConnection.BLE) {
                                 this.bluetoothModal.open();
@@ -255,7 +254,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             }
                         }}
                     >
-                        {translate('App.labels.next')}
+                        {translate('App.labels.connect')}
                     </Button>
                 </View>
                 <BluetoothDevicesModal

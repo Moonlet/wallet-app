@@ -1,4 +1,4 @@
-import { HWVendor, HWModel, HWConnection } from '../types';
+import { HWModel, HWConnection } from '../types';
 import { BLE } from './transport/transport-ble';
 import { USB } from './transport/transport-usb';
 import { Platform } from 'react-native';

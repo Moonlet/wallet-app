@@ -5,7 +5,7 @@ import { loadTranslations } from '../core/i18n';
 
 // Note: test renderer must be required after react-native.
 import { shallow } from 'enzyme';
-import { testUtils } from '../core/utils/test';
+import { timeUtils } from '../core/utils/time';
 import * as storeMock from '../redux/config';
 
 jest.mock('../redux/config');
@@ -23,7 +23,7 @@ test('renders correctly', async () => {
     expect(element.reduxStateLoaded).toBe(false);
 
     (storeMock as any).triggerStoreSubscribe();
-    await testUtils.delay();
+    await timeUtils.delay();
 
     expect(element.state.appReady).toBe(true);
     expect(element.translationsLoaded).toBe(true);

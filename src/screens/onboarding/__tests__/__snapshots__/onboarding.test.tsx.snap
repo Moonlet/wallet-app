@@ -20,7 +20,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]} testID=\\"button-recover\\">
         Recover
       </withTheme(ButtonComponent)>
-      <withTheme(ButtonComponent) style={{...}}>
+      <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]}>
         Connect
       </withTheme(ButtonComponent)>
     </View>

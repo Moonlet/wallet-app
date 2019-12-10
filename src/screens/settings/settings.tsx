@@ -15,6 +15,10 @@ import { translate } from '../../core/i18n';
 import { ICON_SIZE } from '../../styles/dimensions';
 import TouchID from 'react-native-touch-id';
 
+export interface IState {
+    isTouchIDSupported: boolean;
+}
+
 export interface IReduxProps {
     currency: string;
     network: string;
@@ -47,28 +51,34 @@ const navigationOptions = () => ({
 });
 
 export class SettingsScreenComponent extends React.Component<
-    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
     public static navigationOptions = navigationOptions;
 
-    public revealPassphraseTouch = () => {
-        // open reveal Passphrase screen
-        this.props.mock();
-    };
+    constructor(
+        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
+        super(props);
+
+        this.state = {
+            isTouchIDSupported: false
+        };
+
+        TouchID.isSupported()
+            .then(biometryType => this.setState({ isTouchIDSupported: true }))
+            .catch(error => {
+                // Failure code if the user's device does not have touchID or faceID enabled
+                this.setState({ isTouchIDSupported: false });
+            });
+    }
+
     public backupWalletTouch = () => {
         // backup wallet
         this.props.mock();
     };
     public reportIssueTouch = () => {
         // report an issue
-        this.props.mock();
-    };
-    public termsAndConditionsTouch = () => {
-        // open terms
-        this.props.mock();
-    };
-    public privacyPolicyTouch = () => {
-        // open privacy policy
         this.props.mock();
     };
     public signOut = () => {
@@ -110,7 +120,7 @@ export class SettingsScreenComponent extends React.Component<
 
                     <View style={styles.divider} />
 
-                    {TouchID.isSupported() && (
+                    {this.state.isTouchIDSupported && (
                         <View>
                             <View style={styles.rowContainer}>
                                 <Text style={styles.textRow}>{translate('Settings.touchID')}</Text>

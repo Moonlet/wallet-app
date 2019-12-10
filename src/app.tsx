@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { StatusBar, Platform, AppRegistry } from 'react-native';
+import { StatusBar, Platform } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { RootNavigation } from './navigation/navigation';
 import configureStore from './redux/config';

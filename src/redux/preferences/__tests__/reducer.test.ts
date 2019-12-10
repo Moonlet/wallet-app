@@ -17,6 +17,6 @@ describe('preferences reducer', () => {
                 type: actions.TOGGLE_PIN_LOGIN,
                 data: ''
             })
-        ).toEqual({ currency: 'USD', pinLogin: false });
+        ).toEqual({ currency: 'USD', pinLogin: false, touchID: false });
     });
 });

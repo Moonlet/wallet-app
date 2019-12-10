@@ -48,5 +48,9 @@ export default (theme: ITheme) =>
         },
         blockchainButtonTextActive: {
             color: theme.colors.accent
+        },
+        coinDashboard: {
+            flex: 1,
+            alignSelf: 'stretch'
         }
     });

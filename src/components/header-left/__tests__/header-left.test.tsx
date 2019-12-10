@@ -4,6 +4,7 @@ import { darkTheme } from '../../../styles/themes/dark-theme';
 import styleProvider from '../styles';
 
 import { shallow } from 'enzyme';
+import { loadTranslations } from '../../../core/i18n';
 
 const props: IProps = {
     styles: styleProvider(darkTheme),
@@ -13,6 +14,10 @@ const props: IProps = {
 };
 
 describe('header go back button', () => {
+    beforeAll(async () => {
+        await loadTranslations('en');
+    });
+
     it('renders correctly', () => {
         const wrapper = shallow(<HeaderLeftComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();

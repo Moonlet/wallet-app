@@ -12,13 +12,6 @@ import LinearGradient from 'react-native-linear-gradient';
 import TouchID from 'react-native-touch-id';
 import { IReduxState } from '../../../../redux/state';
 
-// const optionalConfigObject = {
-//     title: 'Authentication Required', // Android
-//     color: '#e00606', // Android,
-//     fallbackLabel: 'Show Passcode', // iOS (if empty, then label is hidden)
-//     cancelText: 'Cancel' // Android
-// };
-
 export interface IReduxProps {
     touchID: boolean;
 }
@@ -227,7 +220,20 @@ export class PasswordPinComponent extends React.Component<
     };
 
     public authenticate() {
-        return TouchID.authenticate(translate('Password.authToContinue'))
+        const { theme } = this.props;
+
+        const touchIDConfig = {
+            title: translate('Password.authRequired'),
+            imageColor: theme.colors.accent,
+            imageErrorColor: theme.colors.error,
+            sensorDescription: translate('Password.touchSensor'),
+            sensorErrorDescription: translate('App.labels.failed'),
+            cancelText: translate('App.labels.cancel'),
+            fallbackLabel: translate('Password.showPasscode'),
+            passcodeFallback: false
+        };
+
+        return TouchID.authenticate(translate('Password.authToContinue'), touchIDConfig)
             .then((success: boolean) => {
                 if (success) {
                     this.props.onBiometryLogin(true);

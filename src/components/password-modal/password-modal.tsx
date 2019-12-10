@@ -68,9 +68,11 @@ export class PasswordModalComponent extends React.Component<
     }
 
     @bind
-    public onBiometryLogin(success: boolean) {
+    public onBiometryLogin(success: boolean): Promise<boolean> {
         if (success) {
             this.setState({ visible: false });
+            this.passwordRequestDeferred && this.passwordRequestDeferred.resolve(true);
+            return;
         }
     }
 

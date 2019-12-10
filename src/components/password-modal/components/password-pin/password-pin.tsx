@@ -28,7 +28,7 @@ export interface IExternalProps {
     subtitle: string;
     updatePinProps: boolean;
     onPasswordEntered: (value: string) => Promise<string>;
-    onBiometryLogin: (success: boolean) => Promise<boolean>;
+    onBiometryLogin: (success: boolean) => Promise<string>;
 }
 
 interface IState {

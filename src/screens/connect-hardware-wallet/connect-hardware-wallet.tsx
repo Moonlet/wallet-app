@@ -14,10 +14,9 @@ import { createHWWallet } from '../../redux/wallets/actions';
 import { HWVendor, HWModel, HWConnection, ConnectionType } from '../../core/wallet/hw-wallet/types';
 import { ledgerConfig } from '../../core/wallet/hw-wallet/ledger/config';
 import { Blockchain } from '../../core/blockchain/types';
-import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { ListCard } from '../../components/list-card/list-card';
 import { BluetoothDevicesModal } from '../../components/bluetooth-devices/bluetooth-devices';
-import { NavigationActions, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 
@@ -154,7 +153,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
         const values = Object.keys(config);
 
         return (
-            <ScrollView style={styles.container}>
+            <ScrollView style={styles.container} key={Platform.OS}>
                 <Text key="device-header" style={styles.text}>
                     {'Connect your ledger'}
                 </Text>
@@ -177,10 +176,10 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                     />
                 ))}
 
-                {this.state.device !== undefined &&
+                {config[this.state.device] !== undefined &&
                     this.renderConnectionTypes(config[this.state.device].connectionTypes)}
 
-                {this.state.device !== undefined &&
+                {config[this.state.device] !== undefined &&
                     this.renderBlockchains(config[this.state.device].blockchains)}
             </ScrollView>
         );
@@ -224,8 +223,8 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
         return (
             <View style={props.styles.container}>
                 {Platform.select({
-                    ios: this.renderConfig(ledgerConfig.ios),
                     android: this.renderConfig(ledgerConfig.android),
+                    ios: this.renderConfig(ledgerConfig.ios),
                     web: this.renderConfig(ledgerConfig.web)
                 })}
                 {this.renderMessages()}

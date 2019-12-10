@@ -66,6 +66,12 @@ export const createHWWallet = (
             connectionType
         );
 
+        try {
+            await wallet.onAppOpened(blockchain);
+        } catch {
+            // wait until user opens the app;
+        }
+
         dispatch(verifyAddressOnDevice(true));
         const account = await wallet.getAccounts(blockchain, 0);
         dispatch(

@@ -17,7 +17,7 @@ export class LedgerWallet implements IWallet {
         this.connectionType = connectionType;
     }
 
-    public onAppOpen(blockchain: Blockchain): Promise<void> {
+    public onAppOpened(blockchain: Blockchain): Promise<void> {
         return new Promise(async resolve => {
             let opened = false;
             while (opened === false) {
@@ -46,7 +46,7 @@ export class LedgerWallet implements IWallet {
 
         try {
             try {
-                await this.onAppOpen(blockchain);
+                await this.onAppOpened(blockchain);
             } catch {
                 // keep trying until user opens the app
             }

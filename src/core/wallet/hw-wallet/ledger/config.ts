@@ -1,5 +1,5 @@
 import { Blockchain } from '../../../blockchain/types';
-import { HWModel, ConnectionType, HWConnection } from '../types';
+import { HWConnection } from '../types';
 
 interface ILedgerTransportConfig {
     [platform: string]: {
@@ -13,30 +13,30 @@ interface ILedgerTransportConfig {
 }
 
 export const ledgerConfig: ILedgerTransportConfig = {
-    ios: {
-        NANO_X: {
-            blockchains: [Blockchain.ZILLIQA, Blockchain.ETHEREUM],
-            connectionTypes: [HWConnection.USB, HWConnection.BLE]
-        }
-    },
     android: {
+        NANO_S: {
+            blockchains: [Blockchain.ETHEREUM, Blockchain.ZILLIQA],
+            connectionTypes: [HWConnection.USB]
+        },
         NANO_X: {
             blockchains: [Blockchain.ETHEREUM],
             connectionTypes: [HWConnection.BLE]
-        },
-        NANO_S: {
-            blockchains: [Blockchain.ETHEREUM, Blockchain.ZILLIQA],
+        }
+    },
+    ios: {
+        NANO_X: {
+            blockchains: [Blockchain.ETHEREUM],
             connectionTypes: [HWConnection.BLE]
         }
     },
     web: {
         NANO_X: {
             blockchains: [Blockchain.ETHEREUM],
-            connectionTypes: [HWConnection.BLE]
+            connectionTypes: [HWConnection.USB]
         },
         NANO_S: {
             blockchains: [Blockchain.ETHEREUM, Blockchain.ZILLIQA],
-            connectionTypes: [HWConnection.BLE]
+            connectionTypes: [HWConnection.USB]
         }
     }
 };

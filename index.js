@@ -15,12 +15,16 @@ import 'node-libs-react-native/globals';
 import { AppRegistry, Platform } from 'react-native';
 import App from './src/app';
 import { name as appName } from './app.json';
-import androidBgMessagingHandler from './src/messaging/androidBackgroundMessaging';
+import androidBgMessagingHandler from './src/core/messaging/silent/android-background-messaging';
 
 // TODO remove this when fixed
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['RCTRootView cancelTouches']);
 
-AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => androidBgMessagingHandler);
-//AppRegistry.registerHeadlessTask('RNFirebaseBackgroundMessage', () => require('./messaging/androidBackgroundMessaging'));
+if (Platform.OS === 'android') {
+    AppRegistry.registerHeadlessTask(
+        'RNFirebaseBackgroundMessage',
+        () => androidBgMessagingHandler
+    );
+}
 AppRegistry.registerComponent(appName, () => App);

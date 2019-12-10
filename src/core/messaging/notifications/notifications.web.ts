@@ -1,6 +1,6 @@
 export class NotificationService {
     public async getToken() {
-        return 'x';
+        return '';
     }
 
     public configure() {

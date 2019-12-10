@@ -27,7 +27,8 @@ export default (theme: ITheme) =>
             lineHeight: 25,
             letterSpacing: 0.38,
             color: theme.colors.text,
-            opacity: 0.87
+            opacity: 0.87,
+            textTransform: 'capitalize'
         },
         menuIcon: {
             color: theme.colors.accent

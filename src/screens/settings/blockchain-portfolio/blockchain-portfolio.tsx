@@ -15,7 +15,6 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { toogleBlockchainActive, updateBlockchainOrder } from '../../../redux/app/actions';
 import { Blockchain } from '../../../core/blockchain/types';
 import { ICON_SIZE } from '../../../styles/dimensions';
-import { capitalizeFirstLetter } from '../../../core/utils/format-string';
 
 export interface IReduxProps {
     blockchains: IBlockchainsOptions;
@@ -59,7 +58,7 @@ export class BlockchainPortfolioComponent extends React.Component<
             <View style={styles.rowContainer}>
                 <View style={styles.infoContainer}>
                     <Icon name="money-wallet-1" size={ICON_SIZE} style={styles.blockchainIcon} />
-                    <Text style={styles.blockchainName}>{capitalizeFirstLetter(item.key)}</Text>
+                    <Text style={styles.blockchainName}>{item.key}</Text>
                 </View>
                 <TouchableOpacity
                     style={styles.iconContainer}

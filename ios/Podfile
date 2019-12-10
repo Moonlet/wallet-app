@@ -37,7 +37,6 @@ target 'Moonlet' do
   pod 'DoubleConversion', :podspec => '../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec'
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
-  pod 'TouchID', :path => '../node_modules/react-native-touch-id'
 
   pod 'Firebase/Core', '~> 6.3.0', :modular_headers => true
   pod 'Firebase/Messaging', '~> 6.3.0',

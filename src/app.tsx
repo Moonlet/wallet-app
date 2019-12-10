@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { StatusBar, Platform, AppRegistry } from 'react-native';
+import { StatusBar, Platform, AppState, AppRegistry } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { RootNavigation } from './navigation/navigation';
 import configureStore from './redux/config';
@@ -11,6 +11,7 @@ import { loadTranslations } from './core/i18n';
 import { persistStore } from 'redux-persist';
 import { SplashScreen } from './components/splash-screen/splash-screen';
 import { Notification } from './messaging/notifications';
+import { PasswordModal } from './components/password-modal/password-modal';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -20,10 +21,12 @@ const persistor = persistStore(store);
 interface IState {
     appReady: boolean;
     splashAnimationDone: boolean;
+    appState: string;
 }
 
 export default class App extends React.Component<{}, IState> {
     public interval: any = null;
+    public passwordModal = null;
     private translationsLoaded: boolean = false;
     private reduxStateLoaded: boolean = false;
 
@@ -31,7 +34,8 @@ export default class App extends React.Component<{}, IState> {
         super(props);
         this.state = {
             appReady: false,
-            splashAnimationDone: false
+            splashAnimationDone: false,
+            appState: AppState.currentState
         };
 
         loadTranslations('en').then(() => {
@@ -57,6 +61,8 @@ export default class App extends React.Component<{}, IState> {
     }
 
     public componentDidMount() {
+        AppState.addEventListener('change', this.handleAppStateChange);
+
         setTimeout(() => {
             this.setState({ splashAnimationDone: true });
         }, 1000);
@@ -68,6 +74,17 @@ export default class App extends React.Component<{}, IState> {
         // Notifications.scheduleNotification(date)
     }
 
+    public componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange);
+    }
+
+    public handleAppStateChange = (nextAppState: string) => {
+        if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+            this.passwordModal.requestPassword();
+        }
+        this.setState({ appState: nextAppState });
+    };
+
     public render() {
         if (this.state.appReady && this.state.splashAnimationDone) {
             //            this.unsubscribe();
@@ -76,6 +93,7 @@ export default class App extends React.Component<{}, IState> {
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
                             <AppContainer theme="dark" />
+                            <PasswordModal obRef={ref => (this.passwordModal = ref)} />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

@@ -125,7 +125,6 @@ export class SettingsScreenComponent extends React.Component<
                             <View style={styles.rowContainer}>
                                 <Text style={styles.textRow}>{translate('Settings.touchID')}</Text>
                                 <Switch
-                                    testID={'touch-id'}
                                     onValueChange={() => this.props.toggleTouchID()}
                                     value={this.props.touchID}
                                     trackColor={{

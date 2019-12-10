@@ -36,11 +36,6 @@ export default describe('Wallet screen', () => {
         wrapper.find('[testID="pin-login"]').simulate('valueChange');
         expect(props.togglePinLogin).toHaveBeenCalledTimes(1);
     });
-    it('Touch id switch tapped', () => {
-        const wrapper = shallow(<SettingsScreenComponent {...props} />);
-        wrapper.find('[testID="touch-id"]').simulate('valueChange');
-        expect(props.mock).toHaveBeenCalled();
-    });
     it('Backup Wallet', () => {
         const wrapper = shallow(<SettingsScreenComponent {...props} />);
         wrapper.find('[testID="backup-wallet"]').simulate('Press');

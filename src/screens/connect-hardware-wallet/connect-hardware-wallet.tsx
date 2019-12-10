@@ -17,20 +17,20 @@ import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { ListCard } from '../../components/list-card/list-card';
 import { BluetoothDevicesModal } from '../../components/bluetooth-devices/bluetooth-devices';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { HeaderLeft } from '../../components/header-left/header-left';
-import { translation } from '../../core/i18n/translation/locales/en';
+import { INavigationProps } from '../../navigation/with-navigation-params';
 
 export interface IReduxProps {
     tosVersion: number;
     verifyAddressMessage: boolean;
-    walletCreated: boolean;
     createHWWallet: (
         deviceId: string,
         deviceVendor: HWVendor,
         deviceModel: HWModel,
         connectionType: HWConnection,
-        blockchain: Blockchain
+        blockchain: Blockchain,
+        navigation: NavigationScreenProp<NavigationState>
     ) => Promise<any>;
 }
 
@@ -61,21 +61,11 @@ const navigationOptions = ({ navigation }: any) => ({
 });
 
 export class ConnectHardwareWalletScreenComponent extends React.Component<
-    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
     public static navigationOptions = navigationOptions;
 
-    public static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.walletCreated === true) {
-            nextProps.navigation.navigate(
-                'MainNavigation',
-                {},
-                NavigationActions.navigate({ routeName: 'Dashboard' })
-            );
-        }
-        return prevState;
-    }
     public connection: HWConnection = undefined;
     public bluetoothModal = null;
 
@@ -179,10 +169,9 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             });
                             this.connection = undefined;
                         }}
-                        label={
-                            translate('CreateHardwareWallet.selectDevice') +
-                            translate('CreateHardwareWallet.' + key)
-                        }
+                        label={translate('CreateHardwareWallet.selectDevice', {
+                            param: translate('CreateHardwareWallet.' + key)
+                        })}
                         rightIcon={this.state.device === HWModel[key] && 'check-1'}
                         selected={this.state.device === HWModel[key]}
                     />
@@ -205,9 +194,9 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                     <Text style={styles.textIndicator}>
                         {this.props.verifyAddressMessage
                             ? translate('CreateHardwareWallet.verifyAddress')
-                            : translate('CreateHardwareWallet.openAppOnDevice') +
-                              this.state.blockchain +
-                              translate('CreateHardwareWallet.onDevice')}
+                            : translate('CreateHardwareWallet.openAppOnDevice', {
+                                  param: this.state.blockchain
+                              })}
                     </Text>
                     <ActivityIndicator size="large" color="#ffffff" />
                 </View>
@@ -225,7 +214,8 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
             HWVendor.LEDGER,
             this.state.device,
             this.connection,
-            this.state.blockchain
+            this.state.blockchain,
+            this.props.navigation
         );
     }
 
@@ -271,8 +261,7 @@ export const ConnectHardwareWallet = smartConnect(ConnectHardwareWalletScreenCom
     connect(
         (state: IReduxState) => ({
             tosVersion: state.app.tosVersion,
-            verifyAddressMessage: state.screens.connectHardwareWallet.verifyAddress,
-            walletCreated: state.screens.connectHardwareWallet.hardwareWalletCreated
+            verifyAddressMessage: state.screens.connectHardwareWallet.verifyAddress
         }),
         {
             createHWWallet

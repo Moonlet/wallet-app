@@ -13,11 +13,9 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
 import { selectCurrentWallet } from './selectors';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
-import {
-    verifyAddressOnDevice,
-    hardwareWalletCreated
-} from '../screens/connectHardwareWallet/actions';
+import { verifyAddressOnDevice } from '../screens/connectHardwareWallet/actions';
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
+import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-navigation';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -55,7 +53,8 @@ export const createHWWallet = (
     deviceVendor: HWVendor,
     deviceModel: HWModel,
     connectionType: HWConnection,
-    blockchain: Blockchain
+    blockchain: Blockchain,
+    navigation: NavigationScreenProp<NavigationState>
 ) => async (dispatch, getState: () => IReduxState) => {
     try {
         const walletId = uuidv4();
@@ -72,6 +71,7 @@ export const createHWWallet = (
         dispatch(
             addWallet({
                 id: walletId,
+                deviceId,
                 name: `Wallet ${getState().wallets.length + 1}`,
                 type: WalletType.HW,
                 accounts: account.reduce((out, accounts) => {
@@ -81,9 +81,13 @@ export const createHWWallet = (
         );
 
         dispatch(appSwitchWallet(walletId));
-        dispatch(hardwareWalletCreated());
+        navigation.navigate(
+            'MainNavigation',
+            {},
+            NavigationActions.navigate({ routeName: 'Dashboard' })
+        );
     } catch {
-        // TODO best way to handle this?
+        throw new Error('Wallet could not be connected');
     }
 };
 

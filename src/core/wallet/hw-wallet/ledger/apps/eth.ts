@@ -26,7 +26,12 @@ export class Eth implements IHardwareWalletApp {
         return this.app.getAddress(this.getPath(index, derivationIndex, path), true);
     }
 
-    public signTransaction({ index, derivationIndex, path, txRaw }) {
+    public signTransaction(
+        index: number,
+        derivationIndex: number = 0,
+        path: string,
+        txRaw: string
+    ) {
         return this.app.signTransaction(this.getPath(index, derivationIndex, path), txRaw);
     }
 

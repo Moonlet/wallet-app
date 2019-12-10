@@ -142,7 +142,8 @@ export const translation: ITranslations = {
             viewPhrase: 'Reveal secret phrase',
             secureWallet: 'Secure wallet',
             editTitle: 'Edit wallet name',
-            editDescription: 'Use a relevant name or an alias for this wallet'
+            editDescription: 'Use a relevant name or an alias for this wallet',
+            addWalletTitle: 'Add Wallet'
         },
         Transaction: {
             transactionID: 'Transaction ID',
@@ -175,6 +176,10 @@ export const translation: ITranslations = {
             mainnet: 'Mainnet',
             testnet: 'Testnet',
             title: 'Network Options'
+        },
+        Onboarding: {
+            welcomeTitle: 'Welcome to Moonlet!',
+            welcomeText: 'We’ll generate this section once you create, recover or connect a wallet'
         }
     },
     plural: (n: number, ord?: boolean) => {

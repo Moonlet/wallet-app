@@ -19,6 +19,7 @@ import { ListCard } from '../../components/list-card/list-card';
 import { BluetoothDevicesModal } from '../../components/bluetooth-devices/bluetooth-devices';
 import { NavigationActions } from 'react-navigation';
 import { HeaderLeft } from '../../components/header-left/header-left';
+import { translation } from '../../core/i18n/translation/locales/en';
 
 export interface IReduxProps {
     tosVersion: number;
@@ -56,7 +57,7 @@ const navigationOptions = ({ navigation }: any) => ({
 
         return null;
     },
-    title: 'Add Wallet'
+    title: translate('Wallets.addWalletTitle')
 });
 
 export class ConnectHardwareWalletScreenComponent extends React.Component<
@@ -107,7 +108,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                 {connectionTypes.map((key, index) => (
                     <ListCard
                         key={'coonnection' + index}
-                        customStyle={{ height: 60, width: 180, marginRight: 20 }}
+                        style={{ height: 60, width: 180, marginRight: 20 }}
                         onPress={() => {
                             this.connection = HWConnection[connectionTypes[index]];
                             this.setState({ selectConnection: true });
@@ -136,7 +137,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                 {blockchains.map((key, index) => (
                     <ListCard
                         key={'blockchain' + index}
-                        customStyle={{ height: 60, width: 180, marginRight: 20 }}
+                        style={{ height: 60, width: 180, marginRight: 20 }}
                         onPress={() => {
                             this.setState({
                                 blockchain: blockchains[index],

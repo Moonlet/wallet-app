@@ -4,7 +4,7 @@ import { IAccountState } from '../../../../redux/wallets/state';
 import { HWModel, HWConnection } from '../types';
 import { AppFactory } from './apps-factory';
 import { TransportFactory } from './transport-factory';
-import { timeUtils } from '../../../utils/time';
+import { delay } from '../../../utils/time';
 
 export class LedgerWallet implements IWallet {
     private deviceId: string;
@@ -30,7 +30,7 @@ export class LedgerWallet implements IWallet {
                 } catch {
                     // dont handle error - keep trying until user opens the app
                 }
-                await timeUtils.delay(1000);
+                await delay(1000);
             }
             resolve();
         });
@@ -51,6 +51,7 @@ export class LedgerWallet implements IWallet {
                 // keep trying until user opens the app
             }
 
+            // each time an error generated the pair between app and device is lost and must be reinitiated
             const transport = await this.getTransport();
             const app = await AppFactory.get(blockchain, transport);
             const address = await app.getAddress(index, 0, undefined);
@@ -64,7 +65,7 @@ export class LedgerWallet implements IWallet {
             accounts.push(account);
             return Promise.resolve(accounts);
         } catch (e) {
-            Promise.reject('No accounts');
+            Promise.reject('Communication error');
         }
     }
 
@@ -73,7 +74,7 @@ export class LedgerWallet implements IWallet {
         accountIndex: number,
         tx: IBlockchainTransaction
     ): Promise<any> {
-        return;
+        return Promise.reject('NOT_IMPLEMENTED');
     }
 
     public getTransport() {

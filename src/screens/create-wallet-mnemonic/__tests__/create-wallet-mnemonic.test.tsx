@@ -11,7 +11,7 @@ import styleProvider from '../styles';
 import { shallow } from 'enzyme';
 import { loadTranslations } from '../../../core/i18n';
 import { Mnemonic } from '../../../core/wallet/hd-wallet/mnemonic';
-import { timeUtils } from '../../../core/utils/time';
+import { delay } from '../../../core/utils/time';
 
 const props: IProps & IReduxProps = {
     // @ts-ignore
@@ -40,7 +40,7 @@ describe('creat wallet terms screen component', () => {
 
     it('renders correctly', async () => {
         const wrapper = shallow(<CreateWalletMnemonicScreenComponent {...props} />);
-        await timeUtils.delay();
+        await delay();
         expect(wrapper.debug()).toMatchSnapshot();
     });
 

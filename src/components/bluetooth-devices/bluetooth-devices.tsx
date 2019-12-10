@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, FlatList, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { Modal, FlatList, TouchableOpacity, View } from 'react-native';
 import stylesProvider from './styles';
 import { Text } from '../../library';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -7,6 +7,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { Icon } from '../icon';
 import { BLE } from '../../core/wallet/hw-wallet/ledger/transport/transport-ble';
+import { LoadingIndicator } from '../loading-indicator/loading-indicator';
 
 export interface IExternalProps {
     obRef: any;
@@ -91,9 +92,7 @@ export class BluetoothDevicesModalComponent extends React.Component<
                     <Icon name="close" size={ICON_SIZE} style={styles.icon} />
                 </TouchableOpacity>
                 <Text style={styles.headerTitle}>Scanning for Bluetooth...</Text>
-                <View style={styles.indicator}>
-                    <ActivityIndicator size="large" color="#ffffff" />
-                </View>
+                <LoadingIndicator />
             </View>
         );
     };

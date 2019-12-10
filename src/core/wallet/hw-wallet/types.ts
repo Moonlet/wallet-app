@@ -16,4 +16,4 @@ export enum HWConnection {
     BLE = 'BLE'
 }
 
-export type ConnectionType = Array<'USB' | 'U2F' | 'BLE'>;
+export type ConnectionType = HWConnection[];

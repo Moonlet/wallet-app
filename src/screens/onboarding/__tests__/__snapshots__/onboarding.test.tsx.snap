@@ -7,12 +7,8 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       <Image style={{...}} source={{...}} />
     </View>
     <View style={{...}}>
-      <withTheme(TextComponent) large={true} style={{...}}>
-        Welcome to Moonlet!
-      </withTheme(TextComponent)>
-      <withTheme(TextComponent) style={{...}} darker={true}>
-        We’ll generate this section once you create, recover or connect a wallet
-      </withTheme(TextComponent)>
+      <withTheme(TextComponent) large={true} style={{...}} />
+      <withTheme(TextComponent) style={{...}} darker={true} />
     </View>
   </View>
   <View style={{...}}>

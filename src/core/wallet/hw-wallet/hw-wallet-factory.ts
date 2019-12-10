@@ -13,7 +13,8 @@ export class HWWalletFactory {
         switch (deviceVendor) {
             case HWVendor.LEDGER: {
                 try {
-                    await TransportFactory.get(deviceModel, connectionType, deviceId); // start pairing
+                    // call for transport must be done here to display native popup to start pairing the bluetooth device
+                    await TransportFactory.get(deviceModel, connectionType, deviceId);
                     return Promise.resolve(new LedgerWallet(deviceModel, connectionType, deviceId));
                 } catch (e) {
                     return Promise.reject(e);

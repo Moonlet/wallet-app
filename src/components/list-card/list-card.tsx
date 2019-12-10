@@ -13,7 +13,7 @@ export interface IProps {
     rightIcon?: string;
     selected?: boolean;
     onPress?: any;
-    customStyle?: any;
+    style?: any;
 }
 
 export const ListCardComponent = (
@@ -27,13 +27,7 @@ export const ListCardComponent = (
         );
     return (
         <TouchableHighlight onPress={props.onPress}>
-            <View
-                style={[
-                    props.styles.card,
-                    props.selected && props.styles.selected,
-                    props.customStyle
-                ]}
-            >
+            <View style={[props.styles.card, props.selected && props.styles.selected, props.style]}>
                 {props.leftIcon && (
                     <View style={props.styles.iconLeftContainer}>
                         <Icon name={props.leftIcon} size={ICON_SIZE} style={props.styles.icon} />

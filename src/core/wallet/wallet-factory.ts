@@ -14,7 +14,6 @@ export class WalletFactory {
             deviceModel?: HWModel;
             deviceId?: string;
             connectionType?: HWConnection;
-            blockchain?: Blockchain;
         }
     ): Promise<IWallet> {
         switch (walletType) {

@@ -38,7 +38,8 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/react-native-gesture-handler'),
         path.resolve(appDirectory, 'node_modules/@react-native-community/async-storage'),
         path.resolve(appDirectory, 'node_modules/react-native-keychain'),
-        path.resolve(appDirectory, 'node_modules/react-native-qrcode-svg')
+        path.resolve(appDirectory, 'node_modules/react-native-qrcode-svg'),
+        path.resolve(appDirectory, 'node_modules/react-native-touch-id')
         // path.resolve(appDirectory, 'node_modules/react-native-uncompiled')
     ],
     use: {

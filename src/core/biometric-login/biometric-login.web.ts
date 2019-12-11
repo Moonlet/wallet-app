@@ -16,8 +16,8 @@ interface IsSupportedConfig {
 }
 
 export const biometricAuth = {
-    authenticate(reason?: string, config?: AuthenticateConfig) {
-        //
+    authenticate(reason?: string, config?: AuthenticateConfig): Promise<boolean> {
+        return;
     },
     isSupported(config?: IsSupportedConfig): Promise<BiometryType> {
         return Promise.reject('NOT_SUPPORTED');

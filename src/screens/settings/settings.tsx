@@ -13,7 +13,7 @@ import DeviceInfo from 'react-native-device-info';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { translate } from '../../core/i18n';
 import { ICON_SIZE } from '../../styles/dimensions';
-import { biometricAuth } from '../../core/biometric-login/biometric-login';
+import { biometricAuth } from '../../core/biometric-auth/biometric-auth';
 
 export interface IState {
     isTouchIDSupported: boolean;

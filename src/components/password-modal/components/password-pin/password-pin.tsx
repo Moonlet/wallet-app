@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { hash } from '../../../../core/secure/encrypt';
 import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
-import { biometricAuth } from '../../../../core/biometric-login/biometric-login';
+import { biometricAuth } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';
 
 export interface IReduxProps {

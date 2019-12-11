@@ -2,7 +2,6 @@ import { WalletType, IWallet } from './types';
 import { HDWallet } from './hd-wallet/hd-wallet';
 import { HWVendor, HWModel, HWConnection } from './hw-wallet/types';
 import { HWWalletFactory } from './hw-wallet/hw-wallet-factory';
-import { Blockchain } from '../blockchain/types';
 
 export class WalletFactory {
     public static async get(

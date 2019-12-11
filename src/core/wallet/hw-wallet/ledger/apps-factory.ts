@@ -1,5 +1,3 @@
-import { HWVendor, HWModel, HWConnection } from '../types';
-import { Platform } from 'react-native';
 import { Blockchain } from '../../../blockchain/types';
 import { Eth } from './apps/eth';
 import { IHardwareWalletApp } from './types';

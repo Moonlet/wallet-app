@@ -1,6 +1,6 @@
 import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
 import { Blockchain } from '../../core/blockchain/types';
-import { WalletType, IWallet } from '../../core/wallet/types';
+import { WalletType } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
 import { IAction } from '../types';
 import { Dispatch } from 'react';

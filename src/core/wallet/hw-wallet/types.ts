@@ -1,5 +1,3 @@
-import { Blockchain } from '../../blockchain/types';
-
 export enum HWVendor {
     LEDGER = 'LEDGER',
     TREZOR = 'TREZOR'

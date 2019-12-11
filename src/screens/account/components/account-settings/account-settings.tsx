@@ -8,7 +8,6 @@ import { ITheme } from '../../../../core/theme/itheme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
-import { HeaderLeft } from '../../../../components/header-left/header-left';
 import { ViewKey } from '../view-key/view-key';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ICON_SIZE } from '../../../../styles/dimensions';

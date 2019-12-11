@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, Clipboard, Platform } from 'react-native';
+import { View, TextInput, Clipboard } from 'react-native';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { IReduxState } from '../../redux/state';

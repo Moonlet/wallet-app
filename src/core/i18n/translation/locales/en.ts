@@ -72,10 +72,10 @@ export const translation: ITranslations = {
             }
         },
         CreateHardwareWallet: {
-            selectDevice: 'Device: {{param}}',
+            device: 'Device: {{param}}',
             NANO_X: 'Ledger Nano X',
             NANO_S: 'Ledger Nano S',
-            openAppOnDevice: 'Make sure you have opened the {{param}} app on your hardware wallet',
+            app: 'Make sure you have opened the {{param}} app on your hardware wallet',
             verifyAddress: 'Verify address on your device'
         },
         Fee: {

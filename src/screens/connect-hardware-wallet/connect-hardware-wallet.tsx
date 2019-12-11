@@ -168,7 +168,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             });
                             this.connection = undefined;
                         }}
-                        label={translate('CreateHardwareWallet.selectDevice', {
+                        label={translate('CreateHardwareWallet.device', {
                             param: translate('CreateHardwareWallet.' + key)
                         })}
                         rightIcon={this.state.device === HWModel[key] && 'check-1'}
@@ -193,7 +193,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                     <Text style={styles.textIndicator}>
                         {this.props.verifyAddressMessage
                             ? translate('CreateHardwareWallet.verifyAddress')
-                            : translate('CreateHardwareWallet.openAppOnDevice', {
+                            : translate('CreateHardwareWallet.app', {
                                   param: this.state.blockchain
                               })}
                     </Text>
@@ -248,7 +248,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                     </Button>
                 </View>
                 <BluetoothDevicesModal
-                    obRef={ref => (this.bluetoothModal = ref)}
+                    ref={ref => (this.bluetoothModal = ref)}
                     onComplete={this.onBluetoothConnected}
                 />
             </View>

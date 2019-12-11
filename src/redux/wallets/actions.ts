@@ -16,6 +16,7 @@ import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/typ
 import { verifyAddressOnDevice } from '../screens/connectHardwareWallet/actions';
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-navigation';
+import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -66,18 +67,19 @@ export const createHWWallet = (
             connectionType
         );
 
-        try {
-            await wallet.onAppOpened(blockchain);
-        } catch {
-            // wait until user opens the app;
-        }
+        await (wallet as LedgerWallet).onAppOpened(blockchain);
 
         dispatch(verifyAddressOnDevice(true));
         const account = await wallet.getAccounts(blockchain, 0);
         dispatch(
             addWallet({
                 id: walletId,
-                deviceId,
+                hwOptions: {
+                    deviceId,
+                    deviceVendor,
+                    deviceModel,
+                    connectionType
+                },
                 name: `Wallet ${getState().wallets.length + 1}`,
                 type: WalletType.HW,
                 accounts: account.reduce((out, accounts) => {

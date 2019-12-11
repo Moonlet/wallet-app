@@ -45,12 +45,7 @@ export class LedgerWallet implements IWallet {
         const accounts = [];
 
         try {
-            try {
-                await this.onAppOpened(blockchain);
-            } catch {
-                // keep trying until user opens the app
-            }
-
+            await this.onAppOpened(blockchain);
             // each time an error generated the pair between app and device is lost and must be reinitiated
             const transport = await this.getTransport();
             const app = await AppFactory.get(blockchain, transport);

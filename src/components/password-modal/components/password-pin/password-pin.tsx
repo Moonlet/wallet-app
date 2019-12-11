@@ -5,15 +5,23 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
+import { connect } from 'react-redux';
 import { hash } from '../../../../core/secure/encrypt';
 import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
+import { biometricAuth } from '../../../../core/biometric-auth/biometric-auth';
+import { IReduxState } from '../../../../redux/state';
+
+export interface IReduxProps {
+    touchID: boolean;
+}
 
 export interface IExternalProps {
     title: string;
     subtitle: string;
     updatePinProps: boolean;
     onPasswordEntered: (value: string) => Promise<string>;
+    onBiometryLogin: (success: boolean) => void;
 }
 
 interface IState {
@@ -21,6 +29,10 @@ interface IState {
     errorMessage: string;
     passToVerify: string;
 }
+
+const mapStateToProps = (state: IReduxState) => ({
+    touchID: state.preferences.touchID
+});
 
 const digitsLayout = [
     [1, 2, 3],
@@ -31,7 +43,7 @@ const ZERO = 0;
 const PASSWORD_LENGTH = 6;
 
 export class PasswordPinComponent extends React.Component<
-    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
     public static getDerivedStateFromProps(nextProps, prevState) {
@@ -47,7 +59,9 @@ export class PasswordPinComponent extends React.Component<
     }
     private shakeAnimation: Animated.Value;
 
-    constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(
+        props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
 
         this.state = {
@@ -56,6 +70,8 @@ export class PasswordPinComponent extends React.Component<
             passToVerify: ''
         };
         this.shakeAnimation = new Animated.Value(0);
+
+        this.biometryAuth();
     }
 
     public async onEnterPassword() {
@@ -193,17 +209,49 @@ export class PasswordPinComponent extends React.Component<
         );
     };
 
+    public biometryAuth = () => {
+        if (this.props.touchID) {
+            biometricAuth
+                .isSupported()
+                .then(biometryType => this.authenticate())
+                .catch(error => {
+                    // Failure code if the user's device does not have touchID or faceID enabled
+                });
+        }
+    };
+
+    public authenticate() {
+        const { theme } = this.props;
+
+        const touchIDConfig = {
+            title: translate('Password.authRequired'),
+            imageColor: theme.colors.accent,
+            imageErrorColor: theme.colors.error,
+            sensorDescription: translate('Password.touchSensor'),
+            sensorErrorDescription: translate('App.labels.failed'),
+            cancelText: translate('App.labels.cancel'),
+            fallbackLabel: translate('Password.showPasscode'),
+            passcodeFallback: false
+        };
+
+        return biometricAuth
+            .authenticate(translate('Password.authToContinue'), touchIDConfig)
+            .then(success => {
+                if (success) {
+                    this.props.onBiometryLogin(true);
+                }
+            })
+            .catch(error => {
+                //
+            });
+    }
+
     public renderFooterRow = () => {
         const styles = this.props.styles;
 
         return (
             <View style={styles.keyRow}>
-                <TouchableOpacity
-                    style={styles.keyContainer}
-                    onPress={() => {
-                        // show touch id
-                    }}
-                >
+                <TouchableOpacity style={styles.keyContainer} onPress={this.biometryAuth}>
                     <Icon name="touch-id" size={40} style={styles.icon} />
                 </TouchableOpacity>
                 <LinearGradient
@@ -251,7 +299,6 @@ export class PasswordPinComponent extends React.Component<
             <View style={styles.container}>
                 <Image
                     style={styles.logoImage}
-                    // moonlet_space_gray
                     source={require('../../../../assets/images/png/moonlet_space_gray.png')}
                 />
                 <View style={styles.headerContainer}>
@@ -307,5 +354,6 @@ export class PasswordPinComponent extends React.Component<
 }
 
 export const PasswordPin = smartConnect<IExternalProps>(PasswordPinComponent, [
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

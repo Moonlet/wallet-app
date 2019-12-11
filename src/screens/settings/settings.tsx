@@ -3,7 +3,7 @@ import { ScrollView, View, Switch, TouchableOpacity } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
-import { setPinLogin } from '../../redux/preferences/actions';
+import { togglePinLogin, toggleTouchID } from '../../redux/preferences/actions';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { Icon } from '../../components/icon';
@@ -13,12 +13,19 @@ import DeviceInfo from 'react-native-device-info';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { translate } from '../../core/i18n';
 import { ICON_SIZE } from '../../styles/dimensions';
+import { biometricAuth } from '../../core/biometric-auth/biometric-auth';
+
+export interface IState {
+    isTouchIDSupported: boolean;
+}
 
 export interface IReduxProps {
     currency: string;
     network: string;
     pinLogin: boolean;
-    setPinLogin: () => void;
+    togglePinLogin: typeof togglePinLogin;
+    touchID: boolean;
+    toggleTouchID: typeof toggleTouchID;
     mock: () => void;
 }
 
@@ -28,8 +35,15 @@ export const mockFunction = () => {
 
 const mapStateToProps = (state: IReduxState) => ({
     pinLogin: state.preferences.pinLogin,
+    touchID: state.preferences.touchID,
     currency: state.preferences.currency
 });
+
+const mapDispatchToProps = {
+    mock: mockFunction,
+    togglePinLogin,
+    toggleTouchID
+};
 
 const navigationOptions = () => ({
     title: translate('App.labels.settings'),
@@ -37,32 +51,35 @@ const navigationOptions = () => ({
 });
 
 export class SettingsScreenComponent extends React.Component<
-    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
     public static navigationOptions = navigationOptions;
 
-    public touchIdSwitch = () => {
-        // touch Id
-        this.props.mock();
-    };
-    public revealPassphraseTouch = () => {
-        // open reveal Passphrase screen
-        this.props.mock();
-    };
+    constructor(
+        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
+        super(props);
+
+        this.state = {
+            isTouchIDSupported: false
+        };
+
+        biometricAuth
+            .isSupported()
+            .then(biometryType => this.setState({ isTouchIDSupported: true }))
+            .catch(error => {
+                // Failure code if the user's device does not have touchID or faceID enabled
+                this.setState({ isTouchIDSupported: false });
+            });
+    }
+
     public backupWalletTouch = () => {
         // backup wallet
         this.props.mock();
     };
     public reportIssueTouch = () => {
         // report an issue
-        this.props.mock();
-    };
-    public termsAndConditionsTouch = () => {
-        // open terms
-        this.props.mock();
-    };
-    public privacyPolicyTouch = () => {
-        // open privacy policy
         this.props.mock();
     };
     public signOut = () => {
@@ -86,7 +103,7 @@ export class SettingsScreenComponent extends React.Component<
                         <Text style={styles.textRow}>{translate('Settings.pinLogin')}</Text>
                         <Switch
                             testID={'pin-login'}
-                            onValueChange={() => this.props.setPinLogin()}
+                            onValueChange={() => this.props.togglePinLogin()}
                             value={this.props.pinLogin}
                             trackColor={{
                                 true: this.props.theme.colors.cardBackground,
@@ -100,21 +117,28 @@ export class SettingsScreenComponent extends React.Component<
 
                     <View style={styles.divider} />
 
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.textRow}>{translate('Settings.touchID')}</Text>
-                        <Switch
-                            testID={'touch-id'}
-                            onValueChange={this.touchIdSwitch}
-                            value={true}
-                            trackColor={{
-                                true: this.props.theme.colors.cardBackground,
-                                false: this.props.theme.colors.primary
-                            }}
-                            thumbColor={theme.colors.accent}
-                        />
-                    </View>
+                    {this.state.isTouchIDSupported && (
+                        <View>
+                            <View style={styles.rowContainer}>
+                                <Text style={styles.textRow}>{translate('Settings.touchID')}</Text>
+                                <Switch
+                                    onValueChange={() => this.props.toggleTouchID()}
+                                    value={this.props.touchID}
+                                    trackColor={{
+                                        true: this.props.theme.colors.cardBackground,
+                                        false: this.props.theme.colors.primary
+                                    }}
+                                    thumbColor={
+                                        this.props.touchID
+                                            ? theme.colors.accent
+                                            : theme.colors.primary
+                                    }
+                                />
+                            </View>
 
-                    <View style={styles.divider} />
+                            <View style={styles.divider} />
+                        </View>
+                    )}
 
                     <TouchableOpacity
                         style={styles.rowContainer}
@@ -252,6 +276,6 @@ export class SettingsScreenComponent extends React.Component<
 }
 
 export const SettingsScreen = smartConnect(SettingsScreenComponent, [
-    connect(mapStateToProps, { mock: mockFunction, setPinLogin }),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

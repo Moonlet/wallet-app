@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { hash } from '../../../../core/secure/encrypt';
 import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
-import TouchID from 'react-native-touch-id';
+import { biometricAuth } from '../../../../core/biometric-login/biometric-login';
 import { IReduxState } from '../../../../redux/state';
 
 export interface IReduxProps {
@@ -211,7 +211,8 @@ export class PasswordPinComponent extends React.Component<
 
     public biometryAuth = () => {
         if (this.props.touchID) {
-            TouchID.isSupported()
+            biometricAuth
+                .isSupported()
                 .then(biometryType => this.authenticate())
                 .catch(error => {
                     // Failure code if the user's device does not have touchID or faceID enabled
@@ -233,7 +234,8 @@ export class PasswordPinComponent extends React.Component<
             passcodeFallback: false
         };
 
-        return TouchID.authenticate(translate('Password.authToContinue'), touchIDConfig)
+        return biometricAuth
+            .authenticate(translate('Password.authToContinue'), touchIDConfig)
             .then((success: boolean) => {
                 if (success) {
                     this.props.onBiometryLogin(true);

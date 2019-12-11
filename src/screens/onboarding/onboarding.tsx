@@ -133,10 +133,10 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
                     </View>
                     <View style={styles.textContainer}>
                         <Text large style={{ fontWeight: 'bold' }}>
-                            {translate('Onbarding.welcomeTitle')}
+                            {translate('Onboarding.welcomeTitle')}
                         </Text>
                         <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
-                            {translate('Onbarding.welcomeText')}
+                            {translate('Onboarding.welcomeText')}
                         </Text>
                     </View>
                 </View>

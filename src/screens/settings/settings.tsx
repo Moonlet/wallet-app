@@ -13,7 +13,7 @@ import DeviceInfo from 'react-native-device-info';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { translate } from '../../core/i18n';
 import { ICON_SIZE } from '../../styles/dimensions';
-import TouchID from 'react-native-touch-id';
+import { biometricAuth } from '../../core/biometric-login/biometric-login';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -65,7 +65,8 @@ export class SettingsScreenComponent extends React.Component<
             isTouchIDSupported: false
         };
 
-        TouchID.isSupported()
+        biometricAuth
+            .isSupported()
             .then(biometryType => this.setState({ isTouchIDSupported: true }))
             .catch(error => {
                 // Failure code if the user's device does not have touchID or faceID enabled

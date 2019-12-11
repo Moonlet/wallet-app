@@ -28,6 +28,7 @@ interface IState {
     showBackButton: boolean;
     title: string;
     key: string;
+    showSecurityWarning: boolean;
 }
 
 export class AccountSettingsComponent extends React.Component<IProps & IExternalProps, IState> {
@@ -40,7 +41,8 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             showKeyScreen: false,
             showBackButton: false,
             title: translate('AccountSettings.manageAccount'),
-            key: ''
+            key: '',
+            showSecurityWarning: false
         };
     }
 
@@ -50,7 +52,8 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                 showKeyScreen: true,
                 showBackButton: true,
                 title: translate('AccountSettings.revealPrivate'),
-                key: this.props.account.address // TO DO - switch to private key
+                key: this.props.account.address, // TO DO - switch to private key
+                showSecurityWarning: true
             })
         );
     };
@@ -59,7 +62,8 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             showKeyScreen: true,
             showBackButton: true,
             title: translate('AccountSettings.revealPublic'),
-            key: this.props.account.publicKey
+            key: this.props.account.publicKey,
+            showSecurityWarning: false
         });
     };
     public viewOn = () => {
@@ -129,7 +133,11 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                             </View>
                         </View>
                         {this.state.showKeyScreen ? (
-                            <ViewKey key={this.state.key} value={this.state.key} />
+                            <ViewKey
+                                key={this.state.key}
+                                value={this.state.key}
+                                showSecurityWarning={this.state.showSecurityWarning}
+                            />
                         ) : (
                             <View style={styles.contentContainer}>
                                 <TouchableOpacity

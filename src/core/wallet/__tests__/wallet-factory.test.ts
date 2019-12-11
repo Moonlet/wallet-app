@@ -7,11 +7,11 @@ jest.mock('../hd-wallet/hd-wallet');
 describe('WalletFactory', () => {
     test('get()', async () => {
         HDWallet.loadFromStorage = jest.fn();
-        let wallet = WalletFactory.get('', WalletType.HD);
+        let wallet = WalletFactory.get('', WalletType.HD, {});
         expect(wallet).toBeInstanceOf(Promise);
         expect(HDWallet.loadFromStorage).toHaveBeenCalledTimes(1);
 
-        wallet = WalletFactory.get('', 'INVALID_TYPE' as any);
+        wallet = WalletFactory.get('', 'INVALID_TYPE' as any, {});
         expect(wallet).toBeInstanceOf(Promise);
         expect(HDWallet.loadFromStorage).toHaveBeenCalledTimes(2);
     });

@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should set the config 1`] = `
+Object {
+  "blacklist": Array [
+    "screens",
+  ],
+  "key": "root",
+  "storage": undefined,
+  "version": 1,
+}
+`;

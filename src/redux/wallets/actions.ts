@@ -12,6 +12,11 @@ import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
 import { selectCurrentWallet } from './selectors';
+import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
+import { verifyAddressOnDevice } from '../screens/connectHardwareWallet/actions';
+import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
+import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-navigation';
+import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -21,17 +26,6 @@ export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
-
-export const FEE = {
-    [Blockchain.ZILLIQA]: {
-        gasPrice: 1000,
-        gasLimit: 1
-    },
-    [Blockchain.ETHEREUM]: {
-        gasPrice: 20000000000,
-        gasLimit: 21000
-    }
-};
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -53,6 +47,56 @@ export const removeAccount = (walletId: string, blockchain: Blockchain, account:
         type: ACCOUNT_REMOVE,
         data: { walletId, account, blockchain }
     };
+};
+
+export const createHWWallet = (
+    deviceId: string,
+    deviceVendor: HWVendor,
+    deviceModel: HWModel,
+    connectionType: HWConnection,
+    blockchain: Blockchain,
+    navigation: NavigationScreenProp<NavigationState>
+) => async (dispatch, getState: () => IReduxState) => {
+    try {
+        const walletId = uuidv4();
+
+        const wallet = await HWWalletFactory.get(
+            deviceVendor,
+            deviceModel,
+            deviceId,
+            connectionType
+        );
+
+        await (wallet as LedgerWallet).onAppOpened(blockchain);
+
+        dispatch(verifyAddressOnDevice(true));
+        const account = await wallet.getAccounts(blockchain, 0);
+        dispatch(
+            addWallet({
+                id: walletId,
+                hwOptions: {
+                    deviceId,
+                    deviceVendor,
+                    deviceModel,
+                    connectionType
+                },
+                name: `Wallet ${getState().wallets.length + 1}`,
+                type: WalletType.HW,
+                accounts: account.reduce((out, accounts) => {
+                    return out.concat(accounts);
+                }, [])
+            })
+        );
+
+        dispatch(appSwitchWallet(walletId));
+        navigation.navigate(
+            'MainNavigation',
+            {},
+            NavigationActions.navigate({ routeName: 'Dashboard' })
+        );
+    } catch {
+        throw new Error('Wallet could not be connected');
+    }
 };
 
 export const createHDWallet = (mnemonic: string, password: string, callback?: () => any) => async (
@@ -157,7 +201,7 @@ export const sendTransferTransaction = (
     const wallet = selectCurrentWallet(state);
 
     try {
-        const hdWallet = await WalletFactory.get(wallet.id, wallet.type, password); // encrypted string: pass)
+        const hdWallet = await WalletFactory.get(wallet.id, wallet.type, { pass: password }); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
 
         const nonce = await blockchainInstance.getClient(chainId).getNonce(account.address);

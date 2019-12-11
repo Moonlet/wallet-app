@@ -71,6 +71,13 @@ export const translation: ITranslations = {
                 tryAgain: 'Please try again'
             }
         },
+        CreateHardwareWallet: {
+            device: 'Device: {{device}}',
+            NANO_X: 'Ledger Nano X',
+            NANO_S: 'Ledger Nano S',
+            app: 'Make sure you have opened the {{app}} app on your hardware wallet',
+            verifyAddress: 'Verify address on your device'
+        },
         Fee: {
             feeTitle: 'Transaction fee',
             gasPrice: 'Gas price',
@@ -133,7 +140,8 @@ export const translation: ITranslations = {
             viewPhrase: 'Reveal secret phrase',
             secureWallet: 'Secure wallet',
             editTitle: 'Edit wallet name',
-            editDescription: 'Use a relevant name or an alias for this wallet'
+            editDescription: 'Use a relevant name or an alias for this wallet',
+            addWalletTitle: 'Add Wallet'
         },
         Transaction: {
             transactionID: 'Transaction ID',
@@ -166,6 +174,10 @@ export const translation: ITranslations = {
             mainnet: 'Mainnet',
             testnet: 'Testnet',
             title: 'Network Options'
+        },
+        Onboarding: {
+            welcomeTitle: 'Welcome to Moonlet!',
+            welcomeText: 'We’ll generate this section once you create, recover or connect a wallet'
         }
     },
     plural: (n: number, ord?: boolean) => {

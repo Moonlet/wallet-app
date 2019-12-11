@@ -145,83 +145,70 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                     style={styles.rowContainer}
                                     onPress={this.revealPrivateKey}
                                 >
-                                    <View style={styles.leftIcon}>
-                                        <Icon name="key" size={24} style={styles.icon} />
-                                    </View>
+                                    <Icon name="key" size={ICON_SIZE} style={styles.leftIcon} />
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
                                             {translate('AccountSettings.revealPrivate')}
                                         </Text>
-                                        <View style={styles.rightIcon}>
-                                            <Icon
-                                                name="arrow-right-1"
-                                                size={16}
-                                                style={styles.icon}
-                                            />
-                                        </View>
+                                        <Icon
+                                            name="arrow-right-1"
+                                            size={16}
+                                            style={styles.rightIcon}
+                                        />
                                     </View>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity
                                     testID="public-key"
                                     style={styles.rowContainer}
                                     onPress={this.revealPublicKey}
                                 >
-                                    <View style={styles.leftIcon}>
-                                        <Icon name="eye" size={24} style={styles.icon} />
-                                    </View>
+                                    <Icon name="eye" size={ICON_SIZE} style={styles.leftIcon} />
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
                                             {translate('AccountSettings.revealPublic')}
                                         </Text>
-                                        <View style={styles.rightIcon}>
-                                            <Icon
-                                                name="arrow-right-1"
-                                                size={16}
-                                                style={styles.icon}
-                                            />
-                                        </View>
+                                        <Icon
+                                            name="arrow-right-1"
+                                            size={16}
+                                            style={styles.rightIcon}
+                                        />
                                     </View>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity
                                     testID="view-on"
                                     style={styles.rowContainer}
                                     onPress={this.viewOn}
                                 >
-                                    <View style={styles.leftIcon}>
-                                        <Icon name="search" size={24} style={styles.icon} />
-                                    </View>
+                                    <Icon name="search" size={ICON_SIZE} style={styles.leftIcon} />
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
                                             {translate('AccountSettings.viewOn') + viewOnName}
                                         </Text>
-                                        <View style={styles.rightIcon}>
-                                            <Icon
-                                                name="arrow-right-1"
-                                                size={16}
-                                                style={styles.icon}
-                                            />
-                                        </View>
+                                        <Icon
+                                            name="arrow-right-1"
+                                            size={16}
+                                            style={styles.rightIcon}
+                                        />
                                     </View>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity
                                     testID="report-issue"
                                     style={styles.rowContainer}
                                     onPress={this.reportIssue}
                                 >
-                                    <View style={styles.leftIcon}>
-                                        <Icon name="bug" size={24} style={styles.icon} />
-                                    </View>
+                                    <Icon name="bug" size={ICON_SIZE} style={styles.leftIcon} />
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
                                             {translate('AccountSettings.reportIssue')}
                                         </Text>
-                                        <View style={styles.rightIcon}>
-                                            <Icon
-                                                name="arrow-right-1"
-                                                size={16}
-                                                style={styles.icon}
-                                            />
-                                        </View>
+                                        <Icon
+                                            name="arrow-right-1"
+                                            size={16}
+                                            style={styles.rightIcon}
+                                        />
                                     </View>
                                 </TouchableOpacity>
                             </View>

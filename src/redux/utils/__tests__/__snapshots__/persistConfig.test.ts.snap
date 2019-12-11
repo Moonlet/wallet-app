@@ -5,11 +5,8 @@ Object {
   "blacklist": Array [
     "screens",
   ],
-  "key": "extensionStorage",
-  "storage": Object {
-    "getItem": [Function],
-    "removeItem": [Function],
-    "setItem": [Function],
-  },
+  "key": "root",
+  "storage": undefined,
+  "version": 1,
 }
 `;

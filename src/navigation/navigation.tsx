@@ -39,6 +39,7 @@ import { RewardsScreen } from '../screens/rewards/rewards';
 import { WatchScreen } from '../screens/watch/watch';
 import { AccountsScreen } from '../screens/accounts/accounts';
 import { BASE_DIMENSION } from '../styles/dimensions';
+import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -262,6 +263,9 @@ export const CreateWalletNavigation = createStackNavigator(
         },
         RecoverWallet: {
             screen: RecoverWalletScreen
+        },
+        ConnectHardwareWallet: {
+            screen: ConnectHardwareWallet
         }
     },
     {

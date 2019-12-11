@@ -45,6 +45,8 @@
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Moonlet need to access photo library to read qr-code</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Moonlet need to access bluetooth to connect your hardware wallets</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>icons.ttf</string>

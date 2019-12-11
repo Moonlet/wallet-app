@@ -47,7 +47,6 @@ target 'Moonlet' do
 
   use_native_modules!
 
-
 end
 
 post_install do |installer|

@@ -11,6 +11,7 @@ import { translate } from '../../../../core/i18n';
 import { ViewKey } from '../view-key/view-key';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ICON_SIZE } from '../../../../styles/dimensions';
+import { PasswordModal } from '../../../../components/password-modal/password-modal';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -30,6 +31,8 @@ interface IState {
 }
 
 export class AccountSettingsComponent extends React.Component<IProps & IExternalProps, IState> {
+    public passwordModal = null;
+
     constructor(props: IProps & IExternalProps) {
         super(props);
 
@@ -42,12 +45,14 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
     }
 
     public revealPrivateKey = () => {
-        this.setState({
-            showKeyScreen: true,
-            showBackButton: true,
-            title: translate('AccountSettings.revealPrivate'),
-            key: this.props.account.address // TO DO - switch to private key
-        });
+        this.passwordModal.requestPassword().then(() =>
+            this.setState({
+                showKeyScreen: true,
+                showBackButton: true,
+                title: translate('AccountSettings.revealPrivate'),
+                key: this.props.account.address // TO DO - switch to private key
+            })
+        );
     };
     public revealPublicKey = () => {
         this.setState({
@@ -215,6 +220,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                         )}
                     </View>
                 </View>
+                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </Modal>
         );
     }

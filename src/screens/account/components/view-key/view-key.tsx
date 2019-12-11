@@ -39,14 +39,7 @@ export class ViewKeyComponent extends React.Component<
         return (
             <View style={styles.contentContainer}>
                 <View style={styles.keyWrapper}>
-                    <Text
-                        style={[
-                            styles.keyText
-                            // { marginBottom: this.props.value.length >= 50 ? 16 : 90 }
-                        ]}
-                    >
-                        {this.props.value}
-                    </Text>
+                    <Text style={[styles.keyText]}>{this.props.value}</Text>
                 </View>
 
                 {this.props.showSecurityWarning && (

@@ -20,6 +20,7 @@ export const translation: ITranslations = {
                 delete: 'Delete',
                 details: 'Details',
                 error: 'Error',
+                failed: 'Failed',
                 fast: 'Fast',
                 fastest: 'Fastest',
                 fee: 'Fee',
@@ -97,9 +98,12 @@ export const translation: ITranslations = {
             dontMatch: "PIN code doesn't match",
             termsBody: 'You need to setup a password to secure your wallet.',
             termsCheckboxLabel:
-                'Do not lose this password. Moonlet will not be able to reset it for you.'
+                'Do not lose this password. Moonlet will not be able to reset it for you.',
+            authRequired: 'Authentication Required',
+            authToContinue: 'Authenticate to continue',
+            touchSensor: 'Touch sensor',
+            showPasscode: 'Show Passcode'
         },
-
         Send: {
             inputAddress: 'Search public addresses or domain names',
             amount: 'Amount',

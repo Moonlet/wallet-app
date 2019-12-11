@@ -51,7 +51,7 @@ const calculateBalances = (accounts: IAccountState[], blockchains: IBlockchainsO
                 out.balance[account.blockchain] = {
                     amount: account?.balance?.value || new BigNumber(0)
                 };
-                if (blockchains[account.blockchain].active) {
+                if (blockchains && blockchains[account.blockchain]?.active) {
                     out.coins.push({
                         blockchain: account.blockchain,
                         order: blockchains[account.blockchain].order

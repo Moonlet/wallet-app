@@ -15,7 +15,7 @@ const props: IProps & IReduxProps = {
     theme: darkTheme,
     mock: jest.fn(),
     pinLogin: true,
-    setPinLogin: jest.fn()
+    togglePinLogin: jest.fn()
 };
 beforeEach(() => {
     // @ts-ignore
@@ -34,12 +34,7 @@ export default describe('Wallet screen', () => {
     it('Pin login switch tapped', () => {
         const wrapper = shallow(<SettingsScreenComponent {...props} />);
         wrapper.find('[testID="pin-login"]').simulate('valueChange');
-        expect(props.setPinLogin).toHaveBeenCalledTimes(1);
-    });
-    it('Touch id switch tapped', () => {
-        const wrapper = shallow(<SettingsScreenComponent {...props} />);
-        wrapper.find('[testID="touch-id"]').simulate('valueChange');
-        expect(props.mock).toHaveBeenCalled();
+        expect(props.togglePinLogin).toHaveBeenCalledTimes(1);
     });
     it('Backup Wallet', () => {
         const wrapper = shallow(<SettingsScreenComponent {...props} />);

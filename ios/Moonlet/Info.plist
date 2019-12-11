@@ -39,6 +39,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Moonlet need to access bluetooth to connect your hardware wallets</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Moonlet need to access camera to read qr-code</string>
 	<key>NSFaceIDUsageDescription</key>

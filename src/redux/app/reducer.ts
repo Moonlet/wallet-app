@@ -4,7 +4,9 @@ import {
     APP_SWITCH_WALLET,
     APP_SET_TOS_VERSION,
     APP_SET_TEST_NET,
-    APP_SET_NETWORK_TEST_NET_CHAIN_ID
+    APP_SET_NETWORK_TEST_NET_CHAIN_ID,
+    APP_TOGGLE_BLOCKCHAIN,
+    APP_UPDATE_BLOCKCHAIN_ORDER
 } from './actions';
 import { Blockchain } from '../../core/blockchain/types';
 
@@ -22,6 +24,16 @@ const intialState: IAppState = {
             testNet: 333,
             mainNet: 1
         }
+    },
+    blockchains: {
+        [Blockchain.ETHEREUM]: {
+            order: 0,
+            active: true
+        },
+        [Blockchain.ZILLIQA]: {
+            order: 1,
+            active: true
+        }
     }
 };
 
@@ -36,19 +48,33 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
                 ...state,
                 testNet: !state.testNet
             };
-            break;
         case APP_SET_NETWORK_TEST_NET_CHAIN_ID:
             return {
                 ...state,
                 networks: {
                     ...state.networks,
                     [action.data.blockchain]: {
-                        mainNet: 1,
+                        ...state.networks[action.data.blockchain],
                         testNet: action.data.chainId
                     }
                 }
             };
-            break;
+        case APP_TOGGLE_BLOCKCHAIN:
+            return {
+                ...state,
+                blockchains: {
+                    ...state.blockchains,
+                    [action.data.blockchain]: {
+                        ...state.blockchains[action.data.blockchain],
+                        active: !state.blockchains[action.data.blockchain].active
+                    }
+                }
+            };
+        case APP_UPDATE_BLOCKCHAIN_ORDER:
+            return {
+                ...state,
+                blockchains: action.data.blockchains
+            };
         default:
             break;
     }

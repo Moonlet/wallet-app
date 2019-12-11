@@ -2,6 +2,9 @@
 
 exports[`should set the config 1`] = `
 Object {
+  "blacklist": Array [
+    "screens",
+  ],
   "key": "extensionStorage",
   "storage": Object {
     "getItem": [Function],

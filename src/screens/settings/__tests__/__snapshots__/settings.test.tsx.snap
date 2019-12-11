@@ -44,7 +44,7 @@ exports[`Wallet screen renders correctly 1`] = `
       </View>
     </TouchableOpacity>
     <View style={{...}} />
-    <TouchableOpacity testID=\\"blockchain-portfolio\\" style={{...}} onPress={[Function]} activeOpacity={0.2}>
+    <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
       <withTheme(TextComponent) style={{...}}>
         Blockchain portfolio
       </withTheme(TextComponent)>

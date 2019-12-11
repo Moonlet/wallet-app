@@ -30,7 +30,7 @@ import { themes } from '../../navigation/navigation';
 export interface IReduxProps {
     wallets: {
         [WalletType.HD]: IWalletState[];
-        [WalletType.HW_LEDGER]: IWalletState[];
+        [WalletType.HW]: IWalletState[];
     };
     currentWalletId: string;
     appSwitchWallet: typeof appSwitchWallet;
@@ -48,9 +48,7 @@ const mapStateToProps = (state: IReduxState) => {
         wallets: {
             // TODO reselect? https://github.com/reduxjs/reselect
             [WalletType.HD]: state.wallets.filter(wallet => wallet.type === WalletType.HD),
-            [WalletType.HW_LEDGER]: state.wallets.filter(
-                wallet => wallet.type === WalletType.HW_LEDGER
-            )
+            [WalletType.HW]: state.wallets.filter(wallet => wallet.type === WalletType.HW)
         },
         walletsNr: state.wallets.length,
         currentWalletId: state.app.currentWalletId
@@ -114,6 +112,24 @@ export class WalletsScreenComponent extends React.Component<
             })
         );
     }
+
+    public onPressCreateHW() {
+        this.props.navigation.navigate(
+            'CreateWalletNavigation',
+            {},
+            NavigationActions.navigate({
+                routeName: 'ConnectHardwareWallet',
+                params: {
+                    goBack: (
+                        navigation: NavigationScreenProp<NavigationState, NavigationParams>
+                    ) => {
+                        navigation.navigate('Wallets');
+                    }
+                }
+            })
+        );
+    }
+
     public onPressCreate() {
         this.props.navigation.navigate(
             'CreateWalletNavigation',
@@ -255,7 +271,7 @@ export class WalletsScreenComponent extends React.Component<
                 <TabSelect
                     options={{
                         [WalletType.HD]: { title: 'Moonlet' },
-                        [WalletType.HW_LEDGER]: { title: 'Ledger' }
+                        [WalletType.HW]: { title: 'Ledger' }
                     }}
                     onSelectionChange={key => {
                         this.setState({
@@ -311,9 +327,14 @@ export class WalletsScreenComponent extends React.Component<
                                     </Button>
                                 </View>
                             ),
-                            [WalletType.HW_LEDGER]: (
+                            [WalletType.HW]: (
                                 <View style={styles.buttonContainer}>
-                                    <Button style={styles.bottomButton}>
+                                    <Button
+                                        style={styles.bottomButton}
+                                        onPress={() => {
+                                            this.onPressCreateHW();
+                                        }}
+                                    >
                                         {translate('App.labels.connect')}
                                     </Button>
                                 </View>

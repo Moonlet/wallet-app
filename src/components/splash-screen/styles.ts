@@ -15,6 +15,6 @@ export default (theme: ITheme) =>
         lottie: {
             ...StyleSheet.absoluteFillObject,
             height: '100%',
-            top: -150
+            top: -BASE_DIMENSION * 10
         }
     });

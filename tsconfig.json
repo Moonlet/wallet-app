@@ -13,7 +13,7 @@
         "strict": false,
         "target": "es2018",
         "resolveJsonModule": true,
-        "noUnusedLocals": false,
+        "noUnusedLocals": true,
         "typeRoots": ["node_modules/@types"],
         "types": ["jest"],
         "skipLibCheck": true,

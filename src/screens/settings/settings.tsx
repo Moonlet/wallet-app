@@ -69,10 +69,6 @@ export class SettingsScreenComponent extends React.Component<
         // sign out
         this.props.mock();
     };
-    public blockchainPortfolioTouch = () => {
-        // blockchain portfolio
-        this.props.mock();
-    };
 
     public render() {
         const styles = this.props.styles;
@@ -162,9 +158,8 @@ export class SettingsScreenComponent extends React.Component<
                     <View style={styles.divider} />
 
                     <TouchableOpacity
-                        testID={'blockchain-portfolio'}
                         style={styles.rowContainer}
-                        onPress={this.blockchainPortfolioTouch}
+                        onPress={() => navigation.navigate('BlockchainPortfolio')}
                     >
                         <Text style={styles.textRow}>
                             {translate('Settings.blockchainPortfolio')}

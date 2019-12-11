@@ -20,6 +20,7 @@ import { SettingsScreen } from '../screens/settings/settings';
 import { NetworkOptionsScreen } from '../screens/settings/network-options/network-options';
 import { NetworkSelectionScreen } from '../screens/settings/network-selection/network-selection';
 import { SetCurrencyScreen } from '../screens/settings/set-currency/set-currency';
+import { BlockchainPortfolioScreen } from '../screens/settings/blockchain-portfolio/blockchain-portfolio';
 import { OnboardingScreen } from '../screens/onboarding/onboarding';
 import { CreateWalletTermsScreen } from '../screens/create-wallet-terms/create-wallet-terms';
 import { CreateWalletMnemonicScreen } from '../screens/create-wallet-mnemonic/create-wallet-mnemonic';
@@ -38,6 +39,7 @@ import { RewardsScreen } from '../screens/rewards/rewards';
 import { WatchScreen } from '../screens/watch/watch';
 import { AccountsScreen } from '../screens/accounts/accounts';
 import { BASE_DIMENSION } from '../styles/dimensions';
+import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -167,6 +169,9 @@ export const SettingsNavigation = createStackNavigator(
         },
         SetCurrency: {
             screen: SetCurrencyScreen
+        },
+        BlockchainPortfolio: {
+            screen: BlockchainPortfolioScreen
         }
     },
     {
@@ -258,6 +263,9 @@ export const CreateWalletNavigation = createStackNavigator(
         },
         RecoverWallet: {
             screen: RecoverWalletScreen
+        },
+        ConnectHardwareWallet: {
+            screen: ConnectHardwareWallet
         }
     },
     {

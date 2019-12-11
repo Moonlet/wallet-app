@@ -46,11 +46,6 @@ export default describe('Wallet screen', () => {
         wrapper.find('[testID="backup-wallet"]').simulate('Press');
         expect(props.mock).toHaveBeenCalledTimes(1);
     });
-    it('Blockchain portfolio', () => {
-        const wrapper = shallow(<SettingsScreenComponent {...props} />);
-        wrapper.find('[testID="blockchain-portfolio"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalledTimes(1);
-    });
     it('Report issue', () => {
         const wrapper = shallow(<SettingsScreenComponent {...props} />);
         wrapper.find('[testID="report-issue"]').simulate('Press');

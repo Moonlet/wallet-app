@@ -18,6 +18,8 @@ jest.mock('react-navigation', () => {
     };
 });
 
+jest.mock('@ledgerhq/react-native-hw-transport-ble', () => ({}));
+
 jest.mock('react-navigation-tabs', () => {
     return {
         createBottomTabNavigator: jest.fn()

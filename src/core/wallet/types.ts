@@ -3,7 +3,7 @@ import { IAccountState } from '../../redux/wallets/state';
 
 export enum WalletType {
     HD = 'HD',
-    HW_LEDGER = 'HW_LEDGER'
+    HW = 'HW'
 }
 
 export enum TransactionStatus {
@@ -14,6 +14,6 @@ export enum TransactionStatus {
 }
 
 export interface IWallet {
-    getAccounts(blockchain: Blockchain, index: number, indexTo: number): Promise<IAccountState[]>;
+    getAccounts(blockchain: Blockchain, index: number, indexTo?: number): Promise<IAccountState[]>;
     sign(blockchain: Blockchain, accountIndex: number, tx: IBlockchainTransaction): Promise<string>;
 }

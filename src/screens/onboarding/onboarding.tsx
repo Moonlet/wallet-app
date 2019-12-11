@@ -15,6 +15,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
 import { hash } from '../../core/secure/encrypt';
 import { setPassword } from '../../core/secure/keychain';
+import { translate } from '../../core/i18n';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -85,6 +86,22 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
             })
         );
     }
+    public onPressConnect() {
+        this.props.navigation.navigate(
+            'CreateWalletNavigation',
+            {},
+            NavigationActions.navigate({
+                routeName: 'ConnectHardwareWallet',
+                params: {
+                    goBack: (
+                        navigation: NavigationScreenProp<NavigationState, NavigationParams>
+                    ) => {
+                        navigation.navigate('OnboardingScreen');
+                    }
+                }
+            })
+        );
+    }
     public async onPressGenerateWallet() {
         const password = await hash('000000');
         setPassword(password, false);
@@ -116,10 +133,10 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
                     </View>
                     <View style={styles.textContainer}>
                         <Text large style={{ fontWeight: 'bold' }}>
-                            Welcome to Moonlet!
+                            {translate('Onbarding.welcomeTitle')}
                         </Text>
                         <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
-                            We’ll generate this section once you create, recover or connect a wallet
+                            {translate('Onbarding.welcomeText')}
                         </Text>
                     </View>
                 </View>
@@ -131,9 +148,11 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
                             onPress={() => this.onPressRecover()}
                             testID="button-recover"
                         >
-                            Recover
+                            {translate('App.labels.recover')}
                         </Button>
-                        <Button style={styles.button}>Connect</Button>
+                        <Button style={styles.button} onPress={() => this.onPressConnect()}>
+                            {translate('App.labels.connect')}
+                        </Button>
                     </View>
                     <View style={{ flexDirection: 'row' }}>
                         <Button
@@ -142,7 +161,7 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
                             primary
                             onPress={() => this.onPressCreate()}
                         >
-                            Create
+                            {translate('App.labels.create')}
                         </Button>
                     </View>
 

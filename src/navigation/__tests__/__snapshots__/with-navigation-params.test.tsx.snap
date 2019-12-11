@@ -2,7 +2,6 @@
 
 exports[`Theme:withTheme withTheme works properly navigation without params on state: navigation without params on state 1`] = `
 Object {
-  "children": undefined,
   "navigation": Object {
     "state": Object {},
   },
@@ -11,21 +10,18 @@ Object {
 
 exports[`Theme:withTheme withTheme works properly navigation without state: navigation without state 1`] = `
 Object {
-  "children": undefined,
   "navigation": Object {},
 }
 `;
 
 exports[`Theme:withTheme withTheme works properly no navigation prop: no navigation prop 1`] = `
 Object {
-  "children": undefined,
   "navigation": undefined,
 }
 `;
 
 exports[`Theme:withTheme withTheme works properly valid navigation: valid navigation 1`] = `
 Object {
-  "children": undefined,
   "navigation": Object {
     "state": Object {
       "params": Object {

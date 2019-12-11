@@ -6,23 +6,28 @@ export type INavigationProps<P = {}> = P & {
     navigation: NavigationScreenProp<NavigationState, P>;
 };
 
-interface IProps {
-    children?: any;
-}
-
-export const withNavigationParams = () => (Comp: any) => {
-    function Component(props: IProps & INavigationProps) {
+export const withNavigationParams = (options?: { forwardRef?: boolean }) => (Comp: any) => {
+    const displayName = `withNavigation(${Comp.displayName || Comp.name || 'Component'})`;
+    function Component(props: any) {
         let params;
         if (props.navigation && props.navigation.state && props.navigation.state.params) {
             params = props.navigation.state.params;
         }
-        return (
-            <Comp {...props} {...params}>
-                {props.children}
-            </Comp>
-        );
+        return <Comp {...props} {...params} ref={props.forwardedRef} />;
     }
+    Component.displayName = displayName;
     hoistNonReactStatics(Component, Comp);
-    Component.displayName = `withNavigation(${Comp.displayName || Comp.name || 'Component'})`;
+
+    function ForwardRef(props, ref) {
+        return <Component {...props} forwardedRef={ref} />;
+    }
+
+    if (options?.forwardRef) {
+        const forwardedRef = React.forwardRef(ForwardRef);
+
+        ForwardRef.displayName = displayName;
+        hoistNonReactStatics(forwardedRef, Comp);
+        return forwardedRef;
+    }
     return Component;
 };

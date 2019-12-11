@@ -10,7 +10,7 @@ import { BLE } from '../../core/wallet/hw-wallet/ledger/transport/transport-ble'
 import { LoadingIndicator } from '../loading-indicator/loading-indicator';
 
 export interface IExternalProps {
-    ref: any;
+    obRef: any;
     onComplete: (deviceId: string) => void;
 }
 
@@ -39,7 +39,7 @@ export class BluetoothDevicesModalComponent extends React.Component<
             error: null,
             refreshing: false
         };
-        props.ref && props.ref(this);
+        props.obRef && props.obRef(this);
     }
 
     public open = async () => {

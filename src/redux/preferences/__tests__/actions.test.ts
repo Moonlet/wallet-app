@@ -2,7 +2,7 @@ import * as actions from '../actions';
 
 test('check preference actions to be saved on redux', () => {
     const expectedAction = {
-        type: actions.PREF_SET_PIN
+        type: actions.TOGGLE_PIN_LOGIN
     };
-    expect(actions.setPinLogin()).toEqual(expectedAction);
+    expect(actions.togglePinLogin()).toEqual(expectedAction);
 });

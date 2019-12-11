@@ -8,4 +8,4 @@ export class NotificationService {
     }
 }
 
-export const Notification = new NotificationService();
+export const Notifications = new NotificationService();

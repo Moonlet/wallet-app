@@ -20,7 +20,7 @@ export const ledgerConfig: ILedgerTransportConfig = {
         },
         NANO_X: {
             blockchains: [Blockchain.ETHEREUM],
-            connectionTypes: [HWConnection.BLE]
+            connectionTypes: [HWConnection.USB, HWConnection.BLE]
         }
     },
     ios: {

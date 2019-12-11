@@ -13,7 +13,11 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
 import { selectCurrentWallet } from './selectors';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
-import { verifyAddressOnDevice } from '../screens/connectHardwareWallet/actions';
+import {
+    verifyAddressOnDevice,
+    featureNotSupported,
+    toInitialState
+} from '../screens/connectHardwareWallet/actions';
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
@@ -60,6 +64,9 @@ export const createHWWallet = (
     try {
         const walletId = uuidv4();
 
+        // in case you replace your connected ledger reset message
+        dispatch(toInitialState());
+
         const wallet = await HWWalletFactory.get(
             deviceVendor,
             deviceModel,
@@ -94,8 +101,9 @@ export const createHWWallet = (
             {},
             NavigationActions.navigate({ routeName: 'Dashboard' })
         );
-    } catch {
-        throw new Error('Wallet could not be connected');
+    } catch (e) {
+        dispatch(featureNotSupported());
+        // throw e;
     }
 };
 

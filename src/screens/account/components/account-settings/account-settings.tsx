@@ -11,6 +11,7 @@ import { translate } from '../../../../core/i18n';
 import { ViewKey } from '../view-key/view-key';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ICON_SIZE } from '../../../../styles/dimensions';
+import { PasswordModal } from '../../../../components/password-modal/password-modal';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -27,9 +28,12 @@ interface IState {
     showBackButton: boolean;
     title: string;
     key: string;
+    showSecurityWarning: boolean;
 }
 
 export class AccountSettingsComponent extends React.Component<IProps & IExternalProps, IState> {
+    public passwordModal = null;
+
     constructor(props: IProps & IExternalProps) {
         super(props);
 
@@ -37,24 +41,29 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             showKeyScreen: false,
             showBackButton: false,
             title: translate('AccountSettings.manageAccount'),
-            key: ''
+            key: '',
+            showSecurityWarning: false
         };
     }
 
     public revealPrivateKey = () => {
-        this.setState({
-            showKeyScreen: true,
-            showBackButton: true,
-            title: translate('AccountSettings.revealPrivate'),
-            key: this.props.account.address // TO DO - switch to private key
-        });
+        this.passwordModal.requestPassword().then(() =>
+            this.setState({
+                showKeyScreen: true,
+                showBackButton: true,
+                title: translate('AccountSettings.revealPrivate'),
+                key: this.props.account.address, // TO DO - switch to private key
+                showSecurityWarning: true
+            })
+        );
     };
     public revealPublicKey = () => {
         this.setState({
             showKeyScreen: true,
             showBackButton: true,
             title: translate('AccountSettings.revealPublic'),
-            key: this.props.account.publicKey
+            key: this.props.account.publicKey,
+            showSecurityWarning: false
         });
     };
     public viewOn = () => {
@@ -124,7 +133,11 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                             </View>
                         </View>
                         {this.state.showKeyScreen ? (
-                            <ViewKey key={this.state.key} value={this.state.key} />
+                            <ViewKey
+                                key={this.state.key}
+                                value={this.state.key}
+                                showSecurityWarning={this.state.showSecurityWarning}
+                            />
                         ) : (
                             <View style={styles.contentContainer}>
                                 <TouchableOpacity
@@ -132,89 +145,77 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                     style={styles.rowContainer}
                                     onPress={this.revealPrivateKey}
                                 >
-                                    <View style={styles.leftIcon}>
-                                        <Icon name="key" size={24} style={styles.icon} />
-                                    </View>
+                                    <Icon name="key" size={ICON_SIZE} style={styles.leftIcon} />
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
                                             {translate('AccountSettings.revealPrivate')}
                                         </Text>
-                                        <View style={styles.rightIcon}>
-                                            <Icon
-                                                name="arrow-right-1"
-                                                size={16}
-                                                style={styles.icon}
-                                            />
-                                        </View>
+                                        <Icon
+                                            name="arrow-right-1"
+                                            size={16}
+                                            style={styles.rightIcon}
+                                        />
                                     </View>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity
                                     testID="public-key"
                                     style={styles.rowContainer}
                                     onPress={this.revealPublicKey}
                                 >
-                                    <View style={styles.leftIcon}>
-                                        <Icon name="eye" size={24} style={styles.icon} />
-                                    </View>
+                                    <Icon name="eye" size={ICON_SIZE} style={styles.leftIcon} />
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
                                             {translate('AccountSettings.revealPublic')}
                                         </Text>
-                                        <View style={styles.rightIcon}>
-                                            <Icon
-                                                name="arrow-right-1"
-                                                size={16}
-                                                style={styles.icon}
-                                            />
-                                        </View>
+                                        <Icon
+                                            name="arrow-right-1"
+                                            size={16}
+                                            style={styles.rightIcon}
+                                        />
                                     </View>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity
                                     testID="view-on"
                                     style={styles.rowContainer}
                                     onPress={this.viewOn}
                                 >
-                                    <View style={styles.leftIcon}>
-                                        <Icon name="search" size={24} style={styles.icon} />
-                                    </View>
+                                    <Icon name="search" size={ICON_SIZE} style={styles.leftIcon} />
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
                                             {translate('AccountSettings.viewOn') + viewOnName}
                                         </Text>
-                                        <View style={styles.rightIcon}>
-                                            <Icon
-                                                name="arrow-right-1"
-                                                size={16}
-                                                style={styles.icon}
-                                            />
-                                        </View>
+                                        <Icon
+                                            name="arrow-right-1"
+                                            size={16}
+                                            style={styles.rightIcon}
+                                        />
                                     </View>
                                 </TouchableOpacity>
+
                                 <TouchableOpacity
                                     testID="report-issue"
                                     style={styles.rowContainer}
                                     onPress={this.reportIssue}
                                 >
-                                    <View style={styles.leftIcon}>
-                                        <Icon name="bug" size={24} style={styles.icon} />
-                                    </View>
+                                    <Icon name="bug" size={ICON_SIZE} style={styles.leftIcon} />
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
                                             {translate('AccountSettings.reportIssue')}
                                         </Text>
-                                        <View style={styles.rightIcon}>
-                                            <Icon
-                                                name="arrow-right-1"
-                                                size={16}
-                                                style={styles.icon}
-                                            />
-                                        </View>
+                                        <Icon
+                                            name="arrow-right-1"
+                                            size={16}
+                                            style={styles.rightIcon}
+                                        />
                                     </View>
                                 </TouchableOpacity>
                             </View>
                         )}
                     </View>
                 </View>
+                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </Modal>
         );
     }

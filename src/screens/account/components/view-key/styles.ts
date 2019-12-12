@@ -6,25 +6,22 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         contentContainer: {
             flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'flex-end',
-            marginTop: BASE_DIMENSION * 5
-        },
-        rowContainer: {
-            flexDirection: 'row',
-            paddingVertical: BASE_DIMENSION
+            flexDirection: 'column'
         },
         keyWrapper: {
+            flex: 1,
             flexDirection: 'row',
-            flexWrap: 'wrap',
-            marginBottom: BASE_DIMENSION * 4,
-            paddingHorizontal: BASE_DIMENSION * 5
+            alignItems: 'center',
+            paddingHorizontal: BASE_DIMENSION * 3
         },
         keyText: {
-            color: theme.colors.textSecondary,
-            fontSize: theme.fontSize.regular,
-            lineHeight: BASE_DIMENSION * 3,
-            textAlign: 'center'
+            flex: 1,
+            color: theme.colors.text,
+            fontSize: 20,
+            lineHeight: 25,
+            textAlign: 'center',
+            letterSpacing: 0.38,
+            opacity: 0.87
         },
         tipWrapper: {
             flexDirection: 'row',
@@ -50,16 +47,18 @@ export default (theme: ITheme) =>
             height: 1,
             backgroundColor: 'rgba(0,0,0,0.4)'
         },
+        rowContainer: {
+            flexDirection: 'row',
+            paddingVertical: BASE_DIMENSION * 2,
+            alignItems: 'center'
+        },
         icon: {
-            color: theme.colors.accent,
-            padding: 4
+            paddingHorizontal: BASE_DIMENSION * 2,
+            color: theme.colors.accent
         },
         textRow: {
-            fontSize: theme.fontSize.regular,
-            lineHeight: 30
-        },
-        leftIcon: {
-            paddingLeft: BASE_DIMENSION * 2,
-            paddingRight: BASE_DIMENSION * 2
+            fontSize: 17,
+            lineHeight: 22,
+            color: theme.colors.accent
         }
     });

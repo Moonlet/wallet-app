@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { StatusBar, Platform, AppState } from 'react-native';
+import { StatusBar, Platform, AppState, AppStateStatus } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { RootNavigation } from './navigation/navigation';
 import configureStore from './redux/config';
@@ -18,10 +18,13 @@ const AppContainer = createAppContainer(RootNavigation);
 const store = configureStore();
 const persistor = persistStore(store);
 
+const APP_STATE_ACTIVE: AppStateStatus = 'active';
+const APP_STATE_BACKGROUND: AppStateStatus = 'background';
+
 interface IState {
     appReady: boolean;
     splashAnimationDone: boolean;
-    appState: string;
+    appState: AppStateStatus;
 }
 
 export default class App extends React.Component<{}, IState> {
@@ -65,7 +68,11 @@ export default class App extends React.Component<{}, IState> {
                     this.state.splashAnimationDone
             },
             () => {
-                if (this.state.appReady && store.getState().wallets.length >= 1) {
+                if (
+                    this.state.appReady &&
+                    this.state.appState === APP_STATE_ACTIVE &&
+                    store.getState().wallets.length >= 1
+                ) {
                     setTimeout(() => this.requestPassword(), 500);
                 }
             }
@@ -92,13 +99,15 @@ export default class App extends React.Component<{}, IState> {
     }
 
     public requestPassword() {
-        this.passwordModal.requestPassword().then(() => this.setState({ appState: 'active' }));
+        this.passwordModal
+            .requestPassword()
+            .then(() => this.setState({ appState: APP_STATE_ACTIVE }));
     }
 
-    public handleAppStateChange = (nextAppState: string) => {
+    public handleAppStateChange = (nextAppState: AppStateStatus) => {
         if (
-            this.state.appState.match(/inactive|background/) &&
-            nextAppState === 'active' &&
+            this.state.appState === APP_STATE_BACKGROUND &&
+            nextAppState === APP_STATE_ACTIVE &&
             store.getState().wallets.length >= 1
         ) {
             this.requestPassword();

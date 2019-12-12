@@ -14,31 +14,19 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.modalBackground,
             height: 380,
             borderRadius: BORDER_RADIUS * 2,
-            marginLeft: BASE_DIMENSION * 3,
-            marginRight: BASE_DIMENSION * 3
+            marginHorizontal: BASE_DIMENSION * 3
         },
         contentContainer: {
             marginTop: BASE_DIMENSION * 5
         },
         rowContainer: {
             flexDirection: 'row',
-            paddingVertical: BASE_DIMENSION
+            paddingVertical: BASE_DIMENSION * 2
         },
         rowChild: {
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'space-between'
-        },
-        leftIcon: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingLeft: BASE_DIMENSION * 2,
-            paddingRight: BASE_DIMENSION * 2
-        },
-        rightIcon: {
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingRight: BASE_DIMENSION
         },
         header: {
             height: ICON_CONTAINER_SIZE,
@@ -84,12 +72,22 @@ export default (theme: ITheme) =>
             textAlign: 'center',
             fontWeight: 'bold'
         },
+        leftIcon: {
+            color: theme.colors.text,
+            opacity: 0.67,
+            marginHorizontal: BASE_DIMENSION * 2
+        },
+        rightIcon: {
+            color: theme.colors.accent,
+            marginHorizontal: BASE_DIMENSION * 2
+        },
         icon: {
-            color: theme.colors.accent, // TODO: check here with Figma
-            padding: 4
+            color: theme.colors.accent
         },
         textRow: {
-            fontSize: theme.fontSize.regular,
-            lineHeight: 30
+            fontSize: 17,
+            lineHeight: 22,
+            color: theme.colors.text,
+            opacity: 0.67
         }
     });

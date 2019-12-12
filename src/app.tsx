@@ -73,7 +73,7 @@ export default class App extends React.Component<{}, IState> {
                     this.state.appState === APP_STATE_ACTIVE &&
                     store.getState().wallets.length >= 1
                 ) {
-                    setTimeout(() => this.requestPassword(), 500);
+                    setTimeout(() => this.requestPassword());
                 }
             }
         );

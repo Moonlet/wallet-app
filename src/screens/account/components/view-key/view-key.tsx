@@ -14,6 +14,7 @@ import {
 
 export interface IExternalProps {
     value: string;
+    showSecurityWarning: boolean;
 }
 
 interface IState {
@@ -38,20 +39,17 @@ export class ViewKeyComponent extends React.Component<
         return (
             <View style={styles.contentContainer}>
                 <View style={styles.keyWrapper}>
-                    <Text
-                        style={[
-                            styles.keyText,
-                            { marginBottom: this.props.value.length >= 50 ? 16 : 90 }
-                        ]}
-                    >
-                        {this.props.value}
-                    </Text>
+                    <Text style={[styles.keyText]}>{this.props.value}</Text>
                 </View>
 
-                <View style={styles.tipWrapper}>
-                    <Icon name="warning" size={ICON_SIZE} style={styles.alertIcon} />
-                    <Text style={styles.tipText}>{translate('AccountSettings.securityTip')}</Text>
-                </View>
+                {this.props.showSecurityWarning && (
+                    <View style={styles.tipWrapper}>
+                        <Icon name="warning" size={ICON_SIZE} style={styles.alertIcon} />
+                        <Text style={styles.tipText}>
+                            {translate('AccountSettings.securityTip')}
+                        </Text>
+                    </View>
+                )}
 
                 <View style={styles.divider} />
 
@@ -63,9 +61,7 @@ export class ViewKeyComponent extends React.Component<
                         this.setState({ copied: true });
                     }}
                 >
-                    <View style={styles.leftIcon}>
-                        <Icon name="copy" size={ICON_SIZE} style={styles.icon} />
-                    </View>
+                    <Icon name="copy" size={ICON_SIZE} style={styles.icon} />
                     <Text style={styles.textRow}>
                         {this.state.copied === false
                             ? translate('App.buttons.clipboardBtn')

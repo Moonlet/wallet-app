@@ -25,11 +25,11 @@ interface IState {
     appReady: boolean;
     splashAnimationDone: boolean;
     appState: AppStateStatus;
+    showPasswordModal: boolean;
 }
 
 export default class App extends React.Component<{}, IState> {
     public interval: any = null;
-    public passwordModal = null;
     private translationsLoaded: boolean = false;
     private reduxStateLoaded: boolean = false;
 
@@ -38,7 +38,8 @@ export default class App extends React.Component<{}, IState> {
         this.state = {
             appReady: false,
             splashAnimationDone: false,
-            appState: AppState.currentState
+            appState: AppState.currentState,
+            showPasswordModal: false
         };
 
         loadTranslations('en').then(() => {
@@ -73,7 +74,7 @@ export default class App extends React.Component<{}, IState> {
                     this.state.appState === APP_STATE_ACTIVE &&
                     store.getState().wallets.length >= 1
                 ) {
-                    setTimeout(() => this.requestPassword());
+                    this.showPasswordModal();
                 }
             }
         );
@@ -98,10 +99,10 @@ export default class App extends React.Component<{}, IState> {
         AppState.removeEventListener('change', this.handleAppStateChange);
     }
 
-    public requestPassword() {
-        this.passwordModal
-            .requestPassword()
-            .then(() => this.setState({ appState: APP_STATE_ACTIVE }));
+    public showPasswordModal() {
+        this.setState({ showPasswordModal: true }, () =>
+            this.setState({ showPasswordModal: false, appState: APP_STATE_ACTIVE })
+        );
     }
 
     public handleAppStateChange = (nextAppState: AppStateStatus) => {
@@ -110,7 +111,7 @@ export default class App extends React.Component<{}, IState> {
             nextAppState === APP_STATE_ACTIVE &&
             store.getState().wallets.length >= 1
         ) {
-            this.requestPassword();
+            this.showPasswordModal();
         }
         this.setState({ appState: nextAppState });
     };
@@ -123,7 +124,7 @@ export default class App extends React.Component<{}, IState> {
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
                             <AppContainer theme="dark" />
-                            <PasswordModal obRef={ref => (this.passwordModal = ref)} />
+                            <PasswordModal visible={this.state.showPasswordModal} />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

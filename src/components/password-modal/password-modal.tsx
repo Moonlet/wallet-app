@@ -14,7 +14,8 @@ export interface IExternalProps {
     shouldCreatePassword?: boolean;
     title?: string;
     subtitle?: string;
-    obRef: any;
+    obRef?: any;
+    visible?: boolean;
 }
 
 interface IState {
@@ -36,7 +37,7 @@ export class PasswordModalComponent extends React.Component<
         super(props);
 
         this.state = {
-            visible: false,
+            visible: props.visible || false,
             title: props.title || translate('Password.pinTitleUnlock'),
             subtitle: props.subtitle || translate('Password.pinSubtitleUnlock'),
             showTerms: false,
@@ -45,6 +46,12 @@ export class PasswordModalComponent extends React.Component<
             updatePinProps: false
         };
         props.obRef && props.obRef(this);
+    }
+
+    public componentDidUpdate(prevProps: IExternalProps) {
+        if (this.props.visible !== prevProps.visible && this.props.visible) {
+            this.setState({ visible: this.props.visible });
+        }
     }
 
     public async requestPassword(): Promise<string> {

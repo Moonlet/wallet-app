@@ -53,19 +53,16 @@ interface IState {
     settingsVisible: boolean;
 }
 const navigationOptions = ({ navigation, theme }: any) => ({
-    headerRight: () => {
-        return (
-            <HeaderRight
-                icon="navigation-menu-vertical"
-                onPress={
-                    navigation.state.params ? navigation.state.params.openSettingsMenu : undefined
-                }
-            />
-        );
-    },
+    headerRight: () => (
+        <HeaderRight
+            icon="navigation-menu-vertical"
+            onPress={navigation.state.params ? navigation.state.params.openSettingsMenu : undefined}
+        />
+    ),
     headerStyle: {
         backgroundColor: themes[theme].colors.headerBackground
-    }
+    },
+    title: `${translate('App.labels.account')} ${navigation.state.params.accountIndex + 1}`
 });
 
 export class AccountScreenComponent extends React.Component<

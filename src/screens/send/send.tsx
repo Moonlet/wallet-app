@@ -29,7 +29,6 @@ import BigNumber from 'bignumber.js';
 import bind from 'bind-decorator';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { ICON_SIZE } from '../../styles/dimensions';
-import { themes } from '../../navigation/navigation';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -68,12 +67,9 @@ interface IState {
     feeOptions: any;
 }
 
-export const navigationOptions = ({ navigation, theme }: any) => ({
+export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: translate('App.labels.send'),
-    headerStyle: {
-        backgroundColor: themes[theme].colors.headerBackground
-    }
+    title: translate('App.labels.send')
 });
 export class SendScreenComponent extends React.Component<
     INavigationProps<INavigationParams> &

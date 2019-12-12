@@ -5,13 +5,9 @@ import { translate } from '../../core/i18n';
 import { Text } from '../../library';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { themes } from '../../navigation/navigation';
 
-export const navigationOptions = ({ theme }: any) => ({
-    title: translate('App.labels.tc'),
-    headerStyle: {
-        backgroundColor: themes[theme].colors.headerBackground
-    }
+export const navigationOptions = () => ({
+    title: translate('App.labels.tc')
 });
 
 export class TermsConditionsScreenComponent extends React.Component<

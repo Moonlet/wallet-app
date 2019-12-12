@@ -19,7 +19,6 @@ import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { Amount } from '../../components/amount/amount';
 import { ICON_SIZE } from '../../styles/dimensions';
-import { themes } from '../../navigation/navigation';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -46,7 +45,7 @@ export interface INavigationParams {
 interface IState {
     settingsVisible: boolean;
 }
-const navigationOptions = ({ navigation, theme }: any) => ({
+const navigationOptions = ({ navigation }: any) => ({
     headerRight: () => {
         return (
             <HeaderRight
@@ -56,9 +55,6 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                 }
             />
         );
-    },
-    headerStyle: {
-        backgroundColor: themes[theme].colors.headerBackground
     }
 });
 

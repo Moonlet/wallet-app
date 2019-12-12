@@ -12,7 +12,6 @@ import { translate } from '../../../core/i18n';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { AVAILABLE_CURRENCIES } from '../../../core/constants/app';
 import { setCurrency } from '../../../redux/preferences/actions';
-import { themes } from '../../../navigation/navigation';
 
 export interface IReduxProps {
     selectedCurrency: string;
@@ -27,11 +26,8 @@ const mapStateToProps = (state: IReduxState) => ({
     selectedCurrency: state.preferences.currency
 });
 
-const navigationOptions = ({ theme }: any) => ({
-    title: translate('Settings.defaultCurrency'),
-    headerStyle: {
-        backgroundColor: themes[theme].colors.headerBackground
-    }
+const navigationOptions = () => ({
+    title: translate('Settings.defaultCurrency')
 });
 
 export class SetCurrencyComponent extends React.Component<

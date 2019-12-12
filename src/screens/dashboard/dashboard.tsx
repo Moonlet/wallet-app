@@ -20,7 +20,6 @@ import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { BigNumber } from 'bignumber.js';
 import { selectCurrentWallet } from '../../redux/wallets/selectors';
 import { createSelector } from 'reselect';
-import { PasswordModal } from '../../components/password-modal/password-modal';
 import { IBlockchainsOptions } from '../../redux/app/state';
 
 export interface IReduxProps {
@@ -131,7 +130,6 @@ export class DashboardScreenComponent extends React.Component<
         // update balances if wallet accounts changes
         return getWalletBalances(props.wallet, props.blockchains);
     }
-    public passwordModal = null;
     public initialIndex = 0;
     public dashboardOpacity = new Animated.Value(1);
     public balancesScrollView: any;
@@ -199,7 +197,6 @@ export class DashboardScreenComponent extends React.Component<
         this.props.wallet?.accounts.map(account => {
             this.props.getBalance(account.blockchain, account.address, true);
         });
-        this.passwordModal.requestPassword();
     }
 
     public renderBottomBlockchainNav = () => {
@@ -307,7 +304,6 @@ export class DashboardScreenComponent extends React.Component<
                 )}
 
                 {coins.length > 1 && this.renderBottomBlockchainNav()}
-                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>
         );
     }

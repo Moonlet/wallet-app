@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { StatusBar, Platform, AppState, AppRegistry } from 'react-native';
+import { StatusBar, Platform, AppState } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { RootNavigation } from './navigation/navigation';
 import configureStore from './redux/config';
@@ -56,38 +56,59 @@ export default class App extends React.Component<{}, IState> {
         }
     }
 
-    public updateAppReady() {
-        this.setState({ appReady: this.translationsLoaded && this.reduxStateLoaded });
-    }
+    public updateAppReady = () => {
+        this.setState(
+            {
+                appReady:
+                    this.translationsLoaded &&
+                    this.reduxStateLoaded &&
+                    this.state.splashAnimationDone
+            },
+            () => {
+                if (this.state.appReady && store.getState().wallets.length >= 1) {
+                    setTimeout(() => this.requestPassword(), 500);
+                }
+            }
+        );
+    };
 
     public componentDidMount() {
         AppState.addEventListener('change', this.handleAppStateChange);
 
-        setTimeout(() => {
-            this.setState({ splashAnimationDone: true });
-        }, 1000);
+        setTimeout(
+            () => this.setState({ splashAnimationDone: true }, () => this.updateAppReady()),
+            1000
+        );
 
         Notification.configure();
 
-        // const date = new Date()
-        // date.setSeconds(date.getSeconds() + 10)
-        // Notifications.scheduleNotification(date)
+        // const date = new Date();
+        // date.setSeconds(date.getSeconds() + 10);
+        // Notifications.scheduleNotification(date);
     }
 
     public componentWillUnmount() {
         AppState.removeEventListener('change', this.handleAppStateChange);
     }
 
+    public requestPassword() {
+        this.passwordModal.requestPassword().then(() => this.setState({ appState: 'active' }));
+    }
+
     public handleAppStateChange = (nextAppState: string) => {
-        if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-            this.passwordModal.requestPassword();
+        if (
+            this.state.appState.match(/inactive|background/) &&
+            nextAppState === 'active' &&
+            store.getState().wallets.length >= 1
+        ) {
+            this.requestPassword();
         }
         this.setState({ appState: nextAppState });
     };
 
     public render() {
-        if (this.state.appReady && this.state.splashAnimationDone) {
-            //            this.unsubscribe();
+        if (this.state.appReady) {
+            // this.unsubscribe();
             return (
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>

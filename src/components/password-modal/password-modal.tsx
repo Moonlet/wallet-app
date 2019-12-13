@@ -14,7 +14,9 @@ export interface IExternalProps {
     shouldCreatePassword?: boolean;
     title?: string;
     subtitle?: string;
-    obRef: any;
+    obRef?: any;
+    visible?: boolean;
+    onPassword?: (password: string) => void;
 }
 
 interface IState {
@@ -31,12 +33,12 @@ export class PasswordModalComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    private passwordRequestDeferred;
+    private passwordRequestDeferred = null;
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
         this.state = {
-            visible: false,
+            visible: props.visible || false,
             title: props.title || translate('Password.pinTitleUnlock'),
             subtitle: props.subtitle || translate('Password.pinSubtitleUnlock'),
             showTerms: false,
@@ -45,6 +47,12 @@ export class PasswordModalComponent extends React.Component<
             updatePinProps: false
         };
         props.obRef && props.obRef(this);
+    }
+
+    public componentDidUpdate(prevProps: IExternalProps) {
+        if (this.props.visible && this.props.visible !== prevProps.visible) {
+            this.setState({ visible: this.props.visible });
+        }
     }
 
     public async requestPassword(): Promise<string> {
@@ -76,6 +84,8 @@ export class PasswordModalComponent extends React.Component<
             if (keychainPassword) {
                 this.passwordRequestDeferred &&
                     this.passwordRequestDeferred.resolve(keychainPassword.password);
+
+                this.props.onPassword(keychainPassword.password);
             }
         }
     }
@@ -98,6 +108,7 @@ export class PasswordModalComponent extends React.Component<
             this.setState({
                 visible: false
             });
+            this.props.onPassword(value);
             return;
         }
 
@@ -107,6 +118,7 @@ export class PasswordModalComponent extends React.Component<
             this.setState({
                 visible: false
             });
+            this.props.onPassword(value);
             return undefined;
         } else {
             return verifyPassword.errorMessage;

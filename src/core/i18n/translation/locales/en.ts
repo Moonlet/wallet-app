@@ -7,6 +7,7 @@ export const translation: ITranslations = {
                 // please try to add keys in alphabetic order
                 about: 'About',
                 accept: 'Accept',
+                account: 'Account',
                 accounts: 'Accounts',
                 advanced: 'Advanced',
                 cancel: 'Cancel',

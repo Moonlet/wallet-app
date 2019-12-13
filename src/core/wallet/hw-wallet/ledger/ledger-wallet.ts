@@ -75,4 +75,8 @@ export class LedgerWallet implements IWallet {
     public getTransport() {
         return TransportFactory.get(this.deviceModel, this.connectionType, this.deviceId);
     }
+
+    public getPrivateKey(blockchain: Blockchain, accountIndex: number): string {
+        return 'Method not implemented.';
+    }
 }

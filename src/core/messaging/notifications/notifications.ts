@@ -11,6 +11,7 @@ export class NotificationService {
 
     public async getToken() {
         const fcmToken = await firebase.messaging().getToken();
+        // console.log('Messaging permissions enabled: ' + fcmToken);
         return fcmToken;
     }
 
@@ -18,7 +19,10 @@ export class NotificationService {
         const enabled = await firebase.messaging().hasPermission();
         if (enabled) {
             // console.log('Messaging permissions enabled');
-            this.getToken();
+            // seems like this is a must
+            // even is permissions were already granted
+            this.requestPermission();
+            // this.getToken();
         } else {
             this.requestPermission();
         }
@@ -139,4 +143,4 @@ export class NotificationService {
     }
 }
 
-export const Notification = new NotificationService();
+export const Notifications = new NotificationService();

@@ -13,6 +13,8 @@ import { INavigationProps, withNavigationParams } from '../../navigation/with-na
 import { IWalletState } from '../../redux/wallets/state';
 import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
 import { ICON_SIZE } from '../../styles/dimensions';
+import { allowScreenshots, forbidScreenshots } from '../../core/utils/screenshot';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 
 export interface INavigationParams {
     wallet: IWalletState;
@@ -21,6 +23,7 @@ export interface INavigationParams {
 interface IState {
     mnemonic: string[];
     copied: boolean;
+    isLoading: boolean;
 }
 
 export const navigationOptions = () => ({
@@ -38,8 +41,11 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
         super(props);
         this.state = {
             mnemonic: new Array(24).fill(''),
-            copied: false
+            copied: false,
+            isLoading: true
         };
+
+        forbidScreenshots();
     }
 
     public componentDidMount() {
@@ -53,53 +59,65 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
             });
     }
 
+    public componentWillUnmount() {
+        allowScreenshots();
+    }
+
     public render() {
         const { styles } = this.props;
-        const { copied } = this.state;
+        const { copied, isLoading } = this.state;
 
         return (
             <View style={styles.container}>
-                <View style={styles.topContainer}>
-                    <View style={styles.mnemonicContainer}>
-                        {this.state.mnemonic.reduce((out: any, word: string, i: number) => {
-                            if (i % 4 === 0) {
-                                const line = this.state.mnemonic.slice(i, i + 4);
-                                out = [
-                                    ...out,
-                                    <View style={styles.mnemonicLine} key={i}>
-                                        {line.map((w, k) => (
-                                            <Text small key={k} style={styles.mnemonicWord}>
-                                                {i + k + 1}. {w}
-                                            </Text>
-                                        ))}
-                                    </View>
-                                ];
-                            }
-                            return out;
-                        }, [])}
-                    </View>
+                {isLoading ? (
+                    <LoadingIndicator />
+                ) : (
+                    <React.Fragment>
+                        <View style={styles.topContainer}>
+                            <View style={styles.mnemonicContainer}>
+                                {this.state.mnemonic.reduce((out: any, word: string, i: number) => {
+                                    if (i % 4 === 0) {
+                                        const line = this.state.mnemonic.slice(i, i + 4);
+                                        out = [
+                                            ...out,
+                                            <View style={styles.mnemonicLine} key={i}>
+                                                {line.map((w, k) => (
+                                                    <Text small key={k} style={styles.mnemonicWord}>
+                                                        {i + k + 1}. {w}
+                                                    </Text>
+                                                ))}
+                                            </View>
+                                        ];
+                                    }
+                                    return out;
+                                }, [])}
+                            </View>
 
-                    <View style={styles.tipWrapper}>
-                        <Icon name="warning" size={ICON_SIZE} style={styles.alertIcon} />
-                        <Text style={styles.tipText}>
-                            {translate('AccountSettings.securityTip')}
-                        </Text>
-                    </View>
-                </View>
+                            <View style={styles.tipWrapper}>
+                                <Icon name="warning" size={ICON_SIZE} style={styles.alertIcon} />
+                                <Text style={styles.tipText}>
+                                    {translate('AccountSettings.securityTip')}
+                                </Text>
+                            </View>
+                        </View>
 
-                <View style={styles.bottomContainer}>
-                    <Button
-                        disabled={copied}
-                        onPress={() => {
-                            Clipboard.setString(this.state.mnemonic.toString().replace(/,/g, ' '));
-                            this.setState({ copied: true });
-                        }}
-                    >
-                        {copied
-                            ? translate('App.buttons.copiedBtn')
-                            : translate('App.buttons.clipboardBtn')}
-                    </Button>
-                </View>
+                        <View style={styles.bottomContainer}>
+                            <Button
+                                disabled={copied}
+                                onPress={() => {
+                                    Clipboard.setString(
+                                        this.state.mnemonic.toString().replace(/,/g, ' ')
+                                    );
+                                    this.setState({ copied: true });
+                                }}
+                            >
+                                {copied
+                                    ? translate('App.buttons.copiedBtn')
+                                    : translate('App.buttons.clipboardBtn')}
+                            </Button>
+                        </View>
+                    </React.Fragment>
+                )}
 
                 <PasswordModal
                     subtitle={translate('Password.subtitleMnemonic')}
@@ -122,7 +140,8 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
             const mnemonic = wallet.getMnemonic();
 
             this.setState({
-                mnemonic: mnemonic.split(' ')
+                mnemonic: mnemonic.split(' '),
+                isLoading: false
             });
         } catch (e) {
             // something went wrong

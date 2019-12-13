@@ -1,6 +1,6 @@
 export class NotificationService {
     public async getToken() {
-        return 'x';
+        return '';
     }
 
     public configure() {
@@ -8,4 +8,4 @@ export class NotificationService {
     }
 }
 
-export const Notification = new NotificationService();
+export const Notifications = new NotificationService();

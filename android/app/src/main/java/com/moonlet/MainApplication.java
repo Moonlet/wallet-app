@@ -30,6 +30,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
 
       packages.add(new RNFirebaseMessagingPackage());
       packages.add(new RNFirebaseNotificationsPackage());
+      packages.add(new CustomPreventScreenshotPackage());
 
       return packages;
     }

@@ -21,6 +21,7 @@ import {
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
+import { translate } from '../../core/i18n';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -102,8 +103,10 @@ export const createHWWallet = (
             NavigationActions.navigate({ routeName: 'Dashboard' })
         );
     } catch (e) {
-        dispatch(featureNotSupported());
-        // throw e;
+        // this might not be the best place
+        if (e.message === translate('CreateHardwareWallet.notSupported')) {
+            dispatch(featureNotSupported());
+        }
     }
 };
 

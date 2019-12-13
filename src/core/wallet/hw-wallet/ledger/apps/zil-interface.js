@@ -47,7 +47,8 @@ class Zilliqa {
                     version += '.';
                 }
             }
-            return { version };
+            // TODO - in case of HID transport Ziliqa app returns a wrong version
+            if (response[0] === 0 || response[0] === 1) return { version };
         });
     }
 

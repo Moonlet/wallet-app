@@ -1,10 +1,11 @@
 import TransportHID from '@ledgerhq/react-native-hid';
+import { translate } from '../../../../i18n';
 
 export class USB {
     public static async get(): Promise<Transport> {
         const isSupported = await TransportHID.isSupported();
         if (isSupported === false) {
-            return Promise.reject('Feature not supported');
+            return Promise.reject(translate('CreateHardwareWallet.notSupported'));
         }
 
         const devices = await TransportHID.list();

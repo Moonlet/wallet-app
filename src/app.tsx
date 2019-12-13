@@ -99,10 +99,14 @@ export default class App extends React.Component<{}, IState> {
         AppState.removeEventListener('change', this.handleAppStateChange);
     }
 
+    public toggleShowPasswordModal() {
+        this.setState({ showPasswordModal: !this.state.showPasswordModal });
+    }
+
     public showPasswordModal() {
-        this.setState({ showPasswordModal: true }, () =>
-            this.setState({ showPasswordModal: false, appState: APP_STATE_ACTIVE })
-        );
+        this.toggleShowPasswordModal();
+        this.toggleShowPasswordModal(); // reset modal visibility for background app state
+        this.setState({ appState: APP_STATE_ACTIVE });
     }
 
     public handleAppStateChange = (nextAppState: AppStateStatus) => {

@@ -10,8 +10,9 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom';
-import { Notification } from '../../messaging/notifications';
+import { Notifications } from '../../core/messaging/notifications/notifications';
 import { Text, Button } from '../../library';
+import { getApnsToken } from '../../core/messaging/silent/ios-voip-push-notification';
 
 interface IState {
     textInput: any;
@@ -52,9 +53,12 @@ export class WatchScreenComponent extends React.Component<
     };
 
     public getCurrentToken = () => {
-        Notification.getToken().then(token => {
+        Notifications.getToken().then(token => {
             Clipboard.setString(token);
         });
+    };
+    public getApnsToken = () => {
+        Clipboard.setString(getApnsToken());
     };
 
     public render() {
@@ -65,9 +69,14 @@ export class WatchScreenComponent extends React.Component<
                 <View style={styles.textInputArea}>
                     <TextInput value={this.state.textInput} editable={false} style={styles.text} />
                 </View>
-                <Button onPress={this.getCurrentToken}>
-                    <Text>Copy fb token</Text>
-                </Button>
+                <View style={{ justifyContent: 'center', flexDirection: 'row' }}>
+                    <Button onPress={this.getCurrentToken}>
+                        <Text>Copy fb token</Text>
+                    </Button>
+                    <Button onPress={this.getApnsToken}>
+                        <Text>Copy ios token</Text>
+                    </Button>
+                </View>
                 <KeyboardCustom
                     showNumeric={true}
                     handleTextUpdate={this.handleTextUpdate}

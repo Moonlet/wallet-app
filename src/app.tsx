@@ -10,7 +10,8 @@ import { ThemeContext } from './core/theme/theme-contex';
 import { loadTranslations } from './core/i18n';
 import { persistStore } from 'redux-persist';
 import { SplashScreen } from './components/splash-screen/splash-screen';
-import { Notification } from './messaging/notifications';
+import { Notifications } from './core/messaging/notifications/notifications';
+import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-notification';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -61,7 +62,11 @@ export default class App extends React.Component<{}, IState> {
             this.setState({ splashAnimationDone: true });
         }, 1000);
 
-        Notification.configure();
+        Notifications.configure();
+
+        if (Platform.OS === 'ios') {
+            setupVoipNotification();
+        }
 
         // const date = new Date()
         // date.setSeconds(date.getSeconds() + 10)

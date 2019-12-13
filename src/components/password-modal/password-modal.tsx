@@ -16,6 +16,7 @@ export interface IExternalProps {
     subtitle?: string;
     obRef?: any;
     visible?: boolean;
+    onPassword?: (password: string) => void;
 }
 
 interface IState {
@@ -32,7 +33,7 @@ export class PasswordModalComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    private passwordRequestDeferred;
+    private passwordRequestDeferred = null;
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
@@ -49,7 +50,7 @@ export class PasswordModalComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IExternalProps) {
-        if (this.props.visible !== prevProps.visible && this.props.visible) {
+        if (this.props.visible && this.props.visible !== prevProps.visible) {
             this.setState({ visible: this.props.visible });
         }
     }
@@ -83,6 +84,8 @@ export class PasswordModalComponent extends React.Component<
             if (keychainPassword) {
                 this.passwordRequestDeferred &&
                     this.passwordRequestDeferred.resolve(keychainPassword.password);
+
+                this.props.onPassword(keychainPassword.password);
             }
         }
     }
@@ -105,6 +108,7 @@ export class PasswordModalComponent extends React.Component<
             this.setState({
                 visible: false
             });
+            this.props.onPassword(value);
             return;
         }
 
@@ -114,6 +118,7 @@ export class PasswordModalComponent extends React.Component<
             this.setState({
                 visible: false
             });
+            this.props.onPassword(value);
             return undefined;
         } else {
             return verifyPassword.errorMessage;

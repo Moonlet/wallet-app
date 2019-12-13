@@ -104,14 +104,11 @@ export default class App extends React.Component<{}, IState> {
         AppState.removeEventListener('change', this.handleAppStateChange);
     }
 
-    public toggleShowPasswordModal() {
-        this.setState({ showPasswordModal: !this.state.showPasswordModal });
-    }
-
     public showPasswordModal() {
-        this.toggleShowPasswordModal();
-        this.toggleShowPasswordModal(); // reset modal visibility for background app state
-        this.setState({ appState: APP_STATE_ACTIVE });
+        this.setState({
+            showPasswordModal: true,
+            appState: APP_STATE_ACTIVE
+        });
     }
 
     public handleAppStateChange = (nextAppState: AppStateStatus) => {
@@ -133,7 +130,10 @@ export default class App extends React.Component<{}, IState> {
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
                             <AppContainer theme="dark" />
-                            <PasswordModal visible={this.state.showPasswordModal} />
+                            <PasswordModal
+                                visible={this.state.showPasswordModal}
+                                onPassword={() => this.setState({ showPasswordModal: false })}
+                            />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

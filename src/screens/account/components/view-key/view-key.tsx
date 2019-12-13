@@ -11,7 +11,7 @@ import {
     withNavigationParams,
     INavigationProps
 } from '../../../../navigation/with-navigation-params';
-import { allowFunction, forbidFunction } from '../../../../core/utils/prevent-screenshot';
+import { allowScreenshots, forbidScreenshots } from '../../../../core/utils/screenshot';
 
 export interface IExternalProps {
     value: string;
@@ -34,11 +34,11 @@ export class ViewKeyComponent extends React.Component<
             copied: false
         };
 
-        forbidFunction();
+        forbidScreenshots();
     }
 
     public componentWillUnmount() {
-        allowFunction();
+        allowScreenshots();
     }
 
     public render() {

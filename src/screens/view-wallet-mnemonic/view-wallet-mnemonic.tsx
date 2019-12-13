@@ -14,7 +14,7 @@ import { IWalletState } from '../../redux/wallets/state';
 import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
-import { allowFunction, forbidFunction } from '../../core/utils/prevent-screenshot';
+import { allowScreenshots, forbidScreenshots } from '../../core/utils/screenshot';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 
 export interface INavigationParams {
@@ -49,7 +49,7 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
             isLoading: true
         };
 
-        forbidFunction();
+        forbidScreenshots();
     }
 
     public componentDidMount() {
@@ -64,7 +64,7 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
     }
 
     public componentWillUnmount() {
-        allowFunction();
+        allowScreenshots();
     }
 
     public render() {

@@ -1,6 +1,6 @@
 import { NativeModules } from 'react-native';
 
-export const forbidFunction = async () => {
+export const forbidScreenshots = async () => {
     try {
         await NativeModules.PreventScreenshotModule.forbid();
     } catch (e) {
@@ -8,7 +8,7 @@ export const forbidFunction = async () => {
     }
 };
 
-export const allowFunction = async () => {
+export const allowScreenshots = async () => {
     try {
         await NativeModules.PreventScreenshotModule.allow();
     } catch (e) {

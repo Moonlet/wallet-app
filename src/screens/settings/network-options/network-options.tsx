@@ -14,7 +14,6 @@ import { INetworksOptions } from '../../../redux/app/state';
 import { toggleTestNet } from '../../../redux/app/actions';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { Blockchain } from '../../../core/blockchain/types';
-import { themes } from '../../../navigation/navigation';
 
 export interface IReduxProps {
     testNet: boolean;
@@ -31,11 +30,8 @@ const mapStateToProps = (state: IReduxState) => ({
     networksOptions: state.app.networks
 });
 
-const navigationOptions = ({ theme }: any) => ({
-    title: translate('NetworkOptions.title'),
-    headerStyle: {
-        backgroundColor: themes[theme].colors.headerBackground
-    }
+const navigationOptions = () => ({
+    title: translate('NetworkOptions.title')
 });
 
 export class NetworkOptionsComponent extends React.Component<

@@ -13,7 +13,6 @@ import { INavigationProps, withNavigationParams } from '../../navigation/with-na
 import { IWalletState } from '../../redux/wallets/state';
 import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
 import { ICON_SIZE } from '../../styles/dimensions';
-import { themes } from '../../navigation/navigation';
 import { allowScreenshots, forbidScreenshots } from '../../core/utils/screenshot';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 
@@ -27,11 +26,8 @@ interface IState {
     isLoading: boolean;
 }
 
-export const navigationOptions = ({ theme }: any) => ({
-    title: translate('Wallets.viewPhrase'),
-    headerStyle: {
-        backgroundColor: themes[theme].colors.headerBackground
-    }
+export const navigationOptions = () => ({
+    title: translate('Wallets.viewPhrase')
 });
 
 export class ViewWalletMnemonicScreenComponent extends React.Component<

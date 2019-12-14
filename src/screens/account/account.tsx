@@ -23,7 +23,6 @@ import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { Amount } from '../../components/amount/amount';
 import { ICON_SIZE } from '../../styles/dimensions';
-import { themes } from '../../navigation/navigation';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -52,16 +51,14 @@ export interface INavigationParams {
 interface IState {
     settingsVisible: boolean;
 }
-const navigationOptions = ({ navigation, theme }: any) => ({
+
+const navigationOptions = ({ navigation }: any) => ({
     headerRight: () => (
         <HeaderRight
             icon="navigation-menu-vertical"
             onPress={navigation.state.params ? navigation.state.params.openSettingsMenu : undefined}
         />
     ),
-    headerStyle: {
-        backgroundColor: themes[theme].colors.headerBackground
-    },
     title: `${translate('App.labels.account')} ${navigation.state.params.accountIndex + 1}`
 });
 

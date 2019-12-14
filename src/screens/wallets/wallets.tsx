@@ -25,7 +25,6 @@ import stylesProvider from './styles';
 import { deleteWallet, updateWalletName } from '../../redux/wallets/actions';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { ListCard } from '../../components/list-card/list-card';
-import { themes } from '../../navigation/navigation';
 
 export interface IReduxProps {
     wallets: {
@@ -61,12 +60,9 @@ const mapDispatchToProps = {
     updateWalletName
 };
 
-const navigationOptions = ({ navigation, theme }: any) => ({
+const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: translate('App.labels.wallets'),
-    headerStyle: {
-        backgroundColor: themes[theme].colors.headerBackground
-    }
+    title: translate('App.labels.wallets')
 });
 
 export class WalletsScreenComponent extends React.Component<

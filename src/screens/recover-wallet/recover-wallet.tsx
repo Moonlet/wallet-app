@@ -1,16 +1,10 @@
 import React from 'react';
-import { View, TextInput, ScrollView, Clipboard, Keyboard } from 'react-native';
+import { View, ScrollView, Clipboard } from 'react-native';
 import { Text } from '../../library';
-import {
-    NavigationParams,
-    NavigationScreenProp,
-    NavigationState,
-    NavigationActions
-} from 'react-navigation';
 import { Button } from '../../library/button/button';
 
 import stylesProvider from './styles';
-import { withTheme } from '../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { wordlists } from 'bip39';
 import { translate } from '../../core/i18n';
 import { HeaderLeft } from '../../components/header-left/header-left';
@@ -18,23 +12,21 @@ import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
 import { TOS_VERSION } from '../../core/constants/app';
-import { ITheme } from '../../core/theme/itheme';
 import { createHDWallet } from '../../redux/wallets/actions';
 import { Mnemonic } from '../../core/wallet/hd-wallet/mnemonic';
 import { PasswordModal } from '../../components/password-modal/password-modal';
+import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom';
+import { TextInput } from '../../components/text-input/text-input';
+import { INavigationProps } from '../../navigation/with-navigation-params';
+import { NavigationActions } from 'react-navigation';
 
-export interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
+const NUMBER_MNEMONICS = 24;
 
 interface IState {
     mnemonic: string[];
     suggestions: string[];
     indexForSuggestions: number;
     errors: number[];
-    keyboardUp: boolean;
 }
 
 export interface IReduxProps {
@@ -43,177 +35,141 @@ export interface IReduxProps {
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: () => {
-        if (navigation.state && navigation.state.params && navigation.state.params.goBack) {
-            return (
-                <HeaderLeft
-                    icon="arrow-left-1"
-                    text="Back"
-                    onPress={() => {
-                        navigation.state.params.goBack(navigation);
-                    }}
-                />
-            );
-        }
-
-        return null;
-    },
+    headerLeft: () =>
+        navigation.state?.params?.goBack && (
+            <HeaderLeft
+                icon="arrow-left-1"
+                text="Back"
+                onPress={() => {
+                    navigation.state.params.goBack(navigation);
+                }}
+            />
+        ),
     title: translate('App.labels.recover')
 });
 
-export class RecoverWalletScreenComponent extends React.Component<IProps & IReduxProps, IState> {
+export class RecoverWalletScreenComponent extends React.Component<
+    IReduxProps & INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
     public static navigationOptions = navigationOptions;
     public passwordModal = null;
     public suggestionsScrollView: any;
     public inputView: any = [];
-    public keyboardDidShowListener = null;
-    public keyboardDidHideListener = null;
 
-    constructor(props: any) {
+    constructor(
+        props: IReduxProps &
+            INavigationProps &
+            IReduxProps &
+            IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
         this.state = {
-            mnemonic: new Array(24).fill(''),
+            mnemonic: new Array(NUMBER_MNEMONICS).fill(''),
             // mnemonic: 'panic club above clarify orbit resist illegal feel bus remember aspect field test bubble dog trap awesome hand room rice heavy idle faint salmon'.split(' '),
             suggestions: [],
             errors: [],
-            indexForSuggestions: -1,
-            keyboardUp: false
+            indexForSuggestions: -1
         };
 
         if (!props.tosVersion || TOS_VERSION > props.tosVersion) {
             props.navigation.navigate('CreateWalletTerms');
         }
-
-        this._keyboardDidHide = this._keyboardDidHide.bind(this);
-        this._keyboardDidShow = this._keyboardDidShow.bind(this);
     }
 
-    // updates text when user types in
-    public setMnemonicText(index, text) {
+    public setMnemonicText(text: string) {
         const mnemonic = this.state.mnemonic.slice();
-        mnemonic[index] = text;
+
+        const index = this.state.indexForSuggestions;
+        mnemonic[index] += text;
 
         this.setState({
             mnemonic,
-            suggestions: this.getSuggestions(text),
+            suggestions: this.getSuggestions(mnemonic[index]),
             indexForSuggestions: index
         });
     }
 
-    public componentDidMount() {
-        this.keyboardDidShowListener = Keyboard.addListener(
-            'keyboardDidShow',
-            this._keyboardDidShow
-        );
-        this.keyboardDidHideListener = Keyboard.addListener(
-            'keyboardDidHide',
-            this._keyboardDidHide
-        );
+    public deleteMnemonicText() {
+        const mnemonic = this.state.mnemonic.slice();
+
+        const index = this.state.indexForSuggestions;
+        mnemonic[index] = mnemonic[index].slice(0, -1);
+
+        this.setState({
+            mnemonic,
+            suggestions: this.getSuggestions(mnemonic[index]),
+            indexForSuggestions: index
+        });
     }
 
-    public componentWillUnmount() {
-        this.keyboardDidShowListener && this.keyboardDidShowListener.remove();
-        this.keyboardDidHideListener && this.keyboardDidHideListener.remove();
-    }
+    public confirm() {
+        if (!this.validateMnemonicWords() || !Mnemonic.verify(this.state.mnemonic.join(' '))) {
+            // display an error somewhere
+            return;
+        }
 
-    public _keyboardDidShow() {
-        this.setState({ keyboardUp: true });
-    }
-
-    public _keyboardDidHide() {
-        this.setState({ keyboardUp: false });
+        this.passwordModal.requestPassword().then(password => {
+            this.props.createHDWallet(this.state.mnemonic.join(' '), password, () =>
+                this.props.navigation.navigate(
+                    'MainNavigation',
+                    {},
+                    NavigationActions.navigate({ routeName: 'Dashboard' })
+                )
+            );
+        });
     }
 
     public render() {
-        const props = this.props;
-        return (
-            <View style={props.styles.container}>
-                <ScrollView style={props.styles.topContainer}>
-                    <View style={props.styles.mnemonicContainer}>{this.getInputMatrix()}</View>
-                </ScrollView>
-                <View
-                    style={[
-                        props.styles.bottomContainer,
-                        this.state.keyboardUp && { marginBottom: 0 }
-                    ]}
-                >
-                    <ScrollView
-                        ref={ref => (this.suggestionsScrollView = ref)}
-                        horizontal
-                        overScrollMode={'never'}
-                        snapToAlignment={'start'}
-                        showsHorizontalScrollIndicator={false}
-                        style={props.styles.suggestionsContainer}
-                        keyboardShouldPersistTaps={'handled'}
-                    >
-                        <View style={{ width: 12 }} />
-                        {this.state.suggestions.map((word, i) => (
-                            <View key={i}>
-                                <Button
-                                    secondary
-                                    style={props.styles.suggestionButton}
-                                    onPress={() => {
-                                        this.fillMnemonicText(word);
-                                    }}
-                                    testID={`button-suggestion-${i}`}
-                                >
-                                    {word}
-                                </Button>
-                            </View>
-                        ))}
-                        <View style={{ width: 12 }} />
-                    </ScrollView>
-                    <View style={props.styles.bottomButtonContainer}>
-                        <Button
-                            testID="button-paste"
-                            style={props.styles.bottomButton}
-                            onPress={() => {
-                                this.pasteFromClipboard();
-                            }}
-                        >
-                            {translate('App.labels.paste')}
-                        </Button>
-                        <Button
-                            testID="button-next"
-                            style={props.styles.bottomButton}
-                            disabled={this.state.indexForSuggestions > 22}
-                            onPress={() => this.focusInput(this.state.indexForSuggestions + 1)}
-                        >
-                            {translate('App.labels.next')}
-                        </Button>
-                        <Button
-                            testID="button-confirm"
-                            style={props.styles.bottomButton}
-                            primary
-                            onPress={() => {
-                                if (
-                                    !this.validateMnemonicWords() ||
-                                    !Mnemonic.verify(this.state.mnemonic.join(' '))
-                                ) {
-                                    // display an error somewhere
-                                    return;
-                                }
+        const { styles } = this.props;
 
-                                this.passwordModal.requestPassword().then(password => {
-                                    props.createHDWallet(
-                                        this.state.mnemonic.join(' '),
-                                        password,
-                                        () =>
-                                            props.navigation.navigate(
-                                                'MainNavigation',
-                                                {},
-                                                NavigationActions.navigate({
-                                                    routeName: 'Dashboard'
-                                                })
-                                            )
-                                    );
-                                });
-                            }}
-                        >
-                            {translate('App.labels.confirm')}
-                        </Button>
-                    </View>
-                </View>
+        return (
+            <View style={styles.container}>
+                <View style={styles.mnemonicContainer}>{this.getInputMatrix()}</View>
+
+                <ScrollView
+                    ref={ref => (this.suggestionsScrollView = ref)}
+                    horizontal
+                    overScrollMode={'never'}
+                    snapToAlignment={'start'}
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.suggestionsContainer}
+                    keyboardShouldPersistTaps={'handled'}
+                >
+                    {this.state.suggestions.map((word, i) => (
+                        <View key={i}>
+                            <Button
+                                testID={`button-suggestion-${i}`}
+                                secondary
+                                style={styles.suggestionButton}
+                                onPress={() => this.fillMnemonicText(word)}
+                            >
+                                {word}
+                            </Button>
+                        </View>
+                    ))}
+                </ScrollView>
+
+                <KeyboardCustom
+                    handleTextUpdate={(text: string) => this.setMnemonicText(text)}
+                    handleDeleteKey={() => this.deleteMnemonicText()}
+                    buttons={[
+                        {
+                            label: translate('App.labels.paste'),
+                            onPress: () => this.pasteFromClipboard()
+                        },
+                        {
+                            label: translate('App.labels.confirm'),
+                            onPress: () => this.confirm(),
+                            style: { color: this.props.theme.colors.accent }
+                        }
+                    ]}
+                    footerButton={{
+                        label: translate('App.labels.nextWord'),
+                        onPress: () => this.focusInput(this.state.indexForSuggestions + 1)
+                    }}
+                />
+
                 <PasswordModal
                     subtitle={translate('Password.subtitleMnemonic')}
                     obRef={ref => (this.passwordModal = ref)}
@@ -228,24 +184,22 @@ export class RecoverWalletScreenComponent extends React.Component<IProps & IRedu
     }
 
     // fills text when user selects a suggestion / pastes
-    private fillMnemonicText(text) {
+    private fillMnemonicText(text: string) {
         const mnemonic = this.state.mnemonic.slice();
         const index = this.state.indexForSuggestions;
 
         mnemonic[index] = text;
+        this.setState({ mnemonic }, () => {
+            this.validateWord();
 
-        this.setState({
-            mnemonic
+            // if we are not on last word, jump to next input
+            if (index < NUMBER_MNEMONICS - 1) {
+                this.focusInput(index + 1);
+            } else {
+                this.setState({ suggestions: [] });
+                this.inputView[this.state.indexForSuggestions].blur();
+            }
         });
-
-        this.validateWord(index);
-
-        // if we are not on last word, jump to next input
-        if (index < 23) {
-            this.focusInput(index + 1);
-        } else {
-            this.focusInput(index);
-        }
     }
 
     private async pasteFromClipboard() {
@@ -254,14 +208,11 @@ export class RecoverWalletScreenComponent extends React.Component<IProps & IRedu
             if (clipboardText.indexOf(' ') !== -1) {
                 // multiple words, replace mnemonic in state
                 const clipboardMnemonicWords = clipboardText.split(' ');
-                const mnemonic = new Array(24)
+                const mnemonic = new Array(NUMBER_MNEMONICS)
                     .fill('')
                     .map((w, i) => (clipboardMnemonicWords[i] ? clipboardMnemonicWords[i] : ''));
 
-                this.setState({
-                    mnemonic
-                });
-
+                this.setState({ mnemonic });
                 this.validateMnemonicWords();
             } else {
                 // paste single word
@@ -274,10 +225,9 @@ export class RecoverWalletScreenComponent extends React.Component<IProps & IRedu
     // validates entire mnemonic, returns false if invalid words found
     private validateMnemonicWords() {
         const errors = [];
-        this.state.mnemonic.forEach((word: string, i: number) => {
-            // validate only filled inputs (for mnemonics < 24)
-            if (word && wordlists.EN.indexOf(word) === -1) {
-                errors.push(i);
+        this.state.mnemonic.forEach((word: string, index: number) => {
+            if (word === '' || wordlists.EN.indexOf(word) === -1) {
+                errors.push(index);
             }
         });
 
@@ -287,16 +237,18 @@ export class RecoverWalletScreenComponent extends React.Component<IProps & IRedu
     }
 
     // validates single word
-    private validateWord(i) {
-        if (wordlists.EN.indexOf(this.state.mnemonic[i]) === -1) {
-            if (this.state.errors.indexOf(i) === -1) {
+    private validateWord() {
+        const index = this.state.indexForSuggestions;
+
+        if (wordlists.EN.indexOf(this.state.mnemonic[index]) === -1) {
+            if (this.state.errors.indexOf(index) === -1) {
                 const errors = this.state.errors.slice();
-                errors.push(i);
+                errors.push(index);
 
                 this.setState({ errors });
             }
         } else {
-            const indexPos = this.state.errors.indexOf(i);
+            const indexPos = this.state.errors.indexOf(index);
             if (indexPos !== -1) {
                 const errors = this.state.errors.slice();
                 errors.splice(indexPos, 1);
@@ -306,50 +258,43 @@ export class RecoverWalletScreenComponent extends React.Component<IProps & IRedu
         }
     }
 
-    private focusInput(index) {
-        if (index > -1 && index < 24 && this.inputView[index]) {
-            this.inputView[index].focus();
-
-            this.setState({
-                suggestions: this.getSuggestions(this.state.mnemonic[index]),
-                indexForSuggestions: index
-            });
+    private focusInput(index: number) {
+        // Blur previous word
+        const previousIndex = this.state.indexForSuggestions;
+        if (
+            previousIndex > -1 &&
+            previousIndex < NUMBER_MNEMONICS &&
+            this.inputView[previousIndex]
+        ) {
+            this.inputView[this.state.indexForSuggestions].blur();
         }
+
+        // Focus current word
+        if (index > -1 && index < NUMBER_MNEMONICS && this.inputView[index]) {
+            this.inputView[index].focus();
+        }
+
+        this.setState({
+            suggestions: this.getSuggestions(this.state.mnemonic[index]),
+            indexForSuggestions: index
+        });
     }
 
     private getInputLine(lineNumber: number) {
         const output = [];
 
         for (let i = 0; i < 4; i++) {
-            const n = lineNumber * 4 + i;
-            const error = this.state.errors.indexOf(n) !== -1;
+            const index = lineNumber * 4 + i;
+            const error = this.state.errors.indexOf(index) !== -1;
             output.push(
-                <View style={this.props.styles.inputContainer} key={n}>
-                    <Text small style={this.props.styles.inputLabel}>{`${n + 1}.`}</Text>
+                <View style={this.props.styles.inputContainer} key={index}>
+                    <Text small style={this.props.styles.inputLabel}>{`${index + 1}.`}</Text>
                     <TextInput
-                        testID={`input-${n}`}
-                        style={[
-                            this.props.styles.input,
-                            error && { borderBottomColor: this.props.theme.colors.error }
-                        ]}
-                        placeholderTextColor={this.props.theme.colors.textSecondary}
-                        placeholder=""
-                        autoCapitalize={'none'}
-                        autoCorrect={false}
-                        selectionColor={this.props.theme.colors.accent}
-                        onChangeText={(text: string) => {
-                            this.setMnemonicText(n, text);
-                        }}
-                        onFocus={() => {
-                            this.focusInput(n);
-                        }}
-                        onBlur={() => {
-                            this.validateWord(n);
-                        }}
-                        value={this.state.mnemonic[n]}
-                        ref={input => {
-                            this.inputView[n] = input;
-                        }}
+                        obRef={(input: any) => (this.inputView[index] = input)}
+                        style={[error && { borderBottomColor: this.props.theme.colors.error }]}
+                        word={this.state.mnemonic[index]}
+                        onFocus={() => this.focusInput(index)}
+                        onBlur={() => this.validateWord()}
                     />
                 </View>
             );
@@ -374,13 +319,6 @@ export class RecoverWalletScreenComponent extends React.Component<IProps & IRedu
 }
 
 export const RecoverWalletScreen = smartConnect(RecoverWalletScreenComponent, [
-    connect(
-        (state: IReduxState) => ({
-            tosVersion: state.app.tosVersion
-        }),
-        {
-            createHDWallet
-        }
-    ),
+    connect((state: IReduxState) => ({ tosVersion: state.app.tosVersion }), { createHDWallet }),
     withTheme(stylesProvider)
 ]);

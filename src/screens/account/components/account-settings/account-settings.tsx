@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Modal, TouchableOpacity, Linking } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme } from '../../../../core/theme/with-theme';
-import { IAccountState } from '../../../../redux/wallets/state';
+import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
 import { Icon } from '../../../../components/icon';
 import { ITheme } from '../../../../core/theme/itheme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
@@ -12,6 +12,7 @@ import { ViewKey } from '../view-key/view-key';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ICON_SIZE } from '../../../../styles/dimensions';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
+import { WalletFactory } from '../../../../core/wallet/wallet-factory';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -21,6 +22,7 @@ export interface IProps {
 export interface IExternalProps {
     onDonePressed: () => any;
     account: IAccountState;
+    wallet: IWalletState;
 }
 
 interface IState {
@@ -46,16 +48,25 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         };
     }
 
-    public revealPrivateKey = () => {
-        this.passwordModal.requestPassword().then(() =>
-            this.setState({
-                showKeyScreen: true,
-                showBackButton: true,
-                title: translate('AccountSettings.revealPrivate'),
-                key: this.props.account.address, // TO DO - switch to private key
-                showSecurityWarning: true
-            })
+    public revealPrivateKey = async () => {
+        const password = await this.passwordModal.requestPassword();
+
+        const hdWallet = await WalletFactory.get(this.props.wallet.id, this.props.wallet.type, {
+            pass: password
+        });
+
+        const privateKey = hdWallet.getPrivateKey(
+            this.props.account.blockchain,
+            this.props.account.index
         );
+
+        this.setState({
+            showKeyScreen: true,
+            showBackButton: true,
+            title: translate('AccountSettings.revealPrivate'),
+            key: privateKey,
+            showSecurityWarning: true
+        });
     };
     public revealPublicKey = () => {
         this.setState({
@@ -95,7 +106,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                     <View style={styles.modalContainer}>
                         <View style={styles.header}>
                             <View style={styles.backButtonWrapper}>
-                                {this.state.showKeyScreen ? (
+                                {this.state.showKeyScreen && (
                                     <TouchableOpacity
                                         onPress={() => {
                                             this.setState({
@@ -117,7 +128,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                             {translate('App.buttons.back')}
                                         </Text>
                                     </TouchableOpacity>
-                                ) : null}
+                                )}
                             </View>
 
                             <View style={styles.titleWrapper}>

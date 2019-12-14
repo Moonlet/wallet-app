@@ -2,8 +2,12 @@ import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
-import { IAccountState, ITransactionState } from '../../redux/wallets/state';
-import { getAccountTransactions, getAccount } from '../../redux/wallets/selectors';
+import { IAccountState, ITransactionState, IWalletState } from '../../redux/wallets/state';
+import {
+    getAccountTransactions,
+    getAccount,
+    selectCurrentWallet
+} from '../../redux/wallets/selectors';
 import { IReduxState } from '../../redux/state';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { withTheme } from '../../core/theme/with-theme';
@@ -28,12 +32,14 @@ export interface IProps {
 export interface IReduxProps {
     account: IAccountState;
     transactions: ITransactionState[];
+    wallet: IWalletState;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        transactions: getAccountTransactions(state, ownProps.accountIndex, ownProps.blockchain)
+        transactions: getAccountTransactions(state, ownProps.accountIndex, ownProps.blockchain),
+        wallet: selectCurrentWallet(state)
     };
 };
 
@@ -45,17 +51,15 @@ export interface INavigationParams {
 interface IState {
     settingsVisible: boolean;
 }
+
 const navigationOptions = ({ navigation }: any) => ({
-    headerRight: () => {
-        return (
-            <HeaderRight
-                icon="navigation-menu-vertical"
-                onPress={
-                    navigation.state.params ? navigation.state.params.openSettingsMenu : undefined
-                }
-            />
-        );
-    }
+    headerRight: () => (
+        <HeaderRight
+            icon="navigation-menu-vertical"
+            onPress={navigation.state.params ? navigation.state.params.openSettingsMenu : undefined}
+        />
+    ),
+    title: `${translate('App.labels.account')} ${navigation.state.params.accountIndex + 1}`
 });
 
 export class AccountScreenComponent extends React.Component<
@@ -121,7 +125,7 @@ export class AccountScreenComponent extends React.Component<
                     </Button>
                 </View>
 
-                {transactions ? (
+                {transactions && (
                     <View style={styles.transactionsContainer}>
                         <Translate
                             text="App.labels.transactions"
@@ -173,14 +177,15 @@ export class AccountScreenComponent extends React.Component<
                             })}
                         </View>
                     </View>
-                ) : null}
-                {this.state.settingsVisible ? (
-                    //
+                )}
+
+                {this.state.settingsVisible && (
                     <AccountSettings
                         onDonePressed={this.openSettingsMenu}
                         account={this.props.account}
+                        wallet={this.props.wallet}
                     />
-                ) : null}
+                )}
             </ScrollView>
         );
     }

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { StatusBar, Platform } from 'react-native';
+import { StatusBar, Platform, AppState, AppStateStatus } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { RootNavigation } from './navigation/navigation';
 import configureStore from './redux/config';
@@ -10,6 +10,7 @@ import { ThemeContext } from './core/theme/theme-contex';
 import { loadTranslations } from './core/i18n';
 import { persistStore } from 'redux-persist';
 import { SplashScreen } from './components/splash-screen/splash-screen';
+import { PasswordModal } from './components/password-modal/password-modal';
 import { Notifications } from './core/messaging/notifications/notifications';
 import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-notification';
 
@@ -18,9 +19,14 @@ const AppContainer = createAppContainer(RootNavigation);
 const store = configureStore();
 const persistor = persistStore(store);
 
+const APP_STATE_ACTIVE: AppStateStatus = 'active';
+const APP_STATE_BACKGROUND: AppStateStatus = 'background';
+
 interface IState {
     appReady: boolean;
     splashAnimationDone: boolean;
+    appState: AppStateStatus;
+    showPasswordModal: boolean;
 }
 
 export default class App extends React.Component<{}, IState> {
@@ -32,7 +38,9 @@ export default class App extends React.Component<{}, IState> {
         super(props);
         this.state = {
             appReady: false,
-            splashAnimationDone: false
+            splashAnimationDone: false,
+            appState: AppState.currentState,
+            showPasswordModal: false
         };
 
         loadTranslations('en').then(() => {
@@ -53,14 +61,33 @@ export default class App extends React.Component<{}, IState> {
         }
     }
 
-    public updateAppReady() {
-        this.setState({ appReady: this.translationsLoaded && this.reduxStateLoaded });
-    }
+    public updateAppReady = () => {
+        this.setState(
+            {
+                appReady:
+                    this.translationsLoaded &&
+                    this.reduxStateLoaded &&
+                    this.state.splashAnimationDone
+            },
+            () => {
+                if (
+                    this.state.appReady &&
+                    this.state.appState === APP_STATE_ACTIVE &&
+                    store.getState().wallets.length >= 1
+                ) {
+                    this.showPasswordModal();
+                }
+            }
+        );
+    };
 
     public componentDidMount() {
-        setTimeout(() => {
-            this.setState({ splashAnimationDone: true });
-        }, 1000);
+        AppState.addEventListener('change', this.handleAppStateChange);
+
+        setTimeout(
+            () => this.setState({ splashAnimationDone: true }, () => this.updateAppReady()),
+            1000
+        );
 
         Notifications.configure();
 
@@ -68,19 +95,45 @@ export default class App extends React.Component<{}, IState> {
             setupVoipNotification();
         }
 
-        // const date = new Date()
-        // date.setSeconds(date.getSeconds() + 10)
-        // Notifications.scheduleNotification(date)
+        // const date = new Date();
+        // date.setSeconds(date.getSeconds() + 10);
+        // Notifications.scheduleNotification(date);
     }
 
+    public componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange);
+    }
+
+    public showPasswordModal() {
+        this.setState({
+            showPasswordModal: true,
+            appState: APP_STATE_ACTIVE
+        });
+    }
+
+    public handleAppStateChange = (nextAppState: AppStateStatus) => {
+        if (
+            this.state.appState === APP_STATE_BACKGROUND &&
+            nextAppState === APP_STATE_ACTIVE &&
+            store.getState().wallets.length >= 1
+        ) {
+            this.showPasswordModal();
+        }
+        this.setState({ appState: nextAppState });
+    };
+
     public render() {
-        if (this.state.appReady && this.state.splashAnimationDone) {
-            //            this.unsubscribe();
+        if (this.state.appReady) {
+            // this.unsubscribe();
             return (
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
                             <AppContainer theme="dark" />
+                            <PasswordModal
+                                visible={this.state.showPasswordModal}
+                                onPassword={() => this.setState({ showPasswordModal: false })}
+                            />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

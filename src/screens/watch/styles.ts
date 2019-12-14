@@ -1,26 +1,37 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION } from '../../styles/dimensions';
+import { ph, pw } from '../../styles';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            flex: 1,
             backgroundColor: theme.colors.appBackground,
-            height: '100%'
+            justifyContent: 'center'
         },
-        textInputArea: {
-            flexDirection: 'row',
-            marginHorizontal: BASE_DIMENSION * 2,
-            padding: BASE_DIMENSION,
-            borderColor: theme.colors.accent,
-            borderWidth: 1,
-            marginTop: 40,
-            minHeight: 40
+        logoImage: {
+            height: ph(20),
+            width: pw(40),
+            alignSelf: 'center',
+            resizeMode: 'contain'
         },
-        text: {
-            fontSize: 16,
-            lineHeight: 21,
+        launchingSoonText: {
+            fontWeight: 'bold',
+            fontSize: 22,
+            lineHeight: 28,
             textAlign: 'center',
-            color: theme.colors.text
+            letterSpacing: 0.35,
+            color: theme.colors.text,
+            opacity: 0.87,
+            marginBottom: BASE_DIMENSION * 2
+        },
+        buttonContainer: {
+            flexDirection: 'row',
+            justifyContent: 'center',
+            marginTop: BASE_DIMENSION * 2
+        },
+        button: {
+            marginHorizontal: BASE_DIMENSION * 2
         }
     });

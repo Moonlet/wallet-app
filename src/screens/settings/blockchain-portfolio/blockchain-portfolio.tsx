@@ -10,7 +10,6 @@ import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
 import { IBlockchainsOptions } from '../../../redux/app/state';
-import { themes } from '../../../navigation/navigation';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { toogleBlockchainActive, updateBlockchainOrder } from '../../../redux/app/actions';
 import { Blockchain } from '../../../core/blockchain/types';
@@ -35,11 +34,8 @@ const mapStateToProps = (state: IReduxState) => {
     };
 };
 
-const navigationOptions = ({ theme }: any) => ({
-    title: translate('Settings.blockchainPortfolio'),
-    headerStyle: {
-        backgroundColor: themes[theme].colors.header
-    }
+const navigationOptions = () => ({
+    title: translate('Settings.blockchainPortfolio')
 });
 
 export class BlockchainPortfolioComponent extends React.Component<

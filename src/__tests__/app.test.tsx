@@ -21,10 +21,12 @@ test('renders correctly', async () => {
     expect(element.state.appReady).toBe(false);
     expect(element.translationsLoaded).toBe(false);
     expect(element.reduxStateLoaded).toBe(false);
+    expect(element.state.splashAnimationDone).toBe(false);
 
     (storeMock as any).triggerStoreSubscribe();
-    await delay();
+    await delay(1000);
 
+    expect(element.state.splashAnimationDone).toBe(true);
     expect(element.state.appReady).toBe(true);
     expect(element.translationsLoaded).toBe(true);
     expect(element.reduxStateLoaded).toBe(true);

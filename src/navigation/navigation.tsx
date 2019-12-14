@@ -9,11 +9,7 @@ import { lightTheme } from '../styles/themes/light-theme';
 import { ITheme } from '../core/theme/itheme';
 import { Theme } from '../core/theme/themes';
 import { HeaderLeft } from '../components/header-left/header-left';
-import {
-    // DummyScreen,
-    menuIcon,
-    removeAnimation
-} from './utils';
+import { menuIcon, removeAnimation } from './utils';
 
 import { DashboardScreen } from '../screens/dashboard/dashboard';
 import { SettingsScreen } from '../screens/settings/settings';

@@ -28,6 +28,7 @@ export const translation: ITranslations = {
                 from: 'From',
                 legal: 'Legal',
                 next: 'Next',
+                nextWord: 'Next word',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
                 receive: 'Receive',

@@ -24,7 +24,8 @@ export default (theme: ITheme) =>
         keyboardLayout: {
             flex: 1,
             backgroundColor: theme.colors.cardBackground,
-            padding: BASE_DIMENSION
+            padding: BASE_DIMENSION,
+            paddingBottom: BASE_DIMENSION * 2
         },
         footerContainer: {
             backgroundColor: theme.colors.primary,

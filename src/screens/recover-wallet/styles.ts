@@ -1,101 +1,47 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingHorizontal: 16,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: theme.colors.appBackground,
-            height: '100%'
-        },
-
-        topContainer: {
-            // borderWidth: 1, borderColor: 'green',
             flex: 1,
-            // justifyContent: 'center',
-            // alignItems: 'center',
-            alignSelf: 'stretch'
+            backgroundColor: theme.colors.appBackground,
+            padding: BASE_DIMENSION * 2
         },
-
-        bottomContainer: {
-            flex: 0,
-            flexDirection: 'column',
-            justifyContent: 'center',
-            alignSelf: 'center',
-            alignItems: 'center',
-            marginBottom: 60,
-            width: '100%'
-        },
-
-        bottomButtonContainer: {
-            flex: 0,
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignSelf: 'center',
-            alignItems: 'center',
-            width: '80%'
-        },
-
         mnemonicContainer: {
-            // borderWidth: 1, borderColor: 'green',
             backgroundColor: theme.colors.cardBackground,
-            borderRadius: 6,
-            alignSelf: 'stretch',
-            paddingTop: 2,
-            paddingBottom: 12,
-            paddingLeft: 2,
-            paddingRight: 4,
-            marginTop: 0
+            borderRadius: BORDER_RADIUS,
+            marginBottom: BASE_DIMENSION * 2,
+            paddingTop: BASE_DIMENSION / 4,
+            paddingBottom: BASE_DIMENSION * 2 - BASE_DIMENSION / 2,
+            paddingLeft: BASE_DIMENSION / 4,
+            paddingRight: BASE_DIMENSION
         },
-
+        suggestionsContainer: {
+            flexGrow: 1
+        },
         mnemonicLine: {
             flexDirection: 'row',
-            paddingVertical: Platform.OS === 'ios' ? 3 : 0
+            paddingVertical: Platform.OS === 'ios' ? BASE_DIMENSION / 2 : 0
         },
-
         inputContainer: {
-            // borderWidth: 1, borderColor: 'green',
-            flexBasis: 0,
             flex: 1,
-            padding: 0,
-            margin: 0,
             flexDirection: 'row'
         },
-
-        input: {
-            flex: 1,
-            borderBottomWidth: 1,
-            fontSize: 12,
-            borderColor: 'gray',
-            alignSelf: 'stretch',
-            color: theme.colors.text,
-            padding: 0,
-            margin: 0,
-            lineHeight: 16
-        },
-
         inputLabel: {
-            flex: 0,
             textAlign: 'right',
             alignSelf: 'center',
             fontSize: 10,
             width: 18,
-            paddingTop: 2
+            color: theme.colors.text,
+            opacity: 0.87,
+            paddingTop: BASE_DIMENSION / 4
         },
-
-        suggestionsContainer: {
-            marginHorizontal: -BASE_DIMENSION * 2, // compensate for screen padding
-            marginVertical: BASE_DIMENSION
-        },
-
         suggestionButton: {
             paddingVertical: 6,
-            marginHorizontal: 4
+            marginHorizontal: BASE_DIMENSION / 2
         },
-
         bottomButton: {
             flex: 1,
             flexBasis: 0,

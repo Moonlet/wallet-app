@@ -193,6 +193,9 @@ export const translation: ITranslations = {
         },
         Onboarding: {
             welcomeTitle: 'Welcome to Moonlet!',
+            welcomeText: 'We’ll generate this section once you create, recover or connect a wallet',
+            welcomeTextWeb:
+                'To use Moonlet extension:\n1. Open Moonlet app on your phone \n2. Tap this and that\n3. Scan this QR Code'
             welcomeText: 'We’ll generate this section once you create, recover or connect a wallet'
         },
         Account: {

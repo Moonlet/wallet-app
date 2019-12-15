@@ -13,6 +13,9 @@ import DeviceInfo from 'react-native-device-info';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { translate } from '../../core/i18n';
 import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric-auth';
+import { ICON_SIZE } from '../../styles/dimensions';
+import { biometricAuth } from '../../core/biometric-auth/biometric-auth';
+import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -84,8 +87,9 @@ export class SettingsScreenComponent extends React.Component<
         this.props.mock();
     };
     public signOut = () => {
-        // sign out
-        this.props.mock();
+        if (Platform.OS === 'web') {
+            WalletConnectWeb.disconnect();
+        }
     };
 
     public render() {
@@ -99,6 +103,10 @@ export class SettingsScreenComponent extends React.Component<
                     <Text style={styles.textHeader}>
                         {translate('App.labels.security').toUpperCase()}
                     </Text>
+
+                    <Button testID={'sign-out'} style={styles.button} onPress={this.signOut}>
+                        {translate('Settings.signOut')}
+                    </Button>
 
                     <View style={styles.rowContainer}>
                         <Text style={styles.textRow}>{translate('Settings.pinLogin')}</Text>

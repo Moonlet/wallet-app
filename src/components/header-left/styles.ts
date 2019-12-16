@@ -1,18 +1,17 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         button: {
             flexDirection: 'row',
-            alignItems: 'center'
+            alignItems: 'center',
+            paddingLeft: BASE_DIMENSION
         },
         iconContainer: {
             alignItems: 'center',
-            justifyContent: 'center',
-            height: ICON_CONTAINER_SIZE,
-            width: ICON_CONTAINER_SIZE
+            justifyContent: 'center'
         },
         icon: {
             color: theme.colors.accent

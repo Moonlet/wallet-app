@@ -34,6 +34,12 @@ exports[`wallet actions createHDWallet working properly 1`] = `
           ],
           "id": "uuid",
           "name": "Wallet 1",
+          "selectedAccount": Object {
+            "address": "0x151250cB2bB034247c8ffBeD91B7Fb1e9f3e9FFE",
+            "blockchain": "ETHEREUM",
+            "index": 0,
+            "publicKey": "22d185a1eda6240e2004a4794e50daff53eb3e5194bf21d4cca3be002688566ee2af4d5724dbe507646649193e5f8368ee63fb257147fbb2bafed87e63717c68",
+          },
           "type": "HD",
         },
         "type": "WALLET_ADD",

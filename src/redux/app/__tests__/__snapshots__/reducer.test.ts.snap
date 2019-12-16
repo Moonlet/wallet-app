@@ -12,6 +12,7 @@ Object {
       "order": 1,
     },
   },
+  "bottomSheet": undefined,
   "currentWalletId": "",
   "devMode": true,
   "networks": Object {

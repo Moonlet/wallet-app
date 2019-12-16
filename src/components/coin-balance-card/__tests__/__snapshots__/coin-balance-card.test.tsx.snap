@@ -1,10 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`coin balance component renders correctly 1`] = `
-"<View style={{...}}>
-  <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" />
+"<TouchableOpacity onPress={[Function: onPress]} style={{...}} activeOpacity={0.2}>
   <View style={{...}}>
-    <Connect(AmountComponent) style={false} amount={{...}} blockchain=\\"ZILLIQA\\" convert={true} />
+    <withTheme(TextComponent) style={{...}}>
+      Account 2
+    </withTheme(TextComponent)>
+    <withTheme(TextComponent) style={{...}}>
+      zil1v...3k21b
+    </withTheme(TextComponent)>
   </View>
-</View>"
+  <View style={{...}}>
+    <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" />
+    <Icon name=\\"arrow-down-1\\" size={24} style={{...}} allowFontScaling={false} />
+  </View>
+  <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" convert={true} />
+</TouchableOpacity>"
 `;

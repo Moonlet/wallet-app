@@ -15,7 +15,19 @@ const props: IProps = {
     toCurrency: 'ETH',
     width: 100,
     active: true,
-    styles: styleProvider(darkTheme)
+    styles: styleProvider(darkTheme),
+    selectedAccount: {
+        index: 1,
+        blockchain: Blockchain.ZILLIQA,
+        address: 'zil1vs74hw5k21233h432kj321l3k21b',
+        publicKey: '1',
+        balance: {
+            value: new BigNumber(12332),
+            inProgress: false,
+            timestamp: 123,
+            error: undefined
+        }
+    }
 };
 
 describe('coin balance component', () => {

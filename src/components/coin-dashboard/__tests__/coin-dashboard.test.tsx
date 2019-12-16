@@ -36,12 +36,4 @@ describe('coin dashboard component', () => {
         const wrapper = shallow(<CoinDashboardComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();
     });
-
-    it('navigates to create new wallet', () => {
-        const wrapper = shallow(<CoinDashboardComponent {...props} />);
-        wrapper.find('[testID="button-manage-accounts"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('Accounts', {
-            blockchain: Blockchain.ZILLIQA
-        });
-    });
 });

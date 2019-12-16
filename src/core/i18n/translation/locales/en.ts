@@ -184,6 +184,11 @@ export const translation: ITranslations = {
         Onboarding: {
             welcomeTitle: 'Welcome to Moonlet!',
             welcomeText: 'We’ll generate this section once you create, recover or connect a wallet'
+        },
+        Account: {
+            noTransactions: 'No transactions available',
+            transactionHistory:
+                'Transaction history will appear here once you start to send tokens to other accounts'
         }
     },
     plural: (n: number, ord?: boolean) => {

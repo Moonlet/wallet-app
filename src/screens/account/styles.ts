@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import { ph, pw } from '../../styles';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -32,6 +33,7 @@ export default (theme: ITheme) =>
         },
 
         transactionsContainer: {
+            flex: 1,
             paddingHorizontal: BASE_DIMENSION * 2,
             marginTop: BASE_DIMENSION * 6
         },
@@ -75,5 +77,33 @@ export default (theme: ITheme) =>
         transactionRightIcon: {
             color: theme.colors.accent,
             margin: 14
+        },
+        emptySection: {
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'center'
+        },
+        logoImage: {
+            height: ph(20),
+            width: pw(50),
+            alignSelf: 'center',
+            resizeMode: 'contain',
+            marginBottom: BASE_DIMENSION * 3
+        },
+        noTransactionsText: {
+            fontWeight: 'bold',
+            fontSize: 22,
+            lineHeight: 28,
+            textAlign: 'center',
+            letterSpacing: 0.35,
+            color: theme.colors.textSecondary,
+            marginBottom: BASE_DIMENSION
+        },
+        transactionHistoryText: {
+            fontSize: 17,
+            lineHeight: 22,
+            color: theme.colors.textTertiary,
+            textAlign: 'center',
+            paddingHorizontal: BASE_DIMENSION * 2
         }
     });

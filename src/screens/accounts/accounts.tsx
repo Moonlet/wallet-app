@@ -6,7 +6,6 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
 import { selectAccount } from '../../redux/wallets/actions';
-import { ListCard } from '../../components/list-card/list-card';
 import stylesProvider from './styles';
 import { Blockchain } from '../../core/blockchain/types';
 import { selectCurrentWallet } from '../../redux/wallets/selectors';
@@ -14,6 +13,7 @@ import { formatAddress } from '../../core/utils/format-address';
 import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { ListAccount } from '../account/components/list-account/list-account';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -77,26 +77,34 @@ export const AccountsScreenComponent = (
 
                 const label = (
                     <View>
+                        <View style={props.styles.firstRow}>
+                            <Text style={props.styles.accountName}>
+                                {`Account ${account.index + 1}`}
+                            </Text>
+                            <Text style={props.styles.accountAddress}>
+                                {formatAddress(account.address)}
+                            </Text>
+                        </View>
                         <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
                             <Amount
+                                style={props.styles.fistAmountText}
                                 amount={account.balance?.value}
                                 blockchain={account.blockchain}
                             />
                             <Amount
-                                style={{ fontSize: 12, marginLeft: 8 }}
+                                style={props.styles.secondAmountText}
                                 amount={account.balance?.value}
                                 blockchain={account.blockchain}
                                 convert
                             />
                         </View>
-                        <Text small>{formatAddress(account.address)}</Text>
                     </View>
                 );
                 return (
-                    <ListCard
+                    <ListAccount
                         key={index}
                         leftIcon="money-wallet-1"
-                        rightIcon={selected ? 'check-2-thicked' : 'check-2'}
+                        rightIcon={selected ? 'check-1' : undefined}
                         label={label}
                         selected={selected}
                         onPress={() =>

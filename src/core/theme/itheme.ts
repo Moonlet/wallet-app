@@ -21,6 +21,7 @@ export interface ITheme {
 
         settingsDivider: string;
         cardBackground: string;
+        cardBackgroundSecondary: string;
         appBackground: string;
         inputBackground: string;
         disabledButton: string;

@@ -27,7 +27,7 @@ export class AccountsBottomSheetComponent extends React.Component<
     }
 
     public renderBottomSheetContent = () => (
-        <View style={[this.props.styles.panelContent, { height: BOTTOM_SHEET_HEIGHT }]}>
+        <View style={{ height: BOTTOM_SHEET_HEIGHT }}>
             <AccountsScreen />
         </View>
     );
@@ -47,7 +47,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                     snapPoints={[0, BOTTOM_SHEET_HEIGHT]}
                     renderContent={this.renderBottomSheetContent}
                     renderHeader={this.renderHeader}
-                    onCloseStart={() => setTimeout(() => this.props.onClose(), 500)}
+                    onCloseStart={() => setTimeout(() => this.props.onClose(), 500)} // TODO: fix here, onCloseEnd it's not working properly
                 />
             </View>
         );

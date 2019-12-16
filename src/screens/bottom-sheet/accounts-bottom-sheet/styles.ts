@@ -10,7 +10,7 @@ export default (theme: ITheme) =>
         },
         header: {
             flex: 1,
-            backgroundColor: theme.colors.cardBackground,
+            backgroundColor: theme.colors.cardBackgroundSecondary,
             paddingVertical: BASE_DIMENSION * 2,
             borderTopLeftRadius: BORDER_RADIUS * 3,
             borderTopRightRadius: BORDER_RADIUS * 3,
@@ -21,8 +21,5 @@ export default (theme: ITheme) =>
             height: 8,
             borderRadius: BORDER_RADIUS,
             backgroundColor: theme.colors.accent
-        },
-        panelContent: {
-            backgroundColor: theme.colors.cardBackground
         }
     });

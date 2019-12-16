@@ -55,7 +55,7 @@ interface IState {
 const navigationOptions = ({ navigation }: any) => ({
     headerRight: () => (
         <HeaderRight
-            icon="navigation-menu-vertical"
+            icon="navigation-menu-horizontal"
             onPress={navigation.state.params ? navigation.state.params.openSettingsMenu : undefined}
         />
     ),

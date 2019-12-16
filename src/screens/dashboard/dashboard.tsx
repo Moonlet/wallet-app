@@ -13,7 +13,7 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { getBalance } from '../../redux/wallets/actions';
+import { getBalance, selectAccount } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { BigNumber } from 'bignumber.js';
 import { selectCurrentWallet } from '../../redux/wallets/selectors';
@@ -31,6 +31,7 @@ export interface IReduxProps {
     getBalance: typeof getBalance;
     blockchains: IBlockchainsOptions;
     setBottomSheet: typeof setBottomSheet;
+    selectAccount: typeof selectAccount;
 }
 
 interface IState {
@@ -40,8 +41,6 @@ interface IState {
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCROLL_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.5);
-const ANIMATED_BC_SELECTION = true;
 
 const calculateBalances = (accounts: IAccountState[], blockchains: IBlockchainsOptions) => {
     const result = accounts.reduce(
@@ -83,7 +82,8 @@ const mapStateToProps = (state: IReduxState) => ({
 
 const mapDispatchToProps = {
     getBalance,
-    setBottomSheet
+    setBottomSheet,
+    selectAccount
 };
 
 const MyTitle = ({ text }) => (
@@ -176,18 +176,6 @@ export class DashboardScreenComponent extends React.Component<
         }
     }
 
-    public setActiveCoin = (i: number) => {
-        if (ANIMATED_BC_SELECTION) {
-            this.setState({
-                coinIndex: i
-            });
-        }
-
-        if (this.balancesScrollView) {
-            this.balancesScrollView.scrollTo({ x: SCROLL_CARD_WIDTH * i, ANIMATED_BC_SELECTION });
-        }
-    };
-
     public componentDidMount() {
         this.props.wallet?.accounts.map(account => {
             this.props.getBalance(account.blockchain, account.address, true);
@@ -197,6 +185,7 @@ export class DashboardScreenComponent extends React.Component<
     public renderBottomBlockchainNav = () => {
         const styles = this.props.styles;
         const { coins, coinIndex } = this.state;
+        const { wallet } = this.props;
 
         return (
             <LinearGradient
@@ -217,20 +206,35 @@ export class DashboardScreenComponent extends React.Component<
                         snapToEnd={false}
                         decelerationRate={0.8}
                     >
-                        {coins.map((coin, i) => (
+                        {coins.map((coin: { blockchain: Blockchain; order: number }) => (
                             <TouchableOpacity
-                                key={i}
+                                key={coin.order}
                                 style={[
                                     styles.blockchainButton,
-                                    coinIndex === i && styles.blockchainButtonActive,
+                                    coinIndex === coin.order && styles.blockchainButtonActive,
                                     {
                                         width: coins.length > 3 ? SCREEN_WIDTH / 3 : null
                                     }
                                 ]}
-                                onPress={() => this.setActiveCoin(i)}
+                                onPress={() => {
+                                    this.setState({ coinIndex: coin.order });
+
+                                    this.props.selectAccount(
+                                        wallet.id,
+                                        coin.blockchain,
+                                        wallet.accounts.filter(
+                                            account => account.blockchain === coin.blockchain
+                                        )[0]
+                                    );
+                                }}
                             >
-                                <Text style={coinIndex === i && styles.blockchainButtonTextActive}>
-                                    {BLOCKCHAIN_INFO[coins[i].blockchain].coin}
+                                <Text
+                                    style={
+                                        coinIndex === coin.order &&
+                                        styles.blockchainButtonTextActive
+                                    }
+                                >
+                                    {BLOCKCHAIN_INFO[coins[coin.order].blockchain].coin}
                                 </Text>
                             </TouchableOpacity>
                         ))}

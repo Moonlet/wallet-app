@@ -1,9 +1,20 @@
-import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
+import TransportHID from '@ledgerhq/react-native-hid';
+import { translate } from '../../../../i18n';
 
 export class USB {
     public static async get(): Promise<Transport> {
-        // TODO
-        const transport = await TransportBLE.open('');
-        return Promise.resolve(transport);
+        const isSupported = await TransportHID.isSupported();
+        if (isSupported === false) {
+            return Promise.reject(translate('CreateHardwareWallet.notSupported'));
+        }
+
+        const devices = await TransportHID.list();
+        if (devices.length) {
+            return this.connect(devices[0]);
+        }
+    }
+
+    public static async connect(device): Promise<Transport> {
+        return TransportHID.open(device);
     }
 }

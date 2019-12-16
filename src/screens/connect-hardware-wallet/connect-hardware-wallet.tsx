@@ -23,6 +23,7 @@ import { INavigationProps } from '../../navigation/with-navigation-params';
 export interface IReduxProps {
     tosVersion: number;
     verifyAddressMessage: boolean;
+    featureNotSupportedMessage: boolean;
     createHWWallet: (
         deviceId: string,
         deviceVendor: HWVendor,
@@ -187,20 +188,31 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
 
     public renderMessages() {
         const styles = this.props.styles;
-        return (
-            this.state.openAppOnDevice && (
+
+        if (this.props.featureNotSupportedMessage === true && this.state.openAppOnDevice) {
+            return (
                 <View style={styles.activityContainer}>
                     <Text style={styles.textIndicator}>
-                        {this.props.verifyAddressMessage
-                            ? translate('CreateHardwareWallet.verifyAddress')
-                            : translate('CreateHardwareWallet.app', {
-                                  app: this.state.blockchain
-                              })}
+                        {translate('CreateHardwareWallet.notSupported')}
                     </Text>
-                    <ActivityIndicator size="large" color="#ffffff" />
                 </View>
-            )
-        );
+            );
+        } else {
+            return (
+                this.state.openAppOnDevice && (
+                    <View style={styles.activityContainer}>
+                        <Text style={styles.textIndicator}>
+                            {this.props.verifyAddressMessage
+                                ? translate('CreateHardwareWallet.verifyAddress')
+                                : translate('CreateHardwareWallet.app', {
+                                      app: this.state.blockchain
+                                  })}
+                        </Text>
+                        <ActivityIndicator size="large" color="#ffffff" />
+                    </View>
+                )
+            );
+        }
     }
 
     public onBluetoothConnected = (deviceId: string) => {
@@ -260,7 +272,8 @@ export const ConnectHardwareWallet = smartConnect(ConnectHardwareWalletScreenCom
     connect(
         (state: IReduxState) => ({
             tosVersion: state.app.tosVersion,
-            verifyAddressMessage: state.screens.connectHardwareWallet.verifyAddress
+            verifyAddressMessage: state.screens.connectHardwareWallet.verifyAddress,
+            featureNotSupportedMessage: state.screens.connectHardwareWallet.featureNotSupported
         }),
         {
             createHWWallet

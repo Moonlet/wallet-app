@@ -79,7 +79,8 @@ export const translation: ITranslations = {
             NANO_X: 'Ledger Nano X',
             NANO_S: 'Ledger Nano S',
             app: 'Make sure you have opened the {{app}} app on your hardware wallet',
-            verifyAddress: 'Verify address on your device'
+            verifyAddress: 'Verify address on your device',
+            notSupported: 'Feature is not supported'
         },
         Fee: {
             feeTitle: 'Transaction fee',

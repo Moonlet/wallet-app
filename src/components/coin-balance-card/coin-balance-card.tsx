@@ -9,10 +9,13 @@ import { Blockchain } from '../../core/blockchain/types';
 import { Amount } from '../amount/amount';
 import { Icon } from '../icon';
 import { ICON_SIZE } from '../../styles/dimensions';
+import { IAccountState } from '../../redux/wallets/state';
+import { formatAddress } from '../../core/utils/format-address';
 
 export interface IProps {
     onPress?: () => void;
     blockchain: Blockchain;
+    selectedAccount: IAccountState;
     balance: BigNumber;
     width?: number;
     active: boolean;
@@ -25,8 +28,10 @@ export const CoinBalanceCardComponent = (props: IProps) => (
         style={[props.styles.container, { width: props.width }]}
     >
         <View style={props.styles.rowContainer}>
-            <Text style={props.styles.account}>Account 1</Text>
-            <Text style={props.styles.address}>Zil1f...0fqvn</Text>
+            <Text style={props.styles.account}>
+                {props.selectedAccount?.name || `Account ${props.selectedAccount.index + 1}`}
+            </Text>
+            <Text style={props.styles.address}>{formatAddress(props.selectedAccount.address)}</Text>
         </View>
         <View style={props.styles.rowContainer}>
             <Amount

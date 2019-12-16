@@ -259,6 +259,7 @@ export class DashboardScreenComponent extends React.Component<
                                 currency={BLOCKCHAIN_INFO[blockchain].coin}
                                 toCurrency="USD"
                                 active={true}
+                                selectedAccount={this.props.wallet.selectedAccount}
                             />
                         </View>
 

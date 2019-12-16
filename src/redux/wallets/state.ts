@@ -15,6 +15,7 @@ export interface IWalletState {
     };
     type: WalletType;
     accounts: IAccountState[];
+    selectedAccount: IAccountState;
     transactions?: {
         [id: string]: ITransactionState;
     };

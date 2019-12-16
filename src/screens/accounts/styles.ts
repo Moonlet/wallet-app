@@ -7,6 +7,6 @@ export default (theme: ITheme) =>
         container: {
             flex: 1,
             padding: BASE_DIMENSION * 2,
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.cardBackground
         }
     });

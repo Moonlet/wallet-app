@@ -6,7 +6,8 @@ import {
     APP_SET_TEST_NET,
     APP_SET_NETWORK_TEST_NET_CHAIN_ID,
     APP_TOGGLE_BLOCKCHAIN,
-    APP_UPDATE_BLOCKCHAIN_ORDER
+    APP_UPDATE_BLOCKCHAIN_ORDER,
+    APP_SET_BOTTOM_SHEET
 } from './actions';
 import { Blockchain } from '../../core/blockchain/types';
 
@@ -34,7 +35,8 @@ const intialState: IAppState = {
             order: 1,
             active: true
         }
-    }
+    },
+    bottomSheet: undefined
 };
 
 export default (state: IAppState = intialState, action: IAction): IAppState => {
@@ -74,6 +76,14 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
             return {
                 ...state,
                 blockchains: action.data.blockchains
+            };
+        case APP_SET_BOTTOM_SHEET:
+            return {
+                ...state,
+                bottomSheet: {
+                    type: action.data.type,
+                    blockchain: action.data.blockchain
+                }
             };
         default:
             break;

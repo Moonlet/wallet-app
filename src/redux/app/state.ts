@@ -1,3 +1,5 @@
+import { Blockchain } from '../../core/blockchain/types';
+
 export interface INetworksOptions {
     [blockchain: string]: {
         // key is for Blockchain enum
@@ -13,6 +15,15 @@ export interface IBlockchainsOptions {
     };
 }
 
+export interface IBottomSheet {
+    type: BottomSheetType;
+    blockchain: Blockchain;
+}
+
+export enum BottomSheetType {
+    Accounts = 'Accounts'
+}
+
 export interface IAppState {
     currentWalletId: string;
     tosVersion: number;
@@ -20,4 +31,5 @@ export interface IAppState {
     testNet: boolean;
     networks: INetworksOptions;
     blockchains: IBlockchainsOptions;
+    bottomSheet: IBottomSheet;
 }

@@ -18,17 +18,19 @@ import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { BigNumber } from 'bignumber.js';
 import { selectCurrentWallet } from '../../redux/wallets/selectors';
 import { createSelector } from 'reselect';
-import { IBlockchainsOptions } from '../../redux/app/state';
+import { IBlockchainsOptions, BottomSheetType } from '../../redux/app/state';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import { setBottomSheet } from '../../redux/app/actions';
 
 export interface IReduxProps {
     wallet: IWalletState;
     walletsNr: number;
     getBalance: typeof getBalance;
     blockchains: IBlockchainsOptions;
+    setBottomSheet: typeof setBottomSheet;
 }
 
 interface IState {
@@ -37,7 +39,6 @@ interface IState {
     coins: Array<{ blockchain: Blockchain; order: number }>;
 }
 
-const FADE_ANIMATION_DURATION = 50;
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCROLL_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.5);
 const ANIMATED_BC_SELECTION = true;
@@ -81,7 +82,8 @@ const mapStateToProps = (state: IReduxState) => ({
 });
 
 const mapDispatchToProps = {
-    getBalance
+    getBalance,
+    setBottomSheet
 };
 
 const MyTitle = ({ text }) => (
@@ -174,37 +176,6 @@ export class DashboardScreenComponent extends React.Component<
         }
     }
 
-    public handleScrollEnd = (event: any) => {
-        // calculate the index on which the animation stopped
-        // (current scroll offset + left scrollview offset) / scroll card width
-        // (event.nativeEvent.contentOffset.x + (SCREEN_WIDTH - SCROLL_CARD_WIDTH) / 2) /
-        //         SCROLL_CARD_WIDTH
-        const scrollIndex: number = Math.round(
-            event.nativeEvent.contentOffset.x / SCROLL_CARD_WIDTH
-        );
-
-        // bail out if its the same coin index;
-        if (scrollIndex === this.state.coinIndex) {
-            return;
-        }
-
-        Animated.timing(this.dashboardOpacity, {
-            toValue: 0,
-            duration: FADE_ANIMATION_DURATION,
-            useNativeDriver: true
-        }).start(() => {
-            this.setState({
-                coinIndex: scrollIndex
-            });
-
-            Animated.timing(this.dashboardOpacity, {
-                toValue: 1,
-                duration: FADE_ANIMATION_DURATION,
-                useNativeDriver: true
-            }).start();
-        });
-    };
-
     public setActiveCoin = (i: number) => {
         if (ANIMATED_BC_SELECTION) {
             this.setState({
@@ -272,7 +243,7 @@ export class DashboardScreenComponent extends React.Component<
     public render() {
         const styles = this.props.styles;
         const { coins, coinIndex } = this.state;
-        const blockchain = coins[coinIndex].blockchain;
+        const blockchain = coins[coinIndex]?.blockchain;
 
         return (
             <View style={styles.container}>
@@ -280,6 +251,9 @@ export class DashboardScreenComponent extends React.Component<
                     <View style={styles.dashboardContainer}>
                         <View style={styles.coinBalanceCard}>
                             <CoinBalanceCard
+                                onPress={() =>
+                                    this.props.setBottomSheet(BottomSheetType.Accounts, blockchain)
+                                }
                                 balance={this.state.balance[blockchain].amount}
                                 blockchain={blockchain}
                                 currency={BLOCKCHAIN_INFO[blockchain].coin}

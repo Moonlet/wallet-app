@@ -26,6 +26,7 @@ export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
+export const ACCOUNT_SELECT = 'ACCOUNT_SELECT';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -45,6 +46,13 @@ export const addAccount = (walletId: string, blockchain: Blockchain, account: IA
 export const removeAccount = (walletId: string, blockchain: Blockchain, account: IAccountState) => {
     return {
         type: ACCOUNT_REMOVE,
+        data: { walletId, account, blockchain }
+    };
+};
+
+export const selectAccount = (walletId: string, blockchain: Blockchain, account: IAccountState) => {
+    return {
+        type: ACCOUNT_SELECT,
         data: { walletId, account, blockchain }
     };
 };
@@ -84,7 +92,8 @@ export const createHWWallet = (
                 type: WalletType.HW,
                 accounts: account.reduce((out, accounts) => {
                     return out.concat(accounts);
-                }, [])
+                }, []),
+                selectedAccount: undefined
             })
         );
 
@@ -114,14 +123,15 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ZILLIQA, 1)
         ]).then(async data => {
             const walletId = uuidv4();
+            const accounts: IAccountState[] = data.reduce((out, acc) => out.concat(acc), []);
+
             dispatch(
                 addWallet({
                     id: walletId,
                     name: `Wallet ${getState().wallets.length + 1}`,
                     type: WalletType.HD,
-                    accounts: data.reduce((out, accounts) => {
-                        return out.concat(accounts);
-                    }, [])
+                    accounts,
+                    selectedAccount: accounts[0]
                 })
             );
 

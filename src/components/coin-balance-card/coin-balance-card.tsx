@@ -11,6 +11,7 @@ import { Icon } from '../icon';
 import { ICON_SIZE } from '../../styles/dimensions';
 
 export interface IProps {
+    onPress?: () => void;
     blockchain: Blockchain;
     balance: BigNumber;
     width?: number;
@@ -19,7 +20,10 @@ export interface IProps {
 }
 
 export const CoinBalanceCardComponent = (props: IProps) => (
-    <TouchableOpacity style={[props.styles.container, { width: props.width }]}>
+    <TouchableOpacity
+        onPress={() => props.onPress()}
+        style={[props.styles.container, { width: props.width }]}
+    >
         <View style={props.styles.rowContainer}>
             <Text style={props.styles.account}>Account 1</Text>
             <Text style={props.styles.address}>Zil1f...0fqvn</Text>

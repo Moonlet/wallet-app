@@ -13,14 +13,16 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { HeaderLeft } from '../../components/header-left/header-left';
-import { HeaderRight } from '../../components/header-right/header-right';
 import { getBalance } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { BigNumber } from 'bignumber.js';
 import { selectCurrentWallet } from '../../redux/wallets/selectors';
 import { createSelector } from 'reselect';
 import { IBlockchainsOptions } from '../../redux/app/state';
+import { HeaderIcon } from '../../components/header-icon/header-icon';
+import { Icon } from '../../components/icon';
+import { themes } from '../../navigation/navigation';
+import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -86,11 +88,10 @@ const MyTitle = ({ text }) => (
     <Text
         style={{
             flex: 1,
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: 20,
+            lineHeight: 25,
             opacity: 0.87,
-            fontWeight: 'bold',
-            // color: themes[theme].colors.text,
+            letterSpacing: 0.38,
             textAlign: 'center'
         }}
     >
@@ -101,11 +102,34 @@ const MyConnectedTitle = connect((state: IReduxState) => ({
     text: (selectCurrentWallet(state) || {}).name
 }))(MyTitle);
 
-const navigationOptions = ({ navigation, theme }: any) => ({
+const navigationOptions = ({ navigation }: any) => ({
     headerTitle: () => <MyConnectedTitle />,
-    headerLeft: <HeaderLeft icon="saturn-icon" />,
+    headerLeft: <HeaderIcon />,
     headerRight: (
-        <HeaderRight icon="single-man-hierachy" onPress={() => navigation.navigate('Wallets')} />
+        <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity
+                style={{ width: ICON_CONTAINER_SIZE }}
+                onPress={() => navigation.navigate('Wallets')}
+            >
+                <Icon
+                    name="money-wallet-1"
+                    size={ICON_SIZE}
+                    style={{ color: themes.dark.colors.accent }}
+                />
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={{ width: ICON_CONTAINER_SIZE }}
+                onPress={() => {
+                    //
+                }}
+            >
+                <Icon
+                    name="navigation-menu-vertical"
+                    size={ICON_SIZE}
+                    style={{ color: themes.dark.colors.accent }}
+                />
+            </TouchableOpacity>
+        </View>
     )
 });
 
@@ -248,45 +272,22 @@ export class DashboardScreenComponent extends React.Component<
     public render() {
         const styles = this.props.styles;
         const { coins, coinIndex } = this.state;
+        const blockchain = coins[coinIndex].blockchain;
 
         return (
             <View style={styles.container}>
                 {coins.length !== 0 && (
-                    <View>
-                        <View style={styles.balancesContainer}>
-                            <ScrollView
-                                ref={ref => (this.balancesScrollView = ref)}
-                                onMomentumScrollEnd={this.handleScrollEnd}
-                                horizontal
-                                disableIntervalMomentum={true}
-                                overScrollMode={'never'}
-                                centerContent={true}
-                                snapToAlignment={'start'}
-                                snapToInterval={SCROLL_CARD_WIDTH}
-                                contentContainerStyle={{ marginTop: 16 }}
-                                showsHorizontalScrollIndicator={false}
-                                snapToStart={false}
-                                snapToEnd={false}
-                                decelerationRate={0.8}
-                            >
-                                <View style={{ width: (SCREEN_WIDTH - SCROLL_CARD_WIDTH) / 2 }} />
-                                {coins.map((coin, i) => {
-                                    const blockchain = coins[i].blockchain;
-                                    return (
-                                        <CoinBalanceCard
-                                            balance={this.state.balance[blockchain].amount}
-                                            blockchain={blockchain}
-                                            currency={BLOCKCHAIN_INFO[blockchain].coin}
-                                            width={SCROLL_CARD_WIDTH}
-                                            key={i}
-                                            toCurrency="USD"
-                                            active={coinIndex === i}
-                                        />
-                                    );
-                                })}
-                                <View style={{ width: (SCREEN_WIDTH - SCROLL_CARD_WIDTH) / 2 }} />
-                            </ScrollView>
+                    <View style={styles.dashboardContainer}>
+                        <View style={styles.coinBalanceCard}>
+                            <CoinBalanceCard
+                                balance={this.state.balance[blockchain].amount}
+                                blockchain={blockchain}
+                                currency={BLOCKCHAIN_INFO[blockchain].coin}
+                                toCurrency="USD"
+                                active={true}
+                            />
                         </View>
+
                         <Animated.View
                             style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
                         >

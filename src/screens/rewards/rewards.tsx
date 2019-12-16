@@ -9,7 +9,7 @@ import { translate } from '../../core/i18n';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { HeaderLeft } from '../../components/header-left/header-left';
+import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { SkeletonRow } from '../../components/skeleton-row/skeleton-row';
 
 export const mapStateToProps = (state: IReduxState) => {
@@ -17,7 +17,7 @@ export const mapStateToProps = (state: IReduxState) => {
 };
 
 export const navigationOptions = () => ({
-    headerLeft: <HeaderLeft icon="saturn-icon" />,
+    headerLeft: <HeaderIcon />,
     title: translate('App.labels.rewards')
 });
 

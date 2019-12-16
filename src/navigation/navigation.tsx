@@ -82,11 +82,11 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
     },
     headerTitleStyle: {
         flex: 1,
-        fontSize: 22,
-        lineHeight: 28,
-        opacity: 0.87,
-        fontWeight: 'bold',
+        fontSize: 20,
+        lineHeight: 25,
         color: themes[theme].colors.text,
+        opacity: 0.87,
+        letterSpacing: 0.38,
         textAlign: 'center'
     },
     headerLeft:

@@ -1,18 +1,49 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            padding: 0,
-            paddingTop: 10,
-            paddingBottom: 10,
+            alignSelf: 'center',
             alignItems: 'center'
         },
         darkerText: {
             color: theme.colors.textSecondary
         },
+        rowContainer: {
+            flexDirection: 'row',
+            marginBottom: BASE_DIMENSION
+        },
+        account: {
+            fontSize: 15,
+            lineHeight: 20,
+            color: theme.colors.text,
+            opacity: 0.87,
+            marginRight: BASE_DIMENSION
+        },
+        address: {
+            fontSize: 15,
+            lineHeight: 20,
+            color: theme.colors.accent
+        },
         mainText: {
-            fontSize: 28
+            fontSize: 30,
+            lineHeight: 41,
+            fontWeight: 'bold',
+            letterSpacing: 0.4,
+            color: theme.colors.text,
+            opacity: 0.87,
+            marginRight: BASE_DIMENSION
+        },
+        secondaryText: {
+            fontSize: 16,
+            lineHeight: 21,
+            color: theme.colors.textSecondary
+        },
+        icon: {
+            alignSelf: 'center',
+            color: theme.colors.accent,
+            fontWeight: 'bold'
         }
     });

@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`header go back button renders correctly 1`] = `
+"<TouchableOpacity onPress={[Function: mockConstructor]} style={{...}} activeOpacity={0.2}>
+  <View style={{...}}>
+    <Icon name=\\"cog\\" size={24} style={{...}} allowFontScaling={false} />
+  </View>
+  <withTheme(TextComponent) style={{...}}>
+    text
+  </withTheme(TextComponent)>
+</TouchableOpacity>"
+`;

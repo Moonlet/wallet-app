@@ -1,3 +1,5 @@
+import { IBlockchainTransaction } from '../../../blockchain/types';
+
 export interface IHardwareWalletApp {
     getAddress(
         index: number,
@@ -8,7 +10,7 @@ export interface IHardwareWalletApp {
         index: number,
         derivationIndex: number,
         path: string,
-        txRaw: string
-    ): Promise<{ tx: string }>;
+        txRaw: IBlockchainTransaction
+    ): Promise<any>;
     getInfo();
 }

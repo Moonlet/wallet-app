@@ -210,7 +210,13 @@ export const sendTransferTransaction = (
     const wallet = selectCurrentWallet(state);
 
     try {
-        const hdWallet = await WalletFactory.get(wallet.id, wallet.type, { pass: password }); // encrypted string: pass)
+        const hdWallet = await WalletFactory.get(wallet.id, wallet.type, {
+            pass: password,
+            deviceVendor: wallet.hwOptions?.deviceVendor,
+            deviceModel: wallet.hwOptions?.deviceModel,
+            deviceId: wallet.hwOptions?.deviceId,
+            connectionType: wallet.hwOptions?.connectionType
+        }); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
 
         const nonce = await blockchainInstance.getClient(chainId).getNonce(account.address);

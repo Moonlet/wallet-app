@@ -9,7 +9,7 @@ const intialState: ISendScreenState = {
 export default (state: ISendScreenState = intialState, action: IAction): ISendScreenState => {
     switch (action.type) {
         case REVIEW_TRANSACTION:
-            return { ...state, reviewTransaction: true };
+            return { ...state, reviewTransaction: action.data };
 
         default:
             break;

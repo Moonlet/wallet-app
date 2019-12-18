@@ -22,6 +22,7 @@ import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
+import { REVIEW_TRANSACTION } from '../screens/send/actions';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -202,7 +203,8 @@ export const sendTransferTransaction = (
     toAddress: string,
     amount: string,
     feeOptions: any,
-    password: string
+    password: string,
+    navigation: NavigationScreenProp<NavigationState>
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
@@ -235,6 +237,10 @@ export const sendTransferTransaction = (
             options
         };
 
+        dispatch({
+            type: REVIEW_TRANSACTION,
+            data: true
+        });
         const transaction = await hdWallet.sign(account.blockchain, account.index, tx);
 
         const publish = await getBlockchain(account.blockchain)
@@ -249,6 +255,11 @@ export const sendTransferTransaction = (
                     walletId: wallet.id
                 }
             });
+            dispatch({
+                type: REVIEW_TRANSACTION,
+                data: false
+            });
+            navigation.goBack();
             return;
         }
     } catch (e) {

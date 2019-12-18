@@ -3,5 +3,5 @@ import { ISendScreenState } from './send/state';
 
 export interface IScreensState {
     connectHardwareWallet: IConnectHardwareWalletState;
-    sendScreen: ISendScreenState;
+    send: ISendScreenState;
 }

@@ -132,7 +132,8 @@ export const translation: ITranslations = {
             alertEditTitle: 'Edit address book name',
             alertEditDescription: 'Use a relevant name or an alias for this address',
             deleteContact: 'Delete contact',
-            editContactName: 'Edit name'
+            editContactName: 'Edit name',
+            reviewTransaction: 'Review transaction on your hardware wallet'
         },
         AccountSettings: {
             manageAccount: 'Manage account',

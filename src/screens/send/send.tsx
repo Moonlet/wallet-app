@@ -29,6 +29,7 @@ import BigNumber from 'bignumber.js';
 import bind from 'bind-decorator';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { ICON_SIZE } from '../../styles/dimensions';
+import { MessageModal } from '../../components/message-modal/message-modal';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -36,13 +37,15 @@ export interface IReduxProps {
     sendTransferTransaction: typeof sendTransferTransaction;
     addContact: typeof addContact;
     contacts: IContactsState[];
+    reviewTxMessage: boolean;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         accounts: getAccounts(state, ownProps.blockchain),
-        contacts: getContacts(state)
+        contacts: getContacts(state),
+        reviewTxMessage: state.screens.send.reviewTransaction
     };
 };
 
@@ -107,9 +110,9 @@ export class SendScreenComponent extends React.Component<
                 this.state.toAddress,
                 this.state.amount,
                 this.state.feeOptions,
-                password
+                password,
+                this.props.navigation
             );
-            this.props.navigation.goBack();
         });
     };
 
@@ -423,6 +426,10 @@ export class SendScreenComponent extends React.Component<
                 <QrModalReader
                     ref={ref => (this.qrCodeScanner = ref)}
                     onQrCodeScanned={this.onQrCodeScanned}
+                />
+                <MessageModal
+                    visible={this.props.reviewTxMessage}
+                    message={translate('Send.reviewTransaction')}
                 />
             </View>
         );

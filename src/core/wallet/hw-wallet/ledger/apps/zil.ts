@@ -1,5 +1,6 @@
 import ZilApp from './zil-interface';
 import * as zcrypto from '@zilliqa-js/crypto';
+import { IBlockchainTransaction } from '../../../../blockchain/types';
 
 export class Zil {
     private app = null;
@@ -21,15 +22,22 @@ export class Zil {
         });
     }
 
-    public signTransaction(
+    public signTransaction = async (
         index: number,
         derivationIndex: number = 0,
         path: string,
-        txRaw: string
-    ) {
-        // console.log({ index, txRaw, derivationIndex, path }, JSON.stringify(txRaw));
-        return this.app.signTxn(index, txRaw);
-    }
+        tx: IBlockchainTransaction
+    ): Promise<any> => {
+        const params = {
+            amount: tx.amount,
+            gasPrice: tx.options.gasPrice,
+            gasLimit: tx.options.gasLimit,
+            toAddr: tx.to,
+            version: 0
+        };
+
+        return this.app.signTxn(index, params);
+    };
 
     public getInfo() {
         return this.app.getVersion();

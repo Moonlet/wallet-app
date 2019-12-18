@@ -86,22 +86,10 @@ class Zilliqa {
         // https://github.com/Zilliqa/Zilliqa-JavaScript-Library/tree/dev/packages/zilliqa-js-account#interfaces
         const P1 = 0x00;
         const P2 = 0x00;
+        console.log('tx params', txnParams);
 
         let indexBytes = Buffer.alloc(4);
         indexBytes.writeInt32LE(keyIndex);
-
-        // Convert to Zilliqa types
-        if (!(txnParams.amount instanceof BN)) {
-            txnParams.amount = new BN(txnParams.amount);
-        }
-
-        if (!(txnParams.gasPrice instanceof BN)) {
-            txnParams.gasPrice = new BN(txnParams.gasPrice);
-        }
-
-        if (!(txnParams.gasLimit instanceof Long)) {
-            txnParams.gasLimit = Long.fromNumber(txnParams.gasLimit);
-        }
 
         var txnBytes = txnEncoder(txnParams);
         const message = JSON.stringify(
@@ -109,7 +97,7 @@ class Zilliqa {
             null,
             2
         );
-        // console.log(chalk.green(message));
+        console.log('tx params4 ', message);
 
         const STREAM_LEN = 128; // Stream in batches of STREAM_LEN bytes each.
         var txn1Bytes;
@@ -133,7 +121,7 @@ class Zilliqa {
         const payload = Buffer.concat([indexBytes, hostBytesLeftBytes, txn1SizeBytes, txn1Bytes]);
 
         let transport = this.transport;
-        // console.log("=>", payload.toString("hex"));
+        console.log('=>', payload.toString('hex'));
         return transport
             .send(CLA, INS.signTxn, P1, P2, payload)
             .then(function cb(response) {

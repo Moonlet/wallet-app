@@ -73,7 +73,7 @@ export default class App extends React.Component<{}, IState> {
                 if (
                     this.state.appReady &&
                     this.state.appState === APP_STATE_ACTIVE &&
-                    store.getState().wallets.length >= 1
+                    Object.keys(store.getState().wallets).length >= 1
                 ) {
                     this.showPasswordModal();
                 }
@@ -115,7 +115,7 @@ export default class App extends React.Component<{}, IState> {
         if (
             this.state.appState === APP_STATE_BACKGROUND &&
             nextAppState === APP_STATE_ACTIVE &&
-            store.getState().wallets.length >= 1
+            Object.keys(store.getState().wallets).length >= 1
         ) {
             this.showPasswordModal();
         }

@@ -37,14 +37,13 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                           }
                       }));
 
-                      // TODO: check this
-                      //   out[id].transactions =
-                      //       (out[id]?.transactions &&
-                      //           Object.values(wallet.transactions).map((tx: ITransactionState) => ({
-                      //               ...wallet.transactions,
-                      //               amount: new BigNumber(tx.amount || 0)
-                      //           }))) ||
-                      //       [];
+                      out[id].transactions =
+                          out[id]?.transactions &&
+                          Object.keys(out[id].transactions).reduce((txOut: any, txId: string) => {
+                              txOut[txId] = out[id].transactions[txId];
+                              txOut[txId].amount = new BigNumber(txOut[txId].amount || 0);
+                              return txOut;
+                          }, {});
 
                       return out;
                   }, {})

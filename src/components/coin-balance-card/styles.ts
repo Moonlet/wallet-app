@@ -34,7 +34,7 @@ export default (theme: ITheme) =>
             letterSpacing: 0.4,
             color: theme.colors.text,
             opacity: 0.87,
-            marginRight: BASE_DIMENSION
+            marginRight: BASE_DIMENSION * 2
         },
         secondaryText: {
             fontSize: 16,

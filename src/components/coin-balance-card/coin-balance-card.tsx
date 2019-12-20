@@ -8,7 +8,6 @@ import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../core/blockchain/types';
 import { Amount } from '../amount/amount';
 import { Icon } from '../icon';
-import { ICON_SIZE } from '../../styles/dimensions';
 import { IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
 
@@ -39,7 +38,7 @@ export const CoinBalanceCardComponent = (props: IProps) => (
                 amount={props.balance}
                 blockchain={props.blockchain}
             />
-            <Icon name="arrow-down-1" size={ICON_SIZE} style={props.styles.icon} />
+            <Icon name="arrow-down-1" size={18} style={props.styles.icon} />
         </View>
         <Amount
             style={[props.styles.secondaryText, !props.active && props.styles.darkerText]}

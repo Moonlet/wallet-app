@@ -121,9 +121,7 @@ const navigationOptions = ({ navigation }: any) => ({
             </TouchableOpacity>
             <TouchableOpacity
                 style={{ width: ICON_CONTAINER_SIZE }}
-                onPress={() => {
-                    //
-                }}
+                onPress={() => navigation.state.params.setDashboardMenuBottomSheet()}
             >
                 <Icon
                     name="navigation-menu-vertical"
@@ -180,7 +178,15 @@ export class DashboardScreenComponent extends React.Component<
         this.props.wallet?.accounts.map(account => {
             this.props.getBalance(account.blockchain, account.address, true);
         });
+
+        this.props.navigation.setParams({
+            setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
+        });
     }
+
+    public setDashboardMenuBottomSheet = () => {
+        this.props.setBottomSheet(BottomSheetType.DashboardMenu);
+    };
 
     public renderBottomBlockchainNav = () => {
         const styles = this.props.styles;

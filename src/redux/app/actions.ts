@@ -52,7 +52,7 @@ export const updateBlockchainOrder = (blockchains: IBlockchainsOptions[]) => {
     };
 };
 
-export const setBottomSheet = (type: BottomSheetType, blockchain: Blockchain) => {
+export const setBottomSheet = (type: BottomSheetType, blockchain?: Blockchain) => {
     return {
         type: APP_SET_BOTTOM_SHEET,
         data: { type, blockchain }

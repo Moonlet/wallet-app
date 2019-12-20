@@ -190,6 +190,12 @@ export const translation: ITranslations = {
             noTransactions: 'No transactions available',
             transactionHistory:
                 'Transaction history will appear here once you start to send tokens to other accounts'
+        },
+        DashboardMenu: {
+            transactionHistory: 'Transaction history',
+            manageAccount: 'Manage account',
+            walletConnect: 'Wallet connect',
+            description: 'Quickly add an importan item to your inbox'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -6,6 +6,7 @@ import { IReduxState } from '../../redux/state';
 import { AccountsBottomSheet } from './accounts-bottom-sheet/accounts-bottom-sheet';
 import { BottomSheetType, IBottomSheet } from '../../redux/app/state';
 import { setBottomSheet } from '../../redux/app/actions';
+import { DashboardMenuBottomSheet } from './dashboard-menu-bottom-sheet/dashboard-menu-bottom-sheet';
 
 interface IReduxProps {
     bottomSheet: IBottomSheet;
@@ -28,6 +29,12 @@ export class BottomSheetComponent extends React.Component<IReduxProps> {
             case BottomSheetType.Accounts:
                 return (
                     <AccountsBottomSheet
+                        onClose={() => this.props.setBottomSheet(undefined, undefined)}
+                    />
+                );
+            case BottomSheetType.DashboardMenu:
+                return (
+                    <DashboardMenuBottomSheet
                         onClose={() => this.props.setBottomSheet(undefined, undefined)}
                     />
                 );

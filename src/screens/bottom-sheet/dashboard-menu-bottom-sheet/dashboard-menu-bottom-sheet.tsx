@@ -77,7 +77,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
 
     public renderHeader = () => (
         <View style={this.props.styles.header}>
-            <View style={this.props.styles.panelHandle} />
+            <Icon name="arrow-button-down" size={28} style={this.props.styles.icon} />
         </View>
     );
 

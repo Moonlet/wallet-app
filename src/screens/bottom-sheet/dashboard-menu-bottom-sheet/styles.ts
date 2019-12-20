@@ -16,16 +16,7 @@ export default (theme: ITheme) =>
         header: {
             flex: 1,
             backgroundColor: theme.colors.cardBackgroundSecondary,
-            paddingVertical: BASE_DIMENSION * 2,
-            borderTopLeftRadius: BORDER_RADIUS * 3,
-            borderTopRightRadius: BORDER_RADIUS * 3,
-            alignItems: 'center'
-        },
-        panelHandle: {
-            width: 40,
-            height: 8,
-            borderRadius: BORDER_RADIUS,
-            backgroundColor: theme.colors.accent
+            paddingTop: BASE_DIMENSION * 2
         },
         rowContainer: {
             flexDirection: 'row',

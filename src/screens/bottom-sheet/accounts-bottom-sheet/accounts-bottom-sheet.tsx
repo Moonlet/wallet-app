@@ -5,6 +5,7 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { AccountsScreen } from '../../accounts/accounts';
+import { Icon } from '../../../components/icon';
 
 const BOTTOM_SHEET_HEIGHT = 600;
 
@@ -34,7 +35,7 @@ export class AccountsBottomSheetComponent extends React.Component<
 
     public renderHeader = () => (
         <View style={this.props.styles.header}>
-            <View style={this.props.styles.panelHandle} />
+            <Icon name="arrow-button-down" size={28} style={this.props.styles.icon} />
         </View>
     );
 

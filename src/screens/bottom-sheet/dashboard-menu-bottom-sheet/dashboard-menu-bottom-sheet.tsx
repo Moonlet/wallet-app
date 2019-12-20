@@ -7,6 +7,7 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import { Icon } from '../../../components/icon';
 import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
+import { ICON_SIZE } from '../../../styles/dimensions';
 
 const BOTTOM_SHEET_HEIGHT = 300;
 
@@ -35,7 +36,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
             <View style={[styles.content, { height: BOTTOM_SHEET_HEIGHT }]}>
                 <TouchableOpacity style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
-                        <Icon name="money-wallet-1" size={28} style={styles.icon} />
+                        <Icon name="archive-locker" size={ICON_SIZE} style={styles.icon} />
                     </View>
                     <View style={styles.textContainer}>
                         <Text style={styles.title}>
@@ -49,7 +50,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
 
                 <TouchableOpacity style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
-                        <Icon name="money-wallet-1" size={28} style={styles.icon} />
+                        <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
                     </View>
                     <View style={styles.textContainer}>
                         <Text style={styles.title}>{translate('DashboardMenu.manageAccount')}</Text>
@@ -61,7 +62,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
 
                 <TouchableOpacity style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
-                        <Icon name="money-wallet-1" size={28} style={styles.icon} />
+                        <Icon name="flash" size={ICON_SIZE} style={styles.icon} />
                     </View>
                     <View style={styles.textContainer}>
                         <Text style={styles.title}>{translate('DashboardMenu.walletConnect')}</Text>

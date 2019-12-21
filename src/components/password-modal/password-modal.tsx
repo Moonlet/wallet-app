@@ -85,7 +85,9 @@ export class PasswordModalComponent extends React.Component<
                 this.passwordRequestDeferred &&
                     this.passwordRequestDeferred.resolve(keychainPassword.password);
 
-                this.props.onPassword(keychainPassword.password);
+                if (this.props.onPassword) {
+                    this.props.onPassword(keychainPassword.password);
+                }
             }
         }
     }

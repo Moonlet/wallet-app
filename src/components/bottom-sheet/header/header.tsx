@@ -7,6 +7,7 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 interface IExternalProps {
     obRef: any;
+    initialSnap: number;
 }
 
 export class BottomSheetHeaderComponent extends React.Component<
@@ -15,7 +16,7 @@ export class BottomSheetHeaderComponent extends React.Component<
     public render() {
         return (
             <TouchableWithoutFeedback
-                onPress={() => this.props.obRef.current.snapTo(0)}
+                onPress={() => this.props.obRef.current.snapTo(this.props.initialSnap)}
                 style={this.props.styles.header}
             >
                 <Icon name="arrow-button-down" size={28} style={this.props.styles.icon} />

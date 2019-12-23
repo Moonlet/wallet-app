@@ -10,33 +10,31 @@ import { translate } from '../../../core/i18n';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 
-const BOTTOM_SHEET_HEIGHT = 300;
-
 interface IExternalProps {
-    onClose: () => void;
+    snapPoints: { initialSnap: number; bottomSheetHeight: number };
+    onOpenStart: () => void;
+    onCloseEnd: () => void;
 }
 
 export class DashboardMenuBottomSheetComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public bottomSheet: any;
-    public allowBottomSheetCloseEnd: boolean;
 
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.bottomSheet = React.createRef();
-        this.allowBottomSheetCloseEnd = false;
     }
 
     public componentDidMount() {
-        this.bottomSheet.current.snapTo(BOTTOM_SHEET_HEIGHT);
+        this.bottomSheet.current.snapTo(this.props.snapPoints.bottomSheetHeight);
     }
 
     public renderBottomSheetContent = () => {
         const { styles } = this.props;
 
         return (
-            <View style={[styles.content, { height: BOTTOM_SHEET_HEIGHT }]}>
+            <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
                 <TouchableOpacity style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
                         <Icon name="archive-locker" size={ICON_SIZE} style={styles.icon} />
@@ -78,28 +76,24 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         );
     };
 
-    public handleOpenStart = () => {
-        this.allowBottomSheetCloseEnd = true;
-        return;
-    };
-
-    public handleCloseEnd = () => {
-        if (!this.allowBottomSheetCloseEnd) {
-            return;
-        }
-        this.props.onClose();
-    };
-
     public render() {
         return (
             <BottomSheet
                 ref={this.bottomSheet}
-                initialSnap={0}
-                snapPoints={[0, BOTTOM_SHEET_HEIGHT]}
+                initialSnap={this.props.snapPoints.initialSnap}
+                snapPoints={[
+                    this.props.snapPoints.initialSnap,
+                    this.props.snapPoints.bottomSheetHeight
+                ]}
                 renderContent={this.renderBottomSheetContent}
-                renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
-                onOpenStart={this.handleOpenStart}
-                onCloseEnd={this.handleCloseEnd}
+                renderHeader={() => (
+                    <BottomSheetHeader
+                        obRef={this.bottomSheet}
+                        initialSnap={this.props.snapPoints.initialSnap}
+                    />
+                )}
+                onOpenStart={this.props.onOpenStart}
+                onCloseEnd={this.props.onCloseEnd}
             />
         );
     }

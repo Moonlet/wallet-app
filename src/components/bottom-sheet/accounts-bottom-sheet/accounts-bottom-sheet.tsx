@@ -7,56 +7,50 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import { AccountsScreen } from '../../../screens/accounts/accounts';
 import { BottomSheetHeader } from '../header/header';
 
-const BOTTOM_SHEET_HEIGHT = 600;
-
 interface IExternalProps {
-    onClose: () => void;
+    snapPoints: { initialSnap: number; bottomSheetHeight: number };
+    onOpenStart: () => void;
+    onCloseEnd: () => void;
 }
 
 export class AccountsBottomSheetComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public bottomSheet: any;
-    public allowBottomSheetCloseEnd: boolean;
 
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.bottomSheet = React.createRef();
-        this.allowBottomSheetCloseEnd = false;
     }
 
     public componentDidMount() {
-        this.bottomSheet.current.snapTo(BOTTOM_SHEET_HEIGHT);
+        this.bottomSheet.current.snapTo(this.props.snapPoints.bottomSheetHeight);
     }
 
     public renderBottomSheetContent = () => (
-        <View style={{ height: BOTTOM_SHEET_HEIGHT }}>
+        <View style={{ height: this.props.snapPoints.bottomSheetHeight }}>
             <AccountsScreen />
         </View>
     );
-
-    public handleOpenStart = () => {
-        this.allowBottomSheetCloseEnd = true;
-        return;
-    };
-
-    public handleCloseEnd = () => {
-        if (!this.allowBottomSheetCloseEnd) {
-            return;
-        }
-        this.props.onClose();
-    };
 
     public render() {
         return (
             <BottomSheet
                 ref={this.bottomSheet}
-                initialSnap={0}
-                snapPoints={[0, BOTTOM_SHEET_HEIGHT]}
+                initialSnap={this.props.snapPoints.initialSnap}
+                snapPoints={[
+                    this.props.snapPoints.initialSnap,
+                    this.props.snapPoints.bottomSheetHeight
+                ]}
                 renderContent={this.renderBottomSheetContent}
-                renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
-                onOpenStart={this.handleOpenStart}
-                onCloseEnd={this.handleCloseEnd}
+                renderHeader={() => (
+                    <BottomSheetHeader
+                        obRef={this.bottomSheet}
+                        initialSnap={this.props.snapPoints.initialSnap}
+                    />
+                )}
+                onOpenStart={this.props.onOpenStart}
+                onCloseEnd={this.props.onCloseEnd}
             />
         );
     }

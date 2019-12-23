@@ -30,19 +30,47 @@ const mapDispatchToProps = {
 export class BottomSheetComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
+    public allowBottomSheetCloseEnd: boolean;
+
+    constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+        super(props);
+        this.allowBottomSheetCloseEnd = false;
+    }
+
+    public handleOpenStart = () => {
+        this.allowBottomSheetCloseEnd = true;
+        return;
+    };
+
+    public handleCloseEnd = () => {
+        if (!this.allowBottomSheetCloseEnd) {
+            return;
+        }
+        this.props.closeBottomSheet();
+        this.allowBottomSheetCloseEnd = false; // reset
+    };
+
     public render() {
         switch (this.props.bottomSheet?.type) {
             case BottomSheetType.ACCOUNTS:
                 return (
                     <View style={this.props.styles.container}>
-                        <AccountsBottomSheet onClose={() => this.props.closeBottomSheet()} />
+                        <AccountsBottomSheet
+                            snapPoints={{ initialSnap: 0, bottomSheetHeight: 600 }}
+                            onOpenStart={this.handleOpenStart}
+                            onCloseEnd={this.handleCloseEnd}
+                        />
                     </View>
                 );
 
             case BottomSheetType.DASHBOARD_MENU:
                 return (
                     <View style={this.props.styles.container}>
-                        <DashboardMenuBottomSheet onClose={() => this.props.closeBottomSheet()} />
+                        <DashboardMenuBottomSheet
+                            snapPoints={{ initialSnap: 0, bottomSheetHeight: 300 }}
+                            onOpenStart={this.handleOpenStart}
+                            onCloseEnd={this.handleCloseEnd}
+                        />
                     </View>
                 );
 

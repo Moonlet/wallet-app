@@ -2,7 +2,7 @@
 
 exports[`app actions app action creators 1`] = `
 Object {
-  "data": 1,
+  "data": "1",
   "type": "APP_STATE_SWITCH_WALLET",
 }
 `;
@@ -11,5 +11,15 @@ exports[`app actions app action creators 2`] = `
 Object {
   "data": 1,
   "type": "APP_SET_TOS_VERSION",
+}
+`;
+
+exports[`app actions app action creators 3`] = `
+Object {
+  "data": Object {
+    "blockchain": "ETHEREUM",
+    "index": 0,
+  },
+  "type": "APP_SWITCH_ACCOUNT",
 }
 `;

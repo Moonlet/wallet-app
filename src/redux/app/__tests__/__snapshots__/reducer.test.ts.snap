@@ -13,6 +13,10 @@ Object {
     },
   },
   "bottomSheet": undefined,
+  "currentAccount": Object {
+    "blockchain": "ETHEREUM",
+    "index": 0,
+  },
   "currentWalletId": "",
   "devMode": true,
   "networks": Object {

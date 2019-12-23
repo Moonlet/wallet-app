@@ -78,7 +78,7 @@ export const createHWWallet = (
         await (wallet as LedgerWallet).onAppOpened(blockchain);
 
         dispatch(verifyAddressOnDevice(true));
-        const account = await wallet.getAccounts(blockchain, 0);
+        const accounts: IAccountState[] = await wallet.getAccounts(blockchain, 0);
         const walletData: IWalletState = {
             id: walletId,
             hwOptions: {
@@ -89,7 +89,7 @@ export const createHWWallet = (
             },
             name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
             type: WalletType.HW,
-            accounts: account.reduce((out, accounts) => out.concat(accounts), [])
+            accounts
         };
 
         dispatch(addWallet(walletData));

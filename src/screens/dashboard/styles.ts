@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -53,35 +53,5 @@ export default (theme: ITheme) =>
         coinDashboard: {
             flex: 1,
             alignSelf: 'stretch'
-        },
-        header: {
-            backgroundColor: theme.colors.cardBackground,
-            shadowColor: '#000000',
-            paddingTop: 20,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            width: '100%'
-        },
-        panelHeader: {
-            alignItems: 'center'
-        },
-        panelHandle: {
-            width: 40,
-            height: 8,
-            borderRadius: BORDER_RADIUS,
-            backgroundColor: '#00000040',
-            marginBottom: BASE_DIMENSION
-        },
-        panelContent: {
-            flex: 1,
-            backgroundColor: theme.colors.cardBackground
-            // height: 600
-        },
-        panelContainer: {
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-            left: 0,
-            right: 0
         }
     });

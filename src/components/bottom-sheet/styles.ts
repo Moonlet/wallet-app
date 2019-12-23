@@ -4,7 +4,12 @@ import { ITheme } from '../../core/theme/itheme';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            ...StyleSheet.absoluteFillObject,
-            backgroundColor: '#2c2c2fAA'
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            flex: 1,
+            backgroundColor: theme.colors.cardBackground + 'AA' // used for opacity
         }
     });

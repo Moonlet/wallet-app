@@ -21,8 +21,8 @@ export interface IBottomSheet {
 }
 
 export enum BottomSheetType {
-    Accounts = 'Accounts',
-    DashboardMenu = 'DashboardMenu'
+    ACCOUNTS = 'ACCOUNTS',
+    DASHBOARD_MENU = 'DASHBOARD_MENU'
 }
 
 export interface IAppState {

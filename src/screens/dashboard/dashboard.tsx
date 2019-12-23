@@ -23,14 +23,14 @@ import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
-import { setBottomSheet } from '../../redux/app/actions';
+import { openBottomSheet } from '../../redux/app/actions';
 
 export interface IReduxProps {
     wallet: IWalletState;
     walletsNr: number;
     getBalance: typeof getBalance;
     blockchains: IBlockchainsOptions;
-    setBottomSheet: typeof setBottomSheet;
+    openBottomSheet: typeof openBottomSheet;
     selectAccount: typeof selectAccount;
 }
 
@@ -82,7 +82,7 @@ const mapStateToProps = (state: IReduxState) => ({
 
 const mapDispatchToProps = {
     getBalance,
-    setBottomSheet,
+    openBottomSheet,
     selectAccount
 };
 
@@ -185,7 +185,7 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public setDashboardMenuBottomSheet = () => {
-        this.props.setBottomSheet(BottomSheetType.DashboardMenu);
+        this.props.openBottomSheet(BottomSheetType.DASHBOARD_MENU);
     };
 
     public renderBottomBlockchainNav = () => {
@@ -253,7 +253,7 @@ export class DashboardScreenComponent extends React.Component<
     public render() {
         const styles = this.props.styles;
         const { coins, coinIndex } = this.state;
-        const blockchain = coins[coinIndex]?.blockchain;
+        const blockchain: Blockchain = coins[coinIndex]?.blockchain;
 
         return (
             <View style={styles.container}>
@@ -262,7 +262,9 @@ export class DashboardScreenComponent extends React.Component<
                         <View style={styles.coinBalanceCard}>
                             <CoinBalanceCard
                                 onPress={() =>
-                                    this.props.setBottomSheet(BottomSheetType.Accounts, blockchain)
+                                    this.props.openBottomSheet(BottomSheetType.ACCOUNTS, {
+                                        blockchain
+                                    })
                                 }
                                 balance={this.state.balance[blockchain].amount}
                                 blockchain={blockchain}

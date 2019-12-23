@@ -7,7 +7,8 @@ import {
     APP_SET_NETWORK_TEST_NET_CHAIN_ID,
     APP_TOGGLE_BLOCKCHAIN,
     APP_UPDATE_BLOCKCHAIN_ORDER,
-    APP_SET_BOTTOM_SHEET
+    APP_OPEN_BOTTOM_SHEET,
+    APP_CLOSE_BOTTOM_SHEET
 } from './actions';
 import { Blockchain } from '../../core/blockchain/types';
 
@@ -77,13 +78,18 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
                 ...state,
                 blockchains: action.data.blockchains
             };
-        case APP_SET_BOTTOM_SHEET:
+        case APP_OPEN_BOTTOM_SHEET:
             return {
                 ...state,
                 bottomSheet: {
                     type: action.data.type,
-                    blockchain: action.data.blockchain
+                    blockchain: action.data.props?.blockchain
                 }
+            };
+        case APP_CLOSE_BOTTOM_SHEET:
+            return {
+                ...state,
+                bottomSheet: undefined
             };
         default:
             break;

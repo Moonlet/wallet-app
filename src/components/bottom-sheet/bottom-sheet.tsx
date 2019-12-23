@@ -5,12 +5,13 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
 import { AccountsBottomSheet } from './accounts-bottom-sheet/accounts-bottom-sheet';
 import { BottomSheetType, IBottomSheet } from '../../redux/app/state';
-import { setBottomSheet } from '../../redux/app/actions';
+import { openBottomSheet, closeBottomSheet } from '../../redux/app/actions';
 import { DashboardMenuBottomSheet } from './dashboard-menu-bottom-sheet/dashboard-menu-bottom-sheet';
 
 interface IReduxProps {
     bottomSheet: IBottomSheet;
-    setBottomSheet: typeof setBottomSheet;
+    openBottomSheet: typeof openBottomSheet;
+    closeBottomSheet: typeof closeBottomSheet;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -20,24 +21,17 @@ const mapStateToProps = (state: IReduxState) => {
 };
 
 const mapDispatchToProps = {
-    setBottomSheet
+    openBottomSheet,
+    closeBottomSheet
 };
 
 export class BottomSheetComponent extends React.Component<IReduxProps> {
     public render() {
         switch (this.props.bottomSheet?.type) {
-            case BottomSheetType.Accounts:
-                return (
-                    <AccountsBottomSheet
-                        onClose={() => this.props.setBottomSheet(undefined, undefined)}
-                    />
-                );
-            case BottomSheetType.DashboardMenu:
-                return (
-                    <DashboardMenuBottomSheet
-                        onClose={() => this.props.setBottomSheet(undefined, undefined)}
-                    />
-                );
+            case BottomSheetType.ACCOUNTS:
+                return <AccountsBottomSheet onClose={() => this.props.closeBottomSheet()} />;
+            case BottomSheetType.DASHBOARD_MENU:
+                return <DashboardMenuBottomSheet onClose={() => this.props.closeBottomSheet()} />;
             default:
                 return <View />;
         }

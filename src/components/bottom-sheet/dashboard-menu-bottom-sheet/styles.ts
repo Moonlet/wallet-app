@@ -4,19 +4,10 @@ import { BASE_DIMENSION, BORDER_RADIUS } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
-        container: {
-            ...StyleSheet.absoluteFillObject,
-            backgroundColor: '#2c2c2fAA'
-        },
         content: {
             backgroundColor: theme.colors.cardBackgroundSecondary,
             paddingHorizontal: BASE_DIMENSION * 3,
             paddingVertical: BASE_DIMENSION * 2
-        },
-        header: {
-            flex: 1,
-            backgroundColor: theme.colors.cardBackgroundSecondary,
-            paddingTop: BASE_DIMENSION * 2
         },
         rowContainer: {
             flexDirection: 'row',

@@ -5,10 +5,10 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
-import { selectAccount } from '../../redux/wallets/actions';
+import { appSwitchAccount } from '../../redux/app/actions';
 import stylesProvider from './styles';
 import { Blockchain } from '../../core/blockchain/types';
-import { selectCurrentWallet } from '../../redux/wallets/selectors';
+import { selectCurrentWallet, selectCurrentAccount } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
@@ -18,18 +18,20 @@ import { ListAccount } from '../account/components/list-account/list-account';
 export interface IReduxProps {
     wallet: IWalletState;
     blockchain: Blockchain;
-    selectAccount: typeof selectAccount;
+    appSwitchAccount: typeof appSwitchAccount;
+    selectedAccount: IAccountState;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     return {
         blockchain: state.app.bottomSheet.blockchain,
-        wallet: selectCurrentWallet(state)
+        wallet: selectCurrentWallet(state),
+        selectedAccount: selectCurrentAccount(state)
     };
 };
 
 const mapDispatchToProps = {
-    selectAccount
+    appSwitchAccount
 };
 
 export const AccountsScreenComponent = (
@@ -73,7 +75,7 @@ export const AccountsScreenComponent = (
     return (
         <View style={props.styles.container}>
             {accounts.map((account: IAccountState, index: number) => {
-                const selected = props.wallet.selectedAccount.address === account.address;
+                const selected = props.selectedAccount.address === account.address;
 
                 const label = (
                     <View>
@@ -108,7 +110,10 @@ export const AccountsScreenComponent = (
                         label={label}
                         selected={selected}
                         onPress={() =>
-                            props.selectAccount(props.wallet.id, props.blockchain, account)
+                            props.appSwitchAccount({
+                                index: account.index,
+                                blockchain: account.blockchain
+                            })
                         }
                     />
                 );

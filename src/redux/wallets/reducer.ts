@@ -7,7 +7,6 @@ import {
     TRANSACTION_PUBLISHED,
     ACCOUNT_ADD,
     ACCOUNT_REMOVE,
-    ACCOUNT_SELECT,
     WALLET_CHANGE_NAME
 } from './actions';
 import { TransactionStatus } from '../../core/wallet/types';
@@ -135,20 +134,6 @@ export default (state: IWalletState[] = intialState, action: IAction) => {
                                   account.blockchain === action.data.account.blockchain
                               );
                           })
-                      }
-                    : wallet
-            );
-
-        case ACCOUNT_SELECT:
-            return state.map(wallet =>
-                wallet.id === action.data.walletId
-                    ? {
-                          ...wallet,
-                          selectedAccount: wallet.accounts.find(
-                              account =>
-                                  account.address === action.data.account.address &&
-                                  account.blockchain === action.data.account.blockchain
-                          )
                       }
                     : wallet
             );

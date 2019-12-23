@@ -25,8 +25,14 @@ export enum BottomSheetType {
     DASHBOARD_MENU = 'DASHBOARD_MENU'
 }
 
+export interface ICurrentAccount {
+    index: number;
+    blockchain: Blockchain;
+}
+
 export interface IAppState {
     currentWalletId: string;
+    currentAccount: ICurrentAccount;
     tosVersion: number;
     devMode: boolean;
     testNet: boolean;

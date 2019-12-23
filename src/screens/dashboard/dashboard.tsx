@@ -13,17 +13,17 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { getBalance, selectAccount } from '../../redux/wallets/actions';
+import { getBalance } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { BigNumber } from 'bignumber.js';
-import { selectCurrentWallet } from '../../redux/wallets/selectors';
+import { selectCurrentWallet, selectCurrentAccount } from '../../redux/wallets/selectors';
 import { createSelector } from 'reselect';
 import { IBlockchainsOptions, BottomSheetType } from '../../redux/app/state';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
-import { openBottomSheet } from '../../redux/app/actions';
+import { openBottomSheet, appSwitchAccount } from '../../redux/app/actions';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -31,7 +31,8 @@ export interface IReduxProps {
     getBalance: typeof getBalance;
     blockchains: IBlockchainsOptions;
     openBottomSheet: typeof openBottomSheet;
-    selectAccount: typeof selectAccount;
+    currentAccount: IAccountState;
+    appSwitchAccount: typeof appSwitchAccount;
 }
 
 interface IState {
@@ -77,13 +78,14 @@ const calculateBalances = (accounts: IAccountState[], blockchains: IBlockchainsO
 const mapStateToProps = (state: IReduxState) => ({
     wallet: selectCurrentWallet(state),
     walletsNr: state.wallets.length,
-    blockchains: state.app.blockchains
+    blockchains: state.app.blockchains,
+    currentAccount: selectCurrentAccount(state)
 });
 
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
-    selectAccount
+    appSwitchAccount
 };
 
 const MyTitle = ({ text }) => (
@@ -191,7 +193,6 @@ export class DashboardScreenComponent extends React.Component<
     public renderBottomBlockchainNav = () => {
         const styles = this.props.styles;
         const { coins, coinIndex } = this.state;
-        const { wallet } = this.props;
 
         return (
             <LinearGradient
@@ -224,14 +225,10 @@ export class DashboardScreenComponent extends React.Component<
                                 ]}
                                 onPress={() => {
                                     this.setState({ coinIndex: coin.order });
-
-                                    this.props.selectAccount(
-                                        wallet.id,
-                                        coin.blockchain,
-                                        wallet.accounts.filter(
-                                            account => account.blockchain === coin.blockchain
-                                        )[0]
-                                    );
+                                    this.props.appSwitchAccount({
+                                        index: 0,
+                                        blockchain: coin.blockchain
+                                    });
                                 }}
                             >
                                 <Text
@@ -260,19 +257,21 @@ export class DashboardScreenComponent extends React.Component<
                 {coins.length !== 0 && (
                     <View style={styles.dashboardContainer}>
                         <View style={styles.coinBalanceCard}>
-                            <CoinBalanceCard
-                                onPress={() =>
-                                    this.props.openBottomSheet(BottomSheetType.ACCOUNTS, {
-                                        blockchain
-                                    })
-                                }
-                                balance={this.state.balance[blockchain].amount}
-                                blockchain={blockchain}
-                                currency={BLOCKCHAIN_INFO[blockchain].coin}
-                                toCurrency="USD"
-                                active={true}
-                                selectedAccount={this.props.wallet.selectedAccount}
-                            />
+                            {this.props.currentAccount && (
+                                <CoinBalanceCard
+                                    onPress={() =>
+                                        this.props.openBottomSheet(BottomSheetType.ACCOUNTS, {
+                                            blockchain
+                                        })
+                                    }
+                                    balance={this.state.balance[blockchain].amount}
+                                    blockchain={blockchain}
+                                    currency={BLOCKCHAIN_INFO[blockchain].coin}
+                                    toCurrency="USD"
+                                    active={true}
+                                    selectedAccount={this.props.currentAccount}
+                                />
+                            )}
                         </View>
 
                         <Animated.View

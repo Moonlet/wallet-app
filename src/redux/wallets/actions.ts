@@ -31,7 +31,6 @@ export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
-export const ACCOUNT_SELECT = 'ACCOUNT_SELECT';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -51,13 +50,6 @@ export const addAccount = (walletId: string, blockchain: Blockchain, account: IA
 export const removeAccount = (walletId: string, blockchain: Blockchain, account: IAccountState) => {
     return {
         type: ACCOUNT_REMOVE,
-        data: { walletId, account, blockchain }
-    };
-};
-
-export const selectAccount = (walletId: string, blockchain: Blockchain, account: IAccountState) => {
-    return {
-        type: ACCOUNT_SELECT,
         data: { walletId, account, blockchain }
     };
 };
@@ -98,8 +90,7 @@ export const createHWWallet = (
                 },
                 name: `Wallet ${getState().wallets.length + 1}`,
                 type: WalletType.HW,
-                accounts,
-                selectedAccount: undefined
+                accounts
             })
         );
 
@@ -139,8 +130,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
                     id: walletId,
                     name: `Wallet ${getState().wallets.length + 1}`,
                     type: WalletType.HD,
-                    accounts,
-                    selectedAccount: accounts[0]
+                    accounts
                 })
             );
 

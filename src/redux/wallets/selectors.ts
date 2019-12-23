@@ -3,13 +3,30 @@ import { ITransactionState, IAccountState, IWalletState } from './state';
 import { Blockchain } from '../../core/blockchain/types';
 
 import { createSelector } from 'reselect';
+import { ICurrentAccount } from '../app/state';
 
 export const selectCurrentWallet = createSelector(
     [
         (state: IReduxState): IWalletState[] => state.wallets,
         (state: IReduxState): string => state.app.currentWalletId
     ],
-    (wallets, currendWalletId) => wallets.find(wallet => wallet.id === currendWalletId)
+    (wallets, currentWalletId) => wallets.find(wallet => wallet.id === currentWalletId)
+);
+
+export const selectCurrentAccount = createSelector(
+    [
+        (state: IReduxState): IWalletState[] => state.wallets,
+        (state: IReduxState): string => state.app.currentWalletId,
+        (state: IReduxState): ICurrentAccount => state.app.currentAccount
+    ],
+    (wallets, currentWalletId, currentAccount) =>
+        wallets
+            .find(wallet => wallet.id === currentWalletId)
+            ?.accounts.find(
+                (account: IAccountState) =>
+                    account.index === currentAccount.index &&
+                    account.blockchain === currentAccount.blockchain
+            )
 );
 
 export const getAccountTransactions = (

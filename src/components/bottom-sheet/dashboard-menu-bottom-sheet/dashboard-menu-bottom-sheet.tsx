@@ -20,10 +20,12 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public bottomSheet: any;
+    public allowBottomSheetCloseEnd: boolean;
 
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.bottomSheet = React.createRef();
+        this.allowBottomSheetCloseEnd = false;
     }
 
     public componentDidMount() {
@@ -76,6 +78,18 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         );
     };
 
+    public handleOpenStart = () => {
+        this.allowBottomSheetCloseEnd = true;
+        return;
+    };
+
+    public handleCloseEnd = () => {
+        if (!this.allowBottomSheetCloseEnd) {
+            return;
+        }
+        this.props.onClose();
+    };
+
     public render() {
         return (
             <BottomSheet
@@ -84,7 +98,8 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                 snapPoints={[0, BOTTOM_SHEET_HEIGHT]}
                 renderContent={this.renderBottomSheetContent}
                 renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
-                onCloseStart={() => setTimeout(() => this.props.onClose(), 500)} // TODO: fix here, onCloseEnd it's not working properly
+                onOpenStart={this.handleOpenStart}
+                onCloseEnd={this.handleCloseEnd}
             />
         );
     }

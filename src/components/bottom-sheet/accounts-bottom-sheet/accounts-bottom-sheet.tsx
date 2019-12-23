@@ -4,8 +4,8 @@ import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { AccountsScreen } from '../../accounts/accounts';
-import { Icon } from '../../../components/icon';
+import { AccountsScreen } from '../../../screens/accounts/accounts';
+import { Icon } from '../../icon';
 
 const BOTTOM_SHEET_HEIGHT = 600;
 

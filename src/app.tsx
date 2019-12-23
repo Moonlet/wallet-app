@@ -13,7 +13,7 @@ import { SplashScreen } from './components/splash-screen/splash-screen';
 import { PasswordModal } from './components/password-modal/password-modal';
 import { Notifications } from './core/messaging/notifications/notifications';
 import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-notification';
-import { BottomSheet } from './screens/bottom-sheet/bottom-sheet';
+import { BottomSheet } from './components/bottom-sheet/bottom-sheet';
 
 const AppContainer = createAppContainer(RootNavigation);
 

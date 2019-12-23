@@ -46,10 +46,14 @@ const mapStateToProps = (state: IReduxState) => {
     return {
         wallets: {
             // TODO reselect? https://github.com/reduxjs/reselect
-            [WalletType.HD]: state.wallets.filter(wallet => wallet.type === WalletType.HD),
-            [WalletType.HW]: state.wallets.filter(wallet => wallet.type === WalletType.HW)
+            [WalletType.HD]: Object.values(state.wallets).filter(
+                (wallet: IWalletState) => wallet.type === WalletType.HD
+            ),
+            [WalletType.HW]: Object.values(state.wallets).filter(
+                (wallet: IWalletState) => wallet.type === WalletType.HW
+            )
         },
-        walletsNr: state.wallets.length,
+        walletsNr: Object.keys(state.wallets).length,
         currentWalletId: state.app.currentWalletId
     };
 };
@@ -269,11 +273,7 @@ export class WalletsScreenComponent extends React.Component<
                         [WalletType.HD]: { title: 'Moonlet' },
                         [WalletType.HW]: { title: 'Ledger' }
                     }}
-                    onSelectionChange={key => {
-                        this.setState({
-                            selectedTab: key
-                        });
-                    }}
+                    onSelectionChange={key => this.setState({ selectedTab: key })}
                     selected={this.state.selectedTab}
                 />
                 <ScrollView style={styles.walletList}>

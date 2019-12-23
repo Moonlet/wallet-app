@@ -74,7 +74,7 @@ const calculateBalances = (accounts: IAccountState[], blockchains: IBlockchainsO
 
 const mapStateToProps = (state: IReduxState) => ({
     wallet: selectCurrentWallet(state),
-    walletsNr: state.wallets.length,
+    walletsNr: Object.keys(state.wallets).length,
     blockchains: state.app.blockchains
 });
 

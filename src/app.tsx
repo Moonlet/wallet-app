@@ -13,6 +13,7 @@ import { SplashScreen } from './components/splash-screen/splash-screen';
 import { PasswordModal } from './components/password-modal/password-modal';
 import { Notifications } from './core/messaging/notifications/notifications';
 import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-notification';
+import { BottomSheet } from './components/bottom-sheet/bottom-sheet';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -48,9 +49,11 @@ export default class App extends React.Component<{}, IState> {
             this.updateAppReady();
         });
         store.subscribe(() => {
-            if (store.getState()._persist.rehydrated === true) {
-                this.reduxStateLoaded = true;
-                this.updateAppReady();
+            if (store.getState()._persist.rehydrated) {
+                if (!this.reduxStateLoaded) {
+                    this.reduxStateLoaded = true;
+                    this.updateAppReady();
+                }
             }
         });
 
@@ -134,6 +137,7 @@ export default class App extends React.Component<{}, IState> {
                                 visible={this.state.showPasswordModal}
                                 onPassword={() => this.setState({ showPasswordModal: false })}
                             />
+                            <BottomSheet />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

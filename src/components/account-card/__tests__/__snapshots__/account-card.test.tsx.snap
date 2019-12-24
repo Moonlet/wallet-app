@@ -16,7 +16,7 @@ exports[`account card component renders correctly 1`] = `
     </withTheme(TextComponent)>
   </View>
   <View style={{...}}>
-    <Icon name=\\"arrow-right-1\\" size={24} style={{...}} allowFontScaling={false} />
+    <Icon name=\\"arrow-right-1\\" size={18} style={{...}} allowFontScaling={false} />
   </View>
 </TouchableOpacity>"
 `;

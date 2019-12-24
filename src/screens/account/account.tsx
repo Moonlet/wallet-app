@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, ITransactionState, IWalletState } from '../../redux/wallets/state';
@@ -55,7 +55,7 @@ interface IState {
 const navigationOptions = ({ navigation }: any) => ({
     headerRight: () => (
         <HeaderRight
-            icon="navigation-menu-vertical"
+            icon="navigation-menu-horizontal"
             onPress={navigation.state.params ? navigation.state.params.openSettingsMenu : undefined}
         />
     ),
@@ -96,97 +96,121 @@ export class AccountScreenComponent extends React.Component<
     public render() {
         const { styles, navigation, account, transactions } = this.props;
         return (
-            <ScrollView style={styles.container}>
-                <AccountAddress account={account} />
-                <View style={styles.buttonsContainer}>
-                    <Button
-                        testID="button-send"
-                        style={styles.button}
-                        onPress={() => {
-                            navigation.navigate('Send', {
-                                accountIndex: account.index,
-                                blockchain: account.blockchain
-                            });
-                        }}
-                    >
-                        {translate('App.labels.send')}
-                    </Button>
-                    <Button
-                        testID="button-receive"
-                        style={styles.button}
-                        onPress={() => {
-                            navigation.navigate('Receive', {
-                                accountIndex: account.index,
-                                blockchain: account.blockchain
-                            });
-                        }}
-                    >
-                        {translate('App.labels.receive')}
-                    </Button>
-                </View>
-
-                {transactions && (
-                    <View style={styles.transactionsContainer}>
-                        <Translate
-                            text="App.labels.transactions"
-                            style={styles.transactionsTitle}
-                        />
-                        <View>
-                            {transactions.map(tx => {
-                                const date = new Date(tx.date.signed);
-
-                                return (
-                                    <TouchableOpacity
-                                        key={tx.id}
-                                        style={styles.transactionListItem}
-                                        onPress={() => {
-                                            navigation.navigate('TransactionDetails', {
-                                                transaction: tx,
-                                                accountIndex: account.index,
-                                                blockchain: account.blockchain
-                                            });
-                                        }}
-                                    >
-                                        <Icon
-                                            name="money-wallet-1"
-                                            size={ICON_SIZE}
-                                            style={styles.transactionIcon}
-                                        />
-                                        <View style={styles.transactionTextContainer}>
-                                            <View style={styles.transactionAmountContainer}>
-                                                <Amount
-                                                    amount={tx.amount}
-                                                    blockchain={account.blockchain}
-                                                />
-
-                                                <Text style={styles.transactionTextPrimary}>
-                                                    {this.getTransactionPrimaryText(tx, account)}
-                                                </Text>
-                                            </View>
-                                            <Text style={styles.transactionTextSecondary}>
-                                                {date.toISOString()}
-                                            </Text>
-                                        </View>
-                                        <Icon
-                                            name="arrow-right-1"
-                                            size={16}
-                                            style={styles.transactionRightIcon}
-                                        />
-                                    </TouchableOpacity>
-                                );
-                            })}
-                        </View>
+            <View style={styles.container}>
+                <ScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={false}
+                >
+                    <AccountAddress account={account} />
+                    <View style={styles.buttonsContainer}>
+                        <Button
+                            testID="button-send"
+                            style={styles.button}
+                            onPress={() => {
+                                navigation.navigate('Send', {
+                                    accountIndex: account.index,
+                                    blockchain: account.blockchain
+                                });
+                            }}
+                        >
+                            {translate('App.labels.send')}
+                        </Button>
+                        <Button
+                            testID="button-receive"
+                            style={styles.button}
+                            onPress={() => {
+                                navigation.navigate('Receive', {
+                                    accountIndex: account.index,
+                                    blockchain: account.blockchain
+                                });
+                            }}
+                        >
+                            {translate('App.labels.receive')}
+                        </Button>
                     </View>
-                )}
 
-                {this.state.settingsVisible && (
-                    <AccountSettings
-                        onDonePressed={this.openSettingsMenu}
-                        account={this.props.account}
-                        wallet={this.props.wallet}
-                    />
-                )}
-            </ScrollView>
+                    {transactions && (
+                        <View style={styles.transactionsContainer}>
+                            <Translate
+                                text="App.labels.transactions"
+                                style={styles.transactionsTitle}
+                            />
+
+                            {transactions.length === 0 ? (
+                                <View style={styles.emptySection}>
+                                    <Image
+                                        style={styles.logoImage}
+                                        source={require('../../assets/images/png/moonlet_space_gray.png')}
+                                    />
+                                    <Text style={styles.noTransactionsText}>
+                                        {translate('Account.noTransactions')}
+                                    </Text>
+                                    <Text style={styles.transactionHistoryText}>
+                                        {translate('Account.transactionHistory')}
+                                    </Text>
+                                </View>
+                            ) : (
+                                <View>
+                                    {transactions.map(tx => {
+                                        const date = new Date(tx.date.signed);
+
+                                        return (
+                                            <TouchableOpacity
+                                                key={tx.id}
+                                                style={styles.transactionListItem}
+                                                onPress={() => {
+                                                    navigation.navigate('TransactionDetails', {
+                                                        transaction: tx,
+                                                        accountIndex: account.index,
+                                                        blockchain: account.blockchain
+                                                    });
+                                                }}
+                                            >
+                                                <Icon
+                                                    name="money-wallet-1"
+                                                    size={ICON_SIZE}
+                                                    style={styles.transactionIcon}
+                                                />
+                                                <View style={styles.transactionTextContainer}>
+                                                    <View style={styles.transactionAmountContainer}>
+                                                        <Amount
+                                                            amount={tx.amount}
+                                                            blockchain={account.blockchain}
+                                                        />
+
+                                                        <Text style={styles.transactionTextPrimary}>
+                                                            {this.getTransactionPrimaryText(
+                                                                tx,
+                                                                account
+                                                            )}
+                                                        </Text>
+                                                    </View>
+                                                    <Text style={styles.transactionTextSecondary}>
+                                                        {date.toISOString()}
+                                                    </Text>
+                                                </View>
+                                                <Icon
+                                                    name="arrow-right-1"
+                                                    size={16}
+                                                    style={styles.transactionRightIcon}
+                                                />
+                                            </TouchableOpacity>
+                                        );
+                                    })}
+                                </View>
+                            )}
+                        </View>
+                    )}
+
+                    {this.state.settingsVisible && (
+                        <AccountSettings
+                            onDonePressed={this.openSettingsMenu}
+                            account={this.props.account}
+                            wallet={this.props.wallet}
+                        />
+                    )}
+                </ScrollView>
+            </View>
         );
     }
 }

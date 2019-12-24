@@ -4,13 +4,13 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { HeaderLeft } from '../../components/header-left/header-left';
+import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Notifications } from '../../core/messaging/notifications/notifications';
 import { Text, Button } from '../../library';
 import { getApnsToken } from '../../core/messaging/silent/ios-voip-push-notification';
 
 export const navigationOptions = () => ({
-    headerLeft: <HeaderLeft icon="saturn-icon" />,
+    headerLeft: <HeaderIcon />,
     title: translate('App.labels.watch')
 });
 

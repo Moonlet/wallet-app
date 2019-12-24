@@ -122,15 +122,17 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ZILLIQA, 0),
             wallet.getAccounts(Blockchain.ZILLIQA, 1)
         ]).then(async data => {
-            const walletId: string = uuidv4();
-            const walletData: IWalletState = {
-                id: walletId,
-                name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
-                type: WalletType.HD,
-                accounts: data.reduce((out, accounts) => out.concat(accounts), [])
-            };
+            const walletId = uuidv4();
+            const accounts: IAccountState[] = data.reduce((out, acc) => out.concat(acc), []);
 
-            dispatch(addWallet(walletData));
+            dispatch(
+                addWallet({
+                    id: walletId,
+                    name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
+                    type: WalletType.HD,
+                    accounts
+                })
+            );
 
             await storeEncrypted(mnemonic, walletId, password);
 

@@ -29,13 +29,23 @@ export const ConversionCardComponent = (
 
     return (
         <View style={props.styles.container}>
-            <Text small style={props.styles.conversionLabel}>
+            <Text style={[props.styles.text, props.styles.conversionLabel]}>
                 {props.fromCurrency}
                 {props.toCurrency}
             </Text>
-            <Convert from={props.fromCurrency} to={props.toCurrency} amount={new BigNumber(1)} />
-            <Text small style={[change >= 0 ? props.styles.changeUp : props.styles.changeDown]}>
-                {change}
+            <Convert
+                from={props.fromCurrency}
+                to={props.toCurrency}
+                amount={new BigNumber(1)}
+                style={props.styles.convert}
+            />
+            <Text
+                style={[
+                    props.styles.text,
+                    change >= 0 ? props.styles.changeUp : props.styles.changeDown
+                ]}
+            >
+                {`${change}%`}
             </Text>
         </View>
     );

@@ -5,15 +5,16 @@ import { BASE_DIMENSION } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingHorizontal: BASE_DIMENSION * 2,
-            paddingTop: 40,
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            backgroundColor: theme.colors.appBackground,
-            height: '100%'
+            flex: 1,
+            backgroundColor: theme.colors.appBackground
         },
-        balancesContainer: {
-            height: 140
+        coinBalanceCard: {
+            paddingTop: BASE_DIMENSION * 4,
+            paddingBottom: BASE_DIMENSION * 6
+        },
+        dashboardContainer: {
+            flex: 1,
+            paddingHorizontal: BASE_DIMENSION * 2
         },
         selectorGradientContainer: {
             position: 'absolute',

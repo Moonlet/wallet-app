@@ -7,11 +7,6 @@ exports[`coin dashboard component renders correctly 1`] = `
     <withTheme(Connect(ConversionCardComponent)) fromCurrency=\\"ZIL\\" toCurrency=\\"BTC\\" />
     <withTheme(Connect(ConversionCardComponent)) fromCurrency=\\"ZIL\\" toCurrency=\\"ETH\\" />
   </View>
-  <View style={{...}}>
-    <TouchableOpacity testID=\\"button-manage-accounts\\" onPress={[Function: onPress]} activeOpacity={0.2}>
-      <Icon name=\\"add\\" size={24} style={{...}} allowFontScaling={false} />
-    </TouchableOpacity>
-  </View>
   <ScrollViewMock style={{...}}>
     <withTheme(AccountCardComponent) account={{...}} navigation={{...}} blockchain=\\"ZILLIQA\\" />
   </ScrollViewMock>

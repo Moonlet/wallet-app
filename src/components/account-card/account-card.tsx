@@ -51,7 +51,7 @@ export const AccountCardComponent = (props: IProps) => {
                 <Text style={styles.address}>{formatAddress(props.account.address)} </Text>
             </View>
             <View style={styles.iconContainer}>
-                <Icon name="arrow-right-1" size={ICON_SIZE} style={styles.icon} />
+                <Icon name="arrow-right-1" size={18} style={styles.icon} />
             </View>
         </TouchableOpacity>
     );

@@ -10,7 +10,7 @@ import { Icon } from '../../components/icon';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
-import { HeaderLeft } from '../../components/header-left/header-left';
+import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { translate } from '../../core/i18n';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { biometricAuth } from '../../core/biometric-auth/biometric-auth';
@@ -47,7 +47,7 @@ const mapDispatchToProps = {
 
 const navigationOptions = () => ({
     title: translate('App.labels.settings'),
-    headerLeft: <HeaderLeft icon="saturn-icon" />
+    headerLeft: <HeaderIcon />
 });
 
 export class SettingsScreenComponent extends React.Component<

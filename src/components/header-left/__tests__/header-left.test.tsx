@@ -14,9 +14,7 @@ const props: IProps = {
 };
 
 describe('header go back button', () => {
-    beforeAll(async () => {
-        await loadTranslations('en');
-    });
+    beforeAll(async () => loadTranslations('en'));
 
     it('renders correctly', () => {
         const wrapper = shallow(<HeaderLeftComponent {...props} />);

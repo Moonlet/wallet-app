@@ -24,6 +24,7 @@ export const darkTheme: ITheme = {
         warning: COLORS.YELLOW,
 
         cardBackground: COLORS.DARK_GRAY,
+        cardBackgroundSecondary: COLORS.VERY_DARK_GRAY,
         appBackground: COLORS.COD_GRAY,
         settingsDivider: COLORS.BLACK,
         inputBackground: COLORS.TUNDORA_GRAY,

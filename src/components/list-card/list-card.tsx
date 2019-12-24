@@ -3,7 +3,7 @@ import { Text } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { View, TouchableHighlight } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import Icon from '../icon';
 import { ICON_SIZE } from '../../styles/dimensions';
 
@@ -26,7 +26,7 @@ export const ListCardComponent = (
             props.label
         );
     return (
-        <TouchableHighlight onPress={props.onPress}>
+        <TouchableOpacity onPress={props.onPress}>
             <View style={[props.styles.card, props.selected && props.styles.selected, props.style]}>
                 {props.leftIcon && (
                     <View style={props.styles.iconLeftContainer}>
@@ -40,7 +40,7 @@ export const ListCardComponent = (
                     </View>
                 )}
             </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
     );
 };
 

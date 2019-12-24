@@ -13,20 +13,26 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { HeaderLeft } from '../../components/header-left/header-left';
-import { HeaderRight } from '../../components/header-right/header-right';
 import { getBalance } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { BigNumber } from 'bignumber.js';
-import { selectCurrentWallet } from '../../redux/wallets/selectors';
+import { selectCurrentWallet, selectCurrentAccount } from '../../redux/wallets/selectors';
 import { createSelector } from 'reselect';
-import { IBlockchainsOptions } from '../../redux/app/state';
+import { IBlockchainsOptions, BottomSheetType } from '../../redux/app/state';
+import { HeaderIcon } from '../../components/header-icon/header-icon';
+import { Icon } from '../../components/icon';
+import { themes } from '../../navigation/navigation';
+import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import { openBottomSheet, appSwitchAccount } from '../../redux/app/actions';
 
 export interface IReduxProps {
     wallet: IWalletState;
     walletsNr: number;
     getBalance: typeof getBalance;
     blockchains: IBlockchainsOptions;
+    openBottomSheet: typeof openBottomSheet;
+    currentAccount: IAccountState;
+    appSwitchAccount: typeof appSwitchAccount;
 }
 
 interface IState {
@@ -35,10 +41,7 @@ interface IState {
     coins: Array<{ blockchain: Blockchain; order: number }>;
 }
 
-const FADE_ANIMATION_DURATION = 50;
 const SCREEN_WIDTH = Dimensions.get('window').width;
-const SCROLL_CARD_WIDTH = Math.round(SCREEN_WIDTH * 0.5);
-const ANIMATED_BC_SELECTION = true;
 
 const calculateBalances = (accounts: IAccountState[], blockchains: IBlockchainsOptions) => {
     const result = accounts.reduce(
@@ -75,22 +78,24 @@ const calculateBalances = (accounts: IAccountState[], blockchains: IBlockchainsO
 const mapStateToProps = (state: IReduxState) => ({
     wallet: selectCurrentWallet(state),
     walletsNr: Object.keys(state.wallets).length,
-    blockchains: state.app.blockchains
+    blockchains: state.app.blockchains,
+    currentAccount: selectCurrentAccount(state)
 });
 
 const mapDispatchToProps = {
-    getBalance
+    getBalance,
+    openBottomSheet,
+    appSwitchAccount
 };
 
 const MyTitle = ({ text }) => (
     <Text
         style={{
             flex: 1,
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: 20,
+            lineHeight: 25,
             opacity: 0.87,
-            fontWeight: 'bold',
-            // color: themes[theme].colors.text,
+            letterSpacing: 0.38,
             textAlign: 'center'
         }}
     >
@@ -101,11 +106,32 @@ const MyConnectedTitle = connect((state: IReduxState) => ({
     text: (selectCurrentWallet(state) || {}).name
 }))(MyTitle);
 
-const navigationOptions = ({ navigation, theme }: any) => ({
+const navigationOptions = ({ navigation }: any) => ({
     headerTitle: () => <MyConnectedTitle />,
-    headerLeft: <HeaderLeft icon="saturn-icon" />,
+    headerLeft: <HeaderIcon />,
     headerRight: (
-        <HeaderRight icon="single-man-hierachy" onPress={() => navigation.navigate('Wallets')} />
+        <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity
+                style={{ width: ICON_CONTAINER_SIZE }}
+                onPress={() => navigation.navigate('Wallets')}
+            >
+                <Icon
+                    name="money-wallet-1"
+                    size={ICON_SIZE}
+                    style={{ color: themes.dark.colors.accent }}
+                />
+            </TouchableOpacity>
+            <TouchableOpacity
+                style={{ width: ICON_CONTAINER_SIZE }}
+                onPress={() => navigation.state.params.setDashboardMenuBottomSheet()}
+            >
+                <Icon
+                    name="navigation-menu-vertical"
+                    size={ICON_SIZE}
+                    style={{ color: themes.dark.colors.accent }}
+                />
+            </TouchableOpacity>
+        </View>
     )
 });
 
@@ -150,54 +176,19 @@ export class DashboardScreenComponent extends React.Component<
         }
     }
 
-    public handleScrollEnd = (event: any) => {
-        // calculate the index on which the animation stopped
-        // (current scroll offset + left scrollview offset) / scroll card width
-        // (event.nativeEvent.contentOffset.x + (SCREEN_WIDTH - SCROLL_CARD_WIDTH) / 2) /
-        //         SCROLL_CARD_WIDTH
-        const scrollIndex: number = Math.round(
-            event.nativeEvent.contentOffset.x / SCROLL_CARD_WIDTH
-        );
-
-        // bail out if its the same coin index;
-        if (scrollIndex === this.state.coinIndex) {
-            return;
-        }
-
-        Animated.timing(this.dashboardOpacity, {
-            toValue: 0,
-            duration: FADE_ANIMATION_DURATION,
-            useNativeDriver: true
-        }).start(() => {
-            this.setState({
-                coinIndex: scrollIndex
-            });
-
-            Animated.timing(this.dashboardOpacity, {
-                toValue: 1,
-                duration: FADE_ANIMATION_DURATION,
-                useNativeDriver: true
-            }).start();
-        });
-    };
-
-    public setActiveCoin = (i: number) => {
-        if (ANIMATED_BC_SELECTION) {
-            this.setState({
-                coinIndex: i
-            });
-        }
-
-        if (this.balancesScrollView) {
-            this.balancesScrollView.scrollTo({ x: SCROLL_CARD_WIDTH * i, ANIMATED_BC_SELECTION });
-        }
-    };
-
     public componentDidMount() {
         this.props.wallet?.accounts.map(account => {
             this.props.getBalance(account.blockchain, account.address, true);
         });
+
+        this.props.navigation.setParams({
+            setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
+        });
     }
+
+    public setDashboardMenuBottomSheet = () => {
+        this.props.openBottomSheet(BottomSheetType.DASHBOARD_MENU);
+    };
 
     public renderBottomBlockchainNav = () => {
         const styles = this.props.styles;
@@ -222,20 +213,31 @@ export class DashboardScreenComponent extends React.Component<
                         snapToEnd={false}
                         decelerationRate={0.8}
                     >
-                        {coins.map((coin, i) => (
+                        {coins.map((coin: { blockchain: Blockchain; order: number }) => (
                             <TouchableOpacity
-                                key={i}
+                                key={coin.order}
                                 style={[
                                     styles.blockchainButton,
-                                    coinIndex === i && styles.blockchainButtonActive,
+                                    coinIndex === coin.order && styles.blockchainButtonActive,
                                     {
                                         width: coins.length > 3 ? SCREEN_WIDTH / 3 : null
                                     }
                                 ]}
-                                onPress={() => this.setActiveCoin(i)}
+                                onPress={() => {
+                                    this.setState({ coinIndex: coin.order });
+                                    this.props.appSwitchAccount({
+                                        index: 0,
+                                        blockchain: coin.blockchain
+                                    });
+                                }}
                             >
-                                <Text style={coinIndex === i && styles.blockchainButtonTextActive}>
-                                    {BLOCKCHAIN_INFO[coins[i].blockchain].coin}
+                                <Text
+                                    style={
+                                        coinIndex === coin.order &&
+                                        styles.blockchainButtonTextActive
+                                    }
+                                >
+                                    {BLOCKCHAIN_INFO[coins[coin.order].blockchain].coin}
                                 </Text>
                             </TouchableOpacity>
                         ))}
@@ -248,45 +250,30 @@ export class DashboardScreenComponent extends React.Component<
     public render() {
         const styles = this.props.styles;
         const { coins, coinIndex } = this.state;
+        const blockchain: Blockchain = coins[coinIndex]?.blockchain;
 
         return (
             <View style={styles.container}>
                 {coins.length !== 0 && (
-                    <View>
-                        <View style={styles.balancesContainer}>
-                            <ScrollView
-                                ref={ref => (this.balancesScrollView = ref)}
-                                onMomentumScrollEnd={this.handleScrollEnd}
-                                horizontal
-                                disableIntervalMomentum={true}
-                                overScrollMode={'never'}
-                                centerContent={true}
-                                snapToAlignment={'start'}
-                                snapToInterval={SCROLL_CARD_WIDTH}
-                                contentContainerStyle={{ marginTop: 16 }}
-                                showsHorizontalScrollIndicator={false}
-                                snapToStart={false}
-                                snapToEnd={false}
-                                decelerationRate={0.8}
-                            >
-                                <View style={{ width: (SCREEN_WIDTH - SCROLL_CARD_WIDTH) / 2 }} />
-                                {coins.map((coin, i) => {
-                                    const blockchain = coins[i].blockchain;
-                                    return (
-                                        <CoinBalanceCard
-                                            balance={this.state.balance[blockchain].amount}
-                                            blockchain={blockchain}
-                                            currency={BLOCKCHAIN_INFO[blockchain].coin}
-                                            width={SCROLL_CARD_WIDTH}
-                                            key={i}
-                                            toCurrency="USD"
-                                            active={coinIndex === i}
-                                        />
-                                    );
-                                })}
-                                <View style={{ width: (SCREEN_WIDTH - SCROLL_CARD_WIDTH) / 2 }} />
-                            </ScrollView>
+                    <View style={styles.dashboardContainer}>
+                        <View style={styles.coinBalanceCard}>
+                            {this.props.currentAccount && (
+                                <CoinBalanceCard
+                                    onPress={() =>
+                                        this.props.openBottomSheet(BottomSheetType.ACCOUNTS, {
+                                            blockchain
+                                        })
+                                    }
+                                    balance={this.state.balance[blockchain].amount}
+                                    blockchain={blockchain}
+                                    currency={BLOCKCHAIN_INFO[blockchain].coin}
+                                    toCurrency="USD"
+                                    active={true}
+                                    selectedAccount={this.props.currentAccount}
+                                />
+                            )}
                         </View>
+
                         <Animated.View
                             style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
                         >

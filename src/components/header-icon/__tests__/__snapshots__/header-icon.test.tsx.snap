@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`header go back button renders correctly 1`] = `
+"<View style={{...}}>
+  <Icon name=\\"saturn-icon\\" size={28} style={{...}} allowFontScaling={false} />
+</View>"
+`;

@@ -3,6 +3,10 @@ import { Blockchain } from '../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
 
+export interface IWalletsState {
+    [id: string]: IWalletState;
+}
+
 export interface IWalletState {
     id: string;
     name: string;

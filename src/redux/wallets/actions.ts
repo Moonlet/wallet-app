@@ -61,9 +61,9 @@ export const createHWWallet = (
     connectionType: HWConnection,
     blockchain: Blockchain,
     navigation: NavigationScreenProp<NavigationState>
-) => async (dispatch, getState: () => IReduxState) => {
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     try {
-        const walletId = uuidv4();
+        const walletId: string = uuidv4();
 
         // in case you replace your connected ledger reset message
         dispatch(toInitialState());
@@ -79,20 +79,20 @@ export const createHWWallet = (
 
         dispatch(verifyAddressOnDevice(true));
         const accounts: IAccountState[] = await wallet.getAccounts(blockchain, 0);
-        dispatch(
-            addWallet({
-                id: walletId,
-                hwOptions: {
-                    deviceId,
-                    deviceVendor,
-                    deviceModel,
-                    connectionType
-                },
-                name: `Wallet ${getState().wallets.length + 1}`,
-                type: WalletType.HW,
-                accounts
-            })
-        );
+        const walletData: IWalletState = {
+            id: walletId,
+            hwOptions: {
+                deviceId,
+                deviceVendor,
+                deviceModel,
+                connectionType
+            },
+            name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
+            type: WalletType.HW,
+            accounts
+        };
+
+        dispatch(addWallet(walletData));
 
         dispatch(appSwitchWallet(walletId));
         navigation.navigate(
@@ -128,7 +128,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             dispatch(
                 addWallet({
                     id: walletId,
-                    name: `Wallet ${getState().wallets.length + 1}`,
+                    name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
                     type: WalletType.HD,
                     accounts
                 })
@@ -250,14 +250,13 @@ export const sendTransferTransaction = (
     }
 };
 
-export const deleteWallet = walletId => (
+export const deleteWallet = (walletId: string) => (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
     const state = getState();
-
     if (state.app.currentWalletId === walletId) {
-        const nextWallet = state.wallets.find(wallet => wallet.id !== walletId);
+        const nextWallet = Object.values(state.wallets).find(wallet => wallet.id !== walletId);
         const nextWalletId = nextWallet ? nextWallet.id : '';
         dispatch(appSwitchWallet(nextWalletId));
     }
@@ -265,7 +264,6 @@ export const deleteWallet = walletId => (
         type: WALLET_DELETE,
         data: walletId
     });
-
     deleteFromStorage(walletId);
 };
 

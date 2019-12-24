@@ -17,6 +17,6 @@ describe('wallets reducer', () => {
                 type: WALLET_ADD,
                 data: { id: 'walletId' }
             })
-        ).toEqual([{ id: 'walletId' }]);
+        ).toEqual({ walletId: { id: 'walletId' } });
     });
 });

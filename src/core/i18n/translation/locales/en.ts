@@ -193,9 +193,11 @@ export const translation: ITranslations = {
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',
+            checkTransactions: 'Check all your transactions',
             manageAccount: 'Manage account',
-            walletConnect: 'Wallet connect',
-            description: 'Quickly add an importan item to your inbox'
+            quicklyManage: 'Quickly manage the accounts',
+            connectExtension: 'Connect to extension',
+            scanCode: 'Scan the QR code on extension'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -44,9 +44,10 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             {translate('DashboardMenu.transactionHistory')}
                         </Text>
                         <Text style={styles.description}>
-                            {translate('DashboardMenu.description')}
+                            {translate('DashboardMenu.checkTransactions')}
                         </Text>
                     </View>
+                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.rowContainer}>
@@ -56,21 +57,25 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     <View style={styles.textContainer}>
                         <Text style={styles.title}>{translate('DashboardMenu.manageAccount')}</Text>
                         <Text style={styles.description}>
-                            {translate('DashboardMenu.description')}
+                            {translate('DashboardMenu.quicklyManage')}
                         </Text>
                     </View>
+                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
-                        <Icon name="flash" size={ICON_SIZE} style={styles.icon} />
+                        <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
                     </View>
                     <View style={styles.textContainer}>
-                        <Text style={styles.title}>{translate('DashboardMenu.walletConnect')}</Text>
+                        <Text style={styles.title}>
+                            {translate('DashboardMenu.connectExtension')}
+                        </Text>
                         <Text style={styles.description}>
-                            {translate('DashboardMenu.description')}
+                            {translate('DashboardMenu.scanCode')}
                         </Text>
                     </View>
+                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
             </View>
         );

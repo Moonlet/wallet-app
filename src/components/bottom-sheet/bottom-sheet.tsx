@@ -9,9 +9,10 @@ import { AccountsBottomSheet } from './accounts-bottom-sheet/accounts-bottom-she
 import { BottomSheetType, IBottomSheet } from '../../redux/app/state';
 import { openBottomSheet, closeBottomSheet } from '../../redux/app/actions';
 import { DashboardMenuBottomSheet } from './dashboard-menu-bottom-sheet/dashboard-menu-bottom-sheet';
+import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 
 interface IProps {
-    navigator: any;
+    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 interface IReduxProps {
@@ -74,7 +75,7 @@ export class BottomSheetComponent extends React.Component<
                             snapPoints={{ initialSnap: 0, bottomSheetHeight: 300 }}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
-                            navigation={this.props.navigator?._navigation}
+                            navigation={this.props.navigation}
                         />
                     </View>
                 );

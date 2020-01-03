@@ -138,7 +138,7 @@ export default class App extends React.Component<{}, IState> {
                                 visible={this.state.showPasswordModal}
                                 onPassword={() => this.setState({ showPasswordModal: false })}
                             />
-                            <BottomSheet navigator={this.navigator} />
+                            <BottomSheet navigation={this.navigator?._navigation} />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

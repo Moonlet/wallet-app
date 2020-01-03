@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { BASE_DIMENSION, ICON_CONTAINER_SIZE } from '../../../styles/dimensions';
+import { BASE_DIMENSION } from '../../../styles/dimensions';
 import { ITheme } from '../../../core/theme/itheme';
 import { ph, pw } from '../../../styles';
 
@@ -10,17 +10,14 @@ export default (theme: ITheme) =>
             padding: BASE_DIMENSION * 2
         },
         transactionListItem: {
-            flexWrap: 'wrap',
-            justifyContent: 'flex-start',
-            alignItems: 'center',
             flexDirection: 'row',
-            height: ICON_CONTAINER_SIZE,
-            marginBottom: BASE_DIMENSION,
-            marginTop: BASE_DIMENSION
+            paddingHorizontal: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION * 3
         },
         transactionIcon: {
             color: theme.colors.text,
-            margin: BASE_DIMENSION
+            alignSelf: 'center',
+            marginRight: BASE_DIMENSION
         },
         transactionTextContainer: {
             flex: 1,
@@ -31,15 +28,19 @@ export default (theme: ITheme) =>
             alignItems: 'baseline'
         },
         transactionTextPrimary: {
-            marginLeft: BASE_DIMENSION,
-            color: theme.colors.textSecondary
+            fontSize: 17,
+            lineHeight: 21,
+            color: theme.colors.text,
+            opacity: 0.87
         },
         transactionTextSecondary: {
-            color: theme.colors.textTertiary
+            fontSize: 15,
+            lineHeight: 20,
+            color: theme.colors.textSecondary
         },
         transactionRightIcon: {
             color: theme.colors.accent,
-            margin: 14
+            alignSelf: 'center'
         },
         emptySection: {
             flex: 1,

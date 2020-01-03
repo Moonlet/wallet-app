@@ -11,6 +11,7 @@ import { Amount } from '../../../components/amount/amount';
 import { translate } from '../../../core/i18n';
 import { formatAddress } from '../../../core/utils/format-address';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
+import moment from 'moment';
 
 export interface IExternalProps {
     transactions: ITransactionState[];
@@ -26,7 +27,7 @@ export class TransactionsHistoryListComponent extends React.Component<
             tx.fromAddress === account.address
                 ? translate('App.labels.to').toLowerCase()
                 : translate('App.labels.from').toLowerCase();
-        return `${formattedAmount} ${formatAddress(tx.toAddress)}`;
+        return ` ${formattedAmount} ${formatAddress(tx.toAddress)}`;
     }
 
     public render() {
@@ -83,7 +84,9 @@ export class TransactionsHistoryListComponent extends React.Component<
                                             </Text>
                                         </View>
                                         <Text style={styles.transactionTextSecondary}>
-                                            {date.toISOString()}
+                                            {`${moment(date).format('L')}, ${moment(date).format(
+                                                'LTS'
+                                            )}`}
                                         </Text>
                                     </View>
                                     <Icon

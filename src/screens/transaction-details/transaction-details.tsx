@@ -16,6 +16,7 @@ import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import moment from 'moment';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -50,6 +51,9 @@ export class TransactionDetailsComponent extends React.Component<
         });
     };
 
+    public capitalizeString = (word: string) =>
+        `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;
+
     public render() {
         const styles = this.props.styles;
         const transaction = this.props.transaction;
@@ -57,65 +61,76 @@ export class TransactionDetailsComponent extends React.Component<
 
         const date = new Date(transaction.date.signed);
         return (
-            <ScrollView style={styles.container}>
+            <ScrollView
+                contentContainerStyle={styles.container}
+                showsVerticalScrollIndicator={false}
+            >
+                <View style={styles.rowContainer}>
+                    <Text style={styles.textPrimary}>
+                        {`${moment(date).format('L')}, ${moment(date).format('LTS')}`}
+                    </Text>
+                    <Text style={styles.textSecondary}>{translate('App.labels.dateAndTime')}</Text>
+                </View>
+
+                <View style={styles.rowContainer}>
+                    <Amount
+                        style={styles.textPrimary}
+                        amount={transaction.amount}
+                        blockchain={account.blockchain}
+                    />
+                    <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
+                </View>
+
+                {/* TODO: Fee */}
+                <View style={styles.rowContainer}>
+                    {/* <Amount
+                        style={styles.textPrimary}
+                        amount={transaction.fee}
+                        blockchain={account.blockchain}
+                    /> */}
+                    <Text style={styles.textSecondary}>{translate('App.labels.fee')}</Text>
+                </View>
+
+                <View style={styles.rowContainer}>
+                    <Text style={styles.textPrimary}>
+                        {translate(
+                            `Transaction.statusValue.${this.capitalizeString(
+                                transaction.status.toString()
+                            )}`
+                        )}
+                    </Text>
+                    <Text style={styles.textSecondary}>{translate('App.labels.status')}</Text>
+                </View>
+
+                <View style={styles.rowContainer}>
+                    <Text style={styles.textPrimary}>{formatAddress(transaction.fromAddress)}</Text>
+                    <Text style={styles.textSecondary}>{translate('App.labels.sender')}</Text>
+                </View>
+
+                <View style={styles.rowContainer}>
+                    <Text style={styles.textPrimary}>{formatAddress(transaction.toAddress)}</Text>
+                    <Text style={styles.textSecondary}>{translate('App.labels.recipient')}</Text>
+                </View>
+
                 <TouchableOpacity
                     testID={'transaction-id'}
-                    style={styles.rowContainer}
+                    style={styles.transactionIdContainer}
                     onPress={this.goToExplorer}
                 >
-                    <View>
-                        <Text style={styles.textPrimary}>{transaction.id.slice(0, 40)}</Text>
+                    <View style={styles.transactionId}>
+                        <Text numberOfLines={1} ellipsizeMode="tail" style={styles.textPrimary}>
+                            {transaction.id}
+                        </Text>
                         <Text style={styles.textSecondary}>
                             {translate('Transaction.transactionID')}
                         </Text>
                     </View>
                     <Icon name="arrow-right-1" size={16} style={styles.icon} />
                 </TouchableOpacity>
+
                 <View style={styles.rowContainer}>
-                    <View>
-                        <Text style={styles.textPrimary}>
-                            {formatAddress(transaction.fromAddress)}
-                        </Text>
-                        <Text style={styles.textSecondary}>{translate('App.labels.from')}</Text>
-                    </View>
-                </View>
-                <View style={styles.rowContainer}>
-                    <View>
-                        <Text style={styles.textPrimary}>
-                            {formatAddress(transaction.toAddress)}
-                        </Text>
-                        <Text style={styles.textSecondary}>{translate('App.labels.to')}</Text>
-                    </View>
-                </View>
-                <View style={styles.rowContainer}>
-                    <View>
-                        <Text style={styles.textPrimary}>{date.toISOString()}</Text>
-                        <Text style={styles.textSecondary}>{translate('App.labels.date')}</Text>
-                    </View>
-                </View>
-                <View style={styles.rowContainer}>
-                    <View>
-                        <Amount
-                            style={styles.textPrimary}
-                            amount={transaction.amount}
-                            blockchain={account.blockchain}
-                        />
-                        <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
-                    </View>
-                </View>
-                <View style={styles.rowContainer}>
-                    <View>
-                        <Text style={styles.textPrimary}>{transaction.nonce}</Text>
-                        <Text style={styles.textSecondary}>{translate('Transaction.nonce')}</Text>
-                    </View>
-                </View>
-                <View style={styles.rowContainer}>
-                    <View>
-                        <Text style={styles.textPrimary}>
-                            {translate('Transaction.statusValue.' + transaction.status.toString())}
-                        </Text>
-                        <Text style={styles.textSecondary}>{translate('App.labels.status')}</Text>
-                    </View>
+                    <Text style={styles.textPrimary}>{transaction.nonce}</Text>
+                    <Text style={styles.textSecondary}>{translate('Transaction.nonce')}</Text>
                 </View>
             </ScrollView>
         );
@@ -129,7 +144,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 };
 
 export const TransactionDetails = smartConnect(TransactionDetailsComponent, [
-    connect(mapStateToProps, {}),
+    connect(mapStateToProps, undefined),
     withTheme(stylesProvider),
     withNavigationParams()
 ]);

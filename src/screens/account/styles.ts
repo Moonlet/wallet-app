@@ -33,6 +33,7 @@ export default (theme: ITheme) =>
             lineHeight: 28,
             color: theme.colors.text,
             opacity: 0.87,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            marginLeft: BASE_DIMENSION * 2
         }
     });

@@ -14,12 +14,12 @@ import { withTheme } from '../../core/theme/with-theme';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { Button } from '../../library';
-import { translate } from '../../core/i18n';
+import { translate, Translate } from '../../core/i18n';
 import { AccountSettings } from './components/account-settings/account-settings';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { Blockchain } from '../../core/blockchain/types';
-import { TransactionsHistoryList } from './components/list-transactions-history/list-transactions-history';
+import { TransactionsHistoryList } from '../transactions-history/list-transactions-history/list-transactions-history';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -116,7 +116,17 @@ export class AccountScreenComponent extends React.Component<
                         </Button>
                     </View>
 
-                    <TransactionsHistoryList transactions={transactions} account={account} />
+                    <View>
+                        <Translate
+                            text="App.labels.transactions"
+                            style={styles.transactionsTitle}
+                        />
+                        <TransactionsHistoryList
+                            transactions={transactions}
+                            account={account}
+                            navigation={navigation}
+                        />
+                    </View>
 
                     {this.state.settingsVisible && (
                         <AccountSettings

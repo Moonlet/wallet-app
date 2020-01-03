@@ -1,22 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { BASE_DIMENSION, ICON_CONTAINER_SIZE } from '../../../../styles/dimensions';
-import { ITheme } from '../../../../core/theme/itheme';
-import { ph, pw } from '../../../../styles';
+import { BASE_DIMENSION, ICON_CONTAINER_SIZE } from '../../../styles/dimensions';
+import { ITheme } from '../../../core/theme/itheme';
+import { ph, pw } from '../../../styles';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         transactionsContainer: {
             flex: 1,
-            paddingHorizontal: BASE_DIMENSION * 2,
-            marginTop: BASE_DIMENSION * 6
-        },
-
-        transactionsTitle: {
-            fontSize: 22,
-            lineHeight: 28,
-            color: theme.colors.text,
-            opacity: 0.87,
-            fontWeight: 'bold'
+            padding: BASE_DIMENSION * 2
         },
         transactionListItem: {
             flexWrap: 'wrap',

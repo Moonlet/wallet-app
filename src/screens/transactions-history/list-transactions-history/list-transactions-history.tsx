@@ -1,24 +1,25 @@
 import React from 'react';
 import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import stylesProvider from './styles';
-import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { Icon } from '../../../../components/icon';
-import { smartConnect } from '../../../../core/utils/smart-connect';
-import { Text } from '../../../../library';
-import { ITransactionState, IAccountState } from '../../../../redux/wallets/state';
-import { ICON_SIZE } from '../../../../styles/dimensions';
-import { Amount } from '../../../../components/amount/amount';
-import { translate, Translate } from '../../../../core/i18n';
-import { formatAddress } from '../../../../core/utils/format-address';
-import { INavigationProps } from '../../../../navigation/with-navigation-params';
+import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
+import { Icon } from '../../../components/icon';
+import { smartConnect } from '../../../core/utils/smart-connect';
+import { Text } from '../../../library';
+import { ITransactionState, IAccountState } from '../../../redux/wallets/state';
+import { ICON_SIZE } from '../../../styles/dimensions';
+import { Amount } from '../../../components/amount/amount';
+import { translate } from '../../../core/i18n';
+import { formatAddress } from '../../../core/utils/format-address';
+import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 
 export interface IExternalProps {
     transactions: ITransactionState[];
     account: IAccountState;
+    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 export class TransactionsHistoryListComponent extends React.Component<
-    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>> & INavigationProps
+    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public getTransactionPrimaryText(tx: ITransactionState, account: IAccountState) {
         const formattedAmount =
@@ -34,14 +35,12 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         return (
             <View style={styles.transactionsContainer}>
-                <Translate text="App.labels.transactions" style={styles.transactionsTitle} />
-
                 {typeof transactions === 'undefined' ||
                 (transactions && transactions.length === 0) ? (
                     <View style={styles.emptySection}>
                         <Image
                             style={styles.logoImage}
-                            source={require('../../../../assets/images/png/moonlet_space_gray.png')}
+                            source={require('../../../assets/images/png/moonlet_space_gray.png')}
                         />
                         <Text style={styles.noTransactionsText}>
                             {translate('Account.noTransactions')}

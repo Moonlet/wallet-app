@@ -18,6 +18,7 @@ export default (theme: ITheme) =>
         },
         buttonsContainer: {
             marginTop: BASE_DIMENSION * 8,
+            marginBottom: BASE_DIMENSION * 6,
             marginHorizontal: BASE_DIMENSION,
             flexWrap: 'wrap',
             justifyContent: 'center',
@@ -26,5 +27,12 @@ export default (theme: ITheme) =>
         button: {
             flex: 1,
             marginHorizontal: BASE_DIMENSION / 2
+        },
+        transactionsTitle: {
+            fontSize: 22,
+            lineHeight: 28,
+            color: theme.colors.text,
+            opacity: 0.87,
+            fontWeight: 'bold'
         }
     });

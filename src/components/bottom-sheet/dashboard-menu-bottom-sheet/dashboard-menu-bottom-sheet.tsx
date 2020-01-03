@@ -9,11 +9,13 @@ import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
+import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
     onOpenStart: () => void;
     onCloseEnd: () => void;
+    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 export class DashboardMenuBottomSheetComponent extends React.Component<
@@ -30,12 +32,20 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         this.bottomSheet.current.snapTo(this.props.snapPoints.bottomSheetHeight);
     }
 
+    public transactionHistoryPress = () => {
+        this.props.onCloseEnd();
+        this.props.navigation.navigate('TransactonsHistory');
+    };
+
     public renderBottomSheetContent = () => {
         const { styles } = this.props;
 
         return (
             <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
-                <TouchableOpacity style={styles.rowContainer}>
+                <TouchableOpacity
+                    onPress={this.transactionHistoryPress}
+                    style={styles.rowContainer}
+                >
                     <View style={styles.iconContainer}>
                         <Icon name="archive-locker" size={ICON_SIZE} style={styles.icon} />
                     </View>

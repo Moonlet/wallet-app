@@ -10,6 +10,10 @@ import { BottomSheetType, IBottomSheet } from '../../redux/app/state';
 import { openBottomSheet, closeBottomSheet } from '../../redux/app/actions';
 import { DashboardMenuBottomSheet } from './dashboard-menu-bottom-sheet/dashboard-menu-bottom-sheet';
 
+interface IProps {
+    navigator: any;
+}
+
 interface IReduxProps {
     bottomSheet: IBottomSheet;
     openBottomSheet: typeof openBottomSheet;
@@ -28,11 +32,11 @@ const mapDispatchToProps = {
 };
 
 export class BottomSheetComponent extends React.Component<
-    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public allowBottomSheetCloseEnd: boolean;
 
-    constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.allowBottomSheetCloseEnd = false;
     }
@@ -70,6 +74,7 @@ export class BottomSheetComponent extends React.Component<
                             snapPoints={{ initialSnap: 0, bottomSheetHeight: 300 }}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
+                            navigation={this.props.navigator?._navigation}
                         />
                     </View>
                 );
@@ -80,7 +85,7 @@ export class BottomSheetComponent extends React.Component<
     }
 }
 
-export const BottomSheet = smartConnect(BottomSheetComponent, [
+export const BottomSheet = smartConnect<IProps>(BottomSheetComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

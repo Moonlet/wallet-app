@@ -32,6 +32,7 @@ interface IState {
 
 export default class App extends React.Component<{}, IState> {
     public interval: any = null;
+    public navigator: any = null;
     private translationsLoaded: boolean = false;
     private reduxStateLoaded: boolean = false;
 
@@ -132,12 +133,12 @@ export default class App extends React.Component<{}, IState> {
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
-                            <AppContainer theme="dark" />
+                            <AppContainer ref={nav => (this.navigator = nav)} theme="dark" />
                             <PasswordModal
                                 visible={this.state.showPasswordModal}
                                 onPassword={() => this.setState({ showPasswordModal: false })}
                             />
-                            <BottomSheet />
+                            <BottomSheet navigator={this.navigator} />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

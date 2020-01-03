@@ -7,7 +7,7 @@ export default (theme: ITheme) =>
         container: {
             flex: 1,
             padding: BASE_DIMENSION * 2,
-            backgroundColor: theme.colors.cardBackgroundSecondary
+            backgroundColor: theme.colors.appBackground
         },
         firstRow: {
             flexDirection: 'row',

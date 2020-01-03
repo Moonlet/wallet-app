@@ -198,7 +198,7 @@ export const translation: ITranslations = {
             transactionHistory: 'Transaction history',
             checkTransactions: 'Check all your transactions',
             manageAccount: 'Manage account',
-            quicklyManage: 'Quickly manage the accounts',
+            quicklyManage: 'Quickly edit, order or hide your accounts',
             connectExtension: 'Connect to extension',
             scanCode: 'Scan the QR code on extension'
         }

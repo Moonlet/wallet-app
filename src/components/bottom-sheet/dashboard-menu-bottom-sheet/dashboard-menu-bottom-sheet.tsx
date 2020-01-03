@@ -37,6 +37,15 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         this.props.navigation.navigate('TransactonsHistory');
     };
 
+    public manageAccount = () => {
+        this.props.onCloseEnd();
+        this.props.navigation.navigate('Accounts');
+    };
+
+    public connectExtension = () => {
+        this.props.onCloseEnd();
+    };
+
     public renderBottomSheetContent = () => {
         const { styles } = this.props;
 
@@ -60,7 +69,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.rowContainer}>
+                <TouchableOpacity onPress={this.manageAccount} style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
                         <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
                     </View>
@@ -73,7 +82,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.rowContainer}>
+                <TouchableOpacity onPress={this.connectExtension} style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
                         <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
                     </View>

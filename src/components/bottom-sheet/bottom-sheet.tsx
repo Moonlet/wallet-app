@@ -51,7 +51,7 @@ export class BottomSheetComponent extends React.Component<
             return;
         }
         this.props.closeBottomSheet();
-        this.allowBottomSheetCloseEnd = false; // reset
+        this.allowBottomSheetCloseEnd = false; // used to reset
     };
 
     public render() {

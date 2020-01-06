@@ -10,15 +10,22 @@ export const WalletConnectWeb = (() => {
     };
 
     const isConnected = () => true;
+    const setStore = store => true;
 
     const disconnect = () => {
         // @ts-ignore
+    };
+
+    const getState = () => {
+        return Promise.resolve();
     };
 
     return {
         connect,
         disconnect,
         subscribe,
-        isConnected
+        isConnected,
+        setStore,
+        getState
     };
 })();

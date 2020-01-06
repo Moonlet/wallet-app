@@ -173,6 +173,10 @@ export class DashboardScreenComponent extends React.Component<
         if (Platform.OS === 'web') {
             if (!WalletConnectWeb.isConnected()) {
                 props.navigation.navigate('OnboardingScreen');
+            } else {
+                WalletConnectWeb.getState().then(() => {
+                    this.getWalletBalances(this.props.wallet);
+                });
             }
         } else {
             if (this.state.coins.length === 0 || props.walletsNr < 1) {
@@ -183,7 +187,11 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.props.wallet?.accounts.map(account => {
+        this.getWalletBalances(this.props.wallet);
+    }
+
+    public getWalletBalances(wallet: IWalletState) {
+        wallet?.accounts.map(account => {
             this.props.getBalance(account.blockchain, account.address, true);
         });
 

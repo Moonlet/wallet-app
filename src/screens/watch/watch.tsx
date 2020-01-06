@@ -10,9 +10,6 @@ import { Text, Button } from '../../library';
 import { getApnsToken } from '../../core/messaging/silent/ios-voip-push-notification';
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
-import { storeEncrypted } from '../../core/secure/storage.web';
-import { getPassword } from '../../core/secure/keychain';
-import { WC_CONNECTION_STRING } from '../../core/constants/app';
 
 export const navigationOptions = () => ({
     headerLeft: <HeaderIcon />,
@@ -37,10 +34,13 @@ export class WatchScreenComponent extends React.Component<
 
     public onQrCodeScanned = async (value: string) => {
         WalletConnectClient.connect(value);
-        const keychainPassword = await getPassword();
-        if (keychainPassword) {
-            storeEncrypted(value, WC_CONNECTION_STRING, keychainPassword.password);
-        }
+    };
+
+    public connect = () => {
+        this.qrCodeScanner.open();
+    };
+    public reconnect = () => {
+        WalletConnectClient.reconnect();
     };
 
     public render() {
@@ -54,16 +54,31 @@ export class WatchScreenComponent extends React.Component<
                 />
                 <Text style={styles.launchingSoonText}>{translate('Rewards.launchingSoon')}</Text>
 
-                <View style={styles.buttonContainer}>
-                    <Button style={styles.button} onPress={this.getCurrentToken}>
-                        <Text>Copy fb token</Text>
-                    </Button>
-                    <Button style={styles.button} onPress={this.getApnsToken}>
-                        <Text>Copy ios token</Text>
-                    </Button>
-                    <Button onPress={() => this.qrCodeScanner.open()}>
-                        <Text>WC</Text>
-                    </Button>
+                <View style={[styles.buttonContainer, { flexDirection: 'column' }]}>
+                    <View>
+                        <Button style={styles.button} onPress={this.getCurrentToken}>
+                            <Text>Copy fb token</Text>
+                        </Button>
+                        <Button style={styles.button} onPress={this.getApnsToken}>
+                            <Text>Copy ios token</Text>
+                        </Button>
+                        <Button
+                            style={styles.button}
+                            onPress={() => {
+                                this.connect();
+                            }}
+                        >
+                            <Text>WC</Text>
+                        </Button>
+                        <Button
+                            style={styles.button}
+                            onPress={() => {
+                                this.reconnect();
+                            }}
+                        >
+                            <Text>Reconnect</Text>
+                        </Button>
+                    </View>
                 </View>
                 <QrModalReader
                     ref={ref => (this.qrCodeScanner = ref)}

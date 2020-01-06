@@ -155,6 +155,8 @@ export const translation: ITranslations = {
         },
         Transaction: {
             transactionID: 'Transaction ID',
+            transactionDetails: 'Transaction details',
+            transactionStatus: 'Transaction status',
             nonce: 'Nonce',
             statusValue: {
                 Pending: 'Pending',

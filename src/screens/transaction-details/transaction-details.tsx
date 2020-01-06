@@ -30,7 +30,7 @@ export interface INavigationParams {
 
 export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: translate('App.labels.details')
+    title: translate('Transaction.transactionDetails')
 });
 
 export class TransactionDetailsComponent extends React.Component<
@@ -82,14 +82,14 @@ export class TransactionDetailsComponent extends React.Component<
                 </View>
 
                 {/* TODO: Fee */}
-                <View style={styles.rowContainer}>
-                    {/* <Amount
+                {/* <View style={styles.rowContainer}>
+                    <Amount
                         style={styles.textPrimary}
                         amount={transaction.fee}
                         blockchain={account.blockchain}
-                    /> */}
+                    />
                     <Text style={styles.textSecondary}>{translate('App.labels.fee')}</Text>
-                </View>
+                </View> */}
 
                 <View style={styles.rowContainer}>
                     <Text style={styles.textPrimary}>
@@ -99,7 +99,9 @@ export class TransactionDetailsComponent extends React.Component<
                             )}`
                         )}
                     </Text>
-                    <Text style={styles.textSecondary}>{translate('App.labels.status')}</Text>
+                    <Text style={styles.textSecondary}>
+                        {translate('Transaction.transactionStatus')}
+                    </Text>
                 </View>
 
                 <View style={styles.rowContainer}>

@@ -69,7 +69,7 @@ export class TransactionDetailsComponent extends React.Component<
                             {translate('Transaction.transactionID')}
                         </Text>
                     </View>
-                    <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                    <Icon name="chevron-right" size={16} style={styles.icon} />
                 </TouchableOpacity>
                 <View style={styles.rowContainer}>
                     <View>

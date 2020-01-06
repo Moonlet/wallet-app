@@ -15,14 +15,14 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       <withTheme(TextComponent) style={{...}}>
         Terms &amp; conditions
       </withTheme(TextComponent)>
-      <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
     <View style={{...}} />
     <TouchableOpacity testID=\\"button-privacy-policy\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
       <withTheme(TextComponent) style={{...}}>
         Privacy policy
       </withTheme(TextComponent)>
-      <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
     <View style={{...}} />
     <withTheme(ButtonComponent) testID=\\"button-accept\\" style={{...}} primary={true} onPress={[Function: onPress]}>

@@ -10,6 +10,8 @@ export interface IExternalProps {
     onFocus?: any;
     onBlur?: any;
     obRef?: any;
+    isFocus?: boolean;
+    isValid?: boolean;
 }
 
 interface IState {
@@ -63,17 +65,36 @@ export class TextInputComponent extends React.Component<
     }
 
     public render() {
-        const { styles } = this.props;
+        const { styles, theme } = this.props;
+
+        let containerBorderBottomColor = theme.colors.primary;
+        if (this.props.isFocus) {
+            containerBorderBottomColor = theme.colors.accent;
+        } else if (this.props.isValid) {
+            containerBorderBottomColor = theme.colors.text;
+        }
+
         return (
             <View
-                style={[styles.container, this.props.style]}
+                style={[
+                    styles.container,
+                    { borderBottomColor: containerBorderBottomColor },
+                    this.props.style
+                ]}
                 onStartShouldSetResponderCapture={() => {
                     TextInputComponent.focus(this);
                     this.props.onFocus();
                     return true;
                 }}
             >
-                <Text numberOfLines={1} ellipsizeMode="head" style={styles.text}>
+                <Text
+                    numberOfLines={1}
+                    ellipsizeMode="head"
+                    style={[
+                        styles.text,
+                        { color: this.props.isFocus ? theme.colors.accent : theme.colors.text }
+                    ]}
+                >
                     {this.props.word}
                 </Text>
                 <View style={[styles.cursor, { width: this.state.cursorWidth }]} />

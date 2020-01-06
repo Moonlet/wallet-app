@@ -42,7 +42,7 @@ export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) =>
                 onPress={() => props.navigation.navigate('TermsConditions')}
             >
                 <Text style={props.styles.text}>{translate('App.labels.tc')}</Text>
-                <Icon name="arrow-right-1" size={16} style={props.styles.icon} />
+                <Icon name="chevron-right" size={16} style={props.styles.icon} />
             </TouchableOpacity>
             <View style={props.styles.divider} />
 
@@ -52,7 +52,7 @@ export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) =>
                 onPress={() => props.navigation.navigate('PrivacyPolicy')}
             >
                 <Text style={props.styles.text}>{translate('App.labels.privacyPolicy')}</Text>
-                <Icon name="arrow-right-1" size={16} style={props.styles.icon} />
+                <Icon name="chevron-right" size={16} style={props.styles.icon} />
             </TouchableOpacity>
             <View style={props.styles.divider} />
             <Button

@@ -38,7 +38,7 @@ export const CoinBalanceCardComponent = (props: IProps) => (
                 amount={props.balance}
                 blockchain={props.blockchain}
             />
-            <Icon name="arrow-down-1" size={18} style={props.styles.icon} />
+            <Icon name="chevron-down" size={18} style={props.styles.icon} />
         </View>
         <Amount
             style={[props.styles.secondaryText, !props.active && props.styles.darkerText]}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { Text } from '../../library';
 import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import { Icon } from '../icon';
@@ -9,7 +8,6 @@ import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { Amount } from '../amount/amount';
 import { ICON_SIZE } from '../../styles/dimensions';
-import { formatAddress } from '../../core/utils/format-address';
 
 export interface IProps {
     account: IAccountState;
@@ -35,23 +33,20 @@ export const AccountCardComponent = (props: IProps) => {
                 <Icon name="money-wallet-1" size={ICON_SIZE} style={styles.icon} />
             </View>
             <View style={styles.accountInfoContainer}>
-                <View style={styles.amountContainer}>
-                    <Amount
-                        style={styles.firstAmount}
-                        amount={props.account.balance?.value}
-                        blockchain={props.account.blockchain}
-                    />
-                    <Amount
-                        style={styles.secondAmount}
-                        amount={props.account.balance?.value}
-                        blockchain={props.account.blockchain}
-                        convert
-                    />
-                </View>
-                <Text style={styles.address}>{formatAddress(props.account.address)} </Text>
+                <Amount
+                    style={styles.firstAmount}
+                    amount={props.account.balance?.value}
+                    blockchain={props.account.blockchain}
+                />
+                <Amount
+                    style={styles.secondAmount}
+                    amount={props.account.balance?.value}
+                    blockchain={props.account.blockchain}
+                    convert
+                />
             </View>
             <View style={styles.iconContainer}>
-                <Icon name="arrow-right-1" size={18} style={styles.icon} />
+                <Icon name="chevron-right" size={18} style={styles.icon} />
             </View>
         </TouchableOpacity>
     );

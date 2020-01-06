@@ -11,6 +11,7 @@ export interface ITheme {
     colors: {
         primary: string;
         accent: string;
+        accentSecondary: string;
         text: string;
         textSecondary: string;
         textTertiary: string;

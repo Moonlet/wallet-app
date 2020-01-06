@@ -27,6 +27,7 @@ interface IState {
     suggestions: string[];
     indexForSuggestions: number;
     errors: number[];
+    validInputs: number[];
 }
 
 export interface IReduxProps {
@@ -37,13 +38,7 @@ export interface IReduxProps {
 export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: () =>
         navigation.state?.params?.goBack && (
-            <HeaderLeft
-                icon="arrow-left-1"
-                text="Back"
-                onPress={() => {
-                    navigation.state.params.goBack(navigation);
-                }}
-            />
+            <HeaderLeft icon="close" onPress={() => navigation.state.params.goBack(navigation)} />
         ),
     title: translate('App.labels.recover')
 });
@@ -69,7 +64,8 @@ export class RecoverWalletScreenComponent extends React.Component<
             // mnemonic: 'panic club above clarify orbit resist illegal feel bus remember aspect field test bubble dog trap awesome hand room rice heavy idle faint salmon'.split(' '),
             suggestions: [],
             errors: [],
-            indexForSuggestions: -1
+            indexForSuggestions: -1,
+            validInputs: []
         };
 
         if (!props.tosVersion || TOS_VERSION > props.tosVersion) {
@@ -102,6 +98,8 @@ export class RecoverWalletScreenComponent extends React.Component<
             indexForSuggestions: index
         });
     }
+
+    public mnemonicsFilled = () => this.state.mnemonic.indexOf('') === -1;
 
     public confirm() {
         if (!this.validateMnemonicWords() || !Mnemonic.verify(this.state.mnemonic.join(' '))) {
@@ -156,18 +154,22 @@ export class RecoverWalletScreenComponent extends React.Component<
                     buttons={[
                         {
                             label: translate('App.labels.paste'),
-                            onPress: () => this.pasteFromClipboard()
+                            onPress: () => this.pasteFromClipboard(),
+                            disabled: this.mnemonicsFilled()
+                        },
+                        {
+                            label: translate('App.labels.nextWord'),
+                            onPress: () => this.focusInput(this.state.indexForSuggestions + 1),
+                            disabled: this.mnemonicsFilled()
                         },
                         {
                             label: translate('App.labels.confirm'),
                             onPress: () => this.confirm(),
-                            style: { color: this.props.theme.colors.accent }
+                            style: { color: this.props.theme.colors.accent },
+                            disabled: !this.mnemonicsFilled()
                         }
                     ]}
-                    footerButton={{
-                        label: translate('App.labels.nextWord'),
-                        onPress: () => this.focusInput(this.state.indexForSuggestions + 1)
-                    }}
+                    disableSpace
                 />
 
                 <PasswordModal
@@ -248,6 +250,10 @@ export class RecoverWalletScreenComponent extends React.Component<
                 this.setState({ errors });
             }
         } else {
+            const validInputs = this.state.validInputs.slice();
+            validInputs.push(index);
+            this.setState({ validInputs });
+
             const indexPos = this.state.errors.indexOf(index);
             if (indexPos !== -1) {
                 const errors = this.state.errors.slice();
@@ -286,15 +292,31 @@ export class RecoverWalletScreenComponent extends React.Component<
         for (let i = 0; i < 4; i++) {
             const index = lineNumber * 4 + i;
             const error = this.state.errors.indexOf(index) !== -1;
+            const isValid = this.state.validInputs.indexOf(index) !== -1;
+            const isFocus = this.state.indexForSuggestions === index;
+
+            let labelColor = this.props.theme.colors.text;
+            if (isFocus) {
+                labelColor = this.props.theme.colors.accent;
+            } else if (isValid) {
+                labelColor = this.props.theme.colors.text;
+            } else if (error) {
+                labelColor = this.props.theme.colors.error;
+            }
+
             output.push(
                 <View style={this.props.styles.inputContainer} key={index}>
-                    <Text small style={this.props.styles.inputLabel}>{`${index + 1}.`}</Text>
+                    <Text style={[this.props.styles.inputLabel, { color: labelColor }]}>
+                        {`${index + 1}.`}
+                    </Text>
                     <TextInput
                         obRef={(input: any) => (this.inputView[index] = input)}
                         style={[error && { borderBottomColor: this.props.theme.colors.error }]}
                         word={this.state.mnemonic[index]}
                         onFocus={() => this.focusInput(index)}
                         onBlur={() => this.validateWord()}
+                        isFocus={isFocus}
+                        isValid={isValid}
                     />
                 </View>
             );

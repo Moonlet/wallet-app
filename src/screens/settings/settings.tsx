@@ -12,7 +12,6 @@ import { connect } from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { translate } from '../../core/i18n';
-import { ICON_SIZE } from '../../styles/dimensions';
 import { biometricAuth } from '../../core/biometric-auth/biometric-auth';
 
 export interface IState {
@@ -146,7 +145,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('Settings.manageWallet')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -159,7 +158,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('Settings.backupWallet')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
                     <View style={styles.divider} />
@@ -175,7 +174,7 @@ export class SettingsScreenComponent extends React.Component<
                         <Text style={styles.textRow}>{translate('Settings.defaultCurrency')}</Text>
                         <View style={styles.rightContainer}>
                             <Text style={styles.textRowValue}>{this.props.currency}</Text>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -190,7 +189,7 @@ export class SettingsScreenComponent extends React.Component<
                         </Text>
                         <View style={styles.rightContainer}>
                             <Text style={styles.textRowValue}>{this.props.network}</Text>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -207,7 +206,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('Settings.reportIssue')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -223,7 +222,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('Settings.networkOptions')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -239,7 +238,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('App.labels.tc')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -251,7 +250,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('Settings.privacyPolicy')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 

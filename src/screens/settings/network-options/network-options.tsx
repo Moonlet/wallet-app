@@ -86,7 +86,7 @@ export class NetworkOptionsComponent extends React.Component<
                                             : translate('NetworkOptions.mainnet')}
                                     </Text>
                                     <Icon
-                                        name="arrow-right-1"
+                                        name="chevron-right"
                                         size={ICON_SIZE / 2}
                                         style={{
                                             color: testNet

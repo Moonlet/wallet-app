@@ -1,51 +1,34 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
+import { BASE_DIMENSION } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingHorizontal: 16,
-            paddingTop: 40,
             flex: 1,
-            alignItems: 'center',
-            justifyContent: 'space-between',
+            paddingHorizontal: BASE_DIMENSION * 5,
+            paddingTop: BASE_DIMENSION * 20,
+            paddingBottom: BASE_DIMENSION * 10,
             backgroundColor: theme.colors.appBackground
         },
-
-        topContainer: {
-            flex: 1,
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            alignSelf: 'stretch'
-        },
-
-        bottomContainer: {
-            flex: 0,
-            justifyContent: 'center',
-            alignSelf: 'stretch',
-            alignItems: 'center',
-            marginBottom: 60
-        },
-
         bottomButton: {
-            width: '80%',
-            marginTop: 40
+            width: '100%'
         },
-
         confirmTextContainer: {
-            flexDirection: 'row'
+            flexDirection: 'row',
+            marginBottom: BASE_DIMENSION * 2
         },
         textStyle: {
+            fontSize: 17,
+            lineHeight: 21,
+            color: theme.colors.text,
+            opacity: 0.87,
             textAlign: 'center',
-            marginTop: 60
+            paddingHorizontal: BASE_DIMENSION * 6
         },
         imageStyle: {
+            flex: 1,
             alignItems: 'center',
-            alignSelf: 'stretch',
-            marginTop: 40
-        },
-        icon: {
-            color: theme.colors.accent,
-            paddingRight: 8
+            justifyContent: 'center'
         }
     });

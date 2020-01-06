@@ -18,20 +18,18 @@ export const PasswordTermsComponent = (
 
     return (
         <View style={props.styles.container}>
-            <View style={props.styles.topContainer}>
-                <Text darker style={props.styles.textStyle}>
-                    {translate('Password.termsBody')}
-                </Text>
-                <View style={props.styles.imageStyle}>
-                    <Image source={require('../../../../assets/images/png/shield.png')} />
-                </View>
+            <Text style={props.styles.textStyle}>{translate('Password.termsBody')}</Text>
+
+            <View style={props.styles.imageStyle}>
+                <Image
+                    resizeMode="contain"
+                    source={require('../../../../assets/images/png/shield.png')}
+                />
             </View>
-            <View style={props.styles.bottomContainer}>
+            <View>
                 <View style={props.styles.confirmTextContainer}>
                     <Checkbox
-                        onPress={() => {
-                            setAcknowledged(!acknowledged);
-                        }}
+                        onPress={() => setAcknowledged(!acknowledged)}
                         checked={acknowledged}
                         text={translate('Password.termsCheckboxLabel')}
                     />

@@ -61,14 +61,11 @@ export class PasswordModalComponent extends React.Component<
         this.setState({ visible: true });
         if (this.props.shouldCreatePassword) {
             const keychainPassword = await getPassword();
+
             if (keychainPassword) {
-                this.setState({
-                    showTerms: false
-                });
+                this.setState({ showTerms: false });
             } else {
-                this.setState({
-                    showTerms: true
-                });
+                this.setState({ showTerms: true });
             }
         }
 

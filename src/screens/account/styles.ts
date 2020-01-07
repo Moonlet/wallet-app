@@ -42,7 +42,6 @@ export default (theme: ITheme) =>
             fontSize: 22,
             lineHeight: 28,
             color: theme.colors.text,
-            opacity: 0.87,
             fontWeight: 'bold'
         },
 

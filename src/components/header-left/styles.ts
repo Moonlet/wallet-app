@@ -19,7 +19,6 @@ export default (theme: ITheme) =>
         text: {
             fontSize: 17,
             lineHeight: 22,
-            opacity: 0.87,
             color: theme.colors.text
         }
     });

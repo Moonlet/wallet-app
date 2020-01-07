@@ -107,10 +107,12 @@ export class SettingsScreenComponent extends React.Component<
                             value={this.props.pinLogin}
                             trackColor={{
                                 true: this.props.theme.colors.cardBackground,
-                                false: this.props.theme.colors.primary
+                                false: this.props.theme.colors.cardBackground
                             }}
                             thumbColor={
-                                this.props.pinLogin ? theme.colors.accent : theme.colors.primary
+                                this.props.pinLogin
+                                    ? theme.colors.accent
+                                    : theme.colors.cardBackground
                             }
                         />
                     </View>
@@ -126,12 +128,12 @@ export class SettingsScreenComponent extends React.Component<
                                     value={this.props.touchID}
                                     trackColor={{
                                         true: this.props.theme.colors.cardBackground,
-                                        false: this.props.theme.colors.primary
+                                        false: this.props.theme.colors.cardBackground
                                     }}
                                     thumbColor={
                                         this.props.touchID
                                             ? theme.colors.accent
-                                            : theme.colors.primary
+                                            : theme.colors.cardBackground
                                     }
                                 />
                             </View>

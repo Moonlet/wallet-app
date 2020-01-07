@@ -6,7 +6,7 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         header: {
             flex: 1,
-            backgroundColor: theme.colors.cardBackgroundSecondary,
+            backgroundColor: theme.colors.cardBackground,
             paddingTop: BASE_DIMENSION * 2,
             paddingBottom: BASE_DIMENSION
         },

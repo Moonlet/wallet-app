@@ -7,7 +7,7 @@ export default (theme: ITheme) =>
         container: {
             flex: 1,
             padding: BASE_DIMENSION * 2,
-            backgroundColor: theme.colors.cardBackgroundSecondary
+            backgroundColor: theme.colors.cardBackground
         },
         firstRow: {
             flexDirection: 'row',
@@ -19,7 +19,6 @@ export default (theme: ITheme) =>
             fontWeight: '500',
             letterSpacing: 0.38,
             color: theme.colors.text,
-            opacity: 0.87,
             marginRight: BASE_DIMENSION
         },
         accountAddress: {

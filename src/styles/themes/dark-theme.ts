@@ -1,6 +1,5 @@
 import { ITheme } from '../../core/theme/itheme';
 import { COLORS } from '../colors';
-import { adjustColor } from '../common';
 
 export const darkTheme: ITheme = {
     dark: true,
@@ -13,26 +12,24 @@ export const darkTheme: ITheme = {
     },
 
     colors: {
-        primary: COLORS.GRAY,
         accent: COLORS.AQUA,
-        text: COLORS.WHITE,
-        textSecondary: COLORS.LIGHT_GRAY,
-        textTertiary: COLORS.GRAY,
+        accentSecondary: COLORS.LIGHT_AQUA,
+
+        text: COLORS.WHITE_87,
+        textSecondary: COLORS.WHITE_67,
+        textTertiary: COLORS.WHITE_37,
+
         positive: COLORS.HOT_GREEN,
         negative: COLORS.HOT_RED,
         error: COLORS.LIGHT_RED,
         warning: COLORS.YELLOW,
 
-        cardBackground: COLORS.DARK_GRAY,
-        cardBackgroundSecondary: COLORS.VERY_DARK_GRAY,
-        appBackground: COLORS.COD_GRAY,
-        settingsDivider: COLORS.BLACK,
-        inputBackground: COLORS.TUNDORA_GRAY,
-        disabledButton: COLORS.LIGHT_GRAY,
-        modalBackground: COLORS.FLAT_GRAY,
-        headerBackground: adjustColor(COLORS.DARK_GRAY, -7),
+        cardBackground: COLORS.GRAY_CARDS,
+        appBackground: COLORS.GRAY_PAGE,
 
-        gradientLight: COLORS.COD_GRAY,
+        settingsDivider: COLORS.BLACK,
+
+        gradientLight: COLORS.GRAY_PAGE,
         gradientDark: COLORS.BLACK
     }
 };

@@ -11,7 +11,7 @@ export default (theme: ITheme) =>
         modalContainer: {
             marginTop: 200,
             marginBottom: 200,
-            backgroundColor: theme.colors.modalBackground,
+            backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS * 2,
             marginLeft: BASE_DIMENSION * 3,
             marginRight: BASE_DIMENSION * 3

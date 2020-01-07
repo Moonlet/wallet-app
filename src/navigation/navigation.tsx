@@ -85,7 +85,6 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         fontSize: 20,
         lineHeight: 25,
         color: themes[theme].colors.text,
-        opacity: 0.87,
         letterSpacing: 0.38,
         textAlign: 'center'
     },

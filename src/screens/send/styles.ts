@@ -17,13 +17,13 @@ export default (theme: ITheme) =>
             justifyContent: Platform.OS === 'ios' ? 'space-between' : 'flex-start'
         },
         accountAddress: {
-            paddingTop: 40
+            paddingTop: BASE_DIMENSION * 5
         },
         address: {
             fontSize: 30,
             textAlign: 'center',
             fontWeight: 'bold',
-            marginBottom: 40
+            marginBottom: BASE_DIMENSION * 5
         },
         input: {
             flex: 1,
@@ -50,12 +50,11 @@ export default (theme: ITheme) =>
             color: theme.colors.warning
         },
         inputBoxAddress: {
-            // height: ICON_CONTAINER_SIZE,
             borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',
-            backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: 12,
+            backgroundColor: theme.colors.textTertiary,
+            paddingHorizontal: BASE_DIMENSION,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'
@@ -65,8 +64,8 @@ export default (theme: ITheme) =>
             borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',
-            backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: 12,
+            backgroundColor: theme.colors.textTertiary,
+            paddingHorizontal: BASE_DIMENSION,
             marginTop: BASE_DIMENSION,
             flexDirection: 'row',
             justifyContent: 'space-between',

@@ -14,7 +14,6 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             marginBottom: BASE_DIMENSION,
             flexDirection: 'row'
-            // padding: 12
         },
         accountInfoContainer: {
             flex: 1,
@@ -38,21 +37,18 @@ export default (theme: ITheme) =>
         address: {
             fontSize: 16,
             lineHeight: 20,
-            color: theme.colors.text,
-            opacity: 0.67
+            color: theme.colors.textSecondary
         },
         firstAmount: {
             fontSize: 18,
             letterSpacing: 0.38,
             color: theme.colors.text,
-            opacity: 0.87,
             fontWeight: '500'
         },
         secondAmount: {
             fontSize: 12,
             letterSpacing: 0.38,
             color: theme.colors.text,
-            opacity: 0.87,
             marginLeft: 8,
             fontWeight: '500'
         }

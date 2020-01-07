@@ -41,7 +41,7 @@ export default (theme: ITheme) =>
             borderColor: 'gray',
             alignSelf: 'stretch',
             color: theme.colors.text,
-            backgroundColor: theme.colors.inputBackground,
+            backgroundColor: theme.colors.textTertiary,
             paddingHorizontal: 12,
             marginBottom: 20
         },

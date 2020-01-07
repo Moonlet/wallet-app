@@ -23,8 +23,7 @@ export default (theme: ITheme) =>
             lineHeight: 25,
             fontWeight: '500',
             letterSpacing: 0.38,
-            color: theme.colors.text,
-            opacity: 0.87
+            color: theme.colors.text
         },
         selected: {
             borderColor: theme.colors.accent

@@ -42,11 +42,11 @@ export default (theme: ITheme) =>
             flex: 1,
             fontSize: 13,
             lineHeight: 18,
-            color: theme.colors.primary
+            color: theme.colors.cardBackground
         },
         alertIcon: {
             alignSelf: 'center',
-            color: theme.colors.primary,
+            color: theme.colors.cardBackground,
             marginRight: BASE_DIMENSION
         }
     });

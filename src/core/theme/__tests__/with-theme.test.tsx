@@ -21,7 +21,7 @@ describe('Theme:withTheme', () => {
 
         const CompWithTheme = withTheme((theme: ITheme) => ({
             div: {
-                backgroundColor: theme.colors.primary
+                backgroundColor: theme.colors.cardBackground
             }
         }))(Comp);
 
@@ -35,7 +35,7 @@ describe('Theme:withTheme', () => {
             prop2: 'value2',
             styles: {
                 div: {
-                    backgroundColor: darkTheme.colors.primary
+                    backgroundColor: darkTheme.colors.cardBackground
                 }
             },
             theme: darkTheme

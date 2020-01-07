@@ -27,7 +27,7 @@ export default (theme: ITheme) =>
             borderRadius: 6,
             borderColor: 'gray',
             alignSelf: 'stretch',
-            backgroundColor: theme.colors.inputBackground,
+            backgroundColor: theme.colors.textTertiary,
             paddingHorizontal: 12,
             marginTop: 40,
             flexDirection: 'row',

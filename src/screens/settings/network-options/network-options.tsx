@@ -52,9 +52,9 @@ export class NetworkOptionsComponent extends React.Component<
                             value={testNet}
                             trackColor={{
                                 true: this.props.theme.colors.cardBackground,
-                                false: this.props.theme.colors.primary
+                                false: this.props.theme.colors.cardBackground
                             }}
-                            thumbColor={testNet ? theme.colors.accent : theme.colors.primary}
+                            thumbColor={testNet ? theme.colors.accent : theme.colors.cardBackground}
                         />
                     </View>
                 </View>
@@ -91,7 +91,7 @@ export class NetworkOptionsComponent extends React.Component<
                                         style={{
                                             color: testNet
                                                 ? theme.colors.accent
-                                                : theme.colors.primary
+                                                : theme.colors.cardBackground
                                         }}
                                     />
                                 </View>

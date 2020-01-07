@@ -19,7 +19,6 @@ export default (theme: ITheme) =>
             fontSize: 15,
             lineHeight: 20,
             color: theme.colors.text,
-            opacity: 0.87,
             marginRight: BASE_DIMENSION
         },
         address: {
@@ -33,7 +32,6 @@ export default (theme: ITheme) =>
             fontWeight: 'bold',
             letterSpacing: 0.4,
             color: theme.colors.text,
-            opacity: 0.87,
             marginRight: BASE_DIMENSION * 2
         },
         secondaryText: {

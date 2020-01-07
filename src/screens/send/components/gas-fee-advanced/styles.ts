@@ -15,7 +15,7 @@ export default (theme: ITheme) =>
             borderRadius: BORDER_RADIUS,
             borderColor: 'gray',
             alignSelf: 'stretch',
-            backgroundColor: theme.colors.inputBackground,
+            backgroundColor: theme.colors.textTertiary,
             paddingHorizontal: 12,
             flexDirection: 'row',
             justifyContent: 'space-between',

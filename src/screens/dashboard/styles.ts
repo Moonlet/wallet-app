@@ -24,7 +24,6 @@ export default (theme: ITheme) =>
             height: 100,
             bottom: 0,
             zIndex: 1,
-            opacity: 0.87,
             justifyContent: 'flex-end'
         },
         blockchainSelectorContainer: {
@@ -45,9 +44,11 @@ export default (theme: ITheme) =>
             margin: BASE_DIMENSION / 2
         },
         blockchainButtonActive: {
-            backgroundColor: theme.colors.primary
+            backgroundColor: theme.colors.textTertiary
         },
         blockchainButtonTextActive: {
+            fontSize: 16,
+            lineHeight: 18,
             color: theme.colors.accent
         },
         coinDashboard: {

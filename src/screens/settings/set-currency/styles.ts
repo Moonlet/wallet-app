@@ -21,8 +21,7 @@ export default (theme: ITheme) =>
             fontSize: 17,
             lineHeight: 21,
             letterSpacing: 0.38,
-            color: theme.colors.text,
-            opacity: 0.87
+            color: theme.colors.text
         },
         divider: {
             width: '100%',

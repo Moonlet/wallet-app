@@ -16,7 +16,7 @@ export default (theme: ITheme) =>
             width: CIRCLE_SIZE,
             height: CIRCLE_SIZE,
             borderRadius: CIRCLE_SIZE / 2,
-            backgroundColor: theme.colors.primary,
+            backgroundColor: theme.colors.cardBackground,
             marginRight: BASE_DIMENSION
         },
         linesWrapper: {
@@ -26,12 +26,12 @@ export default (theme: ITheme) =>
         },
         firstRow: {
             height: LINE_HEIGTH,
-            backgroundColor: theme.colors.primary,
+            backgroundColor: theme.colors.cardBackground,
             borderRadius: 8
         },
         secondRow: {
             height: LINE_HEIGTH,
-            backgroundColor: theme.colors.primary,
+            backgroundColor: theme.colors.cardBackground,
             borderRadius: 8
         }
     });

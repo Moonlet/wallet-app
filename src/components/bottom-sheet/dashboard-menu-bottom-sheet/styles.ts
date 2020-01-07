@@ -5,7 +5,7 @@ import { BASE_DIMENSION, BORDER_RADIUS } from '../../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         content: {
-            backgroundColor: theme.colors.cardBackgroundSecondary,
+            backgroundColor: theme.colors.cardBackground,
             paddingHorizontal: BASE_DIMENSION * 3,
             paddingVertical: BASE_DIMENSION * 2
         },

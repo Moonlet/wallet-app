@@ -28,7 +28,7 @@ export default (theme: ITheme) =>
             paddingBottom: BASE_DIMENSION * 2
         },
         footerContainer: {
-            backgroundColor: theme.colors.primary,
+            backgroundColor: theme.colors.cardBackground,
             paddingVertical: BASE_DIMENSION,
             marginVertical: BASE_DIMENSION,
             marginHorizontal: BASE_DIMENSION * 3,

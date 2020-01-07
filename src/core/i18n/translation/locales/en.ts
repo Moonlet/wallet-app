@@ -93,7 +93,7 @@ export const translation: ITranslations = {
             verifyPinTitle: 'Verify PIN code',
             verifyPinSubtitle: 'Please re-enter your new PIN code',
             pinTitleUnlock: 'Enter PIN code',
-            pinSubtitleUnlock: 'Your PIN is required to unlock Moonlet',
+            pinSubtitleUnlock: 'Your PIN is required\nto unlock Moonlet',
             invalidPassword: 'Invalid Password',
             genericError: 'Operation could not be completed',
             subtitleMnemonic: 'Your PIN is required to view mnemonic',

@@ -252,7 +252,7 @@ export class PasswordPinComponent extends React.Component<
         return (
             <View style={styles.keyRow}>
                 <TouchableOpacity style={styles.keyContainer} onPress={this.biometryAuth}>
-                    <Icon name="touch-id" size={40} style={styles.icon} />
+                    <Icon name="touch-id" size={40} style={styles.touchIdIcon} />
                 </TouchableOpacity>
                 <LinearGradient
                     colors={[
@@ -286,7 +286,7 @@ export class PasswordPinComponent extends React.Component<
                         });
                     }}
                 >
-                    <Icon name="keyboard-delete-1" size={40} style={styles.icon} />
+                    <Icon name="keyboard-delete-1" size={40} style={styles.deleteIcon} />
                 </TouchableOpacity>
             </View>
         );

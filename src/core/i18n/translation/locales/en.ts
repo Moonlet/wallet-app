@@ -13,6 +13,7 @@ export const translation: ITranslations = {
                 cancel: 'Cancel',
                 cheap: 'Cheap',
                 close: 'Close',
+                comingSoon: 'Coming soon!',
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
@@ -196,6 +197,10 @@ export const translation: ITranslations = {
             manageAccount: 'Manage account',
             walletConnect: 'Wallet connect',
             description: 'Quickly add an importan item to your inbox'
+        },
+        BackupWallet: {
+            title: 'Backup Wallet',
+            workInProgress: 'A backup/recovery system\nis in the work.'
         }
     },
     plural: (n: number, ord?: boolean) => {

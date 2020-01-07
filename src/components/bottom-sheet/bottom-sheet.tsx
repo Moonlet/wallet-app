@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -61,7 +61,10 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <AccountsBottomSheet
-                            snapPoints={{ initialSnap: 0, bottomSheetHeight: 600 }}
+                            snapPoints={{
+                                initialSnap: 0,
+                                bottomSheetHeight: (Dimensions.get('window').height * 3) / 4
+                            }}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
                         />

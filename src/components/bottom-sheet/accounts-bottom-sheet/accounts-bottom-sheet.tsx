@@ -24,7 +24,7 @@ export class AccountsBottomSheetComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.bottomSheet.current.snapTo(this.props.snapPoints.bottomSheetHeight);
+        this.bottomSheet.current.snapTo(1);
     }
 
     public renderBottomSheetContent = () => (
@@ -43,12 +43,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                     this.props.snapPoints.bottomSheetHeight
                 ]}
                 renderContent={this.renderBottomSheetContent}
-                renderHeader={() => (
-                    <BottomSheetHeader
-                        obRef={this.bottomSheet}
-                        initialSnap={this.props.snapPoints.initialSnap}
-                    />
-                )}
+                renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
                 onOpenStart={this.props.onOpenStart}
                 onCloseEnd={this.props.onCloseEnd}
             />

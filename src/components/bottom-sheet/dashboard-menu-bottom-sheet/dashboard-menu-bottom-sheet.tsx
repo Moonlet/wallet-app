@@ -9,11 +9,13 @@ import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
+import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
     onOpenStart: () => void;
     onCloseEnd: () => void;
+    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 export class DashboardMenuBottomSheetComponent extends React.Component<
@@ -30,12 +32,29 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         this.bottomSheet.current.snapTo(this.props.snapPoints.bottomSheetHeight);
     }
 
+    public transactionHistoryPress = () => {
+        this.props.onCloseEnd();
+        this.props.navigation.navigate('TransactonsHistory');
+    };
+
+    public manageAccount = () => {
+        this.props.onCloseEnd();
+        this.props.navigation.navigate('Accounts');
+    };
+
+    public connectExtension = () => {
+        this.props.onCloseEnd();
+    };
+
     public renderBottomSheetContent = () => {
         const { styles } = this.props;
 
         return (
             <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
-                <TouchableOpacity style={styles.rowContainer}>
+                <TouchableOpacity
+                    onPress={this.transactionHistoryPress}
+                    style={styles.rowContainer}
+                >
                     <View style={styles.iconContainer}>
                         <Icon name="archive-locker" size={ICON_SIZE} style={styles.icon} />
                     </View>
@@ -44,33 +63,38 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             {translate('DashboardMenu.transactionHistory')}
                         </Text>
                         <Text style={styles.description}>
-                            {translate('DashboardMenu.description')}
+                            {translate('DashboardMenu.checkTransactions')}
                         </Text>
                     </View>
+                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.rowContainer}>
+                <TouchableOpacity onPress={this.manageAccount} style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
                         <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
                     </View>
                     <View style={styles.textContainer}>
                         <Text style={styles.title}>{translate('DashboardMenu.manageAccount')}</Text>
                         <Text style={styles.description}>
-                            {translate('DashboardMenu.description')}
+                            {translate('DashboardMenu.quicklyManage')}
                         </Text>
                     </View>
+                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.rowContainer}>
+                <TouchableOpacity onPress={this.connectExtension} style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
-                        <Icon name="flash" size={ICON_SIZE} style={styles.icon} />
+                        <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
                     </View>
                     <View style={styles.textContainer}>
-                        <Text style={styles.title}>{translate('DashboardMenu.walletConnect')}</Text>
+                        <Text style={styles.title}>
+                            {translate('DashboardMenu.connectExtension')}
+                        </Text>
                         <Text style={styles.description}>
-                            {translate('DashboardMenu.description')}
+                            {translate('DashboardMenu.scanCode')}
                         </Text>
                     </View>
+                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
             </View>
         );

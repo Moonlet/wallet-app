@@ -14,6 +14,11 @@ import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ListAccount } from '../account/components/list-account/list-account';
+import { translate } from '../../core/i18n';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Icon } from '../../components/icon';
+import { themes } from '../../navigation/navigation';
+import { BASE_DIMENSION, ICON_SIZE } from '../../styles/dimensions';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -24,7 +29,7 @@ export interface IReduxProps {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        blockchain: state.app.bottomSheet.blockchain,
+        blockchain: state.app.currentAccount.blockchain,
         wallet: selectCurrentWallet(state),
         selectedAccount: selectCurrentAccount(state)
     };
@@ -33,6 +38,27 @@ const mapStateToProps = (state: IReduxState) => {
 const mapDispatchToProps = {
     appSwitchAccount
 };
+
+export const navigationOptions = ({ navigation, theme }: any) => ({
+    title: translate('DashboardMenu.manageAccount'),
+    headerRight: (
+        <TouchableOpacity
+            onPress={() => {
+                //
+            }}
+        >
+            <Icon
+                name="add"
+                size={ICON_SIZE}
+                style={{
+                    color: themes[theme].colors.accent,
+                    alignSelf: 'center',
+                    marginRight: BASE_DIMENSION * 2
+                }}
+            />
+        </TouchableOpacity>
+    )
+});
 
 export const AccountsScreenComponent = (
     props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -121,6 +147,8 @@ export const AccountsScreenComponent = (
         </View>
     );
 };
+
+AccountsScreenComponent.navigationOptions = navigationOptions;
 
 export const AccountsScreen = smartConnect(AccountsScreenComponent, [
     connect(mapStateToProps, mapDispatchToProps),

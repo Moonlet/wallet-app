@@ -12,6 +12,8 @@ export interface ITextProps {
     small?: boolean;
     format?: INumberFormatOptions;
     styles: ReturnType<typeof stylesProvider>;
+    numberOfLines?: number;
+    ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
 }
 
 const styleModifiers = ['darker', 'small', 'large'];
@@ -45,7 +47,15 @@ export const TextComponent = (props: ITextProps) => {
         const amount = parseFloat(text);
         text = formatNumber(amount, props.format);
     }
-    return <ReactNative.Text style={getStyle(props)}>{text}</ReactNative.Text>;
+    return (
+        <ReactNative.Text
+            style={getStyle(props)}
+            numberOfLines={props.numberOfLines}
+            ellipsizeMode={props.ellipsizeMode}
+        >
+            {text}
+        </ReactNative.Text>
+    );
 };
 
 export const Text = withTheme(stylesProvider)(TextComponent);

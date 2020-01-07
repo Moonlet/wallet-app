@@ -38,5 +38,9 @@ export default (theme: ITheme) =>
             fontSize: 13,
             lineHeight: 18,
             color: theme.colors.textSecondary
+        },
+        arrowRight: {
+            color: theme.colors.accent,
+            alignSelf: 'center'
         }
     });

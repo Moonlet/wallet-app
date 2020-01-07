@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Switch, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Switch, TouchableOpacity, Platform } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
@@ -13,15 +13,15 @@ import DeviceInfo from 'react-native-device-info';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { translate } from '../../core/i18n';
 import { ICON_SIZE } from '../../styles/dimensions';
-import { biometricAuth } from '../../core/biometric-auth/biometric-auth';
+import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric-auth';
 
 export interface IState {
     isTouchIDSupported: boolean;
+    biometryType: BiometryType;
 }
 
 export interface IReduxProps {
     currency: string;
-    network: string;
     pinLogin: boolean;
     togglePinLogin: typeof togglePinLogin;
     touchID: boolean;
@@ -62,12 +62,18 @@ export class SettingsScreenComponent extends React.Component<
         super(props);
 
         this.state = {
-            isTouchIDSupported: false
+            isTouchIDSupported: false,
+            biometryType: undefined
         };
 
         biometricAuth
             .isSupported()
-            .then(biometryType => this.setState({ isTouchIDSupported: true }))
+            .then(biometryType => {
+                if (Platform.OS === 'ios') {
+                    this.setState({ biometryType });
+                }
+                this.setState({ isTouchIDSupported: true });
+            })
             .catch(error => {
                 // Failure code if the user's device does not have touchID or faceID enabled
                 this.setState({ isTouchIDSupported: false });
@@ -118,7 +124,11 @@ export class SettingsScreenComponent extends React.Component<
                     {this.state.isTouchIDSupported && (
                         <View>
                             <View style={styles.rowContainer}>
-                                <Text style={styles.textRow}>{translate('Settings.touchID')}</Text>
+                                <Text style={styles.textRow}>
+                                    {Platform.OS === 'ios' && this.state.biometryType
+                                        ? translate(`BiometryType.${this.state.biometryType}`)
+                                        : translate('BiometryType.touchID')}
+                                </Text>
                                 <Switch
                                     onValueChange={() => this.props.toggleTouchID()}
                                     value={this.props.touchID}
@@ -171,7 +181,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('Settings.defaultCurrency')}</Text>
                         <View style={styles.rightContainer}>
-                            <Text style={styles.textRowValue}>{this.props.currency}</Text>
+                            <Text style={styles.rightValue}>{this.props.currency}</Text>
                             <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
@@ -185,10 +195,7 @@ export class SettingsScreenComponent extends React.Component<
                         <Text style={styles.textRow}>
                             {translate('Settings.blockchainPortfolio')}
                         </Text>
-                        <View style={styles.rightContainer}>
-                            <Text style={styles.textRowValue}>{this.props.network}</Text>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
-                        </View>
+                        <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
                     </TouchableOpacity>
 
                     <View style={styles.divider} />
@@ -218,7 +225,7 @@ export class SettingsScreenComponent extends React.Component<
                         style={styles.rowContainer}
                         onPress={() => navigation.navigate('NetworkOptions')}
                     >
-                        <Text style={styles.textRow}>{translate('Settings.networkOptions')}</Text>
+                        <Text style={styles.textRow}>{translate('Settings.mainnetTestnet')}</Text>
                         <View style={styles.rightContainer}>
                             <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
                         </View>
@@ -257,7 +264,7 @@ export class SettingsScreenComponent extends React.Component<
                     <View style={styles.rowContainer}>
                         <Text style={styles.textRow}>{translate('Settings.appVersion')}</Text>
                         <View style={styles.rightContainer}>
-                            <Text style={styles.textRowValue}>{DeviceInfo.getVersion()}</Text>
+                            <Text style={styles.rightValue}>{DeviceInfo.getVersion()}</Text>
                         </View>
                     </View>
 

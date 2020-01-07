@@ -176,7 +176,7 @@ export const translation: ITranslations = {
             privacyPolicy: 'Privacy policy',
             reportIssue: 'Report issue',
             signOut: 'Sign out',
-            touchID: 'TouchID'
+            mainnetTestnet: 'Mainnet/Testnet'
         },
         NetworkOptions: {
             mainnet: 'Mainnet',
@@ -201,6 +201,10 @@ export const translation: ITranslations = {
         BackupWallet: {
             title: 'Backup Wallet',
             workInProgress: 'A backup/recovery system\nis in the work.'
+        },
+        BiometryType: {
+            FaceID: 'FaceID',
+            TouchID: 'TouchID'
         }
     },
     plural: (n: number, ord?: boolean) => {

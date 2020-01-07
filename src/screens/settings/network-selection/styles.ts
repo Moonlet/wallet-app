@@ -26,7 +26,7 @@ export default (theme: ITheme) =>
         textRowValue: {
             fontSize: 15,
             color: theme.colors.textSecondary,
-            paddingRight: 8
+            paddingRight: BASE_DIMENSION
         },
         divider: {
             width: '100%',

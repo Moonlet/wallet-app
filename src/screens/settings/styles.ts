@@ -28,10 +28,10 @@ export default (theme: ITheme) =>
             letterSpacing: 0.38,
             color: theme.colors.text
         },
-        textRowValue: {
+        rightValue: {
             fontSize: 15,
             lineHeight: 20,
-            color: theme.colors.textSecondary,
+            color: theme.colors.textTertiary,
             paddingRight: BASE_DIMENSION
         },
         divider: {

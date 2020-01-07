@@ -8,16 +8,15 @@ Object {
     text="Back"
   />,
   "headerStyle": Object {
-    "backgroundColor": "#111111",
+    "backgroundColor": "#121212",
     "borderBottomWidth": 0,
   },
   "headerTitleStyle": Object {
-    "color": "#FFF",
+    "color": "#E0E0E0",
     "flex": 1,
     "fontSize": 20,
     "letterSpacing": 0.38,
     "lineHeight": 25,
-    "opacity": 0.87,
     "textAlign": "center",
   },
 }
@@ -27,16 +26,15 @@ exports[`Navigation configuration default stack configuration should not display
 Object {
   "headerLeft": null,
   "headerStyle": Object {
-    "backgroundColor": "#111111",
+    "backgroundColor": "#121212",
     "borderBottomWidth": 0,
   },
   "headerTitleStyle": Object {
-    "color": "#FFF",
+    "color": "#E0E0E0",
     "flex": 1,
     "fontSize": 20,
     "letterSpacing": 0.38,
     "lineHeight": 25,
-    "opacity": 0.87,
     "textAlign": "center",
   },
 }

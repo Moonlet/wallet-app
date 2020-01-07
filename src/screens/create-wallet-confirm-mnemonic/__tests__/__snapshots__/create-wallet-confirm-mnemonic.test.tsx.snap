@@ -7,9 +7,9 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       To make sure you have written down all of your recovery words, please enter the following:
     </withTheme(TextComponent)>
     <View style={{...}}>
-      <TextInput style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Word #1\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-0\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-      <TextInput style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Word #2\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-1\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-      <TextInput style={{...}} placeholderTextColor=\\"#9a9a9a\\" placeholder=\\"Word #3\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-2\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TextInput style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Word #1\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-0\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TextInput style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Word #2\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-1\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
+      <TextInput style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Word #3\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-2\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
     </View>
     <withTheme(TextComponent) darker={true} small={true}>
       panic 

@@ -48,10 +48,7 @@ exports[`Wallet screen renders correctly 1`] = `
       <withTheme(TextComponent) style={{...}}>
         Blockchain portfolio
       </withTheme(TextComponent)>
-      <View style={{...}}>
-        <withTheme(TextComponent) style={{...}} />
-        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
-      </View>
+      <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
     <View style={{...}} />
     <withTheme(TextComponent) style={{...}}>
@@ -71,7 +68,7 @@ exports[`Wallet screen renders correctly 1`] = `
     </withTheme(TextComponent)>
     <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
       <withTheme(TextComponent) style={{...}}>
-        Network options
+        Mainnet/Testnet
       </withTheme(TextComponent)>
       <View style={{...}}>
         <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />

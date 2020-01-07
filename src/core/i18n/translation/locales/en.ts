@@ -52,6 +52,7 @@ export const translation: ITranslations = {
                 simple: 'Simple',
                 standard: 'Standard',
                 status: 'Status',
+                startConnect: 'Start connect',
                 support: 'Support',
                 tc: 'Terms & conditions',
                 to: 'To',
@@ -94,7 +95,7 @@ export const translation: ITranslations = {
             USB: 'Cable',
             U2F: 'U2F', // TODO
             BLE: 'Bluetooth',
-            scanningDevices: 'Scanning for device',
+            scanningDevices: 'Scanning for ledger device',
             paired: 'has been paired',
             openApp: 'Please open {{app}} app on your Ledger',
             ETHEREUM: 'Ethereum',
@@ -167,7 +168,9 @@ export const translation: ITranslations = {
             secureWallet: 'Secure wallet',
             editTitle: 'Edit wallet name',
             editDescription: 'Use a relevant name or an alias for this wallet',
-            addWalletTitle: 'Add Wallet'
+            addWalletTitle: 'Add Wallet',
+            connectLedger: 'Connect your Ledger!',
+            quicklyConnectLedger: 'Quickly connect your Ledger and manage your assests'
         },
         Transaction: {
             transactionID: 'Transaction ID',

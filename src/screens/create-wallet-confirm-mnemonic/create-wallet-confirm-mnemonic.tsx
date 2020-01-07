@@ -60,10 +60,7 @@ const getWordInput = (
 
 export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IReduxProps) => {
     // TODO: no mnemonic? where to?
-    const mnemonic =
-        props.navigation.state &&
-        props.navigation.state.params &&
-        props.navigation.state.params.mnemonic;
+    const mnemonic = props.navigation.state?.params?.mnemonic;
 
     // holds index of three random words from mnemonic
     const [testWords, setTestWords] = useState([]);

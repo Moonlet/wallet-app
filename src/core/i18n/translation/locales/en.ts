@@ -17,6 +17,7 @@ export const translation: ITranslations = {
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
+                copy: 'Copy',
                 create: 'Create',
                 date: 'Date',
                 delete: 'Delete',

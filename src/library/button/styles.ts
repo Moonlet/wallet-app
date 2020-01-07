@@ -14,11 +14,13 @@ export default (theme: ITheme) =>
         text: {
             fontSize: 17,
             lineHeight: 22,
+            fontWeight: '600',
             textAlign: 'center',
             color: theme.colors.accent
         },
         buttonPrimary: {
-            backgroundColor: theme.colors.accent
+            backgroundColor: theme.colors.accent,
+            borderColor: theme.colors.accent
         },
         buttonSecondary: {
             borderColor: theme.colors.textSecondary
@@ -30,8 +32,8 @@ export default (theme: ITheme) =>
             color: theme.colors.text
         },
         buttonDisabled: {
-            backgroundColor: theme.colors.textTertiary,
-            borderColor: theme.colors.textTertiary
+            backgroundColor: theme.colors.textSecondary,
+            borderColor: theme.colors.textSecondary
         },
         textDisabled: {
             color: theme.colors.cardBackground

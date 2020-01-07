@@ -23,6 +23,7 @@ export interface ITheme {
 
         cardBackground: string;
         appBackground: string;
+        bottomSheetBackground: string;
 
         settingsDivider: string;
 

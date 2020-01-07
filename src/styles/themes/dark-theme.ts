@@ -26,6 +26,7 @@ export const darkTheme: ITheme = {
 
         cardBackground: COLORS.GRAY_CARDS,
         appBackground: COLORS.GRAY_PAGE,
+        bottomSheetBackground: COLORS.GRAY_SHEET,
 
         settingsDivider: COLORS.BLACK,
 

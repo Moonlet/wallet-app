@@ -11,6 +11,7 @@ export const COLORS = {
 
     GRAY_CARDS: '#28282A', // all cards
     GRAY_PAGE: '#121212', // page background
+    GRAY_SHEET: '#1F1F1F', // bottom sheet
 
     HOT_GREEN: '#00E676',
     HOT_RED: '#E91E63',

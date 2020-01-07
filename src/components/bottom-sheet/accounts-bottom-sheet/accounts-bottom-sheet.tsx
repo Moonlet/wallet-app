@@ -28,7 +28,12 @@ export class AccountsBottomSheetComponent extends React.Component<
     }
 
     public renderBottomSheetContent = () => (
-        <View style={{ height: this.props.snapPoints.bottomSheetHeight }}>
+        <View
+            style={[
+                this.props.styles.container,
+                { height: this.props.snapPoints.bottomSheetHeight }
+            ]}
+        >
             <AccountsScreen />
         </View>
     );

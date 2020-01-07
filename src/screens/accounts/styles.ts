@@ -6,8 +6,7 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            padding: BASE_DIMENSION * 2,
-            backgroundColor: theme.colors.cardBackground
+            padding: BASE_DIMENSION * 2
         },
         firstRow: {
             flexDirection: 'row',

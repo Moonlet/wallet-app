@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Switch, TouchableOpacity } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { Text, Button } from '../../library';
+import { Text } from '../../library';
 import { IReduxState } from '../../redux/state';
 import { togglePinLogin, toggleTouchID } from '../../redux/preferences/actions';
 import stylesProvider from './styles';
@@ -265,9 +265,9 @@ export class SettingsScreenComponent extends React.Component<
 
                     <View style={styles.divider} />
 
-                    <Button testID={'sign-out'} style={styles.button} onPress={this.signOut}>
+                    {/* <Button testID={'sign-out'} style={styles.button} onPress={this.signOut}>
                         {translate('Settings.signOut')}
-                    </Button>
+                    </Button> */}
                 </ScrollView>
             </View>
         );

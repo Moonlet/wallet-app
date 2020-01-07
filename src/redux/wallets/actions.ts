@@ -16,7 +16,8 @@ import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/typ
 import {
     verifyAddressOnDevice,
     featureNotSupported,
-    toInitialState
+    toInitialState,
+    connectInProgress
 } from '../screens/connectHardwareWallet/actions';
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-navigation';
@@ -69,8 +70,10 @@ export const createHWWallet = (
 
         // in case you replace your connected ledger reset message
         dispatch(toInitialState());
+        dispatch(connectInProgress());
 
         const wallet = await HWWalletFactory.get(
+            blockchain,
             deviceVendor,
             deviceModel,
             deviceId,
@@ -102,11 +105,13 @@ export const createHWWallet = (
             {},
             NavigationActions.navigate({ routeName: 'Dashboard' })
         );
+        dispatch(toInitialState());
     } catch (e) {
         // this might not be the best place
-        if (e.message === translate('CreateHardwareWallet.notSupported')) {
+        if (e === translate('CreateHardwareWallet.notSupported')) {
             dispatch(featureNotSupported());
         }
+        throw new Error(e);
     }
 };
 

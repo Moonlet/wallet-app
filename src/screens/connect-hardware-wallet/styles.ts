@@ -33,14 +33,58 @@ export default (theme: ITheme) =>
             width: '80%'
         },
         textIndicator: {
+            width: '90%',
             fontSize: theme.fontSize.regular,
             textAlign: 'center',
-            color: theme.colors.text,
-            marginBottom: 10
+            color: theme.colors.textSecondary,
+            marginBottom: BASE_DIMENSION * 2
         },
         text: {
-            fontSize: theme.fontSize.regular,
+            fontSize: 15,
+            lineHeight: 20,
             color: theme.colors.text,
-            marginBottom: 10
+            opacity: 0.87
+        },
+
+        headerRow: {
+            flex: 1,
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: BASE_DIMENSION * 4
+        },
+        headerDescription: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: BASE_DIMENSION * 4
+        },
+        circle: {
+            height: 50,
+            width: 50,
+            borderRadius: 25,
+            padding: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION,
+            alignSelf: 'center',
+            backgroundColor: theme.colors.cardBackground
+        },
+        circleSelected: {
+            backgroundColor: theme.colors.accent + '16'
+        },
+        number: {
+            fontSize: 28,
+            lineHeight: 34,
+            textAlign: 'center',
+            color: theme.colors.textSecondary
+        },
+        numberSelected: {
+            color: theme.colors.accent
+        },
+        divider: {
+            flex: 1,
+            height: 2,
+            alignSelf: 'center',
+            backgroundColor: theme.colors.cardBackground
+        },
+        dividerSelected: {
+            backgroundColor: theme.colors.accent + 'AA'
         }
     });

@@ -2,9 +2,11 @@ import { HWVendor, HWModel, HWConnection } from './types';
 import { LedgerWallet } from './ledger/ledger-wallet';
 import { TransportFactory } from './ledger/transport-factory';
 import { IWallet } from '../types';
+import { Blockchain } from '../../blockchain/types';
 
 export class HWWalletFactory {
     public static async get(
+        blockchain: Blockchain,
         deviceVendor: HWVendor,
         deviceModel: HWModel,
         deviceId: string,
@@ -14,9 +16,10 @@ export class HWWalletFactory {
             case HWVendor.LEDGER: {
                 try {
                     // call for transport must be done here to display native popup to start pairing the bluetooth device
-
-                    await TransportFactory.get(deviceModel, connectionType, deviceId);
-                    return Promise.resolve(new LedgerWallet(deviceModel, connectionType, deviceId));
+                    await TransportFactory.get(blockchain, deviceModel, connectionType, deviceId);
+                    return Promise.resolve(
+                        new LedgerWallet(blockchain, deviceModel, connectionType, deviceId)
+                    );
                 } catch (e) {
                     return Promise.reject(e);
                 }

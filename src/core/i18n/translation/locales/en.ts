@@ -18,6 +18,7 @@ export const translation: ITranslations = {
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
                 copy: 'Copy',
+                connection: 'Connection',
                 create: 'Create',
                 date: 'Date',
                 dateAndTime: 'Date and time',
@@ -29,7 +30,9 @@ export const translation: ITranslations = {
                 fastest: 'Fastest',
                 fee: 'Fee',
                 from: 'From',
+                ledgerType: 'Ledger type',
                 legal: 'Legal',
+                network: 'Network',
                 next: 'Next',
                 nextWord: 'Next word',
                 paste: 'Paste',
@@ -37,6 +40,7 @@ export const translation: ITranslations = {
                 receive: 'Receive',
                 recipient: 'Recipient',
                 recover: 'Recover',
+                resetAll: 'Reset all',
                 rewards: 'Rewards',
                 save: 'Save',
                 secure: 'Secure',
@@ -83,10 +87,18 @@ export const translation: ITranslations = {
             device: 'Device: {{device}}',
             NANO_X: 'Ledger Nano X',
             NANO_S: 'Ledger Nano S',
-            app: 'Make sure you have opened the {{app}} app on your hardware wallet',
-            verifyAddress: 'Verify address on your device',
+            app:
+                'Make sure you have opened {{app}} app on your Ledger before starting the connect.',
+            verifyAddress: 'Verify {{app}} address on your Ledger',
             notSupported: 'Feature is not supported',
-            openApp: 'Please open {{app}} app on your Ledger'
+            USB: 'Cable',
+            U2F: 'U2F', // TODO
+            BLE: 'Bluetooth',
+            scanningDevices: 'Scanning for device',
+            paired: 'has been paired',
+            openApp: 'Please open {{app}} app on your Ledger',
+            ETHEREUM: 'Ethereum',
+            ZILLIQA: 'Zilliqa'
         },
         Fee: {
             feeTitle: 'Transaction fee',

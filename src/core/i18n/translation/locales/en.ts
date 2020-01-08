@@ -30,6 +30,7 @@ export const translation: ITranslations = {
                 fee: 'Fee',
                 from: 'From',
                 legal: 'Legal',
+                maybeLater: 'Maybe later',
                 next: 'Next',
                 nextWord: 'Next word',
                 paste: 'Paste',
@@ -151,6 +152,8 @@ export const translation: ITranslations = {
                 'Make sure you have saved securely your recovery phrase before deleting it',
             viewPhrase: 'Reveal secret phrase',
             secureWallet: 'Secure wallet',
+            withoutPin:
+                'Without a PIN code, anyone who has access to your phone will be able to control the founds. It’s wise to setup a PIN code and secure your wallet',
             editTitle: 'Edit wallet name',
             editDescription: 'Use a relevant name or an alias for this wallet',
             addWalletTitle: 'Add Wallet'

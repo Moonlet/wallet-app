@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, TouchableOpacity, ScrollView } from 'react-native';
 import {
     NavigationParams,
     NavigationScreenProp,
@@ -25,6 +25,7 @@ import stylesProvider from './styles';
 import { deleteWallet, updateWalletName } from '../../redux/wallets/actions';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { ListCard } from '../../components/list-card/list-card';
+import { AlertModal } from '../../components/alert-modal/alert-modal';
 
 export interface IReduxProps {
     wallets: {
@@ -75,6 +76,7 @@ export class WalletsScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public passwordModal = null;
+    public alertModal: any = null;
 
     public walletSwipeableRef: ReadonlyArray<string> = new Array();
     public currentlyOpenSwipeable: string = null;
@@ -149,22 +151,19 @@ export class WalletsScreenComponent extends React.Component<
 
     public onPressDelete(wallet: IWalletState) {
         // show a confirm dialog
-        Alert.alert(translate('Wallets.deleteWallet'), translate('Wallets.confirmDelete'), [
-            {
-                text: translate('App.labels.cancel'),
-                onPress: () => {
-                    /* console.log('Cancel Pressed')*/
-                },
-                style: 'cancel'
-            },
-            {
-                text: translate('App.labels.delete'),
-                onPress: () => {
+        this.alertModal
+            .showAlert(
+                translate('Wallets.deleteWallet'),
+                translate('Wallets.confirmDelete'),
+                translate('App.labels.cancel'),
+                translate('App.labels.delete')
+            )
+            .then((res: boolean) => {
+                if (res) {
                     this.closeCurrentOpenedSwipable();
                     this.onDeleteConfirmed(wallet);
                 }
-            }
-        ]);
+            });
     }
 
     public onDeleteConfirmed(wallet: IWalletState) {
@@ -178,29 +177,18 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     public onPressEdit(wallet: any) {
-        const title = translate('Wallets.editTitle');
-        const message = translate('Wallets.editDescription');
-        const buttons = [
-            {
-                text: translate('App.labels.cancel'),
-                onPress: () => {
-                    /* console.log('Cancel Pressed')*/
-                },
-                type: 'cancel'
-            },
-            {
-                text: translate('App.labels.save'),
-                onPress: (inputValue: string) => {
-                    if (inputValue !== '') {
-                        this.props.updateWalletName(wallet.id, inputValue);
-                    }
-                },
-                type: 'default'
-            }
-        ];
-        const type = 'plain-text';
-
-        Alert.prompt(title, message, buttons, type);
+        this.alertModal
+            .showPrompt(
+                translate('Wallets.editTitle'),
+                translate('Wallets.editDescription'),
+                translate('App.labels.cancel'),
+                translate('App.labels.save')
+            )
+            .then(inputValue => {
+                if (inputValue !== '') {
+                    this.props.updateWalletName(wallet.id, inputValue);
+                }
+            });
     }
 
     public onSelectWallet(walletId: string) {
@@ -343,6 +331,8 @@ export class WalletsScreenComponent extends React.Component<
                     subtitle={translate('Password.subtitleDeleteWallet')}
                     obRef={ref => (this.passwordModal = ref)}
                 />
+
+                <AlertModal obRef={ref => (this.alertModal = ref)} />
             </View>
         );
     }

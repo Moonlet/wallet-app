@@ -1,9 +1,11 @@
-import { IWalletState } from '../../redux/wallets/state';
+import { IWalletsState } from '../../redux/wallets/state';
 import { IReduxState } from '../../redux/state';
 
-export const trimWallets = (wallets: IWalletState[]) =>
-    wallets.map((wallet: IWalletState) => {
-        const trimmedWallet = { ...wallet };
+export const trimWallets = (wallets: IWalletsState) => {
+    const trimmedWallets = { ...wallets };
+
+    Object.keys(trimmedWallets).forEach(id => {
+        const trimmedWallet = { ...wallets[id] };
         delete trimmedWallet.transactions;
 
         trimmedWallet.accounts = trimmedWallet.accounts.map(account => ({
@@ -11,8 +13,11 @@ export const trimWallets = (wallets: IWalletState[]) =>
             balance: null
         }));
 
-        return trimmedWallet;
+        trimmedWallets[id] = trimmedWallet;
     });
+
+    return trimmedWallets;
+};
 
 export const trimState = (state: IReduxState) => ({
     app: state.app,

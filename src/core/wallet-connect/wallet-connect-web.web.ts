@@ -1,14 +1,22 @@
-import WalletConnect from '@walletconnect/browser';
+// import WalletConnect from '@walletconnect/browser';
 import { WC } from '../constants/app';
 import { updateReduxState } from '../../redux/wallets/actions';
+import { WebStorage } from './wc-web-storage';
+import Connector from '@walletconnect/core';
+import * as cryptoLib from '@walletconnect/browser/src/webCrypto';
 
 export const WalletConnectWeb = (() => {
     let store = null;
     const subscribers = [];
 
-    const walletConnector = new WalletConnect({
-        bridge: 'https://bridge.walletconnect.org'
-    });
+    const walletConnector = new Connector(
+        cryptoLib,
+        {
+            bridge: 'https://bridge.walletconnect.org'
+        },
+        null,
+        WebStorage
+    );
 
     const setStore = storeReference => {
         store = storeReference;

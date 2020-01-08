@@ -141,7 +141,9 @@ export const WalletConnectClient = (() => {
         walletConnector && walletConnector.killSession();
     };
 
-    reconnect();
+    reconnect().catch(() => {
+        // not connected
+    });
 
     return {
         connect,

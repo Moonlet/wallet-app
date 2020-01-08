@@ -153,7 +153,6 @@ export class DashboardScreenComponent extends React.Component<
     public static navigationOptions = navigationOptions;
 
     public static getDerivedStateFromProps(props, state) {
-        // update balances if wallet accounts changes
         return getWalletBalances(props.wallet, props.blockchains);
     }
     public initialIndex = 0;
@@ -188,15 +187,15 @@ export class DashboardScreenComponent extends React.Component<
 
     public componentDidMount() {
         this.getWalletBalances(this.props.wallet);
+
+        this.props.navigation.setParams({
+            setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
+        });
     }
 
     public getWalletBalances(wallet: IWalletState) {
         wallet?.accounts.map(account => {
             this.props.getBalance(account.blockchain, account.address, true);
-        });
-
-        this.props.navigation.setParams({
-            setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
     }
 

@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import { IReduxState } from '../state';
 import { IAppState } from '../app/state';
-import { IWalletState } from '../wallets/state';
+import { IWalletsState } from '../wallets/state';
 import { IContactsState } from '../contacts/state';
 import { IPrefState } from '../preferences/state';
 
@@ -18,12 +18,7 @@ const getStatePatch = createSelector(
     (state: IReduxState) => state.wallets,
     (state: IReduxState) => state.contacts,
     (state: IReduxState) => state.preferences,
-    (
-        app: IAppState,
-        wallets: IWalletState[],
-        contacts: IContactsState,
-        preferences: IPrefState
-    ) => {
+    (app: IAppState, wallets: IWalletsState, contacts: IContactsState, preferences: IPrefState) => {
         const trimmedWallets = trimWallets(wallets);
         const statePatch: any = {};
 

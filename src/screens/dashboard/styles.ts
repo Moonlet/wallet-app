@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION } from '../../styles/dimensions';
+import { ph } from '../../styles/common';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: theme.colors.appBackground
+            minHeight: ph(100) // temporary workaround
         },
         coinBalanceCard: {
             paddingTop: BASE_DIMENSION * 4,

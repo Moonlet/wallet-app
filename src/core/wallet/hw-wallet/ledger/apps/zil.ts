@@ -1,6 +1,8 @@
 import ZilApp from './zil-interface';
 import * as zcrypto from '@zilliqa-js/crypto';
 import { IBlockchainTransaction } from '../../../../blockchain/types';
+// import Long from 'long';
+// import * as ZilliqaJsAccountUtil from '@zilliqa-js/account/dist/util';
 
 export class Zil {
     private app = null;
@@ -28,15 +30,32 @@ export class Zil {
         path: string,
         tx: IBlockchainTransaction
     ): Promise<any> => {
-        const params = {
-            amount: tx.amount,
-            gasPrice: tx.options.gasPrice,
-            gasLimit: tx.options.gasLimit,
-            toAddr: tx.to,
-            version: 0
-        };
+        const data = await this.app.getPublicKey(`${index}`);
 
-        return this.app.signTxn(index, params);
+        const transaction: any = {
+            // tslint:disable-next-line: no-bitwise
+            version: (tx.options.chainId << 16) + 1,
+            nonce: tx.options.nonce,
+            toAddr: zcrypto
+                .fromBech32Address(tx.to)
+                .replace('0x', '')
+                .toLowerCase(),
+            amount: tx.amount.toString(),
+            pubKey: data.pubKey,
+            gasPrice: tx.options.gasPrice.toString(),
+            gasLimit: tx.options.gasLimit.toNumber(),
+            signature: '',
+            code: '',
+            data: '',
+            priority: false
+        };
+        const signed = await this.app.signTxn(index, transaction);
+        transaction.signature = signed.sig;
+        transaction.amount = transaction.amount.toString();
+        transaction.gasLimit = transaction.gasLimit.toString();
+        transaction.gasPrice = transaction.gasPrice.toString();
+        transaction.toAddr = zcrypto.toChecksumAddress(transaction.toAddr).replace('0x', '');
+        return transaction;
     };
 
     public getInfo() {

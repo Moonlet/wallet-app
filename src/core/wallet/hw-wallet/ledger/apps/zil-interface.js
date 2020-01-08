@@ -86,10 +86,22 @@ class Zilliqa {
         // https://github.com/Zilliqa/Zilliqa-JavaScript-Library/tree/dev/packages/zilliqa-js-account#interfaces
         const P1 = 0x00;
         const P2 = 0x00;
-        console.log('tx params', txnParams);
 
         let indexBytes = Buffer.alloc(4);
         indexBytes.writeInt32LE(keyIndex);
+
+        // Convert to Zilliqa types
+        if (!(txnParams.amount instanceof BN)) {
+            txnParams.amount = new BN(txnParams.amount);
+        }
+
+        if (!(txnParams.gasPrice instanceof BN)) {
+            txnParams.gasPrice = new BN(txnParams.gasPrice);
+        }
+
+        if (!(txnParams.gasLimit instanceof Long)) {
+            txnParams.gasLimit = Long.fromNumber(txnParams.gasLimit);
+        }
 
         var txnBytes = txnEncoder(txnParams);
         const message = JSON.stringify(

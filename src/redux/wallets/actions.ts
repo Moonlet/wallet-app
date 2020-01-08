@@ -237,10 +237,12 @@ export const sendTransferTransaction = (
             options
         };
 
-        dispatch({
-            type: REVIEW_TRANSACTION,
-            data: true
-        });
+        if (wallet.type === WalletType.HW) {
+            dispatch({
+                type: REVIEW_TRANSACTION,
+                data: true
+            });
+        }
         const transaction = await hdWallet.sign(account.blockchain, account.index, tx);
 
         const publish = await getBlockchain(account.blockchain)
@@ -255,11 +257,14 @@ export const sendTransferTransaction = (
                     walletId: wallet.id
                 }
             });
-            dispatch({
-                type: REVIEW_TRANSACTION,
-                data: false
-            });
-            navigation.goBack();
+            if (wallet.type === WalletType.HW) {
+                dispatch({
+                    type: REVIEW_TRANSACTION,
+                    data: false
+                });
+                navigation.goBack();
+            }
+
             return;
         }
     } catch (e) {

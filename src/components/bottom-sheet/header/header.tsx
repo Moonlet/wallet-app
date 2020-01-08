@@ -4,10 +4,10 @@ import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { Icon } from '../../icon';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { ICON_SIZE } from '../../../styles/dimensions';
 
 interface IExternalProps {
     obRef: any;
-    initialSnap: number;
 }
 
 export class BottomSheetHeaderComponent extends React.Component<
@@ -16,10 +16,10 @@ export class BottomSheetHeaderComponent extends React.Component<
     public render() {
         return (
             <TouchableWithoutFeedback
-                onPress={() => this.props.obRef.current.snapTo(this.props.initialSnap)}
+                onPress={() => this.props.obRef.current.snapTo(0)}
                 style={this.props.styles.header}
             >
-                <Icon name="arrow-button-down" size={28} style={this.props.styles.icon} />
+                <Icon name="chevron-up" size={ICON_SIZE / 2} style={this.props.styles.icon} />
             </TouchableWithoutFeedback>
         );
     }

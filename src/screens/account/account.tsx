@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, ITransactionState, IWalletState } from '../../redux/wallets/state';
@@ -13,16 +13,13 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { withTheme } from '../../core/theme/with-theme';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { Text, Button } from '../../library';
+import { Button } from '../../library';
 import { translate, Translate } from '../../core/i18n';
-import { Icon } from '../../components/icon';
 import { AccountSettings } from './components/account-settings/account-settings';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { AccountAddress } from '../../components/account-address/account-address';
-import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
-import { Amount } from '../../components/amount/amount';
-import { ICON_SIZE } from '../../styles/dimensions';
+import { TransactionsHistoryList } from '../transactions-history/list-transactions-history/list-transactions-history';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -81,17 +78,7 @@ export class AccountScreenComponent extends React.Component<
         });
     }
 
-    public openSettingsMenu = () => {
-        this.setState({ settingsVisible: !this.state.settingsVisible });
-    };
-
-    public getTransactionPrimaryText(tx: ITransactionState, account: IAccountState) {
-        const formattedAmount =
-            tx.fromAddress === account.address
-                ? translate('App.labels.to').toLowerCase()
-                : translate('App.labels.from').toLowerCase();
-        return formattedAmount + ' ' + formatAddress(tx.toAddress);
-    }
+    public openSettingsMenu = () => this.setState({ settingsVisible: !this.state.settingsVisible });
 
     public render() {
         const { styles, navigation, account, transactions } = this.props;
@@ -129,78 +116,17 @@ export class AccountScreenComponent extends React.Component<
                         </Button>
                     </View>
 
-                    {transactions && (
-                        <View style={styles.transactionsContainer}>
-                            <Translate
-                                text="App.labels.transactions"
-                                style={styles.transactionsTitle}
-                            />
-
-                            {transactions.length === 0 ? (
-                                <View style={styles.emptySection}>
-                                    <Image
-                                        style={styles.logoImage}
-                                        source={require('../../assets/images/png/moonlet_space_gray.png')}
-                                    />
-                                    <Text style={styles.noTransactionsText}>
-                                        {translate('Account.noTransactions')}
-                                    </Text>
-                                    <Text style={styles.transactionHistoryText}>
-                                        {translate('Account.transactionHistory')}
-                                    </Text>
-                                </View>
-                            ) : (
-                                <View>
-                                    {transactions.map(tx => {
-                                        const date = new Date(tx.date.signed);
-
-                                        return (
-                                            <TouchableOpacity
-                                                key={tx.id}
-                                                style={styles.transactionListItem}
-                                                onPress={() => {
-                                                    navigation.navigate('TransactionDetails', {
-                                                        transaction: tx,
-                                                        accountIndex: account.index,
-                                                        blockchain: account.blockchain
-                                                    });
-                                                }}
-                                            >
-                                                <Icon
-                                                    name="money-wallet-1"
-                                                    size={ICON_SIZE}
-                                                    style={styles.transactionIcon}
-                                                />
-                                                <View style={styles.transactionTextContainer}>
-                                                    <View style={styles.transactionAmountContainer}>
-                                                        <Amount
-                                                            amount={tx.amount}
-                                                            blockchain={account.blockchain}
-                                                        />
-
-                                                        <Text style={styles.transactionTextPrimary}>
-                                                            {this.getTransactionPrimaryText(
-                                                                tx,
-                                                                account
-                                                            )}
-                                                        </Text>
-                                                    </View>
-                                                    <Text style={styles.transactionTextSecondary}>
-                                                        {date.toISOString()}
-                                                    </Text>
-                                                </View>
-                                                <Icon
-                                                    name="chevron-right"
-                                                    size={16}
-                                                    style={styles.transactionRightIcon}
-                                                />
-                                            </TouchableOpacity>
-                                        );
-                                    })}
-                                </View>
-                            )}
-                        </View>
-                    )}
+                    <View>
+                        <Translate
+                            text="App.labels.transactions"
+                            style={styles.transactionsTitle}
+                        />
+                        <TransactionsHistoryList
+                            transactions={transactions}
+                            account={account}
+                            navigation={navigation}
+                        />
+                    </View>
 
                     {this.state.settingsVisible && (
                         <AccountSettings

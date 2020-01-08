@@ -18,6 +18,7 @@ export const translation: ITranslations = {
                 connect: 'Connect',
                 create: 'Create',
                 date: 'Date',
+                dateAndTime: 'Date and time',
                 delete: 'Delete',
                 details: 'Details',
                 error: 'Error',
@@ -32,12 +33,14 @@ export const translation: ITranslations = {
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
                 receive: 'Receive',
+                recipient: 'Recipient',
                 recover: 'Recover',
                 rewards: 'Rewards',
                 save: 'Save',
                 secure: 'Secure',
                 security: 'Security',
                 send: 'Send',
+                sender: 'Sender',
                 settings: 'Settings',
                 setup: 'Setup',
                 simple: 'Simple',
@@ -152,6 +155,8 @@ export const translation: ITranslations = {
         },
         Transaction: {
             transactionID: 'Transaction ID',
+            transactionDetails: 'Transaction details',
+            transactionStatus: 'Transaction status',
             nonce: 'Nonce',
             statusValue: {
                 Pending: 'Pending',
@@ -193,9 +198,11 @@ export const translation: ITranslations = {
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',
+            checkTransactions: 'Check all your transactions',
             manageAccount: 'Manage account',
-            walletConnect: 'Wallet connect',
-            description: 'Quickly add an importan item to your inbox'
+            quicklyManage: 'Quickly edit, order or hide your accounts',
+            connectExtension: 'Connect to extension',
+            scanCode: 'Scan the QR code on extension'
         }
     },
     plural: (n: number, ord?: boolean) => {

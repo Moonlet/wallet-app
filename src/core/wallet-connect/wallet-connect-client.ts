@@ -98,11 +98,6 @@ export const WalletConnectClient = (() => {
                                     { session: JSON.parse(conn) },
                                     moonletMeta
                                 );
-                                // const s =  'wc:392af13b-cc1e-4ed4-b146-89581bc92ceb@1?bridge=https%3A%2F%2Fbridge.walletconnect.org&key=292b21f07f145499434daa636df3be4193bfc4f29a5f6f5a9ea9ca78080fbe4f';
-                                // walletConnector = new RNWalletConnect(
-                                //     { uri: s },
-                                //     moonletMeta
-                                // );
                                 setupListeners();
                             })
                             .catch(e => {

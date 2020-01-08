@@ -6,7 +6,7 @@ import { IAction } from '../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { getChainId } from '../app/selectors';
-import { appSwitchWallet } from '../app/actions';
+import { appSwitchWallet, openBottomSheet, closeBottomSheet } from '../app/actions';
 import uuidv4 from 'uuid/v4';
 import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
@@ -23,6 +23,7 @@ import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
 import { REVIEW_TRANSACTION } from '../screens/send/actions';
+import { BottomSheetType } from '../app/state';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -209,15 +210,15 @@ export const sendTransferTransaction = (
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
 
-    const wallet = selectCurrentWallet(state);
+    const appWallet = selectCurrentWallet(state);
 
     try {
-        const hdWallet = await WalletFactory.get(wallet.id, wallet.type, {
+        const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
             pass: password,
-            deviceVendor: wallet.hwOptions?.deviceVendor,
-            deviceModel: wallet.hwOptions?.deviceModel,
-            deviceId: wallet.hwOptions?.deviceId,
-            connectionType: wallet.hwOptions?.connectionType
+            deviceVendor: appWallet.hwOptions?.deviceVendor,
+            deviceModel: appWallet.hwOptions?.deviceModel,
+            deviceId: appWallet.hwOptions?.deviceId,
+            connectionType: appWallet.hwOptions?.connectionType
         }); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
 
@@ -227,7 +228,8 @@ export const sendTransferTransaction = (
             nonce,
             chainId,
             gasPrice: feeOptions.gasPrice,
-            gasLimit: feeOptions.gasLimit
+            gasLimit: feeOptions.gasLimit,
+            publicKey: account.publicKey
         };
 
         const tx = {
@@ -237,13 +239,21 @@ export const sendTransferTransaction = (
             options
         };
 
-        if (wallet.type === WalletType.HW) {
+        if (appWallet.type === WalletType.HW) {
+            dispatch(
+                openBottomSheet(BottomSheetType.LEDGER_SIGN_MESSAGES, {
+                    blockchain: account.blockchain
+                })
+            );
+
+            await (wallet as LedgerWallet).onAppOpened(account.blockchain);
+
             dispatch({
                 type: REVIEW_TRANSACTION,
                 data: true
             });
         }
-        const transaction = await hdWallet.sign(account.blockchain, account.index, tx);
+        const transaction = await wallet.sign(account.blockchain, account.index, tx);
 
         const publish = await getBlockchain(account.blockchain)
             .getClient(chainId)
@@ -254,14 +264,15 @@ export const sendTransferTransaction = (
                 data: {
                     hash: transaction,
                     tx,
-                    walletId: wallet.id
+                    walletId: appWallet.id
                 }
             });
-            if (wallet.type === WalletType.HW) {
+            if (appWallet.type === WalletType.HW) {
                 dispatch({
                     type: REVIEW_TRANSACTION,
                     data: false
                 });
+                dispatch(closeBottomSheet());
                 navigation.goBack();
             }
 

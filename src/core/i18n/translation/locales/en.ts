@@ -85,7 +85,8 @@ export const translation: ITranslations = {
             NANO_S: 'Ledger Nano S',
             app: 'Make sure you have opened the {{app}} app on your hardware wallet',
             verifyAddress: 'Verify address on your device',
-            notSupported: 'Feature is not supported'
+            notSupported: 'Feature is not supported',
+            openApp: 'Please open {{app}} app on your Ledger'
         },
         Fee: {
             feeTitle: 'Transaction fee',

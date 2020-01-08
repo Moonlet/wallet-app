@@ -1,29 +1,44 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { Icon } from '../../icon';
 import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
-import { ICON_SIZE } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
+import { Blockchain } from '../../../core/blockchain/types';
+import { IReduxState } from '../../../redux/state';
+import { connect } from 'react-redux';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
+    blockchain: Blockchain;
     onOpenStart: () => void;
     onCloseEnd: () => void;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
+interface IReduxProps {
+    reviewTransaction: boolean;
+}
+
+export const mapStateToProps = (state: IReduxState) => {
+    return {
+        reviewTransaction: state.screens.send.reviewTransaction
+    };
+};
+
 export class LedgerMessageBottomSheetComponent extends React.Component<
-    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public bottomSheet: any;
 
-    constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(
+        props: IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
         this.bottomSheet = React.createRef();
     }
@@ -51,51 +66,16 @@ export class LedgerMessageBottomSheetComponent extends React.Component<
 
         return (
             <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
-                <TouchableOpacity
-                    onPress={this.transactionHistoryPress}
-                    style={styles.rowContainer}
-                >
-                    <View style={styles.iconContainer}>
-                        <Icon name="archive-locker" size={ICON_SIZE} style={styles.icon} />
-                    </View>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.title}>
-                            {translate('DashboardMenu.transactionHistory')}
-                        </Text>
-                        <Text style={styles.description}>
-                            {translate('DashboardMenu.checkTransactions')}
-                        </Text>
-                    </View>
-                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={this.manageAccount} style={styles.rowContainer}>
-                    <View style={styles.iconContainer}>
-                        <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
-                    </View>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.title}>{translate('DashboardMenu.manageAccount')}</Text>
-                        <Text style={styles.description}>
-                            {translate('DashboardMenu.quicklyManage')}
-                        </Text>
-                    </View>
-                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={this.connectExtension} style={styles.rowContainer}>
-                    <View style={styles.iconContainer}>
-                        <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
-                    </View>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.title}>
-                            {translate('DashboardMenu.connectExtension')}
-                        </Text>
-                        <Text style={styles.description}>
-                            {translate('DashboardMenu.scanCode')}
-                        </Text>
-                    </View>
-                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
-                </TouchableOpacity>
+                <Text key="message" style={styles.message}>
+                    {this.props.reviewTransaction === true
+                        ? translate('Send.reviewTransaction')
+                        : translate('CreateHardwareWallet.openApp', {
+                              app: this.props.blockchain
+                          })}
+                </Text>
+                <View key="loading">
+                    <LoadingIndicator />
+                </View>
             </View>
         );
     };
@@ -120,5 +100,5 @@ export class LedgerMessageBottomSheetComponent extends React.Component<
 
 export const LedgerMessageBottomSheet = smartConnect<IExternalProps>(
     LedgerMessageBottomSheetComponent,
-    [withTheme(stylesProvider)]
+    [connect(mapStateToProps, null), withTheme(stylesProvider)]
 );

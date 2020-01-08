@@ -36,15 +36,13 @@ export interface IReduxProps {
     sendTransferTransaction: typeof sendTransferTransaction;
     addContact: typeof addContact;
     contacts: IContactsState[];
-    reviewTxMessage: boolean;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         accounts: getAccounts(state, ownProps.blockchain),
-        contacts: getContacts(state),
-        reviewTxMessage: state.screens.send.reviewTransaction
+        contacts: getContacts(state)
     };
 };
 

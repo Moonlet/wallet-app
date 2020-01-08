@@ -19,7 +19,7 @@ export class Zil {
         return this.app.getPublicKey(`${index}`).then(data => {
             return {
                 address: zcrypto.toBech32Address(zcrypto.getAddressFromPublicKey(data.publicKey)),
-                pubKey: data.publicKey
+                publicKey: data.publicKey
             };
         });
     }
@@ -30,8 +30,6 @@ export class Zil {
         path: string,
         tx: IBlockchainTransaction
     ): Promise<any> => {
-        const data = await this.app.getPublicKey(`${index}`);
-
         const transaction: any = {
             // tslint:disable-next-line: no-bitwise
             version: (tx.options.chainId << 16) + 1,
@@ -41,7 +39,7 @@ export class Zil {
                 .replace('0x', '')
                 .toLowerCase(),
             amount: tx.amount.toString(),
-            pubKey: data.pubKey,
+            pubKey: tx.options.publicKey,
             gasPrice: tx.options.gasPrice.toString(),
             gasLimit: tx.options.gasLimit.toNumber(),
             signature: '',
@@ -50,6 +48,7 @@ export class Zil {
             priority: false
         };
         const signed = await this.app.signTxn(index, transaction);
+
         transaction.signature = signed.sig;
         transaction.amount = transaction.amount.toString();
         transaction.gasLimit = transaction.gasLimit.toString();

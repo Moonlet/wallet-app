@@ -15,6 +15,7 @@ export const darkTheme: ITheme = {
     colors: {
         primary: COLORS.GRAY,
         accent: COLORS.AQUA,
+        accentSecondary: COLORS.LIGHT_AQUA,
         text: COLORS.WHITE,
         textSecondary: COLORS.LIGHT_GRAY,
         textTertiary: COLORS.GRAY,

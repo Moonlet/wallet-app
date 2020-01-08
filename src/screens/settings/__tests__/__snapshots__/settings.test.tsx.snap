@@ -18,7 +18,7 @@ exports[`Wallet screen renders correctly 1`] = `
         Manage wallet
       </withTheme(TextComponent)>
       <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
@@ -27,7 +27,7 @@ exports[`Wallet screen renders correctly 1`] = `
         Backup wallet
       </withTheme(TextComponent)>
       <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
@@ -40,7 +40,7 @@ exports[`Wallet screen renders correctly 1`] = `
       </withTheme(TextComponent)>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}} />
-        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
@@ -50,7 +50,7 @@ exports[`Wallet screen renders correctly 1`] = `
       </withTheme(TextComponent)>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}} />
-        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
@@ -62,7 +62,7 @@ exports[`Wallet screen renders correctly 1`] = `
         Report issue
       </withTheme(TextComponent)>
       <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
@@ -74,7 +74,7 @@ exports[`Wallet screen renders correctly 1`] = `
         Network options
       </withTheme(TextComponent)>
       <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
@@ -86,7 +86,7 @@ exports[`Wallet screen renders correctly 1`] = `
         Terms &amp; conditions
       </withTheme(TextComponent)>
       <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
@@ -95,7 +95,7 @@ exports[`Wallet screen renders correctly 1`] = `
         Privacy policy
       </withTheme(TextComponent)>
       <View style={{...}}>
-        <Icon name=\\"arrow-right-1\\" size={12} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
@@ -108,9 +108,6 @@ exports[`Wallet screen renders correctly 1`] = `
       </View>
     </View>
     <View style={{...}} />
-    <withTheme(ButtonComponent) testID=\\"sign-out\\" style={{...}} onPress={[Function]}>
-      Sign out
-    </withTheme(ButtonComponent)>
   </ScrollViewMock>
 </View>"
 `;

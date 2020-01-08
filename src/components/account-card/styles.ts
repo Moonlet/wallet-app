@@ -14,7 +14,6 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             marginBottom: BASE_DIMENSION,
             flexDirection: 'row'
-            // padding: 12
         },
         accountInfoContainer: {
             flex: 1,
@@ -31,10 +30,6 @@ export default (theme: ITheme) =>
         icon: {
             color: theme.colors.accent
         },
-        amountContainer: {
-            flexDirection: 'row',
-            alignItems: 'baseline'
-        },
         address: {
             fontSize: 16,
             lineHeight: 20,
@@ -43,17 +38,17 @@ export default (theme: ITheme) =>
         },
         firstAmount: {
             fontSize: 18,
+            lineHeight: 25,
             letterSpacing: 0.38,
             color: theme.colors.text,
             opacity: 0.87,
             fontWeight: '500'
         },
         secondAmount: {
-            fontSize: 12,
+            fontSize: 16,
+            lineHeight: 20,
             letterSpacing: 0.38,
             color: theme.colors.text,
-            opacity: 0.87,
-            marginLeft: 8,
-            fontWeight: '500'
+            opacity: 0.67
         }
     });

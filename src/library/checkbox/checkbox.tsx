@@ -27,11 +27,7 @@ export const CheckboxComponent = (props: ICheckboxProps) => (
             size={18}
             style={props.styles.icon}
         />
-        {props.text && (
-            <Text darker style={{ flex: 1 }}>
-                {props.text}
-            </Text>
-        )}
+        {props.text && <Text style={props.styles.text}>{props.text}</Text>}
     </TouchableOpacity>
 );
 

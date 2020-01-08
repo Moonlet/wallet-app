@@ -102,9 +102,9 @@ export const translation: ITranslations = {
             subtitleMnemonic: 'Your PIN is required to view mnemonic',
             subtitleDeleteWallet: 'Your PIN is required to delete wallet',
             dontMatch: "PIN code doesn't match",
-            termsBody: 'You need to setup a password to secure your wallet.',
+            termsBody: 'You need to setup a PIN to secure your wallet.',
             termsCheckboxLabel:
-                'Do not lose this password. Moonlet will not be able to reset it for you.',
+                'Do not lose this PIN. Moonlet will not be able to reset it for you.',
             authRequired: 'Authentication Required',
             authToContinue: 'Authenticate to continue',
             touchSensor: 'Touch sensor',

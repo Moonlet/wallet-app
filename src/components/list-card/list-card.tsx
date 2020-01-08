@@ -36,7 +36,7 @@ export const ListCardComponent = (
                 <View style={props.styles.labelContainer}>{label}</View>
                 {props.rightIcon && (
                     <View style={props.styles.iconRightContainer}>
-                        <Icon name={props.rightIcon} size={16} style={props.styles.icon} />
+                        <Icon name={props.rightIcon} size={18} style={props.styles.icon} />
                     </View>
                 )}
             </View>

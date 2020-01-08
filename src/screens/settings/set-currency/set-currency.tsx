@@ -9,7 +9,6 @@ import { Icon } from '../../../components/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
-import { ICON_SIZE } from '../../../styles/dimensions';
 import { AVAILABLE_CURRENCIES } from '../../../core/constants/app';
 import { setCurrency } from '../../../redux/preferences/actions';
 
@@ -48,7 +47,7 @@ export class SetCurrencyComponent extends React.Component<
                         >
                             <Text style={styles.textRow}>{currency}</Text>
                             {this.props.selectedCurrency === currency && (
-                                <Icon name="check-1" size={ICON_SIZE / 2} style={styles.icon} />
+                                <Icon name="check-1" size={16} style={styles.icon} />
                             )}
                         </TouchableOpacity>
                         <View style={styles.divider} />

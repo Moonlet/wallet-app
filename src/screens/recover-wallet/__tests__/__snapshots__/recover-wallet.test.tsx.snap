@@ -7,172 +7,171 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
   <View style={{...}}>
     <View style={{...}}>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           1.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           2.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           3.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           4.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
     </View>
     <View style={{...}}>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           5.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           6.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           7.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           8.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
     </View>
     <View style={{...}}>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           9.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           10.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           11.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           12.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
     </View>
     <View style={{...}}>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           13.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           14.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           15.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           16.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
     </View>
     <View style={{...}}>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           17.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           18.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           19.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           20.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
     </View>
     <View style={{...}}>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           21.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           22.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           23.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
+        <withTheme(TextComponent) style={{...}}>
           24.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} />
       </View>
     </View>
   </View>
   <ScrollViewMock horizontal={true} overScrollMode=\\"never\\" snapToAlignment=\\"start\\" showsHorizontalScrollIndicator={false} contentContainerStyle={{...}} keyboardShouldPersistTaps=\\"handled\\" />
-  <withTheme(KeyboardComponent) handleTextUpdate={[Function: handleTextUpdate]} handleDeleteKey={[Function: handleDeleteKey]} buttons={{...}} footerButton={{...}} />
+  <withTheme(KeyboardComponent) handleTextUpdate={[Function: handleTextUpdate]} handleDeleteKey={[Function: handleDeleteKey]} buttons={{...}} disableSpace={true} />
   <withTheme(PasswordModalComponent) subtitle=\\"Your PIN is required to view mnemonic\\" obRef={[Function: obRef]} />
 </View>"
 `;
 
 exports[`creat wallet terms screen component sets correct navigation options 1`] = `
 <withTheme(HeaderLeftComponent)
-  icon="arrow-left-1"
+  icon="close"
   onPress={[Function]}
-  text="Back"
 />
 `;
 

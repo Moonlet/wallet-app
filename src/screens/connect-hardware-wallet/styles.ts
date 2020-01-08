@@ -67,7 +67,7 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.cardBackground
         },
         circleSelected: {
-            backgroundColor: theme.colors.accent + '16'
+            backgroundColor: theme.colors.accentSecondary
         },
         number: {
             fontSize: 28,
@@ -85,6 +85,6 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.cardBackground
         },
         dividerSelected: {
-            backgroundColor: theme.colors.accent + 'AA'
+            backgroundColor: theme.colors.accentSecondary
         }
     });

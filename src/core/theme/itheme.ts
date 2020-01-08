@@ -26,6 +26,8 @@ export interface ITheme {
         bottomSheetBackground: string;
 
         settingsDivider: string;
+        inputBackground: string;
+        disabledButton: string;
 
         gradientLight: string;
         gradientDark: string;

@@ -12,7 +12,7 @@ export const DummyScreen = () => (
 
 // TODO use theme for colors
 export const menuIcon = (icon: string) => ({ focused }: any) => (
-    <Icon name={icon} size={25} style={{ color: focused ? COLORS.AQUA : COLORS.WHITE_67 }} />
+    <Icon name={icon} size={25} style={{ color: focused ? COLORS.AQUA : COLORS.DARK_GRAY }} />
 );
 
 // remove animation when transitioning to any of `noAnimationScreens`

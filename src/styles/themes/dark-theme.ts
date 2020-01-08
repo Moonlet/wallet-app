@@ -15,22 +15,24 @@ export const darkTheme: ITheme = {
         accent: COLORS.AQUA,
         accentSecondary: COLORS.LIGHT_AQUA,
 
-        text: COLORS.WHITE_87,
-        textSecondary: COLORS.WHITE_67,
-        textTertiary: COLORS.WHITE_37,
+        text: COLORS.GAINSBORO_WHITE,
+        textSecondary: COLORS.DARK_GRAY,
+        textTertiary: COLORS.DIM_GRAY,
 
         positive: COLORS.HOT_GREEN,
         negative: COLORS.HOT_RED,
         error: COLORS.LIGHT_RED,
         warning: COLORS.YELLOW,
 
-        cardBackground: COLORS.GRAY_CARDS,
-        appBackground: COLORS.GRAY_PAGE,
-        bottomSheetBackground: COLORS.GRAY_SHEET,
+        cardBackground: COLORS.SHARK_GRAY,
+        appBackground: COLORS.COD_GRAY,
+        bottomSheetBackground: COLORS.VERY_DARK_GRAY,
 
         settingsDivider: COLORS.BLACK,
+        inputBackground: COLORS.DIM_GRAY,
+        disabledButton: COLORS.DARK_GRAY,
 
-        gradientLight: COLORS.GRAY_PAGE,
+        gradientLight: COLORS.COD_GRAY,
         gradientDark: COLORS.BLACK
     }
 };

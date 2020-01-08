@@ -43,6 +43,20 @@ export const getAccountTransactions = (
     }
 };
 
+export const getCurrentAccountTransactions = (state: IReduxState): ITransactionState[] => {
+    const account: IAccountState = selectCurrentWallet(state).accounts.find(
+        acc =>
+            acc.index === selectCurrentAccount(state).index &&
+            acc.blockchain === selectCurrentAccount(state).blockchain
+    );
+    const transactions = selectCurrentWallet(state).transactions;
+    if (transactions) {
+        return Object.values(selectCurrentWallet(state).transactions).filter(
+            tx => tx.fromAddress === account.address
+        );
+    }
+};
+
 export const getAccounts = (state: IReduxState, blockchain: Blockchain): IAccountState[] =>
     selectCurrentWallet(state).accounts.filter(acc => acc.blockchain === blockchain);
 

@@ -10,7 +10,7 @@ import { IThemeProps } from '../../../core/theme/with-theme';
 const props: IProps & IThemeProps<ReturnType<typeof stylesProvider>> = {
     label: 'card',
     leftIcon: 'money-wallet-1',
-    rightIcon: 'arrow-right-1',
+    rightIcon: 'chevron-right',
     selected: true,
     onPress: jest.fn(),
     styles: stylesProvider(darkTheme)

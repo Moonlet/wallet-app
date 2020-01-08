@@ -31,6 +31,7 @@ import { RecoverWalletScreen } from '../screens/recover-wallet/recover-wallet';
 import { WalletsScreen } from '../screens/wallets/wallets';
 import { ReceiveScreen } from '../screens/receive/receive';
 import { ViewWalletMnemonicScreen } from '../screens/view-wallet-mnemonic/view-wallet-mnemonic';
+import { TransactionsHistoryScreen } from '../screens/transactions-history/transactions-history';
 import { TransactionDetails } from '../screens/transaction-details/transaction-details';
 import { RewardsScreen } from '../screens/rewards/rewards';
 import { WatchScreen } from '../screens/watch/watch';
@@ -89,16 +90,9 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         letterSpacing: 0.38,
         textAlign: 'center'
     },
-    headerLeft:
-        navigation.dangerouslyGetParent().state.index > 0 ? (
-            <HeaderLeft
-                icon="arrow-left-1"
-                text="Back"
-                onPress={() => {
-                    navigation.goBack(null);
-                }}
-            />
-        ) : null
+    headerLeft: navigation.dangerouslyGetParent().state.index > 0 && (
+        <HeaderLeft icon="arrow-left-1" onPress={() => navigation.goBack(null)} />
+    )
 });
 
 // wallet navigation stack
@@ -124,6 +118,9 @@ export const WalletNavigation = createStackNavigator(
         },
         ViewWalletMnemonic: {
             screen: ViewWalletMnemonicScreen
+        },
+        TransactonsHistory: {
+            screen: TransactionsHistoryScreen
         },
         TransactionDetails: {
             screen: TransactionDetails

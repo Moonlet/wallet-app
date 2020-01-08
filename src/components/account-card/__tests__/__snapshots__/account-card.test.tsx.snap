@@ -6,17 +6,11 @@ exports[`account card component renders correctly 1`] = `
     <Icon name=\\"money-wallet-1\\" size={24} style={{...}} allowFontScaling={false} />
   </View>
   <View style={{...}}>
-    <View style={{...}}>
-      <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" />
-      <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" convert={true} />
-    </View>
-    <withTheme(TextComponent) style={{...}}>
-      zil1v...3k21b
-       
-    </withTheme(TextComponent)>
+    <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" />
+    <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" convert={true} />
   </View>
   <View style={{...}}>
-    <Icon name=\\"arrow-right-1\\" size={18} style={{...}} allowFontScaling={false} />
+    <Icon name=\\"chevron-right\\" size={18} style={{...}} allowFontScaling={false} />
   </View>
 </TouchableOpacity>"
 `;

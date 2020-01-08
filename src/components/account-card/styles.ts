@@ -30,10 +30,6 @@ export default (theme: ITheme) =>
         icon: {
             color: theme.colors.accent
         },
-        amountContainer: {
-            flexDirection: 'row',
-            alignItems: 'baseline'
-        },
         address: {
             fontSize: 16,
             lineHeight: 20,
@@ -41,12 +37,14 @@ export default (theme: ITheme) =>
         },
         firstAmount: {
             fontSize: 18,
+            lineHeight: 25,
             letterSpacing: 0.38,
             color: theme.colors.text,
             fontWeight: '500'
         },
         secondAmount: {
-            fontSize: 12,
+            fontSize: 16,
+            lineHeight: 20,
             letterSpacing: 0.38,
             color: theme.colors.text,
             marginLeft: 8,

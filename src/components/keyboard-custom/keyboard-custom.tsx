@@ -19,8 +19,9 @@ export interface IProps {
     showNumeric?: boolean;
     handleTextUpdate: (key: any) => void;
     handleDeleteKey: () => void;
-    buttons?: Array<{ label: string; onPress: () => void; style?: {} }>;
+    buttons?: Array<{ label: string; onPress: () => void; style?: {}; disabled?: boolean }>;
     footerButton?: { label?: string; onPress: () => void; style?: {} };
+    disableSpace?: boolean;
 }
 
 interface IState {
@@ -92,8 +93,32 @@ export class KeyboardComponent extends React.Component<
         const styles = this.props.styles;
 
         return this.props.buttons?.map((button: any, index: any) => (
-            <TouchableOpacity key={index} onPress={button.onPress} style={styles.headerButton}>
-                <Text style={[styles.pasteWordText, button?.style]}>{button.label}</Text>
+            <TouchableOpacity
+                key={index}
+                onPress={button.onPress}
+                disabled={button?.disabled}
+                style={[
+                    styles.headerButton,
+                    {
+                        borderColor: button?.disabled
+                            ? this.props.theme.colors.primary
+                            : this.props.theme.colors.accentSecondary
+                    }
+                ]}
+            >
+                <Text
+                    style={[
+                        styles.textButton,
+                        button?.style,
+                        {
+                            color: button?.disabled
+                                ? this.props.theme.colors.textSecondary
+                                : this.props.theme.colors.accent
+                        }
+                    ]}
+                >
+                    {button.label}
+                </Text>
             </TouchableOpacity>
         ));
     };
@@ -112,14 +137,16 @@ export class KeyboardComponent extends React.Component<
                     {this.renderRow(keyboardLayout[2])}
                     {this.renderRow(keyboardLayout[3], true)}
 
-                    <TouchableOpacity
-                        onPress={footerButton?.onPress}
-                        style={[styles.footerContainer]}
-                    >
-                        <Text style={[styles.footerText, footerButton?.style]}>
-                            {footerButton?.label}
-                        </Text>
-                    </TouchableOpacity>
+                    {!this.props.disableSpace && (
+                        <TouchableOpacity
+                            onPress={footerButton?.onPress}
+                            style={[styles.footerContainer]}
+                        >
+                            <Text style={[styles.footerText, footerButton?.style]}>
+                                {footerButton?.label}
+                            </Text>
+                        </TouchableOpacity>
+                    )}
                 </View>
             </View>
         );

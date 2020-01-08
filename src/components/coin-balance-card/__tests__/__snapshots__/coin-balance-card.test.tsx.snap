@@ -12,7 +12,7 @@ exports[`coin balance component renders correctly 1`] = `
   </View>
   <View style={{...}}>
     <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" />
-    <Icon name=\\"arrow-down-1\\" size={18} style={{...}} allowFontScaling={false} />
+    <Icon name=\\"chevron-down\\" size={18} style={{...}} allowFontScaling={false} />
   </View>
   <Connect(AmountComponent) style={{...}} amount={{...}} blockchain=\\"ZILLIQA\\" convert={true} />
 </TouchableOpacity>"

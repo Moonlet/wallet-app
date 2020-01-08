@@ -42,6 +42,7 @@
         "immutable": "^3.8.2",
         "intl": "^1.2.5",
         "lottie-react-native": "^3.3.2",
+        "moment": "^2.24.0",
         "node-libs-react-native": "^1.0.3",
         "react": "16.9.0",
         "react-native": "0.61.1",

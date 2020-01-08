@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Switch, TouchableOpacity, Platform } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { Text, Button } from '../../library';
+import { Text } from '../../library';
 import { IReduxState } from '../../redux/state';
 import { togglePinLogin, toggleTouchID } from '../../redux/preferences/actions';
 import stylesProvider from './styles';
@@ -154,7 +154,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('Settings.manageWallet')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -166,7 +166,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('Settings.backupWallet')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
                     <View style={styles.divider} />
@@ -211,7 +211,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('Settings.reportIssue')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -227,7 +227,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('Settings.mainnetTestnet')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -243,7 +243,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('App.labels.tc')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -255,7 +255,7 @@ export class SettingsScreenComponent extends React.Component<
                     >
                         <Text style={styles.textRow}>{translate('Settings.privacyPolicy')}</Text>
                         <View style={styles.rightContainer}>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -270,9 +270,9 @@ export class SettingsScreenComponent extends React.Component<
 
                     <View style={styles.divider} />
 
-                    <Button testID={'sign-out'} style={styles.button} onPress={this.signOut}>
+                    {/* <Button testID={'sign-out'} style={styles.button} onPress={this.signOut}>
                         {translate('Settings.signOut')}
-                    </Button>
+                    </Button> */}
                 </ScrollView>
             </View>
         );

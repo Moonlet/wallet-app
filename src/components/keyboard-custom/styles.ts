@@ -13,13 +13,18 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground
         },
         headerButtonContainer: {
-            flexDirection: 'row',
-            marginBottom: BASE_DIMENSION / 2
+            flexDirection: 'row'
         },
         headerButton: {
             flex: 1,
             paddingVertical: BASE_DIMENSION,
-            backgroundColor: theme.colors.cardBackground
+            backgroundColor: theme.colors.appBackground,
+            borderWidth: 1
+        },
+        textButton: {
+            fontSize: 17,
+            lineHeight: 22,
+            textAlign: 'center'
         },
         keyboardLayout: {
             flex: 1,

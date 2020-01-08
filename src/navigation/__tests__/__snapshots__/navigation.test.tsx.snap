@@ -5,7 +5,6 @@ Object {
   "headerLeft": <withTheme(HeaderLeftComponent)
     icon="arrow-left-1"
     onPress={[Function]}
-    text="Back"
   />,
   "headerStyle": Object {
     "backgroundColor": "#121212",
@@ -24,7 +23,7 @@ Object {
 
 exports[`Navigation configuration default stack configuration should not display back button if there is nowhere to go back to 1`] = `
 Object {
-  "headerLeft": null,
+  "headerLeft": false,
   "headerStyle": Object {
     "backgroundColor": "#121212",
     "borderBottomWidth": 0,

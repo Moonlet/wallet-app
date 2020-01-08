@@ -12,6 +12,6 @@ export default (theme: ITheme) =>
         },
         icon: {
             alignSelf: 'center',
-            color: theme.colors.accent
+            color: theme.colors.appBackground
         }
     });

@@ -162,7 +162,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                             {translate('AccountSettings.revealPrivate')}
                                         </Text>
                                         <Icon
-                                            name="arrow-right-1"
+                                            name="chevron-right"
                                             size={16}
                                             style={styles.rightIcon}
                                         />
@@ -180,7 +180,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                             {translate('AccountSettings.revealPublic')}
                                         </Text>
                                         <Icon
-                                            name="arrow-right-1"
+                                            name="chevron-right"
                                             size={16}
                                             style={styles.rightIcon}
                                         />
@@ -198,7 +198,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                             {translate('AccountSettings.viewOn') + viewOnName}
                                         </Text>
                                         <Icon
-                                            name="arrow-right-1"
+                                            name="chevron-right"
                                             size={16}
                                             style={styles.rightIcon}
                                         />
@@ -216,7 +216,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                             {translate('AccountSettings.reportIssue')}
                                         </Text>
                                         <Icon
-                                            name="arrow-right-1"
+                                            name="chevron-right"
                                             size={16}
                                             style={styles.rightIcon}
                                         />

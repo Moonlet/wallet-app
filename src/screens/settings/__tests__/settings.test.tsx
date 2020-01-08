@@ -1,6 +1,6 @@
 import 'react-native';
 import React from 'react';
-import { SettingsScreenComponent, IProps, IReduxProps, mockFunction } from '../settings';
+import { SettingsScreenComponent, IProps, IReduxProps } from '../settings';
 import { shallow } from 'enzyme';
 import styleProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';
@@ -30,11 +30,6 @@ export default describe('Wallet screen', () => {
     it('renders correctly', () => {
         const wrapper = shallow(<SettingsScreenComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();
-    });
-    it('Pin login switch tapped', () => {
-        const wrapper = shallow(<SettingsScreenComponent {...props} />);
-        wrapper.find('[testID="pin-login"]').simulate('valueChange');
-        expect(props.togglePinLogin).toHaveBeenCalledTimes(1);
     });
     it('Report issue', () => {
         const wrapper = shallow(<SettingsScreenComponent {...props} />);

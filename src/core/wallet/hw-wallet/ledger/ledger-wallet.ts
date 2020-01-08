@@ -7,18 +7,11 @@ import { TransportFactory } from './transport-factory';
 import { delay } from '../../../utils/time';
 
 export class LedgerWallet implements IWallet {
-    private blockchain: Blockchain;
     private deviceId: string;
     private deviceModel: HWModel;
     private connectionType: HWConnection;
 
-    constructor(
-        blockchain: Blockchain,
-        deviceModel: HWModel,
-        connectionType: HWConnection,
-        deviceId: string
-    ) {
-        this.blockchain = blockchain;
+    constructor(deviceModel: HWModel, connectionType: HWConnection, deviceId: string) {
         this.deviceId = deviceId;
         this.deviceModel = deviceModel;
         this.connectionType = connectionType;
@@ -89,12 +82,7 @@ export class LedgerWallet implements IWallet {
     }
 
     public getTransport() {
-        return TransportFactory.get(
-            this.blockchain,
-            this.deviceModel,
-            this.connectionType,
-            this.deviceId
-        );
+        return TransportFactory.get(this.deviceModel, this.connectionType, this.deviceId);
     }
 
     public getPrivateKey(blockchain: Blockchain, accountIndex: number): string {

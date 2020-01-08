@@ -73,7 +73,6 @@ export const createHWWallet = (
         dispatch(connectInProgress());
 
         const wallet = await HWWalletFactory.get(
-            blockchain,
             deviceVendor,
             deviceModel,
             deviceId,

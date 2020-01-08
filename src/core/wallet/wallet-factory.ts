@@ -2,7 +2,6 @@ import { WalletType, IWallet } from './types';
 import { HDWallet } from './hd-wallet/hd-wallet';
 import { HWVendor, HWModel, HWConnection } from './hw-wallet/types';
 import { HWWalletFactory } from './hw-wallet/hw-wallet-factory';
-import { Blockchain } from '../blockchain/types';
 
 export class WalletFactory {
     public static async get(
@@ -10,7 +9,6 @@ export class WalletFactory {
         walletType: WalletType,
         options: {
             pass?: string;
-            blockchain?: Blockchain;
             deviceVendor?: HWVendor;
             deviceModel?: HWModel;
             deviceId?: string;
@@ -22,7 +20,6 @@ export class WalletFactory {
                 return HDWallet.loadFromStorage(walletId, options.pass);
             case WalletType.HW:
                 return HWWalletFactory.get(
-                    options.blockchain,
                     options.deviceVendor,
                     options.deviceModel,
                     options.deviceId,

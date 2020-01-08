@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Clipboard } from 'react-native';
 import { Text } from '../../library';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { Button } from '../../library/button/button';
@@ -23,6 +23,7 @@ export interface IProps {
 
 interface IState {
     mnemonic: string[];
+    copied: boolean;
 }
 
 export interface IReduxProps {
@@ -58,7 +59,8 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
     constructor(props: any) {
         super(props);
         this.state = {
-            mnemonic: new Array(24).fill('')
+            mnemonic: new Array(24).fill(''),
+            copied: false
         };
 
         if (!props.tosVersion || TOS_VERSION > props.tosVersion) {
@@ -87,8 +89,8 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
                                     ...out,
                                     <View style={props.styles.mnemonicLine} key={i}>
                                         {line.map((w, k) => (
-                                            <Text small key={k} style={props.styles.mnemonicWord}>
-                                                {i + k + 1}. {w}
+                                            <Text key={k} style={props.styles.mnemonicWord}>
+                                                {`${i + k + 1}. ${w}`}
                                             </Text>
                                         ))}
                                     </View>
@@ -104,8 +106,19 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
                 </View>
                 <View style={props.styles.bottomContainer}>
                     <Button
+                        style={props.styles.copyButton}
+                        onPress={() => {
+                            Clipboard.setString(this.state.mnemonic.toString().replace(/,/g, ' '));
+                            this.setState({ copied: true });
+                        }}
+                    >
+                        {this.state.copied
+                            ? translate('App.buttons.copiedBtn')
+                            : translate('App.labels.copy')}
+                    </Button>
+
+                    <Button
                         testID="button-next"
-                        style={props.styles.bottomButton}
                         primary
                         onPress={() => {
                             props.navigation.navigate('CreateWalletConfirmMnemonic', {

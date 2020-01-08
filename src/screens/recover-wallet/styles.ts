@@ -34,7 +34,7 @@ export default (theme: ITheme) =>
             alignSelf: 'center',
             fontSize: 10,
             width: 18,
-            opacity: 0.87,
+            color: theme.colors.text,
             paddingTop: BASE_DIMENSION / 4
         },
         suggestionButton: {

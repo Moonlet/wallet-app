@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, Animated, TouchableOpacity } from 'react-native';
+import { View, Image, Animated, TouchableOpacity, Platform } from 'react-native';
 import { translate } from '../../../../core/i18n';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
@@ -9,7 +9,7 @@ import { connect } from 'react-redux';
 import { hash } from '../../../../core/secure/encrypt';
 import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
-import { biometricAuth } from '../../../../core/biometric-auth/biometric-auth';
+import { biometricAuth, BiometryType } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';
 
 export interface IReduxProps {
@@ -28,6 +28,7 @@ interface IState {
     password: string;
     errorMessage: string;
     passToVerify: string;
+    biometryType: BiometryType;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -67,7 +68,8 @@ export class PasswordPinComponent extends React.Component<
         this.state = {
             password: '',
             errorMessage: '',
-            passToVerify: ''
+            passToVerify: '',
+            biometryType: undefined
         };
         this.shakeAnimation = new Animated.Value(0);
 
@@ -213,7 +215,12 @@ export class PasswordPinComponent extends React.Component<
         if (this.props.touchID) {
             biometricAuth
                 .isSupported()
-                .then(biometryType => this.authenticate())
+                .then(biometryType => {
+                    if (Platform.OS === 'ios') {
+                        this.setState({ biometryType });
+                    }
+                    this.authenticate();
+                })
                 .catch(error => {
                     // Failure code if the user's device does not have touchID or faceID enabled
                 });
@@ -252,7 +259,19 @@ export class PasswordPinComponent extends React.Component<
         return (
             <View style={styles.keyRow}>
                 <TouchableOpacity style={styles.keyContainer} onPress={this.biometryAuth}>
-                    <Icon name="touch-id" size={40} style={styles.icon} />
+                    <Icon
+                        name={
+                            Platform.OS === 'ios' && this.state.biometryType
+                                ? this.state.biometryType === 'TouchID'
+                                    ? 'touch-id'
+                                    : this.state.biometryType === 'FaceID'
+                                    ? 'face-id'
+                                    : 'touch-id'
+                                : 'touch-id'
+                        }
+                        size={40}
+                        style={styles.touchIdIcon}
+                    />
                 </TouchableOpacity>
                 <LinearGradient
                     colors={[
@@ -286,7 +305,7 @@ export class PasswordPinComponent extends React.Component<
                         });
                     }}
                 >
-                    <Icon name="keyboard-delete-1" size={40} style={styles.icon} />
+                    <Icon name="keyboard-delete-1" size={40} style={styles.deleteIcon} />
                 </TouchableOpacity>
             </View>
         );

@@ -17,6 +17,7 @@ import { NetworkOptionsScreen } from '../screens/settings/network-options/networ
 import { NetworkSelectionScreen } from '../screens/settings/network-selection/network-selection';
 import { SetCurrencyScreen } from '../screens/settings/set-currency/set-currency';
 import { BlockchainPortfolioScreen } from '../screens/settings/blockchain-portfolio/blockchain-portfolio';
+import { BackupWalletScreen } from '../screens/settings/backup-wallet/backup-wallet';
 import { OnboardingScreen } from '../screens/onboarding/onboarding';
 import { CreateWalletTermsScreen } from '../screens/create-wallet-terms/create-wallet-terms';
 import { CreateWalletMnemonicScreen } from '../screens/create-wallet-mnemonic/create-wallet-mnemonic';
@@ -86,7 +87,6 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         fontSize: 20,
         lineHeight: 25,
         color: themes[theme].colors.text,
-        opacity: 0.87,
         letterSpacing: 0.38,
         textAlign: 'center'
     },
@@ -165,6 +165,9 @@ export const SettingsNavigation = createStackNavigator(
         },
         BlockchainPortfolio: {
             screen: BlockchainPortfolioScreen
+        },
+        BackupWallet: {
+            screen: BackupWalletScreen
         }
     },
     {

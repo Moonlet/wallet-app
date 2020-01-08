@@ -67,7 +67,7 @@ export class TextInputComponent extends React.Component<
     public render() {
         const { styles, theme } = this.props;
 
-        let containerBorderBottomColor = theme.colors.primary;
+        let containerBorderBottomColor = theme.colors.textTertiary;
         if (this.props.isFocus) {
             containerBorderBottomColor = theme.colors.accent;
         } else if (this.props.isValid) {

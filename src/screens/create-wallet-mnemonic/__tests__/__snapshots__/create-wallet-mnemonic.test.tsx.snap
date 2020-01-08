@@ -5,135 +5,87 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
   <View style={{...}}>
     <View style={{...}}>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          1
-          . 
-          1
+        <withTheme(TextComponent) style={{...}}>
+          1. 1
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          2
-          . 
-          2
+        <withTheme(TextComponent) style={{...}}>
+          2. 2
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          3
-          . 
-          3
+        <withTheme(TextComponent) style={{...}}>
+          3. 3
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          4
-          . 
-          4
+        <withTheme(TextComponent) style={{...}}>
+          4. 4
         </withTheme(TextComponent)>
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          5
-          . 
-          5
+        <withTheme(TextComponent) style={{...}}>
+          5. 5
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          6
-          . 
-          6
+        <withTheme(TextComponent) style={{...}}>
+          6. 6
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          7
-          . 
-          7
+        <withTheme(TextComponent) style={{...}}>
+          7. 7
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          8
-          . 
-          8
+        <withTheme(TextComponent) style={{...}}>
+          8. 8
         </withTheme(TextComponent)>
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          9
-          . 
-          9
+        <withTheme(TextComponent) style={{...}}>
+          9. 9
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          10
-          . 
-          10
+        <withTheme(TextComponent) style={{...}}>
+          10. 10
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          11
-          . 
-          11
+        <withTheme(TextComponent) style={{...}}>
+          11. 11
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          12
-          . 
-          12
+        <withTheme(TextComponent) style={{...}}>
+          12. 12
         </withTheme(TextComponent)>
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          13
-          . 
-          13
+        <withTheme(TextComponent) style={{...}}>
+          13. 13
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          14
-          . 
-          14
+        <withTheme(TextComponent) style={{...}}>
+          14. 14
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          15
-          . 
-          15
+        <withTheme(TextComponent) style={{...}}>
+          15. 15
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          16
-          . 
-          16
+        <withTheme(TextComponent) style={{...}}>
+          16. 16
         </withTheme(TextComponent)>
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          17
-          . 
-          17
+        <withTheme(TextComponent) style={{...}}>
+          17. 17
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          18
-          . 
-          18
+        <withTheme(TextComponent) style={{...}}>
+          18. 18
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          19
-          . 
-          19
+        <withTheme(TextComponent) style={{...}}>
+          19. 19
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          20
-          . 
-          20
+        <withTheme(TextComponent) style={{...}}>
+          20. 20
         </withTheme(TextComponent)>
       </View>
       <View style={{...}}>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          21
-          . 
-          21
+        <withTheme(TextComponent) style={{...}}>
+          21. 21
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          22
-          . 
-          22
+        <withTheme(TextComponent) style={{...}}>
+          22. 22
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          23
-          . 
-          23
+        <withTheme(TextComponent) style={{...}}>
+          23. 23
         </withTheme(TextComponent)>
-        <withTheme(TextComponent) small={true} style={{...}}>
-          24
-          . 
-          24
+        <withTheme(TextComponent) style={{...}}>
+          24. 24
         </withTheme(TextComponent)>
       </View>
     </View>
@@ -145,7 +97,10 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
     </View>
   </View>
   <View style={{...}}>
-    <withTheme(ButtonComponent) testID=\\"button-next\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+    <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]}>
+      Copy
+    </withTheme(ButtonComponent)>
+    <withTheme(ButtonComponent) testID=\\"button-next\\" primary={true} onPress={[Function: onPress]}>
       Next
     </withTheme(ButtonComponent)>
   </View>

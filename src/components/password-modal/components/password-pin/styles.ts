@@ -32,8 +32,7 @@ export default (theme: ITheme) =>
             textAlign: 'center',
             letterSpacing: 0.36,
             marginBottom: BASE_DIMENSION,
-            color: theme.colors.text,
-            opacity: 0.67
+            color: theme.colors.text
         },
         subTitle: {
             fontSize: 17,
@@ -41,8 +40,7 @@ export default (theme: ITheme) =>
             textAlign: 'center',
             letterSpacing: 0.36,
             marginBottom: BASE_DIMENSION * 4,
-            color: theme.colors.text,
-            opacity: 0.67
+            color: theme.colors.textSecondary
         },
         errorMessage: {
             marginTop: BASE_DIMENSION * 2,
@@ -71,9 +69,13 @@ export default (theme: ITheme) =>
             color: theme.colors.text,
             textAlign: 'center'
         },
-        icon: {
+        touchIdIcon: {
             alignSelf: 'center',
-            color: theme.colors.primary
+            color: theme.colors.accent
+        },
+        deleteIcon: {
+            alignSelf: 'center',
+            color: theme.colors.textTertiary
         },
         inputRow: {
             justifyContent: 'center',
@@ -99,7 +101,7 @@ export default (theme: ITheme) =>
             marginRight: 10
         },
         unchecked: {
-            borderColor: 'white',
+            borderColor: theme.colors.text,
             borderWidth: 1
         },
         checked: {

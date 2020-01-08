@@ -13,9 +13,11 @@ export const translation: ITranslations = {
                 cancel: 'Cancel',
                 cheap: 'Cheap',
                 close: 'Close',
+                comingSoon: 'Coming soon!',
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
+                copy: 'Copy',
                 create: 'Create',
                 date: 'Date',
                 dateAndTime: 'Date and time',
@@ -96,7 +98,7 @@ export const translation: ITranslations = {
             verifyPinTitle: 'Verify PIN code',
             verifyPinSubtitle: 'Please re-enter your new PIN code',
             pinTitleUnlock: 'Enter PIN code',
-            pinSubtitleUnlock: 'Your PIN is required to unlock Moonlet',
+            pinSubtitleUnlock: 'Your PIN is required\nto unlock Moonlet',
             invalidPassword: 'Invalid Password',
             genericError: 'Operation could not be completed',
             subtitleMnemonic: 'Your PIN is required to view mnemonic',
@@ -180,7 +182,7 @@ export const translation: ITranslations = {
             privacyPolicy: 'Privacy policy',
             reportIssue: 'Report issue',
             signOut: 'Sign out',
-            touchID: 'TouchID'
+            mainnetTestnet: 'Mainnet/Testnet'
         },
         NetworkOptions: {
             mainnet: 'Mainnet',
@@ -203,6 +205,14 @@ export const translation: ITranslations = {
             quicklyManage: 'Quickly edit, order or hide your accounts',
             connectExtension: 'Connect to extension',
             scanCode: 'Scan the QR code on extension'
+        },
+        BackupWallet: {
+            title: 'Backup Wallet',
+            workInProgress: 'A backup/recovery system\nis in the work.'
+        },
+        BiometryType: {
+            FaceID: 'FaceID',
+            TouchID: 'TouchID'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -1,18 +1,20 @@
 export const COLORS = {
-    WHITE: '#FFF',
-    BLACK: '#000',
-    COD_GRAY: '#111111',
-    // SHARK_GRAY: '#232326',
-    VERY_DARK_GRAY: '#1F1F1F',
-    DARK_GRAY: '#2a2a2a',
-    TUNDORA_GRAY: '#4E4E4E',
-    GRAY: '#585858',
-    LIGHT_GRAY: '#9a9a9a',
+    WHITE: '#FFFFFF',
+    BLACK: '#000000',
+
+    AQUA: '#00DAFF', // main color
+    LIGHT_AQUA: '#00515E', // cards outline
+
+    GAINSBORO_WHITE: '#E0E0E0', // WHITE_87: headers from page
+    DARK_GRAY: '#B1B1B1', // WHITE_67 - texts from page
+    DIM_GRAY: '#6A6A6A', // WHITE_37 - texts from fields
+
+    SHARK_GRAY: '#28282A', // all cards
+    COD_GRAY: '#121212', // page background
+    VERY_DARK_GRAY: '#1F1F1F', // bottom sheet
+
     HOT_GREEN: '#00E676',
     HOT_RED: '#E91E63',
-    AQUA: '#00DAFF',
-    LIGHT_AQUA: '#00515E',
-    FLAT_GRAY: '#4E4E53',
     LIGHT_RED: '#FFAB91',
     YELLOW: '#F2C94C'
 };

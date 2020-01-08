@@ -33,15 +33,13 @@ export default (theme: ITheme) =>
         address: {
             fontSize: 16,
             lineHeight: 20,
-            color: theme.colors.text,
-            opacity: 0.67
+            color: theme.colors.textSecondary
         },
         firstAmount: {
             fontSize: 18,
             lineHeight: 25,
             letterSpacing: 0.38,
             color: theme.colors.text,
-            opacity: 0.87,
             fontWeight: '500'
         },
         secondAmount: {
@@ -49,6 +47,7 @@ export default (theme: ITheme) =>
             lineHeight: 20,
             letterSpacing: 0.38,
             color: theme.colors.text,
-            opacity: 0.67
+            marginLeft: 8,
+            fontWeight: '500'
         }
     });

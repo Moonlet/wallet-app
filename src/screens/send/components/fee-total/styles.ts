@@ -12,7 +12,7 @@ export default (theme: ITheme) =>
         feeWrapper: {
             borderRadius: BORDER_RADIUS,
             borderWidth: 1,
-            backgroundColor: theme.colors.primary,
+            backgroundColor: theme.colors.cardBackground,
             paddingLeft: BASE_DIMENSION * 2,
             paddingVertical: BASE_DIMENSION
         },

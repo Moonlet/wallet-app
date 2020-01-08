@@ -18,11 +18,10 @@ export default (theme: ITheme) =>
         },
         textRow: {
             flex: 1,
-            fontSize: 17,
-            lineHeight: 21,
+            fontSize: 20,
+            lineHeight: 25,
             letterSpacing: 0.38,
-            color: theme.colors.text,
-            opacity: 0.87
+            color: theme.colors.text
         },
         divider: {
             width: '100%',

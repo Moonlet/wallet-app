@@ -11,7 +11,7 @@ export default (theme: ITheme) =>
             alignContent: 'center'
         },
         modalContainer: {
-            backgroundColor: theme.colors.modalBackground,
+            backgroundColor: theme.colors.cardBackground,
             height: 380,
             borderRadius: BORDER_RADIUS * 2,
             marginHorizontal: BASE_DIMENSION * 3
@@ -53,7 +53,6 @@ export default (theme: ITheme) =>
         backText: {
             fontSize: 17,
             lineHeight: 22,
-            opacity: 0.87,
             color: theme.colors.text
         },
         doneWrapper: {
@@ -73,8 +72,7 @@ export default (theme: ITheme) =>
             fontWeight: 'bold'
         },
         leftIcon: {
-            color: theme.colors.text,
-            opacity: 0.67,
+            color: theme.colors.textSecondary,
             marginHorizontal: BASE_DIMENSION * 2
         },
         rightIcon: {
@@ -87,7 +85,6 @@ export default (theme: ITheme) =>
         textRow: {
             fontSize: 17,
             lineHeight: 22,
-            color: theme.colors.text,
-            opacity: 0.67
+            color: theme.colors.textSecondary
         }
     });

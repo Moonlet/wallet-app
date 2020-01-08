@@ -9,11 +9,13 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             backgroundColor: theme.colors.cardBackground,
             borderBottomWidth: 1,
+            borderBottomColor: theme.colors.cardBackground,
             marginHorizontal: BASE_DIMENSION / 2
         },
         text: {
             fontSize: 13,
-            lineHeight: 18
+            lineHeight: 18,
+            color: theme.colors.text
         },
         cursor: {
             borderRadius: BORDER_RADIUS / 3,

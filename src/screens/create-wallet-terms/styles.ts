@@ -62,7 +62,6 @@ export default (theme: ITheme) =>
             fontSize: 20,
             lineHeight: 25,
             color: theme.colors.text,
-            opacity: 0.87,
             letterSpacing: 0.38
         }
     });

@@ -1,60 +1,47 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingHorizontal: 16,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: theme.colors.appBackground,
-            height: '100%'
+            flex: 1,
+            paddingHorizontal: BASE_DIMENSION * 2,
+            backgroundColor: theme.colors.appBackground
         },
-
         topContainer: {
             flex: 1,
-            justifyContent: 'flex-start',
             alignItems: 'center',
-            alignSelf: 'stretch'
+            paddingTop: BASE_DIMENSION * 8
         },
-
         bottomContainer: {
-            flex: 0,
-            justifyContent: 'center',
-            alignSelf: 'stretch',
-            alignItems: 'center',
+            marginHorizontal: BASE_DIMENSION * 2,
             marginBottom: BASE_DIMENSION * 6
         },
-
         mnemonicContainer: {
             backgroundColor: theme.colors.cardBackground,
-            borderRadius: 6,
-            alignSelf: 'stretch',
-            padding: 12,
-            marginTop: 20
+            borderRadius: BORDER_RADIUS,
+            padding: BASE_DIMENSION,
+            alignSelf: 'stretch'
         },
-
         mnemonicLine: {
             flexDirection: 'row',
-            paddingVertical: 8
+            paddingVertical: BASE_DIMENSION
         },
-
         mnemonicWord: {
-            flexBasis: 0,
-            flex: 1
+            flex: 1,
+            fontSize: 13,
+            lineHeight: 18,
+            color: theme.colors.text
         },
-
-        bottomButton: {
-            width: '80%'
+        copyButton: {
+            marginBottom: BASE_DIMENSION * 2
         },
-
         textContainer: {
             flexDirection: 'row',
             marginTop: BASE_DIMENSION * 3,
             marginHorizontal: BASE_DIMENSION * 2
         },
-
         alertIcon: {
             color: theme.colors.warning,
             marginRight: BASE_DIMENSION

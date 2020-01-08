@@ -24,7 +24,6 @@ export default (theme: ITheme) =>
             textAlign: 'center',
             letterSpacing: 0.35,
             color: theme.colors.text,
-            opacity: 0.87,
             marginBottom: BASE_DIMENSION * 2
         }
     });

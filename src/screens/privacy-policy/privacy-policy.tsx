@@ -24,7 +24,7 @@ export class PrivacyPolicyScreenComponent extends React.Component<
                     style={styles.logoImage}
                     source={require('../../assets/images/png/moonlet_space.png')}
                 />
-                <Text style={styles.launchingSoonText}>{translate('Rewards.launchingSoon')}</Text>
+                <Text style={styles.launchingSoonText}>{translate('App.labels.comingSoon')}</Text>
             </View>
         );
     }

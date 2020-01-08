@@ -101,7 +101,7 @@ export class KeyboardComponent extends React.Component<
                     styles.headerButton,
                     {
                         borderColor: button?.disabled
-                            ? this.props.theme.colors.primary
+                            ? this.props.theme.colors.textTertiary
                             : this.props.theme.colors.accentSecondary
                     }
                 ]}

@@ -6,8 +6,7 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            padding: BASE_DIMENSION * 2,
-            backgroundColor: theme.colors.cardBackgroundSecondary
+            padding: BASE_DIMENSION * 2
         },
         firstRow: {
             flexDirection: 'row',
@@ -19,7 +18,6 @@ export default (theme: ITheme) =>
             fontWeight: '500',
             letterSpacing: 0.38,
             color: theme.colors.text,
-            opacity: 0.87,
             marginRight: BASE_DIMENSION
         },
         accountAddress: {

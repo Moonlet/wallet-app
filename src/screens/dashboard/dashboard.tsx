@@ -94,7 +94,6 @@ const MyTitle = ({ text }) => (
             flex: 1,
             fontSize: 20,
             lineHeight: 25,
-            opacity: 0.87,
             letterSpacing: 0.38,
             textAlign: 'center'
         }}

@@ -26,13 +26,12 @@ export default (theme: ITheme) =>
             fontSize: 17,
             lineHeight: 21,
             letterSpacing: 0.38,
-            color: theme.colors.text,
-            opacity: 0.87
+            color: theme.colors.text
         },
-        textRowValue: {
+        rightValue: {
             fontSize: 15,
             lineHeight: 20,
-            color: theme.colors.textSecondary,
+            color: theme.colors.textTertiary,
             paddingRight: BASE_DIMENSION
         },
         divider: {
@@ -44,8 +43,7 @@ export default (theme: ITheme) =>
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'flex-end',
-            alignItems: 'center',
-            paddingRight: BASE_DIMENSION
+            alignItems: 'center'
         },
         icon: {
             color: theme.colors.accent

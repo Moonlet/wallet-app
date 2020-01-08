@@ -12,7 +12,6 @@ import { connect } from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { translate } from '../../core/i18n';
-import { ICON_SIZE } from '../../styles/dimensions';
 import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric-auth';
 
 export interface IState {
@@ -182,7 +181,7 @@ export class SettingsScreenComponent extends React.Component<
                         <Text style={styles.textRow}>{translate('Settings.defaultCurrency')}</Text>
                         <View style={styles.rightContainer}>
                             <Text style={styles.rightValue}>{this.props.currency}</Text>
-                            <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                            <Icon name="arrow-right-1" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -195,7 +194,7 @@ export class SettingsScreenComponent extends React.Component<
                         <Text style={styles.textRow}>
                             {translate('Settings.blockchainPortfolio')}
                         </Text>
-                        <Icon name="arrow-right-1" size={ICON_SIZE / 2} style={styles.icon} />
+                        <Icon name="arrow-right-1" size={16} style={styles.icon} />
                     </TouchableOpacity>
 
                     <View style={styles.divider} />

@@ -97,7 +97,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
     </View>
   </View>
   <View style={{...}}>
-    <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]} disabled={false}>
+    <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]}>
       Copy
     </withTheme(ButtonComponent)>
     <withTheme(ButtonComponent) testID=\\"button-next\\" primary={true} onPress={[Function: onPress]}>

@@ -43,8 +43,7 @@ export default (theme: ITheme) =>
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'flex-end',
-            alignItems: 'center',
-            paddingRight: BASE_DIMENSION
+            alignItems: 'center'
         },
         icon: {
             color: theme.colors.accent

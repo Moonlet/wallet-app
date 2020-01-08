@@ -111,7 +111,6 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
                             Clipboard.setString(this.state.mnemonic.toString().replace(/,/g, ' '));
                             this.setState({ copied: true });
                         }}
-                        disabled={this.state.copied}
                     >
                         {this.state.copied
                             ? translate('App.buttons.copiedBtn')

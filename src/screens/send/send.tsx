@@ -29,7 +29,6 @@ import BigNumber from 'bignumber.js';
 import bind from 'bind-decorator';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { ICON_SIZE } from '../../styles/dimensions';
-import { MessageModal } from '../../components/message-modal/message-modal';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -426,10 +425,6 @@ export class SendScreenComponent extends React.Component<
                 <QrModalReader
                     ref={ref => (this.qrCodeScanner = ref)}
                     onQrCodeScanned={this.onQrCodeScanned}
-                />
-                <MessageModal
-                    visible={this.props.reviewTxMessage}
-                    message={translate('Send.reviewTransaction')}
                 />
             </View>
         );

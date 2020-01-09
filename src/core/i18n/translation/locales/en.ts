@@ -33,6 +33,7 @@ export const translation: ITranslations = {
                 maybeLater: 'Maybe later',
                 next: 'Next',
                 nextWord: 'Next word',
+                ok: 'OK',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
                 receive: 'Receive',

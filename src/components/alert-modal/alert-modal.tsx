@@ -5,20 +5,37 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { Deferred } from '../../core/utils/deferred';
 import { Text } from '../../library';
 import Dialog from 'react-native-dialog';
+import { translate } from '../../core/i18n';
+import { KeyboardTypeOptions } from 'react-native';
+
+export interface IAlertButton {
+    text?: string;
+    onPress?: (value?: string) => void;
+}
 
 export interface IExternalProps {
     obRef?: any;
 }
 
 interface IState {
-    isPrompt: boolean;
     visible: boolean;
+
+    isAlert: boolean;
+    isPrompt: boolean;
+    isConfirm: boolean;
+
     title: string;
     message: string;
-    cancelButton: string;
-    confirmButton: string;
-    promptLabel: string;
+
+    cancelButton: IAlertButton;
+    confirmButton: IAlertButton;
+
+    cancelButtonText: string;
+    confirmButtonText: string;
+
+    defaultInputValue: string;
     inputValue: string;
+    keyboardType: KeyboardTypeOptions;
 }
 
 export class AlertModalComponent extends React.Component<
@@ -32,14 +49,24 @@ export class AlertModalComponent extends React.Component<
         super(props);
 
         this.state = {
-            isPrompt: false,
             visible: false,
+
+            isAlert: false,
+            isPrompt: false,
+            isConfirm: false,
+
             title: '',
             message: '',
-            cancelButton: '',
-            confirmButton: '',
-            promptLabel: 'Type here',
-            inputValue: ''
+
+            cancelButtonText: '',
+            confirmButtonText: '',
+
+            cancelButton: undefined,
+            confirmButton: undefined,
+
+            defaultInputValue: 'Type here',
+            inputValue: '',
+            keyboardType: 'default'
         };
         props.obRef && props.obRef(this);
     }
@@ -47,13 +74,14 @@ export class AlertModalComponent extends React.Component<
     public async showAlert(
         title: string,
         message: string,
-        cancelButton: string,
-        confirmButton: string
+        cancelButton: IAlertButton,
+        confirmButton: IAlertButton
     ): Promise<boolean> {
         this.showAlertDeferred = new Deferred();
 
         this.setState({
             visible: true,
+            isAlert: true,
             title,
             message,
             cancelButton,
@@ -66,9 +94,10 @@ export class AlertModalComponent extends React.Component<
     public async showPrompt(
         title: string,
         message: string,
-        cancelButton: string,
-        confirmButton: string,
-        promptLabel?: string
+        cancelButtonText: string,
+        confirmButtonText: string,
+        defaultInputValue?: string,
+        keyboardType?: KeyboardTypeOptions
     ): Promise<string> {
         this.showAlertDeferred = new Deferred();
 
@@ -77,17 +106,39 @@ export class AlertModalComponent extends React.Component<
             visible: true,
             title,
             message,
-            cancelButton,
-            confirmButton,
-            promptLabel
+            cancelButtonText,
+            confirmButtonText,
+            defaultInputValue,
+            keyboardType
         });
 
         return this.showAlertDeferred.promise;
     }
 
-    public hideAlert = () => this.setState({ visible: false });
+    public async showConfirm(title: string, message: string): Promise<boolean> {
+        this.showAlertDeferred = new Deferred();
+
+        this.setState({
+            isConfirm: true,
+            visible: true,
+            title,
+            message
+        });
+
+        return this.showAlertDeferred.promise;
+    }
+
+    public hideAlert = () =>
+        this.setState({
+            visible: false,
+            isAlert: false,
+            cancelButton: undefined,
+            confirmButton: undefined
+        });
 
     public hidePrompt = () => this.setState({ visible: false, isPrompt: false, inputValue: '' });
+
+    public hideConfirm = () => this.setState({ visible: false, isConfirm: false });
 
     public render() {
         const { styles, theme } = this.props;
@@ -107,31 +158,54 @@ export class AlertModalComponent extends React.Component<
                 {this.state.isPrompt && (
                     <Dialog.Input
                         onChangeText={inputValue => this.setState({ inputValue })}
-                        label={this.state.promptLabel}
+                        label={this.state.defaultInputValue}
                     />
                 )}
                 <Dialog.Button
-                    label={this.state.cancelButton}
+                    label={
+                        this.state.isAlert
+                            ? this.state.cancelButton?.text
+                                ? this.state.cancelButton.text
+                                : translate('App.labels.cancel')
+                            : this.state.isConfirm
+                            ? translate('App.labels.cancel')
+                            : this.state.cancelButtonText
+                    }
                     onPress={() => {
-                        if (this.state.isPrompt) {
+                        if (this.state.isAlert) {
+                            this.hideAlert();
+                            this.state.cancelButton?.onPress && this.state.cancelButton?.onPress();
+                        } else if (this.state.isPrompt) {
                             this.hidePrompt();
                             this.showAlertDeferred && this.showAlertDeferred.resolve('');
-                        } else {
-                            this.hideAlert();
+                        } else if (this.state.isConfirm) {
+                            this.hideConfirm();
                             this.showAlertDeferred && this.showAlertDeferred.resolve(false);
                         }
                     }}
                     color={theme.colors.accent}
                 />
                 <Dialog.Button
-                    label={this.state.confirmButton}
+                    label={
+                        this.state.isAlert
+                            ? this.state.confirmButton?.text
+                                ? this.state.confirmButton.text
+                                : translate('App.labels.ok')
+                            : this.state.isConfirm
+                            ? translate('App.labels.ok')
+                            : this.state.confirmButtonText
+                    }
                     onPress={() => {
-                        if (this.state.isPrompt) {
+                        if (this.state.isAlert) {
+                            this.hideAlert();
+                            this.state.confirmButton?.onPress &&
+                                this.state.confirmButton?.onPress();
+                        } else if (this.state.isPrompt) {
                             this.hidePrompt();
                             this.showAlertDeferred &&
                                 this.showAlertDeferred.resolve(this.state.inputValue);
-                        } else {
-                            this.hideAlert();
+                        } else if (this.state.isConfirm) {
+                            this.hideConfirm();
                             this.showAlertDeferred && this.showAlertDeferred.resolve(true);
                         }
                     }}

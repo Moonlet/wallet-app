@@ -151,19 +151,30 @@ export class WalletsScreenComponent extends React.Component<
 
     public onPressDelete(wallet: IWalletState) {
         // show a confirm dialog
-        this.alertModal
-            .showAlert(
-                translate('Wallets.deleteWallet'),
-                translate('Wallets.confirmDelete'),
-                translate('App.labels.cancel'),
-                translate('App.labels.delete')
-            )
-            .then((res: boolean) => {
-                if (res) {
+
+        // this.alertModal
+        //     .showConfirm(translate('Wallets.deleteWallet'), translate('Wallets.confirmDelete'))
+        //     .then((res: boolean) => {
+        //         if (res) {
+        //             this.closeCurrentOpenedSwipable();
+        //             this.onDeleteConfirmed(wallet);
+        //         }
+        //     });
+
+        /// OR ///
+
+        this.alertModal.showAlert(
+            translate('Wallets.deleteWallet'),
+            translate('Wallets.confirmDelete'),
+            { text: translate('App.labels.cancel') },
+            {
+                text: translate('App.labels.delete'),
+                onPress: () => {
                     this.closeCurrentOpenedSwipable();
                     this.onDeleteConfirmed(wallet);
                 }
-            });
+            }
+        );
     }
 
     public onDeleteConfirmed(wallet: IWalletState) {

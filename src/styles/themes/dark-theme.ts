@@ -29,7 +29,7 @@ export const darkTheme: ITheme = {
         bottomSheetBackground: COLORS.VERY_DARK_GRAY,
 
         settingsDivider: COLORS.BLACK,
-        inputBackground: COLORS.DIM_GRAY,
+        inputBackground: COLORS.GUN_POWDER_GRAY,
         disabledButton: COLORS.DARK_GRAY,
 
         gradientLight: COLORS.COD_GRAY,

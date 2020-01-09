@@ -47,7 +47,6 @@ export default (theme: ITheme) =>
             lineHeight: 20,
             letterSpacing: 0.38,
             color: theme.colors.text,
-            marginLeft: 8,
             fontWeight: '500'
         }
     });

@@ -4,6 +4,7 @@ import { Text } from '../index';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
+import { BORDER_RADIUS } from '../../styles/dimensions';
 
 export interface ITabSelectProps {
     options: any;
@@ -13,15 +14,23 @@ export interface ITabSelectProps {
 }
 export const TabSelectComponent = (props: ITabSelectProps) => (
     <View style={props.styles.container}>
-        {Object.keys(props.options).map((key, i) => (
+        {Object.keys(props.options).map((key, index) => (
             <TouchableOpacity
-                key={i}
+                key={index}
                 onPress={() => {
                     props.onSelectionChange(key);
                 }}
                 style={[
                     props.styles.tabButton,
-                    props.selected === key && props.styles.tabButtonSelected
+                    props.selected === key && props.styles.tabButtonSelected,
+                    {
+                        borderTopLeftRadius: index === 0 ? BORDER_RADIUS / 2 : 0,
+                        borderBottomLeftRadius: index === 0 ? BORDER_RADIUS / 2 : 0,
+                        borderTopRightRadius:
+                            index === Object.keys(props.options).length - 1 ? BORDER_RADIUS / 2 : 0,
+                        borderBottomRightRadius:
+                            index === Object.keys(props.options).length - 1 ? BORDER_RADIUS / 2 : 0
+                    }
                 ]}
             >
                 <Text

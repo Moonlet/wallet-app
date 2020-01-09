@@ -39,7 +39,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
 
     public manageAccount = () => {
         this.props.onCloseEnd();
-        this.props.navigation.navigate('Accounts');
+        this.props.navigation.navigate('ManageAccount');
     };
 
     public connectExtension = () => {

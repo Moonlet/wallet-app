@@ -9,6 +9,7 @@ export const translation: ITranslations = {
                 accept: 'Accept',
                 account: 'Account',
                 accounts: 'Accounts',
+                addToken: 'Add token',
                 advanced: 'Advanced',
                 cancel: 'Cancel',
                 cheap: 'Cheap',
@@ -17,12 +18,15 @@ export const translation: ITranslations = {
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
+                contractAddress: 'Contract address',
                 copy: 'Copy',
                 create: 'Create',
                 date: 'Date',
                 dateAndTime: 'Date and time',
+                decimals: 'Decimals',
                 delete: 'Delete',
                 details: 'Details',
+                editToken: 'Edit token',
                 error: 'Error',
                 failed: 'Failed',
                 fast: 'Fast',
@@ -49,6 +53,7 @@ export const translation: ITranslations = {
                 standard: 'Standard',
                 status: 'Status',
                 support: 'Support',
+                symbol: 'Symbol',
                 tc: 'Terms & conditions',
                 to: 'To',
                 tools: 'Tools',
@@ -153,7 +158,8 @@ export const translation: ITranslations = {
             secureWallet: 'Secure wallet',
             editTitle: 'Edit wallet name',
             editDescription: 'Use a relevant name or an alias for this wallet',
-            addWalletTitle: 'Add Wallet'
+            addWalletTitle: 'Add Wallet',
+            manageWallets: 'Manage wallets'
         },
         Transaction: {
             transactionID: 'Transaction ID',
@@ -196,7 +202,8 @@ export const translation: ITranslations = {
         Account: {
             noTransactions: 'No transactions available',
             transactionHistory:
-                'Transaction history will appear here once you start to send tokens to other accounts'
+                'Transaction history will appear here once you start to send tokens to other accounts',
+            manageAccount: 'Manage account'
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',
@@ -213,6 +220,10 @@ export const translation: ITranslations = {
         BiometryType: {
             FaceID: 'FaceID',
             TouchID: 'TouchID'
+        },
+        Token: {
+            deleteToken: 'Delete token',
+            editToken: 'Edit token'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -15,10 +15,6 @@ import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ListAccount } from '../account/components/list-account/list-account';
 import { translate } from '../../core/i18n';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Icon } from '../../components/icon';
-import { themes } from '../../navigation/navigation';
-import { BASE_DIMENSION, ICON_SIZE } from '../../styles/dimensions';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -39,25 +35,8 @@ const mapDispatchToProps = {
     appSwitchAccount
 };
 
-export const navigationOptions = ({ navigation, theme }: any) => ({
-    title: translate('DashboardMenu.manageAccount'),
-    headerRight: (
-        <TouchableOpacity
-            onPress={() => {
-                //
-            }}
-        >
-            <Icon
-                name="add"
-                size={ICON_SIZE}
-                style={{
-                    color: themes[theme].colors.accent,
-                    alignSelf: 'center',
-                    marginRight: BASE_DIMENSION * 2
-                }}
-            />
-        </TouchableOpacity>
-    )
+export const navigationOptions = () => ({
+    title: translate('DashboardMenu.manageAccount')
 });
 
 export const AccountsScreenComponent = (

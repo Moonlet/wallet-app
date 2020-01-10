@@ -36,7 +36,8 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
         index,
         publicKey: privateToPublic(privateKey),
         address: privateToAddress(privateKey),
-        blockchain: Blockchain.ZILLIQA
+        blockchain: Blockchain.ZILLIQA,
+        tokens: {}
     };
 };
 

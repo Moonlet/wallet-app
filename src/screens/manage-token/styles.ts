@@ -23,6 +23,16 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.inputBackground,
             paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2
         },
+        contractAddressContainer: {
+            marginBottom: BASE_DIMENSION * 3
+        },
+        contractAddressBox: {
+            height: BASE_DIMENSION * 5 + BASE_DIMENSION / 2,
+            borderRadius: BORDER_RADIUS,
+            backgroundColor: theme.colors.inputBackground,
+            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2,
+            marginBottom: BASE_DIMENSION / 2
+        },
         input: {
             flex: 1,
             fontSize: 17,
@@ -32,5 +42,23 @@ export default (theme: ITheme) =>
         saveButton: {
             width: '80%',
             alignSelf: 'center'
+        },
+        addressErrors: {
+            flexDirection: 'column',
+            marginBottom: BASE_DIMENSION * 3
+        },
+        displayError: {
+            paddingLeft: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION,
+            color: theme.colors.error,
+            fontSize: 15,
+            lineHeight: 20
+        },
+        receipientWarning: {
+            paddingLeft: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION,
+            color: theme.colors.warning,
+            fontSize: 15,
+            lineHeight: 20
         }
     });

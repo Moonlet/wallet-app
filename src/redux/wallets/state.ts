@@ -24,6 +24,34 @@ export interface IWalletState {
     };
 }
 
+export enum TokenSymbol {
+    ETH = 'ETH',
+    MKR = 'MKR'
+}
+
+export enum TokenType {
+    NATIVE = 'NATIVE',
+    ERC20 = 'ERC20'
+}
+
+export interface IToken {
+    name: string;
+    symbol: TokenSymbol;
+    logo?: string;
+    type: TokenType;
+    contractAddress: string;
+    order: number;
+    active: boolean;
+    decimals: number;
+    uiDecimals: number;
+    balance?: {
+        value: BigNumber;
+        inProgress: boolean;
+        timestamp: number;
+        error: any;
+    };
+}
+
 export interface IAccountState {
     index: number;
     name?: string;
@@ -38,6 +66,9 @@ export interface IAccountState {
         error: any;
     };
     balanceTimestamp?: number;
+    tokens: {
+        [symbol: string]: IToken;
+    };
 }
 
 export interface ITransactionState {

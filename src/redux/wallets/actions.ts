@@ -1,7 +1,7 @@
 import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
 import { Blockchain } from '../../core/blockchain/types';
 import { WalletType } from '../../core/wallet/types';
-import { IWalletState, IAccountState } from './state';
+import { IWalletState, IAccountState, IToken } from './state';
 import { IAction } from '../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
@@ -31,6 +31,9 @@ export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
+export const TOGGLE_TOKEN_ACTIVE = 'TOGGLE_TOKEN_ACTIVE';
+export const UPDATE_TOKEN_ORDER = 'UPDATE_TOKEN_ORDER';
+export const REMOVE_TOKEN = 'REMOVE_TOKEN';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -271,5 +274,26 @@ export const updateWalletName = (walletId: string, newName: string) => {
     return {
         type: WALLET_CHANGE_NAME,
         data: { walletId, newName }
+    };
+};
+
+export const toggleTokenActive = (walletId: string, account: IAccountState, token: IToken) => {
+    return {
+        type: TOGGLE_TOKEN_ACTIVE,
+        data: { walletId, account, token }
+    };
+};
+
+export const updateTokenOrder = (walletId: string, account: IAccountState, tokens: IToken[]) => {
+    return {
+        type: UPDATE_TOKEN_ORDER,
+        data: { walletId, account, tokens }
+    };
+};
+
+export const removeToken = (walletId: string, account: IAccountState, token: IToken) => {
+    return {
+        type: REMOVE_TOKEN,
+        data: { walletId, account, token }
     };
 };

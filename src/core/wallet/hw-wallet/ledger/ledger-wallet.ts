@@ -56,7 +56,8 @@ export class LedgerWallet implements IWallet {
                 index,
                 publicKey: address.publicKey,
                 address: address.address,
-                blockchain
+                blockchain,
+                tokens: {}
             };
             accounts.push(account);
             return Promise.resolve(accounts);

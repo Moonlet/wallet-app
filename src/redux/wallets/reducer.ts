@@ -7,7 +7,10 @@ import {
     TRANSACTION_PUBLISHED,
     ACCOUNT_ADD,
     ACCOUNT_REMOVE,
-    WALLET_CHANGE_NAME
+    WALLET_CHANGE_NAME,
+    TOGGLE_TOKEN_ACTIVE,
+    UPDATE_TOKEN_ORDER,
+    REMOVE_TOKEN
 } from './actions';
 import { TransactionStatus } from '../../core/wallet/types';
 import { REHYDRATE } from 'redux-persist';
@@ -149,6 +152,68 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                                 account.address === action.data.account.address &&
                                 account.blockchain === action.data.account.blockchain
                             )
+                    )
+                }
+            };
+
+        case TOGGLE_TOKEN_ACTIVE:
+            const token = action.data.token;
+            token.active = !token.active;
+
+            return {
+                ...state,
+                [action.data.walletId]: {
+                    ...state[action.data.walletId],
+                    accounts: state[action.data.walletId].accounts.map(account =>
+                        account.address === action.data.account.address &&
+                        account.blockchain === action.data.account.blockchain
+                            ? {
+                                  ...account,
+                                  tokens: {
+                                      ...account.tokens,
+                                      [action.data.token.symbol]: token
+                                  }
+                              }
+                            : account
+                    )
+                }
+            };
+
+        case UPDATE_TOKEN_ORDER:
+            return {
+                ...state,
+                [action.data.walletId]: {
+                    ...state[action.data.walletId],
+                    accounts: state[action.data.walletId].accounts.map(account =>
+                        account.address === action.data.account.address &&
+                        account.blockchain === action.data.account.blockchain
+                            ? {
+                                  ...account,
+                                  tokens: action.data.tokens
+                              }
+                            : account
+                    )
+                }
+            };
+
+        case REMOVE_TOKEN:
+            const accountToRemoveToken = state[action.data.walletId].accounts.find(
+                account =>
+                    account.address === action.data.account.address &&
+                    account.blockchain === action.data.account.blockchain
+            );
+
+            delete accountToRemoveToken.tokens[action.data.token.symbol];
+
+            return {
+                ...state,
+                [action.data.walletId]: {
+                    ...state[action.data.walletId],
+                    accounts: state[action.data.walletId].accounts.map(account =>
+                        account.address === action.data.account.address &&
+                        account.blockchain === action.data.account.blockchain
+                            ? accountToRemoveToken
+                            : account
                     )
                 }
             };

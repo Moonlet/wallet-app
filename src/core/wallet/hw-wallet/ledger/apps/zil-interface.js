@@ -109,7 +109,7 @@ class Zilliqa {
             null,
             2
         );
-        // console.log(chalk.green(message));
+        console.log('tx params4 ', message);
 
         const STREAM_LEN = 128; // Stream in batches of STREAM_LEN bytes each.
         var txn1Bytes;
@@ -133,7 +133,7 @@ class Zilliqa {
         const payload = Buffer.concat([indexBytes, hostBytesLeftBytes, txn1SizeBytes, txn1Bytes]);
 
         let transport = this.transport;
-        // console.log("=>", payload.toString("hex"));
+        console.log('=>', payload.toString('hex'));
         return transport
             .send(CLA, INS.signTxn, P1, P2, payload)
             .then(function cb(response) {

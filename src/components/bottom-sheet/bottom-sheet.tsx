@@ -6,6 +6,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { IReduxState } from '../../redux/state';
 import { AccountsBottomSheet } from './accounts-bottom-sheet/accounts-bottom-sheet';
+import { LedgerMessageBottomSheet } from './ledger-message-bottom-sheet/ledger-message-bottom-sheet';
 import { BottomSheetType, IBottomSheet } from '../../redux/app/state';
 import { openBottomSheet, closeBottomSheet } from '../../redux/app/actions';
 import { DashboardMenuBottomSheet } from './dashboard-menu-bottom-sheet/dashboard-menu-bottom-sheet';
@@ -76,6 +77,18 @@ export class BottomSheetComponent extends React.Component<
                     <View style={this.props.styles.container}>
                         <DashboardMenuBottomSheet
                             snapPoints={{ initialSnap: 0, bottomSheetHeight: 300 }}
+                            onOpenStart={this.handleOpenStart}
+                            onCloseEnd={this.handleCloseEnd}
+                            navigation={this.props.navigation}
+                        />
+                    </View>
+                );
+            case BottomSheetType.LEDGER_SIGN_MESSAGES:
+                return (
+                    <View style={this.props.styles.container}>
+                        <LedgerMessageBottomSheet
+                            snapPoints={{ initialSnap: 0, bottomSheetHeight: 200 }}
+                            blockchain={this.props.bottomSheet?.blockchain}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
                             navigation={this.props.navigation}

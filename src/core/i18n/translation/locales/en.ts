@@ -92,7 +92,8 @@ export const translation: ITranslations = {
             NANO_S: 'Ledger Nano S',
             app: 'Make sure you have opened the {{app}} app on your hardware wallet',
             verifyAddress: 'Verify address on your device',
-            notSupported: 'Feature is not supported'
+            notSupported: 'Feature is not supported',
+            openApp: 'Please open {{app}} app on your Ledger'
         },
         Fee: {
             feeTitle: 'Transaction fee',
@@ -139,7 +140,8 @@ export const translation: ITranslations = {
             alertEditTitle: 'Edit address book name',
             alertEditDescription: 'Use a relevant name or an alias for this address',
             deleteContact: 'Delete contact',
-            editContactName: 'Edit name'
+            editContactName: 'Edit name',
+            reviewTransaction: 'Review transaction on your hardware wallet'
         },
         AccountSettings: {
             manageAccount: 'Manage account',
@@ -199,7 +201,9 @@ export const translation: ITranslations = {
         },
         Onboarding: {
             welcomeTitle: 'Welcome to Moonlet!',
-            welcomeText: 'We’ll generate this section once you create, recover or connect a wallet'
+            welcomeText: 'We’ll generate this section once you create, recover or connect a wallet',
+            welcomeTextWeb:
+                'To use Moonlet extension:\n1. Open Moonlet app on your phone \n2. Tap this and that\n3. Scan this QR Code'
         },
         Account: {
             noTransactions: 'No transactions available',

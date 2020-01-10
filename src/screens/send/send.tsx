@@ -107,9 +107,9 @@ export class SendScreenComponent extends React.Component<
                 this.state.toAddress,
                 this.state.amount,
                 this.state.feeOptions,
-                password
+                password,
+                this.props.navigation
             );
-            this.props.navigation.goBack();
         });
     };
 

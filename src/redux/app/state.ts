@@ -22,7 +22,8 @@ export interface IBottomSheet {
 
 export enum BottomSheetType {
     ACCOUNTS = 'ACCOUNTS',
-    DASHBOARD_MENU = 'DASHBOARD_MENU'
+    DASHBOARD_MENU = 'DASHBOARD_MENU',
+    LEDGER_SIGN_MESSAGES = 'LEDGER_SIGN_MESSAGES'
 }
 
 export interface ICurrentAccount {

@@ -10,6 +10,8 @@ import { translate } from '../../../core/i18n';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
+import { QrModalReader } from '../../qr-modal/qr-modal';
+import { WalletConnectClient } from '../../../core/wallet-connect/wallet-connect-client';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -22,6 +24,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public bottomSheet: any;
+    public qrCodeScanner: any;
 
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
@@ -43,7 +46,12 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
     };
 
     public connectExtension = () => {
+        this.qrCodeScanner.open();
+    };
+
+    public onQrCodeScanned = async (value: string) => {
         this.props.onCloseEnd();
+        WalletConnectClient.connect(value);
     };
 
     public renderBottomSheetContent = () => {
@@ -96,6 +104,11 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     </View>
                     <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
+
+                <QrModalReader
+                    ref={ref => (this.qrCodeScanner = ref)}
+                    onQrCodeScanned={this.onQrCodeScanned}
+                />
             </View>
         );
     };

@@ -71,7 +71,15 @@ export class LedgerWallet implements IWallet {
         accountIndex: number,
         tx: IBlockchainTransaction
     ): Promise<any> {
-        return Promise.reject('NOT_IMPLEMENTED');
+        try {
+            await this.onAppOpened(blockchain);
+            const transport = await this.getTransport();
+            const app = await AppFactory.get(blockchain, transport);
+
+            return Promise.resolve(app.signTransaction(accountIndex, 0, undefined, tx));
+        } catch (e) {
+            return Promise.reject(e);
+        }
     }
 
     public getTransport() {

@@ -6,7 +6,7 @@ import { IAction } from '../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { getChainId } from '../app/selectors';
-import { appSwitchWallet } from '../app/actions';
+import { appSwitchWallet, openBottomSheet, closeBottomSheet } from '../app/actions';
 import uuidv4 from 'uuid/v4';
 import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
@@ -22,6 +22,9 @@ import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
+import { REVIEW_TRANSACTION } from '../screens/send/actions';
+import { BottomSheetType } from '../app/state';
+import { REHYDRATE } from 'redux-persist';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -41,6 +44,13 @@ export const addWallet = (walletData: IWalletState) => {
         type: WALLET_ADD,
         data: walletData
     };
+};
+
+export const updateReduxState = (state: IReduxState) => dispatch => {
+    dispatch({
+        type: REHYDRATE,
+        payload: state
+    });
 };
 
 export const addAccount = (walletId: string, blockchain: Blockchain, account: IAccountState) => {
@@ -205,15 +215,22 @@ export const sendTransferTransaction = (
     toAddress: string,
     amount: string,
     feeOptions: any,
-    password: string
+    password: string,
+    navigation: NavigationScreenProp<NavigationState>
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
 
-    const wallet = selectCurrentWallet(state);
+    const appWallet = selectCurrentWallet(state);
 
     try {
-        const hdWallet = await WalletFactory.get(wallet.id, wallet.type, { pass: password }); // encrypted string: pass)
+        const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
+            pass: password,
+            deviceVendor: appWallet.hwOptions?.deviceVendor,
+            deviceModel: appWallet.hwOptions?.deviceModel,
+            deviceId: appWallet.hwOptions?.deviceId,
+            connectionType: appWallet.hwOptions?.connectionType
+        }); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
 
         const nonce = await blockchainInstance.getClient(chainId).getNonce(account.address);
@@ -222,7 +239,8 @@ export const sendTransferTransaction = (
             nonce,
             chainId,
             gasPrice: feeOptions.gasPrice,
-            gasLimit: feeOptions.gasLimit
+            gasLimit: feeOptions.gasLimit,
+            publicKey: account.publicKey
         };
 
         const tx = {
@@ -232,7 +250,21 @@ export const sendTransferTransaction = (
             options
         };
 
-        const transaction = await hdWallet.sign(account.blockchain, account.index, tx);
+        if (appWallet.type === WalletType.HW) {
+            dispatch(
+                openBottomSheet(BottomSheetType.LEDGER_SIGN_MESSAGES, {
+                    blockchain: account.blockchain
+                })
+            );
+
+            await (wallet as LedgerWallet).onAppOpened(account.blockchain);
+
+            dispatch({
+                type: REVIEW_TRANSACTION,
+                data: true
+            });
+        }
+        const transaction = await wallet.sign(account.blockchain, account.index, tx);
 
         const publish = await getBlockchain(account.blockchain)
             .getClient(chainId)
@@ -243,9 +275,18 @@ export const sendTransferTransaction = (
                 data: {
                     hash: transaction,
                     tx,
-                    walletId: wallet.id
+                    walletId: appWallet.id
                 }
             });
+            if (appWallet.type === WalletType.HW) {
+                dispatch({
+                    type: REVIEW_TRANSACTION,
+                    data: false
+                });
+                dispatch(closeBottomSheet());
+                navigation.goBack();
+            }
+
             return;
         }
     } catch (e) {

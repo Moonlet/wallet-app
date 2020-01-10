@@ -85,24 +85,20 @@ export class ManageAccountComponent extends React.Component<
         const styles = this.props.styles;
         return (
             <View style={styles.leftActionsContainer}>
-                {token.type !== TokenType.NATIVE && (
-                    <TouchableOpacity
-                        style={styles.action}
-                        onPress={() => {
-                            this.props.removeToken(
-                                this.props.wallet.id,
-                                this.props.selectedAccount,
-                                token
-                            );
-                            this.closeCurrentOpenedSwipable();
-                        }}
-                    >
-                        <Icon name="bin" size={32} style={styles.iconActionNegative} />
-                        <Text style={styles.textActionNegative}>
-                            {translate('Token.deleteToken')}
-                        </Text>
-                    </TouchableOpacity>
-                )}
+                <TouchableOpacity
+                    style={styles.action}
+                    onPress={() => {
+                        this.props.removeToken(
+                            this.props.wallet.id,
+                            this.props.selectedAccount,
+                            token
+                        );
+                        this.closeCurrentOpenedSwipable();
+                    }}
+                >
+                    <Icon name="bin" size={32} style={styles.iconActionNegative} />
+                    <Text style={styles.textActionNegative}>{translate('Token.deleteToken')}</Text>
+                </TouchableOpacity>
 
                 <TouchableOpacity
                     style={styles.action}
@@ -140,7 +136,9 @@ export class ManageAccountComponent extends React.Component<
             <Swipeable
                 key={index}
                 ref={ref => (this.accountsSwipeableRef[index] = ref)}
-                renderLeftActions={() => this.renderLeftActions(item.value)}
+                renderLeftActions={() =>
+                    item.value.type !== TokenType.NATIVE && this.renderLeftActions(item.value)
+                }
                 onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
             >
                 <View

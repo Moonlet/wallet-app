@@ -99,14 +99,19 @@ export class SettingsScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <ScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {Platform.OS === 'web' && (
+                        <Button style={styles.button} onPress={this.signOut}>
+                            {translate('Settings.signOut')}
+                        </Button>
+                    )}
+
                     <Text style={styles.textHeader}>
                         {translate('App.labels.security').toUpperCase()}
                     </Text>
-
-                    <Button testID={'sign-out'} style={styles.button} onPress={this.signOut}>
-                        {translate('Settings.signOut')}
-                    </Button>
 
                     <View style={styles.rowContainer}>
                         <Text style={styles.textRow}>{translate('Settings.pinLogin')}</Text>

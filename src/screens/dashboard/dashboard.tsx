@@ -25,6 +25,7 @@ import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 import { openBottomSheet, appSwitchAccount } from '../../redux/app/actions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
+import { ph } from '../../styles/common';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -266,7 +267,7 @@ export class DashboardScreenComponent extends React.Component<
         const blockchain: Blockchain = coins[coinIndex]?.blockchain;
 
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, { minHeight: Platform.OS === 'web' && ph(100) }]}>
                 {coins.length !== 0 && (
                     <View style={styles.dashboardContainer}>
                         <View style={styles.coinBalanceCard}>

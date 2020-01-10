@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Modal, TouchableOpacity, Linking } from 'react-native';
+import { View, TouchableOpacity, Linking } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme } from '../../../../core/theme/with-theme';
 import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
@@ -13,6 +13,7 @@ import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ICON_SIZE } from '../../../../styles/dimensions';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { WalletFactory } from '../../../../core/wallet/wallet-factory';
+import Modal from '../../../../library/modal/modal';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;

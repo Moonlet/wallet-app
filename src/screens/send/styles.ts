@@ -1,6 +1,12 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    ICON_CONTAINER_SIZE,
+    FULL_HEIGHT,
+    HEADER_FOR_WEB
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -10,7 +16,8 @@ export default (theme: ITheme) =>
             paddingLeft: BASE_DIMENSION * 2,
             paddingRight: BASE_DIMENSION * 2,
             flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            height: FULL_HEIGHT
         },
         keyboardAvoidance: {
             flex: 1,
@@ -32,7 +39,8 @@ export default (theme: ITheme) =>
         inputAddress: {
             flex: 1,
             color: theme.colors.text,
-            paddingRight: BASE_DIMENSION * 2
+            paddingRight: BASE_DIMENSION * 2,
+            height: 40
         },
         receipientLabel: {
             paddingLeft: BASE_DIMENSION,
@@ -75,7 +83,7 @@ export default (theme: ITheme) =>
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'center',
-            marginBottom: BASE_DIMENSION * 2
+            marginBottom: BASE_DIMENSION * 2 + HEADER_FOR_WEB
         },
         bottomButton: {
             width: '90%'

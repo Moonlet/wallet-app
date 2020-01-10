@@ -5,7 +5,7 @@ export default {
     permissions: ['storage', 'identity', 'https://api.moonlet.xyz/*'],
     optional_permissions: ['https://*/*'],
     background: {
-        scripts: ['background/bundle.background.js']
+        scripts: ['bundle.background.js']
     },
 
     icons: {
@@ -14,7 +14,7 @@ export default {
         128: 'icons/moonlet-128px.png'
     },
     browser_action: {
-        default_popup: 'browser-action/index.html'
+        default_popup: 'index.html'
     },
     manifest_version: 2
 };

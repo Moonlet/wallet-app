@@ -9,6 +9,7 @@ import marketReducer from './market/reducer';
 import prefReducer from './preferences/reducer';
 import contactsReducer from './contacts/reducer';
 import connectHardwareWalletReducer from './screens/connectHardwareWallet/reducer';
+import { walletConnectMiddleware } from './utils/wallet-connect-middleware';
 import sendReducer from './screens/send/reducer';
 
 const composeEnhancers = composeWithDevTools({
@@ -33,7 +34,7 @@ const configureStore = () => {
     return createStore(
         persistReducer(persistConfig, rootReducer),
         {},
-        composeEnhancers(applyMiddleware(thunk))
+        composeEnhancers(applyMiddleware(thunk, walletConnectMiddleware))
     );
 };
 

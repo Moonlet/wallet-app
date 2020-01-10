@@ -13,17 +13,20 @@ interface ILedgerTransportConfig {
     };
 }
 
+const nanosConnectionConfig = {
+    connectionTypes: [HWConnection.USB]
+};
+const nanoXConnectionConfigBLE = {
+    connectionTypes: [HWConnection.BLE]
+};
+
 export const ledgerConfig: ILedgerTransportConfig = {
     android: {
         ZILLIQA: {
-            NANO_S: {
-                connectionTypes: [HWConnection.USB]
-            }
+            NANO_S: nanosConnectionConfig
         },
         ETHEREUM: {
-            NANO_S: {
-                connectionTypes: [HWConnection.USB]
-            },
+            NANO_S: nanosConnectionConfig,
             NANO_X: {
                 connectionTypes: [HWConnection.BLE, HWConnection.USB]
             }
@@ -31,24 +34,16 @@ export const ledgerConfig: ILedgerTransportConfig = {
     },
     ios: {
         ETHEREUM: {
-            NANO_X: {
-                connectionTypes: [HWConnection.BLE]
-            }
+            NANO_X: nanoXConnectionConfigBLE
         }
     },
     web: {
         ZILLIQA: {
-            NANO_S: {
-                connectionTypes: [HWConnection.USB]
-            }
+            NANO_S: nanosConnectionConfig
         },
         ETHEREUM: {
-            NANO_S: {
-                connectionTypes: [HWConnection.USB]
-            },
-            NANO_X: {
-                connectionTypes: [HWConnection.BLE]
-            }
+            NANO_S: nanosConnectionConfig,
+            NANO_X: nanoXConnectionConfigBLE
         }
     }
 };

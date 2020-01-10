@@ -12,6 +12,7 @@ export interface IZilliqaTxOptions {
     gasLimit?: number;
     data?: string;
     code?: string;
+    publicKey?: string;
 }
 
 export const Zilliqa: IBlockchain<IZilliqaTxOptions> = {

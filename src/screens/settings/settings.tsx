@@ -13,8 +13,6 @@ import DeviceInfo from 'react-native-device-info';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { translate } from '../../core/i18n';
 import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric-auth';
-import { ICON_SIZE } from '../../styles/dimensions';
-import { biometricAuth } from '../../core/biometric-auth/biometric-auth';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 
 export interface IState {

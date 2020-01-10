@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,12 +8,14 @@ export default (theme: ITheme) =>
             flex: 1,
             margin: BASE_DIMENSION,
             backgroundColor: theme.colors.cardBackground,
+            borderRadius: BORDER_RADIUS,
+            borderWidth: 2,
+            borderColor: theme.colors.cardBackground,
             alignItems: 'center',
-            paddingVertical: BASE_DIMENSION,
-            paddingHorizontal: BASE_DIMENSION
+            padding: BASE_DIMENSION
         },
         containerSelected: {
-            backgroundColor: theme.colors.text
+            borderColor: theme.colors.accentSecondary
         },
         fee: {
             fontSize: 16,
@@ -22,8 +24,8 @@ export default (theme: ITheme) =>
         },
         feeConverted: {
             color: theme.colors.textSecondary,
-            fontSize: theme.fontSize.small,
-            lineHeight: 19
+            fontSize: 15,
+            lineHeight: 20
         },
         containerFeeConverted: {
             flexDirection: 'row',
@@ -33,5 +35,8 @@ export default (theme: ITheme) =>
             fontSize: 16,
             lineHeight: 25,
             color: theme.colors.textSecondary
+        },
+        textSelected: {
+            color: theme.colors.text
         }
     });

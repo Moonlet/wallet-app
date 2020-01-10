@@ -71,15 +71,14 @@ export class ReceiveScreenComponent extends React.Component<
                     <Button
                         testID="copy-clipboard"
                         style={styles.bottomButton}
-                        primary
                         onPress={() => {
                             Clipboard.setString(account.address);
                             this.setState({ copied: true });
                         }}
                     >
-                        {this.state.copied === false
-                            ? translate('App.buttons.clipboardBtn')
-                            : translate('App.buttons.copiedBtn')}
+                        {this.state.copied
+                            ? translate('App.buttons.copiedBtn')
+                            : translate('App.buttons.clipboardBtn')}
                     </Button>
                 </View>
             </View>

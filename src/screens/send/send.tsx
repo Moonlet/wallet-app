@@ -214,7 +214,7 @@ export class SendScreenComponent extends React.Component<
                     onPress={this.onPressClearInput}
                     style={[styles.rightAddressButton]}
                 >
-                    <Icon name="close" size={ICON_SIZE} style={styles.icon} />
+                    <Icon name="close" size={16} style={styles.icon} />
                 </TouchableOpacity>
             );
         }
@@ -277,6 +277,9 @@ export class SendScreenComponent extends React.Component<
 
         return (
             <View style={styles.basicFields}>
+                <Text style={styles.receipientLabel}>
+                    {this.state.amount !== '' ? translate('Send.amount') : ' '}
+                </Text>
                 <View style={styles.inputBox}>
                     <TextInput
                         testID="amount"

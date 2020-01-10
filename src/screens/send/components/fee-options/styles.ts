@@ -17,8 +17,8 @@ export default (theme: ITheme) =>
         },
         textTranferButton: {
             color: theme.colors.accent,
-            lineHeight: BASE_DIMENSION * 3,
-            fontSize: theme.fontSize.small
+            fontSize: 13,
+            lineHeight: 18
         },
         feeTitle: {
             paddingLeft: BASE_DIMENSION,

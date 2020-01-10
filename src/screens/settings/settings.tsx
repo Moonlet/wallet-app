@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Switch, TouchableOpacity, Platform } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { Text } from '../../library';
+import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
 import { togglePinLogin, toggleTouchID } from '../../redux/preferences/actions';
 import stylesProvider from './styles';
@@ -13,6 +13,7 @@ import DeviceInfo from 'react-native-device-info';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { translate } from '../../core/i18n';
 import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric-auth';
+import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -84,8 +85,9 @@ export class SettingsScreenComponent extends React.Component<
         this.props.mock();
     };
     public signOut = () => {
-        // sign out
-        this.props.mock();
+        if (Platform.OS === 'web') {
+            WalletConnectWeb.disconnect();
+        }
     };
 
     public render() {
@@ -99,6 +101,10 @@ export class SettingsScreenComponent extends React.Component<
                     <Text style={styles.textHeader}>
                         {translate('App.labels.security').toUpperCase()}
                     </Text>
+
+                    <Button testID={'sign-out'} style={styles.button} onPress={this.signOut}>
+                        {translate('Settings.signOut')}
+                    </Button>
 
                     <View style={styles.rowContainer}>
                         <Text style={styles.textRow}>{translate('Settings.pinLogin')}</Text>

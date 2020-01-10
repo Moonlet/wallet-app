@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'react-native';
+import { Modal, View } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -137,24 +137,26 @@ export class PasswordModalComponent extends React.Component<
 
     public render() {
         return (
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={this.state.visible}
-                presentationStyle={'overFullScreen'}
-            >
-                {this.state.showTerms ? (
-                    <PasswordTerms onAcknowledged={this.onAcknowledged} />
-                ) : (
-                    <PasswordPin
-                        updatePinProps={this.state.updatePinProps}
-                        title={this.state.title}
-                        subtitle={this.state.subtitle}
-                        onPasswordEntered={this.onPasswordEntered}
-                        onBiometryLogin={this.onBiometryLogin}
-                    />
-                )}
-            </Modal>
+            <View style={{ display: this.state.visible ? 'flex' : 'none' }}>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={this.state.visible}
+                    presentationStyle={'overFullScreen'}
+                >
+                    {this.state.showTerms ? (
+                        <PasswordTerms onAcknowledged={this.onAcknowledged} />
+                    ) : (
+                        <PasswordPin
+                            updatePinProps={this.state.updatePinProps}
+                            title={this.state.title}
+                            subtitle={this.state.subtitle}
+                            onPasswordEntered={this.onPasswordEntered}
+                            onBiometryLogin={this.onBiometryLogin}
+                        />
+                    )}
+                </Modal>
+            </View>
         );
     }
 

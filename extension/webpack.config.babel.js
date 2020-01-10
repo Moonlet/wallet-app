@@ -126,7 +126,8 @@ module.exports = {
             'react-native-device-info$': path.resolve(
                 __dirname,
                 'modules-mocks/react-native-device-info'
-            )
+            ),
+            'react-native-keychain$': path.resolve(__dirname, 'modules-mocks/react-native-keychain')
         },
         // If you're working on a multi-platform React Native app, web-specific
         // module implementations should be written in files using the extension

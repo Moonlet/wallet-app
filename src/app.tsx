@@ -14,6 +14,8 @@ import { PasswordModal } from './components/password-modal/password-modal';
 import { Notifications } from './core/messaging/notifications/notifications';
 import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-notification';
 import { BottomSheet } from './components/bottom-sheet/bottom-sheet';
+import { WalletConnectClient } from './core/wallet-connect/wallet-connect-client';
+import { WalletConnectWeb } from './core/wallet-connect/wallet-connect-web';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -29,6 +31,9 @@ interface IState {
     appState: AppStateStatus;
     showPasswordModal: boolean;
 }
+
+WalletConnectClient.setStore(store);
+WalletConnectWeb.setStore(store);
 
 export default class App extends React.Component<{}, IState> {
     public interval: any = null;

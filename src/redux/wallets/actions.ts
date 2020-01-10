@@ -33,6 +33,7 @@ export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
+import { REHYDRATE } from 'redux-persist';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -40,6 +41,13 @@ export const addWallet = (walletData: IWalletState) => {
         type: WALLET_ADD,
         data: walletData
     };
+};
+
+export const updateReduxState = (state: IReduxState) => dispatch => {
+    dispatch({
+        type: REHYDRATE,
+        payload: state
+    });
 };
 
 export const addAccount = (walletId: string, blockchain: Blockchain, account: IAccountState) => {

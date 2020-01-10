@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Dimensions, Animated, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Dimensions, Animated, TouchableOpacity, Platform } from 'react-native';
 import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
@@ -24,6 +24,7 @@ import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 import { openBottomSheet, appSwitchAccount } from '../../redux/app/actions';
+import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -152,7 +153,6 @@ export class DashboardScreenComponent extends React.Component<
     public static navigationOptions = navigationOptions;
 
     public static getDerivedStateFromProps(props, state) {
-        // update balances if wallet accounts changes
         return getWalletBalances(props.wallet, props.blockchains);
     }
     public initialIndex = 0;
@@ -169,19 +169,33 @@ export class DashboardScreenComponent extends React.Component<
             ...calculateBalances(props.wallet?.accounts || [], props.blockchains)
         };
 
-        if (this.state.coins.length === 0 || props.walletsNr < 1) {
-            // maybe check this in another screen?
-            props.navigation.navigate('OnboardingScreen');
+        if (Platform.OS === 'web') {
+            if (!WalletConnectWeb.isConnected()) {
+                props.navigation.navigate('OnboardingScreen');
+            } else {
+                WalletConnectWeb.getState().then(() => {
+                    this.getWalletBalances(this.props.wallet);
+                });
+            }
+        } else {
+            if (this.state.coins.length === 0 || props.walletsNr < 1) {
+                // maybe check this in another screen?
+                props.navigation.navigate('OnboardingScreen');
+            }
         }
     }
 
     public componentDidMount() {
-        this.props.wallet?.accounts.map(account => {
-            this.props.getBalance(account.blockchain, account.address, true);
-        });
+        this.getWalletBalances(this.props.wallet);
 
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
+        });
+    }
+
+    public getWalletBalances(wallet: IWalletState) {
+        wallet?.accounts.map(account => {
+            this.props.getBalance(account.blockchain, account.address, true);
         });
     }
 

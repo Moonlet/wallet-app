@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScrollView, View, Switch, TouchableOpacity, Platform } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { Text } from '../../library';
+import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
 import { togglePinLogin, toggleTouchID } from '../../redux/preferences/actions';
 import stylesProvider from './styles';

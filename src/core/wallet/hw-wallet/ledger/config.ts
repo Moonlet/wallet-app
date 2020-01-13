@@ -1,42 +1,49 @@
-import { Blockchain } from '../../../blockchain/types';
 import { HWConnection } from '../types';
 
 interface ILedgerTransportConfig {
+    // ios | android | web
     [platform: string]: {
-        // ios | android | web
-        [deviceModel: string]: {
-            // HWModel
-            blockchains: Blockchain[];
-            connectionTypes: HWConnection[];
+        // Blockchain
+        [blockchains: string]: {
+            // Model
+            [deviceModel: string]: {
+                connectionTypes: HWConnection[];
+            };
         };
     };
 }
 
+const nanosConnectionConfig = {
+    connectionTypes: [HWConnection.USB]
+};
+const nanoXConnectionConfigBLE = {
+    connectionTypes: [HWConnection.BLE]
+};
+
 export const ledgerConfig: ILedgerTransportConfig = {
     android: {
-        NANO_S: {
-            blockchains: [Blockchain.ETHEREUM, Blockchain.ZILLIQA],
-            connectionTypes: [HWConnection.USB]
+        ZILLIQA: {
+            NANO_S: nanosConnectionConfig
         },
-        NANO_X: {
-            blockchains: [Blockchain.ETHEREUM],
-            connectionTypes: [HWConnection.USB, HWConnection.BLE]
+        ETHEREUM: {
+            NANO_S: nanosConnectionConfig,
+            NANO_X: {
+                connectionTypes: [HWConnection.BLE, HWConnection.USB]
+            }
         }
     },
     ios: {
-        NANO_X: {
-            blockchains: [Blockchain.ETHEREUM],
-            connectionTypes: [HWConnection.BLE]
+        ETHEREUM: {
+            NANO_X: nanoXConnectionConfigBLE
         }
     },
     web: {
-        NANO_X: {
-            blockchains: [Blockchain.ETHEREUM],
-            connectionTypes: [HWConnection.USB]
+        ZILLIQA: {
+            NANO_S: nanosConnectionConfig
         },
-        NANO_S: {
-            blockchains: [Blockchain.ETHEREUM, Blockchain.ZILLIQA],
-            connectionTypes: [HWConnection.USB]
+        ETHEREUM: {
+            NANO_S: nanosConnectionConfig,
+            NANO_X: nanoXConnectionConfigBLE
         }
     }
 };

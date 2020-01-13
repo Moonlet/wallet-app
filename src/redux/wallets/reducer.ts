@@ -69,19 +69,25 @@ export default (state: IWalletsState = intialState, action: IAction) => {
             };
 
         case ACCOUNT_GET_BALANCE: {
+            state = { ...state };
+
             return {
                 ...state,
                 [action.data.walletId]: {
                     ...state[action.data.walletId],
-                    accounts: state[action.data.walletId].accounts.map(account =>
-                        account.address === action.data.address &&
-                        account.blockchain === action.data.blockchain
-                            ? {
-                                  ...account,
-                                  balance: newBalance(account.balance, action)
-                              }
-                            : account
-                    )
+                    accounts: state[action.data.walletId].accounts.map(account => {
+                        if (
+                            account.address === action.data.address &&
+                            account.blockchain === action.data.blockchain
+                        ) {
+                            account.tokens[action.data.token].balance = newBalance(
+                                account.tokens[action.data.token].balance,
+                                action
+                            );
+                        }
+
+                        return account;
+                    })
                 }
             };
         }

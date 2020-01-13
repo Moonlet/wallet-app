@@ -34,16 +34,23 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
         index,
         publicKey: privateToPublic(privateKey),
         address: privateToAddress(privateKey),
-        blockchain: Blockchain.ETHEREUM
+        blockchain: Blockchain.ETHEREUM,
+        tokens: { ...config.tokens }
     };
 };
 
-export const amountToStd = (value: BigNumber | number | string): BigNumber => {
-    return convert(new BigNumber(value), config.coin, config.defaultUnit, config);
+export const amountToStd = (
+    value: BigNumber | number | string,
+    decimals: number = config.tokens[config.coin].decimals
+): BigNumber => {
+    return new BigNumber(value).multipliedBy(new BigNumber(10).pow(decimals));
 };
 
-export const amountFromStd = (value: BigNumber): BigNumber => {
-    return convert(value, config.defaultUnit, config.coin, config);
+export const amountFromStd = (
+    value: BigNumber | number | string,
+    decimals: number = config.tokens[config.coin].decimals
+): BigNumber => {
+    return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals));
 };
 
 export const convertUnit = (value: BigNumber, from: string, to: string): BigNumber => {

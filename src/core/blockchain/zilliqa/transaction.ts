@@ -1,4 +1,4 @@
-import { IBlockchainTransaction } from '../types';
+import { IBlockchainTransaction, ITransferTransaction } from '../types';
 import { IZilliqaTxOptions } from '.';
 import { privateToPublic } from './account';
 
@@ -59,4 +59,21 @@ export const sign = async (
     transaction.toAddr = toChecksumAddress(transaction.toAddr).replace('0x', '');
 
     return transaction;
+};
+
+export const buildTransferTransaction = (
+    tx: ITransferTransaction
+): IBlockchainTransaction<IZilliqaTxOptions> => {
+    return {
+        from: tx.account.address,
+        to: tx.toAddress,
+        amount: tx.amount,
+        options: {
+            nonce: tx.nonce,
+            gasPrice: tx.gasPrice.toNumber(),
+            gasLimit: tx.gasLimit,
+            chainId: tx.chainId,
+            publicKey: tx.account.publicKey
+        }
+    };
 };

@@ -99,6 +99,7 @@
         "@babel/runtime": "^7.7.2",
         "@react-native-community/eslint-config": "^0.0.5",
         "@types/enzyme": "^3.10.3",
+        "@types/ethereumjs-abi": "^0.6.3",
         "@types/ethereumjs-tx": "^2.0.0",
         "@types/hdkey": "^0.7.1",
         "@types/jest": "^24.0.19",

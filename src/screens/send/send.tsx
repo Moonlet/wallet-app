@@ -54,6 +54,7 @@ const mapDispatchToProps = {
 export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
+    token: string;
 }
 
 interface IState {
@@ -106,6 +107,7 @@ export class SendScreenComponent extends React.Component<
                 this.props.account,
                 this.state.toAddress,
                 this.state.amount,
+                this.props.token,
                 this.state.feeOptions,
                 password,
                 this.props.navigation

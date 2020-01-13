@@ -6,5 +6,20 @@ Object {
   "blockchain": "ETHEREUM",
   "index": 1,
   "publicKey": "PUBLIC_KEY",
+  "tokens": Object {
+    "ETH": Object {
+      "decimals": 18,
+      "name": "Ethereum",
+      "order": 0,
+      "symbol": "ETH",
+      "type": "NATIVE",
+      "uiDecimals": 4,
+      "units": Object {
+        "ETH": "1000000000000000000",
+        "GWEI": "1000000000",
+        "WEI": "1",
+      },
+    },
+  },
 }
 `;

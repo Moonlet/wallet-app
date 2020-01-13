@@ -10,6 +10,7 @@ export interface IEthereumTxOptions {
     chainId: number;
     gasPrice: number;
     gasLimit: number;
+    data?: string;
 }
 
 export const Ethereum: IBlockchain<IEthereumTxOptions> = {

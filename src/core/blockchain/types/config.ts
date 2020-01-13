@@ -1,14 +1,15 @@
 import { BigNumber } from 'bignumber.js';
+import { ITokenConfig, TokenType } from './token';
 
 export interface IBlockchainConfig {
     derivationPath: string;
     coin: string;
     defaultUnit: string;
-    units: {
-        [unit: string]: BigNumber;
+    tokens: {
+        [symbol: string]: ITokenConfig;
     };
-    decimals: number;
     feeOptions: {
+        gasPriceToken: string;
         defaults: {
             gasPrice: BigNumber;
             gasLimit: BigNumber;
@@ -20,6 +21,7 @@ export interface IBlockchainConfig {
             };
         };
         ui: {
+            availableTokenTypes: TokenType[];
             feeComponent: 'FeeTotal' | 'FeePresets';
             feeComponentAdvanced?: 'GasFeeAdvanced';
             gasPriceUnit: string;

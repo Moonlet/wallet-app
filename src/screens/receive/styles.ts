@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, FULL_HEIGHT, HEADER_FOR_WEB } from '../../styles/dimensions';
+import { BASE_DIMENSION, SCREEN_HEIGHT, HEADER_FOR_WEB } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -9,7 +9,7 @@ export default (theme: ITheme) =>
             padding: BASE_DIMENSION * 2,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
-            height: FULL_HEIGHT
+            height: SCREEN_HEIGHT
         },
         bottomButton: {
             width: '90%'

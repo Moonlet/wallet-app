@@ -4,8 +4,7 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
-    FULL_HEIGHT,
-    HEADER_FOR_WEB
+    SCREEN_HEIGHT
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -17,7 +16,7 @@ export default (theme: ITheme) =>
             paddingRight: BASE_DIMENSION * 2,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
-            height: FULL_HEIGHT
+            height: SCREEN_HEIGHT
         },
         keyboardAvoidance: {
             flex: 1,
@@ -83,7 +82,7 @@ export default (theme: ITheme) =>
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'center',
-            marginBottom: BASE_DIMENSION * 2 + HEADER_FOR_WEB
+            marginBottom: BASE_DIMENSION * 2
         },
         bottomButton: {
             width: '90%'

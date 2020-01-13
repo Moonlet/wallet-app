@@ -1,12 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { ph, pw } from '../../styles';
-import {
-    BASE_DIMENSION,
-    BORDER_RADIUS,
-    FULL_HEIGHT,
-    HEADER_FOR_WEB
-} from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, SCREEN_HEIGHT } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -14,7 +9,7 @@ export default (theme: ITheme) =>
             flex: 1,
             padding: BASE_DIMENSION * 2,
             backgroundColor: theme.colors.appBackground,
-            height: FULL_HEIGHT
+            height: SCREEN_HEIGHT
         },
 
         walletList: {
@@ -23,7 +18,7 @@ export default (theme: ITheme) =>
 
         bottomContainer: {
             alignSelf: 'center',
-            marginBottom: 20 + HEADER_FOR_WEB,
+            marginBottom: 20,
             flexDirection: 'row',
             flex: 0
         },

@@ -13,13 +13,7 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
 import { selectCurrentAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
-import {
-    IAccountState,
-    IToken,
-    TokenSymbol,
-    IWalletState,
-    TokenType
-} from '../../redux/wallets/state';
+import { IAccountState, IToken, IWalletState, TokenType } from '../../redux/wallets/state';
 import { Amount } from '../../components/amount/amount';
 import BigNumber from 'bignumber.js';
 import { toggleTokenActive, updateTokenOrder, removeToken } from '../../redux/wallets/actions';
@@ -29,7 +23,7 @@ export interface IReduxProps {
     updateTokenOrder: typeof updateTokenOrder;
     removeToken: typeof removeToken;
 
-    tokens: [{ key: TokenSymbol; value: IToken }];
+    tokens: [{ key: string; value: IToken }];
     wallet: IWalletState;
     selectedAccount: IAccountState;
 }
@@ -128,7 +122,7 @@ export class ManageAccountComponent extends React.Component<
         this.currentlyOpenSwipeable = index;
     }
 
-    public renderToken(item: { key: TokenSymbol; value: IToken }, move: any, moveEnd: any) {
+    public renderToken(item: { key: string; value: IToken }, move: any, moveEnd: any) {
         const { styles, theme } = this.props;
         const index = item.key;
 
@@ -212,9 +206,7 @@ export class ManageAccountComponent extends React.Component<
                 <DraggableFlatList
                     data={this.props.tokens}
                     renderItem={({ item, move, moveEnd }) => this.renderToken(item, move, moveEnd)}
-                    keyExtractor={(item: { key: TokenSymbol; value: IToken }) =>
-                        `${item.value.order}`
-                    }
+                    keyExtractor={(item: { key: string; value: IToken }) => `${item.value.order}`}
                     scrollPercent={5}
                     onMoveEnd={({ data }) => {
                         this.props.updateTokenOrder(
@@ -223,7 +215,7 @@ export class ManageAccountComponent extends React.Component<
                             Object.assign(
                                 {},
                                 ...data.map(
-                                    (item: { key: TokenSymbol; value: IToken }, index: number) => ({
+                                    (item: { key: string; value: IToken }, index: number) => ({
                                         [item.key]: { ...item.value, order: index }
                                     })
                                 )

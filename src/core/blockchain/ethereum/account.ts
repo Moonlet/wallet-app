@@ -1,4 +1,4 @@
-import { IAccountState, TokenSymbol, TokenType } from '../../../redux/wallets/state';
+import { IAccountState, TokenType } from '../../../redux/wallets/state';
 import { Blockchain } from '../types';
 import * as Util from 'ethereumjs-util';
 import { BigNumber } from 'bignumber.js';
@@ -38,7 +38,7 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
         tokens: {
             ETH: {
                 name: 'Ethereum',
-                symbol: TokenSymbol.ETH,
+                symbol: 'ETH',
                 logo: '', // use a dummy logo for now
                 type: TokenType.NATIVE,
                 contractAddress: privateToPublic(privateKey),
@@ -55,7 +55,7 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
             }
             // MKR: {
             //     name: 'Maker',
-            //     symbol: TokenSymbol.MKR,
+            //     symbol: 'MKR',
             //     logo: '', // use a dummy logo for now
             //     type: TokenType.ERC20, // TokenType (Native, ERC20, ...)
             //     contractAddress: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',

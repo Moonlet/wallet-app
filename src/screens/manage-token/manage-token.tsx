@@ -7,13 +7,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import {
-    IToken,
-    TokenSymbol,
-    IAccountState,
-    TokenType,
-    IWalletState
-} from '../../redux/wallets/state';
+import { IToken, IAccountState, TokenType, IWalletState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { addToken } from '../../redux/wallets/actions';
@@ -97,10 +91,10 @@ export class ManageTokenComponent extends React.Component<
             this.state.symbol === undefined
         ) {
             alert('Please fill in all of the fields.');
-        } else if (this.state.symbol in TokenSymbol) {
+        } else {
             const token: IToken = {
                 name: '',
-                symbol: this.state.symbol as TokenSymbol,
+                symbol: this.state.symbol, // check here if valid
                 type: TokenType.ERC20,
                 contractAddress: this.state.contractAddress,
                 order: Object.keys(this.props.selectCurrentAccount.tokens).length, // check here
@@ -112,8 +106,6 @@ export class ManageTokenComponent extends React.Component<
             this.props.addToken(this.props.wallet.id, this.props.selectCurrentAccount, token);
 
             this.props.navigation.goBack();
-        } else {
-            alert('Symbol is not valid!');
         }
     };
 

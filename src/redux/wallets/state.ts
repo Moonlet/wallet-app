@@ -24,12 +24,6 @@ export interface IWalletState {
     };
 }
 
-export enum TokenSymbol {
-    ETH = 'ETH',
-    MKR = 'MKR',
-    BAT = 'BAT'
-}
-
 export enum TokenType {
     NATIVE = 'NATIVE',
     ERC20 = 'ERC20'
@@ -37,7 +31,7 @@ export enum TokenType {
 
 export interface IToken {
     name: string;
-    symbol: TokenSymbol;
+    symbol: string;
     logo?: string;
     type: TokenType;
     contractAddress: string;

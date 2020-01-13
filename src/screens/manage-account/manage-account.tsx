@@ -15,7 +15,6 @@ import { themes } from '../../navigation/navigation';
 import { selectCurrentAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
 import { IAccountState, IToken, IWalletState, TokenType } from '../../redux/wallets/state';
 import { Amount } from '../../components/amount/amount';
-import BigNumber from 'bignumber.js';
 import { toggleTokenActive, updateTokenOrder, removeToken } from '../../redux/wallets/actions';
 
 export interface IReduxProps {
@@ -134,17 +133,14 @@ export class ManageAccountComponent extends React.Component<
                     <View style={styles.infoContainer}>
                         <Icon name="money-wallet-1" size={ICON_SIZE} style={styles.accountIcon} />
                         <View>
-                            <Text style={styles.firstAmount}>
-                                {`${item.value.balance?.value || 0} ${item.value.symbol}`}
-                            </Text>
-                            {/* <Amount
+                            <Amount
                                 style={styles.firstAmount}
-                                amount={new BigNumber(item.value.balance?.value)}
+                                amount={item.value.balance?.value}
                                 blockchain={this.props.selectedAccount.blockchain}
-                            /> */}
+                            />
                             <Amount
                                 style={styles.secondAmount}
-                                amount={new BigNumber(item.value.balance?.value)}
+                                amount={item.value.balance?.value}
                                 blockchain={this.props.selectedAccount.blockchain}
                                 convert
                             />

@@ -9,7 +9,7 @@ export interface ITokenConfig {
     name: string;
     symbol: string;
     logo?: string;
-    type: TokenType; // TokenType (Native, ERC20, ...)
+    type: TokenType;
     contractAddress?: string;
     decimals: number;
     uiDecimals: number;
@@ -17,6 +17,7 @@ export interface ITokenConfig {
         [unit: string]: BigNumber;
     };
     order: number;
+    active: boolean;
     balance?: {
         value: BigNumber;
         inProgress: boolean;

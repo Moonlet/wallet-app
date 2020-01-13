@@ -11,6 +11,7 @@ export const config: IBlockchainConfig = {
             name: 'Ethereum',
             symbol: 'ETH',
             order: 0,
+            active: true,
             decimals: 18,
             uiDecimals: 4,
             type: TokenType.NATIVE,

@@ -11,6 +11,7 @@ export const config: IBlockchainConfig = {
             name: 'Zilliqa',
             symbol: 'ZIL',
             order: 0,
+            active: true,
             decimals: 12,
             uiDecimals: 3,
             type: TokenType.NATIVE,

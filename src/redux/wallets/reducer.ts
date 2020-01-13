@@ -10,7 +10,8 @@ import {
     WALLET_CHANGE_NAME,
     TOGGLE_TOKEN_ACTIVE,
     UPDATE_TOKEN_ORDER,
-    REMOVE_TOKEN
+    REMOVE_TOKEN,
+    ADD_TOKEN
 } from './actions';
 import { TransactionStatus } from '../../core/wallet/types';
 import { REHYDRATE } from 'redux-persist';
@@ -213,6 +214,28 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                         account.address === action.data.account.address &&
                         account.blockchain === action.data.account.blockchain
                             ? accountToRemoveToken
+                            : account
+                    )
+                }
+            };
+
+        case ADD_TOKEN:
+            const accountToAddToken = state[action.data.walletId].accounts.find(
+                account =>
+                    account.address === action.data.account.address &&
+                    account.blockchain === action.data.account.blockchain
+            );
+
+            accountToAddToken.tokens[action.data.token.symbol] = action.data.token;
+
+            return {
+                ...state,
+                [action.data.walletId]: {
+                    ...state[action.data.walletId],
+                    accounts: state[action.data.walletId].accounts.map(account =>
+                        account.address === action.data.account.address &&
+                        account.blockchain === action.data.account.blockchain
+                            ? accountToAddToken
                             : account
                     )
                 }

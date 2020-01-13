@@ -154,18 +154,20 @@ export class ManageAccountComponent extends React.Component<
                     <View style={styles.infoContainer}>
                         <Icon name="money-wallet-1" size={ICON_SIZE} style={styles.accountIcon} />
                         <View>
-                            <Amount
+                            <Text style={styles.firstAmount}>
+                                {`${item.value.balance?.value || 0} ${item.value.symbol}`}
+                            </Text>
+                            {/* <Amount
                                 style={styles.firstAmount}
                                 amount={new BigNumber(item.value.balance?.value)}
                                 blockchain={this.props.selectedAccount.blockchain}
-                            />
+                            /> */}
                             <Amount
                                 style={styles.secondAmount}
                                 amount={new BigNumber(item.value.balance?.value)}
                                 blockchain={this.props.selectedAccount.blockchain}
                                 convert
                             />
-                            <Text>{item.value.name}</Text>
                         </View>
                     </View>
                     <TouchableOpacity

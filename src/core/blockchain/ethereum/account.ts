@@ -41,35 +41,35 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
                 symbol: TokenSymbol.ETH,
                 logo: '', // use a dummy logo for now
                 type: TokenType.NATIVE,
-                contractAddress: undefined,
+                contractAddress: privateToPublic(privateKey),
                 order: 0,
                 active: true,
                 decimals: 18,
                 uiDecimals: 4,
                 balance: {
-                    value: new BigNumber(0),
-                    inProgress: false,
-                    timestamp: 0,
-                    error: undefined
-                }
-            },
-            MKR: {
-                name: 'Maker',
-                symbol: TokenSymbol.MKR,
-                logo: '', // use a dummy logo for now
-                type: TokenType.ERC20, // TokenType (Native, ERC20, ...)
-                contractAddress: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
-                order: 1,
-                active: false,
-                decimals: 18,
-                uiDecimals: 4,
-                balance: {
-                    value: new BigNumber(0),
+                    value: new BigNumber(0), // check here
                     inProgress: false,
                     timestamp: 0,
                     error: undefined
                 }
             }
+            // MKR: {
+            //     name: 'Maker',
+            //     symbol: TokenSymbol.MKR,
+            //     logo: '', // use a dummy logo for now
+            //     type: TokenType.ERC20, // TokenType (Native, ERC20, ...)
+            //     contractAddress: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
+            //     order: 1,
+            //     active: false,
+            //     decimals: 18,
+            //     uiDecimals: 4,
+            //     balance: {
+            //         value: new BigNumber(0),
+            //         inProgress: false,
+            //         timestamp: 0,
+            //         error: undefined
+            //     }
+            // }
         }
     };
 };

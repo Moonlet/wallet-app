@@ -26,7 +26,8 @@ export interface IWalletState {
 
 export enum TokenSymbol {
     ETH = 'ETH',
-    MKR = 'MKR'
+    MKR = 'MKR',
+    BAT = 'BAT'
 }
 
 export enum TokenType {

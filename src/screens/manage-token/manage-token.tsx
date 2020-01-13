@@ -7,9 +7,25 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { IToken } from '../../redux/wallets/state';
+import {
+    IToken,
+    TokenSymbol,
+    IAccountState,
+    TokenType,
+    IWalletState
+} from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { addToken } from '../../redux/wallets/actions';
+import { connect } from 'react-redux';
+import { IReduxState } from '../../redux/state';
+import { selectCurrentAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
+
+export interface IReduxProps {
+    selectCurrentAccount: IAccountState;
+    wallet: IWalletState;
+    addToken: typeof addToken;
+}
 
 interface IState {
     token: IToken;
@@ -21,6 +37,17 @@ interface IState {
     labelWarningAddressDisplay: boolean;
 }
 
+const mapStateToProps = (state: IReduxState) => {
+    return {
+        selectCurrentAccount: selectCurrentAccount(state),
+        wallet: selectCurrentWallet(state)
+    };
+};
+
+const mapDispatchToProps = {
+    addToken
+};
+
 export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
     title: navigation.state?.params?.token
@@ -29,12 +56,14 @@ export const navigationOptions = ({ navigation }: any) => ({
 });
 
 export class ManageTokenComponent extends React.Component<
-    INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IReduxProps & INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
     public static navigationOptions = navigationOptions;
 
-    constructor(props: INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(
+        props: IReduxProps & INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
 
         this.state = {
@@ -50,7 +79,7 @@ export class ManageTokenComponent extends React.Component<
     }
 
     public verifyAddress = (text: string) => {
-        const blockchainInstance = getBlockchain(this.props.navigation.state?.params?.blockchain);
+        const blockchainInstance = getBlockchain(this.props.selectCurrentAccount.blockchain);
         this.setState({ contractAddress: text });
         const addressValid = blockchainInstance.account.isValidAddress(text);
 
@@ -59,6 +88,33 @@ export class ManageTokenComponent extends React.Component<
             labelErrorAddressDisplay: !addressValid,
             labelWarningAddressDisplay: !blockchainInstance.account.isValidChecksumAddress(text)
         });
+    };
+
+    public saveToken = () => {
+        if (
+            this.state.contractAddress === undefined ||
+            this.state.decimals === undefined ||
+            this.state.symbol === undefined
+        ) {
+            alert('Please fill in all of the fields.');
+        } else if (this.state.symbol in TokenSymbol) {
+            const token: IToken = {
+                name: '',
+                symbol: this.state.symbol as TokenSymbol,
+                type: TokenType.ERC20,
+                contractAddress: this.state.contractAddress,
+                order: Object.keys(this.props.selectCurrentAccount.tokens).length, // check here
+                active: true,
+                decimals: Number(this.state.decimals),
+                uiDecimals: 4 // check here
+            };
+
+            this.props.addToken(this.props.wallet.id, this.props.selectCurrentAccount, token);
+
+            this.props.navigation.goBack();
+        } else {
+            alert('Symbol is not valid!');
+        }
     };
 
     public render() {
@@ -129,12 +185,10 @@ export class ManageTokenComponent extends React.Component<
 
                 <Button
                     style={styles.saveButton}
-                    onPress={() => {
-                        // add / edit token
-                    }}
-                    disabled={
-                        this.state.labelErrorAddressDisplay && this.state.labelWarningAddressDisplay
-                    }
+                    onPress={this.saveToken}
+                    // disabled={
+                    //     this.state.labelErrorAddressDisplay && this.state.labelWarningAddressDisplay
+                    // }
                 >
                     {translate('App.labels.save')}
                 </Button>
@@ -143,4 +197,7 @@ export class ManageTokenComponent extends React.Component<
     }
 }
 
-export const ManageTokenScreen = smartConnect(ManageTokenComponent, [withTheme(stylesProvider)]);
+export const ManageTokenScreen = smartConnect(ManageTokenComponent, [
+    connect(mapStateToProps, mapDispatchToProps),
+    withTheme(stylesProvider)
+]);

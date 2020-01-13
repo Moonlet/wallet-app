@@ -292,11 +292,7 @@ export class DashboardScreenComponent extends React.Component<
                             style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
                         >
                             <CoinDashboard
-                                accounts={(this.props.wallet?.accounts || []).filter(
-                                    account =>
-                                        account &&
-                                        account.blockchain === coins[coinIndex].blockchain
-                                )}
+                                account={this.props.currentAccount}
                                 blockchain={coins[coinIndex].blockchain}
                                 navigation={this.props.navigation}
                             />

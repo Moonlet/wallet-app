@@ -37,6 +37,7 @@ export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
 export const TOGGLE_TOKEN_ACTIVE = 'TOGGLE_TOKEN_ACTIVE';
 export const UPDATE_TOKEN_ORDER = 'UPDATE_TOKEN_ORDER';
 export const REMOVE_TOKEN = 'REMOVE_TOKEN';
+export const ADD_TOKEN = 'ADD_TOKEN';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -335,6 +336,13 @@ export const updateTokenOrder = (walletId: string, account: IAccountState, token
 export const removeToken = (walletId: string, account: IAccountState, token: IToken) => {
     return {
         type: REMOVE_TOKEN,
+        data: { walletId, account, token }
+    };
+};
+
+export const addToken = (walletId: string, account: IAccountState, token: IToken) => {
+    return {
+        type: ADD_TOKEN,
         data: { walletId, account, token }
     };
 };

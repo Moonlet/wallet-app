@@ -31,7 +31,8 @@ const props: IProps & IReduxProps = {
             timestamp: 123,
             value: new BigNumber(12332),
             error: undefined
-        }
+        },
+        tokens: {}
     }
 };
 

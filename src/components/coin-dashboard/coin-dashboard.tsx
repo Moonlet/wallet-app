@@ -48,15 +48,18 @@ export const CoinDashboardComponent = (props: IProps) => (
 
             {props.account &&
                 props.account.tokens &&
-                Object.values(props.account.tokens).map((token: IToken, index: number) => (
-                    <TokenCard
-                        account={props.account}
-                        token={token}
-                        navigation={props.navigation}
-                        key={index}
-                        blockchain={props.blockchain}
-                    />
-                ))}
+                Object.values(props.account.tokens).map(
+                    (token: IToken, index: number) =>
+                        token.active && (
+                            <TokenCard
+                                account={props.account}
+                                token={token}
+                                navigation={props.navigation}
+                                key={index}
+                                blockchain={props.blockchain}
+                            />
+                        )
+                )}
         </ScrollView>
     </View>
 );

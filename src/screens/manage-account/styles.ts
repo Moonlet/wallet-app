@@ -30,10 +30,8 @@ export default (theme: ITheme) =>
             color: theme.colors.text
         },
         secondAmount: {
-            fontWeight: '500',
             fontSize: 16,
             lineHeight: 20,
-            letterSpacing: 0.38,
             color: theme.colors.textSecondary
         },
         menuIcon: {

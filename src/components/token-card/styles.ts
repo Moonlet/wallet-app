@@ -45,8 +45,6 @@ export default (theme: ITheme) =>
         secondAmount: {
             fontSize: 16,
             lineHeight: 20,
-            letterSpacing: 0.38,
-            color: theme.colors.text,
-            fontWeight: '500'
+            color: theme.colors.textSecondary
         }
     });

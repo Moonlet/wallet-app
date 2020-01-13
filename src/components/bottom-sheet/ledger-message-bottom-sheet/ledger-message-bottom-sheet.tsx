@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -44,7 +44,9 @@ export class LedgerMessageBottomSheetComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.bottomSheet.current.snapTo(1);
+        Platform.OS === 'web'
+            ? this.bottomSheet.current.props.onOpenStart()
+            : this.bottomSheet.current.snapTo(1);
     }
 
     public transactionHistoryPress = () => {

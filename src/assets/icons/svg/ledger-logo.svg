@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="20px" height="20px" viewBox="0 0 20 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>ledger (1)</title>
+    <desc>Created with Sketch.</desc>
+    <g id="New-Moonlet-Logo" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="ledger-(1)" fill="#000000" fill-rule="nonzero">
+            <path d="M16.7,-1.57457666e-05 L7.59,-1.57457666e-05 L7.59,12.29 L19.89,12.29 L19.89,3.18 C19.89,2.33487609 19.5535971,1.52451148 18.9550668,0.927857504 C18.3565366,0.331203527 17.5451197,-0.00265762237 16.7,-1.57457666e-05 Z" id="Shape"></path>
+            <path d="M4.75,0 L3.18,0 C1.4237345,0 0,1.4237345 0,3.18 L0,4.75 L4.75,4.75 L4.75,0 Z" id="Path"></path>
+            <polygon id="Rectangle-path" points="0 7.59 4.75 7.59 4.75 12.34 0 12.34"></polygon>
+            <path d="M15.18,19.89 L16.75,19.89 C17.5951239,19.89 18.4054885,19.5535971 19.0021425,18.9550668 C19.5987965,18.3565366 19.9326576,17.5451197 19.9300157,16.7 L19.9300157,15.18 L15.18,15.18 L15.18,19.89 Z" id="Path"></path>
+            <polygon id="Path" points="7.59 15.18 12.34 15.18 12.34 19.93 7.59 19.93"></polygon>
+            <path d="M0,15.18 L0,16.75 C0,18.5062655 1.4237345,19.93 3.18,19.93 L4.75,19.93 L4.75,15.18 L0,15.18 Z" id="Path"></path>
+        </g>
+    </g>
+</svg>

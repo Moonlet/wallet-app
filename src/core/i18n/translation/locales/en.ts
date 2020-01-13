@@ -21,6 +21,7 @@ export const translation: ITranslations = {
                 connect: 'Connect',
                 contractAddress: 'Contract address',
                 copy: 'Copy',
+                connection: 'Connection',
                 create: 'Create',
                 date: 'Date',
                 dateAndTime: 'Date and time',
@@ -34,7 +35,9 @@ export const translation: ITranslations = {
                 fastest: 'Fastest',
                 fee: 'Fee',
                 from: 'From',
+                ledgerType: 'Ledger type',
                 legal: 'Legal',
+                network: 'Network',
                 next: 'Next',
                 nextWord: 'Next word',
                 paste: 'Paste',
@@ -42,6 +45,7 @@ export const translation: ITranslations = {
                 receive: 'Receive',
                 recipient: 'Recipient',
                 recover: 'Recover',
+                resetAll: 'Reset all',
                 rewards: 'Rewards',
                 save: 'Save',
                 secure: 'Secure',
@@ -54,6 +58,7 @@ export const translation: ITranslations = {
                 simpleSetup: 'Simple setup',
                 standard: 'Standard',
                 status: 'Status',
+                startConnect: 'Start connect',
                 support: 'Support',
                 symbol: 'Symbol',
                 tc: 'Terms & conditions',
@@ -90,10 +95,18 @@ export const translation: ITranslations = {
             device: 'Device: {{device}}',
             NANO_X: 'Ledger Nano X',
             NANO_S: 'Ledger Nano S',
-            app: 'Make sure you have opened the {{app}} app on your hardware wallet',
-            verifyAddress: 'Verify address on your device',
+            app:
+                'Make sure you have opened {{app}} app on your Ledger before starting the connect.',
+            verifyAddress: 'Verify {{app}} address on your Ledger',
             notSupported: 'Feature is not supported',
-            openApp: 'Please open {{app}} app on your Ledger'
+            USB: 'Cable',
+            U2F: 'U2F', // TODO
+            BLE: 'Bluetooth',
+            scanningDevices: 'Scanning for ledger device',
+            paired: 'has been paired',
+            openApp: 'Please open {{app}} app on your Ledger',
+            ETHEREUM: 'Ethereum',
+            ZILLIQA: 'Zilliqa'
         },
         Fee: {
             feeTitle: 'Transaction fee',
@@ -163,7 +176,9 @@ export const translation: ITranslations = {
             editTitle: 'Edit wallet name',
             editDescription: 'Use a relevant name or an alias for this wallet',
             addWalletTitle: 'Add Wallet',
-            manageWallets: 'Manage wallets'
+            manageWallets: 'Manage wallets',
+            connectLedger: 'Connect your Ledger!',
+            quicklyConnectLedger: 'Quickly connect your Ledger and manage your assests'
         },
         Transaction: {
             transactionID: 'Transaction ID',

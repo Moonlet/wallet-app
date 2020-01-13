@@ -10,7 +10,7 @@
         "ios:pod-install": "cd ios && pod install",
         "ios:before-run": "npm run generate-icons & npm run ios:pod-install",
         "ext": "TARGET=beta BROWSER=chrome NODE_ENV=development webpack --mode development --config ./extension/webpack.config.babel.js --watch --info-verbosity verbose",
-        "ext:build": "webpack -p --config ./extension/webpack.config.babel.js",
+        "ext:build": "node --max_old_space_size=6144 ./node_modules/.bin/webpack -p --config ./extension/webpack.config.babel.js",
         "ext:build:beta:chrome": "TARGET=beta BROWSER=chrome npm run ext:build",
         "ext:build:beta:firefox": "TARGET=beta BROWSER=firefox npm run ext:build",
         "start": "(tsc -w --noEmit & react-native start)",

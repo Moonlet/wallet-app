@@ -17,19 +17,21 @@ export interface IButtonProps {
     primary?: boolean;
     secondary?: boolean;
     disabled?: boolean;
+    disabledSecondary?: boolean;
     onPress?: any;
     styles: ReturnType<typeof stylesProvider>;
 }
 
 export const ButtonComponent = (props: IButtonProps) => (
     <TouchableOpacity
-        disabled={props.disabled}
+        disabled={props.disabled || props.disabledSecondary}
         onPress={props.onPress}
         style={[
             props.styles.button,
             props.primary && props.styles.buttonPrimary,
             props.secondary && props.styles.buttonSecondary,
             props.disabled && props.styles.buttonDisabled,
+            props.disabledSecondary && props.styles.buttonDisabledSecondary,
             props.style
         ]}
     >
@@ -38,7 +40,8 @@ export const ButtonComponent = (props: IButtonProps) => (
                 props.styles.text,
                 props.primary && props.styles.textPrimary,
                 props.secondary && props.styles.textSecondary,
-                props.disabled && props.styles.textDisabled
+                props.disabled && props.styles.textDisabled,
+                props.disabledSecondary && props.styles.textDisabledSecondary
             ]}
         >
             {props.children}

@@ -34,6 +34,7 @@ export const translation: ITranslations = {
                 fast: 'Fast',
                 fastest: 'Fastest',
                 fee: 'Fee',
+                find: 'Find',
                 from: 'From',
                 ledgerType: 'Ledger type',
                 legal: 'Legal',
@@ -244,7 +245,7 @@ export const translation: ITranslations = {
         },
         Token: {
             deleteToken: 'Delete token',
-            editToken: 'Edit token'
+            searchToken: 'Search by symbol or contract address'
         }
     },
     plural: (n: number, ord?: boolean) => {

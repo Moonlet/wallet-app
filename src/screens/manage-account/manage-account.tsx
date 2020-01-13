@@ -93,20 +93,6 @@ export class ManageAccountComponent extends React.Component<
                     <Icon name="bin" size={32} style={styles.iconActionNegative} />
                     <Text style={styles.textActionNegative}>{translate('Token.deleteToken')}</Text>
                 </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={styles.action}
-                    onPress={() => {
-                        this.props.navigation.navigate('ManageToken', {
-                            token,
-                            blockchain: this.props.selectedAccount.blockchain
-                        });
-                        this.closeCurrentOpenedSwipable();
-                    }}
-                >
-                    <Icon name="pencil" size={28} style={styles.iconActionPositive} />
-                    <Text style={styles.textActionPositive}>{translate('Token.editToken')}</Text>
-                </TouchableOpacity>
             </View>
         );
     };

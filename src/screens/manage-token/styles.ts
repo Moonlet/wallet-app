@@ -1,14 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
             paddingHorizontal: BASE_DIMENSION * 2,
-            paddingTop: BASE_DIMENSION * 10,
-            paddingBottom: BASE_DIMENSION * 5,
+            paddingVertical: BASE_DIMENSION * 5,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground
         },
@@ -17,21 +16,13 @@ export default (theme: ITheme) =>
             flexDirection: 'column'
         },
         inputBox: {
-            height: BASE_DIMENSION * 5 + BASE_DIMENSION / 2,
-            marginBottom: BASE_DIMENSION * 6,
-            borderRadius: BORDER_RADIUS,
-            backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2
-        },
-        contractAddressContainer: {
-            marginBottom: BASE_DIMENSION * 3
-        },
-        contractAddressBox: {
-            height: BASE_DIMENSION * 5 + BASE_DIMENSION / 2,
-            borderRadius: BORDER_RADIUS,
-            backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2,
-            marginBottom: BASE_DIMENSION / 2
+            flexDirection: 'row',
+            marginHorizontal: BASE_DIMENSION * 2,
+            marginBottom: BASE_DIMENSION * 2,
+            borderRadius: 10,
+            backgroundColor: theme.colors.cardBackground,
+            paddingHorizontal: BASE_DIMENSION,
+            paddingVertical: BASE_DIMENSION
         },
         input: {
             flex: 1,
@@ -39,26 +30,63 @@ export default (theme: ITheme) =>
             lineHeight: 22,
             color: theme.colors.text
         },
-        saveButton: {
-            width: '80%',
-            alignSelf: 'center'
+        bottomButtonContainer: {
+            marginHorizontal: BASE_DIMENSION * 2
         },
-        addressErrors: {
+        searchIcon: {
+            alignSelf: 'center',
+            color: theme.colors.textTertiary,
+            marginRight: BASE_DIMENSION
+        },
+        closeIcon: {
+            alignSelf: 'center',
+            color: theme.colors.accent
+        },
+
+        ///
+        tokenCardContainer: {
+            backgroundColor: theme.colors.cardBackground,
+            borderRadius: BORDER_RADIUS,
+            paddingHorizontal: BASE_DIMENSION / 2,
+            paddingVertical: BASE_DIMENSION * 2,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: BASE_DIMENSION,
+            flexDirection: 'row'
+        },
+        accountInfoContainer: {
+            flex: 1,
+            display: 'flex',
             flexDirection: 'column',
-            marginBottom: BASE_DIMENSION * 3
+            marginHorizontal: BASE_DIMENSION
         },
-        displayError: {
-            paddingLeft: BASE_DIMENSION,
-            marginBottom: BASE_DIMENSION,
-            color: theme.colors.error,
-            fontSize: 15,
-            lineHeight: 20
+        iconContainer: {
+            width: ICON_CONTAINER_SIZE,
+            height: ICON_CONTAINER_SIZE,
+            justifyContent: 'center',
+            alignItems: 'center'
         },
-        receipientWarning: {
-            paddingLeft: BASE_DIMENSION,
-            marginBottom: BASE_DIMENSION,
-            color: theme.colors.warning,
-            fontSize: 15,
-            lineHeight: 20
+        icon: {
+            color: theme.colors.accent
+        },
+        address: {
+            fontSize: 16,
+            lineHeight: 20,
+            color: theme.colors.textSecondary
+        },
+        firstAmount: {
+            fontSize: 18,
+            lineHeight: 25,
+            letterSpacing: 0.38,
+            color: theme.colors.text,
+            fontWeight: '500'
+        },
+        secondAmount: {
+            fontSize: 16,
+            lineHeight: 20,
+            letterSpacing: 0.38,
+            color: theme.colors.text,
+            fontWeight: '500'
         }
     });

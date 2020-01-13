@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, TouchableOpacity, Image } from 'react-native';
 import { Text, Button } from '../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -7,13 +7,13 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { IToken, IAccountState, TokenType, IWalletState } from '../../redux/wallets/state';
-import { formatAddress } from '../../core/utils/format-address';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { IAccountState, IWalletState } from '../../redux/wallets/state';
 import { addToken } from '../../redux/wallets/actions';
 import { connect } from 'react-redux';
 import { IReduxState } from '../../redux/state';
 import { selectCurrentAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
+import { Icon } from '../../components/icon';
+import { formatAddress } from '../../core/utils/format-address';
 
 export interface IReduxProps {
     selectCurrentAccount: IAccountState;
@@ -22,13 +22,9 @@ export interface IReduxProps {
 }
 
 interface IState {
-    token: IToken;
-    contractAddress: string;
-    symbol: string;
-    decimals: string;
-    isValidAddress: boolean;
-    labelErrorAddressDisplay: boolean;
-    labelWarningAddressDisplay: boolean;
+    fieldInput: string;
+    isSaveButton: false;
+    token: any;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -44,9 +40,7 @@ const mapDispatchToProps = {
 
 export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: navigation.state?.params?.token
-        ? translate('App.labels.editToken')
-        : translate('App.labels.addToken')
+    title: translate('App.labels.addToken')
 });
 
 export class ManageTokenComponent extends React.Component<
@@ -61,52 +55,43 @@ export class ManageTokenComponent extends React.Component<
         super(props);
 
         this.state = {
-            contractAddress:
-                this.props.navigation.state?.params?.token.contractAddress || undefined,
-            symbol: this.props.navigation.state?.params?.token.symbol || undefined,
-            decimals: this.props.navigation.state?.params?.token.decimals.toString() || undefined,
-            token: this.props.navigation.state?.params?.token || undefined,
-            isValidAddress: this.props.navigation.state?.params?.token ? true : false,
-            labelErrorAddressDisplay: false,
-            labelWarningAddressDisplay: false
+            fieldInput: undefined,
+            isSaveButton: false,
+            token: undefined
         };
     }
 
-    public verifyAddress = (text: string) => {
-        const blockchainInstance = getBlockchain(this.props.selectCurrentAccount.blockchain);
-        this.setState({ contractAddress: text });
-        const addressValid = blockchainInstance.account.isValidAddress(text);
+    public findToken = async () => {
+        const token = await fetch(
+            `https://static.moonlet.dev/tokens/${this.props.selectCurrentAccount.blockchain.toLocaleLowerCase()}/${this.state.fieldInput.toLocaleLowerCase()}.json`,
+            {
+                method: 'POST'
+            }
+        )
+            .then(res => res.json())
+            .catch(err => {
+                //
+            });
 
-        this.setState({
-            isValidAddress: addressValid,
-            labelErrorAddressDisplay: !addressValid,
-            labelWarningAddressDisplay: !blockchainInstance.account.isValidChecksumAddress(text)
-        });
+        if (token) {
+            this.setState({ token });
+        }
     };
 
     public saveToken = () => {
-        if (
-            this.state.contractAddress === undefined ||
-            this.state.decimals === undefined ||
-            this.state.symbol === undefined
-        ) {
-            alert('Please fill in all of the fields.');
-        } else {
-            const token: IToken = {
-                name: '',
-                symbol: this.state.symbol, // check here if valid
-                type: TokenType.ERC20,
-                contractAddress: this.state.contractAddress,
-                order: Object.keys(this.props.selectCurrentAccount.tokens).length, // check here
-                active: true,
-                decimals: Number(this.state.decimals),
-                uiDecimals: 4 // check here
-            };
-
-            this.props.addToken(this.props.wallet.id, this.props.selectCurrentAccount, token);
-
-            this.props.navigation.goBack();
-        }
+        // getTokenInfo
+        // const token: IToken = {
+        //     name: '',
+        //     symbol: this.state.symbol, // check here if valid
+        //     type: TokenType.ERC20,
+        //     contractAddress: this.state.contractAddress,
+        //     order: Object.keys(this.props.selectCurrentAccount.tokens).length, // check here
+        //     active: true,
+        //     decimals: undefined,
+        //     uiDecimals: 4 // check here
+        // };
+        // this.props.addToken(this.props.wallet.id, this.props.selectCurrentAccount, token);
+        // this.props.navigation.goBack();
     };
 
     public render() {
@@ -115,75 +100,61 @@ export class ManageTokenComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <View style={styles.contractAddressContainer}>
-                        <View style={styles.contractAddressBox}>
-                            <TextInput
-                                style={styles.input}
-                                placeholderTextColor={theme.colors.textTertiary}
-                                placeholder={translate('App.labels.contractAddress')}
-                                autoCapitalize={'none'}
-                                autoCorrect={false}
-                                selectionColor={theme.colors.accent}
-                                value={
-                                    this.state.isValidAddress
-                                        ? formatAddress(this.state.contractAddress)
-                                        : this.state.contractAddress
-                                }
-                                onChangeText={text => this.verifyAddress(text)}
-                            />
-                        </View>
-
-                        <View style={styles.addressErrors}>
-                            {this.state.labelErrorAddressDisplay && (
-                                <Text style={styles.displayError}>
-                                    {translate('Send.recipientNotValid')}
-                                </Text>
-                            )}
-                            {this.state.labelWarningAddressDisplay && (
-                                <Text style={styles.receipientWarning}>
-                                    {translate('Send.receipientWarning')}
-                                </Text>
-                            )}
-                        </View>
-                    </View>
-
                     <View style={styles.inputBox}>
+                        <Icon name="search" size={14} style={styles.searchIcon} />
                         <TextInput
                             style={styles.input}
                             placeholderTextColor={theme.colors.textTertiary}
-                            placeholder={translate('App.labels.symbol')}
+                            placeholder={translate('Token.searchToken')}
                             autoCapitalize={'none'}
                             autoCorrect={false}
                             selectionColor={theme.colors.accent}
-                            value={this.state.symbol}
-                            onChangeText={value => this.setState({ symbol: value })}
+                            value={this.state.fieldInput}
+                            onChangeText={value => this.setState({ fieldInput: value })}
                         />
+                        {this.state.fieldInput !== '' && this.state.fieldInput !== undefined && (
+                            <Icon name="close" size={16} style={styles.closeIcon} />
+                        )}
                     </View>
 
-                    <View style={styles.inputBox}>
-                        <TextInput
-                            style={styles.input}
-                            placeholderTextColor={theme.colors.textTertiary}
-                            placeholder={translate('App.labels.decimals')}
-                            autoCapitalize={'none'}
-                            autoCorrect={false}
-                            keyboardType="decimal-pad"
-                            selectionColor={theme.colors.accent}
-                            value={this.state.decimals}
-                            onChangeText={value => this.setState({ decimals: value })}
-                        />
-                    </View>
+                    {this.state.token && (
+                        <TouchableOpacity
+                            style={styles.tokenCardContainer}
+                            onPress={() => {
+                                //
+                            }}
+                        >
+                            <View style={styles.iconContainer}>
+                                <Image source={{ uri: this.state.token.logo }} />
+                                {/* <Icon name="money-wallet-1" size={ICON_SIZE} style={styles.icon} /> */}
+                            </View>
+                            <View style={styles.accountInfoContainer}>
+                                <Text style={styles.firstAmount}>{this.state.token.name}</Text>
+                                <Text style={styles.secondAmount}>
+                                    {formatAddress(this.state.token.contractAddress)}
+                                </Text>
+                            </View>
+                            <View style={styles.iconContainer}>
+                                <Icon name="chevron-right" size={18} style={styles.icon} />
+                            </View>
+                        </TouchableOpacity>
+                    )}
                 </View>
 
-                <Button
-                    style={styles.saveButton}
-                    onPress={this.saveToken}
-                    // disabled={
-                    //     this.state.labelErrorAddressDisplay && this.state.labelWarningAddressDisplay
-                    // }
-                >
-                    {translate('App.labels.save')}
-                </Button>
+                <View style={styles.bottomButtonContainer}>
+                    <Button
+                        onPress={() =>
+                            this.state.isSaveButton ? this.saveToken() : this.findToken()
+                        }
+                        disabledSecondary={
+                            this.state.fieldInput === '' || this.state.fieldInput === undefined
+                        }
+                    >
+                        {this.state.isSaveButton
+                            ? translate('App.labels.save')
+                            : translate('App.labels.find')}
+                    </Button>
+                </View>
             </View>
         );
     }

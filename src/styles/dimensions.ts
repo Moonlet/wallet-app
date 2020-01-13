@@ -7,4 +7,3 @@ export const ICON_CONTAINER_SIZE = 44;
 
 export const SCREEN_HEIGHT =
     Platform.OS === 'web' ? Dimensions.get('window').height - 64 : Dimensions.get('window').height;
-export const HEADER_FOR_WEB = Platform.OS === 'web' ? 0 : 0;

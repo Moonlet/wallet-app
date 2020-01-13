@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, Platform } from 'react-native';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -67,7 +67,10 @@ export class BottomSheetComponent extends React.Component<
                     <View style={this.props.styles.container}>
                         <AccountsBottomSheet
                             snapPoints={{
-                                initialSnap: 0,
+                                initialSnap:
+                                    Platform.OS === 'web'
+                                        ? (Dimensions.get('window').height * 3) / 4
+                                        : 0,
                                 bottomSheetHeight: (Dimensions.get('window').height * 3) / 4
                             }}
                             onOpenStart={this.handleOpenStart}
@@ -78,9 +81,12 @@ export class BottomSheetComponent extends React.Component<
 
             case BottomSheetType.DASHBOARD_MENU:
                 return (
-                    <View style={this.props.styles.container}>
+                    <View style={[this.props.styles.container]}>
                         <DashboardMenuBottomSheet
-                            snapPoints={{ initialSnap: 0, bottomSheetHeight: 300 }}
+                            snapPoints={{
+                                initialSnap: Platform.OS === 'web' ? 300 : 0,
+                                bottomSheetHeight: 300
+                            }}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
                             navigation={this.props.navigation}
@@ -91,7 +97,10 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <LedgerMessageBottomSheet
-                            snapPoints={{ initialSnap: 0, bottomSheetHeight: 200 }}
+                            snapPoints={{
+                                initialSnap: Platform.OS === 'web' ? 200 : 0,
+                                bottomSheetHeight: 200
+                            }}
                             blockchain={this.props.bottomSheet?.blockchain}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}

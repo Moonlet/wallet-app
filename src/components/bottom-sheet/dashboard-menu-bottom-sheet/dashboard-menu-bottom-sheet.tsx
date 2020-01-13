@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -32,7 +32,9 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.bottomSheet.current.snapTo(1);
+        Platform.OS === 'web'
+            ? this.bottomSheet.current.props.onOpenStart()
+            : this.bottomSheet.current.snapTo(1);
     }
 
     public transactionHistoryPress = () => {
@@ -117,7 +119,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         return (
             <BottomSheet
                 ref={this.bottomSheet}
-                initialSnap={this.props.snapPoints.initialSnap}
+                initialSnap={0}
                 snapPoints={[
                     this.props.snapPoints.initialSnap,
                     this.props.snapPoints.bottomSheetHeight

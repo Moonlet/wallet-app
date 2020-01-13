@@ -57,6 +57,10 @@ export class PasswordModalComponent extends React.Component<
     }
 
     public async requestPassword(): Promise<string> {
+        if (Platform.OS === 'web') {
+            Promise.resolve('000000');
+            return undefined;
+        }
         this.passwordRequestDeferred = new Deferred();
 
         this.setState({ visible: true });

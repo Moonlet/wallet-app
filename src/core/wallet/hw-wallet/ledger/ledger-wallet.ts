@@ -5,6 +5,7 @@ import { HWModel, HWConnection } from '../types';
 import { AppFactory } from './apps-factory';
 import { TransportFactory } from './transport-factory';
 import { delay } from '../../../utils/time';
+import { getBlockchain } from '../../../blockchain/blockchain-factory';
 
 export class LedgerWallet implements IWallet {
     private deviceId: string;
@@ -57,7 +58,7 @@ export class LedgerWallet implements IWallet {
                 publicKey: address.publicKey,
                 address: address.address,
                 blockchain,
-                tokens: {}
+                tokens: { ...getBlockchain(blockchain).config.tokens }
             };
             accounts.push(account);
             return Promise.resolve(accounts);

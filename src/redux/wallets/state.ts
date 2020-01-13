@@ -2,6 +2,7 @@ import { WalletType, TransactionStatus } from '../../core/wallet/types';
 import { Blockchain } from '../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
+import { ITokenConfig } from '../../core/blockchain/types/token';
 
 export interface IWalletsState {
     [id: string]: IWalletState;
@@ -54,16 +55,10 @@ export interface IAccountState {
     address: string;
     publicKey: string;
     nonce?: number;
-    balance?: {
-        value: BigNumber;
-        inProgress: boolean;
-        timestamp: number;
-        error: any;
-    };
-    balanceTimestamp?: number;
     tokens: {
-        [symbol: string]: IToken;
+        [symbol: string]: ITokenConfig;
     };
+    balance?: any; // TODO: remove this, deprecated...
 }
 
 export interface ITransactionState {

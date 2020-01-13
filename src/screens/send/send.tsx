@@ -360,10 +360,6 @@ export class SendScreenComponent extends React.Component<
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={{ flexGrow: 1 }}
                 >
-                    {/* <KeyboardAvoidingView
-                        style={styles.keyboardAvoidance}
-                        behavior={Platform.OS === 'ios' ? 'position' : null}
-                    > */}
                     <View style={styles.accountAddress}>
                         <AccountAddress account={account} />
                     </View>

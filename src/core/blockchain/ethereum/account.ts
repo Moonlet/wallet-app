@@ -1,4 +1,4 @@
-import { IAccountState, TokenType } from '../../../redux/wallets/state';
+import { IAccountState } from '../../../redux/wallets/state';
 import { Blockchain } from '../types';
 import * as Util from 'ethereumjs-util';
 import { BigNumber } from 'bignumber.js';
@@ -35,51 +35,22 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
         publicKey: privateToPublic(privateKey),
         address: privateToAddress(privateKey),
         blockchain: Blockchain.ETHEREUM,
-        tokens: {
-            ETH: {
-                name: 'Ethereum',
-                symbol: 'ETH',
-                logo: '', // use a dummy logo for now
-                type: TokenType.NATIVE,
-                contractAddress: privateToPublic(privateKey),
-                order: 0,
-                active: true,
-                decimals: 18,
-                uiDecimals: 4,
-                balance: {
-                    value: new BigNumber(0), // check here
-                    inProgress: false,
-                    timestamp: 0,
-                    error: undefined
-                }
-            }
-            // MKR: {
-            //     name: 'Maker',
-            //     symbol: 'MKR',
-            //     logo: '', // use a dummy logo for now
-            //     type: TokenType.ERC20, // TokenType (Native, ERC20, ...)
-            //     contractAddress: '0x9f8f72aa9304c8b593d555f12ef6589cc3a579a2',
-            //     order: 1,
-            //     active: false,
-            //     decimals: 18,
-            //     uiDecimals: 4,
-            //     balance: {
-            //         value: new BigNumber(0),
-            //         inProgress: false,
-            //         timestamp: 0,
-            //         error: undefined
-            //     }
-            // }
-        }
+        tokens: { ...config.tokens }
     };
 };
 
-export const amountToStd = (value: BigNumber | number | string): BigNumber => {
-    return convert(new BigNumber(value), config.coin, config.defaultUnit, config);
+export const amountToStd = (
+    value: BigNumber | number | string,
+    decimals: number = config.tokens[config.coin].decimals
+): BigNumber => {
+    return new BigNumber(value).multipliedBy(new BigNumber(10).pow(decimals));
 };
 
-export const amountFromStd = (value: BigNumber): BigNumber => {
-    return convert(value, config.defaultUnit, config.coin, config);
+export const amountFromStd = (
+    value: BigNumber | number | string,
+    decimals: number = config.tokens[config.coin].decimals
+): BigNumber => {
+    return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals));
 };
 
 export const convertUnit = (value: BigNumber, from: string, to: string): BigNumber => {

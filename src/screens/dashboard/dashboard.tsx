@@ -195,8 +195,9 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public getWalletBalances(wallet: IWalletState) {
+        // TODO: fix balance
         wallet?.accounts.map(account => {
-            this.props.getBalance(account.blockchain, account.address, true);
+            this.props.getBalance(account.blockchain, account.address, undefined, true);
         });
     }
 

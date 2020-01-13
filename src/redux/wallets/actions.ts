@@ -26,6 +26,7 @@ import { translate } from '../../core/i18n';
 import { REVIEW_TRANSACTION } from '../screens/send/actions';
 import { BottomSheetType } from '../app/state';
 import { REHYDRATE } from 'redux-persist';
+import { TokenType } from '../../core/blockchain/types/token';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -164,9 +165,12 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     // TODO  - error handling
 };
 
+// TODO ERC20 - getAccountBalance
+// will check balance for a coin or all coins if needed
 export const getBalance = (
     blockchain: Blockchain,
     address: string,
+    token: string = undefined,
     force: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
@@ -177,41 +181,71 @@ export const getBalance = (
     const account = wallet.accounts.filter(
         acc => acc.address === address && acc.blockchain === blockchain
     )[0];
-    const balanceInProgress = account?.balance?.inProgress;
-    const balanceTimestamp = account?.balance?.timestamp || 0;
 
-    if (force || (!balanceInProgress && balanceTimestamp + 10 * 3600 < Date.now())) {
-        const data = {
-            walletId: wallet.id,
-            address,
-            blockchain
-        };
+    // console.log('getBalance', { blockchain, address, token });
+    if (token) {
+        const balanceInProgress = account?.tokens[token]?.balance?.inProgress;
+        const balanceTimestamp = account?.tokens[token]?.balance?.timestamp || 0;
 
-        dispatch({
-            type: ACCOUNT_GET_BALANCE,
-            data,
-            inProgress: true
-        });
-        try {
-            const chainId = getChainId(state, account.blockchain);
-
-            const balance = await getBlockchain(blockchain)
-                .getClient(chainId)
-                .getBalance(address);
-            dispatch({
-                type: ACCOUNT_GET_BALANCE,
-                data: {
-                    ...data,
-                    balance
-                }
-            });
-        } catch (error) {
-            dispatch({
-                type: ACCOUNT_GET_BALANCE,
+        if (force || (!balanceInProgress && balanceTimestamp + 10 * 3600 < Date.now())) {
+            const data = {
                 walletId: wallet.id,
-                error
+                address,
+                token,
+                blockchain
+            };
+
+            dispatch({
+                type: ACCOUNT_GET_BALANCE,
+                data,
+                inProgress: true
             });
+            try {
+                const chainId = getChainId(state, account.blockchain);
+                const tokenInfo = account.tokens[token];
+
+                let balance;
+                switch (tokenInfo.type) {
+                    case TokenType.NATIVE:
+                        balance = await getBlockchain(blockchain)
+                            .getClient(chainId)
+                            .getBalance(address);
+                        break;
+                    default:
+                        const client = getBlockchain(blockchain).getClient(chainId);
+                        if (client.tokens[tokenInfo.type]) {
+                            balance = client.tokens[tokenInfo.type].getBalance(
+                                tokenInfo.contractAddress,
+                                address
+                            );
+                        } else {
+                            throw new Error(
+                                `Token Type (${tokenInfo.type}) not handled for blockchain ${blockchain}.`
+                            );
+                        }
+                }
+
+                dispatch({
+                    type: ACCOUNT_GET_BALANCE,
+                    data: {
+                        ...data,
+                        balance
+                    }
+                });
+            } catch (error) {
+                dispatch({
+                    type: ACCOUNT_GET_BALANCE,
+                    data,
+                    error
+                });
+            }
         }
+    } else {
+        // call get balance for all tokens
+        Object.keys(account.tokens).map(tokenSymbol => {
+            // console.log(`getBalance(${blockchain}, ${address}, ${tokenSymbol}, ${force})`);
+            getBalance(blockchain, address, tokenSymbol, force)(dispatch, getState);
+        });
     }
 };
 

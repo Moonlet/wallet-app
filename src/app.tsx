@@ -114,6 +114,9 @@ export default class App extends React.Component<{}, IState> {
     }
 
     public showPasswordModal() {
+        if (Platform.OS === 'web') {
+            return;
+        }
         this.setState({
             showPasswordModal: true,
             appState: APP_STATE_ACTIVE

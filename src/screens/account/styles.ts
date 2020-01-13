@@ -18,7 +18,7 @@ export default (theme: ITheme) =>
         },
         buttonsContainer: {
             marginTop: BASE_DIMENSION * 8,
-            marginBottom: BASE_DIMENSION * 6,
+            marginBottom: BASE_DIMENSION * 2,
             marginHorizontal: BASE_DIMENSION,
             flexWrap: 'wrap',
             justifyContent: 'center',

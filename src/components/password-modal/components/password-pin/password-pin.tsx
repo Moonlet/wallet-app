@@ -84,9 +84,18 @@ export class PasswordPinComponent extends React.Component<
             });
             return;
         }
+        if (Platform.OS === 'web') {
+            this.props.onPasswordEntered(this.state.password);
+            this.setState({
+                errorMessage: '',
+                password: ''
+            });
+            return;
+        }
         try {
             const passHash = await hash(this.state.password);
             const resultVerificationPass = await this.props.onPasswordEntered(passHash);
+
             if (resultVerificationPass !== undefined) {
                 this.setState({
                     errorMessage: resultVerificationPass,
@@ -94,7 +103,7 @@ export class PasswordPinComponent extends React.Component<
                 });
                 this.startShake();
             }
-        } catch {
+        } catch (e) {
             this.startShake();
             this.setState({
                 errorMessage: translate('Password.genericError'),

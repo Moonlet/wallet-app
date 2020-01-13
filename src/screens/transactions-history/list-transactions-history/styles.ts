@@ -52,7 +52,7 @@ export default (theme: ITheme) =>
             width: pw(50),
             alignSelf: 'center',
             resizeMode: 'contain',
-            marginBottom: BASE_DIMENSION * 3
+            marginBottom: BASE_DIMENSION * 2
         },
         noTransactionsText: {
             fontWeight: 'bold',

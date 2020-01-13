@@ -1,14 +1,15 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 import { ph, pw } from '../../styles';
+import { BASE_DIMENSION, BORDER_RADIUS, SCREEN_HEIGHT } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
             padding: BASE_DIMENSION * 2,
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            height: SCREEN_HEIGHT
         },
 
         walletList: {
@@ -29,6 +30,7 @@ export default (theme: ITheme) =>
 
         bottomButton: {
             flex: 1,
+            width: 150,
             flexBasis: 0,
             marginHorizontal: BASE_DIMENSION / 2
         },

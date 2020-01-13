@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, SCREEN_HEIGHT } from '../../styles/dimensions';
 import { ph, pw } from '../../styles';
 
 export default (theme: ITheme) =>
@@ -8,7 +8,8 @@ export default (theme: ITheme) =>
         container: {
             flex: 1,
             backgroundColor: theme.colors.appBackground,
-            justifyContent: 'center'
+            justifyContent: 'center',
+            height: SCREEN_HEIGHT
         },
         logoImage: {
             height: ph(20),

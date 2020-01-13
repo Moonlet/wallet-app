@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -9,6 +9,7 @@ import { PasswordPin } from './components/password-pin/password-pin';
 import bind from 'bind-decorator';
 import { translate } from '../../core/i18n';
 import { PasswordTerms } from './components/password-terms/password-terms';
+import Modal from '../../library/modal/modal';
 
 export interface IExternalProps {
     shouldCreatePassword?: boolean;
@@ -137,7 +138,13 @@ export class PasswordModalComponent extends React.Component<
 
     public render() {
         return (
-            <View style={{ display: this.state.visible ? 'flex' : 'none' }}>
+            <View
+                style={{
+                    display: this.state.visible ? 'flex' : 'none',
+                    position: 'absolute',
+                    height: '100%'
+                }}
+            >
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -161,6 +168,9 @@ export class PasswordModalComponent extends React.Component<
     }
 
     private async verifyPassword(value): Promise<{ valid: boolean; errorMessage: string }> {
+        if (Platform.OS === 'web') {
+            return { valid: true, errorMessage: '' };
+        }
         try {
             const passwordCredentials = await getPassword();
             if (passwordCredentials) {

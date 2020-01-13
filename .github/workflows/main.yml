@@ -126,6 +126,8 @@ jobs:
         run: npm run generate-icons
       - name: Build extension
         run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
       - name: Create extenion zip
         run: cd extension/build/beta/chrome && zip -r ./extension.zip ./
       - name: Deploy to Chrome store

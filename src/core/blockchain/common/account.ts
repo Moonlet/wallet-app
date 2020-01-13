@@ -12,8 +12,9 @@ export const convert = (
     }
 
     if (info) {
-        if (info.units[fromUnit] && info.units[toUnit]) {
-            return value.multipliedBy(info.units[fromUnit]).dividedBy(info.units[toUnit]);
+        const units = info.tokens[info.coin].units;
+        if (units[fromUnit] && units[toUnit]) {
+            return value.multipliedBy(units[fromUnit]).dividedBy(units[toUnit]);
         } else {
             throw new Error(`${fromUnit} or ${toUnit} is not configured as a unit.`);
         }

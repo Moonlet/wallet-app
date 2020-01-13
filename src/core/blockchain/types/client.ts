@@ -3,6 +3,7 @@ import { RpcClient } from '../../utils/rpc-client';
 import { IBlockchainNetwork } from './network';
 
 export abstract class BlockchainGenericClient {
+    public readonly tokens: { [type: string]: any } = {};
     protected rpc: RpcClient;
     protected chainId: number;
 

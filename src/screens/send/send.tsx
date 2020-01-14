@@ -229,7 +229,7 @@ export class SendScreenComponent extends React.Component<
         if (this.props.account.balance?.value.minus(completeAmount).isGreaterThanOrEqualTo(0)) {
             this.setState({ insufficientFunds: false });
         } else {
-            this.setState({ insufficientFunds: false });
+            this.setState({ insufficientFunds: true });
         }
     }
 

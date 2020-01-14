@@ -10,6 +10,7 @@ import { Amount } from '../amount/amount';
 import { Icon } from '../icon';
 import { IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export interface IProps {
     onPress?: () => void;
@@ -36,6 +37,12 @@ export const CoinBalanceCardComponent = (props: IProps) => (
             <Amount
                 style={[props.styles.mainText, !props.active && props.styles.darkerText]}
                 amount={props.balance}
+                token={getBlockchain(props.blockchain).config.coin}
+                tokenDecimals={
+                    getBlockchain(props.blockchain).config.tokens[
+                        getBlockchain(props.blockchain).config.coin
+                    ].decimals
+                }
                 blockchain={props.blockchain}
             />
             <Icon name="chevron-down" size={18} style={props.styles.icon} />
@@ -43,6 +50,12 @@ export const CoinBalanceCardComponent = (props: IProps) => (
         <Amount
             style={[props.styles.secondaryText, !props.active && props.styles.darkerText]}
             amount={props.balance}
+            token={getBlockchain(props.blockchain).config.coin}
+            tokenDecimals={
+                getBlockchain(props.blockchain).config.tokens[
+                    getBlockchain(props.blockchain).config.coin
+                ].decimals
+            }
             blockchain={props.blockchain}
             convert
         />

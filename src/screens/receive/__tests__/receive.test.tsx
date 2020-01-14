@@ -7,6 +7,14 @@ import { loadTranslations } from '../../../core/i18n';
 
 const props: IProps = {
     // @ts-ignore
+    navigation: {
+        navigate: jest.fn(),
+        state: {
+            params: {
+                token: {}
+            }
+        }
+    },
     styles: stylesProvider(darkTheme),
     theme: darkTheme,
     account: { address: 'value' }

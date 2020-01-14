@@ -142,7 +142,7 @@ export class SettingsScreenComponent extends React.Component<
                                 <Text style={styles.textRow}>
                                     {Platform.OS === 'ios' && this.state.biometryType
                                         ? translate(`BiometryType.${this.state.biometryType}`)
-                                        : translate('BiometryType.touchID')}
+                                        : translate('BiometryType.TouchID')}
                                 </Text>
                                 <Switch
                                     onValueChange={() =>

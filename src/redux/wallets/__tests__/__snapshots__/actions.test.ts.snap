@@ -16,6 +16,9 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ETH": Object {
                   "active": true,
                   "decimals": 18,
+                  "logo": Object {
+                    "testUri": "../../../src/assets/images/png/eth.png",
+                  },
                   "name": "Ethereum",
                   "order": 0,
                   "symbol": "ETH",
@@ -38,6 +41,9 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ETH": Object {
                   "active": true,
                   "decimals": 18,
+                  "logo": Object {
+                    "testUri": "../../../src/assets/images/png/eth.png",
+                  },
                   "name": "Ethereum",
                   "order": 0,
                   "symbol": "ETH",
@@ -60,6 +66,9 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ZIL": Object {
                   "active": true,
                   "decimals": 12,
+                  "logo": Object {
+                    "testUri": "../../../src/assets/images/png/zil.png",
+                  },
                   "name": "Zilliqa",
                   "order": 0,
                   "symbol": "ZIL",
@@ -82,6 +91,9 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ZIL": Object {
                   "active": true,
                   "decimals": 12,
+                  "logo": Object {
+                    "testUri": "../../../src/assets/images/png/zil.png",
+                  },
                   "name": "Zilliqa",
                   "order": 0,
                   "symbol": "ZIL",

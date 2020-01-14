@@ -133,17 +133,17 @@ export class ManageAccountComponent extends React.Component<
                 >
                     <View style={styles.infoContainer}>
                         <View style={styles.iconContainer}>
-                            {item.value?.logo ? (
+                            {item.value.type === TokenType.NATIVE ? (
+                                <Image
+                                    style={styles.tokenLogo}
+                                    resizeMode="contain"
+                                    source={item.value.logo}
+                                />
+                            ) : (
                                 <Image
                                     style={styles.tokenLogo}
                                     resizeMode="contain"
                                     source={{ uri: item.value.logo }}
-                                />
-                            ) : (
-                                <Icon
-                                    name="money-wallet-1"
-                                    size={ICON_SIZE}
-                                    style={styles.accountIcon}
                                 />
                             )}
                         </View>
@@ -151,11 +151,15 @@ export class ManageAccountComponent extends React.Component<
                             <Amount
                                 style={styles.firstAmount}
                                 amount={item.value.balance?.value}
+                                token={item.value.symbol}
+                                tokenDecimals={item.value.decimals}
                                 blockchain={this.props.selectedAccount.blockchain}
                             />
                             <Amount
                                 style={styles.secondAmount}
                                 amount={item.value.balance?.value}
+                                token={item.value.symbol}
+                                tokenDecimals={item.value.decimals}
                                 blockchain={this.props.selectedAccount.blockchain}
                                 convert
                             />

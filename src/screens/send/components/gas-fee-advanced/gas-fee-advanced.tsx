@@ -8,8 +8,10 @@ import { FeeTotal } from '../fee-total/fee-total';
 import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { ITokenConfig } from '../../../../core/blockchain/types/token';
 
 export interface IExternalProps {
+    token: ITokenConfig;
     gasPrice: BigNumber;
     gasLimit: BigNumber;
     blockchain: Blockchain;
@@ -108,6 +110,7 @@ export class GasFeeAvancedComponent extends React.Component<
                 <FeeTotal
                     amount={this.props.gasPrice.multipliedBy(this.props.gasLimit)}
                     blockchain={this.props.blockchain}
+                    token={this.props.token}
                 />
             </View>
         );

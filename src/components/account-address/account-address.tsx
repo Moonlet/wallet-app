@@ -7,6 +7,7 @@ import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { formatAddress } from '../../core/utils/format-address';
 import { Amount } from '../amount/amount';
+import { ITokenConfig } from '../../core/blockchain/types/token';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -15,6 +16,7 @@ export interface IProps {
 
 export interface IExternalProps {
     account: IAccountState;
+    token: ITokenConfig;
 }
 
 export const AccountAddressComponent = (props: IProps & IExternalProps) => {
@@ -28,11 +30,15 @@ export const AccountAddressComponent = (props: IProps & IExternalProps) => {
                     style={styles.balance}
                     amount={props.account.balance?.value}
                     blockchain={props.account.blockchain}
+                    token={props.token.symbol}
+                    tokenDecimals={props.token.decimals}
                 />
                 <Amount
                     style={styles.convert}
                     amount={props.account.balance?.value}
                     blockchain={props.account.blockchain}
+                    token={props.token.symbol}
+                    tokenDecimals={props.token.decimals}
                     convert
                 />
             </View>

@@ -77,6 +77,12 @@ export class TransactionDetailsComponent extends React.Component<
                         style={styles.textPrimary}
                         amount={transaction.amount}
                         blockchain={account.blockchain}
+                        token={getBlockchain(account.blockchain).config.coin}
+                        tokenDecimals={
+                            getBlockchain(account.blockchain).config.tokens[
+                                getBlockchain(account.blockchain).config.coin
+                            ].decimals
+                        }
                     />
                     <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
                 </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Alert } from 'react-native';
+import { View, ScrollView, Alert, Image } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, ITransactionState, IWalletState } from '../../redux/wallets/state';
@@ -13,15 +13,17 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { withTheme } from '../../core/theme/with-theme';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { Button } from '../../library';
+import { Button, Text } from '../../library';
 import { translate, Translate } from '../../core/i18n';
 import { AccountSettings } from './components/account-settings/account-settings';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { TransactionsHistoryList } from '../transactions-history/list-transactions-history/list-transactions-history';
+import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
+import { themes } from '../../navigation/navigation';
 import { formatNumber } from '../../core/utils/format-number';
-import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { formatAddress } from '../../core/utils/format-address';
 import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
@@ -63,17 +65,37 @@ interface IState {
     settingsVisible: boolean;
 }
 
-const navigationOptions = ({ navigation }: any) => ({
+const navigationOptions = ({ navigation, theme }: any) => ({
     headerRight: () => (
         <HeaderRight
             icon="navigation-menu-horizontal"
             onPress={navigation.state.params ? navigation.state.params.openSettingsMenu : undefined}
         />
     ),
-    title: `${translate('App.labels.account')} ${navigation.state.params.accountIndex + 1}`
+    headerTitle: () => (
+        <View style={{ flexDirection: 'row' }}>
+            <Image
+                style={{ height: ICON_SIZE, width: ICON_SIZE, marginRight: BASE_DIMENSION }}
+                resizeMode="contain"
+                source={navigation.state.params.tokenLogo}
+            />
+            <Text
+                style={{
+                    fontSize: 22,
+                    lineHeight: 28,
+                    color: themes[theme].colors.text,
+                    letterSpacing: 0.38,
+                    textAlign: 'center',
+                    fontWeight: 'bold'
+                }}
+            >
+                {`${translate('App.labels.account')} ${navigation.state.params.accountIndex + 1}`}
+            </Text>
+        </View>
+    )
 });
 
-export class AccountScreenComponent extends React.Component<
+export class TokenScreenComponent extends React.Component<
     INavigationProps<INavigationParams> & IReduxProps & IProps,
     IState
 > {
@@ -162,13 +184,15 @@ export class AccountScreenComponent extends React.Component<
 
     public render() {
         const { styles, navigation, account, transactions } = this.props;
+        const { token } = this.props.navigation.state.params;
+
         return (
             <View style={styles.container}>
                 <ScrollView
                     contentContainerStyle={{ flexGrow: 1 }}
                     showsVerticalScrollIndicator={false}
                 >
-                    <AccountAddress account={account} />
+                    <AccountAddress account={account} token={token} />
                     <View style={styles.buttonsContainer}>
                         <Button
                             testID="button-send"
@@ -177,7 +201,7 @@ export class AccountScreenComponent extends React.Component<
                                 navigation.navigate('Send', {
                                     accountIndex: account.index,
                                     blockchain: account.blockchain,
-                                    token: getBlockchain(account.blockchain).config.coin
+                                    token
                                 });
                             }}
                         >
@@ -189,7 +213,8 @@ export class AccountScreenComponent extends React.Component<
                             onPress={() => {
                                 navigation.navigate('Receive', {
                                     accountIndex: account.index,
-                                    blockchain: account.blockchain
+                                    blockchain: account.blockchain,
+                                    token
                                 });
                             }}
                         >
@@ -224,7 +249,7 @@ export class AccountScreenComponent extends React.Component<
     }
 }
 
-export const AccountScreen = smartConnect(AccountScreenComponent, [
+export const TokenScreen = smartConnect(TokenScreenComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider),
     withNavigationParams()

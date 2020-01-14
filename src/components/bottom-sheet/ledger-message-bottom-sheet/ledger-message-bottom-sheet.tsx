@@ -49,20 +49,6 @@ export class LedgerMessageBottomSheetComponent extends React.Component<
             : this.bottomSheet.current.snapTo(1);
     }
 
-    public transactionHistoryPress = () => {
-        this.props.onCloseEnd();
-        this.props.navigation.navigate('TransactonsHistory');
-    };
-
-    public manageAccount = () => {
-        this.props.onCloseEnd();
-        this.props.navigation.navigate('Accounts');
-    };
-
-    public connectExtension = () => {
-        this.props.onCloseEnd();
-    };
-
     public renderBottomSheetContent = () => {
         const { styles } = this.props;
 

@@ -31,8 +31,7 @@ export default (theme: ITheme) =>
         iconLeftContainer: {
             height: ICON_CONTAINER_SIZE,
             width: ICON_CONTAINER_SIZE,
-            alignItems: 'flex-start',
-            justifyContent: 'center'
+            marginRight: BASE_DIMENSION
         },
         iconRightContainer: {
             height: ICON_CONTAINER_SIZE,
@@ -42,5 +41,9 @@ export default (theme: ITheme) =>
         },
         icon: {
             color: theme.colors.accent
+        },
+        accountIcon: {
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE
         }
     });

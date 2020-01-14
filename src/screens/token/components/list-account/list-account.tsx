@@ -3,14 +3,12 @@ import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { View } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import Icon from '../../../../components/icon';
-import { ICON_SIZE } from '../../../../styles/dimensions';
-import TouchableOpacity from '../../../../library/touchable-opacity/touchable-opacity';
 
 export interface IProps {
     label: string | JSX.Element;
-    leftIcon?: string;
+    leftIcon?: number;
     rightIcon?: string;
     selected?: boolean;
     onPress?: any;
@@ -33,7 +31,11 @@ export const ListAccountComponent = (
         >
             {props.leftIcon && (
                 <View style={props.styles.iconLeftContainer}>
-                    <Icon name={props.leftIcon} size={ICON_SIZE} style={props.styles.icon} />
+                    <Image
+                        resizeMode="contain"
+                        style={props.styles.accountIcon}
+                        source={props.leftIcon}
+                    />
                 </View>
             )}
             <View style={props.styles.labelContainer}>{label}</View>

@@ -10,6 +10,7 @@ export const config: IBlockchainConfig = {
         ETH: {
             name: 'Ethereum',
             symbol: 'ETH',
+            logo: require('../../../assets/images/png/eth.png'),
             order: 0,
             active: true,
             decimals: 18,

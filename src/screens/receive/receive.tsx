@@ -15,6 +15,7 @@ import { connect } from 'react-redux';
 import { Blockchain } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
+import { ITokenConfig } from '../../core/blockchain/types/token';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -24,6 +25,7 @@ export interface IProps {
 export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
+    token: ITokenConfig;
 }
 
 export interface IReduxProps {
@@ -63,7 +65,10 @@ export class ReceiveScreenComponent extends React.Component<
         const account = this.props.account;
         return (
             <View style={styles.container}>
-                <AccountAddress account={account} />
+                <AccountAddress
+                    account={account}
+                    token={this.props.navigation.state.params.token}
+                />
                 <View style={styles.qrcode}>
                     <QRCode value={account.address} size={300} />
                 </View>

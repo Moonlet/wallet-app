@@ -12,6 +12,6 @@ export interface IBlockchainAccountUtils {
     getAccountFromPrivateKey(privateKey: string, index: number): IAccountState;
 
     amountToStd(value: BigNumber | number | string, decimals?: number): BigNumber;
-    amountFromStd(value: BigNumber): BigNumber;
+    amountFromStd(value: BigNumber, decimals?: number): BigNumber;
     convertUnit(value: BigNumber, from: string, to: string): BigNumber;
 }

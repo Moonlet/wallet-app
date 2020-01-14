@@ -10,6 +10,9 @@ Object {
     "ETH": Object {
       "active": true,
       "decimals": 18,
+      "logo": Object {
+        "testUri": "../../../src/assets/images/png/eth.png",
+      },
       "name": "Ethereum",
       "order": 0,
       "symbol": "ETH",

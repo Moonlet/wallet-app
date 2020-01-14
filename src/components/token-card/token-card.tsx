@@ -15,6 +15,7 @@ export interface IProps {
     account: IAccountState;
     styles: ReturnType<typeof stylesProvider>;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    tokenLogo: any;
 }
 
 export const TokenCardComponent = (props: IProps) => {
@@ -27,7 +28,8 @@ export const TokenCardComponent = (props: IProps) => {
                 props.navigation.navigate('Token', {
                     accountIndex: props.account.index,
                     blockchain: props.account.blockchain,
-                    token: props.token
+                    token: props.token,
+                    tokenLogo: props.tokenLogo
                 })
             }
         >

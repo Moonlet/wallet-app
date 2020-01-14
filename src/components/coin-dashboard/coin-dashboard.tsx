@@ -6,7 +6,7 @@ import { Blockchain } from '../../core/blockchain/types';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
-import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { TokenCard } from '../token-card/token-card';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 
@@ -47,6 +47,11 @@ export const CoinDashboardComponent = (props: IProps) => (
                                 navigation={props.navigation}
                                 key={index}
                                 blockchain={props.blockchain}
+                                tokenLogo={
+                                    getBlockchain(props.blockchain).config.tokens[
+                                        getBlockchain(props.blockchain).config.coin
+                                    ].logo
+                                }
                             />
                         )
                 )}

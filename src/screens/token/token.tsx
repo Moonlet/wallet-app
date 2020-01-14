@@ -77,7 +77,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
             <Image
                 style={{ height: ICON_SIZE, width: ICON_SIZE, marginRight: BASE_DIMENSION }}
                 resizeMode="contain"
-                source={navigation.state.params.token.logo} // TODO: fix here for ERC-20
+                source={navigation.state.params.tokenLogo}
             />
             <Text
                 style={{

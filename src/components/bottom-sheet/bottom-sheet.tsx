@@ -12,6 +12,7 @@ import { openBottomSheet, closeBottomSheet } from '../../redux/app/actions';
 import { DashboardMenuBottomSheet } from './dashboard-menu-bottom-sheet/dashboard-menu-bottom-sheet';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { LedgerConnect } from '../../screens/connect-hardware-wallet/ledger-connect/ledger-connect';
+import { ExtensionRequestBottomSheet } from './extension-request-bottom-sheet/extension-request-bottom-sheet';
 
 interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -120,6 +121,22 @@ export class BottomSheetComponent extends React.Component<
                             navigation={this.props.navigation}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
+                        />
+                    </View>
+                );
+
+            case BottomSheetType.EXTENSION_REQUEST:
+                return (
+                    <View style={this.props.styles.container}>
+                        <ExtensionRequestBottomSheet
+                            snapPoints={{
+                                initialSnap: Platform.OS === 'web' ? 280 : 0,
+                                bottomSheetHeight: 280
+                            }}
+                            onOpenStart={this.handleOpenStart}
+                            onCloseEnd={this.handleCloseEnd}
+                            navigation={this.props.navigation}
+                            data={this.props.bottomSheet?.data}
                         />
                     </View>
                 );

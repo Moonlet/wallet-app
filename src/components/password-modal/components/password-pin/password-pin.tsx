@@ -29,6 +29,7 @@ interface IState {
     errorMessage: string;
     passToVerify: string;
     biometryType: BiometryType;
+    updatePinProps: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -48,10 +49,11 @@ export class PasswordPinComponent extends React.Component<
     IState
 > {
     public static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.updatePinProps === true) {
+        if (nextProps.updatePinProps !== prevState.updatePinProps) {
             return {
                 password: '',
                 errorMessage: '',
+                updatePinProps: nextProps.updatePinProps,
                 passToVerify: prevState.password // save the password to compare it
             };
         } else {
@@ -69,6 +71,7 @@ export class PasswordPinComponent extends React.Component<
             password: '',
             errorMessage: '',
             passToVerify: '',
+            updatePinProps: false,
             biometryType: undefined
         };
         this.shakeAnimation = new Animated.Value(0);

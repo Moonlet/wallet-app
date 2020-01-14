@@ -33,7 +33,7 @@ import { ReceiveScreen } from '../screens/receive/receive';
 import { ViewWalletMnemonicScreen } from '../screens/view-wallet-mnemonic/view-wallet-mnemonic';
 import { TransactionsHistoryScreen } from '../screens/transactions-history/transactions-history';
 import { TransactionDetails } from '../screens/transaction-details/transaction-details';
-import { RewardsScreen } from '../screens/rewards/rewards';
+import { StatisticsScreen } from '../screens/statistics/statistics';
 import { WatchScreen } from '../screens/watch/watch';
 import { AccountsScreen } from '../screens/accounts/accounts';
 import { BASE_DIMENSION } from '../styles/dimensions';
@@ -181,14 +181,14 @@ export const SettingsNavigation = createStackNavigator(
 );
 
 // rewards navigation stack
-export const RewardsNavigation = createStackNavigator(
+export const StatisticsNavigation = createStackNavigator(
     {
-        Rewards: {
-            screen: RewardsScreen
+        Statistics: {
+            screen: StatisticsScreen
         }
     },
     {
-        initialRouteName: 'Rewards',
+        initialRouteName: 'Statistics',
         defaultNavigationOptions: defaultStackNavigationOptions,
         headerLayoutPreset: 'center'
     }
@@ -210,17 +210,17 @@ export const WatchNavigation = createStackNavigator(
 
 // main dashboard navigation
 export const navigationConfig = {
-    Wallet: {
+    Dashboard: {
         screen: WalletNavigation,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('money-wallet-1')
+            tabBarIcon: menuIcon('dashboard')
         })
     },
-    Rewards: {
-        screen: RewardsNavigation,
+    Statistics: {
+        screen: StatisticsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('accounting-coins-stack')
+            tabBarIcon: menuIcon('performance-money-increase')
         })
     },
     Watch: {

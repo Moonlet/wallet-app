@@ -7,7 +7,8 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            minHeight: ph(100) // temporary workaround
+            minHeight: ph(100), // temporary workaround
+            backgroundColor: theme.colors.appBackground
         },
         coinBalanceCard: {
             paddingTop: BASE_DIMENSION * 4,

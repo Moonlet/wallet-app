@@ -136,6 +136,7 @@ export class SendScreenComponent extends React.Component<
                 account: this.props.account,
                 toAddress: this.state.toAddress,
                 amount: this.state.amount,
+                token: this.props.token,
                 feeOptions: this.state.feeOptions,
                 walletId: this.props.currentWalletId,
                 currentAccount: this.props.currentAccount

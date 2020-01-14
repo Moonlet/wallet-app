@@ -21,7 +21,7 @@ import { AccountAddress } from '../../components/account-address/account-address
 import { Blockchain } from '../../core/blockchain/types';
 import { TransactionsHistoryList } from '../transactions-history/list-transactions-history/list-transactions-history';
 import { formatNumber } from '../../core/utils/format-number';
-import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { formatAddress } from '../../core/utils/format-address';
 import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
@@ -93,6 +93,7 @@ export class AccountScreenComponent extends React.Component<
                 account,
                 toAddress,
                 amount,
+                token,
                 feeOptions
             } = this.props.extensionTransactionPayload.params[0];
 
@@ -132,6 +133,7 @@ export class AccountScreenComponent extends React.Component<
                                         account,
                                         toAddress,
                                         amount,
+                                        token,
                                         feeOptions,
                                         password,
                                         this.props.navigation

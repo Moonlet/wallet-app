@@ -9,7 +9,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { IAccountState } from '../../redux/wallets/state';
@@ -29,6 +29,15 @@ import BigNumber from 'bignumber.js';
 import bind from 'bind-decorator';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { ICON_SIZE } from '../../styles/dimensions';
+import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
+import { openBottomSheet } from '../../redux/app/actions';
+import {
+    IBottomSheetExtensionRequestData,
+    IExtensionRequestType,
+    BottomSheetType,
+    ICurrentAccount
+} from '../../redux/app/state';
+import { formatNumber } from '../../core/utils/format-number';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -36,18 +45,24 @@ export interface IReduxProps {
     sendTransferTransaction: typeof sendTransferTransaction;
     addContact: typeof addContact;
     contacts: IContactsState[];
+    openBottomSheet: typeof openBottomSheet;
+    currentWalletId: string;
+    currentAccount: ICurrentAccount;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         accounts: getAccounts(state, ownProps.blockchain),
-        contacts: getContacts(state)
+        contacts: getContacts(state),
+        currentWalletId: state.app.currentWalletId,
+        currentAccount: state.app.currentAccount
     };
 };
 
 const mapDispatchToProps = {
     sendTransferTransaction,
+    openBottomSheet,
     addContact
 };
 
@@ -66,6 +81,7 @@ interface IState {
     showOwnAccounts: boolean;
     insufficientFunds: boolean;
     feeOptions: any;
+    showExtensionMessage: boolean;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -97,11 +113,46 @@ export class SendScreenComponent extends React.Component<
             labelWarningAddressDisplay: false,
             insufficientFunds: false,
             showOwnAccounts: false,
-            feeOptions: undefined
+            feeOptions: undefined,
+            showExtensionMessage: false
         };
     }
 
     public confirmPayment = async () => {
+        if (Platform.OS === 'web') {
+            const formattedAmount = formatNumber(new BigNumber(this.state.amount), {
+                currency: BLOCKCHAIN_INFO[this.props.account.blockchain].coin
+            });
+
+            const data: IBottomSheetExtensionRequestData = {
+                type: IExtensionRequestType.SIGN_TRANSACTION,
+                state: 'pending',
+                mainText: `${formattedAmount} to ${formatAddress(this.props.account.address)}`,
+                secondaryText: new Date().toLocaleDateString('en-GB')
+            };
+            this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
+
+            WalletConnectWeb.signTransaction({
+                account: this.props.account,
+                toAddress: this.state.toAddress,
+                amount: this.state.amount,
+                token: this.props.token,
+                feeOptions: this.state.feeOptions,
+                walletId: this.props.currentWalletId,
+                currentAccount: this.props.currentAccount
+            })
+                .then(result => {
+                    data.state = 'completed';
+                    this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
+                    this.props.navigation.goBack();
+                })
+                .catch(error => {
+                    data.state = 'rejected';
+                    this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
+                });
+            return;
+        }
+
         this.passwordModal.requestPassword().then(password => {
             this.props.sendTransferTransaction(
                 this.props.account,

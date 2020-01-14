@@ -1,5 +1,6 @@
 import firebase from 'react-native-firebase';
 import { Alert } from 'react-native';
+import { signExtensionTransaction } from '../../wallet-connect/utils';
 
 // this file is in this format for testing purposes
 export class NotificationService {
@@ -44,7 +45,6 @@ export class NotificationService {
         });
 
         this.messageListener = firebase.messaging().onMessage(message => {
-            // console.log('on Message');
             // console.log(message);
         });
 
@@ -71,17 +71,32 @@ export class NotificationService {
 
         this.onNotificationOpenedListener = firebase
             .notifications()
-            .onNotificationOpened(notification => {
-                // console.log('onNotificationOpened');
-                // console.log(notification);
-
-                Alert.alert(
-                    'Push Notification',
-                    `${notification.action},${notification.notification},${notification.results}`,
-                    [{ text: 'OK' }],
-                    { cancelable: false }
-                );
+            .onNotificationOpened(notificationOpen => {
+                // check here for different types of notifications
+                // this gets called when app is opened but in background
+                const notification = notificationOpen.notification;
+                signExtensionTransaction(notification.data);
             });
+    }
+
+    public removeListeners() {
+        this.messageListener();
+        this.notificationDisplayedListener();
+        this.onNotificationListener();
+        this.onNotificationOpenedListener();
+    }
+
+    public async displayNotification(title, body, data) {
+        const notification = new firebase.notifications.Notification()
+            .setNotificationId('1')
+            .setTitle(title)
+            .setBody(body)
+            .setData(data)
+            .android.setPriority(firebase.notifications.Android.Priority.High)
+            .android.setChannelId('default')
+            .android.setAutoCancel(true);
+
+        firebase.notifications().displayNotification(notification);
     }
 
     public async scheduleNotification(date) {
@@ -103,7 +118,7 @@ export class NotificationService {
             });
     }
 
-    public configure() {
+    public async configure() {
         const channel = new firebase.notifications.Android.Channel(
             'default',
             'default channel',
@@ -112,6 +127,8 @@ export class NotificationService {
         firebase.notifications().android.createChannel(channel);
         this.checkPermission();
         this.createListeners();
+
+        this.wasOpenedByNotification();
     }
 
     public wasOpenedByNotification() {
@@ -121,23 +138,9 @@ export class NotificationService {
             .then(notificationOpen => {
                 if (notificationOpen) {
                     // App was opened by a notification
-                    // Get the action triggered by the notification being opened
-                    const action = notificationOpen.action;
-                    // Get information about the notification that was opened
+                    // check here for different types of notifications
                     const notification = notificationOpen.notification;
-
-                    // console.log('App was opened by a notification');
-                    // console.log(action);
-                    // console.log(notification);
-
-                    Alert.alert(
-                        'Push Notification',
-                        `${action},${notification}`,
-                        [{ text: 'OK' }],
-                        { cancelable: false }
-                    );
-                } else {
-                    // console.log('App was NOT opened by a notification');
+                    signExtensionTransaction(notification.data);
                 }
             });
     }

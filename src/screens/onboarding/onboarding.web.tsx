@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View } from 'react-native';
 import { Text } from '../../library';
 import { NavigationActions } from 'react-navigation';
 import stylesProvider from './styles';
@@ -58,17 +58,6 @@ export class OnboardingScreenComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <View
-                        style={{
-                            alignItems: 'center',
-                            alignSelf: 'stretch'
-                        }}
-                    >
-                        <Image
-                            style={styles.logoImage}
-                            source={require('../../assets/images/png/moonlet_space.png')}
-                        />
-                    </View>
                     <View style={styles.textContainer}>
                         <Text large style={{ fontWeight: 'bold' }}>
                             {translate('Onboarding.welcomeTitle')}
@@ -81,6 +70,20 @@ export class OnboardingScreenComponent extends React.Component<
 
                 <View style={{ justifyContent: 'center' }}>
                     <canvas ref={ref => (this.qrCanvas = ref)}></canvas>
+                </View>
+
+                <View style={{ flex: 1, justifyContent: 'center' }}>
+                    <View style={styles.textContainer}>
+                        <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
+                            {translate('Onboarding.webStep1')}
+                        </Text>
+                        <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
+                            {translate('Onboarding.webStep2')}
+                        </Text>
+                        <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
+                            {translate('Onboarding.webStep3')}
+                        </Text>
+                    </View>
                 </View>
             </View>
         );

@@ -242,7 +242,7 @@ export const getBalance = (
         }
     } else {
         // call get balance for all tokens
-        Object.keys(account.tokens).map(tokenSymbol => {
+        Object.keys(account.tokens || {}).map(tokenSymbol => {
             // console.log(`getBalance(${blockchain}, ${address}, ${tokenSymbol}, ${force})`);
             getBalance(blockchain, address, tokenSymbol, force)(dispatch, getState);
         });

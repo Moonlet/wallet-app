@@ -16,6 +16,7 @@ import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-not
 import { BottomSheet } from './components/bottom-sheet/bottom-sheet';
 import { WalletConnectClient } from './core/wallet-connect/wallet-connect-client';
 import { WalletConnectWeb } from './core/wallet-connect/wallet-connect-web';
+import { NavigationService } from './navigation/navigation-service';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -103,14 +104,11 @@ export default class App extends React.Component<{}, IState> {
         if (Platform.OS === 'ios') {
             setupVoipNotification();
         }
-
-        // const date = new Date();
-        // date.setSeconds(date.getSeconds() + 10);
-        // Notifications.scheduleNotification(date);
     }
 
     public componentWillUnmount() {
         AppState.removeEventListener('change', this.handleAppStateChange);
+        Notifications.removeListeners();
     }
 
     public showPasswordModal() {
@@ -142,7 +140,13 @@ export default class App extends React.Component<{}, IState> {
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
-                            <AppContainer ref={nav => (this.navigator = nav)} theme="dark" />
+                            <AppContainer
+                                ref={nav => {
+                                    this.navigator = nav;
+                                    NavigationService.setTopLevelNavigator(nav);
+                                }}
+                                theme="dark"
+                            />
                             <PasswordModal
                                 visible={this.state.showPasswordModal}
                                 onPassword={() => this.setState({ showPasswordModal: false })}

@@ -26,12 +26,6 @@ const props: IProps & IReduxProps = {
         blockchain: Blockchain.ZILLIQA,
         address: 'zil1vs74hw5k21233h432kj321l3k21b',
         publicKey: '1',
-        balance: {
-            inProgress: false,
-            timestamp: 123,
-            value: new BigNumber(12332),
-            error: undefined
-        },
         tokens: {}
     }
 };
@@ -52,7 +46,8 @@ export default describe('AccountScreen', () => {
         wrapper.find('[testID="button-send"]').simulate('Press');
         expect(props.navigation.navigate).toHaveBeenCalledWith('Send', {
             accountIndex: 1,
-            blockchain: 'ZILLIQA'
+            blockchain: 'ZILLIQA',
+            token: 'ZIL'
         });
     });
     test('Receive button goes on the proper screen', () => {

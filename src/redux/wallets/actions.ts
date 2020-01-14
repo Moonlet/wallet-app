@@ -27,6 +27,7 @@ import { REVIEW_TRANSACTION } from '../screens/send/actions';
 import { BottomSheetType } from '../app/state';
 import { REHYDRATE } from 'redux-persist';
 import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
+import BigNumber from 'bignumber.js';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -165,7 +166,6 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     // TODO  - error handling
 };
 
-// TODO ERC20 - getAccountBalance
 // will check balance for a coin or all coins if needed
 export const getBalance = (
     blockchain: Blockchain,
@@ -253,6 +253,7 @@ export const sendTransferTransaction = (
     account: IAccountState,
     toAddress: string,
     amount: string,
+    token: string,
     feeOptions: any,
     password: string,
     navigation: NavigationScreenProp<NavigationState>
@@ -274,20 +275,16 @@ export const sendTransferTransaction = (
 
         const nonce = await blockchainInstance.getClient(chainId).getNonce(account.address);
 
-        const options = {
-            nonce,
+        const tx = blockchainInstance.transaction.buildTransferTransaction({
             chainId,
-            gasPrice: feeOptions.gasPrice,
-            gasLimit: feeOptions.gasLimit,
-            publicKey: account.publicKey
-        };
-
-        const tx = {
-            from: account.address,
-            to: toAddress,
-            amount: blockchainInstance.account.amountToStd(amount),
-            options
-        };
+            account,
+            toAddress,
+            amount: blockchainInstance.account.amountToStd(amount, account.tokens[token].decimals),
+            token,
+            nonce,
+            gasPrice: new BigNumber(feeOptions.gasPrice),
+            gasLimit: new BigNumber(feeOptions.gasLimit).toNumber()
+        });
 
         if (appWallet.type === WalletType.HW) {
             dispatch(

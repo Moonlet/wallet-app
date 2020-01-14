@@ -321,7 +321,7 @@ export const sendTransferTransaction = (
                 });
                 dispatch(closeBottomSheet());
             }
-
+            navigation.goBack();
             return;
         }
     } catch (e) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Image } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, ITransactionState, IWalletState } from '../../redux/wallets/state';
@@ -13,13 +13,15 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { withTheme } from '../../core/theme/with-theme';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { Button } from '../../library';
+import { Button, Text } from '../../library';
 import { translate, Translate } from '../../core/i18n';
 import { AccountSettings } from './components/account-settings/account-settings';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { TransactionsHistoryList } from '../transactions-history/list-transactions-history/list-transactions-history';
+import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
+import { themes } from '../../navigation/navigation';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -49,14 +51,34 @@ interface IState {
     settingsVisible: boolean;
 }
 
-const navigationOptions = ({ navigation }: any) => ({
+const navigationOptions = ({ navigation, theme }: any) => ({
     headerRight: () => (
         <HeaderRight
             icon="navigation-menu-horizontal"
             onPress={navigation.state.params ? navigation.state.params.openSettingsMenu : undefined}
         />
     ),
-    title: `${translate('App.labels.account')} ${navigation.state.params.accountIndex + 1}`
+    headerTitle: () => (
+        <View style={{ flexDirection: 'row' }}>
+            <Image
+                style={{ height: ICON_SIZE, width: ICON_SIZE, marginRight: BASE_DIMENSION }}
+                resizeMode="contain"
+                source={navigation.state.params.token.logo} // TODO: fix here for ERC-20
+            />
+            <Text
+                style={{
+                    fontSize: 22,
+                    lineHeight: 28,
+                    color: themes[theme].colors.text,
+                    letterSpacing: 0.38,
+                    textAlign: 'center',
+                    fontWeight: 'bold'
+                }}
+            >
+                {`${translate('App.labels.account')} ${navigation.state.params.accountIndex + 1}`}
+            </Text>
+        </View>
+    )
 });
 
 export class TokenScreenComponent extends React.Component<
@@ -100,7 +122,6 @@ export class TokenScreenComponent extends React.Component<
                                     accountIndex: account.index,
                                     blockchain: account.blockchain,
                                     token
-                                    // getBlockchain(account.blockchain).config.coin // check here
                                 });
                             }}
                         >

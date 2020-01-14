@@ -27,13 +27,15 @@ export default (theme: ITheme) =>
         },
         inputContainer: {
             flex: 1,
-            flexDirection: 'row'
+            flexDirection: 'row',
+            height: 30
         },
         inputLabel: {
             textAlign: 'right',
             alignSelf: 'center',
             fontSize: 10,
             width: 18,
+            lineHeight: 30,
             color: theme.colors.text,
             paddingTop: BASE_DIMENSION / 4
         },

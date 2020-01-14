@@ -3,5 +3,5 @@ export const setPassword = async (password: string, shouldEncrypt: boolean = tru
 };
 
 export const getPassword = async () => {
-    return Promise.resolve({ password: '' });
+    return Promise.resolve({ password: '', username: '' });
 };

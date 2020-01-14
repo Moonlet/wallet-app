@@ -6,16 +6,16 @@ jest.mock('../utils');
 export default describe('Navigation', () => {
     describe('configuration', () => {
         test('config is ok', () => {
-            navigationConfig.Wallet.navigationOptions();
-            expect(menuIcon).toHaveBeenCalledWith('money-wallet-1');
+            navigationConfig.Dashboard.navigationOptions();
+            expect(menuIcon).toHaveBeenCalledWith('dashboard');
             (menuIcon as any).mockClear();
 
             navigationConfig.Watch.navigationOptions();
             expect(menuIcon).toHaveBeenCalledWith('view-1');
             (menuIcon as any).mockClear();
 
-            navigationConfig.Rewards.navigationOptions();
-            expect(menuIcon).toHaveBeenCalledWith('accounting-coins-stack');
+            navigationConfig.Statistics.navigationOptions();
+            expect(menuIcon).toHaveBeenCalledWith('performance-money-increase');
             (menuIcon as any).mockClear();
 
             navigationConfig.Settings.navigationOptions();

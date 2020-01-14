@@ -77,8 +77,8 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
-    bundleCommand: "ram-bundle",
-    extraPackagerArgs: ["--indexed-ram-bundle"],
+    // bundleCommand: "ram-bundle",
+    // extraPackagerArgs: ["--indexed-ram-bundle"],
     enableHermes: false,  // clean and rebuild if changing
 ]
 

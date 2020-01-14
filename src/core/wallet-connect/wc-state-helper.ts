@@ -6,7 +6,7 @@ export const trimWallets = (wallets: IWalletsState) => {
 
     Object.keys(trimmedWallets).forEach(id => {
         const trimmedWallet = { ...wallets[id] };
-        delete trimmedWallet.transactions;
+        // delete trimmedWallet.transactions;
 
         trimmedWallet.accounts = trimmedWallet.accounts.map(account => ({
             ...account,

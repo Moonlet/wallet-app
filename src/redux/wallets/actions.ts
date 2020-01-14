@@ -25,6 +25,9 @@ import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
 import { REVIEW_TRANSACTION } from '../screens/send/actions';
 import { BottomSheetType } from '../app/state';
+import { REHYDRATE } from 'redux-persist';
+import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
+import BigNumber from 'bignumber.js';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -34,9 +37,10 @@ export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
-import { REHYDRATE } from 'redux-persist';
-import { TokenType } from '../../core/blockchain/types/token';
-import BigNumber from 'bignumber.js';
+export const TOGGLE_TOKEN_ACTIVE = 'TOGGLE_TOKEN_ACTIVE';
+export const UPDATE_TOKEN_ORDER = 'UPDATE_TOKEN_ORDER';
+export const REMOVE_TOKEN = 'REMOVE_TOKEN';
+export const ADD_TOKEN = 'ADD_TOKEN';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -347,5 +351,41 @@ export const updateWalletName = (walletId: string, newName: string) => {
     return {
         type: WALLET_CHANGE_NAME,
         data: { walletId, newName }
+    };
+};
+
+export const toggleTokenActive = (
+    walletId: string,
+    account: IAccountState,
+    token: ITokenConfig
+) => {
+    return {
+        type: TOGGLE_TOKEN_ACTIVE,
+        data: { walletId, account, token }
+    };
+};
+
+export const updateTokenOrder = (
+    walletId: string,
+    account: IAccountState,
+    tokens: ITokenConfig[]
+) => {
+    return {
+        type: UPDATE_TOKEN_ORDER,
+        data: { walletId, account, tokens }
+    };
+};
+
+export const removeToken = (walletId: string, account: IAccountState, token: ITokenConfig) => {
+    return {
+        type: REMOVE_TOKEN,
+        data: { walletId, account, token }
+    };
+};
+
+export const addToken = (walletId: string, account: IAccountState, token: ITokenConfig) => {
+    return {
+        type: ADD_TOKEN,
+        data: { walletId, account, token }
     };
 };

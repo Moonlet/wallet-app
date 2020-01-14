@@ -13,6 +13,7 @@ import DeviceInfo from 'react-native-device-info';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { translate } from '../../core/i18n';
 import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric-auth';
+import { PasswordModal } from '../../components/password-modal/password-modal';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 
 export interface IState {
@@ -55,6 +56,7 @@ export class SettingsScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
+    public passwordModal = null;
 
     constructor(
         props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -97,20 +99,28 @@ export class SettingsScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+                <ScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {Platform.OS === 'web' && (
+                        <Button style={styles.button} onPress={this.signOut}>
+                            {translate('Settings.signOut')}
+                        </Button>
+                    )}
+
                     <Text style={styles.textHeader}>
                         {translate('App.labels.security').toUpperCase()}
                     </Text>
 
-                    <Button testID={'sign-out'} style={styles.button} onPress={this.signOut}>
-                        {translate('Settings.signOut')}
-                    </Button>
-
                     <View style={styles.rowContainer}>
                         <Text style={styles.textRow}>{translate('Settings.pinLogin')}</Text>
                         <Switch
-                            testID={'pin-login'}
-                            onValueChange={() => this.props.togglePinLogin()}
+                            onValueChange={() =>
+                                this.passwordModal
+                                    .requestPassword()
+                                    .then(() => this.props.togglePinLogin())
+                            }
                             value={this.props.pinLogin}
                             trackColor={{
                                 true: this.props.theme.colors.cardBackground,
@@ -119,7 +129,7 @@ export class SettingsScreenComponent extends React.Component<
                             thumbColor={
                                 this.props.pinLogin
                                     ? theme.colors.accent
-                                    : theme.colors.cardBackground
+                                    : theme.colors.textTertiary
                             }
                         />
                     </View>
@@ -135,7 +145,11 @@ export class SettingsScreenComponent extends React.Component<
                                         : translate('BiometryType.touchID')}
                                 </Text>
                                 <Switch
-                                    onValueChange={() => this.props.toggleTouchID()}
+                                    onValueChange={() =>
+                                        this.passwordModal
+                                            .requestPassword()
+                                            .then(() => this.props.toggleTouchID())
+                                    }
                                     value={this.props.touchID}
                                     trackColor={{
                                         true: this.props.theme.colors.cardBackground,
@@ -144,7 +158,7 @@ export class SettingsScreenComponent extends React.Component<
                                     thumbColor={
                                         this.props.touchID
                                             ? theme.colors.accent
-                                            : theme.colors.cardBackground
+                                            : theme.colors.textTertiary
                                     }
                                 />
                             </View>
@@ -279,6 +293,8 @@ export class SettingsScreenComponent extends React.Component<
                         {translate('Settings.signOut')}
                     </Button> */}
                 </ScrollView>
+
+                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>
         );
     }

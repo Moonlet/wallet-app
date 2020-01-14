@@ -66,7 +66,7 @@ const mapDispatchToProps = {
 
 const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: translate('App.labels.wallets')
+    title: translate('Wallets.manageWallets')
 });
 
 export class WalletsScreenComponent extends React.Component<
@@ -180,7 +180,7 @@ export class WalletsScreenComponent extends React.Component<
     public onPressEdit(wallet: any) {
         const title = translate('Wallets.editTitle');
         const message = translate('Wallets.editDescription');
-        const buttons = [
+        const callbackOrButtons = [
             {
                 text: translate('App.labels.cancel'),
                 onPress: () => {
@@ -200,7 +200,7 @@ export class WalletsScreenComponent extends React.Component<
         ];
         const type = 'plain-text';
 
-        Alert.prompt(title, message, buttons, type);
+        Alert.prompt(title, message, callbackOrButtons, type);
     }
 
     public onSelectWallet(walletId: string) {

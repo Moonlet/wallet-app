@@ -43,16 +43,36 @@ export class FeePresetComponent extends React.Component<
                         : styles.container
                 }
             >
-                <Text style={styles.feeTitle}>{this.props.title}</Text>
+                <Text
+                    style={
+                        this.props.selected
+                            ? [styles.feeTitle, styles.textSelected]
+                            : styles.feeTitle
+                    }
+                >
+                    {this.props.title}
+                </Text>
                 <Amount
-                    style={styles.fee}
+                    style={this.props.selected ? [styles.fee, styles.textSelected] : styles.fee}
                     amount={this.props.amount}
                     blockchain={this.props.blockchain}
                 />
                 <View style={styles.containerFeeConverted}>
-                    <Text style={styles.feeConverted}>~</Text>
+                    <Text
+                        style={
+                            this.props.selected
+                                ? [styles.feeConverted, styles.textSelected]
+                                : styles.feeConverted
+                        }
+                    >
+                        {`~`}
+                    </Text>
                     <Amount
-                        style={styles.feeConverted}
+                        style={
+                            this.props.selected
+                                ? [styles.feeConverted, styles.textSelected]
+                                : styles.feeConverted
+                        }
                         amount={this.props.amount}
                         blockchain={this.props.blockchain}
                         convert

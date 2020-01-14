@@ -9,7 +9,9 @@ export const translation: ITranslations = {
                 accept: 'Accept',
                 account: 'Account',
                 accounts: 'Accounts',
+                addToken: 'Add token',
                 advanced: 'Advanced',
+                advancedSetup: 'Advanced setup',
                 cancel: 'Cancel',
                 cheap: 'Cheap',
                 close: 'Close',
@@ -17,18 +19,23 @@ export const translation: ITranslations = {
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
+                contract: 'Contract',
+                contractAddress: 'Contract address',
                 copy: 'Copy',
                 connection: 'Connection',
                 create: 'Create',
                 date: 'Date',
                 dateAndTime: 'Date and time',
+                decimals: 'Decimals',
                 delete: 'Delete',
                 details: 'Details',
+                editToken: 'Edit token',
                 error: 'Error',
                 failed: 'Failed',
                 fast: 'Fast',
                 fastest: 'Fastest',
                 fee: 'Fee',
+                find: 'Find',
                 from: 'From',
                 ledgerType: 'Ledger type',
                 legal: 'Legal',
@@ -50,11 +57,13 @@ export const translation: ITranslations = {
                 settings: 'Settings',
                 setup: 'Setup',
                 simple: 'Simple',
+                simpleSetup: 'Simple setup',
                 standard: 'Standard',
                 status: 'Status',
                 startConnect: 'Start connect',
                 statistics: 'Statistics',
                 support: 'Support',
+                symbol: 'Symbol',
                 tc: 'Terms & conditions',
                 to: 'To',
                 tools: 'Tools',
@@ -170,6 +179,7 @@ export const translation: ITranslations = {
             editTitle: 'Edit wallet name',
             editDescription: 'Use a relevant name or an alias for this wallet',
             addWalletTitle: 'Add Wallet',
+            manageWallets: 'Manage wallets',
             connectLedger: 'Connect your Ledger!',
             quicklyConnectLedger: 'Quickly connect your Ledger and manage your assests'
         },
@@ -216,7 +226,8 @@ export const translation: ITranslations = {
         Account: {
             noTransactions: 'No transactions available',
             transactionHistory:
-                'Transaction history will appear here once you start to send tokens to other accounts'
+                'Transaction history will appear here once you start to send tokens to other accounts',
+            manageAccount: 'Manage account'
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',
@@ -233,6 +244,12 @@ export const translation: ITranslations = {
         BiometryType: {
             FaceID: 'FaceID',
             TouchID: 'TouchID'
+        },
+        Token: {
+            deleteToken: 'Delete token',
+            searchToken: 'Search by symbol or contract address',
+            noMatch: 'Nothing matches your search',
+            noGiveUp: `But don't give up – check the search string you entered and give it one more try`
         }
     },
     plural: (n: number, ord?: boolean) => {

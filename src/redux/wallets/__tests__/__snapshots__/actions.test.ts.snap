@@ -14,6 +14,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "publicKey": "22d185a1eda6240e2004a4794e50daff53eb3e5194bf21d4cca3be002688566ee2af4d5724dbe507646649193e5f8368ee63fb257147fbb2bafed87e63717c68",
               "tokens": Object {
                 "ETH": Object {
+                  "active": true,
                   "decimals": 18,
                   "name": "Ethereum",
                   "order": 0,
@@ -35,6 +36,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "publicKey": "d95dadc866a4acbbf37fb7347f26ddf59955c0b978f7356861e2e7e7a17eaaa07e632630ee164969b84a196e724acbd0ad9b230276c694c0de2fb9fc05239398",
               "tokens": Object {
                 "ETH": Object {
+                  "active": true,
                   "decimals": 18,
                   "name": "Ethereum",
                   "order": 0,
@@ -56,6 +58,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "publicKey": "0310a8a9ad39c2c9a878bf1a42895ee122806d1f4cf510f604d274b04f5a5854cc",
               "tokens": Object {
                 "ZIL": Object {
+                  "active": true,
                   "decimals": 12,
                   "name": "Zilliqa",
                   "order": 0,
@@ -77,6 +80,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "publicKey": "0362f31a424e62c75b38534ce16a1b607dd216eae22aa4add9042b16d6750e43e8",
               "tokens": Object {
                 "ZIL": Object {
+                  "active": true,
                   "decimals": 12,
                   "name": "Zilliqa",
                   "order": 0,

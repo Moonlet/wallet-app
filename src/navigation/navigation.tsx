@@ -36,8 +36,10 @@ import { TransactionDetails } from '../screens/transaction-details/transaction-d
 import { StatisticsScreen } from '../screens/statistics/statistics';
 import { WatchScreen } from '../screens/watch/watch';
 import { AccountsScreen } from '../screens/accounts/accounts';
+import { ManageAccountScreen } from '../screens/manage-account/manage-account';
 import { BASE_DIMENSION } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
+import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -84,11 +86,12 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
     },
     headerTitleStyle: {
         flex: 1,
-        fontSize: 20,
-        lineHeight: 25,
+        fontSize: 22,
+        lineHeight: 28,
         color: themes[theme].colors.text,
         letterSpacing: 0.38,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontWeight: 'bold'
     },
     headerLeft: navigation.dangerouslyGetParent().state.index > 0 && (
         <HeaderLeft icon="arrow-left-1" onPress={() => navigation.goBack(null)} />
@@ -124,6 +127,12 @@ export const WalletNavigation = createStackNavigator(
         },
         TransactionDetails: {
             screen: TransactionDetails
+        },
+        ManageAccount: {
+            screen: ManageAccountScreen
+        },
+        ManageToken: {
+            screen: ManageTokenScreen
         }
     },
     {

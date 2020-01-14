@@ -186,8 +186,8 @@ export class FeeOptionsComponent extends React.Component<
                     >
                         <Text style={styles.textTranferButton}>
                             {this.state.showAdvancedOptions
-                                ? translate('App.labels.simple')
-                                : translate('App.labels.advanced')}
+                                ? translate('App.labels.simpleSetup')
+                                : translate('App.labels.advancedSetup')}
                         </Text>
                     </TouchableOpacity>
                 )}

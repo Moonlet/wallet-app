@@ -25,7 +25,8 @@ const props: IProps & IReduxProps = {
         index: 1,
         blockchain: Blockchain.ZILLIQA,
         address: 'zil1vs74hw5k21233h432kj321l3k21b',
-        publicKey: '1'
+        publicKey: '1',
+        tokens: {}
     }
 };
 

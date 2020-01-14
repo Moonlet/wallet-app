@@ -23,7 +23,8 @@ export default (theme: ITheme) =>
             justifyContent: Platform.OS === 'ios' ? 'space-between' : 'flex-start'
         },
         accountAddress: {
-            paddingTop: BASE_DIMENSION * 5
+            paddingTop: BASE_DIMENSION * 5,
+            paddingBottom: BASE_DIMENSION * 3
         },
         address: {
             fontSize: 30,
@@ -42,8 +43,9 @@ export default (theme: ITheme) =>
             height: 40
         },
         receipientLabel: {
+            fontSize: 13,
+            lineHeight: 18,
             paddingLeft: BASE_DIMENSION,
-            marginTop: BASE_DIMENSION * 3,
             color: theme.colors.textSecondary
         },
         displayError: {
@@ -73,7 +75,6 @@ export default (theme: ITheme) =>
             alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
             paddingHorizontal: BASE_DIMENSION,
-            marginTop: BASE_DIMENSION,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'

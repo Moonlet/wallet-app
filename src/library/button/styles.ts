@@ -35,7 +35,14 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.disabledButton,
             borderColor: theme.colors.disabledButton
         },
+        buttonDisabledSecondary: {
+            backgroundColor: theme.colors.appBackground,
+            borderColor: theme.colors.textTertiary
+        },
         textDisabled: {
             color: theme.colors.cardBackground
+        },
+        textDisabledSecondary: {
+            color: theme.colors.textTertiary
         }
     });

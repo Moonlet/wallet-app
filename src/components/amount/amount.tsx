@@ -1,56 +1,87 @@
 import React from 'react';
 import { Text } from '../../library';
 import BigNumber from 'bignumber.js';
-import { Blockchain } from '../../core/blockchain/types';
-import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
+import { IReduxState } from '../../redux/state';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { Blockchain } from '../../core/blockchain/types';
 
 interface IExternalProps {
-    amount: BigNumber;
     blockchain: Blockchain;
-    convert?: boolean; // if this is present will convert amount to this currency
+    amount: BigNumber;
+    token: string;
+    convert?: boolean; // if this is present will convert amount to user currency
+    convertTo?: string; // if this is present will convert amount to this currency
     style?: any;
+    tokenDecimals: number;
+    uiDecimals?: number;
 }
 
 export interface IReduxProps {
-    usdPrices: any;
+    exchangeRates: any;
+    userCurrency: string;
 }
 
-export const AmountComponent = (props: IExternalProps & IReduxProps) => {
-    const formatOptions = props.convert
-        ? {
-              currency: 'USD'
-          }
-        : {
-              currency: BLOCKCHAIN_INFO[props.blockchain].coin
-          };
-    const convertAmount = (blockchain: Blockchain, value: BigNumber): BigNumber => {
-        if (value === undefined) {
-            return new BigNumber(0);
-        }
+const convertAmount = (
+    blockchain: Blockchain,
+    exchangeRates: any,
+    value: BigNumber,
+    fromToken: string,
+    toToken: string,
+    tokenDecimals: number
+): BigNumber => {
+    if (value && exchangeRates[fromToken]) {
         const blockchainInstance = getBlockchain(blockchain);
-        const conversion =
-            props.usdPrices[BLOCKCHAIN_INFO[props.blockchain].coin] / props.usdPrices.USD || 0;
+        const amount = blockchainInstance.account.amountFromStd(value, tokenDecimals);
 
-        const amount = blockchainInstance.account.amountFromStd(value);
-
-        if (props.convert) {
-            return (amount || new BigNumber(0)).multipliedBy(conversion);
+        if (fromToken === toToken) {
+            return amount;
+        } else if (exchangeRates[fromToken][toToken]) {
+            // direct conversion is possible
+            return amount.multipliedBy(exchangeRates[fromToken][toToken]);
+        } else {
+            // direct conversion not possible
+            const avTokens = Object.keys(exchangeRates[fromToken]);
+            for (const avToken of avTokens) {
+                if (exchangeRates[avToken] && exchangeRates[avToken][toToken]) {
+                    return amount
+                        .multipliedBy(exchangeRates[fromToken][avToken])
+                        .multipliedBy(exchangeRates[avToken][toToken]);
+                }
+            }
         }
+    }
 
-        return amount;
-    };
+    return new BigNumber(0);
+};
+
+export const AmountComponent = (props: IExternalProps & IReduxProps) => {
+    const convertTo = props.convertTo || props.convert ? props.userCurrency : props.token;
 
     return (
-        <Text style={props.style} format={formatOptions}>
-            {convertAmount(props.blockchain, props.amount)}
+        <Text
+            style={props.style}
+            format={{
+                currency: convertTo,
+                maximumFractionDigits: props.uiDecimals || 4
+            }}
+        >
+            {convertAmount(
+                props.blockchain,
+                props.exchangeRates,
+                props.amount,
+                props.token,
+                convertTo,
+                props.tokenDecimals
+            )}
         </Text>
     );
 };
 
-const mapStateToProps = (state: any) => ({
-    usdPrices: state.market.usdPrices
+const mapStateToProps = (state: IReduxState) => ({
+    exchangeRates: (state as any).market.exchangeRates,
+    userCurrency: state.preferences.currency
 });
 
 export const Amount = smartConnect<IExternalProps>(AmountComponent, [

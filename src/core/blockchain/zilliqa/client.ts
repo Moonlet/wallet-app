@@ -32,7 +32,7 @@ export class Client extends BlockchainGenericClient {
                     .replace('0x', '')
                     .toLowerCase()
             ]);
-            return response.result.balance;
+            return response.result.nonce + 1; // TODO to see what happens when there are multiple transactions in a limited time
         } catch (result) {
             if (result?.error?.message === 'Account is not created') {
                 return 0;

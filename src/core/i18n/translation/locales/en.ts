@@ -9,7 +9,9 @@ export const translation: ITranslations = {
                 accept: 'Accept',
                 account: 'Account',
                 accounts: 'Accounts',
+                addToken: 'Add token',
                 advanced: 'Advanced',
+                advancedSetup: 'Advanced setup',
                 cancel: 'Cancel',
                 cheap: 'Cheap',
                 close: 'Close',
@@ -17,20 +19,28 @@ export const translation: ITranslations = {
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
+                contract: 'Contract',
+                contractAddress: 'Contract address',
                 copy: 'Copy',
+                connection: 'Connection',
                 create: 'Create',
                 date: 'Date',
                 dateAndTime: 'Date and time',
+                decimals: 'Decimals',
                 delete: 'Delete',
                 details: 'Details',
+                editToken: 'Edit token',
                 error: 'Error',
                 failed: 'Failed',
                 fast: 'Fast',
                 fastest: 'Fastest',
                 fee: 'Fee',
+                find: 'Find',
                 from: 'From',
+                ledgerType: 'Ledger type',
                 legal: 'Legal',
                 maybeLater: 'Maybe later',
+                network: 'Network',
                 next: 'Next',
                 nextWord: 'Next word',
                 ok: 'OK',
@@ -39,6 +49,7 @@ export const translation: ITranslations = {
                 receive: 'Receive',
                 recipient: 'Recipient',
                 recover: 'Recover',
+                resetAll: 'Reset all',
                 rewards: 'Rewards',
                 save: 'Save',
                 secure: 'Secure',
@@ -47,17 +58,22 @@ export const translation: ITranslations = {
                 sender: 'Sender',
                 settings: 'Settings',
                 setup: 'Setup',
+                sign: 'Sign',
                 simple: 'Simple',
+                simpleSetup: 'Simple setup',
                 standard: 'Standard',
                 status: 'Status',
+                startConnect: 'Start connect',
+                statistics: 'Statistics',
                 support: 'Support',
+                symbol: 'Symbol',
                 tc: 'Terms & conditions',
                 to: 'To',
                 tools: 'Tools',
                 transactions: 'Transactions',
                 understand: 'I understand',
                 wallets: 'Wallets',
-                watch: 'Watch'
+                watch: 'Watch mode'
                 // plase try to add keys in alphabetic order
             },
             buttons: {
@@ -85,9 +101,18 @@ export const translation: ITranslations = {
             device: 'Device: {{device}}',
             NANO_X: 'Ledger Nano X',
             NANO_S: 'Ledger Nano S',
-            app: 'Make sure you have opened the {{app}} app on your hardware wallet',
-            verifyAddress: 'Verify address on your device',
-            notSupported: 'Feature is not supported'
+            app:
+                'Make sure you have opened {{app}} app on your Ledger before starting the connect.',
+            verifyAddress: 'Verify {{app}} address on your Ledger',
+            notSupported: 'Feature is not supported',
+            USB: 'Cable',
+            U2F: 'U2F', // TODO
+            BLE: 'Bluetooth',
+            scanningDevices: 'Scanning for ledger device',
+            paired: 'has been paired',
+            openApp: 'Please open {{app}} app on your Ledger',
+            ETHEREUM: 'Ethereum',
+            ZILLIQA: 'Zilliqa'
         },
         Fee: {
             feeTitle: 'Transaction fee',
@@ -134,7 +159,8 @@ export const translation: ITranslations = {
             alertEditTitle: 'Edit address book name',
             alertEditDescription: 'Use a relevant name or an alias for this address',
             deleteContact: 'Delete contact',
-            editContactName: 'Edit name'
+            editContactName: 'Edit name',
+            reviewTransaction: 'Review transaction on your hardware wallet'
         },
         AccountSettings: {
             manageAccount: 'Manage account',
@@ -157,7 +183,10 @@ export const translation: ITranslations = {
                 'Without a PIN code, anyone who has access to your phone will be able to control the founds. It’s wise to setup a PIN code and secure your wallet',
             editTitle: 'Edit wallet name',
             editDescription: 'Use a relevant name or an alias for this wallet',
-            addWalletTitle: 'Add Wallet'
+            addWalletTitle: 'Add Wallet',
+            manageWallets: 'Manage wallets',
+            connectLedger: 'Connect your Ledger!',
+            quicklyConnectLedger: 'Quickly connect your Ledger and manage your assests'
         },
         Transaction: {
             transactionID: 'Transaction ID',
@@ -169,11 +198,18 @@ export const translation: ITranslations = {
                 Failed: 'Failed',
                 Dropped: 'Dropped',
                 Success: 'Success'
-            }
+            },
+            signTransaction: 'Sign transaction',
+            signExtensionTransaction:
+                'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
+            signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}'
         },
-        Rewards: {
+        Statistics: {
             launchingSoon: 'Launching soon!',
-            newSection: 'A new section to get rewards by staking your tokens is in the work.'
+            newSection: 'A new section with stats about your wallets and accounts is in the work.'
+        },
+        Watch: {
+            newSection: 'A new section to watch accounts is in the work.'
         },
         Settings: {
             appVersion: 'Application version',
@@ -195,12 +231,17 @@ export const translation: ITranslations = {
         },
         Onboarding: {
             welcomeTitle: 'Welcome to Moonlet!',
-            welcomeText: 'We’ll generate this section once you create, recover or connect a wallet'
+            welcomeText: 'We’ll generate this section once you create, recover or connect a wallet',
+            welcomeTextWeb: 'To use this extension, install our mobile app and scan the code',
+            webStep1: '1. Open Moonlet app on your mobile',
+            webStep2: '2. Tap on menu icon from the header',
+            webStep3: '3. Select icon to start scan the code'
         },
         Account: {
             noTransactions: 'No transactions available',
             transactionHistory:
-                'Transaction history will appear here once you start to send tokens to other accounts'
+                'Transaction history will appear here once you start to send tokens to other accounts',
+            manageAccount: 'Manage account'
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',
@@ -217,6 +258,16 @@ export const translation: ITranslations = {
         BiometryType: {
             FaceID: 'FaceID',
             TouchID: 'TouchID'
+        },
+        Extension: {
+            appRequestInfo:
+                'Please use the Moonlet mobile app on your phone to sign this transaction'
+        },
+        Token: {
+            deleteToken: 'Delete token',
+            searchToken: 'Search by symbol or contract address',
+            noMatch: 'Nothing matches your search',
+            noGiveUp: `But don't give up – check the search string you entered and give it one more try`
         }
     },
     plural: (n: number, ord?: boolean) => {

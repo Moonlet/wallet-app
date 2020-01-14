@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal } from 'react-native';
+import { View, Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -9,6 +9,7 @@ import { PasswordPin } from './components/password-pin/password-pin';
 import bind from 'bind-decorator';
 import { translate } from '../../core/i18n';
 import { PasswordTerms } from './components/password-terms/password-terms';
+import Modal from '../../library/modal/modal';
 
 export interface IExternalProps {
     shouldCreatePassword?: boolean;
@@ -56,13 +57,17 @@ export class PasswordModalComponent extends React.Component<
     }
 
     public async requestPassword(): Promise<string> {
+        if (Platform.OS === 'web') {
+            Promise.resolve('000000');
+            return undefined;
+        }
         this.passwordRequestDeferred = new Deferred();
 
         this.setState({ visible: true });
         if (this.props.shouldCreatePassword) {
             const keychainPassword = await getPassword();
 
-            if (keychainPassword) {
+            if (keychainPassword && keychainPassword.username) {
                 this.setState({ showTerms: false });
             } else {
                 this.setState({ showTerms: true });
@@ -102,7 +107,7 @@ export class PasswordModalComponent extends React.Component<
             return;
         }
         if (this.state.verifyPass === true) {
-            await setPassword(value);
+            await setPassword(value, false);
             this.passwordRequestDeferred && this.passwordRequestDeferred.resolve(value);
             this.setState({
                 visible: false
@@ -137,28 +142,39 @@ export class PasswordModalComponent extends React.Component<
 
     public render() {
         return (
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={this.state.visible}
-                presentationStyle={'overFullScreen'}
+            <View
+                style={{
+                    display: this.state.visible ? 'flex' : 'none',
+                    position: 'absolute',
+                    height: '100%'
+                }}
             >
-                {this.state.showTerms ? (
-                    <PasswordTerms onAcknowledged={this.onAcknowledged} />
-                ) : (
-                    <PasswordPin
-                        updatePinProps={this.state.updatePinProps}
-                        title={this.state.title}
-                        subtitle={this.state.subtitle}
-                        onPasswordEntered={this.onPasswordEntered}
-                        onBiometryLogin={this.onBiometryLogin}
-                    />
-                )}
-            </Modal>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={this.state.visible}
+                    presentationStyle={'overFullScreen'}
+                >
+                    {this.state.showTerms ? (
+                        <PasswordTerms onAcknowledged={this.onAcknowledged} />
+                    ) : (
+                        <PasswordPin
+                            updatePinProps={this.state.updatePinProps}
+                            title={this.state.title}
+                            subtitle={this.state.subtitle}
+                            onPasswordEntered={this.onPasswordEntered}
+                            onBiometryLogin={this.onBiometryLogin}
+                        />
+                    )}
+                </Modal>
+            </View>
         );
     }
 
     private async verifyPassword(value): Promise<{ valid: boolean; errorMessage: string }> {
+        if (Platform.OS === 'web') {
+            return { valid: true, errorMessage: '' };
+        }
         try {
             const passwordCredentials = await getPassword();
             if (passwordCredentials) {

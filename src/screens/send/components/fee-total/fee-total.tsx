@@ -7,8 +7,10 @@ import { Text } from '../../../../library';
 import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { translate } from '../../../../core/i18n';
+import { ITokenConfig } from '../../../../core/blockchain/types/token';
 
 export interface IExternalProps {
+    token: ITokenConfig;
     amount: BigNumber;
     blockchain: Blockchain;
 }
@@ -27,6 +29,8 @@ export class FeeTotalComponent extends React.Component<
                         style={styles.fee}
                         amount={this.props.amount}
                         blockchain={this.props.blockchain}
+                        token={this.props.token.symbol}
+                        tokenDecimals={this.props.token.decimals}
                     />
                 </View>
                 <View style={styles.containerFeeConverted}>
@@ -35,6 +39,8 @@ export class FeeTotalComponent extends React.Component<
                         style={styles.feeConverted}
                         amount={this.props.amount}
                         blockchain={this.props.blockchain}
+                        token={this.props.token.symbol}
+                        tokenDecimals={this.props.token.decimals}
                         convert
                     />
                 </View>

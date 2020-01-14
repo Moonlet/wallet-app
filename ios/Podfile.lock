@@ -328,6 +328,8 @@ PODS:
     - React
   - RNVectorIcons (6.6.0):
     - React
+  - RNVoipPushNotification (1.1.5):
+    - React-Core
   - Sentry (4.4.3):
     - Sentry/Core (= 4.4.3)
   - Sentry/Core (4.4.3)
@@ -382,6 +384,7 @@ DEPENDENCIES:
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
+  - RNVoipPushNotification (from `../node_modules/react-native-voip-push-notification`)
   - TouchID (from `../node_modules/react-native-touch-id`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -486,6 +489,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
     :path: "../node_modules/react-native-vector-icons"
+  RNVoipPushNotification:
+    :path: "../node_modules/react-native-voip-push-notification"
   TouchID:
     :path: "../node_modules/react-native-touch-id"
   Yoga:
@@ -547,6 +552,7 @@ SPEC CHECKSUMS:
   RNSentry: 2803ba8c8129dcf26b79e9b4d8c80168be6e4390
   RNSVG: f6177f8d7c095fada7cfee2e4bb7388ba426064c
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
+  RNVoipPushNotification: 27ff53396bfd396bef52bf30a31353c1897b8e3a
   Sentry: 14bdd673870e8cf64932b149fad5bbbf39a9b390
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: d8c572ddec8d05b7dba08e4e5f1924004a177078

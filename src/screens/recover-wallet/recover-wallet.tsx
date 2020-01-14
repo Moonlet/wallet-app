@@ -173,6 +173,7 @@ export class RecoverWalletScreenComponent extends React.Component<
                 />
 
                 <PasswordModal
+                    shouldCreatePassword={true}
                     subtitle={translate('Password.subtitleMnemonic')}
                     obRef={ref => (this.passwordModal = ref)}
                 />
@@ -311,7 +312,10 @@ export class RecoverWalletScreenComponent extends React.Component<
                     </Text>
                     <TextInput
                         obRef={(input: any) => (this.inputView[index] = input)}
-                        style={[error && { borderBottomColor: this.props.theme.colors.error }]}
+                        style={[
+                            error && { borderBottomColor: this.props.theme.colors.error },
+                            this.props.styles.inputLabel
+                        ]}
                         word={this.state.mnemonic[index]}
                         onFocus={() => this.focusInput(index)}
                         onBlur={() => this.validateWord()}

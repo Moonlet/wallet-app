@@ -2,12 +2,14 @@ import React from 'react';
 import { View } from 'react-native';
 import { Text } from '../../library';
 import { connect } from 'react-redux';
-import { Convert } from '../convert/convert';
 
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import BigNumber from 'bignumber.js';
+import { Amount } from '../amount/amount';
+import { Blockchain } from '../../core/blockchain/types';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export interface IReduxProps {
     change: any;
@@ -16,6 +18,7 @@ export interface IReduxProps {
 export interface IProps {
     fromCurrency: string;
     toCurrency: string;
+    blockchain: Blockchain;
 }
 
 const mapStateToProps = (state: any) => ({
@@ -33,11 +36,17 @@ export const ConversionCardComponent = (
                 {props.fromCurrency}
                 {props.toCurrency}
             </Text>
-            <Convert
-                from={props.fromCurrency}
-                to={props.toCurrency}
+            <Amount
                 amount={new BigNumber(1)}
+                token={props.fromCurrency}
                 style={props.styles.convert}
+                convertTo={props.toCurrency} // not working
+                blockchain={props.blockchain}
+                tokenDecimals={
+                    getBlockchain(props.blockchain).config.tokens[
+                        getBlockchain(props.blockchain).config.coin
+                    ].decimals
+                }
             />
             <Text
                 style={[

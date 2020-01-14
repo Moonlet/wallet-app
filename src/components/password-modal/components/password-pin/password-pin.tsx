@@ -29,6 +29,7 @@ interface IState {
     errorMessage: string;
     passToVerify: string;
     biometryType: BiometryType;
+    updatePinProps: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -48,10 +49,11 @@ export class PasswordPinComponent extends React.Component<
     IState
 > {
     public static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.updatePinProps === true) {
+        if (nextProps.updatePinProps !== prevState.updatePinProps) {
             return {
                 password: '',
                 errorMessage: '',
+                updatePinProps: nextProps.updatePinProps,
                 passToVerify: prevState.password // save the password to compare it
             };
         } else {
@@ -69,6 +71,7 @@ export class PasswordPinComponent extends React.Component<
             password: '',
             errorMessage: '',
             passToVerify: '',
+            updatePinProps: false,
             biometryType: undefined
         };
         this.shakeAnimation = new Animated.Value(0);
@@ -84,9 +87,18 @@ export class PasswordPinComponent extends React.Component<
             });
             return;
         }
+        if (Platform.OS === 'web') {
+            this.props.onPasswordEntered(this.state.password);
+            this.setState({
+                errorMessage: '',
+                password: ''
+            });
+            return;
+        }
         try {
             const passHash = await hash(this.state.password);
             const resultVerificationPass = await this.props.onPasswordEntered(passHash);
+
             if (resultVerificationPass !== undefined) {
                 this.setState({
                     errorMessage: resultVerificationPass,
@@ -94,7 +106,7 @@ export class PasswordPinComponent extends React.Component<
                 });
                 this.startShake();
             }
-        } catch {
+        } catch (e) {
             this.startShake();
             this.setState({
                 errorMessage: translate('Password.genericError'),

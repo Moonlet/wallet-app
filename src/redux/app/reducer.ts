@@ -90,7 +90,10 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
                 ...state,
                 bottomSheet: {
                     type: action.data.type,
-                    blockchain: action.data.props?.blockchain
+                    blockchain: action.data.props?.blockchain,
+                    deviceModel: action.data.props?.deviceModel,
+                    connectionType: action.data.props?.connectionType,
+                    data: action.data.props?.data
                 }
             };
         case APP_CLOSE_BOTTOM_SHEET:

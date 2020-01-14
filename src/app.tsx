@@ -14,6 +14,9 @@ import { PasswordModal } from './components/password-modal/password-modal';
 import { Notifications } from './core/messaging/notifications/notifications';
 import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-notification';
 import { BottomSheet } from './components/bottom-sheet/bottom-sheet';
+import { WalletConnectClient } from './core/wallet-connect/wallet-connect-client';
+import { WalletConnectWeb } from './core/wallet-connect/wallet-connect-web';
+import { NavigationService } from './navigation/navigation-service';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -29,6 +32,9 @@ interface IState {
     appState: AppStateStatus;
     showPasswordModal: boolean;
 }
+
+WalletConnectClient.setStore(store);
+WalletConnectWeb.setStore(store);
 
 export default class App extends React.Component<{}, IState> {
     public interval: any = null;
@@ -98,17 +104,17 @@ export default class App extends React.Component<{}, IState> {
         if (Platform.OS === 'ios') {
             setupVoipNotification();
         }
-
-        // const date = new Date();
-        // date.setSeconds(date.getSeconds() + 10);
-        // Notifications.scheduleNotification(date);
     }
 
     public componentWillUnmount() {
         AppState.removeEventListener('change', this.handleAppStateChange);
+        Notifications.removeListeners();
     }
 
     public showPasswordModal() {
+        if (Platform.OS === 'web') {
+            return;
+        }
         this.setState({
             showPasswordModal: true,
             appState: APP_STATE_ACTIVE
@@ -119,7 +125,8 @@ export default class App extends React.Component<{}, IState> {
         if (
             this.state.appState === APP_STATE_BACKGROUND &&
             nextAppState === APP_STATE_ACTIVE &&
-            Object.keys(store.getState().wallets).length >= 1
+            Object.keys(store.getState().wallets).length >= 1 &&
+            store.getState().screens.connectHardwareWallet.connectInProgress === false
         ) {
             this.showPasswordModal();
         }
@@ -133,7 +140,13 @@ export default class App extends React.Component<{}, IState> {
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
-                            <AppContainer ref={nav => (this.navigator = nav)} theme="dark" />
+                            <AppContainer
+                                ref={nav => {
+                                    this.navigator = nav;
+                                    NavigationService.setTopLevelNavigator(nav);
+                                }}
+                                theme="dark"
+                            />
                             <PasswordModal
                                 visible={this.state.showPasswordModal}
                                 onPassword={() => this.setState({ showPasswordModal: false })}

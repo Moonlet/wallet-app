@@ -16,8 +16,10 @@ import { getChainId } from '../../../../redux/app/selectors';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import bind from 'bind-decorator';
+import { ITokenConfig } from '../../../../core/blockchain/types/token';
 
 export interface IExternalProps {
+    token: ITokenConfig;
     account: IAccountState;
     toAddress: string;
     onFeesChanged: (feeOptions: any) => any;
@@ -116,6 +118,7 @@ export class FeeOptionsComponent extends React.Component<
                         <FeeTotal
                             amount={this.state.feeOptions.feeTotal}
                             blockchain={this.props.account.blockchain}
+                            token={this.props.token}
                         />
                     )
                 );
@@ -130,19 +133,18 @@ export class FeeOptionsComponent extends React.Component<
                                 scrollEnabled={false}
                                 data={Object.keys(this.state.feeOptions.presets)}
                                 keyExtractor={index => `${index}`}
-                                renderItem={({ item }) => {
-                                    return (
-                                        <FeePreset
-                                            key={item}
-                                            amount={this.state.feeOptions.presets[item]}
-                                            blockchain={this.props.account.blockchain}
-                                            title={translate('App.labels.' + item)}
-                                            presetKey={item}
-                                            onSelect={this.onSelectFeePreset}
-                                            selected={this.state.selectedPreset === item}
-                                        />
-                                    );
-                                }}
+                                renderItem={({ item }) => (
+                                    <FeePreset
+                                        key={item}
+                                        token={this.props.token}
+                                        amount={this.state.feeOptions.presets[item]}
+                                        blockchain={this.props.account.blockchain}
+                                        title={translate('App.labels.' + item)}
+                                        presetKey={item}
+                                        onSelect={this.onSelectFeePreset}
+                                        selected={this.state.selectedPreset === item}
+                                    />
+                                )}
                                 horizontal={false}
                                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                                 showsVerticalScrollIndicator={false}
@@ -164,6 +166,7 @@ export class FeeOptionsComponent extends React.Component<
                         gasLimit={this.state.feeOptions.gasLimit}
                         blockchain={this.props.account.blockchain}
                         onInputFees={this.onInputAdvancedFees}
+                        token={this.props.token}
                     />
                 )
             );
@@ -186,8 +189,8 @@ export class FeeOptionsComponent extends React.Component<
                     >
                         <Text style={styles.textTranferButton}>
                             {this.state.showAdvancedOptions
-                                ? translate('App.labels.simple')
-                                : translate('App.labels.advanced')}
+                                ? translate('App.labels.simpleSetup')
+                                : translate('App.labels.advancedSetup')}
                         </Text>
                     </TouchableOpacity>
                 )}

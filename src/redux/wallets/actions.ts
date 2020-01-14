@@ -6,7 +6,7 @@ import { IAction } from '../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { getChainId } from '../app/selectors';
-import { appSwitchWallet } from '../app/actions';
+import { appSwitchWallet, openBottomSheet, closeBottomSheet } from '../app/actions';
 import uuidv4 from 'uuid/v4';
 import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
@@ -16,12 +16,18 @@ import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/typ
 import {
     verifyAddressOnDevice,
     featureNotSupported,
-    toInitialState
+    toInitialState,
+    connectInProgress
 } from '../screens/connectHardwareWallet/actions';
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
+import { REVIEW_TRANSACTION } from '../screens/send/actions';
+import { BottomSheetType } from '../app/state';
+import { REHYDRATE } from 'redux-persist';
+import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
+import BigNumber from 'bignumber.js';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -31,6 +37,10 @@ export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
+export const TOGGLE_TOKEN_ACTIVE = 'TOGGLE_TOKEN_ACTIVE';
+export const UPDATE_TOKEN_ORDER = 'UPDATE_TOKEN_ORDER';
+export const REMOVE_TOKEN = 'REMOVE_TOKEN';
+export const ADD_TOKEN = 'ADD_TOKEN';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -38,6 +48,13 @@ export const addWallet = (walletData: IWalletState) => {
         type: WALLET_ADD,
         data: walletData
     };
+};
+
+export const updateReduxState = (state: IReduxState) => dispatch => {
+    dispatch({
+        type: REHYDRATE,
+        payload: state
+    });
 };
 
 export const addAccount = (walletId: string, blockchain: Blockchain, account: IAccountState) => {
@@ -67,6 +84,7 @@ export const createHWWallet = (
 
         // in case you replace your connected ledger reset message
         dispatch(toInitialState());
+        dispatch(connectInProgress());
 
         const wallet = await HWWalletFactory.get(
             deviceVendor,
@@ -100,11 +118,13 @@ export const createHWWallet = (
             {},
             NavigationActions.navigate({ routeName: 'Dashboard' })
         );
+        dispatch(toInitialState());
     } catch (e) {
         // this might not be the best place
-        if (e.message === translate('CreateHardwareWallet.notSupported')) {
+        if (e === translate('CreateHardwareWallet.notSupported')) {
             dispatch(featureNotSupported());
         }
+        throw new Error(e);
     }
 };
 
@@ -146,9 +166,11 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     // TODO  - error handling
 };
 
+// will check balance for a coin or all coins if needed
 export const getBalance = (
     blockchain: Blockchain,
     address: string,
+    token: string = undefined,
     force: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
@@ -159,41 +181,71 @@ export const getBalance = (
     const account = wallet.accounts.filter(
         acc => acc.address === address && acc.blockchain === blockchain
     )[0];
-    const balanceInProgress = account?.balance?.inProgress;
-    const balanceTimestamp = account?.balance?.timestamp || 0;
 
-    if (force || (!balanceInProgress && balanceTimestamp + 10 * 3600 < Date.now())) {
-        const data = {
-            walletId: wallet.id,
-            address,
-            blockchain
-        };
+    // console.log('getBalance', { blockchain, address, token });
+    if (token) {
+        const balanceInProgress = account?.tokens[token]?.balance?.inProgress;
+        const balanceTimestamp = account?.tokens[token]?.balance?.timestamp || 0;
 
-        dispatch({
-            type: ACCOUNT_GET_BALANCE,
-            data,
-            inProgress: true
-        });
-        try {
-            const chainId = getChainId(state, account.blockchain);
-
-            const balance = await getBlockchain(blockchain)
-                .getClient(chainId)
-                .getBalance(address);
-            dispatch({
-                type: ACCOUNT_GET_BALANCE,
-                data: {
-                    ...data,
-                    balance
-                }
-            });
-        } catch (error) {
-            dispatch({
-                type: ACCOUNT_GET_BALANCE,
+        if (force || (!balanceInProgress && balanceTimestamp + 10 * 3600 < Date.now())) {
+            const data = {
                 walletId: wallet.id,
-                error
+                address,
+                token,
+                blockchain
+            };
+
+            dispatch({
+                type: ACCOUNT_GET_BALANCE,
+                data,
+                inProgress: true
             });
+            try {
+                const chainId = getChainId(state, account.blockchain);
+                const tokenInfo = account.tokens[token];
+
+                let balance;
+                switch (tokenInfo.type) {
+                    case TokenType.NATIVE:
+                        balance = await getBlockchain(blockchain)
+                            .getClient(chainId)
+                            .getBalance(address);
+                        break;
+                    default:
+                        const client = getBlockchain(blockchain).getClient(chainId);
+                        if (client.tokens[tokenInfo.type]) {
+                            balance = client.tokens[tokenInfo.type].getBalance(
+                                tokenInfo.contractAddress,
+                                address
+                            );
+                        } else {
+                            throw new Error(
+                                `Token Type (${tokenInfo.type}) not handled for blockchain ${blockchain}.`
+                            );
+                        }
+                }
+
+                dispatch({
+                    type: ACCOUNT_GET_BALANCE,
+                    data: {
+                        ...data,
+                        balance
+                    }
+                });
+            } catch (error) {
+                dispatch({
+                    type: ACCOUNT_GET_BALANCE,
+                    data,
+                    error
+                });
+            }
         }
+    } else {
+        // call get balance for all tokens
+        Object.keys(account.tokens || {}).map(tokenSymbol => {
+            // console.log(`getBalance(${blockchain}, ${address}, ${tokenSymbol}, ${force})`);
+            getBalance(blockchain, address, tokenSymbol, force)(dispatch, getState);
+        });
     }
 };
 
@@ -201,35 +253,54 @@ export const sendTransferTransaction = (
     account: IAccountState,
     toAddress: string,
     amount: string,
+    token: string,
     feeOptions: any,
-    password: string
+    password: string,
+    navigation: NavigationScreenProp<NavigationState>
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
 
-    const wallet = selectCurrentWallet(state);
+    const appWallet = selectCurrentWallet(state);
 
     try {
-        const hdWallet = await WalletFactory.get(wallet.id, wallet.type, { pass: password }); // encrypted string: pass)
+        const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
+            pass: password,
+            deviceVendor: appWallet.hwOptions?.deviceVendor,
+            deviceModel: appWallet.hwOptions?.deviceModel,
+            deviceId: appWallet.hwOptions?.deviceId,
+            connectionType: appWallet.hwOptions?.connectionType
+        }); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
 
         const nonce = await blockchainInstance.getClient(chainId).getNonce(account.address);
 
-        const options = {
-            nonce,
+        const tx = blockchainInstance.transaction.buildTransferTransaction({
             chainId,
-            gasPrice: feeOptions.gasPrice,
-            gasLimit: feeOptions.gasLimit
-        };
+            account,
+            toAddress,
+            amount: blockchainInstance.account.amountToStd(amount, account.tokens[token].decimals),
+            token,
+            nonce,
+            gasPrice: new BigNumber(feeOptions.gasPrice),
+            gasLimit: new BigNumber(feeOptions.gasLimit).toNumber()
+        });
 
-        const tx = {
-            from: account.address,
-            to: toAddress,
-            amount: blockchainInstance.account.amountToStd(amount),
-            options
-        };
+        if (appWallet.type === WalletType.HW) {
+            dispatch(
+                openBottomSheet(BottomSheetType.LEDGER_SIGN_MESSAGES, {
+                    blockchain: account.blockchain
+                })
+            );
 
-        const transaction = await hdWallet.sign(account.blockchain, account.index, tx);
+            await (wallet as LedgerWallet).onAppOpened(account.blockchain);
+
+            dispatch({
+                type: REVIEW_TRANSACTION,
+                data: true
+            });
+        }
+        const transaction = await wallet.sign(account.blockchain, account.index, tx);
 
         const publish = await getBlockchain(account.blockchain)
             .getClient(chainId)
@@ -240,9 +311,17 @@ export const sendTransferTransaction = (
                 data: {
                     hash: transaction,
                     tx,
-                    walletId: wallet.id
+                    walletId: appWallet.id
                 }
             });
+            if (appWallet.type === WalletType.HW) {
+                dispatch({
+                    type: REVIEW_TRANSACTION,
+                    data: false
+                });
+                dispatch(closeBottomSheet());
+            }
+            navigation.goBack();
             return;
         }
     } catch (e) {
@@ -271,5 +350,41 @@ export const updateWalletName = (walletId: string, newName: string) => {
     return {
         type: WALLET_CHANGE_NAME,
         data: { walletId, newName }
+    };
+};
+
+export const toggleTokenActive = (
+    walletId: string,
+    account: IAccountState,
+    token: ITokenConfig
+) => {
+    return {
+        type: TOGGLE_TOKEN_ACTIVE,
+        data: { walletId, account, token }
+    };
+};
+
+export const updateTokenOrder = (
+    walletId: string,
+    account: IAccountState,
+    tokens: ITokenConfig[]
+) => {
+    return {
+        type: UPDATE_TOKEN_ORDER,
+        data: { walletId, account, tokens }
+    };
+};
+
+export const removeToken = (walletId: string, account: IAccountState, token: ITokenConfig) => {
+    return {
+        type: REMOVE_TOKEN,
+        data: { walletId, account, token }
+    };
+};
+
+export const addToken = (walletId: string, account: IAccountState, token: ITokenConfig) => {
+    return {
+        type: ADD_TOKEN,
+        data: { walletId, account, token }
     };
 };

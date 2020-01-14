@@ -77,6 +77,12 @@ export class TransactionDetailsComponent extends React.Component<
                         style={styles.textPrimary}
                         amount={transaction.amount}
                         blockchain={account.blockchain}
+                        token={getBlockchain(account.blockchain).config.coin}
+                        tokenDecimals={
+                            getBlockchain(account.blockchain).config.tokens[
+                                getBlockchain(account.blockchain).config.coin
+                            ].decimals
+                        }
                     />
                     <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
                 </View>
@@ -127,7 +133,7 @@ export class TransactionDetailsComponent extends React.Component<
                             {translate('Transaction.transactionID')}
                         </Text>
                     </View>
-                    <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                    <Icon name="chevron-right" size={16} style={styles.icon} />
                 </TouchableOpacity>
 
                 <View style={styles.rowContainer}>

@@ -1,6 +1,11 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    ICON_CONTAINER_SIZE,
+    SCREEN_HEIGHT
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -10,14 +15,16 @@ export default (theme: ITheme) =>
             paddingLeft: BASE_DIMENSION * 2,
             paddingRight: BASE_DIMENSION * 2,
             flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            height: SCREEN_HEIGHT
         },
         keyboardAvoidance: {
             flex: 1,
             justifyContent: Platform.OS === 'ios' ? 'space-between' : 'flex-start'
         },
         accountAddress: {
-            paddingTop: BASE_DIMENSION * 5
+            paddingTop: BASE_DIMENSION * 5,
+            paddingBottom: BASE_DIMENSION * 3
         },
         address: {
             fontSize: 30,
@@ -32,11 +39,13 @@ export default (theme: ITheme) =>
         inputAddress: {
             flex: 1,
             color: theme.colors.text,
-            paddingRight: BASE_DIMENSION * 2
+            paddingRight: BASE_DIMENSION * 2,
+            height: 40
         },
         receipientLabel: {
+            fontSize: 13,
+            lineHeight: 18,
             paddingLeft: BASE_DIMENSION,
-            marginTop: BASE_DIMENSION * 3,
             color: theme.colors.textSecondary
         },
         displayError: {
@@ -66,7 +75,6 @@ export default (theme: ITheme) =>
             alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
             paddingHorizontal: BASE_DIMENSION,
-            marginTop: BASE_DIMENSION,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'

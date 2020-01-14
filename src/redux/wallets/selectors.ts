@@ -22,8 +22,8 @@ export const selectCurrentAccount = createSelector(
     (wallets, currentWalletId, currentAccount) =>
         wallets[currentWalletId]?.accounts.find(
             (account: IAccountState) =>
-                account.index === currentAccount.index &&
-                account.blockchain === currentAccount.blockchain
+                account.index === currentAccount?.index &&
+                account.blockchain === currentAccount?.blockchain
         )
 );
 

@@ -13,12 +13,7 @@ import { formatAddress } from '../../core/utils/format-address';
 import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { ListAccount } from '../account/components/list-account/list-account';
-import { translate } from '../../core/i18n';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Icon } from '../../components/icon';
-import { themes } from '../../navigation/navigation';
-import { BASE_DIMENSION, ICON_SIZE } from '../../styles/dimensions';
+import { ListAccount } from '../token/components/list-account/list-account';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -39,26 +34,7 @@ const mapDispatchToProps = {
     appSwitchAccount
 };
 
-export const navigationOptions = ({ navigation, theme }: any) => ({
-    title: translate('DashboardMenu.manageAccount'),
-    headerRight: (
-        <TouchableOpacity
-            onPress={() => {
-                //
-            }}
-        >
-            <Icon
-                name="add"
-                size={ICON_SIZE}
-                style={{
-                    color: themes[theme].colors.accent,
-                    alignSelf: 'center',
-                    marginRight: BASE_DIMENSION * 2
-                }}
-            />
-        </TouchableOpacity>
-    )
-});
+// TODO: this is a component, not a screen any more => move this
 
 export const AccountsScreenComponent = (
     props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -102,6 +78,7 @@ export const AccountsScreenComponent = (
         <View style={props.styles.container}>
             {accounts.map((account: IAccountState, index: number) => {
                 const selected = props.selectedAccount.address === account.address;
+                const blockchain = account.blockchain;
 
                 const label = (
                     <View>
@@ -117,12 +94,24 @@ export const AccountsScreenComponent = (
                             <Amount
                                 style={props.styles.fistAmountText}
                                 amount={account.balance?.value}
-                                blockchain={account.blockchain}
+                                blockchain={blockchain}
+                                token={getBlockchain(props.blockchain).config.coin}
+                                tokenDecimals={
+                                    getBlockchain(props.blockchain).config.tokens[
+                                        getBlockchain(props.blockchain).config.coin
+                                    ].decimals
+                                }
                             />
                             <Amount
                                 style={props.styles.secondAmountText}
                                 amount={account.balance?.value}
-                                blockchain={account.blockchain}
+                                blockchain={blockchain}
+                                token={getBlockchain(props.blockchain).config.coin}
+                                tokenDecimals={
+                                    getBlockchain(props.blockchain).config.tokens[
+                                        getBlockchain(props.blockchain).config.coin
+                                    ].decimals
+                                }
                                 convert
                             />
                         </View>
@@ -131,14 +120,20 @@ export const AccountsScreenComponent = (
                 return (
                     <ListAccount
                         key={index}
-                        leftIcon="money-wallet-1"
+                        leftIcon={
+                            blockchain === Blockchain.ETHEREUM
+                                ? require('../../assets/images/png/eth.png')
+                                : blockchain === Blockchain.ZILLIQA
+                                ? require('../../assets/images/png/zil.png')
+                                : undefined
+                        }
                         rightIcon={selected ? 'check-1' : undefined}
                         label={label}
                         selected={selected}
                         onPress={() =>
                             props.appSwitchAccount({
                                 index: account.index,
-                                blockchain: account.blockchain
+                                blockchain
                             })
                         }
                     />
@@ -147,8 +142,6 @@ export const AccountsScreenComponent = (
         </View>
     );
 };
-
-AccountsScreenComponent.navigationOptions = navigationOptions;
 
 export const AccountsScreen = smartConnect(AccountsScreenComponent, [
     connect(mapStateToProps, mapDispatchToProps),

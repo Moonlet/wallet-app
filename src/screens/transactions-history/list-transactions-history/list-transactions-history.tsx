@@ -12,6 +12,7 @@ import { translate } from '../../../core/i18n';
 import { formatAddress } from '../../../core/utils/format-address';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import moment from 'moment';
+import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 
 export interface IExternalProps {
     transactions: ITransactionState[];
@@ -77,6 +78,15 @@ export class TransactionsHistoryListComponent extends React.Component<
                                             <Amount
                                                 amount={tx.amount}
                                                 blockchain={account.blockchain}
+                                                token={
+                                                    getBlockchain(account.blockchain).config.coin
+                                                }
+                                                tokenDecimals={
+                                                    getBlockchain(account.blockchain).config.tokens[
+                                                        getBlockchain(account.blockchain).config
+                                                            .coin
+                                                    ].decimals
+                                                }
                                             />
 
                                             <Text style={styles.transactionTextPrimary}>
@@ -90,7 +100,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                                         </Text>
                                     </View>
                                     <Icon
-                                        name="arrow-right-1"
+                                        name="chevron-right"
                                         size={16}
                                         style={styles.transactionRightIcon}
                                     />

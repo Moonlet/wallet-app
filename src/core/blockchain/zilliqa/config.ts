@@ -1,22 +1,36 @@
 import { IBlockchainConfig } from '../types';
 import { BigNumber } from 'bignumber.js';
+import { TokenType } from '../types/token';
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/313'/0'/0`,
     coin: 'ZIL',
     defaultUnit: 'QA',
-    units: {
-        QA: new BigNumber(1),
-        LI: new BigNumber(Math.pow(10, 6)),
-        ZIL: new BigNumber(Math.pow(10, 12))
+    tokens: {
+        ZIL: {
+            name: 'Zilliqa',
+            symbol: 'ZIL',
+            logo: require('../../../assets/images/png/zil.png'),
+            order: 0,
+            active: true,
+            decimals: 12,
+            uiDecimals: 3,
+            type: TokenType.NATIVE,
+            units: {
+                QA: new BigNumber(1),
+                LI: new BigNumber(Math.pow(10, 6)),
+                ZIL: new BigNumber(Math.pow(10, 12))
+            }
+        }
     },
-    decimals: 3,
     feeOptions: {
+        gasPriceToken: 'ZIL',
         defaults: {
             gasPrice: new BigNumber(1000000000),
             gasLimit: new BigNumber(1)
         },
         ui: {
+            availableTokenTypes: [],
             feeComponent: 'FeeTotal',
             feeComponentAdvanced: 'GasFeeAdvanced',
             gasPriceUnit: 'LI'

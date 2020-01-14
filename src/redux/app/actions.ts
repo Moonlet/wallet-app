@@ -1,5 +1,11 @@
 import { Blockchain } from '../../core/blockchain/types';
-import { IBlockchainsOptions, BottomSheetType, ICurrentAccount } from './state';
+import {
+    IBlockchainsOptions,
+    BottomSheetType,
+    ICurrentAccount,
+    IBottomSheetExtensionRequestData
+} from './state';
+import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
 
 // actions consts
 export const APP_SWITCH_WALLET = 'APP_STATE_SWITCH_WALLET';
@@ -61,7 +67,15 @@ export const updateBlockchainOrder = (blockchains: IBlockchainsOptions[]) => {
     };
 };
 
-export const openBottomSheet = (type: BottomSheetType, props?: { blockchain: Blockchain }) => {
+export const openBottomSheet = (
+    type: BottomSheetType,
+    props?: {
+        blockchain?: Blockchain;
+        deviceModel?: HWModel;
+        connectionType?: HWConnection;
+        data?: IBottomSheetExtensionRequestData;
+    }
+) => {
     return {
         type: APP_OPEN_BOTTOM_SHEET,
         data: { type, props }

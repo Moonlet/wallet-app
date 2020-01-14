@@ -26,7 +26,8 @@ const props: IProps = {
             inProgress: false,
             timestamp: 123,
             error: undefined
-        }
+        },
+        tokens: {}
     }
 };
 

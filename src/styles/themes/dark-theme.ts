@@ -26,10 +26,11 @@ export const darkTheme: ITheme = {
 
         cardBackground: COLORS.SHARK_GRAY,
         appBackground: COLORS.COD_GRAY,
-        bottomSheetBackground: COLORS.VERY_DARK_GRAY,
+        bottomSheetBackground: COLORS.SHARK_GRAY,
+        overlayBackground: COLORS.BLACK + '90',
 
         settingsDivider: COLORS.BLACK,
-        inputBackground: COLORS.DIM_GRAY,
+        inputBackground: COLORS.GUN_POWDER_GRAY,
         disabledButton: COLORS.DARK_GRAY,
 
         gradientLight: COLORS.COD_GRAY,

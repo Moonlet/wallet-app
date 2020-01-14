@@ -2,6 +2,7 @@ import { WalletType, TransactionStatus } from '../../core/wallet/types';
 import { Blockchain } from '../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
+import { ITokenConfig } from '../../core/blockchain/types/token';
 
 export interface IWalletsState {
     [id: string]: IWalletState;
@@ -24,6 +25,11 @@ export interface IWalletState {
     };
 }
 
+export enum TokenType {
+    NATIVE = 'NATIVE',
+    ERC20 = 'ERC20'
+}
+
 export interface IAccountState {
     index: number;
     name?: string;
@@ -31,13 +37,10 @@ export interface IAccountState {
     address: string;
     publicKey: string;
     nonce?: number;
-    balance?: {
-        value: BigNumber;
-        inProgress: boolean;
-        timestamp: number;
-        error: any;
+    tokens: {
+        [symbol: string]: ITokenConfig;
     };
-    balanceTimestamp?: number;
+    balance?: any; // TODO: remove this, deprecated...
 }
 
 export interface ITransactionState {

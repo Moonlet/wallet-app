@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,6 +8,7 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION * 3,
             borderWidth: 1,
             borderColor: theme.colors.accent,
+            borderRadius: BORDER_RADIUS,
             flexDirection: 'row'
         },
         tabButton: {
@@ -19,7 +20,8 @@ export default (theme: ITheme) =>
         },
         tabButtonText: {
             fontSize: 13,
-            lineHeight: 18
+            lineHeight: 18,
+            color: theme.colors.text
         },
         tabButtonSelected: {
             backgroundColor: theme.colors.accent

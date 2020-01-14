@@ -1,20 +1,27 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION } from '../../styles/dimensions';
-import { ph, pw } from '../../styles';
+import { pw, ph } from '../../styles';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: theme.colors.appBackground,
-            justifyContent: 'center'
+            paddingHorizontal: BASE_DIMENSION * 2,
+            paddingTop: BASE_DIMENSION * 3,
+            justifyContent: 'center',
+            backgroundColor: theme.colors.appBackground
         },
         logoImage: {
             height: ph(20),
             width: pw(40),
             alignSelf: 'center',
             resizeMode: 'contain'
+        },
+        textSection: {
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'center'
         },
         launchingSoonText: {
             fontWeight: 'bold',
@@ -25,12 +32,15 @@ export default (theme: ITheme) =>
             color: theme.colors.text,
             marginBottom: BASE_DIMENSION * 2
         },
-        buttonContainer: {
-            flexDirection: 'row',
-            justifyContent: 'center',
-            marginTop: BASE_DIMENSION * 2
+        newSectionText: {
+            fontSize: 17,
+            alignContent: 'center',
+            lineHeight: 22,
+            textAlign: 'center',
+            marginHorizontal: BASE_DIMENSION * 5,
+            color: theme.colors.textSecondary
         },
-        button: {
-            marginHorizontal: BASE_DIMENSION * 2
+        skeletonRow: {
+            marginVertical: BASE_DIMENSION
         }
     });

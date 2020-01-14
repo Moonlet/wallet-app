@@ -4,7 +4,7 @@ exports[`SendScreen Buton should open qr-code 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -31,7 +31,7 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -39,7 +39,7 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
     <View style={{...}}>
       <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
       <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
-        <Icon name=\\"close\\" size={24} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"close\\" size={16} style={{...}} allowFontScaling={false} />
       </TouchableOpacity>
     </View>
     <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
@@ -53,6 +53,9 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
       </withTheme(TextComponent)>
     </TouchableOpacity>
     <View style={{...}}>
+      <withTheme(TextComponent) style={{...}}>
+         
+      </withTheme(TextComponent)>
       <View style={{...}}>
         <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
       </View>
@@ -61,7 +64,7 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
           Add all balance
         </withTheme(TextComponent)>
       </TouchableOpacity>
-      <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
+      <withTheme(Connect(FeeOptionsComponent)) token={{...}} account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
       <View style={{...}}>
         <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: _callee]}>
           Confirm payment
@@ -78,7 +81,7 @@ exports[`SendScreen onChangeText 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
       Recipient
@@ -111,7 +114,7 @@ exports[`SendScreen onChangeText 2`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
       Recipient
@@ -119,7 +122,7 @@ exports[`SendScreen onChangeText 2`] = `
     <View style={{...}}>
       <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"pass1...pass1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
       <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
-        <Icon name=\\"close\\" size={24} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"close\\" size={16} style={{...}} allowFontScaling={false} />
       </TouchableOpacity>
     </View>
     <withTheme(TextComponent) style={{...}}>
@@ -139,6 +142,9 @@ exports[`SendScreen onChangeText 2`] = `
       </withTheme(TextComponent)>
     </TouchableOpacity>
     <View style={{...}}>
+      <withTheme(TextComponent) style={{...}}>
+        Amount
+      </withTheme(TextComponent)>
       <View style={{...}}>
         <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"10\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
       </View>
@@ -150,7 +156,7 @@ exports[`SendScreen onChangeText 2`] = `
           Add all balance
         </withTheme(TextComponent)>
       </TouchableOpacity>
-      <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"pass1\\" onFeesChanged={[Function]} />
+      <withTheme(Connect(FeeOptionsComponent)) token={{...}} account={{...}} toAddress=\\"pass1\\" onFeesChanged={[Function]} />
       <View style={{...}}>
         <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: _callee]}>
           Confirm payment
@@ -167,7 +173,7 @@ exports[`SendScreen renders correctly - no amount and fee should be present 1`] 
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -194,7 +200,7 @@ exports[`SendScreen renders correctly - no amount and fee should be present 2`] 
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -221,7 +227,7 @@ exports[`SendScreen renders correctly 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -248,7 +254,7 @@ exports[`SendScreen renders correctly 2`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -256,7 +262,7 @@ exports[`SendScreen renders correctly 2`] = `
     <View style={{...}}>
       <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={false} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
       <TouchableOpacity testID=\\"clear-address\\" onPress={[Function: bound onPressClearInput]} style={{...}} activeOpacity={0.2}>
-        <Icon name=\\"close\\" size={24} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"close\\" size={16} style={{...}} allowFontScaling={false} />
       </TouchableOpacity>
     </View>
     <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function]} style={{...}} activeOpacity={0.2}>
@@ -270,6 +276,9 @@ exports[`SendScreen renders correctly 2`] = `
       </withTheme(TextComponent)>
     </TouchableOpacity>
     <View style={{...}}>
+      <withTheme(TextComponent) style={{...}}>
+        Amount
+      </withTheme(TextComponent)>
       <View style={{...}}>
         <TextInput testID=\\"amount\\" style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Amount\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" value=\\"1\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
       </View>
@@ -278,7 +287,7 @@ exports[`SendScreen renders correctly 2`] = `
           Add all balance
         </withTheme(TextComponent)>
       </TouchableOpacity>
-      <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
+      <withTheme(Connect(FeeOptionsComponent)) token={{...}} account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
       <View style={{...}}>
         <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={false} onPress={[Function: _callee]}>
           Confirm payment
@@ -295,7 +304,7 @@ exports[`SendScreen should Call verify address 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
       Recipient

@@ -10,7 +10,12 @@ import { Blockchain } from '../../../core/blockchain/types';
 const props: IProps = {
     // @ts-ignore
     navigation: {
-        navigate: jest.fn()
+        navigate: jest.fn(),
+        state: {
+            params: {
+                token: {}
+            }
+        }
     },
     styles: stylesProvider(darkTheme),
     theme: darkTheme,

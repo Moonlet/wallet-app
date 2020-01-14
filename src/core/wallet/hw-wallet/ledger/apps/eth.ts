@@ -1,5 +1,8 @@
 import EthApp from '@ledgerhq/hw-app-eth';
 import { IHardwareWalletApp } from '../types';
+import { IBlockchainTransaction } from '../../../../blockchain/types';
+import { Transaction } from 'ethereumjs-tx';
+import BigNumber from 'bignumber.js';
 
 export class Eth implements IHardwareWalletApp {
     private app: EthApp;
@@ -26,14 +29,40 @@ export class Eth implements IHardwareWalletApp {
         return this.app.getAddress(this.getPath(index, derivationIndex, path), true);
     }
 
-    public signTransaction(
+    public signTransaction = async (
         index: number,
         derivationIndex: number = 0,
         path: string,
-        txRaw: string
-    ) {
-        return this.app.signTransaction(this.getPath(index, derivationIndex, path), txRaw);
-    }
+        tx: IBlockchainTransaction
+    ): Promise<any> => {
+        const transaction = new Transaction(
+            {
+                nonce: '0x' + new BigNumber(tx.options.nonce).toString(16),
+                gasPrice: '0x' + new BigNumber(tx.options.gasPrice).toString(16),
+                gasLimit: '0x' + new BigNumber(tx.options.gasLimit).toString(16),
+                to: tx.to,
+                value: '0x' + tx.amount.toString(16)
+            },
+            {
+                chain: tx.options.chainId
+            }
+        );
+
+        transaction.raw[6] = Buffer.from([tx.options.chainId]); // v
+        transaction.raw[7] = Buffer.from([]); // r
+        transaction.raw[8] = Buffer.from([]); // s
+
+        const result = await this.app.signTransaction(
+            this.getPath(index, derivationIndex, path),
+            transaction.serialize().toString('hex')
+        );
+
+        transaction.v = Buffer.from(result.v, 'hex');
+        transaction.r = Buffer.from(result.r, 'hex');
+        transaction.s = Buffer.from(result.s, 'hex');
+
+        return '0x' + transaction.serialize().toString('hex');
+    };
 
     public getInfo() {
         return this.app.getAppConfiguration();

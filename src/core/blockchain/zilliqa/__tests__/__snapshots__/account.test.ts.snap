@@ -6,5 +6,24 @@ Object {
   "blockchain": "ZILLIQA",
   "index": 1,
   "publicKey": "PUBLIC_KEY",
+  "tokens": Object {
+    "ZIL": Object {
+      "active": true,
+      "decimals": 12,
+      "logo": Object {
+        "testUri": "../../../src/assets/images/png/zil.png",
+      },
+      "name": "Zilliqa",
+      "order": 0,
+      "symbol": "ZIL",
+      "type": "NATIVE",
+      "uiDecimals": 3,
+      "units": Object {
+        "LI": "1000000",
+        "QA": "1",
+        "ZIL": "1000000000000",
+      },
+    },
+  },
 }
 `;

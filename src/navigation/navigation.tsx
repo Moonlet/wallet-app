@@ -21,7 +21,7 @@ import { BackupWalletScreen } from '../screens/settings/backup-wallet/backup-wal
 import { OnboardingScreen } from '../screens/onboarding/onboarding';
 import { CreateWalletTermsScreen } from '../screens/create-wallet-terms/create-wallet-terms';
 import { CreateWalletMnemonicScreen } from '../screens/create-wallet-mnemonic/create-wallet-mnemonic';
-import { AccountScreen } from '../screens/account/account';
+import { TokenScreen } from '../screens/token/token';
 import { SendScreen } from '../screens/send/send';
 import { TermsConditionsScreen } from '../screens/terms-conditions/terms-conditions';
 import { PrivacyPolicyScreen } from '../screens/privacy-policy/privacy-policy';
@@ -33,11 +33,13 @@ import { ReceiveScreen } from '../screens/receive/receive';
 import { ViewWalletMnemonicScreen } from '../screens/view-wallet-mnemonic/view-wallet-mnemonic';
 import { TransactionsHistoryScreen } from '../screens/transactions-history/transactions-history';
 import { TransactionDetails } from '../screens/transaction-details/transaction-details';
-import { RewardsScreen } from '../screens/rewards/rewards';
+import { StatisticsScreen } from '../screens/statistics/statistics';
 import { WatchScreen } from '../screens/watch/watch';
 import { AccountsScreen } from '../screens/accounts/accounts';
+import { ManageAccountScreen } from '../screens/manage-account/manage-account';
 import { BASE_DIMENSION } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
+import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -84,11 +86,12 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
     },
     headerTitleStyle: {
         flex: 1,
-        fontSize: 20,
-        lineHeight: 25,
+        fontSize: 22,
+        lineHeight: 28,
         color: themes[theme].colors.text,
         letterSpacing: 0.38,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontWeight: 'bold'
     },
     headerLeft: navigation.dangerouslyGetParent().state.index > 0 && (
         <HeaderLeft icon="arrow-left-1" onPress={() => navigation.goBack(null)} />
@@ -101,8 +104,8 @@ export const WalletNavigation = createStackNavigator(
         Dashboard: {
             screen: DashboardScreen
         },
-        Account: {
-            screen: AccountScreen
+        Token: {
+            screen: TokenScreen
         },
         Send: {
             screen: SendScreen
@@ -124,6 +127,12 @@ export const WalletNavigation = createStackNavigator(
         },
         TransactionDetails: {
             screen: TransactionDetails
+        },
+        ManageAccount: {
+            screen: ManageAccountScreen
+        },
+        ManageToken: {
+            screen: ManageTokenScreen
         }
     },
     {
@@ -181,14 +190,14 @@ export const SettingsNavigation = createStackNavigator(
 );
 
 // rewards navigation stack
-export const RewardsNavigation = createStackNavigator(
+export const StatisticsNavigation = createStackNavigator(
     {
-        Rewards: {
-            screen: RewardsScreen
+        Statistics: {
+            screen: StatisticsScreen
         }
     },
     {
-        initialRouteName: 'Rewards',
+        initialRouteName: 'Statistics',
         defaultNavigationOptions: defaultStackNavigationOptions,
         headerLayoutPreset: 'center'
     }
@@ -210,17 +219,17 @@ export const WatchNavigation = createStackNavigator(
 
 // main dashboard navigation
 export const navigationConfig = {
-    Wallet: {
+    Dashboard: {
         screen: WalletNavigation,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('money-wallet-1')
+            tabBarIcon: menuIcon('dashboard')
         })
     },
-    Rewards: {
-        screen: RewardsNavigation,
+    Statistics: {
+        screen: StatisticsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('accounting-coins-stack')
+            tabBarIcon: menuIcon('performance-money-increase')
         })
     },
     Watch: {

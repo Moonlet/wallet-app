@@ -2,7 +2,7 @@
 
 exports[`Wallet screen renders correctly 1`] = `
 "<View style={{...}}>
-  <ScrollViewMock contentContainerStyle={{...}}>
+  <ScrollViewMock contentContainerStyle={{...}} showsVerticalScrollIndicator={false}>
     <withTheme(TextComponent) style={{...}}>
       SECURITY
     </withTheme(TextComponent)>
@@ -10,7 +10,7 @@ exports[`Wallet screen renders correctly 1`] = `
       <withTheme(TextComponent) style={{...}}>
         Pin Login
       </withTheme(TextComponent)>
-      <Switch testID=\\"pin-login\\" onValueChange={[Function: onValueChange]} value={true} trackColor={{...}} thumbColor=\\"#00DAFF\\" />
+      <Switch onValueChange={[Function: onValueChange]} value={true} trackColor={{...}} thumbColor=\\"#00DAFF\\" />
     </View>
     <View style={{...}} />
     <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
@@ -40,7 +40,7 @@ exports[`Wallet screen renders correctly 1`] = `
       </withTheme(TextComponent)>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}} />
-        <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+        <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
       </View>
     </TouchableOpacity>
     <View style={{...}} />
@@ -48,7 +48,7 @@ exports[`Wallet screen renders correctly 1`] = `
       <withTheme(TextComponent) style={{...}}>
         Blockchain portfolio
       </withTheme(TextComponent)>
-      <Icon name=\\"arrow-right-1\\" size={16} style={{...}} allowFontScaling={false} />
+      <Icon name=\\"chevron-right\\" size={16} style={{...}} allowFontScaling={false} />
     </TouchableOpacity>
     <View style={{...}} />
     <withTheme(TextComponent) style={{...}}>
@@ -106,5 +106,6 @@ exports[`Wallet screen renders correctly 1`] = `
     </View>
     <View style={{...}} />
   </ScrollViewMock>
+  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
 </View>"
 `;

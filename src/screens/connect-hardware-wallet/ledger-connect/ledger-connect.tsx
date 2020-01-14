@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, FlatList } from 'react-native';
+import { View, FlatList, Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -17,6 +17,7 @@ import { HWVendor, HWModel, HWConnection } from '../../../core/wallet/hw-wallet/
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { delay } from '../../../core/utils/time';
 import { TransportFactory } from '../../../core/wallet/hw-wallet/ledger/transport-factory';
+import TouchableOpacity from '../../../library/touchable-opacity/touchable-opacity';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -101,7 +102,9 @@ export class LedgerConnectComponent extends React.Component<
     });
 
     public async componentDidMount() {
-        this.bottomSheet.current.snapTo(1);
+        Platform.OS === 'web'
+            ? this.bottomSheet.current.props.onOpenStart()
+            : this.bottomSheet.current.snapTo(1);
 
         await delay(500);
         this.scannerUnsubscribe = await TransportFactory.scan(this.props.connectionType, event => {

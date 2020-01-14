@@ -45,9 +45,9 @@ export class StatisticsScreenComponent extends React.Component<
                         source={require('../../assets/images/png/moonlet_space.png')}
                     />
                     <Text style={styles.launchingSoonText}>
-                        {translate('Rewards.launchingSoon')}
+                        {translate('Statistics.launchingSoon')}
                     </Text>
-                    <Text style={styles.newSectionText}>{translate('Rewards.newSection')}</Text>
+                    <Text style={styles.newSectionText}>{translate('Statistics.newSection')}</Text>
                 </View>
 
                 <View style={styles.skeletonRow}>

@@ -34,8 +34,10 @@ export default (theme: ITheme) =>
         },
         newSectionText: {
             fontSize: 17,
+            alignContent: 'center',
             lineHeight: 22,
             textAlign: 'center',
+            marginHorizontal: BASE_DIMENSION * 5,
             color: theme.colors.textSecondary
         },
         skeletonRow: {

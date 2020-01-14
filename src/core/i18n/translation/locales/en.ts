@@ -71,7 +71,7 @@ export const translation: ITranslations = {
                 transactions: 'Transactions',
                 understand: 'I understand',
                 wallets: 'Wallets',
-                watch: 'Watch'
+                watch: 'Watch mode'
                 // plase try to add keys in alphabetic order
             },
             buttons: {
@@ -200,9 +200,12 @@ export const translation: ITranslations = {
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}'
         },
-        Rewards: {
+        Statistics: {
             launchingSoon: 'Launching soon!',
-            newSection: 'A new section to get rewards by staking your tokens is in the work.'
+            newSection: 'A new section with stats about your wallets and accounts is in the work.'
+        },
+        Watch: {
+            newSection: 'A new section to watch accounts is in the work.'
         },
         Settings: {
             appVersion: 'Application version',

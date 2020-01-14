@@ -28,14 +28,14 @@ export const AccountAddressComponent = (props: IProps & IExternalProps) => {
             <View style={styles.balanceContainer}>
                 <Amount
                     style={styles.balance}
-                    amount={props.account.balance?.value}
+                    amount={props.token.balance?.value}
                     blockchain={props.account.blockchain}
                     token={props.token.symbol}
                     tokenDecimals={props.token.decimals}
                 />
                 <Amount
                     style={styles.convert}
-                    amount={props.account.balance?.value}
+                    amount={props.token.balance?.value}
                     blockchain={props.account.blockchain}
                     token={props.token.symbol}
                     tokenDecimals={props.token.decimals}

@@ -118,6 +118,7 @@ export class FeeOptionsComponent extends React.Component<
                         <FeeTotal
                             amount={this.state.feeOptions.feeTotal}
                             blockchain={this.props.account.blockchain}
+                            token={this.props.token}
                         />
                     )
                 );
@@ -132,20 +133,18 @@ export class FeeOptionsComponent extends React.Component<
                                 scrollEnabled={false}
                                 data={Object.keys(this.state.feeOptions.presets)}
                                 keyExtractor={index => `${index}`}
-                                renderItem={({ item }) => {
-                                    return (
-                                        <FeePreset
-                                            key={item}
-                                            token={this.props.token}
-                                            amount={this.state.feeOptions.presets[item]}
-                                            blockchain={this.props.account.blockchain}
-                                            title={translate('App.labels.' + item)}
-                                            presetKey={item}
-                                            onSelect={this.onSelectFeePreset}
-                                            selected={this.state.selectedPreset === item}
-                                        />
-                                    );
-                                }}
+                                renderItem={({ item }) => (
+                                    <FeePreset
+                                        key={item}
+                                        token={this.props.token}
+                                        amount={this.state.feeOptions.presets[item]}
+                                        blockchain={this.props.account.blockchain}
+                                        title={translate('App.labels.' + item)}
+                                        presetKey={item}
+                                        onSelect={this.onSelectFeePreset}
+                                        selected={this.state.selectedPreset === item}
+                                    />
+                                )}
                                 horizontal={false}
                                 columnWrapperStyle={{ justifyContent: 'space-between' }}
                                 showsVerticalScrollIndicator={false}

@@ -53,6 +53,7 @@ export const translation: ITranslations = {
                 standard: 'Standard',
                 status: 'Status',
                 startConnect: 'Start connect',
+                statistics: 'Statistics',
                 support: 'Support',
                 tc: 'Terms & conditions',
                 to: 'To',

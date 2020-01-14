@@ -20,6 +20,7 @@ import { BASE_DIMENSION } from '../../styles/dimensions';
 import { BottomSheetType } from '../../redux/app/state';
 import { openBottomSheet } from '../../redux/app/actions';
 import { themes } from '../../navigation/navigation';
+import { PasswordModal } from '../../components/password-modal/password-modal';
 
 export interface IReduxProps {
     tosVersion: number;
@@ -70,6 +71,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
+    public passwordModal = null;
 
     constructor(props: any) {
         super(props);
@@ -314,10 +316,12 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             testID="button-next"
                             style={props.styles.bottomButton}
                             onPress={async () => {
-                                this.props.openBottomSheet(BottomSheetType.LEDGER_CONNECT, {
-                                    blockchain: this.state.blockchain,
-                                    deviceModel: this.state.device,
-                                    connectionType: this.state.connection
+                                this.passwordModal.requestPassword().then(() => {
+                                    this.props.openBottomSheet(BottomSheetType.LEDGER_CONNECT, {
+                                        blockchain: this.state.blockchain,
+                                        deviceModel: this.state.device,
+                                        connectionType: this.state.connection
+                                    });
                                 });
                             }}
                         >
@@ -325,6 +329,11 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                         </Button>
                     </View>
                 )}
+                <PasswordModal
+                    shouldCreatePassword={true}
+                    subtitle={translate('Password.subtitleMnemonic')}
+                    obRef={ref => (this.passwordModal = ref)}
+                />
             </View>
         );
     }

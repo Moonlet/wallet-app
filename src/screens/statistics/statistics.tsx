@@ -18,10 +18,10 @@ export const mapStateToProps = (state: IReduxState) => {
 
 export const navigationOptions = () => ({
     headerLeft: <HeaderIcon />,
-    title: translate('App.labels.rewards')
+    title: translate('App.labels.statistics')
 });
 
-export class RewardsScreenComponent extends React.Component<
+export class StatisticsScreenComponent extends React.Component<
     INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
@@ -66,7 +66,7 @@ export class RewardsScreenComponent extends React.Component<
     }
 }
 
-export const RewardsScreen = smartConnect(RewardsScreenComponent, [
+export const StatisticsScreen = smartConnect(StatisticsScreenComponent, [
     connect(mapStateToProps, null),
     withTheme(stylesProvider),
     withNavigationParams()

@@ -76,7 +76,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             {translate('DashboardMenu.checkTransactions')}
                         </Text>
                     </View>
-                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
+                    <Icon name="chevron-right" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={this.manageAccount} style={styles.rowContainer}>
@@ -89,7 +89,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             {translate('DashboardMenu.quicklyManage')}
                         </Text>
                     </View>
-                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
+                    <Icon name="chevron-right" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={this.connectExtension} style={styles.rowContainer}>
@@ -104,7 +104,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             {translate('DashboardMenu.scanCode')}
                         </Text>
                     </View>
-                    <Icon name="arrow-right-1" size={16} style={styles.arrowRight} />
+                    <Icon name="chevron-right" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
 
                 <QrModalReader

@@ -24,6 +24,7 @@ export interface ITheme {
         cardBackground: string;
         appBackground: string;
         bottomSheetBackground: string;
+        overlayBackground: string;
 
         settingsDivider: string;
         inputBackground: string;

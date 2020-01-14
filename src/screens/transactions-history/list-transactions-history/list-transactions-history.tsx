@@ -100,7 +100,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                                         </Text>
                                     </View>
                                     <Icon
-                                        name="arrow-right-1"
+                                        name="chevron-right"
                                         size={16}
                                         style={styles.transactionRightIcon}
                                     />

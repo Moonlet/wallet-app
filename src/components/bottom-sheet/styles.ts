@@ -10,6 +10,6 @@ export default (theme: ITheme) =>
             left: 0,
             right: 0,
             flex: 1,
-            backgroundColor: theme.colors.cardBackground + 'AA' // used for opacity
+            backgroundColor: theme.colors.overlayBackground
         }
     });

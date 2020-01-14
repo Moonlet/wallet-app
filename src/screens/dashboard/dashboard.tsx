@@ -266,9 +266,13 @@ export class DashboardScreenComponent extends React.Component<
         const styles = this.props.styles;
         const { coins, coinIndex } = this.state;
         const blockchain: Blockchain = coins[coinIndex]?.blockchain;
+        const containerExtraStyle = Platform.select({
+            default: undefined,
+            web: { minHeight: ph(100) }
+        });
 
         return (
-            <View style={[styles.container, { minHeight: Platform.OS === 'web' && ph(100) }]}>
+            <View style={[styles.container, containerExtraStyle]}>
                 {coins.length !== 0 && (
                     <View style={styles.dashboardContainer}>
                         <View style={styles.coinBalanceCard}>

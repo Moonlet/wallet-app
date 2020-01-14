@@ -153,7 +153,7 @@ export class ManageTokenComponent extends React.Component<
                     type: TokenType.ERC20,
                     contractAddress: this.state.token.contractAddress,
                     decimals: Number(this.state.token.decimals),
-                    uiDecimals: 4, // check
+                    uiDecimals: 4,
 
                     active: true,
                     order:

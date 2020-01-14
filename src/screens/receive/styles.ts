@@ -16,6 +16,7 @@ export default (theme: ITheme) =>
         },
         qrcode: {
             flex: 1,
+            alignSelf: 'center',
             alignItems: 'center',
             //  padding: BASE_DIMENSION * 5,
             width: 300,

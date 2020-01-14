@@ -1,31 +1,30 @@
 import React from 'react';
 import { View, TouchableOpacity, Image } from 'react-native';
 import { IAccountState } from '../../redux/wallets/state';
-import { Blockchain } from '../../core/blockchain/types';
 import { Icon } from '../icon';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { Amount } from '../amount/amount';
-import { ICON_SIZE } from '../../styles/dimensions';
-import { ITokenConfig } from '../../core/blockchain/types/token';
+import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
+import { Blockchain } from '../../core/blockchain/types';
 
 export interface IProps {
+    blockchain: Blockchain;
     token: ITokenConfig;
     account: IAccountState;
-    blockchain: Blockchain;
     styles: ReturnType<typeof stylesProvider>;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 export const TokenCardComponent = (props: IProps) => {
     const styles = props.styles;
+
     return (
         <TouchableOpacity
             style={styles.container}
             onPress={() =>
-                // TODO: fix here
-                props.navigation.navigate('Account', {
+                props.navigation.navigate('Token', {
                     accountIndex: props.account.index,
                     blockchain: props.account.blockchain,
                     token: props.token
@@ -33,24 +32,28 @@ export const TokenCardComponent = (props: IProps) => {
             }
         >
             <View style={styles.iconContainer}>
-                {props.token?.logo ? (
-                    <Image
-                        style={styles.tokenLogo}
-                        resizeMode="contain"
-                        source={{ uri: props.token.logo }}
-                    />
-                ) : (
-                    <Icon name="money-wallet-1" size={ICON_SIZE} style={styles.icon} />
-                )}
+                <Image
+                    style={styles.tokenLogo}
+                    resizeMode="contain"
+                    source={
+                        props.token.type === TokenType.NATIVE
+                            ? props.token.logo
+                            : { uri: props.token.logo }
+                    }
+                />
             </View>
             <View style={styles.accountInfoContainer}>
                 <Amount
                     style={styles.firstAmount}
+                    token={props.token.symbol}
+                    tokenDecimals={props.token.decimals}
                     amount={props.token.balance?.value}
-                    blockchain={props.account.blockchain}
+                    blockchain={props.blockchain}
                 />
                 <Amount
                     style={styles.secondAmount}
+                    token={props.token.symbol}
+                    tokenDecimals={props.token.decimals}
                     amount={props.token.balance?.value}
                     blockchain={props.blockchain}
                     convert

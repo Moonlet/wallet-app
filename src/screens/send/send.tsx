@@ -29,6 +29,7 @@ import BigNumber from 'bignumber.js';
 import bind from 'bind-decorator';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { ICON_SIZE } from '../../styles/dimensions';
+import { ITokenConfig } from '../../core/blockchain/types/token';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -54,7 +55,7 @@ const mapDispatchToProps = {
 export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
-    token: string;
+    token: ITokenConfig;
 }
 
 interface IState {
@@ -107,7 +108,7 @@ export class SendScreenComponent extends React.Component<
                 this.props.account,
                 this.state.toAddress,
                 this.state.amount,
-                this.props.token,
+                this.props.token.symbol,
                 this.state.feeOptions,
                 password,
                 this.props.navigation
@@ -309,6 +310,7 @@ export class SendScreenComponent extends React.Component<
                 </TouchableOpacity>
 
                 <FeeOptions
+                    token={this.props.navigation.state.params.token}
                     account={this.props.account}
                     toAddress={this.state.toAddress}
                     onFeesChanged={this.onFeesChanged}
@@ -363,7 +365,10 @@ export class SendScreenComponent extends React.Component<
                     contentContainerStyle={{ flexGrow: 1 }}
                 >
                     <View style={styles.accountAddress}>
-                        <AccountAddress account={account} />
+                        <AccountAddress
+                            account={account}
+                            token={this.props.navigation.state.params.token}
+                        />
                     </View>
                     <Text style={styles.receipientLabel}>
                         {this.state.toAddress !== '' ? translate('Send.recipientLabel') : ' '}

@@ -21,7 +21,7 @@ import { BackupWalletScreen } from '../screens/settings/backup-wallet/backup-wal
 import { OnboardingScreen } from '../screens/onboarding/onboarding';
 import { CreateWalletTermsScreen } from '../screens/create-wallet-terms/create-wallet-terms';
 import { CreateWalletMnemonicScreen } from '../screens/create-wallet-mnemonic/create-wallet-mnemonic';
-import { AccountScreen } from '../screens/account/account';
+import { TokenScreen } from '../screens/token/token';
 import { SendScreen } from '../screens/send/send';
 import { TermsConditionsScreen } from '../screens/terms-conditions/terms-conditions';
 import { PrivacyPolicyScreen } from '../screens/privacy-policy/privacy-policy';
@@ -104,8 +104,8 @@ export const WalletNavigation = createStackNavigator(
         Dashboard: {
             screen: DashboardScreen
         },
-        Account: {
-            screen: AccountScreen
+        Token: {
+            screen: TokenScreen
         },
         Send: {
             screen: SendScreen

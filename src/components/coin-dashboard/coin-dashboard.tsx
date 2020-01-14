@@ -30,6 +30,7 @@ export const CoinDashboardComponent = (props: IProps) => (
                                 key={i}
                                 fromCurrency={BLOCKCHAIN_INFO[props.blockchain].coin}
                                 toCurrency={toCurrency}
+                                blockchain={props.blockchain}
                             />
                         )
                 )}

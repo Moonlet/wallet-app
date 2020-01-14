@@ -20,7 +20,6 @@ import { withNavigationParams, INavigationProps } from '../../navigation/with-na
 import { AccountAddress } from '../../components/account-address/account-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { TransactionsHistoryList } from '../transactions-history/list-transactions-history/list-transactions-history';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -60,7 +59,7 @@ const navigationOptions = ({ navigation }: any) => ({
     title: `${translate('App.labels.account')} ${navigation.state.params.accountIndex + 1}`
 });
 
-export class AccountScreenComponent extends React.Component<
+export class TokenScreenComponent extends React.Component<
     INavigationProps<INavigationParams> & IReduxProps & IProps,
     IState
 > {
@@ -83,13 +82,15 @@ export class AccountScreenComponent extends React.Component<
 
     public render() {
         const { styles, navigation, account, transactions } = this.props;
+        const { token } = this.props.navigation.state.params;
+
         return (
             <View style={styles.container}>
                 <ScrollView
                     contentContainerStyle={{ flexGrow: 1 }}
                     showsVerticalScrollIndicator={false}
                 >
-                    <AccountAddress account={account} />
+                    <AccountAddress account={account} token={token} />
                     <View style={styles.buttonsContainer}>
                         <Button
                             testID="button-send"
@@ -98,7 +99,8 @@ export class AccountScreenComponent extends React.Component<
                                 navigation.navigate('Send', {
                                     accountIndex: account.index,
                                     blockchain: account.blockchain,
-                                    token: getBlockchain(account.blockchain).config.coin
+                                    token
+                                    // getBlockchain(account.blockchain).config.coin // check here
                                 });
                             }}
                         >
@@ -110,7 +112,8 @@ export class AccountScreenComponent extends React.Component<
                             onPress={() => {
                                 navigation.navigate('Receive', {
                                     accountIndex: account.index,
-                                    blockchain: account.blockchain
+                                    blockchain: account.blockchain,
+                                    token
                                 });
                             }}
                         >
@@ -143,7 +146,7 @@ export class AccountScreenComponent extends React.Component<
     }
 }
 
-export const AccountScreen = smartConnect(AccountScreenComponent, [
+export const TokenScreen = smartConnect(TokenScreenComponent, [
     connect(mapStateToProps, null),
     withTheme(stylesProvider),
     withNavigationParams()

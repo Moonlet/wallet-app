@@ -16,8 +16,10 @@ import { getChainId } from '../../../../redux/app/selectors';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import bind from 'bind-decorator';
+import { ITokenConfig } from '../../../../core/blockchain/types/token';
 
 export interface IExternalProps {
+    token: ITokenConfig;
     account: IAccountState;
     toAddress: string;
     onFeesChanged: (feeOptions: any) => any;
@@ -134,6 +136,7 @@ export class FeeOptionsComponent extends React.Component<
                                     return (
                                         <FeePreset
                                             key={item}
+                                            token={this.props.token}
                                             amount={this.state.feeOptions.presets[item]}
                                             blockchain={this.props.account.blockchain}
                                             title={translate('App.labels.' + item)}
@@ -164,6 +167,7 @@ export class FeeOptionsComponent extends React.Component<
                         gasLimit={this.state.feeOptions.gasLimit}
                         blockchain={this.props.account.blockchain}
                         onInputFees={this.onInputAdvancedFees}
+                        token={this.props.token}
                     />
                 )
             );

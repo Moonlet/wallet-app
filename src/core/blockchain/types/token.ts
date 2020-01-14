@@ -8,7 +8,7 @@ export enum TokenType {
 export interface ITokenConfig {
     name: string;
     symbol: string;
-    logo?: string;
+    logo?: any;
     type: TokenType;
     contractAddress?: string;
     decimals: number;

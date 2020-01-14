@@ -6,8 +6,10 @@ import { Amount } from '../../../../components/amount/amount';
 import { Text } from '../../../../library';
 import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../../../core/blockchain/types';
+import { ITokenConfig } from '../../../../core/blockchain/types/token';
 
 export interface IExternalProps {
+    token: ITokenConfig;
     amount: BigNumber;
     blockchain: Blockchain;
     title: string;
@@ -56,6 +58,8 @@ export class FeePresetComponent extends React.Component<
                     style={this.props.selected ? [styles.fee, styles.textSelected] : styles.fee}
                     amount={this.props.amount}
                     blockchain={this.props.blockchain}
+                    token={this.props.token.symbol} // TODO:  not working
+                    tokenDecimals={this.props.token.decimals}
                 />
                 <View style={styles.containerFeeConverted}>
                     <Text
@@ -75,6 +79,8 @@ export class FeePresetComponent extends React.Component<
                         }
                         amount={this.props.amount}
                         blockchain={this.props.blockchain}
+                        token={this.props.token.symbol}
+                        tokenDecimals={this.props.token.decimals}
                         convert
                     />
                 </View>

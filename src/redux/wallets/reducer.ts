@@ -35,10 +35,24 @@ export default (state: IWalletsState = intialState, action: IAction) => {
 
                       out[id].accounts = out[id].accounts.map((account: IAccountState) => ({
                           ...account,
+
+                          // TODO: remove this
                           balance: {
                               ...account.balance,
                               value: new BigNumber(account.balance?.value || 0)
-                          }
+                          },
+
+                          // check here = NaN
+                          tokens: Object.keys(account.tokens).reduce(
+                              (tokenOut: any, tokenId: string) => {
+                                  tokenOut[tokenId] = account.tokens[tokenId];
+                                  tokenOut[tokenId].balance.value = new BigNumber(
+                                      tokenOut[tokenId].balance.value || 0
+                                  );
+                                  return tokenOut;
+                              },
+                              {}
+                          )
                       }));
 
                       out[id].transactions =

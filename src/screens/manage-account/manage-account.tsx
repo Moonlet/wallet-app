@@ -174,7 +174,7 @@ export class ManageAccountComponent extends React.Component<
                     </View>
                     <TouchableOpacity
                         style={styles.iconContainer}
-                        onPress={() =>
+                        onPressOut={() =>
                             this.props.toggleTokenActive(
                                 this.props.wallet.id,
                                 this.props.selectedAccount,

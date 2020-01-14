@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,10 +8,12 @@ export default (theme: ITheme) =>
             flex: 1,
             backgroundColor: theme.colors.bottomSheetBackground,
             paddingTop: BASE_DIMENSION * 2,
-            paddingBottom: BASE_DIMENSION
+            paddingBottom: BASE_DIMENSION,
+            borderTopLeftRadius: BORDER_RADIUS * 2,
+            borderTopRightRadius: BORDER_RADIUS * 2
         },
         icon: {
             alignSelf: 'center',
-            color: theme.colors.appBackground
+            color: theme.colors.textTertiary
         }
     });

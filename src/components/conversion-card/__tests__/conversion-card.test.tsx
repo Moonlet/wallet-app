@@ -6,6 +6,7 @@ import styleProvider from '../styles';
 
 import { shallow } from 'enzyme';
 import { IThemeProps } from '../../../core/theme/with-theme';
+import { Blockchain } from '../../../core/blockchain/types';
 
 const props: IProps & IReduxProps & IThemeProps<ReturnType<typeof styleProvider>> = {
     fromCurrency: 'ZIL',
@@ -15,7 +16,8 @@ const props: IProps & IReduxProps & IThemeProps<ReturnType<typeof styleProvider>
             ETH: 0.0216
         }
     },
-    styles: styleProvider(darkTheme)
+    styles: styleProvider(darkTheme),
+    blockchain: Blockchain.ETHEREUM
 };
 
 describe('conversion card component', () => {

@@ -320,7 +320,6 @@ export const sendTransferTransaction = (
                     data: false
                 });
                 dispatch(closeBottomSheet());
-                navigation.goBack();
             }
 
             return;

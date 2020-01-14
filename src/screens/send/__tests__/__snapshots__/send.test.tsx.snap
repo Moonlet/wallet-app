@@ -4,7 +4,7 @@ exports[`SendScreen Buton should open qr-code 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -31,7 +31,7 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -64,7 +64,7 @@ exports[`SendScreen Button should be disabled if amount is 0 1`] = `
           Add all balance
         </withTheme(TextComponent)>
       </TouchableOpacity>
-      <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
+      <withTheme(Connect(FeeOptionsComponent)) token={{...}} account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
       <View style={{...}}>
         <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: _callee]}>
           Confirm payment
@@ -81,7 +81,7 @@ exports[`SendScreen onChangeText 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
       Recipient
@@ -114,7 +114,7 @@ exports[`SendScreen onChangeText 2`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
       Recipient
@@ -156,7 +156,7 @@ exports[`SendScreen onChangeText 2`] = `
           Add all balance
         </withTheme(TextComponent)>
       </TouchableOpacity>
-      <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"pass1\\" onFeesChanged={[Function]} />
+      <withTheme(Connect(FeeOptionsComponent)) token={{...}} account={{...}} toAddress=\\"pass1\\" onFeesChanged={[Function]} />
       <View style={{...}}>
         <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={true} onPress={[Function: _callee]}>
           Confirm payment
@@ -173,7 +173,7 @@ exports[`SendScreen renders correctly - no amount and fee should be present 1`] 
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -200,7 +200,7 @@ exports[`SendScreen renders correctly - no amount and fee should be present 2`] 
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -227,7 +227,7 @@ exports[`SendScreen renders correctly 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -254,7 +254,7 @@ exports[`SendScreen renders correctly 2`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -287,7 +287,7 @@ exports[`SendScreen renders correctly 2`] = `
           Add all balance
         </withTheme(TextComponent)>
       </TouchableOpacity>
-      <withTheme(Connect(FeeOptionsComponent)) account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
+      <withTheme(Connect(FeeOptionsComponent)) token={{...}} account={{...}} toAddress=\\"\\" onFeesChanged={[Function]} />
       <View style={{...}}>
         <withTheme(ButtonComponent) testID=\\"confirm-payment\\" style={{...}} primary={true} disabled={false} onPress={[Function: _callee]}>
           Confirm payment
@@ -304,7 +304,7 @@ exports[`SendScreen should Call verify address 1`] = `
 "<View style={{...}}>
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
       Recipient

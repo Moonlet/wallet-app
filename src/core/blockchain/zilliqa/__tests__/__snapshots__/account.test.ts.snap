@@ -10,6 +10,9 @@ Object {
     "ZIL": Object {
       "active": true,
       "decimals": 12,
+      "logo": Object {
+        "testUri": "../../../src/assets/images/png/zil.png",
+      },
       "name": "Zilliqa",
       "order": 0,
       "symbol": "ZIL",

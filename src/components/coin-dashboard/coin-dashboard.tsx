@@ -2,13 +2,14 @@ import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { ConversionCard } from '../conversion-card/conversion-card';
 import { AccountCard } from '../account-card/account-card';
-import { IAccountState, IToken } from '../../redux/wallets/state';
+import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { TokenCard } from '../token-card/token-card';
+import { ITokenConfig } from '../../core/blockchain/types/token';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -49,7 +50,7 @@ export const CoinDashboardComponent = (props: IProps) => (
             {props.account &&
                 props.account.tokens &&
                 Object.values(props.account.tokens).map(
-                    (token: IToken, index: number) =>
+                    (token: ITokenConfig, index: number) =>
                         token.active && (
                             <TokenCard
                                 account={props.account}

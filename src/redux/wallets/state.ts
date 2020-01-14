@@ -30,24 +30,6 @@ export enum TokenType {
     ERC20 = 'ERC20'
 }
 
-export interface IToken {
-    name: string;
-    symbol: string;
-    logo?: string;
-    type: TokenType;
-    contractAddress: string;
-    order: number;
-    active: boolean;
-    decimals: number;
-    uiDecimals: number;
-    balance?: {
-        value: BigNumber;
-        inProgress: boolean;
-        timestamp: number;
-        error: any;
-    };
-}
-
 export interface IAccountState {
     index: number;
     name?: string;

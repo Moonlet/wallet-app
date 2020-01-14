@@ -19,6 +19,7 @@ export const translation: ITranslations = {
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
+                contract: 'Contract',
                 contractAddress: 'Contract address',
                 copy: 'Copy',
                 connection: 'Connection',
@@ -245,7 +246,9 @@ export const translation: ITranslations = {
         },
         Token: {
             deleteToken: 'Delete token',
-            searchToken: 'Search by symbol or contract address'
+            searchToken: 'Search by symbol or contract address',
+            noMatch: 'Nothing matches your search',
+            noGiveUp: `But don't give up – check the search string you entered and give it one more try`
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { IToken, IAccountState } from '../../redux/wallets/state';
+import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import { Icon } from '../icon';
 import stylesProvider from './styles';
@@ -8,9 +8,10 @@ import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { Amount } from '../amount/amount';
 import { ICON_SIZE } from '../../styles/dimensions';
+import { ITokenConfig } from '../../core/blockchain/types/token';
 
 export interface IProps {
-    token: IToken;
+    token: ITokenConfig;
     account: IAccountState;
     blockchain: Blockchain;
     styles: ReturnType<typeof stylesProvider>;

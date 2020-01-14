@@ -9,6 +9,7 @@ Object {
   "headerStyle": Object {
     "backgroundColor": "#121212",
     "borderBottomWidth": 0,
+    "elevation": 0,
   },
   "headerTitleStyle": Object {
     "color": "#E0E0E0",
@@ -28,6 +29,7 @@ Object {
   "headerStyle": Object {
     "backgroundColor": "#121212",
     "borderBottomWidth": 0,
+    "elevation": 0,
   },
   "headerTitleStyle": Object {
     "color": "#E0E0E0",

@@ -51,7 +51,7 @@ export const WalletConnectWeb = (() => {
             default:
                 walletConnector.rejectRequest({
                     id: payload.id,
-                    error: { message: 'Unknown method' }
+                    error: { message: `Unknown method ` + JSON.stringify(payload) }
                 });
         }
     });
@@ -72,6 +72,23 @@ export const WalletConnectWeb = (() => {
                     resolve(data);
                 }
             });
+        });
+    };
+
+    const signTransaction = transactionData => {
+        return new Promise((resolve, reject) => {
+            walletConnector
+                .sendCustomRequest({ method: WC.SIGN_TRANSACTION, params: [transactionData] })
+                .then(data => {
+                    if (data.error) {
+                        reject(data.error);
+                    } else {
+                        resolve(data);
+                    }
+                })
+                .catch(error => {
+                    reject(error);
+                });
         });
     };
 
@@ -115,6 +132,7 @@ export const WalletConnectWeb = (() => {
         isConnected,
         getState,
         getSession,
-        setStore
+        setStore,
+        signTransaction
     };
 })();

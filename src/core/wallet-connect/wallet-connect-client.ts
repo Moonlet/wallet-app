@@ -3,15 +3,21 @@ import { getPassword } from '../secure/keychain';
 import { storeEncrypted, readEncrypted } from '../secure/storage';
 import { WC_CONNECTION, WC } from '../constants/app';
 import { trimState } from './wc-state-helper';
+import { Notifications } from '../messaging/notifications/notifications';
+import { AppState } from 'react-native';
+import { translate } from '../i18n/translation/translate';
+import { signExtensionTransaction } from './utils';
+import { formatNumber } from '../utils/format-number';
+import { BLOCKCHAIN_INFO } from '../blockchain/blockchain-factory';
+import BigNumber from 'bignumber.js';
+import { formatAddress } from '../utils/format-address';
 
-const moonletMeta: any = {
-    clientMeta: {
-        description: 'Moonlet Wallet App',
-        url: 'https://moonlet.xyz/',
-        name: 'Moonlet',
-        // @ts-ignore
-        ssl: true
-    }
+const clientMeta: any = {
+    description: 'Moonlet Wallet App',
+    url: 'https://moonlet.xyz/',
+    name: 'Moonlet',
+    // @ts-ignore
+    ssl: true
 };
 
 export const WalletConnectClient = (() => {
@@ -36,14 +42,23 @@ export const WalletConnectClient = (() => {
     };
 
     // initiate new connection using the connection string (from QR code)
-    const connect = (connectionString: string) => {
-        walletConnector && walletConnector.killSession;
+    const connect = async (connectionString: string) => {
+        walletConnector && walletConnector.killSession();
 
         walletConnector = new RNWalletConnect(
             {
                 uri: connectionString
             },
-            moonletMeta
+            {
+                clientMeta,
+                push: {
+                    url: 'https://us-central1-moonlet-beta.cloudfunctions.net/push',
+                    type: 'fcm',
+                    token: await Notifications.getToken(),
+                    peerMeta: true,
+                    language: 'en'
+                }
+            }
         );
 
         setupListeners();
@@ -76,6 +91,27 @@ export const WalletConnectClient = (() => {
                     const state = trimState(store.getState());
                     walletConnector.approveRequest({ id: payload.id, result: { state } });
                     break;
+                case WC.SIGN_TRANSACTION:
+                    if (AppState.currentState !== 'active') {
+                        // app is in background or was wake up by background service > display a notification
+                        const { account, toAddress, amount } = payload.params[0];
+                        const formattedAmount = formatNumber(new BigNumber(amount), {
+                            currency: BLOCKCHAIN_INFO[account.blockchain].coin
+                        });
+
+                        Notifications.displayNotification(
+                            'Moonlet',
+                            translate('Transaction.signTransactionNotification', {
+                                amount: formattedAmount,
+                                fromAccount: formatAddress(account.address),
+                                toAccount: formatAddress(toAddress)
+                            }),
+                            payload
+                        );
+                    } else {
+                        signExtensionTransaction(payload);
+                    }
+                    break;
             }
         });
 
@@ -92,11 +128,21 @@ export const WalletConnectClient = (() => {
                 .then(keychainPassword => {
                     if (keychainPassword) {
                         readEncrypted(WC_CONNECTION, keychainPassword.password)
-                            .then(conn => {
-                                walletConnector && walletConnector.killSession;
+                            .then(async conn => {
+                                walletConnector && walletConnector.killSession();
                                 walletConnector = new RNWalletConnect(
                                     { session: JSON.parse(conn) },
-                                    moonletMeta
+                                    {
+                                        clientMeta,
+                                        push: {
+                                            url:
+                                                'https://us-central1-moonlet-beta.cloudfunctions.net/push',
+                                            type: 'fcm',
+                                            token: await Notifications.getToken(),
+                                            peerMeta: true,
+                                            language: 'en'
+                                        }
+                                    }
                                 );
                                 setupListeners();
                             })
@@ -136,6 +182,8 @@ export const WalletConnectClient = (() => {
         walletConnector && walletConnector.killSession();
     };
 
+    const getConnector = () => walletConnector;
+
     reconnect().catch(() => {
         // not connected
     });
@@ -146,6 +194,7 @@ export const WalletConnectClient = (() => {
         disconnect,
         sendMessage,
         setStore,
-        isConnected
+        isConnected,
+        getConnector
     };
 })();

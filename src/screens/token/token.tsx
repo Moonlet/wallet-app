@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Image } from 'react-native';
+import { View, ScrollView, Alert, Image } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, ITransactionState, IWalletState } from '../../redux/wallets/state';
@@ -22,6 +22,13 @@ import { Blockchain } from '../../core/blockchain/types';
 import { TransactionsHistoryList } from '../transactions-history/list-transactions-history/list-transactions-history';
 import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
+import { formatNumber } from '../../core/utils/format-number';
+import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import BigNumber from 'bignumber.js';
+import { formatAddress } from '../../core/utils/format-address';
+import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
+import { PasswordModal } from '../../components/password-modal/password-modal';
+import { sendTransferTransaction } from '../../redux/wallets/actions';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -32,19 +39,26 @@ export interface IReduxProps {
     account: IAccountState;
     transactions: ITransactionState[];
     wallet: IWalletState;
+    sendTransferTransaction: typeof sendTransferTransaction;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         transactions: getAccountTransactions(state, ownProps.accountIndex, ownProps.blockchain),
-        wallet: selectCurrentWallet(state)
+        wallet: selectCurrentWallet(state),
+        extensionTransactionPayload: ownProps.extensionTransactionPayload
     };
+};
+
+const mapDispatchToProps = {
+    sendTransferTransaction
 };
 
 export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
+    extensionTransactionPayload: any; // TODO add typing
 }
 
 interface IState {
@@ -86,6 +100,7 @@ export class TokenScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
+    public passwordModal: any;
 
     constructor(props: INavigationProps<INavigationParams> & IReduxProps & IProps) {
         super(props);
@@ -93,6 +108,71 @@ export class TokenScreenComponent extends React.Component<
         this.state = {
             settingsVisible: false
         };
+
+        if (this.props.extensionTransactionPayload) {
+            // stub
+            const {
+                account,
+                toAddress,
+                amount,
+                token,
+                feeOptions
+            } = this.props.extensionTransactionPayload.params[0];
+
+            const formattedAmount = formatNumber(new BigNumber(amount), {
+                currency: BLOCKCHAIN_INFO[account.blockchain].coin
+            });
+
+            Alert.alert(
+                'Transaction.signTransaction',
+                translate('Transaction.signExtensionTransaction', {
+                    amount: formattedAmount,
+                    fromAccount: formatAddress(account.address),
+                    toAccount: formatAddress(toAddress)
+                }),
+                [
+                    {
+                        text: translate('App.labels.cancel'),
+                        onPress: () => {
+                            WalletConnectClient.getConnector().rejectRequest({
+                                id: this.props.extensionTransactionPayload.id,
+                                error: { message: 'Transaction refused' }
+                            });
+                        },
+                        style: 'cancel'
+                    },
+                    {
+                        text: translate('App.labels.sign'),
+                        onPress: () => {
+                            this.passwordModal
+                                .requestPassword()
+                                .then(password => {
+                                    WalletConnectClient.getConnector().approveRequest({
+                                        id: this.props.extensionTransactionPayload.id,
+                                        result: {}
+                                    });
+                                    this.props.sendTransferTransaction(
+                                        account,
+                                        toAddress,
+                                        amount,
+                                        token,
+                                        feeOptions,
+                                        password,
+                                        this.props.navigation
+                                    );
+                                })
+                                .catch(() => {
+                                    // maybe retry here
+                                    WalletConnectClient.getConnector().rejectRequest({
+                                        id: this.props.extensionTransactionPayload.id,
+                                        error: { message: 'Wrong password' }
+                                    });
+                                });
+                        }
+                    }
+                ]
+            );
+        }
     }
     public componentDidMount() {
         this.props.navigation.setParams({
@@ -162,13 +242,15 @@ export class TokenScreenComponent extends React.Component<
                         />
                     )}
                 </ScrollView>
+
+                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>
         );
     }
 }
 
 export const TokenScreen = smartConnect(TokenScreenComponent, [
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider),
     withNavigationParams()
 ]);

@@ -20,12 +20,17 @@ export const WalletConnectWeb = (() => {
         return Promise.resolve();
     };
 
+    const signTransaction = transaction => {
+        return Promise.resolve();
+    };
+
     return {
         connect,
         disconnect,
         subscribe,
         isConnected,
         setStore,
-        getState
+        getState,
+        signTransaction
     };
 })();

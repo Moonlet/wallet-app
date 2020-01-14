@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
 import { ConversionCard } from '../conversion-card/conversion-card';
-import { AccountCard } from '../account-card/account-card';
 import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import stylesProvider from './styles';
@@ -13,8 +12,7 @@ import { ITokenConfig } from '../../core/blockchain/types/token';
 
 export interface IProps {
     blockchain: Blockchain;
-    accounts?: IAccountState[];
-    account?: IAccountState;
+    account: IAccountState;
     styles: ReturnType<typeof stylesProvider>;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
@@ -38,17 +36,7 @@ export const CoinDashboardComponent = (props: IProps) => (
         </View>
 
         <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>
-            {props.accounts?.map((account: IAccountState, i: number) => (
-                <AccountCard
-                    account={account}
-                    navigation={props.navigation}
-                    key={i}
-                    blockchain={props.blockchain}
-                />
-            ))}
-
-            {props.account &&
-                props.account.tokens &&
+            {props.account?.tokens &&
                 Object.values(props.account.tokens).map(
                     (token: ITokenConfig, index: number) =>
                         token.active && (

@@ -22,12 +22,13 @@ export const TokenCardComponent = (props: IProps) => {
     const styles = props.styles;
     return (
         <TouchableOpacity
-            testID="account-card"
             style={styles.container}
             onPress={() =>
+                // TODO: fix here
                 props.navigation.navigate('Account', {
                     accountIndex: props.account.index,
-                    blockchain: props.account.blockchain
+                    blockchain: props.account.blockchain,
+                    token: props.token
                 })
             }
         >
@@ -45,7 +46,7 @@ export const TokenCardComponent = (props: IProps) => {
             <View style={styles.accountInfoContainer}>
                 <Amount
                     style={styles.firstAmount}
-                    amount={props.account.balance?.value}
+                    amount={props.token.balance?.value}
                     blockchain={props.account.blockchain}
                 />
                 <Amount

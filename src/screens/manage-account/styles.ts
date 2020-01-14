@@ -39,8 +39,6 @@ export default (theme: ITheme) =>
         },
         accountIcon: {
             color: theme.colors.accent,
-            marginLeft: BASE_DIMENSION,
-            marginRight: BASE_DIMENSION * 2,
             alignSelf: 'center'
         },
         infoContainer: {
@@ -52,6 +50,15 @@ export default (theme: ITheme) =>
             height: ICON_CONTAINER_SIZE,
             justifyContent: 'center',
             alignItems: 'center'
+        },
+        tokenLogo: {
+            width: ICON_CONTAINER_SIZE,
+            height: ICON_CONTAINER_SIZE
+        },
+        amountContainer: {
+            display: 'flex',
+            flexDirection: 'column',
+            marginLeft: BASE_DIMENSION
         },
 
         // Swipeable left actions

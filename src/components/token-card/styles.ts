@@ -7,7 +7,7 @@ export default (theme: ITheme) =>
         container: {
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
-            paddingHorizontal: BASE_DIMENSION / 2,
+            paddingHorizontal: BASE_DIMENSION,
             paddingVertical: BASE_DIMENSION * 2,
             display: 'flex',
             justifyContent: 'space-between',
@@ -19,7 +19,7 @@ export default (theme: ITheme) =>
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            marginHorizontal: BASE_DIMENSION
+            marginLeft: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         iconContainer: {
             width: ICON_CONTAINER_SIZE,
@@ -46,5 +46,9 @@ export default (theme: ITheme) =>
             fontSize: 16,
             lineHeight: 20,
             color: theme.colors.textSecondary
+        },
+        tokenLogo: {
+            width: ICON_CONTAINER_SIZE,
+            height: ICON_CONTAINER_SIZE
         }
     });

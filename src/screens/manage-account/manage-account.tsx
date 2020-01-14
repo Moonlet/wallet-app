@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { Text, Swipeable } from '../../library';
 import { IReduxState } from '../../redux/state';
@@ -132,8 +132,22 @@ export class ManageAccountComponent extends React.Component<
                     ]}
                 >
                     <View style={styles.infoContainer}>
-                        <Icon name="money-wallet-1" size={ICON_SIZE} style={styles.accountIcon} />
-                        <View>
+                        <View style={styles.iconContainer}>
+                            {item.value?.logo ? (
+                                <Image
+                                    style={styles.tokenLogo}
+                                    resizeMode="contain"
+                                    source={{ uri: item.value.logo }}
+                                />
+                            ) : (
+                                <Icon
+                                    name="money-wallet-1"
+                                    size={ICON_SIZE}
+                                    style={styles.accountIcon}
+                                />
+                            )}
+                        </View>
+                        <View style={styles.amountContainer}>
                             <Amount
                                 style={styles.firstAmount}
                                 amount={item.value.balance?.value}

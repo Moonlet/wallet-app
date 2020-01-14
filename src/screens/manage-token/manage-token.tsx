@@ -20,6 +20,7 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../redux/app/selectors';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { isValidAddress } from '../../core/blockchain/ethereum/account';
+import BigNumber from 'bignumber.js';
 
 export interface IReduxProps {
     currentAccount: IAccountState;
@@ -155,7 +156,14 @@ export class ManageTokenComponent extends React.Component<
                     uiDecimals: 4, // check
 
                     active: true,
-                    order: Object.keys(this.props.currentAccount.tokens).length // check here
+                    order: Object.keys(this.props.currentAccount.tokens).length, // check here
+
+                    balance: {
+                        value: new BigNumber(0),
+                        timestamp: undefined,
+                        inProgress: false,
+                        error: undefined
+                    }
                 }
             },
             () => {

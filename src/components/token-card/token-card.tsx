@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import { Icon } from '../icon';
@@ -32,7 +32,15 @@ export const TokenCardComponent = (props: IProps) => {
             }
         >
             <View style={styles.iconContainer}>
-                <Icon name="money-wallet-1" size={ICON_SIZE} style={styles.icon} />
+                {props.token?.logo ? (
+                    <Image
+                        style={styles.tokenLogo}
+                        resizeMode="contain"
+                        source={{ uri: props.token.logo }}
+                    />
+                ) : (
+                    <Icon name="money-wallet-1" size={ICON_SIZE} style={styles.icon} />
+                )}
             </View>
             <View style={styles.accountInfoContainer}>
                 <Amount
@@ -47,9 +55,7 @@ export const TokenCardComponent = (props: IProps) => {
                     convert
                 />
             </View>
-            <View style={styles.iconContainer}>
-                <Icon name="chevron-right" size={18} style={styles.icon} />
-            </View>
+            <Icon name="chevron-right" size={18} style={styles.icon} />
         </TouchableOpacity>
     );
 };

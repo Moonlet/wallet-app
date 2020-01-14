@@ -20,6 +20,7 @@ import { withNavigationParams, INavigationProps } from '../../navigation/with-na
 import { AccountAddress } from '../../components/account-address/account-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { TransactionsHistoryList } from '../transactions-history/list-transactions-history/list-transactions-history';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -96,7 +97,8 @@ export class AccountScreenComponent extends React.Component<
                             onPress={() => {
                                 navigation.navigate('Send', {
                                     accountIndex: account.index,
-                                    blockchain: account.blockchain
+                                    blockchain: account.blockchain,
+                                    token: getBlockchain(account.blockchain).config.coin
                                 });
                             }}
                         >

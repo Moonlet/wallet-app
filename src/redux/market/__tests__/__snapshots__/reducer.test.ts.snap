@@ -56,6 +56,9 @@ Object {
       "USD": 150.76,
       "USDT": 150.85,
     },
+    "FAU": Object {
+      "ETH": 0.007,
+    },
     "HEDG": Object {
       "ETH": 0.01471,
     },

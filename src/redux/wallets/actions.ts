@@ -214,7 +214,7 @@ export const getBalance = (
                     default:
                         const client = getBlockchain(blockchain).getClient(chainId);
                         if (client.tokens[tokenInfo.type]) {
-                            balance = client.tokens[tokenInfo.type].getBalance(
+                            balance = await client.tokens[tokenInfo.type].getBalance(
                                 tokenInfo.contractAddress,
                                 address
                             );

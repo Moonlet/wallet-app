@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Platform } from 'react-native';
+import { View, Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -12,6 +12,7 @@ import { BottomSheetHeader } from '../header/header';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { QrModalReader } from '../../qr-modal/qr-modal';
 import { WalletConnectClient } from '../../../core/wallet-connect/wallet-connect-client';
+import TouchableOpacity from '../../../library/touchable-opacity/touchable-opacity';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -58,7 +59,6 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
 
     public renderBottomSheetContent = () => {
         const { styles } = this.props;
-
         return (
             <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
                 <TouchableOpacity

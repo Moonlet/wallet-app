@@ -3,9 +3,10 @@ import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import Icon from '../../../../components/icon';
 import { ICON_SIZE } from '../../../../styles/dimensions';
+import TouchableOpacity from '../../../../library/touchable-opacity/touchable-opacity';
 
 export interface IProps {
     label: string | JSX.Element;

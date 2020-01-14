@@ -201,7 +201,7 @@ export class SettingsScreenComponent extends React.Component<
                         <Text style={styles.textRow}>{translate('Settings.defaultCurrency')}</Text>
                         <View style={styles.rightContainer}>
                             <Text style={styles.rightValue}>{this.props.currency}</Text>
-                            <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                            <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
 
@@ -214,7 +214,7 @@ export class SettingsScreenComponent extends React.Component<
                         <Text style={styles.textRow}>
                             {translate('Settings.blockchainPortfolio')}
                         </Text>
-                        <Icon name="arrow-right-1" size={16} style={styles.icon} />
+                        <Icon name="chevron-right" size={16} style={styles.icon} />
                     </TouchableOpacity>
 
                     <View style={styles.divider} />

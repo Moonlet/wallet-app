@@ -8,6 +8,7 @@ Object {
   "publicKey": "PUBLIC_KEY",
   "tokens": Object {
     "ZIL": Object {
+      "active": true,
       "decimals": 12,
       "name": "Zilliqa",
       "order": 0,

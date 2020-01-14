@@ -8,6 +8,7 @@ Object {
   "publicKey": "PUBLIC_KEY",
   "tokens": Object {
     "ETH": Object {
+      "active": true,
       "decimals": 18,
       "name": "Ethereum",
       "order": 0,

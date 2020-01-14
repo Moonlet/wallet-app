@@ -156,7 +156,10 @@ export class ManageTokenComponent extends React.Component<
                     uiDecimals: 4, // check
 
                     active: true,
-                    order: Object.keys(this.props.currentAccount.tokens).length, // check here
+                    order:
+                        Object.values(this.props.currentAccount.tokens).sort(
+                            (x, y) => y.order - x.order
+                        )[0]?.order || 0 + 1, // check here
 
                     balance: {
                         value: new BigNumber(0),

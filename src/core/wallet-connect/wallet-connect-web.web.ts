@@ -23,9 +23,9 @@ export const WalletConnectWeb = (() => {
         store = storeReference;
 
         // request state from the mobile app
-        if (isConnected()) {
-            getState();
-        }
+        // if (isConnected()) {
+        //     getState();
+        // }
     };
 
     const connect = () => {

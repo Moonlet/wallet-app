@@ -32,11 +32,13 @@ export class OnboardingScreenComponent extends React.Component<
 
                 QRCode.toCanvas(this.qrCanvas, uri, { errorCorrectionLevel: 'H' });
                 this.unsubscribe = WalletConnectWeb.subscribe('connect', payload => {
-                    this.props.navigation.navigate(
-                        'MainNavigation',
-                        {},
-                        NavigationActions.navigate({ routeName: 'Dashboard' })
-                    );
+                    WalletConnectWeb.getState().then(() => {
+                        this.props.navigation.navigate(
+                            'MainNavigation',
+                            {},
+                            NavigationActions.navigate({ routeName: 'Dashboard' })
+                        );
+                    });
                 });
             });
         }

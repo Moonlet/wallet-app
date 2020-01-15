@@ -64,12 +64,19 @@ export default class App extends React.Component<{}, IState> {
             if (store.getState()._persist.rehydrated) {
                 if (!this.reduxStateLoaded) {
                     this.reduxStateLoaded = true;
+
+                    // trigger extension getState after state was loaded from storage
+                    Platform.OS === 'web' &&
+                        WalletConnectWeb.isConnected() &&
+                        WalletConnectWeb.getState();
+
                     this.updateAppReady();
                 }
             }
+
             if (Platform.OS === 'web' && store.getState().app.extensionStateLoaded) {
                 if (!this.extensionStateLoaded) {
-                    this.extensionStateLoaded = false;
+                    this.extensionStateLoaded = true;
                     this.updateAppReady();
                 }
             }

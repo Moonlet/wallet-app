@@ -12,7 +12,7 @@ import { translate } from '../../core/i18n';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
-import { selectCurrentAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
+import { getCurrentAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
 import { IAccountState, IWalletState, TokenType } from '../../redux/wallets/state';
 import { Amount } from '../../components/amount/amount';
 import { toggleTokenActive, updateTokenOrder, removeToken } from '../../redux/wallets/actions';
@@ -35,7 +35,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state: IReduxState) => {
-    const selectedAccount = selectCurrentAccount(state);
+    const selectedAccount = getCurrentAccount(state);
 
     return {
         tokens: Object.keys(selectedAccount.tokens)
@@ -108,7 +108,11 @@ export class ManageAccountComponent extends React.Component<
         this.currentlyOpenSwipeable = index;
     }
 
-    public renderToken(item: { key: string; value: ITokenConfig }, move: any, moveEnd: any) {
+    public renderToken(
+        item: { key: string; value: ITokenConfig },
+        drag: () => void,
+        isActive: boolean
+    ) {
         const { styles, theme } = this.props;
         const index = item.key;
 
@@ -127,6 +131,9 @@ export class ManageAccountComponent extends React.Component<
                         {
                             borderColor: item.value.active
                                 ? theme.colors.accentSecondary
+                                : theme.colors.cardBackground,
+                            backgroundColor: isActive
+                                ? theme.colors.appBackground
                                 : theme.colors.cardBackground
                         }
                     ]}
@@ -167,7 +174,7 @@ export class ManageAccountComponent extends React.Component<
                     </View>
                     <TouchableOpacity
                         style={styles.iconContainer}
-                        onPress={() =>
+                        onPressOut={() =>
                             this.props.toggleTokenActive(
                                 this.props.wallet.id,
                                 this.props.selectedAccount,
@@ -187,11 +194,7 @@ export class ManageAccountComponent extends React.Component<
                             ]}
                         />
                     </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.iconContainer}
-                        onLongPress={move}
-                        onPressOut={moveEnd}
-                    >
+                    <TouchableOpacity style={styles.iconContainer} onLongPress={drag}>
                         <Icon size={18} name="navigation-menu" style={styles.menuIcon} />
                     </TouchableOpacity>
                 </View>
@@ -206,12 +209,13 @@ export class ManageAccountComponent extends React.Component<
             <View style={styles.container}>
                 <DraggableFlatList
                     data={this.props.tokens}
-                    renderItem={({ item, move, moveEnd }) => this.renderToken(item, move, moveEnd)}
+                    renderItem={({ item, drag, isActive }) =>
+                        this.renderToken(item, drag, isActive)
+                    }
                     keyExtractor={(item: { key: string; value: ITokenConfig }) =>
                         `${item.value.order}`
                     }
-                    scrollPercent={5}
-                    onMoveEnd={({ data }) => {
+                    onDragEnd={({ data }) => {
                         this.props.updateTokenOrder(
                             this.props.wallet.id,
                             this.props.selectedAccount,

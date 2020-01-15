@@ -11,7 +11,8 @@ import {
     TOGGLE_TOKEN_ACTIVE,
     UPDATE_TOKEN_ORDER,
     REMOVE_TOKEN,
-    ADD_TOKEN
+    ADD_TOKEN,
+    WALLET_SELECT_ACCOUNT
 } from './actions';
 import { TransactionStatus } from '../../core/wallet/types';
 import { REHYDRATE } from 'redux-persist';
@@ -42,7 +43,6 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                               value: new BigNumber(account.balance?.value || 0)
                           },
 
-                          // check here = NaN
                           tokens: Object.keys(account.tokens).reduce(
                               (tokenOut: any, tokenId: string) => {
                                   tokenOut[tokenId] = account.tokens[tokenId];
@@ -85,6 +85,24 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                     name: action.data.newName
                 }
             };
+        case WALLET_SELECT_ACCOUNT: {
+            state = { ...state };
+
+            return {
+                ...state,
+                [action.data.walletId]: {
+                    ...state[action.data.walletId],
+                    accounts: state[action.data.walletId].accounts.map(account => {
+                        account.index === action.data.currentAccount.index &&
+                        account.blockchain === action.data.currentAccount.blockchain
+                            ? (account.selected = true)
+                            : (account.selected = false);
+
+                        return account;
+                    })
+                }
+            };
+        }
 
         case ACCOUNT_GET_BALANCE: {
             state = { ...state };

@@ -41,8 +41,8 @@ export const sign = async (
         amount: new BN(tx.amount.toString()),
         gasPrice: new BN(tx.options.gasPrice),
         gasLimit: Long.fromNumber(tx.options.gasLimit),
-        code: tx.options.code,
-        data: tx.options.data,
+        code: tx.options.code || '',
+        data: tx.options.data || '',
         signature: ''
     };
 
@@ -58,6 +58,7 @@ export const sign = async (
     transaction.gasPrice = transaction.gasPrice.toString();
     transaction.toAddr = toChecksumAddress(transaction.toAddr).replace('0x', '');
 
+    // console.log('signed transaction', transaction);
     return transaction;
 };
 

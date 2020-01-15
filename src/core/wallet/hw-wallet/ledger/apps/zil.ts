@@ -1,6 +1,7 @@
 import ZilApp from './zil-interface';
 import * as zcrypto from '@zilliqa-js/crypto';
 import { IBlockchainTransaction } from '../../../../blockchain/types';
+import BigNumber from 'bignumber.js';
 // import Long from 'long';
 // import * as ZilliqaJsAccountUtil from '@zilliqa-js/account/dist/util';
 
@@ -40,8 +41,8 @@ export class Zil {
                 .toLowerCase(),
             amount: tx.amount.toString(),
             pubKey: tx.options.publicKey,
-            gasPrice: tx.options.gasPrice.toString(),
-            gasLimit: tx.options.gasLimit.toNumber(),
+            gasPrice: new BigNumber(tx.options.gasPrice).toString(),
+            gasLimit: new BigNumber(tx.options.gasLimit).toNumber(),
             signature: '',
             code: '',
             data: '',

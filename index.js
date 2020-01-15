@@ -21,6 +21,8 @@ import androidBgMessagingHandler from './src/core/messaging/silent/android-backg
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['RCTRootView cancelTouches', 'Require cycle']);
 
+// console.disableYellowBox = true;
+
 if (Platform.OS === 'android') {
     AppRegistry.registerHeadlessTask(
         'RNFirebaseBackgroundMessage',

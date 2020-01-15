@@ -204,15 +204,18 @@ export class SendScreenComponent extends React.Component<
     };
 
     public onFeesChanged = (feeOptions: any) => {
-        this.setState({ feeOptions }); // , () => this.availableFunds());
+        this.setState({ feeOptions }, () => this.availableFunds());
     };
 
     public addAmount = (value: string) => {
-        this.setState({ amount: value }); // , () => this.availableFunds());
+        this.setState({ amount: value }, () => this.availableFunds());
     };
 
     public onAddAllBalance = () => {
-        const allBalance = this.props.account.balance?.value.minus(this.state.feeOptions.feeTotal);
+        const token = this.props.account.tokens[
+            getBlockchain(this.props.account.blockchain).config.coin
+        ];
+        const allBalance = token.balance?.value.minus(this.state.feeOptions.feeTotal);
 
         if (allBalance.isGreaterThanOrEqualTo(0)) {
             const blockchainInstance = getBlockchain(this.props.account.blockchain);
@@ -228,8 +231,11 @@ export class SendScreenComponent extends React.Component<
         const stdAmount = blockchainInstance.account.amountToStd(
             new BigNumber(this.state.amount ? this.state.amount : 0)
         );
+        const token = this.props.account.tokens[
+            getBlockchain(this.props.account.blockchain).config.coin
+        ];
         const completeAmount = this.state.feeOptions.feeTotal.plus(stdAmount);
-        if (this.props.account.balance?.value.minus(completeAmount).isGreaterThanOrEqualTo(0)) {
+        if (token.balance?.value.minus(completeAmount).isGreaterThanOrEqualTo(0)) {
             this.setState({ insufficientFunds: false });
         } else {
             this.setState({ insufficientFunds: true });

@@ -5,7 +5,6 @@ import { WC_CONNECTION, WC } from '../constants/app';
 import { trimState } from './wc-state-helper';
 import { Notifications } from '../messaging/notifications/notifications';
 import { AppState } from 'react-native';
-import { translate } from '../i18n/translation/translate';
 import { signExtensionTransaction } from './utils';
 import { formatNumber } from '../utils/format-number';
 import { BLOCKCHAIN_INFO } from '../blockchain/blockchain-factory';
@@ -98,14 +97,11 @@ export const WalletConnectClient = (() => {
                         const formattedAmount = formatNumber(new BigNumber(amount), {
                             currency: BLOCKCHAIN_INFO[account.blockchain].coin
                         });
-
                         Notifications.displayNotification(
                             'Moonlet',
-                            translate('Transaction.signTransactionNotification', {
-                                amount: formattedAmount,
-                                fromAccount: formatAddress(account.address),
-                                toAccount: formatAddress(toAddress)
-                            }),
+                            `New transaction request of ${formattedAmount} from ${formatAddress(
+                                account.address
+                            )} to ${formatAddress(toAddress)}`,
                             payload
                         );
                     } else {

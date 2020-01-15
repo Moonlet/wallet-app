@@ -26,6 +26,8 @@ const babelLoaderConfiguration = {
         // path.resolve(appDirectory, 'index.web.js'),
         // path.resolve(appDirectory, 'src'),
         path.resolve(appDirectory, 'node_modules/@react-navigation'),
+        path.resolve(appDirectory, 'node_modules/react-native-dialog'),
+        path.resolve(appDirectory, 'node_modules/react-native-animatable'),
         path.resolve(appDirectory, 'node_modules/react-navigation'),
         path.resolve(appDirectory, 'node_modules/react-navigation-stack'),
         path.resolve(appDirectory, 'node_modules/react-navigation-tabs'),

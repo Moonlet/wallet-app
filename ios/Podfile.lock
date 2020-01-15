@@ -317,7 +317,7 @@ PODS:
     - React
   - RNKeychain (4.0.1):
     - React
-  - RNReanimated (1.4.0):
+  - RNReanimated (1.5.0):
     - React
   - RNScreens (2.0.0-alpha.8):
     - React
@@ -547,7 +547,7 @@ SPEC CHECKSUMS:
   RNFirebase: ac0de8b24c6f91ae9459575491ed6a77327619c6
   RNGestureHandler: 7add966bb5d90ee8cf38d4341f87814474357972
   RNKeychain: 45dbd50d1ac4bd42c3740f76ffb135abf05746d0
-  RNReanimated: b2ab0b693dddd2339bd2f300e770f6302d2e960c
+  RNReanimated: 1761c14b3982fc77fc9fdad6ea2f42ed861c342a
   RNScreens: bfa9143ca291bcf3804c932f77b9617ff324704f
   RNSentry: 2803ba8c8129dcf26b79e9b4d8c80168be6e4390
   RNSVG: f6177f8d7c095fada7cfee2e4bb7388ba426064c

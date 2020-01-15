@@ -18,7 +18,7 @@ jobs:
         id: cache
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: NPM install
         run: npm i
       - name: Generate icons
@@ -61,7 +61,7 @@ jobs:
         id: cache
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: NPM install
         run: npm i
       - name: Get sign ssh-keys
@@ -97,7 +97,7 @@ jobs:
         id: cache
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: NPM install
         run: npm i
       - name: Cocoapods install

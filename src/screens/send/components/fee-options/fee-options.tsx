@@ -137,7 +137,9 @@ export class FeeOptionsComponent extends React.Component<
                                     <FeePreset
                                         key={item}
                                         token={this.props.token}
-                                        amount={this.state.feeOptions.presets[item]}
+                                        amount={this.state.feeOptions.presets[item].multipliedBy(
+                                            this.state.feeOptions.gasLimit
+                                        )}
                                         blockchain={this.props.account.blockchain}
                                         title={translate('App.labels.' + item)}
                                         presetKey={item}

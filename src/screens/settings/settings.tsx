@@ -89,6 +89,7 @@ export class SettingsScreenComponent extends React.Component<
     public signOut = () => {
         if (Platform.OS === 'web') {
             WalletConnectWeb.disconnect();
+            location.reload();
         }
     };
 
@@ -103,12 +104,6 @@ export class SettingsScreenComponent extends React.Component<
                     contentContainerStyle={{ flexGrow: 1 }}
                     showsVerticalScrollIndicator={false}
                 >
-                    {Platform.OS === 'web' && (
-                        <Button style={styles.button} onPress={this.signOut}>
-                            {translate('Settings.signOut')}
-                        </Button>
-                    )}
-
                     <Text style={styles.textHeader}>
                         {translate('App.labels.security').toUpperCase()}
                     </Text>
@@ -289,9 +284,11 @@ export class SettingsScreenComponent extends React.Component<
 
                     <View style={styles.divider} />
 
-                    {/* <Button testID={'sign-out'} style={styles.button} onPress={this.signOut}>
-                        {translate('Settings.signOut')}
-                    </Button> */}
+                    {Platform.OS === 'web' && (
+                        <Button style={styles.button} onPress={this.signOut}>
+                            {translate('Settings.signOut')}
+                        </Button>
+                    )}
                 </ScrollView>
 
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />

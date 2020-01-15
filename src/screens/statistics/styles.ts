@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 import { pw, ph } from '../../styles';
@@ -10,7 +10,8 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2,
             paddingTop: BASE_DIMENSION * 3,
             justifyContent: 'center',
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            minHeight: Platform.OS === 'web' ? 'calc(100vh - 122px)' : 'auto'
         },
         logoImage: {
             height: ph(20),

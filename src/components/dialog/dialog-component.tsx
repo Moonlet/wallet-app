@@ -3,7 +3,6 @@ import { KeyboardTypeOptions, Platform } from 'react-native';
 import { IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { Deferred } from '../../core/utils/deferred';
-import { Text } from '../../library';
 import RNDialog from 'react-native-dialog';
 import { translate } from '../../core/i18n';
 
@@ -228,11 +227,9 @@ export class DialogComponent extends React.Component<
                 blurStyle={styles.contentContainerStyle}
                 contentStyle={styles.contentContainerStyle}
             >
-                <RNDialog.Title>
-                    <Text style={styles.titleStyle}>{this.state.title}</Text>
-                </RNDialog.Title>
-                <RNDialog.Description>
-                    <Text style={styles.descriptionStyle}>{this.state.message}</Text>
+                <RNDialog.Title style={styles.titleStyle}>{this.state.title}</RNDialog.Title>
+                <RNDialog.Description style={styles.descriptionStyle}>
+                    {this.state.message}
                 </RNDialog.Description>
                 {this.state.dialogType === DialogType.PROMPT && (
                     <RNDialog.Input

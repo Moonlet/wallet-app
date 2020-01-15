@@ -14,10 +14,8 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { getBalance, switchSelectedAccount } from '../../redux/wallets/actions';
-import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
-import { BigNumber } from 'bignumber.js';
+import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { selectCurrentWallet, getCurrentAccount } from '../../redux/wallets/selectors';
-import { createSelector } from 'reselect';
 import { IBlockchainsOptions, BottomSheetType } from '../../redux/app/state';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
@@ -26,6 +24,8 @@ import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 import { openBottomSheet, setSelectedBlockchain } from '../../redux/app/actions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { ph } from '../../styles/common';
+import BigNumber from 'bignumber.js';
+import { TokenType } from '../../core/blockchain/types/token';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -35,55 +35,25 @@ export interface IReduxProps {
     openBottomSheet: typeof openBottomSheet;
     currentAccount: IAccountState;
     selectedBlockchain: Blockchain;
+    exchangeRates: any;
     switchSelectedAccount: typeof switchSelectedAccount;
     setSelectedBlockchain: typeof setSelectedBlockchain;
 }
 
 interface IState {
-    balance: any;
+    balance: BigNumber;
     coins: Array<{ blockchain: Blockchain; order: number }>;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
-
-const calculateBalances = (accounts: IAccountState[], blockchains: IBlockchainsOptions) => {
-    const result = accounts.reduce(
-        (out: any, account: IAccountState) => {
-            if (!account) {
-                return out;
-            }
-            if (!out.balance[account.blockchain]) {
-                out.balance[account.blockchain] = {
-                    amount: account?.balance?.value || new BigNumber(0)
-                };
-                if (blockchains && blockchains[account.blockchain]?.active) {
-                    out.coins.push({
-                        blockchain: account.blockchain,
-                        order: blockchains[account.blockchain].order
-                    });
-                }
-            } else {
-                out.balance[account.blockchain].amount = out.balance[
-                    account.blockchain
-                ].amount.plus(account?.balance?.value || new BigNumber(0));
-            }
-            return out;
-        },
-        { coins: [], balance: {} }
-    );
-
-    const coins = result.coins.sort((a, b) => a.order - b.order);
-    const balance = result.balance;
-
-    return { coins, balance };
-};
 
 const mapStateToProps = (state: IReduxState) => ({
     wallet: selectCurrentWallet(state),
     walletsNr: Object.keys(state.wallets).length,
     blockchains: state.app.blockchains,
     selectedBlockchain: state.app.selectedBlockchain,
-    currentAccount: getCurrentAccount(state)
+    currentAccount: getCurrentAccount(state),
+    exchangeRates: (state as any).market.exchangeRates
 });
 
 const mapDispatchToProps = {
@@ -139,26 +109,12 @@ const navigationOptions = ({ navigation }: any) => ({
     )
 });
 
-// `calculateBalances` gets executed only when result of parameter picker function result is changed
-const getWalletBalances = createSelector(
-    [
-        (wallet: IWalletState, blockchains: IBlockchainsOptions) => ({
-            accounts: (wallet && wallet.accounts) || [],
-            blockchains: blockchains || {}
-        })
-    ],
-    result => calculateBalances(result.accounts, result.blockchains)
-);
-
 export class DashboardScreenComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
     public static navigationOptions = navigationOptions;
 
-    public static getDerivedStateFromProps(props, state) {
-        return getWalletBalances(props.wallet, props.blockchains);
-    }
     public dashboardOpacity = new Animated.Value(1);
     public balancesScrollView: any;
 
@@ -167,8 +123,18 @@ export class DashboardScreenComponent extends React.Component<
     ) {
         super(props);
 
+        const coins = [];
+        Object.keys(this.props.blockchains).map(key => {
+            const value = this.props.blockchains[key];
+            coins.push({
+                blockchain: key,
+                order: value.order
+            });
+        });
+
         this.state = {
-            ...calculateBalances(props.wallet?.accounts || [], props.blockchains)
+            coins,
+            balance: new BigNumber(0)
         };
 
         if (Platform.OS === 'web') {
@@ -188,19 +154,39 @@ export class DashboardScreenComponent extends React.Component<
         }
     }
 
+    public calculateBalance() {
+        const tokenKeys = Object.keys(this.props.currentAccount.tokens);
+
+        let balance = new BigNumber(0);
+
+        tokenKeys.map(key => {
+            const token = this.props.currentAccount.tokens[key];
+            if (token.active) {
+                if (token.type === TokenType.NATIVE) {
+                    balance = balance.plus(token.balance?.value);
+                } else {
+                    const exchange = this.props.exchangeRates[key][
+                        getBlockchain(this.props.currentAccount.blockchain).config.coin
+                    ];
+                    balance = balance.plus(token.balance?.value.multipliedBy(exchange));
+                }
+            }
+        });
+        this.setState({ balance });
+    }
+
     public componentDidMount() {
-        this.getWalletBalances(this.props.wallet);
+        this.props.getBalance(
+            this.props.currentAccount.blockchain,
+            this.props.currentAccount.address,
+            undefined,
+            true
+        );
 
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
-    }
-
-    public getWalletBalances(wallet: IWalletState) {
-        // TODO: fix balance
-        wallet?.accounts.map(account => {
-            this.props.getBalance(account.blockchain, account.address, undefined, true);
-        });
+        this.calculateBalance();
     }
 
     public setDashboardMenuBottomSheet = () => {
@@ -247,6 +233,7 @@ export class DashboardScreenComponent extends React.Component<
                                         index: 0, // TODO - in the case we are not using the index 0 account this might not work
                                         blockchain: coin.blockchain
                                     });
+                                    this.calculateBalance();
                                 }}
                             >
                                 <Text
@@ -281,12 +268,13 @@ export class DashboardScreenComponent extends React.Component<
                         <View style={styles.coinBalanceCard}>
                             {this.props.currentAccount && (
                                 <CoinBalanceCard
+                                    key={this.props.currentAccount.address}
                                     onPress={() =>
                                         this.props.openBottomSheet(BottomSheetType.ACCOUNTS, {
                                             blockchain
                                         })
                                     }
-                                    balance={this.state.balance[blockchain].amount}
+                                    balance={this.state.balance}
                                     blockchain={blockchain}
                                     currency={BLOCKCHAIN_INFO[blockchain].coin}
                                     toCurrency="USD"
@@ -300,6 +288,7 @@ export class DashboardScreenComponent extends React.Component<
                             style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
                         >
                             <CoinDashboard
+                                key={this.props.currentAccount.address}
                                 account={this.props.currentAccount}
                                 blockchain={blockchain}
                                 navigation={this.props.navigation}

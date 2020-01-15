@@ -17,7 +17,7 @@
         "test": "jest",
         "lint": "tslint --fix '{src,extension}/**/*.{ts,tsx}'",
         "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore",
-        "postinstall": "jetify"
+        "postinstall": "jetify && ./scripts/ts-nockeck-files.sh"
     },
     "dependencies": {
         "@ledgerhq/hw-app-eth": "^4.78.0",

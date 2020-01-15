@@ -149,12 +149,12 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     public async onPressDelete(wallet: IWalletState) {
-        const res: boolean = await Dialog.confirm(
-            translate('Wallets.deleteWallet'),
-            translate('Wallets.confirmDelete')
-        );
-
-        if (res) {
+        if (
+            await Dialog.confirm(
+                translate('Wallets.deleteWallet'),
+                translate('Wallets.confirmDelete')
+            )
+        ) {
             this.closeCurrentOpenedSwipable();
             this.onDeleteConfirmed(wallet);
         }

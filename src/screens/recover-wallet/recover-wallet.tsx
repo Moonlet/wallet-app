@@ -174,7 +174,7 @@ export class RecoverWalletScreenComponent extends React.Component<
 
                 <PasswordModal
                     shouldCreatePassword={true}
-                    subtitle={translate('Password.pinSubtitleUnlockWallet')}
+                    subtitle={translate('Password.subtitleMnemonic')}
                     obRef={ref => (this.passwordModal = ref)}
                 />
             </View>

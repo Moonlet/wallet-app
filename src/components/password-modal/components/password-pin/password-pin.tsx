@@ -11,7 +11,6 @@ import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
 import { biometricAuth, BiometryType } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';
-import { LoadingIndicator } from '../../../loading-indicator/loading-indicator';
 
 export interface IReduxProps {
     touchID: boolean;
@@ -31,7 +30,6 @@ interface IState {
     passToVerify: string;
     biometryType: BiometryType;
     updatePinProps: boolean;
-    isLoading: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -74,8 +72,7 @@ export class PasswordPinComponent extends React.Component<
             errorMessage: '',
             passToVerify: '',
             updatePinProps: false,
-            biometryType: undefined,
-            isLoading: false
+            biometryType: undefined
         };
         this.shakeAnimation = new Animated.Value(0);
 
@@ -99,16 +96,13 @@ export class PasswordPinComponent extends React.Component<
             return;
         }
         try {
-            this.setState({ isLoading: true });
-
             const passHash = await hash(this.state.password);
             const resultVerificationPass = await this.props.onPasswordEntered(passHash);
 
             if (resultVerificationPass !== undefined) {
                 this.setState({
                     errorMessage: resultVerificationPass,
-                    password: '',
-                    isLoading: false
+                    password: ''
                 });
                 this.startShake();
             }
@@ -116,8 +110,7 @@ export class PasswordPinComponent extends React.Component<
             this.startShake();
             this.setState({
                 errorMessage: translate('Password.genericError'),
-                password: '',
-                isLoading: false
+                password: ''
             });
         }
     }
@@ -333,73 +326,61 @@ export class PasswordPinComponent extends React.Component<
     public render() {
         const styles = this.props.styles;
 
-        if (this.state.isLoading) {
-            return (
-                <View style={styles.container}>
-                    <Image
-                        style={styles.logoImage}
-                        source={require('../../../../assets/images/png/moonlet_space_gray.png')}
-                    />
-                    <LoadingIndicator />
-                </View>
-            );
-        } else {
-            return (
-                <View style={styles.container}>
-                    <Image
-                        style={styles.logoImage}
-                        source={require('../../../../assets/images/png/moonlet_space_gray.png')}
-                    />
-                    <View style={styles.headerContainer}>
-                        <Text style={styles.title}>{this.props.title}</Text>
-                        <Text style={styles.subTitle}>{this.props.subtitle}</Text>
-                        {this.renderInputDots()}
+        return (
+            <View style={styles.container}>
+                <Image
+                    style={styles.logoImage}
+                    source={require('../../../../assets/images/png/moonlet_space_gray.png')}
+                />
+                <View style={styles.headerContainer}>
+                    <Text style={styles.title}>{this.props.title}</Text>
+                    <Text style={styles.subTitle}>{this.props.subtitle}</Text>
+                    {this.renderInputDots()}
 
-                        <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
-                    </View>
-
-                    <View style={styles.digitsLayout}>
-                        {this.renderRow(digitsLayout[0], 0)}
-                        <LinearGradient
-                            colors={[
-                                this.props.theme.colors.gradientLight,
-                                this.props.theme.colors.gradientDark,
-                                this.props.theme.colors.gradientLight
-                            ]}
-                            locations={[0.16, 0.5, 0.84]}
-                            angle={90}
-                            useAngle={true}
-                            style={styles.selectorGradientContainer}
-                        />
-                        {this.renderRow(digitsLayout[1], 1)}
-                        <LinearGradient
-                            colors={[
-                                this.props.theme.colors.gradientLight,
-                                this.props.theme.colors.gradientDark,
-                                this.props.theme.colors.gradientLight
-                            ]}
-                            locations={[0.16, 0.5, 0.84]}
-                            angle={90}
-                            useAngle={true}
-                            style={styles.selectorGradientContainer}
-                        />
-                        {this.renderRow(digitsLayout[2], 2)}
-                        <LinearGradient
-                            colors={[
-                                this.props.theme.colors.gradientLight,
-                                this.props.theme.colors.gradientDark,
-                                this.props.theme.colors.gradientLight
-                            ]}
-                            locations={[0.16, 0.5, 0.84]}
-                            angle={90}
-                            useAngle={true}
-                            style={styles.selectorGradientContainer}
-                        />
-                        {this.renderFooterRow()}
-                    </View>
+                    <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
                 </View>
-            );
-        }
+
+                <View style={styles.digitsLayout}>
+                    {this.renderRow(digitsLayout[0], 0)}
+                    <LinearGradient
+                        colors={[
+                            this.props.theme.colors.gradientLight,
+                            this.props.theme.colors.gradientDark,
+                            this.props.theme.colors.gradientLight
+                        ]}
+                        locations={[0.16, 0.5, 0.84]}
+                        angle={90}
+                        useAngle={true}
+                        style={styles.selectorGradientContainer}
+                    />
+                    {this.renderRow(digitsLayout[1], 1)}
+                    <LinearGradient
+                        colors={[
+                            this.props.theme.colors.gradientLight,
+                            this.props.theme.colors.gradientDark,
+                            this.props.theme.colors.gradientLight
+                        ]}
+                        locations={[0.16, 0.5, 0.84]}
+                        angle={90}
+                        useAngle={true}
+                        style={styles.selectorGradientContainer}
+                    />
+                    {this.renderRow(digitsLayout[2], 2)}
+                    <LinearGradient
+                        colors={[
+                            this.props.theme.colors.gradientLight,
+                            this.props.theme.colors.gradientDark,
+                            this.props.theme.colors.gradientLight
+                        ]}
+                        locations={[0.16, 0.5, 0.84]}
+                        angle={90}
+                        useAngle={true}
+                        style={styles.selectorGradientContainer}
+                    />
+                    {this.renderFooterRow()}
+                </View>
+            </View>
+        );
     }
 }
 

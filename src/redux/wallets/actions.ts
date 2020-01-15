@@ -115,7 +115,7 @@ export const createHWWallet = (
 
         dispatch(verifyAddressOnDevice(true));
         const accounts: IAccountState[] = await wallet.getAccounts(blockchain, 0);
-        accounts[0][0].selected = true;
+        accounts[0].selected = true;
         const walletData: IWalletState = {
             id: walletId,
             hwOptions: {

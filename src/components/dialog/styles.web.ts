@@ -54,5 +54,16 @@ export default (theme: ITheme) =>
             lineHeight: 13,
             color: theme.colors.text
         },
-        dialogContainer: {}
+        dialogContainer: {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: 'center',
+            backgroundColor: '#00000066'
+        },
+        'dialogContainer>div': {
+            borderWidth: 0
+        }
     });

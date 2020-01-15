@@ -5,10 +5,10 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
-import { appSwitchAccount } from '../../redux/app/actions';
+import { switchSelectedAccount } from '../../redux/wallets/actions';
 import stylesProvider from './styles';
 import { Blockchain } from '../../core/blockchain/types';
-import { selectCurrentWallet, selectCurrentAccount } from '../../redux/wallets/selectors';
+import { selectCurrentWallet, getCurrentAccount } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
@@ -17,21 +17,19 @@ import { ListAccount } from '../token/components/list-account/list-account';
 
 export interface IReduxProps {
     wallet: IWalletState;
-    blockchain: Blockchain;
-    appSwitchAccount: typeof appSwitchAccount;
+    switchSelectedAccount: typeof switchSelectedAccount;
     selectedAccount: IAccountState;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        blockchain: state.app.currentAccount.blockchain,
         wallet: selectCurrentWallet(state),
-        selectedAccount: selectCurrentAccount(state)
+        selectedAccount: getCurrentAccount(state)
     };
 };
 
 const mapDispatchToProps = {
-    appSwitchAccount
+    switchSelectedAccount
 };
 
 // TODO: this is a component, not a screen any more => move this
@@ -45,11 +43,12 @@ export const AccountsScreenComponent = (
         (async function getAccounts() {
             try {
                 const hdAccounts = props.wallet.accounts.filter(
-                    (account: IAccountState) => account.blockchain === props.blockchain
+                    (account: IAccountState) =>
+                        account.blockchain === props.selectedAccount.blockchain
                 );
                 setAccounts(hdAccounts);
 
-                const client = getBlockchain(props.blockchain).getClient(4);
+                const client = getBlockchain(props.selectedAccount.blockchain).getClient(4);
 
                 const balanceCalls = [];
                 hdAccounts.map(account => balanceCalls.push(client.getBalance(account.address)));
@@ -72,7 +71,7 @@ export const AccountsScreenComponent = (
                 // console.log(e);
             }
         })();
-    }, [props.blockchain]);
+    }, [props.selectedAccount.blockchain]);
 
     return (
         <View style={props.styles.container}>
@@ -95,10 +94,10 @@ export const AccountsScreenComponent = (
                                 style={props.styles.fistAmountText}
                                 amount={account.balance?.value}
                                 blockchain={blockchain}
-                                token={getBlockchain(props.blockchain).config.coin}
+                                token={getBlockchain(blockchain).config.coin}
                                 tokenDecimals={
-                                    getBlockchain(props.blockchain).config.tokens[
-                                        getBlockchain(props.blockchain).config.coin
+                                    getBlockchain(blockchain).config.tokens[
+                                        getBlockchain(blockchain).config.coin
                                     ].decimals
                                 }
                             />
@@ -106,10 +105,10 @@ export const AccountsScreenComponent = (
                                 style={props.styles.secondAmountText}
                                 amount={account.balance?.value}
                                 blockchain={blockchain}
-                                token={getBlockchain(props.blockchain).config.coin}
+                                token={getBlockchain(blockchain).config.coin}
                                 tokenDecimals={
-                                    getBlockchain(props.blockchain).config.tokens[
-                                        getBlockchain(props.blockchain).config.coin
+                                    getBlockchain(blockchain).config.tokens[
+                                        getBlockchain(blockchain).config.coin
                                     ].decimals
                                 }
                                 convert
@@ -131,7 +130,7 @@ export const AccountsScreenComponent = (
                         label={label}
                         selected={selected}
                         onPress={() =>
-                            props.appSwitchAccount({
+                            props.switchSelectedAccount({
                                 index: account.index,
                                 blockchain
                             })

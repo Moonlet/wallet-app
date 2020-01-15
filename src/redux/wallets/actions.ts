@@ -24,7 +24,7 @@ import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
 import { REVIEW_TRANSACTION } from '../screens/send/actions';
-import { BottomSheetType } from '../app/state';
+import { BottomSheetType, ICurrentAccount } from '../app/state';
 import { REHYDRATE } from 'redux-persist';
 import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import BigNumber from 'bignumber.js';
@@ -41,6 +41,7 @@ export const TOGGLE_TOKEN_ACTIVE = 'TOGGLE_TOKEN_ACTIVE';
 export const UPDATE_TOKEN_ORDER = 'UPDATE_TOKEN_ORDER';
 export const REMOVE_TOKEN = 'REMOVE_TOKEN';
 export const ADD_TOKEN = 'ADD_TOKEN';
+export const WALLET_SELECT_ACCOUNT = 'WALLET_SELECT_ACCOUNT';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -48,6 +49,23 @@ export const addWallet = (walletData: IWalletState) => {
         type: WALLET_ADD,
         data: walletData
     };
+};
+
+export const switchSelectedAccount = (currentAccount: ICurrentAccount) => (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    const wallet = selectCurrentWallet(getState());
+    if (wallet === undefined) {
+        return;
+    }
+    dispatch({
+        type: WALLET_SELECT_ACCOUNT,
+        data: {
+            walletId: wallet.id,
+            currentAccount
+        }
+    });
 };
 
 export const updateReduxState = (state: IReduxState) => dispatch => {
@@ -97,6 +115,7 @@ export const createHWWallet = (
 
         dispatch(verifyAddressOnDevice(true));
         const accounts: IAccountState[] = await wallet.getAccounts(blockchain, 0);
+        accounts[0][0].selected = true;
         const walletData: IWalletState = {
             id: walletId,
             hwOptions: {
@@ -142,6 +161,8 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ZILLIQA, 0),
             wallet.getAccounts(Blockchain.ZILLIQA, 1)
         ]).then(async data => {
+            data[0][0].selected = true;
+            //    data[2][0].selected = true;
             const walletId = uuidv4();
             const accounts: IAccountState[] = data.reduce((out, acc) => out.concat(acc), []);
 

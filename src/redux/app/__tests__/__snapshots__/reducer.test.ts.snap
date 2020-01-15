@@ -13,10 +13,6 @@ Object {
     },
   },
   "bottomSheet": undefined,
-  "currentAccount": Object {
-    "blockchain": "ETHEREUM",
-    "index": 0,
-  },
   "currentWalletId": "",
   "devMode": true,
   "networks": Object {
@@ -29,6 +25,7 @@ Object {
       "testNet": 333,
     },
   },
+  "selectedBlockchain": "ETHEREUM",
   "testNet": true,
   "tosVersion": 0,
 }

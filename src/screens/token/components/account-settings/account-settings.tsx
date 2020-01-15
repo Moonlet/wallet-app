@@ -14,6 +14,7 @@ import { ICON_SIZE } from '../../../../styles/dimensions';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { WalletFactory } from '../../../../core/wallet/wallet-factory';
 import Modal from '../../../../library/modal/modal';
+import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -32,6 +33,7 @@ interface IState {
     title: string;
     key: string;
     showSecurityWarning: boolean;
+    isLoading: boolean;
 }
 
 export class AccountSettingsComponent extends React.Component<IProps & IExternalProps, IState> {
@@ -45,11 +47,13 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             showBackButton: false,
             title: translate('AccountSettings.manageAccount'),
             key: '',
-            showSecurityWarning: false
+            showSecurityWarning: false,
+            isLoading: false
         };
     }
 
     public revealPrivateKey = async () => {
+        this.setState({ isLoading: true });
         const password = await this.passwordModal.requestPassword();
 
         const hdWallet = await WalletFactory.get(this.props.wallet.id, this.props.wallet.type, {
@@ -66,9 +70,11 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             showBackButton: true,
             title: translate('AccountSettings.revealPrivate'),
             key: privateKey,
-            showSecurityWarning: true
+            showSecurityWarning: true,
+            isLoading: false
         });
     };
+
     public revealPublicKey = () => {
         this.setState({
             showKeyScreen: true,
@@ -78,6 +84,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             showSecurityWarning: false
         });
     };
+
     public viewOn = () => {
         const url = getBlockchain(this.props.account.blockchain).networks[0].explorer.getAccountUrl(
             this.props.account.address
@@ -118,16 +125,11 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                         }}
                                         style={styles.backButtonContainer}
                                     >
-                                        <View style={styles.backIconContainer}>
-                                            <Icon
-                                                name="arrow-left-1"
-                                                size={ICON_SIZE}
-                                                style={styles.icon}
-                                            />
-                                        </View>
-                                        <Text style={styles.backText}>
-                                            {translate('App.buttons.back')}
-                                        </Text>
+                                        <Icon
+                                            name="arrow-left-1"
+                                            size={ICON_SIZE}
+                                            style={styles.icon}
+                                        />
                                     </TouchableOpacity>
                                 )}
                             </View>
@@ -145,11 +147,15 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                             </View>
                         </View>
                         {this.state.showKeyScreen ? (
-                            <ViewKey
-                                key={this.state.key}
-                                value={this.state.key}
-                                showSecurityWarning={this.state.showSecurityWarning}
-                            />
+                            this.state.isLoading ? (
+                                <LoadingIndicator />
+                            ) : (
+                                <ViewKey
+                                    key={this.state.key}
+                                    value={this.state.key}
+                                    showSecurityWarning={this.state.showSecurityWarning}
+                                />
+                            )
                         ) : (
                             <View style={styles.contentContainer}>
                                 <TouchableOpacity

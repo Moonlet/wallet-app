@@ -9,7 +9,8 @@ import {
     APP_UPDATE_BLOCKCHAIN_ORDER,
     APP_OPEN_BOTTOM_SHEET,
     APP_CLOSE_BOTTOM_SHEET,
-    APP_SET_SELECTED_BLOCKCHAIN
+    APP_SET_SELECTED_BLOCKCHAIN,
+    APP_SET_EXTENSION_STATE_LOADED
 } from './actions';
 import { Blockchain } from '../../core/blockchain/types';
 
@@ -39,7 +40,8 @@ const intialState: IAppState = {
             active: true
         }
     },
-    bottomSheet: undefined
+    bottomSheet: undefined,
+    extensionStateLoaded: false
 };
 
 export default (state: IAppState = intialState, action: IAction): IAppState => {
@@ -97,6 +99,11 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
             return {
                 ...state,
                 bottomSheet: undefined
+            };
+        case APP_SET_EXTENSION_STATE_LOADED:
+            return {
+                ...state,
+                extensionStateLoaded: true
             };
         default:
             break;

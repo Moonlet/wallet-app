@@ -61,3 +61,5 @@ NativeModules.Aes = {
     encrypt: jest.fn(() => Promise.resolve('encrypted')),
     decrypt: jest.fn().mockReturnValue('data')
 };
+
+global.WebSocket = jest.fn(() => {});

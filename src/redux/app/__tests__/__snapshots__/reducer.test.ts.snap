@@ -15,6 +15,7 @@ Object {
   "bottomSheet": undefined,
   "currentWalletId": "",
   "devMode": true,
+  "extensionStateLoaded": false,
   "networks": Object {
     "ETHEREUM": Object {
       "mainNet": 1,

@@ -63,8 +63,15 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public async calculateFees(from: string, to: string) {
-        const results = await this.estimateFees(from, to);
+    public async calculateFees(
+        from: string,
+        to: string,
+        amount: BigNumber = new BigNumber(1),
+        contractAddress?: string
+    ) {
+        const results = contractAddress
+            ? await this.estimateFees(from, to, amount, contractAddress)
+            : await this.estimateFees(from, to);
 
         let presets: {
             cheap: BigNumber;
@@ -112,9 +119,31 @@ export class Client extends BlockchainGenericClient {
         };
     }
 
-    private async estimateFees(from: string, to: string): Promise<any> {
+    private async estimateFees(
+        from: string,
+        to: string,
+        amount?: BigNumber,
+        contractAddress?: string
+    ): Promise<any> {
+        let gasEstimatePromise;
+        if (contractAddress) {
+            gasEstimatePromise = this.rpc.call('eth_estimateGas', [
+                {
+                    from,
+                    to: contractAddress,
+                    data:
+                        '0x' +
+                        abi
+                            .simpleEncode('transfer(address,uint256)', to, amount.toString())
+                            .toString('hex')
+                }
+            ]);
+        } else {
+            gasEstimatePromise = this.rpc.call('eth_estimateGas', [{ from, to }]);
+        }
+
         return Promise.all([
-            this.rpc.call('eth_estimateGas', [{ from, to }]),
+            gasEstimatePromise,
             // TODO: extract url in a constant, also create a firebase function to be sure that this service is up
             fetch('https://ethgasstation.info/json/ethgasAPI.json')
         ]);

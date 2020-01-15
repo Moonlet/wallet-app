@@ -31,13 +31,15 @@ const convertAmount = (
     toToken: string,
     tokenDecimals: number
 ): BigNumber => {
-    if (value && exchangeRates[fromToken]) {
-        const blockchainInstance = getBlockchain(blockchain);
-        const amount = blockchainInstance.account.amountFromStd(value, tokenDecimals);
+    const blockchainInstance = getBlockchain(blockchain);
+    const amount = blockchainInstance.account.amountFromStd(value, tokenDecimals);
 
-        if (fromToken === toToken) {
-            return amount;
-        } else if (exchangeRates[fromToken][toToken]) {
+    if (fromToken === toToken) {
+        return amount;
+    }
+
+    if (value && exchangeRates[fromToken]) {
+        if (exchangeRates[fromToken][toToken]) {
             // direct conversion is possible
             return amount.multipliedBy(exchangeRates[fromToken][toToken]);
         } else {
@@ -58,6 +60,16 @@ const convertAmount = (
 
 export const AmountComponent = (props: IExternalProps & IReduxProps) => {
     const convertTo = props.convertTo || props.convert ? props.userCurrency : props.token;
+    const amount = convertAmount(
+        props.blockchain,
+        props.exchangeRates,
+        props.amount,
+        props.token,
+        convertTo,
+        props.tokenDecimals
+    );
+
+    // console.log('amount', amount);
 
     return (
         <Text
@@ -67,14 +79,7 @@ export const AmountComponent = (props: IExternalProps & IReduxProps) => {
                 maximumFractionDigits: props.uiDecimals || 4
             }}
         >
-            {convertAmount(
-                props.blockchain,
-                props.exchangeRates,
-                props.amount,
-                props.token,
-                convertTo,
-                props.tokenDecimals
-            )}
+            {amount}
         </Text>
     );
 };

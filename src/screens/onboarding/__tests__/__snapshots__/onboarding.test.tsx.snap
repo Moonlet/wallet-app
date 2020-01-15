@@ -30,7 +30,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       </withTheme(ButtonComponent)>
     </View>
     <View style={{...}}>
-      <withTheme(ButtonComponent) testID=\\"button-generate\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+      <withTheme(ButtonComponent) testID=\\"button-generate\\" style={{...}} primary={true} onPress={[Function: _callee]}>
         Generate wallet
       </withTheme(ButtonComponent)>
     </View>

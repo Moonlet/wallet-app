@@ -9,6 +9,7 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { TokenCard } from '../token-card/token-card';
 import { ITokenConfig } from '../../core/blockchain/types/token';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -36,7 +37,10 @@ export const CoinDashboardComponent = (props: IProps) => (
                 )}
         </View>
 
-        <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>
+        <ScrollView
+            contentContainerStyle={{ flexGrow: 1, paddingBottom: BASE_DIMENSION * 8 }}
+            showsVerticalScrollIndicator={false}
+        >
             {props.account?.tokens &&
                 Object.values(props.account.tokens).map(
                     (token: ITokenConfig, index: number) =>

@@ -366,6 +366,7 @@ export class SendScreenComponent extends React.Component<
                             getBlockchain(this.props.account.blockchain).config.coin
                         ]
                     }
+                    sendingToken={this.props.token}
                     account={this.props.account}
                     toAddress={this.state.toAddress}
                     onFeesChanged={this.onFeesChanged}

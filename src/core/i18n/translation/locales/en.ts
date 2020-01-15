@@ -129,6 +129,7 @@ export const translation: ITranslations = {
             pinSubtitleUnlock: 'Your PIN is required\nto unlock Moonlet',
             invalidPassword: 'Invalid Password',
             genericError: 'Operation could not be completed',
+            pinSubtitleUnlockWallet: 'Your PIN is required\nto unlock Moonlet wallet',
             subtitleMnemonic: 'Your PIN is required to view mnemonic',
             subtitleDeleteWallet: 'Your PIN is required to delete wallet',
             dontMatch: "PIN code doesn't match",

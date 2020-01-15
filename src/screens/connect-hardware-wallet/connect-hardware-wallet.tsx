@@ -331,7 +331,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                 )}
                 <PasswordModal
                     shouldCreatePassword={true}
-                    subtitle={translate('Password.subtitleMnemonic')}
+                    subtitle={translate('Password.pinSubtitleUnlockWallet')}
                     obRef={ref => (this.passwordModal = ref)}
                 />
             </View>

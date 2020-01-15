@@ -25,7 +25,7 @@ import stylesProvider from './styles';
 import { deleteWallet, updateWalletName } from '../../redux/wallets/actions';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { ListCard } from '../../components/list-card/list-card';
-import { AlertModal } from '../../components/alert-modal/alert-modal';
+import { Dialog } from '../../components/dialog/dialog';
 
 export interface IReduxProps {
     wallets: {
@@ -76,7 +76,6 @@ export class WalletsScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public passwordModal = null;
-    public alertModal: any = null;
 
     public walletSwipeableRef: ReadonlyArray<string> = new Array();
     public currentlyOpenSwipeable: string = null;
@@ -149,57 +148,37 @@ export class WalletsScreenComponent extends React.Component<
         );
     }
 
-    public onPressDelete(wallet: IWalletState) {
-        // show a confirm dialog
-
-        // this.alertModal
-        //     .showConfirm(translate('Wallets.deleteWallet'), translate('Wallets.confirmDelete'))
-        //     .then((res: boolean) => {
-        //         if (res) {
-        //             this.closeCurrentOpenedSwipable();
-        //             this.onDeleteConfirmed(wallet);
-        //         }
-        //     });
-
-        /// OR ///
-
-        this.alertModal.showAlert(
+    public async onPressDelete(wallet: IWalletState) {
+        const res: boolean = await Dialog.confirm(
             translate('Wallets.deleteWallet'),
-            translate('Wallets.confirmDelete'),
-            { text: translate('App.labels.cancel') },
-            {
-                text: translate('App.labels.delete'),
-                onPress: () => {
-                    this.closeCurrentOpenedSwipable();
-                    this.onDeleteConfirmed(wallet);
-                }
-            }
+            translate('Wallets.confirmDelete')
         );
+
+        if (res) {
+            this.closeCurrentOpenedSwipable();
+            this.onDeleteConfirmed(wallet);
+        }
     }
 
     public onDeleteConfirmed(wallet: IWalletState) {
-        this.passwordModal.requestPassword().then(() => {
-            this.props.deleteWallet(wallet.id);
-        });
+        this.passwordModal.requestPassword().then(() => this.props.deleteWallet(wallet.id));
     }
 
     public onPressUnveil(wallet: any) {
         this.props.navigation.navigate('ViewWalletMnemonic', { wallet });
     }
 
-    public onPressEdit(wallet: any) {
-        this.alertModal
-            .showPrompt(
-                translate('Wallets.editTitle'),
-                translate('Wallets.editDescription'),
-                translate('App.labels.cancel'),
-                translate('App.labels.save')
-            )
-            .then(inputValue => {
-                if (inputValue !== '') {
-                    this.props.updateWalletName(wallet.id, inputValue);
-                }
-            });
+    public async onPressEdit(wallet: any) {
+        const inputValue: string = await Dialog.prompt(
+            translate('Wallets.editTitle'),
+            translate('Wallets.editDescription'),
+            translate('App.labels.cancel'),
+            translate('App.labels.save')
+        );
+
+        if (inputValue !== '') {
+            this.props.updateWalletName(wallet.id, inputValue);
+        }
     }
 
     public onSelectWallet(walletId: string) {
@@ -211,12 +190,7 @@ export class WalletsScreenComponent extends React.Component<
         const styles = this.props.styles;
         return (
             <View style={styles.leftActionsContainer}>
-                <TouchableOpacity
-                    style={styles.action}
-                    onPress={() => {
-                        this.onPressDelete(wallet);
-                    }}
-                >
+                <TouchableOpacity style={styles.action} onPress={() => this.onPressDelete(wallet)}>
                     <Icon name="bin" size={32} style={styles.iconActionNegative} />
                     <Text style={styles.textActionNegative}>
                         {translate('Wallets.deleteWallet')}
@@ -358,8 +332,6 @@ export class WalletsScreenComponent extends React.Component<
                     subtitle={translate('Password.subtitleDeleteWallet')}
                     obRef={ref => (this.passwordModal = ref)}
                 />
-
-                <AlertModal obRef={ref => (this.alertModal = ref)} />
             </View>
         );
     }

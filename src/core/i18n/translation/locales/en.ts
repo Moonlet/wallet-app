@@ -71,6 +71,7 @@ export const translation: ITranslations = {
                 to: 'To',
                 tools: 'Tools',
                 transactions: 'Transactions',
+                typeHere: 'Type here',
                 understand: 'I understand',
                 wallets: 'Wallets',
                 watch: 'Watch mode'

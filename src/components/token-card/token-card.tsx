@@ -42,7 +42,7 @@ export const TokenCardComponent = (props: IProps) => {
                             ? Platform.OS === 'web'
                                 ? props.tokenLogo
                                 : props.token.logo
-                            : { uri: props.tokenLogo }
+                            : { uri: props.token.logo }
                     }
                 />
             </View>

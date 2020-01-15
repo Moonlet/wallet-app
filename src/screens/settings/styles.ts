@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 
@@ -8,7 +8,8 @@ export default (theme: ITheme) =>
             flex: 1,
             padding: BASE_DIMENSION * 2,
             flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            height: Platform.OS === 'web' ? 'calc(100vh - 122px)' : 'auto'
         },
         rowContainer: {
             flexDirection: 'row',

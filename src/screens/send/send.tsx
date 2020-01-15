@@ -20,7 +20,7 @@ import { AccountAddress } from '../../components/account-address/account-address
 import { AccountList } from './components/account-list/account-list';
 import { AddressBook } from './components/address-book/address-book';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
-import { getAccounts, getAccount } from '../../redux/wallets/selectors';
+import { getAccounts, getAccount, getCurrentAccount } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
@@ -57,7 +57,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
         accounts: getAccounts(state, ownProps.blockchain),
         contacts: getContacts(state),
         currentWalletId: state.app.currentWalletId,
-        currentAccount: state.app.currentAccount
+        currentAccount: getCurrentAccount(state)
     };
 };
 

@@ -11,7 +11,7 @@ import { IAccountState, IWalletState, TokenType } from '../../redux/wallets/stat
 import { addToken } from '../../redux/wallets/actions';
 import { connect } from 'react-redux';
 import { IReduxState } from '../../redux/state';
-import { selectCurrentAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
+import { getCurrentAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
 import { Icon } from '../../components/icon';
 import { formatAddress } from '../../core/utils/format-address';
 import { ICON_SIZE } from '../../styles/dimensions';
@@ -38,7 +38,7 @@ interface IState {
 }
 
 const mapStateToProps = (state: IReduxState) => {
-    const currentAccount = selectCurrentAccount(state);
+    const currentAccount = getCurrentAccount(state);
 
     return {
         currentAccount,

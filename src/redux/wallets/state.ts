@@ -32,6 +32,7 @@ export enum TokenType {
 
 export interface IAccountState {
     index: number;
+    selected: boolean;
     name?: string;
     blockchain: Blockchain;
     address: string;

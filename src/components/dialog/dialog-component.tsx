@@ -194,6 +194,7 @@ export class DialogComponent extends React.Component<
                 this.dialogDeferred && this.dialogDeferred.resolve('');
                 break;
             default:
+                this.closeDialog();
                 break;
         }
     };
@@ -213,6 +214,7 @@ export class DialogComponent extends React.Component<
                 this.dialogDeferred && this.dialogDeferred.resolve(this.state.inputValue);
                 break;
             default:
+                this.closeDialog();
                 break;
         }
     };

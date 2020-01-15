@@ -123,16 +123,8 @@ export class DashboardScreenComponent extends React.Component<
     ) {
         super(props);
 
-        const coins = [];
-        Object.keys(this.props.blockchains).map(key => {
-            const value = this.props.blockchains[key];
-            coins.push({
-                blockchain: key,
-                order: value.order
-            });
-        });
         this.state = {
-            coins,
+            coins: this.buildCoins(),
             balance: new BigNumber(0)
         };
 
@@ -150,6 +142,44 @@ export class DashboardScreenComponent extends React.Component<
                 // maybe check this in another screen?
                 props.navigation.navigate('OnboardingScreen');
             }
+        }
+    }
+
+    public buildCoins() {
+        const coins = [];
+        Object.keys(this.props.blockchains).map(key => {
+            const value = this.props.blockchains[key];
+            let blockchainHasAccounts = false;
+            if (this.props.wallet) {
+                if (this.props.wallet.accounts.find(acc => acc.blockchain === key)) {
+                    blockchainHasAccounts = true;
+                }
+            } else {
+                blockchainHasAccounts = true;
+            }
+
+            if (blockchainHasAccounts) {
+                coins.push({
+                    blockchain: key,
+                    order: value.order
+                });
+            }
+        });
+
+        return coins;
+    }
+
+    public componentDidUpdate(prevProps: IReduxProps) {
+        if (this.props.currentAccount !== prevProps.currentAccount) {
+            this.props.setSelectedBlockchain(this.props.currentAccount.blockchain);
+            this.props.getBalance(
+                this.props.currentAccount.blockchain,
+                this.props.currentAccount.address,
+                undefined,
+                true
+            );
+            this.setState({ coins: this.buildCoins() });
+            this.calculateBalance();
         }
     }
 
@@ -234,6 +264,7 @@ export class DashboardScreenComponent extends React.Component<
                                         index: 0, // TODO - in the case we are not using the index 0 account this might not work
                                         blockchain: coin.blockchain
                                     });
+                                    this.setState({ coins: this.buildCoins() });
                                     this.calculateBalance();
                                 }}
                             >
@@ -261,7 +292,6 @@ export class DashboardScreenComponent extends React.Component<
             default: undefined,
             web: { minHeight: ph(100) }
         });
-
         return (
             <View style={[styles.container, containerExtraStyle]}>
                 {coins.length !== 0 && (
@@ -269,6 +299,7 @@ export class DashboardScreenComponent extends React.Component<
                         <View style={styles.coinBalanceCard}>
                             {this.props.currentAccount && (
                                 <CoinBalanceCard
+                                    key={this.props.currentAccount.address}
                                     onPress={() =>
                                         this.props.openBottomSheet(BottomSheetType.ACCOUNTS, {
                                             blockchain

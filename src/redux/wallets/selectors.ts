@@ -17,10 +17,12 @@ export const getCurrentAccount = createSelector(
         (state: IReduxState): IWalletsState => state.wallets,
         (state: IReduxState): string => state.app.currentWalletId
     ],
-    (wallets, currentWalletId) =>
-        wallets[currentWalletId]?.accounts.find(
+    (wallets, currentWalletId) => {
+        const acc = wallets[currentWalletId]?.accounts.find(
             (account: IAccountState) => account.selected === true
-        )
+        );
+        return acc || wallets[currentWalletId]?.accounts[0];
+    }
 );
 
 export const getAccountTransactions = (

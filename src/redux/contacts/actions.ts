@@ -1,9 +1,9 @@
 import { IContactState } from './state';
 import { Dispatch } from 'redux';
-import { confirm } from '../../core/utils/dialog';
 import { translate } from '../../core/i18n';
 import { IAction } from '../types';
 import { Blockchain } from '../../core/blockchain/types';
+import { Dialog } from '../../components/dialog/dialog';
 
 // actions consts
 export const CONTACT_ADD = 'CONTACT_ADD';
@@ -20,7 +20,7 @@ export const addContact = (contactData: IContactState) => {
 export const deleteContact = (blockchain: Blockchain, address: string) => async (
     dispatch: Dispatch<IAction<any>>
 ) => {
-    if (await confirm(translate('Send.deleteContact'), '')) {
+    if (await Dialog.confirm(translate('Send.deleteContact'), '')) {
         dispatch({
             type: CONTACT_DELETE,
             data: { blockchain, address }

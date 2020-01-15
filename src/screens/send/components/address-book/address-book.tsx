@@ -5,8 +5,7 @@ import {
     TouchableOpacity,
     SafeAreaView,
     SectionList,
-    SectionListData,
-    Alert
+    SectionListData
 } from 'react-native';
 import stylesProvider from './styles';
 import { IReduxState } from '../../../../redux/state';
@@ -23,6 +22,7 @@ import { Blockchain } from '../../../../core/blockchain/types';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteContact, updateContactName } from '../../../../redux/contacts/actions';
 import { ICON_SIZE } from '../../../../styles/dimensions';
+import { Dialog } from '../../../../components/dialog/dialog';
 
 export interface IReduxProps {
     contacts: ReadonlyArray<SectionListData<IContactsState>>;
@@ -52,35 +52,19 @@ export class AddressBookComponent extends React.Component<
     public contactsSwipeableRef: ReadonlyArray<string> = new Array();
     public currentlyOpenSwipeable: string = null;
 
-    public onPressUpdate(contact: IContactState) {
-        const title = translate('Send.alertEditTitle');
-        const message = translate('Send.alertEditDescription');
-        const buttons = [
-            {
-                text: translate('App.labels.cancel'),
-                onPress: () => {
-                    /* console.log('Cancel Pressed')*/
-                },
-                type: 'cancel'
-            },
-            {
-                text: translate('App.labels.save'),
-                onPress: (inputValue: string) => {
-                    if (inputValue !== '') {
-                        const data: IContactState = {
-                            address: contact.address,
-                            blockchain: contact.blockchain,
-                            name: inputValue
-                        };
-                        this.props.updateContactName(data);
-                    }
-                },
-                type: 'default'
-            }
-        ];
-        const type = 'plain-text';
+    public async onPressUpdate(contact: IContactState) {
+        const inputValue: string = await Dialog.prompt(
+            translate('Send.alertEditTitle'),
+            translate('Send.alertEditDescription')
+        );
 
-        Alert.prompt(title, message, buttons, type);
+        if (inputValue !== '') {
+            this.props.updateContactName({
+                address: contact.address,
+                blockchain: contact.blockchain,
+                name: inputValue
+            });
+        }
     }
 
     public closeCurrentOpenedSwipable() {

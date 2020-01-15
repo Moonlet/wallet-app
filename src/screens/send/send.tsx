@@ -278,9 +278,7 @@ export class SendScreenComponent extends React.Component<
     public async alertModalAddAddress() {
         const inputValue: string = await Dialog.prompt(
             translate('Send.alertTitle'),
-            translate('Send.alertDescription'),
-            translate('App.labels.cancel'),
-            translate('App.labels.save')
+            translate('Send.alertDescription')
         );
 
         if (inputValue !== '') {

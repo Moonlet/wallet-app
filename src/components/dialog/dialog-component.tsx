@@ -1,5 +1,5 @@
 import React from 'react';
-import { KeyboardTypeOptions } from 'react-native';
+import { KeyboardTypeOptions, Platform } from 'react-native';
 import { IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { Deferred } from '../../core/utils/deferred';
@@ -59,8 +59,8 @@ export class DialogComponent extends React.Component<
     public static async prompt(
         title: string,
         message: string,
-        cancelButtonText: string,
-        confirmButtonText: string,
+        cancelButtonText?: string,
+        confirmButtonText?: string,
         defaultInputValue?: string,
         keyboardType?: KeyboardTypeOptions
     ): Promise<string> {
@@ -69,8 +69,8 @@ export class DialogComponent extends React.Component<
         const res = await ref.showPrompt(
             title,
             message,
-            cancelButtonText,
-            confirmButtonText,
+            cancelButtonText || translate('App.labels.cancel'),
+            confirmButtonText || translate('App.labels.save'),
             defaultInputValue,
             keyboardType
         );
@@ -234,6 +234,7 @@ export class DialogComponent extends React.Component<
                 </RNDialog.Description>
                 {this.state.dialogType === DialogType.PROMPT && (
                     <RNDialog.Input
+                        style={Platform.OS === 'android' && styles.textInput}
                         onChangeText={inputValue => this.setState({ inputValue })}
                         label={this.state.defaultInputValue}
                     />

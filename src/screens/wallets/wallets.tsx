@@ -171,9 +171,7 @@ export class WalletsScreenComponent extends React.Component<
     public async onPressEdit(wallet: any) {
         const inputValue: string = await Dialog.prompt(
             translate('Wallets.editTitle'),
-            translate('Wallets.editDescription'),
-            translate('App.labels.cancel'),
-            translate('App.labels.save')
+            translate('Wallets.editDescription')
         );
 
         if (inputValue !== '') {

@@ -45,5 +45,13 @@ export default (theme: ITheme) =>
             lineHeight: 22,
             fontWeight: '600',
             color: theme.colors.accent
+        },
+        textInput: {
+            paddingHorizontal: BASE_DIMENSION,
+            backgroundColor: theme.colors.inputBackground,
+            borderRadius: BORDER_RADIUS / 2,
+            fontSize: 11,
+            lineHeight: 13,
+            color: theme.colors.text
         }
     });

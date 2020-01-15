@@ -38,7 +38,8 @@ const initialState = {
         ZRX: { ETH: 0.001475 },
         CENNZ: { ETH: 0.0005804 },
         SXP: { ETH: 0.009383 },
-        KCS: { ETH: 0.00701 }
+        KCS: { ETH: 0.00701 },
+        FAU: { ETH: 0.007 }
     },
     change: {
         daily: {
@@ -79,5 +80,5 @@ const initialState = {
 const intialState: any = initialState;
 
 export default (state: any = intialState, action: IAction): any => {
-    return state;
+    return intialState;
 };

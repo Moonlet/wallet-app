@@ -203,11 +203,11 @@ export class SendScreenComponent extends React.Component<
     };
 
     public onFeesChanged = (feeOptions: any) => {
-        this.setState({ feeOptions }, () => this.availableFunds());
+        this.setState({ feeOptions }); // , () => this.availableFunds());
     };
 
     public addAmount = (value: string) => {
-        this.setState({ amount: value }, () => this.availableFunds());
+        this.setState({ amount: value }); // , () => this.availableFunds());
     };
 
     public onAddAllBalance = () => {
@@ -361,7 +361,12 @@ export class SendScreenComponent extends React.Component<
                 </TouchableOpacity>
 
                 <FeeOptions
-                    token={this.props.navigation.state.params.token}
+                    token={
+                        this.props.account.tokens[
+                            getBlockchain(this.props.account.blockchain).config.coin
+                        ]
+                    }
+                    sendingToken={this.props.token}
                     account={this.props.account}
                     toAddress={this.state.toAddress}
                     onFeesChanged={this.onFeesChanged}

@@ -20,6 +20,7 @@ import { ITokenConfig } from '../../../../core/blockchain/types/token';
 
 export interface IExternalProps {
     token: ITokenConfig;
+    sendingToken: ITokenConfig;
     account: IAccountState;
     toAddress: string;
     onFeesChanged: (feeOptions: any) => any;
@@ -61,7 +62,12 @@ export class FeeOptionsComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
         const fees = await blockchainInstance
             .getClient(this.props.chainId)
-            .calculateFees(this.props.account.address, this.props.toAddress);
+            .calculateFees(
+                this.props.account.address,
+                this.props.toAddress,
+                1,
+                this.props.sendingToken.contractAddress
+            );
 
         this.setState({
             feeOptions: fees
@@ -137,7 +143,9 @@ export class FeeOptionsComponent extends React.Component<
                                     <FeePreset
                                         key={item}
                                         token={this.props.token}
-                                        amount={this.state.feeOptions.presets[item]}
+                                        amount={this.state.feeOptions.presets[item].multipliedBy(
+                                            this.state.feeOptions.gasLimit
+                                        )}
                                         blockchain={this.props.account.blockchain}
                                         title={translate('App.labels.' + item)}
                                         presetKey={item}

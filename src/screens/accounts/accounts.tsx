@@ -5,7 +5,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
-import { switchSelectedAccount } from '../../redux/wallets/actions';
+import { switchSelectedAccount, getBalance } from '../../redux/wallets/actions';
 import stylesProvider from './styles';
 import { Blockchain } from '../../core/blockchain/types';
 import { selectCurrentWallet, getCurrentAccount } from '../../redux/wallets/selectors';
@@ -19,6 +19,7 @@ export interface IReduxProps {
     wallet: IWalletState;
     switchSelectedAccount: typeof switchSelectedAccount;
     selectedAccount: IAccountState;
+    getBalance: typeof getBalance;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -29,7 +30,8 @@ const mapStateToProps = (state: IReduxState) => {
 };
 
 const mapDispatchToProps = {
-    switchSelectedAccount
+    switchSelectedAccount,
+    getBalance
 };
 
 // TODO: this is a component, not a screen any more => move this
@@ -48,25 +50,9 @@ export const AccountsScreenComponent = (
                 );
                 setAccounts(hdAccounts);
 
-                const client = getBlockchain(props.selectedAccount.blockchain).getClient(4);
-
-                const balanceCalls = [];
-                hdAccounts.map(account => balanceCalls.push(client.getBalance(account.address)));
-
-                // cache this somehow?
-                Promise.all(balanceCalls).then(data => {
-                    setAccounts(
-                        hdAccounts.map((account, i) => {
-                            account.balance = {
-                                value: data[i],
-                                inProgress: false,
-                                timestamp: Date.now(),
-                                error: undefined
-                            };
-                            return account;
-                        })
-                    );
-                });
+                hdAccounts.map(account =>
+                    this.props.getBalance(account.blockchain, account.address, undefined, true)
+                );
             } catch (e) {
                 // console.log(e);
             }
@@ -78,6 +64,7 @@ export const AccountsScreenComponent = (
             {accounts.map((account: IAccountState, index: number) => {
                 const selected = props.selectedAccount.address === account.address;
                 const blockchain = account.blockchain;
+                const token = account.tokens[getBlockchain(account.blockchain).config.coin];
 
                 const label = (
                     <View>
@@ -92,7 +79,7 @@ export const AccountsScreenComponent = (
                         <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
                             <Amount
                                 style={props.styles.fistAmountText}
-                                amount={account.balance?.value}
+                                amount={token.balance?.value}
                                 blockchain={blockchain}
                                 token={getBlockchain(blockchain).config.coin}
                                 tokenDecimals={
@@ -103,7 +90,7 @@ export const AccountsScreenComponent = (
                             />
                             <Amount
                                 style={props.styles.secondAmountText}
-                                amount={account.balance?.value}
+                                amount={token.balance?.value}
                                 blockchain={blockchain}
                                 token={getBlockchain(blockchain).config.coin}
                                 tokenDecimals={

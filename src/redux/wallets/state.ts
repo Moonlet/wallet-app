@@ -41,7 +41,6 @@ export interface IAccountState {
     tokens: {
         [symbol: string]: ITokenConfig;
     };
-    balance?: any; // TODO: remove this, deprecated...
 }
 
 export interface ITransactionState {

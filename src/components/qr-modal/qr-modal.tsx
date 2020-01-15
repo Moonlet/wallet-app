@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, Modal, Alert, Platform, Linking } from 'react-native';
+import { View, Modal, Platform, Linking } from 'react-native';
 import { CameraKitCameraScreen, CameraKitCamera } from 'react-native-camera-kit';
 import { translate } from '../../core/i18n';
 import AndroidOpenSettings from 'react-native-android-open-settings';
+import { Dialog } from '../dialog/dialog';
 
 export interface IProps {
     onQrCodeScanned: (qrCode: string) => any;
@@ -44,24 +45,21 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
         if (success) {
             this.setState({ isVisible: true });
         } else {
-            Alert.alert(
+            Dialog.alert(
                 translate('Send.cameraDisabledTitle'),
                 translate('Send.cameraDisabledText'),
-                [
-                    {
-                        text: translate('App.labels.cancel'),
-                        onPress: () => {
-                            this.setState({ isVisible: false });
-                        },
-                        style: 'cancel'
-                    },
-                    {
-                        text: translate('App.labels.settings'),
-                        onPress: () => {
-                            this.openPhoneSettings();
-                        }
+                {
+                    text: translate('App.labels.cancel'),
+                    onPress: () => {
+                        this.setState({ isVisible: false });
                     }
-                ]
+                },
+                {
+                    text: translate('App.labels.settings'),
+                    onPress: () => {
+                        this.openPhoneSettings();
+                    }
+                }
             );
         }
     };

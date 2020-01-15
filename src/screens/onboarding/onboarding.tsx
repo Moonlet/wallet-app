@@ -16,6 +16,7 @@ import { IReduxState } from '../../redux/state';
 import { hash } from '../../core/secure/encrypt';
 import { setPassword } from '../../core/secure/keychain';
 import { translate } from '../../core/i18n';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -26,7 +27,11 @@ export interface IReduxProps {
     createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
 }
 
-export class OnboardingScreenComponent extends React.Component<IProps & IReduxProps> {
+interface IState {
+    isLoading: boolean;
+}
+
+export class OnboardingScreenComponent extends React.Component<IProps & IReduxProps, IState> {
     public mnemonic = [
         'pigeon',
         'road',
@@ -53,6 +58,13 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
         'order',
         'icon'
     ];
+    constructor(props: IProps & IReduxProps) {
+        super(props);
+
+        this.state = {
+            isLoading: false
+        };
+    }
 
     public onPressRecover() {
         this.props.navigation.navigate(
@@ -102,82 +114,94 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
             })
         );
     }
-    public async onPressGenerateWallet() {
+    public onPressGenerateWallet = async () => {
+        this.setState({ isLoading: true });
+
         const password = await hash('000000');
         setPassword(password, false);
-        this.props.createHDWallet(this.mnemonic.join(' '), password, () =>
+
+        this.props.createHDWallet(this.mnemonic.join(' '), password, () => {
             this.props.navigation.navigate(
                 'MainNavigation',
                 {},
                 NavigationActions.navigate({ routeName: 'Dashboard' })
-            )
-        );
-    }
+            );
+            this.setState({ isLoading: false });
+        });
+    };
 
     public render() {
         const styles = this.props.styles;
 
-        return (
-            <View style={styles.container}>
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <View
-                        style={{
-                            alignItems: 'center',
-                            alignSelf: 'stretch'
-                        }}
-                    >
-                        <Image
-                            style={styles.logoImage}
-                            source={require('../../assets/images/png/moonlet_space.png')}
-                        />
-                    </View>
-                    <View style={styles.textContainer}>
-                        <Text large style={{ fontWeight: 'bold' }}>
-                            {translate('Onboarding.welcomeTitle')}
-                        </Text>
-                        <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
-                            {translate('Onboarding.welcomeText')}
-                        </Text>
-                    </View>
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.container}>
+                    <LoadingIndicator />
                 </View>
-
-                <View style={styles.buttonsContainer}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                        <Button
-                            style={styles.button}
-                            onPress={() => this.onPressRecover()}
-                            testID="button-recover"
+            );
+        } else {
+            return (
+                <View style={styles.container}>
+                    <View style={{ flex: 1, justifyContent: 'center' }}>
+                        <View
+                            style={{
+                                alignItems: 'center',
+                                alignSelf: 'stretch'
+                            }}
                         >
-                            {translate('App.labels.recover')}
-                        </Button>
-                        <Button style={styles.button} onPress={() => this.onPressConnect()}>
-                            {translate('App.labels.connect')}
-                        </Button>
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Button
-                            testID="button-create"
-                            style={styles.bottomButton}
-                            primary
-                            onPress={() => this.onPressCreate()}
-                        >
-                            {translate('App.labels.create')}
-                        </Button>
+                            <Image
+                                style={styles.logoImage}
+                                source={require('../../assets/images/png/moonlet_space.png')}
+                            />
+                        </View>
+                        <View style={styles.textContainer}>
+                            <Text large style={{ fontWeight: 'bold' }}>
+                                {translate('Onboarding.welcomeTitle')}
+                            </Text>
+                            <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
+                                {translate('Onboarding.welcomeText')}
+                            </Text>
+                        </View>
                     </View>
 
-                    <View style={{ flexDirection: 'row' }}>
-                        <Button
-                            testID="button-generate"
-                            style={styles.bottomButton}
-                            primary
-                            onPress={() => this.onPressGenerateWallet()}
-                        >
-                            Generate wallet
-                        </Button>
+                    <View style={styles.buttonsContainer}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Button
+                                style={styles.button}
+                                onPress={() => this.onPressRecover()}
+                                testID="button-recover"
+                            >
+                                {translate('App.labels.recover')}
+                            </Button>
+                            <Button style={styles.button} onPress={() => this.onPressConnect()}>
+                                {translate('App.labels.connect')}
+                            </Button>
+                        </View>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Button
+                                testID="button-create"
+                                style={styles.bottomButton}
+                                primary
+                                onPress={() => this.onPressCreate()}
+                            >
+                                {translate('App.labels.create')}
+                            </Button>
+                        </View>
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <Button
+                                testID="button-generate"
+                                style={styles.bottomButton}
+                                primary
+                                onPress={this.onPressGenerateWallet}
+                            >
+                                Generate wallet
+                            </Button>
+                        </View>
                     </View>
                 </View>
-            </View>
-        );
+            );
+        }
     }
 }
 

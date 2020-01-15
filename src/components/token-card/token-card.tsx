@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Image, Platform } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import { IAccountState } from '../../redux/wallets/state';
 import { Icon } from '../icon';
 import stylesProvider from './styles';
@@ -15,7 +15,7 @@ export interface IProps {
     account: IAccountState;
     styles: ReturnType<typeof stylesProvider>;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    tokenLogo: any;
+    nativeTokenLogo: any;
 }
 
 export const TokenCardComponent = (props: IProps) => {
@@ -29,7 +29,7 @@ export const TokenCardComponent = (props: IProps) => {
                     accountIndex: props.account.index,
                     blockchain: props.account.blockchain,
                     token: props.token,
-                    tokenLogo: props.tokenLogo
+                    tokenLogo: props.nativeTokenLogo
                 })
             }
         >
@@ -39,10 +39,10 @@ export const TokenCardComponent = (props: IProps) => {
                     resizeMode="contain"
                     source={
                         props.token.type === TokenType.NATIVE
-                            ? Platform.OS === 'web'
-                                ? props.tokenLogo
-                                : props.token.logo
-                            : { uri: props.tokenLogo }
+                            ? props.nativeTokenLogo
+                            : props.token?.logo
+                            ? { uri: props.token.logo }
+                            : props.nativeTokenLogo
                     }
                 />
             </View>

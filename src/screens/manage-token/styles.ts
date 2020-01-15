@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 
@@ -22,7 +22,7 @@ export default (theme: ITheme) =>
             borderRadius: 10,
             backgroundColor: theme.colors.cardBackground,
             paddingHorizontal: BASE_DIMENSION,
-            paddingVertical: BASE_DIMENSION
+            paddingVertical: Platform.OS === 'ios' ? BASE_DIMENSION : 0
         },
         input: {
             flex: 1,

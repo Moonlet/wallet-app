@@ -17,6 +17,7 @@ import { BottomSheet } from './components/bottom-sheet/bottom-sheet';
 import { WalletConnectClient } from './core/wallet-connect/wallet-connect-client';
 import { WalletConnectWeb } from './core/wallet-connect/wallet-connect-web';
 import { NavigationService } from './navigation/navigation-service';
+import { Dialog } from './components/dialog/dialog';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -152,6 +153,7 @@ export default class App extends React.Component<{}, IState> {
                                 onPassword={() => this.setState({ showPasswordModal: false })}
                             />
                             <BottomSheet navigation={this.navigator?._navigation} />
+                            <Dialog.Component />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

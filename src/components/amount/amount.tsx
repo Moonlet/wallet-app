@@ -69,8 +69,6 @@ export const AmountComponent = (props: IExternalProps & IReduxProps) => {
         props.tokenDecimals
     );
 
-    // console.log('amount', amount);
-
     return (
         <Text
             style={props.style}

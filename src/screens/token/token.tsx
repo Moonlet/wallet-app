@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Alert, Image } from 'react-native';
+import { View, ScrollView, Image } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, ITransactionState, IWalletState } from '../../redux/wallets/state';
@@ -29,6 +29,7 @@ import { formatAddress } from '../../core/utils/format-address';
 import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
+import { Dialog } from '../../components/dialog/dialog';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -123,54 +124,52 @@ export class TokenScreenComponent extends React.Component<
                 currency: BLOCKCHAIN_INFO[account.blockchain].coin
             });
 
-            Alert.alert(
+            Dialog.alert(
                 'Transaction.signTransaction',
                 translate('Transaction.signExtensionTransaction', {
                     amount: formattedAmount,
                     fromAccount: formatAddress(account.address),
                     toAccount: formatAddress(toAddress)
                 }),
-                [
-                    {
-                        text: translate('App.labels.cancel'),
-                        onPress: () => {
-                            WalletConnectClient.getConnector().rejectRequest({
-                                id: this.props.extensionTransactionPayload.id,
-                                error: { message: 'Transaction refused' }
-                            });
-                        },
-                        style: 'cancel'
-                    },
-                    {
-                        text: translate('App.labels.sign'),
-                        onPress: () => {
-                            this.passwordModal
-                                .requestPassword()
-                                .then(password => {
-                                    WalletConnectClient.getConnector().approveRequest({
-                                        id: this.props.extensionTransactionPayload.id,
-                                        result: {}
-                                    });
-                                    this.props.sendTransferTransaction(
-                                        account,
-                                        toAddress,
-                                        amount,
-                                        token,
-                                        feeOptions,
-                                        password,
-                                        this.props.navigation
-                                    );
-                                })
-                                .catch(() => {
-                                    // maybe retry here
-                                    WalletConnectClient.getConnector().rejectRequest({
-                                        id: this.props.extensionTransactionPayload.id,
-                                        error: { message: 'Wrong password' }
-                                    });
-                                });
-                        }
+
+                {
+                    text: translate('App.labels.cancel'),
+                    onPress: () => {
+                        WalletConnectClient.getConnector().rejectRequest({
+                            id: this.props.extensionTransactionPayload.id,
+                            error: { message: 'Transaction refused' }
+                        });
                     }
-                ]
+                },
+                {
+                    text: translate('App.labels.sign'),
+                    onPress: () => {
+                        this.passwordModal
+                            .requestPassword()
+                            .then(password => {
+                                WalletConnectClient.getConnector().approveRequest({
+                                    id: this.props.extensionTransactionPayload.id,
+                                    result: {}
+                                });
+                                this.props.sendTransferTransaction(
+                                    account,
+                                    toAddress,
+                                    amount,
+                                    token,
+                                    feeOptions,
+                                    password,
+                                    this.props.navigation
+                                );
+                            })
+                            .catch(() => {
+                                // maybe retry here
+                                WalletConnectClient.getConnector().rejectRequest({
+                                    id: this.props.extensionTransactionPayload.id,
+                                    error: { message: 'Wrong password' }
+                                });
+                            });
+                    }
+                }
             );
         }
     }

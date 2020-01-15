@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity, Platform, ScrollView, Alert } from 'react-native';
+import { View, TextInput, TouchableOpacity, Platform, ScrollView } from 'react-native';
 import { Icon } from '../../components/icon';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
@@ -39,6 +39,7 @@ import {
     ICurrentAccount
 } from '../../redux/app/state';
 import { formatNumber } from '../../core/utils/format-number';
+import { Dialog } from '../../components/dialog/dialog';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -274,38 +275,19 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    public alertModalAddAddress() {
-        const account = this.props.account;
+    public async alertModalAddAddress() {
+        const inputValue: string = await Dialog.prompt(
+            translate('Send.alertTitle'),
+            translate('Send.alertDescription')
+        );
 
-        const title = translate('Send.alertTitle');
-        const message = translate('Send.alertDescription');
-        const buttons = [
-            {
-                text: translate('App.labels.cancel'),
-                onPress: () => {
-                    /* console.log('Cancel Pressed')*/
-                },
-                type: 'cancel'
-            },
-            {
-                text: translate('App.labels.save'),
-                onPress: (inputValue: string) => {
-                    if (inputValue !== '') {
-                        const contactData: IContactState = {
-                            blockchain: account.blockchain,
-                            name: inputValue,
-                            address: this.state.toAddress
-                        };
-
-                        this.props.addContact(contactData);
-                    }
-                },
-                type: 'default'
-            }
-        ];
-        const type = 'plain-text';
-
-        Alert.prompt(title, message, buttons, type);
+        if (inputValue !== '') {
+            this.props.addContact({
+                blockchain: this.props.account.blockchain,
+                name: inputValue,
+                address: this.state.toAddress
+            });
+        }
     }
 
     public renderAddAddressToBook() {

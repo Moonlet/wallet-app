@@ -51,7 +51,7 @@ export const CoinDashboardComponent = (props: IProps) => (
                                 navigation={props.navigation}
                                 key={index}
                                 blockchain={props.blockchain}
-                                tokenLogo={
+                                nativeTokenLogo={
                                     getBlockchain(props.blockchain).config.tokens[
                                         getBlockchain(props.blockchain).config.coin
                                     ].logo

@@ -131,7 +131,6 @@ export class DashboardScreenComponent extends React.Component<
                 order: value.order
             });
         });
-
         this.state = {
             coins,
             balance: new BigNumber(0)
@@ -176,17 +175,19 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.props.getBalance(
-            this.props.currentAccount.blockchain,
-            this.props.currentAccount.address,
-            undefined,
-            true
-        );
+        if (this.props.currentAccount) {
+            this.props.getBalance(
+                this.props.currentAccount.blockchain,
+                this.props.currentAccount.address,
+                undefined,
+                true
+            );
+            this.calculateBalance();
+        }
 
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
-        this.calculateBalance();
     }
 
     public setDashboardMenuBottomSheet = () => {
@@ -268,7 +269,6 @@ export class DashboardScreenComponent extends React.Component<
                         <View style={styles.coinBalanceCard}>
                             {this.props.currentAccount && (
                                 <CoinBalanceCard
-                                    key={this.props.currentAccount.address}
                                     onPress={() =>
                                         this.props.openBottomSheet(BottomSheetType.ACCOUNTS, {
                                             blockchain
@@ -288,7 +288,6 @@ export class DashboardScreenComponent extends React.Component<
                             style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
                         >
                             <CoinDashboard
-                                key={this.props.currentAccount.address}
                                 account={this.props.currentAccount}
                                 blockchain={blockchain}
                                 navigation={this.props.navigation}

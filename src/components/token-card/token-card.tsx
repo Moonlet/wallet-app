@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity, Image, Platform } from 'react-native';
 import { IAccountState } from '../../redux/wallets/state';
 import { Icon } from '../icon';
 import stylesProvider from './styles';
@@ -39,8 +39,10 @@ export const TokenCardComponent = (props: IProps) => {
                     resizeMode="contain"
                     source={
                         props.token.type === TokenType.NATIVE
-                            ? props.token.logo
-                            : { uri: props.token.logo }
+                            ? Platform.OS === 'web'
+                                ? props.tokenLogo
+                                : props.token.logo
+                            : { uri: props.tokenLogo }
                     }
                 />
             </View>

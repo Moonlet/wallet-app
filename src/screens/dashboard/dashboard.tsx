@@ -174,11 +174,12 @@ export class DashboardScreenComponent extends React.Component<
         if (Platform.OS === 'web') {
             if (!WalletConnectWeb.isConnected()) {
                 props.navigation.navigate('OnboardingScreen');
-            } else {
-                WalletConnectWeb.getState().then(() => {
-                    this.getWalletBalances(this.props.wallet);
-                });
             }
+            // else {
+            //     WalletConnectWeb.getState().then(() => {
+            //         this.getWalletBalances(this.props.wallet);
+            //     });
+            // }
         } else {
             if (this.state.coins.length === 0 || props.walletsNr < 1) {
                 // maybe check this in another screen?

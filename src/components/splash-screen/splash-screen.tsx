@@ -1,15 +1,51 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import LottieView from 'lottie-react-native';
+import { Button, Text } from '../../library';
+import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web.web';
+
+interface IState {
+    showCancelButton: boolean;
+}
 
 export class SplashScreenComponent extends React.Component<
-    IThemeProps<ReturnType<typeof stylesProvider>>
+    IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
+
+        this.state = {
+            showCancelButton: false
+        };
+
+        Platform.OS === 'web' &&
+            setTimeout(() => {
+                this.setState({ showCancelButton: true });
+            }, 2800);
+    }
+
+    public resetSession() {
+        WalletConnectWeb.disconnect();
+        location.reload();
+    }
+
+    public renderCancelButton() {
+        return (
+            <View style={{ padding: 10, justifyContent: 'center', alignItems: 'center' }}>
+                <Text style={{ marginBottom: 15 }}>Connecting to phone...</Text>
+                <Button
+                    onPress={() => {
+                        this.resetSession();
+                    }}
+                >
+                    Cancel
+                </Button>
+            </View>
+        );
     }
 
     public render() {
@@ -24,6 +60,9 @@ export class SplashScreenComponent extends React.Component<
                         autoPlay
                         loop
                     />
+                </View>
+                <View style={{ height: 160 }}>
+                    {this.state.showCancelButton && this.renderCancelButton()}
                 </View>
             </View>
         );

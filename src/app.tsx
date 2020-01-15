@@ -42,6 +42,9 @@ export default class App extends React.Component<{}, IState> {
     public navigator: any = null;
     private translationsLoaded: boolean = false;
     private reduxStateLoaded: boolean = false;
+    private extensionStateLoaded: boolean =
+        Platform.OS === 'web' && WalletConnectWeb.isConnected() ? false : true;
+    private unsub: any;
 
     constructor(props: any) {
         super(props);
@@ -56,12 +59,30 @@ export default class App extends React.Component<{}, IState> {
             this.translationsLoaded = true;
             this.updateAppReady();
         });
-        store.subscribe(() => {
+
+        this.unsub = store.subscribe(() => {
             if (store.getState()._persist.rehydrated) {
                 if (!this.reduxStateLoaded) {
                     this.reduxStateLoaded = true;
+
+                    // trigger extension getState after state was loaded from storage
+                    Platform.OS === 'web' &&
+                        WalletConnectWeb.isConnected() &&
+                        WalletConnectWeb.getState();
+
                     this.updateAppReady();
                 }
+            }
+
+            if (Platform.OS === 'web' && store.getState().app.extensionStateLoaded) {
+                if (!this.extensionStateLoaded) {
+                    this.extensionStateLoaded = true;
+                    this.updateAppReady();
+                }
+            }
+
+            if (this.reduxStateLoaded && this.extensionStateLoaded) {
+                this.unsub && this.unsub();
             }
         });
 
@@ -78,6 +99,7 @@ export default class App extends React.Component<{}, IState> {
                 appReady:
                     this.translationsLoaded &&
                     this.reduxStateLoaded &&
+                    this.extensionStateLoaded &&
                     this.state.splashAnimationDone
             },
             () => {

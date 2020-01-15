@@ -6,6 +6,7 @@ Object {
   "blockchain": "ETHEREUM",
   "index": 1,
   "publicKey": "PUBLIC_KEY",
+  "selected": false,
   "tokens": Object {
     "ETH": Object {
       "active": true,

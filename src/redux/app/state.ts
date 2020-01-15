@@ -50,7 +50,7 @@ export interface ICurrentAccount {
 
 export interface IAppState {
     currentWalletId: string;
-    currentAccount: ICurrentAccount;
+    selectedBlockchain: Blockchain;
     tosVersion: number;
     devMode: boolean;
     testNet: boolean;

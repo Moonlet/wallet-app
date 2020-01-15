@@ -55,6 +55,7 @@ export class LedgerWallet implements IWallet {
 
             const account: IAccountState = {
                 index,
+                selected: false,
                 publicKey: address.publicKey,
                 address: address.address,
                 blockchain,

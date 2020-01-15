@@ -1,15 +1,9 @@
 import { Blockchain } from '../../core/blockchain/types';
-import {
-    IBlockchainsOptions,
-    BottomSheetType,
-    ICurrentAccount,
-    IBottomSheetExtensionRequestData
-} from './state';
+import { IBlockchainsOptions, BottomSheetType, IBottomSheetExtensionRequestData } from './state';
 import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
 
 // actions consts
 export const APP_SWITCH_WALLET = 'APP_STATE_SWITCH_WALLET';
-export const APP_SWITCH_ACCOUNT = 'APP_SWITCH_ACCOUNT';
 export const APP_SET_TOS_VERSION = 'APP_SET_TOS_VERSION';
 export const APP_SET_TEST_NET = 'APP_SET_TEST_NET';
 export const APP_SET_NETWORK_TEST_NET_CHAIN_ID = 'APP_SET_NETWORK_TEST_NET_CHAIN_ID';
@@ -17,6 +11,7 @@ export const APP_TOGGLE_BLOCKCHAIN = 'APP_TOGGLE_BLOCKCHAIN';
 export const APP_UPDATE_BLOCKCHAIN_ORDER = 'APP_UPDATE_BLOCKCHAIN_ORDER';
 export const APP_OPEN_BOTTOM_SHEET = 'APP_OPEN_BOTTOM_SHEET';
 export const APP_CLOSE_BOTTOM_SHEET = 'APP_CLOSE_BOTTOM_SHEET';
+export const APP_SET_SELECTED_BLOCKCHAIN = 'APP_SET_SELECTED_BLOCKCHAIN';
 
 // actions creators
 export const appSwitchWallet = (walletId: string) => {
@@ -26,17 +21,17 @@ export const appSwitchWallet = (walletId: string) => {
     };
 };
 
-export const appSwitchAccount = (currentAccount: ICurrentAccount) => {
-    return {
-        type: APP_SWITCH_ACCOUNT,
-        data: currentAccount
-    };
-};
-
 export const appSetTosVersion = (version: number) => {
     return {
         type: APP_SET_TOS_VERSION,
         data: version
+    };
+};
+
+export const setSelectedBlockchain = (blockchain: Blockchain) => {
+    return {
+        type: APP_SET_SELECTED_BLOCKCHAIN,
+        data: blockchain
     };
 };
 

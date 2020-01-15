@@ -34,6 +34,7 @@ export const privateToAddress = (privateKey: string): string => {
 export const getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {
     return {
         index,
+        selected: false,
         publicKey: privateToPublic(privateKey),
         address: privateToAddress(privateKey),
         blockchain: Blockchain.ZILLIQA,

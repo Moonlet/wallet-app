@@ -6,6 +6,7 @@ Object {
   "blockchain": "ZILLIQA",
   "index": 1,
   "publicKey": "PUBLIC_KEY",
+  "selected": false,
   "tokens": Object {
     "ZIL": Object {
       "active": true,

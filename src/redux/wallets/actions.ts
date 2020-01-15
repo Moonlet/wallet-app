@@ -277,7 +277,8 @@ export const sendTransferTransaction = (
     token: string,
     feeOptions: any,
     password: string,
-    navigation: NavigationScreenProp<NavigationState>
+    navigation: NavigationScreenProp<NavigationState>,
+    goBack: boolean = true
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
@@ -342,7 +343,7 @@ export const sendTransferTransaction = (
                 });
                 dispatch(closeBottomSheet());
             }
-            navigation.goBack();
+            goBack && navigation.goBack();
             return;
         }
     } catch (e) {

@@ -135,6 +135,7 @@ export class TokenScreenComponent extends React.Component<
                 {
                     text: translate('App.labels.cancel'),
                     onPress: () => {
+                        this.props.navigation.navigate('Dashboard');
                         WalletConnectClient.getConnector().rejectRequest({
                             id: this.props.extensionTransactionPayload.id,
                             error: { message: 'Transaction refused' }
@@ -155,10 +156,11 @@ export class TokenScreenComponent extends React.Component<
                                     account,
                                     toAddress,
                                     amount,
-                                    token,
+                                    token.symbol,
                                     feeOptions,
                                     password,
-                                    this.props.navigation
+                                    this.props.navigation,
+                                    false
                                 );
                             })
                             .catch(() => {

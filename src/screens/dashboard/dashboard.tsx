@@ -23,7 +23,6 @@ import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 import { openBottomSheet, setSelectedBlockchain } from '../../redux/app/actions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
-import { ph } from '../../styles/common';
 import BigNumber from 'bignumber.js';
 import { TokenType } from '../../core/blockchain/types/token';
 
@@ -288,12 +287,8 @@ export class DashboardScreenComponent extends React.Component<
         const styles = this.props.styles;
         const { coins } = this.state;
         const blockchain: Blockchain = this.props.selectedBlockchain;
-        const containerExtraStyle = Platform.select({
-            default: undefined,
-            web: { minHeight: ph(100) }
-        });
         return (
-            <View style={[styles.container, containerExtraStyle]}>
+            <View style={styles.container}>
                 {coins.length !== 0 && (
                     <View style={styles.dashboardContainer}>
                         <View style={styles.coinBalanceCard}>

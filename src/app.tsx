@@ -86,6 +86,11 @@ export default class App extends React.Component<{}, IState> {
             }
         });
 
+        setTimeout(() => {
+            this.reduxStateLoaded = true;
+            this.updateAppReady();
+        }, 5000);
+
         // decide the bar style on lightTheme
         StatusBar.setBarStyle('light-content', true);
         if (Platform.OS === 'android') {
@@ -94,13 +99,23 @@ export default class App extends React.Component<{}, IState> {
     }
 
     public updateAppReady = () => {
+        const appReady =
+            this.translationsLoaded &&
+            this.reduxStateLoaded &&
+            this.extensionStateLoaded &&
+            this.state.splashAnimationDone;
+
+        if (appReady) {
+            Notifications.configure();
+
+            if (Platform.OS === 'ios') {
+                setupVoipNotification();
+            }
+        }
+
         this.setState(
             {
-                appReady:
-                    this.translationsLoaded &&
-                    this.reduxStateLoaded &&
-                    this.extensionStateLoaded &&
-                    this.state.splashAnimationDone
+                appReady
             },
             () => {
                 if (
@@ -121,12 +136,6 @@ export default class App extends React.Component<{}, IState> {
             () => this.setState({ splashAnimationDone: true }, () => this.updateAppReady()),
             1000
         );
-
-        Notifications.configure();
-
-        if (Platform.OS === 'ios') {
-            setupVoipNotification();
-        }
     }
 
     public componentWillUnmount() {

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 
@@ -6,7 +6,8 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            height: Platform.OS === 'web' ? 'calc(100vh - 122px)' : 'auto'
         },
         coinBalanceCard: {
             paddingTop: BASE_DIMENSION * 4,

@@ -57,4 +57,5 @@ export interface IAppState {
     networks: INetworksOptions;
     blockchains: IBlockchainsOptions;
     bottomSheet: IBottomSheet;
+    extensionStateLoaded: boolean;
 }

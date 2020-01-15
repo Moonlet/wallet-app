@@ -12,6 +12,7 @@ export const APP_UPDATE_BLOCKCHAIN_ORDER = 'APP_UPDATE_BLOCKCHAIN_ORDER';
 export const APP_OPEN_BOTTOM_SHEET = 'APP_OPEN_BOTTOM_SHEET';
 export const APP_CLOSE_BOTTOM_SHEET = 'APP_CLOSE_BOTTOM_SHEET';
 export const APP_SET_SELECTED_BLOCKCHAIN = 'APP_SET_SELECTED_BLOCKCHAIN';
+export const APP_SET_EXTENSION_STATE_LOADED = 'APP_SET_EXTENSION_STATE_LOADED';
 
 // actions creators
 export const appSwitchWallet = (walletId: string) => {
@@ -80,5 +81,11 @@ export const openBottomSheet = (
 export const closeBottomSheet = () => {
     return {
         type: APP_CLOSE_BOTTOM_SHEET
+    };
+};
+
+export const appSetExtensionStateLoaded = () => {
+    return {
+        type: APP_SET_EXTENSION_STATE_LOADED
     };
 };

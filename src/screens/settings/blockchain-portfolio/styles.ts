@@ -19,7 +19,8 @@ export default (theme: ITheme) =>
             padding: BASE_DIMENSION,
             alignItems: 'center',
             marginBottom: BASE_DIMENSION,
-            paddingVertical: BASE_DIMENSION * 2
+            paddingVertical: BASE_DIMENSION * 2,
+            borderWidth: 2
         },
         blockchainName: {
             fontWeight: '500',
@@ -27,7 +28,9 @@ export default (theme: ITheme) =>
             lineHeight: 25,
             letterSpacing: 0.38,
             color: theme.colors.text,
-            textTransform: 'capitalize'
+            textTransform: 'capitalize',
+            marginLeft: BASE_DIMENSION,
+            alignSelf: 'center'
         },
         menuIcon: {
             color: theme.colors.accent

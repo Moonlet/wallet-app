@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import { INavigationProps } from '../../../navigation/with-navigation-params';
 import { Text } from '../../../library';
 import { IReduxState } from '../../../redux/state';
@@ -13,10 +13,10 @@ import { IBlockchainsOptions } from '../../../redux/app/state';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { toogleBlockchainActive, updateBlockchainOrder } from '../../../redux/app/actions';
 import { Blockchain } from '../../../core/blockchain/types';
-import { ICON_SIZE } from '../../../styles/dimensions';
+import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 
 export interface IReduxProps {
-    blockchains: IBlockchainsOptions;
+    blockchains: [{ key: Blockchain; value: IBlockchainsOptions }];
     toogleBlockchainActive: typeof toogleBlockchainActive;
     updateBlockchainOrder: typeof updateBlockchainOrder;
 }
@@ -45,20 +45,40 @@ export class BlockchainPortfolioComponent extends React.Component<
 
     public renderBlockchain(
         item: { key: Blockchain; value: IBlockchainsOptions },
-        move: any,
-        moveEnd: any
+        move: () => void,
+        isActive: boolean
     ) {
         const { styles, theme } = this.props;
 
         return (
-            <View style={styles.rowContainer}>
+            <View
+                style={[
+                    styles.rowContainer,
+                    {
+                        borderColor: item.value.active
+                            ? theme.colors.accentSecondary
+                            : theme.colors.cardBackground,
+                        backgroundColor: isActive
+                            ? theme.colors.appBackground
+                            : theme.colors.cardBackground
+                    }
+                ]}
+            >
                 <View style={styles.infoContainer}>
-                    <Icon name="money-wallet-1" size={ICON_SIZE} style={styles.blockchainIcon} />
+                    <Image
+                        style={styles.iconContainer}
+                        resizeMode="contain"
+                        source={
+                            getBlockchain(item.key).config.tokens[
+                                getBlockchain(item.key).config.coin
+                            ].logo
+                        }
+                    />
                     <Text style={styles.blockchainName}>{item.key}</Text>
                 </View>
                 <TouchableOpacity
                     style={styles.iconContainer}
-                    onPress={() => this.props.toogleBlockchainActive(item.key)}
+                    onPressOut={() => this.props.toogleBlockchainActive(item.key)}
                 >
                     <Icon
                         size={18}
@@ -72,11 +92,7 @@ export class BlockchainPortfolioComponent extends React.Component<
                         ]}
                     />
                 </TouchableOpacity>
-                <TouchableOpacity
-                    style={styles.iconContainer}
-                    onLongPress={move}
-                    onPressOut={moveEnd}
-                >
+                <TouchableOpacity style={styles.iconContainer} onLongPress={move}>
                     <Icon size={18} name="navigation-menu" style={styles.menuIcon} />
                 </TouchableOpacity>
             </View>
@@ -90,14 +106,13 @@ export class BlockchainPortfolioComponent extends React.Component<
             <View style={styles.container}>
                 <DraggableFlatList
                     data={this.props.blockchains}
-                    renderItem={({ item, move, moveEnd }) =>
-                        this.renderBlockchain(item, move, moveEnd)
+                    renderItem={({ item, drag, isActive }) =>
+                        this.renderBlockchain(item, drag, isActive)
                     }
                     keyExtractor={(item: { key: Blockchain; value: IBlockchainsOptions }) =>
                         `${item.value.order}`
                     }
-                    scrollPercent={5}
-                    onMoveEnd={({ data }) => {
+                    onDragEnd={({ data }) => {
                         this.props.updateBlockchainOrder(
                             Object.assign(
                                 {},

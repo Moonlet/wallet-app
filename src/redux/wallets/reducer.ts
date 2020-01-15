@@ -43,7 +43,6 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                               value: new BigNumber(account.balance?.value || 0)
                           },
 
-                          // check here = NaN
                           tokens: Object.keys(account.tokens).reduce(
                               (tokenOut: any, tokenId: string) => {
                                   tokenOut[tokenId] = account.tokens[tokenId];

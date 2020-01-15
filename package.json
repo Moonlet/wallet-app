@@ -17,7 +17,7 @@
         "test": "jest",
         "lint": "tslint --fix '{src,extension}/**/*.{ts,tsx}'",
         "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore",
-        "postinstall": "jetify"
+        "postinstall": "jetify && ./scripts/ts-nockeck-files.sh"
     },
     "dependencies": {
         "@ledgerhq/hw-app-eth": "^4.78.0",
@@ -60,14 +60,14 @@
         "react-native-ble-plx": "^1.1.0",
         "react-native-camera-kit": "^8.0.2",
         "react-native-device-info": "^4.0.1",
-        "react-native-draggable-flatlist": "^1.1.9",
+        "react-native-draggable-flatlist": "^2.0.1",
         "react-native-firebase": "^5.5.6",
         "react-native-gesture-handler": "^1.5.1",
         "react-native-keychain": "^4.0.1",
         "react-native-linear-gradient": "^2.5.6",
         "react-native-qrcode-svg": "^5.3.2",
         "react-native-randombytes": "^3.5.3",
-        "react-native-reanimated": "^1.4.0",
+        "react-native-reanimated": "^1.5.0",
         "react-native-screens": "^2.0.0-alpha.3",
         "react-native-svg": "^9.13.3",
         "react-native-touch-id": "^4.4.1",

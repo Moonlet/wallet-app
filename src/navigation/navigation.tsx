@@ -82,6 +82,7 @@ const mainTabbedNavigationOptions: any = {
 export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefaultNavOptions) => ({
     headerStyle: {
         backgroundColor: themes[theme].colors.appBackground,
+        elevation: 0,
         borderBottomWidth: 0
     },
     headerTitleStyle: {

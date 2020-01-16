@@ -9,7 +9,6 @@ import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
 import { IBottomSheetExtensionRequestData } from '../../../redux/app/state';
 
@@ -17,7 +16,6 @@ interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
     onOpenStart: () => void;
     onCloseEnd: () => void;
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     data: IBottomSheetExtensionRequestData;
 }
 
@@ -37,16 +35,6 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
             ? this.bottomSheet.current.props.onOpenStart()
             : this.bottomSheet.current.snapTo(1);
     }
-
-    public transactionHistoryPress = () => {
-        this.props.onCloseEnd();
-        this.props.navigation.navigate('TransactonsHistory');
-    };
-
-    public manageAccount = () => {
-        this.props.onCloseEnd();
-        this.props.navigation.navigate('Accounts');
-    };
 
     public renderBottomSheetContent = () => {
         const { styles } = this.props;

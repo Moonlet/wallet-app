@@ -9,16 +9,15 @@ import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { QrModalReader } from '../../qr-modal/qr-modal';
 import { WalletConnectClient } from '../../../core/wallet-connect/wallet-connect-client';
 import TouchableOpacity from '../../../library/touchable-opacity/touchable-opacity';
+import { NavigationService } from '../../../navigation/navigation-service';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
     onOpenStart: () => void;
     onCloseEnd: () => void;
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 export class DashboardMenuBottomSheetComponent extends React.Component<
@@ -40,12 +39,12 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
 
     public transactionHistoryPress = () => {
         this.props.onCloseEnd();
-        this.props.navigation.navigate('TransactonsHistory');
+        NavigationService.navigate('TransactonsHistory', {});
     };
 
     public manageAccount = () => {
         this.props.onCloseEnd();
-        this.props.navigation.navigate('ManageAccount');
+        NavigationService.navigate('ManageAccount', {});
     };
 
     public connectExtension = () => {

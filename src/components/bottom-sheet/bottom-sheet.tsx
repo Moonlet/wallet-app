@@ -10,17 +10,9 @@ import { LedgerMessageBottomSheet } from './ledger-message-bottom-sheet/ledger-m
 import { BottomSheetType, IBottomSheet } from '../../redux/app/state';
 import { openBottomSheet, closeBottomSheet } from '../../redux/app/actions';
 import { DashboardMenuBottomSheet } from './dashboard-menu-bottom-sheet/dashboard-menu-bottom-sheet';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { LedgerConnect } from '../../screens/connect-hardware-wallet/ledger-connect/ledger-connect';
 import { ExtensionRequestBottomSheet } from './extension-request-bottom-sheet/extension-request-bottom-sheet';
 
-interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-}
-
-interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-}
 interface IReduxProps {
     bottomSheet: IBottomSheet;
     openBottomSheet: typeof openBottomSheet;
@@ -39,11 +31,11 @@ const mapDispatchToProps = {
 };
 
 export class BottomSheetComponent extends React.Component<
-    IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public allowBottomSheetCloseEnd: boolean;
 
-    constructor(props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.allowBottomSheetCloseEnd = false;
     }
@@ -90,7 +82,6 @@ export class BottomSheetComponent extends React.Component<
                             }}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
-                            navigation={this.props.navigation}
                         />
                     </View>
                 );
@@ -105,7 +96,6 @@ export class BottomSheetComponent extends React.Component<
                             blockchain={this.props.bottomSheet?.blockchain}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
-                            navigation={this.props.navigation}
                         />
                     </View>
                 );
@@ -118,7 +108,6 @@ export class BottomSheetComponent extends React.Component<
                             blockchain={this.props.bottomSheet?.blockchain}
                             deviceModel={this.props.bottomSheet?.deviceModel}
                             connectionType={this.props.bottomSheet?.connectionType}
-                            navigation={this.props.navigation}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
                         />
@@ -135,7 +124,6 @@ export class BottomSheetComponent extends React.Component<
                             }}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
-                            navigation={this.props.navigation}
                             data={this.props.bottomSheet?.data}
                         />
                     </View>
@@ -147,7 +135,7 @@ export class BottomSheetComponent extends React.Component<
     }
 }
 
-export const BottomSheet = smartConnect<IProps>(BottomSheetComponent, [
+export const BottomSheet = smartConnect(BottomSheetComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

@@ -10,7 +10,10 @@ export const config: IBlockchainConfig = {
         ZIL: {
             name: 'Zilliqa',
             symbol: 'ZIL',
-            logo: require('../../../assets/images/png/zil.png'),
+            logo: {
+                uri:
+                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/zil.png'
+            }, // require('../../../assets/images/png/zil.png'),
             order: 0,
             active: true,
             decimals: 12,

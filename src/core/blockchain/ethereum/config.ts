@@ -10,7 +10,10 @@ export const config: IBlockchainConfig = {
         ETH: {
             name: 'Ethereum',
             symbol: 'ETH',
-            logo: require('../../../assets/images/png/eth.png'),
+            logo: {
+                uri:
+                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png'
+            }, // require('../../../assets/images/png/eth.png'),
             order: 0,
             active: true,
             decimals: 18,

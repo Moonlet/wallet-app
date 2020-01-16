@@ -12,7 +12,7 @@ Object {
       "active": true,
       "decimals": 18,
       "logo": Object {
-        "testUri": "../../../src/assets/images/png/eth.png",
+        "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png",
       },
       "name": "Ethereum",
       "order": 0,

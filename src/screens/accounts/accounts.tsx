@@ -4,7 +4,7 @@ import { IReduxState } from '../../redux/state';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { IWalletState, IAccountState } from '../../redux/wallets/state';
+import { IWalletState, IAccountState, TokenType } from '../../redux/wallets/state';
 import { switchSelectedAccount, getBalance } from '../../redux/wallets/actions';
 import stylesProvider from './styles';
 import { Blockchain } from '../../core/blockchain/types';
@@ -14,18 +14,21 @@ import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ListAccount } from '../token/components/list-account/list-account';
+import BigNumber from 'bignumber.js';
 
 export interface IReduxProps {
     wallet: IWalletState;
     switchSelectedAccount: typeof switchSelectedAccount;
     selectedAccount: IAccountState;
     getBalance: typeof getBalance;
+    exchangeRates: any;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     return {
         wallet: selectCurrentWallet(state),
-        selectedAccount: getCurrentAccount(state)
+        selectedAccount: getCurrentAccount(state),
+        exchangeRates: (state as any).market.exchangeRates
     };
 };
 
@@ -59,12 +62,29 @@ export const AccountsScreenComponent = (
         })();
     }, [props.selectedAccount.blockchain]);
 
+    const calculateBalance = (account: IAccountState) => {
+        const tokenKeys = Object.keys(account.tokens);
+        let balance = new BigNumber(0);
+        tokenKeys.map(key => {
+            const token = account.tokens[key];
+            if (token.active) {
+                if (token.type === TokenType.NATIVE) {
+                    balance = balance.plus(token.balance?.value);
+                } else {
+                    const exchange =
+                        props.exchangeRates[key][getBlockchain(account.blockchain).config.coin];
+                    balance = balance.plus(token.balance?.value.multipliedBy(exchange));
+                }
+            }
+        });
+        return balance;
+    };
+
     return (
         <View style={props.styles.container}>
             {accounts.map((account: IAccountState, index: number) => {
                 const selected = props.selectedAccount.address === account.address;
                 const blockchain = account.blockchain;
-                const token = account.tokens[getBlockchain(account.blockchain).config.coin];
 
                 const label = (
                     <View>
@@ -79,7 +99,7 @@ export const AccountsScreenComponent = (
                         <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
                             <Amount
                                 style={props.styles.fistAmountText}
-                                amount={token.balance?.value}
+                                amount={calculateBalance(account)}
                                 blockchain={blockchain}
                                 token={getBlockchain(blockchain).config.coin}
                                 tokenDecimals={
@@ -90,7 +110,7 @@ export const AccountsScreenComponent = (
                             />
                             <Amount
                                 style={props.styles.secondAmountText}
-                                amount={token.balance?.value}
+                                amount={calculateBalance(account)}
                                 blockchain={blockchain}
                                 token={getBlockchain(blockchain).config.coin}
                                 tokenDecimals={

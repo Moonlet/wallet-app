@@ -22,6 +22,6 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       Confirm
     </withTheme(ButtonComponent)>
   </View>
-  <withTheme(PasswordModalComponent) shouldCreatePassword={true} subtitle=\\"Your PIN is required\\\\nto unlock Moonlet wallet\\" obRef={[Function: obRef]} />
+  <withTheme(PasswordModalComponent) shouldCreatePassword={true} subtitle=\\"Your PIN is required to view mnemonic\\" obRef={[Function: obRef]} />
 </KeyboardAvoidingView>"
 `;

@@ -40,7 +40,6 @@ export interface IReduxProps {
 }
 
 interface IState {
-    balance: BigNumber;
     coins: Array<{ blockchain: Blockchain; order: number }>;
 }
 
@@ -123,8 +122,7 @@ export class DashboardScreenComponent extends React.Component<
         super(props);
 
         this.state = {
-            coins: this.buildCoins(),
-            balance: new BigNumber(0)
+            coins: this.buildCoins()
         };
 
         if (Platform.OS === 'web') {
@@ -169,7 +167,7 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.currentAccount !== prevProps.currentAccount) {
+        if (this.props.currentAccount !== prevProps.currentAccount && this.props.currentAccount) {
             this.props.setSelectedBlockchain(this.props.currentAccount.blockchain);
             this.props.getBalance(
                 this.props.currentAccount.blockchain,
@@ -178,15 +176,12 @@ export class DashboardScreenComponent extends React.Component<
                 true
             );
             this.setState({ coins: this.buildCoins() });
-            this.calculateBalance();
         }
     }
 
     public calculateBalance() {
         const tokenKeys = Object.keys(this.props.currentAccount.tokens);
-
         let balance = new BigNumber(0);
-
         tokenKeys.map(key => {
             const token = this.props.currentAccount.tokens[key];
             if (token.active) {
@@ -200,7 +195,7 @@ export class DashboardScreenComponent extends React.Component<
                 }
             }
         });
-        this.setState({ balance });
+        return balance;
     }
 
     public componentDidMount() {
@@ -211,7 +206,6 @@ export class DashboardScreenComponent extends React.Component<
                 undefined,
                 true
             );
-            this.calculateBalance();
         }
 
         this.props.navigation.setParams({
@@ -264,7 +258,6 @@ export class DashboardScreenComponent extends React.Component<
                                         blockchain: coin.blockchain
                                     });
                                     this.setState({ coins: this.buildCoins() });
-                                    this.calculateBalance();
                                 }}
                             >
                                 <Text
@@ -300,7 +293,7 @@ export class DashboardScreenComponent extends React.Component<
                                             blockchain
                                         })
                                     }
-                                    balance={this.state.balance}
+                                    balance={this.calculateBalance()}
                                     blockchain={blockchain}
                                     currency={BLOCKCHAIN_INFO[blockchain].coin}
                                     toCurrency="USD"

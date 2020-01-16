@@ -17,9 +17,11 @@ import { HeaderLeftClose } from '../../components/header-left-close/header-left-
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import moment from 'moment';
+import { getChainId } from '../../redux/app/selectors';
 
 export interface IReduxProps {
     account: IAccountState;
+    chainId: number;
 }
 
 export interface INavigationParams {
@@ -41,9 +43,9 @@ export class TransactionDetailsComponent extends React.Component<
     public static navigationOptions = navigationOptions;
 
     public goToExplorer = () => {
-        const url = getBlockchain(this.props.account.blockchain).networks[0].explorer.getAccountUrl(
-            this.props.transaction.fromAddress
-        );
+        const url = getBlockchain(this.props.account.blockchain)
+            .networks.filter(n => n.chainId === this.props.chainId)[0]
+            .explorer.getTransactionUrl(this.props.transaction.id);
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
                 Linking.openURL(url);
@@ -147,7 +149,8 @@ export class TransactionDetailsComponent extends React.Component<
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
-        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain)
+        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
+        chainId: getChainId(state, ownProps.blockchain)
     };
 };
 

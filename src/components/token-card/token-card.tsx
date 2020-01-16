@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, TouchableOpacity, Image, Platform } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import { IAccountState } from '../../redux/wallets/state';
 import { Icon } from '../icon';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { Amount } from '../amount/amount';
-import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
+import { ITokenConfig } from '../../core/blockchain/types/token';
 import { Blockchain } from '../../core/blockchain/types';
 
 export interface IProps {
@@ -24,27 +24,19 @@ export const TokenCardComponent = (props: IProps) => {
     return (
         <TouchableOpacity
             style={styles.container}
-            onPress={() =>
+            onPress={() => {
+                // console.log(props.token.logo, props.tokenLogo);
+
                 props.navigation.navigate('Token', {
                     accountIndex: props.account.index,
                     blockchain: props.account.blockchain,
                     token: props.token,
                     tokenLogo: props.tokenLogo
-                })
-            }
+                });
+            }}
         >
             <View style={styles.iconContainer}>
-                <Image
-                    style={styles.tokenLogo}
-                    resizeMode="contain"
-                    source={
-                        props.token.type === TokenType.NATIVE
-                            ? Platform.OS === 'web'
-                                ? props.tokenLogo
-                                : props.token.logo
-                            : { uri: props.tokenLogo }
-                    }
-                />
+                <Image style={styles.tokenLogo} resizeMode="contain" source={props.token.logo} />
             </View>
             <View style={styles.accountInfoContainer}>
                 <Amount

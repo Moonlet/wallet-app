@@ -14,13 +14,17 @@ import { IReduxState } from '../../redux/state';
 import { getCurrentAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
 import { Icon } from '../../components/icon';
 import { formatAddress } from '../../core/utils/format-address';
-import { ICON_SIZE } from '../../styles/dimensions';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../redux/app/selectors';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { isValidAddress } from '../../core/blockchain/ethereum/account';
 import BigNumber from 'bignumber.js';
+
+const GENERIC_TOKEN_LOGO = {
+    uri:
+        'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png'
+};
 
 export interface IReduxProps {
     currentAccount: IAccountState;
@@ -130,7 +134,7 @@ export class ManageTokenComponent extends React.Component<
                     decimals: tokenInfo.decimals,
                     name: tokenInfo?.name || foundToken.name,
                     symbol: tokenInfo?.symbol || foundToken.symbol,
-                    logo: foundToken?.logo || undefined
+                    logo: { uri: foundToken?.logo } || GENERIC_TOKEN_LOGO
                 },
                 showError: false,
                 isLoading: false
@@ -149,7 +153,7 @@ export class ManageTokenComponent extends React.Component<
 
                     name: this.state.token?.name || '',
                     symbol: this.state.token.symbol,
-                    logo: this.state.token?.logo || '',
+                    logo: this.state.token?.logo || GENERIC_TOKEN_LOGO,
                     type: TokenType.ERC20,
                     contractAddress: this.state.token.contractAddress,
                     decimals: Number(this.state.token.decimals),
@@ -229,21 +233,11 @@ export class ManageTokenComponent extends React.Component<
                             onPress={() => this.setState({ isTokenSelected: true })}
                         >
                             <View style={styles.iconContainer}>
-                                {this.state.token?.logo ? (
-                                    <Image
-                                        style={styles.tokenLogo}
-                                        resizeMode="contain"
-                                        source={{ uri: this.state.token?.logo }}
-                                    />
-                                ) : (
-                                    <View style={styles.iconContainer}>
-                                        <Icon
-                                            name="money-wallet-1"
-                                            size={ICON_SIZE}
-                                            style={styles.icon}
-                                        />
-                                    </View>
-                                )}
+                                <Image
+                                    style={styles.tokenLogo}
+                                    resizeMode="contain"
+                                    source={this.state.token?.logo}
+                                />
                             </View>
                             <View style={styles.accountInfoContainer}>
                                 <Text

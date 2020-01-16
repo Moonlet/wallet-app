@@ -140,19 +140,11 @@ export class ManageAccountComponent extends React.Component<
                 >
                     <View style={styles.infoContainer}>
                         <View style={styles.iconContainer}>
-                            {item.value.type === TokenType.NATIVE ? (
-                                <Image
-                                    style={styles.tokenLogo}
-                                    resizeMode="contain"
-                                    source={item.value.logo}
-                                />
-                            ) : (
-                                <Image
-                                    style={styles.tokenLogo}
-                                    resizeMode="contain"
-                                    source={{ uri: item.value.logo }}
-                                />
-                            )}
+                            <Image
+                                style={styles.tokenLogo}
+                                resizeMode="contain"
+                                source={item.value.logo}
+                            />
                         </View>
                         <View style={styles.amountContainer}>
                             <Amount

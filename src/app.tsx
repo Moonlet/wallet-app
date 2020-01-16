@@ -88,7 +88,7 @@ export default class App extends React.Component<{}, IState> {
 
         setTimeout(() => {
             this.reduxStateLoaded = true;
-            this.updateAppReady();
+            !this.state.appReady && this.updateAppReady();
         }, 5000);
 
         // decide the bar style on lightTheme

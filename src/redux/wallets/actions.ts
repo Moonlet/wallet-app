@@ -324,14 +324,14 @@ export const sendTransferTransaction = (
         }
         const transaction = await wallet.sign(account.blockchain, account.index, tx);
 
-        const publish = await getBlockchain(account.blockchain)
+        const txHash = await getBlockchain(account.blockchain)
             .getClient(chainId)
             .sendTransaction(transaction);
-        if (publish) {
+        if (txHash) {
             dispatch({
                 type: TRANSACTION_PUBLISHED,
                 data: {
-                    hash: transaction,
+                    hash: txHash,
                     tx,
                     walletId: appWallet.id
                 }

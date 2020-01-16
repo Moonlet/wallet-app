@@ -39,7 +39,6 @@ WalletConnectWeb.setStore(store);
 
 export default class App extends React.Component<{}, IState> {
     public interval: any = null;
-    public navigator: any = null;
     private translationsLoaded: boolean = false;
     private reduxStateLoaded: boolean = false;
     private extensionStateLoaded: boolean =
@@ -113,20 +112,15 @@ export default class App extends React.Component<{}, IState> {
             }
         }
 
-        this.setState(
-            {
-                appReady
-            },
-            () => {
-                if (
-                    this.state.appReady &&
-                    this.state.appState === APP_STATE_ACTIVE &&
-                    Object.keys(store.getState().wallets).length >= 1
-                ) {
-                    this.showPasswordModal();
-                }
+        this.setState({ appReady }, () => {
+            if (
+                this.state.appReady &&
+                this.state.appState === APP_STATE_ACTIVE &&
+                Object.keys(store.getState().wallets).length >= 1
+            ) {
+                this.showPasswordModal();
             }
-        );
+        });
     };
 
     public componentDidMount() {
@@ -173,17 +167,14 @@ export default class App extends React.Component<{}, IState> {
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
                             <AppContainer
-                                ref={nav => {
-                                    this.navigator = nav;
-                                    NavigationService.setTopLevelNavigator(nav);
-                                }}
+                                ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
                                 theme="dark"
                             />
                             <PasswordModal
                                 visible={this.state.showPasswordModal}
                                 onPassword={() => this.setState({ showPasswordModal: false })}
                             />
-                            <BottomSheet navigation={this.navigator?._navigation} />
+                            <BottomSheet />
                             <Dialog.Component />
                         </ThemeContext.Provider>
                     </PersistGate>

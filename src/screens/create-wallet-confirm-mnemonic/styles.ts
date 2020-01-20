@@ -6,6 +6,7 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             paddingHorizontal: 16,
+            paddingTop: 30,
             alignItems: 'center',
             justifyContent: 'space-between',
             backgroundColor: theme.colors.appBackground,

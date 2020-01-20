@@ -407,9 +407,13 @@ export const removeToken = (walletId: string, account: IAccountState, token: ITo
     };
 };
 
-export const addToken = (walletId: string, account: IAccountState, token: ITokenConfig) => {
-    return {
+export const addToken = (walletId: string, account: IAccountState, token: ITokenConfig) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    dispatch({
         type: ADD_TOKEN,
         data: { walletId, account, token }
-    };
+    });
+    getBalance(account.blockchain, account.address, undefined, true)(dispatch, getState);
 };

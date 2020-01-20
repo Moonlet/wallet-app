@@ -24,6 +24,7 @@ export interface IExternalProps {
     onDonePressed: () => any;
     account: IAccountState;
     wallet: IWalletState;
+    chainId: number;
 }
 
 interface IState {
@@ -79,9 +80,9 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         });
     };
     public viewOn = () => {
-        const url = getBlockchain(this.props.account.blockchain).networks[0].explorer.getAccountUrl(
-            this.props.account.address
-        );
+        const url = getBlockchain(this.props.account.blockchain)
+            .networks.filter(n => n.chainId === this.props.chainId)[0]
+            .explorer.getAccountUrl(this.props.account.address);
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
                 Linking.openURL(url);

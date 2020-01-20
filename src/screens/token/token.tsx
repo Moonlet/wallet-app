@@ -30,6 +30,7 @@ import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-cl
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
 import { Dialog } from '../../components/dialog/dialog';
+import { getChainId } from '../../redux/app/selectors';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -41,6 +42,7 @@ export interface IReduxProps {
     transactions: ITransactionState[];
     wallet: IWalletState;
     sendTransferTransaction: typeof sendTransferTransaction;
+    chainId: number;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -48,7 +50,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         transactions: getAccountTransactions(state, ownProps.accountIndex, ownProps.blockchain),
         wallet: selectCurrentWallet(state),
-        extensionTransactionPayload: ownProps.extensionTransactionPayload
+        extensionTransactionPayload: ownProps.extensionTransactionPayload,
+        chainId: getChainId(state, ownProps.blockchain)
     };
 };
 
@@ -240,6 +243,7 @@ export class TokenScreenComponent extends React.Component<
                             onDonePressed={this.openSettingsMenu}
                             account={this.props.account}
                             wallet={this.props.wallet}
+                            chainId={this.props.chainId}
                         />
                     )}
                 </ScrollView>

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, TextInput, KeyboardAvoidingView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, TextInput, KeyboardAvoidingView, Keyboard, Platform } from 'react-native';
 import { Text } from '../../library';
 import {
     NavigationParams,
@@ -70,6 +70,8 @@ export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IRedu
 
     const [error, setError] = useState(false);
 
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
     // generate three unique random test numbers
     if (testWords.length < 3) {
         const randomNumbers: any = [];
@@ -88,12 +90,29 @@ export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IRedu
         (n: number) => mnemonicsInput[n] && mnemonicsInput[n].length > 0
     );
 
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => Platform.OS === 'android' && setKeyboardVisible(true)
+        );
+        const keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', () =>
+            setKeyboardVisible(false)
+        );
+
+        return () => {
+            keyboardDidHideListener.remove();
+            keyboardDidShowListener.remove();
+        };
+    }, []);
+
     return (
         <KeyboardAvoidingView style={props.styles.container}>
             <View style={props.styles.topContainer}>
-                <Text darker style={{ textAlign: 'center' }}>
-                    {translate('CreateWalletMnemonicConfirm.body')}
-                </Text>
+                {!isKeyboardVisible && (
+                    <Text darker style={{ textAlign: 'center' }}>
+                        {translate('CreateWalletMnemonicConfirm.body')}
+                    </Text>
+                )}
                 <View style={props.styles.inputContainer}>
                     {error && (
                         <Text style={{ textAlign: 'center', marginBottom: 20 }}>
@@ -111,9 +130,11 @@ export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IRedu
                         )
                     )}
                 </View>
-                <Text darker small>
-                    {testWords.map((n, i) => mnemonic[n] + ' ')}
-                </Text>
+                {!isKeyboardVisible && (
+                    <Text darker small>
+                        {testWords.map((n, i) => mnemonic[n] + ' ')}
+                    </Text>
+                )}
             </View>
             <View style={props.styles.bottomContainer}>
                 <Button

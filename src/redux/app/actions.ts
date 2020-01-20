@@ -1,6 +1,10 @@
 import { Blockchain } from '../../core/blockchain/types';
 import { IBlockchainsOptions, BottomSheetType, IBottomSheetExtensionRequestData } from './state';
 import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
+import { getCurrentAccount } from '../wallets/selectors';
+import { getBalance } from '../wallets/actions';
+import { Dispatch } from 'react';
+import { IReduxState } from '../state';
 
 // actions consts
 export const APP_SWITCH_WALLET = 'APP_STATE_SWITCH_WALLET';
@@ -36,10 +40,19 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => {
     };
 };
 
-export const toggleTestNet = () => {
-    return {
+export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
+    const state = getState();
+    const currentAccount = getCurrentAccount(state);
+
+    dispatch({
         type: APP_SET_TEST_NET
-    };
+    });
+    getBalance(
+        currentAccount.blockchain,
+        currentAccount.address,
+        undefined,
+        true
+    )(dispatch, getState);
 };
 
 export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: number) => {

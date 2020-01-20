@@ -19,7 +19,7 @@ const intialState: IAppState = {
     selectedBlockchain: Blockchain.ETHEREUM,
     tosVersion: 0,
     devMode: true,
-    testNet: true,
+    testNet: false,
     networks: {
         [Blockchain.ETHEREUM]: {
             testNet: 4,

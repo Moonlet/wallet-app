@@ -27,7 +27,7 @@ Object {
     },
   },
   "selectedBlockchain": "ETHEREUM",
-  "testNet": true,
+  "testNet": false,
   "tosVersion": 0,
 }
 `;

@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - master
-      - fix-bottom-sheet-nav
 
 name: Deploy Beta
 jobs:

@@ -45,6 +45,7 @@ export default class App extends React.Component<{}, IState> {
     private extensionStateLoaded: boolean =
         Platform.OS === 'web' && WalletConnectWeb.isConnected() ? false : true;
     private unsub: any;
+    private notificationsConfigured: boolean = false;
 
     constructor(props: any) {
         super(props);
@@ -86,11 +87,6 @@ export default class App extends React.Component<{}, IState> {
             }
         });
 
-        setTimeout(() => {
-            this.reduxStateLoaded = true;
-            !this.state.appReady && this.updateAppReady();
-        }, 5000);
-
         // decide the bar style on lightTheme
         StatusBar.setBarStyle('light-content', true);
         if (Platform.OS === 'android') {
@@ -105,12 +101,14 @@ export default class App extends React.Component<{}, IState> {
             this.extensionStateLoaded &&
             this.state.splashAnimationDone;
 
-        if (appReady) {
+        if (appReady && !this.notificationsConfigured) {
             Notifications.configure();
 
             if (Platform.OS === 'ios') {
                 setupVoipNotification();
             }
+
+            this.notificationsConfigured = true;
         }
 
         this.setState(

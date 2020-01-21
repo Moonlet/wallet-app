@@ -41,9 +41,11 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                           tokens: Object.keys(account.tokens).reduce(
                               (tokenOut: any, tokenId: string) => {
                                   tokenOut[tokenId] = account.tokens[tokenId];
-                                  tokenOut[tokenId].balance.value = new BigNumber(
-                                      tokenOut[tokenId].balance.value || 0
-                                  );
+                                  tokenOut[tokenId].balance
+                                      ? (tokenOut[tokenId].balance.value = new BigNumber(
+                                            tokenOut[tokenId].balance.value || 0
+                                        ))
+                                      : null;
                                   return tokenOut;
                               },
                               {}

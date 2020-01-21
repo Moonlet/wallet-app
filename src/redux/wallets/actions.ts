@@ -203,7 +203,6 @@ export const getBalance = (
         acc => acc.address === address && acc.blockchain === blockchain
     )[0];
 
-    // console.log('getBalance', { blockchain, address, token });
     if (token) {
         const balanceInProgress = account?.tokens[token]?.balance?.inProgress;
         const balanceTimestamp = account?.tokens[token]?.balance?.timestamp || 0;

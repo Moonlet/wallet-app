@@ -109,7 +109,6 @@ class Zilliqa {
             null,
             2
         );
-        console.log('tx params4 ', message);
 
         const STREAM_LEN = 128; // Stream in batches of STREAM_LEN bytes each.
         var txn1Bytes;

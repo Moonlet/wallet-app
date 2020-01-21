@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - fix-builds
 
 name: Deploy Beta
 jobs:

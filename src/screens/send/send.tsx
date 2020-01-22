@@ -204,7 +204,6 @@ export class SendScreenComponent extends React.Component<
     };
 
     public onFeesChanged = (feeOptions: any) => {
-        // console.log({feeOptions});
         this.setState({ feeOptions }, () => this.availableFunds());
     };
 

@@ -81,6 +81,7 @@ export class LedgerConnectComponent extends React.Component<
                 // this.props.navigation
             )
             .then(() => {
+                Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(0) : null;
                 this.props.onCloseEnd();
                 if (this.scannerUnsubscribe) {
                     this.scannerUnsubscribe.unsubscribe();
@@ -98,9 +99,8 @@ export class LedgerConnectComponent extends React.Component<
     });
 
     public async componentDidMount() {
-        Platform.OS === 'web'
-            ? this.bottomSheet.current.props.onOpenStart()
-            : this.bottomSheet.current.snapTo(1);
+        this.bottomSheet.current.props.onOpenStart();
+        Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(1) : null;
 
         await delay(500);
         this.scannerUnsubscribe = await TransportFactory.scan(this.props.connectionType, event => {

@@ -1,13 +1,5 @@
 import { Blockchain } from '../../core/blockchain/types';
 import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
-import { INetworksOptions } from '../preferences/state';
-
-export interface IBlockchainsOptions {
-    [blockchain: string]: {
-        order: number;
-        active: boolean;
-    };
-}
 
 export interface IBottomSheet {
     type: BottomSheetType;
@@ -42,11 +34,10 @@ export interface ICurrentAccount {
 }
 
 export interface IAppState {
+    version: number;
     currentWalletId: string;
     selectedBlockchain: Blockchain;
     tosVersion: number;
-    networks: INetworksOptions;
-    blockchains: IBlockchainsOptions;
     bottomSheet: IBottomSheet;
     extensionStateLoaded: boolean;
 }

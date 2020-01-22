@@ -16,7 +16,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { getBalance, switchSelectedAccount } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { selectCurrentWallet, getCurrentAccount } from '../../redux/wallets/selectors';
-import { IBlockchainsOptions, BottomSheetType } from '../../redux/app/state';
+import { BottomSheetType } from '../../redux/app/state';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
@@ -25,6 +25,7 @@ import { openBottomSheet, setSelectedBlockchain } from '../../redux/app/actions'
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import BigNumber from 'bignumber.js';
 import { TokenType } from '../../core/blockchain/types/token';
+import { IBlockchainsOptions } from '../../redux/preferences/state';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -48,7 +49,7 @@ const SCREEN_WIDTH = Dimensions.get('window').width;
 const mapStateToProps = (state: IReduxState) => ({
     wallet: selectCurrentWallet(state),
     walletsNr: Object.keys(state.wallets).length,
-    blockchains: state.app.blockchains,
+    blockchains: state.preferences.blockchains,
     selectedBlockchain: state.app.selectedBlockchain,
     currentAccount: getCurrentAccount(state),
     exchangeRates: (state as any).market.exchangeRates

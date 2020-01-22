@@ -27,7 +27,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state: IReduxState) => ({
     testNet: state.preferences.testNet,
-    networksOptions: state.app.networks
+    networksOptions: state.preferences.networks
 });
 
 const navigationOptions = () => ({

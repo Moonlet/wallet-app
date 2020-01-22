@@ -3,6 +3,8 @@ export interface IPrefState {
     testNet: boolean;
     pinLogin: boolean;
     touchID: boolean;
+    networks: INetworksOptions;
+    blockchains: IBlockchainsOptions;
 }
 
 export interface INetworksOptions {
@@ -10,5 +12,12 @@ export interface INetworksOptions {
         // key is for Blockchain enum
         mainNet?: number;
         testNet?: number;
+    };
+}
+
+export interface IBlockchainsOptions {
+    [blockchain: string]: {
+        order: number;
+        active: boolean;
     };
 }

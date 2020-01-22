@@ -8,7 +8,7 @@ import { Icon } from '../../../components/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { IBlockchainNetwork, Blockchain } from '../../../core/blockchain/types';
-import { setNetworkTestNetChainId } from '../../../redux/app/actions';
+import { setNetworkTestNetChainId } from '../../../redux/preferences/actions';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { INetworksOptions } from '../../../redux/preferences/state';
 
@@ -24,7 +24,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state: IReduxState) => ({
-    appNetworks: state.app.networks
+    appNetworks: state.preferences.networks
 });
 
 const navigationOptions = ({ navigation }: any) => ({

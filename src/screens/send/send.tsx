@@ -48,7 +48,7 @@ export interface IReduxProps {
     addContact: typeof addContact;
     contacts: IContactsState[];
     openBottomSheet: typeof openBottomSheet;
-    currentWalletId: string;
+    selectedWalletId: string;
     currentAccount: ICurrentAccount;
 }
 
@@ -57,7 +57,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         accounts: getAccounts(state, ownProps.blockchain),
         contacts: getContacts(state),
-        currentWalletId: state.app.currentWalletId,
+        selectedWalletId: state.app.selectedWalletId,
         currentAccount: getCurrentAccount(state)
     };
 };
@@ -140,7 +140,7 @@ export class SendScreenComponent extends React.Component<
                 amount: this.state.amount,
                 token: this.props.token,
                 feeOptions: this.state.feeOptions,
-                walletId: this.props.currentWalletId,
+                walletId: this.props.selectedWalletId,
                 currentAccount: this.props.currentAccount
             })
                 .then(result => {

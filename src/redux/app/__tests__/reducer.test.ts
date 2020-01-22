@@ -16,7 +16,7 @@ describe('app reducer', () => {
             reducer(undefined as any, {
                 type: APP_SWITCH_WALLET,
                 data: 'uniqueid'
-            }).currentWalletId
+            }).selectedWalletId
         ).toBe('uniqueid');
     });
 

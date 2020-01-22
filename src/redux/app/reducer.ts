@@ -5,7 +5,7 @@ import { Blockchain } from '../../core/blockchain/types';
 
 const intialState: IAppState = {
     version: 1,
-    currentWalletId: '',
+    selectedWalletId: '',
     selectedBlockchain: Blockchain.ETHEREUM,
     tosVersion: 0
 };
@@ -15,7 +15,7 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
         case APP_SET_SELECTED_BLOCKCHAIN:
             return { ...state, selectedBlockchain: action.data };
         case APP_SWITCH_WALLET:
-            return { ...state, currentWalletId: action.data };
+            return { ...state, selectedWalletId: action.data };
         case APP_SET_TOS_VERSION:
             return { ...state, tosVersion: action.data };
 

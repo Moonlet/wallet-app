@@ -7,7 +7,7 @@ export interface ICurrentAccount {
 
 export interface IAppState {
     version: number;
-    currentWalletId: string;
+    selectedWalletId: string;
     selectedBlockchain: Blockchain;
     tosVersion: number;
 }

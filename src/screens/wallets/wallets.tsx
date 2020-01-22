@@ -32,7 +32,7 @@ export interface IReduxProps {
         [WalletType.HD]: IWalletState[];
         [WalletType.HW]: IWalletState[];
     };
-    currentWalletId: string;
+    selectedWalletId: string;
     appSwitchWallet: typeof appSwitchWallet;
     deleteWallet: typeof deleteWallet;
     walletsNr: number;
@@ -55,7 +55,7 @@ const mapStateToProps = (state: IReduxState) => {
             )
         },
         walletsNr: Object.keys(state.wallets).length,
-        currentWalletId: state.app.currentWalletId
+        selectedWalletId: state.app.selectedWalletId
     };
 };
 
@@ -278,9 +278,9 @@ export class WalletsScreenComponent extends React.Component<
                                         leftIcon="saturn-icon"
                                         label={wallet.name}
                                         rightIcon={
-                                            this.props.currentWalletId === wallet.id && 'check-1'
+                                            this.props.selectedWalletId === wallet.id && 'check-1'
                                         }
-                                        selected={this.props.currentWalletId === wallet.id}
+                                        selected={this.props.selectedWalletId === wallet.id}
                                     />
                                 </Swipeable>
                             );

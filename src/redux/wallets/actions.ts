@@ -360,7 +360,7 @@ export const deleteWallet = (walletId: string) => (
     getState: () => IReduxState
 ) => {
     const state = getState();
-    if (state.app.currentWalletId === walletId) {
+    if (state.app.selectedWalletId === walletId) {
         const nextWallet = Object.values(state.wallets).find(wallet => wallet.id !== walletId);
         const nextWalletId = nextWallet ? nextWallet.id : '';
         dispatch(appSwitchWallet(nextWalletId));

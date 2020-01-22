@@ -7,7 +7,7 @@ import { createSelector } from 'reselect';
 export const selectCurrentWallet = createSelector(
     [
         (state: IReduxState): IWalletsState => state.wallets,
-        (state: IReduxState): string => state.app.currentWalletId
+        (state: IReduxState): string => state.app.selectedWalletId
     ],
     (wallets, currendWalletId) => wallets[currendWalletId]
 );
@@ -15,13 +15,13 @@ export const selectCurrentWallet = createSelector(
 export const getCurrentAccount = createSelector(
     [
         (state: IReduxState): IWalletsState => state.wallets,
-        (state: IReduxState): string => state.app.currentWalletId
+        (state: IReduxState): string => state.app.selectedWalletId
     ],
-    (wallets, currentWalletId) => {
-        const acc = wallets[currentWalletId]?.accounts.find(
+    (wallets, selectedWalletId) => {
+        const acc = wallets[selectedWalletId]?.accounts.find(
             (account: IAccountState) => account.selected === true
         );
-        return acc || wallets[currentWalletId]?.accounts[0];
+        return acc || wallets[selectedWalletId]?.accounts[0];
     }
 );
 

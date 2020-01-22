@@ -3,7 +3,6 @@ import { IAction } from '../types';
 import {
     APP_SWITCH_WALLET,
     APP_SET_TOS_VERSION,
-    APP_SET_TEST_NET,
     APP_SET_NETWORK_TEST_NET_CHAIN_ID,
     APP_TOGGLE_BLOCKCHAIN,
     APP_UPDATE_BLOCKCHAIN_ORDER,
@@ -18,8 +17,7 @@ const intialState: IAppState = {
     currentWalletId: '',
     selectedBlockchain: Blockchain.ETHEREUM,
     tosVersion: 0,
-    devMode: true,
-    testNet: false,
+
     networks: {
         [Blockchain.ETHEREUM]: {
             testNet: 4,
@@ -52,11 +50,7 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
             return { ...state, currentWalletId: action.data };
         case APP_SET_TOS_VERSION:
             return { ...state, tosVersion: action.data };
-        case APP_SET_TEST_NET:
-            return {
-                ...state,
-                testNet: !state.testNet
-            };
+
         case APP_SET_NETWORK_TEST_NET_CHAIN_ID:
             return {
                 ...state,

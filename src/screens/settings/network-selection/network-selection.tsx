@@ -10,7 +10,7 @@ import { connect } from 'react-redux';
 import { IBlockchainNetwork, Blockchain } from '../../../core/blockchain/types';
 import { setNetworkTestNetChainId } from '../../../redux/app/actions';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
-import { INetworksOptions } from '../../../redux/app/state';
+import { INetworksOptions } from '../../../redux/preferences/state';
 
 export interface INavigationParams {
     blockchain: Blockchain;

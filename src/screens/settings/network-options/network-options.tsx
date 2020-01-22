@@ -10,8 +10,8 @@ import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
-import { INetworksOptions } from '../../../redux/app/state';
-import { toggleTestNet } from '../../../redux/app/actions';
+import { INetworksOptions } from '../../../redux/preferences/state';
+import { toggleTestNet } from '../../../redux/preferences/actions';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { Blockchain } from '../../../core/blockchain/types';
 
@@ -26,7 +26,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state: IReduxState) => ({
-    testNet: state.app.testNet,
+    testNet: state.preferences.testNet,
     networksOptions: state.app.networks
 });
 

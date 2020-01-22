@@ -1,13 +1,6 @@
 import { Blockchain } from '../../core/blockchain/types';
 import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
-
-export interface INetworksOptions {
-    [blockchain: string]: {
-        // key is for Blockchain enum
-        mainNet?: number;
-        testNet?: number;
-    };
-}
+import { INetworksOptions } from '../preferences/state';
 
 export interface IBlockchainsOptions {
     [blockchain: string]: {
@@ -52,8 +45,6 @@ export interface IAppState {
     currentWalletId: string;
     selectedBlockchain: Blockchain;
     tosVersion: number;
-    devMode: boolean;
-    testNet: boolean;
     networks: INetworksOptions;
     blockchains: IBlockchainsOptions;
     bottomSheet: IBottomSheet;

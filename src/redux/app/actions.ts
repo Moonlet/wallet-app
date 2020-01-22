@@ -1,15 +1,10 @@
 import { Blockchain } from '../../core/blockchain/types';
 import { IBlockchainsOptions, BottomSheetType, IBottomSheetExtensionRequestData } from './state';
 import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
-import { getCurrentAccount } from '../wallets/selectors';
-import { getBalance } from '../wallets/actions';
-import { Dispatch } from 'react';
-import { IReduxState } from '../state';
 
 // actions consts
 export const APP_SWITCH_WALLET = 'APP_STATE_SWITCH_WALLET';
 export const APP_SET_TOS_VERSION = 'APP_SET_TOS_VERSION';
-export const APP_SET_TEST_NET = 'APP_SET_TEST_NET';
 export const APP_SET_NETWORK_TEST_NET_CHAIN_ID = 'APP_SET_NETWORK_TEST_NET_CHAIN_ID';
 export const APP_TOGGLE_BLOCKCHAIN = 'APP_TOGGLE_BLOCKCHAIN';
 export const APP_UPDATE_BLOCKCHAIN_ORDER = 'APP_UPDATE_BLOCKCHAIN_ORDER';
@@ -38,21 +33,6 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => {
         type: APP_SET_SELECTED_BLOCKCHAIN,
         data: blockchain
     };
-};
-
-export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
-    const state = getState();
-    const currentAccount = getCurrentAccount(state);
-
-    dispatch({
-        type: APP_SET_TEST_NET
-    });
-    getBalance(
-        currentAccount.blockchain,
-        currentAccount.address,
-        undefined,
-        true
-    )(dispatch, getState);
 };
 
 export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: number) => {

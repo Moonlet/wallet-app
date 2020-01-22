@@ -25,7 +25,7 @@ interface IReduxProps {
 
 export const mapStateToProps = (state: IReduxState) => {
     return {
-        reviewTransaction: state.screens.send.reviewTransaction
+        reviewTransaction: state.ui.screens.send.reviewTransaction
     };
 };
 

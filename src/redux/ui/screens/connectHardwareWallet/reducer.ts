@@ -1,5 +1,5 @@
 import { IConnectHardwareWalletState } from './state';
-import { IAction } from '../../types';
+import { IAction } from '../../../types';
 import {
     VERIFY_ADDRESS_ON_DEVICE,
     FEATURE_NOT_SUPPORTED,

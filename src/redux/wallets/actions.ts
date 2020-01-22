@@ -6,7 +6,7 @@ import { IAction } from '../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { getChainId } from '../app/selectors';
-import { appSwitchWallet, openBottomSheet, closeBottomSheet } from '../app/actions';
+import { appSwitchWallet } from '../app/actions';
 import uuidv4 from 'uuid/v4';
 import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
@@ -18,17 +18,19 @@ import {
     featureNotSupported,
     toInitialState,
     connectInProgress
-} from '../screens/connectHardwareWallet/actions';
+} from '../ui/screens/connectHardwareWallet/actions';
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
-import { REVIEW_TRANSACTION } from '../screens/send/actions';
-import { BottomSheetType, ICurrentAccount } from '../app/state';
+import { REVIEW_TRANSACTION } from '../ui/screens/send/actions';
+import { ICurrentAccount } from '../app/state';
 import { REHYDRATE } from 'redux-persist';
 import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import BigNumber from 'bignumber.js';
 import { NavigationService } from '../../navigation/navigation-service';
+import { BottomSheetType } from '../ui/bottomSheet/state';
+import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';

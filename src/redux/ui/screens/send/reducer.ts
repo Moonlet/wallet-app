@@ -1,5 +1,5 @@
 import { ISendScreenState } from './state';
-import { IAction } from '../../types';
+import { IAction } from '../../../types';
 import { REVIEW_TRANSACTION } from './actions';
 
 const intialState: ISendScreenState = {

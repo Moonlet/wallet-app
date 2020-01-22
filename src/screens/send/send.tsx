@@ -31,15 +31,15 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
-import { openBottomSheet } from '../../redux/app/actions';
+import { ICurrentAccount } from '../../redux/app/state';
+import { formatNumber } from '../../core/utils/format-number';
+import { Dialog } from '../../components/dialog/dialog';
+import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import {
     IBottomSheetExtensionRequestData,
     IExtensionRequestType,
-    BottomSheetType,
-    ICurrentAccount
-} from '../../redux/app/state';
-import { formatNumber } from '../../core/utils/format-number';
-import { Dialog } from '../../components/dialog/dialog';
+    BottomSheetType
+} from '../../redux/ui/bottomSheet/state';
 
 export interface IReduxProps {
     account: IAccountState;

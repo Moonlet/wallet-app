@@ -74,7 +74,7 @@ export default class App extends React.Component<{}, IState> {
                 }
             }
 
-            if (Platform.OS === 'web' && store.getState().app.extensionStateLoaded) {
+            if (Platform.OS === 'web' && store.getState().ui.extension.stateLoaded) {
                 if (!this.extensionStateLoaded) {
                     this.extensionStateLoaded = true;
                     this.updateAppReady();
@@ -150,7 +150,7 @@ export default class App extends React.Component<{}, IState> {
             this.state.appState === APP_STATE_BACKGROUND &&
             nextAppState === APP_STATE_ACTIVE &&
             Object.keys(store.getState().wallets).length >= 1 &&
-            store.getState().screens.connectHardwareWallet.connectInProgress === false
+            store.getState().ui.screens.connectHardwareWallet.connectInProgress === false
         ) {
             this.showPasswordModal();
         }

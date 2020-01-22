@@ -16,16 +16,17 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { getBalance, switchSelectedAccount } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { selectCurrentWallet, getCurrentAccount } from '../../redux/wallets/selectors';
-import { BottomSheetType } from '../../redux/app/state';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
-import { openBottomSheet, setSelectedBlockchain } from '../../redux/app/actions';
+import { setSelectedBlockchain } from '../../redux/app/actions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import BigNumber from 'bignumber.js';
 import { TokenType } from '../../core/blockchain/types/token';
 import { IBlockchainsOptions } from '../../redux/preferences/state';
+import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
+import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 
 export interface IReduxProps {
     wallet: IWalletState;

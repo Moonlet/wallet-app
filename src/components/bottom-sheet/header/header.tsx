@@ -17,11 +17,10 @@ export class BottomSheetHeaderComponent extends React.Component<
     public render() {
         return (
             <TouchableWithoutFeedback
-                onPress={() =>
-                    Platform.OS === 'web'
-                        ? this.props.obRef.current.props.onCloseEnd()
-                        : this.props.obRef.current.snapTo(0)
-                }
+                onPress={() => {
+                    Platform.OS !== 'web' ? this.props.obRef.current.snapTo(0) : null;
+                    this.props.obRef.current.props.onCloseEnd();
+                }}
                 style={this.props.styles.header}
             >
                 <Icon name="chevron-up" size={ICON_SIZE / 2} style={this.props.styles.icon} />

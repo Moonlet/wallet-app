@@ -25,8 +25,6 @@ export const TokenCardComponent = (props: IProps) => {
         <TouchableOpacity
             style={styles.container}
             onPress={() => {
-                // console.log(props.token.logo, props.tokenLogo);
-
                 props.navigation.navigate('Token', {
                     accountIndex: props.account.index,
                     blockchain: props.account.blockchain,

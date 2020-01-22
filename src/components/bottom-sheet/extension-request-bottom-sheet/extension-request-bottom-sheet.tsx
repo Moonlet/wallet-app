@@ -33,9 +33,8 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
     }
 
     public componentDidMount() {
-        Platform.OS === 'web'
-            ? this.bottomSheet.current.props.onOpenStart()
-            : this.bottomSheet.current.snapTo(1);
+        this.bottomSheet.current.props.onOpenStart();
+        Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(1) : null;
     }
 
     public transactionHistoryPress = () => {

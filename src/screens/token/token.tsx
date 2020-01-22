@@ -6,7 +6,7 @@ import { IAccountState, ITransactionState, IWalletState } from '../../redux/wall
 import {
     getAccountTransactions,
     getAccount,
-    selectCurrentWallet
+    getSelectedWallet
 } from '../../redux/wallets/selectors';
 import { IReduxState } from '../../redux/state';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
@@ -49,7 +49,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         transactions: getAccountTransactions(state, ownProps.accountIndex, ownProps.blockchain),
-        wallet: selectCurrentWallet(state),
+        wallet: getSelectedWallet(state),
         extensionTransactionPayload: ownProps.extensionTransactionPayload,
         chainId: getChainId(state, ownProps.blockchain)
     };

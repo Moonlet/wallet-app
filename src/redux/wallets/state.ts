@@ -12,6 +12,8 @@ export interface IWalletState {
     id: string;
     name: string;
     deviceId?: string;
+    selected: boolean;
+    selectedBlockchain: Blockchain;
     hwOptions?: {
         deviceId: string;
         deviceVendor: HWVendor;
@@ -28,6 +30,11 @@ export interface IWalletState {
 export enum TokenType {
     NATIVE = 'NATIVE',
     ERC20 = 'ERC20'
+}
+
+export interface ISelectedAccount {
+    index: number;
+    blockchain: Blockchain;
 }
 
 export interface IAccountState {

@@ -1,6 +1,6 @@
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
-import { getCurrentAccount } from '../wallets/selectors';
+import { getSelectedAccount } from '../wallets/selectors';
 import { getBalance } from '../wallets/actions';
 import { Blockchain } from '../../core/blockchain/types';
 import { IBlockchainsOptions } from './state';
@@ -39,14 +39,14 @@ export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: number
 
 export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
     const state = getState();
-    const currentAccount = getCurrentAccount(state);
+    const selectedAccount = getSelectedAccount(state);
 
     dispatch({
         type: SET_TEST_NET
     });
     getBalance(
-        currentAccount.blockchain,
-        currentAccount.address,
+        selectedAccount.blockchain,
+        selectedAccount.address,
         undefined,
         true
     )(dispatch, getState);

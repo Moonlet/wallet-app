@@ -8,7 +8,7 @@ import { IWalletState, IAccountState, TokenType } from '../../redux/wallets/stat
 import { switchSelectedAccount, getBalance } from '../../redux/wallets/actions';
 import stylesProvider from './styles';
 import { Blockchain } from '../../core/blockchain/types';
-import { selectCurrentWallet, getCurrentAccount } from '../../redux/wallets/selectors';
+import { getSelectedWallet, getSelectedAccount } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
@@ -26,8 +26,8 @@ export interface IReduxProps {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        wallet: selectCurrentWallet(state),
-        selectedAccount: getCurrentAccount(state),
+        wallet: getSelectedWallet(state),
+        selectedAccount: getSelectedAccount(state),
         exchangeRates: (state as any).market.exchangeRates
     };
 };

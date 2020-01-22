@@ -17,15 +17,15 @@ import Icon from '../../components/icon';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 
 import { translate } from '../../core/i18n';
-import { appSwitchWallet } from '../../redux/app/actions';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 import stylesProvider from './styles';
-import { deleteWallet, updateWalletName } from '../../redux/wallets/actions';
+import { deleteWallet, updateWalletName, setSelectedWallet } from '../../redux/wallets/actions';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { ListCard } from '../../components/list-card/list-card';
 import { Dialog } from '../../components/dialog/dialog';
+import { getSelectedWallet } from '../../redux/wallets/selectors';
 
 export interface IReduxProps {
     wallets: {
@@ -33,7 +33,7 @@ export interface IReduxProps {
         [WalletType.HW]: IWalletState[];
     };
     selectedWalletId: string;
-    appSwitchWallet: typeof appSwitchWallet;
+    setSelectedWallet: typeof setSelectedWallet;
     deleteWallet: typeof deleteWallet;
     walletsNr: number;
     updateWalletName: typeof updateWalletName;
@@ -55,12 +55,12 @@ const mapStateToProps = (state: IReduxState) => {
             )
         },
         walletsNr: Object.keys(state.wallets).length,
-        selectedWalletId: state.app.selectedWalletId
+        selectedWalletId: getSelectedWallet(state).id
     };
 };
 
 const mapDispatchToProps = {
-    appSwitchWallet,
+    setSelectedWallet,
     deleteWallet,
     updateWalletName
 };
@@ -180,7 +180,7 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     public onSelectWallet(walletId: string) {
-        this.props.appSwitchWallet(walletId);
+        this.props.setSelectedWallet(walletId);
         this.props.navigation.goBack(null);
     }
 

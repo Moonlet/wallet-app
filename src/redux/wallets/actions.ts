@@ -6,12 +6,10 @@ import { IAction } from '../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { getChainId } from '../app/selectors';
-import { appSwitchWallet } from '../app/actions';
 import uuidv4 from 'uuid/v4';
 import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
-import { selectCurrentWallet } from './selectors';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
 import {
     verifyAddressOnDevice,
@@ -24,13 +22,14 @@ import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
 import { REVIEW_TRANSACTION } from '../ui/screens/send/actions';
-import { ICurrentAccount } from '../app/state';
+import { ISelectedAccount } from '../wallets/state';
 import { REHYDRATE } from 'redux-persist';
 import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import BigNumber from 'bignumber.js';
 import { NavigationService } from '../../navigation/navigation-service';
 import { BottomSheetType } from '../ui/bottomSheet/state';
 import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
+import { getSelectedWallet } from './selectors';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -45,6 +44,8 @@ export const UPDATE_TOKEN_ORDER = 'UPDATE_TOKEN_ORDER';
 export const REMOVE_TOKEN = 'REMOVE_TOKEN';
 export const ADD_TOKEN = 'ADD_TOKEN';
 export const WALLET_SELECT_ACCOUNT = 'WALLET_SELECT_ACCOUNT';
+export const WALLET_SELECT_BLOCKCHAIN = 'WALLET_SELECT_BLOCKCHAIN';
+export const SELECT_WALLET = 'SELECT_WALLET';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -54,11 +55,35 @@ export const addWallet = (walletData: IWalletState) => {
     };
 };
 
-export const switchSelectedAccount = (currentAccount: ICurrentAccount) => (
+export const setSelectedWallet = (walletId: string) => {
+    return {
+        type: SELECT_WALLET,
+        data: walletId
+    };
+};
+
+export const setSelectedBlockchain = (blockchain: Blockchain) => (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
-    const wallet = selectCurrentWallet(getState());
+    const wallet = getSelectedWallet(getState());
+    if (wallet === undefined) {
+        return;
+    }
+    dispatch({
+        type: WALLET_SELECT_BLOCKCHAIN,
+        data: {
+            walletId: wallet.id,
+            blockchain
+        }
+    });
+};
+
+export const switchSelectedAccount = (selectedAccount: ISelectedAccount) => (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    const wallet = getSelectedWallet(getState());
     if (wallet === undefined) {
         return;
     }
@@ -66,7 +91,7 @@ export const switchSelectedAccount = (currentAccount: ICurrentAccount) => (
         type: WALLET_SELECT_ACCOUNT,
         data: {
             walletId: wallet.id,
-            currentAccount
+            selectedAccount
         }
     });
 };
@@ -121,6 +146,8 @@ export const createHWWallet = (
         accounts[0].selected = true;
         const walletData: IWalletState = {
             id: walletId,
+            selected: false,
+            selectedBlockchain: blockchain,
             hwOptions: {
                 deviceId,
                 deviceVendor,
@@ -134,14 +161,10 @@ export const createHWWallet = (
 
         dispatch(addWallet(walletData));
 
-        dispatch(appSwitchWallet(walletId));
-        // navigation.navigate(
-        //     'MainNavigation',
-        //     {},
-        //     NavigationActions.navigate({ routeName: 'Dashboard' })
-        // );
+        dispatch(setSelectedWallet(walletId));
         NavigationService.navigate('MainNavigation', {});
         NavigationService.navigate('Dashboard', {}); // TODO: check this
+
         dispatch(toInitialState());
     } catch (e) {
         // this might not be the best place
@@ -174,6 +197,8 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             dispatch(
                 addWallet({
                     id: walletId,
+                    selected: false,
+                    selectedBlockchain: Blockchain.ETHEREUM, // by default the first blockchain is selected
                     name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
                     type: WalletType.HD,
                     accounts
@@ -182,7 +207,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
 
             await storeEncrypted(mnemonic, walletId, password);
 
-            dispatch(appSwitchWallet(walletId));
+            dispatch(setSelectedWallet(walletId));
             callback && callback();
         });
     } catch (e) {
@@ -200,7 +225,7 @@ export const getBalance = (
     force: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
-    const wallet = selectCurrentWallet(state);
+    const wallet = getSelectedWallet(state);
     if (wallet === undefined) {
         return;
     }
@@ -287,7 +312,7 @@ export const sendTransferTransaction = (
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
 
-    const appWallet = selectCurrentWallet(state);
+    const appWallet = getSelectedWallet(state);
 
     try {
         const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
@@ -360,10 +385,10 @@ export const deleteWallet = (walletId: string) => (
     getState: () => IReduxState
 ) => {
     const state = getState();
-    if (state.app.selectedWalletId === walletId) {
+    if (getSelectedWallet(state).id === walletId) {
         const nextWallet = Object.values(state.wallets).find(wallet => wallet.id !== walletId);
         const nextWalletId = nextWallet ? nextWallet.id : '';
-        dispatch(appSwitchWallet(nextWalletId));
+        dispatch(setSelectedWallet(nextWalletId));
     }
     dispatch({
         type: WALLET_DELETE,

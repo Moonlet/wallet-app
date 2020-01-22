@@ -2,8 +2,6 @@
 
 exports[`app reducer should set initial state 1`] = `
 Object {
-  "selectedBlockchain": "ETHEREUM",
-  "selectedWalletId": "",
   "tosVersion": 0,
   "version": 1,
 }

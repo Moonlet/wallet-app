@@ -1,4 +1,4 @@
-import { addWallet, createHDWallet } from '../actions';
+import { addWallet, createHDWallet, setSelectedWallet } from '../actions';
 
 jest.mock('../../../core/secure/keychain', () => {
     return {
@@ -25,6 +25,7 @@ describe('wallet actions', () => {
     test('addWallet actions return correct object', () => {
         // @ts-ignore
         expect(addWallet({ data: 'test' })).toEqual({ data: { data: 'test' }, type: 'WALLET_ADD' });
+        expect(setSelectedWallet('1')).toMatchSnapshot();
     });
 
     test('createHDWallet working properly', async () => {

@@ -1,5 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`wallet actions addWallet actions return correct object 1`] = `
+Object {
+  "data": "1",
+  "type": "SELECT_WALLET",
+}
+`;
+
 exports[`wallet actions createHDWallet working properly 1`] = `
 [MockFunction] {
   "calls": Array [
@@ -114,6 +121,8 @@ exports[`wallet actions createHDWallet working properly 1`] = `
           ],
           "id": "uuid",
           "name": "Wallet 1",
+          "selected": false,
+          "selectedBlockchain": "ETHEREUM",
           "type": "HD",
         },
         "type": "WALLET_ADD",
@@ -122,7 +131,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
     Array [
       Object {
         "data": "uuid",
-        "type": "APP_STATE_SWITCH_WALLET",
+        "type": "SELECT_WALLET",
       },
     ],
   ],

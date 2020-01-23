@@ -5,7 +5,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { IWalletState, IAccountState, TokenType } from '../../redux/wallets/state';
-import { switchSelectedAccount, getBalance } from '../../redux/wallets/actions';
+import { setSelectedAccount, getBalance } from '../../redux/wallets/actions';
 import stylesProvider from './styles';
 import { Blockchain } from '../../core/blockchain/types';
 import { getSelectedWallet, getSelectedAccount } from '../../redux/wallets/selectors';
@@ -18,7 +18,7 @@ import BigNumber from 'bignumber.js';
 
 export interface IReduxProps {
     wallet: IWalletState;
-    switchSelectedAccount: typeof switchSelectedAccount;
+    setSelectedAccount: typeof setSelectedAccount;
     selectedAccount: IAccountState;
     getBalance: typeof getBalance;
     exchangeRates: any;
@@ -33,7 +33,7 @@ const mapStateToProps = (state: IReduxState) => {
 };
 
 const mapDispatchToProps = {
-    switchSelectedAccount,
+    setSelectedAccount,
     getBalance
 };
 
@@ -137,7 +137,7 @@ export const AccountsScreenComponent = (
                         label={label}
                         selected={selected}
                         onPress={() =>
-                            props.switchSelectedAccount({
+                            props.setSelectedAccount({
                                 index: account.index,
                                 blockchain
                             })

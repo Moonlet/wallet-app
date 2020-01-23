@@ -5,7 +5,6 @@ import { IWalletState, IAccountState } from './state';
 import { IAction } from '../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
-import { getChainId } from '../app/selectors';
 import uuidv4 from 'uuid/v4';
 import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
@@ -30,6 +29,7 @@ import { NavigationService } from '../../navigation/navigation-service';
 import { BottomSheetType } from '../ui/bottomSheet/state';
 import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
 import { getSelectedWallet } from './selectors';
+import { getChainId } from '../preferences/selectors';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -79,7 +79,7 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
     });
 };
 
-export const switchSelectedAccount = (selectedAccount: ISelectedAccount) => (
+export const setSelectedAccount = (selectedAccount: ISelectedAccount) => (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {

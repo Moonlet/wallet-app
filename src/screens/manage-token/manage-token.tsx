@@ -16,7 +16,7 @@ import { Icon } from '../../components/icon';
 import { formatAddress } from '../../core/utils/format-address';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { getChainId } from '../../redux/app/selectors';
+import { getChainId } from '../../redux/preferences/selectors';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { isValidAddress } from '../../core/blockchain/ethereum/account';
 import BigNumber from 'bignumber.js';

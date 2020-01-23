@@ -13,11 +13,7 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import {
-    getBalance,
-    switchSelectedAccount,
-    setSelectedBlockchain
-} from '../../redux/wallets/actions';
+import { getBalance, setSelectedAccount, setSelectedBlockchain } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
 import {
     getSelectedWallet,
@@ -44,7 +40,7 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
     selectedBlockchain: Blockchain;
     exchangeRates: any;
-    switchSelectedAccount: typeof switchSelectedAccount;
+    setSelectedAccount: typeof setSelectedAccount;
     setSelectedBlockchain: typeof setSelectedBlockchain;
 }
 
@@ -66,7 +62,7 @@ const mapStateToProps = (state: IReduxState) => ({
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
-    switchSelectedAccount,
+    setSelectedAccount,
     setSelectedBlockchain
 };
 
@@ -264,7 +260,7 @@ export class DashboardScreenComponent extends React.Component<
                                 ]}
                                 onPress={() => {
                                     this.props.setSelectedBlockchain(coin.blockchain);
-                                    this.props.switchSelectedAccount({
+                                    this.props.setSelectedAccount({
                                         index: 0, // TODO - in the case we are not using the index 0 account this might not work
                                         blockchain: coin.blockchain
                                     });

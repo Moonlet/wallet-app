@@ -30,7 +30,7 @@ import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-cl
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
 import { Dialog } from '../../components/dialog/dialog';
-import { getChainId } from '../../redux/app/selectors';
+import { getChainId } from '../../redux/preferences/selectors';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;

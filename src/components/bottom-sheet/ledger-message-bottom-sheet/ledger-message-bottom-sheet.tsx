@@ -7,7 +7,6 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { BottomSheetHeader } from '../header/header';
-import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
 import { Blockchain } from '../../../core/blockchain/types';
 import { IReduxState } from '../../../redux/state';
@@ -18,7 +17,6 @@ interface IExternalProps {
     blockchain: Blockchain;
     onOpenStart: () => void;
     onCloseEnd: () => void;
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 interface IReduxProps {

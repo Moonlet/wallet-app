@@ -20,7 +20,7 @@ import {
     connectInProgress
 } from '../screens/connectHardwareWallet/actions';
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
-import { NavigationScreenProp, NavigationState, NavigationActions } from 'react-navigation';
+import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
 import { REVIEW_TRANSACTION } from '../screens/send/actions';
@@ -28,6 +28,7 @@ import { BottomSheetType, ICurrentAccount } from '../app/state';
 import { REHYDRATE } from 'redux-persist';
 import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import BigNumber from 'bignumber.js';
+import { NavigationService } from '../../navigation/navigation-service';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -94,8 +95,8 @@ export const createHWWallet = (
     deviceVendor: HWVendor,
     deviceModel: HWModel,
     connectionType: HWConnection,
-    blockchain: Blockchain,
-    navigation: NavigationScreenProp<NavigationState>
+    blockchain: Blockchain
+    // navigation: NavigationScreenProp<NavigationState>
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     try {
         const walletId: string = uuidv4();
@@ -132,11 +133,13 @@ export const createHWWallet = (
         dispatch(addWallet(walletData));
 
         dispatch(appSwitchWallet(walletId));
-        navigation.navigate(
-            'MainNavigation',
-            {},
-            NavigationActions.navigate({ routeName: 'Dashboard' })
-        );
+        // navigation.navigate(
+        //     'MainNavigation',
+        //     {},
+        //     NavigationActions.navigate({ routeName: 'Dashboard' })
+        // );
+        NavigationService.navigate('MainNavigation', {});
+        NavigationService.navigate('Dashboard', {}); // TODO: check this
         dispatch(toInitialState());
     } catch (e) {
         // this might not be the best place

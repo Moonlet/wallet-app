@@ -14,7 +14,6 @@ import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { Blockchain } from '../../../core/blockchain/types';
 import { HWVendor, HWModel, HWConnection } from '../../../core/wallet/hw-wallet/types';
-import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { delay } from '../../../core/utils/time';
 import { TransportFactory } from '../../../core/wallet/hw-wallet/ledger/transport-factory';
 import TouchableOpacity from '../../../library/touchable-opacity/touchable-opacity';
@@ -24,7 +23,6 @@ interface IExternalProps {
     blockchain: Blockchain;
     deviceModel: HWModel;
     connectionType: HWConnection;
-    navigation: NavigationScreenProp<NavigationState>;
     onOpenStart: () => void;
     onCloseEnd: () => void;
 }
@@ -37,9 +35,9 @@ interface IReduxProps {
         deviceVendor: HWVendor,
         deviceModel: HWModel,
         connectionType: HWConnection,
-        blockchain: Blockchain,
-        navigation: NavigationScreenProp<NavigationState>
-    ) => Promise<any>;
+        blockchain: Blockchain
+    ) => // navigation: NavigationScreenProp<NavigationState>
+    Promise<any>;
 }
 
 interface IState {
@@ -48,7 +46,6 @@ interface IState {
     loadingConnection: boolean;
     openApp: boolean;
     ledgerDevice: any;
-    navigation: NavigationScreenProp<NavigationState>;
 }
 
 export class LedgerConnectComponent extends React.Component<
@@ -69,8 +66,7 @@ export class LedgerConnectComponent extends React.Component<
             error: null,
             loadingConnection: false,
             openApp: false,
-            ledgerDevice: undefined,
-            navigation: undefined
+            ledgerDevice: undefined
         };
     }
 
@@ -81,8 +77,8 @@ export class LedgerConnectComponent extends React.Component<
                 HWVendor.LEDGER,
                 this.props.deviceModel,
                 this.props.connectionType,
-                this.props.blockchain,
-                this.props.navigation
+                this.props.blockchain
+                // this.props.navigation
             )
             .then(() => {
                 Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(0) : null;

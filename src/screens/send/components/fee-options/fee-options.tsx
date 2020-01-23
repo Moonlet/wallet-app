@@ -12,7 +12,7 @@ import { IBlockchainConfig } from '../../../../core/blockchain/types';
 import { BLOCKCHAIN_INFO, getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { IReduxState } from '../../../../redux/state';
-import { getChainId } from '../../../../redux/app/selectors';
+import { getChainId } from '../../../../redux/preferences/selectors';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import bind from 'bind-decorator';

@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IAccountState, ITransactionState } from '../../redux/wallets/state';
 import { IReduxState } from '../../redux/state';
-import { getCurrentAccount, getCurrentAccountTransactions } from '../../redux/wallets/selectors';
+import { getSelectedAccount, getSelectedAccountTransactions } from '../../redux/wallets/selectors';
 import { TransactionsHistoryList } from './list-transactions-history/list-transactions-history';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
 
@@ -22,8 +22,8 @@ export interface IReduxProps {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        selectedAccount: getCurrentAccount(state),
-        transactions: getCurrentAccountTransactions(state)
+        selectedAccount: getSelectedAccount(state),
+        transactions: getSelectedAccountTransactions(state)
     };
 };
 

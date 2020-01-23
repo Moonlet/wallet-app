@@ -13,18 +13,23 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { getBalance, switchSelectedAccount } from '../../redux/wallets/actions';
+import { getBalance, setSelectedAccount, setSelectedBlockchain } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { selectCurrentWallet, getCurrentAccount } from '../../redux/wallets/selectors';
-import { IBlockchainsOptions, BottomSheetType } from '../../redux/app/state';
+import {
+    getSelectedWallet,
+    getSelectedAccount,
+    getSelectedBlockchain
+} from '../../redux/wallets/selectors';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
-import { openBottomSheet, setSelectedBlockchain } from '../../redux/app/actions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import BigNumber from 'bignumber.js';
 import { TokenType } from '../../core/blockchain/types/token';
+import { IBlockchainsOptions } from '../../redux/preferences/state';
+import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
+import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -32,10 +37,10 @@ export interface IReduxProps {
     getBalance: typeof getBalance;
     blockchains: IBlockchainsOptions;
     openBottomSheet: typeof openBottomSheet;
-    currentAccount: IAccountState;
+    selectedAccount: IAccountState;
     selectedBlockchain: Blockchain;
     exchangeRates: any;
-    switchSelectedAccount: typeof switchSelectedAccount;
+    setSelectedAccount: typeof setSelectedAccount;
     setSelectedBlockchain: typeof setSelectedBlockchain;
 }
 
@@ -46,18 +51,18 @@ interface IState {
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
 const mapStateToProps = (state: IReduxState) => ({
-    wallet: selectCurrentWallet(state),
+    wallet: getSelectedWallet(state),
     walletsNr: Object.keys(state.wallets).length,
-    blockchains: state.app.blockchains,
-    selectedBlockchain: state.app.selectedBlockchain,
-    currentAccount: getCurrentAccount(state),
+    blockchains: state.preferences.blockchains,
+    selectedBlockchain: getSelectedBlockchain(state),
+    selectedAccount: getSelectedAccount(state),
     exchangeRates: (state as any).market.exchangeRates
 });
 
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
-    switchSelectedAccount,
+    setSelectedAccount,
     setSelectedBlockchain
 };
 
@@ -75,7 +80,7 @@ const MyTitle = ({ text }) => (
     </Text>
 );
 const MyConnectedTitle = connect((state: IReduxState) => ({
-    text: (selectCurrentWallet(state) || {}).name
+    text: (getSelectedWallet(state) || {}).name
 }))(MyTitle);
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -147,11 +152,10 @@ export class DashboardScreenComponent extends React.Component<
         Object.keys(this.props.blockchains).map(key => {
             const value = this.props.blockchains[key];
             let blockchainHasAccounts = false;
-            if (this.props.wallet) {
-                if (this.props.wallet.accounts.find(acc => acc.blockchain === key)) {
-                    blockchainHasAccounts = true;
-                }
-            } else {
+            if (
+                this.props.wallet &&
+                this.props.wallet.accounts.find(acc => acc.blockchain === key)
+            ) {
                 blockchainHasAccounts = true;
             }
 
@@ -167,11 +171,14 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.currentAccount !== prevProps.currentAccount && this.props.currentAccount) {
-            this.props.setSelectedBlockchain(this.props.currentAccount.blockchain);
+        if (
+            this.props.selectedAccount !== prevProps.selectedAccount &&
+            this.props.selectedAccount
+        ) {
+            this.props.setSelectedBlockchain(this.props.selectedAccount.blockchain);
             this.props.getBalance(
-                this.props.currentAccount.blockchain,
-                this.props.currentAccount.address,
+                this.props.selectedAccount.blockchain,
+                this.props.selectedAccount.address,
                 undefined,
                 true
             );
@@ -180,16 +187,16 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public calculateBalance() {
-        const tokenKeys = Object.keys(this.props.currentAccount.tokens);
+        const tokenKeys = Object.keys(this.props.selectedAccount.tokens);
         let balance = new BigNumber(0);
         tokenKeys.map(key => {
-            const token = this.props.currentAccount.tokens[key];
+            const token = this.props.selectedAccount.tokens[key];
             if (token.active) {
                 if (token.type === TokenType.NATIVE) {
                     balance = balance.plus(token.balance?.value);
                 } else {
                     const exchange = this.props.exchangeRates[key][
-                        getBlockchain(this.props.currentAccount.blockchain).config.coin
+                        getBlockchain(this.props.selectedAccount.blockchain).config.coin
                     ];
                     balance = balance.plus(token.balance?.value.multipliedBy(exchange));
                 }
@@ -199,10 +206,10 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public componentDidMount() {
-        if (this.props.currentAccount) {
+        if (this.props.selectedAccount) {
             this.props.getBalance(
-                this.props.currentAccount.blockchain,
-                this.props.currentAccount.address,
+                this.props.selectedAccount.blockchain,
+                this.props.selectedAccount.address,
                 undefined,
                 true
             );
@@ -253,7 +260,7 @@ export class DashboardScreenComponent extends React.Component<
                                 ]}
                                 onPress={() => {
                                     this.props.setSelectedBlockchain(coin.blockchain);
-                                    this.props.switchSelectedAccount({
+                                    this.props.setSelectedAccount({
                                         index: 0, // TODO - in the case we are not using the index 0 account this might not work
                                         blockchain: coin.blockchain
                                     });
@@ -285,9 +292,9 @@ export class DashboardScreenComponent extends React.Component<
                 {coins.length !== 0 && (
                     <View style={styles.dashboardContainer}>
                         <View style={styles.coinBalanceCard}>
-                            {this.props.currentAccount && (
+                            {this.props.selectedAccount && (
                                 <CoinBalanceCard
-                                    key={this.props.currentAccount.address}
+                                    key={this.props.selectedAccount.address}
                                     onPress={() =>
                                         this.props.openBottomSheet(BottomSheetType.ACCOUNTS, {
                                             blockchain
@@ -298,7 +305,7 @@ export class DashboardScreenComponent extends React.Component<
                                     currency={BLOCKCHAIN_INFO[blockchain].coin}
                                     toCurrency="USD"
                                     active={true}
-                                    selectedAccount={this.props.currentAccount}
+                                    selectedAccount={this.props.selectedAccount}
                                 />
                             )}
                         </View>
@@ -307,7 +314,7 @@ export class DashboardScreenComponent extends React.Component<
                             style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
                         >
                             <CoinDashboard
-                                account={this.props.currentAccount}
+                                account={this.props.selectedAccount}
                                 blockchain={blockchain}
                                 navigation={this.props.navigation}
                             />

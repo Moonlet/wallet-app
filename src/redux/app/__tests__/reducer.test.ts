@@ -1,5 +1,5 @@
 import reducer from '../reducer';
-import { APP_SET_TOS_VERSION, APP_SWITCH_WALLET } from '../actions';
+import { APP_SET_TOS_VERSION } from '../actions';
 
 describe('app reducer', () => {
     test('should set initial state', () => {
@@ -9,15 +9,6 @@ describe('app reducer', () => {
                 data: ''
             })
         ).toMatchSnapshot();
-    });
-
-    test('should handle APP_SWITCH_WALLET', () => {
-        expect(
-            reducer(undefined as any, {
-                type: APP_SWITCH_WALLET,
-                data: 'uniqueid'
-            }).currentWalletId
-        ).toBe('uniqueid');
     });
 
     test('should handle APP_SET_TOS_VERSION', () => {

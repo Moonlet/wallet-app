@@ -8,17 +8,11 @@ import appReducer from './app/reducer';
 import marketReducer from './market/reducer';
 import prefReducer from './preferences/reducer';
 import contactsReducer from './contacts/reducer';
-import connectHardwareWalletReducer from './screens/connectHardwareWallet/reducer';
 import { walletConnectMiddleware } from './utils/wallet-connect-middleware';
-import sendReducer from './screens/send/reducer';
+import { uiReducer } from './ui/reducer';
 
 const composeEnhancers = composeWithDevTools({
     // options like actionSanitizer, stateSanitizer
-});
-
-export const screensReducer = combineReducers({
-    connectHardwareWallet: connectHardwareWalletReducer,
-    send: sendReducer
 });
 
 export const rootReducer = combineReducers({
@@ -26,7 +20,7 @@ export const rootReducer = combineReducers({
     wallets: walletsReducer,
     market: marketReducer,
     preferences: prefReducer,
-    screens: screensReducer,
+    ui: uiReducer,
     contacts: contactsReducer
 });
 

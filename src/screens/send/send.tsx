@@ -12,7 +12,6 @@ import { translate } from '../../core/i18n';
 import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
-import { IAccountState } from '../../redux/wallets/state';
 import { addContact } from '../../redux/contacts/actions';
 import { IContactState, IContactsState } from '../../redux/contacts/state';
 import { getContacts } from '../../redux/contacts/selectors';
@@ -20,7 +19,12 @@ import { AccountAddress } from '../../components/account-address/account-address
 import { AccountList } from './components/account-list/account-list';
 import { AddressBook } from './components/address-book/address-book';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
-import { getAccounts, getAccount, getCurrentAccount } from '../../redux/wallets/selectors';
+import {
+    getAccounts,
+    getAccount,
+    getSelectedAccount,
+    getSelectedWallet
+} from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
@@ -31,15 +35,15 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
-import { openBottomSheet } from '../../redux/app/actions';
+import { ISelectedAccount, IAccountState } from '../../redux/wallets/state';
+import { formatNumber } from '../../core/utils/format-number';
+import { Dialog } from '../../components/dialog/dialog';
+import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import {
     IBottomSheetExtensionRequestData,
     IExtensionRequestType,
-    BottomSheetType,
-    ICurrentAccount
-} from '../../redux/app/state';
-import { formatNumber } from '../../core/utils/format-number';
-import { Dialog } from '../../components/dialog/dialog';
+    BottomSheetType
+} from '../../redux/ui/bottomSheet/state';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -48,8 +52,8 @@ export interface IReduxProps {
     addContact: typeof addContact;
     contacts: IContactsState[];
     openBottomSheet: typeof openBottomSheet;
-    currentWalletId: string;
-    currentAccount: ICurrentAccount;
+    selectedWalletId: string;
+    selectedAccount: ISelectedAccount;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -57,8 +61,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         accounts: getAccounts(state, ownProps.blockchain),
         contacts: getContacts(state),
-        currentWalletId: state.app.currentWalletId,
-        currentAccount: getCurrentAccount(state)
+        selectedWalletId: getSelectedWallet(state).id,
+        selectedAccount: getSelectedAccount(state)
     };
 };
 
@@ -140,8 +144,8 @@ export class SendScreenComponent extends React.Component<
                 amount: this.state.amount,
                 token: this.props.token,
                 feeOptions: this.state.feeOptions,
-                walletId: this.props.currentWalletId,
-                currentAccount: this.props.currentAccount
+                walletId: this.props.selectedWalletId,
+                selectedAccount: this.props.selectedAccount
             })
                 .then(result => {
                     data.state = 'completed';

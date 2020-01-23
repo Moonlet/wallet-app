@@ -1,27 +1,34 @@
 import { IReduxState } from '../state';
-import { ITransactionState, IAccountState, IWalletsState } from './state';
+import { ITransactionState, IAccountState, IWalletsState, IWalletState } from './state';
 import { Blockchain } from '../../core/blockchain/types';
 
 import { createSelector } from 'reselect';
 
-export const selectCurrentWallet = createSelector(
-    [
-        (state: IReduxState): IWalletsState => state.wallets,
-        (state: IReduxState): string => state.app.currentWalletId
-    ],
-    (wallets, currendWalletId) => wallets[currendWalletId]
+export const getSelectedBlockchain = createSelector(
+    (state: IReduxState): IWalletState => getSelectedWallet(state),
+    wallet => {
+        const selectedBlockchain = wallet ? wallet.selectedBlockchain : '';
+        return selectedBlockchain;
+    }
 );
 
-export const getCurrentAccount = createSelector(
-    [
-        (state: IReduxState): IWalletsState => state.wallets,
-        (state: IReduxState): string => state.app.currentWalletId
-    ],
-    (wallets, currentWalletId) => {
-        const acc = wallets[currentWalletId]?.accounts.find(
-            (account: IAccountState) => account.selected === true
-        );
-        return acc || wallets[currentWalletId]?.accounts[0];
+export const getSelectedWallet = createSelector(
+    (state: IReduxState) => state.wallets,
+    (wallets: IWalletsState) => {
+        return Object.values(wallets).find(wallet => wallet.selected === true);
+    }
+);
+
+export const getSelectedAccount = createSelector(
+    (state: IReduxState): IWalletState => getSelectedWallet(state),
+    wallet => {
+        if (wallet === undefined) {
+            return undefined;
+        }
+        const acc = wallet
+            ? wallet.accounts.find((account: IAccountState) => account.selected === true)
+            : undefined;
+        return acc || wallet.accounts[0];
     }
 );
 
@@ -30,39 +37,39 @@ export const getAccountTransactions = (
     accountIndex: number,
     blockchain: Blockchain
 ): ITransactionState[] => {
-    const account: IAccountState = selectCurrentWallet(state).accounts.find(
+    const account: IAccountState = getSelectedWallet(state).accounts.find(
         acc => acc.index === accountIndex && acc.blockchain === blockchain
     );
-    const transactions = selectCurrentWallet(state).transactions;
+    const transactions = getSelectedWallet(state).transactions;
     if (transactions) {
-        return Object.values(selectCurrentWallet(state).transactions).filter(
+        return Object.values(getSelectedWallet(state).transactions).filter(
             tx => tx.fromAddress === account.address
         );
     }
 };
 
-export const getCurrentAccountTransactions = (state: IReduxState): ITransactionState[] => {
-    const account: IAccountState = selectCurrentWallet(state).accounts.find(
+export const getSelectedAccountTransactions = (state: IReduxState): ITransactionState[] => {
+    const account: IAccountState = getSelectedWallet(state).accounts.find(
         acc =>
-            acc.index === getCurrentAccount(state).index &&
-            acc.blockchain === getCurrentAccount(state).blockchain
+            acc.index === getSelectedAccount(state).index &&
+            acc.blockchain === getSelectedAccount(state).blockchain
     );
-    const transactions = selectCurrentWallet(state).transactions;
+    const transactions = getSelectedWallet(state).transactions;
     if (transactions) {
-        return Object.values(selectCurrentWallet(state).transactions).filter(
+        return Object.values(getSelectedWallet(state).transactions).filter(
             tx => tx.fromAddress === account.address
         );
     }
 };
 
 export const getAccounts = (state: IReduxState, blockchain: Blockchain): IAccountState[] =>
-    selectCurrentWallet(state).accounts.filter(acc => acc.blockchain === blockchain);
+    getSelectedWallet(state).accounts.filter(acc => acc.blockchain === blockchain);
 
 export const getAccount = (
     state: IReduxState,
     accountIndex: number,
     blockchain: Blockchain
 ): IAccountState =>
-    selectCurrentWallet(state).accounts.find(
+    getSelectedWallet(state).accounts.find(
         acc => acc.index === accountIndex && acc.blockchain === blockchain
     );

@@ -17,10 +17,10 @@ import { ListCard } from '../../components/list-card/list-card';
 import { HeaderLeft } from '../../components/header-left/header-left';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { BASE_DIMENSION } from '../../styles/dimensions';
-import { BottomSheetType } from '../../redux/app/state';
-import { openBottomSheet } from '../../redux/app/actions';
 import { themes } from '../../navigation/navigation';
 import { PasswordModal } from '../../components/password-modal/password-modal';
+import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
+import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 
 export interface IReduxProps {
     tosVersion: number;

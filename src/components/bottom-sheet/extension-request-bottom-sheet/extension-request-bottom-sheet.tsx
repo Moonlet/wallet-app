@@ -10,7 +10,7 @@ import { translate } from '../../../core/i18n';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
-import { IBottomSheetExtensionRequestData } from '../../../redux/app/state';
+import { IBottomSheetExtensionRequestData } from '../../../redux/ui/bottomSheet/state';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };

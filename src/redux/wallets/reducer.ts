@@ -12,7 +12,9 @@ import {
     UPDATE_TOKEN_ORDER,
     REMOVE_TOKEN,
     ADD_TOKEN,
-    WALLET_SELECT_ACCOUNT
+    WALLET_SELECT_ACCOUNT,
+    WALLET_SELECT_BLOCKCHAIN,
+    SELECT_WALLET
 } from './actions';
 import { TransactionStatus } from '../../core/wallet/types';
 import { REHYDRATE } from 'redux-persist';
@@ -69,7 +71,20 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                 ...state,
                 [action.data.id]: action.data
             };
-
+        case SELECT_WALLET:
+            return Object.keys(state).reduce((out: IWalletsState, id: string) => {
+                out[id] = state[id];
+                out[id].id === action.data ? (out[id].selected = true) : (out[id].selected = false);
+                return out;
+            }, {});
+        case WALLET_SELECT_BLOCKCHAIN:
+            return {
+                ...state,
+                [action.data.walletId]: {
+                    ...state[action.data.walletId],
+                    selectedBlockchain: action.data.blockchain
+                }
+            };
         case WALLET_DELETE:
             delete state[action.data];
             return { ...state };
@@ -90,8 +105,8 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                 [action.data.walletId]: {
                     ...state[action.data.walletId],
                     accounts: state[action.data.walletId].accounts.map(account => {
-                        account.index === action.data.currentAccount.index &&
-                        account.blockchain === action.data.currentAccount.blockchain
+                        account.index === action.data.selectedAccount.index &&
+                        account.blockchain === action.data.selectedAccount.blockchain
                             ? (account.selected = true)
                             : (account.selected = false);
 

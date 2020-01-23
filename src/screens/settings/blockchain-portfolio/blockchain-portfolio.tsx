@@ -9,27 +9,27 @@ import { Icon } from '../../../components/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
-import { IBlockchainsOptions } from '../../../redux/app/state';
+import { IBlockchainsOptions } from '../../../redux/preferences/state';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import { toogleBlockchainActive, updateBlockchainOrder } from '../../../redux/app/actions';
+import { setBlockchainActive, setBlockchainOrder } from '../../../redux/preferences/actions';
 import { Blockchain } from '../../../core/blockchain/types';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainsOptions }];
-    toogleBlockchainActive: typeof toogleBlockchainActive;
-    updateBlockchainOrder: typeof updateBlockchainOrder;
+    setBlockchainActive: typeof setBlockchainActive;
+    setBlockchainOrder: typeof setBlockchainOrder;
 }
 
 const mapDispatchToProps = {
-    toogleBlockchainActive,
-    updateBlockchainOrder
+    setBlockchainActive,
+    setBlockchainOrder
 };
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        blockchains: Object.keys(state.app.blockchains)
-            .map(key => ({ key, value: state.app.blockchains[key] }))
+        blockchains: Object.keys(state.preferences.blockchains)
+            .map(key => ({ key, value: state.preferences.blockchains[key] }))
             .sort((a, b) => a.value.order - b.value.order)
     };
 };
@@ -78,7 +78,7 @@ export class BlockchainPortfolioComponent extends React.Component<
                 </View>
                 <TouchableOpacity
                     style={styles.iconContainer}
-                    onPressOut={() => this.props.toogleBlockchainActive(item.key)}
+                    onPressOut={() => this.props.setBlockchainActive(item.key)}
                 >
                     <Icon
                         size={18}
@@ -113,7 +113,7 @@ export class BlockchainPortfolioComponent extends React.Component<
                         `${item.value.order}`
                     }
                     onDragEnd={({ data }) => {
-                        this.props.updateBlockchainOrder(
+                        this.props.setBlockchainOrder(
                             Object.assign(
                                 {},
                                 ...data.map(

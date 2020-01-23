@@ -17,7 +17,7 @@ import { HeaderLeftClose } from '../../components/header-left-close/header-left-
 import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import moment from 'moment';
-import { getChainId } from '../../redux/app/selectors';
+import { getChainId } from '../../redux/preferences/selectors';
 
 export interface IReduxProps {
     account: IAccountState;

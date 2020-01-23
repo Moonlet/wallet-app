@@ -6,7 +6,7 @@ import { IAccountState, ITransactionState, IWalletState } from '../../redux/wall
 import {
     getAccountTransactions,
     getAccount,
-    selectCurrentWallet
+    getSelectedWallet
 } from '../../redux/wallets/selectors';
 import { IReduxState } from '../../redux/state';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
@@ -30,7 +30,7 @@ import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-cl
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
 import { Dialog } from '../../components/dialog/dialog';
-import { getChainId } from '../../redux/app/selectors';
+import { getChainId } from '../../redux/preferences/selectors';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -49,7 +49,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         transactions: getAccountTransactions(state, ownProps.accountIndex, ownProps.blockchain),
-        wallet: selectCurrentWallet(state),
+        wallet: getSelectedWallet(state),
         extensionTransactionPayload: ownProps.extensionTransactionPayload,
         chainId: getChainId(state, ownProps.blockchain)
     };

@@ -5,11 +5,11 @@ export const signExtensionTransaction = payload => {
     const data = payload.params[0];
 
     NavigationService.navigate('Token', {
-        blockchain: data.currentAccount.blockchain,
-        accountIndex: data.currentAccount.index,
+        blockchain: data.selectedAccount.blockchain,
+        accountIndex: data.selectedAccount.index,
         token: data.token,
-        tokenLogo: getBlockchain(data.currentAccount.blockchain).config.tokens[
-            getBlockchain(data.currentAccount.blockchain).config.coin
+        tokenLogo: getBlockchain(data.selectedAccount.blockchain).config.tokens[
+            getBlockchain(data.selectedAccount.blockchain).config.coin
         ].logo,
         extensionTransactionPayload: payload
     });

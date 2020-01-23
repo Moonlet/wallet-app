@@ -268,8 +268,8 @@ export const LedgerConnect = smartConnect<IExternalProps>(LedgerConnectComponent
     withTheme(stylesProvider),
     connect(
         (state: IReduxState) => ({
-            verifyAddress: state.screens.connectHardwareWallet.verifyAddress,
-            featureNotSupported: state.screens.connectHardwareWallet.featureNotSupported
+            verifyAddress: state.ui.screens.connectHardwareWallet.verifyAddress,
+            featureNotSupported: state.ui.screens.connectHardwareWallet.featureNotSupported
         }),
         mapDispatchToProps
     )

@@ -5,10 +5,10 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { IWalletState, IAccountState, TokenType } from '../../redux/wallets/state';
-import { switchSelectedAccount, getBalance } from '../../redux/wallets/actions';
+import { setSelectedAccount, getBalance } from '../../redux/wallets/actions';
 import stylesProvider from './styles';
 import { Blockchain } from '../../core/blockchain/types';
-import { selectCurrentWallet, getCurrentAccount } from '../../redux/wallets/selectors';
+import { getSelectedWallet, getSelectedAccount } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
@@ -18,7 +18,7 @@ import BigNumber from 'bignumber.js';
 
 export interface IReduxProps {
     wallet: IWalletState;
-    switchSelectedAccount: typeof switchSelectedAccount;
+    setSelectedAccount: typeof setSelectedAccount;
     selectedAccount: IAccountState;
     getBalance: typeof getBalance;
     exchangeRates: any;
@@ -26,14 +26,14 @@ export interface IReduxProps {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        wallet: selectCurrentWallet(state),
-        selectedAccount: getCurrentAccount(state),
+        wallet: getSelectedWallet(state),
+        selectedAccount: getSelectedAccount(state),
         exchangeRates: (state as any).market.exchangeRates
     };
 };
 
 const mapDispatchToProps = {
-    switchSelectedAccount,
+    setSelectedAccount,
     getBalance
 };
 
@@ -137,7 +137,7 @@ export const AccountsScreenComponent = (
                         label={label}
                         selected={selected}
                         onPress={() =>
-                            props.switchSelectedAccount({
+                            props.setSelectedAccount({
                                 index: account.index,
                                 blockchain
                             })

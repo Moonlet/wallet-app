@@ -12,7 +12,7 @@ import { translate } from '../../core/i18n';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
-import { getCurrentAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
+import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { IAccountState, IWalletState, TokenType } from '../../redux/wallets/state';
 import { Amount } from '../../components/amount/amount';
 import { toggleTokenActive, updateTokenOrder, removeToken } from '../../redux/wallets/actions';
@@ -35,14 +35,14 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state: IReduxState) => {
-    const selectedAccount = getCurrentAccount(state);
+    const selectedAccount = getSelectedAccount(state);
 
     return {
         tokens: Object.keys(selectedAccount.tokens)
             .map(key => ({ key, value: selectedAccount.tokens[key] }))
             .sort((a, b) => a.value.order - b.value.order),
         selectedAccount,
-        wallet: selectCurrentWallet(state)
+        wallet: getSelectedWallet(state)
     };
 };
 

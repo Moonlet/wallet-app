@@ -4,7 +4,7 @@ import { updateReduxState } from '../../redux/wallets/actions';
 import { WebStorage } from './wc-web-storage';
 import Connector from '@walletconnect/core';
 import * as cryptoLib from '@walletconnect/browser/src/webCrypto';
-import { appSetExtensionStateLoaded } from '../../redux/app/actions';
+import { setExtensionStateLoaded } from '../../redux/ui/extension/actions';
 
 export const WalletConnectWeb = (() => {
     let store = null;
@@ -69,7 +69,7 @@ export const WalletConnectWeb = (() => {
     const getState = () => {
         return new Promise((resolve, reject) => {
             walletConnector.sendCustomRequest({ method: WC.GET_STATE }).then(data => {
-                store.dispatch(appSetExtensionStateLoaded());
+                store.dispatch(setExtensionStateLoaded());
                 if (data.error) {
                     alert(data.error);
                     reject(data.error);

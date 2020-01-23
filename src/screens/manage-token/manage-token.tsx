@@ -11,12 +11,12 @@ import { IAccountState, IWalletState, TokenType } from '../../redux/wallets/stat
 import { addToken } from '../../redux/wallets/actions';
 import { connect } from 'react-redux';
 import { IReduxState } from '../../redux/state';
-import { getCurrentAccount, selectCurrentWallet } from '../../redux/wallets/selectors';
+import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { Icon } from '../../components/icon';
 import { formatAddress } from '../../core/utils/format-address';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { getChainId } from '../../redux/app/selectors';
+import { getChainId } from '../../redux/preferences/selectors';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { isValidAddress } from '../../core/blockchain/ethereum/account';
 import BigNumber from 'bignumber.js';
@@ -27,7 +27,7 @@ const GENERIC_TOKEN_LOGO = {
 };
 
 export interface IReduxProps {
-    currentAccount: IAccountState;
+    selectedAccount: IAccountState;
     wallet: IWalletState;
     addToken: typeof addToken;
     chainId: number;
@@ -42,12 +42,12 @@ interface IState {
 }
 
 const mapStateToProps = (state: IReduxState) => {
-    const currentAccount = getCurrentAccount(state);
+    const selectedAccount = getSelectedAccount(state);
 
     return {
-        currentAccount,
-        wallet: selectCurrentWallet(state),
-        chainId: getChainId(state, currentAccount.blockchain)
+        selectedAccount,
+        wallet: getSelectedWallet(state),
+        chainId: getChainId(state, selectedAccount.blockchain)
     };
 };
 
@@ -90,7 +90,7 @@ export class ManageTokenComponent extends React.Component<
         });
 
         const inputValue = this.state.fieldInput.toLocaleLowerCase();
-        const blockchain = this.props.currentAccount.blockchain.toLocaleLowerCase();
+        const blockchain = this.props.selectedAccount.blockchain.toLocaleLowerCase();
 
         const foundToken = await fetch(
             `https://static.moonlet.dev/tokens/${blockchain}/${inputValue}.json`,
@@ -119,7 +119,7 @@ export class ManageTokenComponent extends React.Component<
                 }
             });
 
-        const tokenInfo = await getBlockchain(this.props.currentAccount.blockchain)
+        const tokenInfo = await getBlockchain(this.props.selectedAccount.blockchain)
             .getClient(this.props.chainId)
             .tokens[TokenType.ERC20].getTokenInfo(
                 this.state.token?.contractAddress || foundToken?.contractAddress
@@ -161,7 +161,7 @@ export class ManageTokenComponent extends React.Component<
 
                     active: true,
                     order:
-                        Object.values(this.props.currentAccount.tokens).sort(
+                        Object.values(this.props.selectedAccount.tokens).sort(
                             (x, y) => y.order - x.order
                         )[0]?.order || 0 + 1, // check here
 
@@ -176,7 +176,7 @@ export class ManageTokenComponent extends React.Component<
             () => {
                 this.props.addToken(
                     this.props.wallet.id,
-                    this.props.currentAccount,
+                    this.props.selectedAccount,
                     this.state.token
                 );
                 this.props.navigation.goBack();

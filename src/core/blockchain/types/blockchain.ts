@@ -9,6 +9,7 @@ import {
 export enum Blockchain {
     ETHEREUM = 'ETHEREUM',
     ZILLIQA = 'ZILLIQA',
+    NEAR = 'NEAR',
     COSMOS = 'COSMOS',
     STELLAR = 'STELLAR'
 }

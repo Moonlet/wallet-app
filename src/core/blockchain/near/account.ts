@@ -18,23 +18,24 @@ export const getPrivateKeyFromDerived = (derivedKey: HDKeyEd25519): string => {
 };
 
 export const isValidChecksumAddress = (address: string): boolean => {
-    throw new Error('Not Implemented');
+    return true;
 };
 
 export const isValidAddress = (address: string): boolean => {
-    throw new Error('Not Implemented');
+    return true;
 };
 
 export const publicToAddress = (publicKey: string): string => {
-    throw new Error('Not Implemented');
+    return publicKey;
 };
 
 export const privateToPublic = (privateKey: string): string => {
-    throw new Error('Not Implemented');
+    const keyPair = nacl.sign.keyPair.fromSecretKey(bs58.decode(privateKey));
+    return 'ed25519:' + bs58.encode(Buffer.from(keyPair.publicKey));
 };
 
 export const privateToAddress = (privateKey: string): string => {
-    throw new Error('Not Implemented');
+    return privateToPublic(privateKey);
 };
 
 export const getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {

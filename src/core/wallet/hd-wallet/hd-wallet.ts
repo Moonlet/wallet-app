@@ -1,10 +1,11 @@
 import { IWallet } from '../types';
-import HDKey from 'hdkey';
 import { Mnemonic } from './mnemonic';
 import { Blockchain, IBlockchainTransaction } from '../../blockchain/types';
 import { getBlockchain } from '../../blockchain/blockchain-factory';
 import { IAccountState } from '../../../redux/wallets/state';
+import { HDKeyFactory } from './hd-key/hdkey-factory';
 import { readEncrypted } from '../../../core/secure/storage';
+// const readEncrypted:any = "";
 
 export class HDWallet implements IWallet {
     public static async loadFromStorage(walletId: string, pass: string): Promise<HDWallet> {
@@ -12,7 +13,7 @@ export class HDWallet implements IWallet {
         return Promise.resolve(new HDWallet(data.toString()));
     }
     private mnemonic: string;
-    private hdkey: HDKey;
+    private seedCache: Buffer;
 
     constructor(mnemonic: string) {
         if (Mnemonic.verify(mnemonic)) {
@@ -20,8 +21,14 @@ export class HDWallet implements IWallet {
         } else {
             throw new Error('Invalid mnemonic.');
         }
+    }
 
-        this.hdkey = HDKey.fromMasterSeed(Mnemonic.toSeed(this.mnemonic));
+    get seed() {
+        if (!this.seedCache) {
+            this.seedCache = Mnemonic.toSeed(this.mnemonic);
+        }
+
+        return this.seedCache;
     }
 
     public getAccounts(
@@ -56,9 +63,16 @@ export class HDWallet implements IWallet {
         try {
             const accounts = [];
             const blockchainInstance = getBlockchain(blockchain);
-            const key = this.hdkey.derive(blockchainInstance.config.derivationPath);
+            const key = HDKeyFactory.get(
+                blockchainInstance.config.derivationType,
+                this.seed
+            ).derive(blockchainInstance.config.derivationPath);
             for (let i = index; i <= indexTo; i++) {
-                const privateKey = key.derive(`m/${i}`).privateKey.toString('hex');
+                const accountDerivationPath = blockchainInstance.account.getAccountDerivationPath(
+                    i
+                );
+                const derivation = key.derive(`m/${accountDerivationPath}`);
+                const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(derivation);
                 accounts.push(blockchainInstance.account.getAccountFromPrivateKey(privateKey, i));
             }
             return Promise.resolve(accounts);
@@ -73,8 +87,13 @@ export class HDWallet implements IWallet {
 
     public getPrivateKey(blockchain: Blockchain, accountIndex: number): string {
         const blockchainInstance = getBlockchain(blockchain);
-        const key = this.hdkey.derive(blockchainInstance.config.derivationPath);
-        return key.derive(`m/${accountIndex}`).privateKey.toString('hex');
+        const key = HDKeyFactory.get(blockchainInstance.config.derivationType, this.seed).derive(
+            blockchainInstance.config.derivationPath
+        );
+        const derivation = key.derive(
+            `m/${blockchainInstance.account.getAccountDerivationPath(accountIndex)}`
+        );
+        return blockchainInstance.account.getPrivateKeyFromDerived(derivation);
     }
 
     public async sign(

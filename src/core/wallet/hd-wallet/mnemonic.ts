@@ -1,5 +1,6 @@
 import { validateMnemonic, wordlists, mnemonicToSeedSync, entropyToMnemonic } from 'bip39';
 import { NativeModules } from 'react-native';
+// const NativeModules: any = {}
 
 const getRandomBytes: any = (n: number) => {
     return new Promise((resolve, reject) => {

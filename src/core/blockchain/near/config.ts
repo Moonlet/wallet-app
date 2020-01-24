@@ -3,32 +3,32 @@ import { BigNumber } from 'bignumber.js';
 import { TokenType } from '../types/token';
 
 export const config: IBlockchainConfig = {
-    derivationPath: `m/44'/313'/0'/0`,
-    derivationType: DerivationType.HD_KEY,
-    coin: 'ZIL',
-    defaultUnit: 'QA',
+    derivationPath: `m/44'/397'`,
+    derivationType: DerivationType.HD_KEY_ED25519,
+    coin: 'NEAR',
+    defaultUnit: 'YNEAR',
     tokens: {
-        ZIL: {
-            name: 'Zilliqa',
-            symbol: 'ZIL',
+        NEAR: {
+            name: 'Near',
+            symbol: 'NEAR',
             logo: {
                 uri:
-                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/zil.png'
+                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png'
             }, // require('../../../assets/images/png/zil.png'),
             order: 0,
             active: true,
-            decimals: 12,
-            uiDecimals: 3,
+            decimals: 24,
+            uiDecimals: 4,
             type: TokenType.NATIVE,
             units: {
-                QA: new BigNumber(1),
-                LI: new BigNumber(Math.pow(10, 6)),
-                ZIL: new BigNumber(Math.pow(10, 12))
+                YNEAR: new BigNumber(1),
+                NEAR: new BigNumber(Math.pow(10, 24))
             }
         }
     },
+    // TODO: review this...
     feeOptions: {
-        gasPriceToken: 'ZIL',
+        gasPriceToken: 'NEAR',
         defaults: {
             gasPrice: new BigNumber(1000000000),
             gasLimit: new BigNumber(1)
@@ -37,7 +37,7 @@ export const config: IBlockchainConfig = {
             availableTokenTypes: [],
             feeComponent: 'FeeTotal',
             feeComponentAdvanced: 'GasFeeAdvanced',
-            gasPriceUnit: 'LI'
+            gasPriceUnit: 'YNEAR'
         }
     }
 };

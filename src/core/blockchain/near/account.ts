@@ -1,50 +1,51 @@
 import { IAccountState } from '../../../redux/wallets/state';
 import { Blockchain } from '../types';
-import * as Util from 'ethereumjs-util';
 import { BigNumber } from 'bignumber.js';
-import { convert } from '../common/account';
 import { config } from './config';
-import HDNode = require('hdkey');
+import { convert } from '../common/account';
+
+import bs58 from 'bs58';
+import * as nacl from 'tweetnacl';
+import { HDKeyEd25519 } from '../../wallet/hd-wallet/hd-key/hd-key-ed25519';
 
 export const getAccountDerivationPath = (accountIndex): string => {
-    return `${accountIndex}`;
+    return `${accountIndex}'`;
 };
 
-export const getPrivateKeyFromDerived = (derivedKey: HDNode): string => {
-    return derivedKey.privateKey.toString('hex');
+export const getPrivateKeyFromDerived = (derivedKey: HDKeyEd25519): string => {
+    const keyPair = nacl.sign.keyPair.fromSeed(derivedKey.key);
+    return bs58.encode(Buffer.from(keyPair.secretKey));
 };
 
 export const isValidChecksumAddress = (address: string): boolean => {
-    return Util.isValidChecksumAddress(address);
+    throw new Error('Not Implemented');
 };
 
 export const isValidAddress = (address: string): boolean => {
-    return Util.isValidAddress(address);
+    throw new Error('Not Implemented');
 };
 
 export const publicToAddress = (publicKey: string): string => {
-    return Util.toChecksumAddress(
-        Util.publicToAddress(Buffer.from(publicKey, 'hex')).toString('hex')
-    );
+    throw new Error('Not Implemented');
 };
 
 export const privateToPublic = (privateKey: string): string => {
-    return Util.privateToPublic(Buffer.from(privateKey, 'hex')).toString('hex');
+    throw new Error('Not Implemented');
 };
 
 export const privateToAddress = (privateKey: string): string => {
-    return Util.toChecksumAddress(
-        Util.privateToAddress(Buffer.from(privateKey, 'hex')).toString('hex')
-    );
+    throw new Error('Not Implemented');
 };
 
 export const getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {
+    const keyPair = nacl.sign.keyPair.fromSecretKey(bs58.decode(privateKey));
+
     return {
         index,
         selected: false,
-        publicKey: privateToPublic(privateKey),
-        address: privateToAddress(privateKey),
-        blockchain: Blockchain.ETHEREUM,
+        publicKey: 'ed25519:' + bs58.encode(Buffer.from(keyPair.publicKey)),
+        address: 'ed25519:' + bs58.encode(Buffer.from(keyPair.publicKey)),
+        blockchain: Blockchain.NEAR,
         tokens: { ...config.tokens }
     };
 };

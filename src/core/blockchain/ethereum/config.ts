@@ -1,9 +1,10 @@
-import { IBlockchainConfig } from '../types';
+import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType } from '../types/token';
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/60'/0'/0`,
+    derivationType: DerivationType.HD_KEY,
     coin: 'ETH',
     defaultUnit: 'WEI',
     tokens: {

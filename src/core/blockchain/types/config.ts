@@ -1,8 +1,13 @@
 import { BigNumber } from 'bignumber.js';
 import { ITokenConfig, TokenType } from './token';
 
+export enum DerivationType {
+    HD_KEY = 'HD_KEY',
+    HD_KEY_ED25519 = 'HD_KEY_ED25519'
+}
 export interface IBlockchainConfig {
     derivationPath: string;
+    derivationType: DerivationType;
     coin: string;
     defaultUnit: string;
     tokens: {

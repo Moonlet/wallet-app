@@ -39,6 +39,7 @@
         "bignumber.js": "^9.0.0",
         "bind-decorator": "^1.0.11",
         "bip39": "^3.0.2",
+        "bn.js": "^5.1.1",
         "bs58": "^4.0.1",
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.14.0",

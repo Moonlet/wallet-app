@@ -4,7 +4,8 @@ import * as Util from 'ethereumjs-util';
 import { BigNumber } from 'bignumber.js';
 import { convert } from '../common/account';
 import { config } from './config';
-import HDNode = require('hdkey');
+import HDNode from 'hdkey';
+// import HDNode = require('hdkey');
 
 export const getAccountDerivationPath = (accountIndex): string => {
     return `${accountIndex}`;

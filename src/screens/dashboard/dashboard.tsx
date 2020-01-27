@@ -3,7 +3,8 @@ import { View, ScrollView, Dimensions, Animated, TouchableOpacity, Platform } fr
 import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
-import { CoinDashboard } from '../../components/coin-dashboard/coin-dashboard';
+// import { CoinDashboard } from '../../components/coin-dashboard/coin-dashboard';
+import { AccountCreate } from '../../components/account-create/account-create';
 import { IReduxState } from '../../redux/state';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
@@ -313,11 +314,15 @@ export class DashboardScreenComponent extends React.Component<
                         <Animated.View
                             style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
                         >
-                            <CoinDashboard
-                                account={this.props.selectedAccount}
+                            <AccountCreate
                                 blockchain={blockchain}
                                 navigation={this.props.navigation}
                             />
+                            {/* <CoinDashboard
+                                account={this.props.selectedAccount}
+                                blockchain={blockchain}
+                                navigation={this.props.navigation}
+                            /> */}
                         </Animated.View>
                     </View>
                 )}

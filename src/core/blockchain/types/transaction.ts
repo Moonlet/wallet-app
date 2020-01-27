@@ -2,6 +2,7 @@ import { IAccountState } from '../../../redux/wallets/state';
 import { Blockchain } from '.';
 import { ITokenConfig } from './token';
 import { TransactionStatus } from '../../wallet/types';
+import BigNumber from 'bignumber.js';
 
 export interface IBlockchainTransactionUtils {
     sign(
@@ -50,8 +51,13 @@ export enum TransactionType {
 export interface IFeeOptions {
     gasPrice?: string;
     gasLimit?: string;
-    usedGas?: string;
     feeTotal?: string;
+    presets?: {
+        cheap: BigNumber;
+        standard: BigNumber;
+        fast: BigNumber;
+        fastest: BigNumber;
+    };
 }
 
 export interface ITransferTransaction {

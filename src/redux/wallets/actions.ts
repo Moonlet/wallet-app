@@ -27,7 +27,7 @@ import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
 import { BottomSheetType } from '../ui/bottomSheet/state';
 import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
-import { getSelectedWallet } from './selectors';
+import { getSelectedWallet, getSelectedAccount } from './selectors';
 import { getChainId } from '../preferences/selectors';
 
 // actions consts
@@ -186,7 +186,8 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ETHEREUM, 0),
             wallet.getAccounts(Blockchain.ETHEREUM, 1),
             wallet.getAccounts(Blockchain.ZILLIQA, 0),
-            wallet.getAccounts(Blockchain.ZILLIQA, 1)
+            wallet.getAccounts(Blockchain.ZILLIQA, 1),
+            wallet.getAccounts(Blockchain.NEAR, 0)
         ]).then(async data => {
             data[0][0].selected = true;
             //    data[2][0].selected = true;
@@ -445,4 +446,23 @@ export const addToken = (walletId: string, account: IAccountState, token: IToken
         data: { walletId, account, token }
     });
     getBalance(account.blockchain, account.address, undefined, true)(dispatch, getState);
+};
+
+export const createNearAccount = (blockchain: Blockchain, newAccountId: string) => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+
+    const blockchainInstance = getBlockchain(blockchain);
+
+    const chainId = 1; // TODO: refactor this to string
+
+    const createAccount = await blockchainInstance
+        .getClient(chainId)
+        .createAccount(newAccountId, getSelectedAccount(state).publicKey, chainId);
+
+    // console.log('createAccount: ', createAccount);
+
+    return createAccount;
 };

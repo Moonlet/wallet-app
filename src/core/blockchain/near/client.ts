@@ -1,7 +1,17 @@
 import { BlockchainGenericClient } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
-import * as nearlib from 'nearlib';
+import {
+    createAccount,
+    transfer,
+    addKey,
+    fullAccessKey,
+    createTransaction,
+    signTransaction
+} from 'nearlib/src.ts/transaction';
+import { PublicKey, KeyPair, serialize } from 'nearlib/src.ts/utils';
+import { InMemoryKeyStore } from 'nearlib/src.ts/key_stores';
+import { InMemorySigner } from 'nearlib/src.ts';
 import BN from 'bn.js';
 
 export class Client extends BlockchainGenericClient {
@@ -10,11 +20,17 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async getBalance(address: string): Promise<BigNumber> {
-        throw new Error('Not Implemented');
+        const res = await this.rpc.call('query', [`account/${address}`, '']);
+
+        // console.log(res.result);
+        return new BigNumber(res.result.amount, 24);
     }
 
     public async getNonce(address: string, publicKey?: string): Promise<number> {
-        throw new Error('Not Implemented');
+        const res = await this.rpc.call('query', [`access_key/${address}/${publicKey}`, '']);
+
+        // console.log(res.result);
+        return res.result.nonce;
     }
 
     public sendTransaction(transaction): Promise<string> {
@@ -25,7 +41,27 @@ export class Client extends BlockchainGenericClient {
         throw new Error('Not Implemented');
     }
 
-    public async createAccount(newAccountId, publicKey: string, chainId: any) {
+    public async checkAccountIdValid(accountId: string): Promise<boolean> {
+        try {
+            const res = await this.rpc.call('query', [`account/${accountId}`, '']);
+
+            if (res.result) {
+                // account id already taken
+                return false;
+            } else {
+                // valid account id
+                return true;
+            }
+        } catch (err) {
+            return false;
+        }
+    }
+
+    public async createAccount(
+        newAccountId: string,
+        publicKey: string,
+        chainId: any
+    ): Promise<any> {
         chainId = 'testnet';
 
         const SENDER_ACCOUNT_ID = 'tibi';
@@ -34,36 +70,40 @@ export class Client extends BlockchainGenericClient {
             'ed25519:47XC2WW9NWmnvpAE48Jjy8qdgrEjHaovXFDGUrFhKnvvD1mv8PAtSav97wroJx5E8fd3Z2zQGZwRA7e3krzQAm49';
 
         const status = await this.rpc.call('status');
+
+        // transaction actions
         const actions = [
-            nearlib.transactions.createAccount(),
-            nearlib.transactions.transfer(new BN('10000000000000000000000')),
-            nearlib.transactions.addKey(
-                nearlib.utils.PublicKey.fromString(publicKey),
-                nearlib.transactions.fullAccessKey()
-            )
+            createAccount(),
+            transfer(new BN('10000000000000000000000')),
+            addKey(PublicKey.fromString(publicKey), fullAccessKey())
         ];
 
-        const keyStore = new nearlib.keyStores.InMemoryKeyStore();
-        const keyPair = nearlib.utils.KeyPair.fromString(SENDER_PRIVATE_KEY);
+        // setup KeyStore
+        const keyStore = new InMemoryKeyStore();
+        const keyPair = KeyPair.fromString(SENDER_PRIVATE_KEY);
         await keyStore.setKey(chainId, SENDER_ACCOUNT_ID, keyPair);
-        const signer = new nearlib.InMemorySigner(keyStore);
-        const tx = nearlib.transactions.createTransaction(
+
+        // setup Signer
+        const signer = new InMemorySigner(keyStore);
+
+        // create transaction
+        const tx = createTransaction(
             SENDER_ACCOUNT_ID,
-            nearlib.utils.PublicKey.fromString(SENDER_PUBLIC_KEY),
+            PublicKey.fromString(SENDER_PUBLIC_KEY),
             newAccountId,
             await this.getNonce(SENDER_ACCOUNT_ID, SENDER_PUBLIC_KEY),
             actions,
-            nearlib.utils.serialize.base_decode(status.result.sync_info.latest_block_hash)
+            serialize.base_decode(status.result.sync_info.latest_block_hash)
         );
-        const signedTx = await nearlib.transactions.signTransaction(
-            tx,
-            signer,
-            SENDER_ACCOUNT_ID,
-            chainId
-        );
+
+        // sign transaction
+        const signedTx = await signTransaction(tx, signer, SENDER_ACCOUNT_ID, chainId);
+
+        // send transaction
         const res = await this.rpc.call('broadcast_tx_async', [
             Buffer.from(signedTx[1].encode()).toString('base64')
         ]);
+
         return res.result;
     }
 }

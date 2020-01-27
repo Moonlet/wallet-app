@@ -10,7 +10,8 @@ import { Blockchain } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
-import HDNode = require('hdkey');
+import HDNode from 'hdkey';
+// import HDNode = require('hdkey');
 
 export const getAccountDerivationPath = (accountIndex): string => {
     return `${accountIndex}`;

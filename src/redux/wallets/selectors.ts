@@ -1,6 +1,6 @@
 import { IReduxState } from '../state';
-import { ITransactionState, IAccountState, IWalletsState, IWalletState } from './state';
-import { Blockchain } from '../../core/blockchain/types';
+import { IAccountState, IWalletsState, IWalletState } from './state';
+import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
 
 import { createSelector } from 'reselect';
 
@@ -36,19 +36,19 @@ export const getAccountTransactions = (
     state: IReduxState,
     accountIndex: number,
     blockchain: Blockchain
-): ITransactionState[] => {
+): IBlockchainTransaction[] => {
     const account: IAccountState = getSelectedWallet(state).accounts.find(
         acc => acc.index === accountIndex && acc.blockchain === blockchain
     );
     const transactions = getSelectedWallet(state).transactions;
     if (transactions) {
         return Object.values(getSelectedWallet(state).transactions).filter(
-            tx => tx.fromAddress === account.address
+            tx => tx.address === account.address
         );
     }
 };
 
-export const getSelectedAccountTransactions = (state: IReduxState): ITransactionState[] => {
+export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainTransaction[] => {
     const account: IAccountState = getSelectedWallet(state).accounts.find(
         acc =>
             acc.index === getSelectedAccount(state).index &&
@@ -57,7 +57,7 @@ export const getSelectedAccountTransactions = (state: IReduxState): ITransaction
     const transactions = getSelectedWallet(state).transactions;
     if (transactions) {
         return Object.values(getSelectedWallet(state).transactions).filter(
-            tx => tx.fromAddress === account.address
+            tx => tx.address === account.address
         );
     }
 };

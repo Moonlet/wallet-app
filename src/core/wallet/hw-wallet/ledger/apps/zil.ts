@@ -33,16 +33,16 @@ export class Zil {
     ): Promise<any> => {
         const transaction: any = {
             // tslint:disable-next-line: no-bitwise
-            version: (tx.options.chainId << 16) + 1,
-            nonce: tx.options.nonce,
+            version: (tx.chainId << 16) + 1,
+            nonce: tx.nonce,
             toAddr: zcrypto
-                .fromBech32Address(tx.to)
+                .fromBech32Address(tx.toAddress)
                 .replace('0x', '')
                 .toLowerCase(),
             amount: tx.amount.toString(),
-            pubKey: tx.options.publicKey,
-            gasPrice: new BigNumber(tx.options.gasPrice).toString(),
-            gasLimit: new BigNumber(tx.options.gasLimit).toNumber(),
+            pubKey: tx.publicKey,
+            gasPrice: new BigNumber(tx.feeOptions.gasPrice).toString(),
+            gasLimit: new BigNumber(tx.feeOptions.gasLimit).toNumber(),
             signature: '',
             code: '',
             data: '',

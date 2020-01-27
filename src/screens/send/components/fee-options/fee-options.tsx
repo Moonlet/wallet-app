@@ -122,7 +122,7 @@ export class FeeOptionsComponent extends React.Component<
                 return (
                     this.state.feeOptions && (
                         <FeeTotal
-                            amount={this.state.feeOptions.feeTotal}
+                            amount={this.state.feeOptions.feeTotal.toString()}
                             blockchain={this.props.account.blockchain}
                             token={this.props.token}
                         />
@@ -143,9 +143,9 @@ export class FeeOptionsComponent extends React.Component<
                                     <FeePreset
                                         key={item}
                                         token={this.props.token}
-                                        amount={this.state.feeOptions.presets[item].multipliedBy(
-                                            this.state.feeOptions.gasLimit
-                                        )}
+                                        amount={this.state.feeOptions.presets[item]
+                                            .multipliedBy(this.state.feeOptions.gasLimit)
+                                            .toString()}
                                         blockchain={this.props.account.blockchain}
                                         title={translate('App.labels.' + item)}
                                         presetKey={item}

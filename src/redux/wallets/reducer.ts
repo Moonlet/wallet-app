@@ -1,5 +1,5 @@
 import { IAction } from '../types';
-import { ITransactionState, IAccountState, IWalletsState } from './state';
+import { IAccountState, IWalletsState } from './state';
 import {
     WALLET_ADD,
     WALLET_DELETE,
@@ -19,6 +19,7 @@ import {
 import { TransactionStatus } from '../../core/wallet/types';
 import { REHYDRATE } from 'redux-persist';
 import BigNumber from 'bignumber.js';
+import { IBlockchainTransaction } from '../../core/blockchain/types';
 
 const intialState: IWalletsState = {};
 
@@ -141,7 +142,7 @@ export default (state: IWalletsState = intialState, action: IAction) => {
         }
 
         case TRANSACTION_PUBLISHED:
-            const transaction: ITransactionState = {
+            const transaction: IBlockchainTransaction = {
                 id: action.data.hash,
                 date: {
                     created: Date.now(),
@@ -149,17 +150,22 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                     broadcasted: Date.now(),
                     confirmed: Date.now()
                 },
-                fromAddress: action.data.tx.from,
-                toAddress: action.data.tx.to,
+                blockchain: action.data.tx.blockchain,
+                chainId: action.data.tx.data,
+                type: action.data.tx.type,
+                token: action.data.tx.token,
+
+                address: action.data.tx.address,
+                publicKey: action.data.tx.publicKey,
+
+                toAddress: action.data.tx.toAddress,
                 amount: action.data.tx.amount,
-                nonce: action.data.tx.options.nonce,
-                block: undefined,
-                feeOptions: {
-                    gasPrice: action.data.tx.options.gasPrice,
-                    gasLimit: action.data.tx.options.gasLimit,
-                    usedGas: undefined
-                },
-                status: TransactionStatus.PENDING
+                data: action.data.tx.data,
+                feeOptions: action.data.tx.feeOptions,
+                broadcatedOnBlock: action.data.tx.broadcatedOnBlock,
+                nonce: action.data.tx.nonce,
+                status: TransactionStatus.PENDING,
+                additionalInfo: action.data.tx.additionalInfo
             };
 
             return {

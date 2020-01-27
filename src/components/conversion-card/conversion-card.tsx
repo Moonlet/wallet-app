@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
-import BigNumber from 'bignumber.js';
 import { Amount } from '../amount/amount';
 import { Blockchain } from '../../core/blockchain/types';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
@@ -37,7 +36,7 @@ export const ConversionCardComponent = (
                 {props.toCurrency}
             </Text>
             <Amount
-                amount={new BigNumber(1)}
+                amount={'1'}
                 token={props.fromCurrency}
                 style={props.styles.convert}
                 convertTo={props.toCurrency} // not working

@@ -9,9 +9,9 @@ import { connect } from 'react-redux';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
-import { ITransactionState, IAccountState } from '../../redux/wallets/state';
+import { IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
-import { Blockchain } from '../../core/blockchain/types';
+import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { Amount } from '../../components/amount/amount';
@@ -27,7 +27,7 @@ export interface IReduxProps {
 export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
-    transaction: ITransactionState;
+    transaction: IBlockchainTransaction;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -113,7 +113,7 @@ export class TransactionDetailsComponent extends React.Component<
                 </View>
 
                 <View style={styles.rowContainer}>
-                    <Text style={styles.textPrimary}>{formatAddress(transaction.fromAddress)}</Text>
+                    <Text style={styles.textPrimary}>{formatAddress(transaction.address)}</Text>
                     <Text style={styles.textSecondary}>{translate('App.labels.sender')}</Text>
                 </View>
 

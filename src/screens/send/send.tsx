@@ -219,7 +219,9 @@ export class SendScreenComponent extends React.Component<
         const token = this.props.account.tokens[
             getBlockchain(this.props.account.blockchain).config.coin
         ];
-        const allBalance = token.balance?.value.minus(this.state.feeOptions.feeTotal);
+        const tokenBalanceValue = new BigNumber(token.balance?.value);
+
+        const allBalance = tokenBalanceValue.minus(this.state.feeOptions.feeTotal);
 
         if (allBalance.isGreaterThanOrEqualTo(0)) {
             const blockchainInstance = getBlockchain(this.props.account.blockchain);
@@ -239,11 +241,12 @@ export class SendScreenComponent extends React.Component<
 
         const feeTokenSymbol = getBlockchain(this.props.account.blockchain).config.coin;
         const completeAmount = stdAmount;
+        const tokenBalanceValue = new BigNumber(this.props.token.balance?.value);
         if (this.props.token.symbol === feeTokenSymbol) {
             completeAmount.plus(new BigNumber(this.state.feeOptions.feeTotal));
         }
 
-        if (this.props.token.balance?.value.minus(completeAmount).isGreaterThanOrEqualTo(0)) {
+        if (tokenBalanceValue.minus(completeAmount).isGreaterThanOrEqualTo(0)) {
             this.setState({ insufficientFunds: false });
         } else {
             this.setState({ insufficientFunds: true });

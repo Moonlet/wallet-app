@@ -24,7 +24,6 @@ import { REVIEW_TRANSACTION } from '../ui/screens/send/actions';
 import { ISelectedAccount } from '../wallets/state';
 import { REHYDRATE } from 'redux-persist';
 import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
-import BigNumber from 'bignumber.js';
 import { NavigationService } from '../../navigation/navigation-service';
 import { BottomSheetType } from '../ui/bottomSheet/state';
 import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
@@ -330,11 +329,15 @@ export const sendTransferTransaction = (
             chainId,
             account,
             toAddress,
-            amount: blockchainInstance.account.amountToStd(amount, account.tokens[token].decimals),
+            amount: blockchainInstance.account
+                .amountToStd(amount, account.tokens[token].decimals)
+                .toString(),
             token,
             nonce,
-            gasPrice: new BigNumber(feeOptions.gasPrice),
-            gasLimit: new BigNumber(feeOptions.gasLimit).toNumber()
+            feeOptions: {
+                gasPrice: feeOptions.gasPrice.toString(),
+                gasLimit: feeOptions.gasLimit.toString()
+            }
         });
 
         if (appWallet.type === WalletType.HW) {

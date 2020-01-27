@@ -1,61 +1,72 @@
-import { IEthereumTxOptions } from '.';
-import { IBlockchainTransaction, ITransferTransaction } from '../types';
+import {
+    IBlockchainTransaction,
+    ITransferTransaction,
+    IAdditionalInfoType,
+    TransactionType
+} from '../types';
 import { Transaction } from 'ethereumjs-tx';
 import abi from 'ethereumjs-abi';
 import BigNumber from 'bignumber.js';
 import { TokenType } from '../types/token';
+import { TransactionStatus } from '../../wallet/types';
 
 export const sign = async (
-    tx: IBlockchainTransaction<IEthereumTxOptions>,
+    tx: IBlockchainTransaction<IAdditionalInfoType>,
     privateKey: string
 ): Promise<any> => {
     const transaction = new Transaction(
         {
-            nonce: '0x' + new BigNumber(tx.options.nonce).toString(16),
-            gasPrice: '0x' + new BigNumber(tx.options.gasPrice).toString(16),
-            gasLimit: '0x' + new BigNumber(tx.options.gasLimit).toString(16),
-            to: tx.to,
-            value: '0x' + tx.amount.toString(16),
-            data: tx.options.data
-            // chainId: "0x" + new BigNumber(tx.options.chainId).toString(16),
-
-            // v: "0x" + new BigNumber(tx.options.chainId).toString(16),
-            // r: "0x00",
-            // s: "0x00"
+            nonce: '0x' + tx.nonce.toString(16),
+            gasPrice: '0x' + tx.feeOptions.gasPrice,
+            gasLimit: '0x' + tx.feeOptions.gasLimit,
+            to: tx.toAddress,
+            value: '0x' + new BigNumber(tx.amount).toString(16),
+            data: tx.additionalInfo?.data
         },
         {
-            chain: tx.options.chainId
+            chain: tx.chainId
         }
     );
 
     transaction.sign(Buffer.from(privateKey, 'hex'));
+
     return '0x' + transaction.serialize().toString('hex');
 };
 
 export const buildTransferTransaction = (
     tx: ITransferTransaction
-): IBlockchainTransaction<IEthereumTxOptions> => {
+): IBlockchainTransaction<IAdditionalInfoType> => {
     const tokenInfo = tx.account.tokens[tx.token];
 
     switch (tokenInfo.type) {
         case TokenType.ERC20:
             return {
-                from: tx.account.address,
-                to: tokenInfo.contractAddress,
-                amount: new BigNumber(0),
-                options: {
-                    nonce: tx.nonce,
-                    gasPrice: tx.gasPrice.toNumber(),
-                    gasLimit: tx.gasLimit,
-                    chainId: tx.chainId,
+                date: {
+                    created: Date.now(),
+                    signed: Date.now(),
+                    broadcasted: Date.now(),
+                    confirmed: Date.now()
+                },
+                blockchain: tx.account.blockchain,
+                chainId: tx.chainId,
+                type: TransactionType.TRANSFER,
+                token: tokenInfo,
+                address: tx.account.address,
+                publicKey: tx.account.publicKey,
+
+                toAddress: tokenInfo.contractAddress,
+
+                amount: '0',
+                feeOptions: tx.feeOptions,
+                broadcatedOnBlock: undefined,
+                nonce: tx.nonce,
+                status: TransactionStatus.PENDING,
+
+                additionalInfo: {
                     data:
                         '0x' +
                         abi
-                            .simpleEncode(
-                                'transfer(address,uint256)',
-                                tx.toAddress,
-                                tx.amount.toString()
-                            )
+                            .simpleEncode('transfer(address,uint256)', tx.toAddress, tx.amount)
                             .toString('hex')
                 }
             };
@@ -63,15 +74,26 @@ export const buildTransferTransaction = (
         // case TokenType.NATIVE:
         default:
             return {
-                from: tx.account.address,
-                to: tx.toAddress,
+                date: {
+                    created: Date.now(),
+                    signed: Date.now(),
+                    broadcasted: Date.now(),
+                    confirmed: Date.now()
+                },
+                blockchain: tx.account.blockchain,
+                chainId: tx.chainId,
+                type: TransactionType.TRANSFER,
+                token: tokenInfo,
+
+                address: tx.account.address,
+                publicKey: tx.account.publicKey,
+
+                toAddress: tx.toAddress,
                 amount: tx.amount,
-                options: {
-                    nonce: tx.nonce,
-                    gasPrice: tx.gasPrice.toNumber(),
-                    gasLimit: tx.gasLimit,
-                    chainId: tx.chainId
-                }
+                feeOptions: tx.feeOptions,
+                broadcatedOnBlock: undefined,
+                nonce: tx.nonce,
+                status: TransactionStatus.PENDING
             };
     }
 };

@@ -149,14 +149,14 @@ export class ManageAccountComponent extends React.Component<
                         <View style={styles.amountContainer}>
                             <Amount
                                 style={styles.firstAmount}
-                                amount={item.value.balance?.value}
+                                amount={item.value.balance?.value.toString()}
                                 token={item.value.symbol}
                                 tokenDecimals={item.value.decimals}
                                 blockchain={this.props.selectedAccount.blockchain}
                             />
                             <Amount
                                 style={styles.secondAmount}
-                                amount={item.value.balance?.value}
+                                amount={item.value.balance?.value.toString()}
                                 token={item.value.symbol}
                                 tokenDecimals={item.value.decimals}
                                 blockchain={this.props.selectedAccount.blockchain}

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView, Image } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
-import { IAccountState, ITransactionState, IWalletState } from '../../redux/wallets/state';
+import { IAccountState, IWalletState } from '../../redux/wallets/state';
 import {
     getAccountTransactions,
     getAccount,
@@ -18,7 +18,7 @@ import { translate, Translate } from '../../core/i18n';
 import { AccountSettings } from './components/account-settings/account-settings';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { AccountAddress } from '../../components/account-address/account-address';
-import { Blockchain } from '../../core/blockchain/types';
+import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
 import { TransactionsHistoryList } from '../transactions-history/list-transactions-history/list-transactions-history';
 import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
@@ -39,7 +39,7 @@ export interface IProps {
 
 export interface IReduxProps {
     account: IAccountState;
-    transactions: ITransactionState[];
+    transactions: IBlockchainTransaction[];
     wallet: IWalletState;
     sendTransferTransaction: typeof sendTransferTransaction;
     chainId: number;

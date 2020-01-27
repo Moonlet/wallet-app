@@ -9,7 +9,7 @@ import { Blockchain } from '../../core/blockchain/types';
 
 interface IExternalProps {
     blockchain: Blockchain;
-    amount: BigNumber;
+    amount: string;
     token: string;
     convert?: boolean; // if this is present will convert amount to user currency
     convertTo?: string; // if this is present will convert amount to this currency
@@ -26,13 +26,14 @@ export interface IReduxProps {
 const convertAmount = (
     blockchain: Blockchain,
     exchangeRates: any,
-    value: BigNumber,
+    value: string,
     fromToken: string,
     toToken: string,
     tokenDecimals: number
 ): BigNumber => {
     const blockchainInstance = getBlockchain(blockchain);
-    const amount = blockchainInstance.account.amountFromStd(value, tokenDecimals);
+    const valueBigNumber = new BigNumber(value);
+    const amount = blockchainInstance.account.amountFromStd(valueBigNumber, tokenDecimals);
 
     if (fromToken === toToken) {
         return amount;

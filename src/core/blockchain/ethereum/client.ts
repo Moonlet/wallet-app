@@ -29,7 +29,9 @@ export class Client extends BlockchainGenericClient {
     }
 
     public sendTransaction(transaction): Promise<string> {
-        return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => res.result);
+        return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => {
+            return res.result;
+        });
     }
 
     public async callContract(contractAddress, methodSignature, params: any[] = []) {

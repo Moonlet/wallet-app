@@ -5,11 +5,12 @@ import { translate } from '../../core/i18n';
 import stylesProvider from './styles';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { IAccountState, ITransactionState } from '../../redux/wallets/state';
+import { IAccountState } from '../../redux/wallets/state';
 import { IReduxState } from '../../redux/state';
 import { getSelectedAccount, getSelectedAccountTransactions } from '../../redux/wallets/selectors';
 import { TransactionsHistoryList } from './list-transactions-history/list-transactions-history';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
+import { IBlockchainTransaction } from '../../core/blockchain/types';
 
 export const navigationOptions = () => ({
     title: translate('DashboardMenu.transactionHistory')
@@ -17,7 +18,7 @@ export const navigationOptions = () => ({
 
 export interface IReduxProps {
     selectedAccount: IAccountState;
-    transactions: ITransactionState[];
+    transactions: IBlockchainTransaction[];
 }
 
 const mapStateToProps = (state: IReduxState) => {

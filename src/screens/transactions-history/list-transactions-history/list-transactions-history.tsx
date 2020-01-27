@@ -5,7 +5,7 @@ import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import { Icon } from '../../../components/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { Text } from '../../../library';
-import { ITransactionState, IAccountState } from '../../../redux/wallets/state';
+import { IAccountState } from '../../../redux/wallets/state';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { Amount } from '../../../components/amount/amount';
 import { translate } from '../../../core/i18n';
@@ -13,9 +13,10 @@ import { formatAddress } from '../../../core/utils/format-address';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import moment from 'moment';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
+import { IBlockchainTransaction, IAdditionalInfoType } from '../../../core/blockchain/types';
 
 export interface IExternalProps {
-    transactions: ITransactionState[];
+    transactions: IBlockchainTransaction[];
     account: IAccountState;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
@@ -23,9 +24,12 @@ export interface IExternalProps {
 export class TransactionsHistoryListComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    public getTransactionPrimaryText(tx: ITransactionState, account: IAccountState) {
+    public getTransactionPrimaryText(
+        tx: IBlockchainTransaction<IAdditionalInfoType>,
+        account: IAccountState
+    ) {
         const formattedAmount =
-            tx.fromAddress === account.address
+            tx.address === account.address
                 ? translate('App.labels.to').toLowerCase()
                 : translate('App.labels.from').toLowerCase();
         return ` ${formattedAmount} ${formatAddress(tx.toAddress)}`;

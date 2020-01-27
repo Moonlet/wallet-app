@@ -65,19 +65,21 @@ export const AccountsScreenComponent = (
     const calculateBalance = (account: IAccountState) => {
         const tokenKeys = Object.keys(account.tokens);
         let balance = new BigNumber(0);
+
         tokenKeys.map(key => {
             const token = account.tokens[key];
+            const tokenBalanceValue = new BigNumber(token.balance?.value);
             if (token.active) {
                 if (token.type === TokenType.NATIVE) {
-                    balance = balance.plus(token.balance?.value);
+                    balance = balance.plus(tokenBalanceValue);
                 } else {
                     const exchange =
                         props.exchangeRates[key][getBlockchain(account.blockchain).config.coin];
-                    balance = balance.plus(token.balance?.value.multipliedBy(exchange));
+                    balance = balance.plus(tokenBalanceValue.multipliedBy(exchange));
                 }
             }
         });
-        return balance;
+        return balance.toString();
     };
 
     return (

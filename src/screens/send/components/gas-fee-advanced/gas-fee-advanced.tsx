@@ -12,10 +12,10 @@ import { ITokenConfig } from '../../../../core/blockchain/types/token';
 
 export interface IExternalProps {
     token: ITokenConfig;
-    gasPrice: BigNumber;
-    gasLimit: BigNumber;
+    gasPrice: string;
+    gasLimit: string;
     blockchain: Blockchain;
-    onInputFees: (gasPrice: BigNumber, gasLimit: BigNumber, feeTotal: BigNumber) => any;
+    onInputFees: (gasPrice: string, gasLimit: string, feeTotal: string) => any;
 }
 interface IState {
     inputGasPrice: string;
@@ -32,7 +32,7 @@ export class GasFeeAvancedComponent extends React.Component<
         this.state = {
             inputGasPrice: blockchainInstance.account
                 .convertUnit(
-                    props.gasPrice,
+                    new BigNumber(props.gasPrice),
                     blockchainInstance.config.defaultUnit,
                     blockchainInstance.config.feeOptions.ui.gasPriceUnit
                 )
@@ -50,9 +50,13 @@ export class GasFeeAvancedComponent extends React.Component<
             blockchainInstance.config.feeOptions.ui.gasPriceUnit,
             blockchainInstance.config.defaultUnit
         );
-        const gasLimit = new BigNumber(Number(this.state.inputGasLimit));
+        const gasLimit = new BigNumber(this.state.inputGasLimit);
 
-        this.props.onInputFees(gasPrice, gasLimit, gasPrice.multipliedBy(gasLimit));
+        this.props.onInputFees(
+            gasPrice.toString(),
+            gasLimit.toString(),
+            gasPrice.multipliedBy(gasLimit).toString()
+        );
     }
     public addGasLimit(value: string) {
         const blockchainInstance = getBlockchain(this.props.blockchain);
@@ -65,12 +69,18 @@ export class GasFeeAvancedComponent extends React.Component<
         const gasLimit = new BigNumber(value);
 
         this.setState({ inputGasLimit: value });
-        this.props.onInputFees(gasPrice, gasLimit, gasPrice.multipliedBy(gasLimit));
+        this.props.onInputFees(
+            gasPrice.toString(),
+            gasLimit.toString(),
+            gasPrice.multipliedBy(gasLimit).toString()
+        );
     }
 
     public render() {
         const styles = this.props.styles;
         const theme = this.props.theme;
+        const gasPrice = new BigNumber(this.props.gasPrice);
+        const gasLimit = new BigNumber(this.props.gasLimit);
 
         return (
             <View style={styles.container}>
@@ -108,7 +118,7 @@ export class GasFeeAvancedComponent extends React.Component<
                     />
                 </View>
                 <FeeTotal
-                    amount={this.props.gasPrice.multipliedBy(this.props.gasLimit)}
+                    amount={gasPrice.multipliedBy(gasLimit).toString()}
                     blockchain={this.props.blockchain}
                     token={this.props.token}
                 />

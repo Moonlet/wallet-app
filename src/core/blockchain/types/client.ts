@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { RpcClient } from '../../utils/rpc-client';
 import { IBlockchainNetwork } from './network';
+import { IFeeOptions } from './transaction';
 
 export abstract class BlockchainGenericClient {
     public readonly tokens: { [type: string]: any } = {};
@@ -28,5 +29,5 @@ export abstract class BlockchainGenericClient {
         to: string,
         amount?,
         contractAddress?
-    ): Promise<any>;
+    ): Promise<IFeeOptions>;
 }

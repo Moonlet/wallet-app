@@ -8,7 +8,7 @@ import { translate } from '../../../../core/i18n';
 import { GasFeeAvanced } from '../gas-fee-advanced/gas-fee-advanced';
 import { FeeTotal } from '../fee-total/fee-total';
 import { FeePreset } from '../fee-preset/fee-preset';
-import { IBlockchainConfig } from '../../../../core/blockchain/types';
+import { IBlockchainConfig, IFeeOptions } from '../../../../core/blockchain/types';
 import { BLOCKCHAIN_INFO, getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { IReduxState } from '../../../../redux/state';
@@ -23,11 +23,11 @@ export interface IExternalProps {
     sendingToken: ITokenConfig;
     account: IAccountState;
     toAddress: string;
-    onFeesChanged: (feeOptions: any) => any;
+    onFeesChanged: (feeOptions: IFeeOptions) => any;
 }
 
 interface IState {
-    feeOptions: any;
+    feeOptions: IFeeOptions;
     blockchainConfig: IBlockchainConfig;
     hasAdvancedOptions: boolean;
     selectedPreset: string;
@@ -79,32 +79,34 @@ export class FeeOptionsComponent extends React.Component<
     public onSelectFeePreset(key: string) {
         const gasPrice = new BigNumber(this.state.feeOptions.presets[key]);
         const gasLimit = new BigNumber(this.state.feeOptions.gasLimit);
+
         this.setState({
             selectedPreset: key,
             feeOptions: {
                 ...this.state.feeOptions,
-                gasPrice,
-                gasLimit,
-                feeTotal: gasPrice.multipliedBy(gasLimit)
+                gasPrice: gasPrice.toString(),
+                gasLimit: gasLimit.toString(),
+                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
             }
         });
         this.props.onFeesChanged({
-            gasPrice,
-            gasLimit,
-            feeTotal: gasPrice.multipliedBy(gasLimit)
+            gasPrice: gasPrice.toString(),
+            gasLimit: gasLimit.toString(),
+            feeTotal: gasPrice.multipliedBy(gasLimit).toString()
         });
     }
 
     @bind
-    public onInputAdvancedFees(gasPrice: BigNumber, gasLimit: BigNumber) {
+    public onInputAdvancedFees(gasPrice: string, gasLimit: string, feeTotal: string) {
+        const feeOptions: IFeeOptions = {
+            gasPrice,
+            gasLimit,
+            feeTotal
+        };
         this.setState({
-            feeOptions: {
-                gasPrice,
-                gasLimit,
-                feeTotal: gasPrice.multipliedBy(gasLimit)
-            }
+            feeOptions
         });
-        this.props.onFeesChanged({ gasPrice, gasLimit });
+        this.props.onFeesChanged(feeOptions);
     }
 
     @bind
@@ -122,7 +124,7 @@ export class FeeOptionsComponent extends React.Component<
                 return (
                     this.state.feeOptions && (
                         <FeeTotal
-                            amount={this.state.feeOptions.feeTotal.toString()}
+                            amount={this.state.feeOptions.feeTotal}
                             blockchain={this.props.account.blockchain}
                             token={this.props.token}
                         />

@@ -4,5 +4,5 @@ export const persistConfig = {
     key: 'root',
     version: 1,
     storage: AsyncStorage,
-    blacklist: ['screens']
+    blacklist: ['ui']
 };

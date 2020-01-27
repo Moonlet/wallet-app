@@ -114,10 +114,10 @@ export class Client extends BlockchainGenericClient {
             : config.feeOptions.defaults.gasLimit;
 
         return {
-            gasPrice,
-            gasLimit,
+            gasPrice: gasPrice.toString(),
+            gasLimit: gasLimit.toString(),
             presets: presets ? presets : config.feeOptions.defaults.gasPricePresets,
-            feeTotal: gasPrice.multipliedBy(gasLimit)
+            feeTotal: gasPrice.multipliedBy(gasLimit).toString()
         };
     }
 

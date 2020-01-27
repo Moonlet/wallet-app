@@ -26,7 +26,7 @@ import {
     getSelectedWallet
 } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
-import { Blockchain } from '../../core/blockchain/types';
+import { Blockchain, IFeeOptions } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
@@ -86,7 +86,7 @@ interface IState {
     labelWarningAddressDisplay: boolean;
     showOwnAccounts: boolean;
     insufficientFunds: boolean;
-    feeOptions: any;
+    feeOptions: IFeeOptions;
     showExtensionMessage: boolean;
 }
 
@@ -207,7 +207,7 @@ export class SendScreenComponent extends React.Component<
         this.verifyAddress(contact.address);
     };
 
-    public onFeesChanged = (feeOptions: any) => {
+    public onFeesChanged = (feeOptions: IFeeOptions) => {
         this.setState({ feeOptions }, () => this.availableFunds());
     };
 

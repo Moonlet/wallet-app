@@ -14,7 +14,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { getBalance, setSelectedAccount, setSelectedBlockchain } from '../../redux/wallets/actions';
-import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import {
     getSelectedWallet,
     getSelectedAccount,
@@ -25,11 +25,10 @@ import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
-import BigNumber from 'bignumber.js';
-import { TokenType } from '../../core/blockchain/types/token';
 import { IBlockchainsOptions } from '../../redux/preferences/state';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
+import { calculateBalance } from '../../core/blockchain/common/account';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -186,26 +185,6 @@ export class DashboardScreenComponent extends React.Component<
         }
     }
 
-    public calculateBalance() {
-        const tokenKeys = Object.keys(this.props.selectedAccount.tokens);
-        let balance = new BigNumber(0);
-        tokenKeys.map(key => {
-            const token = this.props.selectedAccount.tokens[key];
-            const tokenBalanceValue = new BigNumber(token.balance?.value);
-            if (token.active) {
-                if (token.type === TokenType.NATIVE) {
-                    balance = balance.plus(tokenBalanceValue);
-                } else {
-                    const exchange = this.props.exchangeRates[key][
-                        getBlockchain(this.props.selectedAccount.blockchain).config.coin
-                    ];
-                    balance = balance.plus(tokenBalanceValue.multipliedBy(exchange));
-                }
-            }
-        });
-        return balance;
-    }
-
     public componentDidMount() {
         if (this.props.selectedAccount) {
             this.props.getBalance(
@@ -301,7 +280,7 @@ export class DashboardScreenComponent extends React.Component<
                                             blockchain
                                         })
                                     }
-                                    balance={this.calculateBalance()}
+                                    balance={calculateBalance(this.props.selectedAccount)}
                                     blockchain={blockchain}
                                     currency={BLOCKCHAIN_INFO[blockchain].coin}
                                     toCurrency="USD"

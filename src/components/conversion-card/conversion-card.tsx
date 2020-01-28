@@ -27,7 +27,9 @@ const mapStateToProps = (state: any) => ({
 export const ConversionCardComponent = (
     props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    const change = props.change[props.fromCurrency][props.toCurrency];
+    var change = 0;
+    if (props.change[props.fromCurrency] && props.change[props.fromCurrency][props.toCurrency])
+        change = props.change[props.fromCurrency][props.toCurrency];
 
     return (
         <View style={props.styles.container}>

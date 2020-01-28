@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, ScrollView } from 'react-native';
-// import { ConversionCard } from '../conversion-card/conversion-card';
+import { ConversionCard } from '../conversion-card/conversion-card';
 import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
-// import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import { TokenCard } from '../token-card/token-card';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 
@@ -17,12 +17,12 @@ export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
-// const conversionCards = ['USD', 'BTC', 'ETH'];
+const conversionCards = ['USD', 'BTC', 'ETH'];
 
 export const CoinDashboardComponent = (props: IProps) => (
     <View style={props.styles.container}>
         <View style={props.styles.exchangeCardContainer}>
-            {/* {props.blockchain &&
+            {props.blockchain &&
                 conversionCards.map(
                     (toCurrency, i) =>
                         BLOCKCHAIN_INFO[props.blockchain].coin !== toCurrency && (
@@ -33,7 +33,7 @@ export const CoinDashboardComponent = (props: IProps) => (
                                 blockchain={props.blockchain}
                             />
                         )
-                )} */}
+                )}
         </View>
 
         <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>

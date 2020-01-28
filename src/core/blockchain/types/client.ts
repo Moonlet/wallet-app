@@ -30,7 +30,4 @@ export abstract class BlockchainGenericClient {
         amount?,
         contractAddress?
     ): Promise<IFeeOptions>;
-
-    public createAccount?(newAccountId: string, publicKey: string, chainId: any): Promise<any>;
-    public checkAccountIdValid?(accountId: string): Promise<boolean>;
 }

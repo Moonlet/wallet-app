@@ -1,6 +1,6 @@
 import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
 import { Blockchain, IFeeOptions } from '../../core/blockchain/types';
-import { WalletType } from '../../core/wallet/types';
+import { WalletType, IWallet } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
 import { IAction } from '../types';
 import { Dispatch } from 'react';
@@ -27,8 +27,9 @@ import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
 import { BottomSheetType } from '../ui/bottomSheet/state';
 import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
-import { getSelectedWallet, getSelectedAccount } from './selectors';
+import { getSelectedWallet } from './selectors';
 import { getChainId } from '../preferences/selectors';
+import { Client as NearClient } from '../../core/blockchain/near/client';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -186,8 +187,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ETHEREUM, 0),
             wallet.getAccounts(Blockchain.ETHEREUM, 1),
             wallet.getAccounts(Blockchain.ZILLIQA, 0),
-            wallet.getAccounts(Blockchain.ZILLIQA, 1),
-            wallet.getAccounts(Blockchain.NEAR, 0)
+            wallet.getAccounts(Blockchain.ZILLIQA, 1)
         ]).then(async data => {
             data[0][0].selected = true;
             //    data[2][0].selected = true;
@@ -253,16 +253,14 @@ export const getBalance = (
             try {
                 const chainId = getChainId(state, account.blockchain);
                 const tokenInfo = account.tokens[token];
+                const client = getBlockchain(blockchain).getClient(chainId);
 
                 let balance;
                 switch (tokenInfo.type) {
                     case TokenType.NATIVE:
-                        balance = await getBlockchain(blockchain)
-                            .getClient(chainId)
-                            .getBalance(address);
+                        balance = await client.getBalance(address);
                         break;
                     default:
-                        const client = getBlockchain(blockchain).getClient(chainId);
                         if (client.tokens[tokenInfo.type]) {
                             balance = await client.tokens[tokenInfo.type].getBalance(
                                 tokenInfo.contractAddress,
@@ -448,21 +446,38 @@ export const addToken = (walletId: string, account: IAccountState, token: IToken
     getBalance(account.blockchain, account.address, undefined, true)(dispatch, getState);
 };
 
-export const createNearAccount = (blockchain: Blockchain, newAccountId: string) => async (
-    dispatch: Dispatch<any>,
-    getState: () => IReduxState
-) => {
-    const state = getState();
+export const createAccount = (
+    blockchain: Blockchain,
+    newAccountId: string,
+    password: string
+) => async (dispatch: Dispatch<any>, getState: () => IReduxState) => {
+    const selectedWallet: IWalletState = getSelectedWallet(getState());
+    const hdWallet: IWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
+        pass: password
+    });
+    blockchain = Blockchain.NEAR; // TODO - remove this
+
+    const accounts = await hdWallet.getAccounts(blockchain, 0);
+    const account = accounts[0];
+    const publicKey = account.publicKey;
 
     const blockchainInstance = getBlockchain(blockchain);
-
     const chainId = 1; // TODO: refactor this to string
 
-    const createAccount = await blockchainInstance
-        .getClient(chainId)
-        .createAccount(newAccountId, getSelectedAccount(state).publicKey, chainId);
+    const client = blockchainInstance.getClient(chainId) as NearClient;
 
-    // console.log('createAccount: ', createAccount);
+    const txId = await client.createAccount(newAccountId, publicKey, chainId);
 
-    return createAccount;
+    if (txId) {
+        account.address = newAccountId;
+
+        account.tokens[blockchain].balance = {
+            value: '0',
+            inProgress: false,
+            timestamp: undefined,
+            error: undefined
+        };
+
+        dispatch(addAccount(selectedWallet.id, blockchain, account));
+    }
 };

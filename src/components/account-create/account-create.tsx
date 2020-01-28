@@ -11,9 +11,11 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { createNearAccount } from '../../redux/wallets/actions';
+import { createAccount } from '../../redux/wallets/actions';
 import { IReduxState } from '../../redux/state';
 import { LoadingIndicator } from '../loading-indicator/loading-indicator';
+import { PasswordModal } from '../password-modal/password-modal';
+import { Client as NearClient } from '../../core/blockchain/near/client';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -21,7 +23,7 @@ export interface IProps {
 }
 
 export interface IReduxProps {
-    createNearAccount: typeof createNearAccount;
+    createAccount: typeof createAccount;
 }
 
 export interface IExternalProps {
@@ -42,13 +44,15 @@ const mapStateToProps = (state: IReduxState) => {
 };
 
 const mapDispatchToProps = {
-    createNearAccount
+    createAccount
 };
 
 export class AccountCreateComponent extends React.Component<
     IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
+    public passwordModal = null;
+
     constructor(
         props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
@@ -63,11 +67,11 @@ export class AccountCreateComponent extends React.Component<
     }
 
     public checkAccountIdValid = async () => {
-        const blockchainInstance = getBlockchain(this.props.blockchain);
+        // const blockchainInstance = getBlockchain(this.props.blockchain);
+        const blockchainInstance = getBlockchain(Blockchain.NEAR);
 
-        const isInputValid = await blockchainInstance
-            .getClient(0) // TODO: chainId
-            .checkAccountIdValid(this.state.inputAccout);
+        const client = blockchainInstance.getClient(0) as NearClient;
+        const isInputValid = await client.checkAccountIdValid(this.state.inputAccout);
 
         this.setState({ isInputValid, showInputInfo: true });
 
@@ -77,8 +81,9 @@ export class AccountCreateComponent extends React.Component<
     };
 
     public createAccount = async () => {
+        const password = await this.passwordModal.requestPassword();
         this.setState({ isLoading: true });
-        await this.props.createNearAccount(this.props.blockchain, this.state.inputAccout);
+        this.props.createAccount(this.props.blockchain, this.state.inputAccout, password);
     };
 
     public render() {
@@ -140,6 +145,8 @@ export class AccountCreateComponent extends React.Component<
                             ? translate('App.labels.create')
                             : translate('App.labels.check')}
                     </Button>
+
+                    <PasswordModal obRef={ref => (this.passwordModal = ref)} />
                 </View>
             );
         }

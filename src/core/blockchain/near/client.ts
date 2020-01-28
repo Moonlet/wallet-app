@@ -8,20 +8,22 @@ import {
     createTransaction,
     signTransaction
 } from 'nearlib/src.ts/transaction';
-import { PublicKey, KeyPair, serialize, format } from 'nearlib/src.ts/utils';
+import { PublicKey, KeyPair, serialize } from 'nearlib/src.ts/utils';
 import { InMemoryKeyStore } from 'nearlib/src.ts/key_stores';
 import { InMemorySigner } from 'nearlib/src.ts';
 import BN from 'bn.js';
+import BigNumber from 'bignumber.js';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: number) {
         super(chainId, networks);
     }
 
-    public async getBalance(address: string): Promise<any> {
+    public async getBalance(address: string): Promise<BigNumber> {
         const res = await this.rpc.call('query', [`account/${address}`, '']);
 
-        return format.formatNearAmount(res.result.amount); // ,4
+        // return format.formatNearAmount(res.result.amount); // ,4
+        return new BigNumber(res.result.amount);
     }
 
     public async getNonce(address: string, publicKey?: string): Promise<number> {

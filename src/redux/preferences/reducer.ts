@@ -25,9 +25,9 @@ const initialState: IPrefState = {
             testNet: 333,
             mainNet: 1
         },
-        [Blockchain.ZILLIQA]: {
-            testNet: 1 // 'testnet'
-            // mainNet: 1
+        [Blockchain.NEAR]: {
+            testNet: 1, // TODO - convert to string: 'testnet'
+            mainNet: 1 // TODO - not released yet
         }
     },
     blockchains: {

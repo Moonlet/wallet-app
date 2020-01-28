@@ -5,7 +5,7 @@ import { INavigationProps } from '../../navigation/with-navigation-params';
 import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
 import { CoinDashboard } from '../../components/coin-dashboard/coin-dashboard';
 import { IReduxState } from '../../redux/state';
-import { IWalletState, IAccountState } from '../../redux/wallets/state';
+import { IWalletState, IAccountState, TokenType } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -14,7 +14,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { getBalance, setSelectedAccount, setSelectedBlockchain } from '../../redux/wallets/actions';
-import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
 import {
     getSelectedWallet,
     getSelectedAccount,
@@ -28,7 +28,7 @@ import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { IBlockchainsOptions } from '../../redux/preferences/state';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
-import { calculateBalance } from '../../core/blockchain/common/account';
+import BigNumber from 'bignumber.js';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -145,6 +145,27 @@ export class DashboardScreenComponent extends React.Component<
             }
         }
     }
+
+    public calculateBalance = (account: IAccountState) => {
+        const tokenKeys = Object.keys(account.tokens);
+        let balance = new BigNumber(0);
+
+        tokenKeys.map(key => {
+            const token = account.tokens[key];
+            const tokenBalanceValue = new BigNumber(token.balance?.value);
+            if (token.active) {
+                if (token.type === TokenType.NATIVE) {
+                    balance = balance.plus(tokenBalanceValue);
+                } else {
+                    const exchange = this.props.exchangeRates[key][
+                        getBlockchain(account.blockchain).config.coin
+                    ];
+                    balance = balance.plus(tokenBalanceValue.multipliedBy(exchange));
+                }
+            }
+        });
+        return balance.toString();
+    };
 
     public buildCoins() {
         const coins = [];
@@ -280,7 +301,7 @@ export class DashboardScreenComponent extends React.Component<
                                             blockchain
                                         })
                                     }
-                                    balance={calculateBalance(this.props.selectedAccount)}
+                                    balance={this.calculateBalance(this.props.selectedAccount)}
                                     blockchain={blockchain}
                                     currency={BLOCKCHAIN_INFO[blockchain].coin}
                                     toCurrency="USD"

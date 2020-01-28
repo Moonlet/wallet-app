@@ -54,6 +54,7 @@
         "lottie-react-native": "^3.3.2",
         "modal-react-native-web": "^0.2.0",
         "moment": "^2.24.0",
+        "nearlib": "^0.21.0",
         "node-libs-react-native": "^1.0.3",
         "qrcode": "^1.4.4",
         "react": "16.9.0",

@@ -67,16 +67,17 @@ export class AccountCreateComponent extends React.Component<
     }
 
     public checkAccountIdValid = async () => {
-        // const blockchainInstance = getBlockchain(this.props.blockchain);
-        const blockchainInstance = getBlockchain(Blockchain.NEAR);
+        if (this.props.blockchain === Blockchain.NEAR) {
+            const blockchainInstance = getBlockchain(this.props.blockchain);
 
-        const client = blockchainInstance.getClient(0) as NearClient;
-        const isInputValid = await client.checkAccountIdValid(this.state.inputAccout);
+            const client = blockchainInstance.getClient(0) as NearClient;
+            const isInputValid = await client.checkAccountIdValid(this.state.inputAccout);
 
-        this.setState({ isInputValid, showInputInfo: true });
+            this.setState({ isInputValid, showInputInfo: true });
 
-        if (isInputValid) {
-            this.setState({ isCreate: true });
+            if (isInputValid) {
+                this.setState({ isCreate: true });
+            }
         }
     };
 
@@ -94,9 +95,9 @@ export class AccountCreateComponent extends React.Component<
         } else {
             return (
                 <View style={styles.container}>
-                    <Text style={styles.createText}>{translate('NearCreateAccount.create')}</Text>
+                    <Text style={styles.createText}>{translate('CreateAccount.createNear')}</Text>
                     <Text style={styles.chooseUsernameText}>
-                        {translate('NearCreateAccount.chooseUsername')}
+                        {translate('CreateAccount.chooseUsername')}
                     </Text>
 
                     <View style={styles.inputContainer}>
@@ -104,7 +105,7 @@ export class AccountCreateComponent extends React.Component<
                             <TextInput
                                 style={styles.input}
                                 placeholderTextColor={theme.colors.textTertiary}
-                                placeholder={translate('NearCreateAccount.eg')}
+                                placeholder={translate('CreateAccount.eg')}
                                 autoCapitalize={'none'}
                                 autoCorrect={false}
                                 selectionColor={theme.colors.accent}
@@ -116,13 +117,13 @@ export class AccountCreateComponent extends React.Component<
                         </View>
                         {this.state.isInputValid && this.state.showInputInfo && (
                             <Text style={styles.congratsText}>
-                                {translate('NearCreateAccount.congrats')}
+                                {translate('CreateAccount.congrats')}
                             </Text>
                         )}
 
                         {!this.state.isInputValid && this.state.showInputInfo && (
                             <Text style={styles.invalidText}>
-                                {translate('NearCreateAccount.invalidUsername')}
+                                {translate('CreateAccount.invalidUsername')}
                             </Text>
                         )}
                     </View>

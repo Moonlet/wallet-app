@@ -271,8 +271,8 @@ export const translation: ITranslations = {
             noMatch: 'Nothing matches your search',
             noGiveUp: `But don't give up – check the search string you entered and give it one more try`
         },
-        NearCreateAccount: {
-            create: 'Create NEAR account!',
+        CreateAccount: {
+            createNear: 'Create NEAR account!',
             chooseUsername: 'Just choose a username and you’re all set.',
             congrats: 'Congrats! This name is available.',
             eg: 'e.g. johndoe',

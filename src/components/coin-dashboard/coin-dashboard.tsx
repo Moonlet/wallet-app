@@ -22,9 +22,10 @@ const conversionCards = ['USD', 'BTC', 'ETH'];
 export const CoinDashboardComponent = (props: IProps) => (
     <View style={props.styles.container}>
         <View style={props.styles.exchangeCardContainer}>
-            {props.blockchain &&
+            {typeof props.blockchain !== 'undefined' &&
                 conversionCards.map(
                     (toCurrency, i) =>
+                        BLOCKCHAIN_INFO[props.blockchain] &&
                         BLOCKCHAIN_INFO[props.blockchain].coin !== toCurrency && (
                             <ConversionCard
                                 key={i}

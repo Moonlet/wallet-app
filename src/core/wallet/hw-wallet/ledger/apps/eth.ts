@@ -37,18 +37,18 @@ export class Eth implements IHardwareWalletApp {
     ): Promise<any> => {
         const transaction = new Transaction(
             {
-                nonce: '0x' + new BigNumber(tx.options.nonce).toString(16),
-                gasPrice: '0x' + new BigNumber(tx.options.gasPrice).toString(16),
-                gasLimit: '0x' + new BigNumber(tx.options.gasLimit).toString(16),
-                to: tx.to,
-                value: '0x' + tx.amount.toString(16)
+                nonce: '0x' + tx.nonce.toString(16),
+                gasPrice: '0x' + tx.feeOptions.gasPrice,
+                gasLimit: '0x' + tx.feeOptions.gasLimit,
+                to: tx.toAddress,
+                value: '0x' + new BigNumber(tx.amount).toString(16)
             },
             {
-                chain: tx.options.chainId
+                chain: tx.chainId
             }
         );
 
-        transaction.raw[6] = Buffer.from([tx.options.chainId]); // v
+        transaction.raw[6] = Buffer.from([tx.chainId]); // v
         transaction.raw[7] = Buffer.from([]); // r
         transaction.raw[8] = Buffer.from([]); // s
 

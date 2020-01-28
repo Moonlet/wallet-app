@@ -19,7 +19,6 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../redux/preferences/selectors';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { isValidAddress } from '../../core/blockchain/ethereum/account';
-import BigNumber from 'bignumber.js';
 
 const GENERIC_TOKEN_LOGO = {
     uri:
@@ -166,7 +165,7 @@ export class ManageTokenComponent extends React.Component<
                         )[0]?.order || 0 + 1, // check here
 
                     balance: {
-                        value: new BigNumber(0),
+                        value: '0',
                         timestamp: undefined,
                         inProgress: false,
                         error: undefined

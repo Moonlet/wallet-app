@@ -36,7 +36,7 @@ export const CoinBalanceCardComponent = (props: IProps) => (
         <View style={props.styles.rowContainer}>
             <Amount
                 style={[props.styles.mainText, !props.active && props.styles.darkerText]}
-                amount={props.balance}
+                amount={props.balance.toString()}
                 token={getBlockchain(props.blockchain).config.coin}
                 tokenDecimals={
                     getBlockchain(props.blockchain).config.tokens[
@@ -49,7 +49,7 @@ export const CoinBalanceCardComponent = (props: IProps) => (
         </View>
         <Amount
             style={[props.styles.secondaryText, !props.active && props.styles.darkerText]}
-            amount={props.balance}
+            amount={props.balance.toString()}
             token={getBlockchain(props.blockchain).config.coin}
             tokenDecimals={
                 getBlockchain(props.blockchain).config.tokens[

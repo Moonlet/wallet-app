@@ -14,11 +14,11 @@ export enum Blockchain {
     STELLAR = 'STELLAR'
 }
 
-export interface IBlockchain<TxOptions = any, AccountExtra = {}, TransactionExtra = {}> {
+export interface IBlockchain {
     config: IBlockchainConfig;
     networks: IBlockchainNetwork[];
-    transaction: IBlockchainTransactionUtils<TxOptions> & TransactionExtra;
-    account: IBlockchainAccountUtils & AccountExtra;
+    transaction: IBlockchainTransactionUtils;
+    account: IBlockchainAccountUtils;
     Client: new (chainId) => BlockchainGenericClient;
     getClient: (chainId: number) => BlockchainGenericClient;
 }

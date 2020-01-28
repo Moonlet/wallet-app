@@ -29,7 +29,9 @@ export class Client extends BlockchainGenericClient {
     }
 
     public sendTransaction(transaction): Promise<string> {
-        return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => res.result);
+        return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => {
+            return res.result;
+        });
     }
 
     public async callContract(contractAddress, methodSignature, params: any[] = []) {
@@ -112,10 +114,10 @@ export class Client extends BlockchainGenericClient {
             : config.feeOptions.defaults.gasLimit;
 
         return {
-            gasPrice,
-            gasLimit,
+            gasPrice: gasPrice.toString(),
+            gasLimit: gasLimit.toString(),
             presets: presets ? presets : config.feeOptions.defaults.gasPricePresets,
-            feeTotal: gasPrice.multipliedBy(gasLimit)
+            feeTotal: gasPrice.multipliedBy(gasLimit).toString()
         };
     }
 

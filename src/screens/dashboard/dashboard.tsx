@@ -192,14 +192,15 @@ export class DashboardScreenComponent extends React.Component<
         let balance = new BigNumber(0);
         tokenKeys.map(key => {
             const token = this.props.selectedAccount.tokens[key];
+            const tokenBalanceValue = new BigNumber(token.balance?.value);
             if (token.active) {
                 if (token.type === TokenType.NATIVE) {
-                    balance = balance.plus(token.balance?.value);
+                    balance = balance.plus(tokenBalanceValue);
                 } else {
                     const exchange = this.props.exchangeRates[key][
                         getBlockchain(this.props.selectedAccount.blockchain).config.coin
                     ];
-                    balance = balance.plus(token.balance?.value.multipliedBy(exchange));
+                    balance = balance.plus(tokenBalanceValue.multipliedBy(exchange));
                 }
             }
         });

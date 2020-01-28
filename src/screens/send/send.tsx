@@ -26,7 +26,7 @@ import {
     getSelectedWallet
 } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
-import { Blockchain } from '../../core/blockchain/types';
+import { Blockchain, IFeeOptions } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
@@ -86,7 +86,7 @@ interface IState {
     labelWarningAddressDisplay: boolean;
     showOwnAccounts: boolean;
     insufficientFunds: boolean;
-    feeOptions: any;
+    feeOptions: IFeeOptions;
     showExtensionMessage: boolean;
 }
 
@@ -207,7 +207,7 @@ export class SendScreenComponent extends React.Component<
         this.verifyAddress(contact.address);
     };
 
-    public onFeesChanged = (feeOptions: any) => {
+    public onFeesChanged = (feeOptions: IFeeOptions) => {
         this.setState({ feeOptions }, () => this.availableFunds());
     };
 
@@ -219,7 +219,9 @@ export class SendScreenComponent extends React.Component<
         const token = this.props.account.tokens[
             getBlockchain(this.props.account.blockchain).config.coin
         ];
-        const allBalance = token.balance?.value.minus(this.state.feeOptions.feeTotal);
+        const tokenBalanceValue = new BigNumber(token.balance?.value);
+
+        const allBalance = tokenBalanceValue.minus(this.state.feeOptions.feeTotal);
 
         if (allBalance.isGreaterThanOrEqualTo(0)) {
             const blockchainInstance = getBlockchain(this.props.account.blockchain);
@@ -239,11 +241,12 @@ export class SendScreenComponent extends React.Component<
 
         const feeTokenSymbol = getBlockchain(this.props.account.blockchain).config.coin;
         const completeAmount = stdAmount;
+        const tokenBalanceValue = new BigNumber(this.props.token.balance?.value);
         if (this.props.token.symbol === feeTokenSymbol) {
             completeAmount.plus(new BigNumber(this.state.feeOptions.feeTotal));
         }
 
-        if (this.props.token.balance?.value.minus(completeAmount).isGreaterThanOrEqualTo(0)) {
+        if (tokenBalanceValue.minus(completeAmount).isGreaterThanOrEqualTo(0)) {
             this.setState({ insufficientFunds: false });
         } else {
             this.setState({ insufficientFunds: true });

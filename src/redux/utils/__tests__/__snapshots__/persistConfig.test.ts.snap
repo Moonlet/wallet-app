@@ -3,7 +3,7 @@
 exports[`should set the config 1`] = `
 Object {
   "blacklist": Array [
-    "screens",
+    "ui",
   ],
   "key": "root",
   "storage": undefined,

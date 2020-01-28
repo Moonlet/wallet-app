@@ -6,7 +6,7 @@ exports[`conversion card component renders correctly 1`] = `
     ZIL
     ETH
   </withTheme(TextComponent)>
-  <Connect(AmountComponent) amount={{...}} token=\\"ZIL\\" style={{...}} convertTo=\\"ETH\\" blockchain=\\"ETHEREUM\\" tokenDecimals={18} />
+  <Connect(AmountComponent) amount=\\"1\\" token=\\"ZIL\\" style={{...}} convertTo=\\"ETH\\" blockchain=\\"ETHEREUM\\" tokenDecimals={18} />
   <withTheme(TextComponent) style={{...}}>
     0.0216%
   </withTheme(TextComponent)>
@@ -19,7 +19,7 @@ exports[`conversion card component renders correctly negative values 1`] = `
     ZIL
     ETH
   </withTheme(TextComponent)>
-  <Connect(AmountComponent) amount={{...}} token=\\"ZIL\\" style={{...}} convertTo=\\"ETH\\" blockchain=\\"ETHEREUM\\" tokenDecimals={18} />
+  <Connect(AmountComponent) amount=\\"1\\" token=\\"ZIL\\" style={{...}} convertTo=\\"ETH\\" blockchain=\\"ETHEREUM\\" tokenDecimals={18} />
   <withTheme(TextComponent) style={{...}}>
     -0.0216%
   </withTheme(TextComponent)>

@@ -1,4 +1,4 @@
-import { BlockchainGenericClient } from '../types';
+import { BlockchainGenericClient, IFeeOptions } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
@@ -65,11 +65,13 @@ export class Client extends BlockchainGenericClient {
             : config.feeOptions.defaults.gasPrice;
         const gasLimit = config.feeOptions.defaults.gasLimit;
 
-        return {
-            gasPrice,
-            gasLimit,
-            feeTotal: gasPrice.multipliedBy(gasLimit)
+        const feeOptions: IFeeOptions = {
+            gasPrice: gasPrice.toString(),
+            gasLimit: gasLimit.toString(),
+            feeTotal: gasPrice.multipliedBy(gasLimit).toString()
         };
+
+        return feeOptions;
     }
 
     private async estimateFees(): Promise<any> {

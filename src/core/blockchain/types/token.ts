@@ -19,7 +19,7 @@ export interface ITokenConfig {
     order: number;
     active: boolean;
     balance?: {
-        value: BigNumber;
+        value: string;
         inProgress: boolean;
         timestamp: number;
         error: any;

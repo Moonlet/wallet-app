@@ -1,6 +1,6 @@
 import { IWallet } from '../types';
 import { Mnemonic } from './mnemonic';
-import { Blockchain, IBlockchainTransaction } from '../../blockchain/types';
+import { Blockchain, IBlockchainTransaction, IAdditionalInfoType } from '../../blockchain/types';
 import { getBlockchain } from '../../blockchain/blockchain-factory';
 import { IAccountState } from '../../../redux/wallets/state';
 import { HDKeyFactory } from './hd-key/hdkey-factory';
@@ -99,7 +99,7 @@ export class HDWallet implements IWallet {
     public async sign(
         blockchain: Blockchain,
         accountIndex: number,
-        tx: IBlockchainTransaction
+        tx: IBlockchainTransaction<IAdditionalInfoType>
     ): Promise<any> {
         return getBlockchain(blockchain).transaction.sign(
             tx,

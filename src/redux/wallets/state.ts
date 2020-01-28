@@ -1,6 +1,5 @@
-import { WalletType, TransactionStatus } from '../../core/wallet/types';
-import { Blockchain } from '../../core/blockchain/types';
-import BigNumber from 'bignumber.js';
+import { WalletType } from '../../core/wallet/types';
+import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 
@@ -23,18 +22,13 @@ export interface IWalletState {
     type: WalletType;
     accounts: IAccountState[];
     transactions?: {
-        [id: string]: ITransactionState;
+        [id: string]: IBlockchainTransaction;
     };
 }
 
 export enum TokenType {
     NATIVE = 'NATIVE',
     ERC20 = 'ERC20'
-}
-
-export interface ISelectedAccount {
-    index: number;
-    blockchain: Blockchain;
 }
 
 export interface IAccountState {
@@ -50,25 +44,7 @@ export interface IAccountState {
     };
 }
 
-export interface ITransactionState {
-    id: string;
-    date: {
-        created: number;
-        signed: number;
-        broadcasted: number;
-        confirmed: number;
-    };
-    fromAddress: string;
-    toAddress: string;
-    amount: BigNumber;
-    feeOptions: IFeeOptionsState;
-    block: number;
-    nonce: number;
-    status: TransactionStatus;
-}
-
-export interface IFeeOptionsState {
-    gasPrice: number;
-    gasLimit: number;
-    usedGas: number;
+export interface ISelectedAccount {
+    index: number;
+    blockchain: Blockchain;
 }

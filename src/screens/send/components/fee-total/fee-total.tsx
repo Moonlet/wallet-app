@@ -4,14 +4,13 @@ import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Amount } from '../../../../components/amount/amount';
 import { Text } from '../../../../library';
-import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { translate } from '../../../../core/i18n';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
 
 export interface IExternalProps {
     token: ITokenConfig;
-    amount: BigNumber;
+    amount: string;
     blockchain: Blockchain;
 }
 

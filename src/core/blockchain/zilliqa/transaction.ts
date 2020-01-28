@@ -1,5 +1,4 @@
-import { IBlockchainTransaction, ITransferTransaction } from '../types';
-import { IZilliqaTxOptions } from '.';
+import { IBlockchainTransaction, ITransferTransaction, TransactionType } from '../types';
 import { privateToPublic } from './account';
 
 import * as ZilliqaJsAccountUtil from '@zilliqa-js/account/dist/util';
@@ -7,6 +6,7 @@ import { BN, Long } from '@zilliqa-js/util';
 import * as schnorr from '@zilliqa-js/crypto/dist/schnorr';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { toChecksumAddress } from '@zilliqa-js/crypto/dist/util';
+import { TransactionStatus } from '../../wallet/types';
 
 const schnorrSign = (msg: Buffer, privateKey: string): string => {
     const pubKey = privateToPublic(privateKey);
@@ -25,24 +25,21 @@ const schnorrSign = (msg: Buffer, privateKey: string): string => {
     return r + s;
 };
 
-export const sign = async (
-    tx: IBlockchainTransaction<IZilliqaTxOptions>,
-    privateKey: string
-): Promise<any> => {
+export const sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
     const pubKey = privateToPublic(privateKey);
     const transaction: any = {
         // tslint:disable-next-line: no-bitwise
-        version: (tx.options.chainId << 16) + 1, // add replay protection
-        toAddr: fromBech32Address(tx.to)
+        version: (tx.chainId << 16) + 1, // add replay protection
+        toAddr: fromBech32Address(tx.toAddress)
             .replace('0x', '')
             .toLowerCase(),
-        nonce: tx.options.nonce,
+        nonce: tx.nonce,
         pubKey,
-        amount: new BN(tx.amount.toString()),
-        gasPrice: new BN(tx.options.gasPrice),
-        gasLimit: Long.fromNumber(tx.options.gasLimit),
-        code: tx.options.code || '',
-        data: tx.options.data || '',
+        amount: new BN(tx.amount),
+        gasPrice: new BN(tx.feeOptions.gasPrice.toString()),
+        gasLimit: Long.fromString(tx.feeOptions.gasLimit.toString()),
+        code: '',
+        data: '',
         signature: ''
     };
 
@@ -58,23 +55,31 @@ export const sign = async (
     transaction.gasPrice = transaction.gasPrice.toString();
     transaction.toAddr = toChecksumAddress(transaction.toAddr).replace('0x', '');
 
-    // console.log('signed transaction', transaction);
     return transaction;
 };
 
-export const buildTransferTransaction = (
-    tx: ITransferTransaction
-): IBlockchainTransaction<IZilliqaTxOptions> => {
+export const buildTransferTransaction = (tx: ITransferTransaction): IBlockchainTransaction => {
+    const tokenInfo = tx.account.tokens[tx.token];
     return {
-        from: tx.account.address,
-        to: tx.toAddress,
+        date: {
+            created: Date.now(),
+            signed: Date.now(),
+            broadcasted: Date.now(),
+            confirmed: Date.now()
+        },
+        blockchain: tx.account.blockchain,
+        chainId: tx.chainId,
+        type: TransactionType.TRANSFER,
+        token: tokenInfo,
+
+        address: tx.account.address,
+        publicKey: tx.account.publicKey,
+
+        toAddress: tx.toAddress,
         amount: tx.amount,
-        options: {
-            nonce: tx.nonce,
-            gasPrice: tx.gasPrice.toNumber(),
-            gasLimit: tx.gasLimit,
-            chainId: tx.chainId,
-            publicKey: tx.account.publicKey
-        }
+        feeOptions: tx.feeOptions,
+        broadcatedOnBlock: undefined,
+        nonce: tx.nonce,
+        status: TransactionStatus.PENDING
     };
 };

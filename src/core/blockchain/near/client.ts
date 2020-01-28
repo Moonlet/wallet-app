@@ -1,5 +1,4 @@
-import { BlockchainGenericClient } from '../types';
-import { BigNumber } from 'bignumber.js';
+import { BlockchainGenericClient, IFeeOptions } from '../types';
 import { networks } from './networks';
 import {
     createAccount,
@@ -9,7 +8,7 @@ import {
     createTransaction,
     signTransaction
 } from 'nearlib/src.ts/transaction';
-import { PublicKey, KeyPair, serialize } from 'nearlib/src.ts/utils';
+import { PublicKey, KeyPair, serialize, format } from 'nearlib/src.ts/utils';
 import { InMemoryKeyStore } from 'nearlib/src.ts/key_stores';
 import { InMemorySigner } from 'nearlib/src.ts';
 import BN from 'bn.js';
@@ -19,17 +18,15 @@ export class Client extends BlockchainGenericClient {
         super(chainId, networks);
     }
 
-    public async getBalance(address: string): Promise<BigNumber> {
+    public async getBalance(address: string): Promise<any> {
         const res = await this.rpc.call('query', [`account/${address}`, '']);
 
-        // console.log(res.result);
-        return new BigNumber(res.result.amount, 24);
+        return format.formatNearAmount(res.result.amount); // ,4
     }
 
     public async getNonce(address: string, publicKey?: string): Promise<number> {
         const res = await this.rpc.call('query', [`access_key/${address}/${publicKey}`, '']);
 
-        // console.log(res.result);
         return res.result.nonce;
     }
 
@@ -37,7 +34,12 @@ export class Client extends BlockchainGenericClient {
         throw new Error('Not Implemented');
     }
 
-    public async calculateFees(from: string, to: string) {
+    public async calculateFees(
+        from: string,
+        to: string,
+        amount?,
+        contractAddress?
+    ): Promise<IFeeOptions> {
         throw new Error('Not Implemented');
     }
 
@@ -86,12 +88,14 @@ export class Client extends BlockchainGenericClient {
         // setup Signer
         const signer = new InMemorySigner(keyStore);
 
+        var nonce = await this.getNonce(SENDER_ACCOUNT_ID, SENDER_PUBLIC_KEY);
+
         // create transaction
         const tx = createTransaction(
             SENDER_ACCOUNT_ID,
             PublicKey.fromString(SENDER_PUBLIC_KEY),
             newAccountId,
-            await this.getNonce(SENDER_ACCOUNT_ID, SENDER_PUBLIC_KEY),
+            ++nonce,
             actions,
             serialize.base_decode(status.result.sync_info.latest_block_hash)
         );

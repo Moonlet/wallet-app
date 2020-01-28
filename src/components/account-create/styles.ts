@@ -7,7 +7,8 @@ export default (theme: ITheme) =>
         container: {
             flex: 1,
             flexDirection: 'column',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            paddingHorizontal: BASE_DIMENSION * 2
         },
         createText: {
             fontSize: 22,

@@ -71,7 +71,9 @@ export class AccountCreateComponent extends React.Component<
 
         this.setState({ isInputValid, showInputInfo: true });
 
-        if (isInputValid) { this.setState({ isCreate: true }); }
+        if (isInputValid) {
+            this.setState({ isCreate: true });
+        }
     };
 
     public createAccount = async () => {

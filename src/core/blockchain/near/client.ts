@@ -110,6 +110,7 @@ export class Client extends BlockchainGenericClient {
         // })
 
         // send transaction
+        // broadcast_tx_commit
         const res = await this.rpc.call('broadcast_tx_async', [
             Buffer.from(signedTx[1].encode()).toString('base64')
         ]);

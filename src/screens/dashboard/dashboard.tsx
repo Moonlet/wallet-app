@@ -27,7 +27,11 @@ import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { IBlockchainsOptions } from '../../redux/preferences/state';
-import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
+import {
+    openBottomSheet,
+    enableCreateAccount,
+    disableCreateAccount
+} from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
 
@@ -42,11 +46,13 @@ export interface IReduxProps {
     exchangeRates: any;
     setSelectedAccount: typeof setSelectedAccount;
     setSelectedBlockchain: typeof setSelectedBlockchain;
+    isCreateAccount: boolean;
+    enableCreateAccount: typeof enableCreateAccount;
+    disableCreateAccount: typeof disableCreateAccount;
 }
 
 interface IState {
     coins: Array<{ blockchain: Blockchain; order: number }>;
-    selectedBlockchainHasAccounts: boolean;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -57,14 +63,17 @@ const mapStateToProps = (state: IReduxState) => ({
     blockchains: state.preferences.blockchains,
     selectedBlockchain: getSelectedBlockchain(state),
     selectedAccount: getSelectedAccount(state),
-    exchangeRates: (state as any).market.exchangeRates
+    exchangeRates: (state as any).market.exchangeRates,
+    isCreateAccount: state.ui.bottomSheet.isCreateAccount
 });
 
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
     setSelectedAccount,
-    setSelectedBlockchain
+    setSelectedBlockchain,
+    enableCreateAccount,
+    disableCreateAccount
 };
 
 const MyTitle = ({ text }) => (
@@ -128,8 +137,7 @@ export class DashboardScreenComponent extends React.Component<
         super(props);
 
         this.state = {
-            coins: this.buildCoins(),
-            selectedBlockchainHasAccounts: true
+            coins: this.buildCoins()
         };
 
         if (Platform.OS === 'web') {
@@ -198,7 +206,7 @@ export class DashboardScreenComponent extends React.Component<
             prevProps.wallet?.accounts.length !== this.props.wallet?.accounts.length &&
             this.props.wallet?.accounts.length > 0
         ) {
-            this.setState({ selectedBlockchainHasAccounts: true });
+            this.props.disableCreateAccount();
             this.blockchainPress({ blockchain: this.props.selectedBlockchain, order: 0 });
         }
     }
@@ -223,9 +231,9 @@ export class DashboardScreenComponent extends React.Component<
                     acc => acc.blockchain === this.props.selectedBlockchain
                 )
             ) {
-                this.setState({ selectedBlockchainHasAccounts: true });
+                this.props.disableCreateAccount();
             } else {
-                this.setState({ selectedBlockchainHasAccounts: false });
+                this.props.enableCreateAccount();
             }
         });
     };
@@ -286,9 +294,16 @@ export class DashboardScreenComponent extends React.Component<
         const styles = this.props.styles;
         const { coins } = this.state;
         const blockchain: Blockchain = this.props.selectedBlockchain;
+        const showCreateAccount =
+            this.props.isCreateAccount && this.props.selectedBlockchain === Blockchain.NEAR;
+
         return (
             <View style={styles.container}>
-                {coins.length !== 0 && this.state.selectedBlockchainHasAccounts ? (
+                {showCreateAccount && (
+                    <AccountCreate blockchain={blockchain} navigation={this.props.navigation} />
+                )}
+
+                {!showCreateAccount && coins.length !== 0 && (
                     <View style={styles.dashboardContainer}>
                         <View style={styles.coinBalanceCard}>
                             {this.props.selectedAccount && (
@@ -322,8 +337,6 @@ export class DashboardScreenComponent extends React.Component<
                             />
                         </Animated.View>
                     </View>
-                ) : (
-                    <AccountCreate blockchain={blockchain} navigation={this.props.navigation} />
                 )}
 
                 {coins.length > 1 && this.renderBottomBlockchainNav()}

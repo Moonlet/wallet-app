@@ -458,7 +458,11 @@ export const createAccount = (
     });
     blockchain = Blockchain.NEAR;
     const chainId = getChainId(state, blockchain);
-    const accounts = await hdWallet.getAccounts(blockchain, 0);
+
+    const numberOfAccounts = selectedWallet.accounts.filter(acc => acc.blockchain === blockchain)
+        .length;
+
+    const accounts = await hdWallet.getAccounts(blockchain, numberOfAccounts);
     const account = accounts[0];
     const publicKey = account.publicKey;
 

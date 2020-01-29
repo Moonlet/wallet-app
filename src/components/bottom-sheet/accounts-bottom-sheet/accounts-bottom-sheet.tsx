@@ -18,6 +18,7 @@ import { Amount } from '../../amount/amount';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { calculateBalance } from '../../../core/utils/balance';
 import { translate } from '../../../core/i18n';
+import { enableCreateAccount } from '../../../redux/ui/bottomSheet/actions';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -30,6 +31,7 @@ export interface IReduxProps {
     getBalance: typeof getBalance;
     exchangeRates: any;
     accounts: IAccountState[];
+    enableCreateAccount: typeof enableCreateAccount;
 }
 const mapStateToProps = (state: IReduxState) => {
     return {
@@ -40,7 +42,8 @@ const mapStateToProps = (state: IReduxState) => {
 };
 const mapDispatchToProps = {
     setSelectedAccount,
-    getBalance
+    getBalance,
+    enableCreateAccount
 };
 
 export class AccountsBottomSheetComponent extends React.Component<
@@ -157,7 +160,8 @@ export class AccountsBottomSheetComponent extends React.Component<
                         isCreate
                         label={createAccountLabel}
                         onPress={() => {
-                            //
+                            this.props.onCloseEnd();
+                            this.props.enableCreateAccount();
                         }}
                     />
                 )}

@@ -8,6 +8,7 @@ export interface IBottomSheetState {
     deviceModel: HWModel;
     connectionType: HWConnection;
     data: IBottomSheetExtensionRequestData;
+    isCreateAccount: boolean;
 }
 
 export enum BottomSheetType {

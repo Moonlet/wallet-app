@@ -1,16 +1,10 @@
 import { IBlockchainTransaction, ITransferTransaction } from '../types';
-import { INearTxOptions } from '.';
 
 // TODO: this part is in refactoring...
-export const sign = async (
-    tx: IBlockchainTransaction<INearTxOptions>,
-    privateKey: string
-): Promise<any> => {
+export const sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
     throw new Error('not implemented');
 };
 
-export const buildTransferTransaction = (
-    tx: ITransferTransaction
-): IBlockchainTransaction<INearTxOptions> => {
+export const buildTransferTransaction = (tx: ITransferTransaction): IBlockchainTransaction => {
     throw new Error('not implemented');
 };

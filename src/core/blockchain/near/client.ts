@@ -1,4 +1,4 @@
-import { BlockchainGenericClient, IFeeOptions } from '../types';
+import { BlockchainGenericClient, IFeeOptions, ChainIdType } from '../types';
 import { networks } from './networks';
 import {
     createAccount,
@@ -9,13 +9,11 @@ import {
     signTransaction
 } from 'nearlib/src.ts/transaction';
 import { PublicKey, KeyPair, serialize } from 'nearlib/src.ts/utils';
-import { InMemoryKeyStore } from 'nearlib/src.ts/key_stores';
-import { InMemorySigner } from 'nearlib/src.ts';
 import BN from 'bn.js';
 import BigNumber from 'bignumber.js';
 
 export class Client extends BlockchainGenericClient {
-    constructor(chainId: number) {
+    constructor(chainId: ChainIdType) {
         super(chainId, networks);
     }
 
@@ -64,9 +62,9 @@ export class Client extends BlockchainGenericClient {
     public async createAccount(
         newAccountId: string,
         publicKey: string,
-        chainId: any
+        chainId: ChainIdType
     ): Promise<any> {
-        chainId = 'testnet';
+        chainId = 'testnet'; // todo remove this
 
         const SENDER_ACCOUNT_ID = 'tibi';
         const SENDER_PUBLIC_KEY = 'ed25519:HnJokj1mWhDK2UTdRTjUEaj6djedbVhs1Y5N1x6APpjX';
@@ -82,15 +80,10 @@ export class Client extends BlockchainGenericClient {
             addKey(PublicKey.fromString(publicKey), fullAccessKey())
         ];
 
-        // setup KeyStore
-        const keyStore = new InMemoryKeyStore();
+        // setup KeyPair
         const keyPair = KeyPair.fromString(SENDER_PRIVATE_KEY);
-        await keyStore.setKey(chainId, SENDER_ACCOUNT_ID, keyPair);
 
-        // setup Signer
-        const signer = new InMemorySigner(keyStore);
-
-        var nonce = await this.getNonce(SENDER_ACCOUNT_ID, SENDER_PUBLIC_KEY);
+        let nonce = await this.getNonce(SENDER_ACCOUNT_ID, SENDER_PUBLIC_KEY);
 
         // create transaction
         const tx = createTransaction(
@@ -103,7 +96,18 @@ export class Client extends BlockchainGenericClient {
         );
 
         // sign transaction
+        const signer: any = {
+            async signMessage(message) {
+                return keyPair.sign(message);
+            }
+        };
         const signedTx = await signTransaction(tx, signer, SENDER_ACCOUNT_ID, chainId);
+
+        // const signature = await keyPair.sign(tx.encode());
+        // const signedTx = new SignedTransaction({
+        //     transaction: tx,
+        //     signature: { keyType: tx.publicKey.keyType, data: signature.signature }
+        // })
 
         // send transaction
         const res = await this.rpc.call('broadcast_tx_async', [

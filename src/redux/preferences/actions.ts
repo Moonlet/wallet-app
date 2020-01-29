@@ -2,7 +2,7 @@ import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { getSelectedAccount } from '../wallets/selectors';
 import { getBalance } from '../wallets/actions';
-import { Blockchain } from '../../core/blockchain/types';
+import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { IBlockchainsOptions } from './state';
 
 // actions consts
@@ -30,7 +30,7 @@ export const setBlockchainOrder = (blockchains: IBlockchainsOptions[]) => {
     };
 };
 
-export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: number) => {
+export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: ChainIdType) => {
     return {
         type: PREF_SET_NETWORK_TEST_NET_CHAIN_ID,
         data: { blockchain, chainId }

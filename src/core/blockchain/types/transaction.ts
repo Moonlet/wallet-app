@@ -1,5 +1,5 @@
 import { IAccountState } from '../../../redux/wallets/state';
-import { Blockchain } from '.';
+import { Blockchain, ChainIdType } from '.';
 import { ITokenConfig } from './token';
 import { TransactionStatus } from '../../wallet/types';
 import BigNumber from 'bignumber.js';
@@ -22,7 +22,7 @@ export interface IBlockchainTransaction<IAdditionalInfoType = {}> {
         confirmed: number;
     };
     blockchain: Blockchain;
-    chainId: number;
+    chainId: ChainIdType;
     type: TransactionType;
     token?: ITokenConfig;
 
@@ -62,7 +62,7 @@ export interface IFeeOptions {
 
 export interface ITransferTransaction {
     account: IAccountState;
-    chainId: number; // needed???
+    chainId: ChainIdType; // needed???
     toAddress: string;
     amount: string;
     token: string;

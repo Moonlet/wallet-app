@@ -11,7 +11,7 @@ import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
-import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
+import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { Amount } from '../../components/amount/amount';
@@ -21,7 +21,7 @@ import { getChainId } from '../../redux/preferences/selectors';
 
 export interface IReduxProps {
     account: IAccountState;
-    chainId: number;
+    chainId: ChainIdType;
 }
 
 export interface INavigationParams {

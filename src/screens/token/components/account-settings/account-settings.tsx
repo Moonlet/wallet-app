@@ -14,6 +14,7 @@ import { ICON_SIZE } from '../../../../styles/dimensions';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { WalletFactory } from '../../../../core/wallet/wallet-factory';
 import Modal from '../../../../library/modal/modal';
+import { ChainIdType } from '../../../../core/blockchain/types';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -24,7 +25,7 @@ export interface IExternalProps {
     onDonePressed: () => any;
     account: IAccountState;
     wallet: IWalletState;
-    chainId: number;
+    chainId: ChainIdType;
 }
 
 interface IState {

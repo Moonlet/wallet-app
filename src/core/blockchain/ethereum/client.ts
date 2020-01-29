@@ -1,4 +1,4 @@
-import { BlockchainGenericClient } from '../types';
+import { BlockchainGenericClient, ChainIdType } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
@@ -8,7 +8,7 @@ import { Erc20Client } from './tokens/erc20-client';
 import { TokenType } from '../types/token';
 
 export class Client extends BlockchainGenericClient {
-    constructor(chainId: number) {
+    constructor(chainId: ChainIdType) {
         super(chainId, networks);
 
         this.tokens[TokenType.ERC20] = new Erc20Client(this);

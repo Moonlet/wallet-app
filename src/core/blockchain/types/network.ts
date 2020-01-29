@@ -1,6 +1,8 @@
+export type ChainIdType = number | string;
+
 export interface IBlockchainNetwork {
     name: string;
-    chainId: number;
+    chainId: ChainIdType;
     url: string;
     mainNet: boolean;
     explorer: {

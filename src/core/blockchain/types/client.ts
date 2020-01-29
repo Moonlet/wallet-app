@@ -1,14 +1,14 @@
 import BigNumber from 'bignumber.js';
 import { RpcClient } from '../../utils/rpc-client';
-import { IBlockchainNetwork } from './network';
+import { IBlockchainNetwork, ChainIdType } from './network';
 import { IFeeOptions } from './transaction';
 
 export abstract class BlockchainGenericClient {
     public readonly tokens: { [type: string]: any } = {};
     protected rpc: RpcClient;
-    protected chainId: number;
+    protected chainId: ChainIdType;
 
-    constructor(chainId: number = 1, networks: IBlockchainNetwork[]) {
+    constructor(chainId: ChainIdType, networks: IBlockchainNetwork[]) {
         let url = networks[0].url;
         const network = networks.filter(n => n.chainId === chainId)[0];
         if (network) {

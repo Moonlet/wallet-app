@@ -451,19 +451,18 @@ export const createAccount = (
     newAccountId: string,
     password: string
 ) => async (dispatch: Dispatch<any>, getState: () => IReduxState) => {
-    const selectedWallet: IWalletState = getSelectedWallet(getState());
+    const state = getState();
+    const selectedWallet: IWalletState = getSelectedWallet(state);
     const hdWallet: IWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
         pass: password
     });
-    blockchain = Blockchain.NEAR; // TODO - remove this
-
+    blockchain = Blockchain.NEAR;
+    const chainId = getChainId(state, blockchain);
     const accounts = await hdWallet.getAccounts(blockchain, 0);
     const account = accounts[0];
     const publicKey = account.publicKey;
 
     const blockchainInstance = getBlockchain(blockchain);
-    const chainId = 1; // TODO: refactor this to string
-
     const client = blockchainInstance.getClient(chainId) as NearClient;
 
     const txId = await client.createAccount(newAccountId, publicKey, chainId);

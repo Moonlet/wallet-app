@@ -69,7 +69,6 @@ export class AccountCreateComponent extends React.Component<
     public checkAccountIdValid = async () => {
         if (this.props.blockchain === Blockchain.NEAR) {
             const blockchainInstance = getBlockchain(this.props.blockchain);
-
             const client = blockchainInstance.getClient(0) as NearClient;
             const isInputValid = await client.checkAccountIdValid(this.state.inputAccout);
 

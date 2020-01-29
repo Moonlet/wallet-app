@@ -18,7 +18,7 @@ import { translate, Translate } from '../../core/i18n';
 import { AccountSettings } from './components/account-settings/account-settings';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { AccountAddress } from '../../components/account-address/account-address';
-import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
+import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
 import { TransactionsHistoryList } from '../transactions-history/list-transactions-history/list-transactions-history';
 import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
@@ -42,7 +42,7 @@ export interface IReduxProps {
     transactions: IBlockchainTransaction[];
     wallet: IWalletState;
     sendTransferTransaction: typeof sendTransferTransaction;
-    chainId: number;
+    chainId: ChainIdType;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {

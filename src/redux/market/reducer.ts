@@ -20,7 +20,7 @@ const initialState = {
             CNY: 1032.85,
             USDT: 150.85,
             DAI: 151.15,
-            BTC: 0.017713 //
+            BTC: 0.017713
         },
 
         // ERC20 Tokens

@@ -45,5 +45,10 @@ export default (theme: ITheme) =>
         accountIcon: {
             height: ICON_CONTAINER_SIZE,
             width: ICON_CONTAINER_SIZE
+        },
+        createButton: {
+            backgroundColor: theme.colors.accent,
+            borderColor: theme.colors.accent,
+            paddingHorizontal: BASE_DIMENSION * 2
         }
     });

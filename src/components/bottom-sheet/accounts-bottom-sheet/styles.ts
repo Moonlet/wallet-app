@@ -14,7 +14,7 @@ export default (theme: ITheme) =>
         },
         firstRow: {
             flexDirection: 'row',
-            marginBottom: BASE_DIMENSION
+            marginBottom: BASE_DIMENSION / 4
         },
         accountName: {
             fontSize: 18,

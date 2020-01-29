@@ -14,7 +14,7 @@ export const config: IBlockchainConfig = {
             logo: {
                 uri:
                     'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png'
-            }, // require('../../../assets/images/png/zil.png'),
+            },
             order: 0,
             active: true,
             decimals: 24,

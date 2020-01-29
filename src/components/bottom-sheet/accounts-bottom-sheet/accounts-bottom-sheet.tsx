@@ -94,7 +94,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                         <View>
                             <View style={this.props.styles.firstRow}>
                                 <Text style={this.props.styles.accountName}>
-                                    {`Account ${account.index + 1}`}
+                                    {`${translate('App.labels.account')} ${account.index + 1}`}
                                 </Text>
                                 <Text style={this.props.styles.accountAddress}>
                                     {blockchain === Blockchain.NEAR
@@ -169,7 +169,7 @@ export class AccountsBottomSheetComponent extends React.Component<
         return (
             <BottomSheet
                 ref={this.bottomSheet}
-                // initialSnap={0}
+                initialSnap={0}
                 snapPoints={[
                     this.props.snapPoints.initialSnap,
                     this.props.snapPoints.bottomSheetHeight

@@ -47,7 +47,11 @@ export const ListAccountComponent = (
                     <Icon name={props.rightIcon} size={20} style={props.styles.icon} />
                 </View>
             )}
-            {props.isCreate && <Button primary>{translate('App.labels.create')}</Button>}
+            {props.isCreate && (
+                <Button style={props.styles.createButton} disabled>
+                    {translate('App.labels.create')}
+                </Button>
+            )}
         </TouchableOpacity>
     );
 };

@@ -6,21 +6,17 @@ import { smartConnect } from '../../../core/utils/smart-connect';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { Text } from '../../../library';
 import { BottomSheetHeader } from '../header/header';
-import { IAccountState, TokenType } from '../../../redux/wallets/state';
+import { IAccountState } from '../../../redux/wallets/state';
 import { setSelectedAccount, getBalance } from '../../../redux/wallets/actions';
 import { IReduxState } from '../../../redux/state';
-import {
-    getSelectedWallet,
-    getSelectedAccount,
-    getAccounts
-} from '../../../redux/wallets/selectors';
+import { getSelectedAccount, getAccounts } from '../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
 import { formatAddress } from '../../../core/utils/format-address';
 import { ListAccount } from '../../../screens/token/components/list-account/list-account';
 import { Blockchain } from '../../../core/blockchain/types';
 import { Amount } from '../../amount/amount';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
-import BigNumber from 'bignumber.js';
+import { calculateBalance } from '../../../core/utils/balance';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -36,7 +32,6 @@ export interface IReduxProps {
 }
 const mapStateToProps = (state: IReduxState) => {
     return {
-        wallet: getSelectedWallet(state),
         selectedAccount: getSelectedAccount(state),
         exchangeRates: (state as any).market.exchangeRates,
         accounts: getAccounts(state, getSelectedAccount(state).blockchain)
@@ -67,27 +62,6 @@ export class AccountsBottomSheetComponent extends React.Component<
         });
     }
 
-    public calculateBalance = (account: IAccountState) => {
-        const tokenKeys = Object.keys(account.tokens);
-        let balance = new BigNumber(0);
-
-        tokenKeys.map(key => {
-            const token = account.tokens[key];
-            const tokenBalanceValue = new BigNumber(token.balance?.value);
-            if (token.active) {
-                if (token.type === TokenType.NATIVE) {
-                    balance = balance.plus(tokenBalanceValue);
-                } else {
-                    const exchange = this.props.exchangeRates[key][
-                        getBlockchain(account.blockchain).config.coin
-                    ];
-                    balance = balance.plus(tokenBalanceValue.multipliedBy(exchange));
-                }
-            }
-        });
-        return balance.toString();
-    };
-
     public renderBottomSheetContent = () => (
         <View
             style={[
@@ -113,7 +87,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                             <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
                                 <Amount
                                     style={this.props.styles.fistAmountText}
-                                    amount={this.calculateBalance(account)}
+                                    amount={calculateBalance(account, this.props.exchangeRates)}
                                     blockchain={blockchain}
                                     token={getBlockchain(blockchain).config.coin}
                                     tokenDecimals={
@@ -124,7 +98,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                                 />
                                 <Amount
                                     style={this.props.styles.secondAmountText}
-                                    amount={this.calculateBalance(account)}
+                                    amount={calculateBalance(account, this.props.exchangeRates)}
                                     blockchain={blockchain}
                                     token={getBlockchain(blockchain).config.coin}
                                     tokenDecimals={

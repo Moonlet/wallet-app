@@ -14,11 +14,16 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { setBlockchainActive, setBlockchainOrder } from '../../../redux/preferences/actions';
 import { Blockchain } from '../../../core/blockchain/types';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
+import { isFeatureActive, REMOTE_FEATURE } from '../../../core/utils/remote-feature-config';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainsOptions }];
     setBlockchainActive: typeof setBlockchainActive;
     setBlockchainOrder: typeof setBlockchainOrder;
+}
+
+export interface IState {
+    featureIsActive: boolean;
 }
 
 const mapDispatchToProps = {
@@ -39,9 +44,20 @@ const navigationOptions = () => ({
 });
 
 export class BlockchainPortfolioComponent extends React.Component<
-    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
     public static navigationOptions = navigationOptions;
+
+    constructor(
+        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
+        super(props);
+
+        this.state = {
+            featureIsActive: false
+        };
+    }
 
     public renderBlockchain(
         item: { key: Blockchain; value: IBlockchainsOptions },
@@ -49,6 +65,10 @@ export class BlockchainPortfolioComponent extends React.Component<
         isActive: boolean
     ) {
         const { styles, theme } = this.props;
+
+        if (item.key === Blockchain.NEAR && this.state.featureIsActive === false) {
+            return <View></View>;
+        }
 
         return (
             <View
@@ -97,6 +117,13 @@ export class BlockchainPortfolioComponent extends React.Component<
                 </TouchableOpacity>
             </View>
         );
+    }
+
+    public async componentDidMount() {
+        const active = await isFeatureActive(REMOTE_FEATURE.NEAR);
+        if (active) {
+            this.setState({ featureIsActive: true });
+        }
     }
 
     public render() {

@@ -29,6 +29,7 @@ import { IBlockchainsOptions } from '../../redux/preferences/state';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
+import { isFeatureActive, REMOTE_FEATURE } from '../../core/utils/remote-feature-config';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -45,6 +46,7 @@ export interface IReduxProps {
 
 interface IState {
     coins: Array<{ blockchain: Blockchain; order: number }>;
+    featureIsActive: boolean;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -126,7 +128,8 @@ export class DashboardScreenComponent extends React.Component<
         super(props);
 
         this.state = {
-            coins: this.buildCoins()
+            coins: this.buildCoins(),
+            featureIsActive: false
         };
 
         if (Platform.OS === 'web') {
@@ -150,19 +153,21 @@ export class DashboardScreenComponent extends React.Component<
         const coins = [];
         Object.keys(this.props.blockchains).map(key => {
             const value = this.props.blockchains[key];
-            let blockchainHasAccounts = false;
-            if (
-                this.props.wallet &&
-                this.props.wallet.accounts.find(acc => acc.blockchain === key)
-            ) {
-                blockchainHasAccounts = true;
-            }
-
-            if (blockchainHasAccounts) {
-                coins.push({
-                    blockchain: key,
-                    order: value.order
-                });
+            // let blockchainHasAccounts = false;
+            if (this.props.wallet) {
+                if (key === Blockchain.NEAR) {
+                    if (this.state.featureIsActive === true) {
+                        coins.push({
+                            blockchain: key,
+                            order: value.order
+                        });
+                    }
+                } else {
+                    coins.push({
+                        blockchain: key,
+                        order: value.order
+                    });
+                }
             }
         });
 
@@ -185,7 +190,11 @@ export class DashboardScreenComponent extends React.Component<
         }
     }
 
-    public componentDidMount() {
+    public async componentDidMount() {
+        const active = await isFeatureActive(REMOTE_FEATURE.NEAR);
+        if (active) {
+            this.setState({ featureIsActive: true });
+        }
         if (this.props.selectedAccount) {
             this.props.getBalance(
                 this.props.selectedAccount.blockchain,

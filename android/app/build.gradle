@@ -221,6 +221,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-base:17.0.0"
 	implementation "com.google.firebase:firebase-core:17.0.1"
 	implementation "com.google.firebase:firebase-messaging:19.0.0"
+    implementation "com.google.firebase:firebase-config:19.0.0"
 	implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
 
 

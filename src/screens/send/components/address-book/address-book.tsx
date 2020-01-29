@@ -14,7 +14,7 @@ import { Icon } from '../../../../components/icon';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
-import { IContactsState, IContactState } from '../../../../redux/contacts/state';
+import { IContactState } from '../../../../redux/contacts/state';
 import { selectContacts } from '../../../../redux/contacts/selectors';
 import { formatAddress } from '../../../../core/utils/format-address';
 import { translate } from '../../../../core/i18n';
@@ -25,7 +25,7 @@ import { ICON_SIZE } from '../../../../styles/dimensions';
 import { Dialog } from '../../../../components/dialog/dialog';
 
 export interface IReduxProps {
-    contacts: ReadonlyArray<SectionListData<IContactsState>>;
+    contacts: ReadonlyArray<SectionListData<IContactState>>;
     deleteContact: typeof deleteContact;
     updateContactName: typeof updateContactName;
 }

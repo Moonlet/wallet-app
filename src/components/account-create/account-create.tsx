@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, TouchableOpacity } from 'react-native';
 import { Text, Button } from '../../library';
 import { ITheme } from '../../core/theme/itheme';
 import stylesProvider from './styles';
@@ -16,6 +16,7 @@ import { IReduxState } from '../../redux/state';
 import { LoadingIndicator } from '../loading-indicator/loading-indicator';
 import { PasswordModal } from '../password-modal/password-modal';
 import { Client as NearClient } from '../../core/blockchain/near/client';
+import { Icon } from '../../components/icon';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -86,6 +87,15 @@ export class AccountCreateComponent extends React.Component<
         this.props.createAccount(this.props.blockchain, this.state.inputAccout, password);
     };
 
+    public onPressClearInput = () =>
+        this.setState({
+            inputAccout: '',
+            isInputValid: false,
+            showInputInfo: false,
+            isCreate: false,
+            isLoading: false
+        });
+
     public render() {
         const { styles, theme } = this.props;
 
@@ -110,9 +120,22 @@ export class AccountCreateComponent extends React.Component<
                                 selectionColor={theme.colors.accent}
                                 value={this.state.inputAccout}
                                 onChangeText={inputAccout =>
-                                    this.setState({ inputAccout, showInputInfo: false })
+                                    this.setState({
+                                        inputAccout,
+                                        showInputInfo: false,
+                                        isCreate: false
+                                    })
                                 }
                             />
+                            {this.state.inputAccout.length !== 0 && (
+                                <TouchableOpacity
+                                    testID="clear-address"
+                                    onPress={this.onPressClearInput}
+                                    style={[styles.rightAddressButton]}
+                                >
+                                    <Icon name="close" size={16} style={styles.icon} />
+                                </TouchableOpacity>
+                            )}
                         </View>
                         {this.state.isInputValid && this.state.showInputInfo && (
                             <Text style={styles.congratsText}>

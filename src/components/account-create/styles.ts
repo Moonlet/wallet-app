@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -57,5 +57,15 @@ export default (theme: ITheme) =>
         input: {
             flex: 1,
             color: theme.colors.text
+        },
+        icon: {
+            color: theme.colors.accent
+        },
+        rightAddressButton: {
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE,
+            justifyContent: 'flex-end',
+            alignItems: 'center',
+            flexDirection: 'row'
         }
     });

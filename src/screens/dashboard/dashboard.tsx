@@ -172,42 +172,6 @@ export class DashboardScreenComponent extends React.Component<
         return coins;
     }
 
-    public calculateBalance() {
-        const tokenKeys = Object.keys(this.props.selectedAccount.tokens);
-        let balance = new BigNumber(0);
-        tokenKeys.map(key => {
-            const token = this.props.selectedAccount.tokens[key];
-            const tokenBalanceValue = new BigNumber(token.balance?.value);
-            if (token.active) {
-                if (token.type === TokenType.NATIVE) {
-                    balance = balance.plus(tokenBalanceValue);
-                } else {
-                    const exchange = this.props.exchangeRates[key][
-                        getBlockchain(this.props.selectedAccount.blockchain).config.coin
-                    ];
-                    balance = balance.plus(tokenBalanceValue.multipliedBy(exchange));
-                }
-            }
-        });
-        return balance;
-    }
-
-    // public componentDidUpdate(prevProps: IReduxProps) {
-    //     if (
-    //         this.props.selectedAccount !== prevProps.selectedAccount &&
-    //         this.props.selectedAccount
-    //     ) {
-    //         this.props.setSelectedBlockchain(this.props.selectedAccount.blockchain);
-    //         this.props.getBalance(
-    //             this.props.selectedAccount.blockchain,
-    //             this.props.selectedAccount.address,
-    //             undefined,
-    //             true
-    //         );
-    //         this.setState({ coins: this.buildCoins() });
-    //     }
-    // }
-
     public componentDidMount() {
         if (this.props.selectedAccount) {
             this.props.getBalance(

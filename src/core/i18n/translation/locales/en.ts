@@ -272,6 +272,8 @@ export const translation: ITranslations = {
             noGiveUp: `But don't give up – check the search string you entered and give it one more try`
         },
         CreateAccount: {
+            createAccount: 'Create new account!',
+            chooseUsr: 'Just choose a username',
             createNear: 'Create NEAR account!',
             chooseUsername: 'Just choose a username and you’re all set.',
             congrats: 'Congrats! This name is available.',

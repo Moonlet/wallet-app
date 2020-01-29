@@ -5,7 +5,8 @@ import { BASE_DIMENSION } from '../../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: theme.colors.bottomSheetBackground
+            backgroundColor: theme.colors.bottomSheetBackground,
+            padding: BASE_DIMENSION * 2
         },
         icon: {
             color: theme.colors.accent,

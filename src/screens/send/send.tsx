@@ -440,7 +440,9 @@ export class SendScreenComponent extends React.Component<
                             selectionColor={theme.colors.accent}
                             value={
                                 this.state.isValidAddress
-                                    ? formatAddress(this.state.toAddress)
+                                    ? account.blockchain === Blockchain.NEAR
+                                        ? this.state.toAddress
+                                        : formatAddress(this.state.toAddress)
                                     : this.state.toAddress
                             }
                             onChangeText={text => {

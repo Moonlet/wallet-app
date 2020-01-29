@@ -35,7 +35,6 @@ import { TransactionsHistoryScreen } from '../screens/transactions-history/trans
 import { TransactionDetails } from '../screens/transaction-details/transaction-details';
 import { StatisticsScreen } from '../screens/statistics/statistics';
 import { WatchScreen } from '../screens/watch/watch';
-import { AccountsScreen } from '../screens/accounts/accounts';
 import { ManageAccountScreen } from '../screens/manage-account/manage-account';
 import { BASE_DIMENSION } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
@@ -113,9 +112,6 @@ export const WalletNavigation = createStackNavigator(
         },
         Receive: {
             screen: ReceiveScreen
-        },
-        Accounts: {
-            screen: AccountsScreen
         },
         Wallets: {
             screen: WalletsScreen

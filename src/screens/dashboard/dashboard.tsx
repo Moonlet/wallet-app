@@ -15,7 +15,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { getBalance, setSelectedAccount, setSelectedBlockchain } from '../../redux/wallets/actions';
-import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
 import {
     getSelectedWallet,
     getSelectedAccount,
@@ -26,11 +26,10 @@ import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
-import BigNumber from 'bignumber.js';
-import { TokenType } from '../../core/blockchain/types/token';
 import { IBlockchainsOptions } from '../../redux/preferences/state';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
+import { calculateBalance } from '../../core/utils/balance';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -193,6 +192,22 @@ export class DashboardScreenComponent extends React.Component<
         return balance;
     }
 
+    // public componentDidUpdate(prevProps: IReduxProps) {
+    //     if (
+    //         this.props.selectedAccount !== prevProps.selectedAccount &&
+    //         this.props.selectedAccount
+    //     ) {
+    //         this.props.setSelectedBlockchain(this.props.selectedAccount.blockchain);
+    //         this.props.getBalance(
+    //             this.props.selectedAccount.blockchain,
+    //             this.props.selectedAccount.address,
+    //             undefined,
+    //             true
+    //         );
+    //         this.setState({ coins: this.buildCoins() });
+    //     }
+    // }
+
     public componentDidMount() {
         if (this.props.selectedAccount) {
             this.props.getBalance(
@@ -320,7 +335,10 @@ export class DashboardScreenComponent extends React.Component<
                                             blockchain
                                         })
                                     }
-                                    balance={this.calculateBalance()}
+                                    balance={calculateBalance(
+                                        this.props.selectedAccount,
+                                        this.props.exchangeRates
+                                    )}
                                     blockchain={blockchain}
                                     currency={BLOCKCHAIN_INFO[blockchain].coin}
                                     toCurrency="USD"

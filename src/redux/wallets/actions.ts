@@ -482,5 +482,7 @@ export const createAccount = (
         };
 
         dispatch(addAccount(selectedWallet.id, blockchain, account));
+    } else {
+        // TODO - if client.createAccount crashes, dashboard (near create account section) will be stuck on loading indicator
     }
 };

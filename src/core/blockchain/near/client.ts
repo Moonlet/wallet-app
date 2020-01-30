@@ -21,7 +21,6 @@ export class Client extends BlockchainGenericClient {
     public async getBalance(address: string): Promise<BigNumber> {
         const res = await this.rpc.call('query', [`account/${address}`, '']);
 
-        // return format.formatNearAmount(res.result.amount); // ,4
         return new BigNumber(res.result.amount);
     }
 

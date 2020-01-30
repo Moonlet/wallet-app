@@ -46,7 +46,6 @@ export interface IReduxProps {
 
 interface IState {
     coins: Array<{ blockchain: Blockchain; order: number }>;
-    featureIsActive: boolean;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -128,8 +127,7 @@ export class DashboardScreenComponent extends React.Component<
         super(props);
 
         this.state = {
-            coins: this.buildCoins(),
-            featureIsActive: false
+            coins: this.buildCoins()
         };
 
         if (Platform.OS === 'web') {
@@ -156,7 +154,7 @@ export class DashboardScreenComponent extends React.Component<
             // let blockchainHasAccounts = false;
             if (this.props.wallet) {
                 if (key === Blockchain.NEAR) {
-                    if (this.state.featureIsActive === true) {
+                    if (isFeatureActive(RemoteFeature.NEAR) === true) {
                         coins.push({
                             blockchain: key,
                             order: value.order
@@ -191,10 +189,6 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        const active = await isFeatureActive(RemoteFeature.NEAR);
-        if (active) {
-            this.setState({ featureIsActive: true });
-        }
         if (this.props.selectedAccount) {
             this.props.getBalance(
                 this.props.selectedAccount.blockchain,

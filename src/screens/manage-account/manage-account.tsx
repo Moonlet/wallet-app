@@ -17,6 +17,7 @@ import { IAccountState, IWalletState, TokenType } from '../../redux/wallets/stat
 import { Amount } from '../../components/amount/amount';
 import { toggleTokenActive, updateTokenOrder, removeToken } from '../../redux/wallets/actions';
 import { ITokenConfig } from '../../core/blockchain/types/token';
+import { Blockchain } from '../../core/blockchain/types';
 
 export interface IReduxProps {
     toggleTokenActive: typeof toggleTokenActive;
@@ -48,7 +49,7 @@ const mapStateToProps = (state: IReduxState) => {
 
 export const navigationOptions = ({ navigation, theme }: any) => ({
     title: translate('Account.manageAccount'),
-    headerRight: (
+    headerRight: navigation.state.params.blockchain === Blockchain.ETHEREUM && (
         <TouchableOpacity onPress={() => navigation.navigate('ManageToken')}>
             <Icon
                 name="add"
@@ -69,6 +70,12 @@ export class ManageAccountComponent extends React.Component<
     public static navigationOptions = navigationOptions;
     public accountsSwipeableRef: ReadonlyArray<string> = new Array();
     public currentlyOpenSwipeable: string = null;
+
+    public componentDidMount() {
+        this.props.navigation.setParams({
+            blockchain: this.props.selectedAccount.blockchain
+        });
+    }
 
     public closeCurrentOpenedSwipable() {
         this.accountsSwipeableRef[this.currentlyOpenSwipeable] &&

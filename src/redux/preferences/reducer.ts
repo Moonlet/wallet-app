@@ -26,8 +26,8 @@ const initialState: IPrefState = {
             mainNet: 1
         },
         [Blockchain.NEAR]: {
-            testNet: 1, // TODO - convert to string: 'testnet'
-            mainNet: 1 // TODO - not released yet
+            testNet: 'testnet',
+            mainNet: 'testnet' // not released yet
         }
     },
     blockchains: {

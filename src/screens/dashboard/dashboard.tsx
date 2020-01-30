@@ -27,13 +27,13 @@ import { themes } from '../../navigation/navigation';
 import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { IBlockchainsOptions } from '../../redux/preferences/state';
-import {
-    openBottomSheet,
-    enableCreateAccount,
-    disableCreateAccount
-} from '../../redux/ui/bottomSheet/actions';
+import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
+import {
+    enableCreateAccount,
+    disableCreateAccount
+} from '../../redux/ui/screens/dashboard/actions';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -64,7 +64,7 @@ const mapStateToProps = (state: IReduxState) => ({
     selectedBlockchain: getSelectedBlockchain(state),
     selectedAccount: getSelectedAccount(state),
     exchangeRates: (state as any).market.exchangeRates,
-    isCreateAccount: state.ui.bottomSheet.isCreateAccount
+    isCreateAccount: state.ui.screens.dashboard.isCreateAccount
 });
 
 const mapDispatchToProps = {

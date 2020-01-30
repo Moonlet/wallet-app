@@ -18,7 +18,7 @@ import { Amount } from '../../amount/amount';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { calculateBalance } from '../../../core/utils/balance';
 import { translate } from '../../../core/i18n';
-import { enableCreateAccount } from '../../../redux/ui/bottomSheet/actions';
+import { enableCreateAccount } from '../../../redux/ui/screens/dashboard/actions';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };

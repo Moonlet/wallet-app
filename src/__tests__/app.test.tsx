@@ -14,12 +14,21 @@ jest.mock('../core/i18n/translation/translate', () => ({
     loadTranslations: jest.fn(() => Promise.resolve())
 }));
 
+jest.mock('../core/i18n/translation/translate', () => ({
+    loadTranslations: jest.fn(() => Promise.resolve())
+}));
+
+jest.mock('../core/utils/remote-feature-config', () => ({
+    getRemoteConfigFeatures: jest.fn(() => Promise.resolve({}))
+}));
+
 test('renders correctly', async () => {
     const wrapper = shallow(<App />);
     const element: any = wrapper.instance();
     expect(loadTranslations).toHaveBeenCalledWith('en');
     expect(element.state.appReady).toBe(false);
     expect(element.translationsLoaded).toBe(false);
+    expect(element.remoteFeatureConfigLoaded).toBe(false);
     expect(element.reduxStateLoaded).toBe(false);
     expect(element.state.splashAnimationDone).toBe(false);
 
@@ -30,4 +39,5 @@ test('renders correctly', async () => {
     expect(element.state.appReady).toBe(true);
     expect(element.translationsLoaded).toBe(true);
     expect(element.reduxStateLoaded).toBe(true);
+    expect(element.remoteFeatureConfigLoaded).toBe(true);
 });

@@ -105,6 +105,15 @@ exports[`Wallet screen renders correctly 1`] = `
       </View>
     </View>
     <View style={{...}} />
+    <TouchableOpacity style={{...}} onPress={[Function: _callee]} activeOpacity={0.2}>
+      <withTheme(TextComponent) style={{...}}>
+        Device Id
+      </withTheme(TextComponent)>
+      <View style={{...}}>
+        <withTheme(TextComponent) style={{...}} />
+      </View>
+    </TouchableOpacity>
+    <View style={{...}} />
   </ScrollViewMock>
   <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
 </View>"

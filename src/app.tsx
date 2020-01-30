@@ -18,6 +18,7 @@ import { WalletConnectClient } from './core/wallet-connect/wallet-connect-client
 import { WalletConnectWeb } from './core/wallet-connect/wallet-connect-web';
 import { NavigationService } from './navigation/navigation-service';
 import { Dialog } from './components/dialog/dialog';
+import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -41,6 +42,7 @@ export default class App extends React.Component<{}, IState> {
     public interval: any = null;
     private translationsLoaded: boolean = false;
     private reduxStateLoaded: boolean = false;
+    private remoteFeatureConfigLoaded: boolean = false;
     private extensionStateLoaded: boolean =
         Platform.OS === 'web' && WalletConnectWeb.isConnected() ? false : true;
     private unsub: any;
@@ -54,6 +56,11 @@ export default class App extends React.Component<{}, IState> {
             appState: AppState.currentState,
             showPasswordModal: false
         };
+
+        getRemoteConfigFeatures().then(() => {
+            this.remoteFeatureConfigLoaded = true;
+            this.updateAppReady();
+        });
 
         loadTranslations('en').then(() => {
             this.translationsLoaded = true;
@@ -98,7 +105,8 @@ export default class App extends React.Component<{}, IState> {
             this.translationsLoaded &&
             this.reduxStateLoaded &&
             this.extensionStateLoaded &&
-            this.state.splashAnimationDone;
+            this.state.splashAnimationDone &&
+            this.remoteFeatureConfigLoaded;
 
         if (appReady && !this.notificationsConfigured) {
             Notifications.configure();

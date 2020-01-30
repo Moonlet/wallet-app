@@ -225,7 +225,8 @@ export const translation: ITranslations = {
             reportIssue: 'Report issue',
             signOut: 'Sign out',
             mainnetTestnet: 'Mainnet/Testnet',
-            deviceId: 'Device Id'
+            deviceId: 'Device ID',
+            copied: 'Device ID copied!'
         },
         NetworkOptions: {
             mainnet: 'Mainnet',

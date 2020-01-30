@@ -1,3 +1,4 @@
 module.exports = {
-    getVersion: () => process.env.VERSION
+    getVersion: () => process.env.VERSION,
+    getUniqueId: () => 'testId'
 };

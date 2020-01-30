@@ -26,13 +26,14 @@ import { HeaderLeftClose } from '../../components/header-left-close/header-left-
 import { ListCard } from '../../components/list-card/list-card';
 import { Dialog } from '../../components/dialog/dialog';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
+import { delay } from '../../core/utils/time';
 
 export interface IReduxProps {
     wallets: {
         [WalletType.HD]: IWalletState[];
         [WalletType.HW]: IWalletState[];
     };
-    selectedWalletId: string;
+    selectedWallet: IWalletState;
     setSelectedWallet: typeof setSelectedWallet;
     deleteWallet: typeof deleteWallet;
     walletsNr: number;
@@ -55,7 +56,7 @@ const mapStateToProps = (state: IReduxState) => {
             )
         },
         walletsNr: Object.keys(state.wallets).length,
-        selectedWalletId: getSelectedWallet(state).id
+        selectedWallet: getSelectedWallet(state)
     };
 };
 
@@ -156,6 +157,7 @@ export class WalletsScreenComponent extends React.Component<
             )
         ) {
             this.closeCurrentOpenedSwipable();
+            await delay();
             this.onDeleteConfirmed(wallet);
         }
     }
@@ -278,9 +280,9 @@ export class WalletsScreenComponent extends React.Component<
                                         leftIcon="saturn-icon"
                                         label={wallet.name}
                                         rightIcon={
-                                            this.props.selectedWalletId === wallet.id && 'check-1'
+                                            this.props.selectedWallet.id === wallet.id && 'check-1'
                                         }
-                                        selected={this.props.selectedWalletId === wallet.id}
+                                        selected={this.props.selectedWallet.id === wallet.id}
                                     />
                                 </Swipeable>
                             );

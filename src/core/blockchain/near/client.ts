@@ -21,7 +21,6 @@ export class Client extends BlockchainGenericClient {
     public async getBalance(address: string): Promise<BigNumber> {
         const res = await this.rpc.call('query', [`account/${address}`, '']);
 
-        // return format.formatNearAmount(res.result.amount); // ,4
         return new BigNumber(res.result.amount);
     }
 
@@ -79,31 +78,29 @@ export class Client extends BlockchainGenericClient {
         publicKey: string,
         chainId: ChainIdType
     ): Promise<any> {
-        chainId = 'testnet'; // todo remove this
-
         const SENDER_ACCOUNT_ID = 'tibi';
-        const SENDER_PUBLIC_KEY = 'ed25519:HnJokj1mWhDK2UTdRTjUEaj6djedbVhs1Y5N1x6APpjX';
         const SENDER_PRIVATE_KEY =
             'ed25519:47XC2WW9NWmnvpAE48Jjy8qdgrEjHaovXFDGUrFhKnvvD1mv8PAtSav97wroJx5E8fd3Z2zQGZwRA7e3krzQAm49';
 
         const status = await this.rpc.call('status');
+        const amount = new BN('10000000000000000000000');
 
         // transaction actions
         const actions = [
             createAccount(),
-            transfer(new BN('10000000000000000000000')),
+            transfer(amount),
             addKey(PublicKey.fromString(publicKey), fullAccessKey())
         ];
 
         // setup KeyPair
         const keyPair = KeyPair.fromString(SENDER_PRIVATE_KEY);
 
-        let nonce = await this.getNonce(SENDER_ACCOUNT_ID, SENDER_PUBLIC_KEY);
+        let nonce = await this.getNonce(SENDER_ACCOUNT_ID, keyPair.getPublicKey().toString());
 
         // create transaction
         const tx = createTransaction(
             SENDER_ACCOUNT_ID,
-            PublicKey.fromString(SENDER_PUBLIC_KEY),
+            keyPair.getPublicKey(),
             newAccountId,
             ++nonce,
             actions,
@@ -117,10 +114,9 @@ export class Client extends BlockchainGenericClient {
                 return keyPair.sign(hash);
             }
         };
-        const signedTx = await signTransaction(tx, signer, SENDER_ACCOUNT_ID, chainId);
+        const signedTx = await signTransaction(tx, signer, SENDER_ACCOUNT_ID, chainId.toString());
 
         // send transaction
-        // broadcast_tx_commit
         const res = await this.rpc.call('broadcast_tx_commit', [
             Buffer.from(signedTx[1].encode()).toString('base64')
         ]);

@@ -34,6 +34,7 @@ import {
     enableCreateAccount,
     disableCreateAccount
 } from '../../redux/ui/screens/dashboard/actions';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -161,20 +162,21 @@ export class DashboardScreenComponent extends React.Component<
         const coins = [];
         Object.keys(this.props.blockchains).map(key => {
             const value = this.props.blockchains[key];
-            // let blockchainHasAccounts = false;
-            // if (
-            //     this.props.wallet &&
-            //     this.props.wallet.accounts.find(acc => acc.blockchain === key)
-            // ) {
-            //     blockchainHasAccounts = true;
-            // }
-
-            // if (blockchainHasAccounts) {
-            coins.push({
-                blockchain: key,
-                order: value.order
-            });
-            // }
+            if (this.props.wallet) {
+                if (key === Blockchain.NEAR) {
+                    if (isFeatureActive(RemoteFeature.NEAR) === true) {
+                        coins.push({
+                            blockchain: key,
+                            order: value.order
+                        });
+                    }
+                } else {
+                    coins.push({
+                        blockchain: key,
+                        order: value.order
+                    });
+                }
+            }
         });
 
         return coins;
@@ -217,6 +219,7 @@ export class DashboardScreenComponent extends React.Component<
             index: 0, // TODO - in the case we are not using the index 0 account this might not work
             blockchain: coin.blockchain
         });
+
         if (this.props.selectedAccount) {
             this.props.getBalance(
                 this.props.selectedAccount.blockchain,
@@ -327,15 +330,17 @@ export class DashboardScreenComponent extends React.Component<
                             )}
                         </View>
 
-                        <Animated.View
-                            style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
-                        >
-                            <CoinDashboard
-                                account={this.props.selectedAccount}
-                                blockchain={blockchain}
-                                navigation={this.props.navigation}
-                            />
-                        </Animated.View>
+                        {this.props.selectedAccount && (
+                            <Animated.View
+                                style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
+                            >
+                                <CoinDashboard
+                                    account={this.props.selectedAccount}
+                                    blockchain={blockchain}
+                                    navigation={this.props.navigation}
+                                />
+                            </Animated.View>
+                        )}
                     </View>
                 )}
 

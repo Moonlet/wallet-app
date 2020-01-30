@@ -1,14 +1,12 @@
 import VoipPushNotification from 'react-native-voip-push-notification';
 import { silentMessageHandler } from './silent-push-handler';
 
-let token = '';
+let tokenPromise = null;
 
 export const setupVoipNotification = () => {
     VoipPushNotification.requestPermissions(); // required
 
-    VoipPushNotification.addEventListener('register', deviceToken => {
-        token = deviceToken;
-    });
+    getApnsToken();
 
     VoipPushNotification.addEventListener('notification', notification => {
         silentMessageHandler({
@@ -18,5 +16,12 @@ export const setupVoipNotification = () => {
 };
 
 export const getApnsToken = () => {
-    return token;
+    if (tokenPromise) { return tokenPromise; }
+
+    tokenPromise = new Promise(resolve => {
+        VoipPushNotification.addEventListener('register', deviceToken => {
+            resolve(deviceToken);
+        });
+    });
+    return tokenPromise;
 };

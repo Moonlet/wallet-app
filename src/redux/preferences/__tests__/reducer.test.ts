@@ -31,6 +31,10 @@ describe('preferences reducer', () => {
                 [Blockchain.ZILLIQA]: {
                     testNet: 333,
                     mainNet: 1
+                },
+                [Blockchain.NEAR]: {
+                    testNet: 'testnet',
+                    mainNet: 'testnet' // not released yet
                 }
             },
             blockchains: {
@@ -40,6 +44,10 @@ describe('preferences reducer', () => {
                 },
                 [Blockchain.ZILLIQA]: {
                     order: 1,
+                    active: true
+                },
+                [Blockchain.NEAR]: {
+                    order: 2,
                     active: true
                 }
             }

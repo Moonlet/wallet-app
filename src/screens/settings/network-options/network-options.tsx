@@ -14,6 +14,7 @@ import { INetworksOptions } from '../../../redux/preferences/state';
 import { toggleTestNet } from '../../../redux/preferences/actions';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { Blockchain } from '../../../core/blockchain/types';
+import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 export interface IReduxProps {
     testNet: boolean;
@@ -62,43 +63,52 @@ export class NetworkOptionsComponent extends React.Component<
                 <View style={styles.divider} />
 
                 {networksOptions &&
-                    Object.keys(networksOptions).map((blockchain: Blockchain, index: number) => (
-                        <View key={index}>
-                            <TouchableOpacity
-                                style={styles.rowContainer}
-                                disabled={!testNet}
-                                onPress={() =>
-                                    navigation.navigate('NetworkSelection', {
-                                        blockchain,
-                                        testNet
-                                    })
-                                }
-                            >
-                                <Text style={styles.textRow}>{blockchain}</Text>
-                                <View style={styles.rightContainer}>
-                                    <Text style={styles.rightText}>
-                                        {testNet
-                                            ? getBlockchain(blockchain).networks.find(
-                                                  network =>
-                                                      network.chainId ===
-                                                      networksOptions[blockchain].testNet
-                                              ).name
-                                            : translate('NetworkOptions.mainnet')}
-                                    </Text>
-                                    <Icon
-                                        name="chevron-right"
-                                        size={ICON_SIZE / 2}
-                                        style={{
-                                            color: testNet
-                                                ? theme.colors.accent
-                                                : theme.colors.cardBackground
-                                        }}
-                                    />
-                                </View>
-                            </TouchableOpacity>
-                            <View style={styles.divider} />
-                        </View>
-                    ))}
+                    Object.keys(networksOptions).map((blockchain: Blockchain, index: number) => {
+                        if (
+                            blockchain === Blockchain.NEAR &&
+                            isFeatureActive(RemoteFeature.NEAR) === false
+                        ) {
+                            return <View key={index} />;
+                        }
+
+                        return (
+                            <View key={index}>
+                                <TouchableOpacity
+                                    style={styles.rowContainer}
+                                    disabled={!testNet}
+                                    onPress={() =>
+                                        navigation.navigate('NetworkSelection', {
+                                            blockchain,
+                                            testNet
+                                        })
+                                    }
+                                >
+                                    <Text style={styles.textRow}>{blockchain}</Text>
+                                    <View style={styles.rightContainer}>
+                                        <Text style={styles.rightText}>
+                                            {testNet
+                                                ? getBlockchain(blockchain).networks.find(
+                                                      network =>
+                                                          network.chainId ===
+                                                          networksOptions[blockchain].testNet
+                                                  ).name
+                                                : translate('NetworkOptions.mainnet')}
+                                        </Text>
+                                        <Icon
+                                            name="chevron-right"
+                                            size={ICON_SIZE / 2}
+                                            style={{
+                                                color: testNet
+                                                    ? theme.colors.accent
+                                                    : theme.colors.cardBackground
+                                            }}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                                <View style={styles.divider} />
+                            </View>
+                        );
+                    })}
             </View>
         );
     }

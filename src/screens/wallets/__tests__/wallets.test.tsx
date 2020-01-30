@@ -22,7 +22,11 @@ const props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider
                 accounts: []
             }
         ],
-        [WalletType.HW_LEDGER]: []
+        [WalletType.HW]: []
+    },
+    selectedWallet: {
+        id: 'walletId',
+        type: WalletType.HD
     },
     theme: darkTheme
 };

@@ -4,12 +4,13 @@ import { storeEncrypted, readEncrypted } from '../secure/storage';
 import { WC_CONNECTION, WC } from '../constants/app';
 import { trimState } from './wc-state-helper';
 import { Notifications } from '../messaging/notifications/notifications';
-import { AppState } from 'react-native';
+import { AppState, Platform } from 'react-native';
 import { signExtensionTransaction } from './utils';
 import { formatNumber } from '../utils/format-number';
 import { BLOCKCHAIN_INFO } from '../blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { formatAddress } from '../utils/format-address';
+import { getApnsToken } from '../messaging/silent/ios-voip-push-notification';
 
 const clientMeta: any = {
     description: 'Moonlet Wallet App',
@@ -18,6 +19,9 @@ const clientMeta: any = {
     // @ts-ignore
     ssl: true
 };
+
+const getDeviceToken = () =>
+    Platform.OS === 'android' ? Notifications.getToken() : getApnsToken();
 
 export const WalletConnectClient = (() => {
     let walletConnector: RNWalletConnect;
@@ -52,8 +56,8 @@ export const WalletConnectClient = (() => {
                 clientMeta,
                 push: {
                     url: 'https://us-central1-moonlet-beta.cloudfunctions.net/push',
-                    type: 'fcm',
-                    token: await Notifications.getToken(),
+                    type: Platform.OS === 'android' ? 'fcm' : 'apn',
+                    token: await getDeviceToken(),
                     peerMeta: true,
                     language: 'en'
                 }

@@ -393,8 +393,9 @@ export const deleteWallet = (walletId: string) => (
     const state = getState();
     if (getSelectedWallet(state).id === walletId) {
         const nextWallet = Object.values(state.wallets).find(wallet => wallet.id !== walletId);
-        const nextWalletId = nextWallet ? nextWallet.id : '';
-        dispatch(setSelectedWallet(nextWalletId));
+        if (nextWallet) {
+            dispatch(setSelectedWallet(nextWallet.id));
+        }
     }
     dispatch({
         type: WALLET_DELETE,
@@ -486,5 +487,7 @@ export const createAccount = (
         };
 
         dispatch(addAccount(selectedWallet.id, blockchain, account));
+    } else {
+        // TODO - if client.createAccount crashes, dashboard (near create account section) will be stuck on loading indicator
     }
 };

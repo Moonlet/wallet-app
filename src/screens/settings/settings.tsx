@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Switch, TouchableOpacity, Platform } from 'react-native';
+import { ScrollView, View, Switch, TouchableOpacity, Platform, Clipboard } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
@@ -15,6 +15,7 @@ import { translate } from '../../core/i18n';
 import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric-auth';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
+import { Dialog } from '../../components/dialog/dialog';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -281,6 +282,21 @@ export class SettingsScreenComponent extends React.Component<
                             <Text style={styles.rightValue}>{DeviceInfo.getVersion()}</Text>
                         </View>
                     </View>
+
+                    <View style={styles.divider} />
+
+                    <TouchableOpacity
+                        style={styles.colContainer}
+                        onPress={() => {
+                            Clipboard.setString(DeviceInfo.getUniqueId());
+                            Dialog.confirm(translate('Settings.copied'), '');
+                        }}
+                    >
+                        <Text style={[styles.textRow, styles.textRowMargin]}>
+                            {translate('Settings.deviceId')}
+                        </Text>
+                        <Text style={styles.rightValue}>{DeviceInfo.getUniqueId()}</Text>
+                    </TouchableOpacity>
 
                     <View style={styles.divider} />
 

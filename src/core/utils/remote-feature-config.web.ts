@@ -9,6 +9,6 @@ export const getRemoteConfigFeatures = () => {
     return undefined;
 };
 
-export const isFeatureActive = async (feature: RemoteFeature): Promise<boolean> => {
+export const isFeatureActive = (feature: RemoteFeature): boolean => {
     return false;
 };

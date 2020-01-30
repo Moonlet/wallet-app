@@ -22,10 +22,6 @@ export interface IReduxProps {
     setBlockchainOrder: typeof setBlockchainOrder;
 }
 
-export interface IState {
-    featureIsActive: boolean;
-}
-
 const mapDispatchToProps = {
     setBlockchainActive,
     setBlockchainOrder
@@ -44,8 +40,7 @@ const navigationOptions = () => ({
 });
 
 export class BlockchainPortfolioComponent extends React.Component<
-    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
 
@@ -53,10 +48,6 @@ export class BlockchainPortfolioComponent extends React.Component<
         props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
         super(props);
-
-        this.state = {
-            featureIsActive: false
-        };
     }
 
     public renderBlockchain(
@@ -66,7 +57,7 @@ export class BlockchainPortfolioComponent extends React.Component<
     ) {
         const { styles, theme } = this.props;
 
-        if (item.key === Blockchain.NEAR && this.state.featureIsActive === false) {
+        if (item.key === Blockchain.NEAR && isFeatureActive(RemoteFeature.NEAR) === false) {
             return <View></View>;
         }
 
@@ -117,13 +108,6 @@ export class BlockchainPortfolioComponent extends React.Component<
                 </TouchableOpacity>
             </View>
         );
-    }
-
-    public async componentDidMount() {
-        const active = await isFeatureActive(RemoteFeature.NEAR);
-        if (active) {
-            this.setState({ featureIsActive: true });
-        }
     }
 
     public render() {

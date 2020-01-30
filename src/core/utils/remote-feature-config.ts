@@ -5,6 +5,8 @@ export enum RemoteFeature {
     NEAR = 'feature_near'
 }
 
+let featuresConfig;
+
 export const getRemoteConfigFeatures = async () => {
     // TODO: decide if 1 hour should be the optimal fetch duration
     // set fetch cache duration to 1 hour for live environment
@@ -18,20 +20,18 @@ export const getRemoteConfigFeatures = async () => {
     await firebase.config().activateFetched();
     const objects = await firebase.config().getValues([RemoteFeature.NEAR]);
 
-    const data = {};
+    featuresConfig = {};
     // Retrieve values
     Object.keys(objects).forEach(key => {
-        data[key] = objects[key].val();
+        featuresConfig[key] = objects[key].val();
     });
 
-    return data;
+    return featuresConfig;
 };
 
-export const isFeatureActive = async (feature: RemoteFeature): Promise<boolean> => {
-    const config = await getRemoteConfigFeatures();
-
+export const isFeatureActive = (feature: RemoteFeature): boolean => {
     if (feature === RemoteFeature.NEAR) {
-        const values = JSON.parse(config[feature]);
+        const values = JSON.parse(featuresConfig[feature]);
         const uniqueId = values.filter(id => id === DeviceInfo.getUniqueId());
         if (uniqueId.length) {
             return true;

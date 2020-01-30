@@ -1,4 +1,4 @@
-import { BlockchainGenericClient, ChainIdType } from '../types';
+import { BlockchainGenericClient, ChainIdType, IBlockInfo } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
@@ -31,6 +31,14 @@ export class Client extends BlockchainGenericClient {
     public sendTransaction(transaction): Promise<string> {
         return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => {
             return res.result;
+        });
+    }
+
+    public getCurrentBlock(): Promise<IBlockInfo> {
+        return this.rpc.call('eth_blockNumber').then(res => {
+            return {
+                number: new BigNumber(res.result, 16).toNumber()
+            };
         });
     }
 

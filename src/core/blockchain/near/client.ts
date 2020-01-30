@@ -1,4 +1,4 @@
-import { BlockchainGenericClient, IFeeOptions, ChainIdType } from '../types';
+import { BlockchainGenericClient, IFeeOptions, ChainIdType, IBlockInfo } from '../types';
 import { networks } from './networks';
 import {
     createAccount,
@@ -28,11 +28,22 @@ export class Client extends BlockchainGenericClient {
     public async getNonce(address: string, publicKey?: string): Promise<number> {
         const res = await this.rpc.call('query', [`access_key/${address}/${publicKey}`, '']);
 
-        return res.result.nonce;
+        return res.result.nonce + 1;
     }
 
-    public sendTransaction(transaction): Promise<string> {
-        throw new Error('Not Implemented');
+    public async getCurrentBlock(): Promise<IBlockInfo> {
+        const res = await this.rpc.call('status');
+
+        return {
+            number: res?.result?.sync_info?.latest_block_height,
+            hash: res?.result?.sync_info?.latest_block_hash
+        };
+    }
+
+    public async sendTransaction(signedTransaction): Promise<string> {
+        const res = await this.rpc.call('broadcast_tx_commit', [signedTransaction]);
+
+        return res?.result?.transaction?.hash;
     }
 
     public async calculateFees(
@@ -41,7 +52,10 @@ export class Client extends BlockchainGenericClient {
         amount?,
         contractAddress?
     ): Promise<IFeeOptions> {
-        throw new Error('Not Implemented');
+        return {
+            gasPrice: '937144500000',
+            gasLimit: '1'
+        };
     }
 
     public async checkAccountIdValid(accountId: string): Promise<boolean> {

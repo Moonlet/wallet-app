@@ -3,6 +3,11 @@ import { RpcClient } from '../../utils/rpc-client';
 import { IBlockchainNetwork, ChainIdType } from './network';
 import { IFeeOptions } from './transaction';
 
+export interface IBlockInfo {
+    number: number;
+    hash?: string;
+}
+
 export abstract class BlockchainGenericClient {
     public readonly tokens: { [type: string]: any } = {};
     protected rpc: RpcClient;
@@ -20,7 +25,8 @@ export abstract class BlockchainGenericClient {
     }
 
     public abstract getBalance(address: string): Promise<BigNumber>;
-    public abstract getNonce(address: string): Promise<number>;
+    public abstract getNonce(address: string, publicKey?: string): Promise<number>;
+    public abstract getCurrentBlock(): Promise<IBlockInfo>;
 
     public abstract sendTransaction(transaction: any): Promise<string>;
 

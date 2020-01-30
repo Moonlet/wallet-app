@@ -321,8 +321,10 @@ export const sendTransferTransaction = (
             connectionType: appWallet.hwOptions?.connectionType
         }); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
+        const client = blockchainInstance.getClient(chainId);
 
-        const nonce = await blockchainInstance.getClient(chainId).getNonce(account.address);
+        const nonce = await client.getNonce(account.address, account.publicKey);
+        const blockInfo = await client.getCurrentBlock();
 
         const tx = blockchainInstance.transaction.buildTransferTransaction({
             chainId,
@@ -333,6 +335,8 @@ export const sendTransferTransaction = (
                 .toString(),
             token,
             nonce,
+            currentBlockHash: blockInfo.hash,
+            currentBlockNumber: blockInfo.number,
             feeOptions: {
                 gasPrice: feeOptions.gasPrice.toString(),
                 gasLimit: feeOptions.gasLimit.toString()

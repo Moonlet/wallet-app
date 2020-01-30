@@ -1,4 +1,4 @@
-import { BlockchainGenericClient, IFeeOptions, ChainIdType } from '../types';
+import { BlockchainGenericClient, IFeeOptions, ChainIdType, IBlockInfo } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
@@ -41,11 +41,23 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
+    public async getCurrentBlock(): Promise<IBlockInfo> {
+        try {
+            const response = await this.call('GetLatestTxBlock');
+            return {
+                hash: response?.result?.body?.BlockHash,
+                number: response?.result?.header?.BlockNum
+            };
+        } catch (result) {
+            return Promise.reject(result);
+        }
+    }
+
     public sendTransaction(transaction): Promise<string> {
         return this.rpc.call('CreateTransaction', [transaction]).then(res => res.result.TranID);
     }
 
-    public async call(method: string, params: any[]): Promise<any> {
+    public async call(method: string, params: any[] = []): Promise<any> {
         try {
             const result = await this.rpc.call(method, params);
             if (result.error) {

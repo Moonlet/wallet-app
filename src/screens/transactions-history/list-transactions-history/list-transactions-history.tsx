@@ -13,7 +13,7 @@ import { formatAddress } from '../../../core/utils/format-address';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import moment from 'moment';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
-import { IBlockchainTransaction, IAdditionalInfoType } from '../../../core/blockchain/types';
+import { IBlockchainTransaction } from '../../../core/blockchain/types';
 
 export interface IExternalProps {
     transactions: IBlockchainTransaction[];
@@ -24,10 +24,7 @@ export interface IExternalProps {
 export class TransactionsHistoryListComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    public getTransactionPrimaryText(
-        tx: IBlockchainTransaction<IAdditionalInfoType>,
-        account: IAccountState
-    ) {
+    public getTransactionPrimaryText(tx: IBlockchainTransaction, account: IAccountState) {
         const formattedAmount =
             tx.address === account.address
                 ? translate('App.labels.to').toLowerCase()

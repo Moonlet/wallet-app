@@ -13,3 +13,17 @@ export const Near: IBlockchain = {
     Client,
     getClient: (chainId: ChainIdType) => new Client(chainId)
 };
+
+export enum NearTransactionActionType {
+    TRANSFER = 'TRANSFER'
+}
+
+export interface INearTransactionAction {
+    type: NearTransactionActionType;
+    params?: {};
+}
+
+export interface INearTransactionAdditionalInfoType {
+    currentBlockHash: string;
+    actions: INearTransactionAction[];
+}

@@ -26,17 +26,16 @@ export const config: IBlockchainConfig = {
             }
         }
     },
-    // TODO: review this...
     feeOptions: {
         gasPriceToken: 'NEAR',
         defaults: {
-            gasPrice: new BigNumber(1000000000),
-            gasLimit: new BigNumber(1)
+            gasPrice: new BigNumber('937144500000'),
+            gasLimit: new BigNumber('1')
         },
         ui: {
             availableTokenTypes: [],
             feeComponent: 'FeeTotal',
-            feeComponentAdvanced: 'GasFeeAdvanced',
+            feeComponentAdvanced: undefined,
             gasPriceUnit: 'YNEAR'
         }
     }

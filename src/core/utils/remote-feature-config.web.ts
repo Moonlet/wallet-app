@@ -1,4 +1,4 @@
-export enum REMOTE_FEATURE {
+export enum RemoteFeature {
     NEAR = 'feature_near'
 }
 
@@ -9,6 +9,6 @@ export const getRemoteConfigFeatures = () => {
     return undefined;
 };
 
-export const isFeatureActive = async (feature: REMOTE_FEATURE): Promise<boolean> => {
+export const isFeatureActive = async (feature: RemoteFeature): Promise<boolean> => {
     return false;
 };

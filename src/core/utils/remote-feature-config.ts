@@ -1,14 +1,14 @@
 import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
 
-export enum REMOTE_FEATURE {
+export enum RemoteFeature {
     NEAR = 'feature_near'
 }
 
 export const getRemoteConfigFeatures = async () => {
     // TODO: decide if 1 hour should be the optimal fetch duration
     // set fetch cache duration to 1 hour for live environment
-    let duration = 3600;
+    let duration = 900;
     if (__DEV__) {
         firebase.config().enableDeveloperMode();
         duration = 0;
@@ -16,7 +16,7 @@ export const getRemoteConfigFeatures = async () => {
 
     await firebase.config().fetch(duration);
     await firebase.config().activateFetched();
-    const objects = await firebase.config().getValues([REMOTE_FEATURE.NEAR]);
+    const objects = await firebase.config().getValues([RemoteFeature.NEAR]);
 
     const data = {};
     // Retrieve values
@@ -27,10 +27,10 @@ export const getRemoteConfigFeatures = async () => {
     return data;
 };
 
-export const isFeatureActive = async (feature: REMOTE_FEATURE): Promise<boolean> => {
+export const isFeatureActive = async (feature: RemoteFeature): Promise<boolean> => {
     const config = await getRemoteConfigFeatures();
 
-    if (feature === REMOTE_FEATURE.NEAR) {
+    if (feature === RemoteFeature.NEAR) {
         const values = JSON.parse(config[feature]);
         const uniqueId = values.filter(id => id === DeviceInfo.getUniqueId());
         if (uniqueId.length) {

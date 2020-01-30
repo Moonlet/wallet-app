@@ -29,7 +29,7 @@ import { IBlockchainsOptions } from '../../redux/preferences/state';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
-import { isFeatureActive, REMOTE_FEATURE } from '../../core/utils/remote-feature-config';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -191,7 +191,7 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        const active = await isFeatureActive(REMOTE_FEATURE.NEAR);
+        const active = await isFeatureActive(RemoteFeature.NEAR);
         if (active) {
             this.setState({ featureIsActive: true });
         }

@@ -14,7 +14,7 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { setBlockchainActive, setBlockchainOrder } from '../../../redux/preferences/actions';
 import { Blockchain } from '../../../core/blockchain/types';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
-import { isFeatureActive, REMOTE_FEATURE } from '../../../core/utils/remote-feature-config';
+import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainsOptions }];
@@ -120,7 +120,7 @@ export class BlockchainPortfolioComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        const active = await isFeatureActive(REMOTE_FEATURE.NEAR);
+        const active = await isFeatureActive(RemoteFeature.NEAR);
         if (active) {
             this.setState({ featureIsActive: true });
         }

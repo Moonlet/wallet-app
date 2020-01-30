@@ -293,15 +293,17 @@ export class DashboardScreenComponent extends React.Component<
                             )}
                         </View>
 
-                        <Animated.View
-                            style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
-                        >
-                            <CoinDashboard
-                                account={this.props.selectedAccount}
-                                blockchain={blockchain}
-                                navigation={this.props.navigation}
-                            />
-                        </Animated.View>
+                        {this.props.selectedAccount && (
+                            <Animated.View
+                                style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
+                            >
+                                <CoinDashboard
+                                    account={this.props.selectedAccount}
+                                    blockchain={blockchain}
+                                    navigation={this.props.navigation}
+                                />
+                            </Animated.View>
+                        )}
                     </View>
                 )}
 

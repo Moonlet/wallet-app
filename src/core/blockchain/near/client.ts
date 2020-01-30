@@ -11,6 +11,7 @@ import {
 import { PublicKey, KeyPair, serialize } from 'nearlib/src.ts/utils';
 import BN from 'bn.js';
 import BigNumber from 'bignumber.js';
+import sha256 from 'js-sha256';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -98,20 +99,15 @@ export class Client extends BlockchainGenericClient {
         // sign transaction
         const signer: any = {
             async signMessage(message) {
-                return keyPair.sign(message);
+                const hash = new Uint8Array(sha256.sha256.array(message));
+                return keyPair.sign(hash);
             }
         };
         const signedTx = await signTransaction(tx, signer, SENDER_ACCOUNT_ID, chainId);
 
-        // const signature = await keyPair.sign(tx.encode());
-        // const signedTx = new SignedTransaction({
-        //     transaction: tx,
-        //     signature: { keyType: tx.publicKey.keyType, data: signature.signature }
-        // })
-
         // send transaction
         // broadcast_tx_commit
-        const res = await this.rpc.call('broadcast_tx_async', [
+        const res = await this.rpc.call('broadcast_tx_commit', [
             Buffer.from(signedTx[1].encode()).toString('base64')
         ]);
 

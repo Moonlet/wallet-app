@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Switch, TouchableOpacity, Platform } from 'react-native';
+import { ScrollView, View, Switch, TouchableOpacity, Platform, Clipboard } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
@@ -281,6 +281,20 @@ export class SettingsScreenComponent extends React.Component<
                             <Text style={styles.rightValue}>{DeviceInfo.getVersion()}</Text>
                         </View>
                     </View>
+
+                    <View style={styles.divider} />
+
+                    <TouchableOpacity
+                        style={styles.rowContainer}
+                        onPress={async () => {
+                            Clipboard.setString(DeviceInfo.getUniqueId());
+                        }}
+                    >
+                        <Text style={styles.textRow}>{translate('Settings.deviceId')}</Text>
+                        <View style={styles.rightContainer}>
+                            <Text style={styles.rightValue}>{DeviceInfo.getUniqueId()}</Text>
+                        </View>
+                    </TouchableOpacity>
 
                     <View style={styles.divider} />
 

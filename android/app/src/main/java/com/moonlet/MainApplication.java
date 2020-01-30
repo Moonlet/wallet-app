@@ -11,6 +11,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
+import io.invertase.firebase.config.RNFirebaseRemoteConfigPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
 
 public class MainApplication extends MultiDexApplication implements ReactApplication {
@@ -31,6 +32,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
       packages.add(new RNFirebaseMessagingPackage());
       packages.add(new RNFirebaseNotificationsPackage());
       packages.add(new CustomPreventScreenshotPackage());
+      packages.add(new RNFirebaseRemoteConfigPackage());
 
       return packages;
     }

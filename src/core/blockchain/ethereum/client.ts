@@ -1,4 +1,4 @@
-import { BlockchainGenericClient } from '../types';
+import { BlockchainGenericClient, ChainIdType, IBlockInfo } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
@@ -8,7 +8,7 @@ import { Erc20Client } from './tokens/erc20-client';
 import { TokenType } from '../types/token';
 
 export class Client extends BlockchainGenericClient {
-    constructor(chainId: number) {
+    constructor(chainId: ChainIdType) {
         super(chainId, networks);
 
         this.tokens[TokenType.ERC20] = new Erc20Client(this);
@@ -31,6 +31,14 @@ export class Client extends BlockchainGenericClient {
     public sendTransaction(transaction): Promise<string> {
         return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => {
             return res.result;
+        });
+    }
+
+    public getCurrentBlock(): Promise<IBlockInfo> {
+        return this.rpc.call('eth_blockNumber').then(res => {
+            return {
+                number: new BigNumber(res.result, 16).toNumber()
+            };
         });
     }
 

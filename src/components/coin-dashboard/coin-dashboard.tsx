@@ -25,6 +25,7 @@ export const CoinDashboardComponent = (props: IProps) => (
             {props.blockchain &&
                 conversionCards.map(
                     (toCurrency, i) =>
+                        BLOCKCHAIN_INFO[props.blockchain] &&
                         BLOCKCHAIN_INFO[props.blockchain].coin !== toCurrency && (
                             <ConversionCard
                                 key={i}

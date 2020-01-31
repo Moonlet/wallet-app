@@ -7,6 +7,10 @@ Object {
       "active": true,
       "order": 0,
     },
+    "NEAR": Object {
+      "active": true,
+      "order": 2,
+    },
     "ZILLIQA": Object {
       "active": true,
       "order": 1,
@@ -17,6 +21,10 @@ Object {
     "ETHEREUM": Object {
       "mainNet": 1,
       "testNet": 4,
+    },
+    "NEAR": Object {
+      "mainNet": "testnet",
+      "testNet": "testnet",
     },
     "ZILLIQA": Object {
       "mainNet": 1,

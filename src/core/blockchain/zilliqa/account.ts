@@ -10,6 +10,15 @@ import { Blockchain } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
+import HDNode from 'hdkey';
+
+export const getAccountDerivationPath = (accountIndex): string => {
+    return `${accountIndex}`;
+};
+
+export const getPrivateKeyFromDerived = (derivedKey: HDNode): string => {
+    return derivedKey.privateKey.toString('hex');
+};
 
 export const isValidChecksumAddress = (address: string): boolean => {
     return isBech32(address);

@@ -19,6 +19,7 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../redux/preferences/selectors';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { isValidAddress } from '../../core/blockchain/ethereum/account';
+import { ChainIdType } from '../../core/blockchain/types';
 
 const GENERIC_TOKEN_LOGO = {
     uri:
@@ -29,7 +30,7 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
     wallet: IWalletState;
     addToken: typeof addToken;
-    chainId: number;
+    chainId: ChainIdType;
 }
 
 interface IState {
@@ -244,7 +245,8 @@ export class ManageTokenComponent extends React.Component<
                                 >{`${this.state.token.name} (${this.state.token.symbol})`}</Text>
                                 <Text style={styles.tokenAddressText}>
                                     {`${translate('App.labels.contract')}: ${formatAddress(
-                                        this.state.token.contractAddress
+                                        this.state.token.contractAddress,
+                                        this.props.selectedAccount.blockchain
                                     )}`}
                                 </Text>
                             </View>

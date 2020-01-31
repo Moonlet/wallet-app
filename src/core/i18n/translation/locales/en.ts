@@ -14,6 +14,7 @@ export const translation: ITranslations = {
                 advancedSetup: 'Advanced setup',
                 cancel: 'Cancel',
                 cheap: 'Cheap',
+                check: 'Check',
                 close: 'Close',
                 comingSoon: 'Coming soon!',
                 confirm: 'Confirm',
@@ -224,7 +225,8 @@ export const translation: ITranslations = {
             reportIssue: 'Report issue',
             signOut: 'Sign out',
             mainnetTestnet: 'Mainnet/Testnet',
-            deviceId: 'Device Id'
+            deviceId: 'Device ID',
+            copied: 'Device ID copied!'
         },
         NetworkOptions: {
             mainnet: 'Mainnet',
@@ -270,6 +272,15 @@ export const translation: ITranslations = {
             searchToken: 'Search by symbol or contract address',
             noMatch: 'Nothing matches your search',
             noGiveUp: `But don't give up – check the search string you entered and give it one more try`
+        },
+        CreateAccount: {
+            createAccount: 'Create new account!',
+            chooseUsr: 'Just choose a username',
+            createNear: 'Create NEAR account!',
+            chooseUsername: 'Just choose a username and you’re all set.',
+            congrats: 'Congrats! This name is available.',
+            eg: 'e.g. johndoe',
+            invalidUsername: 'Username is taken. Try something else.'
         }
     },
     plural: (n: number, ord?: boolean) => {

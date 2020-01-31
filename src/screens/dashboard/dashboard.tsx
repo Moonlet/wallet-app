@@ -4,6 +4,7 @@ import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
 import { CoinDashboard } from '../../components/coin-dashboard/coin-dashboard';
+import { AccountCreate } from '../../components/account-create/account-create';
 import { IReduxState } from '../../redux/state';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
@@ -29,6 +30,10 @@ import { IBlockchainsOptions } from '../../redux/preferences/state';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
+import {
+    enableCreateAccount,
+    disableCreateAccount
+} from '../../redux/ui/screens/dashboard/actions';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface IReduxProps {
@@ -42,6 +47,9 @@ export interface IReduxProps {
     exchangeRates: any;
     setSelectedAccount: typeof setSelectedAccount;
     setSelectedBlockchain: typeof setSelectedBlockchain;
+    isCreateAccount: boolean;
+    enableCreateAccount: typeof enableCreateAccount;
+    disableCreateAccount: typeof disableCreateAccount;
 }
 
 interface IState {
@@ -56,14 +64,17 @@ const mapStateToProps = (state: IReduxState) => ({
     blockchains: state.preferences.blockchains,
     selectedBlockchain: getSelectedBlockchain(state),
     selectedAccount: getSelectedAccount(state),
-    exchangeRates: (state as any).market.exchangeRates
+    exchangeRates: (state as any).market.exchangeRates,
+    isCreateAccount: state.ui.screens.dashboard.isCreateAccount
 });
 
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
     setSelectedAccount,
-    setSelectedBlockchain
+    setSelectedBlockchain,
+    enableCreateAccount,
+    disableCreateAccount
 };
 
 const MyTitle = ({ text }) => (
@@ -151,7 +162,6 @@ export class DashboardScreenComponent extends React.Component<
         const coins = [];
         Object.keys(this.props.blockchains).map(key => {
             const value = this.props.blockchains[key];
-            // let blockchainHasAccounts = false;
             if (this.props.wallet) {
                 if (key === Blockchain.NEAR) {
                     if (isFeatureActive(RemoteFeature.NEAR) === true) {
@@ -172,23 +182,7 @@ export class DashboardScreenComponent extends React.Component<
         return coins;
     }
 
-    public componentDidUpdate(prevProps: IReduxProps) {
-        if (
-            this.props.selectedAccount !== prevProps.selectedAccount &&
-            this.props.selectedAccount
-        ) {
-            this.props.setSelectedBlockchain(this.props.selectedAccount.blockchain);
-            this.props.getBalance(
-                this.props.selectedAccount.blockchain,
-                this.props.selectedAccount.address,
-                undefined,
-                true
-            );
-            this.setState({ coins: this.buildCoins() });
-        }
-    }
-
-    public async componentDidMount() {
+    public componentDidMount() {
         if (this.props.selectedAccount) {
             this.props.getBalance(
                 this.props.selectedAccount.blockchain,
@@ -201,10 +195,50 @@ export class DashboardScreenComponent extends React.Component<
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
+
+        this.blockchainPress({ blockchain: this.props.selectedBlockchain, order: 0 }); // TODO - check here the index
     }
 
     public setDashboardMenuBottomSheet = () => {
         this.props.openBottomSheet(BottomSheetType.DASHBOARD_MENU);
+    };
+
+    public async componentDidUpdate(prevProps: IReduxProps) {
+        if (
+            prevProps.wallet?.accounts.length !== this.props.wallet?.accounts.length &&
+            this.props.wallet?.accounts.length > 0
+        ) {
+            this.props.disableCreateAccount();
+            this.blockchainPress({ blockchain: this.props.selectedBlockchain, order: 0 });
+        }
+    }
+
+    public blockchainPress = (coin: { blockchain: Blockchain; order: number }) => {
+        this.props.setSelectedBlockchain(coin.blockchain);
+        this.props.setSelectedAccount({
+            index: 0, // TODO - in the case we are not using the index 0 account this might not work
+            blockchain: coin.blockchain
+        });
+
+        if (this.props.selectedAccount) {
+            this.props.getBalance(
+                this.props.selectedAccount.blockchain,
+                this.props.selectedAccount.address,
+                undefined,
+                true
+            );
+        }
+        this.setState({ coins: this.buildCoins() }, () => {
+            if (
+                this.props.wallet?.accounts.find(
+                    acc => acc.blockchain === this.props.selectedBlockchain
+                )
+            ) {
+                this.props.disableCreateAccount();
+            } else {
+                this.props.enableCreateAccount();
+            }
+        });
     };
 
     public renderBottomBlockchainNav = () => {
@@ -241,14 +275,7 @@ export class DashboardScreenComponent extends React.Component<
                                         width: coins.length > 3 ? SCREEN_WIDTH / 3 : null
                                     }
                                 ]}
-                                onPress={() => {
-                                    this.props.setSelectedBlockchain(coin.blockchain);
-                                    this.props.setSelectedAccount({
-                                        index: 0, // TODO - in the case we are not using the index 0 account this might not work
-                                        blockchain: coin.blockchain
-                                    });
-                                    this.setState({ coins: this.buildCoins() });
-                                }}
+                                onPress={() => this.blockchainPress(coin)}
                             >
                                 <Text
                                     style={
@@ -270,9 +297,16 @@ export class DashboardScreenComponent extends React.Component<
         const styles = this.props.styles;
         const { coins } = this.state;
         const blockchain: Blockchain = this.props.selectedBlockchain;
+        const showCreateAccount =
+            this.props.isCreateAccount && this.props.selectedBlockchain === Blockchain.NEAR;
+
         return (
             <View style={styles.container}>
-                {coins.length !== 0 && (
+                {showCreateAccount && (
+                    <AccountCreate blockchain={blockchain} navigation={this.props.navigation} />
+                )}
+
+                {!showCreateAccount && coins.length !== 0 && (
                     <View style={styles.dashboardContainer}>
                         <View style={styles.coinBalanceCard}>
                             {this.props.selectedAccount && (

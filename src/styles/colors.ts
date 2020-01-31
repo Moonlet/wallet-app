@@ -11,7 +11,7 @@ export const COLORS = {
 
     SHARK_GRAY: '#28282A', // all cards
     COD_GRAY: '#121212', // page background
-    VERY_DARK_GRAY: '#1F1F1F', // bottom sheet
+    VERY_DARK_GRAY: '#1A1A1A', // bottom sheet
     GUN_POWDER_GRAY: '#4E4E53', // input background
 
     HOT_GREEN: '#00E676',

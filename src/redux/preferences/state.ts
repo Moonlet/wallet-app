@@ -1,3 +1,5 @@
+import { ChainIdType } from '../../core/blockchain/types';
+
 export interface IPrefState {
     currency: string;
     testNet: boolean;
@@ -10,8 +12,8 @@ export interface IPrefState {
 export interface INetworksOptions {
     [blockchain: string]: {
         // key is for Blockchain enum
-        mainNet?: number;
-        testNet?: number;
+        mainNet?: ChainIdType;
+        testNet?: ChainIdType;
     };
 }
 

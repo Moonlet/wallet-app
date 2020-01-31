@@ -48,7 +48,7 @@ export class Eth implements IHardwareWalletApp {
             }
         );
 
-        transaction.raw[6] = Buffer.from([tx.chainId]); // v
+        transaction.raw[6] = Buffer.from([Number(tx.chainId)]); // v
         transaction.raw[7] = Buffer.from([]); // r
         transaction.raw[8] = Buffer.from([]); // s
 

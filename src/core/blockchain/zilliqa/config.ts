@@ -1,9 +1,10 @@
-import { IBlockchainConfig } from '../types';
+import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType } from '../types/token';
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/313'/0'/0`,
+    derivationType: DerivationType.HD_KEY,
     coin: 'ZIL',
     defaultUnit: 'QA',
     tokens: {
@@ -38,5 +39,8 @@ export const config: IBlockchainConfig = {
             feeComponentAdvanced: 'GasFeeAdvanced',
             gasPriceUnit: 'LI'
         }
+    },
+    ui: {
+        addressDisplay: 'stripped'
     }
 };

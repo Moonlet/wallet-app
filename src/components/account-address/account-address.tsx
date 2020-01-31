@@ -24,7 +24,9 @@ export const AccountAddressComponent = (props: IProps & IExternalProps) => {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.address}>{formatAddress(props.account.address)}</Text>
+            <Text style={styles.address}>
+                {formatAddress(props.account.address, props.account.blockchain)}
+            </Text>
             <View style={styles.balanceContainer}>
                 <Amount
                     style={styles.balance}

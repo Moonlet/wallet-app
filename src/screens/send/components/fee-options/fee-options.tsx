@@ -8,7 +8,7 @@ import { translate } from '../../../../core/i18n';
 import { GasFeeAvanced } from '../gas-fee-advanced/gas-fee-advanced';
 import { FeeTotal } from '../fee-total/fee-total';
 import { FeePreset } from '../fee-preset/fee-preset';
-import { IBlockchainConfig, IFeeOptions } from '../../../../core/blockchain/types';
+import { IBlockchainConfig, IFeeOptions, ChainIdType } from '../../../../core/blockchain/types';
 import { BLOCKCHAIN_INFO, getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { IReduxState } from '../../../../redux/state';
@@ -35,7 +35,7 @@ interface IState {
 }
 
 interface IReduxProps {
-    chainId: number;
+    chainId: ChainIdType;
 }
 
 export class FeeOptionsComponent extends React.Component<

@@ -15,6 +15,7 @@ import { translate } from '../../core/i18n';
 import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric-auth';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
+import { Dialog } from '../../components/dialog/dialog';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -285,15 +286,16 @@ export class SettingsScreenComponent extends React.Component<
                     <View style={styles.divider} />
 
                     <TouchableOpacity
-                        style={styles.rowContainer}
-                        onPress={async () => {
+                        style={styles.colContainer}
+                        onPress={() => {
                             Clipboard.setString(DeviceInfo.getUniqueId());
+                            Dialog.confirm(translate('Settings.copied'), '');
                         }}
                     >
-                        <Text style={styles.textRow}>{translate('Settings.deviceId')}</Text>
-                        <View style={styles.rightContainer}>
-                            <Text style={styles.rightValue}>{DeviceInfo.getUniqueId()}</Text>
-                        </View>
+                        <Text style={[styles.textRow, styles.textRowMargin]}>
+                            {translate('Settings.deviceId')}
+                        </Text>
+                        <Text style={styles.rightValue}>{DeviceInfo.getUniqueId()}</Text>
                     </TouchableOpacity>
 
                     <View style={styles.divider} />

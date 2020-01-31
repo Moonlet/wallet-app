@@ -1,6 +1,6 @@
 import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
 import { Blockchain, IFeeOptions } from '../../core/blockchain/types';
-import { WalletType } from '../../core/wallet/types';
+import { WalletType, IWallet } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
 import { IAction } from '../types';
 import { Dispatch } from 'react';
@@ -29,6 +29,7 @@ import { BottomSheetType } from '../ui/bottomSheet/state';
 import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
 import { getSelectedWallet } from './selectors';
 import { getChainId } from '../preferences/selectors';
+import { Client as NearClient } from '../../core/blockchain/near/client';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -252,16 +253,14 @@ export const getBalance = (
             try {
                 const chainId = getChainId(state, account.blockchain);
                 const tokenInfo = account.tokens[token];
+                const client = getBlockchain(blockchain).getClient(chainId);
 
                 let balance;
                 switch (tokenInfo.type) {
                     case TokenType.NATIVE:
-                        balance = await getBlockchain(blockchain)
-                            .getClient(chainId)
-                            .getBalance(address);
+                        balance = await client.getBalance(address);
                         break;
                     default:
-                        const client = getBlockchain(blockchain).getClient(chainId);
                         if (client.tokens[tokenInfo.type]) {
                             balance = await client.tokens[tokenInfo.type].getBalance(
                                 tokenInfo.contractAddress,
@@ -322,8 +321,10 @@ export const sendTransferTransaction = (
             connectionType: appWallet.hwOptions?.connectionType
         }); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
+        const client = blockchainInstance.getClient(chainId);
 
-        const nonce = await blockchainInstance.getClient(chainId).getNonce(account.address);
+        const nonce = await client.getNonce(account.address, account.publicKey);
+        const blockInfo = await client.getCurrentBlock();
 
         const tx = blockchainInstance.transaction.buildTransferTransaction({
             chainId,
@@ -334,6 +335,8 @@ export const sendTransferTransaction = (
                 .toString(),
             token,
             nonce,
+            currentBlockHash: blockInfo.hash,
+            currentBlockNumber: blockInfo.number,
             feeOptions: {
                 gasPrice: feeOptions.gasPrice.toString(),
                 gasLimit: feeOptions.gasLimit.toString()
@@ -446,4 +449,45 @@ export const addToken = (walletId: string, account: IAccountState, token: IToken
         data: { walletId, account, token }
     });
     getBalance(account.blockchain, account.address, undefined, true)(dispatch, getState);
+};
+
+export const createAccount = (
+    blockchain: Blockchain,
+    newAccountId: string,
+    password: string
+) => async (dispatch: Dispatch<any>, getState: () => IReduxState) => {
+    const state = getState();
+    const selectedWallet: IWalletState = getSelectedWallet(state);
+    const hdWallet: IWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
+        pass: password
+    });
+    blockchain = Blockchain.NEAR;
+    const chainId = getChainId(state, blockchain);
+
+    const numberOfAccounts = selectedWallet.accounts.filter(acc => acc.blockchain === blockchain)
+        .length;
+
+    const accounts = await hdWallet.getAccounts(blockchain, numberOfAccounts);
+    const account = accounts[0];
+    const publicKey = account.publicKey;
+
+    const blockchainInstance = getBlockchain(blockchain);
+    const client = blockchainInstance.getClient(chainId) as NearClient;
+
+    const txId = await client.createAccount(newAccountId, publicKey, chainId);
+
+    if (txId) {
+        account.address = newAccountId;
+
+        account.tokens[blockchain].balance = {
+            value: '0',
+            inProgress: false,
+            timestamp: undefined,
+            error: undefined
+        };
+
+        dispatch(addAccount(selectedWallet.id, blockchain, account));
+    } else {
+        // TODO - if client.createAccount crashes, dashboard (near create account section) will be stuck on loading indicator
+    }
 };

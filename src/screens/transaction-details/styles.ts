@@ -5,7 +5,7 @@ import { BASE_DIMENSION } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            flexGrow: 1,
+            flex: 1,
             paddingTop: BASE_DIMENSION * 4,
             paddingBottom: BASE_DIMENSION * 2,
             paddingHorizontal: BASE_DIMENSION * 2,

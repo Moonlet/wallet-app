@@ -29,7 +29,7 @@ export const sign = async (tx: IBlockchainTransaction, privateKey: string): Prom
     const pubKey = privateToPublic(privateKey);
     const transaction: any = {
         // tslint:disable-next-line: no-bitwise
-        version: (tx.chainId << 16) + 1, // add replay protection
+        version: (Number(tx.chainId) << 16) + 1, // add replay protection
         toAddr: fromBech32Address(tx.toAddress)
             .replace('0x', '')
             .toLowerCase(),

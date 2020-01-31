@@ -1,19 +1,16 @@
 import { IAccountState } from '../../../redux/wallets/state';
-import { Blockchain } from '.';
+import { Blockchain, ChainIdType } from '.';
 import { ITokenConfig } from './token';
 import { TransactionStatus } from '../../wallet/types';
 import BigNumber from 'bignumber.js';
 
 export interface IBlockchainTransactionUtils {
-    sign(
-        transaction: IBlockchainTransaction<IAdditionalInfoType>,
-        privateKey: string
-    ): Promise<string>;
-    buildTransferTransaction(tx: ITransferTransaction): IBlockchainTransaction<IAdditionalInfoType>;
+    sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string>;
+    buildTransferTransaction(tx: ITransferTransaction): IBlockchainTransaction;
 }
 
 // tslint:disable-next-line:no-shadowed-variable
-export interface IBlockchainTransaction<IAdditionalInfoType = {}> {
+export interface IBlockchainTransaction<IAdditionalInfoType = any> {
     id?: string;
     date: {
         created: number;
@@ -22,7 +19,7 @@ export interface IBlockchainTransaction<IAdditionalInfoType = {}> {
         confirmed: number;
     };
     blockchain: Blockchain;
-    chainId: number;
+    chainId: ChainIdType;
     type: TransactionType;
     token?: ITokenConfig;
 
@@ -62,20 +59,18 @@ export interface IFeeOptions {
 
 export interface ITransferTransaction {
     account: IAccountState;
-    chainId: number; // needed???
+    chainId: ChainIdType; // needed???
     toAddress: string;
     amount: string;
     token: string;
     nonce: number;
     feeOptions: IFeeOptions;
+    currentBlockHash: string;
+    currentBlockNumber: number;
     extraFields?: ITransferTransactionExtraFields;
 }
 
 export interface ITransferTransactionExtraFields {
     memo?: string;
     //
-}
-
-export interface IAdditionalInfoType {
-    data?: string; // for Eth erc-20 sign
 }

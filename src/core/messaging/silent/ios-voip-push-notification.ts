@@ -16,7 +16,9 @@ export const setupVoipNotification = () => {
 };
 
 export const getApnsToken = () => {
-    if (tokenPromise) { return tokenPromise; }
+    if (tokenPromise) {
+        return tokenPromise;
+    }
 
     tokenPromise = new Promise(resolve => {
         VoipPushNotification.addEventListener('register', deviceToken => {

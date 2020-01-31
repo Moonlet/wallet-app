@@ -133,7 +133,10 @@ export class SendScreenComponent extends React.Component<
             const data: IBottomSheetExtensionRequestData = {
                 type: IExtensionRequestType.SIGN_TRANSACTION,
                 state: 'pending',
-                mainText: `${formattedAmount} to ${formatAddress(this.props.account.address)}`,
+                mainText: `${formattedAmount} to ${formatAddress(
+                    this.props.account.address,
+                    this.props.account.blockchain
+                )}`,
                 secondaryText: new Date().toLocaleDateString('en-GB')
             };
             this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
@@ -440,7 +443,7 @@ export class SendScreenComponent extends React.Component<
                             selectionColor={theme.colors.accent}
                             value={
                                 this.state.isValidAddress
-                                    ? formatAddress(this.state.toAddress)
+                                    ? formatAddress(this.state.toAddress, account.blockchain)
                                     : this.state.toAddress
                             }
                             onChangeText={text => {

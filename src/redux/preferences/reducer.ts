@@ -24,6 +24,10 @@ const initialState: IPrefState = {
         [Blockchain.ZILLIQA]: {
             testNet: 333,
             mainNet: 1
+        },
+        [Blockchain.NEAR]: {
+            testNet: 'testnet',
+            mainNet: 'testnet' // not released yet
         }
     },
     blockchains: {
@@ -33,6 +37,10 @@ const initialState: IPrefState = {
         },
         [Blockchain.ZILLIQA]: {
             order: 1,
+            active: true
+        },
+        [Blockchain.NEAR]: {
+            order: 2,
             active: true
         }
     }

@@ -17,6 +17,8 @@ import { Blockchain } from '../../../core/blockchain/types';
 import { Amount } from '../../amount/amount';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { calculateBalance } from '../../../core/utils/balance';
+import { translate } from '../../../core/i18n';
+import { enableCreateAccount } from '../../../redux/ui/screens/dashboard/actions';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -29,6 +31,7 @@ export interface IReduxProps {
     getBalance: typeof getBalance;
     exchangeRates: any;
     accounts: IAccountState[];
+    enableCreateAccount: typeof enableCreateAccount;
 }
 const mapStateToProps = (state: IReduxState) => {
     return {
@@ -39,7 +42,8 @@ const mapStateToProps = (state: IReduxState) => {
 };
 const mapDispatchToProps = {
     setSelectedAccount,
-    getBalance
+    getBalance,
+    enableCreateAccount
 };
 
 export class AccountsBottomSheetComponent extends React.Component<
@@ -62,14 +66,29 @@ export class AccountsBottomSheetComponent extends React.Component<
         });
     }
 
-    public renderBottomSheetContent = () => (
-        <View
-            style={[
-                this.props.styles.container,
-                { height: this.props.snapPoints.bottomSheetHeight }
-            ]}
-        >
-            <View style={this.props.styles.container}>
+    public renderBottomSheetContent = () => {
+        const createAccountLabel = (
+            <View>
+                <View style={this.props.styles.firstRow}>
+                    <Text style={this.props.styles.accountName}>
+                        {translate('CreateAccount.createAccount')}
+                    </Text>
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                    <Text style={this.props.styles.fistAmountText}>
+                        {translate('CreateAccount.chooseUsr')}
+                    </Text>
+                </View>
+            </View>
+        );
+
+        return (
+            <View
+                style={[
+                    this.props.styles.container,
+                    { height: this.props.snapPoints.bottomSheetHeight }
+                ]}
+            >
                 {this.props.accounts.map((account: IAccountState, index: number) => {
                     const selected = this.props.selectedAccount.address === account.address;
                     const blockchain = account.blockchain;
@@ -78,10 +97,10 @@ export class AccountsBottomSheetComponent extends React.Component<
                         <View>
                             <View style={this.props.styles.firstRow}>
                                 <Text style={this.props.styles.accountName}>
-                                    {`Account ${account.index + 1}`}
+                                    {`${translate('App.labels.account')} ${account.index + 1}`}
                                 </Text>
                                 <Text style={this.props.styles.accountAddress}>
-                                    {formatAddress(account.address)}
+                                    {formatAddress(account.address, blockchain)}
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
@@ -111,16 +130,11 @@ export class AccountsBottomSheetComponent extends React.Component<
                             </View>
                         </View>
                     );
+
                     return (
                         <ListAccount
                             key={index}
-                            leftIcon={
-                                blockchain === Blockchain.ETHEREUM
-                                    ? require('../../../assets/images/png/eth.png')
-                                    : blockchain === Blockchain.ZILLIQA
-                                    ? require('../../../assets/images/png/zil.png')
-                                    : undefined
-                            }
+                            leftIcon={account.tokens[getBlockchain(blockchain).config.coin].logo}
                             rightIcon={selected ? 'check-1' : undefined}
                             label={label}
                             selected={selected}
@@ -133,15 +147,31 @@ export class AccountsBottomSheetComponent extends React.Component<
                         />
                     );
                 })}
+
+                {this.props.selectedAccount.blockchain === Blockchain.NEAR && (
+                    <ListAccount
+                        leftIcon={
+                            this.props.selectedAccount.tokens[
+                                getBlockchain(this.props.selectedAccount.blockchain).config.coin
+                            ].logo
+                        }
+                        isCreate
+                        label={createAccountLabel}
+                        onPress={() => {
+                            this.props.onCloseEnd();
+                            this.props.enableCreateAccount();
+                        }}
+                    />
+                )}
             </View>
-        </View>
-    );
+        );
+    };
 
     public render() {
         return (
             <BottomSheet
                 ref={this.bottomSheet}
-                // initialSnap={0}
+                initialSnap={0}
                 snapPoints={[
                     this.props.snapPoints.initialSnap,
                     this.props.snapPoints.bottomSheetHeight

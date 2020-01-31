@@ -39,7 +39,7 @@ export class AccountListComponent extends React.Component<IProps & IExternalProp
                                 <View>
                                     <Text style={styles.name}>Account {i + 1}</Text>
                                     <Text style={styles.address}>
-                                        {formatAddress(account.address)}
+                                        {formatAddress(account.address, account.blockchain)}
                                     </Text>
                                 </View>
                                 <Icon name="add-circle" size={ICON_SIZE} style={styles.icon} />

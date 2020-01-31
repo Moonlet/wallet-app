@@ -5,7 +5,8 @@ import { BASE_DIMENSION } from '../../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: theme.colors.bottomSheetBackground
+            backgroundColor: theme.colors.bottomSheetBackground,
+            padding: BASE_DIMENSION * 2
         },
         icon: {
             color: theme.colors.accent,
@@ -13,7 +14,7 @@ export default (theme: ITheme) =>
         },
         firstRow: {
             flexDirection: 'row',
-            marginBottom: BASE_DIMENSION
+            marginBottom: BASE_DIMENSION / 4
         },
         accountName: {
             fontSize: 18,

@@ -4,6 +4,15 @@ import * as Util from 'ethereumjs-util';
 import { BigNumber } from 'bignumber.js';
 import { convert } from '../common/account';
 import { config } from './config';
+import HDNode from 'hdkey';
+
+export const getAccountDerivationPath = (accountIndex): string => {
+    return `${accountIndex}`;
+};
+
+export const getPrivateKeyFromDerived = (derivedKey: HDNode): string => {
+    return derivedKey.privateKey.toString('hex');
+};
 
 export const isValidChecksumAddress = (address: string): boolean => {
     return Util.isValidChecksumAddress(address);

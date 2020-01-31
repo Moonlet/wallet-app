@@ -1,19 +1,11 @@
-import {
-    IBlockchainTransaction,
-    ITransferTransaction,
-    IAdditionalInfoType,
-    TransactionType
-} from '../types';
+import { IBlockchainTransaction, ITransferTransaction, TransactionType } from '../types';
 import { Transaction } from 'ethereumjs-tx';
 import abi from 'ethereumjs-abi';
 import BigNumber from 'bignumber.js';
 import { TokenType } from '../types/token';
 import { TransactionStatus } from '../../wallet/types';
 
-export const sign = async (
-    tx: IBlockchainTransaction<IAdditionalInfoType>,
-    privateKey: string
-): Promise<any> => {
+export const sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
     const transaction = new Transaction(
         {
             nonce: '0x' + tx.nonce.toString(16),
@@ -21,7 +13,7 @@ export const sign = async (
             gasLimit: '0x' + tx.feeOptions.gasLimit,
             to: tx.toAddress,
             value: '0x' + new BigNumber(tx.amount).toString(16),
-            data: tx.additionalInfo?.data
+            data: tx.data?.raw
         },
         {
             chain: tx.chainId
@@ -33,9 +25,7 @@ export const sign = async (
     return '0x' + transaction.serialize().toString('hex');
 };
 
-export const buildTransferTransaction = (
-    tx: ITransferTransaction
-): IBlockchainTransaction<IAdditionalInfoType> => {
+export const buildTransferTransaction = (tx: ITransferTransaction): IBlockchainTransaction => {
     const tokenInfo = tx.account.tokens[tx.token];
 
     switch (tokenInfo.type) {
@@ -62,8 +52,8 @@ export const buildTransferTransaction = (
                 nonce: tx.nonce,
                 status: TransactionStatus.PENDING,
 
-                additionalInfo: {
-                    data:
+                data: {
+                    raw:
                         '0x' +
                         abi
                             .simpleEncode('transfer(address,uint256)', tx.toAddress, tx.amount)

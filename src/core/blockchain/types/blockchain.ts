@@ -3,15 +3,16 @@ import {
     IBlockchainNetwork,
     IBlockchainAccountUtils,
     BlockchainGenericClient,
-    IBlockchainTransactionUtils
+    IBlockchainTransactionUtils,
+    ChainIdType
 } from './';
 
 export enum Blockchain {
     ETHEREUM = 'ETHEREUM',
     ZILLIQA = 'ZILLIQA',
+    NEAR = 'NEAR',
     COSMOS = 'COSMOS',
-    STELLAR = 'STELLAR',
-    NEAR = 'NEAR'
+    STELLAR = 'STELLAR'
 }
 
 export interface IBlockchain {
@@ -20,5 +21,5 @@ export interface IBlockchain {
     transaction: IBlockchainTransactionUtils;
     account: IBlockchainAccountUtils;
     Client: new (chainId) => BlockchainGenericClient;
-    getClient: (chainId: number) => BlockchainGenericClient;
+    getClient: (chainId: ChainIdType) => BlockchainGenericClient;
 }

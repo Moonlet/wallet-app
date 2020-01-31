@@ -12,7 +12,7 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
             marginBottom: BASE_DIMENSION,
-            borderWidth: 1,
+            borderWidth: 2,
             borderColor: theme.colors.cardBackground
         },
         labelContainer: {
@@ -26,7 +26,7 @@ export default (theme: ITheme) =>
             color: theme.colors.text
         },
         selected: {
-            borderColor: theme.colors.accent
+            borderColor: theme.colors.accentSecondary
         },
         iconLeftContainer: {
             height: ICON_CONTAINER_SIZE,
@@ -45,5 +45,10 @@ export default (theme: ITheme) =>
         accountIcon: {
             height: ICON_CONTAINER_SIZE,
             width: ICON_CONTAINER_SIZE
+        },
+        createButton: {
+            backgroundColor: theme.colors.accent,
+            borderColor: theme.colors.accent,
+            paddingHorizontal: BASE_DIMENSION * 2
         }
     });

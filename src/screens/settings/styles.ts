@@ -16,6 +16,10 @@ export default (theme: ITheme) =>
             paddingVertical: BASE_DIMENSION * 2,
             alignItems: 'center'
         },
+        colContainer: {
+            flexDirection: 'column',
+            paddingVertical: BASE_DIMENSION * 2
+        },
         textHeader: {
             color: theme.colors.textSecondary,
             fontSize: 13,
@@ -28,6 +32,9 @@ export default (theme: ITheme) =>
             lineHeight: 21,
             letterSpacing: 0.38,
             color: theme.colors.text
+        },
+        textRowMargin: {
+            marginBottom: BASE_DIMENSION
         },
         rightValue: {
             fontSize: 15,

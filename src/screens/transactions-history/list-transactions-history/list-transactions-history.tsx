@@ -13,7 +13,7 @@ import { formatAddress } from '../../../core/utils/format-address';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import moment from 'moment';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
-import { IBlockchainTransaction } from '../../../core/blockchain/types';
+import { IBlockchainTransaction, Blockchain } from '../../../core/blockchain/types';
 
 export interface IExternalProps {
     transactions: IBlockchainTransaction[];
@@ -29,7 +29,9 @@ export class TransactionsHistoryListComponent extends React.Component<
             tx.address === account.address
                 ? translate('App.labels.to').toLowerCase()
                 : translate('App.labels.from').toLowerCase();
-        return ` ${formattedAmount} ${formatAddress(tx.toAddress)}`;
+        const address =
+            account.blockchain === Blockchain.NEAR ? tx.toAddress : formatAddress(tx.toAddress);
+        return ` ${formattedAmount} ${address}`;
     }
 
     public render() {

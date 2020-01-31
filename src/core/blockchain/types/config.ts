@@ -33,4 +33,7 @@ export interface IBlockchainConfig {
             defaultPreset?: 'cheap' | 'standard' | 'fast' | 'fastest';
         };
     };
+    ui: {
+        addressDisplay?: 'stripped';
+    };
 }

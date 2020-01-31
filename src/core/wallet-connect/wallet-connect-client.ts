@@ -104,8 +104,9 @@ export const WalletConnectClient = (() => {
                         Notifications.displayNotification(
                             'Moonlet',
                             `New transaction request of ${formattedAmount} from ${formatAddress(
-                                account.address
-                            )} to ${formatAddress(toAddress)}`,
+                                account.address,
+                                account.blockchain
+                            )} to ${formatAddress(toAddress, account.blockchain)}`,
                             payload
                         );
                     } else {

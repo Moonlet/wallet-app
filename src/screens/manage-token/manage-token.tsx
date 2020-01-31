@@ -245,7 +245,8 @@ export class ManageTokenComponent extends React.Component<
                                 >{`${this.state.token.name} (${this.state.token.symbol})`}</Text>
                                 <Text style={styles.tokenAddressText}>
                                     {`${translate('App.labels.contract')}: ${formatAddress(
-                                        this.state.token.contractAddress
+                                        this.state.token.contractAddress,
+                                        this.props.selectedAccount.blockchain
                                     )}`}
                                 </Text>
                             </View>

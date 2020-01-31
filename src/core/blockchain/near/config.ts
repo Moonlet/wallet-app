@@ -38,5 +38,6 @@ export const config: IBlockchainConfig = {
             feeComponentAdvanced: undefined,
             gasPriceUnit: 'YNEAR'
         }
-    }
+    },
+    ui: {}
 };

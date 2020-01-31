@@ -100,9 +100,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                                     {`${translate('App.labels.account')} ${account.index + 1}`}
                                 </Text>
                                 <Text style={this.props.styles.accountAddress}>
-                                    {blockchain === Blockchain.NEAR
-                                        ? account.address
-                                        : formatAddress(account.address)}
+                                    {formatAddress(account.address, blockchain)}
                                 </Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>

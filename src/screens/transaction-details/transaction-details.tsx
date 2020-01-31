@@ -117,18 +117,14 @@ export class TransactionDetailsComponent extends React.Component<
 
                     <View style={styles.rowContainer}>
                         <Text style={styles.textPrimary}>
-                            {account.blockchain === Blockchain.NEAR
-                                ? transaction.address
-                                : formatAddress(transaction.address)}
+                            {formatAddress(transaction.address, account.blockchain)}
                         </Text>
                         <Text style={styles.textSecondary}>{translate('App.labels.sender')}</Text>
                     </View>
 
                     <View style={styles.rowContainer}>
                         <Text style={styles.textPrimary}>
-                            {account.blockchain === Blockchain.NEAR
-                                ? transaction.toAddress
-                                : formatAddress(transaction.toAddress)}
+                            {formatAddress(transaction.toAddress, account.blockchain)}
                         </Text>
                         <Text style={styles.textSecondary}>
                             {translate('App.labels.recipient')}

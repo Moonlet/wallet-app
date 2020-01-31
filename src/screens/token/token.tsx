@@ -131,8 +131,8 @@ export class TokenScreenComponent extends React.Component<
                 'Transaction.signTransaction',
                 translate('Transaction.signExtensionTransaction', {
                     amount: formattedAmount,
-                    fromAccount: formatAddress(account.address),
-                    toAccount: formatAddress(toAddress)
+                    fromAccount: formatAddress(account.address, account.blockchain),
+                    toAccount: formatAddress(toAddress, account.blockchain)
                 }),
 
                 {

@@ -8,7 +8,6 @@ import { withTheme } from '../../core/theme/with-theme';
 import { formatAddress } from '../../core/utils/format-address';
 import { Amount } from '../amount/amount';
 import { ITokenConfig } from '../../core/blockchain/types/token';
-import { Blockchain } from '../../core/blockchain/types';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -26,9 +25,7 @@ export const AccountAddressComponent = (props: IProps & IExternalProps) => {
     return (
         <View style={styles.container}>
             <Text style={styles.address}>
-                {props.account.blockchain === Blockchain.NEAR
-                    ? props.account.address
-                    : formatAddress(props.account.address)}
+                {formatAddress(props.account.address, props.account.blockchain)}
             </Text>
             <View style={styles.balanceContainer}>
                 <Amount

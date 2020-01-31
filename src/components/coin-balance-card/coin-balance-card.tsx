@@ -32,9 +32,7 @@ export const CoinBalanceCardComponent = (props: IProps) => (
                 {props.selectedAccount?.name || `Account ${props.selectedAccount.index + 1}`}
             </Text>
             <Text style={props.styles.address}>
-                {props.blockchain === Blockchain.NEAR
-                    ? props.selectedAccount.address
-                    : formatAddress(props.selectedAccount.address)}
+                {formatAddress(props.selectedAccount.address, props.blockchain)}
             </Text>
         </View>
         <View style={props.styles.rowContainer}>

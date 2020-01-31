@@ -39,5 +39,8 @@ export const config: IBlockchainConfig = {
             feeComponentAdvanced: 'GasFeeAdvanced',
             gasPriceUnit: 'LI'
         }
+    },
+    ui: {
+        addressDisplay: 'stripped'
     }
 };

@@ -132,9 +132,7 @@ export class AddressBookComponent extends React.Component<
                     <View>
                         <Text style={styles.name}>{contact.name}</Text>
                         <Text style={styles.address}>
-                            {contact.blockchain === Blockchain.NEAR
-                                ? contact.address
-                                : formatAddress(contact.address)}
+                            {formatAddress(contact.address, contact.blockchain)}
                         </Text>
                     </View>
                     <Icon name="add-circle" size={ICON_SIZE} style={styles.icon} />

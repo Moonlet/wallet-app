@@ -9,7 +9,6 @@ import { Text } from '../../../../library';
 import { IAccountState } from '../../../../redux/wallets/state';
 import { formatAddress } from '../../../../core/utils/format-address';
 import { ICON_SIZE } from '../../../../styles/dimensions';
-import { Blockchain } from '../../../../core/blockchain/types';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -40,9 +39,7 @@ export class AccountListComponent extends React.Component<IProps & IExternalProp
                                 <View>
                                     <Text style={styles.name}>Account {i + 1}</Text>
                                     <Text style={styles.address}>
-                                        {account.blockchain === Blockchain.NEAR
-                                            ? account.address
-                                            : formatAddress(account.address)}
+                                        {formatAddress(account.address, account.blockchain)}
                                     </Text>
                                 </View>
                                 <Icon name="add-circle" size={ICON_SIZE} style={styles.icon} />

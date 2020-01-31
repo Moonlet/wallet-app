@@ -46,5 +46,8 @@ export const config: IBlockchainConfig = {
             gasPriceUnit: 'GWEI',
             defaultPreset: 'standard'
         }
+    },
+    ui: {
+        addressDisplay: 'stripped'
     }
 };

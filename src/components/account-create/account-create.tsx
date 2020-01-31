@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, TextInput, TouchableOpacity } from 'react-native';
 import { Text, Button } from '../../library';
-import { ITheme } from '../../core/theme/itheme';
 import stylesProvider from './styles';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { Blockchain } from '../../core/blockchain/types';
@@ -17,11 +16,6 @@ import { LoadingIndicator } from '../loading-indicator/loading-indicator';
 import { PasswordModal } from '../password-modal/password-modal';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { Icon } from '../../components/icon';
-
-export interface IProps {
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
 
 export interface IReduxProps {
     createAccount: typeof createAccount;

@@ -440,7 +440,7 @@ export class SendScreenComponent extends React.Component<
                             selectionColor={theme.colors.accent}
                             value={
                                 this.state.isValidAddress
-                                    ? account.blockchain === Blockchain.NEAR
+                                    ? account.blockchain === Blockchain.NEAR // TODO: find a way to avoid doing this check for a specific blockchain
                                         ? this.state.toAddress
                                         : formatAddress(this.state.toAddress)
                                     : this.state.toAddress

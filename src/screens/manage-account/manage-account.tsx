@@ -49,6 +49,8 @@ const mapStateToProps = (state: IReduxState) => {
 
 export const navigationOptions = ({ navigation, theme }: any) => ({
     title: translate('Account.manageAccount'),
+
+    // TODO: in `core/blockchain/${blockchain}/config.ts` config this
     headerRight: navigation.state.params.blockchain === Blockchain.ETHEREUM && (
         <TouchableOpacity onPress={() => navigation.navigate('ManageToken')}>
             <Icon

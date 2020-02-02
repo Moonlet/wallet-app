@@ -1,9 +1,10 @@
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
-import { getSelectedAccount } from '../wallets/selectors';
-import { getBalance } from '../wallets/actions';
+import { getSelectedAccount, getSelectedBlockchain } from '../wallets/selectors';
+import { getBalance, setSelectedBlockchain } from '../wallets/actions';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { IBlockchainsOptions } from './state';
+import { IAction } from '../types';
 
 // actions consts
 export const PREF_SET_CURRENCY = 'PREF_SET_CURRENCY';
@@ -14,13 +15,25 @@ export const PREF_SET_BLOCKCHAIN_ACTIVE_STATE = 'PREF_SET_BLOCKCHAIN_ACTIVE_STAT
 export const PREF_SET_BLOCKCHAIN_ORDER = 'PREF_SET_BLOCKCHAIN_ORDER';
 export const PREF_SET_NETWORK_TEST_NET_CHAIN_ID = 'PREF_SET_NETWORK_TEST_NET_CHAIN_ID';
 
-// actions creators
+export const setBlockchainActive = (blockchain: Blockchain, active: boolean) => (
+    dispatch: Dispatch<IAction>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+    const selectedBlockchain = getSelectedBlockchain(state);
 
-export const setBlockchainActive = (blockchain: Blockchain) => {
-    return {
+    if (selectedBlockchain === blockchain && active === true) {
+        const nextBlockchain = Object.keys(state.preferences.blockchains).find(
+            object => object !== blockchain
+        );
+        if (nextBlockchain) {
+            setSelectedBlockchain(Blockchain[nextBlockchain])(dispatch, getState);
+        }
+    }
+    dispatch({
         type: PREF_SET_BLOCKCHAIN_ACTIVE_STATE,
         data: { blockchain }
-    };
+    });
 };
 
 export const setBlockchainOrder = (blockchains: IBlockchainsOptions[]) => {

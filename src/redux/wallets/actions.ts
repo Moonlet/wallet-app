@@ -27,7 +27,7 @@ import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
 import { BottomSheetType } from '../ui/bottomSheet/state';
 import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
-import { getSelectedWallet } from './selectors';
+import { getSelectedWallet, getSelectedAccount } from './selectors';
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 
@@ -66,7 +66,8 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
-    const wallet = getSelectedWallet(getState());
+    const state = getState();
+    const wallet = getSelectedWallet(state);
     if (wallet === undefined) {
         return;
     }
@@ -77,6 +78,11 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
             blockchain
         }
     });
+    const selectedAccount = getSelectedAccount(state);
+    setSelectedAccount({ index: selectedAccount.index, blockchain: selectedAccount.blockchain })(
+        dispatch,
+        getState
+    );
 };
 
 export const setSelectedAccount = (selectedAccount: ISelectedAccount) => (
@@ -190,7 +196,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ZILLIQA, 1)
         ]).then(async data => {
             data[0][0].selected = true;
-            //    data[2][0].selected = true;
+            data[2][0].selected = true;
             const walletId = uuidv4();
             const accounts: IAccountState[] = data.reduce((out, acc) => out.concat(acc), []);
 

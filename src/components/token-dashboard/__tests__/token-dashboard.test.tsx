@@ -1,6 +1,6 @@
 import 'react-native';
 import React from 'react';
-import { CoinDashboardComponent, IProps } from '../coin-dashboard';
+import { TokenDashboardComponent, IProps } from '../token-dashboard';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import { Blockchain } from '../../../core/blockchain/types';
 import styleProvider from '../styles';
@@ -33,7 +33,7 @@ const props: IProps = {
 
 describe('coin dashboard component', () => {
     it('renders correctly', () => {
-        const wrapper = shallow(<CoinDashboardComponent {...props} />);
+        const wrapper = shallow(<TokenDashboardComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();
     });
 });

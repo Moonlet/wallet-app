@@ -26,7 +26,10 @@ export const getSelectedAccount = createSelector(
             return undefined;
         }
         const acc = wallet
-            ? wallet.accounts.find((account: IAccountState) => account.selected === true)
+            ? wallet.accounts.find(
+                  (account: IAccountState) =>
+                      account.selected === true && account.blockchain === wallet.selectedBlockchain
+              )
             : undefined;
         return acc || wallet.accounts[0];
     }

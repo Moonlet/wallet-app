@@ -14,7 +14,7 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { getBalance, setSelectedAccount, setSelectedBlockchain } from '../../redux/wallets/actions';
+import { getBalance, setSelectedBlockchain } from '../../redux/wallets/actions';
 import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
 import {
     getSelectedWallet,
@@ -29,10 +29,6 @@ import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
-import {
-    enableCreateAccount,
-    disableCreateAccount
-} from '../../redux/ui/screens/dashboard/actions';
 import { getBlockchains } from '../../redux/preferences/selectors';
 
 export interface IReduxProps {
@@ -44,11 +40,8 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
     selectedBlockchain: Blockchain;
     exchangeRates: any;
-    setSelectedAccount: typeof setSelectedAccount;
     setSelectedBlockchain: typeof setSelectedBlockchain;
     isCreateAccount: boolean;
-    enableCreateAccount: typeof enableCreateAccount;
-    disableCreateAccount: typeof disableCreateAccount;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -66,10 +59,7 @@ const mapStateToProps = (state: IReduxState) => ({
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
-    setSelectedAccount,
-    setSelectedBlockchain,
-    enableCreateAccount,
-    disableCreateAccount
+    setSelectedBlockchain
 };
 
 const MyTitle = ({ text }) => (
@@ -135,11 +125,6 @@ export class DashboardScreenComponent extends React.Component<
             if (!WalletConnectWeb.isConnected()) {
                 props.navigation.navigate('OnboardingScreen');
             }
-            // else {
-            //     WalletConnectWeb.getState().then(() => {
-            //         this.getWalletBalances(this.props.wallet);
-            //     });
-            // }
         } else {
             if (props.blockchains.length === 0 || props.walletsNr < 1) {
                 // maybe check this in another screen?
@@ -157,7 +142,14 @@ export class DashboardScreenComponent extends React.Component<
                 true
             );
         }
+        this.props.navigation.setParams({
+            setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
+        });
     }
+
+    public setDashboardMenuBottomSheet = () => {
+        this.props.openBottomSheet(BottomSheetType.DASHBOARD_MENU);
+    };
 
     public renderBottomBlockchainNav = () => {
         const styles = this.props.styles;
@@ -217,49 +209,50 @@ export class DashboardScreenComponent extends React.Component<
         const styles = this.props.styles;
         const { blockchains } = this.props;
         const blockchain: Blockchain = this.props.selectedBlockchain;
-        const showCreateAccount =
-            this.props.isCreateAccount && this.props.selectedBlockchain === Blockchain.NEAR;
+        const showCreateAccount = this.props.isCreateAccount;
 
         return (
             <View style={styles.container}>
                 {showCreateAccount && (
                     <AccountCreate blockchain={blockchain} navigation={this.props.navigation} />
                 )}
-                <View style={styles.dashboardContainer}>
-                    <View style={styles.coinBalanceCard}>
+                {!showCreateAccount && (
+                    <View style={styles.dashboardContainer}>
+                        <View style={styles.coinBalanceCard}>
+                            {this.props.selectedAccount && (
+                                <CoinBalanceCard
+                                    key={this.props.selectedAccount.address}
+                                    onPress={() =>
+                                        this.props.openBottomSheet(BottomSheetType.ACCOUNTS, {
+                                            blockchain
+                                        })
+                                    }
+                                    balance={calculateBalance(
+                                        this.props.selectedAccount,
+                                        this.props.exchangeRates
+                                    )}
+                                    blockchain={blockchain}
+                                    currency={getBlockchain(blockchain).config.coin}
+                                    toCurrency="USD"
+                                    active={true}
+                                    selectedAccount={this.props.selectedAccount}
+                                />
+                            )}
+                        </View>
+
                         {this.props.selectedAccount && (
-                            <CoinBalanceCard
-                                key={this.props.selectedAccount.address}
-                                onPress={() =>
-                                    this.props.openBottomSheet(BottomSheetType.ACCOUNTS, {
-                                        blockchain
-                                    })
-                                }
-                                balance={calculateBalance(
-                                    this.props.selectedAccount,
-                                    this.props.exchangeRates
-                                )}
-                                blockchain={blockchain}
-                                currency={getBlockchain(blockchain).config.coin}
-                                toCurrency="USD"
-                                active={true}
-                                selectedAccount={this.props.selectedAccount}
-                            />
+                            <Animated.View
+                                style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
+                            >
+                                <TokenDashboard
+                                    account={this.props.selectedAccount}
+                                    blockchain={blockchain}
+                                    navigation={this.props.navigation}
+                                />
+                            </Animated.View>
                         )}
                     </View>
-
-                    {this.props.selectedAccount && (
-                        <Animated.View
-                            style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
-                        >
-                            <TokenDashboard
-                                account={this.props.selectedAccount}
-                                blockchain={blockchain}
-                                navigation={this.props.navigation}
-                            />
-                        </Animated.View>
-                    )}
-                </View>
+                )}
 
                 {blockchains.length > 1 && this.renderBottomBlockchainNav()}
             </View>

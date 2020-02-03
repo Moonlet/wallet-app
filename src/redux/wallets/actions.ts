@@ -27,9 +27,10 @@ import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
 import { BottomSheetType } from '../ui/bottomSheet/state';
 import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
-import { getSelectedWallet, getSelectedAccount } from './selectors';
+import { getSelectedWallet, getSelectedAccount, getAccounts } from './selectors';
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
+import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -78,6 +79,17 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
             blockchain
         }
     });
+
+    if (blockchain === Blockchain.NEAR) {
+        if (getAccounts(state, blockchain).length === 0) {
+            dispatch(enableCreateAccount());
+        } else {
+            dispatch(disableCreateAccount());
+        }
+    } else {
+        dispatch(disableCreateAccount());
+    }
+
     const selectedAccount = getSelectedAccount(state);
     setSelectedAccount({ index: selectedAccount.index, blockchain: selectedAccount.blockchain })(
         dispatch,
@@ -493,6 +505,8 @@ export const createAccount = (
         };
 
         dispatch(addAccount(selectedWallet.id, blockchain, account));
+        dispatch(setSelectedAccount({ index: account.index, blockchain: account.blockchain }));
+        dispatch(disableCreateAccount());
     } else {
         // TODO - if client.createAccount crashes, dashboard (near create account section) will be stuck on loading indicator
     }

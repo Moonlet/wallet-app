@@ -17,9 +17,11 @@ export interface INetworksOptions {
     };
 }
 
+export interface IBlockchainOptions {
+    order: number;
+    active: boolean;
+}
+
 export interface IBlockchainsOptions {
-    [blockchain: string]: {
-        order: number;
-        active: boolean;
-    };
+    [blockchain: string]: IBlockchainOptions;
 }

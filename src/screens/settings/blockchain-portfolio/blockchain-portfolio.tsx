@@ -9,7 +9,7 @@ import { Icon } from '../../../components/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
-import { IBlockchainsOptions } from '../../../redux/preferences/state';
+import { IBlockchainOptions } from '../../../redux/preferences/state';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import { setBlockchainActive, setBlockchainOrder } from '../../../redux/preferences/actions';
 import { Blockchain } from '../../../core/blockchain/types';
@@ -17,7 +17,7 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 export interface IReduxProps {
-    blockchains: [{ key: Blockchain; value: IBlockchainsOptions }];
+    blockchains: [{ key: Blockchain; value: IBlockchainOptions }];
     setBlockchainActive: typeof setBlockchainActive;
     setBlockchainOrder: typeof setBlockchainOrder;
 }
@@ -51,7 +51,7 @@ export class BlockchainPortfolioComponent extends React.Component<
     }
 
     public renderBlockchain(
-        item: { key: Blockchain; value: IBlockchainsOptions },
+        item: { key: Blockchain; value: IBlockchainOptions },
         move: () => void,
         isActive: boolean
     ) {
@@ -89,9 +89,7 @@ export class BlockchainPortfolioComponent extends React.Component<
                 </View>
                 <TouchableOpacity
                     style={styles.iconContainer}
-                    onPressOut={() =>
-                        this.props.setBlockchainActive(item.key, item.value.active ? false : true)
-                    }
+                    onPressOut={() => this.props.setBlockchainActive(item.key, !item.value.active)}
                 >
                     <Icon
                         size={18}
@@ -122,7 +120,7 @@ export class BlockchainPortfolioComponent extends React.Component<
                     renderItem={({ item, drag, isActive }) =>
                         this.renderBlockchain(item, drag, isActive)
                     }
-                    keyExtractor={(item: { key: Blockchain; value: IBlockchainsOptions }) =>
+                    keyExtractor={(item: { key: Blockchain; value: IBlockchainOptions }) =>
                         `${item.value.order}`
                     }
                     onDragEnd={({ data }) => {
@@ -131,7 +129,10 @@ export class BlockchainPortfolioComponent extends React.Component<
                                 {},
                                 ...data.map(
                                     (
-                                        item: { key: Blockchain; value: IBlockchainsOptions },
+                                        item: {
+                                            key: Blockchain;
+                                            value: IBlockchainOptions;
+                                        },
                                         index: number
                                     ) => ({
                                         [item.key]: { ...item.value, order: index }

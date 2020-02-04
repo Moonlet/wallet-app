@@ -1,4 +1,4 @@
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions, NavigationParams } from 'react-navigation';
 
 export const NavigationService = (() => {
     let navigator;
@@ -7,7 +7,7 @@ export const NavigationService = (() => {
         navigator = navigatorRef;
     };
 
-    const navigate = (routeName, params) => {
+    const navigate = (routeName: string, params: NavigationParams) => {
         navigator.dispatch(
             NavigationActions.navigate({
                 routeName,
@@ -16,8 +16,29 @@ export const NavigationService = (() => {
         );
     };
 
+    const replace = (routeName: string, params: NavigationParams) => {
+        navigator.dispatch(
+            StackActions.replace({
+                routeName,
+                params
+            })
+        );
+    };
+
+    const getRecursiveRoute = routeState => {
+        if (Array.isArray(routeState.routes)) {
+            return getRecursiveRoute(routeState.routes[routeState.index]);
+        } else {
+            return routeState.routeName;
+        }
+    };
+
+    const getCurrentRoute = () => navigator && getRecursiveRoute(navigator.state.nav);
+
     return {
         setTopLevelNavigator,
-        navigate
+        navigate,
+        replace,
+        getCurrentRoute
     };
 })();

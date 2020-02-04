@@ -19,7 +19,8 @@ import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain
 import {
     getSelectedWallet,
     getSelectedAccount,
-    getSelectedBlockchain
+    getSelectedBlockchain,
+    selectedBlockchainHasAccounts
 } from '../../redux/wallets/selectors';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
@@ -42,6 +43,7 @@ export interface IReduxProps {
     exchangeRates: any;
     setSelectedBlockchain: typeof setSelectedBlockchain;
     isCreateAccount: boolean;
+    hasAccounts: boolean;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -53,7 +55,8 @@ const mapStateToProps = (state: IReduxState) => ({
     selectedBlockchain: getSelectedBlockchain(state),
     selectedAccount: getSelectedAccount(state),
     exchangeRates: (state as any).market.exchangeRates,
-    isCreateAccount: state.ui.screens.dashboard.isCreateAccount
+    isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
+    hasAccounts: selectedBlockchainHasAccounts(state)
 });
 
 const mapDispatchToProps = {
@@ -209,7 +212,7 @@ export class DashboardScreenComponent extends React.Component<
         const styles = this.props.styles;
         const { blockchains } = this.props;
         const blockchain: Blockchain = this.props.selectedBlockchain;
-        const showCreateAccount = this.props.isCreateAccount;
+        const showCreateAccount = this.props.isCreateAccount || !this.props.hasAccounts;
 
         return (
             <View style={styles.container}>

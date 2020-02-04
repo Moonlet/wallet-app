@@ -29,7 +29,7 @@ test('renders correctly', async () => {
     expect(element.state.appReady).toBe(false);
     expect(element.translationsLoaded).toBe(false);
     expect(element.remoteFeatureConfigLoaded).toBe(false);
-    expect(element.reduxStateLoaded).toBe(false);
+    expect(element.reduxStateLoaded).toBe(true);
     expect(element.state.splashAnimationDone).toBe(false);
 
     (storeMock as any).triggerStoreSubscribe();

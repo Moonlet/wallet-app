@@ -19,13 +19,12 @@ export interface IProps {
 
 const conversionCards = ['USD', 'BTC', 'ETH'];
 
-export const CoinDashboardComponent = (props: IProps) => (
+export const TokenDashboardComponent = (props: IProps) => (
     <View style={props.styles.container}>
         <View style={props.styles.exchangeCardContainer}>
             {props.blockchain &&
                 conversionCards.map(
                     (toCurrency, i) =>
-                        BLOCKCHAIN_INFO[props.blockchain] &&
                         BLOCKCHAIN_INFO[props.blockchain].coin !== toCurrency && (
                             <ConversionCard
                                 key={i}
@@ -55,4 +54,4 @@ export const CoinDashboardComponent = (props: IProps) => (
         </ScrollView>
     </View>
 );
-export const CoinDashboard = withTheme(stylesProvider)(CoinDashboardComponent);
+export const TokenDashboard = withTheme(stylesProvider)(TokenDashboardComponent);

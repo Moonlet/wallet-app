@@ -70,7 +70,7 @@ export default (state: IPrefState = initialState, action: IAction): IPrefState =
                     ...state.blockchains,
                     [action.data.blockchain]: {
                         ...state.blockchains[action.data.blockchain],
-                        active: !state.blockchains[action.data.blockchain].active
+                        active: action.data.active
                     }
                 }
             };

@@ -42,6 +42,6 @@ export const config: IBlockchainConfig = {
     },
     ui: {
         addressDisplay: 'stripped',
-        enableTokenManagement: true
+        enableTokenManagement: false
     }
 };

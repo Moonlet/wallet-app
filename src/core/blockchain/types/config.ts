@@ -35,5 +35,6 @@ export interface IBlockchainConfig {
     };
     ui: {
         addressDisplay?: 'stripped';
+        enableTokenManagement: boolean;
     };
 }

@@ -13,7 +13,6 @@ import { getSelectedAccount, getAccounts } from '../../../redux/wallets/selector
 import { connect } from 'react-redux';
 import { formatAddress } from '../../../core/utils/format-address';
 import { ListAccount } from '../../../screens/token/components/list-account/list-account';
-import { Blockchain } from '../../../core/blockchain/types';
 import { Amount } from '../../amount/amount';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { calculateBalance } from '../../../core/utils/balance';
@@ -82,6 +81,8 @@ export class AccountsBottomSheetComponent extends React.Component<
             </View>
         );
 
+        const blockchainConfig = getBlockchain(this.props.selectedAccount.blockchain).config;
+
         return (
             <View
                 style={[
@@ -148,16 +149,10 @@ export class AccountsBottomSheetComponent extends React.Component<
                     );
                 })}
 
-                {this.props.selectedAccount.blockchain === Blockchain.NEAR &&
-                    this.props.accounts.length <
-                        getBlockchain(this.props.selectedAccount.blockchain).config.ui
-                            .maxAccountsNumber && (
+                {blockchainConfig.ui.enableAccountCreation &&
+                    this.props.accounts.length < blockchainConfig.ui.maxAccountsNumber && (
                         <ListAccount
-                            leftIcon={
-                                this.props.selectedAccount.tokens[
-                                    getBlockchain(this.props.selectedAccount.blockchain).config.coin
-                                ].logo
-                            }
+                            leftIcon={this.props.selectedAccount.tokens[blockchainConfig.coin].logo}
                             isCreate
                             label={createAccountLabel}
                             onPress={() => {

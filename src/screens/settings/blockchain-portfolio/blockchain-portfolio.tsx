@@ -89,7 +89,9 @@ export class BlockchainPortfolioComponent extends React.Component<
                 </View>
                 <TouchableOpacity
                     style={styles.iconContainer}
-                    onPressOut={() => this.props.setBlockchainActive(item.key)}
+                    onPressOut={() =>
+                        this.props.setBlockchainActive(item.key, item.value.active ? false : true)
+                    }
                 >
                     <Icon
                         size={18}

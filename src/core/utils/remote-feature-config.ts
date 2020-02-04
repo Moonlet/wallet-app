@@ -30,6 +30,9 @@ export const getRemoteConfigFeatures = async () => {
 };
 
 export const isFeatureActive = (feature: RemoteFeature): boolean => {
+    if (__DEV__) {
+        return true;
+    }
     if (feature === RemoteFeature.NEAR) {
         const values = JSON.parse(featuresConfig[feature]);
         const uniqueId = values.filter(id => id === DeviceInfo.getUniqueId());

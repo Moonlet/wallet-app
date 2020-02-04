@@ -71,7 +71,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "blockchain": "ZILLIQA",
               "index": 0,
               "publicKey": "0310a8a9ad39c2c9a878bf1a42895ee122806d1f4cf510f604d274b04f5a5854cc",
-              "selected": false,
+              "selected": true,
               "tokens": Object {
                 "ZIL": Object {
                   "active": true,

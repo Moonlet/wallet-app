@@ -40,6 +40,7 @@ export const config: IBlockchainConfig = {
         }
     },
     ui: {
-        enableTokenManagement: false
+        enableTokenManagement: false,
+        maxAccountsNumber: 5
     }
 };

@@ -148,21 +148,24 @@ export class AccountsBottomSheetComponent extends React.Component<
                     );
                 })}
 
-                {this.props.selectedAccount.blockchain === Blockchain.NEAR && (
-                    <ListAccount
-                        leftIcon={
-                            this.props.selectedAccount.tokens[
-                                getBlockchain(this.props.selectedAccount.blockchain).config.coin
-                            ].logo
-                        }
-                        isCreate
-                        label={createAccountLabel}
-                        onPress={() => {
-                            this.props.onCloseEnd();
-                            this.props.enableCreateAccount();
-                        }}
-                    />
-                )}
+                {this.props.selectedAccount.blockchain === Blockchain.NEAR &&
+                    this.props.accounts.length <
+                        getBlockchain(this.props.selectedAccount.blockchain).config.ui
+                            .maxAccountsNumber && (
+                        <ListAccount
+                            leftIcon={
+                                this.props.selectedAccount.tokens[
+                                    getBlockchain(this.props.selectedAccount.blockchain).config.coin
+                                ].logo
+                            }
+                            isCreate
+                            label={createAccountLabel}
+                            onPress={() => {
+                                this.props.onCloseEnd();
+                                this.props.enableCreateAccount();
+                            }}
+                        />
+                    )}
             </View>
         );
     };

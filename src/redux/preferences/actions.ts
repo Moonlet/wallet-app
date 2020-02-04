@@ -15,14 +15,14 @@ export const PREF_SET_BLOCKCHAIN_ACTIVE_STATE = 'PREF_SET_BLOCKCHAIN_ACTIVE_STAT
 export const PREF_SET_BLOCKCHAIN_ORDER = 'PREF_SET_BLOCKCHAIN_ORDER';
 export const PREF_SET_NETWORK_TEST_NET_CHAIN_ID = 'PREF_SET_NETWORK_TEST_NET_CHAIN_ID';
 
-export const setBlockchainActive = (blockchain: Blockchain, isActive: boolean) => (
+export const setBlockchainActive = (blockchain: Blockchain, active: boolean) => (
     dispatch: Dispatch<IAction>,
     getState: () => IReduxState
 ) => {
     const state = getState();
     const selectedBlockchain = getSelectedBlockchain(state);
 
-    if (selectedBlockchain === blockchain && isActive === true) {
+    if (selectedBlockchain === blockchain && active === false) {
         const nextBlockchain = Object.keys(state.preferences.blockchains).find(
             object => object !== blockchain
         );
@@ -32,7 +32,7 @@ export const setBlockchainActive = (blockchain: Blockchain, isActive: boolean) =
     }
     dispatch({
         type: PREF_SET_BLOCKCHAIN_ACTIVE_STATE,
-        data: { blockchain, active: !isActive }
+        data: { blockchain, active }
     });
 };
 

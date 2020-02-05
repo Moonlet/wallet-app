@@ -21,7 +21,6 @@ import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
 import { REVIEW_TRANSACTION } from '../ui/screens/send/actions';
-import { ISelectedAccount } from '../wallets/state';
 import { REHYDRATE } from 'redux-persist';
 import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
@@ -91,7 +90,7 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
     }
 };
 
-export const setSelectedAccount = (selectedAccount: ISelectedAccount) => (
+export const setSelectedAccount = (account: IAccountState) => (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
@@ -103,7 +102,8 @@ export const setSelectedAccount = (selectedAccount: ISelectedAccount) => (
         type: WALLET_SELECT_ACCOUNT,
         data: {
             walletId: wallet.id,
-            selectedAccount
+            blockchain: account.blockchain,
+            index: account.index
         }
     });
 };
@@ -499,7 +499,7 @@ export const createAccount = (
         };
 
         dispatch(addAccount(selectedWallet.id, blockchain, account));
-        dispatch(setSelectedAccount({ index: account.index, blockchain: account.blockchain }));
+        dispatch(setSelectedAccount(account));
         dispatch(disableCreateAccount());
     } else {
         // TODO - if client.createAccount crashes, dashboard (near create account section) will be stuck on loading indicator

@@ -106,8 +106,8 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                 [action.data.walletId]: {
                     ...state[action.data.walletId],
                     accounts: state[action.data.walletId].accounts.map(account => {
-                        if (account.blockchain === action.data.selectedAccount.blockchain) {
-                            account.selected = account.index === action.data.selectedAccount.index;
+                        if (account.blockchain === action.data.blockchain) {
+                            account.selected = account.index === action.data.index;
                         }
 
                         return account;

@@ -1,27 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`creat wallet terms screen component renders correctly 1`] = `
-"<KeyboardAvoidingView style={{...}} enabled={true} keyboardVerticalOffset={0}>
+"<View style={{...}}>
+  <withTheme(TextComponent) darker={true} style={{...}}>
+    To make sure you have written down all of your recovery words, please enter the following:
+  </withTheme(TextComponent)>
   <View style={{...}}>
-    <withTheme(TextComponent) darker={true} style={{...}}>
-      To make sure you have written down all of your recovery words, please enter the following:
-    </withTheme(TextComponent)>
-    <View style={{...}}>
-      <TextInput style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Word #1\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-0\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-      <TextInput style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Word #2\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-1\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-      <TextInput style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Word #3\\" autoCapitalize=\\"none\\" autoCorrect={false} selectionColor=\\"#00DAFF\\" onChangeText={[Function]} testID=\\"input-password-2\\" allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-    </View>
-    <withTheme(TextComponent) darker={true} small={true}>
-      panic 
-      club 
-      above 
-    </withTheme(TextComponent)>
+    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #1\\" showBorderBottomColor={false} />
+    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #2\\" showBorderBottomColor={false} />
+    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #3\\" showBorderBottomColor={false} />
   </View>
-  <View style={{...}}>
-    <withTheme(ButtonComponent) testID=\\"button-confirm\\" style={{...}} primary={true} disabled={true} onPress={[Function: onPress]}>
-      Confirm
-    </withTheme(ButtonComponent)>
-  </View>
+  <withTheme(TextComponent) darker={true} small={true}>
+    panic 
+    club 
+    above 
+  </withTheme(TextComponent)>
+  <withTheme(KeyboardComponent) handleTextUpdate={[Function: handleTextUpdate]} handleDeleteKey={[Function: handleDeleteKey]} buttons={{...}} disableSpace={true} />
   <withTheme(PasswordModalComponent) shouldCreatePassword={true} subtitle=\\"Your PIN is required to view mnemonic\\" obRef={[Function: obRef]} />
-</KeyboardAvoidingView>"
+</View>"
 `;

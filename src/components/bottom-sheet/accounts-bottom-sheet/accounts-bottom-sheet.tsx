@@ -139,12 +139,13 @@ export class AccountsBottomSheetComponent extends React.Component<
                             rightIcon={selected ? 'check-1' : undefined}
                             label={label}
                             selected={selected}
-                            onPress={() =>
+                            onPress={() => {
+                                this.props.onCloseEnd();
                                 this.props.setSelectedAccount({
                                     index: account.index,
                                     blockchain
-                                })
-                            }
+                                });
+                            }}
                         />
                     );
                 })}

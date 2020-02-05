@@ -5,12 +5,12 @@ import { BASE_DIMENSION } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingHorizontal: 16,
-            paddingTop: 30,
+            flex: 1,
+            paddingHorizontal: BASE_DIMENSION * 2,
+            paddingTop: BASE_DIMENSION * 4,
             alignItems: 'center',
             justifyContent: 'space-between',
-            backgroundColor: theme.colors.appBackground,
-            height: '100%'
+            backgroundColor: theme.colors.appBackground
         },
 
         topContainer: {
@@ -49,5 +49,13 @@ export default (theme: ITheme) =>
 
         bottomButton: {
             width: '80%'
+        },
+
+        errorMessage: {
+            fontSize: 15,
+            lineHeight: 19,
+            color: theme.colors.error,
+            textAlign: 'center',
+            marginBottom: BASE_DIMENSION * 2
         }
     });

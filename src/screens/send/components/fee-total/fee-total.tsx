@@ -30,6 +30,7 @@ export class FeeTotalComponent extends React.Component<
                         blockchain={this.props.blockchain}
                         token={this.props.token.symbol}
                         tokenDecimals={this.props.token.decimals}
+                        uiDecimals={20} // TODO: remove this
                     />
                 </View>
                 <View style={styles.containerFeeConverted}>

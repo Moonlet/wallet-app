@@ -78,18 +78,12 @@ export const getAccounts = (state: IReduxState, blockchain: Blockchain): IAccoun
     return accounts;
 };
 
-export const selectedBlockchainHasAccounts = (state: IReduxState): boolean => {
-    const hasAccounts = getSelectedWallet(state).accounts.find(acc => {
+export const getSelectedBlockchainAccounts = (state: IReduxState): IAccountState[] => {
+    return getSelectedWallet(state).accounts.filter(acc => {
         if (acc.blockchain === getSelectedBlockchain(state)) {
             return acc;
         }
     });
-
-    if (hasAccounts) {
-        return true;
-    } else {
-        return false;
-    }
 };
 
 export const getAccount = (

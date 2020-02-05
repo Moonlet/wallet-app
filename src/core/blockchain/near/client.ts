@@ -52,9 +52,9 @@ export class Client extends BlockchainGenericClient {
         amount?,
         contractAddress?
     ): Promise<IFeeOptions> {
-        const gasPrice = config.feeOptions.defaults.gasPrice.toString();
-        const gasLimit = config.feeOptions.defaults.gasLimit.toString();
-        const feeTotal = new BigNumber(gasPrice).multipliedBy(new BigNumber(gasLimit)).toString();
+        const gasPrice = config.feeOptions.defaults.gasPrice.toFixed();
+        const gasLimit = config.feeOptions.defaults.gasLimit.toFixed();
+        const feeTotal = new BigNumber(gasPrice).multipliedBy(new BigNumber(gasLimit)).toFixed();
 
         return {
             gasPrice,

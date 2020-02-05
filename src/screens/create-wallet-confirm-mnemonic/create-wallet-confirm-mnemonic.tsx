@@ -204,8 +204,7 @@ export class CreateWalletConfirmMnemonicScreenComponent extends React.Component<
                                         this.state.testWords.indexOf(this.state.indexInputFocus) + 1
                                     ]
                                 );
-                            },
-                            disabled: this.allInputsFilled()
+                            }
                         },
                         {
                             label: translate('App.labels.confirm'),

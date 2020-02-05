@@ -18,12 +18,10 @@ export default (theme: ITheme) =>
             marginTop: BASE_DIMENSION * 20
         },
         inputWrapper: {
-            // flexDirection: 'column',
             paddingVertical: BASE_DIMENSION,
             height: 40,
             borderRadius: BORDER_RADIUS,
             borderColor: theme.colors.inputBackground,
-            // justifyContent: 'center',
             color: theme.colors.text,
             backgroundColor: theme.colors.inputBackground,
             paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2,
@@ -38,6 +36,6 @@ export default (theme: ITheme) =>
             lineHeight: 19,
             color: theme.colors.error,
             textAlign: 'center',
-            marginBottom: BASE_DIMENSION * 2
+            marginVertical: BASE_DIMENSION * 2
         }
     });

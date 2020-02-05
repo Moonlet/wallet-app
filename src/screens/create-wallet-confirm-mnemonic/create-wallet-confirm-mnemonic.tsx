@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Clipboard } from 'react-native';
+import { View } from 'react-native';
 import { Text } from '../../library';
 import {
     NavigationParams,
@@ -19,8 +19,6 @@ import { INavigationProps } from '../../navigation/with-navigation-params';
 import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom';
 import { TextInput } from '../../components/text-input/text-input';
 
-// const NUMBER_MNEMONICS = 3;
-
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
     styles: ReturnType<typeof stylesProvider>;
@@ -39,7 +37,7 @@ export interface IState {
     mnemonic: string[];
 
     // holds index of three random words from mnemonic
-    testWords: [];
+    testWords: number[];
 
     // holds user input
     mnemonicsInput: {};
@@ -158,6 +156,22 @@ export class CreateWalletConfirmMnemonicScreenComponent extends React.Component<
         }
     };
 
+    public focusInput(index: number) {
+        // Blur previous word
+        const previousIndex = this.state.indexInputFocus;
+
+        if (previousIndex > -1 && this.inputView[previousIndex]) {
+            this.inputView[this.state.indexInputFocus].blur();
+        }
+
+        // Focus current word
+        if (index > -1 && this.inputView[index]) {
+            this.inputView[index].focus();
+        }
+
+        this.setState({ indexInputFocus: index });
+    }
+
     public render() {
         return (
             <View style={this.props.styles.container}>
@@ -166,16 +180,16 @@ export class CreateWalletConfirmMnemonicScreenComponent extends React.Component<
                 </Text>
 
                 <View style={this.props.styles.inputContainer}>
+                    {this.state.testWords.map(n => this.getWordInput(n, this.props.styles))}
                     {this.state.error && (
                         <Text style={this.props.styles.errorMessage}>
                             {translate('CreateWalletMnemonicConfirm.errors.tryAgain')}
                         </Text>
                     )}
-                    {this.state.testWords.map((n, i) => this.getWordInput(n, this.props.styles))}
                 </View>
 
                 <Text darker small>
-                    {this.state.testWords.map((n, i) => this.state.mnemonic[n] + ' ')}
+                    {this.state.testWords.map(n => this.state.mnemonic[n] + ' ')}
                 </Text>
 
                 <KeyboardCustom
@@ -183,14 +197,16 @@ export class CreateWalletConfirmMnemonicScreenComponent extends React.Component<
                     handleDeleteKey={() => this.deleteMnemonicText()}
                     buttons={[
                         {
-                            label: translate('App.labels.paste'),
-                            onPress: () => this.pasteFromClipboard()
+                            label: translate('App.labels.nextWord'),
+                            onPress: () => {
+                                this.focusInput(
+                                    this.state.testWords[
+                                        this.state.testWords.indexOf(this.state.indexInputFocus) + 1
+                                    ]
+                                );
+                            },
+                            disabled: this.allInputsFilled()
                         },
-                        // {
-                        //     label: translate('App.labels.nextWord'),
-                        //     onPress: () => this.focusInput(this.state.indexInputFocus + 1),
-                        //     disabled: this.allInputsFilled()
-                        // },
                         {
                             label: translate('App.labels.confirm'),
                             onPress: () => this.confirm(),
@@ -208,42 +224,6 @@ export class CreateWalletConfirmMnemonicScreenComponent extends React.Component<
                 />
             </View>
         );
-    }
-
-    private focusInput(index: number) {
-        // Blur previous word
-        // const previousIndex = this.state.indexInputFocus;
-
-        this.setState({ indexInputFocus: index });
-
-        // if (
-        //     previousIndex > -1 &&
-        //     previousIndex < NUMBER_MNEMONICS &&
-        //     this.inputView[previousIndex]
-        // ) {
-        //     this.inputView[this.state.indexInputFocus].blur();
-        // }
-        // // Focus current word
-        // if (index > -1 && index < NUMBER_MNEMONICS && this.inputView[index]) {
-        //     this.inputView[index].focus();
-        // }
-        // this.setState({
-        //     suggestions: this.getSuggestions(this.state.mnemonic[index]),
-        //     indexForSuggestions: index
-        // });
-    }
-
-    private async pasteFromClipboard() {
-        let clipboardText = await Clipboard.getString();
-        if (clipboardText) {
-            const input = this.state.mnemonicsInput[this.state.indexInputFocus];
-
-            clipboardText = input
-                ? this.state.mnemonicsInput[this.state.indexInputFocus] + clipboardText
-                : clipboardText;
-
-            this.setMnemonicText(clipboardText);
-        }
     }
 }
 

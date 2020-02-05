@@ -5,8 +5,7 @@ export enum RemoteFeature {
 export const getRemoteConfigFeatures = () => {
     // TODO: decide if 1 hour should be the optimal fetch duration
     // set fetch cache duration to 1 hour for live environment
-
-    return undefined;
+    return Promise.resolve();
 };
 
 export const isFeatureActive = (feature: RemoteFeature): boolean => {

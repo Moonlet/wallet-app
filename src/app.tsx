@@ -38,6 +38,16 @@ interface IState {
 WalletConnectClient.setStore(store);
 WalletConnectWeb.setStore(store);
 
+const takeOneAndSubscribeToStore = (reduxStore, callback) => {
+    const state = reduxStore?.getState();
+
+    if (state) {
+        callback(state);
+    }
+
+    return reduxStore.subscribe(() => callback(reduxStore.getState()));
+};
+
 export default class App extends React.Component<{}, IState> {
     public interval: any = null;
     private translationsLoaded: boolean = false;
@@ -65,32 +75,6 @@ export default class App extends React.Component<{}, IState> {
         loadTranslations('en').then(() => {
             this.translationsLoaded = true;
             this.updateAppReady();
-        });
-
-        this.unsub = store.subscribe(() => {
-            if (store.getState()._persist.rehydrated) {
-                if (!this.reduxStateLoaded) {
-                    this.reduxStateLoaded = true;
-
-                    // trigger extension getState after state was loaded from storage
-                    Platform.OS === 'web' &&
-                        WalletConnectWeb.isConnected() &&
-                        WalletConnectWeb.getState();
-
-                    this.updateAppReady();
-                }
-            }
-
-            if (Platform.OS === 'web' && store.getState().ui.extension.stateLoaded) {
-                if (!this.extensionStateLoaded) {
-                    this.extensionStateLoaded = true;
-                    this.updateAppReady();
-                }
-            }
-
-            if (this.reduxStateLoaded && this.extensionStateLoaded) {
-                this.unsub && this.unsub();
-            }
         });
 
         // decide the bar style on lightTheme
@@ -136,6 +120,32 @@ export default class App extends React.Component<{}, IState> {
             () => this.setState({ splashAnimationDone: true }, () => this.updateAppReady()),
             1000
         );
+
+        this.unsub = takeOneAndSubscribeToStore(store, () => {
+            if (store.getState()._persist.rehydrated) {
+                if (!this.reduxStateLoaded) {
+                    this.reduxStateLoaded = true;
+
+                    // trigger extension getState after state was loaded from storage
+                    Platform.OS === 'web' &&
+                        WalletConnectWeb.isConnected() &&
+                        WalletConnectWeb.getState();
+
+                    this.updateAppReady();
+                }
+            }
+
+            if (Platform.OS === 'web' && store.getState().ui.extension.stateLoaded) {
+                if (!this.extensionStateLoaded) {
+                    this.extensionStateLoaded = true;
+                    this.updateAppReady();
+                }
+            }
+
+            if (this.reduxStateLoaded && this.extensionStateLoaded) {
+                this.unsub && this.unsub();
+            }
+        });
     }
 
     public componentWillUnmount() {

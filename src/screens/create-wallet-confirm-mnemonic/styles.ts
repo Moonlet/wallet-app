@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,49 +8,31 @@ export default (theme: ITheme) =>
             flex: 1,
             paddingHorizontal: BASE_DIMENSION * 2,
             paddingTop: BASE_DIMENSION * 4,
+            paddingBottom: BASE_DIMENSION * 7,
             alignItems: 'center',
-            justifyContent: 'space-between',
             backgroundColor: theme.colors.appBackground
         },
-
-        topContainer: {
-            flex: 1,
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            alignSelf: 'stretch',
-            paddingTop: 40,
-            paddingBottom: 60
-        },
-
-        bottomContainer: {
-            flex: 0,
-            justifyContent: 'center',
-            alignSelf: 'stretch',
-            alignItems: 'center',
-            marginBottom: BASE_DIMENSION * 6
-        },
-
         inputContainer: {
             alignSelf: 'stretch',
-            flex: 1,
-            justifyContent: 'center'
+            justifyContent: 'center',
+            marginTop: BASE_DIMENSION * 20
         },
-
-        input: {
+        inputWrapper: {
+            // flexDirection: 'column',
+            paddingVertical: BASE_DIMENSION,
             height: 40,
-            borderRadius: 6,
-            borderColor: 'gray',
-            alignSelf: 'stretch',
+            borderRadius: BORDER_RADIUS,
+            borderColor: theme.colors.inputBackground,
+            // justifyContent: 'center',
             color: theme.colors.text,
             backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: 12,
-            marginBottom: 20
+            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2,
+            marginBottom: BASE_DIMENSION * 3
         },
-
-        bottomButton: {
-            width: '80%'
+        inputText: {
+            fontSize: 14,
+            lineHeight: 21
         },
-
         errorMessage: {
             fontSize: 15,
             lineHeight: 19,

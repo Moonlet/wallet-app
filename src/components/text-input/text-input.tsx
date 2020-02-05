@@ -7,11 +7,14 @@ import { smartConnect } from '../../core/utils/smart-connect';
 export interface IExternalProps {
     word: string;
     style?: any;
+    styleInputText?: any;
     onFocus?: any;
     onBlur?: any;
     obRef?: any;
     isFocus?: boolean;
     isValid?: boolean;
+    placeholder?: string;
+    showBorderBottomColor: boolean;
 }
 
 interface IState {
@@ -61,7 +64,7 @@ export class TextInputComponent extends React.Component<
         clearInterval(this.cursorInterval);
         this.setState({ cursorWidth: 0 });
         this.cursorInterval = null;
-        this.props.onBlur();
+        this.props.onBlur && this.props.onBlur();
     }
 
     public render() {
@@ -78,7 +81,10 @@ export class TextInputComponent extends React.Component<
             <View
                 style={[
                     styles.container,
-                    { borderBottomColor: containerBorderBottomColor },
+                    {
+                        borderBottomColor:
+                            this.props.showBorderBottomColor && containerBorderBottomColor
+                    },
                     this.props.style
                 ]}
                 onStartShouldSetResponderCapture={() => {
@@ -92,10 +98,13 @@ export class TextInputComponent extends React.Component<
                     ellipsizeMode="head"
                     style={[
                         styles.text,
-                        { color: this.props.isFocus ? theme.colors.accent : theme.colors.text }
+                        { color: this.props.isFocus ? theme.colors.accent : theme.colors.text },
+                        this.props.styleInputText
                     ]}
                 >
-                    {this.props.word}
+                    {this.props.placeholder && this.props.word === '' && !this.props.isFocus
+                        ? this.props.placeholder
+                        : this.props.word}
                 </Text>
                 <View style={[styles.cursor, { width: this.state.cursorWidth }]} />
             </View>

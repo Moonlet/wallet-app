@@ -39,5 +39,9 @@ export const config: IBlockchainConfig = {
             gasPriceUnit: 'YNEAR'
         }
     },
-    ui: {}
+    ui: {
+        enableTokenManagement: false,
+        enableAccountCreation: true,
+        maxAccountsNumber: 5
+    }
 };

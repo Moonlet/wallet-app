@@ -479,8 +479,6 @@ export class SendScreenComponent extends React.Component<
                     {this.state.isValidAddress && this.renderBasicFields()}
 
                     {!this.state.isValidAddress && this.renderListOrBook()}
-
-                    {/* </KeyboardAvoidingView> */}
                 </ScrollView>
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />
 

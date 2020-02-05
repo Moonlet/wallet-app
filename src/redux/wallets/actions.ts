@@ -27,7 +27,7 @@ import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
 import { BottomSheetType } from '../ui/bottomSheet/state';
 import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
-import { getSelectedWallet, getSelectedAccount, getAccounts } from './selectors';
+import { getSelectedWallet, getAccounts } from './selectors';
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
@@ -89,12 +89,6 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
     } else {
         dispatch(disableCreateAccount());
     }
-
-    const selectedAccount = getSelectedAccount(state);
-    setSelectedAccount({ index: selectedAccount.index, blockchain: selectedAccount.blockchain })(
-        dispatch,
-        getState
-    );
 };
 
 export const setSelectedAccount = (selectedAccount: ISelectedAccount) => (
@@ -350,7 +344,7 @@ export const sendTransferTransaction = (
             toAddress,
             amount: blockchainInstance.account
                 .amountToStd(amount, account.tokens[token].decimals)
-                .toString(),
+                .toFixed(),
             token,
             nonce,
             currentBlockHash: blockInfo.hash,

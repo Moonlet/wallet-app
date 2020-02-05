@@ -29,8 +29,8 @@ export const config: IBlockchainConfig = {
     feeOptions: {
         gasPriceToken: 'NEAR',
         defaults: {
-            gasPrice: new BigNumber('937144500000'),
-            gasLimit: new BigNumber('1')
+            gasPrice: new BigNumber('10000'),
+            gasLimit: new BigNumber('937144600000')
         },
         ui: {
             availableTokenTypes: [],
@@ -39,5 +39,9 @@ export const config: IBlockchainConfig = {
             gasPriceUnit: 'YNEAR'
         }
     },
-    ui: {}
+    ui: {
+        enableTokenManagement: false,
+        enableAccountCreation: true,
+        maxAccountsNumber: 5
+    }
 };

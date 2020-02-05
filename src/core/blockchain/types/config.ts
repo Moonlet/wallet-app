@@ -35,5 +35,8 @@ export interface IBlockchainConfig {
     };
     ui: {
         addressDisplay?: 'stripped';
+        enableTokenManagement: boolean;
+        enableAccountCreation: boolean;
+        maxAccountsNumber: number;
     };
 }

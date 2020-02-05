@@ -12,6 +12,7 @@ import { PublicKey, KeyPair, serialize } from 'nearlib/src.ts/utils';
 import BN from 'bn.js';
 import BigNumber from 'bignumber.js';
 import sha256 from 'js-sha256';
+import { config } from './config';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -51,9 +52,14 @@ export class Client extends BlockchainGenericClient {
         amount?,
         contractAddress?
     ): Promise<IFeeOptions> {
+        const gasPrice = config.feeOptions.defaults.gasPrice.toFixed();
+        const gasLimit = config.feeOptions.defaults.gasLimit.toFixed();
+        const feeTotal = new BigNumber(gasPrice).multipliedBy(new BigNumber(gasLimit)).toFixed();
+
         return {
-            gasPrice: '937144500000',
-            gasLimit: '1'
+            gasPrice,
+            gasLimit,
+            feeTotal
         };
     }
 

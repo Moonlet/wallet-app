@@ -13,6 +13,11 @@ import { QrModalReader } from '../../qr-modal/qr-modal';
 import { WalletConnectClient } from '../../../core/wallet-connect/wallet-connect-client';
 import TouchableOpacity from '../../../library/touchable-opacity/touchable-opacity';
 import { NavigationService } from '../../../navigation/navigation-service';
+import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
+import { Blockchain } from '../../../core/blockchain/types';
+import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
+import { IReduxState } from '../../../redux/state';
+import { connect } from 'react-redux';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -20,13 +25,23 @@ interface IExternalProps {
     onCloseEnd: () => void;
 }
 
+export interface IReduxProps {
+    blockchain: Blockchain;
+}
+
+const mapStateToProps = (state: IReduxState) => ({
+    blockchain: getSelectedBlockchain(state)
+});
+
 export class DashboardMenuBottomSheetComponent extends React.Component<
-    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public bottomSheet: any;
     public qrCodeScanner: any;
 
-    constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(
+        props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
         this.bottomSheet = React.createRef();
     }
@@ -77,18 +92,22 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     <Icon name="chevron-right" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={this.manageAccount} style={styles.rowContainer}>
-                    <View style={styles.iconContainer}>
-                        <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
-                    </View>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.title}>{translate('DashboardMenu.manageAccount')}</Text>
-                        <Text style={styles.description}>
-                            {translate('DashboardMenu.quicklyManage')}
-                        </Text>
-                    </View>
-                    <Icon name="chevron-right" size={16} style={styles.arrowRight} />
-                </TouchableOpacity>
+                {getBlockchain(this.props.blockchain).config.ui.enableTokenManagement && (
+                    <TouchableOpacity onPress={this.manageAccount} style={styles.rowContainer}>
+                        <View style={styles.iconContainer}>
+                            <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
+                        </View>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.title}>
+                                {translate('DashboardMenu.manageAccount')}
+                            </Text>
+                            <Text style={styles.description}>
+                                {translate('DashboardMenu.quicklyManage')}
+                            </Text>
+                        </View>
+                        <Icon name="chevron-right" size={16} style={styles.arrowRight} />
+                    </TouchableOpacity>
+                )}
 
                 <TouchableOpacity onPress={this.connectExtension} style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
@@ -133,5 +152,5 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
 
 export const DashboardMenuBottomSheet = smartConnect<IExternalProps>(
     DashboardMenuBottomSheetComponent,
-    [withTheme(stylesProvider)]
+    [connect(mapStateToProps, null), withTheme(stylesProvider)]
 );

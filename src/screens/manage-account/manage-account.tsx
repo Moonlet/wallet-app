@@ -17,7 +17,7 @@ import { IAccountState, IWalletState, TokenType } from '../../redux/wallets/stat
 import { Amount } from '../../components/amount/amount';
 import { toggleTokenActive, updateTokenOrder, removeToken } from '../../redux/wallets/actions';
 import { ITokenConfig } from '../../core/blockchain/types/token';
-import { Blockchain } from '../../core/blockchain/types';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export interface IReduxProps {
     toggleTokenActive: typeof toggleTokenActive;
@@ -50,20 +50,20 @@ const mapStateToProps = (state: IReduxState) => {
 export const navigationOptions = ({ navigation, theme }: any) => ({
     title: translate('Account.manageAccount'),
 
-    // TODO: in `core/blockchain/${blockchain}/config.ts` config this
-    headerRight: navigation.state.params.blockchain === Blockchain.ETHEREUM && (
-        <TouchableOpacity onPress={() => navigation.navigate('ManageToken')}>
-            <Icon
-                name="add"
-                size={ICON_SIZE}
-                style={{
-                    color: themes[theme].colors.accent,
-                    alignSelf: 'center',
-                    marginRight: BASE_DIMENSION * 2
-                }}
-            />
-        </TouchableOpacity>
-    )
+    headerRight: navigation.state.params?.blockchain &&
+        getBlockchain(navigation.state.params.blockchain).config.ui.enableTokenManagement && (
+            <TouchableOpacity onPress={() => navigation.navigate('ManageToken')}>
+                <Icon
+                    name="add"
+                    size={ICON_SIZE}
+                    style={{
+                        color: themes[theme].colors.accent,
+                        alignSelf: 'center',
+                        marginRight: BASE_DIMENSION * 2
+                    }}
+                />
+            </TouchableOpacity>
+        )
 });
 
 export class ManageAccountComponent extends React.Component<

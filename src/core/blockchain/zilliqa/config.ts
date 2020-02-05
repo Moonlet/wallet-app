@@ -41,6 +41,9 @@ export const config: IBlockchainConfig = {
         }
     },
     ui: {
-        addressDisplay: 'stripped'
+        addressDisplay: 'stripped',
+        enableTokenManagement: false,
+        enableAccountCreation: false,
+        maxAccountsNumber: 5
     }
 };

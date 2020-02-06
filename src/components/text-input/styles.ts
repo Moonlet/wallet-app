@@ -5,7 +5,6 @@ import { BORDER_RADIUS, BASE_DIMENSION } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            flex: 1,
             flexDirection: 'row',
             backgroundColor: theme.colors.cardBackground,
             borderBottomWidth: 1,
@@ -18,6 +17,7 @@ export default (theme: ITheme) =>
             color: theme.colors.text
         },
         cursor: {
+            height: 20,
             borderRadius: BORDER_RADIUS / 3,
             backgroundColor: theme.colors.accent
         }

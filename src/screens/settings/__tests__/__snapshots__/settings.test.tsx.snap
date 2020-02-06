@@ -6,13 +6,6 @@ exports[`Wallet screen renders correctly 1`] = `
     <withTheme(TextComponent) style={{...}}>
       SECURITY
     </withTheme(TextComponent)>
-    <View style={{...}}>
-      <withTheme(TextComponent) style={{...}}>
-        Pin Login
-      </withTheme(TextComponent)>
-      <Switch onValueChange={[Function: onValueChange]} value={true} trackColor={{...}} thumbColor=\\"#00DAFF\\" />
-    </View>
-    <View style={{...}} />
     <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
       <withTheme(TextComponent) style={{...}}>
         Manage wallet

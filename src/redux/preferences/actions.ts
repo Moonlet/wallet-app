@@ -8,7 +8,6 @@ import { IAction } from '../types';
 
 // actions consts
 export const PREF_SET_CURRENCY = 'PREF_SET_CURRENCY';
-export const TOGGLE_PIN_LOGIN = 'TOGGLE_PIN_LOGIN';
 export const TOGGLE_TOUCH_ID = 'TOGGLE_TOUCH_ID';
 export const SET_TEST_NET = 'SET_TEST_NET';
 export const PREF_SET_BLOCKCHAIN_ACTIVE_STATE = 'PREF_SET_BLOCKCHAIN_ACTIVE_STATE';
@@ -64,12 +63,6 @@ export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IRe
         true
     )(dispatch, getState);
 };
-
-export function togglePinLogin() {
-    return {
-        type: TOGGLE_PIN_LOGIN
-    };
-}
 
 export function toggleTouchID() {
     return {

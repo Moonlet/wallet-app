@@ -31,6 +31,7 @@ import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
 import { getBlockchains } from '../../redux/preferences/selectors';
+import { NavigationEvents } from 'react-navigation';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -137,14 +138,6 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        if (this.props.selectedAccount) {
-            this.props.getBalance(
-                this.props.selectedAccount.blockchain,
-                this.props.selectedAccount.address,
-                undefined,
-                true
-            );
-        }
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
@@ -208,6 +201,17 @@ export class DashboardScreenComponent extends React.Component<
         );
     };
 
+    public onFocus() {
+        if (this.props.selectedAccount) {
+            this.props.getBalance(
+                this.props.selectedAccount.blockchain,
+                this.props.selectedAccount.address,
+                undefined,
+                true
+            );
+        }
+    }
+
     public render() {
         const styles = this.props.styles;
         const { blockchains } = this.props;
@@ -217,6 +221,7 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
+                <NavigationEvents onWillFocus={payload => this.onFocus()} />
                 {showCreateAccount && (
                     <AccountCreate blockchain={blockchain} navigation={this.props.navigation} />
                 )}

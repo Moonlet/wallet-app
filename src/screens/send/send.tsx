@@ -35,7 +35,7 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
-import { ISelectedAccount, IAccountState } from '../../redux/wallets/state';
+import { IAccountState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
 import { Dialog } from '../../components/dialog/dialog';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
@@ -53,7 +53,7 @@ export interface IReduxProps {
     contacts: IContactsState[];
     openBottomSheet: typeof openBottomSheet;
     selectedWalletId: string;
-    selectedAccount: ISelectedAccount;
+    selectedAccount: IAccountState;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {

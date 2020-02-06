@@ -27,6 +27,7 @@ const persistor = persistStore(store);
 
 const APP_STATE_ACTIVE: AppStateStatus = 'active';
 const APP_STATE_BACKGROUND: AppStateStatus = 'background';
+const APP_STATE_INACTIVE: AppStateStatus = 'inactive';
 
 interface IState {
     appReady: boolean;
@@ -164,6 +165,11 @@ export default class App extends React.Component<{}, IState> {
     }
 
     public handleAppStateChange = (nextAppState: AppStateStatus) => {
+        if (nextAppState === APP_STATE_INACTIVE || nextAppState === APP_STATE_BACKGROUND) {
+            this.setState({
+                showPasswordModal: true
+            });
+        }
         if (
             this.state.appState === APP_STATE_BACKGROUND &&
             nextAppState === APP_STATE_ACTIVE &&
@@ -182,10 +188,12 @@ export default class App extends React.Component<{}, IState> {
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
-                            <AppContainer
-                                ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
-                                theme="dark"
-                            />
+                            {!this.state.showPasswordModal && (
+                                <AppContainer
+                                    ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
+                                    theme="dark"
+                                />
+                            )}
                             <PasswordModal
                                 visible={this.state.showPasswordModal}
                                 onPassword={() => this.setState({ showPasswordModal: false })}

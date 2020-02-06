@@ -221,7 +221,6 @@ export const translation: ITranslations = {
             defaultCurrency: 'Default currency',
             manageWallet: 'Manage wallet',
             networkOptions: 'Network options',
-            pinLogin: 'Pin Login',
             privacyPolicy: 'Privacy policy',
             reportIssue: 'Report issue',
             signOut: 'Sign out',

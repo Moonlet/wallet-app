@@ -43,8 +43,3 @@ export interface IAccountState {
         [symbol: string]: ITokenConfig;
     };
 }
-
-export interface ISelectedAccount {
-    index: number;
-    blockchain: Blockchain;
-}

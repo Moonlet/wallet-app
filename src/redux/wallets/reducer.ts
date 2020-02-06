@@ -25,7 +25,7 @@ const intialState: IWalletsState = {};
 
 const newBalance = (oldBalance: any, action: any) => ({
     value: action.data.balance ? action.data.balance : oldBalance?.value,
-    inProgress: action.inProgress !== undefined ? oldBalance?.inProgress : action.inProgress,
+    inProgress: action.inProgress !== undefined ? action.inProgress : false,
     timestamp: action.data.balance ? new Date() : oldBalance?.timestamp,
     error: action.error !== undefined ? action.error : undefined
 });
@@ -106,8 +106,8 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                 [action.data.walletId]: {
                     ...state[action.data.walletId],
                     accounts: state[action.data.walletId].accounts.map(account => {
-                        if (account.blockchain === action.data.selectedAccount.blockchain) {
-                            account.selected = account.index === action.data.selectedAccount.index;
+                        if (account.blockchain === action.data.blockchain) {
+                            account.selected = account.index === action.data.index;
                         }
 
                         return account;
@@ -117,8 +117,6 @@ export default (state: IWalletsState = intialState, action: IAction) => {
         }
 
         case ACCOUNT_GET_BALANCE: {
-            state = { ...state };
-
             return {
                 ...state,
                 [action.data.walletId]: {
@@ -133,7 +131,6 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                                 action
                             );
                         }
-
                         return account;
                     })
                 }

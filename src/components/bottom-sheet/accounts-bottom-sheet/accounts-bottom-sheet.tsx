@@ -61,7 +61,7 @@ export class AccountsBottomSheetComponent extends React.Component<
         this.bottomSheet.current.props.onOpenStart();
         Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(1) : null;
         this.props.accounts.map(acc => {
-            this.props.getBalance(acc.blockchain, acc.address, undefined, true);
+            this.props.getBalance(acc.blockchain, acc.address, undefined, false);
         });
     }
 
@@ -139,12 +139,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                             rightIcon={selected ? 'check-1' : undefined}
                             label={label}
                             selected={selected}
-                            onPress={() =>
-                                this.props.setSelectedAccount({
-                                    index: account.index,
-                                    blockchain
-                                })
-                            }
+                            onPress={() => this.props.setSelectedAccount(account)}
                         />
                     );
                 })}

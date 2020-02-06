@@ -141,10 +141,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                             selected={selected}
                             onPress={() => {
                                 this.props.onCloseEnd();
-                                this.props.setSelectedAccount({
-                                    index: account.index,
-                                    blockchain
-                                });
+                                this.props.setSelectedAccount(account);
                             }}
                         />
                     );

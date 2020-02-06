@@ -18,8 +18,8 @@ jobs:
         run: |-
           BUILD=$(git rev-list --count $GITHUB_SHA)
           VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
-          echo "::set-env name=CUSTOM_TAG::${VERSION}.${BUILD}"
-      - name: Bump version and push tag
+          echo "::set-env name=CUSTOM_TAG::v${VERSION}.${BUILD}"
+      - name: Create GitHubRelease
         uses: anothrNick/github-tag-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -123,30 +123,35 @@ jobs:
   #         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
   #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
   #         KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
-  # beta-ext-chrome:
-  #   name: Chrome extension
-  #   runs-on: ubuntu-latest
-  #   needs: unit-tests
-  #   steps:
-  #     - uses: actions/setup-node@v1
-  #       with:
-  #         node-version: "10.x"
-  #     - uses: actions/checkout@v1
-  #     - name: NPM install
-  #       run: npm i
-  #     - name: Generate icons
-  #       run: npm run generate-icons
-  #     - name: Build extension
-  #       run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
-  #       env:
-  #         NODE_OPTIONS: --max_old_space_size=4096
-  #     - name: Create extenion zip
-  #       run: cd extension/build/beta/chrome && zip -r ./extension.zip ./
-  #     - name: Deploy to Chrome store
-  #       uses: trmcnvn/chrome-addon@v1
-  #       with:
-  #         extension: fppojmnjpgbjelbjpdhgnhjahaimpjeh
-  #         zip: extension/build/beta/chrome/extension.zip
-  #         client-id: ${{ secrets.CHROME_CLIENT_ID }}
-  #         client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-  #         refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+  beta-ext-chrome:
+    name: Chrome extension
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - uses: actions/checkout@v1
+      - name: NPM install
+        run: npm i
+      - name: Generate icons
+        run: npm run generate-icons
+      - name: Build extension
+        run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+      - name: Create extenion zip
+        run: cd extension/build/beta/chrome && zip -r ./extension.zip ./
+      - name: Set tag name
+        run: |-
+          BUILD=$(git rev-list --count $GITHUB_SHA)
+          VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
+          echo "::set-env name=TAG_NAME::v${VERSION}.${BUILD}"
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: extension/build/beta/chrome/*
+          tag: ${{ env.TAG_NAME }}
+          overwrite: true
+          file_glob: true

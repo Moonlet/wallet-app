@@ -119,21 +119,35 @@ export default (state: IWalletsState = intialState, action: IAction) => {
         case ACCOUNT_GET_BALANCE: {
             state = { ...state };
 
+            // console.log('account balance reducer', action.data);
+
             return {
                 ...state,
                 [action.data.walletId]: {
                     ...state[action.data.walletId],
                     accounts: state[action.data.walletId].accounts.map(account => {
+                        // if (account.blockchain === action.data.blockchain)
+                        //     console.log(
+                        //         'account',
+                        //         account.address,
+                        //         account.tokens[action.data.token].balance
+                        //     );
                         if (
                             account.address === action.data.address &&
                             account.blockchain === action.data.blockchain
                         ) {
+                            //     console.log('setNewBalance');
                             account.tokens[action.data.token].balance = newBalance(
                                 account.tokens[action.data.token].balance,
                                 action
                             );
                         }
-
+                        // if (account.blockchain === action.data.blockchain)
+                        //     console.log(
+                        //         'account modified',
+                        //         account.address,
+                        //         account.tokens[action.data.token].balance
+                        //     );
                         return account;
                     })
                 }

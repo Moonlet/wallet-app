@@ -26,7 +26,7 @@ import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
 import { BottomSheetType } from '../ui/bottomSheet/state';
 import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
-import { getSelectedWallet, getAccounts } from './selectors';
+import { getSelectedWallet, getAccounts, getSelectedAccount } from './selectors';
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
@@ -87,6 +87,15 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
         }
     } else {
         dispatch(disableCreateAccount());
+    }
+    const selectedAccount = getSelectedAccount(getState());
+    if (selectedAccount) {
+        getBalance(
+            selectedAccount.blockchain,
+            selectedAccount.address,
+            undefined,
+            true
+        )(dispatch, getState);
     }
 };
 

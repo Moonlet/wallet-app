@@ -28,7 +28,7 @@ import BigNumber from 'bignumber.js';
 import { formatAddress } from '../../core/utils/format-address';
 import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { sendTransferTransaction } from '../../redux/wallets/actions';
+import { sendTransferTransaction, getBalance } from '../../redux/wallets/actions';
 import { Dialog } from '../../components/dialog/dialog';
 import { getChainId } from '../../redux/preferences/selectors';
 
@@ -43,6 +43,7 @@ export interface IReduxProps {
     wallet: IWalletState;
     sendTransferTransaction: typeof sendTransferTransaction;
     chainId: ChainIdType;
+    getBalance: typeof getBalance;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -56,7 +57,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 };
 
 const mapDispatchToProps = {
-    sendTransferTransaction
+    sendTransferTransaction,
+    getBalance
 };
 
 export interface INavigationParams {
@@ -182,6 +184,12 @@ export class TokenScreenComponent extends React.Component<
         this.props.navigation.setParams({
             openSettingsMenu: this.openSettingsMenu
         });
+        this.props.getBalance(
+            this.props.account.blockchain,
+            this.props.account.address,
+            undefined,
+            false // should we actually force it?
+        );
     }
 
     public openSettingsMenu = () => this.setState({ settingsVisible: !this.state.settingsVisible });

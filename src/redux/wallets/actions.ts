@@ -205,10 +205,10 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
 
         // generate initial accounts for each blockchain
         Promise.all([
-            wallet.getAccounts(Blockchain.ETHEREUM, 0),
-            wallet.getAccounts(Blockchain.ETHEREUM, 1),
             wallet.getAccounts(Blockchain.ZILLIQA, 0),
-            wallet.getAccounts(Blockchain.ZILLIQA, 1)
+            wallet.getAccounts(Blockchain.ZILLIQA, 1),
+            wallet.getAccounts(Blockchain.ETHEREUM, 0),
+            wallet.getAccounts(Blockchain.ETHEREUM, 1)
         ]).then(async data => {
             data[0][0].selected = true;
             data[2][0].selected = true;

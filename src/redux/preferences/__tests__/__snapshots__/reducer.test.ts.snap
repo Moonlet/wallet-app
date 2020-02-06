@@ -5,7 +5,7 @@ Object {
   "blockchains": Object {
     "ETHEREUM": Object {
       "active": true,
-      "order": 0,
+      "order": 1,
     },
     "NEAR": Object {
       "active": true,
@@ -13,7 +13,7 @@ Object {
     },
     "ZILLIQA": Object {
       "active": true,
-      "order": 1,
+      "order": 0,
     },
   },
   "currency": "USD",

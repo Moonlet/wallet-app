@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - "create-releases"
 
 name: Deploy Beta
 jobs:
@@ -13,128 +14,133 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
-      - name: Cache node modules
-        uses: actions/cache@v1
-        id: cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: NPM install
-        run: npm i
-      - name: Generate icons
-        run: npm run generate-icons
-      - name: Run unit tests
-        run: npm test
-      - name: Upload coverage to Codecov
-        env:
-          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
-        run: |-
-          curl -s https://codecov.io/bash | bash -s -- \
-          -F "unittests" \
-          -Z || echo 'Codecov upload failed'
-  beta-android:
-    name: Android app
-    runs-on: ubuntu-latest
-    needs: unit-tests
-    steps:
-      - name: Increase watchers
-        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "10.x"
-      - uses: actions/setup-ruby@v1
-        with:
-          ruby-version: "2.x"
-      - name: Generate firebase config file
-        run: echo '${{ secrets.FB_CONFIG_ANDROID_BETA }}' > android/app/google-services.json
-      - name: Setup key
-        uses: webfactory/ssh-agent@v0.1.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_CERTS }}
-      - name: Add to host
-        run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-      - name: Dependencies install
-        run: cd android && bundle install
-      - name: Cache node modules
-        uses: actions/cache@v1
-        id: cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: NPM install
-        run: npm i
-      - name: Get sign ssh-keys
-        run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
-      - name: Generate fonts and icons
-        run: npm run generate-icons
-      - name: Run fastlane beta
-        run: cd android/fastlane && bundle exec fastlane beta
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
-  beta-ios:
-    name: iOS app
-    runs-on: macos-latest
-    needs: unit-tests
-    steps:
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "10.x"
-      - uses: actions/checkout@v1
-      - name: Setup key
-        uses: webfactory/ssh-agent@v0.1.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_CERTS }}
-      - name: Add to host
-        run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-      - name: Generate firebase config file
-        run: echo '${{ secrets.FB_CONFIG_IOS_BETA }}' > ios/GoogleService-Info.plist 
-      - name: Dependencies install
-        run: cd ios && bundle install
-      - name: Cache node modules
-        uses: actions/cache@v1
-        id: cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: NPM install
-        run: npm i
-      - name: Cocoapods install
-        run: cd ios && pod install
-      - name: Generate fonts and icons
-        run: npm run generate-icons
-      - name: Run fastlane beta
-        run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane beta
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
-  beta-ext-chrome:
-    name: Chrome extension
-    runs-on: ubuntu-latest
-    needs: unit-tests
-    steps:
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "10.x"
-      - uses: actions/checkout@v1
-      - name: NPM install
-        run: npm i
-      - name: Generate icons
-        run: npm run generate-icons
-      - name: Build extension
-        run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
-        env:
-          NODE_OPTIONS: --max_old_space_size=4096
-      - name: Create extenion zip
-        run: cd extension/build/beta/chrome && zip -r ./extension.zip ./
-      - name: Deploy to Chrome store
-        uses: trmcnvn/chrome-addon@v1
-        with:
-          extension: fppojmnjpgbjelbjpdhgnhjahaimpjeh
-          zip: extension/build/beta/chrome/extension.zip
-          client-id: ${{ secrets.CHROME_CLIENT_ID }}
-          client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
-          refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}
+      - name: Set tag name
+        run: echo "::set-env name=TAG_NAME::yellow"
+      - name: Test tag name
+        run: echo $TAG_NAME
+  #     - name: Cache node modules
+  #       uses: actions/cache@v1
+  #       id: cache
+  #       with:
+  #         path: node_modules
+  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Generate icons
+  #       run: npm run generate-icons
+  #     - name: Run unit tests
+  #       run: npm test
+  #     - name: Upload coverage to Codecov
+  #       env:
+  #         CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+  #       run: |-
+  #         curl -s https://codecov.io/bash | bash -s -- \
+  #         -F "unittests" \
+  #         -Z || echo 'Codecov upload failed'
+  #     - name: Create GitHub Release
+  # beta-android:
+  #   name: Android app
+  #   runs-on: ubuntu-latest
+  #   needs: unit-tests
+  #   steps:
+  #     - name: Increase watchers
+  #       run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - uses: actions/setup-ruby@v1
+  #       with:
+  #         ruby-version: "2.x"
+  #     - name: Generate firebase config file
+  #       run: echo '${{ secrets.FB_CONFIG_ANDROID_BETA }}' > android/app/google-services.json
+  #     - name: Setup key
+  #       uses: webfactory/ssh-agent@v0.1.1
+  #       with:
+  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
+  #     - name: Add to host
+  #       run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+  #     - name: Dependencies install
+  #       run: cd android && bundle install
+  #     - name: Cache node modules
+  #       uses: actions/cache@v1
+  #       id: cache
+  #       with:
+  #         path: node_modules
+  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Get sign ssh-keys
+  #       run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
+  #     - name: Generate fonts and icons
+  #       run: npm run generate-icons
+  #     - name: Run fastlane beta
+  #       run: cd android/fastlane && bundle exec fastlane beta
+  #       env:
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #         APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
+  # beta-ios:
+  #   name: iOS app
+  #   runs-on: macos-latest
+  #   needs: unit-tests
+  #   steps:
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - uses: actions/checkout@v1
+  #     - name: Setup key
+  #       uses: webfactory/ssh-agent@v0.1.1
+  #       with:
+  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
+  #     - name: Add to host
+  #       run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+  #     - name: Generate firebase config file
+  #       run: echo '${{ secrets.FB_CONFIG_IOS_BETA }}' > ios/GoogleService-Info.plist 
+  #     - name: Dependencies install
+  #       run: cd ios && bundle install
+  #     - name: Cache node modules
+  #       uses: actions/cache@v1
+  #       id: cache
+  #       with:
+  #         path: node_modules
+  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Cocoapods install
+  #       run: cd ios && pod install
+  #     - name: Generate fonts and icons
+  #       run: npm run generate-icons
+  #     - name: Run fastlane beta
+  #       run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane beta
+  #       env:
+  #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  #         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #         KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
+  # beta-ext-chrome:
+  #   name: Chrome extension
+  #   runs-on: ubuntu-latest
+  #   needs: unit-tests
+  #   steps:
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - uses: actions/checkout@v1
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Generate icons
+  #       run: npm run generate-icons
+  #     - name: Build extension
+  #       run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
+  #       env:
+  #         NODE_OPTIONS: --max_old_space_size=4096
+  #     - name: Create extenion zip
+  #       run: cd extension/build/beta/chrome && zip -r ./extension.zip ./
+  #     - name: Deploy to Chrome store
+  #       uses: trmcnvn/chrome-addon@v1
+  #       with:
+  #         extension: fppojmnjpgbjelbjpdhgnhjahaimpjeh
+  #         zip: extension/build/beta/chrome/extension.zip
+  #         client-id: ${{ secrets.CHROME_CLIENT_ID }}
+  #         client-secret: ${{ secrets.CHROME_CLIENT_SECRET }}
+  #         refresh-token: ${{ secrets.CHROME_REFRESH_TOKEN }}

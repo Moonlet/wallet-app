@@ -36,10 +36,7 @@ export const navigationOptions = ({ navigation }: any) => ({
             return (
                 <HeaderLeft
                     icon="arrow-left-1"
-                    text="Back"
-                    onPress={() => {
-                        navigation.state.params.goBack(navigation);
-                    }}
+                    onPress={() => navigation.state.params.goBack(navigation)}
                 />
             );
         }

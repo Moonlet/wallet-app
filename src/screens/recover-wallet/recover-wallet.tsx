@@ -314,13 +314,15 @@ export class RecoverWalletScreenComponent extends React.Component<
                         obRef={(input: any) => (this.inputView[index] = input)}
                         style={[
                             error && { borderBottomColor: this.props.theme.colors.error },
-                            this.props.styles.inputLabel
+                            this.props.styles.inputLabel,
+                            { flex: 1 }
                         ]}
                         word={this.state.mnemonic[index]}
                         onFocus={() => this.focusInput(index)}
                         onBlur={() => this.validateWord()}
                         isFocus={isFocus}
                         isValid={isValid}
+                        showBorderBottomColor
                     />
                 </View>
             );

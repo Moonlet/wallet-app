@@ -31,7 +31,6 @@ Object {
       "testNet": 333,
     },
   },
-  "pinLogin": true,
   "testNet": false,
   "touchID": false,
 }

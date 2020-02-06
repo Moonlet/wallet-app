@@ -140,18 +140,18 @@ jobs:
         run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
         env:
           NODE_OPTIONS: --max_old_space_size=4096
-      - name: Create extenion zip
-        run: cd extension/build/beta/chrome && zip -r ./extension.zip ./
       - name: Set tag name
         run: |-
           BUILD=$(git rev-list --count $GITHUB_SHA)
           VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
           echo "::set-env name=TAG_NAME::v${VERSION}.${BUILD}"
+      - name: Create extenion zip
+        run: cd extension/build/beta/chrome && zip -r ./chrome-extension-$TAG_NAME.zip ./
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v1-release
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: extension/build/beta/chrome/*
+          file: extension/build/beta/chrome/*.zip
           tag: ${{ env.TAG_NAME }}
           overwrite: true
           file_glob: true

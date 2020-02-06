@@ -18,12 +18,12 @@ jobs:
         run: |-
           BUILD=$(git rev-list --count $GITHUB_SHA)
           VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
-          echo "::set-env name=TAG_NAME::${VERSION}.${BUILD}"
+          echo "::set-env name=CUSTOM_TAG::${VERSION}.${BUILD}"
       - name: Bump version and push tag
         uses: anothrNick/github-tag-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CUSTOM_TAG: ${{ TAG_NAME }}
+         
   #     - name: Cache node modules
   #       uses: actions/cache@v1
   #       id: cache

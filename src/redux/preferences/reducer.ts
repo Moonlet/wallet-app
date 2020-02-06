@@ -1,7 +1,6 @@
 import { IPrefState } from './state';
 import { IAction } from '../types';
 import {
-    TOGGLE_PIN_LOGIN,
     PREF_SET_CURRENCY,
     TOGGLE_TOUCH_ID,
     SET_TEST_NET,
@@ -14,7 +13,6 @@ import { Blockchain } from '../../core/blockchain/types';
 const initialState: IPrefState = {
     currency: 'USD',
     testNet: false,
-    pinLogin: true,
     touchID: false,
     networks: {
         [Blockchain.ETHEREUM]: {
@@ -48,10 +46,6 @@ const initialState: IPrefState = {
 
 export default (state: IPrefState = initialState, action: IAction): IPrefState => {
     switch (action.type) {
-        case TOGGLE_PIN_LOGIN:
-            state = { ...state }; // use this for each case and avoid setting it as general
-            state.pinLogin = !state.pinLogin;
-            break;
         case PREF_SET_NETWORK_TEST_NET_CHAIN_ID:
             return {
                 ...state,

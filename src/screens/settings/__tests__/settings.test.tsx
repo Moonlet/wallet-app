@@ -13,9 +13,7 @@ const props: IProps & IReduxProps = {
     },
     styles: styleProvider(darkTheme),
     theme: darkTheme,
-    mock: jest.fn(),
-    pinLogin: true,
-    togglePinLogin: jest.fn()
+    mock: jest.fn()
 };
 beforeEach(() => {
     // @ts-ignore

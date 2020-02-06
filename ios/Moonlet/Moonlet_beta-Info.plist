@@ -47,6 +47,8 @@
 	<string>Moonlet need to access bluetooth to connect your hardware wallets</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Moonlet need to access camera to read qr-code</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>This allows you to securely login to Moonlet.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>

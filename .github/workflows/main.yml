@@ -146,7 +146,7 @@ jobs:
           VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
           echo "::set-env name=TAG_NAME::v${VERSION}.${BUILD}"
       - name: Create extenion zip
-        run: cd extension/build/beta/chrome && zip -r ./chrome-extension-$TAG_NAME.zip ./
+        run: cd extension/build/beta/chrome && zip -r ./chrome-extension-dev-$TAG_NAME.zip ./
       - name: Upload binaries to release
         uses: svenstaro/upload-release-action@v1-release
         with:

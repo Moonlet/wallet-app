@@ -42,7 +42,6 @@ jobs:
           curl -s https://codecov.io/bash | bash -s -- \
           -F "unittests" \
           -Z || echo 'Codecov upload failed'
-      - name: Create GitHub Release
   beta-android:
     name: Android app
     runs-on: ubuntu-latest

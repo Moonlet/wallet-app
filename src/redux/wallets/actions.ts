@@ -219,7 +219,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
                 addWallet({
                     id: walletId,
                     selected: false,
-                    selectedBlockchain: Blockchain.ETHEREUM, // by default the first blockchain is selected
+                    selectedBlockchain: Blockchain.ZILLIQA, // by default the first blockchain is selected
                     name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
                     type: WalletType.HD,
                     accounts

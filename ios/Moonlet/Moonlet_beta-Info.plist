@@ -39,6 +39,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSFaceIDUsageDescription</key>
+	<string>This allows you to securely login to Moonlet.</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
 	<string>Moonlet need to access bluetooth to connect your hardware wallets</string>
 	<key>NSBluetoothAlwaysUsageDescription</key>

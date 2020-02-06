@@ -29,11 +29,11 @@ const initialState: IPrefState = {
         }
     },
     blockchains: {
-        [Blockchain.ETHEREUM]: {
+        [Blockchain.ZILLIQA]: {
             order: 0,
             active: true
         },
-        [Blockchain.ZILLIQA]: {
+        [Blockchain.ETHEREUM]: {
             order: 1,
             active: true
         },

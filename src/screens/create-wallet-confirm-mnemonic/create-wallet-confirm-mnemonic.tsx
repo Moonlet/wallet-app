@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Text } from '../../library';
 import {
@@ -8,14 +8,13 @@ import {
     NavigationActions
 } from 'react-navigation';
 import stylesProvider from './styles';
-import { withTheme, IThemeProps } from '../../core/theme/with-theme';
+import { withTheme } from '../../core/theme/with-theme';
 import { ITheme } from '../../core/theme/itheme';
 import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { createHDWallet } from '../../redux/wallets/actions';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { INavigationProps } from '../../navigation/with-navigation-params';
 import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom';
 import { TextInput } from '../../components/text-input/text-input';
 
@@ -33,198 +32,162 @@ const navigationOptions = () => ({
     title: translate('App.labels.create')
 });
 
-export interface IState {
-    mnemonic: string[];
+interface IMnemonicsInput {
+    [index: number]: string;
+}
+
+// check if every input has some content typed in
+const allInputsFilled = (testWords: number[], mnemonicsInput: IMnemonicsInput) =>
+    testWords.every((n: number) => mnemonicsInput[n] && mnemonicsInput[n].length > 0);
+
+const focusInput = (currentIndex: number, inputView: any, stateIndexInputFocus?: number) => {
+    if (stateIndexInputFocus) {
+        // Blur previous word
+        const previousIndex = stateIndexInputFocus;
+
+        if (previousIndex > -1 && inputView[previousIndex]) {
+            inputView[previousIndex].blur();
+        }
+    }
+
+    // Focus current word
+    if (currentIndex > -1 && inputView[currentIndex]) {
+        inputView[currentIndex].focus();
+    }
+};
+
+export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IReduxProps) => {
+    // TODO: no mnemonic? where to?
+    const mnemonic = props.navigation.state?.params?.mnemonic;
 
     // holds index of three random words from mnemonic
-    testWords: number[];
+    const [testWords, setTestWords] = useState<number[]>([]);
 
     // holds user input
-    mnemonicsInput: {};
+    const [mnemonicsInput, setMnemonicsInput] = useState<IMnemonicsInput>({} as any);
 
-    error: boolean;
-    indexInputFocus: number;
-}
+    const [error, setError] = useState<boolean>(false);
 
-export class CreateWalletConfirmMnemonicScreenComponent extends React.Component<
-    IReduxProps & INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
-> {
-    public static navigationOptions = navigationOptions;
-    public passwordModal = null;
-    public inputView: any = [];
+    const [indexInputFocus, setIndexInputFocus] = useState<number>(-1);
 
-    constructor(
-        props: IReduxProps &
-            INavigationProps &
-            IReduxProps &
-            IThemeProps<ReturnType<typeof stylesProvider>>
-    ) {
-        super(props);
-        this.state = {
-            // TODO: no mnemonic? where to?
-            mnemonic: props.navigation.state?.params?.mnemonic,
-            testWords: [],
-            mnemonicsInput: {},
-            error: false,
-            indexInputFocus: -1
-        };
-    }
+    const [inputView, setInputView] = useState<any>([]);
 
-    public componentDidMount() {
-        // generate three unique random test numbers
-        if (this.state.testWords.length < 3) {
-            const randomNumbers: any = [];
-            while (randomNumbers.length < 3) {
-                const n = Math.floor(Math.random() * 24);
-                if (!randomNumbers.includes(n)) {
-                    randomNumbers.push(n);
-                }
+    // generate three unique random test numbers
+    if (testWords.length < 3) {
+        const randomNumbers: any = [];
+        while (randomNumbers.length < 3) {
+            const n = Math.floor(Math.random() * 24);
+            if (!randomNumbers.includes(n)) {
+                randomNumbers.push(n);
             }
-
-            this.setState({ testWords: randomNumbers });
         }
+
+        setTestWords(randomNumbers);
     }
 
-    // check if every input has some content typed in
-    public allInputsFilled = () =>
-        this.state.testWords.every(
-            (n: number) => this.state.mnemonicsInput[n] && this.state.mnemonicsInput[n].length > 0
-        );
+    return (
+        <View style={props.styles.container}>
+            <Text darker style={{ textAlign: 'center' }}>
+                {translate('CreateWalletMnemonicConfirm.body')}
+            </Text>
 
-    /**
-     * draws a TextInput for a random mnemonic word
-     * @param index {number}
-     * @param styles
-     */
-    public getWordInput = (index: number, styles: ReturnType<typeof stylesProvider>) => {
-        return (
-            <TextInput
-                key={`word-${index}`}
-                obRef={(input: any) => (this.inputView[index] = input)}
-                style={styles.inputWrapper}
-                styleInputText={styles.inputText}
-                word={this.state.mnemonicsInput[index] ? this.state.mnemonicsInput[index] : ''}
-                onFocus={() => this.focusInput(index)}
-                isFocus={this.state.indexInputFocus === index}
-                placeholder={`Word #${index + 1}`}
-                showBorderBottomColor={false}
-            />
-        );
-    };
+            <View style={props.styles.inputContainer}>
+                {testWords.map((index: number) => (
+                    <TextInput
+                        key={`word-${index}`}
+                        obRef={(input: any) => {
+                            inputView[index] = input;
+                            setInputView(inputView);
+                        }}
+                        style={props.styles.inputWrapper}
+                        styleInputText={props.styles.inputText}
+                        word={mnemonicsInput[index] ? mnemonicsInput[index] : ''}
+                        onFocus={() => {
+                            focusInput(index, inputView);
+                            setIndexInputFocus(index);
+                        }}
+                        isFocus={indexInputFocus === index}
+                        placeholder={`Word #${index + 1}`}
+                        showBorderBottomColor={false}
+                    />
+                ))}
+                {error && (
+                    <Text style={props.styles.errorMessage}>
+                        {translate('CreateWalletMnemonicConfirm.errors.tryAgain')}
+                    </Text>
+                )}
+            </View>
 
-    public setMnemonicText(text: string) {
-        const mnemonicsInput = this.state.mnemonicsInput;
+            <Text darker small>
+                {testWords.map(n => mnemonic[n] + ' ')}
+            </Text>
 
-        const index = this.state.indexInputFocus;
-        if (mnemonicsInput[index]) {
-            mnemonicsInput[index] += text;
-        } else {
-            mnemonicsInput[index] = text;
-        }
-
-        this.setState({ mnemonicsInput });
-    }
-
-    public deleteMnemonicText() {
-        const mnemonicsInput = this.state.mnemonicsInput;
-
-        const index = this.state.indexInputFocus;
-        mnemonicsInput[index] = mnemonicsInput[index].slice(0, -1);
-
-        this.setState({ mnemonicsInput });
-    }
-
-    public confirm = () => {
-        const valid = this.state.testWords.every(
-            (n: number) => this.state.mnemonicsInput[n] === this.state.mnemonic[n]
-        );
-        if (valid) {
-            this.passwordModal.requestPassword().then(password => {
-                this.props.createHDWallet(this.state.mnemonic.join(' '), password, () =>
-                    this.props.navigation.navigate(
-                        'MainNavigation',
-                        {},
-                        NavigationActions.navigate({
-                            routeName: 'Dashboard'
-                        })
-                    )
-                );
-            });
-        } else {
-            this.setState({ error: true });
-        }
-    };
-
-    public focusInput(index: number) {
-        // Blur previous word
-        const previousIndex = this.state.indexInputFocus;
-
-        if (previousIndex > -1 && this.inputView[previousIndex]) {
-            this.inputView[this.state.indexInputFocus].blur();
-        }
-
-        // Focus current word
-        if (index > -1 && this.inputView[index]) {
-            this.inputView[index].focus();
-        }
-
-        this.setState({ indexInputFocus: index });
-    }
-
-    public render() {
-        return (
-            <View style={this.props.styles.container}>
-                <Text darker style={{ textAlign: 'center' }}>
-                    {translate('CreateWalletMnemonicConfirm.body')}
-                </Text>
-
-                <View style={this.props.styles.inputContainer}>
-                    {this.state.testWords.map(n => this.getWordInput(n, this.props.styles))}
-                    {this.state.error && (
-                        <Text style={this.props.styles.errorMessage}>
-                            {translate('CreateWalletMnemonicConfirm.errors.tryAgain')}
-                        </Text>
-                    )}
-                </View>
-
-                <Text darker small>
-                    {this.state.testWords.map(n => this.state.mnemonic[n] + ' ')}
-                </Text>
-
-                <KeyboardCustom
-                    handleTextUpdate={(text: string) => this.setMnemonicText(text)}
-                    handleDeleteKey={() => this.deleteMnemonicText()}
-                    buttons={[
-                        {
-                            label: translate('App.labels.nextWord'),
-                            onPress: () => {
-                                this.focusInput(
-                                    this.state.testWords[
-                                        this.state.testWords.indexOf(this.state.indexInputFocus) + 1
-                                    ]
-                                );
+            <KeyboardCustom
+                handleTextUpdate={(text: string) => {
+                    let input = mnemonicsInput[indexInputFocus];
+                    if (input) {
+                        input += text;
+                    } else {
+                        input = text;
+                    }
+                    setMnemonicsInput({ ...mnemonicsInput, ...{ [indexInputFocus]: input } });
+                }}
+                handleDeleteKey={() => {
+                    let input = mnemonicsInput[indexInputFocus];
+                    if (input) {
+                        input = input.slice(0, -1);
+                    }
+                    setMnemonicsInput({ ...mnemonicsInput, ...{ [indexInputFocus]: input } });
+                }}
+                buttons={[
+                    {
+                        label: translate('App.labels.nextWord'),
+                        onPress: () => {
+                            const nextIndexFocus =
+                                testWords[testWords.indexOf(indexInputFocus) + 1];
+                            focusInput(nextIndexFocus, inputView, indexInputFocus);
+                            setIndexInputFocus(nextIndexFocus);
+                        }
+                    },
+                    {
+                        label: translate('App.labels.confirm'),
+                        onPress: () => {
+                            const valid = testWords.every(
+                                (n: number) => mnemonicsInput[n] === mnemonic[n]
+                            );
+                            if (valid) {
+                                this.passwordModal.requestPassword().then(password => {
+                                    props.createHDWallet(mnemonic.join(' '), password, () =>
+                                        props.navigation.navigate(
+                                            'MainNavigation',
+                                            {},
+                                            NavigationActions.navigate({
+                                                routeName: 'Dashboard'
+                                            })
+                                        )
+                                    );
+                                });
+                            } else {
+                                setError(true);
                             }
                         },
-                        {
-                            label: translate('App.labels.confirm'),
-                            onPress: () => this.confirm(),
-                            style: { color: this.props.theme.colors.accent },
-                            disabled: !this.allInputsFilled()
-                        }
-                    ]}
-                    disableSpace
-                />
+                        style: { color: props.theme.colors.accent },
+                        disabled: !allInputsFilled(testWords, mnemonicsInput)
+                    }
+                ]}
+                disableSpace
+            />
 
-                <PasswordModal
-                    shouldCreatePassword={true}
-                    subtitle={translate('Password.subtitleMnemonic')}
-                    obRef={ref => (this.passwordModal = ref)}
-                />
-            </View>
-        );
-    }
-}
+            <PasswordModal
+                shouldCreatePassword={true}
+                subtitle={translate('Password.subtitleMnemonic')}
+                obRef={ref => (this.passwordModal = ref)}
+            />
+        </View>
+    );
+};
+
+CreateWalletConfirmMnemonicScreenComponent.navigationOptions = navigationOptions;
 
 export const CreateWalletConfirmMnemonicScreen = smartConnect(
     CreateWalletConfirmMnemonicScreenComponent,

@@ -15,58 +15,6 @@ exports[`wallet actions createHDWallet working properly 1`] = `
         "data": Object {
           "accounts": Array [
             Object {
-              "address": "0x151250cB2bB034247c8ffBeD91B7Fb1e9f3e9FFE",
-              "blockchain": "ETHEREUM",
-              "index": 0,
-              "publicKey": "22d185a1eda6240e2004a4794e50daff53eb3e5194bf21d4cca3be002688566ee2af4d5724dbe507646649193e5f8368ee63fb257147fbb2bafed87e63717c68",
-              "selected": true,
-              "tokens": Object {
-                "ETH": Object {
-                  "active": true,
-                  "decimals": 18,
-                  "logo": Object {
-                    "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png",
-                  },
-                  "name": "Ethereum",
-                  "order": 0,
-                  "symbol": "ETH",
-                  "type": "NATIVE",
-                  "uiDecimals": 4,
-                  "units": Object {
-                    "ETH": "1000000000000000000",
-                    "GWEI": "1000000000",
-                    "WEI": "1",
-                  },
-                },
-              },
-            },
-            Object {
-              "address": "0x6D179861ea6C879269Fa65b71119e86b3e075c64",
-              "blockchain": "ETHEREUM",
-              "index": 1,
-              "publicKey": "d95dadc866a4acbbf37fb7347f26ddf59955c0b978f7356861e2e7e7a17eaaa07e632630ee164969b84a196e724acbd0ad9b230276c694c0de2fb9fc05239398",
-              "selected": false,
-              "tokens": Object {
-                "ETH": Object {
-                  "active": true,
-                  "decimals": 18,
-                  "logo": Object {
-                    "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png",
-                  },
-                  "name": "Ethereum",
-                  "order": 0,
-                  "symbol": "ETH",
-                  "type": "NATIVE",
-                  "uiDecimals": 4,
-                  "units": Object {
-                    "ETH": "1000000000000000000",
-                    "GWEI": "1000000000",
-                    "WEI": "1",
-                  },
-                },
-              },
-            },
-            Object {
               "address": "zil1kqj0fp7ja409llrjt4q4tja4uvue8vtp65gahs",
               "blockchain": "ZILLIQA",
               "index": 0,
@@ -114,6 +62,58 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "LI": "1000000",
                     "QA": "1",
                     "ZIL": "1000000000000",
+                  },
+                },
+              },
+            },
+            Object {
+              "address": "0x151250cB2bB034247c8ffBeD91B7Fb1e9f3e9FFE",
+              "blockchain": "ETHEREUM",
+              "index": 0,
+              "publicKey": "22d185a1eda6240e2004a4794e50daff53eb3e5194bf21d4cca3be002688566ee2af4d5724dbe507646649193e5f8368ee63fb257147fbb2bafed87e63717c68",
+              "selected": true,
+              "tokens": Object {
+                "ETH": Object {
+                  "active": true,
+                  "decimals": 18,
+                  "logo": Object {
+                    "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png",
+                  },
+                  "name": "Ethereum",
+                  "order": 0,
+                  "symbol": "ETH",
+                  "type": "NATIVE",
+                  "uiDecimals": 4,
+                  "units": Object {
+                    "ETH": "1000000000000000000",
+                    "GWEI": "1000000000",
+                    "WEI": "1",
+                  },
+                },
+              },
+            },
+            Object {
+              "address": "0x6D179861ea6C879269Fa65b71119e86b3e075c64",
+              "blockchain": "ETHEREUM",
+              "index": 1,
+              "publicKey": "d95dadc866a4acbbf37fb7347f26ddf59955c0b978f7356861e2e7e7a17eaaa07e632630ee164969b84a196e724acbd0ad9b230276c694c0de2fb9fc05239398",
+              "selected": false,
+              "tokens": Object {
+                "ETH": Object {
+                  "active": true,
+                  "decimals": 18,
+                  "logo": Object {
+                    "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png",
+                  },
+                  "name": "Ethereum",
+                  "order": 0,
+                  "symbol": "ETH",
+                  "type": "NATIVE",
+                  "uiDecimals": 4,
+                  "units": Object {
+                    "ETH": "1000000000000000000",
+                    "GWEI": "1000000000",
+                    "WEI": "1",
                   },
                 },
               },

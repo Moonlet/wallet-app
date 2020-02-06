@@ -38,11 +38,11 @@ describe('preferences reducer', () => {
             },
             blockchains: {
                 [Blockchain.ETHEREUM]: {
-                    order: 0,
+                    order: 1,
                     active: true
                 },
                 [Blockchain.ZILLIQA]: {
-                    order: 1,
+                    order: 0,
                     active: true
                 },
                 [Blockchain.NEAR]: {

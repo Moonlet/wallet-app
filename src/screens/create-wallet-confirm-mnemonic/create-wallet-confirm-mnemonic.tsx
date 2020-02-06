@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Text } from '../../library';
-import {
-    NavigationParams,
-    NavigationScreenProp,
-    NavigationState,
-    NavigationActions
-} from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 import stylesProvider from './styles';
-import { withTheme } from '../../core/theme/with-theme';
-import { ITheme } from '../../core/theme/itheme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -17,12 +11,7 @@ import { createHDWallet } from '../../redux/wallets/actions';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom';
 import { TextInput } from '../../components/text-input/text-input';
-
-export interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
+import { INavigationProps } from '../../navigation/with-navigation-params';
 
 export interface IReduxProps {
     createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
@@ -56,7 +45,9 @@ const focusInput = (currentIndex: number, inputView: any, stateIndexInputFocus?:
     }
 };
 
-export const CreateWalletConfirmMnemonicScreenComponent = (props: IProps & IReduxProps) => {
+export const CreateWalletConfirmMnemonicScreenComponent = (
+    props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+) => {
     // TODO: no mnemonic? where to?
     const mnemonic = props.navigation.state?.params?.mnemonic;
 

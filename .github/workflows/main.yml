@@ -15,7 +15,10 @@ jobs:
         with:
           node-version: "10.x"
       - name: Set tag name
-        run: echo "::set-env name=TAG_NAME::yellow"
+        run: |-
+          BUILD=$(git rev-list --count $GITHUB_SHA)
+          VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
+          echo "::set-env name=TAG_NAME::${VERSION}.${BUILD}"
       - name: Test tag name
         run: echo $TAG_NAME
   #     - name: Cache node modules

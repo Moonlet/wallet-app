@@ -12,17 +12,16 @@ describe('preferences reducer', () => {
         ).toMatchSnapshot();
     });
 
-    test('should handle TOGGLE_PIN_LOGIN', () => {
+    test('should handle TOGGLE_TOUCH_ID', () => {
         expect(
             reducer(undefined as any, {
-                type: actions.TOGGLE_PIN_LOGIN,
+                type: actions.TOGGLE_TOUCH_ID,
                 data: ''
             })
         ).toEqual({
             currency: 'USD',
             testNet: false,
-            pinLogin: false,
-            touchID: false,
+            touchID: true,
             networks: {
                 [Blockchain.ETHEREUM]: {
                     testNet: 4,

@@ -3,7 +3,7 @@ import { ScrollView, View, Switch, TouchableOpacity, Platform, Clipboard } from 
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
-import { togglePinLogin, toggleTouchID } from '../../redux/preferences/actions';
+import { toggleTouchID } from '../../redux/preferences/actions';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { Icon } from '../../components/icon';
@@ -24,8 +24,6 @@ export interface IState {
 
 export interface IReduxProps {
     currency: string;
-    pinLogin: boolean;
-    togglePinLogin: typeof togglePinLogin;
     touchID: boolean;
     toggleTouchID: typeof toggleTouchID;
     mock: () => void;
@@ -36,14 +34,12 @@ export const mockFunction = () => {
 };
 
 const mapStateToProps = (state: IReduxState) => ({
-    pinLogin: state.preferences.pinLogin,
     touchID: state.preferences.touchID,
     currency: state.preferences.currency
 });
 
 const mapDispatchToProps = {
     mock: mockFunction,
-    togglePinLogin,
     toggleTouchID
 };
 
@@ -108,29 +104,6 @@ export class SettingsScreenComponent extends React.Component<
                     <Text style={styles.textHeader}>
                         {translate('App.labels.security').toUpperCase()}
                     </Text>
-
-                    <View style={styles.rowContainer}>
-                        <Text style={styles.textRow}>{translate('Settings.pinLogin')}</Text>
-                        <Switch
-                            onValueChange={() =>
-                                this.passwordModal
-                                    .requestPassword()
-                                    .then(() => this.props.togglePinLogin())
-                            }
-                            value={this.props.pinLogin}
-                            trackColor={{
-                                true: this.props.theme.colors.cardBackground,
-                                false: this.props.theme.colors.cardBackground
-                            }}
-                            thumbColor={
-                                this.props.pinLogin
-                                    ? theme.colors.accent
-                                    : theme.colors.textTertiary
-                            }
-                        />
-                    </View>
-
-                    <View style={styles.divider} />
 
                     {this.state.isTouchIDSupported && (
                         <View>

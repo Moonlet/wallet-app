@@ -122,7 +122,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
           "id": "uuid",
           "name": "Wallet 1",
           "selected": false,
-          "selectedBlockchain": "ETHEREUM",
+          "selectedBlockchain": "ZILLIQA",
           "type": "HD",
         },
         "type": "WALLET_ADD",

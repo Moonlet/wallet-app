@@ -17,6 +17,12 @@ export const getChainId = (state: IReduxState, blockchain: Blockchain): ChainIdT
     }
 };
 
+export const getChainName = (state: IReduxState, blockchain: Blockchain): string => {
+    return getBlockchain(blockchain).networks.find(
+        network => network.chainId === getChainId(state, blockchain)
+    ).name;
+};
+
 export const getBlockchains = createSelector(
     (state: IReduxState) => state.preferences,
     (preferences: IPrefState) => {

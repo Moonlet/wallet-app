@@ -12,11 +12,13 @@ export default (theme: ITheme) =>
         container: {
             flex: 1,
             paddingBottom: BASE_DIMENSION * 2,
-            paddingLeft: BASE_DIMENSION * 2,
-            paddingRight: BASE_DIMENSION * 2,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
             height: SCREEN_HEIGHT
+        },
+        scrollContainer: {
+            flexGrow: 1,
+            paddingHorizontal: BASE_DIMENSION * 2
         },
         keyboardAvoidance: {
             flex: 1,

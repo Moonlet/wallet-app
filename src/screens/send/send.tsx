@@ -44,6 +44,7 @@ import {
     IExtensionRequestType,
     BottomSheetType
 } from '../../redux/ui/bottomSheet/state';
+import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -418,9 +419,10 @@ export class SendScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
+                <TestnetBadge />
                 <ScrollView
                     showsVerticalScrollIndicator={false}
-                    contentContainerStyle={{ flexGrow: 1 }}
+                    contentContainerStyle={styles.scrollContainer}
                 >
                     <View style={styles.accountAddress}>
                         <AccountAddress

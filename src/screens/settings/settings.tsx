@@ -68,6 +68,9 @@ export class SettingsScreenComponent extends React.Component<
         biometricAuth
             .isSupported()
             .then(biometryType => {
+                // biometryType on Android is of type boolean
+                // biometryType on iOS is of type 'FaceID' | 'TouchID'
+
                 if (Platform.OS === 'ios') {
                     this.setState({ biometryType });
                 }
@@ -109,9 +112,9 @@ export class SettingsScreenComponent extends React.Component<
                         <View>
                             <View style={styles.rowContainer}>
                                 <Text style={styles.textRow}>
-                                    {Platform.OS === 'ios' && this.state.biometryType
+                                    {Platform.OS === 'ios'
                                         ? translate(`BiometryType.${this.state.biometryType}`)
-                                        : translate('BiometryType.TouchID')}
+                                        : translate('BiometryType.FingerprintLogin')}
                                 </Text>
                                 <Switch
                                     onValueChange={() =>

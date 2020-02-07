@@ -120,63 +120,57 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
 
         return (
             <View style={styles.container}>
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <View
-                        style={{
-                            alignItems: 'center',
-                            alignSelf: 'stretch'
-                        }}
-                    >
-                        <Image
-                            style={styles.logoImage}
-                            source={require('../../assets/images/png/moonlet_space.png')}
-                        />
-                    </View>
+                <View style={styles.topContainer}>
+                    <Image
+                        style={styles.logoImage}
+                        source={require('../../assets/images/png/moonlet_space.png')}
+                    />
+
                     <View style={styles.textContainer}>
-                        <Text large style={{ fontWeight: 'bold' }}>
+                        <Text style={styles.welcomeTitle}>
                             {translate('Onboarding.welcomeTitle')}
                         </Text>
-                        <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
+                        <Text style={styles.welcomeText}>
                             {translate('Onboarding.welcomeText')}
                         </Text>
                     </View>
                 </View>
 
                 <View style={styles.buttonsContainer}>
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <View style={styles.topButtons}>
                         <Button
-                            style={styles.button}
+                            style={[styles.button, styles.leftButton]}
                             onPress={() => this.onPressRecover()}
                             testID="button-recover"
                         >
                             {translate('App.labels.recover')}
                         </Button>
-                        <Button style={styles.button} onPress={() => this.onPressConnect()}>
+                        <Button
+                            style={[styles.button, styles.rightButton]}
+                            onPress={() => this.onPressConnect()}
+                        >
                             {translate('App.labels.connect')}
                         </Button>
                     </View>
-                    <View style={{ flexDirection: 'row' }}>
-                        <Button
-                            testID="button-create"
-                            style={styles.bottomButton}
-                            primary
-                            onPress={() => this.onPressCreate()}
-                        >
-                            {translate('App.labels.create')}
-                        </Button>
-                    </View>
+
+                    <Button
+                        testID="button-create"
+                        style={styles.bottomButton}
+                        primary
+                        onPress={() => this.onPressCreate()}
+                    >
+                        {translate('App.labels.create')}
+                    </Button>
 
                     {isFeatureActive(RemoteFeature.DEV) && (
-                        <View style={{ flexDirection: 'row' }}>
-                            <Button
-                                testID="button-generate"
-                                style={styles.bottomButton}
-                                primary
-                                onPress={() => this.onPressGenerateWallet()}
-                            >
-                                Generate wallet
-                            </Button>
-                        </View>
+                        <Button
+                            testID="button-generate"
+                            style={styles.bottomButton}
+                            primary
+                            onPress={() => this.onPressGenerateWallet()}
+                        >
+                            {`Generate wallet`}
+                        </Button>
                     )}
                 </View>
             </View>

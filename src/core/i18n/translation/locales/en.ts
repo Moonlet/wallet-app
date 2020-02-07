@@ -76,7 +76,7 @@ export const translation: ITranslations = {
                 understand: 'I understand',
                 wallets: 'Wallets',
                 watch: 'Watch mode',
-                youAreOn: 'You are on'
+                youAreOn: 'You are on {{blockchain}} {{networkName}} Testnet'
                 // please try to add keys in alphabetic order
             },
             buttons: {

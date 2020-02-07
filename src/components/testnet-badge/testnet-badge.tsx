@@ -8,13 +8,13 @@ import { connect } from 'react-redux';
 import { Blockchain } from '../../core/blockchain/types';
 import { getSelectedBlockchain } from '../../redux/wallets/selectors';
 import { IReduxState } from '../../redux/state';
-import { getChainName } from '../../redux/preferences/selectors';
+import { getNetworkName } from '../../redux/preferences/selectors';
 import { translate } from '../../core/i18n';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export interface IReduxProps {
     blockchain: Blockchain;
-    chainName: string;
+    networkName: string;
     testNet: boolean;
 }
 
@@ -23,7 +23,7 @@ const mapStateToProps = (state: IReduxState) => {
 
     return {
         blockchain,
-        chainName: getChainName(state, blockchain),
+        networkName: getNetworkName(state, blockchain),
         testNet: state.preferences.testNet
     };
 };
@@ -34,15 +34,16 @@ export class TestnetBadgeComponent extends React.Component<
     public render() {
         const styles = this.props.styles;
         const config = getBlockchain(this.props.blockchain).config;
-        const coinName = config.tokens[config.coin].name;
+        const blockchain = config.tokens[config.coin].name;
 
         if (this.props.testNet) {
             return (
                 <View style={styles.container}>
                     <Text style={styles.text}>
-                        {`${translate('App.labels.youAreOn')} ${coinName} ${
-                            this.props.chainName
-                        } ${translate('NetworkOptions.testnet')}`}
+                        {translate('App.labels.youAreOn', {
+                            blockchain,
+                            networkName: this.props.networkName
+                        })}
                     </Text>
                 </View>
             );

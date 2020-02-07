@@ -77,7 +77,7 @@ export const translation: ITranslations = {
                 wallets: 'Wallets',
                 watch: 'Watch mode',
                 youAreOn: 'You are on'
-                // plase try to add keys in alphabetic order
+                // please try to add keys in alphabetic order
             },
             buttons: {
                 back: 'Back',

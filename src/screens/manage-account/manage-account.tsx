@@ -173,28 +173,30 @@ export class ManageAccountComponent extends React.Component<
                             />
                         </View>
                     </View>
-                    <TouchableOpacity
-                        style={styles.iconContainer}
-                        onPressOut={() =>
-                            this.props.toggleTokenActive(
-                                this.props.wallet.id,
-                                this.props.selectedAccount,
-                                item.value
-                            )
-                        }
-                    >
-                        <Icon
-                            size={18}
-                            name={item.value.active ? 'check-2-thicked' : 'check-2'}
-                            style={[
-                                {
-                                    color: item.value.active
-                                        ? theme.colors.accent
-                                        : theme.colors.textSecondary
-                                }
-                            ]}
-                        />
-                    </TouchableOpacity>
+                    {item.value.type !== TokenType.NATIVE && (
+                        <TouchableOpacity
+                            style={styles.iconContainer}
+                            onPressOut={() =>
+                                this.props.toggleTokenActive(
+                                    this.props.wallet.id,
+                                    this.props.selectedAccount,
+                                    item.value
+                                )
+                            }
+                        >
+                            <Icon
+                                size={18}
+                                name={item.value.active ? 'check-2-thicked' : 'check-2'}
+                                style={[
+                                    {
+                                        color: item.value.active
+                                            ? theme.colors.accent
+                                            : theme.colors.textSecondary
+                                    }
+                                ]}
+                            />
+                        </TouchableOpacity>
+                    )}
                     <TouchableOpacity style={styles.iconContainer} onLongPress={drag}>
                         <Icon size={18} name="navigation-menu" style={styles.menuIcon} />
                     </TouchableOpacity>

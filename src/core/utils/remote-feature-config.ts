@@ -2,7 +2,8 @@ import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
 
 export enum RemoteFeature {
-    NEAR = 'feature_near'
+    NEAR = 'feature_near',
+    DEV = 'feature_dev'
 }
 
 let featuresConfig;
@@ -18,7 +19,7 @@ export const getRemoteConfigFeatures = async () => {
 
     await firebase.config().fetch(duration);
     await firebase.config().activateFetched();
-    const objects = await firebase.config().getValues([RemoteFeature.NEAR]);
+    const objects = await firebase.config().getValues([RemoteFeature.NEAR, RemoteFeature.DEV]);
 
     featuresConfig = {};
     // Retrieve values
@@ -33,7 +34,7 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
     if (__DEV__) {
         return true;
     }
-    if (feature === RemoteFeature.NEAR) {
+    if (feature === RemoteFeature.NEAR || feature === RemoteFeature.DEV) {
         const values = JSON.parse(featuresConfig[feature]);
         const uniqueId = values.filter(id => id === DeviceInfo.getUniqueId());
         if (uniqueId.length) {

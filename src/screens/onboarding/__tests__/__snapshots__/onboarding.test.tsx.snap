@@ -3,15 +3,13 @@
 exports[`creat wallet terms screen component renders correctly 1`] = `
 "<View style={{...}}>
   <View style={{...}}>
+    <Image style={{...}} source={{...}} />
     <View style={{...}}>
-      <Image style={{...}} source={{...}} />
-    </View>
-    <View style={{...}}>
-      <withTheme(TextComponent) large={true} style={{...}}>
+      <withTheme(TextComponent) style={{...}}>
         Welcome to Moonlet!
       </withTheme(TextComponent)>
-      <withTheme(TextComponent) style={{...}} darker={true}>
-        We’ll generate this section once you create, recover or connect a wallet
+      <withTheme(TextComponent) style={{...}}>
+        A blockchain agnostic, cross-platform, non custodial cryptocurrency wallet
       </withTheme(TextComponent)>
     </View>
   </View>
@@ -24,16 +22,12 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
         Connect
       </withTheme(ButtonComponent)>
     </View>
-    <View style={{...}}>
-      <withTheme(ButtonComponent) testID=\\"button-create\\" style={{...}} primary={true} onPress={[Function: onPress]}>
-        Create
-      </withTheme(ButtonComponent)>
-    </View>
-    <View style={{...}}>
-      <withTheme(ButtonComponent) testID=\\"button-generate\\" style={{...}} primary={true} onPress={[Function: onPress]}>
-        Generate wallet
-      </withTheme(ButtonComponent)>
-    </View>
+    <withTheme(ButtonComponent) testID=\\"button-create\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+      Create
+    </withTheme(ButtonComponent)>
+    <withTheme(ButtonComponent) testID=\\"button-generate\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+      Generate wallet
+    </withTheme(ButtonComponent)>
   </View>
 </View>"
 `;

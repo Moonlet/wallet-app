@@ -113,9 +113,7 @@ export class SettingsScreenComponent extends React.Component<
                             <View style={styles.rowContainer}>
                                 <Text style={styles.textRow}>
                                     {Platform.OS === 'ios'
-                                        ? this.state.biometryType
-                                            ? translate(`BiometryType.${this.state.biometryType}`)
-                                            : translate('BiometryType.TouchID')
+                                        ? translate(`BiometryType.${this.state.biometryType}`)
                                         : translate('BiometryType.FingerprintLogin')}
                                 </Text>
                                 <Switch

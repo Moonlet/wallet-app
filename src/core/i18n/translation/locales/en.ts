@@ -50,6 +50,7 @@ export const translation: ITranslations = {
                 receive: 'Receive',
                 recipient: 'Recipient',
                 recover: 'Recover',
+                reset: 'Reset',
                 resetAll: 'Reset all',
                 rewards: 'Rewards',
                 save: 'Save',
@@ -235,7 +236,8 @@ export const translation: ITranslations = {
         },
         Onboarding: {
             welcomeTitle: 'Welcome to Moonlet!',
-            welcomeText: 'We’ll generate this section once you create, recover or connect a wallet',
+            welcomeText:
+                'A blockchain agnostic, cross-platform, non custodial cryptocurrency wallet',
             welcomeTextWeb: 'To use this extension, install our mobile app and scan the code',
             webStep1: '1. Open Moonlet app on your mobile',
             webStep2: '2. Tap on menu icon from the header',
@@ -261,7 +263,8 @@ export const translation: ITranslations = {
         },
         BiometryType: {
             FaceID: 'FaceID',
-            TouchID: 'TouchID'
+            TouchID: 'TouchID',
+            FingerprintLogin: 'Fingerprint login'
         },
         Extension: {
             appRequestInfo:

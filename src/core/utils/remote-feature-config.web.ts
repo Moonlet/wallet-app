@@ -1,5 +1,6 @@
 export enum RemoteFeature {
-    NEAR = 'feature_near'
+    NEAR = 'feature_near',
+    DEV = 'dev'
 }
 
 export const getRemoteConfigFeatures = () => {

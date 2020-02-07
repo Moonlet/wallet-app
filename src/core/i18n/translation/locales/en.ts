@@ -262,7 +262,8 @@ export const translation: ITranslations = {
         },
         BiometryType: {
             FaceID: 'FaceID',
-            TouchID: 'TouchID'
+            TouchID: 'TouchID',
+            FingerprintLogin: 'Fingerprint login'
         },
         Extension: {
             appRequestInfo:

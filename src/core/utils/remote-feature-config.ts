@@ -3,7 +3,7 @@ import DeviceInfo from 'react-native-device-info';
 
 export enum RemoteFeature {
     NEAR = 'feature_near',
-    DEV = 'feature_dev'
+    DEV = 'dev'
 }
 
 let featuresConfig;

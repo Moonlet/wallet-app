@@ -107,5 +107,12 @@ export default (theme: ITheme) =>
         checked: {
             backgroundColor: theme.colors.accent,
             borderRadius: 10
+        },
+        reset: {
+            fontSize: 17,
+            lineHeight: 22,
+            fontWeight: '600',
+            color: theme.colors.accent,
+            textAlign: 'center'
         }
     });

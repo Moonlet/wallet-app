@@ -50,6 +50,7 @@ export const translation: ITranslations = {
                 receive: 'Receive',
                 recipient: 'Recipient',
                 recover: 'Recover',
+                reset: 'Reset',
                 resetAll: 'Reset all',
                 rewards: 'Rewards',
                 save: 'Save',

@@ -271,19 +271,23 @@ export class PasswordPinComponent extends React.Component<
         return (
             <View style={styles.keyRow}>
                 <TouchableOpacity style={styles.keyContainer} onPress={this.biometryAuth}>
-                    <Icon
-                        name={
-                            Platform.OS === 'ios' && this.state.biometryType
-                                ? this.state.biometryType === 'TouchID'
-                                    ? 'touch-id'
-                                    : this.state.biometryType === 'FaceID'
+                    {this.props.touchID ? (
+                        <Icon
+                            name={
+                                Platform.OS === 'ios' && this.state.biometryType === 'FaceID'
                                     ? 'face-id'
                                     : 'touch-id'
-                                : 'touch-id'
-                        }
-                        size={40}
-                        style={styles.touchIdIcon}
-                    />
+                            }
+                            size={40}
+                            style={styles.touchIdIcon}
+                        />
+                    ) : (
+                        <TouchableOpacity
+                            onPress={() => this.setState({ password: '', errorMessage: '' })}
+                        >
+                            <Text style={styles.reset}>{translate('App.labels.reset')}</Text>
+                        </TouchableOpacity>
+                    )}
                 </TouchableOpacity>
                 <LinearGradient
                     colors={[

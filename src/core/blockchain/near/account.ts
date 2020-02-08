@@ -23,7 +23,7 @@ export const isValidChecksumAddress = (address: string): boolean => {
 };
 
 export const isValidAddress = (address: string): boolean => {
-    return true;
+    return false;
 };
 
 export const publicToAddress = (publicKey: string): string => {

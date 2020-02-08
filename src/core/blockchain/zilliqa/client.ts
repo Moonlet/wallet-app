@@ -3,10 +3,12 @@ import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { config } from './config';
+import { NameService } from './name-service';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
+        this.nameService = new NameService();
     }
 
     public async getBalance(address: string): Promise<BigNumber> {

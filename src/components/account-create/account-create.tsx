@@ -3,7 +3,7 @@ import { View, TextInput, TouchableOpacity } from 'react-native';
 import { Text, Button } from '../../library';
 import stylesProvider from './styles';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
-import { Blockchain } from '../../core/blockchain/types';
+import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { translate } from '../../core/i18n';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 
@@ -16,9 +16,11 @@ import { LoadingIndicator } from '../loading-indicator/loading-indicator';
 import { PasswordModal } from '../password-modal/password-modal';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { Icon } from '../../components/icon';
+import { getChainId } from '../../redux/preferences/selectors';
 
 export interface IReduxProps {
     createAccount: typeof createAccount;
+    chainId: ChainIdType;
 }
 
 export interface IExternalProps {
@@ -34,8 +36,10 @@ export interface IState {
     isLoading: boolean;
 }
 
-const mapStateToProps = (state: IReduxState) => {
-    return {};
+const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    return {
+        chainId: getChainId(state, ownProps.blockchain)
+    };
 };
 
 const mapDispatchToProps = {
@@ -64,7 +68,7 @@ export class AccountCreateComponent extends React.Component<
     public checkAccountIdValid = async () => {
         if (this.props.blockchain === Blockchain.NEAR) {
             const blockchainInstance = getBlockchain(this.props.blockchain);
-            const client = blockchainInstance.getClient(0) as NearClient;
+            const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
             const isInputValid = await client.checkAccountIdValid(this.state.inputAccout);
 
             this.setState({ isInputValid, showInputInfo: true });

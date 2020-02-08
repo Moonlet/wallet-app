@@ -26,7 +26,13 @@ import {
     getSelectedWallet
 } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
-import { Blockchain, IFeeOptions } from '../../core/blockchain/types';
+import {
+    Blockchain,
+    IFeeOptions,
+    ResolveTextCode,
+    ResolveTextError,
+    ChainIdType
+} from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
@@ -45,6 +51,7 @@ import {
     BottomSheetType
 } from '../../redux/ui/bottomSheet/state';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
+import { getChainId } from '../../redux/preferences/selectors';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -55,6 +62,7 @@ export interface IReduxProps {
     openBottomSheet: typeof openBottomSheet;
     selectedWalletId: string;
     selectedAccount: IAccountState;
+    chainId: ChainIdType;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -63,7 +71,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
         accounts: getAccounts(state, ownProps.blockchain),
         contacts: getContacts(state),
         selectedWalletId: getSelectedWallet(state).id,
-        selectedAccount: getSelectedAccount(state)
+        selectedAccount: getSelectedAccount(state),
+        chainId: getChainId(state, ownProps.blockchain)
     };
 };
 
@@ -82,9 +91,9 @@ export interface INavigationParams {
 interface IState {
     toAddress: string;
     amount: string;
-    isValidAddress: boolean;
-    labelErrorAddressDisplay: boolean;
-    labelWarningAddressDisplay: boolean;
+    isValidText: boolean;
+    errorResponseText: string;
+    warningResponseText: string;
     showOwnAccounts: boolean;
     insufficientFunds: boolean;
     feeOptions: IFeeOptions;
@@ -115,9 +124,9 @@ export class SendScreenComponent extends React.Component<
         this.state = {
             toAddress: '',
             amount: '',
-            isValidAddress: false,
-            labelErrorAddressDisplay: false,
-            labelWarningAddressDisplay: false,
+            isValidText: false,
+            errorResponseText: undefined,
+            warningResponseText: undefined,
             insufficientFunds: false,
             showOwnAccounts: false,
             feeOptions: undefined,
@@ -180,35 +189,64 @@ export class SendScreenComponent extends React.Component<
         this.qrCodeScanner.open();
     };
 
-    public verifyAddress = (text: string) => {
+    public verifyInputText = async (text: string) => {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
         this.setState({ toAddress: text });
 
-        const addressValid = blockchainInstance.account.isValidAddress(text);
+        try {
+            const response = await blockchainInstance
+                .getClient(this.props.chainId)
+                .nameService.resolveText(text);
 
-        this.setState({
-            isValidAddress: addressValid,
-            labelErrorAddressDisplay: !addressValid,
-            labelWarningAddressDisplay: !blockchainInstance.account.isValidChecksumAddress(text)
-        });
+            switch (response.code) {
+                case ResolveTextCode.OK: {
+                    this.setState({
+                        isValidText: true,
+                        errorResponseText: undefined,
+                        warningResponseText: undefined
+                    });
+                    break;
+                }
+                case ResolveTextCode.WARN_CHECKSUM: {
+                    this.setState({
+                        isValidText: true,
+                        errorResponseText: undefined,
+                        warningResponseText: translate('Send.receipientWarning')
+                    });
+                    break;
+                }
+                default:
+                    break;
+            }
+        } catch (error) {
+            switch (error.error) {
+                case ResolveTextError.INVALID: {
+                    this.setState({
+                        isValidText: false,
+                        errorResponseText: translate('Send.recipientNotValid'),
+                        warningResponseText: undefined
+                    });
+                }
+            }
+        }
     };
     public onQrCodeScanned = (value: string) => {
-        this.verifyAddress(value);
+        this.verifyInputText(value);
     };
 
     public onTransferBetweenAccounts = () => {
         const currentState = this.state.showOwnAccounts;
-        this.setState({ showOwnAccounts: !currentState, isValidAddress: false, toAddress: '' });
+        this.setState({ showOwnAccounts: !currentState, isValidText: false, toAddress: '' });
     };
 
     public onAccountSelection = (account: IAccountState) => {
         this.setState({ toAddress: account.address, showOwnAccounts: false });
-        this.verifyAddress(account.address);
+        this.verifyInputText(account.address);
     };
 
     public onContactSelected = (contact: IContactState) => {
         this.setState({ toAddress: contact.address, showOwnAccounts: false });
-        this.verifyAddress(contact.address);
+        this.verifyInputText(contact.address);
     };
 
     public onFeesChanged = (feeOptions: IFeeOptions) => {
@@ -260,10 +298,10 @@ export class SendScreenComponent extends React.Component<
     @bind
     public onPressClearInput() {
         this.setState({
-            isValidAddress: false,
+            isValidText: false,
             toAddress: '',
-            labelErrorAddressDisplay: false,
-            labelWarningAddressDisplay: false
+            errorResponseText: undefined,
+            warningResponseText: undefined
         });
     }
 
@@ -273,7 +311,7 @@ export class SendScreenComponent extends React.Component<
             return null;
         }
 
-        if (!this.state.isValidAddress) {
+        if (!this.state.isValidText) {
             return (
                 <TouchableOpacity
                     testID="qrcode-icon"
@@ -315,7 +353,7 @@ export class SendScreenComponent extends React.Component<
         const styles = this.props.styles;
 
         if (
-            this.state.isValidAddress &&
+            this.state.isValidText &&
             !this.props.contacts[`${this.props.blockchain}|${this.state.toAddress}`]
         ) {
             return (
@@ -381,7 +419,7 @@ export class SendScreenComponent extends React.Component<
                         style={styles.bottomButton}
                         primary
                         disabled={
-                            !this.state.isValidAddress ||
+                            !this.state.isValidText ||
                             this.state.amount === '' ||
                             this.state.insufficientFunds === true
                         }
@@ -441,27 +479,25 @@ export class SendScreenComponent extends React.Component<
                             placeholder={translate('Send.inputAddress')}
                             autoCapitalize={'none'}
                             autoCorrect={false}
-                            editable={!this.state.isValidAddress}
+                            editable={!this.state.isValidText}
                             selectionColor={theme.colors.accent}
                             value={
-                                this.state.isValidAddress
+                                this.state.isValidText
                                     ? formatAddress(this.state.toAddress, account.blockchain)
                                     : this.state.toAddress
                             }
                             onChangeText={text => {
-                                this.verifyAddress(text);
+                                this.verifyInputText(text);
                             }}
                         />
                         {this.renderRightAddressIcon()}
                     </View>
-                    {this.state.labelErrorAddressDisplay && (
-                        <Text style={styles.displayError}>
-                            {translate('Send.recipientNotValid')}
-                        </Text>
+                    {this.state.errorResponseText && (
+                        <Text style={styles.displayError}>{this.state.errorResponseText}</Text>
                     )}
-                    {this.state.labelWarningAddressDisplay && (
+                    {this.state.warningResponseText && (
                         <Text style={styles.receipientWarning}>
-                            {translate('Send.receipientWarning')}
+                            {this.state.warningResponseText}
                         </Text>
                     )}
                     <TouchableOpacity
@@ -478,9 +514,9 @@ export class SendScreenComponent extends React.Component<
 
                     {this.renderAddAddressToBook()}
 
-                    {this.state.isValidAddress && this.renderBasicFields()}
+                    {this.state.isValidText && this.renderBasicFields()}
 
-                    {!this.state.isValidAddress && this.renderListOrBook()}
+                    {!this.state.isValidText && this.renderListOrBook()}
                 </ScrollView>
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />
 

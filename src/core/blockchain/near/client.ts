@@ -13,10 +13,13 @@ import BN from 'bn.js';
 import BigNumber from 'bignumber.js';
 import sha256 from 'js-sha256';
 import { config } from './config';
+import { NameService } from './name-service';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
+
+        this.nameService = new NameService(this);
     }
 
     public async getBalance(address: string): Promise<BigNumber> {

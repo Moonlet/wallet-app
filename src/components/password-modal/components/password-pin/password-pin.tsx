@@ -270,7 +270,16 @@ export class PasswordPinComponent extends React.Component<
 
         return (
             <View style={styles.keyRow}>
-                <TouchableOpacity style={styles.keyContainer} onPress={this.biometryAuth}>
+                <TouchableOpacity
+                    style={styles.keyContainer}
+                    onPress={() => {
+                        if (this.props.touchID) {
+                            this.biometryAuth();
+                        } else {
+                            this.setState({ password: '', errorMessage: '' }); // Reset button
+                        }
+                    }}
+                >
                     {this.props.touchID ? (
                         <Icon
                             name={
@@ -282,11 +291,7 @@ export class PasswordPinComponent extends React.Component<
                             style={styles.touchIdIcon}
                         />
                     ) : (
-                        <TouchableOpacity
-                            onPress={() => this.setState({ password: '', errorMessage: '' })}
-                        >
-                            <Text style={styles.reset}>{translate('App.labels.reset')}</Text>
-                        </TouchableOpacity>
+                        <Text style={styles.reset}>{translate('App.labels.reset')}</Text>
                     )}
                 </TouchableOpacity>
                 <LinearGradient

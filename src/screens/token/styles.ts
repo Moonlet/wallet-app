@@ -7,8 +7,11 @@ export default (theme: ITheme) =>
         container: {
             flex: 1,
             backgroundColor: theme.colors.appBackground,
-            paddingTop: BASE_DIMENSION * 5,
             paddingHorizontal: BASE_DIMENSION
+        },
+        scrollContainer: {
+            flexGrow: 1,
+            paddingTop: BASE_DIMENSION * 5
         },
         balanceContainer: {
             marginTop: BASE_DIMENSION,

@@ -32,6 +32,7 @@ import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
 import { getBlockchains } from '../../redux/preferences/selectors';
 import { NavigationEvents } from 'react-navigation';
+import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -221,6 +222,7 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
+                <TestnetBadge />
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />
                 {showCreateAccount && (
                     <AccountCreate blockchain={blockchain} navigation={this.props.navigation} />

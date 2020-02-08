@@ -31,6 +31,7 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import { sendTransferTransaction, getBalance } from '../../redux/wallets/actions';
 import { Dialog } from '../../components/dialog/dialog';
 import { getChainId } from '../../redux/preferences/selectors';
+import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -200,8 +201,9 @@ export class TokenScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
+                <TestnetBadge />
                 <ScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
+                    contentContainerStyle={styles.scrollContainer}
                     showsVerticalScrollIndicator={false}
                 >
                     <AccountAddress account={account} token={token} />

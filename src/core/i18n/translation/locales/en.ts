@@ -76,8 +76,9 @@ export const translation: ITranslations = {
                 typeHere: 'Type here',
                 understand: 'I understand',
                 wallets: 'Wallets',
-                watch: 'Watch mode'
-                // plase try to add keys in alphabetic order
+                watch: 'Watch mode',
+                youAreOn: 'You are on {{blockchain}} {{networkName}} Testnet'
+                // please try to add keys in alphabetic order
             },
             buttons: {
                 back: 'Back',

@@ -110,7 +110,7 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                 )}
             </View>
 
-            {isFeatureActive(RemoteFeature.DEV) && (
+            {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
                 <Text darker small>
                     {testWords.map(n => mnemonic[n] + ' ')}
                 </Text>

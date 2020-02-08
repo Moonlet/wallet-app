@@ -162,7 +162,7 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
                         {translate('App.labels.create')}
                     </Button>
 
-                    {isFeatureActive(RemoteFeature.DEV) && (
+                    {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
                         <Button
                             testID="button-generate"
                             style={styles.bottomButton}

@@ -12,6 +12,7 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom';
 import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface IReduxProps {
     createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
@@ -109,9 +110,11 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                 )}
             </View>
 
-            <Text darker small>
-                {testWords.map(n => mnemonic[n] + ' ')}
-            </Text>
+            {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
+                <Text darker small>
+                    {testWords.map(n => mnemonic[n] + ' ')}
+                </Text>
+            )}
 
             <KeyboardCustom
                 handleTextUpdate={(text: string) => {

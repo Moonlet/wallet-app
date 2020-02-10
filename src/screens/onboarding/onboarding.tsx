@@ -16,6 +16,7 @@ import { IReduxState } from '../../redux/state';
 import { hash } from '../../core/secure/encrypt';
 import { setPassword } from '../../core/secure/keychain';
 import { translate } from '../../core/i18n';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -161,14 +162,16 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
                         {translate('App.labels.create')}
                     </Button>
 
-                    <Button
-                        testID="button-generate"
-                        style={styles.bottomButton}
-                        primary
-                        onPress={() => this.onPressGenerateWallet()}
-                    >
-                        {`Generate wallet`}
-                    </Button>
+                    {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
+                        <Button
+                            testID="button-generate"
+                            style={styles.bottomButton}
+                            primary
+                            onPress={() => this.onPressGenerateWallet()}
+                        >
+                            {`Generate wallet`}
+                        </Button>
+                    )}
                 </View>
             </View>
         );

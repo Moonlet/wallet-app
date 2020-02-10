@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { StatusBar, Platform, AppState, AppStateStatus, Image, View } from 'react-native';
 import { createAppContainer } from 'react-navigation';
-import { RootNavigation } from './navigation/navigation';
+import { RootNavigation, themes } from './navigation/navigation';
 import configureStore from './redux/config';
 import { PersistGate } from 'redux-persist/integration/react';
 import { darkTheme } from './styles/themes/dark-theme';
@@ -192,7 +192,15 @@ export default class App extends React.Component<{}, IState> {
 
     public renderImage() {
         return (
-            <View style={{ flex: 1, justifyContent: 'center' }}>
+            <View
+                style={{
+                    position: 'absolute',
+                    backgroundColor: themes.dark.colors.appBackground,
+                    height: '100%',
+                    width: '100%',
+                    justifyContent: 'center'
+                }}
+            >
                 <Image
                     style={{
                         width: pw(60),
@@ -212,14 +220,11 @@ export default class App extends React.Component<{}, IState> {
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
-                            {this.state.displayApplication ? (
-                                <AppContainer
-                                    ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
-                                    theme="dark"
-                                />
-                            ) : (
-                                this.renderImage()
-                            )}
+                            <AppContainer
+                                ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
+                                theme="dark"
+                            />
+                            {!this.state.displayApplication && this.renderImage()}
                             <PasswordModal
                                 visible={this.state.showPasswordModal}
                                 onPassword={() =>

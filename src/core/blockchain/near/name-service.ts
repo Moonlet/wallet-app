@@ -10,22 +10,26 @@ export class NameService {
     constructor(private client: Client) {}
 
     public async resolveText(text: string): Promise<IResolveTextResponse> {
-        const client = this.client as NearClient;
-        const isValidAccount = await client.checkAccountIdValid(text);
-
-        if (isValidAccount) {
-            return Promise.resolve({
+        try {
+            const accountValid = await this.resolveName(text);
+            return {
                 code: ResolveTextCode.OK,
-                type: ResolveTextType.ADDRESS,
-                address: text,
+                type: ResolveTextType.NAME,
+                address: accountValid.address,
                 name: ''
-            });
+            };
+        } catch (error) {
+            return Promise.reject();
         }
     }
 
     public async resolveName(text: string): Promise<IResolveNameResponse> {
-        return {
-            address: text
-        };
+        const client = this.client as NearClient;
+
+        try {
+            return await client.accountExists(text);
+        } catch (error) {
+            return Promise.reject();
+        }
     }
 }

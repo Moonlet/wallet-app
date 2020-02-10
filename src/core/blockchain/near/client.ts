@@ -1,4 +1,10 @@
-import { BlockchainGenericClient, IFeeOptions, ChainIdType, IBlockInfo } from '../types';
+import {
+    BlockchainGenericClient,
+    IFeeOptions,
+    ChainIdType,
+    IBlockInfo,
+    IResolveNameResponse
+} from '../types';
 import { networks } from './networks';
 import {
     createAccount,
@@ -64,6 +70,26 @@ export class Client extends BlockchainGenericClient {
             gasLimit,
             feeTotal
         };
+    }
+
+    public async accountExists(accountId: string): Promise<IResolveNameResponse> {
+        try {
+            const res = await this.rpc.call('query', [`account/${accountId}`, '']);
+
+            if (res.result) {
+                // account id already taken
+                return {
+                    address: accountId
+                };
+            } else {
+                // valid account id
+                return {
+                    address: accountId
+                };
+            }
+        } catch (err) {
+            Promise.reject(err);
+        }
     }
 
     public async checkAccountIdValid(accountId: string): Promise<boolean> {

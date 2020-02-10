@@ -20,6 +20,7 @@ export const translation: ITranslations = {
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
                 connect: 'Connect',
+                continue: 'Continue',
                 contract: 'Contract',
                 contractAddress: 'Contract address',
                 copy: 'Copy',

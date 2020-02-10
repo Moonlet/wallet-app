@@ -31,7 +31,8 @@ import {
     IFeeOptions,
     ResolveTextCode,
     ResolveTextError,
-    ChainIdType
+    ChainIdType,
+    ResolveTextType
 } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
@@ -98,6 +99,7 @@ interface IState {
     insufficientFunds: boolean;
     feeOptions: IFeeOptions;
     showExtensionMessage: boolean;
+    userAction: boolean;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -130,7 +132,8 @@ export class SendScreenComponent extends React.Component<
             insufficientFunds: false,
             showOwnAccounts: false,
             feeOptions: undefined,
-            showExtensionMessage: false
+            showExtensionMessage: false,
+            userAction: false
         };
     }
 
@@ -200,11 +203,22 @@ export class SendScreenComponent extends React.Component<
 
             switch (response.code) {
                 case ResolveTextCode.OK: {
-                    this.setState({
-                        isValidText: true,
-                        errorResponseText: undefined,
-                        warningResponseText: undefined
-                    });
+                    if (response.type === ResolveTextType.ADDRESS) {
+                        this.setState({
+                            isValidText: true,
+                            errorResponseText: undefined,
+                            warningResponseText: undefined,
+                            userAction: false
+                        });
+                    } else if (response.type === ResolveTextType.NAME) {
+                        this.setState({
+                            isValidText: false,
+                            userAction: true,
+                            errorResponseText: undefined,
+                            warningResponseText: undefined
+                        });
+                    }
+
                     break;
                 }
                 case ResolveTextCode.WARN_CHECKSUM: {
@@ -236,7 +250,12 @@ export class SendScreenComponent extends React.Component<
 
     public onTransferBetweenAccounts = () => {
         const currentState = this.state.showOwnAccounts;
-        this.setState({ showOwnAccounts: !currentState, isValidText: false, toAddress: '' });
+        this.setState({
+            showOwnAccounts: !currentState,
+            isValidText: false,
+            userAction: false,
+            toAddress: ''
+        });
     };
 
     public onAccountSelection = (account: IAccountState) => {
@@ -364,6 +383,23 @@ export class SendScreenComponent extends React.Component<
                 </TouchableOpacity>
             );
         }
+    }
+
+    public renderContinueAction() {
+        const styles = this.props.styles;
+        return (
+            <View style={styles.userActionContainer}>
+                <Button
+                    primary
+                    style={styles.userActionButton}
+                    onPress={() => {
+                        this.setState({ isValidText: true, userAction: false });
+                    }}
+                >
+                    {translate('App.labels.continue')}
+                </Button>
+            </View>
+        );
     }
 
     public renderBasicFields() {
@@ -513,6 +549,8 @@ export class SendScreenComponent extends React.Component<
                     </TouchableOpacity>
 
                     {this.renderAddAddressToBook()}
+
+                    {this.state.userAction && this.renderContinueAction()}
 
                     {this.state.isValidText && this.renderBasicFields()}
 

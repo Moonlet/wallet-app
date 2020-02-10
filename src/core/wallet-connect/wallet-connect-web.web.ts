@@ -68,25 +68,30 @@ export const WalletConnectWeb = (() => {
 
     const getState = () => {
         return new Promise((resolve, reject) => {
-            walletConnector.sendCustomRequest({ method: WC.GET_STATE }).then(data => {
-                store.dispatch(setExtensionStateLoaded());
-                if (data.error) {
-                    alert(data.error);
-                    reject(data.error);
-                } else {
-                    const state = Object.assign(store.getState(), data.state);
-                    state.app.extensionStateLoaded = true;
-                    store.dispatch(updateReduxState(state));
-                    resolve(data);
-                }
-            });
+            walletConnector
+                .sendCustomRequest({ method: WC.GET_STATE }, { forcePushNotification: true })
+                .then(data => {
+                    store.dispatch(setExtensionStateLoaded());
+                    if (data.error) {
+                        alert(data.error);
+                        reject(data.error);
+                    } else {
+                        const state = Object.assign(store.getState(), data.state);
+                        state.app.extensionStateLoaded = true;
+                        store.dispatch(updateReduxState(state));
+                        resolve(data);
+                    }
+                });
         });
     };
 
     const signTransaction = transactionData => {
         return new Promise((resolve, reject) => {
             walletConnector
-                .sendCustomRequest({ method: WC.SIGN_TRANSACTION, params: [transactionData] })
+                .sendCustomRequest(
+                    { method: WC.SIGN_TRANSACTION, params: [transactionData] },
+                    { forcePushNotification: true }
+                )
                 .then(data => {
                     if (data.error) {
                         reject(data.error);

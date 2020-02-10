@@ -32,5 +32,6 @@ export interface INearTransactionAdditionalInfoType {
 export interface INearAccount {
     address: string;
     name: string;
-    amount?: BigNumber;
+    amount: BigNumber;
+    exists: boolean;
 }

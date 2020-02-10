@@ -12,8 +12,13 @@ export const getChainId = (state: IReduxState, blockchain: Blockchain): ChainIdT
         }
         return state.preferences.networks[blockchain].mainNet;
     } else {
-        getBlockchain(blockchain).networks.filter(n => n.mainNet === !!state.preferences.testNet)[0]
-            .chainId;
+        if (blockchain) {
+            getBlockchain(blockchain).networks.filter(
+                n => n.mainNet === !!state.preferences.testNet
+            )[0].chainId;
+        } else {
+            return '';
+        }
     }
 };
 

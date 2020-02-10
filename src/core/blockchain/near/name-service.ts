@@ -5,7 +5,7 @@ import {
     ResolveTextCode
 } from '../types';
 import { Client as NearClient, Client } from './client';
-import { IBlockchainNameService } from '../types/name-service';
+import { IBlockchainNameService, ResolveTextError } from '../types/name-service';
 
 export class NameService implements IBlockchainNameService {
     constructor(private client: Client) {}
@@ -20,7 +20,7 @@ export class NameService implements IBlockchainNameService {
                 name: ''
             };
         } catch (error) {
-            return Promise.reject();
+            return Promise.reject(error);
         }
     }
 
@@ -33,7 +33,9 @@ export class NameService implements IBlockchainNameService {
                 address: account.address
             };
         } catch (error) {
-            return Promise.reject();
+            return Promise.reject({
+                error: ResolveTextError.CONNECTION_ERROR
+            });
         }
     }
 }

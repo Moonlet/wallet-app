@@ -230,6 +230,13 @@ export class SendScreenComponent extends React.Component<
                     break;
                 }
                 default:
+                    {
+                        this.setState({
+                            isValidText: false,
+                            errorResponseText: translate('Send.recipientNotValid'),
+                            warningResponseText: undefined
+                        });
+                    }
                     break;
             }
         } catch (error) {
@@ -238,6 +245,13 @@ export class SendScreenComponent extends React.Component<
                     this.setState({
                         isValidText: false,
                         errorResponseText: translate('Send.recipientNotValid'),
+                        warningResponseText: undefined
+                    });
+                }
+                case ResolveTextError.CONNECTION_ERROR: {
+                    this.setState({
+                        isValidText: false,
+                        errorResponseText: translate('Send.genericError'),
                         warningResponseText: undefined
                     });
                 }

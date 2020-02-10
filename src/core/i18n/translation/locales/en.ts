@@ -150,6 +150,7 @@ export const translation: ITranslations = {
             recipientLabel: 'Recipient',
             transferOwnAccounts: 'Transfer between my accounts',
             recipientNotValid: 'Recipient address is invalid',
+            genericError: 'Operation could not be completed. Check internet connection',
             insufficientFunds: 'Insufficient funds',
             receipientWarning: 'Warning: recipient address is not checksumed',
             allBalance: 'Add all balance',

@@ -79,13 +79,16 @@ export class Client extends BlockchainGenericClient {
                 return {
                     address: accountId,
                     name: accountId,
-                    amount: new BigNumber(res.result.amount)
+                    amount: new BigNumber(res.result.amount),
+                    exists: true
                 };
             } else {
                 // valid account id
                 return {
                     address: accountId,
-                    name: accountId
+                    name: accountId,
+                    amount: new BigNumber(0),
+                    exists: false
                 };
             }
         } catch (err) {

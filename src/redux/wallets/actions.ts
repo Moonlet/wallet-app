@@ -207,11 +207,17 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
         Promise.all([
             wallet.getAccounts(Blockchain.ZILLIQA, 0),
             wallet.getAccounts(Blockchain.ZILLIQA, 1),
+            wallet.getAccounts(Blockchain.ZILLIQA, 2),
+            wallet.getAccounts(Blockchain.ZILLIQA, 3),
+            wallet.getAccounts(Blockchain.ZILLIQA, 4),
             wallet.getAccounts(Blockchain.ETHEREUM, 0),
-            wallet.getAccounts(Blockchain.ETHEREUM, 1)
+            wallet.getAccounts(Blockchain.ETHEREUM, 1),
+            wallet.getAccounts(Blockchain.ETHEREUM, 2),
+            wallet.getAccounts(Blockchain.ETHEREUM, 3),
+            wallet.getAccounts(Blockchain.ETHEREUM, 4)
         ]).then(async data => {
-            data[0][0].selected = true;
-            data[2][0].selected = true;
+            data[0][0].selected = true; // first zil account
+            data[5][0].selected = true; // first eth account
             const walletId = uuidv4();
             const accounts: IAccountState[] = data.reduce((out, acc) => out.concat(acc), []);
 

@@ -22,7 +22,7 @@ export interface IResolveTextResponse {
     name: string;
 }
 
-export interface IBlockchainNameServiceUtils {
+export interface IBlockchainNameService {
     resolveText(text: string): Promise<IResolveTextResponse>;
     resolveName(text: string): Promise<IResolveNameResponse>;
 }

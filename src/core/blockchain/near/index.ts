@@ -4,6 +4,7 @@ import { Client } from './client';
 import * as transaction from './transaction';
 import * as account from './account';
 import { IBlockchain, ChainIdType } from '../types';
+import BigNumber from 'bignumber.js';
 
 export const Near: IBlockchain = {
     config,
@@ -26,4 +27,10 @@ export interface INearTransactionAction {
 export interface INearTransactionAdditionalInfoType {
     currentBlockHash: string;
     actions: INearTransactionAction[];
+}
+
+export interface INearAccount {
+    address: string;
+    name: string;
+    amount?: BigNumber;
 }

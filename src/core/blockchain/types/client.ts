@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { RpcClient } from '../../utils/rpc-client';
 import { IBlockchainNetwork, ChainIdType } from './network';
 import { IFeeOptions } from './transaction';
-import { IBlockchainNameServiceUtils } from '.';
+import { IBlockchainNameService } from '.';
 
 export interface IBlockInfo {
     number: number;
@@ -11,7 +11,7 @@ export interface IBlockInfo {
 
 export abstract class BlockchainGenericClient {
     public readonly tokens: { [type: string]: any } = {};
-    public nameService: IBlockchainNameServiceUtils;
+    public nameService: IBlockchainNameService;
     protected rpc: RpcClient;
     protected chainId: ChainIdType;
 

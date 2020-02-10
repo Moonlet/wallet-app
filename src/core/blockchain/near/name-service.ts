@@ -5,8 +5,9 @@ import {
     ResolveTextCode
 } from '../types';
 import { Client as NearClient, Client } from './client';
+import { IBlockchainNameService } from '../types/name-service';
 
-export class NameService {
+export class NameService implements IBlockchainNameService {
     constructor(private client: Client) {}
 
     public async resolveText(text: string): Promise<IResolveTextResponse> {
@@ -27,7 +28,10 @@ export class NameService {
         const client = this.client as NearClient;
 
         try {
-            return await client.accountExists(text);
+            const account = await client.getAccount(text);
+            return {
+                address: account.address
+            };
         } catch (error) {
             return Promise.reject();
         }

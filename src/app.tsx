@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { StatusBar, Platform, AppState, AppStateStatus } from 'react-native';
+import { StatusBar, Platform, AppState, AppStateStatus, Image, View } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { RootNavigation } from './navigation/navigation';
 import configureStore from './redux/config';
@@ -19,6 +19,7 @@ import { WalletConnectWeb } from './core/wallet-connect/wallet-connect-web';
 import { NavigationService } from './navigation/navigation-service';
 import { Dialog } from './components/dialog/dialog';
 import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
+import { pw } from './styles';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -34,6 +35,7 @@ interface IState {
     splashAnimationDone: boolean;
     appState: AppStateStatus;
     showPasswordModal: boolean;
+    displayApplication: boolean;
 }
 
 WalletConnectClient.setStore(store);
@@ -65,7 +67,8 @@ export default class App extends React.Component<{}, IState> {
             appReady: false,
             splashAnimationDone: false,
             appState: AppState.currentState,
-            showPasswordModal: false
+            showPasswordModal: false,
+            displayApplication: true
         };
 
         getRemoteConfigFeatures().then(() => {
@@ -160,6 +163,7 @@ export default class App extends React.Component<{}, IState> {
         }
         this.setState({
             showPasswordModal: true,
+            displayApplication: true,
             appState: APP_STATE_ACTIVE
         });
     }
@@ -167,9 +171,14 @@ export default class App extends React.Component<{}, IState> {
     public handleAppStateChange = (nextAppState: AppStateStatus) => {
         if (nextAppState === APP_STATE_INACTIVE || nextAppState === APP_STATE_BACKGROUND) {
             this.setState({
-                showPasswordModal: true
+                displayApplication: false
+            });
+        } else {
+            this.setState({
+                displayApplication: true
             });
         }
+
         if (
             this.state.appState === APP_STATE_BACKGROUND &&
             nextAppState === APP_STATE_ACTIVE &&
@@ -181,6 +190,21 @@ export default class App extends React.Component<{}, IState> {
         this.setState({ appState: nextAppState });
     };
 
+    public renderImage() {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+                <Image
+                    style={{
+                        width: pw(60),
+                        resizeMode: 'contain',
+                        alignSelf: 'center'
+                    }}
+                    source={require('./assets/images/png/moonlet_space.png')}
+                />
+            </View>
+        );
+    }
+
     public render() {
         if (this.state.appReady) {
             // this.unsubscribe();
@@ -188,15 +212,22 @@ export default class App extends React.Component<{}, IState> {
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
-                            {!this.state.showPasswordModal && (
+                            {this.state.displayApplication ? (
                                 <AppContainer
                                     ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
                                     theme="dark"
                                 />
+                            ) : (
+                                this.renderImage()
                             )}
                             <PasswordModal
                                 visible={this.state.showPasswordModal}
-                                onPassword={() => this.setState({ showPasswordModal: false })}
+                                onPassword={() =>
+                                    this.setState({
+                                        showPasswordModal: false,
+                                        displayApplication: true
+                                    })
+                                }
                             />
                             <BottomSheet />
                             <Dialog.Component />

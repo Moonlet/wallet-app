@@ -3,7 +3,7 @@
 exports[`qr code modal  renders correctly 1`] = `
 "<Component animationType=\\"slide\\" transparent={false} visible={false} presentationStyle=\\"overFullScreen\\" hardwareAccelerated={false}>
   <View style={{...}}>
-    <CameraKitCameraScreen testID=\\"CameraKitCameraScreen\\" actions={{...}} onBottomButtonPressed={[Function: onBottomButtonPressed]} scanBarcode={true} onReadCode={[Function: onReadCode]} showFrame={true} offsetForScannerFrame={10} heightForScannerFrame={500} colorForScannerFrame=\\"red\\" frameColor=\\"red\\" laserColor=\\"white\\" />
+    <CameraKitCameraScreen testID=\\"CameraKitCameraScreen\\" actions={{...}} onBottomButtonPressed={[Function: onBottomButtonPressed]} scanBarcode={true} onReadCode={[Function: onReadCode]} />
   </View>
 </Component>"
 `;

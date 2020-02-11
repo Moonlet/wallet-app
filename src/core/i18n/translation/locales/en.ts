@@ -115,7 +115,7 @@ export const translation: ITranslations = {
             BLE: 'Bluetooth',
             scanningDevices: 'Scanning for ledger device',
             paired: 'has been paired',
-            openApp: 'Please open {{app}} app on your Ledger',
+            OPEN_APP: 'Please open {{app}} app on your Ledger',
             ETHEREUM: 'Ethereum',
             ZILLIQA: 'Zilliqa'
         },
@@ -145,6 +145,13 @@ export const translation: ITranslations = {
             showPasscode: 'Show Passcode'
         },
         Send: {
+            REVIEW_TRANSACTION: 'Review transaction on your hardware wallet',
+            OPEN_APP: 'Please open {{app}} app on your Ledger',
+            BROADCASTING: 'Broadcasting transaction',
+            SIGNING: 'Signing transaction',
+            TR_UNDERPRICED: 'Transaction underpriced: gas price might be too low',
+            NOT_ENOUGH_TOKENS: 'Insufficient funds for transaction',
+
             inputAddress: 'Search public addresses or domain names',
             amount: 'Amount',
             recipientLabel: 'Recipient',

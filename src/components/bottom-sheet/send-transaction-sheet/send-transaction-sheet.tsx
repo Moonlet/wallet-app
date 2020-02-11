@@ -8,7 +8,11 @@ import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { BottomSheetHeader } from '../header/header';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
-import { Blockchain } from '../../../core/blockchain/types';
+import {
+    Blockchain,
+    TransactionMessageText,
+    TransactionMessageType
+} from '../../../core/blockchain/types';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 
@@ -20,16 +24,16 @@ interface IExternalProps {
 }
 
 interface IReduxProps {
-    reviewTransaction: boolean;
+    sendTransactionMessage: { message: TransactionMessageText; type: TransactionMessageType };
 }
 
 export const mapStateToProps = (state: IReduxState) => {
     return {
-        reviewTransaction: state.ui.screens.send.reviewTransaction
+        sendTransactionMessage: state.ui.screens.send.message
     };
 };
 
-export class LedgerMessageBottomSheetComponent extends React.Component<
+export class SendTransactionBottomSheetComponent extends React.Component<
     IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public bottomSheet: any;
@@ -51,16 +55,32 @@ export class LedgerMessageBottomSheetComponent extends React.Component<
 
         return (
             <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
-                <Text key="message" style={styles.message}>
-                    {this.props.reviewTransaction === true
-                        ? translate('Send.reviewTransaction')
-                        : translate('CreateHardwareWallet.openApp', {
-                              app: this.props.blockchain
-                          })}
-                </Text>
-                <View key="loading">
-                    <LoadingIndicator />
-                </View>
+                {this.props.sendTransactionMessage !== undefined && (
+                    <Text
+                        key="message"
+                        style={[
+                            styles.message,
+                            this.props.sendTransactionMessage.type === TransactionMessageType.ERROR
+                                ? styles.messageError
+                                : null,
+                            this.props.sendTransactionMessage.type ===
+                            TransactionMessageType.WARNING
+                                ? styles.messageWarning
+                                : null
+                        ]}
+                    >
+                        {translate('Send.' + this.props.sendTransactionMessage.message, {
+                            app: this.props.blockchain
+                        })}
+                    </Text>
+                )}
+
+                {this.props.sendTransactionMessage !== undefined &&
+                    this.props.sendTransactionMessage.type === TransactionMessageType.INFO && (
+                        <View key="loading">
+                            <LoadingIndicator />
+                        </View>
+                    )}
             </View>
         );
     };
@@ -83,7 +103,7 @@ export class LedgerMessageBottomSheetComponent extends React.Component<
     }
 }
 
-export const LedgerMessageBottomSheet = smartConnect<IExternalProps>(
-    LedgerMessageBottomSheetComponent,
+export const SendTransactionBottomSheet = smartConnect<IExternalProps>(
+    SendTransactionBottomSheetComponent,
     [connect(mapStateToProps, null), withTheme(stylesProvider)]
 );

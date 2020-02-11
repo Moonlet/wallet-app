@@ -1,10 +1,14 @@
-// actions consts
-export const REVIEW_TRANSACTION = 'REVIEW_TRANSACTION';
+import { TransactionMessageText, TransactionMessageType } from '../../../../core/blockchain/types';
 
-// actions creators
-export const reviewTransaction = (value: boolean) => {
+// actions consts
+export const DISPLAY_MESSAGE = 'DISPLAY_MESSAGE';
+
+export const displayMessage = (value: TransactionMessageText, type: TransactionMessageType) => {
     return {
-        type: REVIEW_TRANSACTION,
-        data: value
+        type: DISPLAY_MESSAGE,
+        data: {
+            message: value,
+            type
+        }
     };
 };

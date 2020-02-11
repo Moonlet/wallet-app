@@ -74,3 +74,18 @@ export interface ITransferTransactionExtraFields {
     memo?: string;
     //
 }
+
+export enum TransactionMessageType {
+    INFO = 'INFO',
+    ERROR = 'ERROR',
+    WARNING = 'WARNING'
+}
+
+export enum TransactionMessageText {
+    REVIEW_TRANSACTION = 'REVIEW_TRANSACTION',
+    OPEN_APP = 'OPEN_APP',
+    SIGNING = 'SIGNING',
+    BROADCASTING = 'BROADCASTING',
+    TR_UNDERPRICED = 'TR_UNDERPRICED',
+    NOT_ENOUGH_TOKENS = 'NOT_ENOUGH_TOKENS'
+}

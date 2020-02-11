@@ -1,15 +1,15 @@
 import { ISendScreenState } from './state';
 import { IAction } from '../../../types';
-import { REVIEW_TRANSACTION } from './actions';
+import { DISPLAY_MESSAGE } from './actions';
 
 const intialState: ISendScreenState = {
-    reviewTransaction: false
+    message: undefined
 };
 
 export default (state: ISendScreenState = intialState, action: IAction): ISendScreenState => {
     switch (action.type) {
-        case REVIEW_TRANSACTION:
-            return { ...state, reviewTransaction: action.data };
+        case DISPLAY_MESSAGE:
+            return { ...state, message: action.data };
 
         default:
             break;

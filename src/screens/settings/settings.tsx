@@ -143,23 +143,6 @@ export class SettingsScreenComponent extends React.Component<
 
                     <TouchableOpacity
                         style={styles.rowContainer}
-                        onPress={() =>
-                            this.setState({ resetPassword: true }, () => {
-                                this.passwordModal.requestPassword().then(() => {
-                                    // disable resetPassword if you want to reattempt to change the PIN code
-                                    this.setState({ resetPassword: false });
-                                });
-                            })
-                        }
-                    >
-                        <Text style={styles.textRow}>{`Reset password`}</Text>
-                        <Icon name="chevron-right" size={16} style={styles.icon} />
-                    </TouchableOpacity>
-
-                    <View style={styles.divider} />
-
-                    <TouchableOpacity
-                        style={styles.rowContainer}
                         onPress={() => navigation.navigate('Wallets')}
                     >
                         <Text style={styles.textRow}>{translate('Settings.manageWallet')}</Text>
@@ -179,6 +162,24 @@ export class SettingsScreenComponent extends React.Component<
                             <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
+
+                    <View style={styles.divider} />
+
+                    <TouchableOpacity
+                        style={styles.rowContainer}
+                        onPress={() =>
+                            this.setState({ resetPassword: true }, () => {
+                                this.passwordModal.requestPassword().then(() => {
+                                    // disable resetPassword if you want to reattempt to change the PIN code
+                                    this.setState({ resetPassword: false });
+                                });
+                            })
+                        }
+                    >
+                        <Text style={styles.textRow}>{`Reset password`}</Text>
+                        <Icon name="chevron-right" size={16} style={styles.icon} />
+                    </TouchableOpacity>
+
                     <View style={styles.divider} />
 
                     <Text style={styles.textHeader}>

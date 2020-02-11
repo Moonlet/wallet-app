@@ -208,6 +208,7 @@ export class PasswordModalComponent extends React.Component<
                             onPasswordEntered={this.onPasswordEntered}
                             onBiometryLogin={this.onBiometryLogin}
                             clearPasswordInput={this.state.clearPasswordInput}
+                            resetPassword={this.props.resetPassword}
                         />
                     )}
                 </Modal>

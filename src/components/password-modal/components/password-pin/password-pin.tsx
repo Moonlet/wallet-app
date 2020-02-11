@@ -23,6 +23,7 @@ export interface IExternalProps {
     onPasswordEntered: (value: string) => Promise<string>;
     onBiometryLogin: (success: boolean) => void;
     clearPasswordInput: boolean;
+    resetPassword: boolean;
 }
 
 interface IState {
@@ -85,7 +86,9 @@ export class PasswordPinComponent extends React.Component<
         };
         this.shakeAnimation = new Animated.Value(0);
 
-        this.biometryAuth();
+        if (!props.resetPassword) {
+            this.biometryAuth();
+        }
     }
 
     public async onEnterPassword() {
@@ -289,7 +292,7 @@ export class PasswordPinComponent extends React.Component<
                         }
                     }}
                 >
-                    {this.props.touchID ? (
+                    {this.props.touchID && !this.props.resetPassword ? (
                         <Icon
                             name={
                                 Platform.OS === 'ios' && this.state.biometryType === 'FaceID'

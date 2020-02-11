@@ -12,7 +12,6 @@ import { withTheme } from '../../core/theme/with-theme';
 import { createHDWallet } from '../../redux/wallets/actions';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { IReduxState } from '../../redux/state';
 import { hash } from '../../core/secure/encrypt';
 import { setPassword } from '../../core/secure/keychain';
 import { translate } from '../../core/i18n';
@@ -28,6 +27,11 @@ export interface IReduxProps {
     createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
     openLoadingModal: typeof openLoadingModal;
 }
+
+const mapDispatchToProps = {
+    createHDWallet,
+    openLoadingModal
+};
 
 export class OnboardingScreenComponent extends React.Component<IProps & IReduxProps> {
     public mnemonic = [
@@ -182,9 +186,6 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
 }
 
 export const OnboardingScreen = smartConnect(OnboardingScreenComponent, [
-    connect((state: IReduxState) => ({}), {
-        createHDWallet,
-        openLoadingModal
-    }),
+    connect(null, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

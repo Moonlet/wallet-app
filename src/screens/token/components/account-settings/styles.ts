@@ -41,14 +41,7 @@ export default (theme: ITheme) =>
         backButtonContainer: {
             flex: 1,
             flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center'
-        },
-        backIconContainer: {
-            alignItems: 'center',
-            justifyContent: 'center',
-            height: ICON_CONTAINER_SIZE,
-            width: ICON_CONTAINER_SIZE
+            paddingLeft: BASE_DIMENSION * 2
         },
         backText: {
             fontSize: 17,
@@ -80,7 +73,8 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION * 2
         },
         icon: {
-            color: theme.colors.accent
+            color: theme.colors.accent,
+            alignSelf: 'center'
         },
         textRow: {
             fontSize: 17,

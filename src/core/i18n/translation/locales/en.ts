@@ -230,8 +230,7 @@ export const translation: ITranslations = {
             signOut: 'Sign out',
             mainnetTestnet: 'Mainnet/Testnet',
             deviceId: 'Device ID',
-            copied: 'Device ID copied!',
-            pinChanged: 'Pin has been changed successfully!'
+            copied: 'Device ID copied!'
         },
         NetworkOptions: {
             mainnet: 'Mainnet',

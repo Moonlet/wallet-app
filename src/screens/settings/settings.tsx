@@ -146,7 +146,6 @@ export class SettingsScreenComponent extends React.Component<
                         onPress={() =>
                             this.setState({ resetPassword: true }, () => {
                                 this.passwordModal.requestPassword().then(() => {
-                                    Dialog.confirm(translate('Settings.pinChanged'), '');
                                     // disable resetPassword if you want to reattempt to change the PIN code
                                     this.setState({ resetPassword: false });
                                 });

@@ -123,6 +123,7 @@ export class PasswordModalComponent extends React.Component<
                 });
                 return;
             } else {
+                this.setState({ clearPasswordInput: false });
                 return vfPassword.errorMessage;
             }
         }

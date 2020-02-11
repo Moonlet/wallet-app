@@ -279,20 +279,21 @@ export class PasswordPinComponent extends React.Component<
 
     public renderFooterRow = () => {
         const styles = this.props.styles;
+        const isTouchID = this.props.touchID && !this.props.resetPassword;
 
         return (
             <View style={styles.keyRow}>
                 <TouchableOpacity
                     style={styles.keyContainer}
                     onPress={() => {
-                        if (this.props.touchID) {
+                        if (isTouchID) {
                             this.biometryAuth();
                         } else {
                             this.setState({ password: '', errorMessage: '' }); // Reset button
                         }
                     }}
                 >
-                    {this.props.touchID && !this.props.resetPassword ? (
+                    {isTouchID ? (
                         <Icon
                             name={
                                 Platform.OS === 'ios' && this.state.biometryType === 'FaceID'

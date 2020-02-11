@@ -17,6 +17,7 @@ import { hash } from '../../core/secure/encrypt';
 import { setPassword } from '../../core/secure/keychain';
 import { translate } from '../../core/i18n';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -25,6 +26,7 @@ export interface IProps {
 
 export interface IReduxProps {
     createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
+    openLoadingModal: typeof openLoadingModal;
 }
 
 export class OnboardingScreenComponent extends React.Component<IProps & IReduxProps> {
@@ -104,6 +106,7 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
         );
     }
     public async onPressGenerateWallet() {
+        this.props.openLoadingModal();
         const password = await hash('000000');
         setPassword(password, false);
         this.props.createHDWallet(this.mnemonic.join(' '), password, () =>
@@ -180,7 +183,8 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
 
 export const OnboardingScreen = smartConnect(OnboardingScreenComponent, [
     connect((state: IReduxState) => ({}), {
-        createHDWallet
+        createHDWallet,
+        openLoadingModal
     }),
     withTheme(stylesProvider)
 ]);

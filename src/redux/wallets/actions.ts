@@ -30,6 +30,7 @@ import { getSelectedWallet, getAccounts, getSelectedAccount } from './selectors'
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
+import { openLoadingModal, closeLoadingModal } from '../ui/loading-modal/actions';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -200,6 +201,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
+    dispatch(openLoadingModal());
     try {
         const wallet = new HDWallet(mnemonic);
 
@@ -236,10 +238,12 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
 
             dispatch(setSelectedWallet(walletId));
             callback && callback();
+            dispatch(closeLoadingModal());
         });
     } catch (e) {
         // console.log(e);
         // TODO best way to handle this?
+        dispatch(closeLoadingModal());
     }
     // TODO  - error handling
 };

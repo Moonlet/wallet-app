@@ -174,7 +174,7 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
 
             <PasswordModal
                 shouldCreatePassword={true}
-                subtitle={translate('Password.subtitleMnemonic')}
+                subtitle={translate('Password.subtitleMnemonic')} // TODO: fix this
                 obRef={ref => (this.passwordModal = ref)}
             />
         </View>

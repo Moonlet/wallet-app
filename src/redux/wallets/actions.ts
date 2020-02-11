@@ -342,6 +342,7 @@ export const sendTransferTransaction = (
     const chainId = getChainId(state, account.blockchain);
 
     const appWallet = getSelectedWallet(state);
+    dispatch(openLoadingModal());
 
     try {
         const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
@@ -410,9 +411,11 @@ export const sendTransferTransaction = (
                 dispatch(closeBottomSheet());
             }
             goBack && navigation.goBack();
+            dispatch(closeLoadingModal());
             return;
         }
     } catch (e) {
+        dispatch(closeLoadingModal());
         throw new Error(e);
     }
 };

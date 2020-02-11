@@ -4,3 +4,4 @@ export * from './network';
 export * from './transaction';
 export * from './account';
 export * from './config';
+export * from './name-service';

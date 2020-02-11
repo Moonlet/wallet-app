@@ -83,7 +83,7 @@ export default describe('SendScreen', () => {
 
     test('should change state if address is entered', () => {
         const wrapper: any = shallow(<SendScreenComponent {...props} />).instance();
-        wrapper.verifyAddress('address');
+        wrapper.verifyInputText('address');
         expect(wrapper.state.toAddress).toEqual('address');
     });
     // test('should change state if amount is entered', () => {

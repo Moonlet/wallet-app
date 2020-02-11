@@ -3,6 +3,7 @@ import { networks } from './networks';
 import { Client } from './client';
 import * as transaction from './transaction';
 import * as account from './account';
+
 import { IBlockchain, ChainIdType } from '../types';
 
 export const Zilliqa: IBlockchain = {

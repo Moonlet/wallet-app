@@ -20,6 +20,15 @@ export default (theme: ITheme) =>
             flexGrow: 1,
             paddingHorizontal: BASE_DIMENSION * 2
         },
+
+        userActionContainer: {
+            paddingTop: BASE_DIMENSION * 2,
+            alignSelf: 'center',
+            flexDirection: 'row'
+        },
+        userActionButton: {
+            width: '60%'
+        },
         keyboardAvoidance: {
             flex: 1,
             justifyContent: Platform.OS === 'ios' ? 'space-between' : 'flex-start'

@@ -6,12 +6,14 @@ import { convertUnit } from '../ethereum/account';
 import abi from 'ethereumjs-abi';
 import { Erc20Client } from './tokens/erc20-client';
 import { TokenType } from '../types/token';
+import { NameService } from './name-service';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
 
         this.tokens[TokenType.ERC20] = new Erc20Client(this);
+        this.nameService = new NameService();
     }
 
     public getBalance(address: string): Promise<BigNumber> {

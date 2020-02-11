@@ -13,16 +13,23 @@ import BN from 'bn.js';
 import BigNumber from 'bignumber.js';
 import sha256 from 'js-sha256';
 import { config } from './config';
+import { NameService } from './name-service';
+import { INearAccount } from '.';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
+
+        this.nameService = new NameService(this);
     }
 
     public async getBalance(address: string): Promise<BigNumber> {
-        const res = await this.rpc.call('query', [`account/${address}`, '']);
-
-        return new BigNumber(res.result.amount);
+        try {
+            const res = await this.getAccount(address);
+            return res.amount;
+        } catch {
+            return new BigNumber(0);
+        }
     }
 
     public async getNonce(address: string, publicKey?: string): Promise<number> {
@@ -63,19 +70,29 @@ export class Client extends BlockchainGenericClient {
         };
     }
 
-    public async checkAccountIdValid(accountId: string): Promise<boolean> {
+    public async getAccount(accountId: string): Promise<INearAccount> {
         try {
             const res = await this.rpc.call('query', [`account/${accountId}`, '']);
 
             if (res.result) {
                 // account id already taken
-                return false;
+                return {
+                    address: accountId,
+                    name: accountId,
+                    amount: new BigNumber(res.result.amount),
+                    exists: true
+                };
             } else {
                 // valid account id
-                return true;
+                return {
+                    address: accountId,
+                    name: accountId,
+                    amount: new BigNumber(0),
+                    exists: false
+                };
             }
         } catch (err) {
-            return false;
+            Promise.reject(err);
         }
     }
 

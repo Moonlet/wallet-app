@@ -72,34 +72,16 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
                 visible={this.state.isVisible}
                 presentationStyle={'overFullScreen'}
             >
-                <View
-                    style={{
-                        flex: 1,
-                        backgroundColor: 'rgba(100,100,100,0.9)'
-                    }}
-                >
+                <View style={{ flex: 1, backgroundColor: 'rgba(100,100,100,0.9)' }}>
                     <CameraKitCameraScreen
                         testID="CameraKitCameraScreen"
-                        actions={{ leftButtonText: 'Cancel' }}
-                        onBottomButtonPressed={event =>
-                            this.setState({
-                                isVisible: false
-                            })
-                        }
+                        actions={{ leftButtonText: translate('App.labels.cancel') }}
+                        onBottomButtonPressed={() => this.setState({ isVisible: false })}
                         scanBarcode={true}
                         onReadCode={event => {
-                            this.setState({
-                                isVisible: false
-                                //    address: event.nativeEvent.codeStringValue
-                            });
+                            this.setState({ isVisible: false });
                             this.props.onQrCodeScanned(event.nativeEvent.codeStringValue);
                         }}
-                        showFrame={true}
-                        offsetForScannerFrame={10}
-                        heightForScannerFrame={500}
-                        colorForScannerFrame={'red'}
-                        frameColor={'red'}
-                        laserColor={'white'}
                     />
                 </View>
             </Modal>

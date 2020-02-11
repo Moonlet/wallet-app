@@ -20,6 +20,7 @@ import { Dialog } from '../../components/dialog/dialog';
 export interface IState {
     isTouchIDSupported: boolean;
     biometryType: BiometryType;
+    resetPassword: boolean;
 }
 
 export interface IReduxProps {
@@ -62,7 +63,8 @@ export class SettingsScreenComponent extends React.Component<
 
         this.state = {
             isTouchIDSupported: false,
-            biometryType: undefined
+            biometryType: undefined,
+            resetPassword: false
         };
 
         biometricAuth
@@ -138,6 +140,24 @@ export class SettingsScreenComponent extends React.Component<
                             <View style={styles.divider} />
                         </View>
                     )}
+
+                    <TouchableOpacity
+                        style={styles.rowContainer}
+                        onPress={() =>
+                            this.setState({ resetPassword: true }, () => {
+                                this.passwordModal.requestPassword().then(() => {
+                                    Dialog.confirm(translate('Settings.pinChanged'), '');
+                                    // disable resetPassword if you want to reattempt to change the PIN code
+                                    this.setState({ resetPassword: false });
+                                });
+                            })
+                        }
+                    >
+                        <Text style={styles.textRow}>{`Reset password`}</Text>
+                        <Icon name="chevron-right" size={16} style={styles.icon} />
+                    </TouchableOpacity>
+
+                    <View style={styles.divider} />
 
                     <TouchableOpacity
                         style={styles.rowContainer}
@@ -283,7 +303,10 @@ export class SettingsScreenComponent extends React.Component<
                     )}
                 </ScrollView>
 
-                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
+                <PasswordModal
+                    obRef={ref => (this.passwordModal = ref)}
+                    resetPassword={this.state.resetPassword}
+                />
             </View>
         );
     }

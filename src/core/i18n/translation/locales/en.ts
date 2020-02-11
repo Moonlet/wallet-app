@@ -142,7 +142,8 @@ export const translation: ITranslations = {
             authRequired: 'Authentication Required',
             authToContinue: 'Authenticate to continue',
             touchSensor: 'Touch sensor',
-            showPasscode: 'Show Passcode'
+            showPasscode: 'Show Passcode',
+            changePinSubtitle: 'Your current PIN is required in order to change it'
         },
         Send: {
             inputAddress: 'Search public addresses or domain names',
@@ -229,7 +230,8 @@ export const translation: ITranslations = {
             signOut: 'Sign out',
             mainnetTestnet: 'Mainnet/Testnet',
             deviceId: 'Device ID',
-            copied: 'Device ID copied!'
+            copied: 'Device ID copied!',
+            pinChanged: 'Pin has been changed successfully!'
         },
         NetworkOptions: {
             mainnet: 'Mainnet',

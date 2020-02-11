@@ -22,6 +22,7 @@ export interface IExternalProps {
     updatePinProps: boolean;
     onPasswordEntered: (value: string) => Promise<string>;
     onBiometryLogin: (success: boolean) => void;
+    clearPasswordInput: boolean;
 }
 
 interface IState {
@@ -30,6 +31,7 @@ interface IState {
     passToVerify: string;
     biometryType: BiometryType;
     updatePinProps: boolean;
+    clearPasswordInput: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -56,8 +58,14 @@ export class PasswordPinComponent extends React.Component<
                 updatePinProps: nextProps.updatePinProps,
                 passToVerify: prevState.password // save the password to compare it
             };
+        } else if (nextProps.clearPasswordInput !== prevState.clearPasswordInput) {
+            return {
+                password: '',
+                errorMessage: '',
+                clearPasswordInput: nextProps.clearPasswordInput
+            };
         } else {
-            return null;
+            return {};
         }
     }
     private shakeAnimation: Animated.Value;
@@ -72,7 +80,8 @@ export class PasswordPinComponent extends React.Component<
             errorMessage: '',
             passToVerify: '',
             updatePinProps: false,
-            biometryType: undefined
+            biometryType: undefined,
+            clearPasswordInput: false
         };
         this.shakeAnimation = new Animated.Value(0);
 

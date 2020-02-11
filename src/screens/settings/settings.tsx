@@ -20,7 +20,7 @@ import { Dialog } from '../../components/dialog/dialog';
 export interface IState {
     isTouchIDSupported: boolean;
     biometryType: BiometryType;
-    resetPassword: boolean;
+    changePIN: boolean;
 }
 
 export interface IReduxProps {
@@ -64,7 +64,7 @@ export class SettingsScreenComponent extends React.Component<
         this.state = {
             isTouchIDSupported: false,
             biometryType: undefined,
-            resetPassword: false
+            changePIN: false
         };
 
         biometricAuth
@@ -168,15 +168,15 @@ export class SettingsScreenComponent extends React.Component<
                     <TouchableOpacity
                         style={styles.rowContainer}
                         onPress={() =>
-                            this.setState({ resetPassword: true }, () => {
+                            this.setState({ changePIN: true }, () => {
                                 this.passwordModal.requestPassword().then(() => {
-                                    // disable resetPassword if you want to reattempt to change the PIN code
-                                    this.setState({ resetPassword: false });
+                                    // disable changePIN if you want to reattempt to change the PIN code
+                                    this.setState({ changePIN: false });
                                 });
                             })
                         }
                     >
-                        <Text style={styles.textRow}>{`Reset password`}</Text>
+                        <Text style={styles.textRow}>{translate('Settings.changePin')}</Text>
                         <Icon name="chevron-right" size={16} style={styles.icon} />
                     </TouchableOpacity>
 
@@ -305,7 +305,7 @@ export class SettingsScreenComponent extends React.Component<
 
                 <PasswordModal
                     obRef={ref => (this.passwordModal = ref)}
-                    resetPassword={this.state.resetPassword}
+                    changePIN={this.state.changePIN}
                 />
             </View>
         );

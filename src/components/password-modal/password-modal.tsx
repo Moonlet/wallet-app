@@ -18,7 +18,7 @@ export interface IExternalProps {
     obRef?: any;
     visible?: boolean;
     onPassword?: (password: string) => void;
-    resetPassword?: boolean;
+    changePIN?: boolean;
 }
 
 interface IState {
@@ -29,7 +29,7 @@ interface IState {
     createPass: boolean;
     verifyPass: boolean;
     updatePinProps: boolean;
-    resetPassword: boolean;
+    changePIN: boolean;
     clearPasswordInput: boolean;
 }
 
@@ -49,7 +49,7 @@ export class PasswordModalComponent extends React.Component<
             createPass: false,
             verifyPass: false,
             updatePinProps: false,
-            resetPassword: props.resetPassword || false,
+            changePIN: props.changePIN || false,
             clearPasswordInput: false
         };
         props.obRef && props.obRef(this);
@@ -59,8 +59,8 @@ export class PasswordModalComponent extends React.Component<
         if (this.props.visible && this.props.visible !== prevProps.visible) {
             this.setState({ visible: this.props.visible });
         }
-        if (this.props.resetPassword && this.props.resetPassword !== prevProps.resetPassword) {
-            this.setState({ resetPassword: this.props.resetPassword, clearPasswordInput: false });
+        if (this.props.changePIN && this.props.changePIN !== prevProps.changePIN) {
+            this.setState({ changePIN: this.props.changePIN, clearPasswordInput: false });
         }
     }
 
@@ -81,7 +81,7 @@ export class PasswordModalComponent extends React.Component<
                 this.setState({ showTerms: true });
             }
         }
-        if (this.props.resetPassword) {
+        if (this.props.changePIN) {
             this.setState({ showTerms: true });
         }
 
@@ -107,7 +107,7 @@ export class PasswordModalComponent extends React.Component<
 
     @bind
     public async onPasswordEntered(value: string): Promise<string> {
-        if (this.state.resetPassword === true) {
+        if (this.state.changePIN === true) {
             this.setState({ clearPasswordInput: true });
 
             const vfPassword = await this.verifyPassword(value);
@@ -119,7 +119,7 @@ export class PasswordModalComponent extends React.Component<
                     updatePinProps: false,
                     subtitle: translate('Password.setupPinSubtitle'),
                     title: translate('Password.setupPinTitle'),
-                    resetPassword: false
+                    changePIN: false
                 });
                 return;
             } else {
@@ -161,7 +161,7 @@ export class PasswordModalComponent extends React.Component<
     }
     @bind
     public onAcknowledged() {
-        if (this.state.resetPassword) {
+        if (this.state.changePIN) {
             this.setState({
                 showTerms: false,
                 createPass: true,
@@ -198,7 +198,7 @@ export class PasswordModalComponent extends React.Component<
                     {this.state.showTerms ? (
                         <PasswordTerms
                             onAcknowledged={this.onAcknowledged}
-                            resetPassword={this.state.resetPassword}
+                            changePIN={this.state.changePIN}
                         />
                     ) : (
                         <PasswordPin
@@ -208,7 +208,7 @@ export class PasswordModalComponent extends React.Component<
                             onPasswordEntered={this.onPasswordEntered}
                             onBiometryLogin={this.onBiometryLogin}
                             clearPasswordInput={this.state.clearPasswordInput}
-                            resetPassword={this.props.resetPassword}
+                            changePIN={this.props.changePIN}
                         />
                     )}
                 </Modal>

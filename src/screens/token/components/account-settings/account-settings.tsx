@@ -15,6 +15,7 @@ import { PasswordModal } from '../../../../components/password-modal/password-mo
 import { WalletFactory } from '../../../../core/wallet/wallet-factory';
 import Modal from '../../../../library/modal/modal';
 import { ChainIdType } from '../../../../core/blockchain/types';
+import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -34,6 +35,7 @@ interface IState {
     title: string;
     key: string;
     showSecurityWarning: boolean;
+    isLoading: boolean;
 }
 
 export class AccountSettingsComponent extends React.Component<IProps & IExternalProps, IState> {
@@ -47,12 +49,15 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             showBackButton: false,
             title: translate('AccountSettings.manageAccount'),
             key: '',
-            showSecurityWarning: false
+            showSecurityWarning: false,
+            isLoading: false
         };
     }
 
     public revealPrivateKey = async () => {
         const password = await this.passwordModal.requestPassword();
+
+        this.setState({ showKeyScreen: true, isLoading: true });
 
         const hdWallet = await WalletFactory.get(this.props.wallet.id, this.props.wallet.type, {
             pass: password
@@ -68,7 +73,8 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             showBackButton: true,
             title: translate('AccountSettings.revealPrivate'),
             key: privateKey,
-            showSecurityWarning: true
+            showSecurityWarning: true,
+            isLoading: false
         });
     };
     public revealPublicKey = () => {
@@ -120,16 +126,11 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                         }}
                                         style={styles.backButtonContainer}
                                     >
-                                        <View style={styles.backIconContainer}>
-                                            <Icon
-                                                name="arrow-left-1"
-                                                size={ICON_SIZE}
-                                                style={styles.icon}
-                                            />
-                                        </View>
-                                        <Text style={styles.backText}>
-                                            {translate('App.buttons.back')}
-                                        </Text>
+                                        <Icon
+                                            name="arrow-left-1"
+                                            size={ICON_SIZE}
+                                            style={styles.icon}
+                                        />
                                     </TouchableOpacity>
                                 )}
                             </View>
@@ -147,11 +148,15 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                             </View>
                         </View>
                         {this.state.showKeyScreen ? (
-                            <ViewKey
-                                key={this.state.key}
-                                value={this.state.key}
-                                showSecurityWarning={this.state.showSecurityWarning}
-                            />
+                            this.state.isLoading ? (
+                                <LoadingIndicator />
+                            ) : (
+                                <ViewKey
+                                    key={this.state.key}
+                                    value={this.state.key}
+                                    showSecurityWarning={this.state.showSecurityWarning}
+                                />
+                            )
                         ) : (
                             <View style={styles.contentContainer}>
                                 <TouchableOpacity

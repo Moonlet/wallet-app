@@ -15,6 +15,7 @@ import { setBlockchainActive, setBlockchainOrder } from '../../../redux/preferen
 import { Blockchain } from '../../../core/blockchain/types';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
+import { getBlockchains } from '../../../redux/preferences/selectors';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainOptions }];
@@ -29,7 +30,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        blockchains: Object.keys(state.preferences.blockchains)
+        blockchains: getBlockchains(state)
             .map(key => ({ key, value: state.preferences.blockchains[key] }))
             .sort((a, b) => a.value.order - b.value.order)
     };

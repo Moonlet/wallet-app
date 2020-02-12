@@ -32,8 +32,7 @@ describe('preferences reducer', () => {
                     mainNet: 1
                 },
                 [Blockchain.NEAR]: {
-                    testNet: 'testnet',
-                    mainNet: 'testnet' // not released yet
+                    testNet: 'testnet'
                 }
             },
             blockchains: {

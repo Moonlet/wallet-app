@@ -15,17 +15,16 @@ const initialState: IPrefState = {
     testNet: false,
     touchID: false,
     networks: {
-        [Blockchain.ETHEREUM]: {
-            testNet: 4,
-            mainNet: 1
-        },
         [Blockchain.ZILLIQA]: {
             testNet: 333,
             mainNet: 1
         },
+        [Blockchain.ETHEREUM]: {
+            testNet: 4,
+            mainNet: 1
+        },
         [Blockchain.NEAR]: {
-            testNet: 'testnet',
-            mainNet: 'testnet' // not released yet
+            testNet: 'testnet'
         }
     },
     blockchains: {

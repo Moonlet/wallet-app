@@ -23,7 +23,6 @@ Object {
       "testNet": 4,
     },
     "NEAR": Object {
-      "mainNet": "testnet",
       "testNet": "testnet",
     },
     "ZILLIQA": Object {

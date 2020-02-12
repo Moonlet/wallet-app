@@ -2,7 +2,7 @@ import { IReduxState } from '../state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { createSelector } from 'reselect';
-import { IPrefState } from './state';
+import { IPrefState, INetworksOptions } from './state';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export const getChainId = (state: IReduxState, blockchain: Blockchain): ChainIdType => {
@@ -23,25 +23,68 @@ export const getChainId = (state: IReduxState, blockchain: Blockchain): ChainIdT
 };
 
 export const getNetworkName = (state: IReduxState, blockchain: Blockchain): string => {
-    return getBlockchain(blockchain).networks.find(
-        network => network.chainId === getChainId(state, blockchain)
-    ).name;
+    const network = getBlockchain(blockchain).networks.find(
+        value => value.chainId === getChainId(state, blockchain)
+    );
+
+    return network ? network.name : '';
 };
+
+export const getNetworks = createSelector(
+    (state: IReduxState) => state.preferences,
+    (preferences: IPrefState) => {
+        const networks: INetworksOptions[] = [];
+        Object.keys(preferences.networks).map(blockchain => {
+            let hasNetwork = false;
+            if (preferences.testNet) {
+                if (preferences.networks[blockchain].testNet !== undefined) {
+                    hasNetwork = true;
+                }
+            } else {
+                if (preferences.networks[blockchain].mainNet !== undefined) {
+                    hasNetwork = true;
+                }
+            }
+
+            if (hasNetwork) {
+                if (blockchain === Blockchain.NEAR) {
+                    if (isFeatureActive(RemoteFeature.NEAR) === true) {
+                        networks[blockchain] = preferences.networks[blockchain];
+                    }
+                } else {
+                    networks[blockchain] = preferences.networks[blockchain];
+                }
+            }
+        });
+        return networks;
+    }
+);
 
 export const getBlockchains = createSelector(
     (state: IReduxState) => state.preferences,
     (preferences: IPrefState) => {
         const blockchains: Blockchain[] = [];
-        Object.keys(preferences.blockchains).map(key => {
-            const active = preferences.blockchains[key].active;
+        Object.keys(preferences.blockchains).map(blockchain => {
+            const active = preferences.blockchains[blockchain].active;
 
-            if (active) {
-                if (key === Blockchain.NEAR) {
+            let hasNetwork = false;
+            if (preferences.testNet) {
+                if (preferences.networks[blockchain].testNet !== undefined) {
+                    hasNetwork = true;
+                }
+            } else {
+                if (preferences.networks[blockchain].mainNet !== undefined) {
+                    hasNetwork = true;
+                }
+            }
+
+            if (active && hasNetwork) {
+                if (blockchain === Blockchain.NEAR) {
                     if (isFeatureActive(RemoteFeature.NEAR) === true) {
-                        blockchains.push(Blockchain[key]);
+                        blockchains.push(Blockchain[blockchain]);
                     }
                 } else {
-                    blockchains.push(Blockchain[key]);
+                    blockchains.push(Blockchain[blockchain]);
                 }
             }
         });

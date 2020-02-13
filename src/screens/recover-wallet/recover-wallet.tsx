@@ -19,6 +19,8 @@ import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom
 import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { NavigationActions } from 'react-navigation';
+import { delay } from '../../core/utils/time';
+import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
 
 const NUMBER_MNEMONICS = 24;
 
@@ -32,8 +34,14 @@ interface IState {
 
 export interface IReduxProps {
     tosVersion: number;
-    createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
+    createHDWallet: typeof createHDWallet;
+    openLoadingModal: typeof openLoadingModal;
 }
+
+const mapDispatchToProps = {
+    createHDWallet,
+    openLoadingModal
+};
 
 export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: () =>
@@ -107,7 +115,10 @@ export class RecoverWalletScreenComponent extends React.Component<
             return;
         }
 
-        this.passwordModal.requestPassword().then(password => {
+        this.passwordModal.requestPassword().then(async password => {
+            this.props.openLoadingModal();
+            await delay(0);
+
             this.props.createHDWallet(this.state.mnemonic.join(' '), password, () =>
                 this.props.navigation.navigate(
                     'MainNavigation',
@@ -347,6 +358,6 @@ export class RecoverWalletScreenComponent extends React.Component<
 }
 
 export const RecoverWalletScreen = smartConnect(RecoverWalletScreenComponent, [
-    connect((state: IReduxState) => ({ tosVersion: state.app.tosVersion }), { createHDWallet }),
+    connect((state: IReduxState) => ({ tosVersion: state.app.tosVersion }), mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

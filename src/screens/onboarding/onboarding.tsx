@@ -24,7 +24,7 @@ export interface IProps {
 }
 
 export interface IReduxProps {
-    createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
+    createHDWallet: typeof createHDWallet;
     openLoadingModal: typeof openLoadingModal;
 }
 

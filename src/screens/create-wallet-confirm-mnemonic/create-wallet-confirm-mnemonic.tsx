@@ -13,9 +13,12 @@ import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom
 import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { delay } from '../../core/utils/time';
+import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
 
 export interface IReduxProps {
-    createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
+    createHDWallet: typeof createHDWallet;
+    openLoadingModal: typeof openLoadingModal;
 }
 
 const navigationOptions = () => ({
@@ -25,6 +28,11 @@ const navigationOptions = () => ({
 interface IMnemonicsInput {
     [index: number]: string;
 }
+
+const mapDispatchToProps = {
+    createHDWallet,
+    openLoadingModal
+};
 
 // check if every input has some content typed in
 const allInputsFilled = (testWords: number[], mnemonicsInput: IMnemonicsInput) =>
@@ -150,7 +158,10 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                                 (n: number) => mnemonicsInput[n] === mnemonic[n]
                             );
                             if (valid) {
-                                this.passwordModal.requestPassword().then(password => {
+                                this.passwordModal.requestPassword().then(async password => {
+                                    props.openLoadingModal();
+                                    await delay(0);
+
                                     props.createHDWallet(mnemonic.join(' '), password, () =>
                                         props.navigation.navigate(
                                             'MainNavigation',
@@ -185,10 +196,5 @@ CreateWalletConfirmMnemonicScreenComponent.navigationOptions = navigationOptions
 
 export const CreateWalletConfirmMnemonicScreen = smartConnect(
     CreateWalletConfirmMnemonicScreenComponent,
-    [
-        connect(null, {
-            createHDWallet
-        }),
-        withTheme(stylesProvider)
-    ]
+    [connect(null, mapDispatchToProps), withTheme(stylesProvider)]
 );

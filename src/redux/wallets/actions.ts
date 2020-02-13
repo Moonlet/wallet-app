@@ -201,7 +201,6 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
-    dispatch(openLoadingModal());
     try {
         const wallet = new HDWallet(mnemonic);
 

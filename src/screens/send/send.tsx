@@ -9,7 +9,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
-import { getBlockchain, BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { addContact } from '../../redux/contacts/actions';
@@ -140,7 +140,7 @@ export class SendScreenComponent extends React.Component<
     public confirmPayment = async () => {
         if (Platform.OS === 'web') {
             const formattedAmount = formatNumber(new BigNumber(this.state.amount), {
-                currency: BLOCKCHAIN_INFO[this.props.account.blockchain].coin
+                currency: getBlockchain(this.props.account.blockchain).config.coin
             });
 
             const data: IBottomSheetExtensionRequestData = {

@@ -17,7 +17,7 @@ export const getBlockchain = (blockchain: Blockchain): IBlockchain => {
 };
 
 /**
- * @deprecated
+ *
  */
 export const BLOCKCHAIN_INFO: { [blockchain: string]: IBlockchainConfig } = {
     [Blockchain.ETHEREUM]: Ethereum.config,

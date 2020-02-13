@@ -15,7 +15,6 @@ import { setBlockchainActive, setBlockchainOrder } from '../../../redux/preferen
 import { Blockchain } from '../../../core/blockchain/types';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
-import { getBlockchains } from '../../../redux/preferences/selectors';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainOptions }];
@@ -30,7 +29,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        blockchains: getBlockchains(state)
+        blockchains: Object.keys(state.preferences.blockchains)
             .map(key => ({ key, value: state.preferences.blockchains[key] }))
             .sort((a, b) => a.value.order - b.value.order)
     };
@@ -90,7 +89,9 @@ export class BlockchainPortfolioComponent extends React.Component<
                 </View>
                 <TouchableOpacity
                     style={styles.iconContainer}
-                    onPressOut={() => this.props.setBlockchainActive(item.key, !item.value.active)}
+                    onPressOut={() => {
+                        this.props.setBlockchainActive(item.key, !item.value.active);
+                    }}
                 >
                     <Icon
                         size={18}

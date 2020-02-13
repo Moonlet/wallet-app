@@ -6,7 +6,7 @@ import { Blockchain } from '../../core/blockchain/types';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
-import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { TokenCard } from '../token-card/token-card';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 
@@ -25,10 +25,10 @@ export const TokenDashboardComponent = (props: IProps) => (
             {props.blockchain &&
                 conversionCards.map(
                     (toCurrency, i) =>
-                        BLOCKCHAIN_INFO[props.blockchain].coin !== toCurrency && (
+                        getBlockchain(props.blockchain).config.coin !== toCurrency && (
                             <ConversionCard
                                 key={i}
-                                fromCurrency={BLOCKCHAIN_INFO[props.blockchain].coin}
+                                fromCurrency={getBlockchain(props.blockchain).config.coin}
                                 toCurrency={toCurrency}
                                 blockchain={props.blockchain}
                             />

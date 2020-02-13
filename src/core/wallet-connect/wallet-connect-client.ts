@@ -7,7 +7,7 @@ import { Notifications } from '../messaging/notifications/notifications';
 import { AppState, Platform } from 'react-native';
 import { signExtensionTransaction } from './utils';
 import { formatNumber } from '../utils/format-number';
-import { BLOCKCHAIN_INFO } from '../blockchain/blockchain-factory';
+import { getBlockchain } from '../blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { formatAddress } from '../utils/format-address';
 import { getApnsToken } from '../messaging/silent/ios-voip-push-notification';
@@ -100,7 +100,7 @@ export const WalletConnectClient = (() => {
                         // app is in background or was wake up by background service > display a notification
                         const { account, toAddress, amount } = payload.params[0];
                         const formattedAmount = formatNumber(new BigNumber(amount), {
-                            currency: BLOCKCHAIN_INFO[account.blockchain].coin
+                            currency: getBlockchain(account.blockchain).config.coin
                         });
                         Notifications.displayNotification(
                             'Moonlet',

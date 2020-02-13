@@ -43,5 +43,11 @@ export const config: IBlockchainConfig = {
         enableTokenManagement: false,
         enableAccountCreation: true,
         maxAccountsNumber: 5
-    }
+    },
+    networks: {
+        testNet: 'testnet'
+    },
+    mainNetDevMode: false,
+    defaultOrder: 2,
+    defaultActive: true
 };

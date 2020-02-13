@@ -9,7 +9,7 @@ import { GasFeeAvanced } from '../gas-fee-advanced/gas-fee-advanced';
 import { FeeTotal } from '../fee-total/fee-total';
 import { FeePreset } from '../fee-preset/fee-preset';
 import { IBlockchainConfig, IFeeOptions, ChainIdType } from '../../../../core/blockchain/types';
-import { BLOCKCHAIN_INFO, getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { IReduxState } from '../../../../redux/state';
 import { getChainId } from '../../../../redux/preferences/selectors';
@@ -46,11 +46,11 @@ export class FeeOptionsComponent extends React.Component<
         props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps
     ) {
         super(props);
-        const feeOptions = BLOCKCHAIN_INFO[this.props.account.blockchain].feeOptions;
+        const feeOptions = getBlockchain(this.props.account.blockchain).config.feeOptions;
 
         this.state = {
             feeOptions: undefined,
-            blockchainConfig: BLOCKCHAIN_INFO[props.account.blockchain],
+            blockchainConfig: getBlockchain(props.account.blockchain).config,
             showAdvancedOptions: false,
             hasAdvancedOptions: !!feeOptions.ui.feeComponentAdvanced,
             selectedPreset: feeOptions.ui.defaultPreset

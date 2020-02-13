@@ -5,7 +5,7 @@ import { getBalance, setSelectedBlockchain } from '../wallets/actions';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { IBlockchainsOptions } from './state';
 import { IAction } from '../types';
-import { getNetworkName, getBlockchains } from './selectors';
+import { networkAvailable, getBlockchains } from './selectors';
 
 // actions consts
 export const PREF_SET_CURRENCY = 'PREF_SET_CURRENCY';
@@ -57,9 +57,9 @@ export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IRe
     const state = getState();
 
     const selectedBlockchain = getSelectedBlockchain(state);
-    const networkExists = getNetworkName(state, Blockchain[selectedBlockchain]);
+    const networkExists = networkAvailable(state, Blockchain[selectedBlockchain]);
 
-    if (networkExists === '') {
+    if (!networkExists) {
         const blockchains = getBlockchains(state);
         setSelectedBlockchain(blockchains[0])(dispatch, getState);
     }

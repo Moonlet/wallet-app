@@ -30,6 +30,14 @@ export const getNetworkName = (state: IReduxState, blockchain: Blockchain): stri
     return network ? network.name : '';
 };
 
+export const networkAvailable = (state: IReduxState, blockchain: Blockchain): boolean => {
+    const network = getBlockchain(blockchain).networks.find(
+        value => value.chainId === getChainId(state, blockchain)
+    );
+
+    return network ? true : false;
+};
+
 export const getNetworks = createSelector(
     (state: IReduxState) => state.preferences,
     (preferences: IPrefState) => {

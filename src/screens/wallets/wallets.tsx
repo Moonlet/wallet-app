@@ -249,46 +249,52 @@ export class WalletsScreenComponent extends React.Component<
                     onSelectionChange={key => this.setState({ selectedTab: key })}
                     selected={this.state.selectedTab}
                 />
-                <ScrollView contentContainerStyle={styles.walletList}>
-                    {this.props.wallets[this.state.selectedTab].length === 0 &&
-                    this.state.selectedTab === WalletType.HW ? (
-                        <View style={styles.emptyWalletsContainer}>
-                            <Image
-                                style={styles.logoImage}
-                                source={require('../../assets/images/png/moonlet_space_gray.png')}
-                            />
-                            <Text style={styles.connectLedger}>
-                                {translate('Wallets.connectLedger')}
-                            </Text>
-                            <Text style={styles.quicklyConnectLedger}>
-                                {translate('Wallets.quicklyConnectLedger')}
-                            </Text>
-                        </View>
-                    ) : (
-                        this.props.wallets[this.state.selectedTab].map(wallet => {
-                            const index = wallet.id;
+                <View style={styles.scrollContainer}>
+                    <ScrollView
+                        contentContainerStyle={styles.walletList}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        {this.props.wallets[this.state.selectedTab].length === 0 &&
+                        this.state.selectedTab === WalletType.HW ? (
+                            <View style={styles.emptyWalletsContainer}>
+                                <Image
+                                    style={styles.logoImage}
+                                    source={require('../../assets/images/png/moonlet_space_gray.png')}
+                                />
+                                <Text style={styles.connectLedger}>
+                                    {translate('Wallets.connectLedger')}
+                                </Text>
+                                <Text style={styles.quicklyConnectLedger}>
+                                    {translate('Wallets.quicklyConnectLedger')}
+                                </Text>
+                            </View>
+                        ) : (
+                            this.props.wallets[this.state.selectedTab].map(wallet => {
+                                const index = wallet.id;
 
-                            return (
-                                <Swipeable
-                                    key={index}
-                                    ref={ref => (this.walletSwipeableRef[index] = ref)}
-                                    renderLeftActions={() => this.renderLeftActions(wallet)}
-                                    onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
-                                >
-                                    <ListCard
-                                        onPress={() => this.onSelectWallet(wallet.id)}
-                                        leftIcon="saturn-icon"
-                                        label={wallet.name}
-                                        rightIcon={
-                                            this.props.selectedWallet.id === wallet.id && 'check-1'
-                                        }
-                                        selected={this.props.selectedWallet.id === wallet.id}
-                                    />
-                                </Swipeable>
-                            );
-                        })
-                    )}
-                </ScrollView>
+                                return (
+                                    <Swipeable
+                                        key={index}
+                                        ref={ref => (this.walletSwipeableRef[index] = ref)}
+                                        renderLeftActions={() => this.renderLeftActions(wallet)}
+                                        onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
+                                    >
+                                        <ListCard
+                                            onPress={() => this.onSelectWallet(wallet.id)}
+                                            leftIcon="saturn-icon"
+                                            label={wallet.name}
+                                            rightIcon={
+                                                this.props.selectedWallet.id === wallet.id &&
+                                                'check-1'
+                                            }
+                                            selected={this.props.selectedWallet.id === wallet.id}
+                                        />
+                                    </Swipeable>
+                                );
+                            })
+                        )}
+                    </ScrollView>
+                </View>
                 <View style={styles.bottomContainer}>
                     {
                         {

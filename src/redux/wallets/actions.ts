@@ -376,7 +376,7 @@ export const sendTransferTransaction = (
             account,
             toAddress,
             amount: blockchainInstance.account
-                .amountToStd('2', account.tokens[token].decimals)
+                .amountToStd(amount, account.tokens[token].decimals)
                 .toFixed(),
             token,
             nonce,

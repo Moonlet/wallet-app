@@ -11,4 +11,6 @@ export class Dialog {
     public static confirm = DialogComponent.confirm;
 
     public static prompt = DialogComponent.prompt;
+
+    public static info = DialogComponent.info;
 }

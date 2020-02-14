@@ -171,7 +171,9 @@ export class SettingsScreenComponent extends React.Component<
                             this.setState({ changePIN: true }, () => {
                                 this.passwordModal.requestPassword().then(() => {
                                     // disable changePIN if you want to reattempt to change the PIN code
-                                    this.setState({ changePIN: false });
+                                    this.setState({ changePIN: false }, () =>
+                                        Dialog.info(translate('Settings.successChangePin'), '')
+                                    );
                                 });
                             })
                         }
@@ -285,7 +287,7 @@ export class SettingsScreenComponent extends React.Component<
                         style={styles.colContainer}
                         onPress={() => {
                             Clipboard.setString(DeviceInfo.getUniqueId());
-                            Dialog.confirm(translate('Settings.copied'), '');
+                            Dialog.info(translate('Settings.copied'), '');
                         }}
                     >
                         <Text style={[styles.textRow, styles.textRowMargin]}>

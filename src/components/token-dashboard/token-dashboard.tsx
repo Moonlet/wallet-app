@@ -36,7 +36,10 @@ export const TokenDashboardComponent = (props: IProps) => (
                 )}
         </View>
 
-        <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>
+        <ScrollView
+            contentContainerStyle={props.styles.scrollContainer}
+            showsVerticalScrollIndicator={false}
+        >
             {props.account?.tokens &&
                 Object.values(props.account.tokens).map(
                     (token: ITokenConfig, index: number) =>

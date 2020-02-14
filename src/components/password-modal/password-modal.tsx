@@ -31,6 +31,7 @@ interface IState {
     updatePinProps: boolean;
     changePIN: boolean;
     clearPasswordInput: boolean;
+    oldPassword: string;
 }
 
 export class PasswordModalComponent extends React.Component<
@@ -50,7 +51,8 @@ export class PasswordModalComponent extends React.Component<
             verifyPass: false,
             updatePinProps: false,
             changePIN: props.changePIN || false,
-            clearPasswordInput: false
+            clearPasswordInput: false,
+            oldPassword: undefined
         };
         props.obRef && props.obRef(this);
     }
@@ -60,7 +62,11 @@ export class PasswordModalComponent extends React.Component<
             this.setState({ visible: this.props.visible });
         }
         if (this.props.changePIN && this.props.changePIN !== prevProps.changePIN) {
-            this.setState({ changePIN: this.props.changePIN, clearPasswordInput: false });
+            this.setState({
+                changePIN: this.props.changePIN,
+                clearPasswordInput: false,
+                oldPassword: undefined
+            });
         }
     }
 
@@ -108,7 +114,7 @@ export class PasswordModalComponent extends React.Component<
     @bind
     public async onPasswordEntered(value: string): Promise<string> {
         if (this.state.changePIN === true) {
-            this.setState({ clearPasswordInput: true });
+            this.setState({ clearPasswordInput: true, oldPassword: value });
 
             const vfPassword = await this.verifyPassword(value);
             if (vfPassword.valid) {
@@ -139,7 +145,17 @@ export class PasswordModalComponent extends React.Component<
         }
         if (this.state.verifyPass === true) {
             await setPassword(value, false);
-            this.passwordRequestDeferred && this.passwordRequestDeferred.resolve(value);
+
+            if (this.state.oldPassword) {
+                this.passwordRequestDeferred &&
+                    this.passwordRequestDeferred.resolve({
+                        newPassword: value,
+                        oldPassword: this.state.oldPassword
+                    });
+            } else {
+                this.passwordRequestDeferred && this.passwordRequestDeferred.resolve(value);
+            }
+
             this.setState({
                 visible: false
             });

@@ -16,6 +16,7 @@ import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { Dialog } from '../../components/dialog/dialog';
+import { changePIN } from '../../redux/wallets/actions';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -28,6 +29,7 @@ export interface IReduxProps {
     touchID: boolean;
     toggleTouchID: typeof toggleTouchID;
     mock: () => void;
+    changePIN: typeof changePIN;
 }
 
 export const mockFunction = () => {
@@ -41,7 +43,8 @@ const mapStateToProps = (state: IReduxState) => ({
 
 const mapDispatchToProps = {
     mock: mockFunction,
-    toggleTouchID
+    toggleTouchID,
+    changePIN
 };
 
 const navigationOptions = () => ({
@@ -169,12 +172,16 @@ export class SettingsScreenComponent extends React.Component<
                         style={styles.rowContainer}
                         onPress={() =>
                             this.setState({ changePIN: true }, () => {
-                                this.passwordModal.requestPassword().then(() => {
-                                    // disable changePIN if you want to reattempt to change the PIN code
-                                    this.setState({ changePIN: false }, () =>
-                                        Dialog.info(translate('Settings.successChangePin'), '')
-                                    );
-                                });
+                                this.passwordModal
+                                    .requestPassword()
+                                    .then((pass: { newPassword: string; oldPassword: string }) => {
+                                        this.props.changePIN(pass.newPassword, pass.oldPassword);
+
+                                        // disable changePIN if you want to reattempt to change the PIN code
+                                        this.setState({ changePIN: false }, () =>
+                                            Dialog.info(translate('Settings.successChangePin'), '')
+                                        );
+                                    });
                             })
                         }
                     >

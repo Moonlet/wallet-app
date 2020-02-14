@@ -100,7 +100,8 @@ export const translation: ITranslations = {
                 'To make sure you have written down all of your recovery words, please enter the following:',
             errors: {
                 tryAgain: 'Please try again'
-            }
+            },
+            password: 'Your PIN is required\nto create your Moonlet wallet'
         },
         CreateHardwareWallet: {
             device: 'Device: {{device}}',

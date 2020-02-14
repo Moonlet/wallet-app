@@ -164,7 +164,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
   </View>
   <ScrollViewMock horizontal={true} overScrollMode=\\"never\\" snapToAlignment=\\"start\\" showsHorizontalScrollIndicator={false} contentContainerStyle={{...}} keyboardShouldPersistTaps=\\"handled\\" />
   <withTheme(KeyboardComponent) handleTextUpdate={[Function: handleTextUpdate]} handleDeleteKey={[Function: handleDeleteKey]} buttons={{...}} disableSpace={true} />
-  <withTheme(PasswordModalComponent) shouldCreatePassword={true} subtitle=\\"Your PIN is required to view mnemonic\\" obRef={[Function: obRef]} />
+  <withTheme(PasswordModalComponent) shouldCreatePassword={true} subtitle=\\"Your PIN is required\\\\nto recover your Moonlet wallet\\" obRef={[Function: obRef]} />
 </View>"
 `;
 

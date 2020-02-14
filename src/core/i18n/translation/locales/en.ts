@@ -144,7 +144,8 @@ export const translation: ITranslations = {
             authToContinue: 'Authenticate to continue',
             touchSensor: 'Touch sensor',
             showPasscode: 'Show Passcode',
-            changePinSubtitle: 'Your current PIN is required in order to change it'
+            changePinSubtitle: 'Your current PIN is required in order to change it',
+            recoverWalletPinSubtitle: 'Your PIN is required\nto recover your Moonlet wallet'
         },
         Send: {
             inputAddress: 'Search public addresses or domain names',

@@ -216,7 +216,7 @@ export class ManageAccountComponent extends React.Component<
                         this.renderToken(item, drag, isActive)
                     }
                     keyExtractor={(item: { key: string; value: ITokenConfig }) =>
-                        `${item.value.order}`
+                        `token-${item.value.name}`
                     }
                     onDragEnd={({ data }) => {
                         this.props.updateTokenOrder(

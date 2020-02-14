@@ -13,7 +13,6 @@ import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom
 import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
-import { delay } from '../../core/utils/time';
 import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
 
 export interface IReduxProps {
@@ -158,10 +157,7 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                                 (n: number) => mnemonicsInput[n] === mnemonic[n]
                             );
                             if (valid) {
-                                this.passwordModal.requestPassword().then(async password => {
-                                    props.openLoadingModal();
-                                    await delay(0);
-
+                                this.passwordModal.requestPassword().then(password =>
                                     props.createHDWallet(mnemonic.join(' '), password, () =>
                                         props.navigation.navigate(
                                             'MainNavigation',
@@ -170,8 +166,8 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                                                 routeName: 'Dashboard'
                                             })
                                         )
-                                    );
-                                });
+                                    )
+                                );
                             } else {
                                 setError(true);
                             }

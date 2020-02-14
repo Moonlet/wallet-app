@@ -19,7 +19,6 @@ import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom
 import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { NavigationActions } from 'react-navigation';
-import { delay } from '../../core/utils/time';
 import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
 
 const NUMBER_MNEMONICS = 24;
@@ -115,18 +114,17 @@ export class RecoverWalletScreenComponent extends React.Component<
             return;
         }
 
-        this.passwordModal.requestPassword().then(async password => {
-            this.props.openLoadingModal();
-            await delay(0);
-
-            this.props.createHDWallet(this.state.mnemonic.join(' '), password, () =>
-                this.props.navigation.navigate(
-                    'MainNavigation',
-                    {},
-                    NavigationActions.navigate({ routeName: 'Dashboard' })
+        this.passwordModal
+            .requestPassword()
+            .then(password =>
+                this.props.createHDWallet(this.state.mnemonic.join(' '), password, () =>
+                    this.props.navigation.navigate(
+                        'MainNavigation',
+                        {},
+                        NavigationActions.navigate({ routeName: 'Dashboard' })
+                    )
                 )
             );
-        });
     }
 
     public render() {

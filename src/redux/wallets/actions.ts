@@ -31,6 +31,7 @@ import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
 import { openLoadingModal, closeLoadingModal } from '../ui/loading-modal/actions';
+import { delay } from '../../core/utils/time';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -201,6 +202,9 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
+    dispatch(openLoadingModal());
+    await delay(0);
+
     try {
         const wallet = new HDWallet(mnemonic);
 

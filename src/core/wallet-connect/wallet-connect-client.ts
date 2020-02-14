@@ -55,7 +55,8 @@ export const WalletConnectClient = (() => {
             {
                 clientMeta,
                 push: {
-                    url: 'https://us-central1-moonlet-beta.cloudfunctions.net/push',
+                    url:
+                        'https://us-central1-moonlet-wallet-dev.cloudfunctions.net/walletConnectPush',
                     type: Platform.OS === 'android' ? 'fcm' : 'apn',
                     token: await getDeviceToken(),
                     peerMeta: true,
@@ -137,8 +138,8 @@ export const WalletConnectClient = (() => {
                                         clientMeta,
                                         push: {
                                             url:
-                                                'https://us-central1-moonlet-beta.cloudfunctions.net/push',
-                                            type: 'fcm',
+                                                'https://us-central1-moonlet-wallet-dev.cloudfunctions.net/walletConnectPush',
+                                            type: Platform.OS === 'android' ? 'fcm' : 'apn',
                                             token: await Notifications.getToken(),
                                             peerMeta: true,
                                             language: 'en'

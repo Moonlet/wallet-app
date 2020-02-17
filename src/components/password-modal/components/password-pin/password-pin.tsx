@@ -22,6 +22,8 @@ export interface IExternalProps {
     updatePinProps: boolean;
     onPasswordEntered: (value: string) => Promise<string>;
     onBiometryLogin: (success: boolean) => void;
+    clearPasswordInput: boolean;
+    changePIN: boolean;
 }
 
 interface IState {
@@ -30,6 +32,7 @@ interface IState {
     passToVerify: string;
     biometryType: BiometryType;
     updatePinProps: boolean;
+    clearPasswordInput: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -56,8 +59,14 @@ export class PasswordPinComponent extends React.Component<
                 updatePinProps: nextProps.updatePinProps,
                 passToVerify: prevState.password // save the password to compare it
             };
+        } else if (nextProps.clearPasswordInput !== prevState.clearPasswordInput) {
+            return {
+                password: '',
+                errorMessage: '',
+                clearPasswordInput: nextProps.clearPasswordInput
+            };
         } else {
-            return null;
+            return {};
         }
     }
     private shakeAnimation: Animated.Value;
@@ -72,11 +81,14 @@ export class PasswordPinComponent extends React.Component<
             errorMessage: '',
             passToVerify: '',
             updatePinProps: false,
-            biometryType: undefined
+            biometryType: undefined,
+            clearPasswordInput: false
         };
         this.shakeAnimation = new Animated.Value(0);
 
-        this.biometryAuth();
+        if (!props.changePIN) {
+            this.biometryAuth();
+        }
     }
 
     public async onEnterPassword() {
@@ -267,20 +279,21 @@ export class PasswordPinComponent extends React.Component<
 
     public renderFooterRow = () => {
         const styles = this.props.styles;
+        const isTouchID = this.props.touchID && !this.props.changePIN;
 
         return (
             <View style={styles.keyRow}>
                 <TouchableOpacity
                     style={styles.keyContainer}
                     onPress={() => {
-                        if (this.props.touchID) {
+                        if (isTouchID) {
                             this.biometryAuth();
                         } else {
                             this.setState({ password: '', errorMessage: '' }); // Reset button
                         }
                     }}
                 >
-                    {this.props.touchID ? (
+                    {isTouchID ? (
                         <Icon
                             name={
                                 Platform.OS === 'ios' && this.state.biometryType === 'FaceID'

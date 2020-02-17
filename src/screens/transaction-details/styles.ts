@@ -31,13 +31,12 @@ export default (theme: ITheme) =>
             fontSize: 17,
             lineHeight: 22,
             color: theme.colors.text,
-            opacity: 0.87,
             marginBottom: BASE_DIMENSION / 2
         },
         textSecondary: {
             fontSize: 16,
             lineHeight: 21,
-            color: theme.colors.textSecondary
+            color: theme.colors.textTertiary
         },
         icon: {
             color: theme.colors.accent,

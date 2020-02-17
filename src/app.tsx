@@ -20,6 +20,7 @@ import { NavigationService } from './navigation/navigation-service';
 import { Dialog } from './components/dialog/dialog';
 import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
 import { ImageCanvas } from './components/image-canvas/image-canvas';
+import { LoadingModal } from './components/loading-modal/loading-modal';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -213,6 +214,7 @@ export default class App extends React.Component<{}, IState> {
                             />
                             <BottomSheet />
                             <Dialog.Component />
+                            <LoadingModal />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

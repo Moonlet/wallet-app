@@ -11,7 +11,7 @@ import { IAction } from '../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import uuidv4 from 'uuid/v4';
-import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
+import { storeEncrypted, deleteFromStorage, readEncrypted } from '../../core/secure/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
@@ -35,6 +35,8 @@ import { getSelectedWallet, getAccounts, getSelectedAccount } from './selectors'
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
+import { openLoadingModal, closeLoadingModal } from '../ui/loading-modal/actions';
+import { delay } from '../../core/utils/time';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -205,6 +207,9 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
+    dispatch(openLoadingModal());
+    await delay(0);
+
     try {
         const wallet = new HDWallet(mnemonic);
 
@@ -241,10 +246,12 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
 
             dispatch(setSelectedWallet(walletId));
             callback && callback();
+            dispatch(closeLoadingModal());
         });
     } catch (e) {
         // console.log(e);
         // TODO best way to handle this?
+        dispatch(closeLoadingModal());
     }
     // TODO  - error handling
 };
@@ -343,6 +350,7 @@ export const sendTransferTransaction = (
     const chainId = getChainId(state, account.blockchain);
 
     const appWallet = getSelectedWallet(state);
+    dispatch(openLoadingModal());
 
     dispatch(
         openBottomSheet(BottomSheetType.SEND_TRANSACTION, {
@@ -435,9 +443,11 @@ export const sendTransferTransaction = (
             });
             dispatch(closeBottomSheet());
             goBack && navigation.goBack();
+            dispatch(closeLoadingModal());
             return;
         }
     } catch (errorMessage) {
+        dispatch(closeLoadingModal());
         dispatch({
             type: DISPLAY_MESSAGE,
             data: {
@@ -554,4 +564,19 @@ export const createAccount = (
     } else {
         // TODO - if client.createAccount crashes, dashboard (near create account section) will be stuck on loading indicator
     }
+};
+
+export const changePIN = (newPassword: string, oldPassword: string) => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+
+    Object.values(state.wallets).map(async (wallet: IWalletState) => {
+        const walletId = wallet.id;
+
+        const mnemonic = await readEncrypted(walletId, oldPassword);
+
+        await storeEncrypted(mnemonic, walletId, newPassword);
+    });
 };

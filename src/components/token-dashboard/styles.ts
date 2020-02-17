@@ -14,5 +14,8 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             marginHorizontal: -BASE_DIMENSION / 2,
             marginBottom: BASE_DIMENSION
+        },
+        scrollContainer: {
+            flexGrow: 1
         }
     });

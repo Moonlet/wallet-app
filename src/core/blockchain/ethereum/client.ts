@@ -1,4 +1,4 @@
-import { BlockchainGenericClient, ChainIdType, IBlockInfo } from '../types';
+import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionMessageText } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
@@ -32,7 +32,17 @@ export class Client extends BlockchainGenericClient {
 
     public sendTransaction(transaction): Promise<string> {
         return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => {
-            return res.result;
+            if (res.result) {
+                return res.result;
+            }
+
+            const errorMessage: string = res.error.message;
+            if (errorMessage.includes('transaction underpriced')) {
+                return Promise.reject(TransactionMessageText.TR_UNDERPRICED);
+            }
+            if (errorMessage.includes('insufficient funds for gas')) {
+                return Promise.reject(TransactionMessageText.NOT_ENOUGH_TOKENS);
+            }
         });
     }
 

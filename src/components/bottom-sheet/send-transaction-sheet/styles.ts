@@ -16,5 +16,11 @@ export default (theme: ITheme) =>
             marginTop: BASE_DIMENSION * 2,
             marginBottom: BASE_DIMENSION * 5,
             textAlign: 'center'
+        },
+        messageError: {
+            color: theme.colors.error
+        },
+        messageWarning: {
+            color: theme.colors.warning
         }
     });

@@ -193,7 +193,7 @@ export class LedgerConnectComponent extends React.Component<
                               app: this.props.blockchain
                           })
                         : this.state.openApp
-                        ? translate('CreateHardwareWallet.openApp', {
+                        ? translate('Send.OPEN_APP', {
                               app: this.props.blockchain
                           })
                         : ''}

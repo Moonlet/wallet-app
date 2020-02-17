@@ -81,7 +81,7 @@ export class SettingsScreenComponent extends React.Component<
                 }
                 this.setState({ isTouchIDSupported: true });
             })
-            .catch(error => {
+            .catch(() => {
                 // Failure code if the user's device does not have touchID or faceID enabled
                 this.setState({ isTouchIDSupported: false });
             });

@@ -10,11 +10,15 @@ import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { config } from './config';
 import { NameService } from './name-service';
+import { TokenType } from '../types/token';
+import { Zrc2Client } from './tokens/zrc2-client';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
+
         this.nameService = new NameService();
+        this.tokens[TokenType.ZRC2] = new Zrc2Client(this);
     }
 
     public async getBalance(address: string): Promise<BigNumber> {

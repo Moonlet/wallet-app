@@ -6,12 +6,12 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { IReduxState } from '../../redux/state';
 import { AccountsBottomSheet } from './accounts-bottom-sheet/accounts-bottom-sheet';
-import { LedgerMessageBottomSheet } from './ledger-message-bottom-sheet/ledger-message-bottom-sheet';
 import { DashboardMenuBottomSheet } from './dashboard-menu-bottom-sheet/dashboard-menu-bottom-sheet';
 import { LedgerConnect } from '../../screens/connect-hardware-wallet/ledger-connect/ledger-connect';
 import { ExtensionRequestBottomSheet } from './extension-request-bottom-sheet/extension-request-bottom-sheet';
 import { IBottomSheet, BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { openBottomSheet, closeBottomSheet } from '../../redux/ui/bottomSheet/actions';
+import { SendTransactionBottomSheet } from './send-transaction-sheet/send-transaction-sheet';
 
 interface IReduxProps {
     bottomSheet: IBottomSheet;
@@ -85,10 +85,10 @@ export class BottomSheetComponent extends React.Component<
                         />
                     </View>
                 );
-            case BottomSheetType.LEDGER_SIGN_MESSAGES:
+            case BottomSheetType.SEND_TRANSACTION:
                 return (
-                    <View style={this.props.styles.container}>
-                        <LedgerMessageBottomSheet
+                    <View style={[this.props.styles.container]}>
+                        <SendTransactionBottomSheet
                             snapPoints={{
                                 initialSnap: Platform.OS === 'web' ? 200 : 0,
                                 bottomSheetHeight: 200

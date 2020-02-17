@@ -1,3 +1,5 @@
+import { TransactionMessageText, TransactionMessageType } from '../../../../core/blockchain/types';
+
 export interface ISendScreenState {
-    reviewTransaction: boolean;
+    message: { text: TransactionMessageText; type: TransactionMessageType };
 }

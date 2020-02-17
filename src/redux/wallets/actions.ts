@@ -1,5 +1,10 @@
 import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
-import { Blockchain, IFeeOptions } from '../../core/blockchain/types';
+import {
+    Blockchain,
+    IFeeOptions,
+    TransactionMessageText,
+    TransactionMessageType
+} from '../../core/blockchain/types';
 import { WalletType, IWallet } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
 import { IAction } from '../types';
@@ -20,7 +25,7 @@ import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
-import { REVIEW_TRANSACTION } from '../ui/screens/send/actions';
+import { DISPLAY_MESSAGE } from '../ui/screens/send/actions';
 import { REHYDRATE } from 'redux-persist';
 import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
@@ -339,7 +344,20 @@ export const sendTransferTransaction = (
 
     const appWallet = getSelectedWallet(state);
 
+    dispatch(
+        openBottomSheet(BottomSheetType.SEND_TRANSACTION, {
+            blockchain: account.blockchain
+        })
+    );
+
     try {
+        dispatch({
+            type: DISPLAY_MESSAGE,
+            data: {
+                message: TransactionMessageText.SIGNING,
+                type: TransactionMessageType.INFO
+            }
+        });
         const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
             pass: password,
             deviceVendor: appWallet.hwOptions?.deviceVendor,
@@ -371,24 +389,37 @@ export const sendTransferTransaction = (
         });
 
         if (appWallet.type === WalletType.HW) {
-            dispatch(
-                openBottomSheet(BottomSheetType.LEDGER_SIGN_MESSAGES, {
-                    blockchain: account.blockchain
-                })
-            );
-
+            dispatch({
+                type: DISPLAY_MESSAGE,
+                data: {
+                    message: TransactionMessageText.OPEN_APP,
+                    type: TransactionMessageType.INFO
+                }
+            });
             await (wallet as LedgerWallet).onAppOpened(account.blockchain);
 
             dispatch({
-                type: REVIEW_TRANSACTION,
-                data: true
+                type: DISPLAY_MESSAGE,
+                data: {
+                    message: TransactionMessageText.REVIEW_TRANSACTION,
+                    type: TransactionMessageType.INFO
+                }
             });
         }
         const transaction = await wallet.sign(account.blockchain, account.index, tx);
 
+        dispatch({
+            type: DISPLAY_MESSAGE,
+            data: {
+                message: TransactionMessageText.BROADCASTING,
+                type: TransactionMessageType.INFO
+            }
+        });
+
         const txHash = await getBlockchain(account.blockchain)
             .getClient(chainId)
             .sendTransaction(transaction);
+
         if (txHash) {
             dispatch({
                 type: TRANSACTION_PUBLISHED,
@@ -398,18 +429,22 @@ export const sendTransferTransaction = (
                     walletId: appWallet.id
                 }
             });
-            if (appWallet.type === WalletType.HW) {
-                dispatch({
-                    type: REVIEW_TRANSACTION,
-                    data: false
-                });
-                dispatch(closeBottomSheet());
-            }
+            dispatch({
+                type: DISPLAY_MESSAGE,
+                data: undefined
+            });
+            dispatch(closeBottomSheet());
             goBack && navigation.goBack();
             return;
         }
-    } catch (e) {
-        throw new Error(e);
+    } catch (errorMessage) {
+        dispatch({
+            type: DISPLAY_MESSAGE,
+            data: {
+                message: errorMessage,
+                type: TransactionMessageType.ERROR
+            }
+        });
     }
 };
 

@@ -1,4 +1,10 @@
-import { BlockchainGenericClient, IFeeOptions, ChainIdType, IBlockInfo } from '../types';
+import {
+    BlockchainGenericClient,
+    IFeeOptions,
+    ChainIdType,
+    IBlockInfo,
+    TransactionMessageText
+} from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
@@ -56,7 +62,16 @@ export class Client extends BlockchainGenericClient {
     }
 
     public sendTransaction(transaction): Promise<string> {
-        return this.rpc.call('CreateTransaction', [transaction]).then(res => res.result.TranID);
+        return this.rpc.call('CreateTransaction', [transaction]).then(res => {
+            if (res.result) {
+                return res.result.TranID;
+            }
+
+            const errorMessage: string = res.error.message;
+            if (errorMessage.includes('transaction underpriced')) {
+                return Promise.reject(TransactionMessageText.TR_UNDERPRICED);
+            }
+        });
     }
 
     public async call(method: string, params: any[] = []): Promise<any> {

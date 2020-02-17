@@ -36,7 +36,7 @@ export default (theme: ITheme) =>
         transactionTextSecondary: {
             fontSize: 15,
             lineHeight: 20,
-            color: theme.colors.textSecondary
+            color: theme.colors.textTertiary
         },
         transactionRightIcon: {
             color: theme.colors.accent,

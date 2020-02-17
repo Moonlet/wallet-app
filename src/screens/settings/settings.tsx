@@ -16,10 +16,12 @@ import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { Dialog } from '../../components/dialog/dialog';
+import { changePIN } from '../../redux/wallets/actions';
 
 export interface IState {
     isTouchIDSupported: boolean;
     biometryType: BiometryType;
+    changePIN: boolean;
 }
 
 export interface IReduxProps {
@@ -27,6 +29,7 @@ export interface IReduxProps {
     touchID: boolean;
     toggleTouchID: typeof toggleTouchID;
     mock: () => void;
+    changePIN: typeof changePIN;
 }
 
 export const mockFunction = () => {
@@ -40,7 +43,8 @@ const mapStateToProps = (state: IReduxState) => ({
 
 const mapDispatchToProps = {
     mock: mockFunction,
-    toggleTouchID
+    toggleTouchID,
+    changePIN
 };
 
 const navigationOptions = () => ({
@@ -62,7 +66,8 @@ export class SettingsScreenComponent extends React.Component<
 
         this.state = {
             isTouchIDSupported: false,
-            biometryType: undefined
+            biometryType: undefined,
+            changePIN: false
         };
 
         biometricAuth
@@ -160,6 +165,30 @@ export class SettingsScreenComponent extends React.Component<
                             <Icon name="chevron-right" size={16} style={styles.icon} />
                         </View>
                     </TouchableOpacity>
+
+                    <View style={styles.divider} />
+
+                    <TouchableOpacity
+                        style={styles.rowContainer}
+                        onPress={() =>
+                            this.setState({ changePIN: true }, () => {
+                                this.passwordModal
+                                    .requestPassword()
+                                    .then((pass: { newPassword: string; oldPassword: string }) => {
+                                        this.props.changePIN(pass.newPassword, pass.oldPassword);
+
+                                        // disable changePIN if you want to reattempt to change the PIN code
+                                        this.setState({ changePIN: false }, () =>
+                                            Dialog.info(translate('Settings.successChangePin'), '')
+                                        );
+                                    });
+                            })
+                        }
+                    >
+                        <Text style={styles.textRow}>{translate('Settings.changePin')}</Text>
+                        <Icon name="chevron-right" size={16} style={styles.icon} />
+                    </TouchableOpacity>
+
                     <View style={styles.divider} />
 
                     <Text style={styles.textHeader}>
@@ -265,7 +294,7 @@ export class SettingsScreenComponent extends React.Component<
                         style={styles.colContainer}
                         onPress={() => {
                             Clipboard.setString(DeviceInfo.getUniqueId());
-                            Dialog.confirm(translate('Settings.copied'), '');
+                            Dialog.info(translate('Settings.copied'), '');
                         }}
                     >
                         <Text style={[styles.textRow, styles.textRowMargin]}>
@@ -283,7 +312,10 @@ export class SettingsScreenComponent extends React.Component<
                     )}
                 </ScrollView>
 
-                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
+                <PasswordModal
+                    obRef={ref => (this.passwordModal = ref)}
+                    changePIN={this.state.changePIN}
+                />
             </View>
         );
     }

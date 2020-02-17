@@ -14,7 +14,8 @@ export interface IAlertButton {
 export enum DialogType {
     ALERT = 'ALERT',
     CONFIRM = 'CONFIRM',
-    PROMPT = 'PROMPT'
+    PROMPT = 'PROMPT',
+    INFO = 'INFO'
 }
 
 interface IState {
@@ -84,6 +85,15 @@ export class DialogComponent extends React.Component<
 
         return res;
     }
+
+    public static async info(title: string, message: string): Promise<boolean> {
+        const ref = await DialogComponent.ref.promise;
+
+        const res = await ref.showInfo(title, message);
+
+        return res;
+    }
+
     public input = null;
     private dialogDeferred = null;
 
@@ -169,6 +179,19 @@ export class DialogComponent extends React.Component<
         return this.dialogDeferred.promise;
     }
 
+    public async showInfo(title: string, message: string): Promise<boolean> {
+        this.dialogDeferred = new Deferred();
+
+        this.setState({
+            visible: true,
+            dialogType: DialogType.INFO,
+            title,
+            message
+        });
+
+        return this.dialogDeferred.promise;
+    }
+
     public closeDialog = () =>
         this.setState({
             visible: false,
@@ -212,6 +235,10 @@ export class DialogComponent extends React.Component<
                 this.closeDialog();
                 this.dialogDeferred && this.dialogDeferred.resolve(this.state.inputValue);
                 break;
+            case DialogType.INFO:
+                this.closeDialog();
+                this.dialogDeferred && this.dialogDeferred.resolve(true);
+                break;
             default:
                 this.closeDialog();
                 break;
@@ -221,52 +248,61 @@ export class DialogComponent extends React.Component<
     public render() {
         const { styles, theme } = this.props;
 
-        return this.state.visible ? (
-            <View style={styles.dialogContainer}>
-                <RNDialog.Container
-                    visible={this.state.visible}
-                    blurStyle={styles.contentContainerStyle}
-                    contentStyle={styles.contentContainerStyle}
-                >
-                    <RNDialog.Title style={styles.titleStyle}>{this.state.title}</RNDialog.Title>
-                    <RNDialog.Description style={styles.descriptionStyle}>
-                        {this.state.message}
-                    </RNDialog.Description>
-                    {this.state.dialogType === DialogType.PROMPT && (
-                        <RNDialog.Input
-                            style={Platform.OS === 'android' && styles.textInput}
-                            onChangeText={inputValue => this.setState({ inputValue })}
-                            label={this.state.defaultInputValue}
+        if (this.state.visible) {
+            return (
+                <View style={styles.dialogContainer}>
+                    <RNDialog.Container
+                        visible={this.state.visible}
+                        blurStyle={styles.contentContainerStyle}
+                        contentStyle={styles.contentContainerStyle}
+                    >
+                        <RNDialog.Title style={styles.titleStyle}>
+                            {this.state.title}
+                        </RNDialog.Title>
+                        <RNDialog.Description style={styles.descriptionStyle}>
+                            {this.state.message}
+                        </RNDialog.Description>
+                        {this.state.dialogType === DialogType.PROMPT && (
+                            <RNDialog.Input
+                                style={Platform.OS === 'android' && styles.textInput}
+                                onChangeText={inputValue => this.setState({ inputValue })}
+                                label={this.state.defaultInputValue}
+                            />
+                        )}
+                        {this.state.dialogType !== DialogType.INFO && (
+                            <RNDialog.Button
+                                label={
+                                    this.state.dialogType === DialogType.ALERT
+                                        ? this.state.cancelButton?.text
+                                            ? this.state.cancelButton.text
+                                            : translate('App.labels.cancel')
+                                        : this.state.dialogType === DialogType.CONFIRM
+                                        ? translate('App.labels.cancel')
+                                        : this.state.cancelButtonText
+                                }
+                                onPress={this.cancelButtonPress}
+                                color={theme.colors.accent}
+                            />
+                        )}
+                        <RNDialog.Button
+                            label={
+                                this.state.dialogType === DialogType.ALERT
+                                    ? this.state.confirmButton?.text
+                                        ? this.state.confirmButton.text
+                                        : translate('App.labels.ok')
+                                    : this.state.dialogType === DialogType.CONFIRM ||
+                                      this.state.dialogType === DialogType.INFO
+                                    ? translate('App.labels.ok')
+                                    : this.state.confirmButtonText
+                            }
+                            onPress={this.confirmButtonPress}
+                            color={theme.colors.accent}
                         />
-                    )}
-                    <RNDialog.Button
-                        label={
-                            this.state.dialogType === DialogType.ALERT
-                                ? this.state.cancelButton?.text
-                                    ? this.state.cancelButton.text
-                                    : translate('App.labels.cancel')
-                                : this.state.dialogType === DialogType.CONFIRM
-                                ? translate('App.labels.cancel')
-                                : this.state.cancelButtonText
-                        }
-                        onPress={this.cancelButtonPress}
-                        color={theme.colors.accent}
-                    />
-                    <RNDialog.Button
-                        label={
-                            this.state.dialogType === DialogType.ALERT
-                                ? this.state.confirmButton?.text
-                                    ? this.state.confirmButton.text
-                                    : translate('App.labels.ok')
-                                : this.state.dialogType === DialogType.CONFIRM
-                                ? translate('App.labels.ok')
-                                : this.state.confirmButtonText
-                        }
-                        onPress={this.confirmButtonPress}
-                        color={theme.colors.accent}
-                    />
-                </RNDialog.Container>
-            </View>
-        ) : null;
+                    </RNDialog.Container>
+                </View>
+            );
+        } else {
+            return <View />;
+        }
     }
 }

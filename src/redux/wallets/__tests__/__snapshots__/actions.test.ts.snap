@@ -12,6 +12,11 @@ exports[`wallet actions createHDWallet working properly 1`] = `
   "calls": Array [
     Array [
       Object {
+        "type": "OPEN_LOADING_MODAL",
+      },
+    ],
+    Array [
+      Object {
         "data": Object {
           "accounts": Array [
             Object {
@@ -290,8 +295,21 @@ exports[`wallet actions createHDWallet working properly 1`] = `
         "type": "SELECT_WALLET",
       },
     ],
+    Array [
+      Object {
+        "type": "CLOSE_LOADING_MODAL",
+      },
+    ],
   ],
   "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
     Object {
       "type": "return",
       "value": undefined,

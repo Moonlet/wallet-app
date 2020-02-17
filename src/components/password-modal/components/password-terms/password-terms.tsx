@@ -9,6 +9,7 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 
 export interface IExternalProps {
     onAcknowledged: () => any;
+    changePIN: boolean;
 }
 
 export const PasswordTermsComponent = (
@@ -18,7 +19,9 @@ export const PasswordTermsComponent = (
 
     return (
         <View style={props.styles.container}>
-            <Text style={props.styles.textStyle}>{translate('Password.termsBody')}</Text>
+            {!props.changePIN && (
+                <Text style={props.styles.textStyle}>{translate('Password.termsBody')}</Text>
+            )}
 
             <View style={props.styles.imageStyle}>
                 <Image

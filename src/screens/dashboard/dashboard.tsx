@@ -259,6 +259,7 @@ export class DashboardScreenComponent extends React.Component<
                                     account={this.props.selectedAccount}
                                     blockchain={blockchain}
                                     navigation={this.props.navigation}
+                                    showBottomPadding={blockchains.length > 1}
                                 />
                             </Animated.View>
                         )}

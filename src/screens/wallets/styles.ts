@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { ph, pw } from '../../styles';
-import { BASE_DIMENSION, BORDER_RADIUS, SCREEN_HEIGHT } from '../../styles/dimensions';
+import { BASE_DIMENSION, SCREEN_HEIGHT } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -12,15 +12,19 @@ export default (theme: ITheme) =>
             height: SCREEN_HEIGHT
         },
 
+        scrollContainer: {
+            flex: 1,
+            marginVertical: BASE_DIMENSION * 2
+        },
+
         walletList: {
-            marginTop: 32
+            flexGrow: 1,
+            paddingVertical: BASE_DIMENSION * 2
         },
 
         bottomContainer: {
-            alignSelf: 'center',
-            marginBottom: 20,
             flexDirection: 'row',
-            flex: 0
+            marginBottom: BASE_DIMENSION * 3
         },
 
         buttonContainer: {
@@ -33,28 +37,6 @@ export default (theme: ITheme) =>
             width: 150,
             flexBasis: 0,
             marginHorizontal: BASE_DIMENSION / 2
-        },
-
-        walletCard: {
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            height: 80,
-            padding: BASE_DIMENSION * 2,
-            backgroundColor: theme.colors.cardBackground,
-            borderRadius: BORDER_RADIUS,
-            marginBottom: BASE_DIMENSION,
-            borderWidth: 1,
-            borderColor: theme.colors.cardBackground
-        },
-
-        selectedWallet: {
-            borderColor: theme.colors.accent
-        },
-
-        iconWallet: {
-            color: theme.colors.accent,
-            marginRight: BASE_DIMENSION * 2
         },
 
         leftActionsContainer: {

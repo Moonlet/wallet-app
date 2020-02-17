@@ -5,6 +5,7 @@ import { getBalance, setSelectedBlockchain } from '../wallets/actions';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { IBlockchainsOptions } from './state';
 import { IAction } from '../types';
+import { getBlockchains, hasNetwork } from './selectors';
 
 // actions consts
 export const PREF_SET_CURRENCY = 'PREF_SET_CURRENCY';
@@ -50,12 +51,20 @@ export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: ChainI
 };
 
 export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
-    const state = getState();
-    const selectedAccount = getSelectedAccount(state);
-
     dispatch({
         type: SET_TEST_NET
     });
+    const state = getState();
+
+    const selectedBlockchain = getSelectedBlockchain(state);
+    const networkExists = hasNetwork(Blockchain[selectedBlockchain], state.preferences.testNet);
+
+    if (!networkExists) {
+        const blockchains = getBlockchains(state);
+        setSelectedBlockchain(Blockchain[blockchains[0]])(dispatch, getState);
+    }
+
+    const selectedAccount = getSelectedAccount(getState());
     getBalance(
         selectedAccount.blockchain,
         selectedAccount.address,

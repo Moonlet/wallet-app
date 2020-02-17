@@ -22,34 +22,8 @@ describe('preferences reducer', () => {
             currency: 'USD',
             testNet: false,
             touchID: true,
-            networks: {
-                [Blockchain.ETHEREUM]: {
-                    testNet: 4,
-                    mainNet: 1
-                },
-                [Blockchain.ZILLIQA]: {
-                    testNet: 333,
-                    mainNet: 1
-                },
-                [Blockchain.NEAR]: {
-                    testNet: 'testnet',
-                    mainNet: 'testnet' // not released yet
-                }
-            },
-            blockchains: {
-                [Blockchain.ETHEREUM]: {
-                    order: 1,
-                    active: true
-                },
-                [Blockchain.ZILLIQA]: {
-                    order: 0,
-                    active: true
-                },
-                [Blockchain.NEAR]: {
-                    order: 2,
-                    active: true
-                }
-            }
+            networks: {},
+            blockchains: {}
         });
     });
 });

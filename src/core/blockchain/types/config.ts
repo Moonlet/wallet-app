@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import { ITokenConfig, TokenType } from './token';
+import { ChainIdType } from '.';
 
 export enum DerivationType {
     HD_KEY = 'HD_KEY',
@@ -39,4 +40,9 @@ export interface IBlockchainConfig {
         enableAccountCreation: boolean;
         maxAccountsNumber: number;
     };
+    networks: {
+        testNet: ChainIdType;
+        mainNet?: ChainIdType;
+    };
+    defaultOrder: number;
 }

@@ -15,11 +15,14 @@ import { setBlockchainActive, setBlockchainOrder } from '../../../redux/preferen
 import { Blockchain } from '../../../core/blockchain/types';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
+import { getBlockchainsPortfolio, hasNetwork } from '../../../redux/preferences/selectors';
+import { Dialog } from '../../../components/dialog/dialog';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainOptions }];
     setBlockchainActive: typeof setBlockchainActive;
     setBlockchainOrder: typeof setBlockchainOrder;
+    testNet: boolean;
 }
 
 const mapDispatchToProps = {
@@ -29,9 +32,8 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        blockchains: Object.keys(state.preferences.blockchains)
-            .map(key => ({ key, value: state.preferences.blockchains[key] }))
-            .sort((a, b) => a.value.order - b.value.order)
+        testNet: state.preferences.testNet,
+        blockchains: getBlockchainsPortfolio(state)
     };
 };
 
@@ -57,6 +59,8 @@ export class BlockchainPortfolioComponent extends React.Component<
     ) {
         const { styles, theme } = this.props;
 
+        const networkAvailable = hasNetwork(item.key, this.props.testNet);
+
         if (item.key === Blockchain.NEAR && isFeatureActive(RemoteFeature.NEAR) === false) {
             return <View></View>;
         }
@@ -66,9 +70,10 @@ export class BlockchainPortfolioComponent extends React.Component<
                 style={[
                     styles.rowContainer,
                     {
-                        borderColor: item.value.active
-                            ? theme.colors.accentSecondary
-                            : theme.colors.cardBackground,
+                        borderColor:
+                            item.value.active && networkAvailable
+                                ? theme.colors.accentSecondary
+                                : theme.colors.cardBackground,
                         backgroundColor: isActive
                             ? theme.colors.appBackground
                             : theme.colors.cardBackground
@@ -89,11 +94,17 @@ export class BlockchainPortfolioComponent extends React.Component<
                 </View>
                 <TouchableOpacity
                     style={styles.iconContainer}
-                    onPressOut={() => this.props.setBlockchainActive(item.key, !item.value.active)}
+                    onPressOut={() => {
+                        if (!networkAvailable) {
+                            Dialog.confirm(translate('Settings.blockchainHasNoNetwork'), '');
+                        } else {
+                            this.props.setBlockchainActive(item.key, !item.value.active);
+                        }
+                    }}
                 >
                     <Icon
                         size={18}
-                        name={item.value.active ? 'check-2-thicked' : 'check-2'}
+                        name={item.value.active && networkAvailable ? 'check-2-thicked' : 'check-2'}
                         style={[
                             {
                                 color: item.value.active

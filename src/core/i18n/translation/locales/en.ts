@@ -242,6 +242,8 @@ export const translation: ITranslations = {
             mainnetTestnet: 'Mainnet/Testnet',
             deviceId: 'Device ID',
             copied: 'Device ID copied!',
+            blockchainHasNoNetwork:
+                'Network not availble. Please switch network to activate blockchain',
             changePin: 'Change PIN',
             successChangePin: 'PIN has been change successfully!'
         },

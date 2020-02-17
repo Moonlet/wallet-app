@@ -15,7 +15,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { getBalance, setSelectedBlockchain } from '../../redux/wallets/actions';
-import { BLOCKCHAIN_INFO, getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import {
     getSelectedWallet,
     getSelectedAccount,
@@ -192,7 +192,7 @@ export class DashboardScreenComponent extends React.Component<
                                         styles.blockchainButtonTextActive
                                     }
                                 >
-                                    {BLOCKCHAIN_INFO[blockchain].coin}
+                                    {getBlockchain(blockchain).config.coin}
                                 </Text>
                             </TouchableOpacity>
                         ))}

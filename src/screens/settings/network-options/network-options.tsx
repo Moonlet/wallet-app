@@ -15,6 +15,7 @@ import { toggleTestNet } from '../../../redux/preferences/actions';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { Blockchain } from '../../../core/blockchain/types';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
+import { getNetworks } from '../../../redux/preferences/selectors';
 
 export interface IReduxProps {
     testNet: boolean;
@@ -28,7 +29,7 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state: IReduxState) => ({
     testNet: state.preferences.testNet,
-    networksOptions: state.preferences.networks
+    networksOptions: getNetworks(state)
 });
 
 const navigationOptions = () => ({

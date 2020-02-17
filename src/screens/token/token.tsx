@@ -23,7 +23,7 @@ import { TransactionsHistoryList } from '../transactions-history/list-transactio
 import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
 import { formatNumber } from '../../core/utils/format-number';
-import { BLOCKCHAIN_INFO } from '../../core/blockchain/blockchain-factory';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { formatAddress } from '../../core/utils/format-address';
 import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
@@ -127,7 +127,7 @@ export class TokenScreenComponent extends React.Component<
             } = this.props.extensionTransactionPayload.params[0];
 
             const formattedAmount = formatNumber(new BigNumber(amount), {
-                currency: BLOCKCHAIN_INFO[account.blockchain].coin
+                currency: getBlockchain(account.blockchain).config.coin
             });
 
             Dialog.alert(

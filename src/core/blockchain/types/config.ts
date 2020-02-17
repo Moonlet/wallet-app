@@ -44,7 +44,5 @@ export interface IBlockchainConfig {
         testNet: ChainIdType;
         mainNet?: ChainIdType;
     };
-    mainNetDevMode: boolean;
     defaultOrder: number;
-    defaultActive: boolean;
 }

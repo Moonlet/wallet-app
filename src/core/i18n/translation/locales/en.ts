@@ -229,7 +229,9 @@ export const translation: ITranslations = {
             signOut: 'Sign out',
             mainnetTestnet: 'Mainnet/Testnet',
             deviceId: 'Device ID',
-            copied: 'Device ID copied!'
+            copied: 'Device ID copied!',
+            blockchainHasNoNetwork:
+                'Network not availble. Please switch network to activate blockchain'
         },
         NetworkOptions: {
             mainnet: 'Mainnet',

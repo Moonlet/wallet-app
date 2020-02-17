@@ -8,39 +8,13 @@ import {
     PREF_SET_BLOCKCHAIN_ACTIVE_STATE,
     PREF_SET_BLOCKCHAIN_ORDER
 } from './actions';
-import { Blockchain } from '../../core/blockchain/types';
 
 const initialState: IPrefState = {
     currency: 'USD',
     testNet: false,
     touchID: false,
-    networks: {
-        [Blockchain.ZILLIQA]: {
-            testNet: 333,
-            mainNet: 1
-        },
-        [Blockchain.ETHEREUM]: {
-            testNet: 4,
-            mainNet: 1
-        },
-        [Blockchain.NEAR]: {
-            testNet: 'testnet'
-        }
-    },
-    blockchains: {
-        [Blockchain.ZILLIQA]: {
-            order: 0,
-            active: true
-        },
-        [Blockchain.ETHEREUM]: {
-            order: 1,
-            active: true
-        },
-        [Blockchain.NEAR]: {
-            order: 2,
-            active: true
-        }
-    }
+    networks: {},
+    blockchains: {}
 };
 
 export default (state: IPrefState = initialState, action: IAction): IPrefState => {

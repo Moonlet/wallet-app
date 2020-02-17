@@ -11,6 +11,7 @@ import { IBlockchainNetwork, Blockchain } from '../../../core/blockchain/types';
 import { setNetworkTestNetChainId } from '../../../redux/preferences/actions';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { INetworksOptions } from '../../../redux/preferences/state';
+import { getNetworks } from '../../../redux/preferences/selectors';
 
 export interface INavigationParams {
     blockchain: Blockchain;
@@ -24,7 +25,7 @@ const mapDispatchToProps = {
 };
 
 const mapStateToProps = (state: IReduxState) => ({
-    appNetworks: state.preferences.networks
+    appNetworks: getNetworks(state)
 });
 
 const navigationOptions = ({ navigation }: any) => ({

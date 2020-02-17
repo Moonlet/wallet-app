@@ -1,4 +1,4 @@
-import { Blockchain, IBlockchain, IBlockchainConfig } from './types';
+import { Blockchain, IBlockchain } from './types';
 import { Zilliqa } from './zilliqa';
 import { Ethereum } from './ethereum';
 import { Near } from './near';
@@ -19,8 +19,4 @@ export const getBlockchain = (blockchain: Blockchain): IBlockchain => {
 /**
  *
  */
-export const BLOCKCHAIN_INFO: { [blockchain: string]: IBlockchainConfig } = {
-    [Blockchain.ETHEREUM]: Ethereum.config,
-    [Blockchain.ZILLIQA]: Zilliqa.config,
-    [Blockchain.NEAR]: Near.config
-};
+export const BLOCKCHAIN_LIST = [Blockchain.ZILLIQA, Blockchain.ETHEREUM, Blockchain.NEAR];

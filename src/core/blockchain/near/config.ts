@@ -47,7 +47,5 @@ export const config: IBlockchainConfig = {
     networks: {
         testNet: 'testnet'
     },
-    mainNetDevMode: false,
-    defaultOrder: 2,
-    defaultActive: true
+    defaultOrder: 2
 };

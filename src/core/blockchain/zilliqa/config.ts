@@ -50,7 +50,5 @@ export const config: IBlockchainConfig = {
         testNet: 333,
         mainNet: 1
     },
-    mainNetDevMode: false,
-    defaultOrder: 0,
-    defaultActive: true
+    defaultOrder: 0
 };

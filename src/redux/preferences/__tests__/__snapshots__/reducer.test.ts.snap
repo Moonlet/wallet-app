@@ -2,34 +2,9 @@
 
 exports[`preferences reducer should set initial state 1`] = `
 Object {
-  "blockchains": Object {
-    "ETHEREUM": Object {
-      "active": true,
-      "order": 1,
-    },
-    "NEAR": Object {
-      "active": true,
-      "order": 2,
-    },
-    "ZILLIQA": Object {
-      "active": true,
-      "order": 0,
-    },
-  },
+  "blockchains": Object {},
   "currency": "USD",
-  "networks": Object {
-    "ETHEREUM": Object {
-      "mainNet": 1,
-      "testNet": 4,
-    },
-    "NEAR": Object {
-      "testNet": "testnet",
-    },
-    "ZILLIQA": Object {
-      "mainNet": 1,
-      "testNet": 333,
-    },
-  },
+  "networks": Object {},
   "testNet": false,
   "touchID": false,
 }

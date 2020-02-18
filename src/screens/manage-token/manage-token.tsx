@@ -131,38 +131,17 @@ export class ManageTokenComponent extends React.Component<
 
         switch (blockchain) {
             case Blockchain.ETHEREUM:
-                const foundToken = await fetch(
-                    `https://static.moonlet.dev/tokens/${blockchain.toLocaleLowerCase()}/${inputValue}.json`,
-                    {
-                        method: 'POST'
-                    }
-                )
-                    .then(res => res.json())
-                    .catch(() => {
-                        if (this.startsWith(blockchain, inputValue)) {
-                            // Search by address
-                            if (isValidAddressETH(inputValue)) {
-                                this.setState({
-                                    token: {
-                                        ...this.state.token,
-                                        contractAddress: inputValue
-                                    }
-                                });
-                            } else {
-                                // Address is not valid
-                                this.setState({ showError: true, isLoading: false });
-                            }
-                        } else {
-                            // Symbol
-                            this.setState({ showError: true, isLoading: false });
-                        }
-                    });
-
-                this.getTokenInfo(TokenType.ERC20, foundToken);
+                const foundTokenEth = this.searchToken(blockchain, inputValue);
+                this.getTokenInfo(TokenType.ERC20, foundTokenEth);
                 break;
 
             case Blockchain.ZILLIQA:
-                // Search by address
+                // TODO: add this
+
+                // const foundTokenZil = this.searchToken(blockchain, inputValue);
+                // this.getTokenInfo(TokenType.ZRC2, foundTokenZil);
+
+                // TODO: remove this
                 if (this.startsWith(blockchain, inputValue) && isValidAddressZIL(inputValue)) {
                     this.setState(
                         {
@@ -174,7 +153,6 @@ export class ManageTokenComponent extends React.Component<
                         () => this.getTokenInfo(TokenType.ZRC2)
                     );
                 } else {
-                    // Address is not valid
                     this.setState({ showError: true, isLoading: false });
                 }
                 break;
@@ -334,6 +312,38 @@ export class ManageTokenComponent extends React.Component<
             </View>
         );
     }
+
+    private searchToken = async (blockchain: Blockchain, inputValue: string) => {
+        return fetch(
+            `https://static.moonlet.dev/tokens/${blockchain.toLocaleLowerCase()}/${inputValue}.json`,
+            {
+                method: 'POST'
+            }
+        )
+            .then(res => res.json())
+            .catch(() => {
+                if (this.startsWith(blockchain, inputValue)) {
+                    // Search by address
+                    if (
+                        (blockchain === Blockchain.ETHEREUM && isValidAddressETH(inputValue)) ||
+                        (blockchain === Blockchain.ZILLIQA && isValidAddressZIL(inputValue))
+                    ) {
+                        this.setState({
+                            token: {
+                                ...this.state.token,
+                                contractAddress: inputValue
+                            }
+                        });
+                    } else {
+                        // Address is not valid
+                        this.setState({ showError: true, isLoading: false });
+                    }
+                } else {
+                    // Symbol error
+                    this.setState({ showError: true, isLoading: false });
+                }
+            });
+    };
 }
 
 export const ManageTokenScreen = smartConnect(ManageTokenComponent, [

@@ -25,21 +25,6 @@ export const config: IBlockchainConfig = {
                 LI: new BigNumber(Math.pow(10, 6)),
                 ZIL: new BigNumber(Math.pow(10, 12))
             }
-        },
-        // TODO remove this from here, it's just for testing purposes
-        XSGD: {
-            name: 'Singapore dollar',
-            symbol: 'XSGD',
-            logo: {
-                uri:
-                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/zil.png'
-            }, // require('../../../assets/images/png/zil.png'),
-            order: 1,
-            active: true,
-            decimals: 12,
-            uiDecimals: 4,
-            type: TokenType.ZRC2,
-            contractAddress: 'zil1nv80gf5xm5kgcfaadpj9w72p0rufuhyn5qymlz'
         }
     },
     feeOptions: {

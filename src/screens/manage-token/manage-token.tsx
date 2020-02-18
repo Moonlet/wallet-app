@@ -107,7 +107,7 @@ export class ManageTokenComponent extends React.Component<
                         this.state.token?.contractAddress || foundToken?.contractAddress,
                     decimals: tokenInfo.decimals,
                     name: tokenInfo?.name || foundToken.name,
-                    symbol: tokenInfo?.symbol || foundToken.symbol,
+                    symbol: String(tokenInfo?.symbol).toUpperCase() || foundToken.symbol, // Check this
                     logo: foundToken?.logo ? { uri: foundToken.logo } : GENERIC_TOKEN_LOGO
                 },
                 showError: false,
@@ -128,12 +128,9 @@ export class ManageTokenComponent extends React.Component<
 
         const inputValue = this.state.fieldInput.toLocaleLowerCase();
         const blockchain = this.props.selectedAccount.blockchain;
-        let tokenType: TokenType;
 
         switch (blockchain) {
             case Blockchain.ETHEREUM:
-                tokenType = TokenType.ERC20;
-
                 const foundToken = await fetch(
                     `https://static.moonlet.dev/tokens/${blockchain.toLocaleLowerCase()}/${inputValue}.json`,
                     {
@@ -161,12 +158,10 @@ export class ManageTokenComponent extends React.Component<
                         }
                     });
 
-                this.getTokenInfo(tokenType, foundToken);
+                this.getTokenInfo(TokenType.ERC20, foundToken);
                 break;
 
             case Blockchain.ZILLIQA:
-                tokenType = TokenType.ZRC2;
-
                 // Search by address
                 if (this.startsWith(blockchain, inputValue) && isValidAddressZIL(inputValue)) {
                     this.setState(
@@ -176,7 +171,7 @@ export class ManageTokenComponent extends React.Component<
                                 contractAddress: inputValue
                             }
                         },
-                        () => this.getTokenInfo(tokenType)
+                        () => this.getTokenInfo(TokenType.ZRC2)
                     );
                 } else {
                     // Address is not valid
@@ -190,6 +185,18 @@ export class ManageTokenComponent extends React.Component<
     };
 
     public saveToken = () => {
+        let tokenType: TokenType;
+        switch (this.props.selectedAccount.blockchain) {
+            case Blockchain.ETHEREUM:
+                tokenType = TokenType.ERC20;
+                break;
+            case Blockchain.ZILLIQA:
+                tokenType = TokenType.ZRC2;
+                break;
+            default:
+                break;
+        }
+
         this.setState(
             {
                 token: {
@@ -198,7 +205,7 @@ export class ManageTokenComponent extends React.Component<
                     name: this.state.token?.name || '',
                     symbol: this.state.token.symbol,
                     logo: this.state.token?.logo || GENERIC_TOKEN_LOGO,
-                    type: TokenType.ERC20,
+                    type: tokenType,
                     contractAddress: this.state.token.contractAddress,
                     decimals: Number(this.state.token.decimals),
                     uiDecimals: 4,

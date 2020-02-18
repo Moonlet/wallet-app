@@ -5,47 +5,58 @@ import { fromBech32Address } from '@zilliqa-js/crypto';
 export class Zrc2Client {
     constructor(private client: Client) {}
 
-    public getBalance(contractAddress, accountAddress): Promise<BigNumber> {
+    public async getBalance(contractAddress: string, accountAddress: string): Promise<BigNumber> {
         const address = fromBech32Address(accountAddress).toLowerCase();
-        return this.client.rpc
-            .call('GetSmartContractSubState', [
-                fromBech32Address(contractAddress)
-                    .replace('0x', '')
-                    .toLowerCase(),
-                'balances',
-                [address]
-            ])
-            .then(response => (response?.result?.balances || {})[address] || 0)
-            .then(v => new BigNumber(v as string));
+
+        const smartContractSubState = await this.client.getSmartContractSubState(
+            contractAddress,
+            'balances',
+            [address]
+        );
+
+        const balance = (smartContractSubState?.balances || {})[address] || 0;
+        return new BigNumber(balance as string);
     }
 
-    // TODO do implementation
-    // public getSymbol(contractAddress) {
-    //     return this.client.callContract(contractAddress, 'symbol():(string)');
-    // }
+    public getSymbol(smartContractInit) {
+        return this.findSmartContractSubField(smartContractInit, 'symbol');
+    }
 
-    // TODO do implementation
-    // public getName(contractAddress) {
-    //     return this.client.callContract(contractAddress, 'name():(string)');
-    // }
+    public getName(smartContractInit) {
+        return this.findSmartContractSubField(smartContractInit, 'name');
+    }
 
-    // TODO do implementation
-    // public getDecimals(contractAddress) {
-    //     return this.client.callContract(contractAddress, 'decimals():(uint8)');
-    // }
+    public getDecimals(smartContractInit) {
+        return this.findSmartContractSubField(smartContractInit, 'decimals');
+    }
 
-    // TODO do implementation
-    // public async getTokenInfo(contractAddres) {
-    //     const info = await Promise.all([
-    //         this.getSymbol(contractAddres),
-    //         this.getName(contractAddres),
-    //         this.getDecimals(contractAddres)
-    //     ]);
+    public async getTokenInfo(contractAddress: string) {
+        const smartContractSubState = await this.client.getSmartContractSubState(
+            contractAddress,
+            'implementation'
+        );
 
-    //     return {
-    //         symbol: info[0],
-    //         name: info[1],
-    //         decimals: info[2]
-    //     };
-    // }
+        const smartContractInit = await this.client.getSmartContractInit(
+            smartContractSubState?.implementation
+        );
+
+        const info = await Promise.all([
+            this.getSymbol(smartContractInit),
+            this.getName(smartContractInit),
+            this.getDecimals(smartContractInit)
+        ]);
+
+        return {
+            symbol: info[0],
+            name: info[1],
+            decimals: info[2]
+        };
+    }
+
+    private findSmartContractSubField(smartContractInit, field: string) {
+        const object: any = Object.values(smartContractInit).find(
+            (info: any) => info.vname === field
+        );
+        return object?.value;
+    }
 }

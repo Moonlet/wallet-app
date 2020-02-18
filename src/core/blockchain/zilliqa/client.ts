@@ -107,6 +107,26 @@ export class Client extends BlockchainGenericClient {
         return feeOptions;
     }
 
+    public async getSmartContractSubState(
+        contractAddress: string,
+        field: string,
+        subFields: string[] = []
+    ) {
+        return this.call('GetSmartContractSubState', [
+            fromBech32Address(contractAddress)
+                .replace('0x', '')
+                .toLowerCase(),
+            field,
+            subFields
+        ]).then(response => response?.result);
+    }
+
+    public async getSmartContractInit(address: string) {
+        return this.call('GetSmartContractInit', [address.replace('0x', '').toLowerCase()]).then(
+            response => response?.result
+        );
+    }
+
     private async estimateFees(): Promise<any> {
         return this.rpc.call('GetMinimumGasPrice', []);
     }

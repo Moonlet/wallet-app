@@ -18,8 +18,9 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../redux/preferences/selectors';
 import { ITokenConfig } from '../../core/blockchain/types/token';
-import { isValidAddress } from '../../core/blockchain/ethereum/account';
-import { ChainIdType } from '../../core/blockchain/types';
+import { isValidAddress as isValidAddressETH } from '../../core/blockchain/ethereum/account';
+import { isValidAddress as isValidAddressZIL } from '../../core/blockchain/zilliqa/account';
+import { ChainIdType, Blockchain } from '../../core/blockchain/types';
 
 const GENERIC_TOKEN_LOGO = {
     uri:
@@ -80,48 +81,21 @@ export class ManageTokenComponent extends React.Component<
         };
     }
 
-    public startsWith = (str: string) => str.lastIndexOf('0x', 0) === 0;
+    public startsWith = (blockchain: Blockchain, str: string) => {
+        switch (blockchain) {
+            case Blockchain.ETHEREUM:
+                return str.lastIndexOf('0x', 0) === 0;
+            case Blockchain.ZILLIQA:
+                return str.lastIndexOf('zil', 0) === 0;
+            default:
+                return;
+        }
+    };
 
-    public findToken = async () => {
-        this.setState({
-            isLoading: true,
-            token: undefined,
-            showError: false
-        });
-
-        const inputValue = this.state.fieldInput.toLocaleLowerCase();
-        const blockchain = this.props.selectedAccount.blockchain.toLocaleLowerCase();
-
-        const foundToken = await fetch(
-            `https://static.moonlet.dev/tokens/${blockchain}/${inputValue}.json`,
-            {
-                method: 'POST'
-            }
-        )
-            .then(res => res.json())
-            .catch(err => {
-                if (this.startsWith(inputValue)) {
-                    // Search by address
-                    if (isValidAddress(inputValue)) {
-                        this.setState({
-                            token: {
-                                ...this.state.token,
-                                contractAddress: inputValue
-                            }
-                        });
-                    } else {
-                        // Address is not valid
-                        this.setState({ showError: true, isLoading: false });
-                    }
-                } else {
-                    // Symbol
-                    this.setState({ showError: true, isLoading: false });
-                }
-            });
-
+    public getTokenInfo = async (tokenType: TokenType, foundToken?: any) => {
         const tokenInfo = await getBlockchain(this.props.selectedAccount.blockchain)
             .getClient(this.props.chainId)
-            .tokens[TokenType.ERC20].getTokenInfo(
+            .tokens[tokenType].getTokenInfo(
                 this.state.token?.contractAddress || foundToken?.contractAddress
             );
 
@@ -134,7 +108,7 @@ export class ManageTokenComponent extends React.Component<
                     decimals: tokenInfo.decimals,
                     name: tokenInfo?.name || foundToken.name,
                     symbol: tokenInfo?.symbol || foundToken.symbol,
-                    logo: { uri: foundToken?.logo } || GENERIC_TOKEN_LOGO
+                    logo: foundToken?.logo ? { uri: foundToken.logo } : GENERIC_TOKEN_LOGO
                 },
                 showError: false,
                 isLoading: false
@@ -142,6 +116,76 @@ export class ManageTokenComponent extends React.Component<
         } else {
             // Token could not be found
             this.setState({ showError: true, isLoading: false });
+        }
+    };
+
+    public findToken = async () => {
+        this.setState({
+            isLoading: true,
+            token: undefined,
+            showError: false
+        });
+
+        const inputValue = this.state.fieldInput.toLocaleLowerCase();
+        const blockchain = this.props.selectedAccount.blockchain;
+        let tokenType: TokenType;
+
+        switch (blockchain) {
+            case Blockchain.ETHEREUM:
+                tokenType = TokenType.ERC20;
+
+                const foundToken = await fetch(
+                    `https://static.moonlet.dev/tokens/${blockchain.toLocaleLowerCase()}/${inputValue}.json`,
+                    {
+                        method: 'POST'
+                    }
+                )
+                    .then(res => res.json())
+                    .catch(() => {
+                        if (this.startsWith(blockchain, inputValue)) {
+                            // Search by address
+                            if (isValidAddressETH(inputValue)) {
+                                this.setState({
+                                    token: {
+                                        ...this.state.token,
+                                        contractAddress: inputValue
+                                    }
+                                });
+                            } else {
+                                // Address is not valid
+                                this.setState({ showError: true, isLoading: false });
+                            }
+                        } else {
+                            // Symbol
+                            this.setState({ showError: true, isLoading: false });
+                        }
+                    });
+
+                this.getTokenInfo(tokenType, foundToken);
+                break;
+
+            case Blockchain.ZILLIQA:
+                tokenType = TokenType.ZRC2;
+
+                // Search by address
+                if (this.startsWith(blockchain, inputValue) && isValidAddressZIL(inputValue)) {
+                    this.setState(
+                        {
+                            token: {
+                                ...this.state.token,
+                                contractAddress: inputValue
+                            }
+                        },
+                        () => this.getTokenInfo(tokenType)
+                    );
+                } else {
+                    // Address is not valid
+                    this.setState({ showError: true, isLoading: false });
+                }
+                break;
+
+            default:
+                break;
         }
     };
 
@@ -224,7 +268,7 @@ export class ManageTokenComponent extends React.Component<
 
                     {this.state.isLoading && <LoadingIndicator />}
 
-                    {this.state.token && (
+                    {this.state.token && this.state.token?.symbol && (
                         <TouchableOpacity
                             style={[
                                 styles.tokenCardContainer,

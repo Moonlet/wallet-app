@@ -18,32 +18,26 @@ export class Zrc2Client {
         return new BigNumber(balance as string);
     }
 
-    public getSymbol(smartContractInit) {
+    public async getSymbol(contractAddress) {
+        const smartContractInit = await this.getTokenDetails(contractAddress);
         return this.findSmartContractSubField(smartContractInit, 'symbol');
     }
 
-    public getName(smartContractInit) {
+    public async getName(contractAddress) {
+        const smartContractInit = await this.getTokenDetails(contractAddress);
         return this.findSmartContractSubField(smartContractInit, 'name');
     }
 
-    public getDecimals(smartContractInit) {
+    public async getDecimals(contractAddress) {
+        const smartContractInit = await this.getTokenDetails(contractAddress);
         return this.findSmartContractSubField(smartContractInit, 'decimals');
     }
 
-    public async getTokenInfo(contractAddress: string) {
-        const smartContractSubState = await this.client.getSmartContractSubState(
-            contractAddress,
-            'implementation'
-        );
-
-        const smartContractInit = await this.client.getSmartContractInit(
-            smartContractSubState?.implementation
-        );
-
+    public async getTokenInfo(contractAddress) {
         const info = await Promise.all([
-            this.getSymbol(smartContractInit),
-            this.getName(smartContractInit),
-            this.getDecimals(smartContractInit)
+            this.getSymbol(contractAddress),
+            this.getName(contractAddress),
+            this.getDecimals(contractAddress)
         ]);
 
         return {
@@ -51,6 +45,15 @@ export class Zrc2Client {
             name: info[1],
             decimals: info[2]
         };
+    }
+
+    private async getTokenDetails(contractAddress) {
+        const smartContractSubState = await this.client.getSmartContractSubState(
+            contractAddress,
+            'implementation'
+        );
+
+        return this.client.getSmartContractInit(smartContractSubState?.implementation);
     }
 
     private findSmartContractSubField(smartContractInit, field: string) {

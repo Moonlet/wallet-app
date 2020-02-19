@@ -116,7 +116,6 @@ export default (theme: ITheme) =>
             marginRight: BASE_DIMENSION / 2
         },
         buttonRightOptions: {
-            marginTop: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
             alignItems: 'flex-end'
         },

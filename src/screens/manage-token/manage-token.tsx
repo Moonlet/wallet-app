@@ -129,36 +129,45 @@ export class ManageTokenComponent extends React.Component<
         const inputValue = this.state.fieldInput.toLocaleLowerCase();
         const blockchain = this.props.selectedAccount.blockchain;
 
+        const foundToken = await this.searchToken(blockchain, inputValue);
+
+        let tokenType: TokenType;
         switch (blockchain) {
             case Blockchain.ETHEREUM:
-                const foundTokenEth = this.searchToken(blockchain, inputValue);
-                this.getTokenInfo(TokenType.ERC20, foundTokenEth);
+                tokenType = TokenType.ERC20;
                 break;
 
             case Blockchain.ZILLIQA:
-                // TODO: add this
-
-                // const foundTokenZil = this.searchToken(blockchain, inputValue);
-                // this.getTokenInfo(TokenType.ZRC2, foundTokenZil);
-
-                // TODO: remove this
-                if (this.startsWith(blockchain, inputValue) && isValidAddressZIL(inputValue)) {
-                    this.setState(
-                        {
-                            token: {
-                                ...this.state.token,
-                                contractAddress: inputValue
-                            }
-                        },
-                        () => this.getTokenInfo(TokenType.ZRC2)
-                    );
-                } else {
-                    this.setState({ showError: true, isLoading: false });
-                }
+                tokenType = TokenType.ZRC2;
                 break;
 
             default:
                 break;
+        }
+
+        const tokenInfo = await getBlockchain(this.props.selectedAccount.blockchain)
+            .getClient(this.props.chainId)
+            .tokens[tokenType].getTokenInfo(
+                this.state.token?.contractAddress || foundToken?.contractAddress
+            );
+
+        if (tokenInfo) {
+            this.setState({
+                token: {
+                    ...this.state.token,
+                    contractAddress:
+                        this.state.token?.contractAddress || foundToken?.contractAddress,
+                    decimals: tokenInfo.decimals,
+                    name: tokenInfo?.name || foundToken.name,
+                    symbol: String(tokenInfo?.symbol).toUpperCase() || foundToken?.symbol, // Check this
+                    logo: foundToken?.logo ? { uri: foundToken.logo } : GENERIC_TOKEN_LOGO
+                },
+                showError: false,
+                isLoading: false
+            });
+        } else {
+            // Token could not be found
+            this.setState({ showError: true, isLoading: false });
         }
     };
 

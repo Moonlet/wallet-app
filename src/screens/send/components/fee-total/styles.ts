@@ -6,12 +6,14 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {},
         feeTitle: {
-            paddingLeft: BASE_DIMENSION,
-            color: theme.colors.textSecondary
+            fontSize: 13,
+            lineHeight: 18,
+            color: theme.colors.textSecondary,
+            paddingLeft: BASE_DIMENSION * 2,
+            marginTop: BASE_DIMENSION
         },
         feeWrapper: {
             borderRadius: BORDER_RADIUS,
-            borderWidth: 1,
             backgroundColor: theme.colors.cardBackground,
             paddingLeft: BASE_DIMENSION * 2,
             paddingVertical: BASE_DIMENSION

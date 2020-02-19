@@ -47,3 +47,6 @@ export const formatNumber = (amount: number | BigNumber, options: INumberFormatO
         ? formattedNumber + ' ' + options.currency
         : formattedNumber;
 };
+
+const numericRegex = new RegExp(/^[+-]?\d+(\.\d+)?$/);
+export const isNumeric = (value: string) => numericRegex.test(value);

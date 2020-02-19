@@ -95,9 +95,8 @@ export class GasFeeAvancedComponent extends React.Component<
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
                         value={this.state.inputGasPrice}
-                        onChangeText={value => {
-                            this.addGasPrice(value);
-                        }}
+                        onChangeText={value => this.addGasPrice(value)}
+                        keyboardType="decimal-pad"
                     />
                 </View>
 
@@ -112,9 +111,8 @@ export class GasFeeAvancedComponent extends React.Component<
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
                         value={this.state.inputGasLimit.toString()}
-                        onChangeText={value => {
-                            this.addGasLimit(value);
-                        }}
+                        onChangeText={value => this.addGasLimit(value)}
+                        keyboardType="decimal-pad"
                     />
                 </View>
                 <FeeTotal

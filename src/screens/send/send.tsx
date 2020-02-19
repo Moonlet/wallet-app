@@ -435,9 +435,8 @@ export class SendScreenComponent extends React.Component<
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
                         value={this.state.amount}
-                        onChangeText={value => {
-                            this.addAmount(value);
-                        }}
+                        onChangeText={value => this.addAmount(value)}
+                        keyboardType="decimal-pad"
                     />
                 </View>
                 {this.state.insufficientFunds && (

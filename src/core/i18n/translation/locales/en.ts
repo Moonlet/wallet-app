@@ -126,7 +126,7 @@ export const translation: ITranslations = {
             gasPrice: 'Gas price',
             gasLimit: 'Gas limit',
             errorGasPrice: 'Invalid Gas Price',
-            errorLimitPrice: 'Invalid Limit Price'
+            errorLimitPrice: 'Invalid Gas Limit Price'
         },
         Password: {
             setupPinTitle: 'Setup PIN code',

@@ -9,7 +9,7 @@ import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
-import { isNumeric } from '../../../../core/utils/format-number';
+import { isInteger } from '../../../../core/utils/format-number';
 
 export interface IExternalProps {
     token: ITokenConfig;
@@ -46,7 +46,7 @@ export class GasFeeAvancedComponent extends React.Component<
         };
     }
     public addGasPrice(value: string) {
-        if (isNumeric(value)) {
+        if (isInteger(value)) {
             this.setState({ displayErrorGasPrice: false });
         } else {
             this.setState({ displayErrorGasPrice: true });
@@ -69,8 +69,9 @@ export class GasFeeAvancedComponent extends React.Component<
             gasPrice.multipliedBy(gasLimit).toString()
         );
     }
+
     public addGasLimit(value: string) {
-        if (isNumeric(value)) {
+        if (isInteger(value)) {
             this.setState({ displayErrorGasLimit: false });
         } else {
             this.setState({ displayErrorGasLimit: true });
@@ -114,7 +115,7 @@ export class GasFeeAvancedComponent extends React.Component<
                         selectionColor={theme.colors.accent}
                         value={this.state.inputGasPrice}
                         onChangeText={value => this.addGasPrice(value)}
-                        keyboardType="decimal-pad"
+                        keyboardType="numeric"
                     />
                 </View>
                 {this.state.displayErrorGasPrice && (
@@ -134,7 +135,7 @@ export class GasFeeAvancedComponent extends React.Component<
                         selectionColor={theme.colors.accent}
                         value={this.state.inputGasLimit.toString()}
                         onChangeText={value => this.addGasLimit(value)}
-                        keyboardType="decimal-pad"
+                        keyboardType="numeric"
                     />
                 </View>
                 {this.state.displayErrorGasLimit && (

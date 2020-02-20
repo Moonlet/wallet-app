@@ -48,5 +48,5 @@ export const formatNumber = (amount: number | BigNumber, options: INumberFormatO
         : formattedNumber;
 };
 
-const integerRegex = new RegExp(/^([1-9]\d*|0)$/);
+const integerRegex = new RegExp(/^\d+$/);
 export const isInteger = (value: string) => integerRegex.test(value);

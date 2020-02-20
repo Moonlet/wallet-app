@@ -12,6 +12,7 @@ import { config } from './config';
 import { NameService } from './name-service';
 import { TokenType } from '../types/token';
 import { Zrc2Client } from './tokens/zrc2-client';
+import { isBech32 } from '@zilliqa-js/util/dist/validation';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -122,9 +123,17 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async getSmartContractInit(address: string) {
-        return this.call('GetSmartContractInit', [address.replace('0x', '').toLowerCase()]).then(
-            response => response?.result
-        );
+        let addr: string = undefined;
+
+        if (isBech32(address)) {
+            addr = fromBech32Address(address)
+                .replace('0x', '')
+                .toLowerCase();
+        } else {
+            addr = address.replace('0x', '').toLowerCase();
+        }
+
+        return this.call('GetSmartContractInit', [addr]).then(response => response?.result);
     }
 
     private async estimateFees(): Promise<any> {

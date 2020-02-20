@@ -31,7 +31,7 @@ export interface IBlockchainTransaction<IAdditionalInfoType = any> {
     data?: {
         method?: string;
         params?: string[];
-        raw: string;
+        raw?: string;
     };
     feeOptions: IFeeOptions;
     broadcatedOnBlock: number;

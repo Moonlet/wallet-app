@@ -22,7 +22,7 @@ export class FeeTotalComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <Text style={styles.feeTitle}>{translate('App.labels.fee')}</Text>
+                <Text style={styles.feeTitle}>{translate('App.labels.fees')}</Text>
                 <View style={styles.feeWrapper}>
                     <Amount
                         style={styles.fee}

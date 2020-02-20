@@ -12,8 +12,8 @@ export interface IBlockInfo {
 export abstract class BlockchainGenericClient {
     public readonly tokens: { [type: string]: any } = {};
     public nameService: IBlockchainNameService;
-    protected rpc: RpcClient;
-    protected chainId: ChainIdType;
+    public rpc: RpcClient;
+    public readonly chainId: ChainIdType;
 
     constructor(chainId: ChainIdType, networks: IBlockchainNetwork[]) {
         let url = networks[0].url;

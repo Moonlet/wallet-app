@@ -3,7 +3,6 @@ import { View, Image } from 'react-native';
 import { Text } from '../../library';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { IReduxState } from '../../redux/state';
 import { translate } from '../../core/i18n';
 
 import stylesProvider from './styles';
@@ -12,7 +11,7 @@ import { connect } from 'react-redux';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { SkeletonRow } from '../../components/skeleton-row/skeleton-row';
 
-export const mapStateToProps = (state: IReduxState) => {
+export const mapStateToProps = () => {
     return {};
 };
 

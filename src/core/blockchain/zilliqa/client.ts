@@ -10,11 +10,16 @@ import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { config } from './config';
 import { NameService } from './name-service';
+import { TokenType } from '../types/token';
+import { Zrc2Client } from './tokens/zrc2-client';
+import { isBech32 } from '@zilliqa-js/util/dist/validation';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
+
         this.nameService = new NameService();
+        this.tokens[TokenType.ZRC2] = new Zrc2Client(this);
     }
 
     public async getBalance(address: string): Promise<BigNumber> {
@@ -101,6 +106,34 @@ export class Client extends BlockchainGenericClient {
         };
 
         return feeOptions;
+    }
+
+    public async getSmartContractSubState(
+        contractAddress: string,
+        field: string,
+        subFields: string[] = []
+    ) {
+        return this.call('GetSmartContractSubState', [
+            fromBech32Address(contractAddress)
+                .replace('0x', '')
+                .toLowerCase(),
+            field,
+            subFields
+        ]).then(response => response?.result);
+    }
+
+    public async getSmartContractInit(address: string) {
+        let addr: string;
+
+        if (isBech32(address)) {
+            addr = fromBech32Address(address)
+                .replace('0x', '')
+                .toLowerCase();
+        } else {
+            addr = address.replace('0x', '').toLowerCase();
+        }
+
+        return this.call('GetSmartContractInit', [addr]).then(response => response?.result);
     }
 
     private async estimateFees(): Promise<any> {

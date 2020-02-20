@@ -22,11 +22,11 @@ export class Erc20Client {
         return this.client.callContract(contractAddress, 'decimals():(uint8)');
     }
 
-    public async getTokenInfo(contractAddres) {
+    public async getTokenInfo(contractAddress) {
         const info = await Promise.all([
-            this.getSymbol(contractAddres),
-            this.getName(contractAddres),
-            this.getDecimals(contractAddres)
+            this.getSymbol(contractAddress),
+            this.getName(contractAddress),
+            this.getDecimals(contractAddress)
         ]);
 
         return {

@@ -40,29 +40,10 @@ export const sign = async (tx: IBlockchainTransaction, privateKey: string): Prom
         gasPrice: new BN(tx.feeOptions.gasPrice.toString()),
         gasLimit: Long.fromString(tx.feeOptions.gasLimit.toString()),
         code: '',
-        data: '',
+        data: tx.data?.raw,
         signature: '',
         priority: true
     };
-
-    // TODO: this should be moved in buildTransferTransaction on data.raw field
-    if (tx.type === TransactionType.TRANSFER && tx.token.type === TokenType.ZRC2) {
-        transaction.data = JSON.stringify({
-            _tag: tx.data.method,
-            params: [
-                {
-                    vname: 'to',
-                    type: 'ByStr20',
-                    value: fromBech32Address(tx.data.params[0]).toLowerCase()
-                },
-                {
-                    vname: 'value',
-                    type: 'Uint128',
-                    value: tx.data.params[1]
-                }
-            ]
-        });
-    }
 
     // encode transaction for signing
     const encodedTransaction = ZilliqaJsAccountUtil.encodeTransactionProto(transaction);
@@ -107,7 +88,22 @@ export const buildTransferTransaction = (tx: ITransferTransaction): IBlockchainT
 
                 data: {
                     method: 'proxyTransfer',
-                    params: [tx.toAddress, tx.amount]
+                    params: [tx.toAddress, tx.amount],
+                    raw: JSON.stringify({
+                        _tag: 'proxyTransfer',
+                        params: [
+                            {
+                                vname: 'to',
+                                type: 'ByStr20',
+                                value: fromBech32Address(tx.toAddress).toLowerCase()
+                            },
+                            {
+                                vname: 'value',
+                                type: 'Uint128',
+                                value: tx.amount
+                            }
+                        ]
+                    })
                 }
             };
 

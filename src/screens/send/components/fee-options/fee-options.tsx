@@ -187,7 +187,6 @@ export class FeeOptionsComponent extends React.Component<
         const styles = this.props.styles;
         return (
             <View style={styles.container}>
-                <Text style={styles.feeTitle}>{translate('Fee.feeTitle')}</Text>
                 {this.state.showAdvancedOptions
                     ? this.renderAdvancedFees()
                     : this.renderSimpleFees()}

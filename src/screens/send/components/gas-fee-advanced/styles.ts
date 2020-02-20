@@ -8,30 +8,30 @@ export default (theme: ITheme) =>
         inputBoxTop: {
             marginTop: 0
         },
-
         inputBox: {
-            height: BASE_DIMENSION * 5,
-            marginBottom: BASE_DIMENSION * 3,
+            paddingVertical: BASE_DIMENSION,
             borderRadius: BORDER_RADIUS,
-            borderColor: 'gray',
-            alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: 12,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
+            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         input: {
             flex: 1,
+            fontSize: 17,
+            lineHeight: 22,
             color: theme.colors.text
         },
-        gasPriceLabel: {
-            paddingLeft: BASE_DIMENSION,
+        priceLabel: {
+            fontSize: 13,
+            lineHeight: 18,
             color: theme.colors.textSecondary,
+            paddingLeft: BASE_DIMENSION * 2,
             marginTop: BASE_DIMENSION
         },
-        gasLimitLabel: {
+        displayError: {
+            fontSize: 15,
+            lineHeight: 19,
             paddingLeft: BASE_DIMENSION,
-            color: theme.colors.textSecondary
+            marginBottom: BASE_DIMENSION,
+            color: theme.colors.error
         }
     });

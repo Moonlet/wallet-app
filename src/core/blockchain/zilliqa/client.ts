@@ -123,7 +123,7 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async getSmartContractInit(address: string) {
-        let addr: string = undefined;
+        let addr: string;
 
         if (isBech32(address)) {
             addr = fromBech32Address(address)

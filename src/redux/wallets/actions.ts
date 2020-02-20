@@ -350,7 +350,6 @@ export const sendTransferTransaction = (
     const chainId = getChainId(state, account.blockchain);
 
     const appWallet = getSelectedWallet(state);
-    dispatch(openLoadingModal());
 
     dispatch(
         openBottomSheet(BottomSheetType.SEND_TRANSACTION, {
@@ -443,11 +442,9 @@ export const sendTransferTransaction = (
             });
             dispatch(closeBottomSheet());
             goBack && navigation.goBack();
-            dispatch(closeLoadingModal());
             return;
         }
     } catch (errorMessage) {
-        dispatch(closeLoadingModal());
         dispatch({
             type: DISPLAY_MESSAGE,
             data: {

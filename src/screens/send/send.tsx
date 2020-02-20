@@ -163,12 +163,12 @@ export class SendScreenComponent extends React.Component<
                 walletId: this.props.selectedWalletId,
                 selectedAccount: this.props.selectedAccount
             })
-                .then(result => {
+                .then(() => {
                     data.state = 'completed';
                     this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
                     this.props.navigation.goBack();
                 })
-                .catch(error => {
+                .catch(() => {
                     data.state = 'rejected';
                     this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
                 });

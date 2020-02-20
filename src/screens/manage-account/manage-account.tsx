@@ -13,10 +13,10 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
-import { IAccountState, IWalletState, TokenType } from '../../redux/wallets/state';
+import { IAccountState, IWalletState } from '../../redux/wallets/state';
 import { Amount } from '../../components/amount/amount';
 import { toggleTokenActive, updateTokenOrder, removeToken } from '../../redux/wallets/actions';
-import { ITokenConfig } from '../../core/blockchain/types/token';
+import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export interface IReduxProps {

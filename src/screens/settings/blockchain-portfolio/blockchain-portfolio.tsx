@@ -62,7 +62,7 @@ export class BlockchainPortfolioComponent extends React.Component<
         const networkAvailable = hasNetwork(item.key, this.props.testNet);
 
         if (item.key === Blockchain.NEAR && isFeatureActive(RemoteFeature.NEAR) === false) {
-            return <View></View>;
+            return <View />;
         }
 
         return (

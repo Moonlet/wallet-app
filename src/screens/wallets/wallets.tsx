@@ -78,7 +78,7 @@ export class WalletsScreenComponent extends React.Component<
     public static navigationOptions = navigationOptions;
     public passwordModal = null;
 
-    public walletSwipeableRef: ReadonlyArray<string> = new Array();
+    public walletSwipeableRef: ReadonlyArray<string> = [];
     public currentlyOpenSwipeable: string = null;
 
     constructor(

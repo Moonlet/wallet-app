@@ -26,11 +26,6 @@ export interface IWalletState {
     };
 }
 
-export enum TokenType {
-    NATIVE = 'NATIVE',
-    ERC20 = 'ERC20'
-}
-
 export interface IAccountState {
     index: number;
     selected: boolean;

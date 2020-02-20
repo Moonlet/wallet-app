@@ -37,6 +37,7 @@ export const translation: ITranslations = {
                 fast: 'Fast',
                 fastest: 'Fastest',
                 fee: 'Fee',
+                fees: 'Fees',
                 find: 'Find',
                 from: 'From',
                 ledgerType: 'Ledger type',
@@ -123,7 +124,9 @@ export const translation: ITranslations = {
         Fee: {
             feeTitle: 'Transaction fee',
             gasPrice: 'Gas price',
-            gasLimit: 'Gas limit'
+            gasLimit: 'Gas limit',
+            errorGasPrice: 'Invalid Gas Price',
+            errorLimitPrice: 'Invalid Gas Limit Price'
         },
         Password: {
             setupPinTitle: 'Setup PIN code',

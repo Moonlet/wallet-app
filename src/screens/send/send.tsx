@@ -368,6 +368,7 @@ export class SendScreenComponent extends React.Component<
     }
 
     public async alertModalAddAddress() {
+        // TODO: check this, it's not opening all the time
         const inputValue: string = await Dialog.prompt(
             translate('Send.alertTitle'),
             translate('Send.alertDescription')
@@ -390,7 +391,7 @@ export class SendScreenComponent extends React.Component<
             !this.props.contacts[`${this.props.blockchain}|${this.state.toAddress}`]
         ) {
             return (
-                <TouchableOpacity onPress={() => this.alertModalAddAddress()}>
+                <TouchableOpacity onPress={this.alertModalAddAddress}>
                     <Text style={styles.addressNotInBookText}>
                         {translate('Send.addressNotInBook')}
                     </Text>
@@ -435,9 +436,8 @@ export class SendScreenComponent extends React.Component<
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
                         value={this.state.amount}
-                        onChangeText={value => {
-                            this.addAmount(value);
-                        }}
+                        onChangeText={value => this.addAmount(value)}
+                        keyboardType="decimal-pad"
                     />
                 </View>
                 {this.state.insufficientFunds && (
@@ -471,7 +471,9 @@ export class SendScreenComponent extends React.Component<
                         disabled={
                             !this.state.isValidText ||
                             this.state.amount === '' ||
-                            this.state.insufficientFunds === true
+                            this.state.insufficientFunds === true ||
+                            isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
+                            isNaN(Number(this.state.feeOptions?.gasPrice))
                         }
                         onPress={this.confirmPayment}
                     >

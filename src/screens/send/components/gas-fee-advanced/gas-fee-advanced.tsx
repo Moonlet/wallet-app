@@ -9,6 +9,7 @@ import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
+import { isInteger } from '../../../../core/utils/format-number';
 
 export interface IExternalProps {
     token: ITokenConfig;
@@ -20,6 +21,8 @@ export interface IExternalProps {
 interface IState {
     inputGasPrice: string;
     inputGasLimit: string;
+    displayErrorGasPrice: boolean;
+    displayErrorGasLimit: boolean;
 }
 export class GasFeeAvancedComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
@@ -37,10 +40,18 @@ export class GasFeeAvancedComponent extends React.Component<
                     blockchainInstance.config.feeOptions.ui.gasPriceUnit
                 )
                 .toString(),
-            inputGasLimit: props.gasLimit.toString()
+            inputGasLimit: props.gasLimit.toString(),
+            displayErrorGasPrice: false,
+            displayErrorGasLimit: false
         };
     }
     public addGasPrice(value: string) {
+        if (isInteger(value)) {
+            this.setState({ displayErrorGasPrice: false });
+        } else {
+            this.setState({ displayErrorGasPrice: true });
+        }
+
         const blockchainInstance = getBlockchain(this.props.blockchain);
 
         this.setState({ inputGasPrice: value });
@@ -58,7 +69,14 @@ export class GasFeeAvancedComponent extends React.Component<
             gasPrice.multipliedBy(gasLimit).toString()
         );
     }
+
     public addGasLimit(value: string) {
+        if (isInteger(value)) {
+            this.setState({ displayErrorGasLimit: false });
+        } else {
+            this.setState({ displayErrorGasLimit: true });
+        }
+
         const blockchainInstance = getBlockchain(this.props.blockchain);
 
         const gasPrice = blockchainInstance.account.convertUnit(
@@ -84,7 +102,8 @@ export class GasFeeAvancedComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <Text style={styles.gasPriceLabel}>{translate('Fee.gasPrice')}</Text>
+                <Text style={styles.priceLabel}>{translate('Fee.gasPrice')}</Text>
+
                 <View style={[styles.inputBox, styles.inputBoxTop]}>
                     <TextInput
                         testID="gas-price"
@@ -95,13 +114,16 @@ export class GasFeeAvancedComponent extends React.Component<
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
                         value={this.state.inputGasPrice}
-                        onChangeText={value => {
-                            this.addGasPrice(value);
-                        }}
+                        onChangeText={value => this.addGasPrice(value)}
+                        keyboardType="numeric"
                     />
                 </View>
+                {this.state.displayErrorGasPrice && (
+                    <Text style={styles.displayError}>{translate('Fee.errorGasPrice')}</Text>
+                )}
 
-                <Text style={styles.gasLimitLabel}>{translate('Fee.gasLimit')}</Text>
+                <Text style={styles.priceLabel}>{translate('Fee.gasLimit')}</Text>
+
                 <View style={styles.inputBox}>
                     <TextInput
                         testID="gas-limit"
@@ -112,11 +134,14 @@ export class GasFeeAvancedComponent extends React.Component<
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
                         value={this.state.inputGasLimit.toString()}
-                        onChangeText={value => {
-                            this.addGasLimit(value);
-                        }}
+                        onChangeText={value => this.addGasLimit(value)}
+                        keyboardType="numeric"
                     />
                 </View>
+                {this.state.displayErrorGasLimit && (
+                    <Text style={styles.displayError}>{translate('Fee.errorLimitPrice')}</Text>
+                )}
+
                 <FeeTotal
                     amount={gasPrice.multipliedBy(gasLimit).toString()}
                     blockchain={this.props.blockchain}

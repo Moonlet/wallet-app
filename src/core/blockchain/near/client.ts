@@ -146,4 +146,10 @@ export class Client extends BlockchainGenericClient {
 
         return res.result;
     }
+
+    public async recoverAccount(accountId: string, publicKey: string): Promise<any> {
+        const res = await this.rpc.call('query', [`access_key/${accountId}/${publicKey}`, '']);
+
+        return res.result;
+    }
 }

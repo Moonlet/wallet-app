@@ -533,7 +533,6 @@ export const createAccount = (
     const hdWallet: IWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
         pass: password
     });
-    blockchain = Blockchain.NEAR;
     const chainId = getChainId(state, blockchain);
 
     const numberOfAccounts = selectedWallet.accounts.filter(acc => acc.blockchain === blockchain)
@@ -541,12 +540,11 @@ export const createAccount = (
 
     const accounts = await hdWallet.getAccounts(blockchain, numberOfAccounts);
     const account = accounts[0];
-    const publicKey = account.publicKey;
 
     const blockchainInstance = getBlockchain(blockchain);
     const client = blockchainInstance.getClient(chainId) as NearClient;
 
-    const txId = await client.createAccount(newAccountId, publicKey, chainId);
+    const txId = await client.createAccount(newAccountId, account.publicKey, chainId);
 
     if (txId) {
         account.address = newAccountId;

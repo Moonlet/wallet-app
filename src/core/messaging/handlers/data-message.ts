@@ -20,8 +20,8 @@ const handleMessages = (message: ISilentMessage) => {
         case SilentMessageType.TRANSACTION:
             const data = JSON.parse(message.data);
 
-            // @ts-ignoreasdasd
             store.dispatch(
+                // @ts-ignore
                 updateTransactionFromBlockchain(data.transactionHash, data.blockchain, true)
             );
             break;

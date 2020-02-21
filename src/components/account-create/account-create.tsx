@@ -10,27 +10,24 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { createAccount, addAccount, setSelectedAccount } from '../../redux/wallets/actions';
+import { createAccount, addAccount } from '../../redux/wallets/actions';
 import { IReduxState } from '../../redux/state';
 import { LoadingIndicator } from '../loading-indicator/loading-indicator';
 import { PasswordModal } from '../password-modal/password-modal';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { Icon } from '../../components/icon';
 import { getChainId } from '../../redux/preferences/selectors';
-import { WalletFactory } from '../../core/wallet/wallet-factory';
-import { getSelectedWallet } from '../../redux/wallets/selectors';
-import { IWalletState } from '../../redux/wallets/state';
-import { IWallet } from '../../core/wallet/types';
-import { Dialog } from '../dialog/dialog';
-import { disableCreateAccount } from '../../redux/ui/screens/dashboard/actions';
+import {
+    disableCreateAccount,
+    enableRecoverAccount
+} from '../../redux/ui/screens/dashboard/actions';
 
 export interface IReduxProps {
     createAccount: typeof createAccount;
     chainId: ChainIdType;
-    selectedWallet: IWalletState;
     addAccount: typeof addAccount;
-    setSelectedAccount: typeof setSelectedAccount;
     disableCreateAccount: typeof disableCreateAccount;
+    enableRecoverAccount: typeof enableRecoverAccount;
 }
 
 export interface IExternalProps {
@@ -48,16 +45,15 @@ export interface IState {
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
-        chainId: getChainId(state, ownProps.blockchain),
-        selectedWallet: getSelectedWallet(state)
+        chainId: getChainId(state, ownProps.blockchain)
     };
 };
 
 const mapDispatchToProps = {
     createAccount,
     addAccount,
-    setSelectedAccount,
-    disableCreateAccount
+    disableCreateAccount,
+    enableRecoverAccount
 };
 
 export class AccountCreateComponent extends React.Component<
@@ -78,62 +74,6 @@ export class AccountCreateComponent extends React.Component<
             isLoading: false
         };
     }
-
-    private recoverAccount = async () => {
-        return; // TODO
-
-        const password = await this.passwordModal.requestPassword();
-
-        this.setState({ isLoading: true });
-
-        const blockchain = this.props.blockchain;
-
-        const selectedWallet: IWalletState = this.props.selectedWallet;
-        const hdWallet: IWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
-            pass: password
-        });
-
-        const blockchainInstance = getBlockchain(blockchain);
-        const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
-
-        Promise.all([
-            hdWallet.getAccounts(blockchain, 0),
-            hdWallet.getAccounts(blockchain, 1),
-            hdWallet.getAccounts(blockchain, 2),
-            hdWallet.getAccounts(blockchain, 3),
-            hdWallet.getAccounts(blockchain, 4)
-        ]).then(async data => {
-            const publicKeys: string[] = data.reduce(
-                (out: any, acc: any) => out.concat(acc[0].publicKey),
-                []
-            );
-
-            let found = false;
-
-            Promise.all(
-                publicKeys.map(async publicKey => {
-                    const res = await client.recoverAccount(this.state.inputAccout, publicKey);
-
-                    if (res && (res?.permission || res?.nonce)) {
-                        found = true;
-                        const account = data.find(acc => acc[0].publicKey);
-                        const recoverAccount = account[0];
-                        recoverAccount.address = this.state.inputAccout;
-
-                        this.props.addAccount(selectedWallet.id, blockchain, recoverAccount);
-                        this.props.setSelectedAccount(recoverAccount);
-                        this.props.disableCreateAccount();
-                    }
-                })
-            ).then(() => {
-                if (!found) {
-                    Dialog.info('Error', 'This account cannot be recovered using this wallet.');
-                }
-            });
-
-            this.setState({ isLoading: false });
-        });
-    };
 
     public checkAccountIdValid = async () => {
         if (this.props.blockchain === Blockchain.NEAR) {
@@ -235,14 +175,23 @@ export class AccountCreateComponent extends React.Component<
                                 // check is account name is valid (not already taken)
                                 this.checkAccountIdValid();
                             }
-
-                            this.recoverAccount();
                         }}
                     >
                         {this.state.isCreate
                             ? translate('App.labels.create')
                             : translate('App.labels.check')}
                     </Button>
+
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.disableCreateAccount();
+                            this.props.enableRecoverAccount();
+                        }}
+                    >
+                        <Text style={styles.recoverAccount}>
+                            {translate('CreateAccount.recoverAccount')}
+                        </Text>
+                    </TouchableOpacity>
 
                     <PasswordModal obRef={ref => (this.passwordModal = ref)} />
                 </View>

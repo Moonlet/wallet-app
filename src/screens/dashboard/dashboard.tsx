@@ -33,6 +33,7 @@ import { calculateBalance } from '../../core/utils/balance';
 import { getBlockchains } from '../../redux/preferences/selectors';
 import { NavigationEvents } from 'react-navigation';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
+import { AccountRecover } from '../../components/account-recover/account-recover';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -45,6 +46,7 @@ export interface IReduxProps {
     exchangeRates: any;
     setSelectedBlockchain: typeof setSelectedBlockchain;
     isCreateAccount: boolean;
+    isRecoverAccount: boolean;
     selectedBlockchainAccounts: IAccountState[];
 }
 
@@ -58,6 +60,7 @@ const mapStateToProps = (state: IReduxState) => ({
     selectedAccount: getSelectedAccount(state),
     exchangeRates: (state as any).market.exchangeRates,
     isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
+    isRecoverAccount: state.ui.screens.dashboard.isRecoverAccount,
     selectedBlockchainAccounts: getSelectedBlockchainAccounts(state)
 });
 
@@ -219,6 +222,8 @@ export class DashboardScreenComponent extends React.Component<
         const blockchain: Blockchain = this.props.selectedBlockchain;
         const showCreateAccount =
             this.props.isCreateAccount || this.props.selectedBlockchainAccounts.length === 0;
+        const showRecoverAccount =
+            this.props.isRecoverAccount || this.props.selectedBlockchainAccounts.length === 0;
 
         return (
             <View style={styles.container}>
@@ -227,7 +232,10 @@ export class DashboardScreenComponent extends React.Component<
                 {showCreateAccount && (
                     <AccountCreate blockchain={blockchain} navigation={this.props.navigation} />
                 )}
-                {!showCreateAccount && (
+                {showRecoverAccount && (
+                    <AccountRecover blockchain={blockchain} navigation={this.props.navigation} />
+                )}
+                {!showCreateAccount && !showRecoverAccount && (
                     <View style={styles.dashboardContainer}>
                         <View style={styles.coinBalanceCard}>
                             {this.props.selectedAccount && (

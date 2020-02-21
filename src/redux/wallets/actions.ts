@@ -34,7 +34,11 @@ import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
 import { getSelectedWallet, getAccounts, getSelectedAccount } from './selectors';
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
-import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
+import {
+    enableCreateAccount,
+    disableCreateAccount,
+    disableRecoverAccount
+} from '../ui/screens/dashboard/actions';
 import { openLoadingModal, closeLoadingModal } from '../ui/loading-modal/actions';
 import { delay } from '../../core/utils/time';
 
@@ -91,9 +95,11 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
             dispatch(enableCreateAccount());
         } else {
             dispatch(disableCreateAccount());
+            dispatch(disableRecoverAccount());
         }
     } else {
         dispatch(disableCreateAccount());
+        dispatch(disableRecoverAccount());
     }
     const selectedAccount = getSelectedAccount(getState());
     if (selectedAccount) {

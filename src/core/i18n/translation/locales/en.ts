@@ -304,7 +304,25 @@ export const translation: ITranslations = {
             chooseUsername: 'Just choose a username and you’re all set.',
             congrats: 'Congrats! This name is available.',
             eg: 'e.g. johndoe',
-            invalidUsername: 'Username is taken. Try something else.'
+            invalidUsername: 'Username is taken. Try something else.',
+            recoverAccount: 'Already have an account name? Recover it here'
+        },
+        RecoverAccount: {
+            title: 'Recover NEAR account name!',
+            recoverNear: 'Recover NEAR account!',
+            chooseUsername: 'Enter your account username.',
+            invalidUsername: 'Username has not been found. Try something else.',
+            congrats: 'Congrats! This account is valid.',
+            recoverPublicKey:
+                'This account has been created using another wallet. Click here to recover!',
+            recoverPKTitle: 'Click here to give Moonlet\naccess to you NEAR account.',
+            copyLink: 'Copy link',
+            confirmRecover: 'Recover your old user name',
+            invalidUserPublicKey: 'Please try again adding the private key!',
+            publicKey: 'Public Key',
+            pkText: 'use the public key to recover account name',
+            userName: 'User Name',
+            userNameText: 'check if account name was registered'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -19,7 +19,7 @@ export interface IProps {
     showNumeric?: boolean;
     handleTextUpdate: (key: any) => void;
     handleDeleteKey: () => void;
-    buttons?: { label: string; onPress: () => void; style?: {}; disabled?: boolean }[];
+    buttons?: Array<{ label: string; onPress: () => void; style?: {}; disabled?: boolean }>;
     footerButton?: { label?: string; onPress: () => void; style?: {} };
     disableSpace?: boolean;
 }

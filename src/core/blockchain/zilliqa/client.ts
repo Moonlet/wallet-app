@@ -21,6 +21,11 @@ export class Client extends BlockchainGenericClient {
         this.nameService = new NameService();
         this.tokens[TokenType.ZRC2] = new Zrc2Client(this);
     }
+    public getTransactionInfo(
+        transactionHash: string[]
+    ): Promise<import('../types').IBlockchainTransaction<any>> {
+        throw new Error('Method not implemented.');
+    }
 
     public async getBalance(address: string): Promise<BigNumber> {
         try {

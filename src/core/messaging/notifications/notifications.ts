@@ -1,6 +1,8 @@
 import firebase from 'react-native-firebase';
 import { Alert } from 'react-native';
-import { signExtensionTransaction } from '../../wallet-connect/utils';
+import { dataMessageHandler } from '../handlers/data-message';
+import { INotificationPayload } from '../types';
+import { notificationHandler } from '../handlers/notification';
 
 // this file is in this format for testing purposes
 export class NotificationService {
@@ -19,23 +21,20 @@ export class NotificationService {
     public async checkPermission() {
         const enabled = await firebase.messaging().hasPermission();
         if (enabled) {
-            // console.log('Messaging permissions enabled');
             // seems like this is a must
             // even is permissions were already granted
             this.requestPermission();
-            // this.getToken();
         } else {
             this.requestPermission();
         }
     }
 
     public async requestPermission() {
-        // console.log('Requesting messaging permissions');
         try {
             await firebase.messaging().requestPermission();
             this.getToken();
         } catch (error) {
-            // console.log('Messaging permission rejected');
+            // TODO: console.log('Messaging permission rejected');
         }
     }
 
@@ -45,21 +44,17 @@ export class NotificationService {
         });
 
         this.messageListener = firebase.messaging().onMessage(message => {
-            // console.log(message);
+            // received data message
+            dataMessageHandler(message.data);
         });
 
         this.notificationDisplayedListener = firebase
             .notifications()
             .onNotificationDisplayed(notification => {
                 // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
-                // console.log('onNotificationDisplayed');
-                // console.log(notification);
             });
 
         this.onNotificationListener = firebase.notifications().onNotification(notification => {
-            // console.log('onNotification');
-            // console.log(notification);
-
             // UNCOMMENT IF YOU WANT ANDROID TO DISPLAY THE NOTIFICATION
             notification.android.setChannelId('default').setSound('default');
             firebase.notifications().displayNotification(notification);
@@ -74,8 +69,8 @@ export class NotificationService {
             .onNotificationOpened(notificationOpen => {
                 // check here for different types of notifications
                 // this gets called when app is opened but in background
-                const notification = notificationOpen.notification;
-                signExtensionTransaction(notification.data);
+                notificationHandler((notificationOpen.notification as any).data, false);
+                // signExtensionTransaction(notification.data);
             });
     }
 
@@ -86,7 +81,7 @@ export class NotificationService {
         this.onNotificationOpenedListener();
     }
 
-    public async displayNotification(title, body, data) {
+    public async displayNotification(title: string, body: string, data: INotificationPayload) {
         const notification = new firebase.notifications.Notification()
             .setNotificationId('1')
             .setTitle(title)
@@ -139,8 +134,7 @@ export class NotificationService {
                 if (notificationOpen) {
                     // App was opened by a notification
                     // check here for different types of notifications
-                    const notification = notificationOpen.notification;
-                    signExtensionTransaction(notification.data);
+                    notificationHandler((notificationOpen.notification as any).data, true);
                 }
             });
     }

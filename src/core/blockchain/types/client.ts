@@ -1,12 +1,23 @@
 import BigNumber from 'bignumber.js';
 import { RpcClient } from '../../utils/rpc-client';
 import { IBlockchainNetwork, ChainIdType } from './network';
-import { IFeeOptions } from './transaction';
+import { IFeeOptions, IBlockchainTransaction } from './transaction';
 import { IBlockchainNameService } from '.';
 
 export interface IBlockInfo {
     number: number;
     hash?: string;
+}
+
+export interface ITransactionReceipt {
+    transactionHash: string;
+    from: string;
+    to: string;
+    status: number;
+    blockHash: string;
+    blockNumber: number;
+    gasUsed?: number;
+    cumulativeGasUsed?: number;
 }
 
 export abstract class BlockchainGenericClient {
@@ -29,6 +40,7 @@ export abstract class BlockchainGenericClient {
     public abstract getBalance(address: string): Promise<BigNumber>;
     public abstract getNonce(address: string, publicKey?: string): Promise<number>;
     public abstract getCurrentBlock(): Promise<IBlockInfo>;
+    public abstract getTransactionInfo(transactionHash: string[]): Promise<IBlockchainTransaction>;
 
     public abstract sendTransaction(transaction: any): Promise<string>;
 

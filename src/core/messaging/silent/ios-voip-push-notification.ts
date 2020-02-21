@@ -1,5 +1,5 @@
 import VoipPushNotification from 'react-native-voip-push-notification';
-import { silentMessageHandler } from './silent-push-handler';
+import { dataMessageHandler } from '../handlers/data-message';
 
 let tokenPromise = null;
 
@@ -9,9 +9,7 @@ export const setupVoipNotification = () => {
     getApnsToken();
 
     VoipPushNotification.addEventListener('notification', notification => {
-        silentMessageHandler({
-            payload: notification.getMessage()
-        });
+        dataMessageHandler(notification.getMessage().data);
     });
 };
 

@@ -21,6 +21,8 @@ import { Dialog } from './components/dialog/dialog';
 import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
 import { ImageCanvas } from './components/image-canvas/image-canvas';
 import { LoadingModal } from './components/loading-modal/loading-modal';
+import { updateExchangeRates } from './redux/market/actions';
+import { getExchangeRates } from './core/utils/exchange-rates';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -89,6 +91,14 @@ export default class App extends React.Component<{}, IState> {
         }
     }
 
+    public fetchExchangeRates = async () => {
+        const exchangeRates = await getExchangeRates();
+
+        if (exchangeRates) {
+            store.dispatch(updateExchangeRates(exchangeRates));
+        }
+    };
+
     public updateAppReady = () => {
         const appReady =
             this.translationsLoaded &&
@@ -130,6 +140,8 @@ export default class App extends React.Component<{}, IState> {
             if (store.getState()._persist.rehydrated) {
                 if (!this.reduxStateLoaded) {
                     this.reduxStateLoaded = true;
+
+                    this.fetchExchangeRates();
 
                     // trigger extension getState after state was loaded from storage
                     Platform.OS === 'web' &&

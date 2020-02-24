@@ -1,5 +1,8 @@
-// actions consts
-// export const WALLET_CREATE = 'WALLET_CREATE';
+export const EXCHANGE_RATES_UPDATE = 'EXCHANGE_RATES_UPDATE';
 
-// action creators
-export {};
+export const updateExchangeRates = (exchangeRates: any) => {
+    return {
+        type: EXCHANGE_RATES_UPDATE,
+        data: exchangeRates
+    };
+};

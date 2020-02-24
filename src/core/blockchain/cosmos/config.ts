@@ -55,7 +55,7 @@ export const config: IBlockchainConfig = {
     },
     networks: {
         testNet: 'gaia-13007',
-        mainNet: 'Cosmos-Hub'
+        mainNet: 'cosmoshub-3'
     },
     defaultOrder: 3
 };

@@ -3,7 +3,7 @@ import { IBlockchainNetwork } from '../types';
 export const networks: IBlockchainNetwork[] = [
     {
         name: 'Main Network',
-        chainId: 'Cosmos-Hub',
+        chainId: 'cosmoshub-3',
         mainNet: true,
         url: 'https://api.cosmos.network',
         explorer: {

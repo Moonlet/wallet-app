@@ -291,9 +291,7 @@ export class SendScreenComponent extends React.Component<
     };
 
     public onAddAllBalance = () => {
-        const token = this.props.account.tokens[
-            getBlockchain(this.props.account.blockchain).config.coin
-        ];
+        const token = this.props.account.tokens[this.props.token.symbol];
         const tokenBalanceValue = new BigNumber(token.balance?.value);
 
         const allBalance = tokenBalanceValue.minus(this.state.feeOptions.feeTotal);
@@ -515,10 +513,7 @@ export class SendScreenComponent extends React.Component<
                     contentContainerStyle={styles.scrollContainer}
                 >
                     <View style={styles.accountAddress}>
-                        <AccountAddress
-                            account={account}
-                            token={this.props.navigation.state.params.token}
-                        />
+                        <AccountAddress account={account} token={this.props.token} />
                     </View>
                     <Text style={styles.receipientLabel}>
                         {this.state.toAddress !== '' ? translate('Send.recipientLabel') : ' '}

@@ -34,6 +34,7 @@ import { getBlockchains } from '../../redux/preferences/selectors';
 import { NavigationEvents } from 'react-navigation';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { AccountRecover } from '../../components/account-recover/account-recover';
+import { enableCreateAccount } from '../../redux/ui/screens/dashboard/actions';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -48,6 +49,7 @@ export interface IReduxProps {
     isCreateAccount: boolean;
     isRecoverAccount: boolean;
     selectedBlockchainAccounts: IAccountState[];
+    enableCreateAccount: typeof enableCreateAccount;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -67,7 +69,8 @@ const mapStateToProps = (state: IReduxState) => ({
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
-    setSelectedBlockchain
+    setSelectedBlockchain,
+    enableCreateAccount
 };
 
 const MyTitle = ({ text }) => (
@@ -145,6 +148,10 @@ export class DashboardScreenComponent extends React.Component<
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
+
+        if (this.props.selectedBlockchainAccounts.length === 0) {
+            this.props.enableCreateAccount();
+        }
     }
 
     public setDashboardMenuBottomSheet = () => {
@@ -221,9 +228,9 @@ export class DashboardScreenComponent extends React.Component<
         const { blockchains } = this.props;
         const blockchain: Blockchain = this.props.selectedBlockchain;
         const showCreateAccount =
-            this.props.isCreateAccount || this.props.selectedBlockchainAccounts.length === 0;
+            this.props.isCreateAccount && this.props.selectedBlockchainAccounts.length === 0;
         const showRecoverAccount =
-            this.props.isRecoverAccount || this.props.selectedBlockchainAccounts.length === 0;
+            this.props.isRecoverAccount && this.props.selectedBlockchainAccounts.length === 0;
 
         return (
             <View style={styles.container}>

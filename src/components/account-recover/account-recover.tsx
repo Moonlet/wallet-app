@@ -373,9 +373,12 @@ export class AccountRecoverComponent extends React.Component<
                     )}
                     {this.state.isRecoverWithPublicKey && (
                         <TouchableOpacity
-                            onPress={() => {
-                                this.recoverWithPublickKey();
-                                // this.setState({ showRecoverWithPublicKey: true });
+                            onPress={async () => {
+                                await this.recoverWithPublickKey();
+                                this.setState({
+                                    showOptions: false,
+                                    showRecoverWithPublicKey: true
+                                });
                             }}
                         >
                             <Text style={styles.congratsText}>

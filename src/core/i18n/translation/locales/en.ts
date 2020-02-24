@@ -318,7 +318,7 @@ export const translation: ITranslations = {
             recoverPKTitle: 'Click here to give Moonlet\naccess to you NEAR account.',
             copyLink: 'Copy link',
             confirmRecover: 'Recover your old user name',
-            invalidUserPublicKey: 'Please try again adding the private key!',
+            invalidUserPublicKey: 'Please try again adding the access key!',
             publicKey: 'Public Key',
             pkText: 'use the public key to recover account name',
             userName: 'User Name',

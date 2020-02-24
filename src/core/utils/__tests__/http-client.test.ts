@@ -1,9 +1,9 @@
-import { RpcClient } from '../rpc-client';
+import { HttpClient } from '../http-client';
 
 describe('RPC Client', () => {
     describe('call()', () => {
         test('all params ok', async () => {
-            const rpc = new RpcClient('URL');
+            const http = new HttpClient('URL');
 
             // @ts-ignore
             global.fetch = jest.fn(() =>
@@ -11,7 +11,7 @@ describe('RPC Client', () => {
                     json: () => Promise.resolve({ data: 'data' })
                 })
             );
-            expect(await rpc.call('METHOD', ['P1', 'P2'])).toEqual({
+            expect(await http.rpcCall('METHOD', ['P1', 'P2'])).toEqual({
                 data: 'data'
             });
 
@@ -27,7 +27,7 @@ describe('RPC Client', () => {
         });
 
         test('no params', async () => {
-            const rpc = new RpcClient('URL');
+            const http = new HttpClient('URL');
 
             // @ts-ignore
             global.fetch = jest.fn(() =>
@@ -35,7 +35,7 @@ describe('RPC Client', () => {
                     json: () => Promise.resolve({ data: 'data' })
                 })
             );
-            expect(await rpc.call('METHOD')).toEqual({
+            expect(await http.rpcCall('METHOD')).toEqual({
                 data: 'data'
             });
 
@@ -51,13 +51,13 @@ describe('RPC Client', () => {
         });
 
         test('error', async () => {
-            const rpc = new RpcClient('URL');
+            const http = new HttpClient('URL');
 
             // @ts-ignore
             global.fetch = jest.fn(() => Promise.reject('ERROR'));
             try {
                 // @ts-ignore
-                await rpc.call('METHOD', 'P1');
+                await http.rpcCall('METHOD', 'P1');
             } catch (e) {
                 expect(e).toBe('ERROR');
             }

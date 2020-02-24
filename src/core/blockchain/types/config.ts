@@ -20,10 +20,12 @@ export interface IBlockchainConfig {
             gasPrice: BigNumber;
             gasLimit: BigNumber;
             gasPricePresets?: {
-                cheap: BigNumber;
-                standard: BigNumber;
-                fast: BigNumber;
-                fastest: BigNumber;
+                cheap?: BigNumber;
+                standard?: BigNumber;
+                fast?: BigNumber;
+                fastest?: BigNumber;
+                low?: BigNumber;
+                average?: BigNumber;
             };
         };
         ui: {
@@ -31,7 +33,7 @@ export interface IBlockchainConfig {
             feeComponent: 'FeeTotal' | 'FeePresets';
             feeComponentAdvanced?: 'GasFeeAdvanced';
             gasPriceUnit: string;
-            defaultPreset?: 'cheap' | 'standard' | 'fast' | 'fastest';
+            defaultPreset?: 'cheap' | 'standard' | 'fast' | 'fastest' | 'low' | 'average';
         };
     };
     ui: {
@@ -39,6 +41,7 @@ export interface IBlockchainConfig {
         enableTokenManagement: boolean;
         enableAccountCreation: boolean;
         maxAccountsNumber: number;
+        extraFields?: string[];
     };
     networks: {
         testNet: ChainIdType;

@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js';
-import { RpcClient } from '../../utils/rpc-client';
 import { IBlockchainNetwork, ChainIdType } from './network';
 import { IFeeOptions } from './transaction';
 import { IBlockchainNameService } from '.';
+import { HttpClient } from '../../utils/http-client';
 
 export interface IBlockInfo {
     number: number;
@@ -12,7 +12,7 @@ export interface IBlockInfo {
 export abstract class BlockchainGenericClient {
     public readonly tokens: { [type: string]: any } = {};
     public nameService: IBlockchainNameService;
-    public rpc: RpcClient;
+    public http: HttpClient;
     public readonly chainId: ChainIdType;
 
     constructor(chainId: ChainIdType, networks: IBlockchainNetwork[]) {
@@ -23,7 +23,7 @@ export abstract class BlockchainGenericClient {
         }
 
         this.chainId = chainId;
-        this.rpc = new RpcClient(url);
+        this.http = new HttpClient(url);
     }
 
     public abstract getBalance(address: string): Promise<BigNumber>;

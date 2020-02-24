@@ -17,21 +17,23 @@ export class Client extends BlockchainGenericClient {
     }
 
     public getBalance(address: string): Promise<BigNumber> {
-        return this.rpc.call('eth_getBalance', [this.fixAddress(address), 'latest']).then(res => {
-            return new BigNumber(res.result, 16);
-        });
+        return this.http
+            .rpcCall('eth_getBalance', [this.fixAddress(address), 'latest'])
+            .then(res => {
+                return new BigNumber(res.result, 16);
+            });
     }
 
     public getNonce(address: string): Promise<number> {
-        return this.rpc
-            .call('eth_getTransactionCount', [this.fixAddress(address), 'latest'])
+        return this.http
+            .rpcCall('eth_getTransactionCount', [this.fixAddress(address), 'latest'])
             .then(res => {
                 return new BigNumber(res.result, 16).toNumber();
             });
     }
 
     public sendTransaction(transaction): Promise<string> {
-        return this.rpc.call('eth_sendRawTransaction', [transaction]).then(res => {
+        return this.http.rpcCall('eth_sendRawTransaction', [transaction]).then(res => {
             if (res.result) {
                 return res.result;
             }
@@ -47,7 +49,7 @@ export class Client extends BlockchainGenericClient {
     }
 
     public getCurrentBlock(): Promise<IBlockInfo> {
-        return this.rpc.call('eth_blockNumber').then(res => {
+        return this.http.rpcCall('eth_blockNumber').then(res => {
             return {
                 number: new BigNumber(res.result, 16).toNumber()
             };
@@ -67,7 +69,7 @@ export class Client extends BlockchainGenericClient {
                 .map(t => t.trim());
         }
 
-        const response = await this.rpc.call('eth_call', [
+        const response = await this.http.rpcCall('eth_call', [
             {
                 to: contractAddress,
                 data: '0x' + abi.simpleEncode(method, ...params).toString('hex')
@@ -149,7 +151,7 @@ export class Client extends BlockchainGenericClient {
     ): Promise<any> {
         let gasEstimatePromise;
         if (contractAddress) {
-            gasEstimatePromise = this.rpc.call('eth_estimateGas', [
+            gasEstimatePromise = this.http.rpcCall('eth_estimateGas', [
                 {
                     from,
                     to: contractAddress,
@@ -161,7 +163,7 @@ export class Client extends BlockchainGenericClient {
                 }
             ]);
         } else {
-            gasEstimatePromise = this.rpc.call('eth_estimateGas', [{ from, to }]);
+            gasEstimatePromise = this.http.rpcCall('eth_estimateGas', [{ from, to }]);
         }
 
         return Promise.all([

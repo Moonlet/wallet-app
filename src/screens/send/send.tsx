@@ -53,6 +53,7 @@ import {
 } from '../../redux/ui/bottomSheet/state';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { getChainId } from '../../redux/preferences/selectors';
+import { Memo } from './components/extra-fields/memo/memo';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -100,6 +101,7 @@ interface IState {
     feeOptions: IFeeOptions;
     showExtensionMessage: boolean;
     userAction: boolean;
+    memo: string;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -133,7 +135,8 @@ export class SendScreenComponent extends React.Component<
             showOwnAccounts: false,
             feeOptions: undefined,
             showExtensionMessage: false,
-            userAction: false
+            userAction: false,
+            memo: ''
         };
     }
 
@@ -183,7 +186,8 @@ export class SendScreenComponent extends React.Component<
                 this.props.token.symbol,
                 this.state.feeOptions,
                 password,
-                this.props.navigation
+                this.props.navigation,
+                { memo: this.state.memo }
             );
         });
     };
@@ -285,6 +289,11 @@ export class SendScreenComponent extends React.Component<
     public onFeesChanged = (feeOptions: IFeeOptions) => {
         this.setState({ feeOptions }, () => this.availableFunds());
     };
+
+    @bind
+    public onMemoInput(memo: string) {
+        this.setState({ memo });
+    }
 
     public addAmount = (value: string) => {
         this.setState({ amount: value }, () => this.availableFunds());
@@ -417,9 +426,20 @@ export class SendScreenComponent extends React.Component<
         );
     }
 
+    public renderExtraFields(value: string) {
+        switch (value) {
+            case 'Memo':
+                return <Memo onMemoInput={this.onMemoInput} />;
+
+            default:
+                return null;
+        }
+    }
+
     public renderBasicFields() {
         const styles = this.props.styles;
         const theme = this.props.theme;
+        const extraFields = getBlockchain(this.props.account.blockchain).config.ui.extraFields;
 
         return (
             <View style={styles.basicFields}>
@@ -450,6 +470,8 @@ export class SendScreenComponent extends React.Component<
                 >
                     <Text style={styles.textTranferButton}>{translate('Send.allBalance')}</Text>
                 </TouchableOpacity>
+
+                {extraFields && extraFields.map(value => this.renderExtraFields(value))}
 
                 <FeeOptions
                     token={

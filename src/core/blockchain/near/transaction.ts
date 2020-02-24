@@ -1,5 +1,5 @@
 import { IBlockchainTransaction, ITransferTransaction, TransactionType } from '../types';
-import { INearTransactionAdditionalInfoType, NearTransactionActionType } from './';
+import { INearTransactionAdditionalInfoType, NearTransactionActionType, Near } from './';
 import { TransactionStatus } from '../../wallet/types';
 
 import { transfer, createTransaction, signTransaction } from 'nearlib/src.ts/transaction';
@@ -48,10 +48,15 @@ export const sign = async (
     return Buffer.from(signedTx[1].encode()).toString('base64');
 };
 
-export const buildTransferTransaction = (
+export const buildTransferTransaction = async (
     tx: ITransferTransaction
-): IBlockchainTransaction<INearTransactionAdditionalInfoType> => {
+): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> => {
     const tokenInfo = tx.account.tokens[tx.token];
+
+    const client = Near.getClient(tx.chainId);
+    const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
+    const blockInfo = await client.getCurrentBlock();
+
     return {
         date: {
             created: Date.now(),
@@ -71,10 +76,10 @@ export const buildTransferTransaction = (
         amount: tx.amount,
         feeOptions: tx.feeOptions,
         broadcatedOnBlock: undefined,
-        nonce: tx.nonce,
+        nonce,
         status: TransactionStatus.PENDING,
         additionalInfo: {
-            currentBlockHash: tx.currentBlockHash,
+            currentBlockHash: blockInfo.hash,
             actions: [
                 {
                     type: NearTransactionActionType.TRANSFER

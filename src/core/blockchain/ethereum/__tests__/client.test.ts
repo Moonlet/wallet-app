@@ -1,11 +1,11 @@
 import { Ethereum } from '../';
 import BigNumber from 'bignumber.js';
 
-jest.mock('../../../utils/rpc-client', () => ({
-    RpcClient: class {
+jest.mock('../../../utils/http-client', () => ({
+    HttpClient: class {
         public rpcResult = Promise.resolve();
 
-        public call() {
+        public rpcCall() {
             return this.rpcResult;
         }
 
@@ -20,7 +20,7 @@ describe('Ethereum client', () => {
         const client = Ethereum.getClient(1);
 
         // @ts-ignore
-        client.rpc.setRpcResult(
+        client.http.setRpcResult(
             Promise.resolve({
                 result: '0x123'
             })
@@ -28,7 +28,7 @@ describe('Ethereum client', () => {
         expect(await client.getBalance('ADDR')).toEqual(new BigNumber('0x123', 16));
 
         // @ts-ignore
-        client.rpc.setRpcResult(Promise.reject('ERROR'));
+        client.http.setRpcResult(Promise.reject('ERROR'));
         try {
             await client.getBalance('ADDR');
         } catch (e) {

@@ -19,14 +19,9 @@ export class NotificationService {
     }
 
     public async checkPermission() {
+        // @ts-ignore seems like this is a must for now
         const enabled = await firebase.messaging().hasPermission();
-        if (enabled) {
-            // seems like this is a must
-            // even is permissions were already granted
-            this.requestPermission();
-        } else {
-            this.requestPermission();
-        }
+        this.requestPermission();
     }
 
     public async requestPermission() {

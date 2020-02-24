@@ -50,8 +50,9 @@ export const getAccountTransactions = (
     if (transactions) {
         return Object.values(transactions).filter(
             tx =>
-                tx.address.toLowerCase() === account.address.toLowerCase() ||
-                tx.toAddress.toLowerCase() === account.address.toLowerCase()
+                blockchain === tx.blockchain &&
+                (tx.address.toLowerCase() === account.address.toLowerCase() ||
+                    tx.toAddress.toLowerCase() === account.address.toLowerCase())
         );
     }
 };
@@ -106,7 +107,7 @@ export const getWalletWithAddress = (
     blockchain: Blockchain
 ): IWalletState[] =>
     Object.values(state.wallets).filter(wallet =>
-        wallet.accounts.some(
+        (wallet.accounts || []).some(
             account =>
                 account.blockchain === blockchain &&
                 addresses.includes(account.address.toLowerCase())

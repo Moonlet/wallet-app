@@ -378,7 +378,7 @@ export const getBalance = (
 export const updateTransactionFromBlockchain = (
     transactionHash: string[],
     blockchain: Blockchain,
-    displayNotification: boolean = true
+    displayNotification: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const chainId = blockchainChainId[blockchain];
@@ -423,6 +423,7 @@ export const updateTransactionFromBlockchain = (
                           )
                       )
                     : wallets[0];
+
             const notificatonAccount =
                 wallet.accounts.find(
                     account => account.address.toLowerCase() === transaction.toAddress
@@ -442,7 +443,7 @@ export const updateTransactionFromBlockchain = (
                     data: {
                         walletId: wallet.id,
                         accountIndex: notificatonAccount.index,
-                        token: notificatonAccount.tokens.ETH,
+                        token: notificatonAccount.tokens[getBlockchain(blockchain).config.coin],
                         tokenLogo: getBlockchain(blockchain).config.tokens[
                             getBlockchain(notificatonAccount.blockchain).config.coin
                         ].logo,

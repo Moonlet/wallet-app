@@ -183,9 +183,8 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                     ...state[action.data.walletId],
                     transactions: {
                         ...state[action.data.walletId].transactions,
-                        [action.data.transaction.id]: state[action.data.walletId].transactions[
-                            action.data.transaction.id
-                        ]
+                        [action.data.transaction.id]: (state[action.data.walletId].transactions ||
+                            {})[action.data.transaction.id]
                             ? {
                                   ...state[action.data.walletId].transactions[
                                       action.data.transaction.id

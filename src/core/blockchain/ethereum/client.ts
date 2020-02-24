@@ -193,7 +193,8 @@ export class Client extends BlockchainGenericClient {
                     amount: txInfo.value,
                     feeOptions: {
                         gasPrice: txInfo.gasPrice,
-                        feeTotal: txInfo.gas
+                        gasLimit: txInfo.gas,
+                        feeTotal: txReceipt.gasUsed
                     },
                     broadcatedOnBlock: txInfo.blockNumber,
                     nonce: txInfo.nonce,

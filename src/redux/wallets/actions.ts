@@ -47,6 +47,7 @@ import { Notifications } from '../../core/messaging/notifications/notifications'
 import { formatNumber } from '../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { NotificationType } from '../../core/messaging/types';
+import { addAddress } from '../../address-monitor/index';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -264,6 +265,27 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             dispatch(setSelectedWallet(walletId));
             callback && callback();
             dispatch(closeLoadingModal());
+
+            addAddress(
+                Blockchain.ETHEREUM,
+                accounts.reduce((out: string[], account: IAccountState): string[] => {
+                    if (account.blockchain === Blockchain.ETHEREUM) {
+                        out.push(account.address);
+                    }
+
+                    return out;
+                }, [])
+            );
+            addAddress(
+                Blockchain.ZILLIQA,
+                accounts.reduce((out: string[], account: IAccountState): string[] => {
+                    if (account.blockchain === Blockchain.ZILLIQA) {
+                        out.push(account.address);
+                    }
+
+                    return out;
+                }, [])
+            );
         });
     } catch (e) {
         // console.log(e);

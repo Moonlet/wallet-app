@@ -224,13 +224,10 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public render() {
-        const styles = this.props.styles;
-        const { blockchains } = this.props;
+        const { blockchains, styles } = this.props;
         const blockchain: Blockchain = this.props.selectedBlockchain;
-        const showCreateAccount =
-            this.props.isCreateAccount && this.props.selectedBlockchainAccounts.length === 0;
-        const showRecoverAccount =
-            this.props.isRecoverAccount && this.props.selectedBlockchainAccounts.length === 0;
+        const showCreateAccount = this.props.isCreateAccount;
+        const showRecoverAccount = this.props.isRecoverAccount;
 
         return (
             <View style={styles.container}>

@@ -16,7 +16,6 @@ import {
     WALLET_SELECT_BLOCKCHAIN,
     SELECT_WALLET
 } from './actions';
-import { TransactionStatus } from '../../core/wallet/types';
 import { REHYDRATE } from 'redux-persist';
 import BigNumber from 'bignumber.js';
 import { IBlockchainTransaction } from '../../core/blockchain/types';
@@ -139,29 +138,8 @@ export default (state: IWalletsState = intialState, action: IAction) => {
 
         case TRANSACTION_PUBLISHED:
             const transaction: IBlockchainTransaction = {
-                id: action.data.hash,
-                date: {
-                    created: Date.now(),
-                    signed: Date.now(),
-                    broadcasted: Date.now(),
-                    confirmed: Date.now()
-                },
-                blockchain: action.data.tx.blockchain,
-                chainId: action.data.tx.data,
-                type: action.data.tx.type,
-                token: action.data.tx.token,
-
-                address: action.data.tx.address,
-                publicKey: action.data.tx.publicKey,
-
-                toAddress: action.data.tx.toAddress,
-                amount: action.data.tx.amount,
-                data: action.data.tx.data,
-                feeOptions: action.data.tx.feeOptions,
-                broadcatedOnBlock: action.data.tx.broadcatedOnBlock,
-                nonce: action.data.tx.nonce,
-                status: TransactionStatus.PENDING,
-                additionalInfo: action.data.tx.additionalInfo
+                ...action.data.tx,
+                id: action.data.hash
             };
 
             return {

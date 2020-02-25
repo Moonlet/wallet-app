@@ -3,6 +3,8 @@ import { IAccountState, IWalletsState, IWalletState } from './state';
 import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
 
 import { createSelector } from 'reselect';
+import { getChainId } from '../preferences/selectors';
+import { ITokenConfig } from '../../core/blockchain/types/token';
 
 export const getSelectedBlockchain = createSelector(
     (state: IReduxState): IWalletState => getSelectedWallet(state),
@@ -51,6 +53,31 @@ export const getAccountTransactions = (
         return Object.values(getSelectedWallet(state).transactions).filter(
             tx => tx.address === account.address
         );
+    }
+};
+
+export const getAccountFilteredTransactions = (
+    state: IReduxState,
+    accountIndex: number,
+    blockchain: Blockchain,
+    token: ITokenConfig
+): IBlockchainTransaction[] => {
+    const account: IAccountState = getSelectedWallet(state).accounts.find(
+        acc => acc.index === accountIndex && acc.blockchain === blockchain
+    );
+    const transactions = getSelectedWallet(state).transactions;
+    if (transactions) {
+        return Object.values(getSelectedWallet(state).transactions)
+            .filter(
+                tx =>
+                    tx.address === account.address &&
+                    tx.chainId === getChainId(state, blockchain) &&
+                    tx.token?.symbol === token.symbol
+            )
+            .sort(
+                (tx1: IBlockchainTransaction, tx2: IBlockchainTransaction) =>
+                    tx2.date?.signed - tx1.date?.signed
+            );
     }
 };
 

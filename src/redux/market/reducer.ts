@@ -3,30 +3,7 @@ import { EXCHANGE_RATES_UPDATE } from './actions';
 import { IMarketState } from './state';
 
 const initialState: IMarketState = {
-    // TODO: empty this
-    exchangeRates: {
-        BAT: 0.2648,
-        BTC: 9805.56,
-        CNY: 0,
-        CRO: 0.06089,
-        DAI: 1.001,
-        ETH: 271.08,
-        EUR: 1.082,
-        HEDG: 2.807,
-        HT: 4.728,
-        JPY: 0.008995,
-        LEO: 0.9643,
-        LINK: 4.12,
-        MKR: 646.25,
-        OKB: 6.243,
-        PAX: 1.001,
-        SGD: 0,
-        SNX: 1.002,
-        USD: 1,
-        USDC: 1.002,
-        USDT: 1.001,
-        ZIL: 0.007452
-    },
+    exchangeRates: {},
     change: {
         daily: {
             USD: {

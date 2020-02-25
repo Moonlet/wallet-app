@@ -1,4 +1,4 @@
 export interface IMarketState {
-    exchangeRates: any;
+    exchangeRates: { [tokenType: string]: number };
     change: any;
 }

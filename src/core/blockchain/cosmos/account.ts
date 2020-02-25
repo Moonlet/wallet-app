@@ -24,7 +24,7 @@ export const isValidChecksumAddress = (address: string): boolean => {
 };
 
 export const isValidAddress = (address: string): boolean => {
-    return /^cosmos1[0-9a-zA-Z]{38}$/.test(address);
+    return /^cosmos1[0-9a-zA-Z]{38}$/.test(address) && bech32.decode(address) !== undefined;
 };
 
 export const publicToAddress = (publicKey: string): string => {

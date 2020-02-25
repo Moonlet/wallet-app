@@ -251,6 +251,7 @@ export class SendScreenComponent extends React.Component<
                         errorResponseText: translate('Send.recipientNotValid'),
                         warningResponseText: undefined
                     });
+                    break;
                 }
                 case ResolveTextError.CONNECTION_ERROR: {
                     this.setState({
@@ -258,6 +259,15 @@ export class SendScreenComponent extends React.Component<
                         errorResponseText: translate('Send.genericError'),
                         warningResponseText: undefined
                     });
+                    break;
+                }
+                default: {
+                    this.setState({
+                        isValidText: false,
+                        errorResponseText: translate('Send.recipientNotValid'),
+                        warningResponseText: undefined
+                    });
+                    break;
                 }
             }
         }

@@ -4,7 +4,7 @@ import {
     getAddressFromPrivateKey,
     getAddressFromPublicKey
 } from '@zilliqa-js/crypto/dist/util'; // import like this to optimize imports
-import { toBech32Address } from '@zilliqa-js/crypto/dist/bech32';
+import { toBech32Address, fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { Blockchain } from '../types';
 import { BigNumber } from 'bignumber.js';
@@ -22,11 +22,11 @@ export const getPrivateKeyFromDerived = (derivedKey: HDNode): string => {
 };
 
 export const isValidChecksumAddress = (address: string): boolean => {
-    return isBech32(address);
+    return isBech32(address) && fromBech32Address(address) !== undefined;
 };
 
 export const isValidAddress = (address: string): boolean => {
-    return isBech32(address);
+    return isBech32(address) && fromBech32Address(address) !== undefined;
 };
 
 export const publicToAddress = (publicKey: string): string => {

@@ -1,3 +1,1 @@
-export const getExchangeRates = () => {
-    //
-};
+export const getExchangeRates = (callback: any) => callback({});

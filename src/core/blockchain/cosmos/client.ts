@@ -23,13 +23,7 @@ export class Client extends BlockchainGenericClient {
             }
             const res = await this.http.get('/bank/balances/' + address);
             if (res.result) {
-                let amount: BigNumber = new BigNumber(0);
-                res.result.map(value => {
-                    if (value.denom === denom) {
-                        amount = new BigNumber(value.amount);
-                    }
-                });
-                return amount;
+                return new BigNumber(res.result.filter(i => i.denom === denom)[0]?.amount);
             }
         } catch {
             return new BigNumber(0);

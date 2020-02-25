@@ -20,46 +20,8 @@ export const sortObject = obj => {
 };
 
 export const sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
-    let denom = config.defaultUnit.toLowerCase();
-    const symbolMap = config.tokens[config.coin].symbolMap;
-    if (symbolMap !== undefined) {
-        Object.keys(symbolMap).map(key => {
-            if (key === tx.chainId) {
-                denom = symbolMap[key];
-            }
-        });
-    }
-
-    const gasAmount = new BigNumber(tx.feeOptions.gasPrice).multipliedBy(100000);
-
-    const stdSignMsg = {
-        msgs: [
-            {
-                type: 'cosmos-sdk/MsgSend',
-                value: {
-                    amount: [
-                        {
-                            amount: tx.amount, // 6 decimal places (1000000 uatom = 1 ATOM)
-                            denom
-                        }
-                    ],
-                    from_address: tx.address,
-                    to_address: tx.toAddress
-                }
-            }
-        ],
-        fee: {
-            amount: [{ amount: gasAmount.toString(), denom }],
-            gas: tx.feeOptions.gasLimit
-        },
-        memo: '',
-        chain_id: tx.chainId,
-        account_number: tx.additionalInfo.account_number,
-        sequence: tx.nonce
-    };
-
     const hash = createHash('sha256')
-        .update(JSON.stringify(sortObject(stdSignMsg)))
+        .update(JSON.stringify(sortObject(tx.additionalInfo.stdSignMsg)))
         .digest('hex');
     const buf = Buffer.from(hash, 'hex');
     const bufferPrivateKey = Buffer.from(privateKey, 'hex');
@@ -70,8 +32,8 @@ export const sign = async (tx: IBlockchainTransaction, privateKey: string): Prom
 
     const signedTx = {
         tx: {
-            msg: stdSignMsg.msgs,
-            fee: stdSignMsg.fee,
+            msg: tx.additionalInfo.stdSignMsg.msgs,
+            fee: tx.additionalInfo.stdSignMsg.fee,
             signatures: [
                 {
                     signature: signatureBase64,
@@ -96,6 +58,43 @@ export const buildTransferTransaction = async (
 
     const client = Cosmos.getClient(tx.chainId) as CosmosClient;
     const accountInfo = await client.getAccountInfo(tx.account.address);
+    let denom = config.defaultUnit.toLowerCase();
+    const symbolMap = config.tokens[config.coin].symbolMap;
+    if (symbolMap !== undefined) {
+        Object.keys(symbolMap).map(key => {
+            if (key === tx.chainId) {
+                denom = symbolMap[key];
+            }
+        });
+    }
+
+    const gasAmount = new BigNumber(tx.feeOptions.gasPrice).multipliedBy(tx.feeOptions.gasLimit);
+
+    const stdSignMsg = {
+        msgs: [
+            {
+                type: 'cosmos-sdk/MsgSend',
+                value: {
+                    amount: [
+                        {
+                            amount: tx.amount, // 6 decimal places (1000000 uatom = 1 ATOM)
+                            denom
+                        }
+                    ],
+                    from_address: tx.account.address,
+                    to_address: tx.toAddress
+                }
+            }
+        ],
+        fee: {
+            amount: [{ amount: gasAmount.toString(), denom }],
+            gas: tx.feeOptions.gasLimit
+        },
+        memo: '',
+        chain_id: tx.chainId,
+        account_number: accountInfo.account_number,
+        sequence: accountInfo.sequence
+    };
 
     return {
         date: {
@@ -118,7 +117,8 @@ export const buildTransferTransaction = async (
         status: TransactionStatus.PENDING,
         additionalInfo: {
             account_number: accountInfo.account_number,
-            memo: tx.extraFields.memo
+            memo: tx.extraFields.memo,
+            stdSignMsg
         }
     };
 };

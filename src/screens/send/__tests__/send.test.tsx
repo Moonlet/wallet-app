@@ -10,12 +10,7 @@ import { Blockchain } from '../../../core/blockchain/types';
 const props: IProps = {
     // @ts-ignore
     navigation: {
-        navigate: jest.fn(),
-        state: {
-            params: {
-                token: {}
-            }
-        }
+        navigate: jest.fn()
     },
     styles: stylesProvider(darkTheme),
     theme: darkTheme,
@@ -31,7 +26,8 @@ const props: IProps = {
         }
     },
     blockchain: Blockchain.ZILLIQA,
-    contacts: {}
+    contacts: {},
+    token: {}
 };
 
 export default describe('SendScreen', () => {

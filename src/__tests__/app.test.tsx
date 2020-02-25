@@ -23,7 +23,7 @@ jest.mock('../core/utils/remote-feature-config', () => ({
 }));
 
 jest.mock('../core/utils/exchange-rates', () => ({
-    fetchExchangeRates: jest.fn(() => Promise.resolve({}))
+    fetchExchangeRates: jest.fn(callback => callback({}))
 }));
 
 test('renders correctly', async () => {

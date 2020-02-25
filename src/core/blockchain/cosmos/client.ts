@@ -38,7 +38,7 @@ export class Client extends BlockchainGenericClient {
 
     public async getAccountInfo(
         address: string
-    ): Promise<{ account_number: string; sequence: string }> {
+    ): Promise<{ account_number: string; sequence: number }> {
         try {
             const res = await this.http.get('/auth/accounts/' + address);
             if (res.result) {

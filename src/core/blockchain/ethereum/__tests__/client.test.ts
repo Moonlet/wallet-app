@@ -5,7 +5,7 @@ jest.mock('../../../utils/http-client', () => ({
     HttpClient: class {
         public rpcResult = Promise.resolve();
 
-        public rpcCall() {
+        public jsonRpc() {
             return this.rpcResult;
         }
 

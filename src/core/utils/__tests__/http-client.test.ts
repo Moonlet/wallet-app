@@ -11,7 +11,7 @@ describe('RPC Client', () => {
                     json: () => Promise.resolve({ data: 'data' })
                 })
             );
-            expect(await http.rpcCall('METHOD', ['P1', 'P2'])).toEqual({
+            expect(await http.jsonRpc('METHOD', ['P1', 'P2'])).toEqual({
                 data: 'data'
             });
 
@@ -35,7 +35,7 @@ describe('RPC Client', () => {
                     json: () => Promise.resolve({ data: 'data' })
                 })
             );
-            expect(await http.rpcCall('METHOD')).toEqual({
+            expect(await http.jsonRpc('METHOD')).toEqual({
                 data: 'data'
             });
 
@@ -57,7 +57,7 @@ describe('RPC Client', () => {
             global.fetch = jest.fn(() => Promise.reject('ERROR'));
             try {
                 // @ts-ignore
-                await http.rpcCall('METHOD', 'P1');
+                await http.jsonRpc('METHOD', 'P1');
             } catch (e) {
                 expect(e).toBe('ERROR');
             }

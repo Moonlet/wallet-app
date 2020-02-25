@@ -55,7 +55,7 @@ export const sign = async (tx: IBlockchainTransaction, privateKey: string): Prom
         memo: '',
         chain_id: tx.chainId,
         account_number: tx.additionalInfo.account_number,
-        sequence: tx.additionalInfo.sequence
+        sequence: tx.nonce
     };
 
     const hash = createHash('sha256')
@@ -66,9 +66,7 @@ export const sign = async (tx: IBlockchainTransaction, privateKey: string): Prom
 
     const signObj = secp256k1.sign(buf, bufferPrivateKey);
     const signatureBase64 = Buffer.from(signObj.signature, 'binary').toString('base64');
-
-    // @ts-ignore
-    const publicBase64 = secp256k1.publicKeyCreate(bufferPrivateKey).toString('base64');
+    const publicBase64 = Buffer.from(tx.publicKey, 'hex').toString('base64');
 
     const signedTx = {
         tx: {
@@ -83,7 +81,7 @@ export const sign = async (tx: IBlockchainTransaction, privateKey: string): Prom
                     }
                 }
             ],
-            memo: ''
+            memo: tx.additionalInfo.memo
         },
         // The supported return types includes "block"(return after tx commit), "sync"(return afer CheckTx) and "async"(return right away).
         mode: 'sync'
@@ -116,12 +114,11 @@ export const buildTransferTransaction = async (
         amount: tx.amount,
         feeOptions: tx.feeOptions,
         broadcatedOnBlock: undefined,
-        nonce: 0,
+        nonce: accountInfo.sequence,
         status: TransactionStatus.PENDING,
         additionalInfo: {
             account_number: accountInfo.account_number,
-            memo: tx.extraFields.memo,
-            sequence: accountInfo.sequence
+            memo: tx.extraFields.memo
         }
     };
 };

@@ -1,7 +1,9 @@
 import { IAction } from '../types';
 import { EXCHANGE_RATES_UPDATE } from './actions';
+import { IMarketState } from './state';
 
-const initialState: any = {
+const initialState: IMarketState = {
+    // TODO: empty this
     exchangeRates: {
         BAT: 0.2648,
         BTC: 9805.56,
@@ -61,7 +63,7 @@ const initialState: any = {
     }
 };
 
-export default (state: any = initialState, action: IAction) => {
+export default (state: any = initialState, action: IAction): IMarketState => {
     switch (action.type) {
         case EXCHANGE_RATES_UPDATE:
             return {

@@ -56,7 +56,7 @@ const mapStateToProps = (state: IReduxState) => ({
     blockchains: getBlockchains(state),
     selectedBlockchain: getSelectedBlockchain(state),
     selectedAccount: getSelectedAccount(state),
-    exchangeRates: (state as any).market.exchangeRates,
+    exchangeRates: state.market.exchangeRates,
     isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
     selectedBlockchainAccounts: getSelectedBlockchainAccounts(state)
 });

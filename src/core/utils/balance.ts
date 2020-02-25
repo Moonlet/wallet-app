@@ -51,21 +51,6 @@ export const convertAmount = (
 
     if (value && exchangeRates[fromToken]) {
         return amount.multipliedBy(exchangeRates[fromToken]);
-
-        // if (exchangeRates[fromToken][toToken]) {
-        //     // direct conversion is possible
-        //     return amount.multipliedBy(exchangeRates[fromToken][toToken]);
-        // } else {
-        //     // direct conversion not possible
-        //     const avTokens = Object.keys(exchangeRates[fromToken]);
-        //     for (const avToken of avTokens) {
-        //         if (exchangeRates[avToken] && exchangeRates[avToken][toToken]) {
-        //             return amount
-        //                 .multipliedBy(exchangeRates[fromToken][avToken])
-        //                 .multipliedBy(exchangeRates[avToken][toToken]);
-        //         }
-        //     }
-        // }
     }
 
     return new BigNumber(0);

@@ -9,7 +9,7 @@ export const setupVoipNotification = () => {
     getApnsToken();
 
     VoipPushNotification.addEventListener('notification', notification => {
-        dataMessageHandler(notification.getMessage().data);
+        dataMessageHandler(notification._data);
     });
 };
 

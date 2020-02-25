@@ -9,17 +9,6 @@ export interface IBlockInfo {
     hash?: string;
 }
 
-export interface ITransactionReceipt {
-    transactionHash: string;
-    from: string;
-    to: string;
-    status: number;
-    blockHash: string;
-    blockNumber: number;
-    gasUsed?: number;
-    cumulativeGasUsed?: number;
-}
-
 export abstract class BlockchainGenericClient {
     public readonly tokens: { [type: string]: any } = {};
     public nameService: IBlockchainNameService;

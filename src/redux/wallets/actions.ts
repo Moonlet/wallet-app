@@ -47,7 +47,7 @@ import { Notifications } from '../../core/messaging/notifications/notifications'
 import { formatNumber } from '../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { NotificationType } from '../../core/messaging/types';
-import { addAddress } from '../../address-monitor/index';
+import { addAddress } from '../../core/address-monitor/index';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';

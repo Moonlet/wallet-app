@@ -142,49 +142,63 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async getTransactionInfo(transactionHash): Promise<IBlockchainTransaction<any>> {
-        const txData = await this.rpc
-            .call('GetTransaction', [transactionHash])
-            .then(response => response.result);
-        const toAddress = !isBech32(txData.toAddr) ? toBech32Address(txData.toAddr) : txData.toAddr;
-        let fromAddress = getAddressFromPublicKey(txData.senderPubKey);
+        try {
+            const txData = await this.rpc
+                .call('GetTransaction', [transactionHash])
+                .then(response => {
+                    if (!response.result) {
+                        throw new Error(
+                            response.error.message ||
+                                `Error getting transaction info for ${transactionHash}`
+                        );
+                    }
+                    return response.result;
+                });
 
-        if (!isBech32(fromAddress)) {
-            fromAddress = toBech32Address(fromAddress);
+            const toAddress = !isBech32(txData.toAddr)
+                ? toBech32Address(txData.toAddr)
+                : txData.toAddr;
+            let fromAddress = getAddressFromPublicKey(txData.senderPubKey);
+
+            if (!isBech32(fromAddress)) {
+                fromAddress = toBech32Address(fromAddress);
+            }
+
+            const txStatus = txData.receipt
+                ? txData.receipt.success
+                    ? TransactionStatus.SUCCESS
+                    : TransactionStatus.FAILED
+                : TransactionStatus.PENDING;
+
+            return {
+                id: txData.ID,
+                date: {
+                    created: Date.now(),
+                    signed: Date.now(),
+                    broadcasted: Date.now(),
+                    confirmed: Date.now()
+                },
+                blockchain: Blockchain.ZILLIQA,
+                chainId: this.chainId,
+                type: TransactionType.TRANSFER,
+
+                address: fromAddress,
+                publicKey: txData.senderPubKey,
+
+                toAddress,
+                amount: txData.amount,
+                feeOptions: {
+                    gasPrice: txData.gasPrice,
+                    gasLimit: txData.gasLimit,
+                    feeTotal: txData.receipt?.cumulative_gas
+                },
+                broadcatedOnBlock: txData.receipt?.epoch_num,
+                nonce: txData.nonce,
+                status: txStatus
+            };
+        } catch (error) {
+            return Promise.reject(error.message);
         }
-
-        const txStatus = txData.receipt
-            ? txData.receipt.success
-                ? TransactionStatus.SUCCESS
-                : TransactionStatus.FAILED
-            : TransactionStatus.PENDING;
-
-        return {
-            id: txData.ID,
-            date: {
-                created: Date.now(),
-                signed: Date.now(),
-                broadcasted: Date.now(),
-                confirmed: Date.now()
-            },
-            blockchain: Blockchain.ZILLIQA,
-            chainId: this.chainId,
-            type: TransactionType.TRANSFER,
-
-            address: fromAddress,
-            publicKey: txData.senderPubKey,
-
-            toAddress,
-            amount: txData.amount,
-            feeOptions: {
-                gasPrice: txData.gasPrice,
-                gasLimit: txData.gasLimit,
-                feeTotal: txData.receipt?.cumulative_gas
-            },
-            broadcatedOnBlock: txData.receipt?.epoch_num,
-            nonce: txData.nonce,
-            status: txStatus
-        };
-        return null;
     }
 
     private async estimateFees(): Promise<any> {

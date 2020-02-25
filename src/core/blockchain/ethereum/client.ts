@@ -15,7 +15,7 @@ import abi from 'ethereumjs-abi';
 import { Erc20Client } from './tokens/erc20-client';
 import { TokenType } from '../types/token';
 import { NameService } from './name-service';
-import { getEthStatusByCode } from './utils';
+import { getTransactionStatusByCode } from './transaction';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -198,7 +198,7 @@ export class Client extends BlockchainGenericClient {
                     },
                     broadcatedOnBlock: txInfo.blockNumber,
                     nonce: txInfo.nonce,
-                    status: getEthStatusByCode(txReceipt.status)
+                    status: getTransactionStatusByCode(txReceipt.status)
                 };
             } catch (error) {
                 return Promise.reject(error.message);

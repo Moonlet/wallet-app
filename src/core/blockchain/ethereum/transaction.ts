@@ -4,6 +4,7 @@ import abi from 'ethereumjs-abi';
 import BigNumber from 'bignumber.js';
 import { TokenType } from '../types/token';
 import { TransactionStatus } from '../../wallet/types';
+import { Ethereum } from '.';
 
 export const sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
     const transaction = new Transaction(
@@ -38,8 +39,13 @@ export const getTransactionStatusByCode = (status): TransactionStatus => {
     }
 };
 
-export const buildTransferTransaction = (tx: ITransferTransaction): IBlockchainTransaction => {
+export const buildTransferTransaction = async (
+    tx: ITransferTransaction
+): Promise<IBlockchainTransaction> => {
     const tokenInfo = tx.account.tokens[tx.token];
+
+    const client = Ethereum.getClient(tx.chainId);
+    const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
 
     switch (tokenInfo.type) {
         case TokenType.ERC20:
@@ -62,7 +68,7 @@ export const buildTransferTransaction = (tx: ITransferTransaction): IBlockchainT
                 amount: '0',
                 feeOptions: tx.feeOptions,
                 broadcatedOnBlock: undefined,
-                nonce: tx.nonce,
+                nonce,
                 status: TransactionStatus.PENDING,
 
                 data: {
@@ -95,7 +101,7 @@ export const buildTransferTransaction = (tx: ITransferTransaction): IBlockchainT
                 amount: tx.amount,
                 feeOptions: tx.feeOptions,
                 broadcatedOnBlock: undefined,
-                nonce: tx.nonce,
+                nonce,
                 status: TransactionStatus.PENDING
             };
     }

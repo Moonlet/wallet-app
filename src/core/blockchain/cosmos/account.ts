@@ -1,17 +1,15 @@
 import { IAccountState } from '../../../redux/wallets/state';
-import {
-    getPubKeyFromPrivateKey,
-    getAddressFromPrivateKey,
-    getAddressFromPublicKey
-} from '@zilliqa-js/crypto/dist/util'; // import like this to optimize imports
-import { toBech32Address, fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
-import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { Blockchain } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
 import HDNode from 'hdkey';
 import klona from 'klona';
+import bech32 from 'bech32';
+import { createHash } from 'crypto';
+import secp256k1 from 'secp256k1';
+
+export const ADDRESS_PREFIX = 'cosmos';
 
 export const getAccountDerivationPath = (accountIndex): string => {
     return `${accountIndex}`;
@@ -22,23 +20,34 @@ export const getPrivateKeyFromDerived = (derivedKey: HDNode): string => {
 };
 
 export const isValidChecksumAddress = (address: string): boolean => {
-    return isBech32(address) && fromBech32Address(address) !== undefined;
+    return isValidAddress(address);
 };
 
 export const isValidAddress = (address: string): boolean => {
-    return isBech32(address) && fromBech32Address(address) !== undefined;
+    return /^cosmos1[0-9a-zA-Z]{38}$/.test(address) && bech32.decode(address) !== undefined;
 };
 
 export const publicToAddress = (publicKey: string): string => {
-    return toBech32Address(getAddressFromPublicKey(publicKey));
+    const sha = createHash('sha256')
+        .update(Buffer.from(publicKey, 'hex'))
+        .digest();
+    const words = bech32.toWords(
+        createHash('ripemd160')
+            .update(sha)
+            .digest()
+    );
+    return bech32.encode('cosmos', words);
 };
 
 export const privateToPublic = (privateKey: string): string => {
-    return getPubKeyFromPrivateKey(privateKey);
+    const bufferPrivateKey = Buffer.from(privateKey, 'hex');
+
+    // @ts-ignore
+    return secp256k1.publicKeyCreate(bufferPrivateKey, true).toString('hex');
 };
 
 export const privateToAddress = (privateKey: string): string => {
-    return toBech32Address(getAddressFromPrivateKey(privateKey));
+    return publicToAddress(privateToPublic(privateKey));
 };
 
 export const getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {
@@ -47,7 +56,7 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
         selected: false,
         publicKey: privateToPublic(privateKey),
         address: privateToAddress(privateKey),
-        blockchain: Blockchain.ZILLIQA,
+        blockchain: Blockchain.COSMOS,
         tokens: klona(config.tokens)
     };
 };

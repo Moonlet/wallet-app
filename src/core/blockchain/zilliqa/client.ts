@@ -72,7 +72,7 @@ export class Client extends BlockchainGenericClient {
     }
 
     public sendTransaction(transaction): Promise<string> {
-        return this.rpc.call('CreateTransaction', [transaction]).then(res => {
+        return this.http.jsonRpc('CreateTransaction', [transaction]).then(res => {
             if (res.result) {
                 return res.result.TranID;
             }
@@ -86,7 +86,7 @@ export class Client extends BlockchainGenericClient {
 
     public async call(method: string, params: any[] = []): Promise<any> {
         try {
-            const result = await this.rpc.call(method, params);
+            const result = await this.http.jsonRpc(method, params);
             if (result.error) {
                 return Promise.reject(result);
             }
@@ -143,7 +143,7 @@ export class Client extends BlockchainGenericClient {
 
     public async getTransactionInfo(transactionHash): Promise<IBlockchainTransaction<any>> {
         try {
-            const txData = await this.rpc
+            const txData = await this.http.jsonRpc
                 .call('GetTransaction', [transactionHash])
                 .then(response => {
                     if (!response.result) {
@@ -202,6 +202,6 @@ export class Client extends BlockchainGenericClient {
     }
 
     private async estimateFees(): Promise<any> {
-        return this.rpc.call('GetMinimumGasPrice', []);
+        return this.http.jsonRpc('GetMinimumGasPrice', []);
     }
 }

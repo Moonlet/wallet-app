@@ -3,7 +3,8 @@ import {
     Blockchain,
     IFeeOptions,
     TransactionMessageText,
-    TransactionMessageType
+    TransactionMessageType,
+    ITransferTransactionExtraFields
 } from '../../core/blockchain/types';
 import { WalletType, IWallet } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
@@ -242,7 +243,12 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ETHEREUM, 1),
             wallet.getAccounts(Blockchain.ETHEREUM, 2),
             wallet.getAccounts(Blockchain.ETHEREUM, 3),
-            wallet.getAccounts(Blockchain.ETHEREUM, 4)
+            wallet.getAccounts(Blockchain.ETHEREUM, 4),
+            wallet.getAccounts(Blockchain.COSMOS, 0),
+            wallet.getAccounts(Blockchain.COSMOS, 1),
+            wallet.getAccounts(Blockchain.COSMOS, 2),
+            wallet.getAccounts(Blockchain.COSMOS, 3),
+            wallet.getAccounts(Blockchain.COSMOS, 4)
         ]).then(async data => {
             data[0][0].selected = true; // first zil account
             data[5][0].selected = true; // first eth account
@@ -335,9 +341,10 @@ export const getBalance = (
 
                 let balance;
                 switch (tokenInfo.type) {
-                    case TokenType.NATIVE:
+                    case TokenType.NATIVE: {
                         balance = await client.getBalance(address);
                         break;
+                    }
                     default:
                         if (client.tokens[tokenInfo.type]) {
                             balance = await client.tokens[tokenInfo.type].getBalance(
@@ -463,6 +470,7 @@ export const sendTransferTransaction = (
     feeOptions: IFeeOptions,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
+    extraFields: ITransferTransactionExtraFields,
     goBack: boolean = true
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
@@ -492,12 +500,8 @@ export const sendTransferTransaction = (
             connectionType: appWallet.hwOptions?.connectionType
         }); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
-        const client = blockchainInstance.getClient(chainId);
 
-        const nonce = await client.getNonce(account.address, account.publicKey);
-        const blockInfo = await client.getCurrentBlock();
-
-        const tx = blockchainInstance.transaction.buildTransferTransaction({
+        const tx = await blockchainInstance.transaction.buildTransferTransaction({
             chainId,
             account,
             toAddress,
@@ -505,13 +509,11 @@ export const sendTransferTransaction = (
                 .amountToStd(amount, account.tokens[token].decimals)
                 .toFixed(),
             token,
-            nonce,
-            currentBlockHash: blockInfo.hash,
-            currentBlockNumber: blockInfo.number,
             feeOptions: {
                 gasPrice: feeOptions.gasPrice.toString(),
                 gasLimit: feeOptions.gasLimit.toString()
-            }
+            },
+            extraFields
         });
 
         if (appWallet.type === WalletType.HW) {

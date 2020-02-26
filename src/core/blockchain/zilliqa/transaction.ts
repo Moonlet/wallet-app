@@ -40,7 +40,7 @@ export const sign = async (tx: IBlockchainTransaction, privateKey: string): Prom
         gasPrice: new BN(tx.feeOptions.gasPrice.toString()),
         gasLimit: Long.fromString(tx.feeOptions.gasLimit.toString()),
         code: '',
-        data: tx.data?.raw,
+        data: tx.data?.raw || '',
         signature: '',
         priority: true
     };

@@ -23,6 +23,10 @@ jest.mock('../core/utils/remote-feature-config', () => ({
     getRemoteConfigFeatures: jest.fn(() => Promise.resolve({}))
 }));
 
+jest.mock('../core/utils/exchange-rates', () => ({
+    subscribeExchangeRates: jest.fn(callback => callback({}))
+}));
+
 test('renders correctly', async () => {
     const wrapper = shallow(<App />);
     const element: any = wrapper.instance();

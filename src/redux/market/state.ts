@@ -1,3 +1,4 @@
-export interface IMarket {
-    someVal: number;
+export interface IMarketState {
+    exchangeRates: { [tokenType: string]: number };
+    change: any;
 }

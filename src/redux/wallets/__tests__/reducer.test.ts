@@ -1,6 +1,8 @@
 import reducer from '../reducer';
 import { WALLET_ADD, SELECT_WALLET } from '../actions';
 
+jest.mock('../../config');
+
 describe('wallets reducer', () => {
     test('should set initial state', () => {
         expect(

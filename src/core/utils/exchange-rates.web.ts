@@ -1,1 +1,1 @@
-export const fetchExchangeRates = (callback: any) => callback({});
+export const subscribeExchangeRates = (callback: any) => callback({});

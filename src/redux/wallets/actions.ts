@@ -417,7 +417,7 @@ export const updateTransactionFromBlockchain = (
                 new BigNumber(transaction.amount)
             );
             const formattedAmount = formatNumber(amount, {
-                currency: getBlockchain(blockchain).config.coin
+                currency: blockchainInstance.config.coin
             });
 
             // select notification wallet and account

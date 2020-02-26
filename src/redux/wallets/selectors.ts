@@ -81,7 +81,12 @@ export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainT
     const transactions = selectedWallet.transactions;
     if (transactions) {
         return Object.values(selectedWallet.transactions)
-            .filter(tx => tx.address === account.address && tx.blockchain === blockchain)
+            .filter(
+                tx =>
+                    (tx.address.toLowerCase() === account.address.toLowerCase() ||
+                        tx.toAddress.toLowerCase() === account.address.toLowerCase()) &&
+                    tx.blockchain === blockchain
+            )
             .sort(
                 (tx1: IBlockchainTransaction, tx2: IBlockchainTransaction) =>
                     tx2.date?.signed - tx1.date?.signed

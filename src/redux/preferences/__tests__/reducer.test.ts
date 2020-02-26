@@ -2,6 +2,8 @@ import reducer from '../reducer';
 import * as actions from '../actions';
 import { Blockchain } from '../../../core/blockchain/types';
 
+jest.mock('../../config');
+
 describe('preferences reducer', () => {
     test('should set initial state', () => {
         expect(

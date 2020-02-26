@@ -70,3 +70,4 @@ ios/Gemfile.lock
 android/app/google-services.json
 ios/GoogleService-Info.plist
 rpc.http
+test.js

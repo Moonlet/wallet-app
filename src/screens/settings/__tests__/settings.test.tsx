@@ -6,6 +6,8 @@ import styleProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import { loadTranslations } from '../../../core/i18n';
 
+jest.mock('../../../redux/config');
+
 const props: IProps & IReduxProps = {
     // @ts-ignore
     navigation: {

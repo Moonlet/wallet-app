@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { StatusBar, Platform, AppState, AppStateStatus } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { RootNavigation } from './navigation/navigation';
-import configureStore from './redux/config';
+import { store } from './redux/config';
 import { PersistGate } from 'redux-persist/integration/react';
 import { darkTheme } from './styles/themes/dark-theme';
 import { ThemeContext } from './core/theme/theme-contex';
@@ -23,10 +23,11 @@ import { ImageCanvas } from './components/image-canvas/image-canvas';
 import { LoadingModal } from './components/loading-modal/loading-modal';
 import { subscribeExchangeRates } from './core/utils/exchange-rates';
 import { updateExchangeRates } from './redux/market/actions';
+import { takeOneAndSubscribeToStore } from './redux/utils/helpers';
 
 const AppContainer = createAppContainer(RootNavigation);
 
-const store = configureStore();
+// const store = configureStore();
 const persistor = persistStore(store);
 
 const APP_STATE_ACTIVE: AppStateStatus = 'active';
@@ -43,16 +44,6 @@ interface IState {
 
 WalletConnectClient.setStore(store);
 WalletConnectWeb.setStore(store);
-
-const takeOneAndSubscribeToStore = (reduxStore, callback) => {
-    const state = reduxStore?.getState();
-
-    if (state) {
-        callback(state);
-    }
-
-    return reduxStore.subscribe(() => callback(reduxStore.getState()));
-};
 
 export default class App extends React.Component<{}, IState> {
     public interval: any = null;

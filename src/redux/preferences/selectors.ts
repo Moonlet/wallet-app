@@ -47,6 +47,10 @@ export const getNetworks = createSelector(
                     if (isFeatureActive(RemoteFeature.NEAR) === true) {
                         networks[blockchain] = network;
                     }
+                } else if (blockchain === Blockchain.COSMOS) {
+                    if (isFeatureActive(RemoteFeature.COSMOS) === true) {
+                        networks[blockchain] = network;
+                    }
                 } else {
                     networks[blockchain] = network;
                 }
@@ -124,6 +128,10 @@ export const getBlockchains = createSelector(
 
             if (blockchain === Blockchain.NEAR) {
                 if (isFeatureActive(RemoteFeature.NEAR) === true) {
+                    blockchains.push(object.key);
+                }
+            } else if (blockchain === Blockchain.COSMOS) {
+                if (isFeatureActive(RemoteFeature.COSMOS) === true) {
                     blockchains.push(object.key);
                 }
             } else if (blockchain) {

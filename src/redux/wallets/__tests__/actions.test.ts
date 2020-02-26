@@ -1,5 +1,7 @@
 import { addWallet, createHDWallet, setSelectedWallet } from '../actions';
 
+jest.mock('../../config');
+
 jest.mock('../../../core/secure/keychain', () => {
     return {
         getPassword: () => Promise.resolve({ password: 'pass' })

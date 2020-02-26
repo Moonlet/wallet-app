@@ -1,11 +1,11 @@
 import { Zilliqa } from '../';
 import BigNumber from 'bignumber.js';
 
-jest.mock('../../../utils/rpc-client', () => ({
-    RpcClient: class {
+jest.mock('../../../utils/http-client', () => ({
+    HttpClient: class {
         public rpcResult = Promise.resolve();
 
-        public call() {
+        public jsonRpc() {
             return this.rpcResult;
         }
 
@@ -20,7 +20,7 @@ describe('Zilliqa client', () => {
         const client = Zilliqa.getClient(1);
 
         // @ts-ignore
-        client.rpc.setRpcResult(
+        client.http.setRpcResult(
             Promise.resolve({
                 result: {
                     balance: '123'
@@ -32,7 +32,7 @@ describe('Zilliqa client', () => {
         );
 
         // @ts-ignore
-        client.rpc.setRpcResult(
+        client.http.setRpcResult(
             Promise.resolve({
                 error: {
                     message: 'Account is not created'
@@ -44,7 +44,7 @@ describe('Zilliqa client', () => {
         );
 
         // @ts-ignore
-        client.rpc.setRpcResult(Promise.reject('ERROR'));
+        client.http.setRpcResult(Promise.reject('ERROR'));
         try {
             await client.getBalance('zil16dnnka6yaa9mdu32gararzwv5vg369p0zkhps7');
         } catch (e) {

@@ -64,6 +64,9 @@ export class BlockchainPortfolioComponent extends React.Component<
         if (item.key === Blockchain.NEAR && isFeatureActive(RemoteFeature.NEAR) === false) {
             return <View />;
         }
+        if (item.key === Blockchain.COSMOS && isFeatureActive(RemoteFeature.COSMOS) === false) {
+            return <View />;
+        }
 
         return (
             <View

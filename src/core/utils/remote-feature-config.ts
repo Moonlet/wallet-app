@@ -3,15 +3,17 @@ import DeviceInfo from 'react-native-device-info';
 
 export enum RemoteFeature {
     NEAR = 'feature_near',
+    COSMOS = 'feature_cosmos',
     DEV_TOOLS = 'dev_tools'
 }
 
 let featuresConfig;
 
 export const getRemoteConfigFeatures = async () => {
-    // TODO: decide if 1 hour should be the optimal fetch duration
-    // set fetch cache duration to 1 hour for live environment
-    let duration = 900;
+    // TODO: decide if 15 min should be the optimal fetch duration
+    // set fetch cache duration to 15 min for live environment
+    // TODO - before launch set duration back to 15 minutes
+    let duration = 0;
     if (__DEV__) {
         firebase.config().enableDeveloperMode();
         duration = 0;
@@ -21,7 +23,7 @@ export const getRemoteConfigFeatures = async () => {
     await firebase.config().activateFetched();
     const objects = await firebase
         .config()
-        .getValues([RemoteFeature.NEAR, RemoteFeature.DEV_TOOLS]);
+        .getValues([RemoteFeature.NEAR, RemoteFeature.COSMOS, RemoteFeature.DEV_TOOLS]);
 
     featuresConfig = {};
     // Retrieve values
@@ -36,11 +38,17 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
     if (__DEV__) {
         return true;
     }
-    if (feature === RemoteFeature.NEAR || feature === RemoteFeature.DEV_TOOLS) {
+    if (
+        feature === RemoteFeature.NEAR ||
+        feature === RemoteFeature.COSMOS ||
+        feature === RemoteFeature.DEV_TOOLS
+    ) {
         const values = JSON.parse(featuresConfig[feature]);
-        const uniqueId = values.filter(id => id === DeviceInfo.getUniqueId());
-        if (uniqueId.length) {
-            return true;
+        if (values.length > 0) {
+            const uniqueId = values.filter(id => id === DeviceInfo.getUniqueId());
+            if (uniqueId.length) {
+                return true;
+            }
         }
     }
     return false;

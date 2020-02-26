@@ -143,7 +143,7 @@ export class Client extends BlockchainGenericClient {
 
     public async getTransactionInfo(transactionHash): Promise<IBlockchainTransaction<any>> {
         try {
-            const txData = await this.rpc
+            const txData = await this.http.jsonRpc
                 .call('GetTransaction', [transactionHash])
                 .then(response => {
                     if (!response.result) {

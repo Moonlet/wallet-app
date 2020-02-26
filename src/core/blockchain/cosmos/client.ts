@@ -10,6 +10,12 @@ export class Client extends BlockchainGenericClient {
         this.nameService = new NameService();
     }
 
+    public getTransactionInfo(
+        transactionHash: string[]
+    ): Promise<import('../types').IBlockchainTransaction<any>> {
+        throw new Error('Method not implemented.');
+    }
+
     public async getBalance(address: string): Promise<BigNumber> {
         try {
             const symbolMap = config.tokens[config.coin].symbolMap;

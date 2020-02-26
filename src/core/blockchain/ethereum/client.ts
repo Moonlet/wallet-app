@@ -154,8 +154,8 @@ export class Client extends BlockchainGenericClient {
 
     public getTransactionInfo(transactionHash): Promise<IBlockchainTransaction<any>> {
         const rpcCalls = [
-            this.rpc.call('eth_getTransactionByHash', transactionHash),
-            this.rpc.call('eth_getTransactionReceipt', transactionHash)
+            this.http.jsonRpc('eth_getTransactionByHash', transactionHash),
+            this.http.jsonRpc('eth_getTransactionReceipt', transactionHash)
         ];
 
         return Promise.all(rpcCalls).then(res => {

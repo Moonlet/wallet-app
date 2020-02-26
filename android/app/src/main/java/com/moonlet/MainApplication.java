@@ -16,6 +16,8 @@ import java.util.List;
 import io.invertase.firebase.messaging.RNFirebaseMessagingPackage;
 import io.invertase.firebase.config.RNFirebaseRemoteConfigPackage;
 import io.invertase.firebase.notifications.RNFirebaseNotificationsPackage;
+import io.invertase.firebase.database.RNFirebaseDatabasePackage;
+
 public class MainApplication extends MultiDexApplication implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
@@ -35,6 +37,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
       packages.add(new RNFirebaseNotificationsPackage());
       packages.add(new CustomPreventScreenshotPackage());
       packages.add(new RNFirebaseRemoteConfigPackage());
+      packages.add(new RNFirebaseDatabasePackage());
 
       return packages;
     }

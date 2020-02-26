@@ -50,6 +50,7 @@ export interface IReduxProps {
     isRecoverAccount: boolean;
     selectedBlockchainAccounts: IAccountState[];
     enableCreateAccount: typeof enableCreateAccount;
+    userCurrency: string;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -60,10 +61,11 @@ const mapStateToProps = (state: IReduxState) => ({
     blockchains: getBlockchains(state),
     selectedBlockchain: getSelectedBlockchain(state),
     selectedAccount: getSelectedAccount(state),
-    exchangeRates: (state as any).market.exchangeRates,
+    exchangeRates: state.market.exchangeRates,
     isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
     isRecoverAccount: state.ui.screens.dashboard.isRecoverAccount,
-    selectedBlockchainAccounts: getSelectedBlockchainAccounts(state)
+    selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
+    userCurrency: state.preferences.currency
 });
 
 const mapDispatchToProps = {
@@ -256,7 +258,7 @@ export class DashboardScreenComponent extends React.Component<
                                     )}
                                     blockchain={blockchain}
                                     currency={getBlockchain(blockchain).config.coin}
-                                    toCurrency="USD"
+                                    toCurrency={this.props.userCurrency}
                                     active={true}
                                     selectedAccount={this.props.selectedAccount}
                                 />

@@ -5,7 +5,7 @@ exports[`SendScreen Buton should open qr-code 1`] = `
   <withTheme(Connect(TestnetBadgeComponent)) />
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} token={[undefined]} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
        
@@ -33,7 +33,7 @@ exports[`SendScreen should Call verify address 1`] = `
   <withTheme(Connect(TestnetBadgeComponent)) />
   <ScrollViewMock showsVerticalScrollIndicator={false} contentContainerStyle={{...}}>
     <View style={{...}}>
-      <withTheme(AccountAddressComponent) account={{...}} token={[undefined]} />
+      <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
     </View>
     <withTheme(TextComponent) style={{...}}>
       Recipient

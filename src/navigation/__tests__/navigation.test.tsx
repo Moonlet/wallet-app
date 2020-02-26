@@ -3,6 +3,8 @@ import { menuIcon } from '../utils';
 
 jest.mock('../utils');
 
+jest.mock('../../redux/config');
+
 export default describe('Navigation', () => {
     describe('configuration', () => {
         test('config is ok', () => {

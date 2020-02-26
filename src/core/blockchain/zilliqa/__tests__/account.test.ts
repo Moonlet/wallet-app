@@ -4,7 +4,7 @@ import {
     getAddressFromPrivateKey,
     getAddressFromPublicKey
 } from '@zilliqa-js/crypto/dist/util'; // import like this to optimize imports
-import { toBech32Address } from '@zilliqa-js/crypto/dist/bech32';
+import { toBech32Address, fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 
 jest.mock('@zilliqa-js/crypto/dist/util', () => {
@@ -22,7 +22,8 @@ jest.mock('@zilliqa-js/util/dist/validation', () => ({
 }));
 
 jest.mock('@zilliqa-js/crypto/dist/bech32', () => ({
-    toBech32Address: jest.fn().mockReturnValue('BECH32_ADDRESS')
+    toBech32Address: jest.fn().mockReturnValue('BECH32_ADDRESS'),
+    fromBech32Address: jest.fn().mockReturnValue('BECH32_ADDRESS')
 }));
 
 const clearMocks = () => {

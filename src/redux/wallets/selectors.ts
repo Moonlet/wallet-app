@@ -57,7 +57,8 @@ export const getAccountFilteredTransactions = (
         return Object.values(selectedWallet.transactions)
             .filter(
                 tx =>
-                    tx.address === account.address &&
+                    (tx.address.toLowerCase() === account.address.toLowerCase() ||
+                        tx.toAddress.toLowerCase() === account.address.toLowerCase()) &&
                     tx.blockchain === blockchain &&
                     tx.chainId === chainId &&
                     tx.token?.symbol === token.symbol
@@ -115,4 +116,18 @@ export const getAccount = (
 ): IAccountState =>
     getSelectedWallet(state).accounts.find(
         acc => acc.index === accountIndex && acc.blockchain === blockchain
+    );
+
+// search for wallet that contains specific address and return it
+export const getWalletWithAddress = (
+    state: IReduxState,
+    addresses: string[],
+    blockchain: Blockchain
+): IWalletState[] =>
+    Object.values(state.wallets).filter(wallet =>
+        (wallet.accounts || []).some(
+            account =>
+                account.blockchain === blockchain &&
+                addresses.includes(account.address.toLowerCase())
+        )
     );

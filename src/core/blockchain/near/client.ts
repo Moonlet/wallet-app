@@ -22,6 +22,11 @@ export class Client extends BlockchainGenericClient {
 
         this.nameService = new NameService(this);
     }
+    public getTransactionInfo(
+        transactionHash: string[]
+    ): Promise<import('../types').IBlockchainTransaction<any>> {
+        throw new Error('Method not implemented.');
+    }
 
     public async getBalance(address: string): Promise<BigNumber> {
         try {
@@ -33,13 +38,13 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async getNonce(address: string, publicKey?: string): Promise<number> {
-        const res = await this.rpc.call('query', [`access_key/${address}/${publicKey}`, '']);
+        const res = await this.http.jsonRpc('query', [`access_key/${address}/${publicKey}`, '']);
 
         return res.result.nonce + 1;
     }
 
     public async getCurrentBlock(): Promise<IBlockInfo> {
-        const res = await this.rpc.call('status');
+        const res = await this.http.jsonRpc('status');
 
         return {
             number: res?.result?.sync_info?.latest_block_height,
@@ -48,7 +53,7 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async sendTransaction(signedTransaction): Promise<string> {
-        const res = await this.rpc.call('broadcast_tx_commit', [signedTransaction]);
+        const res = await this.http.jsonRpc('broadcast_tx_commit', [signedTransaction]);
 
         return res?.result?.transaction?.hash;
     }
@@ -72,7 +77,7 @@ export class Client extends BlockchainGenericClient {
 
     public async getAccount(accountId: string): Promise<INearAccount> {
         try {
-            const res = await this.rpc.call('query', [`account/${accountId}`, '']);
+            const res = await this.http.jsonRpc('query', [`account/${accountId}`, '']);
 
             if (res.result) {
                 // account id already taken
@@ -105,7 +110,7 @@ export class Client extends BlockchainGenericClient {
         const SENDER_PRIVATE_KEY =
             'ed25519:47XC2WW9NWmnvpAE48Jjy8qdgrEjHaovXFDGUrFhKnvvD1mv8PAtSav97wroJx5E8fd3Z2zQGZwRA7e3krzQAm49';
 
-        const status = await this.rpc.call('status');
+        const status = await this.http.jsonRpc('status');
         const amount = new BN('10000000000000000000000');
 
         // transaction actions
@@ -140,7 +145,7 @@ export class Client extends BlockchainGenericClient {
         const signedTx = await signTransaction(tx, signer, SENDER_ACCOUNT_ID, chainId.toString());
 
         // send transaction
-        const res = await this.rpc.call('broadcast_tx_commit', [
+        const res = await this.http.jsonRpc('broadcast_tx_commit', [
             Buffer.from(signedTx[1].encode()).toString('base64')
         ]);
 

@@ -17,6 +17,9 @@ export interface ITokenConfig {
     units?: {
         [unit: string]: BigNumber;
     };
+    symbolMap?: {
+        [testnet: string]: string;
+    };
     order: number;
     active: boolean;
     balance?: {

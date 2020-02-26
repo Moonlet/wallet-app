@@ -173,6 +173,7 @@ export class TokenScreenComponent extends React.Component<
                                     feeOptions,
                                     password,
                                     this.props.navigation,
+                                    {},
                                     false
                                 );
                             })

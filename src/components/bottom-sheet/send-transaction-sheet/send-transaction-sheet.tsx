@@ -61,9 +61,9 @@ export class SendTransactionBottomSheetComponent extends React.Component<
                         style={[
                             styles.message,
                             this.props.sendTransactionMessage.type ===
-                                TransactionMessageType.ERROR ?? styles.messageError,
+                                TransactionMessageType.ERROR && styles.messageError,
                             this.props.sendTransactionMessage.type ===
-                                TransactionMessageType.WARNING ?? styles.messageWarning
+                                TransactionMessageType.WARNING && styles.messageWarning
                         ]}
                     >
                         {translate('Send.' + this.props.sendTransactionMessage.message, {

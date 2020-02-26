@@ -8,6 +8,7 @@ import { shallow } from 'enzyme';
 import { delay } from '../core/utils/time';
 import * as storeMock from '../redux/config';
 
+jest.mock('../redux/utils/persistConfig');
 jest.mock('../redux/config');
 
 jest.mock('../core/i18n/translation/translate', () => ({

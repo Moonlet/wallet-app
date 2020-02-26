@@ -47,7 +47,7 @@ export const AmountComponent = (props: IExternalProps & IReduxProps) => {
 };
 
 const mapStateToProps = (state: IReduxState) => ({
-    exchangeRates: (state as any).market.exchangeRates,
+    exchangeRates: state.market.exchangeRates,
     userCurrency: state.preferences.currency
 });
 

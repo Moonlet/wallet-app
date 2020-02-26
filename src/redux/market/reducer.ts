@@ -1,46 +1,9 @@
 import { IAction } from '../types';
+import { EXCHANGE_RATES_UPDATE } from './actions';
+import { IMarketState } from './state';
 
-const initialState = {
-    exchangeRates: {
-        // Native Tokens
-        ZIL: {
-            USD: 0.004778,
-            EUR: 0.004293,
-            JPY: 0.5241,
-            SGD: 0.006416,
-            CNY: 0.03273,
-            USDT: 0.004723,
-            DAI: 0.004802
-        },
-        ETH: {
-            USD: 150.76,
-            EUR: 135.54,
-            JPY: 16481.83,
-            SGD: 202.43,
-            CNY: 1032.85,
-            USDT: 150.85,
-            DAI: 151.15,
-            BTC: 0.017713
-        },
-
-        // ERC20 Tokens
-        LEO: { ETH: 0.005713 },
-        LINK: { ETH: 0.01501 },
-        HT: { ETH: 0.02053 },
-        HEDG: { ETH: 0.01471 },
-        CRO: { ETH: 0.0002848 },
-        MKR: { ETH: 3.246 },
-        USDC: { ETH: 0.006639 },
-        BAT: { ETH: 0.001281 },
-        PAX: { ETH: 0.006644 },
-        SNX: { ETH: 0.006693 },
-        OKB: { ETH: 0.01938 },
-        ZRX: { ETH: 0.001475 },
-        CENNZ: { ETH: 0.0005804 },
-        SXP: { ETH: 0.009383 },
-        KCS: { ETH: 0.00701 },
-        FAU: { ETH: 0.007 }
-    },
+const initialState: IMarketState = {
+    exchangeRates: {},
     change: {
         daily: {
             USD: {
@@ -77,8 +40,17 @@ const initialState = {
     }
 };
 
-const intialState: any = initialState;
+export default (state: any = initialState, action: IAction): IMarketState => {
+    switch (action.type) {
+        case EXCHANGE_RATES_UPDATE:
+            return {
+                ...state,
+                exchangeRates: action.data
+            };
 
-export default (state: any = intialState, action: IAction): any => {
-    return intialState;
+        default:
+            break;
+    }
+
+    return state;
 };

@@ -2,9 +2,9 @@ import { IAction } from '../types';
 import { IContactsState } from './state';
 import { CONTACT_ADD, CONTACT_DELETE, CONTACT_UPDATE_NAME } from './actions';
 
-const intialState: IContactsState = {};
+const initialState: IContactsState = {};
 
-export default (state: IContactsState = intialState, action: IAction) => {
+export default (state: IContactsState = initialState, action: IAction) => {
     switch (action.type) {
         case CONTACT_ADD:
             return {

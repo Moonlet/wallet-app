@@ -4,7 +4,7 @@ import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, IWalletState } from '../../redux/wallets/state';
 import {
-    getAccountTransactions,
+    getAccountFilteredTransactions,
     getAccount,
     getSelectedWallet
 } from '../../redux/wallets/selectors';
@@ -32,6 +32,7 @@ import { sendTransferTransaction, getBalance } from '../../redux/wallets/actions
 import { Dialog } from '../../components/dialog/dialog';
 import { getChainId } from '../../redux/preferences/selectors';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
+import { ITokenConfig } from '../../core/blockchain/types/token';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -50,7 +51,12 @@ export interface IReduxProps {
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        transactions: getAccountTransactions(state, ownProps.accountIndex, ownProps.blockchain),
+        transactions: getAccountFilteredTransactions(
+            state,
+            ownProps.accountIndex,
+            ownProps.blockchain,
+            ownProps.token
+        ),
         wallet: getSelectedWallet(state),
         extensionTransactionPayload: ownProps.extensionTransactionPayload,
         chainId: getChainId(state, ownProps.blockchain)
@@ -66,6 +72,7 @@ export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
     extensionTransactionPayload: any; // TODO add typing
+    token: ITokenConfig;
 }
 
 interface IState {
@@ -197,8 +204,7 @@ export class TokenScreenComponent extends React.Component<
     public openSettingsMenu = () => this.setState({ settingsVisible: !this.state.settingsVisible });
 
     public render() {
-        const { styles, navigation, account, transactions } = this.props;
-        const { token } = this.props.navigation.state.params;
+        const { styles, navigation, account, transactions, token } = this.props;
 
         return (
             <View style={styles.container}>

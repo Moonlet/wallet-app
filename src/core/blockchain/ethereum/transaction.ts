@@ -26,6 +26,19 @@ export const sign = async (tx: IBlockchainTransaction, privateKey: string): Prom
     return '0x' + transaction.serialize().toString('hex');
 };
 
+export const getTransactionStatusByCode = (status): TransactionStatus => {
+    switch (parseInt(status, 16)) {
+        case 0:
+            return TransactionStatus.FAILED;
+        case 1:
+            return TransactionStatus.SUCCESS;
+        case 2:
+            return TransactionStatus.PENDING;
+        default:
+            return TransactionStatus.FAILED;
+    }
+};
+
 export const buildTransferTransaction = async (
     tx: ITransferTransaction
 ): Promise<IBlockchainTransaction> => {

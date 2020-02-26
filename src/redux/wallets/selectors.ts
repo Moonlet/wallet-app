@@ -48,8 +48,11 @@ export const getAccountTransactions = (
     );
     const transactions = getSelectedWallet(state).transactions;
     if (transactions) {
-        return Object.values(getSelectedWallet(state).transactions).filter(
-            tx => tx.address === account.address
+        return Object.values(transactions).filter(
+            tx =>
+                blockchain === tx.blockchain &&
+                (tx.address.toLowerCase() === account.address.toLowerCase() ||
+                    tx.toAddress.toLowerCase() === account.address.toLowerCase())
         );
     }
 };
@@ -95,4 +98,18 @@ export const getAccount = (
 ): IAccountState =>
     getSelectedWallet(state).accounts.find(
         acc => acc.index === accountIndex && acc.blockchain === blockchain
+    );
+
+// search for wallet that contains specific address and return it
+export const getWalletWithAddress = (
+    state: IReduxState,
+    addresses: string[],
+    blockchain: Blockchain
+): IWalletState[] =>
+    Object.values(state.wallets).filter(wallet =>
+        (wallet.accounts || []).some(
+            account =>
+                account.blockchain === blockchain &&
+                addresses.includes(account.address.toLowerCase())
+        )
     );

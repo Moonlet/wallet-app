@@ -11,6 +11,7 @@ import { getBlockchain } from '../blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { formatAddress } from '../utils/format-address';
 import { getApnsToken } from '../messaging/silent/ios-voip-push-notification';
+import { NotificationType } from '../messaging/types';
 
 const clientMeta: any = {
     description: 'Moonlet Wallet App',
@@ -108,7 +109,10 @@ export const WalletConnectClient = (() => {
                                 account.address,
                                 account.blockchain
                             )} to ${formatAddress(toAddress, account.blockchain)}`,
-                            payload
+                            {
+                                type: NotificationType.EXTENSION_TRANSACTION,
+                                data: payload
+                            }
                         );
                     } else {
                         signExtensionTransaction(payload);

@@ -65,6 +65,7 @@ export const getAccountFilteredTransactions = (
     token: ITokenConfig
 ): IBlockchainTransaction[] => {
     const selectedWallet = getSelectedWallet(state);
+    const chainId = getChainId(state, blockchain);
 
     const account: IAccountState = selectedWallet.accounts.find(
         acc => acc.index === accountIndex && acc.blockchain === blockchain
@@ -76,7 +77,7 @@ export const getAccountFilteredTransactions = (
                 tx =>
                     tx.address === account.address &&
                     tx.blockchain === blockchain &&
-                    tx.chainId === getChainId(state, blockchain) &&
+                    tx.chainId === chainId &&
                     tx.token?.symbol === token.symbol
             )
             .sort(
@@ -89,15 +90,19 @@ export const getAccountFilteredTransactions = (
 export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainTransaction[] => {
     const selectedWallet = getSelectedWallet(state);
     const selectedAccount = getSelectedAccount(state);
+    const blockchain = getSelectedBlockchain(state);
 
     const account: IAccountState = selectedWallet.accounts.find(
         acc => acc.index === selectedAccount.index && acc.blockchain === selectedAccount.blockchain
     );
     const transactions = selectedWallet.transactions;
     if (transactions) {
-        return Object.values(selectedWallet.transactions).filter(
-            tx => tx.address === account.address
-        );
+        return Object.values(selectedWallet.transactions)
+            .filter(tx => tx.address === account.address && tx.blockchain === blockchain)
+            .sort(
+                (tx1: IBlockchainTransaction, tx2: IBlockchainTransaction) =>
+                    tx2.date?.signed - tx1.date?.signed
+            );
     }
 };
 

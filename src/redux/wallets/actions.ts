@@ -3,7 +3,8 @@ import {
     Blockchain,
     IFeeOptions,
     TransactionMessageText,
-    TransactionMessageType
+    TransactionMessageType,
+    ITransferTransactionExtraFields
 } from '../../core/blockchain/types';
 import { WalletType, IWallet } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
@@ -31,7 +32,12 @@ import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
 import { BottomSheetType } from '../ui/bottomSheet/state';
 import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
-import { getSelectedWallet, getAccounts, getSelectedAccount } from './selectors';
+import {
+    getSelectedWallet,
+    getAccounts,
+    getSelectedAccount,
+    getWalletWithAddress
+} from './selectors';
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import {
@@ -41,6 +47,12 @@ import {
 } from '../ui/screens/dashboard/actions';
 import { openLoadingModal, closeLoadingModal } from '../ui/loading-modal/actions';
 import { delay } from '../../core/utils/time';
+import { formatAddress } from '../../core/utils/format-address';
+import { Notifications } from '../../core/messaging/notifications/notifications';
+import { formatNumber } from '../../core/utils/format-number';
+import BigNumber from 'bignumber.js';
+import { NotificationType } from '../../core/messaging/types';
+import { addAddress } from '../../core/address-monitor/index';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -48,6 +60,7 @@ export const WALLET_DELETE = 'WALLET_DELETE';
 export const WALLET_CHANGE_NAME = 'WALLET_CHANGE_NAME';
 export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
+export const TRANSACTION_UPSERT = 'TRANSACTION_UPSERT';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
 export const TOGGLE_TOKEN_ACTIVE = 'TOGGLE_TOKEN_ACTIVE';
@@ -57,6 +70,12 @@ export const ADD_TOKEN = 'ADD_TOKEN';
 export const WALLET_SELECT_ACCOUNT = 'WALLET_SELECT_ACCOUNT';
 export const WALLET_SELECT_BLOCKCHAIN = 'WALLET_SELECT_BLOCKCHAIN';
 export const SELECT_WALLET = 'SELECT_WALLET';
+
+// will get this from settings for prod/dev
+const blockchainChainId = {
+    [Blockchain.ETHEREUM]: 3,
+    [Blockchain.ZILLIQA]: 333
+};
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -230,7 +249,12 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ETHEREUM, 1),
             wallet.getAccounts(Blockchain.ETHEREUM, 2),
             wallet.getAccounts(Blockchain.ETHEREUM, 3),
-            wallet.getAccounts(Blockchain.ETHEREUM, 4)
+            wallet.getAccounts(Blockchain.ETHEREUM, 4),
+            wallet.getAccounts(Blockchain.COSMOS, 0),
+            wallet.getAccounts(Blockchain.COSMOS, 1),
+            wallet.getAccounts(Blockchain.COSMOS, 2),
+            wallet.getAccounts(Blockchain.COSMOS, 3),
+            wallet.getAccounts(Blockchain.COSMOS, 4)
         ]).then(async data => {
             data[0][0].selected = true; // first zil account
             data[5][0].selected = true; // first eth account
@@ -253,6 +277,27 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             dispatch(setSelectedWallet(walletId));
             callback && callback();
             dispatch(closeLoadingModal());
+
+            addAddress(
+                Blockchain.ETHEREUM,
+                accounts.reduce((out: string[], account: IAccountState): string[] => {
+                    if (account.blockchain === Blockchain.ETHEREUM) {
+                        out.push(account.address);
+                    }
+
+                    return out;
+                }, [])
+            );
+            addAddress(
+                Blockchain.ZILLIQA,
+                accounts.reduce((out: string[], account: IAccountState): string[] => {
+                    if (account.blockchain === Blockchain.ZILLIQA) {
+                        out.push(account.address);
+                    }
+
+                    return out;
+                }, [])
+            );
         });
     } catch (e) {
         // console.log(e);
@@ -302,9 +347,10 @@ export const getBalance = (
 
                 let balance;
                 switch (tokenInfo.type) {
-                    case TokenType.NATIVE:
+                    case TokenType.NATIVE: {
                         balance = await client.getBalance(address);
                         break;
+                    }
                     default:
                         if (client.tokens[tokenInfo.type]) {
                             balance = await client.tokens[tokenInfo.type].getBalance(
@@ -342,6 +388,86 @@ export const getBalance = (
     }
 };
 
+export const updateTransactionFromBlockchain = (
+    transactionHash: string[],
+    blockchain: Blockchain,
+    displayNotification: boolean = false
+) => async (dispatch, getState: () => IReduxState) => {
+    const state = getState();
+    const chainId = blockchainChainId[blockchain];
+    const blockchainInstance = getBlockchain(blockchain);
+    const client = blockchainInstance.getClient(chainId);
+
+    const transaction = await client.getTransactionInfo(transactionHash);
+
+    // search for wallets/accounts affected by this transaction
+    const wallets = getWalletWithAddress(
+        state,
+        [transaction.address, transaction.toAddress],
+        blockchain
+    );
+
+    if (wallets) {
+        wallets.forEach(wallet => {
+            dispatch({
+                type: TRANSACTION_UPSERT,
+                data: {
+                    walletId: wallet.id,
+                    transaction
+                }
+            });
+        });
+
+        if (displayNotification) {
+            const amount = blockchainInstance.account.amountFromStd(
+                new BigNumber(transaction.amount)
+            );
+            const formattedAmount = formatNumber(amount, {
+                currency: getBlockchain(blockchain).config.coin
+            });
+
+            // select notification wallet and account
+            // if two wallets (transferring between own wallets) select the receiving wallet
+            const wallet =
+                wallets.length > 0
+                    ? wallets.find(loopWallet =>
+                          loopWallet.accounts.some(
+                              account => account.address.toLowerCase() === transaction.toAddress
+                          )
+                      )
+                    : wallets[0];
+
+            const notificatonAccount =
+                wallet.accounts.find(
+                    account => account.address.toLowerCase() === transaction.toAddress
+                ) ||
+                wallet.accounts.find(
+                    account => account.address.toLowerCase() === transaction.address
+                );
+
+            Notifications.displayNotification(
+                'Moonlet',
+                `${transaction.status}: Transaction of ${formattedAmount} from ${formatAddress(
+                    transaction.address,
+                    blockchain
+                )} to ${formatAddress(transaction.toAddress, blockchain)}`,
+                {
+                    type: NotificationType.TRANSACTION_UPDATE,
+                    data: {
+                        walletId: wallet.id,
+                        accountIndex: notificatonAccount.index,
+                        token: notificatonAccount.tokens[getBlockchain(blockchain).config.coin],
+                        tokenLogo: getBlockchain(blockchain).config.tokens[
+                            getBlockchain(notificatonAccount.blockchain).config.coin
+                        ].logo,
+                        blockchain
+                    }
+                }
+            );
+        }
+    }
+};
+
 export const sendTransferTransaction = (
     account: IAccountState,
     toAddress: string,
@@ -350,6 +476,7 @@ export const sendTransferTransaction = (
     feeOptions: IFeeOptions,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
+    extraFields: ITransferTransactionExtraFields,
     goBack: boolean = true
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
@@ -379,12 +506,8 @@ export const sendTransferTransaction = (
             connectionType: appWallet.hwOptions?.connectionType
         }); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
-        const client = blockchainInstance.getClient(chainId);
 
-        const nonce = await client.getNonce(account.address, account.publicKey);
-        const blockInfo = await client.getCurrentBlock();
-
-        const tx = blockchainInstance.transaction.buildTransferTransaction({
+        const tx = await blockchainInstance.transaction.buildTransferTransaction({
             chainId,
             account,
             toAddress,
@@ -392,13 +515,11 @@ export const sendTransferTransaction = (
                 .amountToStd(amount, account.tokens[token].decimals)
                 .toFixed(),
             token,
-            nonce,
-            currentBlockHash: blockInfo.hash,
-            currentBlockNumber: blockInfo.number,
             feeOptions: {
                 gasPrice: feeOptions.gasPrice.toString(),
                 gasLimit: feeOptions.gasLimit.toString()
-            }
+            },
+            extraFields
         });
 
         if (appWallet.type === WalletType.HW) {

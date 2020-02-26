@@ -7,6 +7,8 @@ import { loadTranslations } from '../../../core/i18n';
 import { WalletType } from '../../../core/wallet/types';
 import { IThemeProps } from '../../../core/theme/with-theme';
 
+jest.mock('../../../redux/config');
+
 const props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> = {
     // @ts-ignore
     navigation: {

@@ -279,6 +279,146 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 },
               },
             },
+            Object {
+              "address": "cosmos1mrf865hmk3prnkhtpqt8zdwu7kpmpd6l30ws3q",
+              "blockchain": "COSMOS",
+              "index": 0,
+              "publicKey": "02d7144d5afafde20f868a669d74920bac76c7de2750352c2b0ef8162fe8476c1d",
+              "selected": false,
+              "tokens": Object {
+                "ATOM": Object {
+                  "active": true,
+                  "decimals": 6,
+                  "logo": Object {
+                    "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/atom.png",
+                  },
+                  "name": "Atom",
+                  "order": 0,
+                  "symbol": "ATOM",
+                  "symbolMap": Object {
+                    "gaia-13007": "umuon",
+                  },
+                  "type": "NATIVE",
+                  "uiDecimals": 3,
+                  "units": Object {
+                    "ATOM": "1000000",
+                    "UATOM": "1",
+                  },
+                },
+              },
+            },
+            Object {
+              "address": "cosmos1fptf3l633k4kplhslqd7fksfke5kz2saxzupl8",
+              "blockchain": "COSMOS",
+              "index": 1,
+              "publicKey": "03c47735b7c423d6ad9c9be4592f2879c6c30a7357186a0d7e71735abf3bbf09f8",
+              "selected": false,
+              "tokens": Object {
+                "ATOM": Object {
+                  "active": true,
+                  "decimals": 6,
+                  "logo": Object {
+                    "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/atom.png",
+                  },
+                  "name": "Atom",
+                  "order": 0,
+                  "symbol": "ATOM",
+                  "symbolMap": Object {
+                    "gaia-13007": "umuon",
+                  },
+                  "type": "NATIVE",
+                  "uiDecimals": 3,
+                  "units": Object {
+                    "ATOM": "1000000",
+                    "UATOM": "1",
+                  },
+                },
+              },
+            },
+            Object {
+              "address": "cosmos1t257fk07eevpr0kr8rld8dyp0a2e9hmh9tqaad",
+              "blockchain": "COSMOS",
+              "index": 2,
+              "publicKey": "03b8edd9cbacc9092a51283d8ff629fd7732bd8a3e3a808c7c35628c667896154e",
+              "selected": false,
+              "tokens": Object {
+                "ATOM": Object {
+                  "active": true,
+                  "decimals": 6,
+                  "logo": Object {
+                    "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/atom.png",
+                  },
+                  "name": "Atom",
+                  "order": 0,
+                  "symbol": "ATOM",
+                  "symbolMap": Object {
+                    "gaia-13007": "umuon",
+                  },
+                  "type": "NATIVE",
+                  "uiDecimals": 3,
+                  "units": Object {
+                    "ATOM": "1000000",
+                    "UATOM": "1",
+                  },
+                },
+              },
+            },
+            Object {
+              "address": "cosmos14rnhtdvxgccrm54h84t7hk6md0pkk2f7mmlpw3",
+              "blockchain": "COSMOS",
+              "index": 3,
+              "publicKey": "03c059770e2666cee4198ab56328e04db9e0299d2468cd68924b317b91dfe269df",
+              "selected": false,
+              "tokens": Object {
+                "ATOM": Object {
+                  "active": true,
+                  "decimals": 6,
+                  "logo": Object {
+                    "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/atom.png",
+                  },
+                  "name": "Atom",
+                  "order": 0,
+                  "symbol": "ATOM",
+                  "symbolMap": Object {
+                    "gaia-13007": "umuon",
+                  },
+                  "type": "NATIVE",
+                  "uiDecimals": 3,
+                  "units": Object {
+                    "ATOM": "1000000",
+                    "UATOM": "1",
+                  },
+                },
+              },
+            },
+            Object {
+              "address": "cosmos158rxkf0wlhjfwutk63zlc68v57hzst2n4z7pe6",
+              "blockchain": "COSMOS",
+              "index": 4,
+              "publicKey": "0245ab42ba4fdfc9d5102b94a84ad78c1480f0d1fb0561d41809c1890d48ebbda5",
+              "selected": false,
+              "tokens": Object {
+                "ATOM": Object {
+                  "active": true,
+                  "decimals": 6,
+                  "logo": Object {
+                    "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/atom.png",
+                  },
+                  "name": "Atom",
+                  "order": 0,
+                  "symbol": "ATOM",
+                  "symbolMap": Object {
+                    "gaia-13007": "umuon",
+                  },
+                  "type": "NATIVE",
+                  "uiDecimals": 3,
+                  "units": Object {
+                    "ATOM": "1000000",
+                    "UATOM": "1",
+                  },
+                },
+              },
+            },
           ],
           "id": "uuid",
           "name": "Wallet 1",

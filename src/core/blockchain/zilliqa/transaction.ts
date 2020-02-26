@@ -8,6 +8,7 @@ import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { toChecksumAddress } from '@zilliqa-js/crypto/dist/util';
 import { TransactionStatus } from '../../wallet/types';
 import { TokenType } from '../types/token';
+import { Zilliqa } from '.';
 
 const schnorrSign = (msg: Buffer, privateKey: string): string => {
     const pubKey = privateToPublic(privateKey);
@@ -40,7 +41,7 @@ export const sign = async (tx: IBlockchainTransaction, privateKey: string): Prom
         gasPrice: new BN(tx.feeOptions.gasPrice.toString()),
         gasLimit: Long.fromString(tx.feeOptions.gasLimit.toString()),
         code: '',
-        data: tx.data?.raw,
+        data: tx.data?.raw || '',
         signature: '',
         priority: true
     };
@@ -60,7 +61,12 @@ export const sign = async (tx: IBlockchainTransaction, privateKey: string): Prom
     return transaction;
 };
 
-export const buildTransferTransaction = (tx: ITransferTransaction): IBlockchainTransaction => {
+export const buildTransferTransaction = async (
+    tx: ITransferTransaction
+): Promise<IBlockchainTransaction> => {
+    const client = Zilliqa.getClient(tx.chainId);
+    const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
+
     const tokenInfo = tx.account.tokens[tx.token];
     switch (tokenInfo.type) {
         case TokenType.ZRC2:
@@ -83,7 +89,7 @@ export const buildTransferTransaction = (tx: ITransferTransaction): IBlockchainT
                 amount: '0',
                 feeOptions: tx.feeOptions,
                 broadcatedOnBlock: undefined,
-                nonce: tx.nonce,
+                nonce,
                 status: TransactionStatus.PENDING,
 
                 data: {
@@ -128,7 +134,7 @@ export const buildTransferTransaction = (tx: ITransferTransaction): IBlockchainT
                 amount: tx.amount,
                 feeOptions: tx.feeOptions,
                 broadcatedOnBlock: undefined,
-                nonce: tx.nonce,
+                nonce,
                 status: TransactionStatus.PENDING
             };
     }

@@ -12,6 +12,8 @@ import { shallow } from 'enzyme';
 import { loadTranslations } from '../../../core/i18n';
 import { Mnemonic } from '../../../core/wallet/hd-wallet/mnemonic';
 
+jest.mock('../../../redux/config');
+
 const props: IProps & IReduxProps = {
     // @ts-ignore
     navigation: {

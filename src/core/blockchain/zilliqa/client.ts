@@ -3,16 +3,21 @@ import {
     IFeeOptions,
     ChainIdType,
     IBlockInfo,
-    TransactionMessageText
+    TransactionMessageText,
+    IBlockchainTransaction,
+    Blockchain,
+    TransactionType
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
-import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
+import { fromBech32Address, toBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { config } from './config';
 import { NameService } from './name-service';
 import { TokenType } from '../types/token';
 import { Zrc2Client } from './tokens/zrc2-client';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
+import { getAddressFromPublicKey } from '@zilliqa-js/crypto/dist/util';
+import { TransactionStatus } from '../../wallet/types';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -67,7 +72,7 @@ export class Client extends BlockchainGenericClient {
     }
 
     public sendTransaction(transaction): Promise<string> {
-        return this.rpc.call('CreateTransaction', [transaction]).then(res => {
+        return this.http.jsonRpc('CreateTransaction', [transaction]).then(res => {
             if (res.result) {
                 return res.result.TranID;
             }
@@ -81,7 +86,7 @@ export class Client extends BlockchainGenericClient {
 
     public async call(method: string, params: any[] = []): Promise<any> {
         try {
-            const result = await this.rpc.call(method, params);
+            const result = await this.http.jsonRpc(method, params);
             if (result.error) {
                 return Promise.reject(result);
             }
@@ -136,7 +141,67 @@ export class Client extends BlockchainGenericClient {
         return this.call('GetSmartContractInit', [addr]).then(response => response?.result);
     }
 
+    public async getTransactionInfo(transactionHash): Promise<IBlockchainTransaction<any>> {
+        try {
+            const txData = await this.http.jsonRpc
+                .call('GetTransaction', [transactionHash])
+                .then(response => {
+                    if (!response.result) {
+                        throw new Error(
+                            response.error.message ||
+                                `Error getting transaction info for ${transactionHash}`
+                        );
+                    }
+                    return response.result;
+                });
+
+            const toAddress = !isBech32(txData.toAddr)
+                ? toBech32Address(txData.toAddr)
+                : txData.toAddr;
+            let fromAddress = getAddressFromPublicKey(txData.senderPubKey);
+
+            if (!isBech32(fromAddress)) {
+                fromAddress = toBech32Address(fromAddress);
+            }
+
+            const txStatus = txData.receipt
+                ? txData.receipt.success
+                    ? TransactionStatus.SUCCESS
+                    : TransactionStatus.FAILED
+                : TransactionStatus.PENDING;
+
+            return {
+                id: txData.ID,
+                date: {
+                    created: Date.now(),
+                    signed: Date.now(),
+                    broadcasted: Date.now(),
+                    confirmed: Date.now()
+                },
+                blockchain: Blockchain.ZILLIQA,
+                chainId: this.chainId,
+                type: TransactionType.TRANSFER,
+
+                address: fromAddress,
+                publicKey: txData.senderPubKey,
+
+                toAddress,
+                amount: txData.amount,
+                feeOptions: {
+                    gasPrice: txData.gasPrice,
+                    gasLimit: txData.gasLimit,
+                    feeTotal: txData.receipt?.cumulative_gas
+                },
+                broadcatedOnBlock: txData.receipt?.epoch_num,
+                nonce: txData.nonce,
+                status: txStatus
+            };
+        } catch (error) {
+            return Promise.reject(error.message);
+        }
+    }
+
     private async estimateFees(): Promise<any> {
-        return this.rpc.call('GetMinimumGasPrice', []);
+        return this.http.jsonRpc('GetMinimumGasPrice', []);
     }
 }

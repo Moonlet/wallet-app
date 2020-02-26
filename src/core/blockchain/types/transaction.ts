@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 
 export interface IBlockchainTransactionUtils {
     sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string>;
-    buildTransferTransaction(tx: ITransferTransaction): IBlockchainTransaction;
+    buildTransferTransaction(tx: ITransferTransaction): Promise<IBlockchainTransaction>;
 }
 
 // tslint:disable-next-line:no-shadowed-variable
@@ -22,10 +22,8 @@ export interface IBlockchainTransaction<IAdditionalInfoType = any> {
     chainId: ChainIdType;
     type: TransactionType;
     token?: ITokenConfig;
-
     address: string;
     publicKey: string;
-
     toAddress: string;
     amount: string;
     data?: {
@@ -50,10 +48,12 @@ export interface IFeeOptions {
     gasLimit?: string;
     feeTotal?: string;
     presets?: {
-        cheap: BigNumber;
-        standard: BigNumber;
-        fast: BigNumber;
-        fastest: BigNumber;
+        cheap?: BigNumber;
+        standard?: BigNumber;
+        fast?: BigNumber;
+        fastest?: BigNumber;
+        low?: BigNumber;
+        average?: BigNumber;
     };
 }
 
@@ -63,10 +63,10 @@ export interface ITransferTransaction {
     toAddress: string;
     amount: string;
     token: string;
-    nonce: number;
+    //  nonce: number;
     feeOptions: IFeeOptions;
-    currentBlockHash: string;
-    currentBlockNumber: number;
+    //  currentBlockHash: string;
+    //  currentBlockNumber: number;
     extraFields?: ITransferTransactionExtraFields;
 }
 

@@ -7,6 +7,8 @@ import { loadTranslations } from '../../../core/i18n';
 import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../../core/blockchain/types';
 
+jest.mock('../../../redux/config');
+
 const props: IProps = {
     // @ts-ignore
     navigation: {

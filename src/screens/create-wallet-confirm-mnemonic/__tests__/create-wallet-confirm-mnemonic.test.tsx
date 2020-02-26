@@ -10,6 +10,8 @@ import styleProvider from '../styles';
 import { shallow } from 'enzyme';
 import { loadTranslations } from '../../../core/i18n';
 
+jest.mock('../../../redux/config');
+
 const props: IProps & IReduxProps = {
     // @ts-ignore
     navigation: {

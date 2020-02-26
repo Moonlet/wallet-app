@@ -14,7 +14,8 @@ import {
     ADD_TOKEN,
     WALLET_SELECT_ACCOUNT,
     WALLET_SELECT_BLOCKCHAIN,
-    SELECT_WALLET
+    SELECT_WALLET,
+    TRANSACTION_UPSERT
 } from './actions';
 import { TransactionStatus } from '../../core/wallet/types';
 import { REHYDRATE } from 'redux-persist';
@@ -171,6 +172,26 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                     transactions: {
                         ...state[action.data.walletId].transactions,
                         [action.data.hash]: transaction
+                    }
+                }
+            };
+
+        case TRANSACTION_UPSERT:
+            return {
+                ...state,
+                [action.data.walletId]: {
+                    ...state[action.data.walletId],
+                    transactions: {
+                        ...state[action.data.walletId].transactions,
+                        [action.data.transaction.id]: (state[action.data.walletId].transactions ||
+                            {})[action.data.transaction.id]
+                            ? {
+                                  ...state[action.data.walletId].transactions[
+                                      action.data.transaction.id
+                                  ],
+                                  status: action.data.transaction.status
+                              }
+                            : action.data.transaction
                     }
                 }
             };

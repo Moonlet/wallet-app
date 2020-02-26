@@ -189,7 +189,7 @@ export class DashboardScreenComponent extends React.Component<
                                     this.props.selectedBlockchain === blockchain &&
                                         styles.blockchainButtonActive,
                                     {
-                                        width: blockchains.length > 3 ? SCREEN_WIDTH / 3 : null
+                                        width: blockchains.length > 4 ? SCREEN_WIDTH / 4 : null
                                     }
                                 ]}
                                 onPress={() => {

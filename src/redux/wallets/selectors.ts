@@ -40,24 +40,6 @@ export const getSelectedAccount = createSelector(
     }
 );
 
-export const getAccountTransactions = (
-    state: IReduxState,
-    accountIndex: number,
-    blockchain: Blockchain
-): IBlockchainTransaction[] => {
-    const selectedWallet = getSelectedWallet(state);
-
-    const account: IAccountState = selectedWallet.accounts.find(
-        acc => acc.index === accountIndex && acc.blockchain === blockchain
-    );
-    const transactions = selectedWallet.transactions;
-    if (transactions) {
-        return Object.values(selectedWallet.transactions).filter(
-            tx => tx.address === account.address
-        );
-    }
-};
-
 export const getAccountFilteredTransactions = (
     state: IReduxState,
     accountIndex: number,

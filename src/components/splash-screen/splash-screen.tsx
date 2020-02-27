@@ -15,6 +15,7 @@ export class SplashScreenComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
+    animation: LottieView;
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
@@ -48,6 +49,10 @@ export class SplashScreenComponent extends React.Component<
         );
     }
 
+    public loopAnimation() {
+        this.animation.play(40, 120);
+    }
+
     public render() {
         const styles = this.props.styles;
 
@@ -58,7 +63,11 @@ export class SplashScreenComponent extends React.Component<
                         source={require('../../assets/logo/logo-animation.json')}
                         style={styles.lottie}
                         autoPlay
-                        loop
+                        loop={false}
+                        ref={animation => {
+                            this.animation = animation;
+                        }}
+                        onAnimationFinish={() => this.loopAnimation()}
                     />
                 </View>
                 <View style={{ height: 160 }}>

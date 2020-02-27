@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, Platform } from 'react-native';
+import { View, Dimensions, Platform, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -58,6 +58,11 @@ export class BottomSheetComponent extends React.Component<
             case BottomSheetType.ACCOUNTS:
                 return (
                     <View style={this.props.styles.container}>
+                        <TouchableOpacity
+                            onPress={this.handleCloseEnd}
+                            style={this.props.styles.container}
+                            activeOpacity={1}
+                        />
                         <AccountsBottomSheet
                             snapPoints={{
                                 initialSnap:
@@ -74,7 +79,12 @@ export class BottomSheetComponent extends React.Component<
 
             case BottomSheetType.DASHBOARD_MENU:
                 return (
-                    <View style={[this.props.styles.container]}>
+                    <View style={this.props.styles.container}>
+                        <TouchableOpacity
+                            onPress={this.handleCloseEnd}
+                            style={this.props.styles.container}
+                            activeOpacity={1}
+                        />
                         <DashboardMenuBottomSheet
                             snapPoints={{
                                 initialSnap: Platform.OS === 'web' ? 300 : 0,
@@ -87,7 +97,12 @@ export class BottomSheetComponent extends React.Component<
                 );
             case BottomSheetType.SEND_TRANSACTION:
                 return (
-                    <View style={[this.props.styles.container]}>
+                    <View style={this.props.styles.container}>
+                        <TouchableOpacity
+                            onPress={this.handleCloseEnd}
+                            style={this.props.styles.container}
+                            activeOpacity={1}
+                        />
                         <SendTransactionBottomSheet
                             snapPoints={{
                                 initialSnap: Platform.OS === 'web' ? 200 : 0,
@@ -103,6 +118,11 @@ export class BottomSheetComponent extends React.Component<
             case BottomSheetType.LEDGER_CONNECT:
                 return (
                     <View style={this.props.styles.container}>
+                        <TouchableOpacity
+                            onPress={this.handleCloseEnd}
+                            style={this.props.styles.container}
+                            activeOpacity={1}
+                        />
                         <LedgerConnect
                             snapPoints={{ initialSnap: 0, bottomSheetHeight: 300 }}
                             blockchain={this.props.bottomSheet?.blockchain}
@@ -117,6 +137,11 @@ export class BottomSheetComponent extends React.Component<
             case BottomSheetType.EXTENSION_REQUEST:
                 return (
                     <View style={this.props.styles.container}>
+                        <TouchableOpacity
+                            onPress={this.handleCloseEnd}
+                            style={this.props.styles.container}
+                            activeOpacity={1}
+                        />
                         <ExtensionRequestBottomSheet
                             snapPoints={{
                                 initialSnap: Platform.OS === 'web' ? 280 : 0,

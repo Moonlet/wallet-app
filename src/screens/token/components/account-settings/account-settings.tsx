@@ -16,6 +16,7 @@ import { WalletFactory } from '../../../../core/wallet/wallet-factory';
 import Modal from '../../../../library/modal/modal';
 import { ChainIdType } from '../../../../core/blockchain/types';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
+import { WalletType } from '../../../../core/wallet/types';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -159,23 +160,25 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                             )
                         ) : (
                             <View style={styles.contentContainer}>
-                                <TouchableOpacity
-                                    testID="private-key"
-                                    style={styles.rowContainer}
-                                    onPress={this.revealPrivateKey}
-                                >
-                                    <Icon name="key" size={ICON_SIZE} style={styles.leftIcon} />
-                                    <View style={styles.rowChild}>
-                                        <Text style={styles.textRow}>
-                                            {translate('AccountSettings.revealPrivate')}
-                                        </Text>
-                                        <Icon
-                                            name="chevron-right"
-                                            size={16}
-                                            style={styles.rightIcon}
-                                        />
-                                    </View>
-                                </TouchableOpacity>
+                                {this.props.wallet.type !== WalletType.HW && (
+                                    <TouchableOpacity
+                                        testID="private-key"
+                                        style={styles.rowContainer}
+                                        onPress={this.revealPrivateKey}
+                                    >
+                                        <Icon name="key" size={ICON_SIZE} style={styles.leftIcon} />
+                                        <View style={styles.rowChild}>
+                                            <Text style={styles.textRow}>
+                                                {translate('AccountSettings.revealPrivate')}
+                                            </Text>
+                                            <Icon
+                                                name="chevron-right"
+                                                size={16}
+                                                style={styles.rightIcon}
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                )}
 
                                 <TouchableOpacity
                                     testID="public-key"

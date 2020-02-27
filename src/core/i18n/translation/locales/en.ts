@@ -254,7 +254,7 @@ export const translation: ITranslations = {
             blockchainHasNoNetwork:
                 'Network not availble. Please switch network to activate blockchain',
             changePin: 'Change PIN',
-            successChangePin: 'PIN has been change!'
+            successChangePin: 'PIN has been changed!'
         },
         NetworkOptions: {
             mainnet: 'Mainnet',

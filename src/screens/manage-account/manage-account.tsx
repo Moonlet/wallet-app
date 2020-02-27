@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { Text, Swipeable } from '../../library';
 import { IReduxState } from '../../redux/state';
@@ -18,6 +18,7 @@ import { Amount } from '../../components/amount/amount';
 import { toggleTokenActive, updateTokenOrder, removeToken } from '../../redux/wallets/actions';
 import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import FastImage from 'react-native-fast-image';
 
 export interface IReduxProps {
     toggleTokenActive: typeof toggleTokenActive;
@@ -149,9 +150,9 @@ export class ManageAccountComponent extends React.Component<
                 >
                     <View style={styles.infoContainer}>
                         <View style={styles.iconContainer}>
-                            <Image
+                            <FastImage
                                 style={styles.tokenLogo}
-                                resizeMode="contain"
+                                resizeMode={FastImage.resizeMode.contain}
                                 source={item.value.logo}
                             />
                         </View>

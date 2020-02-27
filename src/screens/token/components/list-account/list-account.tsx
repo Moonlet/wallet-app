@@ -3,10 +3,11 @@ import { Text, Button } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { View, Image } from 'react-native';
+import { View } from 'react-native';
 import Icon from '../../../../components/icon';
 import TouchableOpacity from '../../../../library/touchable-opacity/touchable-opacity';
 import { translate } from '../../../../core/i18n';
+import FastImage from 'react-native-fast-image';
 
 export interface IProps {
     label: string | JSX.Element;
@@ -34,10 +35,10 @@ export const ListAccountComponent = (
         >
             {props.leftIcon && (
                 <View style={props.styles.iconLeftContainer}>
-                    <Image
-                        resizeMode="contain"
-                        style={props.styles.accountIcon}
+                    <FastImage
                         source={props.leftIcon}
+                        style={props.styles.accountIcon}
+                        resizeMode={FastImage.resizeMode.contain}
                     />
                 </View>
             )}

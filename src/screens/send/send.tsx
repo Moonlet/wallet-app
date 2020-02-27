@@ -405,17 +405,17 @@ export class SendScreenComponent extends React.Component<
     public renderAddAddressToBook() {
         const { styles } = this.props;
 
-        const addressNotInAccounts =
+        const addressNotInWalletAccounts =
             this.props.accounts.filter(
                 account =>
                     account.blockchain === this.props.blockchain &&
-                    account.address === this.state.toAddress
+                    account.address.toLocaleLowerCase() === this.state.toAddress.toLocaleLowerCase()
             ).length === 0;
 
         if (
             this.state.isValidText &&
             this.props.contacts[`${this.props.blockchain}|${this.state.toAddress}`] === undefined &&
-            addressNotInAccounts === true
+            addressNotInWalletAccounts === true
         ) {
             return (
                 <TouchableOpacity onPress={this.alertModalAddAddress}>

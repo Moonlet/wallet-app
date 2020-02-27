@@ -101,7 +101,6 @@ export default (theme: ITheme) =>
         },
         basicFields: {
             flex: 1,
-            paddingTop: BASE_DIMENSION * 5,
             backgroundColor: theme.colors.appBackground
         },
         icon: {

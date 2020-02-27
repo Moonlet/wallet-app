@@ -384,28 +384,38 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    public async alertModalAddAddress() {
+    public alertModalAddAddress = async () => {
         // TODO: check this, it's not opening all the time
-        const inputValue: string = await Dialog.prompt(
+        const inputValue = await Dialog.prompt(
             translate('Send.alertTitle'),
             translate('Send.alertDescription')
         );
 
+        const contactData: IContactState = {
+            blockchain: this.props.account.blockchain,
+            name: inputValue,
+            address: this.state.toAddress
+        };
+
         if (inputValue !== '') {
-            this.props.addContact({
-                blockchain: this.props.account.blockchain,
-                name: inputValue,
-                address: this.state.toAddress
-            });
+            this.props.addContact(contactData);
         }
-    }
+    };
 
     public renderAddAddressToBook() {
-        const styles = this.props.styles;
+        const { styles } = this.props;
+
+        const addressNotInAccounts =
+            this.props.accounts.filter(
+                account =>
+                    account.blockchain === this.props.blockchain &&
+                    account.address === this.state.toAddress
+            ).length === 0;
 
         if (
             this.state.isValidText &&
-            !this.props.contacts[`${this.props.blockchain}|${this.state.toAddress}`]
+            this.props.contacts[`${this.props.blockchain}|${this.state.toAddress}`] === undefined &&
+            addressNotInAccounts === true
         ) {
             return (
                 <TouchableOpacity onPress={this.alertModalAddAddress}>

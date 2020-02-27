@@ -32,6 +32,7 @@ export const translation: ITranslations = {
                 decimals: 'Decimals',
                 delete: 'Delete',
                 details: 'Details',
+                disconnect: 'Disconnect',
                 editToken: 'Edit token',
                 error: 'Error',
                 failed: 'Failed',
@@ -71,6 +72,7 @@ export const translation: ITranslations = {
                 status: 'Status',
                 startConnect: 'Start connect',
                 statistics: 'Statistics',
+                success: 'Success',
                 support: 'Support',
                 symbol: 'Symbol',
                 tc: 'Terms & conditions',
@@ -246,14 +248,13 @@ export const translation: ITranslations = {
             networkOptions: 'Network options',
             privacyPolicy: 'Privacy policy',
             reportIssue: 'Report issue',
-            signOut: 'Sign out',
             mainnetTestnet: 'Mainnet/Testnet',
             deviceId: 'Device ID',
             copied: 'Device ID copied!',
             blockchainHasNoNetwork:
                 'Network not availble. Please switch network to activate blockchain',
             changePin: 'Change PIN',
-            successChangePin: 'PIN has been change successfully!'
+            successChangePin: 'PIN has been change!'
         },
         NetworkOptions: {
             mainnet: 'Mainnet',

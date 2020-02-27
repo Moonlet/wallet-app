@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Image } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, IWalletState } from '../../redux/wallets/state';
@@ -33,6 +33,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { getChainId } from '../../redux/preferences/selectors';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { ITokenConfig } from '../../core/blockchain/types/token';
+import FastImage from 'react-native-fast-image';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -88,9 +89,9 @@ const navigationOptions = ({ navigation, theme }: any) => ({
     ),
     headerTitle: () => (
         <View style={{ flexDirection: 'row' }}>
-            <Image
+            <FastImage
                 style={{ height: ICON_SIZE, width: ICON_SIZE, marginRight: BASE_DIMENSION }}
-                resizeMode="contain"
+                resizeMode={FastImage.resizeMode.contain}
                 source={navigation.state.params.tokenLogo}
             />
             <Text

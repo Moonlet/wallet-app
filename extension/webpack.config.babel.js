@@ -41,7 +41,8 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/@react-native-community/async-storage'),
         path.resolve(appDirectory, 'node_modules/react-native-keychain'),
         path.resolve(appDirectory, 'node_modules/react-native-qrcode-svg'),
-        path.resolve(appDirectory, 'node_modules/react-native-draggable-flatlist')
+        path.resolve(appDirectory, 'node_modules/react-native-draggable-flatlist'),
+        path.resolve(appDirectory, 'node_modules/react-native-fast-image')
         // path.resolve(appDirectory, 'node_modules/react-native-uncompiled')
     ],
     use: {

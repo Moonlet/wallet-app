@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { INavigationProps } from '../../../navigation/with-navigation-params';
 import { Text } from '../../../library';
 import { IReduxState } from '../../../redux/state';
@@ -17,6 +17,7 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 import { getBlockchainsPortfolio, hasNetwork } from '../../../redux/preferences/selectors';
 import { Dialog } from '../../../components/dialog/dialog';
+import FastImage from 'react-native-fast-image';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainOptions }];
@@ -84,9 +85,9 @@ export class BlockchainPortfolioComponent extends React.Component<
                 ]}
             >
                 <View style={styles.infoContainer}>
-                    <Image
+                    <FastImage
                         style={styles.iconContainer}
-                        resizeMode="contain"
+                        resizeMode={FastImage.resizeMode.contain}
                         source={
                             getBlockchain(item.key).config.tokens[
                                 getBlockchain(item.key).config.coin

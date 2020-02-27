@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Image } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { IAccountState } from '../../redux/wallets/state';
 import { Icon } from '../icon';
 import stylesProvider from './styles';
@@ -8,6 +8,7 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { Amount } from '../amount/amount';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { Blockchain } from '../../core/blockchain/types';
+import FastImage from 'react-native-fast-image';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -34,7 +35,11 @@ export const TokenCardComponent = (props: IProps) => {
             }}
         >
             <View style={styles.iconContainer}>
-                <Image style={styles.tokenLogo} resizeMode="contain" source={props.token.logo} />
+                <FastImage
+                    source={props.token.logo}
+                    style={styles.tokenLogo}
+                    resizeMode={FastImage.resizeMode.contain}
+                />
             </View>
             <View style={styles.accountInfoContainer}>
                 <Amount

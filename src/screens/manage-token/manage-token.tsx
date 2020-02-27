@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, TextInput, TouchableOpacity } from 'react-native';
 import { Text, Button } from '../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -21,6 +21,7 @@ import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
 import { isValidAddress as isValidAddressETH } from '../../core/blockchain/ethereum/account';
 import { isValidAddress as isValidAddressZIL } from '../../core/blockchain/zilliqa/account';
 import { ChainIdType, Blockchain } from '../../core/blockchain/types';
+import FastImage from 'react-native-fast-image';
 
 const GENERIC_TOKEN_LOGO = {
     uri:
@@ -271,9 +272,9 @@ export class ManageTokenComponent extends React.Component<
                             onPress={() => this.setState({ isTokenSelected: true })}
                         >
                             <View style={styles.iconContainer}>
-                                <Image
+                                <FastImage
                                     style={styles.tokenLogo}
-                                    resizeMode="contain"
+                                    resizeMode={FastImage.resizeMode.contain}
                                     source={this.state.token?.logo}
                                 />
                             </View>

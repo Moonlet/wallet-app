@@ -1,9 +1,8 @@
-import React from 'react';
-import { View, Clipboard } from 'react-native';
+import React, { useState } from 'react';
+import { View, Clipboard, Dimensions } from 'react-native';
 import stylesProvider from './styles';
-import { withTheme } from '../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { Button } from '../../library/button/button';
-import { ITheme } from '../../core/theme/itheme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
 import QRCode from 'react-native-qrcode-svg';
@@ -16,11 +15,7 @@ import { Blockchain } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { ITokenConfig } from '../../core/blockchain/types/token';
-
-export interface IProps {
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface INavigationParams {
     accountIndex: number;
@@ -38,61 +33,48 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
     };
 };
 
-interface IState {
-    copied: boolean;
-}
-
 const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
     title: translate('App.labels.receive')
 });
-export class ReceiveScreenComponent extends React.Component<
-    INavigationProps<INavigationParams> & IProps & IReduxProps,
-    IState
-> {
-    public static navigationOptions = navigationOptions;
 
-    constructor(props: INavigationProps<INavigationParams> & IProps & IReduxProps) {
-        super(props);
+export const ReceiveScreenComponent = (
+    props: INavigationProps<INavigationParams> &
+        IReduxProps &
+        IThemeProps<ReturnType<typeof stylesProvider>>
+) => {
+    const [copied, setCopied] = useState(false);
 
-        this.state = {
-            copied: false
-        };
-    }
-
-    public render() {
-        const styles = this.props.styles;
-        const account = this.props.account;
-        return (
-            <View style={styles.container}>
-                <AccountAddress
-                    account={account}
-                    token={this.props.navigation.state.params.token}
+    return (
+        <View style={props.styles.container}>
+            <AccountAddress account={props.account} token={props.navigation.state.params.token} />
+            <View style={props.styles.qrCodeContainer}>
+                <QRCode
+                    value={props.account.address}
+                    size={Dimensions.get('window').width - BASE_DIMENSION * 10}
                 />
-                <View style={styles.qrcode}>
-                    <QRCode value={account.address} size={300} />
-                </View>
-                <View style={styles.bottom}>
-                    <Button
-                        testID="copy-clipboard"
-                        style={styles.bottomButton}
-                        onPress={() => {
-                            Clipboard.setString(account.address);
-                            this.setState({ copied: true });
-                        }}
-                    >
-                        {this.state.copied
-                            ? translate('App.buttons.copiedBtn')
-                            : translate('App.buttons.clipboardBtn')}
-                    </Button>
-                </View>
             </View>
-        );
-    }
-}
+
+            <Button
+                testID="copy-clipboard"
+                style={props.styles.bottomButton}
+                onPress={() => {
+                    Clipboard.setString(props.account.address);
+                    setCopied(true);
+                }}
+            >
+                {copied
+                    ? translate('App.buttons.copiedBtn')
+                    : translate('App.buttons.clipboardBtn')}
+            </Button>
+        </View>
+    );
+};
+
+ReceiveScreenComponent.navigationOptions = navigationOptions;
 
 export const ReceiveScreen = smartConnect(ReceiveScreenComponent, [
-    connect(mapStateToProps, {}),
+    connect(mapStateToProps, null),
     withTheme(stylesProvider),
     withNavigationParams()
 ]);

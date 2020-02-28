@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View, Platform, ScrollView } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -90,75 +90,87 @@ export class AccountsBottomSheetComponent extends React.Component<
                     { height: this.props.snapPoints.bottomSheetHeight }
                 ]}
             >
-                {this.props.accounts.map((account: IAccountState, index: number) => {
-                    const selected = this.props.selectedAccount.address === account.address;
-                    const blockchain = account.blockchain;
+                <ScrollView
+                    contentContainerStyle={[
+                        this.props.styles.scrollContainer,
+                        { height: this.props.snapPoints.bottomSheetHeight }
+                    ]}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {this.props.accounts.map((account: IAccountState, index: number) => {
+                        const selected = this.props.selectedAccount.address === account.address;
+                        const blockchain = account.blockchain;
 
-                    const label = (
-                        <View>
-                            <View style={this.props.styles.firstRow}>
-                                <Text style={this.props.styles.accountName}>
-                                    {`${translate('App.labels.account')} ${account.index + 1}`}
-                                </Text>
-                                <Text style={this.props.styles.accountAddress}>
-                                    {formatAddress(account.address, blockchain)}
-                                </Text>
+                        const label = (
+                            <View>
+                                <View style={this.props.styles.firstRow}>
+                                    <Text style={this.props.styles.accountName}>
+                                        {`${translate('App.labels.account')} ${account.index + 1}`}
+                                    </Text>
+                                    <Text style={this.props.styles.accountAddress}>
+                                        {formatAddress(account.address, blockchain)}
+                                    </Text>
+                                </View>
+                                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
+                                    <Amount
+                                        style={this.props.styles.fistAmountText}
+                                        amount={calculateBalance(account, this.props.exchangeRates)}
+                                        blockchain={blockchain}
+                                        token={getBlockchain(blockchain).config.coin}
+                                        tokenDecimals={
+                                            getBlockchain(blockchain).config.tokens[
+                                                getBlockchain(blockchain).config.coin
+                                            ].decimals
+                                        }
+                                    />
+                                    <Amount
+                                        style={this.props.styles.secondAmountText}
+                                        amount={calculateBalance(account, this.props.exchangeRates)}
+                                        blockchain={blockchain}
+                                        token={getBlockchain(blockchain).config.coin}
+                                        tokenDecimals={
+                                            getBlockchain(blockchain).config.tokens[
+                                                getBlockchain(blockchain).config.coin
+                                            ].decimals
+                                        }
+                                        convert
+                                    />
+                                </View>
                             </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-                                <Amount
-                                    style={this.props.styles.fistAmountText}
-                                    amount={calculateBalance(account, this.props.exchangeRates)}
-                                    blockchain={blockchain}
-                                    token={getBlockchain(blockchain).config.coin}
-                                    tokenDecimals={
-                                        getBlockchain(blockchain).config.tokens[
-                                            getBlockchain(blockchain).config.coin
-                                        ].decimals
-                                    }
-                                />
-                                <Amount
-                                    style={this.props.styles.secondAmountText}
-                                    amount={calculateBalance(account, this.props.exchangeRates)}
-                                    blockchain={blockchain}
-                                    token={getBlockchain(blockchain).config.coin}
-                                    tokenDecimals={
-                                        getBlockchain(blockchain).config.tokens[
-                                            getBlockchain(blockchain).config.coin
-                                        ].decimals
-                                    }
-                                    convert
-                                />
-                            </View>
-                        </View>
-                    );
+                        );
 
-                    return (
-                        <ListAccount
-                            key={index}
-                            leftIcon={account.tokens[getBlockchain(blockchain).config.coin].logo}
-                            rightIcon={selected ? 'check-1' : undefined}
-                            label={label}
-                            selected={selected}
-                            onPress={() => {
-                                this.props.onCloseEnd();
-                                this.props.setSelectedAccount(account);
-                            }}
-                        />
-                    );
-                })}
+                        return (
+                            <ListAccount
+                                key={index}
+                                leftIcon={
+                                    account.tokens[getBlockchain(blockchain).config.coin].logo
+                                }
+                                rightIcon={selected ? 'check-1' : undefined}
+                                label={label}
+                                selected={selected}
+                                onPress={() => {
+                                    this.props.onCloseEnd();
+                                    this.props.setSelectedAccount(account);
+                                }}
+                            />
+                        );
+                    })}
 
-                {blockchainConfig.ui.enableAccountCreation &&
-                    this.props.accounts.length < blockchainConfig.ui.maxAccountsNumber && (
-                        <ListAccount
-                            leftIcon={this.props.selectedAccount.tokens[blockchainConfig.coin].logo}
-                            isCreate
-                            label={createAccountLabel}
-                            onPress={() => {
-                                this.props.onCloseEnd();
-                                this.props.enableCreateAccount();
-                            }}
-                        />
-                    )}
+                    {blockchainConfig.ui.enableAccountCreation &&
+                        this.props.accounts.length < blockchainConfig.ui.maxAccountsNumber && (
+                            <ListAccount
+                                leftIcon={
+                                    this.props.selectedAccount.tokens[blockchainConfig.coin].logo
+                                }
+                                isCreate
+                                label={createAccountLabel}
+                                onPress={() => {
+                                    this.props.onCloseEnd();
+                                    this.props.enableCreateAccount();
+                                }}
+                            />
+                        )}
+                </ScrollView>
             </View>
         );
     };

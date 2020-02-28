@@ -21,7 +21,7 @@ import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
 import { isValidAddress as isValidAddressETH } from '../../core/blockchain/ethereum/account';
 import { isValidAddress as isValidAddressZIL } from '../../core/blockchain/zilliqa/account';
 import { ChainIdType, Blockchain } from '../../core/blockchain/types';
-import FastImage from 'react-native-fast-image';
+import FastImage from '../../core/utils/fast-image';
 
 const GENERIC_TOKEN_LOGO = {
     uri:
@@ -274,7 +274,7 @@ export class ManageTokenComponent extends React.Component<
                             <View style={styles.iconContainer}>
                                 <FastImage
                                     style={styles.tokenLogo}
-                                    resizeMode={FastImage.resizeMode.contain}
+                                    resizeMode="contain"
                                     source={this.state.token?.logo}
                                 />
                             </View>

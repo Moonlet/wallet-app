@@ -1,31 +1,25 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, SCREEN_HEIGHT } from '../../styles/dimensions';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
             padding: BASE_DIMENSION * 2,
+            paddingTop: BASE_DIMENSION * 4,
             flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground,
-            height: SCREEN_HEIGHT
+            backgroundColor: theme.colors.appBackground
+        },
+        qrCodeContainer: {
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: BASE_DIMENSION * 4
         },
         bottomButton: {
-            width: '90%'
-        },
-        qrcode: {
-            flex: 1,
-            alignSelf: 'center',
-            alignItems: 'center',
-            //  padding: BASE_DIMENSION * 5,
-            width: 300,
-            height: 300
-        },
-        bottom: {
-            flex: 1,
-            justifyContent: 'flex-end',
-            alignItems: 'center',
+            marginHorizontal: BASE_DIMENSION * 2,
             marginBottom: BASE_DIMENSION * 3
         }
     });

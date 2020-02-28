@@ -8,7 +8,7 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { Amount } from '../amount/amount';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { Blockchain } from '../../core/blockchain/types';
-import FastImage from 'react-native-fast-image';
+import FastImage from '../../core/utils/fast-image';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -38,7 +38,7 @@ export const TokenCardComponent = (props: IProps) => {
                 <FastImage
                     source={props.token.logo}
                     style={styles.tokenLogo}
-                    resizeMode={FastImage.resizeMode.contain}
+                    resizeMode="contain"
                 />
             </View>
             <View style={styles.accountInfoContainer}>

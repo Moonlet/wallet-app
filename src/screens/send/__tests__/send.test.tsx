@@ -29,7 +29,8 @@ const props: IProps = {
     },
     blockchain: Blockchain.ZILLIQA,
     contacts: {},
-    token: {}
+    token: {},
+    accounts: []
 };
 
 export default describe('SendScreen', () => {

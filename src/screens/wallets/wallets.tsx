@@ -186,7 +186,7 @@ export class WalletsScreenComponent extends React.Component<
         this.props.navigation.goBack(null);
     }
 
-    public renderLeftActions = wallet => {
+    public renderLeftActions = (wallet: IWalletState) => {
         const styles = this.props.styles;
         return (
             <View style={styles.leftActionsContainer}>
@@ -196,16 +196,18 @@ export class WalletsScreenComponent extends React.Component<
                         {translate('Wallets.deleteWallet')}
                     </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => {
-                        this.closeCurrentOpenedSwipable();
-                        this.onPressUnveil(wallet);
-                    }}
-                    style={styles.action}
-                >
-                    <Icon name="view-1" size={32} style={styles.iconActionPositive} />
-                    <Text style={styles.textActionPositive}>{translate('Wallets.unveil')}</Text>
-                </TouchableOpacity>
+                {wallet.type !== WalletType.HW && (
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.closeCurrentOpenedSwipable();
+                            this.onPressUnveil(wallet);
+                        }}
+                        style={styles.action}
+                    >
+                        <Icon name="view-1" size={32} style={styles.iconActionPositive} />
+                        <Text style={styles.textActionPositive}>{translate('Wallets.unveil')}</Text>
+                    </TouchableOpacity>
+                )}
                 <TouchableOpacity
                     style={styles.action}
                     onPress={() => {

@@ -1,5 +1,5 @@
 import reducer from '../reducer';
-import { APP_SET_TC_VERSION } from '../actions';
+import { SET_TC_VERSION } from '../actions';
 
 describe('app reducer', () => {
     test('should set initial state', () => {
@@ -11,10 +11,10 @@ describe('app reducer', () => {
         ).toMatchSnapshot();
     });
 
-    test('should handle APP_SET_TC_VERSION', () => {
+    test('should handle SET_TC_VERSION', () => {
         expect(
             reducer(undefined as any, {
-                type: APP_SET_TC_VERSION,
+                type: SET_TC_VERSION,
                 data: 3
             }).tcVersion
         ).toBe(3);

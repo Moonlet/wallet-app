@@ -18,12 +18,13 @@ import { WalletConnectClient } from './core/wallet-connect/wallet-connect-client
 import { WalletConnectWeb } from './core/wallet-connect/wallet-connect-web';
 import { NavigationService } from './navigation/navigation-service';
 import { Dialog } from './components/dialog/dialog';
-import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
+import { getRemoteConfigFeatures, getTCVersion } from './core/utils/remote-feature-config';
 import { ImageCanvas } from './components/image-canvas/image-canvas';
 import { LoadingModal } from './components/loading-modal/loading-modal';
 import { subscribeExchangeRates } from './core/utils/exchange-rates';
 import { updateExchangeRates } from './redux/market/actions';
 import { takeOneAndSubscribeToStore } from './redux/utils/helpers';
+import { appSetAcceptedTcVersion } from './redux/app/actions';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -67,6 +68,12 @@ export default class App extends React.Component<{}, IState> {
 
         getRemoteConfigFeatures().then(() => {
             this.remoteFeatureConfigLoaded = true;
+
+            const tcAcceptedVersion = getTCVersion();
+            if (this.reduxStateLoaded && tcAcceptedVersion !== undefined) {
+                store.dispatch(appSetAcceptedTcVersion(tcAcceptedVersion));
+            }
+
             this.updateAppReady();
         });
 
@@ -192,7 +199,6 @@ export default class App extends React.Component<{}, IState> {
 
     public render() {
         if (this.state.appReady) {
-            // this.unsubscribe();
             return (
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>

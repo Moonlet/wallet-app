@@ -4,7 +4,8 @@ import DeviceInfo from 'react-native-device-info';
 export enum RemoteFeature {
     NEAR = 'feature_near',
     COSMOS = 'feature_cosmos',
-    DEV_TOOLS = 'dev_tools'
+    DEV_TOOLS = 'dev_tools',
+    TC_VERSION = 'tcVersion'
 }
 
 let featuresConfig;
@@ -23,7 +24,12 @@ export const getRemoteConfigFeatures = async () => {
     await firebase.config().activateFetched();
     const objects = await firebase
         .config()
-        .getValues([RemoteFeature.NEAR, RemoteFeature.COSMOS, RemoteFeature.DEV_TOOLS]);
+        .getValues([
+            RemoteFeature.NEAR,
+            RemoteFeature.COSMOS,
+            RemoteFeature.DEV_TOOLS,
+            RemoteFeature.TC_VERSION
+        ]);
 
     featuresConfig = {};
     // Retrieve values
@@ -52,4 +58,9 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
         }
     }
     return false;
+};
+
+export const getTCVersion = (): number => {
+    const tcVersion = JSON.parse(featuresConfig[RemoteFeature.TC_VERSION]);
+    return tcVersion;
 };

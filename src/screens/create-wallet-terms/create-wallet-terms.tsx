@@ -20,7 +20,7 @@ export interface IProps {
 }
 
 export interface IReduxProps {
-    appSetTcVersion: (n: number) => void;
+    appSetTcVersion: typeof appSetTcVersion;
 }
 
 export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) => (

@@ -33,7 +33,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { getChainId } from '../../redux/preferences/selectors';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { ITokenConfig } from '../../core/blockchain/types/token';
-import FastImage from 'react-native-fast-image';
+import FastImage from '../../core/utils/fast-image';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -91,7 +91,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
         <View style={{ flexDirection: 'row' }}>
             <FastImage
                 style={{ height: ICON_SIZE, width: ICON_SIZE, marginRight: BASE_DIMENSION }}
-                resizeMode={FastImage.resizeMode.contain}
+                resizeMode="contain"
                 source={navigation.state.params.tokenLogo}
             />
             <Text

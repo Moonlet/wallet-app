@@ -17,7 +17,7 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 import { getBlockchainsPortfolio, hasNetwork } from '../../../redux/preferences/selectors';
 import { Dialog } from '../../../components/dialog/dialog';
-import FastImage from 'react-native-fast-image';
+import FastImage from '../../../core/utils/fast-image';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainOptions }];
@@ -87,7 +87,7 @@ export class BlockchainPortfolioComponent extends React.Component<
                 <View style={styles.infoContainer}>
                     <FastImage
                         style={styles.iconContainer}
-                        resizeMode={FastImage.resizeMode.contain}
+                        resizeMode="contain"
                         source={
                             getBlockchain(item.key).config.tokens[
                                 getBlockchain(item.key).config.coin

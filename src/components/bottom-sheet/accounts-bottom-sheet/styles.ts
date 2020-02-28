@@ -8,6 +8,11 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.bottomSheetBackground,
             padding: BASE_DIMENSION * 2
         },
+        scrollContainer: {
+            flexGrow: 1,
+            backgroundColor: theme.colors.bottomSheetBackground,
+            marginBottom: BASE_DIMENSION * 4
+        },
         icon: {
             color: theme.colors.accent,
             alignSelf: 'center'

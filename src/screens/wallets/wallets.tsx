@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, TouchableOpacity, ScrollView, Image, Platform } from 'react-native';
 import {
     NavigationParams,
     NavigationScreenProp,
@@ -278,7 +278,9 @@ export class WalletsScreenComponent extends React.Component<
                                     <Swipeable
                                         key={index}
                                         ref={ref => (this.walletSwipeableRef[index] = ref)}
-                                        renderLeftActions={() => this.renderLeftActions(wallet)}
+                                        renderLeftActions={() =>
+                                            Platform.OS !== 'web' && this.renderLeftActions(wallet)
+                                        }
                                         onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
                                     >
                                         <ListCard
@@ -320,7 +322,7 @@ export class WalletsScreenComponent extends React.Component<
                                     </Button>
                                 </View>
                             ),
-                            [WalletType.HW]: (
+                            [WalletType.HW]: Platform.OS !== 'web' && (
                                 <View style={styles.buttonContainer}>
                                     <Button
                                         style={styles.bottomButton}

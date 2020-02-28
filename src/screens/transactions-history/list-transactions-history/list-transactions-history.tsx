@@ -53,7 +53,10 @@ export class TransactionsHistoryListComponent extends React.Component<
                         </Text>
                     </View>
                 ) : (
-                    <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>
+                    <ScrollView
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        showsVerticalScrollIndicator={false}
+                    >
                         {transactions.map(tx => {
                             const date = new Date(tx.date.signed);
 

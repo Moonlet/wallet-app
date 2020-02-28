@@ -11,7 +11,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
     </View>
   </View>
   <View style={{...}}>
-    <TouchableOpacity testID=\\"button-tos\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+    <TouchableOpacity testID=\\"button-tc\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
       <withTheme(TextComponent) style={{...}}>
         Terms &amp; conditions
       </withTheme(TextComponent)>

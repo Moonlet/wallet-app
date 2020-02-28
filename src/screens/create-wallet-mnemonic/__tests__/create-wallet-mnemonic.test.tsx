@@ -19,13 +19,13 @@ const props: IProps & IReduxProps = {
         navigate: jest.fn()
     },
     styles: styleProvider(darkTheme),
-    tosVersion: 1
+    tcVersion: 1
 };
 
 jest.mock('../../../core/wallet/hd-wallet/mnemonic');
 jest.mock('../../../core/constants/app', () => {
     return {
-        TOS_VERSION: 1
+        TC_VERSION: 1
     };
 });
 
@@ -63,8 +63,8 @@ describe('creat wallet terms screen component', () => {
         expect(options.headerLeft()).toBe(null);
     });
 
-    it('navigates to tos when there are new tos', () => {
-        shallow(<CreateWalletMnemonicScreenComponent {...{ ...props, tosVersion: 0 }} />);
+    it('navigates to tc when there are new tc', () => {
+        shallow(<CreateWalletMnemonicScreenComponent {...{ ...props, tcVersion: 0 }} />);
         expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletTerms');
     });
 });

@@ -9,7 +9,7 @@ import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
-import { TOS_VERSION } from '../../core/constants/app';
+import { TC_VERSION } from '../../core/constants/app';
 import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
 import { ledgerConfig } from '../../core/wallet/hw-wallet/ledger/config';
 import { Blockchain } from '../../core/blockchain/types';
@@ -23,7 +23,7 @@ import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 
 export interface IReduxProps {
-    tosVersion: number;
+    tcVersion: number;
     openBottomSheet: typeof openBottomSheet;
 }
 
@@ -86,7 +86,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
             connectionActive: false
         };
 
-        if (!props.tosVersion || TOS_VERSION > props.tosVersion) {
+        if (!props.tcVersion || TC_VERSION > props.tcVersion) {
             props.navigation.navigate('CreateWalletTerms');
         }
     }
@@ -342,7 +342,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
 export const ConnectHardwareWallet = smartConnect(ConnectHardwareWalletScreenComponent, [
     connect(
         (state: IReduxState) => ({
-            tosVersion: state.app.tosVersion
+            tcVersion: state.app.tcVersion
         }),
         mapDispatchToProps
     ),

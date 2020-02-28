@@ -20,7 +20,7 @@ const props: IProps & IReduxProps = {
         navigate: jest.fn()
     },
     styles: styleProvider(darkTheme),
-    tosVersion: 1,
+    tcVersion: 1,
     createHDWallet: jest.fn((mnemonic, password, callback): any => callback()),
     theme: darkTheme
 };
@@ -28,7 +28,7 @@ const props: IProps & IReduxProps = {
 jest.mock('../../../core/wallet/hd-wallet/mnemonic');
 jest.mock('../../../core/constants/app', () => {
     return {
-        TOS_VERSION: 1
+        TC_VERSION: 1
     };
 });
 
@@ -49,8 +49,8 @@ describe('creat wallet terms screen component', () => {
         expect(wrapper.debug()).toMatchSnapshot();
     });
 
-    test('navigates to tos when there are new tos', () => {
-        shallow(<RecoverWalletScreenComponent {...{ ...props, tosVersion: 0 }} />);
+    test('navigates to tc when there are new tc', () => {
+        shallow(<RecoverWalletScreenComponent {...{ ...props, tcVersion: 0 }} />);
         expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletTerms');
     });
 

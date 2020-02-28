@@ -50,7 +50,7 @@ export default (theme: ITheme) =>
             fontWeight: 'bold',
             alignSelf: 'flex-end'
         },
-        walletTos: {
+        walletTc: {
             marginTop: BASE_DIMENSION * 6,
             marginBottom: BASE_DIMENSION * 2,
             fontSize: 17,

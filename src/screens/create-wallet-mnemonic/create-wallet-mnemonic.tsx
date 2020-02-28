@@ -12,7 +12,7 @@ import { HeaderLeft } from '../../components/header-left/header-left';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
-import { TOS_VERSION } from '../../core/constants/app';
+import { TC_VERSION } from '../../core/constants/app';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { Icon } from '../../components/icon';
 
@@ -27,7 +27,7 @@ interface IState {
 }
 
 export interface IReduxProps {
-    tosVersion: number;
+    tcVersion: number;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -60,7 +60,7 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
             copied: false
         };
 
-        if (!props.tosVersion || TOS_VERSION > props.tosVersion) {
+        if (!props.tcVersion || TC_VERSION > props.tcVersion) {
             props.navigation.navigate('CreateWalletTerms');
         }
     }
@@ -134,7 +134,7 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
 export const CreateWalletMnemonicScreen = smartConnect(CreateWalletMnemonicScreenComponent, [
     connect(
         (state: IReduxState) => ({
-            tosVersion: state.app.tosVersion
+            tcVersion: state.app.tcVersion
         }),
         null
     ),

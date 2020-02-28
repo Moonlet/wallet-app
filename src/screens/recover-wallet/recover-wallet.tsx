@@ -11,7 +11,7 @@ import { HeaderLeft } from '../../components/header-left/header-left';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
-import { TOS_VERSION } from '../../core/constants/app';
+import { TC_VERSION } from '../../core/constants/app';
 import { createHDWallet } from '../../redux/wallets/actions';
 import { Mnemonic } from '../../core/wallet/hd-wallet/mnemonic';
 import { PasswordModal } from '../../components/password-modal/password-modal';
@@ -32,7 +32,7 @@ interface IState {
 }
 
 export interface IReduxProps {
-    tosVersion: number;
+    tcVersion: number;
     createHDWallet: typeof createHDWallet;
     openLoadingModal: typeof openLoadingModal;
 }
@@ -75,7 +75,7 @@ export class RecoverWalletScreenComponent extends React.Component<
             validInputs: []
         };
 
-        if (!props.tosVersion || TOS_VERSION > props.tosVersion) {
+        if (!props.tcVersion || TC_VERSION > props.tcVersion) {
             props.navigation.navigate('CreateWalletTerms');
         }
     }
@@ -356,6 +356,6 @@ export class RecoverWalletScreenComponent extends React.Component<
 }
 
 export const RecoverWalletScreen = smartConnect(RecoverWalletScreenComponent, [
-    connect((state: IReduxState) => ({ tosVersion: state.app.tosVersion }), mapDispatchToProps),
+    connect((state: IReduxState) => ({ tcVersion: state.app.tcVersion }), mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

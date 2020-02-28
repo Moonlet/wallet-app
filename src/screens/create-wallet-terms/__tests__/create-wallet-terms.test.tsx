@@ -18,7 +18,7 @@ const props: IProps & IReduxProps = {
         pop: jest.fn()
     },
     styles: styleProvider(darkTheme),
-    appSetTosVersion: jest.fn()
+    appSetTcVersion: jest.fn()
 };
 
 jest.mock('../../../core/secure/keychain', () => {
@@ -42,7 +42,7 @@ describe('creat wallet terms screen component', () => {
     it('navigates correctly', async () => {
         const wrapper = shallow(<CreateWalletTermsScreenComponent {...props} />);
 
-        wrapper.find('[testID="button-tos"]').simulate('Press');
+        wrapper.find('[testID="button-tc"]').simulate('Press');
         wrapper.find('[testID="button-privacy-policy"]').simulate('Press');
         wrapper.find('[testID="button-accept"]').simulate('Press');
 

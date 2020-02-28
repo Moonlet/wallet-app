@@ -11,8 +11,8 @@ import { Icon } from '../../components/icon';
 import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { appSetTosVersion } from '../../redux/app/actions';
-import { TOS_VERSION } from '../../core/constants/app';
+import { appSetTcVersion } from '../../redux/app/actions';
+import { TC_VERSION } from '../../core/constants/app';
 
 export interface IProps {
     navigation: NavigationStackProp<NavigationState, NavigationParams>;
@@ -20,13 +20,13 @@ export interface IProps {
 }
 
 export interface IReduxProps {
-    appSetTosVersion: (n: number) => void;
+    appSetTcVersion: (n: number) => void;
 }
 
 export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) => (
     <View style={props.styles.container}>
         <View style={props.styles.topContainer}>
-            <Text style={props.styles.walletTos}>{translate('CreateWalletTos.body')}</Text>
+            <Text style={props.styles.walletTc}>{translate('CreateWalletTc.body')}</Text>
             <View style={props.styles.docImageContainer}>
                 <Image
                     resizeMode="contain"
@@ -37,7 +37,7 @@ export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) =>
 
         <View style={props.styles.bottomContainer}>
             <TouchableOpacity
-                testID="button-tos"
+                testID="button-tc"
                 style={props.styles.rowContainer}
                 onPress={() => props.navigation.navigate('TermsConditions')}
             >
@@ -60,7 +60,7 @@ export const CreateWalletTermsScreenComponent = (props: IProps & IReduxProps) =>
                 style={props.styles.bottomButton}
                 primary
                 onPress={() => {
-                    props.appSetTosVersion(TOS_VERSION);
+                    props.appSetTcVersion(TC_VERSION);
                     props.navigation.pop();
                 }}
             >
@@ -79,7 +79,7 @@ CreateWalletTermsScreenComponent.navigationOptions = navigationOptions;
 
 export const CreateWalletTermsScreen = smartConnect(CreateWalletTermsScreenComponent, [
     connect(null, dispatch => ({
-        appSetTosVersion: (tosVersion: number) => dispatch(appSetTosVersion(tosVersion))
+        appSetTcVersion: (tcVersion: number) => dispatch(appSetTcVersion(tcVersion))
     })),
     withTheme(stylesProvider)
 ]);

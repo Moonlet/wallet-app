@@ -28,12 +28,6 @@ export default describe('SendScreen', () => {
     test('renders correctly', () => {
         const wrapper = shallow(<ReceiveScreenComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();
-
-        wrapper.setState({
-            isValidAddress: true,
-            amount: '1'
-        });
-        expect(wrapper.debug()).toMatchSnapshot();
     });
 
     test('renders correctly - button should show Copied in title', () => {

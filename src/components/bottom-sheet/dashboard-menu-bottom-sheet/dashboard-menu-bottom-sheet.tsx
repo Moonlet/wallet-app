@@ -92,22 +92,23 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     <Icon name="chevron-right" size={16} style={styles.arrowRight} />
                 </TouchableOpacity>
 
-                {getBlockchain(this.props.blockchain).config.ui.enableTokenManagement && (
-                    <TouchableOpacity onPress={this.manageAccount} style={styles.rowContainer}>
-                        <View style={styles.iconContainer}>
-                            <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
-                        </View>
-                        <View style={styles.textContainer}>
-                            <Text style={styles.title}>
-                                {translate('DashboardMenu.manageAccount')}
-                            </Text>
-                            <Text style={styles.description}>
-                                {translate('DashboardMenu.quicklyManage')}
-                            </Text>
-                        </View>
-                        <Icon name="chevron-right" size={16} style={styles.arrowRight} />
-                    </TouchableOpacity>
-                )}
+                {getBlockchain(this.props.blockchain).config.ui.enableTokenManagement &&
+                    Platform.OS !== 'web' && (
+                        <TouchableOpacity onPress={this.manageAccount} style={styles.rowContainer}>
+                            <View style={styles.iconContainer}>
+                                <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
+                            </View>
+                            <View style={styles.textContainer}>
+                                <Text style={styles.title}>
+                                    {translate('DashboardMenu.manageAccount')}
+                                </Text>
+                                <Text style={styles.description}>
+                                    {translate('DashboardMenu.quicklyManage')}
+                                </Text>
+                            </View>
+                            <Icon name="chevron-right" size={16} style={styles.arrowRight} />
+                        </TouchableOpacity>
+                    )}
 
                 <TouchableOpacity onPress={this.connectExtension} style={styles.rowContainer}>
                     <View style={styles.iconContainer}>

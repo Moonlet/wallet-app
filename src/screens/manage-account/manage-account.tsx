@@ -18,7 +18,7 @@ import { Amount } from '../../components/amount/amount';
 import { toggleTokenActive, updateTokenOrder, removeToken } from '../../redux/wallets/actions';
 import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import FastImage from 'react-native-fast-image';
+import FastImage from '../../core/utils/fast-image';
 
 export interface IReduxProps {
     toggleTokenActive: typeof toggleTokenActive;
@@ -152,7 +152,7 @@ export class ManageAccountComponent extends React.Component<
                         <View style={styles.iconContainer}>
                             <FastImage
                                 style={styles.tokenLogo}
-                                resizeMode={FastImage.resizeMode.contain}
+                                resizeMode="contain"
                                 source={item.value.logo}
                             />
                         </View>

@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, ActivityIndicator, Modal, Platform } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
+import Modal from '../../core/utils/modal';
 
 interface IExternalProps {
     spinnerColor?: string;
@@ -23,21 +24,6 @@ const mapStateToProps = (state: IReduxState) => {
 export const LoadingModalComponent = (
     props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    if (Platform.OS === 'web') {
-        if (props.isVisible) {
-            return (
-                <View style={props.styles.webContainer}>
-                    <ActivityIndicator
-                        size="large"
-                        color={props.spinnerColor ? props.spinnerColor : props.theme.colors.accent}
-                    />
-                </View>
-            );
-        } else {
-            return <View />;
-        }
-    }
-
     return (
         <Modal
             animationType="fade"

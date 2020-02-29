@@ -5,7 +5,7 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
-import Modal from '../../core/utils/modal';
+import Modal from '../../library/modal/modal';
 
 interface IExternalProps {
     spinnerColor?: string;

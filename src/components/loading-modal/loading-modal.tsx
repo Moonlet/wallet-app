@@ -1,10 +1,11 @@
 import React from 'react';
-import { View, ActivityIndicator, Modal } from 'react-native';
+import { View, ActivityIndicator } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
+import Modal from '../../library/modal/modal';
 
 interface IExternalProps {
     spinnerColor?: string;

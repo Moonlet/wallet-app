@@ -43,10 +43,6 @@ export const ledgerConfigInternal: ILedgerTransportConfig = {
     ios: {
         ETHEREUM: {
             NANO_X: nanoXConnectionConfigBLE
-        },
-        COSMOS: {
-            NANO_S: nanosConnectionConfig,
-            NANO_X: nanoXConnectionConfigUSB
         }
     },
     web: {

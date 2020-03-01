@@ -121,9 +121,7 @@ export const translation: ITranslations = {
             BLE: 'Bluetooth',
             scanningDevices: 'Scanning for ledger device',
             paired: 'has been paired',
-            OPEN_APP: 'Please open {{app}} app on your Ledger',
-            ETHEREUM: 'Ethereum',
-            ZILLIQA: 'Zilliqa'
+            OPEN_APP: 'Please open {{app}} app on your Ledger'
         },
         Fee: {
             feeTitle: 'Transaction fee',

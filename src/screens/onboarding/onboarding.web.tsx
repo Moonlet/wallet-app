@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Text } from '../../library';
 import { NavigationActions } from 'react-navigation';
-import stylesProvider from './styles';
+import stylesProvider from './styles-web';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
@@ -10,19 +10,11 @@ import { withNavigationParams, INavigationProps } from '../../navigation/with-na
 import QRCode from 'qrcode';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 
-export interface IReduxProps {
-    createHDWallet: (mnemonic: string, password: string, callback: () => any) => void;
-}
-
 export class OnboardingScreenComponent extends React.Component<
     INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public qrCanvas: HTMLCanvasElement;
     public unsubscribe: () => void;
-
-    constructor(props: INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
-        super(props);
-    }
 
     public componentDidMount() {
         if (!WalletConnectWeb.isConnected()) {
@@ -55,36 +47,43 @@ export class OnboardingScreenComponent extends React.Component<
     }
 
     public render() {
-        const styles = this.props.styles;
+        const { styles } = this.props;
 
         return (
             <View style={styles.container}>
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <View style={styles.textContainer}>
-                        <Text large style={{ fontWeight: 'bold' }}>
-                            {translate('Onboarding.welcomeTitle')}
-                        </Text>
-                        <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
-                            {translate('Onboarding.welcomeTextWeb')}
-                        </Text>
+                <View style={styles.topContainer}>
+                    <Text large style={styles.welcomeTitle}>
+                        {translate('Onboarding.welcomeTitle')}
+                    </Text>
+                    <Text style={styles.welcomeTextWeb}>
+                        {translate('Onboarding.welcomeTextWeb')}
+                    </Text>
+                </View>
+
+                <View style={styles.canvas}>
+                    <canvas ref={ref => (this.qrCanvas = ref)} style={{ textAlign: 'center' }} />
+                </View>
+
+                <View style={styles.bottomContainer}>
+                    <View style={styles.infoRow}>
+                        <View key="circle-1" style={styles.circle}>
+                            <Text key="number-1" style={styles.number}>{`1`}</Text>
+                        </View>
+                        <Text style={styles.text}>{translate('Onboarding.webStep1')}</Text>
                     </View>
-                </View>
 
-                <View style={{ justifyContent: 'center' }}>
-                    <canvas ref={ref => (this.qrCanvas = ref)}></canvas>
-                </View>
+                    <View style={styles.infoRow}>
+                        <View key="circle-2" style={styles.circle}>
+                            <Text key="number-2" style={styles.number}>{`2`}</Text>
+                        </View>
+                        <Text style={styles.text}>{translate('Onboarding.webStep2')}</Text>
+                    </View>
 
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                    <View style={styles.textContainer}>
-                        <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
-                            {translate('Onboarding.webStep1')}
-                        </Text>
-                        <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
-                            {translate('Onboarding.webStep2')}
-                        </Text>
-                        <Text style={{ textAlign: 'center', marginTop: 12 }} darker>
-                            {translate('Onboarding.webStep3')}
-                        </Text>
+                    <View style={styles.infoRow}>
+                        <View key="circle-3" style={styles.circle}>
+                            <Text key="number-3" style={styles.number}>{`3`}</Text>
+                        </View>
+                        <Text style={styles.text}>{translate('Onboarding.webStep3')}</Text>
                     </View>
                 </View>
             </View>

@@ -35,7 +35,9 @@ export class MemoComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <Text style={styles.label}>{translate('Send.memo')}</Text>
+                <Text key={'memo-label'} style={styles.label}>
+                    {translate('Send.memo')}
+                </Text>
 
                 <View style={[styles.inputBox, styles.inputBoxTop]}>
                     <TextInput

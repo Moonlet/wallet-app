@@ -21,6 +21,7 @@ import { themes } from '../../navigation/navigation';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
+import { Capitalize } from '../../core/utils/format-string';
 
 export interface IReduxProps {
     tosVersion: number;
@@ -28,7 +29,6 @@ export interface IReduxProps {
 }
 
 export interface IState {
-    openAppOnDevice: boolean;
     device: HWModel;
     blockchain: Blockchain;
     connection: HWConnection;
@@ -77,7 +77,6 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
         super(props);
 
         this.state = {
-            openAppOnDevice: false,
             device: undefined,
             blockchain: undefined,
             connection: undefined,
@@ -210,7 +209,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                         {this.state.blockchain !== undefined && (
                             <ListCard
                                 key={`key-${this.state.blockchain}`}
-                                label={translate(`CreateHardwareWallet.${this.state.blockchain}`)}
+                                label={Capitalize(this.state.blockchain)}
                                 leftIcon="money-wallet-1"
                                 rightIcon={'check-1'}
                                 selected={true}
@@ -250,7 +249,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                     ledgerTypeActive: true
                                 })
                             }
-                            label={translate(`CreateHardwareWallet.${key}`)}
+                            label={Capitalize(key)}
                             leftIcon="money-wallet-1"
                             rightIcon={this.state.blockchain === key && 'check-1'}
                             selected={this.state.blockchain === key}

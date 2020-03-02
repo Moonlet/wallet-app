@@ -205,12 +205,7 @@ export class PasswordModalComponent extends React.Component<
                     height: '100%'
                 }}
             >
-                <Modal
-                    animationType={'none'}
-                    transparent={true}
-                    visible={this.state.visible}
-                    presentationStyle={'overFullScreen'}
-                >
+                <Modal isVisible={this.state.visible} animationInTiming={5}>
                     {this.state.showTerms ? (
                         <PasswordTerms
                             onAcknowledged={this.onAcknowledged}

@@ -14,3 +14,7 @@ export const getRemoteConfigFeatures = () => {
 export const isFeatureActive = (feature: RemoteFeature): boolean => {
     return false;
 };
+
+export const getTCVersion = (): number => {
+    return 1;
+};

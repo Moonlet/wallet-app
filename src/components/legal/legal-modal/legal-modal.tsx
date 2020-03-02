@@ -42,12 +42,7 @@ export const LegalModalComponent = (
     });
 
     return (
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={showModal}
-            presentationStyle="overFullScreen"
-        >
+        <Modal isVisible={showModal}>
             <View style={props.styles.container}>
                 <Legal onAccept={() => setShowModal(false)} />
             </View>

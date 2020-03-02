@@ -36,7 +36,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "order": 0,
                   "symbol": "ZIL",
                   "type": "NATIVE",
-                  "uiDecimals": 3,
+                  "ui": Object {
+                    "decimals": 3,
+                    "tokenScreenComponent": "DEFAULT",
+                  },
                   "units": Object {
                     "LI": "1000000",
                     "QA": "1",
@@ -62,7 +65,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "order": 0,
                   "symbol": "ZIL",
                   "type": "NATIVE",
-                  "uiDecimals": 3,
+                  "ui": Object {
+                    "decimals": 3,
+                    "tokenScreenComponent": "DEFAULT",
+                  },
                   "units": Object {
                     "LI": "1000000",
                     "QA": "1",
@@ -88,7 +94,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "order": 0,
                   "symbol": "ZIL",
                   "type": "NATIVE",
-                  "uiDecimals": 3,
+                  "ui": Object {
+                    "decimals": 3,
+                    "tokenScreenComponent": "DEFAULT",
+                  },
                   "units": Object {
                     "LI": "1000000",
                     "QA": "1",
@@ -114,7 +123,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "order": 0,
                   "symbol": "ZIL",
                   "type": "NATIVE",
-                  "uiDecimals": 3,
+                  "ui": Object {
+                    "decimals": 3,
+                    "tokenScreenComponent": "DEFAULT",
+                  },
                   "units": Object {
                     "LI": "1000000",
                     "QA": "1",
@@ -140,7 +152,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "order": 0,
                   "symbol": "ZIL",
                   "type": "NATIVE",
-                  "uiDecimals": 3,
+                  "ui": Object {
+                    "decimals": 3,
+                    "tokenScreenComponent": "DEFAULT",
+                  },
                   "units": Object {
                     "LI": "1000000",
                     "QA": "1",
@@ -166,7 +181,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "order": 0,
                   "symbol": "ETH",
                   "type": "NATIVE",
-                  "uiDecimals": 4,
+                  "ui": Object {
+                    "decimals": 4,
+                    "tokenScreenComponent": "DEFAULT",
+                  },
                   "units": Object {
                     "ETH": "1000000000000000000",
                     "GWEI": "1000000000",
@@ -192,7 +210,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "order": 0,
                   "symbol": "ETH",
                   "type": "NATIVE",
-                  "uiDecimals": 4,
+                  "ui": Object {
+                    "decimals": 4,
+                    "tokenScreenComponent": "DEFAULT",
+                  },
                   "units": Object {
                     "ETH": "1000000000000000000",
                     "GWEI": "1000000000",
@@ -218,7 +239,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "order": 0,
                   "symbol": "ETH",
                   "type": "NATIVE",
-                  "uiDecimals": 4,
+                  "ui": Object {
+                    "decimals": 4,
+                    "tokenScreenComponent": "DEFAULT",
+                  },
                   "units": Object {
                     "ETH": "1000000000000000000",
                     "GWEI": "1000000000",
@@ -244,7 +268,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "order": 0,
                   "symbol": "ETH",
                   "type": "NATIVE",
-                  "uiDecimals": 4,
+                  "ui": Object {
+                    "decimals": 4,
+                    "tokenScreenComponent": "DEFAULT",
+                  },
                   "units": Object {
                     "ETH": "1000000000000000000",
                     "GWEI": "1000000000",
@@ -270,7 +297,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "order": 0,
                   "symbol": "ETH",
                   "type": "NATIVE",
-                  "uiDecimals": 4,
+                  "ui": Object {
+                    "decimals": 4,
+                    "tokenScreenComponent": "DEFAULT",
+                  },
                   "units": Object {
                     "ETH": "1000000000000000000",
                     "GWEI": "1000000000",
@@ -299,7 +329,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "gaia-13007": "umuon",
                   },
                   "type": "NATIVE",
-                  "uiDecimals": 3,
+                  "ui": Object {
+                    "decimals": 3,
+                    "tokenScreenComponent": "DELEGATE",
+                  },
                   "units": Object {
                     "ATOM": "1000000",
                     "UATOM": "1",
@@ -327,7 +360,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "gaia-13007": "umuon",
                   },
                   "type": "NATIVE",
-                  "uiDecimals": 3,
+                  "ui": Object {
+                    "decimals": 3,
+                    "tokenScreenComponent": "DELEGATE",
+                  },
                   "units": Object {
                     "ATOM": "1000000",
                     "UATOM": "1",
@@ -355,7 +391,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "gaia-13007": "umuon",
                   },
                   "type": "NATIVE",
-                  "uiDecimals": 3,
+                  "ui": Object {
+                    "decimals": 3,
+                    "tokenScreenComponent": "DELEGATE",
+                  },
                   "units": Object {
                     "ATOM": "1000000",
                     "UATOM": "1",
@@ -383,7 +422,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "gaia-13007": "umuon",
                   },
                   "type": "NATIVE",
-                  "uiDecimals": 3,
+                  "ui": Object {
+                    "decimals": 3,
+                    "tokenScreenComponent": "DELEGATE",
+                  },
                   "units": Object {
                     "ATOM": "1000000",
                     "UATOM": "1",
@@ -411,7 +453,10 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "gaia-13007": "umuon",
                   },
                   "type": "NATIVE",
-                  "uiDecimals": 3,
+                  "ui": Object {
+                    "decimals": 3,
+                    "tokenScreenComponent": "DELEGATE",
+                  },
                   "units": Object {
                     "ATOM": "1000000",
                     "UATOM": "1",

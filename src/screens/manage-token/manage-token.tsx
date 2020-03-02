@@ -196,7 +196,10 @@ export class ManageTokenComponent extends React.Component<
                     type: tokenType,
                     contractAddress: this.state.token.contractAddress,
                     decimals: Number(this.state.token.decimals),
-                    uiDecimals: 4,
+                    ui: {
+                        decimals: 4,
+                        tokenScreenComponent: this.state.token.ui.tokenScreenComponent
+                    },
 
                     active: true,
                     order:

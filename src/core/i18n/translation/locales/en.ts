@@ -123,6 +123,12 @@ export const translation: ITranslations = {
             paired: 'has been paired',
             OPEN_APP: 'Please open {{app}} app on your Ledger'
         },
+        DelegateTokenScreen: {
+            Account: 'Account',
+            Delegations: 'Delegations',
+            Validators: 'Validators',
+            Transactions: 'Transactions'
+        },
         Fee: {
             feeTitle: 'Transaction fee',
             gasPrice: 'Gas price',
@@ -188,6 +194,7 @@ export const translation: ITranslations = {
             editContactName: 'Edit name',
             reviewTransaction: 'Review transaction on your hardware wallet'
         },
+
         AccountSettings: {
             manageAccount: 'Manage account',
             revealPrivate: 'Reveal private key',

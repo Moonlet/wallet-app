@@ -1,6 +1,6 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType } from '../types/token';
+import { TokenType, TokenScreenComponentType } from '../types/token';
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/313'/0'/0`,
@@ -18,7 +18,10 @@ export const config: IBlockchainConfig = {
             order: 0,
             active: true,
             decimals: 12,
-            uiDecimals: 3,
+            ui: {
+                decimals: 3,
+                tokenScreenComponent: TokenScreenComponentType.DEFAULT
+            },
             type: TokenType.NATIVE,
             units: {
                 QA: new BigNumber(1),

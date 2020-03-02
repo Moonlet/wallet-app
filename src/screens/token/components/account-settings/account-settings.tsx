@@ -8,7 +8,6 @@ import { ITheme } from '../../../../core/theme/itheme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
-import { ViewKey } from '../view-key/view-key';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ICON_SIZE } from '../../../../styles/dimensions';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
@@ -17,6 +16,7 @@ import Modal from '../../../../library/modal/modal';
 import { ChainIdType } from '../../../../core/blockchain/types';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { WalletType } from '../../../../core/wallet/types';
+import { ViewKey } from './components/view-key/view-key';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;

@@ -1,17 +1,17 @@
 import React from 'react';
 import { View, TouchableOpacity, Clipboard } from 'react-native';
 import stylesProvider from './styles';
-import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { Icon } from '../../../../components/icon';
-import { smartConnect } from '../../../../core/utils/smart-connect';
-import { Text } from '../../../../library';
-import { translate } from '../../../../core/i18n';
-import { ICON_SIZE } from '../../../../styles/dimensions';
+import { withTheme, IThemeProps } from '../../../../../../core/theme/with-theme';
+import { Icon } from '../../../../../../components/icon';
+import { smartConnect } from '../../../../../../core/utils/smart-connect';
+import { Text } from '../../../../../../library';
+import { translate } from '../../../../../../core/i18n';
+import { ICON_SIZE } from '../../../../../../styles/dimensions';
 import {
     withNavigationParams,
     INavigationProps
-} from '../../../../navigation/with-navigation-params';
-import { allowScreenshots, forbidScreenshots } from '../../../../core/utils/screenshot';
+} from '../../../../../../navigation/with-navigation-params';
+import { allowScreenshots, forbidScreenshots } from '../../../../../../core/utils/screenshot';
 
 export interface IExternalProps {
     value: string;

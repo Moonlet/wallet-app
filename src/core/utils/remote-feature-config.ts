@@ -45,9 +45,10 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
         return true;
     }
     if (
-        feature === RemoteFeature.NEAR ||
-        feature === RemoteFeature.COSMOS ||
-        feature === RemoteFeature.DEV_TOOLS
+        (feature === RemoteFeature.NEAR ||
+            feature === RemoteFeature.COSMOS ||
+            feature === RemoteFeature.DEV_TOOLS) &&
+        featuresConfig
     ) {
         const values = JSON.parse(featuresConfig[feature]);
         if (values.length > 0) {

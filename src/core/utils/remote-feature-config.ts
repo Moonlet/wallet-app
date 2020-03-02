@@ -61,6 +61,10 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
 };
 
 export const getTCVersion = (): number => {
-    const tcVersion = JSON.parse(featuresConfig[RemoteFeature.TC_VERSION]);
-    return tcVersion;
+    if (featuresConfig) {
+        const tcVersion = JSON.parse(featuresConfig[RemoteFeature.TC_VERSION]);
+        return tcVersion;
+    }
+
+    return;
 };

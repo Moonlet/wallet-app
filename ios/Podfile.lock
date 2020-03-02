@@ -296,6 +296,8 @@ PODS:
     - React
   - react-native-randombytes (3.5.3):
     - React
+  - react-native-webview (8.1.2):
+    - React
   - React-RCTActionSheet (0.61.1):
     - React-Core/RCTActionSheetHeaders (= 0.61.1)
   - React-RCTAnimation (0.61.1):
@@ -406,6 +408,7 @@ DEPENDENCIES:
   - react-native-ble-plx-swift (from `../node_modules/react-native-ble-plx`)
   - react-native-camera-kit (from `../node_modules/react-native-camera-kit`)
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
+  - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
   - React-RCTBlob (from `../node_modules/react-native/Libraries/Blob`)
@@ -501,6 +504,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-camera-kit"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
+  react-native-webview:
+    :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
     :path: "../node_modules/react-native/Libraries/ActionSheetIOS"
   React-RCTAnimation:
@@ -592,6 +597,7 @@ SPEC CHECKSUMS:
   react-native-ble-plx-swift: e0d041529bd7ae66eb9731123eca3df3d132e8ec
   react-native-camera-kit: 8d908f90f4d31943fcfad3bf89a5768249af794b
   react-native-randombytes: 991545e6eaaf700b4ee384c291ef3d572e0b2ca8
+  react-native-webview: 055c7110f17c2f19c971f655064ee480638db668
   React-RCTActionSheet: af4d951113b1e068bb30611f91b984a7a73597ff
   React-RCTAnimation: 4f518d70bb6890b7c3d9d732f84786d6693ca297
   React-RCTBlob: 072a4888c08de0eef6d04eaa727d25e577e6ff26

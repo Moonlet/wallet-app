@@ -6,7 +6,7 @@ import { config } from './config';
 import { Client as CosmosClient } from './client';
 import { Cosmos } from '.';
 import { BigNumber } from 'bignumber.js';
-import { sortObject } from '../common/transaction';
+import { sortObject } from '../../utils/sort-object';
 
 export const sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
     const hash = createHash('sha256')

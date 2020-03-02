@@ -1,8 +1,8 @@
 import CosmosApp from 'ledger-cosmos-js';
 import { IHardwareWalletApp } from '../types';
 import { IBlockchainTransaction } from '../../../../blockchain/types';
-import { sortObject } from '../../../../blockchain/common/transaction';
 import { signatureImport } from 'secp256k1';
+import { sortObject } from '../../../../utils/sort-object';
 
 export class Cosmos implements IHardwareWalletApp {
     private app: CosmosApp;

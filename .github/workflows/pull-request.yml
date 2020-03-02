@@ -10,6 +10,8 @@ jobs:
     - uses: actions/setup-node@v1
       with:
         node-version: "10.x"
+    - name: Install xvfb
+      run: sudo apt install xvfb
     - uses: actions/checkout@v1
     - name: Cache node modules
       uses: actions/cache@v1
@@ -29,6 +31,8 @@ jobs:
       run: npm test
     - name: Build extension
       run: npm run ext:build:beta:chrome
+    - name: Run extension test
+      run: cd extension && xvfb-run npx jest
     - name: Upload coverage to Codecov
       env: 
         CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}

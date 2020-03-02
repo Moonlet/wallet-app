@@ -1,6 +1,7 @@
 import { Blockchain } from '../../../blockchain/types';
 import { Eth } from './apps/eth';
 import { Zil } from './apps/zil';
+import { Cosmos } from './apps/cosmos';
 import { IHardwareWalletApp } from './types';
 
 export class AppFactory {
@@ -13,6 +14,8 @@ export class AppFactory {
                 return new Eth(transport);
             case Blockchain.ZILLIQA:
                 return new Zil(transport);
+            case Blockchain.COSMOS:
+                return new Cosmos(transport);
             default:
                 return Promise.reject();
         }

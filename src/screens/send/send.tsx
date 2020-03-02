@@ -447,7 +447,7 @@ export class SendScreenComponent extends React.Component<
     public renderExtraFields(value: string) {
         switch (value) {
             case 'Memo':
-                return <Memo onMemoInput={this.onMemoInput} />;
+                return <Memo key={value} onMemoInput={this.onMemoInput} />;
 
             default:
                 return null;

@@ -25,7 +25,10 @@ export class AccountListComponent extends React.Component<IProps & IExternalProp
         const styles = this.props.styles;
         const accounts = this.props.accounts;
         return (
-            <ScrollView style={{ flex: 1, alignSelf: 'stretch' }}>
+            <ScrollView
+                contentContainerStyle={{ flexGrow: 1 }}
+                showsVerticalScrollIndicator={false}
+            >
                 {accounts &&
                     accounts.map((account: IAccountState, i: number) => (
                         <View key={i}>

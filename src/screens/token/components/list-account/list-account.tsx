@@ -7,7 +7,7 @@ import { View } from 'react-native';
 import Icon from '../../../../components/icon';
 import TouchableOpacity from '../../../../library/touchable-opacity/touchable-opacity';
 import { translate } from '../../../../core/i18n';
-import FastImage from 'react-native-fast-image';
+import FastImage from '../../../../core/utils/fast-image';
 
 export interface IProps {
     label: string | JSX.Element;
@@ -38,7 +38,7 @@ export const ListAccountComponent = (
                     <FastImage
                         source={props.leftIcon}
                         style={props.styles.accountIcon}
-                        resizeMode={FastImage.resizeMode.contain}
+                        resizeMode="contain"
                     />
                 </View>
             )}

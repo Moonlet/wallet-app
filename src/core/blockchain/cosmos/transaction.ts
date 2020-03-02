@@ -6,18 +6,7 @@ import { config } from './config';
 import { Client as CosmosClient } from './client';
 import { Cosmos } from '.';
 import { BigNumber } from 'bignumber.js';
-
-export const sortObject = obj => {
-    if (obj === null) return null;
-    if (typeof obj !== 'object') return obj;
-    if (Array.isArray(obj)) return obj.map(sortObject);
-    const sortedKeys = Object.keys(obj).sort();
-    const result = {};
-    sortedKeys.forEach(key => {
-        result[key] = sortObject(obj[key]);
-    });
-    return result;
-};
+import { sortObject } from '../../utils/sort-object';
 
 export const sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
     const hash = createHash('sha256')

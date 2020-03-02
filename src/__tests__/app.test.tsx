@@ -20,7 +20,11 @@ jest.mock('../core/i18n/translation/translate', () => ({
 }));
 
 jest.mock('../core/utils/remote-feature-config', () => ({
-    getRemoteConfigFeatures: jest.fn(() => Promise.resolve({}))
+    getRemoteConfigFeatures: jest.fn(() => Promise.resolve({})),
+    isFeatureActive: jest.fn().mockResolvedValue(true),
+    RemoteFeature: {
+        COSMOS: 'feature_cosmos'
+    }
 }));
 
 jest.mock('../core/utils/exchange-rates', () => ({

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Linking } from 'react-native';
+import { View, TouchableOpacity, Linking, Platform } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme } from '../../../../core/theme/with-theme';
 import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
@@ -160,7 +160,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                             )
                         ) : (
                             <View style={styles.contentContainer}>
-                                {this.props.wallet.type !== WalletType.HW && (
+                                {this.props.wallet.type !== WalletType.HW && Platform.OS !== 'web' && (
                                     <TouchableOpacity
                                         testID="private-key"
                                         style={styles.rowContainer}

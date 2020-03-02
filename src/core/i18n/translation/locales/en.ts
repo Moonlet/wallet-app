@@ -121,9 +121,7 @@ export const translation: ITranslations = {
             BLE: 'Bluetooth',
             scanningDevices: 'Scanning for ledger device',
             paired: 'has been paired',
-            OPEN_APP: 'Please open {{app}} app on your Ledger',
-            ETHEREUM: 'Ethereum',
-            ZILLIQA: 'Zilliqa'
+            OPEN_APP: 'Please open {{app}} app on your Ledger'
         },
         Fee: {
             feeTitle: 'Transaction fee',
@@ -266,9 +264,9 @@ export const translation: ITranslations = {
             welcomeText:
                 'A blockchain agnostic, cross-platform, non custodial cryptocurrency wallet',
             welcomeTextWeb: 'To use this extension, install our mobile app and scan the code',
-            webStep1: '1. Open Moonlet app on your mobile',
-            webStep2: '2. Tap on menu icon from the header',
-            webStep3: '3. Select icon to start scan the code'
+            webStep1: 'Open Moonlet app on your mobile',
+            webStep2: 'Tap on menu icon from the header',
+            webStep3: 'Select icon to start scan the code'
         },
         Account: {
             noTransactions: 'No transactions available',

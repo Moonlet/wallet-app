@@ -32,6 +32,7 @@ export const translation: ITranslations = {
                 decimals: 'Decimals',
                 delete: 'Delete',
                 details: 'Details',
+                delegations: 'Delegations',
                 disconnect: 'Disconnect',
                 editToken: 'Edit token',
                 error: 'Error',
@@ -81,6 +82,7 @@ export const translation: ITranslations = {
                 transactions: 'Transactions',
                 typeHere: 'Type here',
                 understand: 'I understand',
+                validators: 'Validators',
                 wallets: 'Wallets',
                 watch: 'Watch mode',
                 youAreOn: 'You are on {{blockchain}} {{networkName}} Testnet'
@@ -122,12 +124,6 @@ export const translation: ITranslations = {
             scanningDevices: 'Scanning for ledger device',
             paired: 'has been paired',
             OPEN_APP: 'Please open {{app}} app on your Ledger'
-        },
-        DelegateTokenScreen: {
-            Account: 'Account',
-            Delegations: 'Delegations',
-            Validators: 'Validators',
-            Transactions: 'Transactions'
         },
         Fee: {
             feeTitle: 'Transaction fee',

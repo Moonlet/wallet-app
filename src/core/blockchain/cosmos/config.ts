@@ -52,10 +52,10 @@ export const config: IBlockchainConfig = {
     ui: {
         token: {
             labels: {
-                tabAccount: 'Account',
-                tabDelegations: 'Delegations',
-                tabValidators: 'Validators',
-                tabTransactions: 'Transactions'
+                tabAccount: 'App.labels.account',
+                tabDelegations: 'App.labels.delegations',
+                tabValidators: 'App.labels.validators',
+                tabTransactions: 'App.labels.transactions'
             }
         },
         addressDisplay: 'stripped',

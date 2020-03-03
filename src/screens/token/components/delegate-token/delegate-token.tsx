@@ -100,7 +100,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
     )
 });
 
-export class DefaultTokenScreenComponent extends React.Component<
+export class DelegateTokenScreenComponent extends React.Component<
     INavigationProps & IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
@@ -174,7 +174,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                                 : stylesTextInactive
                         }
                     >
-                        {translate(`DelegateTokenScreen.${config.ui.token.labels.tabAccount}`)}
+                        {translate(config.ui.token.labels.tabAccount)}
                     </Text>
                 </TouchableOpacity>
 
@@ -193,7 +193,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                                 : stylesTextInactive
                         }
                     >
-                        {translate(`DelegateTokenScreen.${config.ui.token.labels.tabDelegations}`)}
+                        {translate(config.ui.token.labels.tabDelegations)}
                     </Text>
                 </TouchableOpacity>
 
@@ -212,7 +212,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                                 : stylesTextInactive
                         }
                     >
-                        {translate(`DelegateTokenScreen.${config.ui.token.labels.tabValidators}`)}
+                        {translate(config.ui.token.labels.tabValidators)}
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -230,7 +230,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                                 : stylesTextInactive
                         }
                     >
-                        {translate(`DelegateTokenScreen.${config.ui.token.labels.tabTransactions}`)}
+                        {translate(config.ui.token.labels.tabTransactions)}
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -249,7 +249,7 @@ export class DefaultTokenScreenComponent extends React.Component<
     }
 }
 
-export const DelegateTokenScreen = smartConnect<IProps>(DefaultTokenScreenComponent, [
+export const DelegateTokenScreen = smartConnect<IProps>(DelegateTokenScreenComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

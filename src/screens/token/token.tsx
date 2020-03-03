@@ -131,27 +131,36 @@ export class TokenScreenComponent extends React.Component<
 
     public openSettingsMenu = () => this.setState({ settingsVisible: !this.state.settingsVisible });
 
-    public render() {
-        const { styles, token } = this.props;
-
-        return (
-            <View style={styles.container}>
-                <TestnetBadge />
-                {token.ui.tokenScreenComponent === TokenScreenComponentType.DEFAULT ? (
-                    <DefaultTokenScreen
-                        accountIndex={this.props.accountIndex}
-                        blockchain={this.props.blockchain}
-                        token={this.props.token}
-                        extensionTransactionPayload={this.props.extensionTransactionPayload}
-                    />
-                ) : (
+    renderComponent() {
+        switch (this.props.token.ui.tokenScreenComponent) {
+            case TokenScreenComponentType.DELEGATE:
+                return (
                     <DelegateTokenScreen
                         accountIndex={this.props.accountIndex}
                         blockchain={this.props.blockchain}
                         token={this.props.token}
                         extensionTransactionPayload={this.props.extensionTransactionPayload}
                     />
-                )}
+                );
+            default:
+                return (
+                    <DefaultTokenScreen
+                        accountIndex={this.props.accountIndex}
+                        blockchain={this.props.blockchain}
+                        token={this.props.token}
+                        extensionTransactionPayload={this.props.extensionTransactionPayload}
+                    />
+                );
+        }
+    }
+
+    public render() {
+        const { styles } = this.props;
+
+        return (
+            <View style={styles.container}>
+                <TestnetBadge />
+                {this.renderComponent()}
                 {this.state.settingsVisible && (
                     <AccountSettings
                         onDonePressed={this.openSettingsMenu}

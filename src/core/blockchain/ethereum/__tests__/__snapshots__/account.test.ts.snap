@@ -18,7 +18,10 @@ Object {
       "order": 0,
       "symbol": "ETH",
       "type": "NATIVE",
-      "uiDecimals": 4,
+      "ui": Object {
+        "decimals": 4,
+        "tokenScreenComponent": "DEFAULT",
+      },
       "units": Object {
         "ETH": "1000000000000000000",
         "GWEI": "1000000000",

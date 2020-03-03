@@ -51,7 +51,7 @@ export class OnboardingScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <View style={styles.topContainer}>
+                <View style={styles.topContainer} testID="welcome-text">
                     <Text large style={styles.welcomeTitle}>
                         {translate('Onboarding.welcomeTitle')}
                     </Text>

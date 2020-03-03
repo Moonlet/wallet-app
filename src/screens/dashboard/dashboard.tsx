@@ -227,7 +227,7 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <ExtensionConnectionInfo />
+                {Platform.OS === 'web' && <ExtensionConnectionInfo />}
                 <TestnetBadge />
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />
                 {showCreateAccount && (

@@ -19,7 +19,6 @@ import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../../../cor
 import { ICON_SIZE, BASE_DIMENSION } from '../../../../styles/dimensions';
 import { themes } from '../../../../navigation/navigation';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
-import { sendTransferTransaction, getBalance } from '../../../../redux/wallets/actions';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
 import FastImage from '../../../../core/utils/fast-image';
@@ -41,9 +40,7 @@ export interface IReduxProps {
     account: IAccountState;
     transactions: IBlockchainTransaction[];
     wallet: IWalletState;
-    sendTransferTransaction: typeof sendTransferTransaction;
     chainId: ChainIdType;
-    getBalance: typeof getBalance;
 }
 
 export interface IState {
@@ -63,11 +60,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
         extensionTransactionPayload: ownProps.extensionTransactionPayload,
         chainId: getChainId(state, ownProps.blockchain)
     };
-};
-
-const mapDispatchToProps = {
-    sendTransferTransaction,
-    getBalance
 };
 
 const navigationOptions = ({ navigation, theme }: any) => ({
@@ -119,14 +111,6 @@ export class DelegateTokenScreenComponent extends React.Component<
         this.state = {
             activeTab: config.ui.token.labels.tabAccount
         };
-    }
-    public componentDidMount() {
-        this.props.getBalance(
-            this.props.account.blockchain,
-            this.props.account.address,
-            undefined,
-            false // should we actually force it?
-        );
     }
 
     @bind
@@ -250,6 +234,6 @@ export class DelegateTokenScreenComponent extends React.Component<
 }
 
 export const DelegateTokenScreen = smartConnect<IProps>(DelegateTokenScreenComponent, [
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

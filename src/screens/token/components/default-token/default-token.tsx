@@ -23,7 +23,7 @@ import BigNumber from 'bignumber.js';
 import { formatAddress } from '../../../../core/utils/format-address';
 import { WalletConnectClient } from '../../../../core/wallet-connect/wallet-connect-client';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
-import { sendTransferTransaction, getBalance } from '../../../../redux/wallets/actions';
+import { sendTransferTransaction } from '../../../../redux/wallets/actions';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
@@ -41,7 +41,6 @@ export interface IReduxProps {
     wallet: IWalletState;
     sendTransferTransaction: typeof sendTransferTransaction;
     chainId: ChainIdType;
-    getBalance: typeof getBalance;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
@@ -60,8 +59,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
 };
 
 const mapDispatchToProps = {
-    sendTransferTransaction,
-    getBalance
+    sendTransferTransaction
 };
 
 export class DefaultTokenScreenComponent extends React.Component<
@@ -142,14 +140,6 @@ export class DefaultTokenScreenComponent extends React.Component<
                 }
             );
         }
-    }
-    public componentDidMount() {
-        this.props.getBalance(
-            this.props.account.blockchain,
-            this.props.account.address,
-            undefined,
-            false // should we actually force it?
-        );
     }
 
     public render() {

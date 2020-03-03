@@ -18,7 +18,10 @@ Object {
       "order": 0,
       "symbol": "ZIL",
       "type": "NATIVE",
-      "uiDecimals": 3,
+      "ui": Object {
+        "decimals": 3,
+        "tokenScreenComponent": "DEFAULT",
+      },
       "units": Object {
         "LI": "1000000",
         "QA": "1",

@@ -12,12 +12,12 @@ import { IReduxState } from '../../../redux/state';
 import { getSelectedAccount, getAccounts } from '../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
 import { formatAddress } from '../../../core/utils/format-address';
-import { ListAccount } from '../../../screens/token/components/list-account/list-account';
 import { Amount } from '../../amount/amount';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { calculateBalance } from '../../../core/utils/balance';
 import { translate } from '../../../core/i18n';
 import { enableCreateAccount } from '../../../redux/ui/screens/dashboard/actions';
+import { ListAccount } from '../../list-account/list-account';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };

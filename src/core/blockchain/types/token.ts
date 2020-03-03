@@ -6,6 +6,11 @@ export enum TokenType {
     ZRC2 = 'ZRC2'
 }
 
+export enum TokenScreenComponentType {
+    DEFAULT = 'DEFAULT',
+    DELEGATE = 'DELEGATE'
+}
+
 export interface ITokenConfig {
     name: string;
     symbol: string;
@@ -13,7 +18,10 @@ export interface ITokenConfig {
     type: TokenType;
     contractAddress?: string;
     decimals: number;
-    uiDecimals: number;
+    ui: {
+        decimals: number;
+        tokenScreenComponent: TokenScreenComponentType;
+    };
     units?: {
         [unit: string]: BigNumber;
     };

@@ -32,6 +32,7 @@ export const translation: ITranslations = {
                 decimals: 'Decimals',
                 delete: 'Delete',
                 details: 'Details',
+                delegations: 'Delegations',
                 disconnect: 'Disconnect',
                 editToken: 'Edit token',
                 error: 'Error',
@@ -81,6 +82,7 @@ export const translation: ITranslations = {
                 transactions: 'Transactions',
                 typeHere: 'Type here',
                 understand: 'I understand',
+                validators: 'Validators',
                 wallets: 'Wallets',
                 watch: 'Watch mode',
                 youAreOn: 'You are on {{blockchain}} {{networkName}} Testnet'
@@ -188,6 +190,7 @@ export const translation: ITranslations = {
             editContactName: 'Edit name',
             reviewTransaction: 'Review transaction on your hardware wallet'
         },
+
         AccountSettings: {
             manageAccount: 'Manage account',
             revealPrivate: 'Reveal private key',

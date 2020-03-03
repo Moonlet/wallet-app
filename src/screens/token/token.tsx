@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, IWalletState } from '../../redux/wallets/state';
@@ -13,27 +13,20 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { withTheme } from '../../core/theme/with-theme';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { Button, Text } from '../../library';
-import { translate, Translate } from '../../core/i18n';
-import { AccountSettings } from './components/account-settings/account-settings';
+import { Text } from '../../library';
+import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
-import { AccountAddress } from '../../components/account-address/account-address';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
-import { TransactionsHistoryList } from '../transactions-history/list-transactions-history/list-transactions-history';
 import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
-import { formatNumber } from '../../core/utils/format-number';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import BigNumber from 'bignumber.js';
-import { formatAddress } from '../../core/utils/format-address';
-import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
-import { PasswordModal } from '../../components/password-modal/password-modal';
 import { sendTransferTransaction, getBalance } from '../../redux/wallets/actions';
-import { Dialog } from '../../components/dialog/dialog';
 import { getChainId } from '../../redux/preferences/selectors';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
-import { ITokenConfig } from '../../core/blockchain/types/token';
+import { ITokenConfig, TokenScreenComponentType } from '../../core/blockchain/types/token';
 import FastImage from '../../core/utils/fast-image';
+import { DefaultTokenScreen } from './components/default-token/default-token';
+import { DelegateTokenScreen } from './components/delegate-token/delegate-token';
+import { AccountSettings } from './components/account-settings/account-settings';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -47,6 +40,17 @@ export interface IReduxProps {
     sendTransferTransaction: typeof sendTransferTransaction;
     chainId: ChainIdType;
     getBalance: typeof getBalance;
+}
+
+export interface INavigationParams {
+    accountIndex: number;
+    blockchain: Blockchain;
+    extensionTransactionPayload: any; // TODO add typing
+    token: ITokenConfig;
+}
+
+interface IState {
+    settingsVisible: boolean;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -68,17 +72,6 @@ const mapDispatchToProps = {
     sendTransferTransaction,
     getBalance
 };
-
-export interface INavigationParams {
-    accountIndex: number;
-    blockchain: Blockchain;
-    extensionTransactionPayload: any; // TODO add typing
-    token: ITokenConfig;
-}
-
-interface IState {
-    settingsVisible: boolean;
-}
 
 const navigationOptions = ({ navigation, theme }: any) => ({
     headerRight: () => (
@@ -123,72 +116,6 @@ export class TokenScreenComponent extends React.Component<
         this.state = {
             settingsVisible: false
         };
-
-        if (this.props.extensionTransactionPayload) {
-            // stub
-            const {
-                account,
-                toAddress,
-                amount,
-                token,
-                feeOptions
-            } = this.props.extensionTransactionPayload.params[0];
-
-            const formattedAmount = formatNumber(new BigNumber(amount), {
-                currency: getBlockchain(account.blockchain).config.coin
-            });
-
-            Dialog.alert(
-                'Transaction.signTransaction',
-                translate('Transaction.signExtensionTransaction', {
-                    amount: formattedAmount,
-                    fromAccount: formatAddress(account.address, account.blockchain),
-                    toAccount: formatAddress(toAddress, account.blockchain)
-                }),
-
-                {
-                    text: translate('App.labels.cancel'),
-                    onPress: () => {
-                        this.props.navigation.navigate('Dashboard');
-                        WalletConnectClient.getConnector().rejectRequest({
-                            id: this.props.extensionTransactionPayload.id,
-                            error: { message: 'Transaction refused' }
-                        });
-                    }
-                },
-                {
-                    text: translate('App.labels.sign'),
-                    onPress: () => {
-                        this.passwordModal
-                            .requestPassword()
-                            .then(password => {
-                                WalletConnectClient.getConnector().approveRequest({
-                                    id: this.props.extensionTransactionPayload.id,
-                                    result: {}
-                                });
-                                this.props.sendTransferTransaction(
-                                    account,
-                                    toAddress,
-                                    amount,
-                                    token.symbol,
-                                    feeOptions,
-                                    password,
-                                    this.props.navigation,
-                                    {},
-                                    false
-                                );
-                            })
-                            .catch(() => {
-                                // maybe retry here
-                                WalletConnectClient.getConnector().rejectRequest({
-                                    id: this.props.extensionTransactionPayload.id,
-                                    error: { message: 'Wrong password' }
-                                });
-                            });
-                    }
-                }
-            );
-        }
     }
     public componentDidMount() {
         this.props.navigation.setParams({
@@ -204,69 +131,44 @@ export class TokenScreenComponent extends React.Component<
 
     public openSettingsMenu = () => this.setState({ settingsVisible: !this.state.settingsVisible });
 
+    renderComponent() {
+        switch (this.props.token.ui.tokenScreenComponent) {
+            case TokenScreenComponentType.DELEGATE:
+                return (
+                    <DelegateTokenScreen
+                        accountIndex={this.props.accountIndex}
+                        blockchain={this.props.blockchain}
+                        token={this.props.token}
+                        extensionTransactionPayload={this.props.extensionTransactionPayload}
+                    />
+                );
+            default:
+                return (
+                    <DefaultTokenScreen
+                        accountIndex={this.props.accountIndex}
+                        blockchain={this.props.blockchain}
+                        token={this.props.token}
+                        extensionTransactionPayload={this.props.extensionTransactionPayload}
+                    />
+                );
+        }
+    }
+
     public render() {
-        const { styles, navigation, account, transactions, token } = this.props;
+        const { styles } = this.props;
 
         return (
             <View style={styles.container}>
                 <TestnetBadge />
-                <ScrollView
-                    contentContainerStyle={styles.scrollContainer}
-                    showsVerticalScrollIndicator={false}
-                >
-                    <AccountAddress account={account} token={token} />
-                    <View style={styles.buttonsContainer}>
-                        <Button
-                            testID="button-send"
-                            style={styles.button}
-                            onPress={() => {
-                                navigation.navigate('Send', {
-                                    accountIndex: account.index,
-                                    blockchain: account.blockchain,
-                                    token
-                                });
-                            }}
-                        >
-                            {translate('App.labels.send')}
-                        </Button>
-                        <Button
-                            testID="button-receive"
-                            style={styles.button}
-                            onPress={() => {
-                                navigation.navigate('Receive', {
-                                    accountIndex: account.index,
-                                    blockchain: account.blockchain,
-                                    token
-                                });
-                            }}
-                        >
-                            {translate('App.labels.receive')}
-                        </Button>
-                    </View>
-
-                    <View>
-                        <Translate
-                            text="App.labels.transactions"
-                            style={styles.transactionsTitle}
-                        />
-                        <TransactionsHistoryList
-                            transactions={transactions}
-                            account={account}
-                            navigation={navigation}
-                        />
-                    </View>
-
-                    {this.state.settingsVisible && (
-                        <AccountSettings
-                            onDonePressed={this.openSettingsMenu}
-                            account={this.props.account}
-                            wallet={this.props.wallet}
-                            chainId={this.props.chainId}
-                        />
-                    )}
-                </ScrollView>
-
-                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
+                {this.renderComponent()}
+                {this.state.settingsVisible && (
+                    <AccountSettings
+                        onDonePressed={this.openSettingsMenu}
+                        account={this.props.account}
+                        wallet={this.props.wallet}
+                        chainId={this.props.chainId}
+                    />
+                )}
             </View>
         );
     }

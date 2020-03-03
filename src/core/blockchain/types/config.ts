@@ -37,6 +37,14 @@ export interface IBlockchainConfig {
         };
     };
     ui: {
+        token?: {
+            labels: {
+                tabAccount?: string;
+                tabDelegations?: string;
+                tabValidators?: string;
+                tabTransactions?: string;
+            };
+        };
         addressDisplay?: 'stripped';
         enableTokenManagement: boolean;
         enableAccountCreation: boolean;

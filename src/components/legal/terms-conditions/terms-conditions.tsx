@@ -6,7 +6,7 @@ import { smartConnect } from '../../../core/utils/smart-connect';
 import Icon from '../../icon';
 import { ICON_SIZE, BASE_DIMENSION } from '../../../styles/dimensions';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
-import WebView from '../../../library/webview/webview';
+import { WebView } from '../../../library/webview/webview';
 
 interface IExternalProps {
     onClose?: () => void;

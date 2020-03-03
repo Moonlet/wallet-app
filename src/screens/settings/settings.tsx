@@ -17,6 +17,8 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { Dialog } from '../../components/dialog/dialog';
 import { changePIN } from '../../redux/wallets/actions';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { DebugModal } from '../../components/debug-modal/debug-modal';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -58,6 +60,7 @@ export class SettingsScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public passwordModal = null;
+    debugModal: any;
 
     constructor(
         props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -337,6 +340,19 @@ export class SettingsScreenComponent extends React.Component<
                     {this.renderSupportSection()}
                     {Platform.OS !== 'web' && this.renderToolsSection()}
                     {this.renderAboutSection()}
+                    {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
+                        <TouchableOpacity
+                            style={styles.rowContainer}
+                            onPress={() => {
+                                this.debugModal.showDebug();
+                            }}
+                        >
+                            <Text style={styles.textRow}>Debug Info</Text>
+                            <View style={styles.rightContainer}>
+                                <Icon name="chevron-right" size={16} style={styles.icon} />
+                            </View>
+                        </TouchableOpacity>
+                    )}
                     {Platform.OS === 'web' && (
                         <Button
                             style={styles.button}
@@ -354,6 +370,7 @@ export class SettingsScreenComponent extends React.Component<
                     obRef={ref => (this.passwordModal = ref)}
                     changePIN={this.state.changePIN}
                 />
+                <DebugModal obRef={ref => (this.debugModal = ref)} />
             </View>
         );
     }

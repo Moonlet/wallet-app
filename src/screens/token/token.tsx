@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Platform } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, IWalletState } from '../../redux/wallets/state';
@@ -47,6 +47,7 @@ export interface IReduxProps {
     sendTransferTransaction: typeof sendTransferTransaction;
     chainId: ChainIdType;
     getBalance: typeof getBalance;
+    canSend: boolean;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -60,7 +61,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
         ),
         wallet: getSelectedWallet(state),
         extensionTransactionPayload: ownProps.extensionTransactionPayload,
-        chainId: getChainId(state, ownProps.blockchain)
+        chainId: getChainId(state, ownProps.blockchain),
+        canSend: Platform.OS !== 'web' || state.ui.extension.stateLoaded
     };
 };
 
@@ -219,6 +221,7 @@ export class TokenScreenComponent extends React.Component<
                         <Button
                             testID="button-send"
                             style={styles.button}
+                            disabled={!this.props.canSend}
                             onPress={() => {
                                 navigation.navigate('Send', {
                                     accountIndex: account.index,

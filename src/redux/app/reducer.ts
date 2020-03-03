@@ -4,7 +4,7 @@ import { SET_TC_VERSION, SET_ACCEPTED_TC_VERSION } from './actions';
 
 const intialState: IAppState = {
     version: 1,
-    tcVersion: 0,
+    tcVersion: undefined,
     tcAcceptedVersion: undefined
 };
 

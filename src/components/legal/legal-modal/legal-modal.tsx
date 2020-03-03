@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -35,7 +35,11 @@ export const LegalModalComponent = (
 
         if (tcAcceptedVersion !== undefined) {
             props.appSetAcceptedTcVersion(tcAcceptedVersion);
-            if (tcAcceptedVersion > props.tcVersion) {
+            if (
+                props.tcVersion !== undefined &&
+                tcAcceptedVersion > props.tcVersion &&
+                Platform.OS !== 'web'
+            ) {
                 setShowModal(true);
             }
         }

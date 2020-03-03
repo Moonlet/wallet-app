@@ -115,6 +115,15 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: 'ts-loader'
+            },
+            {
+                test: /postMock.html$/,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: '[name].[ext]'
+                    }
+                }
             }
         ]
     },

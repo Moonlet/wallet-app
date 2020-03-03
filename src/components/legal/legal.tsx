@@ -44,9 +44,9 @@ export const LegalComponent = (
     const [showPrivacyPolicy, setShowPrivacyPolicy] = useState<boolean>(false);
 
     if (showTC) {
-        return <TC onClose={() => setShowTC(false)} />;
+        return <TC showClose onClose={() => setShowTC(false)} />;
     } else if (showPrivacyPolicy) {
-        return <PrivacyPolicy onClose={() => setShowPrivacyPolicy(false)} />;
+        return <PrivacyPolicy showClose onClose={() => setShowPrivacyPolicy(false)} />;
     } else
         return (
             <View style={props.styles.container}>

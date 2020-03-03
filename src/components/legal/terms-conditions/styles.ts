@@ -1,12 +1,11 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import { BASE_DIMENSION, ICON_CONTAINER_SIZE } from '../../../styles/dimensions';
+import { BASE_DIMENSION, ICON_CONTAINER_SIZE, SCREEN_HEIGHT } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            paddingTop: Platform.OS === 'ios' ? BASE_DIMENSION * 5 : 0,
             justifyContent: 'center',
             backgroundColor: theme.colors.appBackground
         },
@@ -24,10 +23,11 @@ export default (theme: ITheme) =>
         icon: {
             color: theme.colors.accent
         },
-        loadingContainer: {
+        webviewContainer: {
             flex: 1,
             overflow: 'hidden',
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            height: SCREEN_HEIGHT // used for web
         },
         loadingIndicator: {
             position: 'absolute',

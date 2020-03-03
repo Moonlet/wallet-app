@@ -1,29 +1,40 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
-import { WebView } from 'react-native-webview';
 import Icon from '../../icon';
-import { ICON_SIZE } from '../../../styles/dimensions';
+import { ICON_SIZE, BASE_DIMENSION } from '../../../styles/dimensions';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
+import WebView from '../../../library/webview/webview';
 
 interface IExternalProps {
-    onClose: () => void;
+    onClose?: () => void;
+    showClose?: boolean;
 }
 
 export const TCComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     return (
-        <View style={props.styles.container}>
+        <View
+            style={[
+                props.styles.container,
+                { paddingTop: Platform.OS === 'ios' && props.showClose ? BASE_DIMENSION * 5 : 0 }
+            ]}
+        >
             <React.Fragment>
-                <TouchableOpacity onPress={() => props.onClose()} style={props.styles.button}>
-                    <View style={props.styles.iconContainer}>
-                        <Icon name="close" size={ICON_SIZE} style={props.styles.icon} />
-                    </View>
-                </TouchableOpacity>
-                <View style={props.styles.loadingContainer}>
+                {props.showClose && (
+                    <TouchableOpacity
+                        onPress={() => props.onClose && props.onClose()}
+                        style={props.styles.button}
+                    >
+                        <View style={props.styles.iconContainer}>
+                            <Icon name="close" size={ICON_SIZE} style={props.styles.icon} />
+                        </View>
+                    </TouchableOpacity>
+                )}
+                <View style={props.styles.webviewContainer}>
                     <WebView
                         startInLoadingState={true}
                         source={{ uri: 'https://moonlet.xyz/terms-and-conditions/' }}

@@ -4,6 +4,8 @@ import { smartConnect } from '../../core/utils/smart-connect';
 
 interface IExternalProps {
     source: { uri: string };
+    startInLoadingState?: boolean;
+    renderLoading?: () => void;
 }
 
 export const WebViewComponent = (props: IExternalProps) => {

@@ -8,30 +8,22 @@ import { Icon } from '../../components/icon';
 import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { appSetTcVersion } from '../../redux/app/actions';
+import { appSetAcceptedTcVersion } from '../../redux/app/actions';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TC } from './terms-conditions/terms-conditions';
 import { PrivacyPolicy } from './privacy-policy/privacy-policy';
-import { IReduxState } from '../../redux/state';
 
 interface IExternalProps {
     onAccept: () => void;
+    tcFirebaseVersion: number;
 }
 
 export interface IReduxProps {
-    tcVersion: number;
-    tcAcceptedVersion: number;
-    appSetTcVersion: typeof appSetTcVersion;
+    appSetAcceptedTcVersion: typeof appSetAcceptedTcVersion;
 }
 
-const mapStateToProps = (state: IReduxState) => {
-    return {
-        tcAcceptedVersion: state.app.tcAcceptedVersion
-    };
-};
-
 const mapDispatchToProps = {
-    appSetTcVersion
+    appSetAcceptedTcVersion
 };
 
 export const LegalComponent = (
@@ -86,7 +78,7 @@ export const LegalComponent = (
                         style={props.styles.bottomButton}
                         primary
                         onPress={() => {
-                            props.appSetTcVersion(props.tcAcceptedVersion);
+                            props.appSetAcceptedTcVersion(props.tcFirebaseVersion);
                             props.onAccept();
                         }}
                     >
@@ -105,6 +97,6 @@ export const navigationOptions = () => ({
 LegalComponent.navigationOptions = navigationOptions;
 
 export const Legal = smartConnect<IExternalProps>(LegalComponent, [
-    connect(mapStateToProps, mapDispatchToProps),
+    connect(null, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

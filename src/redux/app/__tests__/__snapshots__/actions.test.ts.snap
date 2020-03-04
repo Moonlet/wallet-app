@@ -3,6 +3,6 @@
 exports[`app actions app action creators 1`] = `
 Object {
   "data": 1,
-  "type": "SET_TC_VERSION",
+  "type": "SET_ACCEPTED_TC_VERSION",
 }
 `;

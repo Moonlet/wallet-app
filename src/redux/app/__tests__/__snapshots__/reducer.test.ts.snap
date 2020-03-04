@@ -3,7 +3,6 @@
 exports[`app reducer should set initial state 1`] = `
 Object {
   "tcAcceptedVersion": undefined,
-  "tcVersion": undefined,
   "version": 1,
 }
 `;

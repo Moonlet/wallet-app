@@ -8,8 +8,6 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { IReduxState } from '../../redux/state';
-import { TC_VERSION } from '../../core/constants/app';
 import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
 import { ledgerConfig } from '../../core/wallet/hw-wallet/ledger/config';
 import { Blockchain } from '../../core/blockchain/types';
@@ -24,7 +22,6 @@ import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { Capitalize } from '../../core/utils/format-string';
 
 export interface IReduxProps {
-    tcVersion: number;
     openBottomSheet: typeof openBottomSheet;
 }
 
@@ -84,10 +81,6 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
             ledgerTypeActive: false,
             connectionActive: false
         };
-
-        if (!props.tcVersion || TC_VERSION > props.tcVersion) {
-            props.navigation.navigate('CreateWalletTerms');
-        }
     }
 
     public resetAll = () =>
@@ -339,11 +332,6 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
 }
 
 export const ConnectHardwareWallet = smartConnect(ConnectHardwareWalletScreenComponent, [
-    connect(
-        (state: IReduxState) => ({
-            tcVersion: state.app.tcVersion
-        }),
-        mapDispatchToProps
-    ),
+    connect(null, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

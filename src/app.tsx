@@ -41,6 +41,7 @@ interface IState {
     appState: AppStateStatus;
     showPasswordModal: boolean;
     displayApplication: boolean;
+    navigationState: any;
 }
 
 WalletConnectClient.setStore(store);
@@ -63,7 +64,8 @@ export default class App extends React.Component<{}, IState> {
             splashAnimationDone: false,
             appState: AppState.currentState,
             showPasswordModal: false,
-            displayApplication: true
+            displayApplication: true,
+            navigationState: undefined
         };
 
         getRemoteConfigFeatures().then(() => {
@@ -200,6 +202,9 @@ export default class App extends React.Component<{}, IState> {
                             <AppContainer
                                 ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
                                 theme="dark"
+                                onNavigationStateChange={(_, newState) => {
+                                    this.setState({ navigationState: newState });
+                                }}
                             />
                             {!this.state.displayApplication && <ImageCanvas />}
                             <PasswordModal
@@ -214,7 +219,7 @@ export default class App extends React.Component<{}, IState> {
                             <BottomSheet />
                             <Dialog.Component />
                             <LoadingModal />
-                            <LegalModal />
+                            <LegalModal navigationState={this.state.navigationState} />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

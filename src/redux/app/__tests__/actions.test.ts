@@ -1,7 +1,7 @@
-import { appSetTcVersion } from '../actions';
+import { appSetAcceptedTcVersion } from '../actions';
 
 describe('app actions', () => {
     test('app action creators', () => {
-        expect(appSetTcVersion(1)).toMatchSnapshot();
+        expect(appSetAcceptedTcVersion(1)).toMatchSnapshot();
     });
 });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
@@ -7,54 +7,88 @@ import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import Modal from '../../../library/modal/modal';
 import { Legal } from '../legal';
-import { getTCVersion } from '../../../core/utils/remote-feature-config';
-import { appSetAcceptedTcVersion } from '../../../redux/app/actions';
+import { getFirebaseTCVersion } from '../../../core/utils/remote-feature-config';
+
+interface IExternalProps {
+    navigationState: any;
+}
 
 export interface IReduxProps {
-    tcVersion: number;
-    appSetAcceptedTcVersion: typeof appSetAcceptedTcVersion;
+    tcAcceptedVersion: number;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        tcVersion: state.app.tcVersion
+        tcAcceptedVersion: state.app.tcAcceptedVersion
     };
 };
 
-const mapDispatchToProps = {
-    appSetAcceptedTcVersion
-};
+interface IState {
+    showModal: boolean;
+    tcFirebaseVersion: number;
+}
 
-export const LegalModalComponent = (
-    props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
-) => {
-    const [showModal, setShowModal] = useState<boolean>(false);
+export class LegalModalComponent extends React.Component<
+    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
+    constructor(
+        props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
+        super(props);
+        this.state = {
+            showModal: false,
+            tcFirebaseVersion: undefined
+        };
+    }
 
-    useEffect(() => {
-        const tcAcceptedVersion = getTCVersion();
+    public componentDidMount() {
+        this.handleShowLegalModal();
+    }
 
-        if (tcAcceptedVersion !== undefined) {
-            props.appSetAcceptedTcVersion(tcAcceptedVersion);
-            if (
-                props.tcVersion !== undefined &&
-                tcAcceptedVersion > props.tcVersion &&
-                Platform.OS !== 'web'
-            ) {
-                setShowModal(true);
+    public componentDidUpdate(prevProps: IExternalProps) {
+        if (this.props.navigationState !== prevProps.navigationState) {
+            this.handleShowLegalModal();
+        }
+    }
+
+    private handleShowLegalModal = () => {
+        if (this.props.navigationState) {
+            const index = this.props.navigationState.index;
+            const currentRoute = this.props.navigationState.routes[index].routeName;
+            const tcFirebaseVersion = getFirebaseTCVersion();
+
+            const showLegalModal =
+                currentRoute !== 'OnboardingScreen' &&
+                tcFirebaseVersion !== undefined &&
+                (this.props.tcAcceptedVersion === undefined ||
+                    tcFirebaseVersion > this.props.tcAcceptedVersion) &&
+                Platform.OS !== 'web';
+
+            if (showLegalModal) {
+                this.setState({
+                    tcFirebaseVersion,
+                    showModal: true
+                });
             }
         }
-    });
+    };
 
-    return (
-        <Modal isVisible={showModal}>
-            <View style={props.styles.container}>
-                <Legal onAccept={() => setShowModal(false)} />
-            </View>
-        </Modal>
-    );
-};
+    public render() {
+        return (
+            <Modal isVisible={this.state.showModal}>
+                <View style={this.props.styles.container}>
+                    <Legal
+                        tcFirebaseVersion={this.state.tcFirebaseVersion}
+                        onAccept={() => this.setState({ showModal: false })}
+                    />
+                </View>
+            </Modal>
+        );
+    }
+}
 
-export const LegalModal = smartConnect(LegalModalComponent, [
-    connect(mapStateToProps, mapDispatchToProps),
+export const LegalModal = smartConnect<IExternalProps>(LegalModalComponent, [
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

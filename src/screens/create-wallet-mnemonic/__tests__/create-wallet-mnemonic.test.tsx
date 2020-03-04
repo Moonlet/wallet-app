@@ -2,8 +2,7 @@ import React from 'react';
 import {
     CreateWalletMnemonicScreenComponent,
     IProps,
-    navigationOptions,
-    IReduxProps
+    navigationOptions
 } from '../create-wallet-mnemonic';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import styleProvider from '../styles';
@@ -13,21 +12,15 @@ import { loadTranslations } from '../../../core/i18n';
 import { Mnemonic } from '../../../core/wallet/hd-wallet/mnemonic';
 import { delay } from '../../../core/utils/time';
 
-const props: IProps & IReduxProps = {
+const props: IProps = {
     // @ts-ignore
     navigation: {
         navigate: jest.fn()
     },
-    styles: styleProvider(darkTheme),
-    tcVersion: 1
+    styles: styleProvider(darkTheme)
 };
 
 jest.mock('../../../core/wallet/hd-wallet/mnemonic');
-jest.mock('../../../core/constants/app', () => {
-    return {
-        TC_VERSION: 1
-    };
-});
 
 describe('creat wallet terms screen component', () => {
     beforeAll(async () => {
@@ -61,10 +54,5 @@ describe('creat wallet terms screen component', () => {
         const navigationProp = { navigation: {} };
         const options = navigationOptions(navigationProp);
         expect(options.headerLeft()).toBe(null);
-    });
-
-    it('navigates to tc when there are new tc', () => {
-        shallow(<CreateWalletMnemonicScreenComponent {...{ ...props, tcVersion: 0 }} />);
-        expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletTerms');
     });
 });

@@ -50,8 +50,6 @@ export default class App extends React.Component<{}, IState> {
     private translationsLoaded: boolean = false;
     private reduxStateLoaded: boolean = false;
     private remoteFeatureConfigLoaded: boolean = false;
-    private extensionStateLoaded: boolean =
-        Platform.OS === 'web' && WalletConnectWeb.isConnected() ? false : true;
     private unsub: any;
     private notificationsConfigured: boolean = false;
 
@@ -86,7 +84,6 @@ export default class App extends React.Component<{}, IState> {
         const appReady =
             this.translationsLoaded &&
             this.reduxStateLoaded &&
-            this.extensionStateLoaded &&
             this.state.splashAnimationDone &&
             this.remoteFeatureConfigLoaded;
 
@@ -139,14 +136,7 @@ export default class App extends React.Component<{}, IState> {
                 }
             }
 
-            if (Platform.OS === 'web' && store.getState().ui.extension.stateLoaded) {
-                if (!this.extensionStateLoaded) {
-                    this.extensionStateLoaded = true;
-                    this.updateAppReady();
-                }
-            }
-
-            if (this.reduxStateLoaded && this.extensionStateLoaded) {
+            if (this.reduxStateLoaded) {
                 this.unsub && this.unsub();
             }
         });

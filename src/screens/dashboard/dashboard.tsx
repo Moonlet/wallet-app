@@ -33,6 +33,7 @@ import { calculateBalance } from '../../core/utils/balance';
 import { getBlockchains } from '../../redux/preferences/selectors';
 import { NavigationEvents } from 'react-navigation';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
+import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -51,17 +52,19 @@ export interface IReduxProps {
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const mapStateToProps = (state: IReduxState) => ({
-    wallet: getSelectedWallet(state),
-    walletsNr: Object.keys(state.wallets).length,
-    blockchains: getBlockchains(state),
-    selectedBlockchain: getSelectedBlockchain(state),
-    selectedAccount: getSelectedAccount(state),
-    exchangeRates: state.market.exchangeRates,
-    isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
-    selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
-    userCurrency: state.preferences.currency
-});
+const mapStateToProps = (state: IReduxState) => {
+    return {
+        wallet: getSelectedWallet(state),
+        walletsNr: Object.keys(state.wallets).length,
+        blockchains: getBlockchains(state),
+        selectedBlockchain: getSelectedBlockchain(state),
+        selectedAccount: getSelectedAccount(state),
+        exchangeRates: state.market.exchangeRates,
+        isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
+        selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
+        userCurrency: state.preferences.currency
+    };
+};
 
 const mapDispatchToProps = {
     getBalance,
@@ -224,6 +227,7 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
+                {Platform.OS === 'web' && <ExtensionConnectionInfo />}
                 <TestnetBadge />
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />
                 {showCreateAccount && (

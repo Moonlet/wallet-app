@@ -156,13 +156,13 @@ export class DashboardScreenComponent extends React.Component<
 
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.selectedBlockchain !== prevProps.selectedBlockchain) {
-            const found =
+            const blockchainListNotContainsSelectedBlockchain =
                 this.props.blockchains
                     .slice(0, 4)
                     .filter(blockchain => blockchain === this.props.selectedBlockchain).length ===
                 0;
 
-            if (found) {
+            if (blockchainListNotContainsSelectedBlockchain) {
                 this.setState({ extraSelectedBlockchain: this.props.selectedBlockchain });
             }
         }

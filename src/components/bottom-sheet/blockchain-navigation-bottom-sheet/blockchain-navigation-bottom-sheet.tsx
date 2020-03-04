@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform, FlatList, TouchableOpacity } from 'react-native';
+import { View, Platform, FlatList } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -14,6 +14,7 @@ import { Blockchain } from '../../../core/blockchain/types';
 import { setSelectedBlockchain } from '../../../redux/wallets/actions';
 import { Text } from '../../../library/text/text';
 import FastImage from '../../../core/utils/fast-image';
+import TouchableOpacity from '../../../library/touchable-opacity/touchable-opacity';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, IWalletState } from '../../redux/wallets/state';
@@ -27,6 +27,7 @@ import FastImage from '../../core/utils/fast-image';
 import { DefaultTokenScreen } from './components/default-token/default-token';
 import { DelegateTokenScreen } from './components/delegate-token/delegate-token';
 import { AccountSettings } from './components/account-settings/account-settings';
+import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -160,6 +161,7 @@ export class TokenScreenComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <TestnetBadge />
+                {Platform.OS === 'web' && <ExtensionConnectionInfo />}
                 {this.renderComponent()}
                 {this.state.settingsVisible && (
                     <AccountSettings

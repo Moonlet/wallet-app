@@ -27,12 +27,14 @@ import { sendTransferTransaction } from '../../../../redux/wallets/actions';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
+import { NavigationScreenProp, NavigationState } from 'react-navigation';
 
 export interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
     extensionTransactionPayload: any; // TODO add typing
     token: ITokenConfig;
+    navigation: NavigationScreenProp<NavigationState>;
 }
 
 export interface IReduxProps {

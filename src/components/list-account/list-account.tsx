@@ -7,12 +7,10 @@ import { View } from 'react-native';
 import Icon from '../icon';
 import TouchableOpacity from '../../library/touchable-opacity/touchable-opacity';
 import { translate } from '../../core/i18n';
-import FastImage from '../../core/utils/fast-image';
-import { TokenIconType } from '../../core/blockchain/types/token';
 
 export interface IProps {
     label: string | JSX.Element;
-    leftIcon?: TokenIconType;
+    leftIcon?: any;
     rightIcon?: string;
     selected?: boolean;
     onPress?: any;
@@ -29,20 +27,18 @@ export const ListAccountComponent = (
         ) : (
             props.label
         );
+
+    const BlockchainIcon = props?.leftIcon;
+
     return (
         <TouchableOpacity
             style={[props.styles.card, props.selected && props.styles.selected, props.style]}
             onPress={props.onPress}
         >
             {props.leftIcon && (
-                <View style={props.styles.iconLeftContainer}>
-                    <FastImage
-                        source={props.leftIcon}
-                        style={props.styles.accountIcon}
-                        resizeMode="contain"
-                    />
-                </View>
+                <BlockchainIcon width={40} height={40} style={props.styles.iconLeftContainer} />
             )}
+
             <View style={props.styles.labelContainer}>{label}</View>
             {props.rightIcon && !props.isCreate && (
                 <View style={props.styles.iconRightContainer}>

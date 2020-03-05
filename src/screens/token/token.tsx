@@ -141,6 +141,7 @@ export class TokenScreenComponent extends React.Component<
                         blockchain={this.props.blockchain}
                         token={this.props.token}
                         extensionTransactionPayload={this.props.extensionTransactionPayload}
+                        navigation={this.props.navigation}
                     />
                 );
             default:
@@ -150,6 +151,7 @@ export class TokenScreenComponent extends React.Component<
                         blockchain={this.props.blockchain}
                         token={this.props.token}
                         extensionTransactionPayload={this.props.extensionTransactionPayload}
+                        navigation={this.props.navigation}
                     />
                 );
         }

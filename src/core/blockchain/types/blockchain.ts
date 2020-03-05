@@ -6,6 +6,7 @@ import {
     IBlockchainTransactionUtils,
     ChainIdType
 } from './';
+import { GenericStats } from './stats';
 
 export enum Blockchain {
     ETHEREUM = 'ETHEREUM',
@@ -21,5 +22,6 @@ export interface IBlockchain {
     transaction: IBlockchainTransactionUtils;
     account: IBlockchainAccountUtils;
     Client: new (chainId) => BlockchainGenericClient;
+    getStats: (chainId: ChainIdType) => GenericStats;
     getClient: (chainId: ChainIdType) => BlockchainGenericClient;
 }

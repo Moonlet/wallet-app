@@ -12,6 +12,7 @@ import { ExtensionRequestBottomSheet } from './extension-request-bottom-sheet/ex
 import { IBottomSheet, BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { openBottomSheet, closeBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { SendTransactionBottomSheet } from './send-transaction-sheet/send-transaction-sheet';
+import { BlockchainNavigationBottomSheet } from './blockchain-navigation-bottom-sheet/blockchain-navigation-bottom-sheet';
 
 interface IReduxProps {
     bottomSheet: IBottomSheet;
@@ -150,6 +151,25 @@ export class BottomSheetComponent extends React.Component<
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
                             data={this.props.bottomSheet?.data}
+                        />
+                    </View>
+                );
+
+            case BottomSheetType.BLOCKCHAIN_NAVIGATION:
+                return (
+                    <View style={this.props.styles.container}>
+                        <TouchableOpacity
+                            onPress={this.handleCloseEnd}
+                            style={this.props.styles.container}
+                            activeOpacity={1}
+                        />
+                        <BlockchainNavigationBottomSheet
+                            snapPoints={{
+                                initialSnap: Platform.OS === 'web' ? 400 : 0,
+                                bottomSheetHeight: 400
+                            }}
+                            onOpenStart={this.handleOpenStart}
+                            onCloseEnd={this.handleCloseEnd}
                         />
                     </View>
                 );

@@ -17,7 +17,11 @@ import { formatAddress } from '../../core/utils/format-address';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../redux/preferences/selectors';
-import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
+import {
+    ITokenConfig,
+    TokenType,
+    TokenScreenComponentType
+} from '../../core/blockchain/types/token';
 import { isValidAddress as isValidAddressETH } from '../../core/blockchain/ethereum/account';
 import { isValidAddress as isValidAddressZIL } from '../../core/blockchain/zilliqa/account';
 import { ChainIdType, Blockchain } from '../../core/blockchain/types';
@@ -198,9 +202,10 @@ export class ManageTokenComponent extends React.Component<
                     decimals: Number(this.state.token.decimals),
                     ui: {
                         decimals: 4,
-                        tokenScreenComponent: this.state.token.ui.tokenScreenComponent
+                        tokenScreenComponent:
+                            this.state.token?.ui?.tokenScreenComponent ||
+                            TokenScreenComponentType.DEFAULT
                     },
-
                     active: true,
                     order:
                         Object.values(this.props.selectedAccount.tokens).sort(

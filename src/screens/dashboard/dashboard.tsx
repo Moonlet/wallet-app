@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Dimensions, Animated, TouchableOpacity, Platform } from 'react-native';
+import { View, Dimensions, Animated, TouchableOpacity, Platform } from 'react-native';
 import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
@@ -33,6 +33,7 @@ import { calculateBalance } from '../../core/utils/balance';
 import { getBlockchains } from '../../redux/preferences/selectors';
 import { NavigationEvents } from 'react-navigation';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
+import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -51,23 +52,29 @@ export interface IReduxProps {
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 
-const mapStateToProps = (state: IReduxState) => ({
-    wallet: getSelectedWallet(state),
-    walletsNr: Object.keys(state.wallets).length,
-    blockchains: getBlockchains(state),
-    selectedBlockchain: getSelectedBlockchain(state),
-    selectedAccount: getSelectedAccount(state),
-    exchangeRates: state.market.exchangeRates,
-    isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
-    selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
-    userCurrency: state.preferences.currency
-});
+const mapStateToProps = (state: IReduxState) => {
+    return {
+        wallet: getSelectedWallet(state),
+        walletsNr: Object.keys(state.wallets).length,
+        blockchains: getBlockchains(state),
+        selectedBlockchain: getSelectedBlockchain(state),
+        selectedAccount: getSelectedAccount(state),
+        exchangeRates: state.market.exchangeRates,
+        isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
+        selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
+        userCurrency: state.preferences.currency
+    };
+};
 
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
     setSelectedBlockchain
 };
+
+interface IState {
+    extraSelectedBlockchain: Blockchain;
+}
 
 const MyTitle = ({ text }) => (
     <Text
@@ -116,7 +123,8 @@ const navigationOptions = ({ navigation }: any) => ({
 });
 
 export class DashboardScreenComponent extends React.Component<
-    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
     public static navigationOptions = navigationOptions;
 
@@ -127,6 +135,9 @@ export class DashboardScreenComponent extends React.Component<
         props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
         super(props);
+        this.state = {
+            extraSelectedBlockchain: undefined
+        };
 
         if (Platform.OS === 'web') {
             if (!WalletConnectWeb.isConnected()) {
@@ -140,19 +151,57 @@ export class DashboardScreenComponent extends React.Component<
         }
     }
 
-    public async componentDidMount() {
+    public componentDidMount() {
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
+    }
+
+    public componentDidUpdate(prevProps: IReduxProps) {
+        if (this.props.selectedBlockchain !== prevProps.selectedBlockchain) {
+            const blockchainNotFound =
+                this.props.blockchains.slice(0, 4).indexOf(this.props.selectedBlockchain) === -1;
+
+            if (blockchainNotFound) {
+                this.setState({ extraSelectedBlockchain: this.props.selectedBlockchain });
+            }
+        }
     }
 
     public setDashboardMenuBottomSheet = () => {
         this.props.openBottomSheet(BottomSheetType.DASHBOARD_MENU);
     };
 
+    public renderBlockchain = (blockchain: Blockchain) => {
+        const { styles, blockchains } = this.props;
+
+        return (
+            <TouchableOpacity
+                key={blockchain}
+                style={[
+                    styles.blockchainButton,
+                    this.props.selectedBlockchain === blockchain && styles.blockchainButtonActive,
+                    {
+                        width: blockchains.length > 4 ? SCREEN_WIDTH / 4 : null
+                    }
+                ]}
+                onPress={() => this.props.setSelectedBlockchain(blockchain)}
+            >
+                <Text
+                    style={
+                        this.props.selectedBlockchain === blockchain &&
+                        styles.blockchainButtonTextActive
+                    }
+                >
+                    {getBlockchain(blockchain).config.coin}
+                </Text>
+            </TouchableOpacity>
+        );
+    };
+
     public renderBottomBlockchainNav = () => {
-        const styles = this.props.styles;
-        const { blockchains } = this.props;
+        const { styles, blockchains } = this.props;
+        const { extraSelectedBlockchain } = this.state;
 
         return (
             <LinearGradient
@@ -161,44 +210,27 @@ export class DashboardScreenComponent extends React.Component<
                 style={styles.selectorGradientContainer}
             >
                 <View style={styles.blockchainSelectorContainer} testID="blockchainSelector">
-                    <ScrollView
-                        horizontal
-                        disableIntervalMomentum={true}
-                        overScrollMode={'never'}
-                        centerContent={true}
-                        snapToAlignment={'start'}
-                        contentContainerStyle={{ flexGrow: 1 }}
-                        showsHorizontalScrollIndicator={false}
-                        snapToStart={false}
-                        snapToEnd={false}
-                        decelerationRate={0.8}
-                    >
-                        {blockchains.map(blockchain => (
+                    <View style={styles.bottomBlockchainContainer}>
+                        {blockchains
+                            .slice(0, 4)
+                            .map(blockchain => this.renderBlockchain(blockchain))}
+
+                        {extraSelectedBlockchain !== undefined &&
+                            this.renderBlockchain(extraSelectedBlockchain)}
+
+                        {blockchains.length > 4 && (
                             <TouchableOpacity
-                                key={blockchain}
-                                style={[
-                                    styles.blockchainButton,
-                                    this.props.selectedBlockchain === blockchain &&
-                                        styles.blockchainButtonActive,
-                                    {
-                                        width: blockchains.length > 4 ? SCREEN_WIDTH / 4 : null
-                                    }
-                                ]}
-                                onPress={() => {
-                                    this.props.setSelectedBlockchain(blockchain);
-                                }}
+                                onPress={() =>
+                                    this.props.openBottomSheet(
+                                        BottomSheetType.BLOCKCHAIN_NAVIGATION
+                                    )
+                                }
+                                style={styles.expandIconContainer}
                             >
-                                <Text
-                                    style={
-                                        this.props.selectedBlockchain === blockchain &&
-                                        styles.blockchainButtonTextActive
-                                    }
-                                >
-                                    {getBlockchain(blockchain).config.coin}
-                                </Text>
+                                <Icon name="expand" size={28} style={styles.expandIcon} />
                             </TouchableOpacity>
-                        ))}
-                    </ScrollView>
+                        )}
+                    </View>
                 </View>
             </LinearGradient>
         );
@@ -224,6 +256,7 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
+                {Platform.OS === 'web' && <ExtensionConnectionInfo />}
                 <TestnetBadge />
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />
                 {showCreateAccount && (

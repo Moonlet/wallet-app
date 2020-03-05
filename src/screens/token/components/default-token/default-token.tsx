@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, Platform } from 'react-native';
 import stylesProvider from './styles';
 import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
 import {
@@ -27,12 +27,14 @@ import { sendTransferTransaction } from '../../../../redux/wallets/actions';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
+import { NavigationScreenProp, NavigationState } from 'react-navigation';
 
 export interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
     extensionTransactionPayload: any; // TODO add typing
     token: ITokenConfig;
+    navigation: NavigationScreenProp<NavigationState>;
 }
 
 export interface IReduxProps {
@@ -41,6 +43,7 @@ export interface IReduxProps {
     wallet: IWalletState;
     sendTransferTransaction: typeof sendTransferTransaction;
     chainId: ChainIdType;
+    canSend: boolean;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
@@ -54,7 +57,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
         ),
         wallet: getSelectedWallet(state),
         extensionTransactionPayload: ownProps.extensionTransactionPayload,
-        chainId: getChainId(state, ownProps.blockchain)
+        chainId: getChainId(state, ownProps.blockchain),
+        canSend: Platform.OS !== 'web' || state.ui.extension.stateLoaded
     };
 };
 
@@ -156,6 +160,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                         <Button
                             testID="button-send"
                             style={styles.button}
+                            disabled={!this.props.canSend}
                             onPress={() => {
                                 navigation.navigate('Send', {
                                     accountIndex: account.index,

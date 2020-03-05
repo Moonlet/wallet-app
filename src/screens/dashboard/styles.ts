@@ -55,5 +55,17 @@ export default (theme: ITheme) =>
         coinDashboard: {
             flex: 1,
             alignSelf: 'stretch'
+        },
+        expandIconContainer: {
+            marginRight: BASE_DIMENSION * 2,
+            justifyContent: 'center'
+        },
+        expandIcon: {
+            color: theme.colors.accent,
+            alignSelf: 'center'
+        },
+        bottomBlockchainContainer: {
+            flex: 1,
+            flexDirection: 'row'
         }
     });

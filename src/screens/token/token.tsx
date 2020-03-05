@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, IWalletState } from '../../redux/wallets/state';
@@ -27,6 +27,7 @@ import { DefaultTokenScreen } from './components/default-token/default-token';
 import { DelegateTokenScreen } from './components/delegate-token/delegate-token';
 import { AccountSettings } from './components/account-settings/account-settings';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -146,6 +147,7 @@ export class TokenScreenComponent extends React.Component<
                         blockchain={this.props.blockchain}
                         token={this.props.token}
                         extensionTransactionPayload={this.props.extensionTransactionPayload}
+                        navigation={this.props.navigation}
                     />
                 );
             default:
@@ -155,6 +157,7 @@ export class TokenScreenComponent extends React.Component<
                         blockchain={this.props.blockchain}
                         token={this.props.token}
                         extensionTransactionPayload={this.props.extensionTransactionPayload}
+                        navigation={this.props.navigation}
                     />
                 );
         }
@@ -166,6 +169,7 @@ export class TokenScreenComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <TestnetBadge />
+                {Platform.OS === 'web' && <ExtensionConnectionInfo />}
                 {this.renderComponent()}
                 {this.state.settingsVisible && (
                     <AccountSettings

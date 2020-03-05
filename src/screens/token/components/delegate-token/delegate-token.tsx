@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { HeaderRight } from '../../../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
 import {
@@ -16,24 +15,23 @@ import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../../../core/blockchain/types';
-import { ICON_SIZE, BASE_DIMENSION } from '../../../../styles/dimensions';
-import { themes } from '../../../../navigation/navigation';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
-import FastImage from '../../../../core/utils/fast-image';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import bind from 'bind-decorator';
 import { AccountTab } from './components/account-tab/account-tab';
 import { DelegationsTab } from './components/delegations-tab/delegations-tab';
 import { ValidatorsTab } from './components/validators-tab/validators-tab';
 import { TransactionsTab } from './components/transactions-tab/transactions-tab';
+import { NavigationScreenProp, NavigationState } from 'react-navigation';
 
 export interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
     extensionTransactionPayload: any; // TODO add typing
     token: ITokenConfig;
+    navigation: NavigationScreenProp<NavigationState>;
 }
 
 export interface IReduxProps {
@@ -62,41 +60,10 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
     };
 };
 
-const navigationOptions = ({ navigation, theme }: any) => ({
-    headerRight: () => (
-        <HeaderRight
-            icon="navigation-menu-horizontal"
-            onPress={navigation.state.params ? navigation.state.params.openSettingsMenu : undefined}
-        />
-    ),
-    headerTitle: () => (
-        <View style={{ flexDirection: 'row' }}>
-            <FastImage
-                style={{ height: ICON_SIZE, width: ICON_SIZE, marginRight: BASE_DIMENSION }}
-                resizeMode="contain"
-                source={navigation.state.params.tokenLogo}
-            />
-            <Text
-                style={{
-                    fontSize: 22,
-                    lineHeight: 28,
-                    color: themes[theme].colors.text,
-                    letterSpacing: 0.38,
-                    textAlign: 'center',
-                    fontWeight: 'bold'
-                }}
-            >
-                {`${translate('App.labels.account')} ${navigation.state.params.accountIndex + 1}`}
-            </Text>
-        </View>
-    )
-});
-
 export class DelegateTokenScreenComponent extends React.Component<
     INavigationProps & IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    public static navigationOptions = navigationOptions;
     public passwordModal: any;
 
     constructor(
@@ -118,11 +85,24 @@ export class DelegateTokenScreenComponent extends React.Component<
         this.setState({ activeTab: tab });
     }
 
+    // export interface IProps {
+    //     accountIndex: number;
+    //     blockchain: Blockchain;
+    //     extensionTransactionPayload: any; // TODO add typing
+    //     token: ITokenConfig;
+    // }
     renderTabs() {
         const config = getBlockchain(this.props.blockchain).config;
         switch (this.state.activeTab) {
             case config.ui.token.labels.tabAccount:
-                return <AccountTab></AccountTab>;
+                return (
+                    <AccountTab
+                        accountIndex={this.props.accountIndex}
+                        blockchain={this.props.blockchain}
+                        extensionTransactionPayload={this.props.extensionTransactionPayload}
+                        token={this.props.token}
+                    ></AccountTab>
+                );
             case config.ui.token.labels.tabDelegations:
                 return <DelegationsTab></DelegationsTab>;
             case config.ui.token.labels.tabValidators:

@@ -5,6 +5,7 @@ import * as transaction from './transaction';
 import * as account from './account';
 import { IBlockchain, ChainIdType } from '../types';
 import BigNumber from 'bignumber.js';
+import { Stats } from './stats';
 
 export const Near: IBlockchain = {
     config,
@@ -12,6 +13,7 @@ export const Near: IBlockchain = {
     transaction,
     account,
     Client,
+    getStats: (chainId: ChainIdType) => new Stats(new Client(chainId), config),
     getClient: (chainId: ChainIdType) => new Client(chainId)
 };
 

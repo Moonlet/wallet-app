@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -69,8 +69,7 @@ export class LegalModalComponent extends React.Component<
                 currentRoute !== 'OnboardingScreen' &&
                 tcLatestVersion !== undefined &&
                 (this.props.tcAcceptedVersion === undefined ||
-                    tcLatestVersion > this.props.tcAcceptedVersion) &&
-                Platform.OS !== 'web';
+                    tcLatestVersion > this.props.tcAcceptedVersion);
 
             if (showLegalModal) {
                 this.setState({

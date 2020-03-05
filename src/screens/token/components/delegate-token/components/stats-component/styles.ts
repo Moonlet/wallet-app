@@ -88,5 +88,12 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             justifyContent: 'center',
             marginBottom: BASE_DIMENSION
+        },
+        dummyView: {
+            height: 100,
+            width: 100,
+            borderRadius: 50,
+            backgroundColor: theme.colors.cardBackground,
+            marginBottom: BASE_DIMENSION
         }
     });

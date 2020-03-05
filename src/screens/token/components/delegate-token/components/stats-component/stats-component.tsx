@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList } from 'react-native';
+import { View, FlatList, Platform } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../../../core/utils/smart-connect';
@@ -9,7 +9,8 @@ import {
     IStatValueType,
     AccountStats
 } from '../../../../../../core/blockchain/types/stats';
-import Pie from 'react-native-fab-pie'; // TODO - fork and move ART library(will be removed in the future warning) to react-native-comunity OR add library within project
+import Pie from '../../../../../../library/pie-chart/pie-chart';
+// TODO - fork and move ART library(will be removed in the future warning) to react-native-comunity OR add library within project
 
 export interface IProps {
     accountStats: AccountStats;
@@ -21,7 +22,7 @@ export class StatsComponentInternal extends React.Component<
     public pie: any = React.createRef();
 
     componentDidMount() {
-        this.pie.current.animate();
+        if (Platform.OS !== 'web') this.pie.current.animate();
     }
     getValueString(stat: IStatValue) {
         switch (stat.type) {
@@ -99,15 +100,19 @@ export class StatsComponentInternal extends React.Component<
 
         const chart = (
             <View style={styles.chartView}>
-                <Pie
-                    ref={this.pie}
-                    containerStyle={styles.chartContainer}
-                    pieStyle={styles.pieStyle}
-                    outerRadius={50}
-                    innerRadius={25}
-                    data={pieData}
-                    animate
-                ></Pie>
+                {Platform.OS === 'web' ? (
+                    <View style={styles.dummyView}></View>
+                ) : (
+                    <Pie
+                        ref={this.pie}
+                        containerStyle={styles.chartContainer}
+                        pieStyle={styles.pieStyle}
+                        outerRadius={50}
+                        innerRadius={25}
+                        data={pieData}
+                        animate
+                    ></Pie>
+                )}
             </View>
         );
 

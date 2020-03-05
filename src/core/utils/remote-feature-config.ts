@@ -1,5 +1,6 @@
 import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export enum RemoteFeature {
     NEAR = 'feature_near',
@@ -61,9 +62,14 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
     return false;
 };
 
-export const getFirebaseTCVersion = (): number => {
+export const getFirebaseTCVersion = async (): Promise<number> => {
     if (featuresConfig) {
         const tcVersion = JSON.parse(featuresConfig[RemoteFeature.TC_VERSION]);
+
+        if (tcVersion) {
+            await AsyncStorage.setItem('tcAcceptedVersion', String(tcVersion));
+        }
+
         return tcVersion;
     }
 

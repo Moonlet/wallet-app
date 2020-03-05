@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import Modal from '../../../library/modal/modal';
 import { Legal } from '../legal';
 import { getFirebaseTCVersion } from '../../../core/utils/remote-feature-config';
+import AsyncStorage from '@react-native-community/async-storage';
 
 interface IExternalProps {
     navigationState: any;
@@ -52,11 +53,17 @@ export class LegalModalComponent extends React.Component<
         }
     }
 
-    private handleShowLegalModal = () => {
+    private handleShowLegalModal = async () => {
         if (this.props.navigationState) {
             const index = this.props.navigationState.index;
             const currentRoute = this.props.navigationState.routes[index].routeName;
-            const tcLatestVersion = getFirebaseTCVersion();
+            let tcLatestVersion = await getFirebaseTCVersion();
+
+            if (tcLatestVersion === undefined) {
+                // check AsyncStorage
+                const tcVersionAsyncStorage = await AsyncStorage.getItem('tcAcceptedVersion');
+                tcLatestVersion = Number(tcVersionAsyncStorage);
+            }
 
             const showLegalModal =
                 currentRoute !== 'OnboardingScreen' &&

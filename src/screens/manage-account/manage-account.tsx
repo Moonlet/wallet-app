@@ -151,9 +151,9 @@ export class ManageAccountComponent extends React.Component<
                     <View style={styles.infoContainer}>
                         <View style={styles.iconContainer}>
                             <FastImage
-                                style={styles.tokenLogo}
+                                style={styles.tokenIcon}
                                 resizeMode="contain"
-                                source={item.value.logo}
+                                source={item.value.icon}
                             />
                         </View>
                         <View style={styles.amountContainer}>

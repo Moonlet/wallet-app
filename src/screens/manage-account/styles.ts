@@ -51,7 +51,7 @@ export default (theme: ITheme) =>
             justifyContent: 'center',
             alignItems: 'center'
         },
-        tokenLogo: {
+        tokenIcon: {
             width: ICON_CONTAINER_SIZE,
             height: ICON_CONTAINER_SIZE
         },

@@ -23,7 +23,7 @@ import { isValidAddress as isValidAddressZIL } from '../../core/blockchain/zilli
 import { ChainIdType, Blockchain } from '../../core/blockchain/types';
 import FastImage from '../../core/utils/fast-image';
 
-const GENERIC_TOKEN_LOGO = {
+const GENERIC_TOKEN_ICON = {
     uri:
         'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png'
 };
@@ -109,7 +109,7 @@ export class ManageTokenComponent extends React.Component<
                     decimals: tokenInfo.decimals,
                     name: tokenInfo?.name || foundToken.name,
                     symbol: String(tokenInfo?.symbol).toUpperCase() || foundToken.symbol, // Check this
-                    logo: foundToken?.logo ? { uri: foundToken.logo } : GENERIC_TOKEN_LOGO
+                    icon: foundToken?.icon ? { uri: foundToken.icon } : GENERIC_TOKEN_ICON
                 },
                 showError: false,
                 isLoading: false
@@ -161,7 +161,7 @@ export class ManageTokenComponent extends React.Component<
                     decimals: tokenInfo.decimals,
                     name: tokenInfo?.name || foundToken.name,
                     symbol: String(tokenInfo?.symbol).toUpperCase() || foundToken?.symbol, // Check this
-                    logo: foundToken?.logo ? { uri: foundToken.logo } : GENERIC_TOKEN_LOGO
+                    icon: foundToken?.icon ? { uri: foundToken.icon } : GENERIC_TOKEN_ICON
                 },
                 showError: false,
                 isLoading: false
@@ -192,7 +192,7 @@ export class ManageTokenComponent extends React.Component<
 
                     name: this.state.token?.name || '',
                     symbol: this.state.token.symbol,
-                    logo: this.state.token?.logo || GENERIC_TOKEN_LOGO,
+                    icon: this.state.token?.icon || GENERIC_TOKEN_ICON,
                     type: tokenType,
                     contractAddress: this.state.token.contractAddress,
                     decimals: Number(this.state.token.decimals),
@@ -276,9 +276,9 @@ export class ManageTokenComponent extends React.Component<
                         >
                             <View style={styles.iconContainer}>
                                 <FastImage
-                                    style={styles.tokenLogo}
+                                    style={styles.tokenIcon}
                                     resizeMode="contain"
-                                    source={this.state.token?.logo}
+                                    source={this.state.token?.icon}
                                 />
                             </View>
                             <View style={styles.accountInfoContainer}>

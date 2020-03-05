@@ -8,10 +8,11 @@ import Icon from '../icon';
 import TouchableOpacity from '../../library/touchable-opacity/touchable-opacity';
 import { translate } from '../../core/i18n';
 import FastImage from '../../core/utils/fast-image';
+import { TokenIconType } from '../../core/blockchain/types/token';
 
 export interface IProps {
     label: string | JSX.Element;
-    leftIcon?: number;
+    leftIcon?: TokenIconType;
     rightIcon?: string;
     selected?: boolean;
     onPress?: any;

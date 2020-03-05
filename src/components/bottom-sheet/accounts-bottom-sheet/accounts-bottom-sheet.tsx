@@ -143,7 +143,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                             <ListAccount
                                 key={index}
                                 leftIcon={
-                                    account.tokens[getBlockchain(blockchain).config.coin].logo
+                                    account.tokens[getBlockchain(blockchain).config.coin].icon
                                 }
                                 rightIcon={selected ? 'check-1' : undefined}
                                 label={label}
@@ -160,7 +160,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                         this.props.accounts.length < blockchainConfig.ui.maxAccountsNumber && (
                             <ListAccount
                                 leftIcon={
-                                    this.props.selectedAccount.tokens[blockchainConfig.coin].logo
+                                    this.props.selectedAccount.tokens[blockchainConfig.coin].icon
                                 }
                                 isCreate
                                 label={createAccountLabel}

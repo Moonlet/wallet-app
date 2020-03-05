@@ -47,7 +47,7 @@ export default (theme: ITheme) =>
             lineHeight: 20,
             color: theme.colors.textSecondary
         },
-        tokenLogo: {
+        tokenIcon: {
             width: ICON_CONTAINER_SIZE,
             height: ICON_CONTAINER_SIZE
         }

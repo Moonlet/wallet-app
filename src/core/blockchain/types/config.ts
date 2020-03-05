@@ -11,6 +11,7 @@ export interface IBlockchainConfig {
     derivationType: DerivationType;
     coin: string;
     defaultUnit: string;
+    iconComponent: any;
     tokens: {
         [symbol: string]: ITokenConfig;
     };

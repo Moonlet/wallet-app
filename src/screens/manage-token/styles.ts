@@ -68,7 +68,7 @@ export default (theme: ITheme) =>
             flexDirection: 'column',
             marginHorizontal: BASE_DIMENSION
         },
-        tokenLogo: {
+        tokenIcon: {
             width: ICON_CONTAINER_SIZE,
             height: ICON_CONTAINER_SIZE
         },

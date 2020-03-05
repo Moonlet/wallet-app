@@ -453,7 +453,7 @@ export const updateTransactionFromBlockchain = (
                         token: notificatonAccount.tokens[getBlockchain(blockchain).config.coin],
                         tokenLogo: getBlockchain(blockchain).config.tokens[
                             getBlockchain(notificatonAccount.blockchain).config.coin
-                        ].logo,
+                        ].icon,
                         blockchain
                     }
                 }

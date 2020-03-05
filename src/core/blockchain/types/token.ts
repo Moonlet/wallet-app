@@ -11,10 +11,14 @@ export enum TokenScreenComponentType {
     DELEGATE = 'DELEGATE'
 }
 
+export interface TokenIconType {
+    uri: string;
+}
+
 export interface ITokenConfig {
     name: string;
     symbol: string;
-    logo?: any;
+    icon?: TokenIconType;
     type: TokenType;
     contractAddress?: string;
     decimals: number;

@@ -35,11 +35,6 @@ export default (theme: ITheme) =>
         menuIcon: {
             color: theme.colors.accent
         },
-        blockchainIcon: {
-            color: theme.colors.accent,
-            marginLeft: BASE_DIMENSION,
-            marginRight: BASE_DIMENSION * 2
-        },
         infoContainer: {
             flex: 1,
             flexDirection: 'row'
@@ -49,5 +44,8 @@ export default (theme: ITheme) =>
             height: ICON_CONTAINER_SIZE,
             justifyContent: 'center',
             alignItems: 'center'
+        },
+        blockchainIcon: {
+            marginHorizontal: BASE_DIMENSION
         }
     });

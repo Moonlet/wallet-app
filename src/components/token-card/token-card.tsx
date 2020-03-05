@@ -16,7 +16,7 @@ export interface IProps {
     account: IAccountState;
     styles: ReturnType<typeof stylesProvider>;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    tokenLogo: any;
+    tokenIcon: any;
 }
 
 export const TokenCardComponent = (props: IProps) => {
@@ -30,14 +30,14 @@ export const TokenCardComponent = (props: IProps) => {
                     accountIndex: props.account.index,
                     blockchain: props.account.blockchain,
                     token: props.token,
-                    tokenLogo: props.tokenLogo
+                    tokenIcon: props.tokenIcon
                 });
             }}
         >
             <View style={styles.iconContainer}>
                 <FastImage
-                    source={props.token.logo}
-                    style={styles.tokenLogo}
+                    source={props.token.icon}
+                    style={styles.tokenIcon}
                     resizeMode="contain"
                 />
             </View>

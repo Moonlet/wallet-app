@@ -44,14 +44,13 @@ export default (theme: ITheme) =>
             alignSelf: 'flex-end'
         },
         walletTc: {
-            fontSize: 17,
             lineHeight: 22,
             textAlign: 'center',
             color: theme.colors.textSecondary,
             marginBottom: BASE_DIMENSION * 10
         },
         text: {
-            fontSize: 20,
+            fontSize: theme.fontSize.large,
             lineHeight: 25,
             color: theme.colors.text,
             letterSpacing: 0.38

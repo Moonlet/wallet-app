@@ -25,7 +25,7 @@ const mapStateToProps = (state: IReduxState) => {
 
 interface IState {
     showModal: boolean;
-    tcFirebaseVersion: number;
+    tcLatestVersion: number;
 }
 
 export class LegalModalComponent extends React.Component<
@@ -38,7 +38,7 @@ export class LegalModalComponent extends React.Component<
         super(props);
         this.state = {
             showModal: false,
-            tcFirebaseVersion: undefined
+            tcLatestVersion: undefined
         };
     }
 
@@ -56,18 +56,18 @@ export class LegalModalComponent extends React.Component<
         if (this.props.navigationState) {
             const index = this.props.navigationState.index;
             const currentRoute = this.props.navigationState.routes[index].routeName;
-            const tcFirebaseVersion = getFirebaseTCVersion();
+            const tcLatestVersion = getFirebaseTCVersion();
 
             const showLegalModal =
                 currentRoute !== 'OnboardingScreen' &&
-                tcFirebaseVersion !== undefined &&
+                tcLatestVersion !== undefined &&
                 (this.props.tcAcceptedVersion === undefined ||
-                    tcFirebaseVersion > this.props.tcAcceptedVersion) &&
+                    tcLatestVersion > this.props.tcAcceptedVersion) &&
                 Platform.OS !== 'web';
 
             if (showLegalModal) {
                 this.setState({
-                    tcFirebaseVersion,
+                    tcLatestVersion,
                     showModal: true
                 });
             }
@@ -79,7 +79,7 @@ export class LegalModalComponent extends React.Component<
             <Modal isVisible={this.state.showModal}>
                 <View style={this.props.styles.container}>
                     <Legal
-                        tcFirebaseVersion={this.state.tcFirebaseVersion}
+                        tcLatestVersion={this.state.tcLatestVersion}
                         onAccept={() => this.setState({ showModal: false })}
                     />
                 </View>

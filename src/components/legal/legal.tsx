@@ -15,7 +15,7 @@ import { PrivacyPolicy } from './privacy-policy/privacy-policy';
 
 interface IExternalProps {
     onAccept: () => void;
-    tcFirebaseVersion: number;
+    tcLatestVersion: number;
 }
 
 export interface IReduxProps {
@@ -78,7 +78,7 @@ export const LegalComponent = (
                         style={props.styles.bottomButton}
                         primary
                         onPress={() => {
-                            props.appSetAcceptedTcVersion(props.tcFirebaseVersion);
+                            props.appSetAcceptedTcVersion(props.tcLatestVersion);
                             props.onAccept();
                         }}
                     >

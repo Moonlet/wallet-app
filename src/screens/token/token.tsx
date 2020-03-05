@@ -23,10 +23,10 @@ import { sendTransferTransaction, getBalance } from '../../redux/wallets/actions
 import { getChainId } from '../../redux/preferences/selectors';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { ITokenConfig, TokenScreenComponentType } from '../../core/blockchain/types/token';
-import FastImage from '../../core/utils/fast-image';
 import { DefaultTokenScreen } from './components/default-token/default-token';
 import { DelegateTokenScreen } from './components/delegate-token/delegate-token';
 import { AccountSettings } from './components/account-settings/account-settings';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -80,27 +80,33 @@ const navigationOptions = ({ navigation, theme }: any) => ({
             onPress={navigation.state.params ? navigation.state.params.openSettingsMenu : undefined}
         />
     ),
-    headerTitle: () => (
-        <View style={{ flexDirection: 'row' }}>
-            <FastImage
-                style={{ height: ICON_SIZE, width: ICON_SIZE, marginRight: BASE_DIMENSION }}
-                resizeMode="contain"
-                source={navigation.state.params.tokenLogo}
-            />
-            <Text
-                style={{
-                    fontSize: 22,
-                    lineHeight: 28,
-                    color: themes[theme].colors.text,
-                    letterSpacing: 0.38,
-                    textAlign: 'center',
-                    fontWeight: 'bold'
-                }}
-            >
-                {`${translate('App.labels.account')} ${navigation.state.params.accountIndex + 1}`}
-            </Text>
-        </View>
-    )
+    headerTitle: () => {
+        const BlockchainIcon = getBlockchain(navigation.state.params.blockchain).config
+            .iconComponent;
+
+        return (
+            <View style={{ flexDirection: 'row' }}>
+                <BlockchainIcon
+                    height={ICON_SIZE}
+                    width={ICON_SIZE}
+                    style={{ marginRight: BASE_DIMENSION, alignSelf: 'center' }}
+                />
+                <Text
+                    style={{
+                        fontSize: 22,
+                        lineHeight: 28,
+                        color: themes[theme].colors.text,
+                        letterSpacing: 0.38,
+                        textAlign: 'center',
+                        fontWeight: 'bold'
+                    }}
+                >
+                    {`${translate('App.labels.account')} ${navigation.state.params.accountIndex +
+                        1}`}
+                </Text>
+            </View>
+        );
+    }
 });
 
 export class TokenScreenComponent extends React.Component<

@@ -29,8 +29,7 @@ export const TokenCardComponent = (props: IProps) => {
                 props.navigation.navigate('Token', {
                     accountIndex: props.account.index,
                     blockchain: props.account.blockchain,
-                    token: props.token,
-                    tokenIcon: props.tokenIcon
+                    token: props.token
                 });
             }}
         >

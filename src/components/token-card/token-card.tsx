@@ -6,9 +6,10 @@ import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { Amount } from '../amount/amount';
-import { ITokenConfig } from '../../core/blockchain/types/token';
+import { ITokenConfig, TokenIconType } from '../../core/blockchain/types/token';
 import { Blockchain } from '../../core/blockchain/types';
-import FastImage from '../../core/utils/fast-image';
+import { SmartImage } from '../../library/image/smart-image';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -22,6 +23,14 @@ export interface IProps {
 export const TokenCardComponent = (props: IProps) => {
     const styles = props.styles;
 
+    const TokenIcon = getBlockchain(props.blockchain).config.tokens[props.token.symbol]?.icon
+        ?.iconComponent;
+
+    const tokenIconSource: TokenIconType = {
+        uri: props.token?.icon.uri,
+        iconComponent: TokenIcon
+    };
+
     return (
         <TouchableOpacity
             style={styles.container}
@@ -33,13 +42,7 @@ export const TokenCardComponent = (props: IProps) => {
                 });
             }}
         >
-            <View style={styles.iconContainer}>
-                <FastImage
-                    source={props.token.icon}
-                    style={styles.tokenIcon}
-                    resizeMode="contain"
-                />
-            </View>
+            <SmartImage source={tokenIconSource} />
             <View style={styles.accountInfoContainer}>
                 <Amount
                     style={styles.firstAmount}

@@ -15,7 +15,8 @@ export const config: IBlockchainConfig = {
             symbol: 'NEAR',
             icon: {
                 uri:
-                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png'
+                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png',
+                iconComponent: NearIcon
             },
             order: 0,
             active: true,

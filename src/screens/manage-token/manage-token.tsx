@@ -25,7 +25,7 @@ import {
 import { isValidAddress as isValidAddressETH } from '../../core/blockchain/ethereum/account';
 import { isValidAddress as isValidAddressZIL } from '../../core/blockchain/zilliqa/account';
 import { ChainIdType, Blockchain } from '../../core/blockchain/types';
-import FastImage from '../../core/utils/fast-image';
+import { SmartImage } from '../../library/image/smart-image';
 
 const GENERIC_TOKEN_ICON = {
     uri:
@@ -279,13 +279,7 @@ export class ManageTokenComponent extends React.Component<
                             ]}
                             onPress={() => this.setState({ isTokenSelected: true })}
                         >
-                            <View style={styles.iconContainer}>
-                                <FastImage
-                                    style={styles.tokenIcon}
-                                    resizeMode="contain"
-                                    source={this.state.token?.icon}
-                                />
-                            </View>
+                            <SmartImage source={this.state.token?.icon} />
                             <View style={styles.accountInfoContainer}>
                                 <Text
                                     style={styles.tokenNameText}

@@ -8,10 +8,7 @@ import { ITokenConfig } from '../../core/blockchain/types/token';
 
 export const getSelectedBlockchain = createSelector(
     (state: IReduxState): IWalletState => getSelectedWallet(state),
-    wallet => {
-        const selectedBlockchain = wallet ? wallet.selectedBlockchain : '';
-        return selectedBlockchain;
-    }
+    wallet => (wallet ? wallet.selectedBlockchain : '')
 );
 
 export const getSelectedWallet = createSelector(

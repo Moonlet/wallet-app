@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Clipboard, Platform } from 'react-native';
+import { View, TouchableOpacity, Clipboard, Platform, ScrollView } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -10,6 +10,7 @@ import { getApnsToken } from '../../core/messaging/silent/ios-voip-push-notifica
 import { readEncrypted } from '../../core/secure/storage';
 import { WC_CONNECTION } from '../../core/constants/app';
 import { getPassword } from '../../core/secure/keychain';
+import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
 
 export interface IExternalProps {
     obRef?: any;
@@ -33,7 +34,7 @@ const displayInfo = (text: string, label?: string) => (
             await Clipboard.setString(text);
         }}
     >
-        {label && <Text small>{label}</Text>}
+        {label && <Text small darker>{label}</Text>}
         <Text small>{text}</Text>
     </TouchableOpacity>
 );
@@ -80,20 +81,39 @@ export class DebugModalComponent extends React.Component<
             >
                 <Modal isVisible={this.state.visible}>
                     <View style={this.props.styles.container}>
-                        <View style={{ flex: 1 }}>
-                            {displayInfo(this.state.fcmToken, 'FCM token')}
-                            {Platform.OS === 'ios' && displayInfo(this.state.apnToken, 'APN token')}
-                            {displayInfo(this.state.wcSession?.bridge, 'WC bridge')}
-                            {displayInfo(this.state.wcSession?.key, 'WC key')}
-                            {displayInfo(this.state.wcSession?.clientId, 'WC client id')}
-                            {displayInfo(this.state.wcSession?.peerId, 'WC peer id')}
-                            {displayInfo(this.state.wcSession?.handshakeId, 'WC handshakeId id')}
-                            {displayInfo(
-                                this.state.wcSession?.handshakeTopic,
-                                'WC handshake topic'
-                            )}
-                        </View>
+                        <ScrollView style={{ flex: 1 }}>
+                            <View>
+                                {displayInfo(this.state.fcmToken, 'FCM token')}
+                                {Platform.OS === 'ios' &&
+                                    displayInfo(this.state.apnToken, 'APN token')}
+                                {displayInfo(
+                                    this.state.wcSession?.connected
+                                        ? 'connected'
+                                        : 'not connected / unk',
+                                    'WC connection'
+                                )}
+                                {displayInfo(this.state.wcSession?.bridge, 'WC bridge')}
+                                {displayInfo(this.state.wcSession?.key, 'WC key')}
+                                {displayInfo(this.state.wcSession?.clientId, 'WC client id')}
+                                {displayInfo(this.state.wcSession?.peerId, 'WC peer id')}
+                                {displayInfo(
+                                    this.state.wcSession?.handshakeId,
+                                    'WC handshakeId id'
+                                )}
+                                {displayInfo(
+                                    this.state.wcSession?.handshakeTopic,
+                                    'WC handshake topic'
+                                )}
+                            </View>
+                        </ScrollView>
                         <View style={{ flex: 0, padding: 20 }}>
+                            <Button
+                                onPress={() => {
+                                    WalletConnectClient.reconnect();
+                                }}
+                            >
+                                Reconnect to WC
+                            </Button>
                             <Button
                                 onPress={() => {
                                     this.setState({

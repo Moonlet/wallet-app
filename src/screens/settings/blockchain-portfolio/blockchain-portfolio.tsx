@@ -17,6 +17,7 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 import { getBlockchainsPortfolio, hasNetwork } from '../../../redux/preferences/selectors';
 import { Dialog } from '../../../components/dialog/dialog';
+import { ICON_SIZE } from '../../../styles/dimensions';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainOptions }];
@@ -86,7 +87,11 @@ export class BlockchainPortfolioComponent extends React.Component<
                 ]}
             >
                 <View style={styles.infoContainer}>
-                    <BlockchainIcon width={40} height={40} style={styles.blockchainIcon} />
+                    <BlockchainIcon
+                        width={ICON_SIZE + ICON_SIZE / 2}
+                        height={ICON_SIZE + ICON_SIZE / 2}
+                        style={styles.blockchainIcon}
+                    />
                     <Text style={styles.blockchainName}>{item.key}</Text>
                 </View>
                 <TouchableOpacity

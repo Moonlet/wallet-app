@@ -11,13 +11,14 @@ export default (theme: ITheme) =>
         },
         topContainer: {
             flex: 1,
-            justifyContent: 'center'
+            justifyContent: 'center',
+            marginBottom: BASE_DIMENSION * 4
         },
         buttonsContainer: {
             width: '100%',
             justifyContent: 'center',
             alignItems: 'center',
-            paddingHorizontal: BASE_DIMENSION * 6,
+            paddingHorizontal: BASE_DIMENSION * 4,
             marginBottom: BASE_DIMENSION * 7
         },
         topButtons: {
@@ -44,8 +45,7 @@ export default (theme: ITheme) =>
             alignSelf: 'center'
         },
         textContainer: {
-            marginHorizontal: BASE_DIMENSION * 4,
-            paddingHorizontal: BASE_DIMENSION * 2
+            marginHorizontal: BASE_DIMENSION * 4
         },
         welcomeTitle: {
             fontSize: 22,

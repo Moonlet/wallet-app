@@ -1,6 +1,6 @@
 import React from 'react';
 import FastImage from 'react-native-fast-image';
-import { TokenIconType } from '../../core/blockchain/types/token';
+import { TokenIcon } from '../../core/blockchain/types/token';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
@@ -8,7 +8,7 @@ import { ICON_SIZE } from '../../styles/dimensions';
 import { View } from 'react-native';
 
 export interface ISmartImageProps {
-    source: TokenIconType;
+    source: TokenIcon;
     small?: boolean;
     resizeMode?: ResizeMode;
     style?: any;

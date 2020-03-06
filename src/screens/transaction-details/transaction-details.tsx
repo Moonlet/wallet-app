@@ -18,6 +18,7 @@ import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import moment from 'moment';
 import { getChainId } from '../../redux/preferences/selectors';
+import BigNumber from 'bignumber.js';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -62,6 +63,17 @@ export class TransactionDetailsComponent extends React.Component<
         const account = this.props.account;
 
         const date = new Date(transaction.date.signed);
+
+        const tokens = getBlockchain(account.blockchain).config.tokens;
+        const coin = getBlockchain(account.blockchain).config.coin;
+
+        let feeTotal;
+        if (transaction.feeOptions?.gasPrice && transaction.feeOptions?.gasLimit) {
+            feeTotal = new BigNumber(transaction.feeOptions.gasPrice)
+                .multipliedBy(new BigNumber(transaction.feeOptions.gasLimit))
+                .toFixed();
+        }
+
         return (
             <View style={styles.container}>
                 <ScrollView
@@ -82,25 +94,26 @@ export class TransactionDetailsComponent extends React.Component<
                             style={styles.textPrimary}
                             amount={transaction.amount}
                             blockchain={account.blockchain}
-                            token={getBlockchain(account.blockchain).config.coin}
-                            tokenDecimals={
-                                getBlockchain(account.blockchain).config.tokens[
-                                    getBlockchain(account.blockchain).config.coin
-                                ].decimals
-                            }
+                            token={transaction?.token?.symbol || coin}
+                            tokenDecimals={transaction?.token?.decimals || tokens[coin].decimals}
                         />
                         <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
                     </View>
 
-                    {/* TODO: Fee */}
-                    {/* <View style={styles.rowContainer}>
-                        <Amount
-                            style={styles.textPrimary}
-                            amount={transaction.fee}
-                            blockchain={account.blockchain}
-                        />
-                        <Text style={styles.textSecondary}>{translate('App.labels.fee')}</Text>
-                    </View> */}
+                    {feeTotal && (
+                        <View style={styles.rowContainer}>
+                            <Amount
+                                style={styles.textPrimary}
+                                amount={feeTotal}
+                                blockchain={account.blockchain}
+                                token={transaction?.token?.symbol || coin}
+                                tokenDecimals={
+                                    transaction?.token?.decimals || tokens[coin].decimals
+                                }
+                            />
+                            <Text style={styles.textSecondary}>{translate('App.labels.fee')}</Text>
+                        </View>
+                    )}
 
                     <View style={styles.rowContainer}>
                         <Text style={styles.textPrimary}>

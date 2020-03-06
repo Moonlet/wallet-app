@@ -61,6 +61,9 @@ export class TransactionsHistoryListComponent extends React.Component<
                 break;
         }
 
+        const tokens = getBlockchain(account.blockchain).config.tokens;
+        const coin = getBlockchain(account.blockchain).config.coin;
+
         return (
             <TouchableOpacity
                 key={tx.id}
@@ -83,12 +86,8 @@ export class TransactionsHistoryListComponent extends React.Component<
                         <Amount
                             amount={tx.amount}
                             blockchain={account.blockchain}
-                            token={getBlockchain(account.blockchain).config.coin}
-                            tokenDecimals={
-                                getBlockchain(account.blockchain).config.tokens[
-                                    getBlockchain(account.blockchain).config.coin
-                                ].decimals
-                            }
+                            token={tx?.token?.symbol || coin}
+                            tokenDecimals={tx?.token?.decimals || tokens[coin].decimals}
                         />
 
                         <Text style={styles.transactionTextPrimary}>

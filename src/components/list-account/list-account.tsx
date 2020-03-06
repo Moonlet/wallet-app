@@ -3,11 +3,12 @@ import { Text, Button } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import Icon from '../icon';
 import TouchableOpacity from '../../library/touchable-opacity/touchable-opacity';
 import { translate } from '../../core/i18n';
 import { SmartImage } from '../../library/image/smart-image';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface IProps {
     label: string | JSX.Element;
@@ -39,7 +40,16 @@ export const ListAccountComponent = (
             {props.leftIcon && (
                 <SmartImage
                     source={{ iconComponent: BlockchainIcon }}
-                    style={props.styles.iconLeftContainer}
+                    style={{
+                        marginLeft: Platform.select({
+                            default: BASE_DIMENSION,
+                            web: BASE_DIMENSION / 4
+                        }),
+                        marginRight: Platform.select({
+                            default: BASE_DIMENSION * 2,
+                            web: BASE_DIMENSION
+                        })
+                    }}
                 />
             )}
 

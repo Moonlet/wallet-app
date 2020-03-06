@@ -33,8 +33,75 @@ export class TransactionsHistoryListComponent extends React.Component<
         return ` ${formattedAmount} ${formatAddress(tx.toAddress, account.blockchain)}`;
     }
 
+    private transactionItem = (tx: IBlockchainTransaction) => {
+        const { account, styles, theme } = this.props;
+
+        const date = new Date(tx.date.signed);
+
+        let txIcon: string;
+        let txColor: string;
+
+        switch (tx.status) {
+            case TransactionStatus.PENDING:
+                txIcon = 'pending';
+                txColor = theme.colors.warning;
+                break;
+            default:
+                if (account.address.toLowerCase() === tx.address.toLowerCase()) {
+                    txIcon = 'outbound';
+                    txColor = theme.colors.error;
+                } else if (account.address.toLowerCase() === tx.toAddress.toLowerCase()) {
+                    txIcon = 'inbound';
+                    txColor = theme.colors.positive;
+                }
+                break;
+        }
+
+        return (
+            <TouchableOpacity
+                key={tx.id}
+                style={styles.transactionListItem}
+                onPress={() =>
+                    this.props.navigation.navigate('TransactionDetails', {
+                        transaction: tx,
+                        accountIndex: account.index,
+                        blockchain: account.blockchain
+                    })
+                }
+            >
+                <Icon
+                    name={txIcon}
+                    size={ICON_SIZE}
+                    style={[styles.transactionIcon, { color: txColor }]}
+                />
+                <View style={styles.transactionTextContainer}>
+                    <View style={styles.transactionAmountContainer}>
+                        <Amount
+                            amount={tx.amount}
+                            blockchain={account.blockchain}
+                            token={getBlockchain(account.blockchain).config.coin}
+                            tokenDecimals={
+                                getBlockchain(account.blockchain).config.tokens[
+                                    getBlockchain(account.blockchain).config.coin
+                                ].decimals
+                            }
+                        />
+
+                        <Text style={styles.transactionTextPrimary}>
+                            {this.getTransactionPrimaryText(tx, account)}
+                        </Text>
+                    </View>
+                    <Text style={styles.transactionTextSecondary}>
+                        {`${moment(date).format('L')}, ${moment(date).format('LTS')}`}
+                    </Text>
+                </View>
+                <Icon name="chevron-right" size={16} style={styles.transactionRightIcon} />
+            </TouchableOpacity>
+        );
+    };
+
     public render() {
-        const { transactions, account, styles, theme } = this.props;
+        const { transactions, styles } = this.props;
 
         return (
             <View style={styles.transactionsContainer}>
@@ -57,79 +124,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                         contentContainerStyle={{ flexGrow: 1 }}
                         showsVerticalScrollIndicator={false}
                     >
-                        {transactions.map(tx => {
-                            const date = new Date(tx.date.signed);
-
-                            let txIcon: string;
-                            let txColor: string;
-
-                            switch (tx.status) {
-                                case TransactionStatus.PENDING:
-                                    txIcon = 'pending';
-                                    txColor = theme.colors.warning;
-                                    break;
-                                default:
-                                    if (account.address === tx.address) {
-                                        txIcon = 'outbound';
-                                        txColor = theme.colors.error;
-                                    } else if (account.address === tx.toAddress) {
-                                        txIcon = 'inbound';
-                                        txColor = theme.colors.positive;
-                                    }
-                                    break;
-                            }
-
-                            return (
-                                <TouchableOpacity
-                                    key={tx.id}
-                                    style={styles.transactionListItem}
-                                    onPress={() => {
-                                        this.props.navigation.navigate('TransactionDetails', {
-                                            transaction: tx,
-                                            accountIndex: account.index,
-                                            blockchain: account.blockchain
-                                        });
-                                    }}
-                                >
-                                    <Icon
-                                        name={txIcon}
-                                        size={ICON_SIZE}
-                                        style={[styles.transactionIcon, { color: txColor }]}
-                                    />
-                                    <View style={styles.transactionTextContainer}>
-                                        <View style={styles.transactionAmountContainer}>
-                                            <Amount
-                                                amount={tx.amount}
-                                                blockchain={account.blockchain}
-                                                token={
-                                                    getBlockchain(account.blockchain).config.coin
-                                                }
-                                                tokenDecimals={
-                                                    getBlockchain(account.blockchain).config.tokens[
-                                                        getBlockchain(account.blockchain).config
-                                                            .coin
-                                                    ].decimals
-                                                }
-                                            />
-
-                                            <Text style={styles.transactionTextPrimary}>
-                                                {this.getTransactionPrimaryText(tx, account)}
-                                            </Text>
-                                        </View>
-                                        <Text style={styles.transactionTextSecondary}>
-                                            {`${moment(date).format('L')}, ${moment(date).format(
-                                                'LTS'
-                                            )}`}
-                                        </Text>
-                                    </View>
-                                    <Icon
-                                        name="chevron-right"
-                                        size={16}
-                                        style={styles.transactionRightIcon}
-                                    />
-                                </TouchableOpacity>
-                            );
-                        })}
+                        {transactions.map((tx: IBlockchainTransaction) => this.transactionItem(tx))}
                     </ScrollView>
                 )}
             </View>

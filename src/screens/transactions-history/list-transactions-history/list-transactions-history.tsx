@@ -46,7 +46,12 @@ export class TransactionsHistoryListComponent extends React.Component<
                 txIcon = 'pending';
                 txColor = theme.colors.warning;
                 break;
+            case TransactionStatus.FAILED:
+                txIcon = 'warning';
+                txColor = theme.colors.error;
+                break;
             default:
+                // TransactionStatus.SUCCESS
                 if (account.address.toLowerCase() === tx.address.toLowerCase()) {
                     txIcon = 'outbound';
                     txColor = theme.colors.error;

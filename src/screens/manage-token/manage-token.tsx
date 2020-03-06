@@ -165,7 +165,7 @@ export class ManageTokenComponent extends React.Component<
                     decimals: tokenInfo.decimals,
                     name: tokenInfo?.name || foundToken.name,
                     symbol: String(tokenInfo?.symbol).toUpperCase() || foundToken?.symbol, // Check this
-                    icon: foundToken?.icon ? { uri: foundToken.icon } : GENERIC_TOKEN_ICON
+                    icon: foundToken?.logo ? { uri: foundToken.logo } : GENERIC_TOKEN_ICON
                 },
                 showError: false,
                 isLoading: false

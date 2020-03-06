@@ -17,7 +17,6 @@ import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
-// import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
 import { sendTransferTransaction, getBalance } from '../../redux/wallets/actions';
 import { getChainId } from '../../redux/preferences/selectors';

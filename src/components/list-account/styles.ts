@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 import { ITheme } from '../../core/theme/itheme';
 
@@ -29,8 +29,14 @@ export default (theme: ITheme) =>
             borderColor: theme.colors.accentSecondary
         },
         iconLeftContainer: {
-            marginLeft: BASE_DIMENSION,
-            marginRight: BASE_DIMENSION * 2
+            marginLeft: Platform.select({
+                default: BASE_DIMENSION,
+                web: BASE_DIMENSION / 4
+            }),
+            marginRight: Platform.select({
+                default: BASE_DIMENSION * 2,
+                web: BASE_DIMENSION
+            })
         },
         iconRightContainer: {
             height: ICON_CONTAINER_SIZE,

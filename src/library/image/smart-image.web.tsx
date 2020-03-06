@@ -23,20 +23,17 @@ export const SmartImageComponent = (props: ISmartImageProps) => {
 
     const source = props.source?.iconComponent || props.source?.uri;
 
+    const baseStyle = {
+        width: props.small ? iconSmallSize : iconLargeSize,
+        height: props.small ? iconSmallSize : iconLargeSize,
+        marginLeft: props.small ? BASE_DIMENSION : 0,
+        marginRight: props.small ? BASE_DIMENSION : 0
+    };
+
     if (source === undefined) {
         return <div />;
     } else {
-        return (
-            <img
-                src={source}
-                style={{
-                    width: props.small ? iconSmallSize : iconLargeSize,
-                    height: props.small ? iconSmallSize : iconLargeSize,
-                    marginLeft: props.small ? BASE_DIMENSION : 0,
-                    marginRight: props.small ? BASE_DIMENSION : 0
-                }}
-            />
-        );
+        return <img src={source} style={{ ...baseStyle, ...props.style }} />;
     }
 };
 

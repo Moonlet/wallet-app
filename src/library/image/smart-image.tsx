@@ -5,9 +5,11 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { ICON_SIZE } from '../../styles/dimensions';
+import { View } from 'react-native';
 
 export interface ISmartImageProps {
     source: TokenIconType;
+    small?: boolean;
     resizeMode?: ResizeMode;
     style?: any;
 }
@@ -44,16 +46,18 @@ export const SmartImageComponent = (
 ) => {
     if (props.source?.iconComponent) {
         const IconComponent = props.source.iconComponent;
+
+        const iconSmallSize = ICON_SIZE;
+        const iconLargeSize = ICON_SIZE + ICON_SIZE / 2;
+
         return (
             <IconComponent
-                width={ICON_SIZE + ICON_SIZE / 2}
-                height={ICON_SIZE + ICON_SIZE / 2}
+                width={props?.small ? iconSmallSize : iconLargeSize}
+                height={props?.small ? iconSmallSize : iconLargeSize}
                 style={[getStyle(props), props.styles.marginHorizontal]}
             />
         );
-    }
-
-    if (props.source.uri) {
+    } else if (props.source?.uri) {
         return (
             <FastImage
                 source={props.source}
@@ -61,7 +65,7 @@ export const SmartImageComponent = (
                 resizeMode={props?.resizeMode || ResizeMode.contain}
             />
         );
-    }
+    } else return <View />;
 };
 
 export const SmartImage = smartConnect<ISmartImageProps>(SmartImageComponent, [

@@ -56,7 +56,6 @@ export const TokenDashboardComponent = (
                                 navigation={props.navigation}
                                 key={`token-${index}`}
                                 blockchain={props.blockchain}
-                                tokenLogo={token.icon}
                             />
                         )
                 )}

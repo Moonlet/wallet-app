@@ -6,7 +6,7 @@ import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { Amount } from '../amount/amount';
-import { ITokenConfig, TokenIconType } from '../../core/blockchain/types/token';
+import { ITokenConfig } from '../../core/blockchain/types/token';
 import { Blockchain } from '../../core/blockchain/types';
 import { SmartImage } from '../../library/image/smart-image';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
@@ -17,7 +17,6 @@ export interface IProps {
     account: IAccountState;
     styles: ReturnType<typeof stylesProvider>;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    tokenIcon: any;
 }
 
 export const TokenCardComponent = (props: IProps) => {
@@ -25,11 +24,6 @@ export const TokenCardComponent = (props: IProps) => {
 
     const TokenIcon = getBlockchain(props.blockchain).config.tokens[props.token.symbol]?.icon
         ?.iconComponent;
-
-    const tokenIconSource: TokenIconType = {
-        uri: props.token?.icon.uri,
-        iconComponent: TokenIcon
-    };
 
     return (
         <TouchableOpacity
@@ -42,7 +36,12 @@ export const TokenCardComponent = (props: IProps) => {
                 });
             }}
         >
-            <SmartImage source={tokenIconSource} />
+            <SmartImage
+                source={{
+                    uri: props.token?.icon?.uri,
+                    iconComponent: TokenIcon
+                }}
+            />
             <View style={styles.accountInfoContainer}>
                 <Amount
                     style={styles.firstAmount}

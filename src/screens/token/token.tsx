@@ -17,7 +17,7 @@ import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
-import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
+// import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
 import { sendTransferTransaction, getBalance } from '../../redux/wallets/actions';
 import { getChainId } from '../../redux/preferences/selectors';
@@ -28,6 +28,7 @@ import { DelegateTokenScreen } from './components/delegate-token/delegate-token'
 import { AccountSettings } from './components/account-settings/account-settings';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
+import { SmartImage } from '../../library/image/smart-image';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -87,11 +88,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
 
         return (
             <View style={{ flexDirection: 'row' }}>
-                <BlockchainIcon
-                    height={ICON_SIZE}
-                    width={ICON_SIZE}
-                    style={{ marginRight: BASE_DIMENSION, alignSelf: 'center' }}
-                />
+                <SmartImage source={{ iconComponent: BlockchainIcon }} small />
                 <Text
                     style={{
                         fontSize: 22,

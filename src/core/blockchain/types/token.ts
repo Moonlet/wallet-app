@@ -12,7 +12,7 @@ export enum TokenScreenComponentType {
 }
 
 export interface TokenIconType {
-    uri: string;
+    uri?: string;
     iconComponent?: any;
 }
 

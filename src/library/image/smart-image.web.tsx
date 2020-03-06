@@ -1,10 +1,10 @@
 import React from 'react';
-import { TokenIcon } from '../../core/blockchain/types/token';
+import { ITokenIcon } from '../../core/blockchain/types/token';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { ICON_SIZE } from '../../styles/dimensions';
 
 interface ISmartImageProps {
-    source: TokenIcon;
+    source: ITokenIcon;
     small?: boolean;
     resizeMode?: ResizeMode;
     style?: any;

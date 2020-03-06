@@ -7,7 +7,7 @@ import { View } from 'react-native';
 import Icon from '../icon';
 import TouchableOpacity from '../../library/touchable-opacity/touchable-opacity';
 import { translate } from '../../core/i18n';
-import { ICON_SIZE } from '../../styles/dimensions';
+import { SmartImage } from '../../library/image/smart-image';
 
 export interface IProps {
     label: string | JSX.Element;
@@ -37,9 +37,8 @@ export const ListAccountComponent = (
             onPress={props.onPress}
         >
             {props.leftIcon && (
-                <BlockchainIcon
-                    width={ICON_SIZE + ICON_SIZE / 2}
-                    height={ICON_SIZE + ICON_SIZE / 2}
+                <SmartImage
+                    source={{ iconComponent: BlockchainIcon }}
                     style={props.styles.iconLeftContainer}
                 />
             )}

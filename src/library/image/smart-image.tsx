@@ -54,7 +54,7 @@ export const SmartImageComponent = (
             <IconComponent
                 width={props?.small ? iconSmallSize : iconLargeSize}
                 height={props?.small ? iconSmallSize : iconLargeSize}
-                style={[getStyle(props), props.styles.marginHorizontal]}
+                style={getStyle(props)}
             />
         );
     } else if (props.source?.uri) {

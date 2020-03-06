@@ -44,5 +44,8 @@ export default (theme: ITheme) =>
         tokenIcon: {
             width: ICON_CONTAINER_SIZE,
             height: ICON_CONTAINER_SIZE
+        },
+        imageStyle: {
+            marginLeft: BASE_DIMENSION / 2
         }
     });

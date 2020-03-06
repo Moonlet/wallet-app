@@ -44,8 +44,5 @@ export default (theme: ITheme) =>
             height: ICON_CONTAINER_SIZE,
             justifyContent: 'center',
             alignItems: 'center'
-        },
-        blockchainIcon: {
-            marginHorizontal: BASE_DIMENSION
         }
     });

@@ -41,6 +41,7 @@ export const TokenCardComponent = (props: IProps) => {
                     uri: props.token?.icon?.uri,
                     iconComponent: TokenIcon
                 }}
+                style={props.styles.imageStyle}
             />
             <View style={styles.accountInfoContainer}>
                 <Amount

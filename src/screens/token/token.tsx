@@ -29,6 +29,7 @@ import { AccountSettings } from './components/account-settings/account-settings'
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 import { SmartImage } from '../../library/image/smart-image';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -88,7 +89,11 @@ const navigationOptions = ({ navigation, theme }: any) => ({
 
         return (
             <View style={{ flexDirection: 'row' }}>
-                <SmartImage source={{ iconComponent: BlockchainIcon }} small />
+                <SmartImage
+                    source={{ iconComponent: BlockchainIcon }}
+                    style={{ marginRight: BASE_DIMENSION }}
+                    small
+                />
                 <Text
                     style={{
                         fontSize: 22,

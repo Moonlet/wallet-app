@@ -56,7 +56,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 }
                 break;
             default:
-                txIcon = 'warning';
+                txIcon = 'delete-2';
                 txColor = theme.colors.error;
                 break;
         }

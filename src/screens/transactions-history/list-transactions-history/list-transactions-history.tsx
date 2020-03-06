@@ -14,6 +14,7 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import moment from 'moment';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { IBlockchainTransaction } from '../../../core/blockchain/types';
+import { TransactionStatus } from '../../../core/wallet/types';
 
 export interface IExternalProps {
     transactions: IBlockchainTransaction[];
@@ -33,8 +34,7 @@ export class TransactionsHistoryListComponent extends React.Component<
     }
 
     public render() {
-        const styles = this.props.styles;
-        const { transactions, account } = this.props;
+        const { transactions, account, styles, theme } = this.props;
 
         return (
             <View style={styles.transactionsContainer}>
@@ -60,6 +60,25 @@ export class TransactionsHistoryListComponent extends React.Component<
                         {transactions.map(tx => {
                             const date = new Date(tx.date.signed);
 
+                            let txIcon: string;
+                            let txColor: string;
+
+                            switch (tx.status) {
+                                case TransactionStatus.PENDING:
+                                    txIcon = 'pending';
+                                    txColor = theme.colors.warning;
+                                    break;
+                                default:
+                                    if (account.address === tx.address) {
+                                        txIcon = 'outbound';
+                                        txColor = theme.colors.error;
+                                    } else if (account.address === tx.toAddress) {
+                                        txIcon = 'inbound';
+                                        txColor = theme.colors.positive;
+                                    }
+                                    break;
+                            }
+
                             return (
                                 <TouchableOpacity
                                     key={tx.id}
@@ -73,9 +92,9 @@ export class TransactionsHistoryListComponent extends React.Component<
                                     }}
                                 >
                                     <Icon
-                                        name="money-wallet-1"
+                                        name={txIcon}
                                         size={ICON_SIZE}
-                                        style={styles.transactionIcon}
+                                        style={[styles.transactionIcon, { color: txColor }]}
                                     />
                                     <View style={styles.transactionTextContainer}>
                                         <View style={styles.transactionAmountContainer}>

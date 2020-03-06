@@ -15,7 +15,6 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 3
         },
         transactionIcon: {
-            color: theme.colors.text,
             alignSelf: 'center',
             marginRight: BASE_DIMENSION
         },

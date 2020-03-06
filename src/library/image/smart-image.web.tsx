@@ -1,7 +1,7 @@
 import React from 'react';
 import { TokenIconType } from '../../core/blockchain/types/token';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
+import { ICON_SIZE } from '../../styles/dimensions';
 
 interface ISmartImageProps {
     source: TokenIconType;
@@ -25,9 +25,7 @@ export const SmartImageComponent = (props: ISmartImageProps) => {
 
     const baseStyle = {
         width: props.small ? iconSmallSize : iconLargeSize,
-        height: props.small ? iconSmallSize : iconLargeSize,
-        marginLeft: props.small ? BASE_DIMENSION : 0,
-        marginRight: props.small ? BASE_DIMENSION : 0
+        height: props.small ? iconSmallSize : iconLargeSize
     };
 
     if (source === undefined) {

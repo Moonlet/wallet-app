@@ -25,12 +25,7 @@ export const LoadingModalComponent = (
     props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     return (
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={props.isVisible}
-            presentationStyle="overFullScreen"
-        >
+        <Modal isVisible={props.isVisible}>
             <View style={props.styles.container}>
                 <ActivityIndicator
                     size="large"

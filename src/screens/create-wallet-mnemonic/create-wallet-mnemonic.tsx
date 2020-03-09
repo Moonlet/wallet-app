@@ -9,10 +9,7 @@ import { withTheme } from '../../core/theme/with-theme';
 import { Mnemonic } from '../../core/wallet/hd-wallet/mnemonic';
 import { translate } from '../../core/i18n';
 import { HeaderLeft } from '../../components/header-left/header-left';
-import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { IReduxState } from '../../redux/state';
-import { TOS_VERSION } from '../../core/constants/app';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { Icon } from '../../components/icon';
 
@@ -24,10 +21,6 @@ export interface IProps {
 interface IState {
     mnemonic: string[];
     copied: boolean;
-}
-
-export interface IReduxProps {
-    tosVersion: number;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -46,23 +39,15 @@ export const navigationOptions = ({ navigation }: any) => ({
     title: translate('App.labels.create')
 });
 
-export class CreateWalletMnemonicScreenComponent extends React.Component<
-    IProps,
-    IState,
-    IReduxProps
-> {
+export class CreateWalletMnemonicScreenComponent extends React.Component<IProps, IState> {
     public static navigationOptions = navigationOptions;
 
-    constructor(props: any) {
+    constructor(props: IProps) {
         super(props);
         this.state = {
             mnemonic: new Array(24).fill(''),
             copied: false
         };
-
-        if (!props.tosVersion || TOS_VERSION > props.tosVersion) {
-            props.navigation.navigate('CreateWalletTerms');
-        }
     }
 
     public async componentDidMount() {
@@ -132,11 +117,5 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
 }
 
 export const CreateWalletMnemonicScreen = smartConnect(CreateWalletMnemonicScreenComponent, [
-    connect(
-        (state: IReduxState) => ({
-            tosVersion: state.app.tosVersion
-        }),
-        null
-    ),
     withTheme(stylesProvider)
 ]);

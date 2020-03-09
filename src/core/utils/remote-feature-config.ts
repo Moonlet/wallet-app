@@ -1,10 +1,12 @@
 import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export enum RemoteFeature {
     NEAR = 'feature_near',
     COSMOS = 'feature_cosmos',
-    DEV_TOOLS = 'dev_tools'
+    DEV_TOOLS = 'dev_tools',
+    TC_VERSION = 'tcVersion'
 }
 
 let featuresConfig;
@@ -23,7 +25,12 @@ export const getRemoteConfigFeatures = async () => {
     await firebase.config().activateFetched();
     const objects = await firebase
         .config()
-        .getValues([RemoteFeature.NEAR, RemoteFeature.COSMOS, RemoteFeature.DEV_TOOLS]);
+        .getValues([
+            RemoteFeature.NEAR,
+            RemoteFeature.COSMOS,
+            RemoteFeature.DEV_TOOLS,
+            RemoteFeature.TC_VERSION
+        ]);
 
     featuresConfig = {};
     // Retrieve values
@@ -53,4 +60,18 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
         }
     }
     return false;
+};
+
+export const getFirebaseTCVersion = async (): Promise<number> => {
+    if (featuresConfig) {
+        const tcVersion = JSON.parse(featuresConfig[RemoteFeature.TC_VERSION]);
+
+        if (tcVersion) {
+            await AsyncStorage.setItem('tcAcceptedVersion', String(tcVersion));
+        }
+
+        return tcVersion;
+    }
+
+    return;
 };

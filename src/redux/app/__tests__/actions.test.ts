@@ -1,8 +1,7 @@
-import { appSetTosVersion } from '../actions';
-import { Blockchain } from '../../../core/blockchain/types';
+import { appSetAcceptedTcVersion } from '../actions';
 
 describe('app actions', () => {
     test('app action creators', () => {
-        expect(appSetTosVersion(1)).toMatchSnapshot();
+        expect(appSetAcceptedTcVersion(1)).toMatchSnapshot();
     });
 });

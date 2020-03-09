@@ -55,6 +55,10 @@ export class TransactionsHistoryListComponent extends React.Component<
                     txColor = theme.colors.positive;
                 }
                 break;
+            case TransactionStatus.DROPPED:
+                txIcon = 'delete-2';
+                txColor = theme.colors.disabledButton;
+                break;
             default:
                 txIcon = 'delete-2';
                 txColor = theme.colors.error;

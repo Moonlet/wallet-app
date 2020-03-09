@@ -86,7 +86,7 @@ export const buildTransferTransaction = async (
 
                 toAddress: tokenInfo.contractAddress,
 
-                amount: tx.amount,
+                amount: '0',
                 feeOptions: tx.feeOptions,
                 broadcatedOnBlock: undefined,
                 nonce,

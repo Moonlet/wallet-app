@@ -20,7 +20,10 @@ export default (theme: ITheme) =>
             flexGrow: 1,
             paddingHorizontal: BASE_DIMENSION * 2
         },
-
+        content: {
+            flex: 1,
+            paddingTop: BASE_DIMENSION * 3
+        },
         userActionContainer: {
             paddingTop: BASE_DIMENSION * 2,
             alignSelf: 'center',
@@ -127,5 +130,56 @@ export default (theme: ITheme) =>
             fontSize: theme.fontSize.regular,
             lineHeight: 20,
             color: theme.colors.accent
+        },
+
+        //
+        addAddressContainer: {
+            flex: 1,
+            margin: BASE_DIMENSION * 2,
+            paddingTop: BASE_DIMENSION
+        },
+
+        //
+        bottomWrapper: {
+            flexDirection: 'column',
+            width: '100%',
+            justifyContent: 'flex-end'
+        },
+        bottomDivider: {
+            height: 1,
+            width: '100%',
+            backgroundColor: theme.colors.settingsDivider
+        },
+        bottomContainer: {
+            padding: BASE_DIMENSION + BASE_DIMENSION / 2,
+            flexDirection: 'row',
+            justifyContent: 'center'
+        },
+        bottomTextContainer: {
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'center'
+        },
+        bottomDefaultText: {
+            fontSize: 15,
+            lineHeight: 20,
+            color: theme.colors.text
+        },
+        bottomSendText: {
+            fontSize: 15,
+            lineHeight: 20,
+            color: theme.colors.accent,
+            marginRight: BASE_DIMENSION / 2
+        },
+        bottomToText: {
+            fontSize: 15,
+            lineHeight: 20,
+            color: theme.colors.text,
+            marginRight: BASE_DIMENSION / 2
+        },
+        bottomAmountText: {
+            fontSize: 11,
+            lineHeight: 13,
+            color: theme.colors.textTertiary
         }
     });

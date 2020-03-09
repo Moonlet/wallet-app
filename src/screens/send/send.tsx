@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity, Platform, ScrollView } from 'react-native';
+import { View, TextInput, TouchableOpacity, Platform } from 'react-native';
 import { Icon } from '../../components/icon';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
@@ -15,7 +15,6 @@ import { withNavigationParams, INavigationProps } from '../../navigation/with-na
 import { addContact } from '../../redux/contacts/actions';
 import { IContactState, IContactsState } from '../../redux/contacts/state';
 import { getContacts } from '../../redux/contacts/selectors';
-import { AccountAddress } from '../../components/account-address/account-address';
 import { AccountList } from './components/account-list/account-list';
 import { AddressBook } from './components/address-book/address-book';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
@@ -54,6 +53,7 @@ import {
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { getChainId } from '../../redux/preferences/selectors';
 import { Memo } from './components/extra-fields/memo/memo';
+import { HeaderStepByStep } from './components/header-step-by-step/header-step-by-step';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -102,6 +102,7 @@ interface IState {
     showExtensionMessage: boolean;
     userAction: boolean;
     memo: string;
+    isConfirm: boolean;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -136,7 +137,8 @@ export class SendScreenComponent extends React.Component<
             feeOptions: undefined,
             showExtensionMessage: false,
             userAction: false,
-            memo: ''
+            memo: '',
+            isConfirm: false
         };
     }
 
@@ -287,12 +289,12 @@ export class SendScreenComponent extends React.Component<
     };
 
     public onAccountSelection = (account: IAccountState) => {
-        this.setState({ toAddress: account.address, showOwnAccounts: false });
+        this.setState({ toAddress: account.address });
         this.verifyInputText(account.address);
     };
 
     public onContactSelected = (contact: IContactState) => {
-        this.setState({ toAddress: contact.address, showOwnAccounts: false });
+        this.setState({ toAddress: contact.address });
         this.verifyInputText(contact.address);
     };
 
@@ -455,8 +457,7 @@ export class SendScreenComponent extends React.Component<
     }
 
     public renderBasicFields() {
-        const styles = this.props.styles;
-        const theme = this.props.theme;
+        const { styles, theme } = this.props;
         const extraFields = getBlockchain(this.props.account.blockchain).config.ui.extraFields;
 
         return (
@@ -530,6 +531,7 @@ export class SendScreenComponent extends React.Component<
                 <AccountList
                     accounts={this.props.accounts}
                     onAccountSelection={this.onAccountSelection}
+                    selectedAddress={this.state.toAddress}
                 />
             );
         } else {
@@ -537,78 +539,123 @@ export class SendScreenComponent extends React.Component<
                 <AddressBook
                     blockchain={this.props.blockchain}
                     onContactSelected={this.onContactSelected}
+                    selectedAddress={this.state.toAddress}
                 />
             );
         }
     }
 
+    private renderAddAddressContainer() {
+        const { styles, theme, account } = this.props;
+
+        return (
+            <View style={styles.addAddressContainer}>
+                <Text style={styles.receipientLabel}>
+                    {this.state.toAddress !== '' ? translate('Send.recipientLabel') : ' '}
+                </Text>
+                <View style={styles.inputBoxAddress}>
+                    <TextInput
+                        testID="input-address"
+                        style={styles.inputAddress}
+                        placeholderTextColor={theme.colors.textSecondary}
+                        placeholder={translate('Send.inputAddress')}
+                        autoCapitalize={'none'}
+                        autoCorrect={false}
+                        editable={!this.state.isValidText}
+                        selectionColor={theme.colors.accent}
+                        value={
+                            this.state.isValidText
+                                ? formatAddress(this.state.toAddress, account.blockchain)
+                                : this.state.toAddress
+                        }
+                        onChangeText={text => {
+                            this.verifyInputText(text);
+                        }}
+                    />
+                    {this.renderRightAddressIcon()}
+                </View>
+
+                {this.state.errorResponseText && (
+                    <Text style={styles.displayError}>{this.state.errorResponseText}</Text>
+                )}
+
+                {this.state.warningResponseText && (
+                    <Text style={styles.receipientWarning}>{this.state.warningResponseText}</Text>
+                )}
+
+                <TouchableOpacity
+                    testID="transfer-between-accounts"
+                    onPress={this.onTransferBetweenAccounts}
+                    style={[styles.buttonRightOptions]}
+                >
+                    <Text style={styles.textTranferButton}>
+                        {this.state.showOwnAccounts
+                            ? translate('App.labels.close')
+                            : translate('Send.transferOwnAccounts')}
+                    </Text>
+                </TouchableOpacity>
+
+                {this.renderAddAddressToBook()}
+
+                {this.renderListOrBook()}
+            </View>
+        );
+    }
+
+    private renderBottomConfirm() {
+        const { styles, account } = this.props;
+
+        return (
+            <View style={styles.bottomWrapper}>
+                <View style={styles.bottomDivider} />
+
+                <View style={styles.bottomContainer}>
+                    <View style={styles.bottomTextContainer}>
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.bottomSendText}>
+                                {translate('App.labels.send')}
+                            </Text>
+                            <Text style={[styles.bottomToText, { textTransform: 'lowercase' }]}>
+                                {translate('App.labels.to')}
+                            </Text>
+                            <Text style={styles.bottomDefaultText}>
+                                {this.state.isValidText
+                                    ? formatAddress(this.state.toAddress, account.blockchain)
+                                    : '___...___'}
+                            </Text>
+                        </View>
+
+                        {/* <Text style={styles.bottomDefaultText}>1,000,000.00 ZIL</Text> */}
+
+                        {/* <Text style={styles.bottomAmountText}>$5,000.00</Text> */}
+                    </View>
+                    <Button style={{ width: 140 }} primary disabled={this.state.toAddress === ''}>
+                        {this.state.isConfirm
+                            ? translate('App.labels.confirm')
+                            : translate('App.labels.next')}
+                    </Button>
+                </View>
+            </View>
+        );
+    }
+
     public render() {
-        const styles = this.props.styles;
-        const theme = this.props.theme;
-        const account = this.props.account;
+        const { styles } = this.props;
 
         return (
             <View style={styles.container}>
                 <TestnetBadge />
-                <ScrollView
-                    showsVerticalScrollIndicator={false}
-                    contentContainerStyle={styles.scrollContainer}
-                >
-                    <View style={styles.accountAddress}>
-                        <AccountAddress account={account} token={this.props.token} />
-                    </View>
-                    <Text style={styles.receipientLabel}>
-                        {this.state.toAddress !== '' ? translate('Send.recipientLabel') : ' '}
-                    </Text>
-                    <View style={styles.inputBoxAddress}>
-                        <TextInput
-                            testID="input-address"
-                            style={styles.inputAddress}
-                            placeholderTextColor={theme.colors.textSecondary}
-                            placeholder={translate('Send.inputAddress')}
-                            autoCapitalize={'none'}
-                            autoCorrect={false}
-                            editable={!this.state.isValidText}
-                            selectionColor={theme.colors.accent}
-                            value={
-                                this.state.isValidText
-                                    ? formatAddress(this.state.toAddress, account.blockchain)
-                                    : this.state.toAddress
-                            }
-                            onChangeText={text => {
-                                this.verifyInputText(text);
-                            }}
-                        />
-                        {this.renderRightAddressIcon()}
-                    </View>
-                    {this.state.errorResponseText && (
-                        <Text style={styles.displayError}>{this.state.errorResponseText}</Text>
-                    )}
-                    {this.state.warningResponseText && (
-                        <Text style={styles.receipientWarning}>
-                            {this.state.warningResponseText}
-                        </Text>
-                    )}
-                    <TouchableOpacity
-                        testID="transfer-between-accounts"
-                        onPress={this.onTransferBetweenAccounts}
-                        style={[styles.buttonRightOptions]}
-                    >
-                        <Text style={styles.textTranferButton}>
-                            {this.state.showOwnAccounts
-                                ? translate('App.labels.close')
-                                : translate('Send.transferOwnAccounts')}
-                        </Text>
-                    </TouchableOpacity>
 
-                    {this.renderAddAddressToBook()}
+                <View style={styles.content}>
+                    <HeaderStepByStep steps={{}} />
+                    {this.renderAddAddressContainer()}
+                    {this.renderBottomConfirm()}
+                </View>
 
-                    {this.state.userAction && this.renderContinueAction()}
+                {/* {this.state.userAction && this.renderContinueAction()} */}
 
-                    {this.state.isValidText && this.renderBasicFields()}
+                {/* {this.state.isValidText && this.renderBasicFields()} */}
 
-                    {!this.state.isValidText && this.renderListOrBook()}
-                </ScrollView>
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />
 
                 <QrModalReader

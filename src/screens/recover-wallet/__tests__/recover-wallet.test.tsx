@@ -20,17 +20,11 @@ const props: IProps & IReduxProps = {
         navigate: jest.fn()
     },
     styles: styleProvider(darkTheme),
-    tosVersion: 1,
     createHDWallet: jest.fn((mnemonic, password, callback): any => callback()),
     theme: darkTheme
 };
 
 jest.mock('../../../core/wallet/hd-wallet/mnemonic');
-jest.mock('../../../core/constants/app', () => {
-    return {
-        TOS_VERSION: 1
-    };
-});
 
 const validMnemonic =
     'panic club above clarify orbit resist illegal feel bus remember aspect field test bubble dog trap awesome hand room rice heavy idle faint salmon';
@@ -47,11 +41,6 @@ describe('creat wallet terms screen component', () => {
     test('renders correctly', async () => {
         const wrapper = shallow(<RecoverWalletScreenComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();
-    });
-
-    test('navigates to tos when there are new tos', () => {
-        shallow(<RecoverWalletScreenComponent {...{ ...props, tosVersion: 0 }} />);
-        expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletTerms');
     });
 
     test('sets correct navigation options', () => {

@@ -1,7 +1,8 @@
 export enum RemoteFeature {
     COSMOS = 'feature_cosmos',
     NEAR = 'feature_near',
-    DEV_TOOLS = 'dev_tools'
+    DEV_TOOLS = 'dev_tools',
+    TC_VERSION = 'tcVersion'
 }
 
 export const getRemoteConfigFeatures = () => {
@@ -12,4 +13,8 @@ export const getRemoteConfigFeatures = () => {
 
 export const isFeatureActive = (feature: RemoteFeature): boolean => {
     return false;
+};
+
+export const getFirebaseTCVersion = (): number => {
+    return undefined;
 };

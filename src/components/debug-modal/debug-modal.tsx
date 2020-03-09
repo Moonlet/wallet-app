@@ -78,12 +78,7 @@ export class DebugModalComponent extends React.Component<
                     height: '100%'
                 }}
             >
-                <Modal
-                    animationType={'none'}
-                    transparent={true}
-                    visible={this.state.visible}
-                    presentationStyle={'overFullScreen'}
-                >
+                <Modal isVisible={this.state.visible}>
                     <View style={this.props.styles.container}>
                         <View style={{ flex: 1 }}>
                             {displayInfo(this.state.fcmToken, 'FCM token')}

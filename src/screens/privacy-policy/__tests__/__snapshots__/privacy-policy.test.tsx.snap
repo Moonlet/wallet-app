@@ -2,9 +2,6 @@
 
 exports[`privacy policy screen component renders correctly 1`] = `
 "<View style={{...}}>
-  <Image style={{...}} source={{...}} />
-  <withTheme(TextComponent) style={{...}}>
-    Coming soon!
-  </withTheme(TextComponent)>
+  <withTheme(PrivacyPolicyComponent) />
 </View>"
 `;

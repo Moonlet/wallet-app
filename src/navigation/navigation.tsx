@@ -9,7 +9,7 @@ import { lightTheme } from '../styles/themes/light-theme';
 import { ITheme } from '../core/theme/itheme';
 import { Theme } from '../core/theme/themes';
 import { HeaderLeft } from '../components/header-left/header-left';
-import { menuIcon, removeAnimation } from './utils';
+import { menuIcon } from './utils';
 
 import { DashboardScreen } from '../screens/dashboard/dashboard';
 import { SettingsScreen } from '../screens/settings/settings';
@@ -19,14 +19,12 @@ import { SetCurrencyScreen } from '../screens/settings/set-currency/set-currency
 import { BlockchainPortfolioScreen } from '../screens/settings/blockchain-portfolio/blockchain-portfolio';
 import { BackupWalletScreen } from '../screens/settings/backup-wallet/backup-wallet';
 import { OnboardingScreen } from '../screens/onboarding/onboarding';
-import { CreateWalletTermsScreen } from '../screens/create-wallet-terms/create-wallet-terms';
 import { CreateWalletMnemonicScreen } from '../screens/create-wallet-mnemonic/create-wallet-mnemonic';
 import { TokenScreen } from '../screens/token/token';
 import { SendScreen } from '../screens/send/send';
 import { TermsConditionsScreen } from '../screens/terms-conditions/terms-conditions';
 import { PrivacyPolicyScreen } from '../screens/privacy-policy/privacy-policy';
 import { CreateWalletConfirmMnemonicScreen } from '../screens/create-wallet-confirm-mnemonic/create-wallet-confirm-mnemonic';
-import { Animated } from 'react-native';
 import { RecoverWalletScreen } from '../screens/recover-wallet/recover-wallet';
 import { WalletsScreen } from '../screens/wallets/wallets';
 import { ReceiveScreen } from '../screens/receive/receive';
@@ -248,9 +246,6 @@ export const navigationConfig = {
 // wallet creation flow stack
 export const CreateWalletNavigation = createStackNavigator(
     {
-        CreateWalletTerms: {
-            screen: CreateWalletTermsScreen
-        },
         CreateWalletMnemonic: {
             screen: CreateWalletMnemonicScreen
         },
@@ -272,15 +267,7 @@ export const CreateWalletNavigation = createStackNavigator(
     },
     {
         initialRouteName: 'CreateWalletMnemonic',
-        defaultNavigationOptions: defaultStackNavigationOptions,
-        // disable transition animation for CreateWalletTerms screen
-        transitionConfig: () => ({
-            transitionSpec: {
-                timing: Animated.timing,
-                useNativeDriver: true
-            },
-            screenInterpolator: removeAnimation(['CreateWalletTerms'])
-        })
+        defaultNavigationOptions: defaultStackNavigationOptions
     }
 );
 

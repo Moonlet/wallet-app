@@ -24,6 +24,7 @@ import { LoadingModal } from './components/loading-modal/loading-modal';
 import { subscribeExchangeRates } from './core/utils/exchange-rates';
 import { updateExchangeRates } from './redux/market/actions';
 import { takeOneAndSubscribeToStore } from './redux/utils/helpers';
+import { LegalModal } from './components/legal/legal-modal/legal-modal';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -40,6 +41,7 @@ interface IState {
     appState: AppStateStatus;
     showPasswordModal: boolean;
     displayApplication: boolean;
+    navigationState: any;
 }
 
 WalletConnectClient.setStore(store);
@@ -60,7 +62,8 @@ export default class App extends React.Component<{}, IState> {
             splashAnimationDone: false,
             appState: AppState.currentState,
             showPasswordModal: false,
-            displayApplication: true
+            displayApplication: true,
+            navigationState: undefined
         };
 
         getRemoteConfigFeatures().then(() => {
@@ -182,7 +185,6 @@ export default class App extends React.Component<{}, IState> {
 
     public render() {
         if (this.state.appReady) {
-            // this.unsubscribe();
             return (
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
@@ -190,6 +192,9 @@ export default class App extends React.Component<{}, IState> {
                             <AppContainer
                                 ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
                                 theme="dark"
+                                onNavigationStateChange={(_, newState) => {
+                                    this.setState({ navigationState: newState });
+                                }}
                             />
                             {!this.state.displayApplication && <ImageCanvas />}
                             <PasswordModal
@@ -204,6 +209,7 @@ export default class App extends React.Component<{}, IState> {
                             <BottomSheet />
                             <Dialog.Component />
                             <LoadingModal />
+                            <LegalModal navigationState={this.state.navigationState} />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

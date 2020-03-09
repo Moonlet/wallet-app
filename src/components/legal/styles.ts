@@ -6,29 +6,22 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            paddingHorizontal: 16,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            paddingHorizontal: BASE_DIMENSION * 2,
+            paddingVertical: BASE_DIMENSION * 4
         },
         topContainer: {
             flex: 1,
-            justifyContent: 'flex-start',
-            alignItems: 'center',
-            alignSelf: 'stretch'
+            flexDirection: 'column',
+            justifyContent: 'center'
         },
         bottomContainer: {
-            flex: 0,
             justifyContent: 'center',
-            alignSelf: 'stretch',
-            alignItems: 'center',
-            marginTop: BASE_DIMENSION * 2,
-            marginBottom: BASE_DIMENSION * 6
-        },
-        docImageContainer: {
-            flex: 1,
-            justifyContent: 'center',
+            width: '100%',
             alignItems: 'center'
+        },
+        docImage: {
+            alignSelf: 'center'
         },
         bottomButton: {
             width: '80%',
@@ -50,16 +43,14 @@ export default (theme: ITheme) =>
             fontWeight: 'bold',
             alignSelf: 'flex-end'
         },
-        walletTos: {
-            marginTop: BASE_DIMENSION * 6,
-            marginBottom: BASE_DIMENSION * 2,
-            fontSize: 17,
+        walletTc: {
             lineHeight: 22,
             textAlign: 'center',
-            color: theme.colors.textSecondary
+            color: theme.colors.textSecondary,
+            marginBottom: BASE_DIMENSION * 10
         },
         text: {
-            fontSize: 20,
+            fontSize: theme.fontSize.large,
             lineHeight: 25,
             color: theme.colors.text,
             letterSpacing: 0.38

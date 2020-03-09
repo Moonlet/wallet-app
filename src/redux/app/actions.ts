@@ -1,11 +1,11 @@
 // actions consts
-export const APP_SET_TOS_VERSION = 'APP_SET_TOS_VERSION';
+export const SET_ACCEPTED_TC_VERSION = 'SET_ACCEPTED_TC_VERSION';
 
 // actions creators
 
-export const appSetTosVersion = (version: number) => {
+export const appSetAcceptedTcVersion = (version: number) => {
     return {
-        type: APP_SET_TOS_VERSION,
+        type: SET_ACCEPTED_TC_VERSION,
         data: version
     };
 };

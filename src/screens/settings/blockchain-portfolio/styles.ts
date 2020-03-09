@@ -35,11 +35,6 @@ export default (theme: ITheme) =>
         menuIcon: {
             color: theme.colors.accent
         },
-        blockchainIcon: {
-            color: theme.colors.accent,
-            marginLeft: BASE_DIMENSION,
-            marginRight: BASE_DIMENSION * 2
-        },
         infoContainer: {
             flex: 1,
             flexDirection: 'row'

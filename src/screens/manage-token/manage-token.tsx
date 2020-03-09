@@ -20,17 +20,13 @@ import { getChainId } from '../../redux/preferences/selectors';
 import {
     ITokenConfig,
     TokenType,
-    TokenScreenComponentType
+    TokenScreenComponentType,
+    GENERIC_TOKEN_ICON
 } from '../../core/blockchain/types/token';
 import { isValidAddress as isValidAddressETH } from '../../core/blockchain/ethereum/account';
 import { isValidAddress as isValidAddressZIL } from '../../core/blockchain/zilliqa/account';
 import { ChainIdType, Blockchain } from '../../core/blockchain/types';
-import FastImage from '../../core/utils/fast-image';
-
-const GENERIC_TOKEN_LOGO = {
-    uri:
-        'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png'
-};
+import { SmartImage } from '../../library/image/smart-image';
 
 export interface IReduxProps {
     selectedAccount: IAccountState;
@@ -113,7 +109,7 @@ export class ManageTokenComponent extends React.Component<
                     decimals: tokenInfo.decimals,
                     name: tokenInfo?.name || foundToken.name,
                     symbol: String(tokenInfo?.symbol).toUpperCase() || foundToken.symbol, // Check this
-                    logo: foundToken?.logo ? { uri: foundToken.logo } : GENERIC_TOKEN_LOGO
+                    icon: foundToken?.icon ? { uri: foundToken.icon } : GENERIC_TOKEN_ICON
                 },
                 showError: false,
                 isLoading: false
@@ -165,7 +161,7 @@ export class ManageTokenComponent extends React.Component<
                     decimals: tokenInfo.decimals,
                     name: tokenInfo?.name || foundToken.name,
                     symbol: String(tokenInfo?.symbol).toUpperCase() || foundToken?.symbol, // Check this
-                    logo: foundToken?.logo ? { uri: foundToken.logo } : GENERIC_TOKEN_LOGO
+                    icon: foundToken?.logo ? { uri: foundToken.logo } : GENERIC_TOKEN_ICON
                 },
                 showError: false,
                 isLoading: false
@@ -196,7 +192,7 @@ export class ManageTokenComponent extends React.Component<
 
                     name: this.state.token?.name || '',
                     symbol: this.state.token.symbol,
-                    logo: this.state.token?.logo || GENERIC_TOKEN_LOGO,
+                    icon: this.state.token?.icon || GENERIC_TOKEN_ICON,
                     type: tokenType,
                     contractAddress: this.state.token.contractAddress,
                     decimals: Number(this.state.token.decimals),
@@ -279,13 +275,7 @@ export class ManageTokenComponent extends React.Component<
                             ]}
                             onPress={() => this.setState({ isTokenSelected: true })}
                         >
-                            <View style={styles.iconContainer}>
-                                <FastImage
-                                    style={styles.tokenLogo}
-                                    resizeMode="contain"
-                                    source={this.state.token?.logo}
-                                />
-                            </View>
+                            <SmartImage source={this.state.token?.icon} />
                             <View style={styles.accountInfoContainer}>
                                 <Text
                                     style={styles.tokenNameText}

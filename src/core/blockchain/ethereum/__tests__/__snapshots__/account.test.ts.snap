@@ -11,7 +11,7 @@ Object {
     "ETH": Object {
       "active": true,
       "decimals": 18,
-      "logo": Object {
+      "icon": Object {
         "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png",
       },
       "name": "Ethereum",

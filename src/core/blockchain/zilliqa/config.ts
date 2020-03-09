@@ -1,20 +1,22 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
+import ZilIcon from '../../../assets/icons/blockchains/zil.svg';
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/313'/0'/0`,
     derivationType: DerivationType.HD_KEY,
     coin: 'ZIL',
     defaultUnit: 'QA',
+    iconComponent: ZilIcon,
     tokens: {
         ZIL: {
             name: 'Zilliqa',
             symbol: 'ZIL',
-            logo: {
+            icon: {
                 uri:
                     'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/zil.png'
-            }, // require('../../../assets/images/png/zil.png'),
+            },
             order: 0,
             active: true,
             decimals: 12,

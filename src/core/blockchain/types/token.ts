@@ -11,10 +11,15 @@ export enum TokenScreenComponentType {
     DELEGATE = 'DELEGATE'
 }
 
+export interface ITokenIcon {
+    uri?: string;
+    iconComponent?: React.ComponentType<any>;
+}
+
 export interface ITokenConfig {
     name: string;
     symbol: string;
-    logo?: any;
+    icon?: ITokenIcon;
     type: TokenType;
     contractAddress?: string;
     decimals: number;
@@ -37,3 +42,8 @@ export interface ITokenConfig {
         error: any;
     };
 }
+
+export const GENERIC_TOKEN_ICON = {
+    uri:
+        'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png'
+};

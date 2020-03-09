@@ -21,12 +21,6 @@ export default (theme: ITheme) =>
             flexDirection: 'column',
             marginLeft: BASE_DIMENSION + BASE_DIMENSION / 2
         },
-        iconContainer: {
-            width: ICON_CONTAINER_SIZE,
-            height: ICON_CONTAINER_SIZE,
-            justifyContent: 'center',
-            alignItems: 'center'
-        },
         icon: {
             color: theme.colors.accent
         },
@@ -47,8 +41,11 @@ export default (theme: ITheme) =>
             lineHeight: 20,
             color: theme.colors.textSecondary
         },
-        tokenLogo: {
+        tokenIcon: {
             width: ICON_CONTAINER_SIZE,
             height: ICON_CONTAINER_SIZE
+        },
+        imageStyle: {
+            marginLeft: BASE_DIMENSION / 2
         }
     });

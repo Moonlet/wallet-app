@@ -29,7 +29,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ZIL": Object {
                   "active": true,
                   "decimals": 12,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/zil.png",
                   },
                   "name": "Zilliqa",
@@ -58,7 +58,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ZIL": Object {
                   "active": true,
                   "decimals": 12,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/zil.png",
                   },
                   "name": "Zilliqa",
@@ -87,7 +87,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ZIL": Object {
                   "active": true,
                   "decimals": 12,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/zil.png",
                   },
                   "name": "Zilliqa",
@@ -116,7 +116,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ZIL": Object {
                   "active": true,
                   "decimals": 12,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/zil.png",
                   },
                   "name": "Zilliqa",
@@ -145,7 +145,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ZIL": Object {
                   "active": true,
                   "decimals": 12,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/zil.png",
                   },
                   "name": "Zilliqa",
@@ -174,7 +174,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ETH": Object {
                   "active": true,
                   "decimals": 18,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png",
                   },
                   "name": "Ethereum",
@@ -203,7 +203,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ETH": Object {
                   "active": true,
                   "decimals": 18,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png",
                   },
                   "name": "Ethereum",
@@ -232,7 +232,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ETH": Object {
                   "active": true,
                   "decimals": 18,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png",
                   },
                   "name": "Ethereum",
@@ -261,7 +261,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ETH": Object {
                   "active": true,
                   "decimals": 18,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png",
                   },
                   "name": "Ethereum",
@@ -290,7 +290,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ETH": Object {
                   "active": true,
                   "decimals": 18,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png",
                   },
                   "name": "Ethereum",
@@ -319,7 +319,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ATOM": Object {
                   "active": true,
                   "decimals": 6,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/atom.png",
                   },
                   "name": "Atom",
@@ -350,7 +350,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ATOM": Object {
                   "active": true,
                   "decimals": 6,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/atom.png",
                   },
                   "name": "Atom",
@@ -381,7 +381,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ATOM": Object {
                   "active": true,
                   "decimals": 6,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/atom.png",
                   },
                   "name": "Atom",
@@ -412,7 +412,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ATOM": Object {
                   "active": true,
                   "decimals": 6,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/atom.png",
                   },
                   "name": "Atom",
@@ -443,7 +443,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                 "ATOM": Object {
                   "active": true,
                   "decimals": 6,
-                  "logo": Object {
+                  "icon": Object {
                     "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/atom.png",
                   },
                   "name": "Atom",

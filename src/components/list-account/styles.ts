@@ -5,13 +5,13 @@ import { ITheme } from '../../core/theme/itheme';
 export default (theme: ITheme) =>
     StyleSheet.create({
         card: {
-            display: 'flex',
             flexDirection: 'row',
-            alignItems: 'center',
-            padding: BASE_DIMENSION * 2,
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
+            padding: BASE_DIMENSION,
+            alignItems: 'center',
             marginBottom: BASE_DIMENSION,
+            paddingVertical: BASE_DIMENSION * 2,
             borderWidth: 2,
             borderColor: theme.colors.cardBackground
         },
@@ -27,11 +27,6 @@ export default (theme: ITheme) =>
         },
         selected: {
             borderColor: theme.colors.accentSecondary
-        },
-        iconLeftContainer: {
-            height: ICON_CONTAINER_SIZE,
-            width: ICON_CONTAINER_SIZE,
-            marginRight: BASE_DIMENSION
         },
         iconRightContainer: {
             height: ICON_CONTAINER_SIZE,

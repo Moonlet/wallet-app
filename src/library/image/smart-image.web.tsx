@@ -21,17 +21,25 @@ export const SmartImageComponent = (props: ISmartImageProps) => {
     const iconSmallSize = ICON_SIZE;
     const iconLargeSize = ICON_SIZE + ICON_SIZE / 2;
 
-    const source = props.source?.iconComponent || props.source?.uri;
-
     const baseStyle = {
         width: props.small ? iconSmallSize : iconLargeSize,
         height: props.small ? iconSmallSize : iconLargeSize
     };
 
-    if (source === undefined) {
-        return <div />;
+    if (props.source?.iconComponent) {
+        const IconComponent = props.source.iconComponent;
+
+        return (
+            <IconComponent
+                width={props?.small ? iconSmallSize : iconLargeSize}
+                height={props?.small ? iconSmallSize : iconLargeSize}
+                style={{ ...baseStyle, ...props.style }}
+            />
+        );
+    } else if (props.source?.uri) {
+        return <img src={props.source.uri} style={{ ...baseStyle, ...props.style }} />;
     } else {
-        return <img src={source} style={{ ...baseStyle, ...props.style }} />;
+        return <div />;
     }
 };
 

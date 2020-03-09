@@ -12,7 +12,7 @@ import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface IProps {
     label: string | JSX.Element;
-    leftIcon?: any;
+    leftIcon?: React.ComponentType<any>;
     rightIcon?: string;
     selected?: boolean;
     onPress?: any;

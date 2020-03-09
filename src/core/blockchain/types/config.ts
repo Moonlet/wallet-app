@@ -11,7 +11,7 @@ export interface IBlockchainConfig {
     derivationType: DerivationType;
     coin: string;
     defaultUnit: string;
-    iconComponent: any;
+    iconComponent: React.ComponentType<any>;
     tokens: {
         [symbol: string]: ITokenConfig;
     };

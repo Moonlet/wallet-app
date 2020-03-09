@@ -13,7 +13,7 @@ export enum TokenScreenComponentType {
 
 export interface ITokenIcon {
     uri?: string;
-    iconComponent?: any;
+    iconComponent?: React.ComponentType<any>;
 }
 
 export interface ITokenConfig {

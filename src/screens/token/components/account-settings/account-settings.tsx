@@ -111,7 +111,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         const viewOnName = getBlockchain(this.props.account.blockchain).networks[0].explorer.name;
 
         return (
-            <Modal animationType="fade" transparent={true} visible={true}>
+            <Modal isVisible={true}>
                 <View style={styles.container}>
                     <View style={styles.modalContainer}>
                         <View style={styles.header}>

@@ -96,7 +96,7 @@ export const translation: ITranslations = {
                 done: 'Done'
             }
         },
-        CreateWalletTos: {
+        CreateWalletTc: {
             body: 'Make sure you review our Privacy policy and Terms & conditions'
         },
         CreateWalletMnemonic: {

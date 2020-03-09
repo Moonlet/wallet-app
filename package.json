@@ -6,7 +6,7 @@
         "generate-icons": "mkdir -p resources/fonts && icon-font-generator ./src/assets/icons/svg/*.svg -o resources/fonts --height 1024 --types ttf",
         "emulator": "cd ~/Library/Android/sdk/tools/; emulator -avd `emulator -list-avds | awk '{print $1}'`",
         "android": "npm run generate-icons && react-native run-android --variant=betaDebug --appIdSuffix=beta",
-        "ios": "npm run ios:before-run && react-native run-ios ",
+        "ios": "npm run ios:before-run && react-native run-ios",
         "ios:pod-install": "cd ios && pod install",
         "ios:before-run": "npm run generate-icons & npm run ios:pod-install",
         "ext": "TARGET=beta BROWSER=chrome NODE_ENV=development webpack --mode development --config ./extension/webpack.config.babel.js --watch --info-verbosity verbose",

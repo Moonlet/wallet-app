@@ -125,7 +125,6 @@ jobs:
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
-          TEST_SECRET_BETA: ${{ secrets.TEST_SECRET_BETA }}
   beta-ext-chrome:
     name: Chrome extension
     runs-on: ubuntu-latest

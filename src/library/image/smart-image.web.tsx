@@ -27,12 +27,9 @@ export const SmartImageComponent = (props: ISmartImageProps) => {
     };
 
     if (props.source?.iconComponent) {
-        const IconComponent = props.source.iconComponent;
-
         return (
-            <IconComponent
-                width={props?.small ? iconSmallSize : iconLargeSize}
-                height={props?.small ? iconSmallSize : iconLargeSize}
+            <img
+                src={String(props.source.iconComponent)}
                 style={{ ...baseStyle, ...props.style }}
             />
         );

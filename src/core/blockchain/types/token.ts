@@ -42,3 +42,8 @@ export interface ITokenConfig {
         error: any;
     };
 }
+
+export const GENERIC_TOKEN_ICON = {
+    uri:
+        'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png'
+};

@@ -20,17 +20,13 @@ import { getChainId } from '../../redux/preferences/selectors';
 import {
     ITokenConfig,
     TokenType,
-    TokenScreenComponentType
+    TokenScreenComponentType,
+    GENERIC_TOKEN_ICON
 } from '../../core/blockchain/types/token';
 import { isValidAddress as isValidAddressETH } from '../../core/blockchain/ethereum/account';
 import { isValidAddress as isValidAddressZIL } from '../../core/blockchain/zilliqa/account';
 import { ChainIdType, Blockchain } from '../../core/blockchain/types';
 import { SmartImage } from '../../library/image/smart-image';
-
-const GENERIC_TOKEN_ICON = {
-    uri:
-        'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png'
-};
 
 export interface IReduxProps {
     selectedAccount: IAccountState;

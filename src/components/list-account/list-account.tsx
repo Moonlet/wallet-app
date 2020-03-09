@@ -3,15 +3,16 @@ import { Text, Button } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 import Icon from '../icon';
 import TouchableOpacity from '../../library/touchable-opacity/touchable-opacity';
 import { translate } from '../../core/i18n';
-import FastImage from '../../core/utils/fast-image';
+import { SmartImage } from '../../library/image/smart-image';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface IProps {
     label: string | JSX.Element;
-    leftIcon?: number;
+    leftIcon?: React.ComponentType<any>;
     rightIcon?: string;
     selected?: boolean;
     onPress?: any;
@@ -28,20 +29,30 @@ export const ListAccountComponent = (
         ) : (
             props.label
         );
+
+    const BlockchainIcon = props?.leftIcon;
+
     return (
         <TouchableOpacity
             style={[props.styles.card, props.selected && props.styles.selected, props.style]}
             onPress={props.onPress}
         >
             {props.leftIcon && (
-                <View style={props.styles.iconLeftContainer}>
-                    <FastImage
-                        source={props.leftIcon}
-                        style={props.styles.accountIcon}
-                        resizeMode="contain"
-                    />
-                </View>
+                <SmartImage
+                    source={{ iconComponent: BlockchainIcon }}
+                    style={{
+                        marginLeft: Platform.select({
+                            default: BASE_DIMENSION,
+                            web: BASE_DIMENSION / 4
+                        }),
+                        marginRight: Platform.select({
+                            default: BASE_DIMENSION * 2,
+                            web: BASE_DIMENSION
+                        })
+                    }}
+                />
             )}
+
             <View style={props.styles.labelContainer}>{label}</View>
             {props.rightIcon && !props.isCreate && (
                 <View style={props.styles.iconRightContainer}>

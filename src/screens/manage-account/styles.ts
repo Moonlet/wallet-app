@@ -51,10 +51,6 @@ export default (theme: ITheme) =>
             justifyContent: 'center',
             alignItems: 'center'
         },
-        tokenLogo: {
-            width: ICON_CONTAINER_SIZE,
-            height: ICON_CONTAINER_SIZE
-        },
         amountContainer: {
             display: 'flex',
             flexDirection: 'column',

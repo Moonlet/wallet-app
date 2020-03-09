@@ -1,20 +1,22 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
+import EthIcon from '../../../assets/icons/blockchains/eth.svg';
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/60'/0'/0`,
     derivationType: DerivationType.HD_KEY,
     coin: 'ETH',
     defaultUnit: 'WEI',
+    iconComponent: EthIcon,
     tokens: {
         ETH: {
             name: 'Ethereum',
             symbol: 'ETH',
-            logo: {
+            icon: {
                 uri:
                     'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png'
-            }, // require('../../../assets/images/png/eth.png'),
+            },
             order: 0,
             active: true,
             decimals: 18,

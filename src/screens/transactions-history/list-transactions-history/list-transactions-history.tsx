@@ -33,7 +33,7 @@ export class TransactionsHistoryListComponent extends React.Component<
         return ` ${formattedAmount} ${formatAddress(tx.toAddress, account.blockchain)}`;
     }
 
-    private transactionItem = (tx: IBlockchainTransaction) => {
+    private transactionItem(tx: IBlockchainTransaction) {
         const { account, styles, theme } = this.props;
 
         const date = new Date(tx.date.signed);
@@ -101,7 +101,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 <Icon name="chevron-right" size={16} style={styles.transactionRightIcon} />
             </TouchableOpacity>
         );
-    };
+    }
 
     public render() {
         const { transactions, styles } = this.props;

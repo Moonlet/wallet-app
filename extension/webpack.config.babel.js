@@ -43,7 +43,8 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/react-native-qrcode-svg'),
         path.resolve(appDirectory, 'node_modules/react-native-draggable-flatlist'),
         path.resolve(appDirectory, 'node_modules/react-native-fast-image'),
-        path.resolve(appDirectory, 'node_modules/react-native-fab-pie')
+        path.resolve(appDirectory, 'node_modules/react-native-fab-pie'),
+        path.resolve(appDirectory, 'node_module/react-native-dotenv')
         // path.resolve(appDirectory, 'node_modules/react-native-uncompiled')
     ],
     use: {
@@ -131,7 +132,11 @@ module.exports = {
                 __dirname,
                 'modules-mocks/react-native-device-info'
             ),
-            'react-native-keychain$': path.resolve(__dirname, 'modules-mocks/react-native-keychain')
+            'react-native-keychain$': path.resolve(
+                __dirname,
+                'modules-mocks/react-native-keychain'
+            ),
+            'react-native-dotenv$': path.resolve(__dirname, 'modules-mocks/react-native-dotenv')
         },
         // If you're working on a multi-platform React Native app, web-specific
         // module implementations should be written in files using the extension

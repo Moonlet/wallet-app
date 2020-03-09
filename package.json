@@ -8,7 +8,7 @@
         "android": "npm run generate-icons && react-native run-android --variant=betaDebug --appIdSuffix=beta",
         "ios": "npm run ios:before-run && react-native run-ios ",
         "ios:pod-install": "cd ios && pod install",
-        "ios:before-run": "npm run generate-icons & npm run ios:pod-install & npm run set-env",
+        "ios:before-run": "npm run generate-icons & npm run ios:pod-install",
         "ext": "TARGET=beta BROWSER=chrome NODE_ENV=development webpack --mode development --config ./extension/webpack.config.babel.js --watch --info-verbosity verbose",
         "ext:build": "node --max_old_space_size=6144 ./node_modules/.bin/webpack -p --config ./extension/webpack.config.babel.js",
         "ext:build:beta:chrome": "TARGET=beta BROWSER=chrome npm run ext:build",
@@ -17,8 +17,7 @@
         "test": "jest",
         "lint": "tslint --fix '{src,extension}/**/*.{ts,tsx}'",
         "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore",
-        "postinstall": "jetify && ./scripts/ts-nockeck-files.sh",
-        "set-env": "./scripts/env-variables.sh"
+        "postinstall": "jetify && ./scripts/ts-nockeck-files.sh"
     },
     "dependencies": {
         "@ledgerhq/hw-app-eth": "^4.78.0",

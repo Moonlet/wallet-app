@@ -118,7 +118,6 @@ export default class App extends React.Component<{}, IState> {
     };
 
     public componentDidMount() {
-        // console.log('process', SOME_ENV_KEY, 'ss');
         AppState.addEventListener('change', this.handleAppStateChange);
 
         setTimeout(

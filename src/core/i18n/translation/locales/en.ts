@@ -189,7 +189,10 @@ export const translation: ITranslations = {
             alertEditDescription: 'Use a relevant name or an alias for this address',
             deleteContact: 'Delete contact',
             editContactName: 'Edit name',
-            reviewTransaction: 'Review transaction on your hardware wallet'
+            reviewTransaction: 'Review transaction on your hardware wallet',
+            addAddress: 'Add\naddress',
+            enterAmount: 'Enter\namount',
+            confirmTransaction: 'Confirm\ntransaction'
         },
 
         AccountSettings: {

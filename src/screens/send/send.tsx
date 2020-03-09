@@ -102,7 +102,8 @@ interface IState {
     showExtensionMessage: boolean;
     userAction: boolean;
     memo: string;
-    isConfirm: boolean;
+    isStep2: boolean;
+    isStep3: boolean;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -138,7 +139,8 @@ export class SendScreenComponent extends React.Component<
             showExtensionMessage: false,
             userAction: false,
             memo: '',
-            isConfirm: false
+            isStep2: false,
+            isStep3: false
         };
     }
 
@@ -629,8 +631,23 @@ export class SendScreenComponent extends React.Component<
 
                         {/* <Text style={styles.bottomAmountText}>$5,000.00</Text> */}
                     </View>
-                    <Button style={{ width: 140 }} primary disabled={this.state.toAddress === ''}>
-                        {this.state.isConfirm
+                    <Button
+                        style={{ width: 140 }}
+                        primary
+                        disabled={this.state.toAddress === ''}
+                        onPress={() => {
+                            if (this.state.isStep3 === true) {
+                                // confirm
+                            } else if (this.state.isStep2 === false) {
+                                // step 2
+                                this.setState({ isStep2: true });
+                            } else {
+                                // step 3
+                                this.setState({ isStep3: true });
+                            }
+                        }}
+                    >
+                        {this.state.isStep3
                             ? translate('App.labels.confirm')
                             : translate('App.labels.next')}
                     </Button>
@@ -647,7 +664,19 @@ export class SendScreenComponent extends React.Component<
                 <TestnetBadge />
 
                 <View style={styles.content}>
-                    <HeaderStepByStep steps={{}} />
+                    <HeaderStepByStep
+                        steps={[
+                            { title: translate('Send.addAddress') },
+                            {
+                                title: translate('Send.enterAmount'),
+                                selected: this.state.isStep2
+                            },
+                            {
+                                title: translate('Send.confirmTransaction'),
+                                selected: this.state.isStep3
+                            }
+                        ]}
+                    />
                     {this.renderAddAddressContainer()}
                     {this.renderBottomConfirm()}
                 </View>

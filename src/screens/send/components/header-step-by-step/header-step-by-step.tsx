@@ -7,21 +7,17 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { BASE_DIMENSION } from '../../../../styles/dimensions';
 
 export interface IExternalProps {
-    steps: any;
+    steps: { title: string; selected?: boolean }[];
 }
 
 export const HeaderStepByStepComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    const { styles } = props;
-    const steps = [
-        { title: `Add\naddress` },
-        { title: `Enter\namount`, selected: false },
-        { title: `Confirm\ntransaction`, selected: false }
-    ];
+    const { steps, styles } = props;
 
     const renderStep = (step: any, index: number) => {
         const isSelected = step?.selected || false;
+        const isDividerSelected = steps[index + 1]?.selected || false;
 
         return (
             <View style={{ flexDirection: 'row' }} key={`step-${index}`}>
@@ -45,7 +41,7 @@ export const HeaderStepByStepComponent = (
                                     BASE_DIMENSION * steps.length
                             },
                             styles.divider,
-                            isSelected && styles.dividerSelected
+                            isDividerSelected && styles.dividerSelected
                         ]}
                     />
                 )}

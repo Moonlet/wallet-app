@@ -137,6 +137,7 @@ jobs:
       - name: NPM install
         run: npm i
       - name: Generate icons
+        run: npm run generate-icons
       - name: Set env vars
         run: cp "/src/env/beta.env" "/.env"
       - name: Build extension

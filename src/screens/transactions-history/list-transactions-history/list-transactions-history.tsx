@@ -36,6 +36,9 @@ export class TransactionsHistoryListComponent extends React.Component<
     private transactionItem(tx: IBlockchainTransaction) {
         const { account, styles, theme } = this.props;
 
+        const blockchainInstance = getBlockchain(account.blockchain);
+        const amount = blockchainInstance.transaction.getTransactionAmount(tx);
+
         const date = new Date(tx.date.signed);
 
         let txIcon: string;
@@ -88,7 +91,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 <View style={styles.transactionTextContainer}>
                     <View style={styles.transactionAmountContainer}>
                         <Amount
-                            amount={tx.amount}
+                            amount={amount}
                             blockchain={account.blockchain}
                             token={tx?.token?.symbol || coin}
                             tokenDecimals={tx?.token?.decimals || tokens[coin].decimals}

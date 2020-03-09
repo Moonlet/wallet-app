@@ -74,6 +74,9 @@ export class TransactionDetailsComponent extends React.Component<
                 .toFixed();
         }
 
+        const blockchainInstance = getBlockchain(account.blockchain);
+        const amount = blockchainInstance.transaction.getTransactionAmount(transaction);
+
         return (
             <View style={styles.container}>
                 <ScrollView
@@ -92,7 +95,7 @@ export class TransactionDetailsComponent extends React.Component<
                     <View style={styles.rowContainer}>
                         <Amount
                             style={styles.textPrimary}
-                            amount={transaction.amount}
+                            amount={amount}
                             blockchain={account.blockchain}
                             token={transaction?.token?.symbol || coin}
                             tokenDecimals={transaction?.token?.decimals || tokens[coin].decimals}

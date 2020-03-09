@@ -13,8 +13,8 @@ import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { Blockchain } from '../../../core/blockchain/types';
 import { setSelectedBlockchain } from '../../../redux/wallets/actions';
 import { Text } from '../../../library/text/text';
-import FastImage from '../../../core/utils/fast-image';
 import TouchableOpacity from '../../../library/touchable-opacity/touchable-opacity';
+import { SmartImage } from '../../../library/image/smart-image';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -63,7 +63,7 @@ export class BlockchainNavigationBottomSheetComponent extends React.Component<
         const { styles, theme } = this.props;
 
         const coin = getBlockchain(blockchain).config.coin;
-        const logo = getBlockchain(blockchain).config.tokens[coin].logo;
+        const BlockchainIcon = getBlockchain(blockchain).config.iconComponent;
 
         return (
             <TouchableOpacity
@@ -84,7 +84,7 @@ export class BlockchainNavigationBottomSheetComponent extends React.Component<
                         }
                     ]}
                 >
-                    <FastImage style={styles.icon} source={logo} resizeMode="contain" />
+                    <SmartImage source={{ iconComponent: BlockchainIcon }} />
                 </View>
                 <Text style={styles.coinText}>{coin}</Text>
             </TouchableOpacity>

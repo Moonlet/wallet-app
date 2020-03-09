@@ -10,7 +10,7 @@ export const signExtensionTransaction = payload => {
         token: data.token,
         tokenLogo: getBlockchain(data.selectedAccount.blockchain).config.tokens[
             getBlockchain(data.selectedAccount.blockchain).config.coin
-        ].logo,
+        ].icon,
         extensionTransactionPayload: payload
     };
 

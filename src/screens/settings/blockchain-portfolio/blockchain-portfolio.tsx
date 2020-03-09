@@ -17,7 +17,8 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 import { getBlockchainsPortfolio, hasNetwork } from '../../../redux/preferences/selectors';
 import { Dialog } from '../../../components/dialog/dialog';
-import FastImage from '../../../core/utils/fast-image';
+import { BASE_DIMENSION } from '../../../styles/dimensions';
+import { SmartImage } from '../../../library/image/smart-image';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainOptions }];
@@ -69,6 +70,8 @@ export class BlockchainPortfolioComponent extends React.Component<
             return <View />;
         }
 
+        const BlockchainIcon = getBlockchain(item.key).config.iconComponent;
+
         return (
             <View
                 style={[
@@ -85,14 +88,9 @@ export class BlockchainPortfolioComponent extends React.Component<
                 ]}
             >
                 <View style={styles.infoContainer}>
-                    <FastImage
-                        style={styles.iconContainer}
-                        resizeMode="contain"
-                        source={
-                            getBlockchain(item.key).config.tokens[
-                                getBlockchain(item.key).config.coin
-                            ].logo
-                        }
+                    <SmartImage
+                        source={{ iconComponent: BlockchainIcon }}
+                        style={{ marginHorizontal: BASE_DIMENSION }}
                     />
                     <Text style={styles.blockchainName}>{item.key}</Text>
                 </View>

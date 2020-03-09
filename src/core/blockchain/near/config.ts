@@ -1,19 +1,22 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
+import NearIcon from '../../../assets/icons/blockchains/near.svg';
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/397'`,
     derivationType: DerivationType.HD_KEY_ED25519,
     coin: 'NEAR',
     defaultUnit: 'YNEAR',
+    iconComponent: NearIcon,
     tokens: {
         NEAR: {
             name: 'Near',
             symbol: 'NEAR',
-            logo: {
+            icon: {
                 uri:
-                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png'
+                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png',
+                iconComponent: NearIcon
             },
             order: 0,
             active: true,

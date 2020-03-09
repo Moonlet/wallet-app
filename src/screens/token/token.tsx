@@ -17,17 +17,18 @@ import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
-import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
 import { sendTransferTransaction, getBalance } from '../../redux/wallets/actions';
 import { getChainId } from '../../redux/preferences/selectors';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { ITokenConfig, TokenScreenComponentType } from '../../core/blockchain/types/token';
-import FastImage from '../../core/utils/fast-image';
 import { DefaultTokenScreen } from './components/default-token/default-token';
 import { DelegateTokenScreen } from './components/delegate-token/delegate-token';
 import { AccountSettings } from './components/account-settings/account-settings';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
+import { SmartImage } from '../../library/image/smart-image';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -81,27 +82,33 @@ const navigationOptions = ({ navigation, theme }: any) => ({
             onPress={navigation.state.params ? navigation.state.params.openSettingsMenu : undefined}
         />
     ),
-    headerTitle: () => (
-        <View style={{ flexDirection: 'row' }}>
-            <FastImage
-                style={{ height: ICON_SIZE, width: ICON_SIZE, marginRight: BASE_DIMENSION }}
-                resizeMode="contain"
-                source={navigation.state.params.tokenLogo}
-            />
-            <Text
-                style={{
-                    fontSize: 22,
-                    lineHeight: 28,
-                    color: themes[theme].colors.text,
-                    letterSpacing: 0.38,
-                    textAlign: 'center',
-                    fontWeight: 'bold'
-                }}
-            >
-                {`${translate('App.labels.account')} ${navigation.state.params.accountIndex + 1}`}
-            </Text>
-        </View>
-    )
+    headerTitle: () => {
+        const BlockchainIcon = getBlockchain(navigation.state.params.blockchain).config
+            .iconComponent;
+
+        return (
+            <View style={{ flexDirection: 'row' }}>
+                <SmartImage
+                    source={{ iconComponent: BlockchainIcon }}
+                    style={{ marginRight: BASE_DIMENSION }}
+                    small
+                />
+                <Text
+                    style={{
+                        fontSize: 22,
+                        lineHeight: 28,
+                        color: themes[theme].colors.text,
+                        letterSpacing: 0.38,
+                        textAlign: 'center',
+                        fontWeight: 'bold'
+                    }}
+                >
+                    {`${translate('App.labels.account')} ${navigation.state.params.accountIndex +
+                        1}`}
+                </Text>
+            </View>
+        );
+    }
 });
 
 export class TokenScreenComponent extends React.Component<

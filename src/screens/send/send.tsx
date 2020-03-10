@@ -187,18 +187,17 @@ export class SendScreenComponent extends React.Component<
             return;
         }
 
-        this.passwordModal.requestPassword().then(password => {
-            this.props.sendTransferTransaction(
-                this.props.account,
-                this.state.toAddress,
-                this.state.amount,
-                this.props.token.symbol,
-                this.state.feeOptions,
-                password,
-                this.props.navigation,
-                { memo: this.state.memo }
-            );
-        });
+        const password = await this.passwordModal.requestPassword();
+        this.props.sendTransferTransaction(
+            this.props.account,
+            this.state.toAddress,
+            this.state.amount,
+            this.props.token.symbol,
+            this.state.feeOptions,
+            password,
+            this.props.navigation,
+            { memo: this.state.memo }
+        );
     };
 
     public onPressQrCodeIcon = async () => {
@@ -620,14 +619,20 @@ export class SendScreenComponent extends React.Component<
                         <Button
                             style={{ width: 140 }}
                             primary
-                            // disabled={this.state.toAddress === '' || amount === ''}
                             disabled={
                                 this.state.toAddress === '' ||
-                                (isStep2 && (amount === '' || this.state.insufficientFunds))
+                                (isStep2 && (amount === '' || this.state.insufficientFunds)) ||
+                                (isStep3 &&
+                                    (!this.state.isValidText ||
+                                        this.state.amount === '' ||
+                                        this.state.insufficientFunds === true ||
+                                        isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
+                                        isNaN(Number(this.state.feeOptions?.gasPrice))))
                             }
                             onPress={() => {
                                 if (isStep3 === true) {
                                     // confirm
+                                    this.confirmPayment();
                                 } else if (isStep2 === false) {
                                     // step 2
                                     this.setState({ isStep2: true, isStep3: false });
@@ -687,21 +692,21 @@ export class SendScreenComponent extends React.Component<
         return (
             <View style={styles.confirmTransactionContainer}>
                 <Text style={styles.receipientLabel}>{translate('Send.recipientLabel')}</Text>
-                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION }]}>
+                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Text style={styles.confirmTransactionText}>
                         {formatAddress(this.state.toAddress, this.props.account.blockchain)}
                     </Text>
                 </View>
 
                 <Text style={styles.receipientLabel}>{translate('Send.amount')}</Text>
-                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION }]}>
+                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Text style={styles.confirmTransactionText}>
                         {`${this.state.amount} ${this.props.token.symbol}`}
                     </Text>
                 </View>
 
                 <Text style={styles.receipientLabel}>{translate('App.labels.fees')}</Text>
-                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION }]}>
+                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Amount
                         style={styles.confirmTransactionText}
                         token={this.props.token.symbol}

@@ -26,12 +26,9 @@ import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
-import { DISPLAY_MESSAGE } from '../ui/screens/send/actions';
 import { REHYDRATE } from 'redux-persist';
 import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
-import { BottomSheetType } from '../ui/bottomSheet/state';
-import { closeBottomSheet, openBottomSheet } from '../ui/bottomSheet/actions';
 import {
     getSelectedWallet,
     getAccounts,
@@ -41,7 +38,7 @@ import {
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
-import { openLoadingModal, closeLoadingModal } from '../ui/loading-modal/actions';
+import { openLoadingModal, closeLoadingModal, DISPLAY_MESSAGE } from '../ui/loading-modal/actions';
 import { delay } from '../../core/utils/time';
 import { formatAddress } from '../../core/utils/format-address';
 import { Notifications } from '../../core/messaging/notifications/notifications';
@@ -49,6 +46,7 @@ import { formatNumber } from '../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { NotificationType } from '../../core/messaging/types';
 import { addAddress } from '../../core/address-monitor/index';
+import { Dialog } from '../../components/dialog/dialog';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -478,17 +476,13 @@ export const sendTransferTransaction = (
 
     const appWallet = getSelectedWallet(state);
 
-    dispatch(
-        openBottomSheet(BottomSheetType.SEND_TRANSACTION, {
-            blockchain: account.blockchain
-        })
-    );
+    dispatch(openLoadingModal());
 
     try {
         dispatch({
             type: DISPLAY_MESSAGE,
             data: {
-                message: TransactionMessageText.SIGNING,
+                text: TransactionMessageText.SIGNING,
                 type: TransactionMessageType.INFO
             }
         });
@@ -520,7 +514,7 @@ export const sendTransferTransaction = (
             dispatch({
                 type: DISPLAY_MESSAGE,
                 data: {
-                    message: TransactionMessageText.OPEN_APP,
+                    text: TransactionMessageText.OPEN_APP,
                     type: TransactionMessageType.INFO
                 }
             });
@@ -529,7 +523,7 @@ export const sendTransferTransaction = (
             dispatch({
                 type: DISPLAY_MESSAGE,
                 data: {
-                    message: TransactionMessageText.REVIEW_TRANSACTION,
+                    text: TransactionMessageText.REVIEW_TRANSACTION,
                     type: TransactionMessageType.INFO
                 }
             });
@@ -539,7 +533,7 @@ export const sendTransferTransaction = (
         dispatch({
             type: DISPLAY_MESSAGE,
             data: {
-                message: TransactionMessageText.BROADCASTING,
+                text: TransactionMessageText.BROADCASTING,
                 type: TransactionMessageType.INFO
             }
         });
@@ -557,22 +551,36 @@ export const sendTransferTransaction = (
                     walletId: appWallet.id
                 }
             });
-            dispatch({
-                type: DISPLAY_MESSAGE,
-                data: undefined
-            });
-            dispatch(closeBottomSheet());
+            dispatch({ type: DISPLAY_MESSAGE, data: undefined });
+            dispatch(closeLoadingModal());
             goBack && navigation.goBack();
             return;
         }
     } catch (errorMessage) {
-        dispatch({
-            type: DISPLAY_MESSAGE,
-            data: {
-                message: errorMessage,
-                type: TransactionMessageType.ERROR
+        dispatch(closeLoadingModal());
+        dispatch({ type: DISPLAY_MESSAGE, data: undefined });
+
+        // TODO: check here and find a solution to fix
+        await delay(500);
+
+        const message = translate('LoadingModal.' + errorMessage, { app: account.blockchain });
+
+        Dialog.alert(
+            translate('LoadingModal.txFailed'),
+            message,
+            {
+                text: translate('App.labels.cancel'),
+                onPress: () => {
+                    //
+                }
+            },
+            {
+                text: translate('App.labels.tryAgain'),
+                onPress: () => {
+                    //
+                }
             }
-        });
+        );
     }
 };
 

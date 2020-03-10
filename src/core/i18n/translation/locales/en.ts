@@ -83,6 +83,7 @@ export const translation: ITranslations = {
                 to: 'To',
                 tools: 'Tools',
                 transactions: 'Transactions',
+                tryAgain: 'Try again',
                 typeHere: 'Type here',
                 understand: 'I understand',
                 validators: 'Validators',
@@ -160,15 +161,6 @@ export const translation: ITranslations = {
                 'Your PIN is required\nto connect your hardware wallet'
         },
         Send: {
-            REVIEW_TRANSACTION: 'Review transaction on your hardware wallet',
-            OPEN_APP: 'Please open {{app}} app on your Ledger',
-            BROADCASTING: 'Broadcasting transaction',
-            SIGNING: 'Signing transaction',
-            TR_UNDERPRICED: 'Transaction underpriced: gas price might be too low',
-            NOT_ENOUGH_TOKENS: 'Insufficient funds for transaction',
-            COSMOS_ERROR_12: 'Insufficient fee',
-            COSMOS_ERROR_14: 'Insufficient funds for transaction',
-
             inputAddress: 'Search public addresses or domain names',
             memo: 'Memo (optional)',
             amount: 'Amount',
@@ -318,6 +310,17 @@ export const translation: ITranslations = {
             congrats: 'Congrats! This name is available.',
             eg: 'e.g. johndoe',
             invalidUsername: 'Username is taken. Try something else.'
+        },
+        LoadingModal: {
+            txFailed: 'Transaction has failed!',
+            REVIEW_TRANSACTION: 'Review transaction on your hardware wallet',
+            OPEN_APP: 'Please open {{app}} app on your Ledger',
+            BROADCASTING: 'Broadcasting transaction',
+            SIGNING: 'Signing transaction',
+            TR_UNDERPRICED: 'Transaction underpriced: gas price might be too low',
+            NOT_ENOUGH_TOKENS: 'Insufficient funds for transaction',
+            COSMOS_ERROR_12: 'Insufficient fee',
+            COSMOS_ERROR_14: 'Insufficient funds for transaction'
         }
     },
     plural: (n: number, ord?: boolean) => {

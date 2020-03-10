@@ -16,7 +16,6 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         input: {
-            flex: 1,
             fontSize: 17,
             lineHeight: 22,
             color: theme.colors.text

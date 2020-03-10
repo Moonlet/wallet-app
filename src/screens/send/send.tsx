@@ -458,35 +458,6 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    public renderBasicFields() {
-        const { styles } = this.props;
-        const extraFields = getBlockchain(this.props.account.blockchain).config.ui.extraFields;
-
-        return (
-            <View style={styles.basicFields}>
-                {extraFields && extraFields.map(value => this.renderExtraFields(value))}
-
-                <View style={styles.bottom}>
-                    <Button
-                        testID="confirm-payment"
-                        style={styles.bottomButton}
-                        primary
-                        disabled={
-                            !this.state.isValidText ||
-                            this.state.amount === '' ||
-                            this.state.insufficientFunds === true ||
-                            isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
-                            isNaN(Number(this.state.feeOptions?.gasPrice))
-                        }
-                        onPress={this.confirmPayment}
-                    >
-                        {translate('App.labels.confirmPayment')}
-                    </Button>
-                </View>
-            </View>
-        );
-    }
-
     public renderListOrBook() {
         if (this.state.showOwnAccounts) {
             return (
@@ -688,6 +659,7 @@ export class SendScreenComponent extends React.Component<
 
     private renderConfirmTransaction() {
         const { styles } = this.props;
+        const extraFields = getBlockchain(this.props.account.blockchain).config.ui.extraFields;
 
         return (
             <View style={styles.confirmTransactionContainer}>
@@ -715,6 +687,8 @@ export class SendScreenComponent extends React.Component<
                         blockchain={this.props.account.blockchain}
                     />
                 </View>
+
+                {extraFields && extraFields.map(value => this.renderExtraFields(value))}
             </View>
         );
     }
@@ -754,9 +728,8 @@ export class SendScreenComponent extends React.Component<
                     {this.renderBottomConfirm()}
                 </View>
 
+                {/* TODO: can be removed? */}
                 {/* {this.state.userAction && this.renderContinueAction()} */}
-
-                {/* {this.state.isValidText && this.renderBasicFields()} */}
 
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />
 

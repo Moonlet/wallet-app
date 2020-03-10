@@ -14,8 +14,7 @@ export const config: IBlockchainConfig = {
             name: 'Ethereum',
             symbol: 'ETH',
             icon: {
-                uri:
-                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/eth.png'
+                iconComponent: EthIcon
             },
             order: 0,
             active: true,

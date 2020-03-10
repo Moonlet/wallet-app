@@ -431,23 +431,6 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    public renderContinueAction() {
-        const styles = this.props.styles;
-        return (
-            <View style={styles.userActionContainer}>
-                <Button
-                    primary
-                    style={styles.userActionButton}
-                    onPress={() => {
-                        this.setState({ isValidText: true, userAction: false });
-                    }}
-                >
-                    {translate('App.labels.continue')}
-                </Button>
-            </View>
-        );
-    }
-
     public renderExtraFields(value: string) {
         switch (value) {
             case 'Memo':
@@ -727,9 +710,6 @@ export class SendScreenComponent extends React.Component<
                     {isStep3 && this.renderConfirmTransaction()}
                     {this.renderBottomConfirm()}
                 </View>
-
-                {/* TODO: can be removed? */}
-                {/* {this.state.userAction && this.renderContinueAction()} */}
 
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />
 

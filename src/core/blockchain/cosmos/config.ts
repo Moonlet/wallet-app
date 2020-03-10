@@ -14,8 +14,7 @@ export const config: IBlockchainConfig = {
             name: 'Atom',
             symbol: 'ATOM',
             icon: {
-                uri:
-                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/atom.png'
+                iconComponent: CosmosIcon
             },
             order: 0,
             active: true,

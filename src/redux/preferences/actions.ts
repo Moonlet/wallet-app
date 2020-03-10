@@ -91,7 +91,6 @@ export function setCurrency(currency: string) {
 }
 
 export const setDeviceId = (deviceId: string) => {
-    console.log(deviceId);
     return {
         type: PREF_SET_DEVICE_ID,
         data: { deviceId }

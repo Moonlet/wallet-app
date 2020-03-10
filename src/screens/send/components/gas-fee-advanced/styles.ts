@@ -4,9 +4,8 @@ import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
-        container: {},
-        inputBoxTop: {
-            marginTop: 0
+        container: {
+            flex: 0
         },
         inputBox: {
             paddingVertical: BASE_DIMENSION,
@@ -15,7 +14,6 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         input: {
-            flex: 1,
             fontSize: 17,
             lineHeight: 22,
             color: theme.colors.text

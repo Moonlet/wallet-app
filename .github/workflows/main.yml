@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - deploy
 
 name: Deploy Beta
 jobs:
@@ -17,12 +18,14 @@ jobs:
         run: |-
           BUILD=$(git rev-list --count $GITHUB_SHA)
           VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
-          echo "::set-env name=CUSTOM_TAG::v${VERSION}.${BUILD}"
+          echo "::set-env name=CUSTOM_TAG::v${VERSION}.${BUILD}-dev"
       - name: Create GitHubRelease
-        uses: anothrNick/github-tag-action@master
+        uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_BRANCHES: "master"
+          RELEASE_BRANCHES: "deploy"
+        with: 
+          prerelease: true
       - name: Cache node modules
         uses: actions/cache@v1
         id: cache

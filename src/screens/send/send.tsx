@@ -54,6 +54,8 @@ import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { getChainId } from '../../redux/preferences/selectors';
 import { Memo } from './components/extra-fields/memo/memo';
 import { HeaderStepByStep } from './components/header-step-by-step/header-step-by-step';
+import { EnterAmount } from './components/enter-amount/enter-amount';
+import { Amount } from '../../components/amount/amount';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -65,6 +67,7 @@ export interface IReduxProps {
     selectedWalletId: string;
     selectedAccount: IAccountState;
     chainId: ChainIdType;
+    exchangeRates: any;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -74,7 +77,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
         contacts: getContacts(state),
         selectedWalletId: getSelectedWallet(state).id,
         selectedAccount: getSelectedAccount(state),
-        chainId: getChainId(state, ownProps.blockchain)
+        chainId: getChainId(state, ownProps.blockchain),
+        exchangeRates: state.market.exchangeRates
     };
 };
 
@@ -329,11 +333,7 @@ export class SendScreenComponent extends React.Component<
     };
 
     public availableFunds() {
-        const blockchainInstance = getBlockchain(this.props.account.blockchain);
-        const stdAmount = blockchainInstance.account.amountToStd(
-            new BigNumber(this.state.amount ? this.state.amount : 0),
-            this.props.token.decimals
-        );
+        const stdAmount = this.getAmountToStd();
 
         const feeTokenSymbol = getBlockchain(this.props.account.blockchain).config.coin;
         const completeAmount = stdAmount;
@@ -459,52 +459,12 @@ export class SendScreenComponent extends React.Component<
     }
 
     public renderBasicFields() {
-        const { styles, theme } = this.props;
+        const { styles } = this.props;
         const extraFields = getBlockchain(this.props.account.blockchain).config.ui.extraFields;
 
         return (
             <View style={styles.basicFields}>
-                <Text style={styles.receipientLabel}>
-                    {this.state.amount !== '' ? translate('Send.amount') : ' '}
-                </Text>
-                <View style={styles.inputBox}>
-                    <TextInput
-                        testID="amount"
-                        style={styles.input}
-                        placeholderTextColor={theme.colors.textSecondary}
-                        placeholder={translate('Send.amount')}
-                        autoCapitalize={'none'}
-                        autoCorrect={false}
-                        selectionColor={theme.colors.accent}
-                        value={this.state.amount}
-                        onChangeText={value => this.addAmount(value)}
-                        keyboardType="decimal-pad"
-                    />
-                </View>
-                {this.state.insufficientFunds && (
-                    <Text style={styles.displayError}>{translate('Send.insufficientFunds')}</Text>
-                )}
-                <TouchableOpacity
-                    testID="all-balance"
-                    onPress={this.onAddAllBalance}
-                    style={[styles.buttonRightOptions]}
-                >
-                    <Text style={styles.textTranferButton}>{translate('Send.allBalance')}</Text>
-                </TouchableOpacity>
-
                 {extraFields && extraFields.map(value => this.renderExtraFields(value))}
-
-                <FeeOptions
-                    token={
-                        this.props.account.tokens[
-                            getBlockchain(this.props.account.blockchain).config.coin
-                        ]
-                    }
-                    sendingToken={this.props.token}
-                    account={this.props.account}
-                    toAddress={this.state.toAddress}
-                    onFeesChanged={this.onFeesChanged}
-                />
 
                 <View style={styles.bottom}>
                     <Button
@@ -570,9 +530,7 @@ export class SendScreenComponent extends React.Component<
                                 ? formatAddress(this.state.toAddress, account.blockchain)
                                 : this.state.toAddress
                         }
-                        onChangeText={text => {
-                            this.verifyInputText(text);
-                        }}
+                        onChangeText={text => this.verifyInputText(text)}
                     />
                     {this.renderRightAddressIcon()}
                 </View>
@@ -604,8 +562,18 @@ export class SendScreenComponent extends React.Component<
         );
     }
 
+    private getAmountToStd(): BigNumber {
+        const blockchainInstance = getBlockchain(this.props.account.blockchain);
+        return blockchainInstance.account.amountToStd(
+            new BigNumber(this.state.amount ? this.state.amount : 0),
+            this.props.token.decimals
+        );
+    }
+
     private renderBottomConfirm() {
-        const { styles, account } = this.props;
+        const { token, styles, account } = this.props;
+        const { amount, isStep2, isStep3 } = this.state;
+        const stdAmount = this.getAmountToStd();
 
         return (
             <View style={styles.bottomWrapper}>
@@ -627,37 +595,94 @@ export class SendScreenComponent extends React.Component<
                             </Text>
                         </View>
 
-                        {/* <Text style={styles.bottomDefaultText}>1,000,000.00 ZIL</Text> */}
+                        {(isStep2 || isStep3) && (
+                            <Text style={styles.bottomDefaultText}>
+                                {amount === ''
+                                    ? `_.___ ${token.symbol}`
+                                    : `${amount} ${token.symbol}`}
+                            </Text>
+                        )}
 
-                        {/* <Text style={styles.bottomAmountText}>$5,000.00</Text> */}
+                        {(isStep2 || isStep3) && (
+                            <Amount
+                                style={styles.bottomAmountText}
+                                token={token.symbol}
+                                tokenDecimals={token.decimals}
+                                amount={stdAmount.toString()}
+                                blockchain={this.props.account.blockchain}
+                                convert
+                            />
+                        )}
                     </View>
-                    <Button
-                        style={{ width: 140 }}
-                        primary
-                        disabled={this.state.toAddress === ''}
-                        onPress={() => {
-                            if (this.state.isStep3 === true) {
-                                // confirm
-                            } else if (this.state.isStep2 === false) {
-                                // step 2
-                                this.setState({ isStep2: true });
-                            } else {
-                                // step 3
-                                this.setState({ isStep3: true });
+
+                    <View style={{ alignSelf: 'center' }}>
+                        <Button
+                            style={{ width: 140 }}
+                            primary
+                            // disabled={this.state.toAddress === '' || amount === ''}
+                            disabled={
+                                this.state.toAddress === '' ||
+                                (isStep2 && (amount === '' || this.state.insufficientFunds))
                             }
-                        }}
-                    >
-                        {this.state.isStep3
-                            ? translate('App.labels.confirm')
-                            : translate('App.labels.next')}
-                    </Button>
+                            onPress={() => {
+                                if (isStep3 === true) {
+                                    // confirm
+                                } else if (isStep2 === false) {
+                                    // step 2
+                                    this.setState({ isStep2: true, isStep3: false });
+                                } else if (isStep3 === false) {
+                                    // step 3
+                                    this.setState({ isStep2: false, isStep3: true });
+                                }
+                            }}
+                        >
+                            {this.state.isStep3
+                                ? translate('App.labels.confirm')
+                                : translate('App.labels.next')}
+                        </Button>
+                    </View>
                 </View>
+            </View>
+        );
+    }
+
+    private renderEnterAmount() {
+        const token = this.props.account.tokens[this.props.token.symbol];
+        const tokenBalanceValue = new BigNumber(token.balance?.value).toFixed();
+        const config = getBlockchain(this.props.account.blockchain).config;
+
+        return (
+            <View style={this.props.styles.amountContainer}>
+                <EnterAmount
+                    amount={this.state.amount}
+                    onAmountEnter={amount => this.addAmount(amount)}
+                    insufficientFunds={this.state.insufficientFunds}
+                    allBalance={tokenBalanceValue}
+                    token={this.props.token}
+                    blockchain={this.props.account.blockchain}
+                    onAddAmount={amount => {
+                        let amountState = this.state.amount;
+                        if (amountState === '') amountState = '0';
+
+                        const value = new BigNumber(amountState).plus(new BigNumber(amount));
+                        this.addAmount(value.toString());
+                    }}
+                    exchangeRates={this.props.exchangeRates}
+                />
+                <FeeOptions
+                    token={this.props.account.tokens[config.coin]}
+                    sendingToken={this.props.token}
+                    account={this.props.account}
+                    toAddress={this.state.toAddress}
+                    onFeesChanged={this.onFeesChanged}
+                />
             </View>
         );
     }
 
     public render() {
         const { styles } = this.props;
+        const { isStep2, isStep3 } = this.state;
 
         return (
             <View style={styles.container}>
@@ -677,7 +702,9 @@ export class SendScreenComponent extends React.Component<
                             }
                         ]}
                     />
-                    {this.renderAddAddressContainer()}
+                    {!isStep2 && !isStep3 && this.renderAddAddressContainer()}
+                    {isStep2 && this.renderEnterAmount()}
+                    {isStep3 && <View />}
                     {this.renderBottomConfirm()}
                 </View>
 

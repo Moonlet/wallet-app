@@ -181,5 +181,9 @@ export default (theme: ITheme) =>
             fontSize: 11,
             lineHeight: 13,
             color: theme.colors.textTertiary
+        },
+        amountContainer: {
+            flex: 1,
+            marginHorizontal: BASE_DIMENSION * 2
         }
     });

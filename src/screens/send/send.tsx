@@ -38,7 +38,7 @@ import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
 import bind from 'bind-decorator';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { ICON_SIZE } from '../../styles/dimensions';
+import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { IAccountState } from '../../redux/wallets/state';
@@ -371,7 +371,7 @@ export class SendScreenComponent extends React.Component<
                 <TouchableOpacity
                     testID="qrcode-icon"
                     onPress={this.onPressQrCodeIcon}
-                    style={[styles.rightAddressButton]}
+                    style={styles.rightAddressButton}
                 >
                     <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
                 </TouchableOpacity>
@@ -381,7 +381,7 @@ export class SendScreenComponent extends React.Component<
                 <TouchableOpacity
                     testID="clear-address"
                     onPress={this.onPressClearInput}
-                    style={[styles.rightAddressButton]}
+                    style={styles.rightAddressButton}
                 >
                     <Icon name="close" size={16} style={styles.icon} />
                 </TouchableOpacity>
@@ -516,7 +516,7 @@ export class SendScreenComponent extends React.Component<
                 <Text style={styles.receipientLabel}>
                     {this.state.toAddress !== '' ? translate('Send.recipientLabel') : ' '}
                 </Text>
-                <View style={styles.inputBoxAddress}>
+                <View style={styles.inputBox}>
                     <TextInput
                         testID="input-address"
                         style={styles.inputAddress}
@@ -681,6 +681,39 @@ export class SendScreenComponent extends React.Component<
         );
     }
 
+    private renderConfirmTransaction() {
+        const { styles } = this.props;
+
+        return (
+            <View style={styles.confirmTransactionContainer}>
+                <Text style={styles.receipientLabel}>{translate('Send.recipientLabel')}</Text>
+                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION }]}>
+                    <Text style={styles.confirmTransactionText}>
+                        {formatAddress(this.state.toAddress, this.props.account.blockchain)}
+                    </Text>
+                </View>
+
+                <Text style={styles.receipientLabel}>{translate('Send.amount')}</Text>
+                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION }]}>
+                    <Text style={styles.confirmTransactionText}>
+                        {`${this.state.amount} ${this.props.token.symbol}`}
+                    </Text>
+                </View>
+
+                <Text style={styles.receipientLabel}>{translate('App.labels.fees')}</Text>
+                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION }]}>
+                    <Amount
+                        style={styles.confirmTransactionText}
+                        token={this.props.token.symbol}
+                        tokenDecimals={this.props.token.decimals}
+                        amount={this.state.feeOptions.feeTotal}
+                        blockchain={this.props.account.blockchain}
+                    />
+                </View>
+            </View>
+        );
+    }
+
     public render() {
         const { styles } = this.props;
         const { isStep2, isStep3 } = this.state;
@@ -705,7 +738,7 @@ export class SendScreenComponent extends React.Component<
                     />
                     {!isStep2 && !isStep3 && this.renderAddAddressContainer()}
                     {isStep2 && this.renderEnterAmount()}
-                    {isStep3 && <View />}
+                    {isStep3 && this.renderConfirmTransaction()}
                     {this.renderBottomConfirm()}
                 </View>
 

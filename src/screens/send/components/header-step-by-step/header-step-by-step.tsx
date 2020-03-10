@@ -16,8 +16,9 @@ export const HeaderStepByStepComponent = (
     const { steps, styles } = props;
 
     const renderStep = (step: any, index: number) => {
-        const isSelected = step?.selected || false;
-        const isDividerSelected = steps[index + 1]?.selected || false;
+        const isSelected = steps[index + 1]?.selected || step?.selected || false;
+        const isDividerSelected = steps[index + 2]?.selected || steps[index + 1]?.selected || false;
+        // TODO: optimise this for more steps
 
         return (
             <View style={{ flexDirection: 'row' }} key={`step-${index}`}>

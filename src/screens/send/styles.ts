@@ -139,7 +139,7 @@ export default (theme: ITheme) =>
             paddingTop: BASE_DIMENSION
         },
 
-        //
+        // bottom container
         bottomWrapper: {
             flexDirection: 'column',
             width: '100%',
@@ -185,5 +185,18 @@ export default (theme: ITheme) =>
         amountContainer: {
             flex: 1,
             marginHorizontal: BASE_DIMENSION * 2
+        },
+
+        // step 3
+        confirmTransactionContainer: {
+            flex: 1,
+            paddingTop: BASE_DIMENSION * 3,
+            paddingHorizontal: BASE_DIMENSION * 2
+        },
+        confirmTransactionText: {
+            fontSize: 15,
+            lineHeight: 20,
+            color: theme.colors.textSecondary,
+            alignSelf: 'center'
         }
     });

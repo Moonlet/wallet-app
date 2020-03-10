@@ -37,6 +37,7 @@ export interface IState {
 
 export interface IReduxProps {
     currency: string;
+    deviceId: string;
     touchID: boolean;
     toggleTouchID: typeof toggleTouchID;
     changePIN: typeof changePIN;
@@ -44,7 +45,8 @@ export interface IReduxProps {
 
 const mapStateToProps = (state: IReduxState) => ({
     touchID: state.preferences.touchID,
-    currency: state.preferences.currency
+    currency: state.preferences.currency,
+    deviceId: state.preferences.deviceId
 });
 
 const mapDispatchToProps = {
@@ -317,14 +319,14 @@ export class SettingsScreenComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.colContainer}
                     onPress={() => {
-                        Clipboard.setString(DeviceInfo.getUniqueId());
+                        Clipboard.setString(this.props.deviceId);
                         Dialog.info(translate('App.labels.success'), translate('Settings.copied'));
                     }}
                 >
                     <Text style={[styles.textRow, styles.textRowMargin]}>
                         {translate('Settings.deviceId')}
                     </Text>
-                    <Text style={styles.rightValue}>{DeviceInfo.getUniqueId()}</Text>
+                    <Text style={styles.rightValue}>{this.props.deviceId}</Text>
                 </TouchableOpacity>
 
                 <View style={styles.divider} />

@@ -27,6 +27,8 @@ import { takeOneAndSubscribeToStore } from './redux/utils/helpers';
 import { LegalModal } from './components/legal/legal-modal/legal-modal';
 import { IExchangeRates } from './redux/market/state';
 import { updateAddressMonitorTokens } from './core/address-monitor';
+import DeviceInfo from 'react-native-device-info';
+import { setDeviceId } from './redux/preferences/actions';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -119,6 +121,8 @@ export default class App extends React.Component<{}, IState> {
 
     public componentDidMount() {
         AppState.addEventListener('change', this.handleAppStateChange);
+
+        store.dispatch(setDeviceId(DeviceInfo.getUniqueId()));
 
         setTimeout(
             () => this.setState({ splashAnimationDone: true }, () => this.updateAppReady()),

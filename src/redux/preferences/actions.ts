@@ -14,6 +14,7 @@ export const SET_TEST_NET = 'SET_TEST_NET';
 export const PREF_SET_BLOCKCHAIN_ACTIVE_STATE = 'PREF_SET_BLOCKCHAIN_ACTIVE_STATE';
 export const PREF_SET_BLOCKCHAIN_ORDER = 'PREF_SET_BLOCKCHAIN_ORDER';
 export const PREF_SET_NETWORK_TEST_NET_CHAIN_ID = 'PREF_SET_NETWORK_TEST_NET_CHAIN_ID';
+export const PREF_SET_DEVICE_ID = 'PREF_SET_DEVICE_ID';
 
 export const setBlockchainActive = (blockchain: Blockchain, active: boolean) => (
     dispatch: Dispatch<IAction>,
@@ -88,3 +89,11 @@ export function setCurrency(currency: string) {
         data: { currency }
     };
 }
+
+export const setDeviceId = (deviceId: string) => {
+    console.log(deviceId);
+    return {
+        type: PREF_SET_DEVICE_ID,
+        data: { deviceId }
+    };
+};

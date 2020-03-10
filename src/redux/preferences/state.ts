@@ -6,6 +6,7 @@ export interface IPrefState {
     touchID: boolean;
     networks: INetworksOptions;
     blockchains: IBlockchainsOptions;
+    deviceId: string;
 }
 
 export interface INetworksOptions {

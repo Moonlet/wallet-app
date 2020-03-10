@@ -1,11 +1,13 @@
 on:
-  release:
+  push: 
     branches:
       - master
+      - deploy
+      #from push will transform to release 
 
 name: Deploy in stores
 jobs:
-  # deplo-android:
+  # deploy-android:
   #   name: Android app
   #   runs-on: ubuntu-latest
   #   needs: unit-tests

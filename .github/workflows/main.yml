@@ -23,7 +23,7 @@ jobs:
         uses: actions/create-release@latest
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_BRANCHES: "deploy"
+          RELEASE_BRANCHES: "master"
         with: 
           tag_name: ${{ env.CUSTOM_TAG }}
           release_name: ${{ env.CUSTOM_TAG }}

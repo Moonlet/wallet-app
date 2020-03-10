@@ -9,6 +9,7 @@ import { Amount } from '../../../../components/amount/amount';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
 import { convertAmount } from '../../../../core/utils/balance';
+import { IExchangeRates } from '../../../../redux/market/state';
 
 export interface IExternalProps {
     allBalance: string;
@@ -18,7 +19,7 @@ export interface IExternalProps {
     blockchain: Blockchain;
     token: ITokenConfig;
     onAddAmount: (amount: string) => void;
-    exchangeRates: any;
+    exchangeRates: IExchangeRates;
 }
 
 export const EnterAmountComponent = (

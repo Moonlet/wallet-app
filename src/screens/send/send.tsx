@@ -56,6 +56,7 @@ import { Memo } from './components/extra-fields/memo/memo';
 import { HeaderStepByStep } from './components/header-step-by-step/header-step-by-step';
 import { EnterAmount } from './components/enter-amount/enter-amount';
 import { Amount } from '../../components/amount/amount';
+import { IExchangeRates } from '../../redux/market/state';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -67,7 +68,7 @@ export interface IReduxProps {
     selectedWalletId: string;
     selectedAccount: IAccountState;
     chainId: ChainIdType;
-    exchangeRates: any;
+    exchangeRates: IExchangeRates;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {

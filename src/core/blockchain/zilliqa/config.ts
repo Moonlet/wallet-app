@@ -14,8 +14,7 @@ export const config: IBlockchainConfig = {
             name: 'Zilliqa',
             symbol: 'ZIL',
             icon: {
-                uri:
-                    'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/zil.png'
+                iconComponent: ZilIcon
             },
             order: 0,
             active: true,

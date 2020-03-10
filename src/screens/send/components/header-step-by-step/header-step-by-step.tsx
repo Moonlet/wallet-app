@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions } from 'react-native';
+import { View, Dimensions, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Text } from '../../../../library';
@@ -8,6 +8,7 @@ import { BASE_DIMENSION } from '../../../../styles/dimensions';
 
 export interface IExternalProps {
     steps: { title: string; selected?: boolean }[];
+    selectPreviousStep: (index: number) => void;
 }
 
 export const HeaderStepByStepComponent = (
@@ -22,7 +23,10 @@ export const HeaderStepByStepComponent = (
 
         return (
             <View style={{ flexDirection: 'row' }} key={`step-${index}`}>
-                <View style={[styles.circle, (index === 0 || isSelected) && styles.circleSelected]}>
+                <TouchableOpacity
+                    onPress={() => props.selectPreviousStep(index)}
+                    style={[styles.circle, (index === 0 || isSelected) && styles.circleSelected]}
+                >
                     <Text
                         style={[
                             styles.number,
@@ -31,7 +35,7 @@ export const HeaderStepByStepComponent = (
                     >
                         {index + 1}
                     </Text>
-                </View>
+                </TouchableOpacity>
 
                 {index !== steps.length - 1 && (
                     <View

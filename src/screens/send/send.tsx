@@ -711,7 +711,7 @@ export class SendScreenComponent extends React.Component<
                         style={styles.confirmTransactionText}
                         token={this.props.token.symbol}
                         tokenDecimals={this.props.token.decimals}
-                        amount={this.state.feeOptions.feeTotal}
+                        amount={this.state.feeOptions?.feeTotal}
                         blockchain={this.props.account.blockchain}
                     />
                 </View>
@@ -740,6 +740,13 @@ export class SendScreenComponent extends React.Component<
                                 selected: this.state.isStep3
                             }
                         ]}
+                        selectPreviousStep={(index: number) => {
+                            if (index === 1 && isStep3) {
+                                this.setState({ isStep2: true, isStep3: false });
+                            } else if (index === 0) {
+                                this.setState({ isStep2: false, isStep3: false });
+                            }
+                        }}
                     />
                     {!isStep2 && !isStep3 && this.renderAddAddressContainer()}
                     {isStep2 && this.renderEnterAmount()}

@@ -25,8 +25,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_BRANCHES: "deploy"
         with: 
-          tag_name: $CUSTOM_TAG
-          release_name: $CUSTOM_TAG
+          tag_name: ${{ env.CUSTOM_TAG }}
+          release_name: 
           prerelease: true
       - name: Cache node modules
         uses: actions/cache@v1

@@ -142,7 +142,7 @@ export const buildTransferTransaction = async (
 
 export const getTransactionAmount = (tx: IBlockchainTransaction): string => {
     if (tx.token?.type === TokenType.ZRC2) {
-        return tx?.data?.params[1] || tx.amount;
+        return tx?.data?.params[1];
     } else {
         return tx.amount;
     }

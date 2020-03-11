@@ -19,16 +19,6 @@ jobs:
           BUILD=$(git rev-list --count $GITHUB_SHA)
           VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
           echo "::set-env name=CUSTOM_TAG::v${VERSION}.${BUILD}-dev"
-      - name: Create GitHubRelease
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          RELEASE_BRANCHES: "master"
-        with: 
-          tag_name: ${{ env.CUSTOM_TAG }}
-          release_name: ${{ env.CUSTOM_TAG }}
-          prerelease: true
-          draft: true
       - name: Cache node modules
         uses: actions/cache@v1
         id: cache

@@ -70,10 +70,6 @@ platform :ios do
 
   lane :deploy do
 
-    ensure_git_branch(
-      branch: 'master'
-    )
-
     version_name = get_version_number(target: "Moonlet")
     appstore_build = app_store_build_number(live: false, app_identifier: "com.moonlet", version: version_name.to_s, initial_build_number: "1")
 

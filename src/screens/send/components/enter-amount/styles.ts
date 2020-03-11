@@ -8,9 +8,17 @@ export default (theme: ITheme) =>
             marginTop: BASE_DIMENSION * 5,
             marginBottom: BASE_DIMENSION * 3
         },
-        input: {
+        inputText: {
             flex: 1,
-            color: theme.colors.text
+            color: theme.colors.text,
+            paddingRight: BASE_DIMENSION * 2
+        },
+        inputBox: {
+            height: BASE_DIMENSION * 5,
+            borderRadius: BORDER_RADIUS,
+            backgroundColor: theme.colors.inputBackground,
+            paddingHorizontal: BASE_DIMENSION,
+            flexDirection: 'row'
         },
         displayError: {
             flex: 1,
@@ -21,12 +29,6 @@ export default (theme: ITheme) =>
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
             color: theme.colors.warning
-        },
-        inputBox: {
-            borderRadius: BORDER_RADIUS,
-            backgroundColor: theme.colors.inputBackground,
-            padding: BASE_DIMENSION + BASE_DIMENSION / 2,
-            flexDirection: 'row'
         },
         buttonRightOptions: {
             width: '100%',

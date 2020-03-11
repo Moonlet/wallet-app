@@ -39,7 +39,7 @@ export const EnterAmountComponent = (
         <View style={styles.container}>
             <View style={styles.inputBox}>
                 <TextInput
-                    style={styles.input}
+                    style={styles.inputText}
                     placeholderTextColor={theme.colors.textSecondary}
                     placeholder={translate('Send.amount')}
                     autoCapitalize={'none'}

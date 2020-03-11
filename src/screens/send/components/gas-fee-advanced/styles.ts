@@ -7,16 +7,17 @@ export default (theme: ITheme) =>
         container: {
             flex: 0
         },
+        input: {
+            flex: 1,
+            color: theme.colors.text,
+            paddingRight: BASE_DIMENSION * 2
+        },
         inputBox: {
-            paddingVertical: BASE_DIMENSION,
+            height: BASE_DIMENSION * 5,
             borderRadius: BORDER_RADIUS,
             backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2
-        },
-        input: {
-            fontSize: 17,
-            lineHeight: 22,
-            color: theme.colors.text
+            paddingHorizontal: BASE_DIMENSION,
+            flexDirection: 'row'
         },
         priceLabel: {
             fontSize: 13,

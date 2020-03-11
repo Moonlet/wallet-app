@@ -62,7 +62,13 @@ export const HeaderStepByStepComponent = (
 
             <View style={styles.headerDescription}>
                 {steps.map((step: any, index: number) => (
-                    <Text key={`step-title-${index}`} style={styles.text}>
+                    <Text
+                        key={`step-title-${index}`}
+                        style={[
+                            styles.text,
+                            { marginLeft: index === 1 ? BASE_DIMENSION * 2 : BASE_DIMENSION } // TODO: optimise this for more steps
+                        ]}
+                    >
                         {step.title}
                     </Text>
                 ))}

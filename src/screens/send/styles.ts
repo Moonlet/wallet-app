@@ -1,4 +1,4 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import {
     BASE_DIMENSION,
@@ -16,45 +16,9 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground,
             height: SCREEN_HEIGHT
         },
-        scrollContainer: {
-            flexGrow: 1,
-            paddingHorizontal: BASE_DIMENSION * 2
-        },
         content: {
             flex: 1,
             paddingTop: BASE_DIMENSION * 3
-        },
-        userActionContainer: {
-            paddingTop: BASE_DIMENSION * 2,
-            alignSelf: 'center',
-            flexDirection: 'row'
-        },
-        userActionButton: {
-            width: '60%'
-        },
-        keyboardAvoidance: {
-            flex: 1,
-            justifyContent: Platform.OS === 'ios' ? 'space-between' : 'flex-start'
-        },
-        accountAddress: {
-            paddingTop: BASE_DIMENSION * 5,
-            paddingBottom: BASE_DIMENSION * 3
-        },
-        address: {
-            fontSize: 30,
-            textAlign: 'center',
-            fontWeight: 'bold',
-            marginBottom: BASE_DIMENSION * 5
-        },
-        input: {
-            flex: 1,
-            color: theme.colors.text
-        },
-        inputAddress: {
-            flex: 1,
-            color: theme.colors.text,
-            paddingRight: BASE_DIMENSION * 2,
-            height: 40
         },
         receipientLabel: {
             fontSize: 13,
@@ -72,15 +36,10 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION,
             color: theme.colors.warning
         },
-        inputBoxAddress: {
-            borderRadius: BORDER_RADIUS,
-            borderColor: 'gray',
-            alignSelf: 'stretch',
-            backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: BASE_DIMENSION,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
+        inputAddress: {
+            flex: 1,
+            color: theme.colors.text,
+            paddingRight: BASE_DIMENSION * 2
         },
         inputBox: {
             height: BASE_DIMENSION * 5,
@@ -92,19 +51,6 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'
-        },
-        bottom: {
-            flex: 1,
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            marginBottom: BASE_DIMENSION * 2
-        },
-        bottomButton: {
-            width: '90%'
-        },
-        basicFields: {
-            flex: 1,
-            backgroundColor: theme.colors.appBackground
         },
         icon: {
             color: theme.colors.accent
@@ -131,8 +77,6 @@ export default (theme: ITheme) =>
             lineHeight: 20,
             color: theme.colors.accent
         },
-
-        //
         addAddressContainer: {
             flex: 1,
             margin: BASE_DIMENSION * 2,
@@ -143,7 +87,8 @@ export default (theme: ITheme) =>
         bottomWrapper: {
             flexDirection: 'column',
             width: '100%',
-            justifyContent: 'flex-end'
+            justifyContent: 'flex-end',
+            backgroundColor: theme.colors.appBackground
         },
         bottomDivider: {
             height: 1,

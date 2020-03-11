@@ -50,7 +50,6 @@ export default (theme: ITheme) =>
             fontSize: 11,
             lineHeight: 13,
             color: theme.colors.text,
-            textAlign: 'center',
-            marginLeft: BASE_DIMENSION // TODO: check here
+            textAlign: 'center'
         }
     });

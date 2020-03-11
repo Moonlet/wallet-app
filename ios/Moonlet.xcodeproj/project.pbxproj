@@ -29,6 +29,9 @@
 		999B626EFCF64A4C9E947F78 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 57A87EF5C18748E58DF0EE85 /* libz.tbd */; };
 		B2D43936A20EA4074D11C300 /* Pods_Moonlet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */; };
 		D8B8708F2417794B00693393 /* GoogleService-Info-release.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8B8708E2417794B00693393 /* GoogleService-Info-release.plist */; };
+		D8B870902418DD5200693393 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4916BFB0239E8FD70069285B /* GoogleService-Info.plist */; };
+		D8B870912418DD5600693393 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4916BFB0239E8FD70069285B /* GoogleService-Info.plist */; };
+		D8B870922418DD5800693393 /* GoogleService-Info-release.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8B8708E2417794B00693393 /* GoogleService-Info-release.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -286,6 +289,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				5E3E1B262358858B008D627E /* LaunchScreen.xib in Resources */,
 				D8B8708F2417794B00693393 /* GoogleService-Info-release.plist in Resources */,
+				D8B870902418DD5200693393 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,8 +300,10 @@
 				5E7A08A92358A82D0036C459 /* main.jsbundle in Resources */,
 				5E7A08AC2358ADFE0036C459 /* icons.ttf in Resources */,
 				70735148239DB47D00EC26A7 /* GoogleService-Info.plist in Resources */,
+				D8B870922418DD5800693393 /* GoogleService-Info-release.plist in Resources */,
 				5E7A08982358A3840036C459 /* Images.xcassets in Resources */,
 				5E7A08992358A3840036C459 /* LaunchScreen.xib in Resources */,
+				D8B870912418DD5600693393 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

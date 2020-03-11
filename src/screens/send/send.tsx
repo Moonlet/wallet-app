@@ -291,12 +291,12 @@ export class SendScreenComponent extends React.Component<
     };
 
     public onAccountSelection = (account: IAccountState) => {
-        this.setState({ toAddress: account.address, showOwnAccounts: false });
+        this.setState({ toAddress: account.address });
         this.verifyInputText(account.address);
     };
 
     public onContactSelected = (contact: IContactState) => {
-        this.setState({ toAddress: contact.address, showOwnAccounts: false });
+        this.setState({ toAddress: contact.address });
         this.verifyInputText(contact.address);
     };
 
@@ -330,10 +330,8 @@ export class SendScreenComponent extends React.Component<
     };
 
     public availableFunds() {
-        const stdAmount = this.getAmountToStd();
-
         const feeTokenSymbol = getBlockchain(this.props.account.blockchain).config.coin;
-        const completeAmount = stdAmount;
+        const completeAmount = this.getAmountToStd();
         const tokenBalanceValue = new BigNumber(this.props.token.balance?.value);
         if (this.props.token.symbol === feeTokenSymbol) {
             completeAmount.plus(new BigNumber(this.state.feeOptions?.feeTotal));

@@ -1,5 +1,6 @@
 on:
-  release: 
+  release:
+    types: ['published']
     branches:
       - master
       - deploy

@@ -314,7 +314,8 @@ export class SendScreenComponent extends React.Component<
     }
 
     public addAmount = (value: string) => {
-        this.setState({ amount: value }, () => this.availableFunds());
+        const amount = value.replace(/,/g, '.');
+        this.setState({ amount }, () => this.availableFunds());
     };
 
     public onAddAllBalance = () => {

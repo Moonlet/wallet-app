@@ -69,12 +69,20 @@ platform :ios do
   end
 
   lane :deploy do
-    package = load_json(json_path: "../package.json")
-    increment_version_number(version_number: package["version"])
-    increment_build_number(build_number: number_of_commits)
-    changelog = changelog_from_git_commits(commits_count: 1)
 
-    match(type: "development")
+    ensure_git_branch(
+      branch: 'master'
+    )
+
+    version_name = get_version_number(target: "Moonlet")
+    appstore_build = app_store_build_number(live: false, app_identifier: "com.moonlet", version: version_name.to_s, initial_build_number: "1")
+
+
+    increment_build_number(build_number: appstore_build)
+
+   # File.write("metadata/en-US/release_notes.txt", changelog)  - this is for whats new in this version....
+
+    match(type: "appstore")
     if is_ci
       create_keychain(
         name: "CI",
@@ -95,26 +103,21 @@ platform :ios do
       match(type: "appstore")
     end
  
-    get_push_certificate(app_identifier: "com.moonlet.beta")
+    get_push_certificate(app_identifier: "com.moonlet")
 
     gym(workspace: "Moonlet.xcworkspace", 
-      scheme: "Moonlet_beta", 
+      scheme: "Moonlet", 
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          "com.moonlet.beta" => "match AppStore com.moonlet.beta"
+          "com.moonlet" => "match AppStore com.moonlet"
         },
         "signingStyle": "manual",
         compileBitcode: false
       })
     
-    pilot(
-      changelog: changelog,
-      beta_app_description: "Moonlet Beta App " + get_version_number(target:"Moonlet_beta"),
-      beta_app_feedback_email: "tibi@moonlet.xyz",
-      skip_waiting_for_build_processing: true,
-      distribute_external: false
-    )
+      upload_to_app_store(force: true, app_identifier: "com.moonlet", submit_for_review: true, phased_release: false, automatic_release: false)
+  
 
   end
   

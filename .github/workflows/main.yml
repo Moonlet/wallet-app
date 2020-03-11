@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - master
-      - deploy
+      # - deploy
 
 name: Deploy Beta
 jobs:

@@ -1,5 +1,5 @@
 on:
-  push:
+  release:
     branches:
       - master
       - deploy
@@ -7,18 +7,6 @@ on:
 
 name: Deploy in stores
 jobs:
-  git-release:
-        name: Git create release
-        runs-on: ubuntu-latest
-        steps:
-          - name: Create GitHubRelease
-          - uses: actions/create-release@latest
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              RELEASE_BRANCHES: "master"
-            with: 
-              tag_name: ${{ env.CUSTOM_TAG }}
-              release_name: ${{ env.CUSTOM_TAG }}
   # deploy-android:
   #   name: Android app
   #   runs-on: ubuntu-latest

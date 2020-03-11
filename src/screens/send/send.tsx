@@ -105,7 +105,6 @@ interface IState {
     insufficientFunds: boolean;
     feeOptions: IFeeOptions;
     showExtensionMessage: boolean;
-    userAction: boolean;
     memo: string;
     isStep2: boolean;
     isStep3: boolean;
@@ -142,7 +141,6 @@ export class SendScreenComponent extends React.Component<
             showOwnAccounts: false,
             feeOptions: undefined,
             showExtensionMessage: false,
-            userAction: false,
             memo: '',
             isStep2: false,
             isStep3: false
@@ -187,17 +185,18 @@ export class SendScreenComponent extends React.Component<
             return;
         }
 
-        const password = await this.passwordModal.requestPassword();
-        this.props.sendTransferTransaction(
-            this.props.account,
-            this.state.toAddress,
-            this.state.amount,
-            this.props.token.symbol,
-            this.state.feeOptions,
-            password,
-            this.props.navigation,
-            { memo: this.state.memo }
-        );
+        this.passwordModal.requestPassword().then(password => {
+            this.props.sendTransferTransaction(
+                this.props.account,
+                this.state.toAddress,
+                this.state.amount,
+                this.props.token.symbol,
+                this.state.feeOptions,
+                password,
+                this.props.navigation,
+                { memo: this.state.memo }
+            );
+        });
     };
 
     public onPressQrCodeIcon = async () => {
@@ -219,13 +218,11 @@ export class SendScreenComponent extends React.Component<
                         this.setState({
                             isValidText: true,
                             errorResponseText: undefined,
-                            warningResponseText: undefined,
-                            userAction: false
+                            warningResponseText: undefined
                         });
                     } else if (response.type === ResolveTextType.NAME) {
                         this.setState({
                             isValidText: false,
-                            userAction: true,
                             errorResponseText: undefined,
                             warningResponseText: undefined
                         });
@@ -289,18 +286,17 @@ export class SendScreenComponent extends React.Component<
         this.setState({
             showOwnAccounts: !currentState,
             isValidText: false,
-            userAction: false,
             toAddress: ''
         });
     };
 
     public onAccountSelection = (account: IAccountState) => {
-        this.setState({ toAddress: account.address });
+        this.setState({ toAddress: account.address, showOwnAccounts: false });
         this.verifyInputText(account.address);
     };
 
     public onContactSelected = (contact: IContactState) => {
-        this.setState({ toAddress: contact.address });
+        this.setState({ toAddress: contact.address, showOwnAccounts: false });
         this.verifyInputText(contact.address);
     };
 

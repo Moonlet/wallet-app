@@ -54,6 +54,10 @@ export const WalletConnectWeb = (() => {
                 walletConnector.approveRequest({ id: payload.id, result: { state } });
                 break;
 
+            case WC.PING:
+                walletConnector.approveRequest({ id: payload.id, result: { status: 'ok' } });
+                break;
+
             default:
                 walletConnector.rejectRequest({
                     id: payload.id,
@@ -68,8 +72,10 @@ export const WalletConnectWeb = (() => {
 
     const getState = () => {
         return new Promise((resolve, reject) => {
+            let i = 0;
             const timer = setInterval(
                 (function connectorGetState() {
+                    i++;
                     walletConnector
                         .sendCustomRequest(
                             { method: WC.GET_STATE },
@@ -88,6 +94,10 @@ export const WalletConnectWeb = (() => {
                                 resolve(data);
                             }
                         });
+
+                    if (i > 3) {
+                        clearInterval(timer);
+                    }
                     return connectorGetState;
                 })(),
                 5000

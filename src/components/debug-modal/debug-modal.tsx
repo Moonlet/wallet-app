@@ -34,7 +34,11 @@ const displayInfo = (text: string, label?: string) => (
             await Clipboard.setString(text);
         }}
     >
-        {label && <Text small darker>{label}</Text>}
+        {label && (
+            <Text small darker>
+                {label}
+            </Text>
+        )}
         <Text small>{text}</Text>
     </TouchableOpacity>
 );

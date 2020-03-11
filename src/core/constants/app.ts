@@ -3,5 +3,6 @@ export const WC_CONNECTION = 'wcConnection';
 export const WC = {
     GET_STATE: 'moonletGetState',
     SIGN_TRANSACTION: 'moonletSignTransaction',
-    UPDATE_STATE: 'moonletUpdateState'
+    UPDATE_STATE: 'moonletUpdateState',
+    PING: 'moonletPing'
 };

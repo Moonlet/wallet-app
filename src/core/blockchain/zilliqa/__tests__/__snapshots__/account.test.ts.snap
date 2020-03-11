@@ -12,7 +12,9 @@ Object {
       "active": true,
       "decimals": 12,
       "icon": Object {
-        "uri": "https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/zil.png",
+        "iconComponent": Object {
+          "testUri": "../../../src/assets/icons/blockchains/zil.svg",
+        },
       },
       "name": "Zilliqa",
       "order": 0,

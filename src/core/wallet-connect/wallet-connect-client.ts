@@ -13,6 +13,8 @@ import { formatAddress } from '../utils/format-address';
 import { getApnsToken } from '../messaging/silent/ios-voip-push-notification';
 import { NotificationType } from '../messaging/types';
 
+import BackgroundTimer from 'react-native-background-timer';
+
 const clientMeta: any = {
     description: 'Moonlet Wallet App',
     url: 'https://moonlet.xyz/',
@@ -67,6 +69,22 @@ export const WalletConnectClient = (() => {
         );
 
         setupListeners();
+    };
+
+    const checkConnection = () => {
+        // reconnect if no response from extension in 2000ms
+        const timeoutId = BackgroundTimer.setTimeout(() => {
+            reconnect();
+        }, 2000);
+
+        walletConnector
+            .sendCustomRequest({ method: WC.PING })
+            .then(() => {
+                BackgroundTimer.clearTimeout(timeoutId);
+            })
+            .catch(e => {
+                BackgroundTimer.clearTimeout(timeoutId);
+            });
     };
 
     // register listeners to respone to wc events
@@ -201,6 +219,7 @@ export const WalletConnectClient = (() => {
         sendMessage,
         setStore,
         isConnected,
-        getConnector
+        getConnector,
+        checkConnection
     };
 })();

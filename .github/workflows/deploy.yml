@@ -51,7 +51,6 @@ jobs:
   deploy-ios:
     name: iOS app
     runs-on: macos-latest
-    needs: git-release
     steps:
       - uses: actions/setup-node@v1
         with:

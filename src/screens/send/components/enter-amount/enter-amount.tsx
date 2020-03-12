@@ -8,32 +8,22 @@ import { translate } from '../../../../core/i18n';
 import { Amount } from '../../../../components/amount/amount';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
-import { convertAmount } from '../../../../core/utils/balance';
-import { IExchangeRates } from '../../../../redux/market/state';
 
 export interface IExternalProps {
-    allBalance: string;
     amount: string;
     insufficientFunds: boolean;
-    onAmountEnter: (amount: string) => void;
     blockchain: Blockchain;
     token: ITokenConfig;
+    onInputEnter: (amount: string) => void;
     onAddAmount: (amount: string) => void;
-    exchangeRates: IExchangeRates;
+    onAddAllBalance: () => void;
+    onAddHalfBalance: () => void;
 }
 
 export const EnterAmountComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     const { amount, theme, styles, insufficientFunds } = props;
-    const amountConverted = convertAmount(
-        props.blockchain,
-        props.exchangeRates,
-        props.allBalance,
-        props.token.symbol,
-        props.token.symbol,
-        props.token.decimals
-    );
 
     return (
         <View style={styles.container}>
@@ -46,7 +36,7 @@ export const EnterAmountComponent = (
                     autoCorrect={false}
                     selectionColor={theme.colors.accent}
                     value={amount}
-                    onChangeText={value => props.onAmountEnter(value)}
+                    onChangeText={value => props.onInputEnter(value)}
                     keyboardType="decimal-pad"
                 />
             </View>
@@ -95,14 +85,14 @@ export const EnterAmountComponent = (
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => props.onAmountEnter(amountConverted.dividedBy(2).toFixed())}
+                    onPress={() => props.onAddHalfBalance()}
                     style={styles.addValueBox}
                 >
                     <Text style={styles.addValueText}>{translate('App.labels.half')}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => props.onAmountEnter(amountConverted.toFixed())}
+                    onPress={() => props.onAddAllBalance()}
                     style={[styles.addValueBox, { marginRight: 0 }]}
                 >
                     <Text style={styles.addValueText}>{translate('App.labels.all')}</Text>

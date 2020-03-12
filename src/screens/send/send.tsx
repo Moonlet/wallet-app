@@ -36,7 +36,6 @@ import {
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
-import bind from 'bind-decorator';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
 import { ITokenConfig } from '../../core/blockchain/types/token';
@@ -56,7 +55,6 @@ import { Memo } from './components/extra-fields/memo/memo';
 import { HeaderStepByStep } from './components/header-step-by-step/header-step-by-step';
 import { EnterAmount } from './components/enter-amount/enter-amount';
 import { Amount } from '../../components/amount/amount';
-import { IExchangeRates } from '../../redux/market/state';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -68,7 +66,6 @@ export interface IReduxProps {
     selectedWalletId: string;
     selectedAccount: IAccountState;
     chainId: ChainIdType;
-    exchangeRates: IExchangeRates;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -78,8 +75,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
         contacts: getContacts(state),
         selectedWalletId: getSelectedWallet(state).id,
         selectedAccount: getSelectedAccount(state),
-        chainId: getChainId(state, ownProps.blockchain),
-        exchangeRates: state.market.exchangeRates
+        chainId: getChainId(state, ownProps.blockchain)
     };
 };
 
@@ -147,7 +143,7 @@ export class SendScreenComponent extends React.Component<
         };
     }
 
-    public confirmPayment = async () => {
+    public async confirmPayment() {
         if (Platform.OS === 'web') {
             const formattedAmount = formatNumber(new BigNumber(this.state.amount), {
                 currency: getBlockchain(this.props.account.blockchain).config.coin
@@ -197,13 +193,13 @@ export class SendScreenComponent extends React.Component<
                 { memo: this.state.memo }
             );
         });
-    };
+    }
 
-    public onPressQrCodeIcon = async () => {
+    public async onPressQrCodeIcon() {
         this.qrCodeScanner.open();
-    };
+    }
 
-    public verifyInputText = async (text: string) => {
+    public async verifyInputText(text: string) {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
         this.setState({ toAddress: text });
 
@@ -276,65 +272,73 @@ export class SendScreenComponent extends React.Component<
                 }
             }
         }
-    };
-    public onQrCodeScanned = (value: string) => {
+    }
+    public onQrCodeScanned(value: string) {
         this.verifyInputText(value);
-    };
+    }
 
-    public onTransferBetweenAccounts = () => {
+    public onTransferBetweenAccounts() {
         const currentState = this.state.showOwnAccounts;
         this.setState({
             showOwnAccounts: !currentState,
             isValidText: false,
             toAddress: ''
         });
-    };
+    }
 
-    public onAccountSelection = (account: IAccountState) => {
+    public onAccountSelection(account: IAccountState) {
         this.setState({ toAddress: account.address });
         this.verifyInputText(account.address);
-    };
+    }
 
-    public onContactSelected = (contact: IContactState) => {
+    public onContactSelected(contact: IContactState) {
         this.setState({ toAddress: contact.address });
         this.verifyInputText(contact.address);
-    };
+    }
 
-    public onFeesChanged = (feeOptions: IFeeOptions) => {
+    public onFeesChanged(feeOptions: IFeeOptions) {
         this.setState({ feeOptions }, () => this.availableFunds());
-    };
+    }
 
-    @bind
     public onMemoInput(memo: string) {
         this.setState({ memo });
     }
 
-    public addAmount = (value: string) => {
+    public addAmount(value: string) {
         const amount = value.replace(/,/g, '.');
         this.setState({ amount }, () => this.availableFunds());
-    };
+    }
 
-    public onAddAllBalance = () => {
+    public onAddBalance(tokenBalanceValue: BigNumber) {
+        const balance = tokenBalanceValue.minus(this.state.feeOptions?.feeTotal);
+
+        if (balance.isGreaterThanOrEqualTo(0)) {
+            const blockchainInstance = getBlockchain(this.props.account.blockchain);
+            const amountFromStd = blockchainInstance.account.amountFromStd(new BigNumber(balance));
+            this.setState({ amount: amountFromStd.toString() }, () => this.availableFunds());
+        }
+    }
+
+    public onAddAllBalance() {
         const token = this.props.account.tokens[this.props.token.symbol];
         const tokenBalanceValue = new BigNumber(token.balance?.value);
 
-        const allBalance = tokenBalanceValue.minus(this.state.feeOptions?.feeTotal);
+        this.onAddBalance(tokenBalanceValue);
+    }
 
-        if (allBalance.isGreaterThanOrEqualTo(0)) {
-            const blockchainInstance = getBlockchain(this.props.account.blockchain);
-            const amountFromStd = blockchainInstance.account.amountFromStd(
-                new BigNumber(allBalance)
-            );
-            this.setState({ amount: amountFromStd.toString() }, () => this.availableFunds());
-        }
-    };
+    public onAddHalfBalance() {
+        const token = this.props.account.tokens[this.props.token.symbol];
+        const tokenBalanceValue = new BigNumber(token.balance?.value).dividedBy(2);
+
+        this.onAddBalance(tokenBalanceValue);
+    }
 
     public availableFunds() {
         const feeTokenSymbol = getBlockchain(this.props.account.blockchain).config.coin;
-        const completeAmount = this.getAmountToStd();
+        let completeAmount = this.getAmountToStd();
         const tokenBalanceValue = new BigNumber(this.props.token.balance?.value);
         if (this.props.token.symbol === feeTokenSymbol) {
-            completeAmount.plus(new BigNumber(this.state.feeOptions?.feeTotal));
+            completeAmount = completeAmount.plus(new BigNumber(this.state.feeOptions?.feeTotal));
         }
 
         if (tokenBalanceValue.minus(completeAmount).isGreaterThanOrEqualTo(0)) {
@@ -344,7 +348,6 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    @bind
     public onPressClearInput() {
         this.setState({
             isValidText: false,
@@ -364,7 +367,7 @@ export class SendScreenComponent extends React.Component<
             return (
                 <TouchableOpacity
                     testID="qrcode-icon"
-                    onPress={this.onPressQrCodeIcon}
+                    onPress={() => this.onPressQrCodeIcon()}
                     style={styles.rightAddressButton}
                 >
                     <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
@@ -374,7 +377,7 @@ export class SendScreenComponent extends React.Component<
             return (
                 <TouchableOpacity
                     testID="clear-address"
-                    onPress={this.onPressClearInput}
+                    onPress={() => this.onPressClearInput()}
                     style={styles.rightAddressButton}
                 >
                     <Icon name="close" size={16} style={styles.icon} />
@@ -383,7 +386,7 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    public alertModalAddAddress = async () => {
+    public async alertModalAddAddress() {
         // TODO: check this, it's not opening all the time
         const inputValue = await Dialog.prompt(
             translate('Send.alertTitle'),
@@ -399,7 +402,7 @@ export class SendScreenComponent extends React.Component<
         if (inputValue !== '') {
             this.props.addContact(contactData);
         }
-    };
+    }
 
     public renderAddAddressToBook() {
         const { styles } = this.props;
@@ -417,7 +420,7 @@ export class SendScreenComponent extends React.Component<
             addressNotInWalletAccounts === true
         ) {
             return (
-                <TouchableOpacity onPress={this.alertModalAddAddress}>
+                <TouchableOpacity onPress={() => this.alertModalAddAddress()}>
                     <Text style={styles.addressNotInBookText}>
                         {translate('Send.addressNotInBook')}
                     </Text>
@@ -429,7 +432,7 @@ export class SendScreenComponent extends React.Component<
     public renderExtraFields(value: string) {
         switch (value) {
             case 'Memo':
-                return <Memo key={value} onMemoInput={this.onMemoInput} />;
+                return <Memo key={value} onMemoInput={(memo: string) => this.onMemoInput(memo)} />;
 
             default:
                 return null;
@@ -441,7 +444,9 @@ export class SendScreenComponent extends React.Component<
             return (
                 <AccountList
                     accounts={this.props.accounts}
-                    onAccountSelection={this.onAccountSelection}
+                    onAccountSelection={(account: IAccountState) =>
+                        this.onAccountSelection(account)
+                    }
                     selectedAddress={this.state.toAddress}
                 />
             );
@@ -449,7 +454,7 @@ export class SendScreenComponent extends React.Component<
             return (
                 <AddressBook
                     blockchain={this.props.blockchain}
-                    onContactSelected={this.onContactSelected}
+                    onContactSelected={(contact: IContactState) => this.onContactSelected(contact)}
                     selectedAddress={this.state.toAddress}
                 />
             );
@@ -494,7 +499,7 @@ export class SendScreenComponent extends React.Component<
 
                 <TouchableOpacity
                     testID="transfer-between-accounts"
-                    onPress={this.onTransferBetweenAccounts}
+                    onPress={() => this.onTransferBetweenAccounts()}
                     style={[styles.buttonRightOptions]}
                 >
                     <Text style={styles.textTranferButton}>
@@ -602,19 +607,16 @@ export class SendScreenComponent extends React.Component<
     }
 
     private renderEnterAmount() {
-        const token = this.props.account.tokens[this.props.token.symbol];
-        const tokenBalanceValue = new BigNumber(token.balance?.value).toFixed();
         const config = getBlockchain(this.props.account.blockchain).config;
 
         return (
             <View style={this.props.styles.amountContainer}>
                 <EnterAmount
                     amount={this.state.amount}
-                    onAmountEnter={amount => this.addAmount(amount)}
                     insufficientFunds={this.state.insufficientFunds}
-                    allBalance={tokenBalanceValue}
                     token={this.props.token}
                     blockchain={this.props.account.blockchain}
+                    onInputEnter={amount => this.addAmount(amount)}
                     onAddAmount={amount => {
                         let amountState = this.state.amount;
                         if (amountState === '') amountState = '0';
@@ -622,14 +624,15 @@ export class SendScreenComponent extends React.Component<
                         const value = new BigNumber(amountState).plus(new BigNumber(amount));
                         this.addAmount(value.toString());
                     }}
-                    exchangeRates={this.props.exchangeRates}
+                    onAddAllBalance={() => this.onAddAllBalance()}
+                    onAddHalfBalance={() => this.onAddHalfBalance()}
                 />
                 <FeeOptions
                     token={this.props.account.tokens[config.coin]}
                     sendingToken={this.props.token}
                     account={this.props.account}
                     toAddress={this.state.toAddress}
-                    onFeesChanged={this.onFeesChanged}
+                    onFeesChanged={(feeOptions: IFeeOptions) => this.onFeesChanged(feeOptions)}
                 />
             </View>
         );
@@ -710,7 +713,7 @@ export class SendScreenComponent extends React.Component<
 
                 <QrModalReader
                     ref={ref => (this.qrCodeScanner = ref)}
-                    onQrCodeScanned={this.onQrCodeScanned}
+                    onQrCodeScanned={value => this.onQrCodeScanned(value)}
                 />
             </View>
         );

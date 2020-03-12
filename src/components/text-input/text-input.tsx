@@ -14,7 +14,7 @@ export interface IExternalProps {
     isFocus?: boolean;
     isValid?: boolean;
     placeholder?: string;
-    showBorderBottomColor: boolean;
+    showBorderBottom: boolean;
 }
 
 interface IState {
@@ -83,7 +83,8 @@ export class TextInputComponent extends React.Component<
                     styles.container,
                     {
                         borderBottomColor:
-                            this.props.showBorderBottomColor && containerBorderBottomColor
+                            this.props.showBorderBottom && containerBorderBottomColor,
+                        borderBottomWidth: this.props.showBorderBottom ? 1 : 0
                     },
                     this.props.style
                 ]}

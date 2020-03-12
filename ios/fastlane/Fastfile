@@ -74,7 +74,6 @@ platform :ios do
     increment_version_number(version_number: package["version"])
     increment_build_number(build_number: number_of_commits)
 
-    increment_build_number(build_number: appstore_build)
 
    # File.write("metadata/en-US/release_notes.txt", changelog)  - this is for whats new in this version....
 

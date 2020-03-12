@@ -119,6 +119,8 @@ export class AccountCreateComponent extends React.Component<
 
     public render() {
         const { styles, theme } = this.props;
+        const isSuccess = this.state.isInputValid && this.state.showInputInfo;
+        const isErrorMessage = !this.state.isInputValid && this.state.showInputInfo;
 
         if (this.state.isLoading) {
             return <LoadingIndicator />;
@@ -158,19 +160,21 @@ export class AccountCreateComponent extends React.Component<
                                 </TouchableOpacity>
                             )}
                         </View>
-                        {this.state.isInputValid && this.state.showInputInfo && (
-                            <Text style={styles.congratsText}>
-                                {translate('CreateAccount.congrats')}
-                            </Text>
-                        )}
 
-                        {!this.state.isInputValid && this.state.showInputInfo && (
-                            <Text style={styles.invalidText}>
-                                {translate('CreateAccount.errorMessage', {
-                                    message: this.state.errorMessage
-                                })}
-                            </Text>
-                        )}
+                        <Text
+                            style={[
+                                isSuccess && styles.congratsText,
+                                isErrorMessage && styles.invalidText
+                            ]}
+                        >
+                            {isSuccess
+                                ? translate('CreateAccount.congrats')
+                                : isErrorMessage
+                                ? translate('CreateAccount.errorMessage', {
+                                      message: this.state.errorMessage
+                                  })
+                                : ''}
+                        </Text>
                     </View>
 
                     <Button

@@ -2,8 +2,12 @@ import { updateTransactionFromBlockchain } from '../../../redux/wallets/actions'
 import { store } from '../../../redux/config';
 import { ISilentMessage, SilentMessageType } from '../types';
 import { takeOneAndSubscribeToStore } from '../../../redux/utils/helpers';
+import { WalletConnectClient } from '../../wallet-connect/wallet-connect-client';
 
 export const dataMessageHandler = async (message: ISilentMessage) => {
+    // meanwhile, try to reestablish WC connection if needed
+    WalletConnectClient.checkConnection();
+
     // check here is app is in foreground ?
 
     // this is entry point for backgorund messaging

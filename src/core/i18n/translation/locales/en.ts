@@ -312,7 +312,9 @@ export const translation: ITranslations = {
             chooseUsername: 'Just choose a username and you’re all set.',
             congrats: 'Congrats! This name is available.',
             eg: 'e.g. johndoe',
-            invalidUsername: 'Username is taken. Try something else.'
+            errorMessage: 'Username is {{message}}. Try something else.',
+            taken: 'taken',
+            invalid: 'invalid'
         }
     },
     plural: (n: number, ord?: boolean) => {

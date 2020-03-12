@@ -34,6 +34,7 @@ export interface IState {
     showInputInfo: boolean;
     isCreate: boolean;
     isLoading: boolean;
+    errorMessage: string;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -61,7 +62,8 @@ export class AccountCreateComponent extends React.Component<
             isInputValid: false,
             showInputInfo: false,
             isCreate: false,
-            isLoading: false
+            isLoading: false,
+            errorMessage: undefined
         };
     }
 
@@ -73,10 +75,26 @@ export class AccountCreateComponent extends React.Component<
             try {
                 const account = await client.getAccount(this.state.inputAccout);
 
-                this.setState({ isInputValid: !account.exists, showInputInfo: true });
-
-                if (!account.exists) {
-                    this.setState({ isCreate: true });
+                if (account.exists === true && account.valid === true) {
+                    this.setState({
+                        isCreate: true,
+                        isInputValid: false,
+                        showInputInfo: true,
+                        errorMessage: translate('CreateAccount.taken')
+                    });
+                } else if (account.exists === false && account.valid === false) {
+                    this.setState({
+                        isCreate: true,
+                        isInputValid: false,
+                        showInputInfo: true,
+                        errorMessage: translate('CreateAccount.invalid')
+                    });
+                } else {
+                    this.setState({
+                        isCreate: false,
+                        isInputValid: true,
+                        showInputInfo: true
+                    });
                 }
             } catch (error) {
                 this.setState({ isInputValid: false, showInputInfo: true });
@@ -148,7 +166,9 @@ export class AccountCreateComponent extends React.Component<
 
                         {!this.state.isInputValid && this.state.showInputInfo && (
                             <Text style={styles.invalidText}>
-                                {translate('CreateAccount.invalidUsername')}
+                                {translate('CreateAccount.errorMessage', {
+                                    message: this.state.errorMessage
+                                })}
                             </Text>
                         )}
                     </View>

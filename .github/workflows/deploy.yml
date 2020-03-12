@@ -63,7 +63,7 @@ jobs:
       - name: Add to host
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
       - name: Generate firebase config file
-        run: echo '${{ secrets.FB_CONFIG_IOS_DEPLOY }}' > ios/release/GoogleService-Info-release.plist
+        run: echo '${{ secrets.FB_CONFIG_IOS_DEPLOY }}' > ios/release/GoogleService-Info.plist
       - name: Dependencies install
         run: cd ios && bundle install
       - name: Cache node modules

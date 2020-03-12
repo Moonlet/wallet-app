@@ -26,10 +26,8 @@
 		70133448239DA8CC0074E5DF /* CallKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70133446239DA8C20074E5DF /* CallKit.framework */; };
 		999B626EFCF64A4C9E947F78 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 57A87EF5C18748E58DF0EE85 /* libz.tbd */; };
 		B2D43936A20EA4074D11C300 /* Pods_Moonlet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */; };
-		D8B870902418DD5200693393 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4916BFB0239E8FD70069285B /* GoogleService-Info.plist */; };
-		D8B870912418DD5600693393 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4916BFB0239E8FD70069285B /* GoogleService-Info.plist */; };
-		D8B8709C241A104A00693393 /* GoogleService-Info-release.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8B8709B241A104A00693393 /* GoogleService-Info-release.plist */; };
-		D8B8709E241A117200693393 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8B8709D241A117200693393 /* GoogleService-Info.plist */; };
+		D8B8709C241A104A00693393 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8B8709B241A104A00693393 /* GoogleService-Info.plist */; };
+		D8B870A0241A1BF400693393 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8B8709F241A1BF400693393 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,7 +42,6 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Moonlet/main.m; sourceTree = "<group>"; };
 		1A7A69B711E0E4F717C81BFD /* Pods_Moonlet.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Moonlet.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		28AF99820AAFEB28EEA5D672 /* Pods_Moonlet_Moonlet_beta.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Moonlet_Moonlet_beta.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4916BFB0239E8FD70069285B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../GoogleService-Info.plist"; sourceTree = "<group>"; };
 		57A87EF5C18748E58DF0EE85 /* libz.tbd */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		5C4CC37B0E80B21C7C248D98 /* Pods-Moonlet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet/Pods-Moonlet.debug.xcconfig"; sourceTree = "<group>"; };
 		5E0012C3234DF5F100B2335A /* Moonlet_beta-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Moonlet_beta-Info.plist"; path = "Moonlet/Moonlet_beta-Info.plist"; sourceTree = "<group>"; };
@@ -56,8 +53,8 @@
 		70517E8F239E54FC000AAFB8 /* Moonlet_beta.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Moonlet_beta.entitlements; sourceTree = "<group>"; };
 		70D8D14323970FCA00C7612F /* Moonlet.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Moonlet.entitlements; path = Moonlet/Moonlet.entitlements; sourceTree = "<group>"; };
 		A75EC3B76B489075D033B115 /* Pods-Moonlet-Moonlet_beta.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-Moonlet_beta.release.xcconfig"; path = "Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta.release.xcconfig"; sourceTree = "<group>"; };
-		D8B8709B241A104A00693393 /* GoogleService-Info-release.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; name = "GoogleService-Info-release.plist"; path = "release/GoogleService-Info-release.plist"; sourceTree = "<group>"; };
-		D8B8709D241A117200693393 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D8B8709B241A104A00693393 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "release/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		D8B8709F241A1BF400693393 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		FF4BFDC69F263F5B95A69624 /* Pods-Moonlet-Moonlet_beta.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Moonlet-Moonlet_beta.debug.xcconfig"; path = "Target Support Files/Pods-Moonlet-Moonlet_beta/Pods-Moonlet-Moonlet_beta.debug.xcconfig"; sourceTree = "<group>"; };
@@ -100,7 +97,6 @@
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				5E0012C3234DF5F100B2335A /* Moonlet_beta-Info.plist */,
-				4916BFB0239E8FD70069285B /* GoogleService-Info.plist */,
 			);
 			name = Moonlet;
 			sourceTree = "<group>";
@@ -149,7 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				70517E8F239E54FC000AAFB8 /* Moonlet_beta.entitlements */,
-				D8B8709D241A117200693393 /* GoogleService-Info.plist */,
+				D8B8709F241A1BF400693393 /* GoogleService-Info.plist */,
 				D8B8708D2417793800693393 /* release */,
 				97676FAE2355A59600A5262D /* Resources */,
 				13B07FAE1A68108700A75B9A /* Moonlet */,
@@ -184,7 +180,7 @@
 		D8B8708D2417793800693393 /* release */ = {
 			isa = PBXGroup;
 			children = (
-				D8B8709B241A104A00693393 /* GoogleService-Info-release.plist */,
+				D8B8709B241A104A00693393 /* GoogleService-Info.plist */,
 			);
 			name = release;
 			sourceTree = "<group>";
@@ -283,10 +279,9 @@
 			files = (
 				5E7A08A82358A82D0036C459 /* main.jsbundle in Resources */,
 				5E7A08AB2358ADFE0036C459 /* icons.ttf in Resources */,
-				D8B8709C241A104A00693393 /* GoogleService-Info-release.plist in Resources */,
+				D8B8709C241A104A00693393 /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				5E3E1B262358858B008D627E /* LaunchScreen.xib in Resources */,
-				D8B870902418DD5200693393 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -296,10 +291,9 @@
 			files = (
 				5E7A08A92358A82D0036C459 /* main.jsbundle in Resources */,
 				5E7A08AC2358ADFE0036C459 /* icons.ttf in Resources */,
+				D8B870A0241A1BF400693393 /* GoogleService-Info.plist in Resources */,
 				5E7A08982358A3840036C459 /* Images.xcassets in Resources */,
 				5E7A08992358A3840036C459 /* LaunchScreen.xib in Resources */,
-				D8B870912418DD5600693393 /* GoogleService-Info.plist in Resources */,
-				D8B8709E241A117200693393 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

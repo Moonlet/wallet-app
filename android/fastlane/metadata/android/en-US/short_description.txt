@@ -1,0 +1,1 @@
+Moonlet is a blockchain agnostic, cross-platform, non custodial, delegating as a service solution for PoS networks.

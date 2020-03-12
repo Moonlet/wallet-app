@@ -45,4 +45,23 @@ platform :android do
     )
   end
 
+  lane :deploy do
+    gradle(task: "clean")
+
+    package = load_json(json_path: "../package.json")
+    gradle(
+      task: "assemble",
+      flavor: "stable",
+      print_command: true,
+      build_type: "Release",
+      properties: {
+        "versionName" => package["version"],
+        "versionCode" => number_of_commits
+      }
+    )
+    changelog = changelog_from_git_commits(commits_count: 1)
+    
+    upload_to_play_store(track: "production", validate_only: true);
+  end
+
 end

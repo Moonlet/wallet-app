@@ -309,7 +309,7 @@ export class SendScreenComponent extends React.Component<
         this.setState({ amount }, () => this.availableFunds());
     }
 
-    public onAddBalance(tokenBalanceValue: BigNumber) {
+    public addBalance(tokenBalanceValue: BigNumber) {
         const balance = tokenBalanceValue.minus(this.state.feeOptions?.feeTotal);
 
         if (balance.isGreaterThanOrEqualTo(0)) {
@@ -322,15 +322,13 @@ export class SendScreenComponent extends React.Component<
     public onAddAllBalance() {
         const token = this.props.account.tokens[this.props.token.symbol];
         const tokenBalanceValue = new BigNumber(token.balance?.value);
-
-        this.onAddBalance(tokenBalanceValue);
+        this.addBalance(tokenBalanceValue);
     }
 
     public onAddHalfBalance() {
         const token = this.props.account.tokens[this.props.token.symbol];
         const tokenBalanceValue = new BigNumber(token.balance?.value).dividedBy(2);
-
-        this.onAddBalance(tokenBalanceValue);
+        this.addBalance(tokenBalanceValue);
     }
 
     public availableFunds() {

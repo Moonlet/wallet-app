@@ -1,9 +1,9 @@
 on:
-  release:
+  push:
     branches:
       - master
       - deploy
-      #from push will transform to release 
+      #from push will transform to release
 
 name: Deploy in stores
 jobs:
@@ -64,7 +64,7 @@ jobs:
       - name: Add to host
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
       - name: Generate firebase config file
-        run: echo '${{ secrets.FB_CONFIG_IOS_DEPLOY }}' > ios/release/GoogleService-Info-release.plist 
+        run: echo '${{ secrets.FB_CONFIG_IOS_DEPLOY }}' > ios/release/GoogleService-Info-release.plist
       - name: Dependencies install
         run: cd ios && bundle install
       - name: Cache node modules

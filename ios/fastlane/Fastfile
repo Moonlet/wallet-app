@@ -71,8 +71,11 @@ platform :ios do
   lane :deploy do
 
     version_name = get_version_number(target: "Moonlet")
-    appstore_build = app_store_build_number(live: false, app_identifier: "com.moonlet", version: version_name.to_s, initial_build_number: "1")
+    appstore_build = app_store_build_number(live: false, app_identifier: "com.moonlet", version: version_name.to_s, initial_build_number: "2")
 
+    # package = load_json(json_path: "../package.json")
+    # increment_version_number(version_number: package["version"])
+    # increment_build_number(build_number: number_of_commits)
 
     increment_build_number(build_number: appstore_build)
 

@@ -72,7 +72,7 @@ export const buildTransferTransaction = async (
                 status: TransactionStatus.PENDING,
 
                 data: {
-                    method: 'proxyTransfer',
+                    method: 'transfer',
                     params: [tx.toAddress, tx.amount],
                     raw:
                         '0x' +

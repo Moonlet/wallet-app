@@ -176,7 +176,12 @@ export class AccountCreateComponent extends React.Component<
                     <Button
                         style={styles.createButton}
                         primary
-                        disabled={this.state.inputAccout.length === 0}
+                        disabled={
+                            this.state.inputAccout.length === 0 ||
+                            (this.state.isCreate &&
+                                this.state.isInputValid === false &&
+                                this.state.showInputInfo)
+                        }
                         onPress={() => {
                             if (this.state.isCreate) {
                                 // create account

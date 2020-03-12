@@ -54,6 +54,10 @@ export const WalletConnectWeb = (() => {
                 walletConnector.approveRequest({ id: payload.id, result: { state } });
                 break;
 
+            case WC.PING:
+                walletConnector.approveRequest({ id: payload.id, result: { status: 'ok' } });
+                break;
+
             default:
                 walletConnector.rejectRequest({
                     id: payload.id,
@@ -68,20 +72,36 @@ export const WalletConnectWeb = (() => {
 
     const getState = () => {
         return new Promise((resolve, reject) => {
-            walletConnector
-                .sendCustomRequest({ method: WC.GET_STATE }, { forcePushNotification: true })
-                .then(data => {
-                    store.dispatch(setExtensionStateLoaded());
-                    if (data.error) {
-                        alert(data.error);
-                        reject(data.error);
-                    } else {
-                        const state = Object.assign(store.getState(), data.state);
-                        state.app.extensionStateLoaded = true;
-                        store.dispatch(updateReduxState(state));
-                        resolve(data);
+            let i = 0;
+            const timer = setInterval(
+                (function connectorGetState() {
+                    i++;
+                    walletConnector
+                        .sendCustomRequest(
+                            { method: WC.GET_STATE },
+                            { forcePushNotification: true }
+                        )
+                        .then(data => {
+                            clearInterval(timer);
+                            store.dispatch(setExtensionStateLoaded());
+                            if (data.error) {
+                                alert(data.error);
+                                reject(data.error);
+                            } else {
+                                const state = Object.assign(store.getState(), data.state);
+                                state.app.extensionStateLoaded = true;
+                                store.dispatch(updateReduxState(state));
+                                resolve(data);
+                            }
+                        });
+
+                    if (i > 3) {
+                        clearInterval(timer);
                     }
-                });
+                    return connectorGetState;
+                })(),
+                5000
+            );
         });
     };
 

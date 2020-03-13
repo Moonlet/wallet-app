@@ -55,6 +55,7 @@ import { Memo } from './components/extra-fields/memo/memo';
 import { HeaderStepByStep } from './components/header-step-by-step/header-step-by-step';
 import { EnterAmount } from './components/enter-amount/enter-amount';
 import { Amount } from '../../components/amount/amount';
+import _ from 'lodash';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -102,8 +103,7 @@ interface IState {
     feeOptions: IFeeOptions;
     showExtensionMessage: boolean;
     memo: string;
-    isStep2: boolean;
-    isStep3: boolean;
+    headerSteps: { step: number; title: string; active: boolean }[];
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -138,8 +138,11 @@ export class SendScreenComponent extends React.Component<
             feeOptions: undefined,
             showExtensionMessage: false,
             memo: '',
-            isStep2: false,
-            isStep3: false
+            headerSteps: [
+                { step: 1, title: translate('Send.addAddress'), active: true },
+                { step: 2, title: translate('Send.enterAmount'), active: false },
+                { step: 3, title: translate('Send.confirmTransaction'), active: false }
+            ]
         };
     }
 
@@ -464,7 +467,7 @@ export class SendScreenComponent extends React.Component<
         const { styles, theme, account } = this.props;
 
         return (
-            <View style={styles.addAddressContainer}>
+            <View key="addAddressContainer" style={styles.addAddressContainer}>
                 <Text style={styles.receipientLabel}>
                     {this.state.toAddress !== '' ? translate('Send.recipientLabel') : ' '}
                 </Text>
@@ -525,8 +528,35 @@ export class SendScreenComponent extends React.Component<
 
     private renderBottomConfirm() {
         const { token, styles, account } = this.props;
-        const { amount, isStep2, isStep3 } = this.state;
+        const { amount, headerSteps } = this.state;
         const stdAmount = this.getAmountToStd();
+
+        const activeIndex = _.findIndex(headerSteps, ['active', true]);
+
+        let disableButton: boolean;
+        switch (activeIndex) {
+            case 0:
+                // Add address
+                if (this.state.toAddress === '' || !this.state.isValidText) disableButton = true;
+                break;
+            case 1:
+                // Enter amount
+                if (
+                    amount === '' ||
+                    this.state.insufficientFunds ||
+                    isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
+                    isNaN(Number(this.state.feeOptions?.gasPrice))
+                )
+                    disableButton = true;
+                break;
+            case 2:
+                // Confirm transaction
+                disableButton = false;
+                break;
+            default:
+                disableButton = true;
+                break;
+        }
 
         return (
             <View style={styles.bottomWrapper}>
@@ -548,23 +578,23 @@ export class SendScreenComponent extends React.Component<
                             </Text>
                         </View>
 
-                        {(isStep2 || isStep3) && (
-                            <Text style={styles.bottomDefaultText}>
-                                {amount === ''
-                                    ? `_.___ ${token.symbol}`
-                                    : `${amount} ${token.symbol}`}
-                            </Text>
-                        )}
+                        {(activeIndex === 1 || activeIndex === 2) && (
+                            <React.Fragment>
+                                <Text style={styles.bottomDefaultText}>
+                                    {amount === ''
+                                        ? `_.___ ${token.symbol}`
+                                        : `${amount} ${token.symbol}`}
+                                </Text>
 
-                        {(isStep2 || isStep3) && (
-                            <Amount
-                                style={styles.bottomAmountText}
-                                token={token.symbol}
-                                tokenDecimals={token.decimals}
-                                amount={stdAmount.toString()}
-                                blockchain={this.props.account.blockchain}
-                                convert
-                            />
+                                <Amount
+                                    style={styles.bottomAmountText}
+                                    token={token.symbol}
+                                    tokenDecimals={token.decimals}
+                                    amount={stdAmount.toString()}
+                                    blockchain={this.props.account.blockchain}
+                                    convert
+                                />
+                            </React.Fragment>
                         )}
                     </View>
 
@@ -572,30 +602,21 @@ export class SendScreenComponent extends React.Component<
                         <Button
                             style={{ width: 140 }}
                             primary
-                            disabled={
-                                this.state.toAddress === '' ||
-                                (isStep2 && (amount === '' || this.state.insufficientFunds)) ||
-                                (isStep3 &&
-                                    (!this.state.isValidText ||
-                                        this.state.amount === '' ||
-                                        this.state.insufficientFunds === true ||
-                                        isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
-                                        isNaN(Number(this.state.feeOptions?.gasPrice))))
-                            }
+                            disabled={disableButton}
                             onPress={() => {
-                                if (isStep3 === true) {
-                                    // confirm
+                                if (activeIndex === 2) {
                                     this.confirmPayment();
-                                } else if (isStep2 === false) {
-                                    // step 2
-                                    this.setState({ isStep2: true, isStep3: false });
-                                } else if (isStep3 === false) {
-                                    // step 3
-                                    this.setState({ isStep2: false, isStep3: true });
+                                } else {
+                                    const steps = headerSteps;
+
+                                    steps[activeIndex].active = false;
+                                    steps[activeIndex + 1].active = true;
+
+                                    this.setState({ headerSteps: steps });
                                 }
                             }}
                         >
-                            {this.state.isStep3
+                            {activeIndex === headerSteps.length - 1
                                 ? translate('App.labels.confirm')
                                 : translate('App.labels.next')}
                         </Button>
@@ -609,7 +630,7 @@ export class SendScreenComponent extends React.Component<
         const config = getBlockchain(this.props.account.blockchain).config;
 
         return (
-            <View style={this.props.styles.amountContainer}>
+            <View key="enterAmount" style={this.props.styles.amountContainer}>
                 <EnterAmount
                     availableAmount={this.availableAmount()}
                     value={this.state.amount}
@@ -634,7 +655,7 @@ export class SendScreenComponent extends React.Component<
         const extraFields = getBlockchain(this.props.account.blockchain).config.ui.extraFields;
 
         return (
-            <View style={styles.confirmTransactionContainer}>
+            <View key="confirmTransaction" style={styles.confirmTransactionContainer}>
                 <Text style={styles.receipientLabel}>{translate('Send.recipientLabel')}</Text>
                 <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Text style={styles.confirmTransactionText}>
@@ -667,7 +688,7 @@ export class SendScreenComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
-        const { isStep2, isStep3 } = this.state;
+        const { headerSteps } = this.state;
 
         return (
             <View style={styles.container}>
@@ -675,28 +696,35 @@ export class SendScreenComponent extends React.Component<
 
                 <View style={styles.content}>
                     <HeaderStepByStep
-                        steps={[
-                            { title: translate('Send.addAddress') },
-                            {
-                                title: translate('Send.enterAmount'),
-                                selected: this.state.isStep2
-                            },
-                            {
-                                title: translate('Send.confirmTransaction'),
-                                selected: this.state.isStep3
+                        steps={headerSteps}
+                        selectStep={selectedIdex => {
+                            const activeIndex = _.findIndex(headerSteps, ['active', true]);
+
+                            const steps = headerSteps;
+                            if (selectedIdex < activeIndex) {
+                                steps[activeIndex].active = false;
+                                steps[selectedIdex].active = true;
                             }
-                        ]}
-                        selectPreviousStep={(index: number) => {
-                            if (index === 1 && isStep3) {
-                                this.setState({ isStep2: true, isStep3: false });
-                            } else if (index === 0) {
-                                this.setState({ isStep2: false, isStep3: false });
-                            }
+
+                            this.setState({ headerSteps: steps });
                         }}
                     />
-                    {!isStep2 && !isStep3 && this.renderAddAddressContainer()}
-                    {isStep2 && this.renderEnterAmount()}
-                    {isStep3 && this.renderConfirmTransaction()}
+
+                    {headerSteps.map((step, index) => {
+                        if (step.active) {
+                            switch (index) {
+                                case 0:
+                                    return this.renderAddAddressContainer();
+                                case 1:
+                                    return this.renderEnterAmount();
+                                case 2:
+                                    return this.renderConfirmTransaction();
+                                default:
+                                    return null;
+                            }
+                        }
+                    })}
+
                     {this.renderBottomConfirm()}
                 </View>
 

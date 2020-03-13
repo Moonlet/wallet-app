@@ -5,34 +5,35 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import _ from 'lodash';
 
 export interface IExternalProps {
-    steps: { title: string; selected?: boolean }[];
-    selectPreviousStep: (index: number) => void;
+    steps: { title: string; active?: boolean }[];
+    selectStep: (index: number) => void;
 }
 
 export const HeaderStepByStepComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     const { steps, styles } = props;
+    const [activeIndex, setActiveIndex] = React.useState<number>(undefined);
 
-    const renderStep = (step: any, index: number) => {
-        const isSelected = steps[index + 1]?.selected || step?.selected || false;
-        const isDividerSelected = steps[index + 2]?.selected || steps[index + 1]?.selected || false;
-        // TODO: optimise this for more steps
+    React.useEffect(() => {
+        const _activeIndex = _.findIndex(steps, ['active', true]);
+        setActiveIndex(_activeIndex);
+    });
+
+    const renderStep = (index: number) => {
+        const isCircleActive = index <= activeIndex;
+        const isDividerSelected = index + 1 <= activeIndex;
 
         return (
             <View style={{ flexDirection: 'row' }} key={`step-${index}`}>
                 <TouchableOpacity
-                    onPress={() => props.selectPreviousStep(index)}
-                    style={[styles.circle, (index === 0 || isSelected) && styles.circleSelected]}
+                    onPress={() => props.selectStep(index)}
+                    style={[styles.circle, isCircleActive && styles.circleSelected]}
                 >
-                    <Text
-                        style={[
-                            styles.number,
-                            (index === 0 || isSelected) && styles.numberSelected
-                        ]}
-                    >
+                    <Text style={[styles.number, isCircleActive && styles.numberSelected]}>
                         {index + 1}
                     </Text>
                 </TouchableOpacity>
@@ -57,7 +58,7 @@ export const HeaderStepByStepComponent = (
     return (
         <View style={styles.container}>
             <View style={styles.headerRow}>
-                {steps.map((step: any, index: number) => renderStep(step, index))}
+                {steps.map((__, index: number) => renderStep(index))}
             </View>
 
             <View style={styles.headerDescription}>

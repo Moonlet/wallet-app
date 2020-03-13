@@ -5,9 +5,7 @@ import { BASE_DIMENSION } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            flex: 1,
-            paddingTop: BASE_DIMENSION,
-            marginBottom: BASE_DIMENSION / 2
+            flex: 1
         },
         exchangeCardContainer: {
             display: 'flex',

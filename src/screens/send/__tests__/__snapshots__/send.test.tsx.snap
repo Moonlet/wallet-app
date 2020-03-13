@@ -1,27 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`SendScreen Buton should open qr-code 1`] = `
+exports[`SendScreen renders correctly 1`] = `
 "<View style={{...}}>
   <withTheme(Connect(TestnetBadgeComponent)) />
   <View style={{...}}>
     <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
-    <View style={{...}}>
-      <withTheme(TextComponent) style={{...}}>
-         
-      </withTheme(TextComponent)>
-      <View style={{...}}>
-        <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: onPress]} style={{...}} activeOpacity={0.2}>
-          <Icon name=\\"qr-code-scan\\" size={24} style={{...}} allowFontScaling={false} />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function: onPress]} style={{...}} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Transfer between my accounts
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-      <withTheme(Connect(AddressBookComponent)) blockchain=\\"ZILLIQA\\" onContactSelected={[Function: onContactSelected]} selectedAddress=\\"\\" />
-    </View>
+    <withTheme(Connect(AddAddressComponent)) account={{...}} accounts={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} contacts={{...}} onChange={[Function: onChange]} />
     <View style={{...}}>
       <View style={{...}} />
       <View style={{...}}>
@@ -47,32 +31,15 @@ exports[`SendScreen Buton should open qr-code 1`] = `
     </View>
   </View>
   <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
-  <QrModalReaderComponent onQrCodeScanned={[Function: onQrCodeScanned]} />
 </View>"
 `;
 
-exports[`SendScreen should Call verify address 1`] = `
+exports[`SendScreen renders correctly 2`] = `
 "<View style={{...}}>
   <withTheme(Connect(TestnetBadgeComponent)) />
   <View style={{...}}>
     <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
-    <View style={{...}}>
-      <withTheme(TextComponent) style={{...}}>
-        Recipient
-      </withTheme(TextComponent)>
-      <View style={{...}}>
-        <TextInput testID=\\"input-address\\" style={{...}} placeholderTextColor=\\"#B1B1B1\\" placeholder=\\"Search public addresses or domain names\\" autoCapitalize=\\"none\\" autoCorrect={false} editable={true} selectionColor=\\"#00DAFF\\" value=\\"address\\" onChangeText={[Function: onChangeText]} allowFontScaling={true} rejectResponderTermination={true} underlineColorAndroid=\\"transparent\\" />
-        <TouchableOpacity testID=\\"qrcode-icon\\" onPress={[Function: onPress]} style={{...}} activeOpacity={0.2}>
-          <Icon name=\\"qr-code-scan\\" size={24} style={{...}} allowFontScaling={false} />
-        </TouchableOpacity>
-      </View>
-      <TouchableOpacity testID=\\"transfer-between-accounts\\" onPress={[Function: onPress]} style={{...}} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Transfer between my accounts
-        </withTheme(TextComponent)>
-      </TouchableOpacity>
-      <withTheme(Connect(AddressBookComponent)) blockchain=\\"ZILLIQA\\" onContactSelected={[Function: onContactSelected]} selectedAddress=\\"address\\" />
-    </View>
+    <withTheme(Connect(AddAddressComponent)) account={{...}} accounts={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} contacts={{...}} onChange={[Function: onChange]} />
     <View style={{...}}>
       <View style={{...}} />
       <View style={{...}}>
@@ -98,6 +65,5 @@ exports[`SendScreen should Call verify address 1`] = `
     </View>
   </View>
   <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
-  <QrModalReaderComponent onQrCodeScanned={[Function: onQrCodeScanned]} />
 </View>"
 `;

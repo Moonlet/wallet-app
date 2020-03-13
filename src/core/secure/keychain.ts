@@ -1,5 +1,6 @@
 import * as Keychain from 'react-native-keychain';
 import { hash } from './encrypt';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const defaultOptions = {
     service: 'com.moonlet'
@@ -18,5 +19,13 @@ export const setPassword = async (password: string, shouldEncrypt: boolean = tru
 };
 
 export const getPassword = async () => {
+    const appInstall = await AsyncStorage.getItem('alreadyLaunched');
+
+    if (appInstall == null) {
+        AsyncStorage.setItem('alreadyLaunched', 'true');
+    } else {
+        await Keychain.resetGenericPassword(defaultOptions);
+    }
+
     return Keychain.getGenericPassword(defaultOptions);
 };

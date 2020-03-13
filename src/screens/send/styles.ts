@@ -103,7 +103,8 @@ export default (theme: ITheme) =>
         bottomTextContainer: {
             flex: 1,
             flexDirection: 'column',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            paddingRight: BASE_DIMENSION * 2
         },
         bottomDefaultText: {
             fontSize: 15,

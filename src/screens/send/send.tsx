@@ -580,7 +580,11 @@ export class SendScreenComponent extends React.Component<
 
                         {(activeIndex === 1 || activeIndex === 2) && (
                             <React.Fragment>
-                                <Text style={styles.bottomDefaultText}>
+                                <Text
+                                    numberOfLines={1}
+                                    ellipsizeMode="middle"
+                                    style={styles.bottomDefaultText}
+                                >
                                     {amount === ''
                                         ? `_.___ ${token.symbol}`
                                         : `${amount} ${token.symbol}`}

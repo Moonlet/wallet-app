@@ -104,7 +104,9 @@ export class PasswordModalComponent extends React.Component<
                 this.passwordRequestDeferred &&
                     this.passwordRequestDeferred.resolve(keychainPassword.password);
 
-                this.props.onPassword && this.props.onPassword(keychainPassword.password);
+                if (this.props.onPassword) {
+                    this.props.onPassword(keychainPassword.password);
+                }
             }
         }
     }
@@ -154,8 +156,10 @@ export class PasswordModalComponent extends React.Component<
                 this.passwordRequestDeferred && this.passwordRequestDeferred.resolve(value);
             }
 
-            this.setState({ visible: false });
-            this.props.onPassword && this.props.onPassword(value);
+            this.setState({
+                visible: false
+            });
+            this.props.onPassword(value);
             return;
         }
 
@@ -165,7 +169,7 @@ export class PasswordModalComponent extends React.Component<
             this.setState({
                 visible: false
             });
-            this.props.onPassword && this.props.onPassword(value);
+            this.props.onPassword(value);
             return undefined;
         } else {
             return verifyPassword.errorMessage;

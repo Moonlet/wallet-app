@@ -242,6 +242,7 @@ export class SendScreenComponent extends React.Component<
     private renderAddAddressContainer() {
         return (
             <AddAddress
+                key="AddAddressContainer"
                 account={this.props.account}
                 accounts={this.props.accounts}
                 blockchain={this.props.blockchain}

@@ -8,22 +8,29 @@ import { translate } from '../../../../core/i18n';
 import { Amount } from '../../../../components/amount/amount';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
+import BigNumber from 'bignumber.js';
 
 export interface IExternalProps {
-    amount: string;
-    insufficientFunds: boolean;
+    availableAmount: string; // amount excepting fees
     blockchain: Blockchain;
     token: ITokenConfig;
-    onInputEnter: (amount: string) => void;
-    onAddAmount: (amount: string) => void;
-    onAddAllBalance: () => void;
-    onAddHalfBalance: () => void;
+    value: string;
+    onChange: (value: string) => any;
+    insufficientFunds: boolean;
 }
 
 export const EnterAmountComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    const { amount, theme, styles, insufficientFunds } = props;
+    const { value, theme, styles, insufficientFunds, onChange, availableAmount } = props;
+
+    const onAddAmount = (amount: string) => {
+        let valueState = value;
+        if (valueState === '') valueState = '0';
+
+        const addedAmount = new BigNumber(valueState).plus(new BigNumber(amount));
+        onChange(addedAmount.toFixed());
+    };
 
     return (
         <View style={styles.container}>
@@ -35,8 +42,8 @@ export const EnterAmountComponent = (
                     autoCapitalize={'none'}
                     autoCorrect={false}
                     selectionColor={theme.colors.accent}
-                    value={amount}
-                    onChangeText={value => props.onInputEnter(value)}
+                    value={value}
+                    onChangeText={text => props.onChange(text)}
                     keyboardType="decimal-pad"
                 />
             </View>
@@ -60,39 +67,33 @@ export const EnterAmountComponent = (
 
             <View style={styles.amountsContainer}>
                 <TouchableOpacity
-                    onPress={() => props.onAddAmount('0.1')}
+                    onPress={() => onAddAmount('0.1')}
                     style={[styles.addValueBox, { marginLeft: 0 }]}
                 >
                     <Text style={styles.addValueText}>{`+0.1`}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => props.onAddAmount('1')} style={styles.addValueBox}>
+                <TouchableOpacity onPress={() => onAddAmount('1')} style={styles.addValueBox}>
                     <Text style={styles.addValueText}>{`+1`}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                    onPress={() => props.onAddAmount('10')}
-                    style={styles.addValueBox}
-                >
+                <TouchableOpacity onPress={() => onAddAmount('10')} style={styles.addValueBox}>
                     <Text style={styles.addValueText}>{`+10`}</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                    onPress={() => props.onAddAmount('100')}
-                    style={styles.addValueBox}
-                >
+                <TouchableOpacity onPress={() => onAddAmount('100')} style={styles.addValueBox}>
                     <Text style={styles.addValueText}>{`+100`}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => props.onAddHalfBalance()}
+                    onPress={() => props.onChange((Number(availableAmount) / 2).toString())}
                     style={styles.addValueBox}
                 >
                     <Text style={styles.addValueText}>{translate('App.labels.half')}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
-                    onPress={() => props.onAddAllBalance()}
+                    onPress={() => props.onChange(availableAmount)}
                     style={[styles.addValueBox, { marginRight: 0 }]}
                 >
                     <Text style={styles.addValueText}>{translate('App.labels.all')}</Text>

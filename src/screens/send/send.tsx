@@ -319,16 +319,17 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    public onAddAllBalance() {
+    public availableAmount() {
         const token = this.props.account.tokens[this.props.token.symbol];
         const tokenBalanceValue = new BigNumber(token.balance?.value);
-        this.addBalance(tokenBalanceValue);
-    }
 
-    public onAddHalfBalance() {
-        const token = this.props.account.tokens[this.props.token.symbol];
-        const tokenBalanceValue = new BigNumber(token.balance?.value).dividedBy(2);
-        this.addBalance(tokenBalanceValue);
+        const balance = tokenBalanceValue.minus(this.state.feeOptions?.feeTotal);
+
+        if (balance.isGreaterThanOrEqualTo(0)) {
+            const blockchainInstance = getBlockchain(this.props.account.blockchain);
+            const amountFromStd = blockchainInstance.account.amountFromStd(new BigNumber(balance));
+            return amountFromStd.toString();
+        }
     }
 
     public availableFunds() {
@@ -610,20 +611,12 @@ export class SendScreenComponent extends React.Component<
         return (
             <View style={this.props.styles.amountContainer}>
                 <EnterAmount
-                    amount={this.state.amount}
+                    availableAmount={this.availableAmount()}
+                    value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}
                     token={this.props.token}
                     blockchain={this.props.account.blockchain}
-                    onInputEnter={amount => this.addAmount(amount)}
-                    onAddAmount={amount => {
-                        let amountState = this.state.amount;
-                        if (amountState === '') amountState = '0';
-
-                        const value = new BigNumber(amountState).plus(new BigNumber(amount));
-                        this.addAmount(value.toString());
-                    }}
-                    onAddAllBalance={() => this.onAddAllBalance()}
-                    onAddHalfBalance={() => this.onAddHalfBalance()}
+                    onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions
                     token={this.props.account.tokens[config.coin]}

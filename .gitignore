@@ -65,7 +65,8 @@ extension/build
 ios/Gemfile.lock
 
 # firebase config files
-android/app/google-services.json
+android/app/src/beta/google-services.json
+android/app/src/main/google-services.json
 ios/GoogleService-Info.plist
 ios/release/GoogleService-Info.plist
 

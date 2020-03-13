@@ -4,7 +4,7 @@ exports[`SendScreen Buton should open qr-code 1`] = `
 "<View style={{...}}>
   <withTheme(Connect(TestnetBadgeComponent)) />
   <View style={{...}}>
-    <withTheme(HeaderStepByStepComponent) steps={{...}} selectPreviousStep={[Function: selectPreviousStep]} />
+    <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
     <View style={{...}}>
       <withTheme(TextComponent) style={{...}}>
          
@@ -55,7 +55,7 @@ exports[`SendScreen should Call verify address 1`] = `
 "<View style={{...}}>
   <withTheme(Connect(TestnetBadgeComponent)) />
   <View style={{...}}>
-    <withTheme(HeaderStepByStepComponent) steps={{...}} selectPreviousStep={[Function: selectPreviousStep]} />
+    <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
     <View style={{...}}>
       <withTheme(TextComponent) style={{...}}>
         Recipient
@@ -90,7 +90,7 @@ exports[`SendScreen should Call verify address 1`] = `
           </View>
         </View>
         <View style={{...}}>
-          <withTheme(ButtonComponent) style={{...}} primary={true} disabled={false} onPress={[Function: onPress]}>
+          <withTheme(ButtonComponent) style={{...}} primary={true} disabled={true} onPress={[Function: onPress]}>
             Next
           </withTheme(ButtonComponent)>
         </View>

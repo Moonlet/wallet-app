@@ -24,13 +24,14 @@ import {
 import { addContact } from '../../../../redux/contacts/actions';
 import { connect } from 'react-redux';
 import { QrModalReader } from '../../../../components/qr-modal/qr-modal';
+import { IReduxState } from '../../../../redux/state';
+import { getAccounts } from '../../../../redux/wallets/selectors';
+import { getContacts } from '../../../../redux/contacts/selectors';
 
 export interface IExternalProps {
     account: IAccountState;
-    accounts: IAccountState[];
     blockchain: Blockchain;
     chainId: ChainIdType;
-    contacts: IContactsState[];
     onChange: (address: string) => void;
 }
 
@@ -44,7 +45,16 @@ interface IState {
 
 export interface IReduxProps {
     addContact: typeof addContact;
+    accounts: IAccountState[];
+    contacts: IContactsState[];
 }
+
+export const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    return {
+        accounts: getAccounts(state, ownProps.blockchain),
+        contacts: getContacts(state)
+    };
+};
 
 const mapDispatchToProps = {
     addContact
@@ -342,6 +352,6 @@ export class AddAddressComponent extends React.Component<
 }
 
 export const AddAddress = smartConnect<IExternalProps>(AddAddressComponent, [
-    connect(null, mapDispatchToProps),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

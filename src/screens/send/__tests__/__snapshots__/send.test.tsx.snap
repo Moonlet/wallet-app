@@ -5,7 +5,7 @@ exports[`SendScreen renders correctly 1`] = `
   <withTheme(Connect(TestnetBadgeComponent)) />
   <View style={{...}}>
     <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
-    <withTheme(Connect(AddAddressComponent)) account={{...}} accounts={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} contacts={{...}} onChange={[Function: onChange]} />
+    <withTheme(Connect(AddAddressComponent)) account={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} onChange={[Function: onChange]} />
     <View style={{...}}>
       <View style={{...}} />
       <View style={{...}}>
@@ -39,7 +39,7 @@ exports[`SendScreen renders correctly 2`] = `
   <withTheme(Connect(TestnetBadgeComponent)) />
   <View style={{...}}>
     <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
-    <withTheme(Connect(AddAddressComponent)) account={{...}} accounts={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} contacts={{...}} onChange={[Function: onChange]} />
+    <withTheme(Connect(AddAddressComponent)) account={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} onChange={[Function: onChange]} />
     <View style={{...}}>
       <View style={{...}} />
       <View style={{...}}>

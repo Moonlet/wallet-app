@@ -10,16 +10,8 @@ import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
-import { addContact } from '../../redux/contacts/actions';
-import { IContactsState } from '../../redux/contacts/state';
-import { getContacts } from '../../redux/contacts/selectors';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
-import {
-    getAccounts,
-    getAccount,
-    getSelectedAccount,
-    getSelectedWallet
-} from '../../redux/wallets/selectors';
+import { getAccount, getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain, IFeeOptions, ChainIdType } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
@@ -48,10 +40,7 @@ import { AddAddress } from './components/add-address/add-address';
 
 export interface IReduxProps {
     account: IAccountState;
-    accounts: IAccountState[];
     sendTransferTransaction: typeof sendTransferTransaction;
-    addContact: typeof addContact;
-    contacts: IContactsState[];
     openBottomSheet: typeof openBottomSheet;
     selectedWalletId: string;
     selectedAccount: IAccountState;
@@ -61,8 +50,6 @@ export interface IReduxProps {
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        accounts: getAccounts(state, ownProps.blockchain),
-        contacts: getContacts(state),
         selectedWalletId: getSelectedWallet(state).id,
         selectedAccount: getSelectedAccount(state),
         chainId: getChainId(state, ownProps.blockchain)
@@ -71,8 +58,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 
 const mapDispatchToProps = {
     sendTransferTransaction,
-    openBottomSheet,
-    addContact
+    openBottomSheet
 };
 
 export interface INavigationParams {
@@ -244,10 +230,8 @@ export class SendScreenComponent extends React.Component<
             <AddAddress
                 key="AddAddressContainer"
                 account={this.props.account}
-                accounts={this.props.accounts}
                 blockchain={this.props.blockchain}
                 chainId={this.props.chainId}
-                contacts={this.props.contacts}
                 onChange={(toAddress: string) => this.setState({ toAddress })}
             />
         );

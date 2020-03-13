@@ -43,48 +43,47 @@ jobs:
           curl -s https://codecov.io/bash | bash -s -- \
           -F "unittests" \
           -Z || echo 'Codecov upload failed'
-  beta-android:
-    name: Android app
-    runs-on: ubuntu-latest
-    needs: unit-tests
-    steps:
-      - name: Increase watchers
-        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-      - uses: actions/checkout@v1
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "10.x"
-      - uses: actions/setup-ruby@v1
-        with:
-          ruby-version: "2.x"
-      - name: Generate firebase config file
-        run: echo '${{ secrets.FB_CONFIG_ANDROID_BETA }}' > android/app/google-services.json
-      - name: Setup key
-        uses: webfactory/ssh-agent@v0.1.1
-        with:
-          ssh-private-key: ${{ secrets.SSH_CERTS }}
-      - name: Add to host
-        run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-      - name: Dependencies install
-        run: cd android && bundle install
-      - name: Cache node modules
-        uses: actions/cache@v1
-        id: cache
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-      - name: NPM install
-        run: npm i
-      - name: Get sign ssh-keys
-        run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
-      - name: Generate fonts and icons
-        run: npm run generate-icons
-      - name: Run fastlane beta
-        run: cd android/fastlane && bundle exec fastlane beta
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
-          NODE_OPTIONS: --max_old_space_size=4096
+  # beta-android:
+  #   name: Android app
+  #   runs-on: ubuntu-latest
+  #   needs: unit-tests
+  #   steps:
+  #     - name: Increase watchers
+  #       run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - uses: actions/setup-ruby@v1
+  #       with:
+  #         ruby-version: "2.x"
+  #     - name: Generate firebase config file
+  #       run: echo '${{ secrets.FB_CONFIG_ANDROID_BETA }}' > android/app/src/beta/google-services.json
+  #     - name: Setup key
+  #       uses: webfactory/ssh-agent@v0.1.1
+  #       with:
+  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
+  #     - name: Add to host
+  #       run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+  #     - name: Dependencies install
+  #       run: cd android && bundle install
+  #     - name: Cache node modules
+  #       uses: actions/cache@v1
+  #       id: cache
+  #       with:
+  #         path: node_modules
+  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Get sign ssh-keys
+  #       run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
+  #     - name: Generate fonts and icons
+  #       run: npm run generate-icons
+  #     - name: Run fastlane beta
+  #       run: cd android/fastlane && bundle exec fastlane beta
+  #       env:
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #         APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
   # beta-ios:
   #   name: iOS app
   #   runs-on: macos-latest

@@ -192,6 +192,11 @@ android {
         }
         
         stable {
+            copy {
+            from 'src/main/'
+            include '*.json'
+            into '.'
+        }
           //no config needed, as this is the default. just need to specify it here in order to build it
         }
     }

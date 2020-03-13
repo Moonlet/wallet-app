@@ -1,0 +1,47 @@
+{
+    "project_info": {
+        "project_number": "277593866196",
+        "firebase_url": "https://moonlet-wallet.firebaseio.com",
+        "project_id": "moonlet-wallet",
+        "storage_bucket": "moonlet-wallet.appspot.com"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:277593866196:android:bb6443fdd03caebfd36041",
+                "android_client_info": {
+                    "package_name": "com.moonlet"
+                }
+            },
+            "oauth_client": [
+                {
+                    "client_id": "277593866196-ogm7egr0un6s2e3nnt59ladarqgilueb.apps.googleusercontent.com",
+                    "client_type": 3
+                }
+            ],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyBdwDT55Z0cHBpBH4_IjJ06MzJC34DUtoc"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": [
+                        {
+                            "client_id": "277593866196-s7hl4afbmq2kkhcta3nloosk6taqqkr6.apps.googleusercontent.com",
+                            "client_type": 3
+                        },
+                        {
+                            "client_id": "277593866196-6a0u8c1kloiduqoosvh80soko3ss1q40.apps.googleusercontent.com",
+                            "client_type": 2,
+                            "ios_info": {
+                                "bundle_id": "com.moonlet"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}

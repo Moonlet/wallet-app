@@ -45,6 +45,7 @@ export const EnterAmountComponent = (
                     value={value}
                     onChangeText={text => props.onChange(text)}
                     keyboardType="decimal-pad"
+                    // TODO: maxLength - max 8 decimals: 0.00000000
                 />
             </View>
 

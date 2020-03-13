@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity, Platform } from 'react-native';
-import { Icon } from '../../components/icon';
+import { View, Platform } from 'react-native';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -10,13 +9,10 @@ import { connect } from 'react-redux';
 import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { addContact } from '../../redux/contacts/actions';
-import { IContactState, IContactsState } from '../../redux/contacts/state';
+import { IContactsState } from '../../redux/contacts/state';
 import { getContacts } from '../../redux/contacts/selectors';
-import { AccountList } from './components/account-list/account-list';
-import { AddressBook } from './components/address-book/address-book';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
 import {
     getAccounts,
@@ -25,24 +21,16 @@ import {
     getSelectedWallet
 } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
-import {
-    Blockchain,
-    IFeeOptions,
-    ResolveTextCode,
-    ResolveTextError,
-    ChainIdType,
-    ResolveTextType
-} from '../../core/blockchain/types';
+import { Blockchain, IFeeOptions, ChainIdType } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { IAccountState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
-import { Dialog } from '../../components/dialog/dialog';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import {
     IBottomSheetExtensionRequestData,
@@ -56,6 +44,7 @@ import { HeaderStepByStep } from './components/header-step-by-step/header-step-b
 import { EnterAmount } from './components/enter-amount/enter-amount';
 import { Amount } from '../../components/amount/amount';
 import _ from 'lodash';
+import { AddAddress } from './components/add-address/add-address';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -95,10 +84,6 @@ export interface INavigationParams {
 interface IState {
     toAddress: string;
     amount: string;
-    isValidText: boolean;
-    errorResponseText: string;
-    warningResponseText: string;
-    showOwnAccounts: boolean;
     insufficientFunds: boolean;
     feeOptions: IFeeOptions;
     showExtensionMessage: boolean;
@@ -117,7 +102,6 @@ export class SendScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    public qrCodeScanner: any;
     public passwordModal = null;
 
     constructor(
@@ -130,11 +114,7 @@ export class SendScreenComponent extends React.Component<
         this.state = {
             toAddress: '',
             amount: '',
-            isValidText: false,
-            errorResponseText: undefined,
-            warningResponseText: undefined,
             insufficientFunds: false,
-            showOwnAccounts: false,
             feeOptions: undefined,
             showExtensionMessage: false,
             memo: '',
@@ -198,107 +178,6 @@ export class SendScreenComponent extends React.Component<
         });
     }
 
-    public async onPressQrCodeIcon() {
-        this.qrCodeScanner.open();
-    }
-
-    public async verifyInputText(text: string) {
-        const blockchainInstance = getBlockchain(this.props.account.blockchain);
-        this.setState({ toAddress: text });
-
-        try {
-            const response = await blockchainInstance
-                .getClient(this.props.chainId)
-                .nameService.resolveText(text);
-
-            switch (response.code) {
-                case ResolveTextCode.OK: {
-                    if (response.type === ResolveTextType.ADDRESS) {
-                        this.setState({
-                            isValidText: true,
-                            errorResponseText: undefined,
-                            warningResponseText: undefined
-                        });
-                    } else if (response.type === ResolveTextType.NAME) {
-                        this.setState({
-                            isValidText: false,
-                            errorResponseText: undefined,
-                            warningResponseText: undefined
-                        });
-                    }
-
-                    break;
-                }
-                case ResolveTextCode.WARN_CHECKSUM: {
-                    this.setState({
-                        isValidText: true,
-                        errorResponseText: undefined,
-                        warningResponseText: translate('Send.receipientWarning')
-                    });
-                    break;
-                }
-                default:
-                    {
-                        this.setState({
-                            isValidText: false,
-                            errorResponseText: translate('Send.recipientNotValid'),
-                            warningResponseText: undefined
-                        });
-                    }
-                    break;
-            }
-        } catch (error) {
-            switch (error.error) {
-                case ResolveTextError.INVALID: {
-                    this.setState({
-                        isValidText: false,
-                        errorResponseText: translate('Send.recipientNotValid'),
-                        warningResponseText: undefined
-                    });
-                    break;
-                }
-                case ResolveTextError.CONNECTION_ERROR: {
-                    this.setState({
-                        isValidText: false,
-                        errorResponseText: translate('Send.genericError'),
-                        warningResponseText: undefined
-                    });
-                    break;
-                }
-                default: {
-                    this.setState({
-                        isValidText: false,
-                        errorResponseText: translate('Send.recipientNotValid'),
-                        warningResponseText: undefined
-                    });
-                    break;
-                }
-            }
-        }
-    }
-    public onQrCodeScanned(value: string) {
-        this.verifyInputText(value);
-    }
-
-    public onTransferBetweenAccounts() {
-        const currentState = this.state.showOwnAccounts;
-        this.setState({
-            showOwnAccounts: !currentState,
-            isValidText: false,
-            toAddress: ''
-        });
-    }
-
-    public onAccountSelection(account: IAccountState) {
-        this.setState({ toAddress: account.address });
-        this.verifyInputText(account.address);
-    }
-
-    public onContactSelected(contact: IContactState) {
-        this.setState({ toAddress: contact.address });
-        this.verifyInputText(contact.address);
-    }
-
     public onFeesChanged(feeOptions: IFeeOptions) {
         this.setState({ feeOptions }, () => this.availableFunds());
     }
@@ -350,87 +229,6 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    public onPressClearInput() {
-        this.setState({
-            isValidText: false,
-            toAddress: '',
-            errorResponseText: undefined,
-            warningResponseText: undefined
-        });
-    }
-
-    public renderRightAddressIcon() {
-        const styles = this.props.styles;
-        if (Platform.OS === 'web') {
-            return null;
-        }
-
-        if (!this.state.isValidText) {
-            return (
-                <TouchableOpacity
-                    testID="qrcode-icon"
-                    onPress={() => this.onPressQrCodeIcon()}
-                    style={styles.rightAddressButton}
-                >
-                    <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
-                </TouchableOpacity>
-            );
-        } else {
-            return (
-                <TouchableOpacity
-                    testID="clear-address"
-                    onPress={() => this.onPressClearInput()}
-                    style={styles.rightAddressButton}
-                >
-                    <Icon name="close" size={16} style={styles.icon} />
-                </TouchableOpacity>
-            );
-        }
-    }
-
-    public async alertModalAddAddress() {
-        // TODO: check this, it's not opening all the time
-        const inputValue = await Dialog.prompt(
-            translate('Send.alertTitle'),
-            translate('Send.alertDescription')
-        );
-
-        const contactData: IContactState = {
-            blockchain: this.props.account.blockchain,
-            name: inputValue,
-            address: this.state.toAddress
-        };
-
-        if (inputValue !== '') {
-            this.props.addContact(contactData);
-        }
-    }
-
-    public renderAddAddressToBook() {
-        const { styles } = this.props;
-
-        const addressNotInWalletAccounts =
-            this.props.accounts.filter(
-                account =>
-                    account.blockchain === this.props.blockchain &&
-                    account.address.toLocaleLowerCase() === this.state.toAddress.toLocaleLowerCase()
-            ).length === 0;
-
-        if (
-            this.state.isValidText &&
-            this.props.contacts[`${this.props.blockchain}|${this.state.toAddress}`] === undefined &&
-            addressNotInWalletAccounts === true
-        ) {
-            return (
-                <TouchableOpacity onPress={() => this.alertModalAddAddress()}>
-                    <Text style={styles.addressNotInBookText}>
-                        {translate('Send.addressNotInBook')}
-                    </Text>
-                </TouchableOpacity>
-            );
-        }
-    }
-
     public renderExtraFields(value: string) {
         switch (value) {
             case 'Memo':
@@ -441,80 +239,16 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    public renderListOrBook() {
-        if (this.state.showOwnAccounts) {
-            return (
-                <AccountList
-                    accounts={this.props.accounts}
-                    onAccountSelection={(account: IAccountState) =>
-                        this.onAccountSelection(account)
-                    }
-                    selectedAddress={this.state.toAddress}
-                />
-            );
-        } else {
-            return (
-                <AddressBook
-                    blockchain={this.props.blockchain}
-                    onContactSelected={(contact: IContactState) => this.onContactSelected(contact)}
-                    selectedAddress={this.state.toAddress}
-                />
-            );
-        }
-    }
-
     private renderAddAddressContainer() {
-        const { styles, theme, account } = this.props;
-
         return (
-            <View key="addAddressContainer" style={styles.addAddressContainer}>
-                <Text style={styles.receipientLabel}>
-                    {this.state.toAddress !== '' ? translate('Send.recipientLabel') : ' '}
-                </Text>
-                <View style={styles.inputBox}>
-                    <TextInput
-                        testID="input-address"
-                        style={styles.inputAddress}
-                        placeholderTextColor={theme.colors.textSecondary}
-                        placeholder={translate('Send.inputAddress')}
-                        autoCapitalize={'none'}
-                        autoCorrect={false}
-                        editable={!this.state.isValidText}
-                        selectionColor={theme.colors.accent}
-                        value={
-                            this.state.isValidText
-                                ? formatAddress(this.state.toAddress, account.blockchain)
-                                : this.state.toAddress
-                        }
-                        onChangeText={text => this.verifyInputText(text)}
-                    />
-                    {this.renderRightAddressIcon()}
-                </View>
-
-                {this.state.errorResponseText && (
-                    <Text style={styles.displayError}>{this.state.errorResponseText}</Text>
-                )}
-
-                {this.state.warningResponseText && (
-                    <Text style={styles.receipientWarning}>{this.state.warningResponseText}</Text>
-                )}
-
-                <TouchableOpacity
-                    testID="transfer-between-accounts"
-                    onPress={() => this.onTransferBetweenAccounts()}
-                    style={[styles.buttonRightOptions]}
-                >
-                    <Text style={styles.textTranferButton}>
-                        {this.state.showOwnAccounts
-                            ? translate('App.labels.close')
-                            : translate('Send.transferOwnAccounts')}
-                    </Text>
-                </TouchableOpacity>
-
-                {this.renderAddAddressToBook()}
-
-                {this.renderListOrBook()}
-            </View>
+            <AddAddress
+                account={this.props.account}
+                accounts={this.props.accounts}
+                blockchain={this.props.blockchain}
+                chainId={this.props.chainId}
+                contacts={this.props.contacts}
+                onChange={(toAddress: string) => this.setState({ toAddress })}
+            />
         );
     }
 
@@ -537,7 +271,7 @@ export class SendScreenComponent extends React.Component<
         switch (activeIndex) {
             case 0:
                 // Add address
-                if (this.state.toAddress === '' || !this.state.isValidText) disableButton = true;
+                if (this.state.toAddress === '') disableButton = true;
                 break;
             case 1:
                 // Enter amount
@@ -572,7 +306,7 @@ export class SendScreenComponent extends React.Component<
                                 {translate('App.labels.to')}
                             </Text>
                             <Text style={styles.bottomDefaultText}>
-                                {this.state.isValidText
+                                {this.state.toAddress !== ''
                                     ? formatAddress(this.state.toAddress, account.blockchain)
                                     : '___...___'}
                             </Text>
@@ -733,11 +467,6 @@ export class SendScreenComponent extends React.Component<
                 </View>
 
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />
-
-                <QrModalReader
-                    ref={ref => (this.qrCodeScanner = ref)}
-                    onQrCodeScanned={value => this.onQrCodeScanned(value)}
-                />
             </View>
         );
     }

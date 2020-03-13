@@ -1,11 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import {
-    BASE_DIMENSION,
-    BORDER_RADIUS,
-    ICON_CONTAINER_SIZE,
-    SCREEN_HEIGHT
-} from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, SCREEN_HEIGHT } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -26,21 +21,6 @@ export default (theme: ITheme) =>
             paddingLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         },
-        displayError: {
-            paddingLeft: BASE_DIMENSION,
-            marginBottom: BASE_DIMENSION,
-            color: theme.colors.error
-        },
-        receipientWarning: {
-            paddingLeft: BASE_DIMENSION,
-            marginBottom: BASE_DIMENSION,
-            color: theme.colors.warning
-        },
-        inputAddress: {
-            flex: 1,
-            color: theme.colors.text,
-            paddingRight: BASE_DIMENSION * 2
-        },
         inputBox: {
             height: BASE_DIMENSION * 5,
             borderRadius: BORDER_RADIUS,
@@ -54,33 +34,6 @@ export default (theme: ITheme) =>
         },
         icon: {
             color: theme.colors.accent
-        },
-        rightAddressButton: {
-            height: ICON_CONTAINER_SIZE,
-            width: ICON_CONTAINER_SIZE,
-            justifyContent: 'flex-end',
-            alignItems: 'center',
-            flexDirection: 'row',
-            marginRight: BASE_DIMENSION / 2
-        },
-        buttonRightOptions: {
-            marginBottom: BASE_DIMENSION,
-            alignItems: 'flex-end'
-        },
-        textTranferButton: {
-            color: theme.colors.accent,
-            lineHeight: 21,
-            fontSize: theme.fontSize.small
-        },
-        addressNotInBookText: {
-            fontSize: theme.fontSize.regular,
-            lineHeight: 20,
-            color: theme.colors.accent
-        },
-        addAddressContainer: {
-            flex: 1,
-            margin: BASE_DIMENSION * 2,
-            paddingTop: BASE_DIMENSION
         },
 
         // bottom container

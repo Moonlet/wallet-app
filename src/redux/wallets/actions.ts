@@ -268,7 +268,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
 
             dispatch(setSelectedWallet(walletId));
             callback && callback();
-            dispatch(closeLoadingModal());
+            closeLoadingModal()(dispatch, getState);
 
             addAddress(
                 Blockchain.ETHEREUM,
@@ -294,7 +294,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     } catch (e) {
         // console.log(e);
         // TODO best way to handle this?
-        dispatch(closeLoadingModal());
+        closeLoadingModal()(dispatch, getState);
     }
     // TODO  - error handling
 };
@@ -470,7 +470,7 @@ export const sendTransferTransaction = (
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransferTransactionExtraFields,
     goBack: boolean = true
-) => async (dispatch, getState: () => IReduxState) => {
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
 
@@ -551,14 +551,12 @@ export const sendTransferTransaction = (
                     walletId: appWallet.id
                 }
             });
-            dispatch({ type: DISPLAY_MESSAGE, data: undefined });
-            dispatch(closeLoadingModal());
+            closeLoadingModal()(dispatch, getState);
             goBack && navigation.goBack();
             return;
         }
     } catch (errorMessage) {
-        dispatch(closeLoadingModal());
-        dispatch({ type: DISPLAY_MESSAGE, data: undefined });
+        closeLoadingModal()(dispatch, getState);
 
         // TODO: check here and find a solution to fix
         await delay(500);

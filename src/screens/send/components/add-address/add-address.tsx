@@ -191,14 +191,17 @@ export class AddAddressComponent extends React.Component<
                             },
                             () => this.props.onChange(this.state.toAddress)
                         );
-                    } else if (response.type === ResolveTextType.NAME) {
-                        this.setState({
-                            isValidText: false,
-                            errorResponseText: undefined,
-                            warningResponseText: undefined
-                        });
                     }
-
+                    if (response.type === ResolveTextType.NAME) {
+                        this.setState(
+                            {
+                                isValidText: false, // because on ResolveTextType.NAME, toAddress TextInput must be editable
+                                errorResponseText: undefined,
+                                warningResponseText: undefined
+                            },
+                            () => this.props.onChange(this.state.toAddress)
+                        );
+                    }
                     break;
                 }
                 case ResolveTextCode.WARN_CHECKSUM: {
@@ -214,38 +217,50 @@ export class AddAddressComponent extends React.Component<
                 }
                 default:
                     {
-                        this.setState({
-                            isValidText: false,
-                            errorResponseText: translate('Send.recipientNotValid'),
-                            warningResponseText: undefined
-                        });
+                        this.setState(
+                            {
+                                isValidText: false,
+                                errorResponseText: translate('Send.recipientNotValid'),
+                                warningResponseText: undefined
+                            },
+                            () => this.props.onChange('')
+                        );
                     }
                     break;
             }
         } catch (error) {
             switch (error.error) {
                 case ResolveTextError.INVALID: {
-                    this.setState({
-                        isValidText: false,
-                        errorResponseText: translate('Send.recipientNotValid'),
-                        warningResponseText: undefined
-                    });
+                    this.setState(
+                        {
+                            isValidText: false,
+                            errorResponseText: translate('Send.recipientNotValid'),
+                            warningResponseText: undefined
+                        },
+                        () => this.props.onChange('')
+                    );
                     break;
                 }
                 case ResolveTextError.CONNECTION_ERROR: {
-                    this.setState({
-                        isValidText: false,
-                        errorResponseText: translate('Send.genericError'),
-                        warningResponseText: undefined
-                    });
+                    this.setState(
+                        {
+                            isValidText: false,
+                            errorResponseText: translate('Send.genericError'),
+                            warningResponseText: undefined
+                        },
+                        () => this.props.onChange('')
+                    );
                     break;
                 }
                 default: {
-                    this.setState({
-                        isValidText: false,
-                        errorResponseText: translate('Send.recipientNotValid'),
-                        warningResponseText: undefined
-                    });
+                    this.setState(
+                        {
+                            isValidText: false,
+                            errorResponseText: translate('Send.recipientNotValid'),
+                            warningResponseText: undefined
+                        },
+                        () => this.props.onChange('')
+                    );
                     break;
                 }
             }

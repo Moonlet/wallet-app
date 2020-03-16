@@ -107,7 +107,7 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                         }}
                         isFocus={indexInputFocus === index}
                         placeholder={`Word #${index + 1}`}
-                        showBorderBottomColor={false}
+                        showBorderBottom={false}
                     />
                 ))}
                 {error && (
@@ -115,13 +115,12 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                         {translate('CreateWalletMnemonicConfirm.errors.tryAgain')}
                     </Text>
                 )}
+                {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
+                    <Text darker small style={props.styles.testWords}>
+                        {testWords.map(n => mnemonic[n] + ' ')}
+                    </Text>
+                )}
             </View>
-
-            {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
-                <Text darker small>
-                    {testWords.map(n => mnemonic[n] + ' ')}
-                </Text>
-            )}
 
             <KeyboardCustom
                 handleTextUpdate={(text: string) => {

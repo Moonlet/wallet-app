@@ -9,14 +9,20 @@ export default (theme: ITheme) =>
             borderWidth: 1,
             borderColor: theme.colors.accent,
             borderRadius: BORDER_RADIUS,
-            flexDirection: 'row'
+            flexDirection: 'row',
+            alignSelf: 'center'
         },
         tabButton: {
             flexBasis: 0,
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            paddingVertical: BASE_DIMENSION
+            paddingVertical: BASE_DIMENSION,
+            paddingHorizontal: BASE_DIMENSION * 3
+        },
+        smallTabButton: {
+            paddingVertical: BASE_DIMENSION,
+            paddingHorizontal: BASE_DIMENSION * 3
         },
         tabButtonText: {
             fontSize: 13,

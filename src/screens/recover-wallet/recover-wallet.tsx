@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, Clipboard } from 'react-native';
-import { Text } from '../../library';
+import { Text, TabSelect } from '../../library';
 import { Button } from '../../library/button/button';
 
 import stylesProvider from './styles';
@@ -19,14 +19,13 @@ import { INavigationProps } from '../../navigation/with-navigation-params';
 import { NavigationActions } from 'react-navigation';
 import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
 
-const NUMBER_MNEMONICS = 24;
-
 interface IState {
     mnemonic: string[];
     suggestions: string[];
     indexForSuggestions: number;
     errors: number[];
     validInputs: number[];
+    numberMnemonics: number;
 }
 
 export interface IReduxProps {
@@ -64,12 +63,14 @@ export class RecoverWalletScreenComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            mnemonic: new Array(NUMBER_MNEMONICS).fill(''),
-            // mnemonic: 'panic club above clarify orbit resist illegal feel bus remember aspect field test bubble dog trap awesome hand room rice heavy idle faint salmon'.split(' '),
+            mnemonic: new Array(24).fill(''),
+            // mnemonic24: 'panic club above clarify orbit resist illegal feel bus remember aspect field test bubble dog trap awesome hand room rice heavy idle faint salmon'.split(' '),
+            // mnemonic12: 'author tumble model pretty exile little shoulder frost bridge mistake devote mixed'.split(' '),
             suggestions: [],
             errors: [],
             indexForSuggestions: -1,
-            validInputs: []
+            validInputs: [],
+            numberMnemonics: 24
         };
     }
 
@@ -103,7 +104,7 @@ export class RecoverWalletScreenComponent extends React.Component<
 
     public confirm() {
         if (!this.validateMnemonicWords() || !Mnemonic.verify(this.state.mnemonic.join(' '))) {
-            // display an error somewhere
+            // TODO: display an error somewhere
             return;
         }
 
@@ -125,6 +126,25 @@ export class RecoverWalletScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
+                <TabSelect
+                    options={{
+                        24: { title: '24' },
+                        12: { title: '12' }
+                    }}
+                    onSelectionChange={key =>
+                        this.setState({
+                            numberMnemonics: parseInt(key, 10),
+                            mnemonic: new Array(parseInt(key, 10)).fill(''),
+                            suggestions: [],
+                            errors: [],
+                            indexForSuggestions: -1,
+                            validInputs: []
+                        })
+                    }
+                    selected={String(this.state.numberMnemonics)}
+                    smallTab
+                />
+
                 <View style={styles.mnemonicContainer}>{this.getInputMatrix()}</View>
 
                 <ScrollView
@@ -198,7 +218,7 @@ export class RecoverWalletScreenComponent extends React.Component<
             this.validateWord();
 
             // if we are not on last word, jump to next input
-            if (index < NUMBER_MNEMONICS - 1) {
+            if (index < this.state.numberMnemonics - 1) {
                 this.focusInput(index + 1);
             } else {
                 this.setState({ suggestions: [] });
@@ -213,7 +233,7 @@ export class RecoverWalletScreenComponent extends React.Component<
             if (clipboardText.indexOf(' ') !== -1) {
                 // multiple words, replace mnemonic in state
                 const clipboardMnemonicWords = clipboardText.split(' ');
-                const mnemonic = new Array(NUMBER_MNEMONICS)
+                const mnemonic = new Array(this.state.numberMnemonics)
                     .fill('')
                     .map((w, i) => (clipboardMnemonicWords[i] ? clipboardMnemonicWords[i] : ''));
 
@@ -272,14 +292,14 @@ export class RecoverWalletScreenComponent extends React.Component<
         const previousIndex = this.state.indexForSuggestions;
         if (
             previousIndex > -1 &&
-            previousIndex < NUMBER_MNEMONICS &&
+            previousIndex < this.state.numberMnemonics &&
             this.inputView[previousIndex]
         ) {
             this.inputView[this.state.indexForSuggestions].blur();
         }
 
         // Focus current word
-        if (index > -1 && index < NUMBER_MNEMONICS && this.inputView[index]) {
+        if (index > -1 && index < this.state.numberMnemonics && this.inputView[index]) {
             this.inputView[index].focus();
         }
 
@@ -335,8 +355,9 @@ export class RecoverWalletScreenComponent extends React.Component<
     // generate text input matrix for mnemonic
     private getInputMatrix() {
         const output = [];
+        const numberOfLines = this.state.numberMnemonics / 4;
 
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < numberOfLines; i++) {
             output.push(
                 <View style={this.props.styles.mnemonicLine} key={i}>
                     {this.getInputLine(i)}

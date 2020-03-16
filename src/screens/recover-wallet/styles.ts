@@ -10,6 +10,7 @@ export default (theme: ITheme) =>
             padding: BASE_DIMENSION * 2
         },
         mnemonicContainer: {
+            marginTop: BASE_DIMENSION * 3,
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
             marginBottom: BASE_DIMENSION * 2,

@@ -311,8 +311,7 @@ export const translation: ITranslations = {
             eg: 'e.g. johndoe',
             errorMessage: 'Username is {{message}}. Try something else.',
             taken: 'taken',
-            invalid: 'invalid',
-            invalidUsername: 'Username is taken. Try something else.'
+            invalid: 'invalid'
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',

@@ -62,6 +62,13 @@ export class TransactionDetailsComponent extends React.Component<
         const account = this.props.account;
 
         const date = new Date(transaction.date.signed);
+
+        const tokens = getBlockchain(account.blockchain).config.tokens;
+        const coin = getBlockchain(account.blockchain).config.coin;
+
+        const blockchainInstance = getBlockchain(account.blockchain);
+        const amount = blockchainInstance.transaction.getTransactionAmount(transaction);
+
         return (
             <View style={styles.container}>
                 <ScrollView
@@ -80,24 +87,22 @@ export class TransactionDetailsComponent extends React.Component<
                     <View style={styles.rowContainer}>
                         <Amount
                             style={styles.textPrimary}
-                            amount={transaction.amount}
+                            amount={amount}
                             blockchain={account.blockchain}
-                            token={getBlockchain(account.blockchain).config.coin}
-                            tokenDecimals={
-                                getBlockchain(account.blockchain).config.tokens[
-                                    getBlockchain(account.blockchain).config.coin
-                                ].decimals
-                            }
+                            token={transaction?.token?.symbol || coin}
+                            tokenDecimals={transaction?.token?.decimals || tokens[coin].decimals}
                         />
                         <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
                     </View>
 
-                    {/* TODO: Fee */}
+                    {/* TODO: Fees */}
                     {/* <View style={styles.rowContainer}>
                         <Amount
                             style={styles.textPrimary}
-                            amount={transaction.fee}
+                            amount={feeTotal}
                             blockchain={account.blockchain}
+                            token={transaction?.token?.symbol || coin}
+                            tokenDecimals={transaction?.token?.decimals || tokens[coin].decimals}
                         />
                         <Text style={styles.textSecondary}>{translate('App.labels.fee')}</Text>
                     </View> */}

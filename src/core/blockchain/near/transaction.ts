@@ -88,3 +88,7 @@ export const buildTransferTransaction = async (
         }
     };
 };
+
+export const getTransactionAmount = (tx: IBlockchainTransaction): string => {
+    return tx.amount;
+};

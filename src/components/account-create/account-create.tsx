@@ -77,21 +77,21 @@ export class AccountCreateComponent extends React.Component<
 
                 if (account.exists === true && account.valid === true) {
                     this.setState({
-                        isCreate: true,
+                        isCreate: false,
                         isInputValid: false,
                         showInputInfo: true,
                         errorMessage: translate('CreateAccount.taken')
                     });
                 } else if (account.exists === false && account.valid === false) {
                     this.setState({
-                        isCreate: true,
+                        isCreate: false,
                         isInputValid: false,
                         showInputInfo: true,
                         errorMessage: translate('CreateAccount.invalid')
                     });
                 } else {
                     this.setState({
-                        isCreate: false,
+                        isCreate: true,
                         isInputValid: true,
                         showInputInfo: true
                     });

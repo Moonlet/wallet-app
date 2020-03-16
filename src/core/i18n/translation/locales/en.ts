@@ -216,7 +216,9 @@ export const translation: ITranslations = {
             addWalletTitle: 'Add Wallet',
             manageWallets: 'Manage wallets',
             connectLedger: 'Connect your Ledger!',
-            quicklyConnectLedger: 'Quickly connect your Ledger and manage your assests'
+            quicklyConnectLedger: 'Quickly connect your Ledger and manage your assests',
+            connectWallet: 'Manage your wallets',
+            quicklyConnectWallet: 'Quickly create or recover your Wallet and manage your assets'
         },
         Transaction: {
             transactionID: 'Transaction ID',

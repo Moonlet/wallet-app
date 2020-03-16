@@ -11,6 +11,7 @@ export interface ITabSelectProps {
     selected: any;
     onSelectionChange: (val: any) => void;
     styles: ReturnType<typeof stylesProvider>;
+    smallTab?: boolean;
 }
 export const TabSelectComponent = (props: ITabSelectProps) => (
     <View style={props.styles.container}>
@@ -21,7 +22,7 @@ export const TabSelectComponent = (props: ITabSelectProps) => (
                     props.onSelectionChange(key);
                 }}
                 style={[
-                    props.styles.tabButton,
+                    props?.smallTab ? props.styles.smallTabButton : props.styles.tabButton,
                     props.selected === key && props.styles.tabButtonSelected,
                     {
                         borderTopLeftRadius: index === 0 ? BORDER_RADIUS / 2 : 0,

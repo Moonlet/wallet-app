@@ -47,6 +47,7 @@ jobs:
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
+          NODE_OPTIONS: --max_old_space_size=4096
   # deploy-ios:
   #   name: iOS app
   #   runs-on: macos-latest

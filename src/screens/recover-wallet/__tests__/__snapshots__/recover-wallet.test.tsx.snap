@@ -11,25 +11,25 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
         <withTheme(TextComponent) style={{...}}>
           1.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           2.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           3.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           4.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
     </View>
     <View style={{...}}>
@@ -37,25 +37,25 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
         <withTheme(TextComponent) style={{...}}>
           5.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           6.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           7.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           8.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
     </View>
     <View style={{...}}>
@@ -63,25 +63,25 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
         <withTheme(TextComponent) style={{...}}>
           9.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           10.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           11.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           12.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
     </View>
     <View style={{...}}>
@@ -89,25 +89,25 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
         <withTheme(TextComponent) style={{...}}>
           13.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           14.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           15.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           16.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
     </View>
     <View style={{...}}>
@@ -115,25 +115,25 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
         <withTheme(TextComponent) style={{...}}>
           17.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           18.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           19.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           20.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
     </View>
     <View style={{...}}>
@@ -141,25 +141,25 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
         <withTheme(TextComponent) style={{...}}>
           21.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           22.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           23.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           24.
         </withTheme(TextComponent)>
-        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottomColor={true} />
+        <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} word=\\"\\" onFocus={[Function: onFocus]} onBlur={[Function: onBlur]} isFocus={false} isValid={false} showBorderBottom={true} />
       </View>
     </View>
   </View>

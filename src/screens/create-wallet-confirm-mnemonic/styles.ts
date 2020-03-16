@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
 
@@ -13,9 +13,9 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground
         },
         inputContainer: {
-            alignSelf: 'stretch',
-            justifyContent: 'center',
-            marginTop: BASE_DIMENSION * 20
+            height: Dimensions.get('window').height / 2,
+            width: '100%',
+            justifyContent: 'center'
         },
         inputWrapper: {
             paddingVertical: BASE_DIMENSION,
@@ -37,5 +37,8 @@ export default (theme: ITheme) =>
             color: theme.colors.error,
             textAlign: 'center',
             marginVertical: BASE_DIMENSION * 2
+        },
+        testWords: {
+            textAlign: 'center'
         }
     });

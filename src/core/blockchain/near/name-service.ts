@@ -29,9 +29,15 @@ export class NameService implements IBlockchainNameService {
 
         try {
             const account = await client.getAccount(text);
-            return {
-                address: account.address
-            };
+            if (account.valid === false) {
+                return Promise.reject({
+                    error: ResolveTextError.INVALID
+                });
+            } else {
+                return {
+                    address: account.address
+                };
+            }
         } catch (error) {
             return Promise.reject({
                 error: ResolveTextError.CONNECTION_ERROR

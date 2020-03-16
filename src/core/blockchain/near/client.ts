@@ -79,22 +79,40 @@ export class Client extends BlockchainGenericClient {
         try {
             const res = await this.http.jsonRpc('query', [`account/${accountId}`, '']);
 
-            if (res.result) {
-                // account id already taken
+            if (res?.result) {
+                // Account exists
                 return {
                     address: accountId,
                     name: accountId,
                     amount: new BigNumber(res.result.amount),
-                    exists: true
+                    exists: true,
+                    valid: true
                 };
-            } else {
-                // valid account id
-                return {
-                    address: accountId,
-                    name: accountId,
-                    amount: new BigNumber(0),
-                    exists: false
-                };
+            } else if (res?.error) {
+                // Account does not exist | it's not created
+                const errorMessage = res.error.data;
+
+                if (errorMessage.includes('not exist')) {
+                    // Account id it's valid
+                    // error message: {"error": {"code": -32000, "data": "account mm does not exist while viewing", "message": "Server error"}, "id": 0, "jsonrpc": "2.0"}
+                    return {
+                        address: accountId,
+                        name: accountId,
+                        amount: new BigNumber(0),
+                        exists: false,
+                        valid: true
+                    };
+                } else if (errorMessage.includes('not valid')) {
+                    // Account is not valid
+                    // error message: {"error": {"code": -32000, "data": "Account ID '??' is not valid", "message": "Server error"}, "id": 0, "jsonrpc": "2.0"}
+                    return {
+                        address: accountId,
+                        name: accountId,
+                        amount: new BigNumber(0),
+                        exists: false,
+                        valid: false
+                    };
+                }
             }
         } catch (err) {
             Promise.reject(err);

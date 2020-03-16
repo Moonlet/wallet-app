@@ -16,7 +16,8 @@ export default (theme: ITheme) =>
         },
         emptyAddressContainer: {
             flex: 1,
-            justifyContent: 'center'
+            justifyContent: 'center',
+            alignSelf: 'center'
         },
         logoImage: {
             height: ph(20),
@@ -84,6 +85,9 @@ export default (theme: ITheme) =>
             lineHeight: 22,
             color: theme.colors.text,
             paddingTop: BASE_DIMENSION
+        },
+        selectedText: {
+            color: theme.colors.accent
         },
 
         leftActionsContainer: {

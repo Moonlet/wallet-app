@@ -5,10 +5,8 @@ import { BASE_DIMENSION } from '../../../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            flex: 1,
             marginBottom: BASE_DIMENSION
-        },
-        containerPresets: {
-            flex: 1
         },
         buttonRightOptions: {
             alignItems: 'flex-end'

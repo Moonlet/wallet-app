@@ -10,6 +10,7 @@ import { ITokenConfig } from '../../core/blockchain/types/token';
 import { Blockchain } from '../../core/blockchain/types';
 import { SmartImage } from '../../library/image/smart-image';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -17,6 +18,7 @@ export interface IProps {
     account: IAccountState;
     styles: ReturnType<typeof stylesProvider>;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    index: number;
 }
 
 export const TokenCardComponent = (props: IProps) => {
@@ -27,7 +29,7 @@ export const TokenCardComponent = (props: IProps) => {
 
     return (
         <TouchableOpacity
-            style={styles.container}
+            style={[styles.container, { marginTop: props.index === 0 ? 0 : BASE_DIMENSION }]}
             onPress={() => {
                 props.navigation.navigate('Token', {
                     accountIndex: props.account.index,

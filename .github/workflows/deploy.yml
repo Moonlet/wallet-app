@@ -39,7 +39,7 @@ jobs:
       - name: NPM install
         run: npm i
       - name: Get sign ssh-keys
-        run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
+        run: cd android/fastlane && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
       - name: Generate fonts and icons
         run: npm run generate-icons
       - name: Run fastlane deploy

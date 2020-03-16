@@ -240,6 +240,7 @@ export class WalletsScreenComponent extends React.Component<
 
     public render() {
         const styles = this.props.styles;
+        const { selectedTab } = this.state;
 
         return (
             <View style={styles.container}>
@@ -249,29 +250,32 @@ export class WalletsScreenComponent extends React.Component<
                         [WalletType.HW]: { title: 'Ledger' }
                     }}
                     onSelectionChange={key => this.setState({ selectedTab: key })}
-                    selected={this.state.selectedTab}
+                    selected={selectedTab}
                 />
                 <View style={styles.scrollContainer}>
                     <ScrollView
                         contentContainerStyle={styles.walletList}
                         showsVerticalScrollIndicator={false}
                     >
-                        {this.props.wallets[this.state.selectedTab].length === 0 &&
-                        this.state.selectedTab === WalletType.HW ? (
+                        {this.props.wallets[selectedTab].length === 0 ? (
                             <View style={styles.emptyWalletsContainer}>
                                 <Image
                                     style={styles.logoImage}
                                     source={require('../../assets/images/png/moonlet_space_gray.png')}
                                 />
                                 <Text style={styles.connectLedger}>
-                                    {translate('Wallets.connectLedger')}
+                                    {selectedTab === WalletType.HW
+                                        ? translate('Wallets.connectLedger')
+                                        : translate('Wallets.connectWallet')}
                                 </Text>
                                 <Text style={styles.quicklyConnectLedger}>
-                                    {translate('Wallets.quicklyConnectLedger')}
+                                    {selectedTab === WalletType.HW
+                                        ? translate('Wallets.quicklyConnectLedger')
+                                        : translate('Wallets.quicklyConnectWallet')}
                                 </Text>
                             </View>
                         ) : (
-                            this.props.wallets[this.state.selectedTab].map(wallet => {
+                            this.props.wallets[selectedTab].map(wallet => {
                                 const index = wallet.id;
 
                                 return (
@@ -299,6 +303,7 @@ export class WalletsScreenComponent extends React.Component<
                         )}
                     </ScrollView>
                 </View>
+
                 <View style={styles.bottomContainer}>
                     {
                         {
@@ -334,7 +339,7 @@ export class WalletsScreenComponent extends React.Component<
                                     </Button>
                                 </View>
                             )
-                        }[this.state.selectedTab]
+                        }[selectedTab]
                     }
                 </View>
 

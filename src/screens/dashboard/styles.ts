@@ -19,12 +19,10 @@ export default (theme: ITheme) =>
         },
         selectorGradientContainer: {
             position: 'absolute',
-            flex: 1,
             left: 0,
             right: 0,
-            height: 100,
+            height: 70, // used for 20px
             bottom: 0,
-            zIndex: 1,
             justifyContent: 'flex-end'
         },
         blockchainSelectorContainer: {
@@ -53,8 +51,7 @@ export default (theme: ITheme) =>
             color: theme.colors.accent
         },
         coinDashboard: {
-            flex: 1,
-            alignSelf: 'stretch'
+            flex: 1
         },
         expandIconContainer: {
             marginRight: BASE_DIMENSION * 2,

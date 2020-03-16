@@ -6,15 +6,15 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
     To make sure you have written down all of your recovery words, please enter the following:
   </withTheme(TextComponent)>
   <View style={{...}}>
-    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #1\\" showBorderBottomColor={false} />
-    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #2\\" showBorderBottomColor={false} />
-    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #3\\" showBorderBottomColor={false} />
+    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #1\\" showBorderBottom={false} />
+    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #2\\" showBorderBottom={false} />
+    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #3\\" showBorderBottom={false} />
+    <withTheme(TextComponent) darker={true} small={true} style={{...}}>
+      panic 
+      club 
+      above 
+    </withTheme(TextComponent)>
   </View>
-  <withTheme(TextComponent) darker={true} small={true}>
-    panic 
-    club 
-    above 
-  </withTheme(TextComponent)>
   <withTheme(KeyboardComponent) handleTextUpdate={[Function: handleTextUpdate]} handleDeleteKey={[Function: handleDeleteKey]} buttons={{...}} disableSpace={true} />
   <withTheme(PasswordModalComponent) shouldCreatePassword={true} subtitle=\\"Your PIN is required\\\\nto create your Moonlet wallet\\" obRef={[Function: obRef]} />
 </View>"

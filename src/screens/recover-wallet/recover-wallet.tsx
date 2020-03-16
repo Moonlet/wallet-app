@@ -324,7 +324,7 @@ export class RecoverWalletScreenComponent extends React.Component<
                         onBlur={() => this.validateWord()}
                         isFocus={isFocus}
                         isValid={isValid}
-                        showBorderBottomColor
+                        showBorderBottom={true}
                     />
                 </View>
             );

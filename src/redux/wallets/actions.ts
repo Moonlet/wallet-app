@@ -225,7 +225,9 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     getState: () => IReduxState
 ) => {
     dispatch(openLoadingModal());
-    await delay(0);
+
+    // TODO: check here and find a solution to fix
+    await delay(500);
 
     try {
         const wallet = new HDWallet(mnemonic);

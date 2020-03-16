@@ -80,7 +80,7 @@
         "react-native-fast-image": "^7.0.2",
         "react-native-firebase": "^5.5.6",
         "react-native-gesture-handler": "^1.5.1",
-        "react-native-keychain": "^4.0.1",
+        "react-native-keychain": "^5.0.1",
         "react-native-linear-gradient": "^2.5.6",
         "react-native-modal": "^11.5.4",
         "react-native-qrcode-svg": "^5.3.2",

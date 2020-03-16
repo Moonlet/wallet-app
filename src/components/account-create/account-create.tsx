@@ -34,6 +34,7 @@ export interface IState {
     showInputInfo: boolean;
     isCreate: boolean;
     isLoading: boolean;
+    errorMessage: string;
 }
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -61,7 +62,8 @@ export class AccountCreateComponent extends React.Component<
             isInputValid: false,
             showInputInfo: false,
             isCreate: false,
-            isLoading: false
+            isLoading: false,
+            errorMessage: undefined
         };
     }
 
@@ -73,10 +75,26 @@ export class AccountCreateComponent extends React.Component<
             try {
                 const account = await client.getAccount(this.state.inputAccout);
 
-                this.setState({ isInputValid: !account.exists, showInputInfo: true });
-
-                if (!account.exists) {
-                    this.setState({ isCreate: true });
+                if (account.exists === true && account.valid === true) {
+                    this.setState({
+                        isCreate: false,
+                        isInputValid: false,
+                        showInputInfo: true,
+                        errorMessage: translate('CreateAccount.taken')
+                    });
+                } else if (account.exists === false && account.valid === false) {
+                    this.setState({
+                        isCreate: false,
+                        isInputValid: false,
+                        showInputInfo: true,
+                        errorMessage: translate('CreateAccount.invalid')
+                    });
+                } else {
+                    this.setState({
+                        isCreate: true,
+                        isInputValid: true,
+                        showInputInfo: true
+                    });
                 }
             } catch (error) {
                 this.setState({ isInputValid: false, showInputInfo: true });
@@ -101,6 +119,8 @@ export class AccountCreateComponent extends React.Component<
 
     public render() {
         const { styles, theme } = this.props;
+        const isSuccess = this.state.isInputValid && this.state.showInputInfo;
+        const isErrorMessage = !this.state.isInputValid && this.state.showInputInfo;
 
         if (this.state.isLoading) {
             return <LoadingIndicator />;
@@ -140,23 +160,32 @@ export class AccountCreateComponent extends React.Component<
                                 </TouchableOpacity>
                             )}
                         </View>
-                        {this.state.isInputValid && this.state.showInputInfo && (
-                            <Text style={styles.congratsText}>
-                                {translate('CreateAccount.congrats')}
-                            </Text>
-                        )}
 
-                        {!this.state.isInputValid && this.state.showInputInfo && (
-                            <Text style={styles.invalidText}>
-                                {translate('CreateAccount.invalidUsername')}
-                            </Text>
-                        )}
+                        <Text
+                            style={[
+                                isSuccess && styles.congratsText,
+                                isErrorMessage && styles.invalidText
+                            ]}
+                        >
+                            {isSuccess
+                                ? translate('CreateAccount.congrats')
+                                : isErrorMessage
+                                ? translate('CreateAccount.errorMessage', {
+                                      message: this.state.errorMessage
+                                  })
+                                : ''}
+                        </Text>
                     </View>
 
                     <Button
                         style={styles.createButton}
                         primary
-                        disabled={this.state.inputAccout.length === 0}
+                        disabled={
+                            this.state.inputAccout.length === 0 ||
+                            (this.state.isCreate &&
+                                this.state.isInputValid === false &&
+                                this.state.showInputInfo)
+                        }
                         onPress={() => {
                             if (this.state.isCreate) {
                                 // create account

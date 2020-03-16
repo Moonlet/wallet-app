@@ -34,6 +34,7 @@ import { getBlockchains } from '../../redux/preferences/selectors';
 import { NavigationEvents } from 'react-navigation';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
+import { IExchangeRates } from '../../redux/market/state';
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -43,7 +44,7 @@ export interface IReduxProps {
     openBottomSheet: typeof openBottomSheet;
     selectedAccount: IAccountState;
     selectedBlockchain: Blockchain;
-    exchangeRates: any;
+    exchangeRates: IExchangeRates;
     setSelectedBlockchain: typeof setSelectedBlockchain;
     isCreateAccount: boolean;
     selectedBlockchainAccounts: IAccountState[];

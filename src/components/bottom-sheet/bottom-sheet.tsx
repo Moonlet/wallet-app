@@ -11,7 +11,6 @@ import { LedgerConnect } from '../../screens/connect-hardware-wallet/ledger-conn
 import { ExtensionRequestBottomSheet } from './extension-request-bottom-sheet/extension-request-bottom-sheet';
 import { IBottomSheet, BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { openBottomSheet, closeBottomSheet } from '../../redux/ui/bottomSheet/actions';
-import { SendTransactionBottomSheet } from './send-transaction-sheet/send-transaction-sheet';
 import { BlockchainNavigationBottomSheet } from './blockchain-navigation-bottom-sheet/blockchain-navigation-bottom-sheet';
 
 interface IReduxProps {
@@ -91,25 +90,6 @@ export class BottomSheetComponent extends React.Component<
                                 initialSnap: Platform.OS === 'web' ? 300 : 0,
                                 bottomSheetHeight: 300
                             }}
-                            onOpenStart={this.handleOpenStart}
-                            onCloseEnd={this.handleCloseEnd}
-                        />
-                    </View>
-                );
-            case BottomSheetType.SEND_TRANSACTION:
-                return (
-                    <View style={this.props.styles.container}>
-                        <TouchableOpacity
-                            onPress={this.handleCloseEnd}
-                            style={this.props.styles.container}
-                            activeOpacity={1}
-                        />
-                        <SendTransactionBottomSheet
-                            snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? 200 : 0,
-                                bottomSheetHeight: 200
-                            }}
-                            blockchain={this.props.bottomSheet?.blockchain}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
                         />

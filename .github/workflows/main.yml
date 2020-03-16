@@ -83,6 +83,7 @@ jobs:
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
+          NODE_OPTIONS: --max_old_space_size=4096
   beta-ios:
     name: iOS app
     runs-on: macos-latest
@@ -99,7 +100,7 @@ jobs:
       - name: Add to host
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
       - name: Generate firebase config file
-        run: echo '${{ secrets.FB_CONFIG_IOS_BETA }}' > ios/GoogleService-Info.plist 
+        run: echo '${{ secrets.FB_CONFIG_IOS_BETA }}' > ios/GoogleService-Info.plist
       - name: Dependencies install
         run: cd ios && bundle install
       - name: Cache node modules

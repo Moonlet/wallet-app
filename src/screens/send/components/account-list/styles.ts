@@ -25,6 +25,9 @@ export default (theme: ITheme) =>
             lineHeight: BASE_DIMENSION * 3,
             fontSize: theme.fontSize.regular + 1
         },
+        selectedText: {
+            color: theme.colors.accent
+        },
         divider: {
             width: '100%',
             height: 1,

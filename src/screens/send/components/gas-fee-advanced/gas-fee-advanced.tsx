@@ -104,7 +104,7 @@ export class GasFeeAvancedComponent extends React.Component<
             <View style={styles.container}>
                 <Text style={styles.priceLabel}>{translate('Fee.gasPrice')}</Text>
 
-                <View style={[styles.inputBox, styles.inputBoxTop]}>
+                <View style={styles.inputBox}>
                     <TextInput
                         testID="gas-price"
                         style={styles.input}

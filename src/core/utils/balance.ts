@@ -6,8 +6,9 @@ import { TokenType } from '../blockchain/types/token';
 
 import { getBlockchain } from '../blockchain/blockchain-factory';
 import { Blockchain } from '../blockchain/types';
+import { IExchangeRates } from '../../redux/market/state';
 
-export const calculateBalance = (account: IAccountState, exchangeRates: any) => {
+export const calculateBalance = (account: IAccountState, exchangeRates: IExchangeRates) => {
     const tokenKeys = Object.keys(account.tokens);
     let balance = new BigNumber(0);
 
@@ -35,7 +36,7 @@ export const calculateBalance = (account: IAccountState, exchangeRates: any) => 
 
 export const convertAmount = (
     blockchain: Blockchain,
-    exchangeRates: any,
+    exchangeRates: IExchangeRates,
     value: string,
     fromToken: string,
     toToken: string,

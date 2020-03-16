@@ -25,6 +25,7 @@ import { subscribeExchangeRates } from './core/utils/exchange-rates';
 import { updateExchangeRates } from './redux/market/actions';
 import { takeOneAndSubscribeToStore } from './redux/utils/helpers';
 import { LegalModal } from './components/legal/legal-modal/legal-modal';
+import { IExchangeRates } from './redux/market/state';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -124,7 +125,7 @@ export default class App extends React.Component<{}, IState> {
                 if (!this.reduxStateLoaded) {
                     this.reduxStateLoaded = true;
 
-                    subscribeExchangeRates((exchangeRates: { [tokenType: string]: number }) => {
+                    subscribeExchangeRates((exchangeRates: IExchangeRates) => {
                         if (exchangeRates) {
                             store.dispatch(updateExchangeRates(exchangeRates));
                         }

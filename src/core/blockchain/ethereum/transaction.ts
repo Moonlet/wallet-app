@@ -72,6 +72,8 @@ export const buildTransferTransaction = async (
                 status: TransactionStatus.PENDING,
 
                 data: {
+                    method: 'transfer',
+                    params: [tx.toAddress, tx.amount],
                     raw:
                         '0x' +
                         abi
@@ -104,5 +106,13 @@ export const buildTransferTransaction = async (
                 nonce,
                 status: TransactionStatus.PENDING
             };
+    }
+};
+
+export const getTransactionAmount = (tx: IBlockchainTransaction): string => {
+    if (tx.token?.type === TokenType.ERC20) {
+        return tx?.data?.params[1];
+    } else {
+        return tx.amount;
     }
 };

@@ -17,6 +17,7 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import bind from 'bind-decorator';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
+import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 
 export interface IExternalProps {
     token: ITokenConfig;
@@ -32,6 +33,7 @@ interface IState {
     hasAdvancedOptions: boolean;
     selectedPreset: string;
     showAdvancedOptions: boolean;
+    isLoading: boolean;
 }
 
 interface IReduxProps {
@@ -53,7 +55,8 @@ export class FeeOptionsComponent extends React.Component<
             blockchainConfig: getBlockchain(props.account.blockchain).config,
             showAdvancedOptions: false,
             hasAdvancedOptions: !!feeOptions.ui.feeComponentAdvanced,
-            selectedPreset: feeOptions.ui.defaultPreset
+            selectedPreset: feeOptions.ui.defaultPreset,
+            isLoading: true
         };
         this.getEstimatedFees();
     }
@@ -69,9 +72,7 @@ export class FeeOptionsComponent extends React.Component<
                 this.props.sendingToken.contractAddress
             );
 
-        this.setState({
-            feeOptions: fees
-        });
+        this.setState({ feeOptions: fees, isLoading: false });
         this.props.onFeesChanged(fees);
     }
 
@@ -133,7 +134,7 @@ export class FeeOptionsComponent extends React.Component<
             case 'FeePresets': {
                 return (
                     this.state.feeOptions && (
-                        <View style={styles.containerPresets}>
+                        <View>
                             <FlatList
                                 contentContainerStyle={styles.list}
                                 onEndReachedThreshold={0.5}
@@ -187,21 +188,27 @@ export class FeeOptionsComponent extends React.Component<
         const styles = this.props.styles;
         return (
             <View style={styles.container}>
-                {this.state.showAdvancedOptions
-                    ? this.renderAdvancedFees()
-                    : this.renderSimpleFees()}
-                {this.state.hasAdvancedOptions && (
-                    <TouchableOpacity
-                        testID="advanced-fees"
-                        onPress={this.onAdvancedButton}
-                        style={[styles.buttonRightOptions]}
-                    >
-                        <Text style={styles.textTranferButton}>
-                            {this.state.showAdvancedOptions
-                                ? translate('App.labels.simpleSetup')
-                                : translate('App.labels.advancedSetup')}
-                        </Text>
-                    </TouchableOpacity>
+                {this.state.isLoading ? (
+                    <LoadingIndicator />
+                ) : (
+                    <React.Fragment>
+                        {this.state.showAdvancedOptions
+                            ? this.renderAdvancedFees()
+                            : this.renderSimpleFees()}
+                        {this.state.hasAdvancedOptions && (
+                            <TouchableOpacity
+                                testID="advanced-fees"
+                                onPress={this.onAdvancedButton}
+                                style={[styles.buttonRightOptions]}
+                            >
+                                <Text style={styles.textTranferButton}>
+                                    {this.state.showAdvancedOptions
+                                        ? translate('App.labels.simpleSetup')
+                                        : translate('App.labels.advancedSetup')}
+                                </Text>
+                            </TouchableOpacity>
+                        )}
+                    </React.Fragment>
                 )}
             </View>
         );

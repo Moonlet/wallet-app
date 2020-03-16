@@ -33,6 +33,7 @@ export interface IReduxProps {
 export interface IExternalProps {
     blockchain: Blockchain;
     onContactSelected: (contact: IContactState) => void;
+    selectedAddress: string;
 }
 
 export const mapStateToProps = (state: IReduxState, ownprops: IExternalProps) => {
@@ -117,6 +118,8 @@ export class AddressBookComponent extends React.Component<
     public renderContact(contact: IContactState) {
         const styles = this.props.styles;
         const index = `${contact.blockchain}|${contact.address}`;
+        const isSelected =
+            this.props.selectedAddress.toLowerCase() === contact.address.toLowerCase();
 
         return (
             <Swipeable
@@ -130,12 +133,18 @@ export class AddressBookComponent extends React.Component<
                     onPress={() => this.props.onContactSelected(contact)}
                 >
                     <View>
-                        <Text style={styles.name}>{contact.name}</Text>
-                        <Text style={styles.address}>
+                        <Text style={[styles.name, isSelected && styles.selectedText]}>
+                            {contact.name}
+                        </Text>
+                        <Text style={[styles.address, isSelected && styles.selectedText]}>
                             {formatAddress(contact.address, contact.blockchain)}
                         </Text>
                     </View>
-                    <Icon name="add-circle" size={ICON_SIZE} style={styles.icon} />
+                    <Icon
+                        name={isSelected ? 'check-1' : 'add-circle'}
+                        size={ICON_SIZE}
+                        style={styles.icon}
+                    />
                 </TouchableOpacity>
                 <View style={styles.divider} />
             </Swipeable>

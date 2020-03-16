@@ -7,6 +7,7 @@ import BigNumber from 'bignumber.js';
 export interface IBlockchainTransactionUtils {
     sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string>;
     buildTransferTransaction(tx: ITransferTransaction): Promise<IBlockchainTransaction>;
+    getTransactionAmount(tx: IBlockchainTransaction): string;
 }
 
 // tslint:disable-next-line:no-shadowed-variable

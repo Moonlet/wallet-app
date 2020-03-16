@@ -45,7 +45,7 @@ import { Notifications } from '../../core/messaging/notifications/notifications'
 import { formatNumber } from '../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { NotificationType } from '../../core/messaging/types';
-import { addAddress } from '../../core/address-monitor/index';
+import { updateAddressMonitorTokens } from '../../core/address-monitor/index';
 import { Dialog } from '../../components/dialog/dialog';
 
 // actions consts
@@ -272,26 +272,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             callback && callback();
             closeLoadingModal()(dispatch, getState);
 
-            addAddress(
-                Blockchain.ETHEREUM,
-                accounts.reduce((out: string[], account: IAccountState): string[] => {
-                    if (account.blockchain === Blockchain.ETHEREUM) {
-                        out.push(account.address);
-                    }
-
-                    return out;
-                }, [])
-            );
-            addAddress(
-                Blockchain.ZILLIQA,
-                accounts.reduce((out: string[], account: IAccountState): string[] => {
-                    if (account.blockchain === Blockchain.ZILLIQA) {
-                        out.push(account.address);
-                    }
-
-                    return out;
-                }, [])
-            );
+            updateAddressMonitorTokens(getState().wallets);
         });
     } catch (e) {
         // console.log(e);
@@ -391,7 +372,6 @@ export const updateTransactionFromBlockchain = (
     const chainId = blockchainChainId[blockchain];
     const blockchainInstance = getBlockchain(blockchain);
     const client = blockchainInstance.getClient(chainId);
-
     const transaction = await client.getTransactionInfo(transactionHash);
 
     // search for wallets/accounts affected by this transaction

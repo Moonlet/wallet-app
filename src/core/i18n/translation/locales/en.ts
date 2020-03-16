@@ -100,7 +100,7 @@ export const translation: ITranslations = {
             }
         },
         CreateWalletTc: {
-            body: 'Make sure you review our Privacy policy and Terms & conditions'
+            body: 'Make sure you review our\nPrivacy policy and Terms & conditions'
         },
         CreateWalletMnemonic: {
             body:

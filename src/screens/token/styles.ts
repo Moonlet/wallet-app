@@ -6,8 +6,7 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: theme.colors.appBackground,
-            paddingHorizontal: BASE_DIMENSION
+            backgroundColor: theme.colors.appBackground
         },
         scrollContainer: {
             flexGrow: 1,

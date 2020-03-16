@@ -18,6 +18,7 @@ import { calculateBalance } from '../../../core/utils/balance';
 import { translate } from '../../../core/i18n';
 import { enableCreateAccount } from '../../../redux/ui/screens/dashboard/actions';
 import { ListAccount } from '../../list-account/list-account';
+import { IExchangeRates } from '../../../redux/market/state';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -28,14 +29,14 @@ export interface IReduxProps {
     setSelectedAccount: typeof setSelectedAccount;
     selectedAccount: IAccountState;
     getBalance: typeof getBalance;
-    exchangeRates: any;
+    exchangeRates: IExchangeRates;
     accounts: IAccountState[];
     enableCreateAccount: typeof enableCreateAccount;
 }
 const mapStateToProps = (state: IReduxState) => {
     return {
         selectedAccount: getSelectedAccount(state),
-        exchangeRates: (state as any).market.exchangeRates,
+        exchangeRates: state.market.exchangeRates,
         accounts: getAccounts(state, getSelectedAccount(state).blockchain)
     };
 };

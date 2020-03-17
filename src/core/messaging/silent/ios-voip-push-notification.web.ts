@@ -5,5 +5,5 @@ export const setupVoipNotification = () => {
 };
 
 export const getApnsToken = () => {
-    return token;
+    return Promise.resolve(token);
 };

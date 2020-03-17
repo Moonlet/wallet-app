@@ -14,7 +14,7 @@ const getDeviceToken = () =>
 export const updateAddressMonitorTokens = (wallets: IWalletsState) => {
     const addresses = {};
 
-    Object.keys(wallets).forEach(id => {
+    Object.keys(wallets || []).forEach(id => {
         wallets[id].accounts.forEach((account: IAccountState) => {
             if (monitoredBlockchains.indexOf(account.blockchain) !== -1) {
                 if (!addresses[account.blockchain]) {

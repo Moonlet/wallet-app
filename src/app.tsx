@@ -26,6 +26,7 @@ import { updateExchangeRates } from './redux/market/actions';
 import { takeOneAndSubscribeToStore } from './redux/utils/helpers';
 import { LegalModal } from './components/legal/legal-modal/legal-modal';
 import { IExchangeRates } from './redux/market/state';
+import { updateAddressMonitorTokens } from './core/address-monitor';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -110,6 +111,10 @@ export default class App extends React.Component<{}, IState> {
                 this.showPasswordModal();
             }
         });
+
+        if (appReady) {
+            updateAddressMonitorTokens(store.getState().wallets);
+        }
     };
 
     public componentDidMount() {

@@ -2,25 +2,50 @@ import { Platform } from 'react-native';
 import { Notifications } from '../messaging/notifications/notifications';
 import { getApnsToken } from '../messaging/silent/ios-voip-push-notification';
 import { Blockchain } from '../blockchain/types';
+import DeviceInfo from 'react-native-device-info';
+import { IWalletsState, IAccountState } from '../../redux/wallets/state';
 
-const url = 'https://us-central1-moonlet-wallet-dev.cloudfunctions.net/addressMonitor';
+const url = 'http://49.12.38.87:8080/notifications/register';
+const monitoredBlockchains = [Blockchain.ETHEREUM, Blockchain.ZILLIQA];
 
-const getDeviceToken = () =>
+const getDeviceToken = (): Promise<string> =>
     Platform.OS === 'android' ? Notifications.getToken() : getApnsToken();
 
-export const addAddress = async (blockchain: Blockchain, address: string[]) => {
-    const request = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            blockchain,
-            token: await getDeviceToken(),
-            type: Platform.OS === 'android' ? 'fcm' : 'apn',
-            address
-        })
-    };
+export const updateAddressMonitorTokens = (wallets: IWalletsState) => {
+    const addresses = {};
 
-    fetch(url + '/add', request);
+    Object.keys(wallets || []).forEach(id => {
+        wallets[id].accounts.forEach((account: IAccountState) => {
+            if (monitoredBlockchains.indexOf(account.blockchain) !== -1) {
+                if (!addresses[account.blockchain]) {
+                    addresses[account.blockchain] = [];
+                }
+
+                addresses[account.blockchain].push(account.address);
+            }
+        });
+    });
+
+    const requestAddresses = Object.keys(addresses).map(blockchain => ({
+        blockchain,
+        addresses: addresses[blockchain]
+    }));
+
+    const deviceId = DeviceInfo.getUniqueId();
+    getDeviceToken().then(token => {
+        const request = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                deviceId,
+                tokenType: Platform.OS === 'android' ? 'fcm' : 'apn',
+                token,
+                addresses: requestAddresses
+            })
+        };
+
+        fetch(url, request);
+    });
 };

@@ -106,6 +106,7 @@ module.exports = {
         new webpack.DefinePlugin({
             __DEV__: false,
             ...ENV_VARS,
+            'process.env.TARGET': `"${TARGET}"`,
             'process.env.VERSION': `"${VERSION}"`
         }),
         new CopyPlugin([

@@ -1,12 +1,11 @@
-import { IAppConfig } from './config-interface';
-import { Platform } from 'react-native';
+import CONFIG_BETA from './config-beta';
+import CONFIG_RELEASE from './config-release';
+import DeviceInfo from 'react-native-device-info';
 
-export const CONFIG: IAppConfig = {
-    example: Platform.select({
-        default: 'default',
-        web: 'web'
-    }),
-    env: process.env.MOONLET_SOME_KEY
-};
+let CONF = CONFIG_RELEASE;
+if (DeviceInfo.getBundleId() === 'com.moonlet.beta') {
+    CONF = CONFIG_BETA;
+}
 
+export const CONFIG = CONF;
 export default CONFIG;

@@ -366,13 +366,14 @@ export const getBalance = (
 export const updateTransactionFromBlockchain = (
     transactionHash: string[],
     blockchain: Blockchain,
+    chainId: number,
     displayNotification: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
-    const chainId = blockchainChainId[blockchain];
     const blockchainInstance = getBlockchain(blockchain);
     const client = blockchainInstance.getClient(chainId);
     const transaction = await client.getTransactionInfo(transactionHash);
+    const currentChainId = getChainId(state, blockchain);
 
     // search for wallets/accounts affected by this transaction
     const wallets = getWalletWithAddress(
@@ -392,7 +393,10 @@ export const updateTransactionFromBlockchain = (
             });
         });
 
-        if (displayNotification) {
+        if (
+            displayNotification &&
+            currentChainId === chainId
+        ) {
             const amount = blockchainInstance.account.amountFromStd(
                 new BigNumber(transaction.amount)
             );

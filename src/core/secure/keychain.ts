@@ -1,31 +1,30 @@
-import * as Keychain from 'react-native-keychain';
+import RNSecureKeyStore, { ACCESSIBLE } from 'react-native-secure-key-store';
 import { hash } from './encrypt';
-import AsyncStorage from '@react-native-community/async-storage';
 
 const defaultOptions = {
     service: 'com.moonlet'
 };
 
-const USERNAME = 'moonlet-app';
-
 export const setPassword = async (password: string, shouldEncrypt: boolean = true) => {
-    await Keychain.resetGenericPassword(defaultOptions);
+    await RNSecureKeyStore.remove(defaultOptions.service).catch(err => {
+        //
+    });
 
     if (shouldEncrypt) {
         password = await hash(password);
     }
 
-    await Keychain.setGenericPassword(USERNAME, password, defaultOptions);
+    await RNSecureKeyStore.set(defaultOptions.service, password, {
+        accessible: ACCESSIBLE.WHEN_UNLOCKED
+    });
 };
 
 export const getPassword = async () => {
-    const appInstall = await AsyncStorage.getItem('alreadyLaunched');
+    const password = await RNSecureKeyStore.get(defaultOptions.service).catch(err => {
+        //
+    });
 
-    if (appInstall == null) {
-        AsyncStorage.setItem('alreadyLaunched', 'true');
-    } else {
-        await Keychain.resetGenericPassword(defaultOptions);
-    }
-
-    return Keychain.getGenericPassword(defaultOptions);
+    return {
+        password
+    };
 };

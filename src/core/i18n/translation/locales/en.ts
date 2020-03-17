@@ -12,6 +12,7 @@ export const translation: ITranslations = {
                 addToken: 'Add token',
                 advanced: 'Advanced',
                 advancedSetup: 'Advanced setup',
+                all: 'All',
                 average: 'Average',
                 cancel: 'Cancel',
                 cheap: 'Cheap',
@@ -43,6 +44,7 @@ export const translation: ITranslations = {
                 fees: 'Fees',
                 find: 'Find',
                 from: 'From',
+                half: 'Half',
                 ledgerType: 'Ledger type',
                 legal: 'Legal',
                 low: 'Low',
@@ -81,6 +83,7 @@ export const translation: ITranslations = {
                 to: 'To',
                 tools: 'Tools',
                 transactions: 'Transactions',
+                tryAgain: 'Try again',
                 typeHere: 'Type here',
                 understand: 'I understand',
                 validators: 'Validators',
@@ -97,7 +100,7 @@ export const translation: ITranslations = {
             }
         },
         CreateWalletTc: {
-            body: 'Make sure you review our Privacy policy and Terms & conditions'
+            body: 'Make sure you review our\nPrivacy policy and Terms & conditions'
         },
         CreateWalletMnemonic: {
             body:
@@ -158,15 +161,6 @@ export const translation: ITranslations = {
                 'Your PIN is required\nto connect your hardware wallet'
         },
         Send: {
-            REVIEW_TRANSACTION: 'Review transaction on your hardware wallet',
-            OPEN_APP: 'Please open {{app}} app on your Ledger',
-            BROADCASTING: 'Broadcasting transaction',
-            SIGNING: 'Signing transaction',
-            TR_UNDERPRICED: 'Transaction underpriced: gas price might be too low',
-            NOT_ENOUGH_TOKENS: 'Insufficient funds for transaction',
-            COSMOS_ERROR_12: 'Insufficient fee',
-            COSMOS_ERROR_14: 'Insufficient funds for transaction',
-
             inputAddress: 'Search public addresses or domain names',
             memo: 'Memo (optional)',
             amount: 'Amount',
@@ -176,7 +170,7 @@ export const translation: ITranslations = {
             genericError: 'Operation could not be completed. Check internet connection',
             insufficientFunds: 'Insufficient funds',
             receipientWarning: 'Warning: recipient address is not checksumed',
-            allBalance: 'Add all balance',
+            allBalance: 'All balance: ',
             cameraDisabledTitle: 'Enable camera',
             cameraDisabledText: 'Please enable camera on device settings',
             emptyAddress: 'Your address book is empty',
@@ -189,7 +183,10 @@ export const translation: ITranslations = {
             alertEditDescription: 'Use a relevant name or an alias for this address',
             deleteContact: 'Delete contact',
             editContactName: 'Edit name',
-            reviewTransaction: 'Review transaction on your hardware wallet'
+            reviewTransaction: 'Review transaction on your hardware wallet',
+            addAddress: 'Add\naddress',
+            enterAmount: 'Enter\namount',
+            confirmTransaction: 'Confirm\ntransaction'
         },
 
         AccountSettings: {
@@ -216,7 +213,9 @@ export const translation: ITranslations = {
             addWalletTitle: 'Add Wallet',
             manageWallets: 'Manage wallets',
             connectLedger: 'Connect your Ledger!',
-            quicklyConnectLedger: 'Quickly connect your Ledger and manage your assests'
+            quicklyConnectLedger: 'Quickly connect your Ledger and manage your assests',
+            connectWallet: 'Manage your wallets',
+            quicklyConnectWallet: 'Quickly create or recover your wallet and manage your assets'
         },
         Transaction: {
             transactionID: 'Transaction ID',
@@ -312,7 +311,20 @@ export const translation: ITranslations = {
             chooseUsername: 'Just choose a username and you’re all set.',
             congrats: 'Congrats! This name is available.',
             eg: 'e.g. johndoe',
-            invalidUsername: 'Username is taken. Try something else.'
+            errorMessage: 'Username is {{message}}. Try something else.',
+            taken: 'taken',
+            invalid: 'invalid'
+        },
+        LoadingModal: {
+            txFailed: 'Transaction has failed!',
+            REVIEW_TRANSACTION: 'Review transaction on your hardware wallet',
+            OPEN_APP: 'Please open {{app}} app on your Ledger',
+            BROADCASTING: 'Broadcasting transaction',
+            SIGNING: 'Signing transaction',
+            TR_UNDERPRICED: 'Transaction underpriced: gas price might be too low',
+            NOT_ENOUGH_TOKENS: 'Insufficient funds for transaction',
+            COSMOS_ERROR_12: 'Insufficient fee',
+            COSMOS_ERROR_14: 'Insufficient funds for transaction'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -12,8 +12,7 @@ export default (theme: ITheme) =>
         },
         topContainer: {
             flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center'
+            flexDirection: 'column'
         },
         bottomContainer: {
             justifyContent: 'center',
@@ -21,6 +20,7 @@ export default (theme: ITheme) =>
             alignItems: 'center'
         },
         docImage: {
+            flex: 1,
             alignSelf: 'center'
         },
         bottomButton: {
@@ -47,7 +47,7 @@ export default (theme: ITheme) =>
             lineHeight: 22,
             textAlign: 'center',
             color: theme.colors.textSecondary,
-            marginBottom: BASE_DIMENSION * 10
+            marginTop: BASE_DIMENSION * 6
         },
         text: {
             fontSize: theme.fontSize.large,

@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { IReduxState } from '../../redux/state';
 import { Blockchain } from '../../core/blockchain/types';
 import { convertAmount } from '../../core/utils/balance';
+import { IExchangeRates } from '../../redux/market/state';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -18,7 +19,7 @@ interface IExternalProps {
 }
 
 export interface IReduxProps {
-    exchangeRates: any;
+    exchangeRates: IExchangeRates;
     userCurrency: string;
 }
 

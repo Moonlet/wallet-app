@@ -9,7 +9,6 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { TokenCard } from '../token-card/token-card';
 import { ITokenConfig } from '../../core/blockchain/types/token';
-import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -42,7 +41,7 @@ export const TokenDashboardComponent = (
         <ScrollView
             contentContainerStyle={[
                 props.styles.scrollContainer,
-                { paddingBottom: props.showBottomPadding ? BASE_DIMENSION * 8 : 0 }
+                { paddingBottom: props.showBottomPadding ? 70 : 0 }
             ]}
             showsVerticalScrollIndicator={false}
         >
@@ -56,6 +55,7 @@ export const TokenDashboardComponent = (
                                 navigation={props.navigation}
                                 key={`token-${index}`}
                                 blockchain={props.blockchain}
+                                index={index}
                             />
                         )
                 )}

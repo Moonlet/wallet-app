@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, TouchableOpacity, Platform } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import Icon from '../../icon';
-import { ICON_SIZE, BASE_DIMENSION } from '../../../styles/dimensions';
+import { ICON_SIZE } from '../../../styles/dimensions';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
 import { WebView } from '../../../library/webview/webview';
+import { SafeAreaView } from 'react-navigation';
 
 interface IExternalProps {
     onClose?: () => void;
@@ -17,12 +18,7 @@ export const TCComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     return (
-        <View
-            style={[
-                props.styles.container,
-                { paddingTop: Platform.OS === 'ios' && props.showClose ? BASE_DIMENSION * 5 : 0 }
-            ]}
-        >
+        <SafeAreaView forceInset={{ bottom: 'never' }} style={props.styles.container}>
             <React.Fragment>
                 {props.showClose && (
                     <TouchableOpacity
@@ -46,7 +42,7 @@ export const TCComponent = (
                     />
                 </View>
             </React.Fragment>
-        </View>
+        </SafeAreaView>
     );
 };
 

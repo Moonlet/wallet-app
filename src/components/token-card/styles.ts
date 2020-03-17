@@ -5,15 +5,11 @@ import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            flexDirection: 'row',
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
             paddingHorizontal: BASE_DIMENSION,
-            paddingVertical: BASE_DIMENSION * 2,
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginBottom: BASE_DIMENSION,
-            flexDirection: 'row'
+            paddingVertical: BASE_DIMENSION * 2
         },
         accountInfoContainer: {
             flex: 1,
@@ -22,7 +18,8 @@ export default (theme: ITheme) =>
             marginLeft: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         icon: {
-            color: theme.colors.accent
+            color: theme.colors.accent,
+            alignSelf: 'center'
         },
         address: {
             fontSize: 16,

@@ -36,4 +36,5 @@ export interface INearAccount {
     name: string;
     amount: BigNumber;
     exists: boolean;
+    valid: boolean;
 }

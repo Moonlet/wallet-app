@@ -267,7 +267,8 @@ export const CreateWalletNavigation = createStackNavigator(
     },
     {
         initialRouteName: 'CreateWalletMnemonic',
-        defaultNavigationOptions: defaultStackNavigationOptions
+        defaultNavigationOptions: defaultStackNavigationOptions,
+        headerLayoutPreset: 'center'
     }
 );
 

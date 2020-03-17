@@ -4,21 +4,20 @@ import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
-        container: {},
-        inputBoxTop: {
-            marginTop: 0
-        },
-        inputBox: {
-            paddingVertical: BASE_DIMENSION,
-            borderRadius: BORDER_RADIUS,
-            backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2
+        container: {
+            flex: 0
         },
         input: {
             flex: 1,
-            fontSize: 17,
-            lineHeight: 22,
-            color: theme.colors.text
+            color: theme.colors.text,
+            paddingRight: BASE_DIMENSION * 2
+        },
+        inputBox: {
+            height: BASE_DIMENSION * 5,
+            borderRadius: BORDER_RADIUS,
+            backgroundColor: theme.colors.inputBackground,
+            paddingHorizontal: BASE_DIMENSION,
+            flexDirection: 'row'
         },
         priceLabel: {
             fontSize: 13,

@@ -5,7 +5,6 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
-import Modal from '../../library/modal/modal';
 import { Text } from '../../library/text/text';
 import { ILoadingModalMessage } from '../../redux/ui/loading-modal/state';
 import { translate } from '../../core/i18n';
@@ -37,15 +36,13 @@ export const LoadingModalComponent = (
         props.message && translate('LoadingModal.' + props.message.text, { app: props.blockchain });
 
     return (
-        <Modal isVisible={props.isVisible}>
-            <View style={props.styles.container}>
-                <ActivityIndicator
-                    size="large"
-                    color={props.spinnerColor ? props.spinnerColor : props.theme.colors.accent}
-                />
-                {message && <Text style={props.styles.message}>{message}</Text>}
-            </View>
-        </Modal>
+        <View style={[props.styles.container, { display: props.isVisible ? 'flex' : 'none' }]}>
+            <ActivityIndicator
+                size="large"
+                color={props.spinnerColor ? props.spinnerColor : props.theme.colors.accent}
+            />
+            {message && <Text style={props.styles.message}>{message}</Text>}
+        </View>
     );
 };
 

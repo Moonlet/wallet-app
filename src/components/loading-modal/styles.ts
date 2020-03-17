@@ -5,8 +5,12 @@ import { BASE_DIMENSION } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            flex: 1,
-            backgroundColor: theme.colors.overlayBackground,
+            display: 'flex',
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            backgroundColor: theme.colors.gradientDark,
+            opacity: 0.75,
             justifyContent: 'center'
         },
         message: {

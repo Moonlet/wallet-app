@@ -364,11 +364,11 @@ PODS:
     - React
   - RNGestureHandler (1.5.1):
     - React
-  - RNKeychain (5.0.1):
-    - React
   - RNReanimated (1.7.0):
     - React
   - RNScreens (2.0.0-alpha.8):
+    - React
+  - RNSecureKeyStore (1.0.0):
     - React
   - RNSentry (1.0.9):
     - React
@@ -439,9 +439,9 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNFirebase (from `../node_modules/react-native-firebase/ios`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
-  - RNKeychain (from `../node_modules/react-native-keychain`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSecureKeyStore (from `../node_modules/react-native-secure-key-store/ios`)
   - "RNSentry (from `../node_modules/@sentry/react-native`)"
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
@@ -554,12 +554,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-firebase/ios"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
-  RNKeychain:
-    :path: "../node_modules/react-native-keychain"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSecureKeyStore:
+    :path: "../node_modules/react-native-secure-key-store/ios"
   RNSentry:
     :path: "../node_modules/@sentry/react-native"
   RNSVG:
@@ -633,9 +633,9 @@ SPEC CHECKSUMS:
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNFirebase: ac0de8b24c6f91ae9459575491ed6a77327619c6
   RNGestureHandler: 7add966bb5d90ee8cf38d4341f87814474357972
-  RNKeychain: a5623de13ec5378bfb8035422e3dee4fa538660d
   RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
   RNScreens: bfa9143ca291bcf3804c932f77b9617ff324704f
+  RNSecureKeyStore: f1ad870e53806453039f650720d2845c678d89c8
   RNSentry: 2803ba8c8129dcf26b79e9b4d8c80168be6e4390
   RNSVG: 7e16ddfc6e00d5aa69c9eb83e699bcce5dcb85d4
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
@@ -648,4 +648,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: eb4c90488aa13900d7ec0ed35cd04b71cd4508c6
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1

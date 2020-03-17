@@ -1,12 +1,11 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { Platform } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { getPassword, setPassword } from '../../core/secure/keychain';
 import { Deferred } from '../../core/utils/deferred';
 import { PasswordPin } from './components/password-pin/password-pin';
-import bind from 'bind-decorator';
 import { translate } from '../../core/i18n';
 import { PasswordTerms } from './components/password-terms/password-terms';
 import Modal from '../../library/modal/modal';
@@ -81,7 +80,7 @@ export class PasswordModalComponent extends React.Component<
         if (this.props.shouldCreatePassword) {
             const keychainPassword = await getPassword();
 
-            if (keychainPassword && keychainPassword.username) {
+            if (keychainPassword && keychainPassword.password) {
                 this.setState({ showTerms: false });
             } else {
                 this.setState({ showTerms: true });
@@ -94,7 +93,6 @@ export class PasswordModalComponent extends React.Component<
         return this.passwordRequestDeferred.promise;
     }
 
-    @bind
     public async onBiometryLogin(success: boolean) {
         if (success) {
             this.setState({ visible: false });
@@ -109,7 +107,6 @@ export class PasswordModalComponent extends React.Component<
         }
     }
 
-    @bind
     public async onPasswordEntered(value: string): Promise<string> {
         if (this.state.changePIN === true) {
             this.setState({ clearPasswordInput: true, oldPassword: value });
@@ -173,7 +170,7 @@ export class PasswordModalComponent extends React.Component<
             return verifyPassword.errorMessage;
         }
     }
-    @bind
+
     public onAcknowledged() {
         if (this.state.changePIN) {
             this.setState({
@@ -196,32 +193,24 @@ export class PasswordModalComponent extends React.Component<
 
     public render() {
         return (
-            <View
-                style={{
-                    display: this.state.visible ? 'flex' : 'none',
-                    position: 'absolute',
-                    height: '100%'
-                }}
-            >
-                <Modal isVisible={this.state.visible} animationInTiming={5}>
-                    {this.state.showTerms ? (
-                        <PasswordTerms
-                            onAcknowledged={this.onAcknowledged}
-                            changePIN={this.state.changePIN}
-                        />
-                    ) : (
-                        <PasswordPin
-                            updatePinProps={this.state.updatePinProps}
-                            title={this.state.title}
-                            subtitle={this.state.subtitle}
-                            onPasswordEntered={this.onPasswordEntered}
-                            onBiometryLogin={this.onBiometryLogin}
-                            clearPasswordInput={this.state.clearPasswordInput}
-                            changePIN={this.props.changePIN}
-                        />
-                    )}
-                </Modal>
-            </View>
+            <Modal isVisible={this.state.visible} animationInTiming={5}>
+                {this.state.showTerms ? (
+                    <PasswordTerms
+                        onAcknowledged={() => this.onAcknowledged()}
+                        changePIN={this.state.changePIN}
+                    />
+                ) : (
+                    <PasswordPin
+                        updatePinProps={this.state.updatePinProps}
+                        title={this.state.title}
+                        subtitle={this.state.subtitle}
+                        onPasswordEntered={(value: string) => this.onPasswordEntered(value)}
+                        onBiometryLogin={(success: boolean) => this.onBiometryLogin(success)}
+                        clearPasswordInput={this.state.clearPasswordInput}
+                        changePIN={this.props.changePIN}
+                    />
+                )}
+            </Modal>
         );
     }
 

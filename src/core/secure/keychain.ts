@@ -6,9 +6,11 @@ const defaultOptions = {
 };
 
 export const setPassword = async (password: string, shouldEncrypt: boolean = true) => {
-    await RNSecureKeyStore.remove(defaultOptions.service).catch(err => {
+    try {
+        await RNSecureKeyStore.remove(defaultOptions.service);
+    } catch (err) {
         //
-    });
+    }
 
     if (shouldEncrypt) {
         password = await hash(password);
@@ -20,9 +22,13 @@ export const setPassword = async (password: string, shouldEncrypt: boolean = tru
 };
 
 export const getPassword = async () => {
-    const password = await RNSecureKeyStore.get(defaultOptions.service).catch(err => {
-        //
-    });
+    let password = null;
+    try {
+        password = await RNSecureKeyStore.get(defaultOptions.service);
+    } catch (err) {
+        // if password it's not set
+        // [Error: {"message":"key does not present"}]
+    }
 
     return {
         password

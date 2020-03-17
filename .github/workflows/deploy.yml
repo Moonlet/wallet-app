@@ -21,7 +21,7 @@ jobs:
         with:
           ruby-version: "2.x"
       - name: Generate firebase config file
-        run: echo '${{ secrets.FB_CONFIG_ANDROID_DEPLOY }}' > android/app/src/main/google-services.json
+        run: echo '${{ secrets.FB_CONFIG_ANDROID_DEPLOY }}' > android/app/google-services.json
       - name: Setup key
         uses: webfactory/ssh-agent@v0.1.1
         with:

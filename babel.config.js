@@ -1,6 +1,13 @@
 module.exports = {
-    presets: ['module:metro-react-native-babel-preset', 'module:react-native-dotenv'],
+    presets: ['module:metro-react-native-babel-preset'],
     plugins: [
+        [
+            'inline-dotenv',
+            {
+                unsafe: true,
+                systemVar: 'overwrite'
+            }
+        ],
         [
             '@babel/plugin-proposal-decorators',
             {

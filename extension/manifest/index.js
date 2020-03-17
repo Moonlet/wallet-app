@@ -1,10 +1,10 @@
 module.exports = {
     release: {
-        chrome: require('./chrome').default,
-        firefox: require('./firefox').default
+        chrome: require('./chrome'),
+        firefox: require('./firefox')
     },
     beta: {
-        chrome: require('./beta/chrome-beta').default,
-        firefox: require('./beta/firefox-beta').default
+        chrome: require('./beta/chrome-beta'),
+        firefox: require('./beta/firefox-beta')
     }
 };

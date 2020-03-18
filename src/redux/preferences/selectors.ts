@@ -86,7 +86,15 @@ export const getBlockchainsPortfolio = createSelector(
                 blockchainObject = option;
             }
 
-            list[blockchain] = blockchainObject;
+            if (blockchain === Blockchain.NEAR) {
+                if (isFeatureActive(RemoteFeature.NEAR) === true) {
+                    list[blockchain] = blockchainObject;
+                }
+            } else if (blockchain === Blockchain.COSMOS) {
+                if (isFeatureActive(RemoteFeature.COSMOS) === true) {
+                    list[blockchain] = blockchainObject;
+                }
+            } else list[blockchain] = blockchainObject;
         });
 
         return Object.keys(list)
@@ -114,6 +122,27 @@ export const hasNetwork = (blockchain: Blockchain, isTestNet: boolean) => {
     }
 };
 
+export const getNrActiveBlockchains = createSelector(
+    (state: IReduxState) => state.preferences,
+    (state: IReduxState) => getBlockchainsPortfolio(state),
+    (preferences: IPrefState, portfolio: [{ key: Blockchain; value: IBlockchainOptions }]) => {
+        let nrActiveBlockchains = 0;
+
+        portfolio.map(object => {
+            let blockchain;
+            const { active } = object.value;
+            blockchain =
+                active && hasNetwork(object.key, preferences.testNet) ? object.key : undefined;
+
+            if (blockchain) {
+                nrActiveBlockchains++;
+            }
+        });
+
+        return nrActiveBlockchains;
+    }
+);
+
 export const getBlockchains = createSelector(
     (state: IReduxState) => state.preferences,
     (state: IReduxState) => getBlockchainsPortfolio(state),
@@ -126,15 +155,7 @@ export const getBlockchains = createSelector(
             blockchain =
                 active && hasNetwork(object.key, preferences.testNet) ? object.key : undefined;
 
-            if (blockchain === Blockchain.NEAR) {
-                if (isFeatureActive(RemoteFeature.NEAR) === true) {
-                    blockchains.push(object.key);
-                }
-            } else if (blockchain === Blockchain.COSMOS) {
-                if (isFeatureActive(RemoteFeature.COSMOS) === true) {
-                    blockchains.push(object.key);
-                }
-            } else if (blockchain) {
+            if (blockchain) {
                 blockchains.push(object.key);
             }
         });

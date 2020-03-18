@@ -1,3 +1,6 @@
+require('dotenv').config();
+
+const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -13,6 +16,21 @@ const BUILD = process.env.BUILD || 0;
 const BROWSER = process.env.BROWSER || 'chrome';
 const TARGET = process.env.TARGET || 'release';
 const VERSION = `${pkg.version}.${BUILD}`;
+
+const dotenvWhitelistFile = fs
+    .readFileSync(path.resolve(__dirname, '../src/config/.env.whitelist'))
+    .toString();
+const envVarsWhitelist = dotenvWhitelistFile
+    .split('\n')
+    .map(v => v.trim())
+    .filter(Boolean)
+    .map(v => v.substring(0, v.indexOf('=')));
+const ENV_VARS = {};
+for (let v of envVarsWhitelist) {
+    if (v.indexOf('MOONLET_') === 0) {
+        ENV_VARS[`process.env.${v}`] = JSON.stringify(process.env[v]);
+    }
+}
 
 // This is needed for webpack to compile JavaScript.
 // Many OSS React Native packages are not compiled to ES5 before being
@@ -86,6 +104,8 @@ module.exports = {
         }),
         new webpack.DefinePlugin({
             __DEV__: false,
+            ...ENV_VARS,
+            'process.env.TARGET': `"${TARGET}"`,
             'process.env.VERSION': `"${VERSION}"`
         }),
         new CopyPlugin([
@@ -130,8 +150,7 @@ module.exports = {
             'react-native-device-info$': path.resolve(
                 __dirname,
                 'modules-mocks/react-native-device-info'
-            ),
-            'react-native-keychain$': path.resolve(__dirname, 'modules-mocks/react-native-keychain')
+            )
         },
         // If you're working on a multi-platform React Native app, web-specific
         // module implementations should be written in files using the extension

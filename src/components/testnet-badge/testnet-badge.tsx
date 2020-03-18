@@ -36,7 +36,7 @@ export const TestnetBadgeComponent = (
             <View style={props.styles.container}>
                 <Text style={props.styles.text}>
                     {translate('App.labels.youAreOn', {
-                        blockchain: Capitalize(props.blockchain),
+                        blockchain: props.blockchain ? Capitalize(props.blockchain) : '',
                         networkName: props.networkName
                     })}
                 </Text>

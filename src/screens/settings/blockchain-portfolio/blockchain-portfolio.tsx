@@ -14,8 +14,11 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { setBlockchainActive, setBlockchainOrder } from '../../../redux/preferences/actions';
 import { Blockchain } from '../../../core/blockchain/types';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
-import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
-import { getBlockchainsPortfolio, hasNetwork } from '../../../redux/preferences/selectors';
+import {
+    getBlockchainsPortfolio,
+    hasNetwork,
+    getNrActiveBlockchains
+} from '../../../redux/preferences/selectors';
 import { Dialog } from '../../../components/dialog/dialog';
 import { BASE_DIMENSION } from '../../../styles/dimensions';
 import { SmartImage } from '../../../library/image/smart-image';
@@ -25,6 +28,7 @@ export interface IReduxProps {
     setBlockchainActive: typeof setBlockchainActive;
     setBlockchainOrder: typeof setBlockchainOrder;
     testNet: boolean;
+    nrActiveBlockchains: number;
 }
 
 const mapDispatchToProps = {
@@ -35,7 +39,8 @@ const mapDispatchToProps = {
 const mapStateToProps = (state: IReduxState) => {
     return {
         testNet: state.preferences.testNet,
-        blockchains: getBlockchainsPortfolio(state)
+        blockchains: getBlockchainsPortfolio(state),
+        nrActiveBlockchains: getNrActiveBlockchains(state)
     };
 };
 
@@ -62,13 +67,6 @@ export class BlockchainPortfolioComponent extends React.Component<
         const { styles, theme } = this.props;
 
         const networkAvailable = hasNetwork(item.key, this.props.testNet);
-
-        if (item.key === Blockchain.NEAR && isFeatureActive(RemoteFeature.NEAR) === false) {
-            return <View />;
-        }
-        if (item.key === Blockchain.COSMOS && isFeatureActive(RemoteFeature.COSMOS) === false) {
-            return <View />;
-        }
 
         const BlockchainIcon = getBlockchain(item.key).config.iconComponent;
 
@@ -98,9 +96,17 @@ export class BlockchainPortfolioComponent extends React.Component<
                     style={styles.iconContainer}
                     onPressOut={() => {
                         if (!networkAvailable) {
-                            Dialog.confirm(translate('Settings.blockchainHasNoNetwork'), '');
+                            Dialog.info(translate('Settings.blockchainHasNoNetwork'), '');
                         } else {
-                            this.props.setBlockchainActive(item.key, !item.value.active);
+                            if (
+                                item.value.active === true &&
+                                this.props.nrActiveBlockchains === 1
+                            ) {
+                                Dialog.info(
+                                    translate('Settings.cannotDeactivateAllBlockchains'),
+                                    ''
+                                );
+                            } else this.props.setBlockchainActive(item.key, !item.value.active);
                         }
                     }}
                 >

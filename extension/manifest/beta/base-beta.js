@@ -1,6 +1,6 @@
-import manifest from '../base';
+const manifest = require('../base');
 
-export default Object.assign({}, manifest, {
+module.exports = Object.assign({}, manifest, {
     name: 'Moonlet Wallet Beta',
 
     icons: {

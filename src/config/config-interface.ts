@@ -1,4 +1,4 @@
 export interface IAppConfig {
-    example: string;
+    supportUrl: string;
     env: string;
 }

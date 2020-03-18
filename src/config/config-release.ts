@@ -1,11 +1,7 @@
 import { IAppConfig } from './config-interface';
-import { Platform } from 'react-native';
 
 export const CONFIG: IAppConfig = {
-    example: Platform.select({
-        default: 'default release',
-        web: 'web release'
-    }),
+    supportUrl: 'https://moonlet.xyz/links/support',
     env: process.env.MOONLET_SOME_KEY
 };
 

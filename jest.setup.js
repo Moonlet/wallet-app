@@ -48,7 +48,8 @@ NativeModules.RNGestureHandlerModule = {
 jest.mock('react-native-device-info', () => {
     return {
         getVersion: jest.fn(),
-        getUniqueId: jest.fn()
+        getUniqueId: jest.fn(),
+        getBundleId: jest.fn()
     };
 });
 

@@ -17,6 +17,7 @@ import { ChainIdType } from '../../../../core/blockchain/types';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { WalletType } from '../../../../core/wallet/types';
 import { ViewKey } from './components/view-key/view-key';
+import CONFIG from '../../../../config';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -98,10 +99,9 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         });
     };
     public reportIssue = () => {
-        const url = 'https://moonlet.xyz/links/support';
-        Linking.canOpenURL(url).then(supported => {
+        Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
             if (supported) {
-                Linking.openURL(url);
+                Linking.openURL(CONFIG.supportUrl);
             }
         });
     };

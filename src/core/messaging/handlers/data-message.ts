@@ -24,7 +24,7 @@ const handleMessages = (message: ISilentMessage) => {
             const data = JSON.parse(message.data);
             store.dispatch(
                 // @ts-ignore
-                updateTransactionFromBlockchain(data.transactionHash, data.blockchain, true)
+                updateTransactionFromBlockchain(data.transactionHash, data.blockchain, data.chainId, true)
             );
             break;
 

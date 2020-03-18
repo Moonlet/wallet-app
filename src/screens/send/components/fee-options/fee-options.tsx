@@ -25,6 +25,7 @@ export interface IExternalProps {
     account: IAccountState;
     toAddress: string;
     onFeesChanged: (feeOptions: IFeeOptions) => any;
+    insufficientFundsFees: boolean;
 }
 
 interface IState {
@@ -68,6 +69,7 @@ export class FeeOptionsComponent extends React.Component<
             .calculateFees(
                 this.props.account.address,
                 this.props.toAddress,
+                this.props.sendingToken.type,
                 1,
                 this.props.sendingToken.contractAddress
             );
@@ -178,6 +180,7 @@ export class FeeOptionsComponent extends React.Component<
                         blockchain={this.props.account.blockchain}
                         onInputFees={this.onInputAdvancedFees}
                         token={this.props.token}
+                        insufficientFundsFees={this.props.insufficientFundsFees}
                     />
                 )
             );
@@ -199,7 +202,7 @@ export class FeeOptionsComponent extends React.Component<
                             <TouchableOpacity
                                 testID="advanced-fees"
                                 onPress={this.onAdvancedButton}
-                                style={[styles.buttonRightOptions]}
+                                style={styles.buttonRightOptions}
                             >
                                 <Text style={styles.textTranferButton}>
                                     {this.state.showAdvancedOptions

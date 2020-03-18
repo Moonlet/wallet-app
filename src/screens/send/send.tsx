@@ -19,7 +19,7 @@ import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { BASE_DIMENSION } from '../../styles/dimensions';
-import { ITokenConfig } from '../../core/blockchain/types/token';
+import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { IAccountState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
@@ -75,6 +75,7 @@ interface IState {
     showExtensionMessage: boolean;
     memo: string;
     headerSteps: { step: number; title: string; active: boolean }[];
+    insufficientFundsFees: boolean;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -108,7 +109,8 @@ export class SendScreenComponent extends React.Component<
                 { step: 1, title: translate('Send.addAddress'), active: true },
                 { step: 2, title: translate('Send.enterAmount'), active: false },
                 { step: 3, title: translate('Send.confirmTransaction'), active: false }
-            ]
+            ],
+            insufficientFundsFees: false
         };
     }
 
@@ -177,21 +179,13 @@ export class SendScreenComponent extends React.Component<
         this.setState({ amount }, () => this.availableFunds());
     }
 
-    public addBalance(tokenBalanceValue: BigNumber) {
-        const balance = tokenBalanceValue.minus(this.state.feeOptions?.feeTotal);
-
-        if (balance.isGreaterThanOrEqualTo(0)) {
-            const blockchainInstance = getBlockchain(this.props.account.blockchain);
-            const amountFromStd = blockchainInstance.account.amountFromStd(new BigNumber(balance));
-            this.setState({ amount: amountFromStd.toString() }, () => this.availableFunds());
-        }
-    }
-
     public availableAmount() {
         const token = this.props.account.tokens[this.props.token.symbol];
-        const tokenBalanceValue = new BigNumber(token.balance?.value);
 
-        const balance = tokenBalanceValue.minus(this.state.feeOptions?.feeTotal);
+        let balance: BigNumber = new BigNumber(token.balance?.value);
+        if (this.props.token.type === TokenType.NATIVE) {
+            balance = balance.minus(this.state.feeOptions?.feeTotal);
+        }
 
         if (balance.isGreaterThanOrEqualTo(0)) {
             const blockchainInstance = getBlockchain(this.props.account.blockchain);
@@ -201,17 +195,40 @@ export class SendScreenComponent extends React.Component<
     }
 
     public availableFunds() {
-        const feeTokenSymbol = getBlockchain(this.props.account.blockchain).config.coin;
-        let completeAmount = this.getAmountToStd();
-        const tokenBalanceValue = new BigNumber(this.props.token.balance?.value);
-        if (this.props.token.symbol === feeTokenSymbol) {
-            completeAmount = completeAmount.plus(new BigNumber(this.state.feeOptions?.feeTotal));
+        // Amount check
+        const inputAmount = this.getInputAmountToStd();
+        const availableAmount = new BigNumber(this.props.token.balance?.value);
+
+        // amount > available amount
+        if (inputAmount.isGreaterThan(availableAmount)) {
+            this.setState({ insufficientFunds: true });
+            return;
+        } else {
+            this.setState({ insufficientFunds: false });
         }
 
-        if (tokenBalanceValue.minus(completeAmount).isGreaterThanOrEqualTo(0)) {
-            this.setState({ insufficientFunds: false });
+        // Fees check
+        const feeTotal = new BigNumber(this.state.feeOptions?.feeTotal);
+
+        if (this.props.token.type === TokenType.NATIVE) {
+            // feeTotal + amount > available amount
+            if (feeTotal.plus(inputAmount).isGreaterThan(availableAmount)) {
+                this.setState({ insufficientFundsFees: true });
+            } else {
+                this.setState({ insufficientFundsFees: false });
+            }
         } else {
-            this.setState({ insufficientFunds: true });
+            const nativeCoin = getBlockchain(this.props.account.blockchain).config.coin;
+            const nativeCoinBalance = this.props.account.tokens[nativeCoin].balance?.value;
+            const availableBalance = new BigNumber(nativeCoinBalance);
+
+            // ERC20 / ZRC2
+            // feeTotal > available amount
+            if (feeTotal.isGreaterThan(availableBalance)) {
+                this.setState({ insufficientFundsFees: true });
+            } else {
+                this.setState({ insufficientFundsFees: false });
+            }
         }
     }
 
@@ -237,7 +254,7 @@ export class SendScreenComponent extends React.Component<
         );
     }
 
-    private getAmountToStd(): BigNumber {
+    private getInputAmountToStd(): BigNumber {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
         return blockchainInstance.account.amountToStd(
             new BigNumber(this.state.amount ? this.state.amount : 0),
@@ -248,7 +265,7 @@ export class SendScreenComponent extends React.Component<
     private renderBottomConfirm() {
         const { token, styles, account } = this.props;
         const { amount, headerSteps } = this.state;
-        const stdAmount = this.getAmountToStd();
+        const stdAmount = this.getInputAmountToStd();
 
         const activeIndex = _.findIndex(headerSteps, ['active', true]);
 
@@ -263,6 +280,7 @@ export class SendScreenComponent extends React.Component<
                 if (
                     amount === '' ||
                     this.state.insufficientFunds ||
+                    this.state.insufficientFundsFees ||
                     isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
                     isNaN(Number(this.state.feeOptions?.gasPrice))
                 )
@@ -368,21 +386,26 @@ export class SendScreenComponent extends React.Component<
                     account={this.props.account}
                     toAddress={this.state.toAddress}
                     onFeesChanged={(feeOptions: IFeeOptions) => this.onFeesChanged(feeOptions)}
+                    insufficientFundsFees={this.state.insufficientFundsFees}
                 />
             </View>
         );
     }
 
     private renderConfirmTransaction() {
-        const { styles } = this.props;
-        const extraFields = getBlockchain(this.props.account.blockchain).config.ui.extraFields;
+        const { account, styles } = this.props;
+        const { blockchain } = account;
+        const config = getBlockchain(blockchain).config;
+        const extraFields = config.ui.extraFields;
+        const feeToken = account.tokens[config.coin];
+        const feeTokenSymbol = config.feeOptions.gasPriceToken;
 
         return (
             <View key="confirmTransaction" style={styles.confirmTransactionContainer}>
                 <Text style={styles.receipientLabel}>{translate('Send.recipientLabel')}</Text>
                 <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Text style={styles.confirmTransactionText}>
-                        {formatAddress(this.state.toAddress, this.props.account.blockchain)}
+                        {formatAddress(this.state.toAddress, blockchain)}
                     </Text>
                 </View>
 
@@ -397,10 +420,10 @@ export class SendScreenComponent extends React.Component<
                 <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Amount
                         style={styles.confirmTransactionText}
-                        token={this.props.token.symbol}
-                        tokenDecimals={this.props.token.decimals}
+                        token={feeTokenSymbol}
+                        tokenDecimals={feeToken.decimals}
                         amount={this.state.feeOptions?.feeTotal}
-                        blockchain={this.props.account.blockchain}
+                        blockchain={blockchain}
                     />
                 </View>
 

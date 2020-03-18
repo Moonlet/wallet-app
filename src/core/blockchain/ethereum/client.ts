@@ -99,6 +99,7 @@ export class Client extends BlockchainGenericClient {
     public async calculateFees(
         from: string,
         to: string,
+        tokenType: TokenType,
         amount: BigNumber = new BigNumber(1),
         contractAddress?: string
     ) {
@@ -142,7 +143,7 @@ export class Client extends BlockchainGenericClient {
         const gasPrice = presets?.standard || config.feeOptions.defaults.gasPrice;
         const gasLimit = results[0].result
             ? new BigNumber(parseInt(results[0].result, 16))
-            : config.feeOptions.defaults.gasLimit;
+            : config.feeOptions.defaults.gasLimit[tokenType];
 
         return {
             gasPrice: gasPrice.toString(),

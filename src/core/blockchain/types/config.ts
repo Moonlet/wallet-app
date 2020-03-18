@@ -19,7 +19,9 @@ export interface IBlockchainConfig {
         gasPriceToken: string;
         defaults: {
             gasPrice: BigNumber;
-            gasLimit: BigNumber;
+            gasLimit: {
+                [tokenType: string]: BigNumber;
+            };
             gasPricePresets?: {
                 cheap?: BigNumber;
                 standard?: BigNumber;

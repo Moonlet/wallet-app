@@ -5,7 +5,7 @@ import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            marginTop: BASE_DIMENSION * 5,
+            marginTop: BASE_DIMENSION * 3,
             marginBottom: BASE_DIMENSION * 3
         },
         inputText: {
@@ -65,5 +65,11 @@ export default (theme: ITheme) =>
         amountsContainer: {
             flexDirection: 'row',
             justifyContent: 'space-between'
+        },
+        receipientLabel: {
+            fontSize: 13,
+            lineHeight: 18,
+            paddingLeft: BASE_DIMENSION,
+            color: theme.colors.textSecondary
         }
     });

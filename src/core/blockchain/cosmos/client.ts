@@ -3,6 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { config } from './config';
 import { NameService } from './name-service';
+import { TokenType } from '../types/token';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -83,10 +84,10 @@ export class Client extends BlockchainGenericClient {
         });
     }
 
-    public async calculateFees(from: string, to: string) {
+    public async calculateFees(from: string, to: string, tokenType: TokenType) {
         const gasPrice =
             config.feeOptions.defaults.gasPricePresets.low || config.feeOptions.defaults.gasPrice;
-        const gasLimit = config.feeOptions.defaults.gasLimit.toFixed();
+        const gasLimit = config.feeOptions.defaults.gasLimit[tokenType].toFixed();
         const feeTotal = gasPrice.multipliedBy(new BigNumber(gasLimit)).toFixed();
 
         return {

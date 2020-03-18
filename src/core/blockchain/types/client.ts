@@ -3,6 +3,7 @@ import { IBlockchainNetwork, ChainIdType } from './network';
 import { IFeeOptions, IBlockchainTransaction } from './transaction';
 import { IBlockchainNameService } from '.';
 import { HttpClient } from '../../utils/http-client';
+import { TokenType } from './token';
 
 export interface IBlockInfo {
     number: number;
@@ -36,6 +37,7 @@ export abstract class BlockchainGenericClient {
     public abstract calculateFees(
         from: string,
         to: string,
+        tokenType: TokenType,
         amount?,
         contractAddress?
     ): Promise<IFeeOptions>;

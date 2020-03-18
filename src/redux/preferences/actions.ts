@@ -5,7 +5,7 @@ import { getBalance, setSelectedBlockchain } from '../wallets/actions';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { IBlockchainsOptions } from './state';
 import { IAction } from '../types';
-import { getBlockchains, hasNetwork } from './selectors';
+import { getBlockchains, hasNetwork, getBlockchainsPortfolio } from './selectors';
 
 // actions consts
 export const PREF_SET_CURRENCY = 'PREF_SET_CURRENCY';
@@ -22,12 +22,15 @@ export const setBlockchainActive = (blockchain: Blockchain, active: boolean) => 
     const state = getState();
     const selectedBlockchain = getSelectedBlockchain(state);
 
-    if (selectedBlockchain === blockchain && active === false) {
-        const nextBlockchain = Object.keys(state.preferences.blockchains).find(
-            object => object !== blockchain
+    if (
+        (selectedBlockchain === blockchain && active === false) ||
+        selectedBlockchain === undefined
+    ) {
+        const nextBlockchain = Object.values(getBlockchainsPortfolio(state)).find(
+            object => object.key !== blockchain
         );
         if (nextBlockchain) {
-            setSelectedBlockchain(Blockchain[nextBlockchain])(dispatch, getState);
+            setSelectedBlockchain(Blockchain[nextBlockchain.key])(dispatch, getState);
         }
     }
     dispatch({

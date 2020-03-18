@@ -255,6 +255,7 @@ export const translation: ITranslations = {
             copied: 'Device ID copied!',
             blockchainHasNoNetwork:
                 'Network not availble. Please switch network to activate blockchain',
+            cannotDeactivateAllBlockchains: 'You cannot deactivate all active blockchains',
             changePin: 'Change PIN',
             successChangePin: 'PIN has been changed!'
         },

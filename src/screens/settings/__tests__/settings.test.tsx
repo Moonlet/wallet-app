@@ -1,6 +1,6 @@
 import 'react-native';
 import React from 'react';
-import { SettingsScreenComponent, IProps, IReduxProps } from '../settings';
+import { SettingsScreenComponent, IReduxProps, SUPPORT_URL } from '../settings';
 import { shallow } from 'enzyme';
 import styleProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';
@@ -8,19 +8,14 @@ import { loadTranslations } from '../../../core/i18n';
 
 jest.mock('../../../redux/config');
 
-const props: IProps & IReduxProps = {
+const props: IReduxProps = {
     // @ts-ignore
     navigation: {
         navigate: jest.fn()
     },
     styles: styleProvider(darkTheme),
-    theme: darkTheme,
-    mock: jest.fn()
+    theme: darkTheme
 };
-beforeEach(() => {
-    // @ts-ignore
-    props.mock.mockClear();
-});
 
 export default describe('Wallet screen', () => {
     beforeAll(async () => {
@@ -30,10 +25,5 @@ export default describe('Wallet screen', () => {
     it('renders correctly', () => {
         const wrapper = shallow(<SettingsScreenComponent {...props} />);
         expect(wrapper.debug()).toMatchSnapshot();
-    });
-    it('Report issue', () => {
-        const wrapper = shallow(<SettingsScreenComponent {...props} />);
-        wrapper.find('[testID="report-issue"]').simulate('Press');
-        expect(props.mock).toHaveBeenCalledTimes(1);
     });
 });

@@ -104,11 +104,10 @@ export class FeeOptionsComponent extends React.Component<
         const feeOptions: IFeeOptions = {
             gasPrice,
             gasLimit,
-            feeTotal
+            feeTotal,
+            presets: this.state.feeOptions?.presets
         };
-        this.setState({
-            feeOptions
-        });
+        this.setState({ feeOptions });
         this.props.onFeesChanged(feeOptions);
     }
 

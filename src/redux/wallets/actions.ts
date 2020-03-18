@@ -65,12 +65,6 @@ export const WALLET_SELECT_ACCOUNT = 'WALLET_SELECT_ACCOUNT';
 export const WALLET_SELECT_BLOCKCHAIN = 'WALLET_SELECT_BLOCKCHAIN';
 export const SELECT_WALLET = 'SELECT_WALLET';
 
-// will get this from settings for prod/dev
-const blockchainChainId = {
-    [Blockchain.ETHEREUM]: 3,
-    [Blockchain.ZILLIQA]: 333
-};
-
 // action creators
 export const addWallet = (walletData: IWalletState) => {
     return {

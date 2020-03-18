@@ -17,7 +17,7 @@ import { ChainIdType } from '../../../../core/blockchain/types';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { WalletType } from '../../../../core/wallet/types';
 import { ViewKey } from './components/view-key/view-key';
-import { SUPPORT_URL } from '../../../settings/settings';
+import CONFIG from '../../../../config';
 
 export interface IProps {
     styles: ReturnType<typeof stylesProvider>;
@@ -99,9 +99,9 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         });
     };
     public reportIssue = () => {
-        Linking.canOpenURL(SUPPORT_URL).then(supported => {
+        Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
             if (supported) {
-                Linking.openURL(SUPPORT_URL);
+                Linking.openURL(CONFIG.supportUrl);
             }
         });
     };

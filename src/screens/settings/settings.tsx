@@ -27,8 +27,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { changePIN } from '../../redux/wallets/actions';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { DebugModal } from '../../components/debug-modal/debug-modal';
-
-export const SUPPORT_URL = 'https://moonlet.xyz/links/support';
+import CONFIG from '../../config';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -95,9 +94,9 @@ export class SettingsScreenComponent extends React.Component<
     }
 
     public reportIssueTouch = () => {
-        Linking.canOpenURL(SUPPORT_URL).then(supported => {
+        Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
             if (supported) {
-                Linking.openURL(SUPPORT_URL);
+                Linking.openURL(CONFIG.supportUrl);
             }
         });
     };

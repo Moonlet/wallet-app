@@ -1,6 +1,6 @@
 import 'react-native';
 import React from 'react';
-import { SettingsScreenComponent, IReduxProps, SUPPORT_URL } from '../settings';
+import { SettingsScreenComponent, IReduxProps } from '../settings';
 import { shallow } from 'enzyme';
 import styleProvider from '../styles';
 import { darkTheme } from '../../../styles/themes/dark-theme';

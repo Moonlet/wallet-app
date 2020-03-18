@@ -36,7 +36,15 @@ export const LoadingModalComponent = (
         props.message && translate('LoadingModal.' + props.message.text, { app: props.blockchain });
 
     return (
-        <View style={[props.styles.container, { display: props.isVisible ? 'flex' : 'none' }]}>
+        <View
+            style={[
+                props.styles.container,
+                {
+                    display: props.isVisible ? 'flex' : 'none',
+                    position: props.isVisible ? 'absolute' : 'relative' // used for android
+                }
+            ]}
+        >
             <ActivityIndicator
                 size="large"
                 color={props.spinnerColor ? props.spinnerColor : props.theme.colors.accent}

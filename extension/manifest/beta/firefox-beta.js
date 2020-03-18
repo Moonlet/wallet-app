@@ -1,3 +1,3 @@
-import manifest from './base-beta';
+const manifest = require('./base-beta');
 
-export default Object.assign({}, manifest, {});
+module.exports = Object.assign({}, manifest, {});

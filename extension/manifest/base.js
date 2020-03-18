@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     name: 'Moonlet Wallet',
     version: '0.0.0',
     description: 'Moonlet Wallet Extension',

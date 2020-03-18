@@ -193,7 +193,7 @@ export class PasswordModalComponent extends React.Component<
 
     public render() {
         return (
-            <Modal isVisible={this.state.visible} animationInTiming={5}>
+            <Modal isVisible={this.state.visible} animationInTiming={5} animationOutTiming={5}>
                 {this.state.showTerms ? (
                     <PasswordTerms
                         onAcknowledged={() => this.onAcknowledged()}

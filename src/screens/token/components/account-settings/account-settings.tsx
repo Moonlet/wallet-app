@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Linking, Platform } from 'react-native';
+import { View, TouchableOpacity, Linking, Platform, Modal } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme } from '../../../../core/theme/with-theme';
 import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
@@ -12,7 +12,6 @@ import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ICON_SIZE } from '../../../../styles/dimensions';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { WalletFactory } from '../../../../core/wallet/wallet-factory';
-import Modal from '../../../../library/modal/modal';
 import { ChainIdType } from '../../../../core/blockchain/types';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { WalletType } from '../../../../core/wallet/types';
@@ -79,7 +78,8 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             isLoading: false
         });
     };
-    public revealPublicKey = () => {
+
+    public revealPublicKey() {
         this.setState({
             showKeyScreen: true,
             showBackButton: true,
@@ -87,8 +87,9 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             key: this.props.account.publicKey,
             showSecurityWarning: false
         });
-    };
-    public viewOn = () => {
+    }
+
+    public viewOn() {
         const url = getBlockchain(this.props.account.blockchain)
             .networks.filter(n => n.chainId === this.props.chainId)[0]
             .explorer.getAccountUrl(this.props.account.address);
@@ -97,21 +98,22 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                 Linking.openURL(url);
             }
         });
-    };
-    public reportIssue = () => {
+    }
+
+    public reportIssue() {
         Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
             if (supported) {
                 Linking.openURL(CONFIG.supportUrl);
             }
         });
-    };
+    }
 
     public render() {
         const styles = this.props.styles;
         const viewOnName = getBlockchain(this.props.account.blockchain).networks[0].explorer.name;
 
         return (
-            <Modal isVisible={true}>
+            <Modal visible={true} transparent={true} animationType="fade">
                 <View style={styles.container}>
                     <View style={styles.modalContainer}>
                         <View style={styles.header}>
@@ -164,7 +166,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                     <TouchableOpacity
                                         testID="private-key"
                                         style={styles.rowContainer}
-                                        onPress={this.revealPrivateKey}
+                                        onPress={() => this.revealPrivateKey()}
                                     >
                                         <Icon name="key" size={ICON_SIZE} style={styles.leftIcon} />
                                         <View style={styles.rowChild}>
@@ -183,7 +185,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                 <TouchableOpacity
                                     testID="public-key"
                                     style={styles.rowContainer}
-                                    onPress={this.revealPublicKey}
+                                    onPress={() => this.revealPublicKey()}
                                 >
                                     <Icon name="eye" size={ICON_SIZE} style={styles.leftIcon} />
                                     <View style={styles.rowChild}>
@@ -201,7 +203,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                 <TouchableOpacity
                                     testID="view-on"
                                     style={styles.rowContainer}
-                                    onPress={this.viewOn}
+                                    onPress={() => this.viewOn()}
                                 >
                                     <Icon name="search" size={ICON_SIZE} style={styles.leftIcon} />
                                     <View style={styles.rowChild}>
@@ -219,7 +221,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                 <TouchableOpacity
                                     testID="report-issue"
                                     style={styles.rowContainer}
-                                    onPress={this.reportIssue}
+                                    onPress={() => this.reportIssue()}
                                 >
                                     <Icon name="bug" size={ICON_SIZE} style={styles.leftIcon} />
                                     <View style={styles.rowChild}>

@@ -6,7 +6,8 @@ import {
     SET_TEST_NET,
     PREF_SET_NETWORK_TEST_NET_CHAIN_ID,
     PREF_SET_BLOCKCHAIN_ACTIVE_STATE,
-    PREF_SET_BLOCKCHAIN_ORDER
+    PREF_SET_BLOCKCHAIN_ORDER,
+    PREF_SET_DEVICE_ID
 } from './actions';
 
 const initialState: IPrefState = {
@@ -14,7 +15,8 @@ const initialState: IPrefState = {
     testNet: false,
     touchID: false,
     networks: {},
-    blockchains: {}
+    blockchains: {},
+    deviceId: ''
 };
 
 export default (state: IPrefState = initialState, action: IAction): IPrefState => {
@@ -59,6 +61,12 @@ export default (state: IPrefState = initialState, action: IAction): IPrefState =
             return {
                 ...state,
                 currency: action.data.currency
+            };
+            break;
+        case PREF_SET_DEVICE_ID:
+            return {
+                ...state,
+                deviceId: action.data.deviceId
             };
         default:
             break;

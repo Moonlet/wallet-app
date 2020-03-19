@@ -25,7 +25,8 @@ describe('preferences reducer', () => {
             testNet: false,
             touchID: true,
             networks: {},
-            blockchains: {}
+            blockchains: {},
+            deviceId: ''
         });
     });
 });

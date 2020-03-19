@@ -16,6 +16,8 @@ export interface IExternalProps {
     otherProps?: any;
     animationIn?: Animation;
     animationInTiming?: number;
+    animationOut?: Animation;
+    animationOutTiming?: number;
 }
 
 interface IState {
@@ -80,6 +82,8 @@ export class ModalWrapper extends React.Component<IExternalProps, IState> {
             <Modal
                 animationIn={this.props?.animationIn || 'fadeIn'}
                 animationInTiming={this.props?.animationInTiming || 300}
+                animationOut={this.props?.animationOut || 'fadeOut'}
+                animationOutTiming={this.props?.animationOutTiming || 300}
                 isVisible={this.state.isVisible}
                 onModalHide={this.combinedOnModalHide}
                 style={{ margin: 0, alignItems: undefined, justifyContent: undefined }}

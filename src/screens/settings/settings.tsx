@@ -1,5 +1,13 @@
 import React from 'react';
-import { ScrollView, View, Switch, TouchableOpacity, Platform, Clipboard } from 'react-native';
+import {
+    ScrollView,
+    View,
+    Switch,
+    TouchableOpacity,
+    Platform,
+    Clipboard,
+    Linking
+} from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
@@ -19,6 +27,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { changePIN } from '../../redux/wallets/actions';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { DebugModal } from '../../components/debug-modal/debug-modal';
+import CONFIG from '../../config';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -30,13 +39,8 @@ export interface IReduxProps {
     currency: string;
     touchID: boolean;
     toggleTouchID: typeof toggleTouchID;
-    mock: () => void;
     changePIN: typeof changePIN;
 }
-
-export const mockFunction = () => {
-    return { type: 'dummy' };
-};
 
 const mapStateToProps = (state: IReduxState) => ({
     touchID: state.preferences.touchID,
@@ -44,7 +48,6 @@ const mapStateToProps = (state: IReduxState) => ({
 });
 
 const mapDispatchToProps = {
-    mock: mockFunction,
     toggleTouchID,
     changePIN
 };
@@ -91,8 +94,11 @@ export class SettingsScreenComponent extends React.Component<
     }
 
     public reportIssueTouch = () => {
-        // report an issue
-        this.props.mock();
+        Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
+            if (supported) {
+                Linking.openURL(CONFIG.supportUrl);
+            }
+        });
     };
 
     public renderSecuritySection = () => {

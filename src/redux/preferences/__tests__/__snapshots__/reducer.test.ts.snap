@@ -4,6 +4,7 @@ exports[`preferences reducer should set initial state 1`] = `
 Object {
   "blockchains": Object {},
   "currency": "USD",
+  "deviceId": "",
   "networks": Object {},
   "testNet": false,
   "touchID": false,

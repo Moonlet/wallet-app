@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-    CreateWalletMnemonicScreenComponent,
-    IProps,
-    navigationOptions
-} from '../create-wallet-mnemonic';
+import { CreateWalletMnemonicScreenComponent, IProps } from '../create-wallet-mnemonic';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import styleProvider from '../styles';
 
@@ -43,16 +39,16 @@ describe('creat wallet terms screen component', () => {
         expect(props.navigation.navigate).toHaveBeenCalledTimes(1);
     });
 
-    it('sets correct navigation options', () => {
-        const navigationProp = { navigation: { state: { params: { goBack: jest.fn() } } } };
-        const options = navigationOptions(navigationProp);
-        expect(options.headerLeft()).toMatchSnapshot();
-        expect(options).toMatchSnapshot();
-    });
+    // it('sets correct navigation options', () => {
+    //     const navigationProp = { navigation: { state: { params: { goBack: jest.fn() } } } };
+    //     const options = navigationOptions(navigationProp);
+    //     expect(options.headerLeft()).toMatchSnapshot();
+    //     expect(options).toMatchSnapshot();
+    // });
 
-    it('does not have a back button if no goBack param is set', () => {
-        const navigationProp = { navigation: {} };
-        const options = navigationOptions(navigationProp);
-        expect(options.headerLeft()).toBe(null);
-    });
+    // it('does not have a back button if no goBack param is set', () => {
+    //     const navigationProp = { navigation: {} };
+    //     const options = navigationOptions(navigationProp);
+    //     expect(options.headerLeft()).toBe(null);
+    // });
 });

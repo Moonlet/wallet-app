@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
 import { Text } from '../../library';
-import { NavigationActions } from 'react-navigation';
+import { StackActions, NavigationActions } from 'react-navigation';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
@@ -157,15 +157,14 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                             );
                             if (valid) {
                                 this.passwordModal.requestPassword().then(password =>
-                                    props.createHDWallet(mnemonic.join(' '), password, () =>
+                                    props.createHDWallet(mnemonic.join(' '), password, () => {
+                                        props.navigation.dispatch(StackActions.popToTop());
                                         props.navigation.navigate(
                                             'MainNavigation',
                                             {},
-                                            NavigationActions.navigate({
-                                                routeName: 'Dashboard'
-                                            })
-                                        )
-                                    )
+                                            NavigationActions.navigate({ routeName: 'Dashboard' })
+                                        );
+                                    })
                                 );
                             } else {
                                 setError(true);

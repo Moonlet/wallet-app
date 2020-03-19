@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { createStackNavigator } from 'react-navigation-stack';
+import { createStackNavigator, StackViewTransitionConfigs } from 'react-navigation-stack';
 import { createSwitchNavigator } from 'react-navigation';
 
 import { darkTheme } from '../styles/themes/dark-theme';
@@ -128,6 +128,26 @@ export const WalletNavigation = createStackNavigator(
         },
         ManageToken: {
             screen: ManageTokenScreen
+        },
+
+        // wallet creation
+        CreateWalletMnemonic: {
+            screen: CreateWalletMnemonicScreen
+        },
+        TermsConditions: {
+            screen: TermsConditionsScreen
+        },
+        PrivacyPolicy: {
+            screen: PrivacyPolicyScreen
+        },
+        CreateWalletConfirmMnemonic: {
+            screen: CreateWalletConfirmMnemonicScreen
+        },
+        RecoverWallet: {
+            screen: RecoverWalletScreen
+        },
+        ConnectHardwareWallet: {
+            screen: ConnectHardwareWallet
         }
     },
     {
@@ -136,7 +156,8 @@ export const WalletNavigation = createStackNavigator(
         headerLayoutPreset: 'center',
         navigationOptions: ({ navigation }) => ({
             tabBarVisible: navigation.state.index < 1
-        })
+        }),
+        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
     }
 );
 
@@ -172,6 +193,20 @@ export const SettingsNavigation = createStackNavigator(
         },
         BackupWallet: {
             screen: BackupWalletScreen
+        },
+
+        // wallet creation
+        CreateWalletMnemonic: {
+            screen: CreateWalletMnemonicScreen
+        },
+        CreateWalletConfirmMnemonic: {
+            screen: CreateWalletConfirmMnemonicScreen
+        },
+        RecoverWallet: {
+            screen: RecoverWalletScreen
+        },
+        ConnectHardwareWallet: {
+            screen: ConnectHardwareWallet
         }
     },
     {
@@ -180,7 +215,8 @@ export const SettingsNavigation = createStackNavigator(
         headerLayoutPreset: 'center',
         navigationOptions: ({ navigation }) => ({
             tabBarVisible: navigation.state.index < 1
-        })
+        }),
+        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
     }
 );
 
@@ -194,7 +230,8 @@ export const StatisticsNavigation = createStackNavigator(
     {
         initialRouteName: 'Statistics',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center'
+        headerLayoutPreset: 'center',
+        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
     }
 );
 
@@ -208,7 +245,8 @@ export const WatchNavigation = createStackNavigator(
     {
         initialRouteName: 'Watch',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center'
+        headerLayoutPreset: 'center',
+        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
     }
 );
 
@@ -244,8 +282,11 @@ export const navigationConfig = {
 };
 
 // wallet creation flow stack
-export const CreateWalletNavigation = createStackNavigator(
+export const OnboardingNavigation = createStackNavigator(
     {
+        Onboarding: {
+            screen: OnboardingScreen
+        },
         CreateWalletMnemonic: {
             screen: CreateWalletMnemonicScreen
         },
@@ -266,9 +307,10 @@ export const CreateWalletNavigation = createStackNavigator(
         }
     },
     {
-        initialRouteName: 'CreateWalletMnemonic',
+        initialRouteName: 'Onboarding',
         defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center'
+        headerLayoutPreset: 'center',
+        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
     }
 );
 
@@ -280,9 +322,8 @@ export const MainNavigation = createBottomTabNavigator(
 
 export const RootNavigation = createSwitchNavigator(
     {
-        OnboardingScreen,
         MainNavigation,
-        CreateWalletNavigation
+        OnboardingNavigation
     },
     {
         initialRouteName: 'MainNavigation'

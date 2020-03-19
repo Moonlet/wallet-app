@@ -3,12 +3,10 @@ import { View, Clipboard } from 'react-native';
 import { Text } from '../../library';
 import { NavigationParams, NavigationScreenProp, NavigationState } from 'react-navigation';
 import { Button } from '../../library/button/button';
-
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { Mnemonic } from '../../core/wallet/hd-wallet/mnemonic';
 import { translate } from '../../core/i18n';
-import { HeaderLeft } from '../../components/header-left/header-left';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { Icon } from '../../components/icon';
@@ -23,19 +21,7 @@ interface IState {
     copied: boolean;
 }
 
-export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: () => {
-        if (navigation.state && navigation.state.params && navigation.state.params.goBack) {
-            return (
-                <HeaderLeft
-                    icon="arrow-left-1"
-                    onPress={() => navigation.state.params.goBack(navigation)}
-                />
-            );
-        }
-
-        return null;
-    },
+export const navigationOptions = () => ({
     title: translate('App.labels.create')
 });
 

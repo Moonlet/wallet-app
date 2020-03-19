@@ -5,7 +5,8 @@ import {
     NavigationParams,
     NavigationScreenProp,
     NavigationState,
-    NavigationActions
+    NavigationActions,
+    StackActions
 } from 'react-navigation';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
@@ -62,64 +63,28 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
     ];
 
     public onPressRecover() {
-        this.props.navigation.navigate(
-            'CreateWalletNavigation',
-            {},
-            NavigationActions.navigate({
-                routeName: 'RecoverWallet',
-                params: {
-                    goBack: (
-                        navigation: NavigationScreenProp<NavigationState, NavigationParams>
-                    ) => {
-                        navigation.navigate('OnboardingScreen');
-                    }
-                }
-            })
-        );
+        this.props.navigation.navigate('RecoverWallet');
     }
     public onPressCreate() {
-        this.props.navigation.navigate(
-            'CreateWalletNavigation',
-            {},
-            NavigationActions.navigate({
-                routeName: 'CreateWalletMnemonic',
-                params: {
-                    goBack: (
-                        navigation: NavigationScreenProp<NavigationState, NavigationParams>
-                    ) => {
-                        navigation.navigate('OnboardingScreen');
-                    }
-                }
-            })
-        );
+        this.props.navigation.navigate('CreateWalletMnemonic');
     }
+
     public onPressConnect() {
-        this.props.navigation.navigate(
-            'CreateWalletNavigation',
-            {},
-            NavigationActions.navigate({
-                routeName: 'ConnectHardwareWallet',
-                params: {
-                    goBack: (
-                        navigation: NavigationScreenProp<NavigationState, NavigationParams>
-                    ) => {
-                        navigation.navigate('OnboardingScreen');
-                    }
-                }
-            })
-        );
+        this.props.navigation.navigate('ConnectHardwareWallet');
     }
+
     public async onPressGenerateWallet() {
         this.props.openLoadingModal();
         const password = await hash('000000');
         setPassword(password, false);
-        this.props.createHDWallet(this.mnemonic.join(' '), password, () =>
+        this.props.createHDWallet(this.mnemonic.join(' '), password, () => {
+            this.props.navigation.dispatch(StackActions.popToTop());
             this.props.navigation.navigate(
                 'MainNavigation',
                 {},
                 NavigationActions.navigate({ routeName: 'Dashboard' })
-            )
-        );
+            );
+        });
     }
 
     public render() {

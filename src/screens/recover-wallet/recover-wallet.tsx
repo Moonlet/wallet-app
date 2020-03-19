@@ -2,12 +2,10 @@ import React from 'react';
 import { View, ScrollView, Clipboard } from 'react-native';
 import { Text, TabSelect } from '../../library';
 import { Button } from '../../library/button/button';
-
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { wordlists } from 'bip39';
 import { translate } from '../../core/i18n';
-import { HeaderLeft } from '../../components/header-left/header-left';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { createHDWallet } from '../../redux/wallets/actions';
@@ -16,7 +14,7 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom';
 import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { NavigationActions } from 'react-navigation';
+import { StackActions, NavigationActions } from 'react-navigation';
 import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
 
 interface IState {
@@ -38,11 +36,7 @@ const mapDispatchToProps = {
     openLoadingModal
 };
 
-export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: () =>
-        navigation.state?.params?.goBack && (
-            <HeaderLeft icon="close" onPress={() => navigation.state.params.goBack(navigation)} />
-        ),
+export const navigationOptions = () => ({
     title: translate('App.labels.recover')
 });
 
@@ -108,17 +102,16 @@ export class RecoverWalletScreenComponent extends React.Component<
             return;
         }
 
-        this.passwordModal
-            .requestPassword()
-            .then(password =>
-                this.props.createHDWallet(this.state.mnemonic.join(' '), password, () =>
-                    this.props.navigation.navigate(
-                        'MainNavigation',
-                        {},
-                        NavigationActions.navigate({ routeName: 'Dashboard' })
-                    )
-                )
-            );
+        this.passwordModal.requestPassword().then(password =>
+            this.props.createHDWallet(this.state.mnemonic.join(' '), password, () => {
+                this.props.navigation.dispatch(StackActions.popToTop());
+                this.props.navigation.navigate(
+                    'MainNavigation',
+                    {},
+                    NavigationActions.navigate({ routeName: 'Dashboard' })
+                );
+            })
+        );
     }
 
     public render() {

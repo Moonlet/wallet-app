@@ -2,7 +2,6 @@ import React from 'react';
 import { View, ScrollView, Platform, TouchableOpacity } from 'react-native';
 import { Text } from '../../library';
 import { Button } from '../../library/button/button';
-
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
@@ -12,7 +11,6 @@ import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
 import { ledgerConfig } from '../../core/wallet/hw-wallet/ledger/config';
 import { Blockchain } from '../../core/blockchain/types';
 import { ListCard } from '../../components/list-card/list-card';
-import { HeaderLeft } from '../../components/header-left/header-left';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
@@ -20,6 +18,7 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { Capitalize } from '../../core/utils/format-string';
+import { delay } from '../../core/utils/time';
 
 export interface IReduxProps {
     openBottomSheet: typeof openBottomSheet;
@@ -39,13 +38,6 @@ const mapDispatchToProps = {
 };
 
 const navigationOptions = ({ navigation, theme }: any) => ({
-    headerLeft: () =>
-        navigation.state?.params?.goBack ? (
-            <HeaderLeft
-                icon="arrow-left-1"
-                onPress={() => navigation.state.params.goBack(navigation)}
-            />
-        ) : null,
     title: translate('App.labels.connect'),
     headerRight: () => (
         <TouchableOpacity onPress={navigation.state?.params?.resetAll}>
@@ -308,7 +300,8 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             testID="button-next"
                             style={props.styles.bottomButton}
                             onPress={async () => {
-                                this.passwordModal.requestPassword().then(() => {
+                                this.passwordModal.requestPassword().then(async () => {
+                                    await delay(100);
                                     this.props.openBottomSheet(BottomSheetType.LEDGER_CONNECT, {
                                         blockchain: this.state.blockchain,
                                         deviceModel: this.state.device,

@@ -31,7 +31,7 @@ import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
 import { getBlockchains } from '../../redux/preferences/selectors';
-import { NavigationEvents } from 'react-navigation';
+import { NavigationEvents, StackActions } from 'react-navigation';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 import { IExchangeRates } from '../../redux/market/state';
@@ -142,12 +142,13 @@ export class DashboardScreenComponent extends React.Component<
 
         if (Platform.OS === 'web') {
             if (!WalletConnectWeb.isConnected()) {
-                props.navigation.navigate('OnboardingScreen');
+                props.navigation.navigate('OnboardingNavigation');
             }
         } else {
             if (props.blockchains.length === 0 || props.walletsNr < 1) {
                 // maybe check this in another screen?
-                props.navigation.navigate('OnboardingScreen');
+                this.props.navigation.dispatch(StackActions.popToTop());
+                props.navigation.navigate('OnboardingNavigation');
             }
         }
     }
@@ -194,7 +195,7 @@ export class DashboardScreenComponent extends React.Component<
                         styles.blockchainButtonTextActive
                     }
                 >
-                    {getBlockchain(blockchain).config.coin}
+                    {blockchain && getBlockchain(blockchain).config.coin}
                 </Text>
             </TouchableOpacity>
         );

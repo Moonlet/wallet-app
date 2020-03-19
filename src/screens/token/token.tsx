@@ -18,7 +18,11 @@ import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
 import { themes } from '../../navigation/navigation';
-import { sendTransferTransaction, getBalance } from '../../redux/wallets/actions';
+import {
+    sendTransferTransaction,
+    getBalance,
+    updateTransactionFromBlockchain
+} from '../../redux/wallets/actions';
 import { getChainId } from '../../redux/preferences/selectors';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { ITokenConfig, TokenScreenComponentType } from '../../core/blockchain/types/token';
@@ -29,6 +33,7 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION } from '../../styles/dimensions';
+import { TransactionStatus } from '../../core/wallet/types';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -42,6 +47,7 @@ export interface IReduxProps {
     sendTransferTransaction: typeof sendTransferTransaction;
     chainId: ChainIdType;
     getBalance: typeof getBalance;
+    updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
 }
 
 export interface INavigationParams {
@@ -72,7 +78,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 
 const mapDispatchToProps = {
     sendTransferTransaction,
-    getBalance
+    getBalance,
+    updateTransactionFromBlockchain
 };
 
 const navigationOptions = ({ navigation, theme }: any) => ({
@@ -135,6 +142,17 @@ export class TokenScreenComponent extends React.Component<
             undefined,
             false // should we actually force it?
         );
+
+        this.props.transactions.forEach((transaction: IBlockchainTransaction) => {
+            if (transaction.status === TransactionStatus.PENDING) {
+                this.props.updateTransactionFromBlockchain(
+                    transaction.id,
+                    transaction.blockchain,
+                    transaction.chainId,
+                    false
+                );
+            }
+        });
     }
 
     public openSettingsMenu = () => this.setState({ settingsVisible: !this.state.settingsVisible });

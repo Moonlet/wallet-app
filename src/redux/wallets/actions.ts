@@ -358,15 +358,22 @@ export const getBalance = (
 };
 
 export const updateTransactionFromBlockchain = (
-    transactionHash: string[],
+    transactionHash: string,
     blockchain: Blockchain,
-    chainId: number,
+    chainId: string | number,
     displayNotification: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const blockchainInstance = getBlockchain(blockchain);
     const client = blockchainInstance.getClient(chainId);
-    const transaction = await client.getTransactionInfo(transactionHash);
+    let transaction;
+
+    try {
+        transaction = await client.getTransactionInfo(transactionHash);
+    } catch (e) {
+        // console.log(e);
+        return;
+    }
     const currentChainId = getChainId(state, blockchain);
 
     // search for wallets/accounts affected by this transaction
@@ -387,10 +394,7 @@ export const updateTransactionFromBlockchain = (
             });
         });
 
-        if (
-            displayNotification &&
-            currentChainId === chainId
-        ) {
+        if (displayNotification && currentChainId === chainId) {
             const amount = blockchainInstance.account.amountFromStd(
                 new BigNumber(transaction.amount)
             );

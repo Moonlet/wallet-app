@@ -35,23 +35,19 @@ export const LoadingModalComponent = (
     const message =
         props.message && translate('LoadingModal.' + props.message.text, { app: props.blockchain });
 
-    return (
-        <View
-            style={[
-                props.styles.container,
-                {
-                    display: props.isVisible ? 'flex' : 'none',
-                    position: props.isVisible ? 'absolute' : 'relative' // used for android
-                }
-            ]}
-        >
-            <ActivityIndicator
-                size="large"
-                color={props.spinnerColor ? props.spinnerColor : props.theme.colors.accent}
-            />
-            {message && <Text style={props.styles.message}>{message}</Text>}
-        </View>
-    );
+    if (props.isVisible) {
+        return (
+            <View style={props.styles.container}>
+                <ActivityIndicator
+                    size="large"
+                    color={props.spinnerColor ? props.spinnerColor : props.theme.colors.accent}
+                />
+                {message && <Text style={props.styles.message}>{message}</Text>}
+            </View>
+        );
+    } else {
+        return null;
+    }
 };
 
 export const LoadingModal = smartConnect<IExternalProps>(LoadingModalComponent, [

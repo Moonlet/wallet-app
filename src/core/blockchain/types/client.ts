@@ -3,6 +3,7 @@ import { IBlockchainNetwork, ChainIdType } from './network';
 import { IFeeOptions, IBlockchainTransaction } from './transaction';
 import { IBlockchainNameService } from '.';
 import { HttpClient } from '../../utils/http-client';
+import { TokenType } from './token';
 
 export interface IBlockInfo {
     number: number;
@@ -37,6 +38,7 @@ export abstract class BlockchainGenericClient {
         from: string,
         to: string,
         amount?,
-        contractAddress?
+        contractAddress?,
+        tokenType?: TokenType
     ): Promise<IFeeOptions>;
 }

@@ -5,6 +5,8 @@ import { BASE_DIMENSION } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            position: 'absolute',
+            display: 'flex',
             width: '100%',
             height: '100%',
             backgroundColor: theme.colors.gradientDark,

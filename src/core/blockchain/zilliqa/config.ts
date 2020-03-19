@@ -35,7 +35,10 @@ export const config: IBlockchainConfig = {
         gasPriceToken: 'ZIL',
         defaults: {
             gasPrice: new BigNumber(1000000000),
-            gasLimit: new BigNumber(1)
+            gasLimit: {
+                [TokenType.NATIVE]: new BigNumber(1),
+                [TokenType.ZRC2]: new BigNumber(10000)
+            }
         },
         ui: {
             availableTokenTypes: [],

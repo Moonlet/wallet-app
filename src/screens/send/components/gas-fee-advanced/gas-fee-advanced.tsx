@@ -10,6 +10,7 @@ import { Blockchain } from '../../../../core/blockchain/types';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { ITokenConfig } from '../../../../core/blockchain/types/token';
 import { isInteger } from '../../../../core/utils/format-number';
+import { smartConnect } from '../../../../core/utils/smart-connect';
 
 export interface IExternalProps {
     token: ITokenConfig;
@@ -17,6 +18,7 @@ export interface IExternalProps {
     gasLimit: string;
     blockchain: Blockchain;
     onInputFees: (gasPrice: string, gasLimit: string, feeTotal: string) => any;
+    insufficientFundsFees: boolean;
 }
 interface IState {
     inputGasPrice: string;
@@ -95,14 +97,18 @@ export class GasFeeAvancedComponent extends React.Component<
     }
 
     public render() {
-        const styles = this.props.styles;
-        const theme = this.props.theme;
+        const { styles, theme } = this.props;
         const gasPrice = new BigNumber(this.props.gasPrice);
         const gasLimit = new BigNumber(this.props.gasLimit);
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+        const gasPriceUnit = blockchainInstance.config.feeOptions.ui.gasPriceUnit;
 
         return (
             <View style={styles.container}>
-                <Text style={styles.priceLabel}>{translate('Fee.gasPrice')}</Text>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.priceLabel}>{translate('Fee.gasPrice')}</Text>
+                    <Text style={styles.gasPriceUnit}>{`(${gasPriceUnit})`}</Text>
+                </View>
 
                 <View style={styles.inputBox}>
                     <TextInput
@@ -115,14 +121,18 @@ export class GasFeeAvancedComponent extends React.Component<
                         selectionColor={theme.colors.accent}
                         value={this.state.inputGasPrice}
                         onChangeText={value => this.addGasPrice(value)}
-                        keyboardType="numeric"
+                        keyboardType="number-pad"
+                        returnKeyType="done"
                     />
                 </View>
                 {this.state.displayErrorGasPrice && (
                     <Text style={styles.displayError}>{translate('Fee.errorGasPrice')}</Text>
                 )}
 
-                <Text style={styles.priceLabel}>{translate('Fee.gasLimit')}</Text>
+                <View style={{ flexDirection: 'row' }}>
+                    <Text style={styles.priceLabel}>{translate('Fee.gasLimit')}</Text>
+                    <Text style={styles.gasPriceUnit}>{`(${gasPriceUnit})`}</Text>
+                </View>
 
                 <View style={styles.inputBox}>
                     <TextInput
@@ -135,7 +145,8 @@ export class GasFeeAvancedComponent extends React.Component<
                         selectionColor={theme.colors.accent}
                         value={this.state.inputGasLimit.toString()}
                         onChangeText={value => this.addGasLimit(value)}
-                        keyboardType="numeric"
+                        keyboardType="number-pad"
+                        returnKeyType="done"
                     />
                 </View>
                 {this.state.displayErrorGasLimit && (
@@ -147,9 +158,17 @@ export class GasFeeAvancedComponent extends React.Component<
                     blockchain={this.props.blockchain}
                     token={this.props.token}
                 />
+
+                {this.props.insufficientFundsFees && (
+                    <Text style={styles.displayErrorFees}>
+                        {translate('Send.insufficientFundsFees')}
+                    </Text>
+                )}
             </View>
         );
     }
 }
 
-export const GasFeeAvanced = withTheme(stylesProvider)(GasFeeAvancedComponent);
+export const GasFeeAvanced = smartConnect<IExternalProps>(GasFeeAvancedComponent, [
+    withTheme(stylesProvider)
+]);

@@ -1,11 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity, ScrollView, Image, Platform } from 'react-native';
-import {
-    NavigationParams,
-    NavigationScreenProp,
-    NavigationState,
-    NavigationActions
-} from 'react-navigation';
+import { StackActions } from 'react-navigation';
 import { IReduxState } from '../../redux/state';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -94,59 +89,21 @@ export class WalletsScreenComponent extends React.Component<
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.walletsNr !== prevProps.walletsNr && this.props.walletsNr < 1) {
             // maybe check this in another screen?
-            this.props.navigation.navigate('OnboardingScreen');
+            this.props.navigation.dispatch(StackActions.popToTop());
+            this.props.navigation.navigate('OnboardingNavigation');
         }
     }
 
     public onPressRecover() {
-        this.props.navigation.navigate(
-            'CreateWalletNavigation',
-            {},
-            NavigationActions.navigate({
-                routeName: 'RecoverWallet',
-                params: {
-                    goBack: (
-                        navigation: NavigationScreenProp<NavigationState, NavigationParams>
-                    ) => {
-                        navigation.navigate('Wallets');
-                    }
-                }
-            })
-        );
+        this.props.navigation.navigate('RecoverWallet');
     }
 
     public onPressCreateHW() {
-        this.props.navigation.navigate(
-            'CreateWalletNavigation',
-            {},
-            NavigationActions.navigate({
-                routeName: 'ConnectHardwareWallet',
-                params: {
-                    goBack: (
-                        navigation: NavigationScreenProp<NavigationState, NavigationParams>
-                    ) => {
-                        navigation.navigate('Wallets');
-                    }
-                }
-            })
-        );
+        this.props.navigation.navigate('ConnectHardwareWallet');
     }
 
     public onPressCreate() {
-        this.props.navigation.navigate(
-            'CreateWalletNavigation',
-            {},
-            NavigationActions.navigate({
-                routeName: 'CreateWalletMnemonic',
-                params: {
-                    goBack: (
-                        navigation: NavigationScreenProp<NavigationState, NavigationParams>
-                    ) => {
-                        navigation.navigate('Wallets');
-                    }
-                }
-            })
-        );
+        this.props.navigation.navigate('CreateWalletMnemonic');
     }
 
     public async onPressDelete(wallet: IWalletState) {
@@ -157,7 +114,7 @@ export class WalletsScreenComponent extends React.Component<
             )
         ) {
             this.closeCurrentOpenedSwipable();
-            await delay();
+            await delay(100);
             this.onDeleteConfirmed(wallet);
         }
     }

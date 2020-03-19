@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-    RecoverWalletScreenComponent,
-    IProps,
-    navigationOptions,
-    IReduxProps
-} from '../recover-wallet';
+import { RecoverWalletScreenComponent, IProps, IReduxProps } from '../recover-wallet';
 import { darkTheme } from '../../../styles/themes/dark-theme';
 import styleProvider from '../styles';
 
@@ -43,12 +38,12 @@ describe('creat wallet terms screen component', () => {
         expect(wrapper.debug()).toMatchSnapshot();
     });
 
-    test('sets correct navigation options', () => {
-        const navigationProp = { navigation: { state: { params: { goBack: jest.fn() } } } };
-        const options = navigationOptions(navigationProp);
-        expect(options.headerLeft()).toMatchSnapshot();
-        expect(options).toMatchSnapshot();
-    });
+    // test('sets correct navigation options', () => {
+    //     const navigationProp = { navigation: { state: { params: { goBack: jest.fn() } } } };
+    //     const options = navigationOptions(navigationProp);
+    //     expect(options.headerLeft()).toMatchSnapshot();
+    //     expect(options).toMatchSnapshot();
+    // });
 
     // test('does not have a back button if no goBack param is set', () => {
     //     const navigationProp = { navigation: {} };

@@ -168,17 +168,3 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
   <withTheme(PasswordModalComponent) shouldCreatePassword={true} subtitle=\\"Your PIN is required\\\\nto recover your Moonlet wallet\\" obRef={[Function: obRef]} />
 </View>"
 `;
-
-exports[`creat wallet terms screen component sets correct navigation options 1`] = `
-<withTheme(HeaderLeftComponent)
-  icon="close"
-  onPress={[Function]}
-/>
-`;
-
-exports[`creat wallet terms screen component sets correct navigation options 2`] = `
-Object {
-  "headerLeft": [Function],
-  "title": "Recover",
-}
-`;

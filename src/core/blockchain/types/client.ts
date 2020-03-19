@@ -37,8 +37,8 @@ export abstract class BlockchainGenericClient {
     public abstract calculateFees(
         from: string,
         to: string,
-        tokenType: TokenType,
         amount?,
-        contractAddress?
+        contractAddress?,
+        tokenType?: TokenType
     ): Promise<IFeeOptions>;
 }

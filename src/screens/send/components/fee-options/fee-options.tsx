@@ -69,9 +69,9 @@ export class FeeOptionsComponent extends React.Component<
             .calculateFees(
                 this.props.account.address,
                 this.props.toAddress,
-                this.props.sendingToken.type,
                 1,
-                this.props.sendingToken.contractAddress
+                this.props.sendingToken.contractAddress,
+                this.props.sendingToken.type
             );
 
         this.setState({ feeOptions: fees, isLoading: false });

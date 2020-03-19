@@ -25,7 +25,6 @@ interface IState {
     inputGasLimit: string;
     displayErrorGasPrice: boolean;
     displayErrorGasLimit: boolean;
-    gasPriceUnit: string;
 }
 export class GasFeeAvancedComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
@@ -34,20 +33,18 @@ export class GasFeeAvancedComponent extends React.Component<
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         const blockchainInstance = getBlockchain(this.props.blockchain);
-        const gasPriceUnit = blockchainInstance.config.feeOptions.ui.gasPriceUnit;
 
         this.state = {
             inputGasPrice: blockchainInstance.account
                 .convertUnit(
                     new BigNumber(props.gasPrice),
                     blockchainInstance.config.defaultUnit,
-                    gasPriceUnit
+                    blockchainInstance.config.feeOptions.ui.gasPriceUnit
                 )
                 .toString(),
             inputGasLimit: props.gasLimit.toString(),
             displayErrorGasPrice: false,
-            displayErrorGasLimit: false,
-            gasPriceUnit
+            displayErrorGasLimit: false
         };
     }
     public addGasPrice(value: string) {
@@ -103,12 +100,14 @@ export class GasFeeAvancedComponent extends React.Component<
         const { styles, theme } = this.props;
         const gasPrice = new BigNumber(this.props.gasPrice);
         const gasLimit = new BigNumber(this.props.gasLimit);
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+        const gasPriceUnit = blockchainInstance.config.feeOptions.ui.gasPriceUnit;
 
         return (
             <View style={styles.container}>
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.priceLabel}>{translate('Fee.gasPrice')}</Text>
-                    <Text style={styles.gasPriceUnit}>{`(${this.state.gasPriceUnit})`}</Text>
+                    <Text style={styles.gasPriceUnit}>{`(${gasPriceUnit})`}</Text>
                 </View>
 
                 <View style={styles.inputBox}>
@@ -132,7 +131,7 @@ export class GasFeeAvancedComponent extends React.Component<
 
                 <View style={{ flexDirection: 'row' }}>
                     <Text style={styles.priceLabel}>{translate('Fee.gasLimit')}</Text>
-                    <Text style={styles.gasPriceUnit}>{`(${this.state.gasPriceUnit})`}</Text>
+                    <Text style={styles.gasPriceUnit}>{`(${gasPriceUnit})`}</Text>
                 </View>
 
                 <View style={styles.inputBox}>

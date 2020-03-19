@@ -96,7 +96,13 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public async calculateFees(from: string, to: string, tokenType: TokenType) {
+    public async calculateFees(
+        from: string,
+        to: string,
+        amount?,
+        contractAddress?,
+        tokenType: TokenType = TokenType.NATIVE
+    ) {
         const result = await this.estimateFees();
 
         const gasPrice = result.result

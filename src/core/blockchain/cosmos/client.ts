@@ -84,7 +84,13 @@ export class Client extends BlockchainGenericClient {
         });
     }
 
-    public async calculateFees(from: string, to: string, tokenType: TokenType) {
+    public async calculateFees(
+        from: string,
+        to: string,
+        amount?,
+        contractAddress?,
+        tokenType: TokenType = TokenType.NATIVE
+    ) {
         const gasPrice =
             config.feeOptions.defaults.gasPricePresets.low || config.feeOptions.defaults.gasPrice;
         const gasLimit = config.feeOptions.defaults.gasLimit[tokenType].toFixed();

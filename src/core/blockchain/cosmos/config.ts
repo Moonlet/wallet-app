@@ -34,10 +34,12 @@ export const config: IBlockchainConfig = {
         }
     },
     feeOptions: {
-        gasPriceToken: 'UATOM',
+        gasPriceToken: 'ATOM',
         defaults: {
             gasPrice: new BigNumber(1),
-            gasLimit: new BigNumber(100000),
+            gasLimit: {
+                [TokenType.NATIVE]: new BigNumber(100000)
+            },
             gasPricePresets: {
                 low: new BigNumber(0.0025),
                 average: new BigNumber(0.025)

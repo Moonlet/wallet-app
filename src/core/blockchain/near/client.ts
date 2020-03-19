@@ -24,7 +24,7 @@ export class Client extends BlockchainGenericClient {
         this.nameService = new NameService(this);
     }
     public getTransactionInfo(
-        transactionHash: string[]
+        transactionHash: string
     ): Promise<import('../types').IBlockchainTransaction<any>> {
         throw new Error('Method not implemented.');
     }

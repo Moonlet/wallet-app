@@ -30,7 +30,7 @@ export abstract class BlockchainGenericClient {
     public abstract getBalance(address: string): Promise<BigNumber>;
     public abstract getNonce(address: string, publicKey?: string): Promise<number>;
     public abstract getCurrentBlock(): Promise<IBlockInfo>;
-    public abstract getTransactionInfo(transactionHash: string[]): Promise<IBlockchainTransaction>;
+    public abstract getTransactionInfo(transactionHash: string): Promise<IBlockchainTransaction>;
 
     public abstract sendTransaction(transaction: any): Promise<string>;
 

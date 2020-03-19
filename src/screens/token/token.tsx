@@ -143,7 +143,7 @@ export class TokenScreenComponent extends React.Component<
             false // should we actually force it?
         );
 
-        this.props.transactions.forEach((transaction: IBlockchainTransaction) => {
+        this.props.transactions?.map((transaction: IBlockchainTransaction) => {
             if (transaction.status === TransactionStatus.PENDING) {
                 this.props.updateTransactionFromBlockchain(
                     transaction.id,

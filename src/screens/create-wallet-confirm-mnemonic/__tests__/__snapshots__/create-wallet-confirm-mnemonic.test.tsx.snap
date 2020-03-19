@@ -6,9 +6,24 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
     To make sure you have written down all of your recovery words, please enter the following:
   </withTheme(TextComponent)>
   <View style={{...}}>
-    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #1\\" showBorderBottom={false} />
-    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #2\\" showBorderBottom={false} />
-    <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #3\\" showBorderBottom={false} />
+    <View>
+      <withTheme(TextComponent) style={{...}}>
+         
+      </withTheme(TextComponent)>
+      <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #1\\" showBorderBottom={false} />
+    </View>
+    <View>
+      <withTheme(TextComponent) style={{...}}>
+         
+      </withTheme(TextComponent)>
+      <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #2\\" showBorderBottom={false} />
+    </View>
+    <View>
+      <withTheme(TextComponent) style={{...}}>
+         
+      </withTheme(TextComponent)>
+      <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #3\\" showBorderBottom={false} />
+    </View>
     <withTheme(TextComponent) darker={true} small={true} style={{...}}>
       panic 
       club 

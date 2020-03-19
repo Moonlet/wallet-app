@@ -92,23 +92,29 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
 
             <View style={props.styles.inputContainer}>
                 {testWords.map((index: number) => (
-                    <TextInput
-                        key={`word-${index}`}
-                        obRef={(input: any) => {
-                            inputView[index] = input;
-                            setInputView(inputView);
-                        }}
-                        style={props.styles.inputWrapper}
-                        styleInputText={props.styles.inputText}
-                        word={mnemonicsInput[index] ? mnemonicsInput[index] : ''}
-                        onFocus={() => {
-                            focusInput(index, inputView);
-                            setIndexInputFocus(index);
-                        }}
-                        isFocus={indexInputFocus === index}
-                        placeholder={`Word #${index + 1}`}
-                        showBorderBottom={false}
-                    />
+                    <View key={`word-${index}`}>
+                        <Text style={props.styles.label}>
+                            {mnemonicsInput[index] !== undefined || index === indexInputFocus
+                                ? `Word #${index + 1}`
+                                : ' '}
+                        </Text>
+                        <TextInput
+                            obRef={(input: any) => {
+                                inputView[index] = input;
+                                setInputView(inputView);
+                            }}
+                            style={props.styles.inputWrapper}
+                            styleInputText={props.styles.inputText}
+                            word={mnemonicsInput[index] ? mnemonicsInput[index] : ''}
+                            onFocus={() => {
+                                focusInput(index, inputView);
+                                setIndexInputFocus(index);
+                            }}
+                            isFocus={indexInputFocus === index}
+                            placeholder={`Word #${index + 1}`}
+                            showBorderBottom={false}
+                        />
+                    </View>
                 ))}
                 {error && (
                     <Text style={props.styles.errorMessage}>

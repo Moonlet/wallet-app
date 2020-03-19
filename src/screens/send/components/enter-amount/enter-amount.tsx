@@ -11,7 +11,7 @@ import { ITokenConfig } from '../../../../core/blockchain/types/token';
 import BigNumber from 'bignumber.js';
 
 export interface IExternalProps {
-    availableAmount: string; // amount excepting fees
+    availableAmount: string;
     blockchain: Blockchain;
     token: ITokenConfig;
     value: string;
@@ -34,6 +34,10 @@ export const EnterAmountComponent = (
 
     return (
         <View style={styles.container}>
+            <Text style={styles.receipientLabel}>
+                {value !== '' ? `${translate('Send.amount')} (${props.token.symbol})` : ' '}
+            </Text>
+
             <View style={styles.inputBox}>
                 <TextInput
                     style={styles.inputText}
@@ -45,6 +49,7 @@ export const EnterAmountComponent = (
                     value={value}
                     onChangeText={text => props.onChange(text)}
                     keyboardType="decimal-pad"
+                    returnKeyType="done"
                     // TODO: maxLength - max 8 decimals: 0.00000000
                 />
             </View>

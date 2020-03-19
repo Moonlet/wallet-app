@@ -100,7 +100,8 @@ export class Client extends BlockchainGenericClient {
         from: string,
         to: string,
         amount: BigNumber = new BigNumber(1),
-        contractAddress?: string
+        contractAddress?: string,
+        tokenType: TokenType = TokenType.NATIVE
     ) {
         const results = contractAddress
             ? await this.estimateFees(from, to, amount, contractAddress)
@@ -142,7 +143,7 @@ export class Client extends BlockchainGenericClient {
         const gasPrice = presets?.standard || config.feeOptions.defaults.gasPrice;
         const gasLimit = results[0].result
             ? new BigNumber(parseInt(results[0].result, 16))
-            : config.feeOptions.defaults.gasLimit;
+            : config.feeOptions.defaults.gasLimit[tokenType];
 
         return {
             gasPrice: gasPrice.toString(),

@@ -15,6 +15,7 @@ import sha256 from 'js-sha256';
 import { config } from './config';
 import { NameService } from './name-service';
 import { INearAccount } from '.';
+import { TokenType } from '../types/token';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -62,10 +63,11 @@ export class Client extends BlockchainGenericClient {
         from: string,
         to: string,
         amount?,
-        contractAddress?
+        contractAddress?,
+        tokenType: TokenType = TokenType.NATIVE
     ): Promise<IFeeOptions> {
         const gasPrice = config.feeOptions.defaults.gasPrice.toFixed();
-        const gasLimit = config.feeOptions.defaults.gasLimit.toFixed();
+        const gasLimit = config.feeOptions.defaults.gasLimit[tokenType].toFixed();
         const feeTotal = new BigNumber(gasPrice).multipliedBy(new BigNumber(gasLimit)).toFixed();
 
         return {

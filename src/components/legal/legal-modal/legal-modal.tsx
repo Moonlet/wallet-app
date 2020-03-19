@@ -9,6 +9,7 @@ import Modal from '../../../library/modal/modal';
 import { Legal } from '../legal';
 import { getFirebaseTCVersion } from '../../../core/utils/remote-feature-config';
 import AsyncStorage from '@react-native-community/async-storage';
+import { NavigationService } from '../../../navigation/navigation-service';
 
 interface IExternalProps {
     navigationState: any;
@@ -53,10 +54,10 @@ export class LegalModalComponent extends React.Component<
         }
     }
 
-    private handleShowLegalModal = async () => {
+    private async handleShowLegalModal() {
         if (this.props.navigationState) {
             const index = this.props.navigationState.index;
-            const currentRoute = this.props.navigationState.routes[index].routeName;
+            const currentNavigatorRouteName = this.props.navigationState.routes[index].routeName;
             let tcLatestVersion = await getFirebaseTCVersion();
 
             if (tcLatestVersion === undefined) {
@@ -66,7 +67,9 @@ export class LegalModalComponent extends React.Component<
             }
 
             const showLegalModal =
-                currentRoute !== 'OnboardingScreen' &&
+                ((currentNavigatorRouteName === 'OnboardingNavigation' &&
+                    NavigationService.getCurrentRoute() !== 'Onboarding') ||
+                    currentNavigatorRouteName !== 'OnboardingNavigation') &&
                 tcLatestVersion !== undefined &&
                 (this.props.tcAcceptedVersion === undefined ||
                     tcLatestVersion > this.props.tcAcceptedVersion);
@@ -78,11 +81,11 @@ export class LegalModalComponent extends React.Component<
                 });
             }
         }
-    };
+    }
 
     public render() {
         return (
-            <Modal isVisible={this.state.showModal}>
+            <Modal isVisible={this.state.showModal} animationInTiming={5}>
                 <View style={this.props.styles.container}>
                     <Legal
                         tcLatestVersion={this.state.tcLatestVersion}

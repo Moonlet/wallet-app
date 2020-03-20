@@ -353,7 +353,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "type": "NATIVE",
                   "ui": Object {
                     "decimals": 3,
-                    "tokenScreenComponent": "DELEGATE",
+                    "tokenScreenComponent": "DEFAULT",
                   },
                   "units": Object {
                     "ATOM": "1000000",
@@ -386,7 +386,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "type": "NATIVE",
                   "ui": Object {
                     "decimals": 3,
-                    "tokenScreenComponent": "DELEGATE",
+                    "tokenScreenComponent": "DEFAULT",
                   },
                   "units": Object {
                     "ATOM": "1000000",
@@ -419,7 +419,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "type": "NATIVE",
                   "ui": Object {
                     "decimals": 3,
-                    "tokenScreenComponent": "DELEGATE",
+                    "tokenScreenComponent": "DEFAULT",
                   },
                   "units": Object {
                     "ATOM": "1000000",
@@ -452,7 +452,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "type": "NATIVE",
                   "ui": Object {
                     "decimals": 3,
-                    "tokenScreenComponent": "DELEGATE",
+                    "tokenScreenComponent": "DEFAULT",
                   },
                   "units": Object {
                     "ATOM": "1000000",
@@ -485,7 +485,7 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                   "type": "NATIVE",
                   "ui": Object {
                     "decimals": 3,
-                    "tokenScreenComponent": "DELEGATE",
+                    "tokenScreenComponent": "DEFAULT",
                   },
                   "units": Object {
                     "ATOM": "1000000",

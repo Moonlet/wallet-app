@@ -21,7 +21,7 @@ export const config: IBlockchainConfig = {
             decimals: 6,
             ui: {
                 decimals: 3,
-                tokenScreenComponent: TokenScreenComponentType.DELEGATE
+                tokenScreenComponent: TokenScreenComponentType.DEFAULT // TODO: DELEGATE is in progress
             },
             type: TokenType.NATIVE,
             units: {

@@ -124,7 +124,11 @@ export class ManageAccountComponent extends React.Component<
         isActive: boolean
     ) {
         const { styles, theme } = this.props;
+        const blockchain = this.props.selectedAccount.blockchain;
         const index = item.key;
+
+        const TokenIcon = getBlockchain(blockchain).config.tokens[item.value.symbol]?.icon
+            ?.iconComponent;
 
         return (
             <Swipeable
@@ -149,21 +153,26 @@ export class ManageAccountComponent extends React.Component<
                     ]}
                 >
                     <View style={styles.infoContainer}>
-                        <SmartImage source={item.value.icon} />
+                        <SmartImage
+                            source={{
+                                uri: item.value?.icon?.uri,
+                                iconComponent: TokenIcon
+                            }}
+                        />
                         <View style={styles.amountContainer}>
                             <Amount
                                 style={styles.firstAmount}
                                 amount={item.value.balance?.value.toString()}
                                 token={item.value.symbol}
                                 tokenDecimals={item.value.decimals}
-                                blockchain={this.props.selectedAccount.blockchain}
+                                blockchain={blockchain}
                             />
                             <Amount
                                 style={styles.secondAmount}
                                 amount={item.value.balance?.value.toString()}
                                 token={item.value.symbol}
                                 tokenDecimals={item.value.decimals}
-                                blockchain={this.props.selectedAccount.blockchain}
+                                blockchain={blockchain}
                                 convert
                             />
                         </View>

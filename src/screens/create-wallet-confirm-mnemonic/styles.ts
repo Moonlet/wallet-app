@@ -18,14 +18,13 @@ export default (theme: ITheme) =>
             justifyContent: 'center'
         },
         inputWrapper: {
+            height: BASE_DIMENSION * 5,
             paddingVertical: BASE_DIMENSION,
-            height: 40,
             borderRadius: BORDER_RADIUS,
-            borderColor: theme.colors.inputBackground,
             color: theme.colors.text,
             backgroundColor: theme.colors.inputBackground,
             paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2,
-            marginBottom: BASE_DIMENSION * 3
+            marginBottom: BASE_DIMENSION * 2
         },
         inputText: {
             fontSize: 14,
@@ -40,5 +39,11 @@ export default (theme: ITheme) =>
         },
         testWords: {
             textAlign: 'center'
+        },
+        label: {
+            fontSize: 13,
+            lineHeight: 18,
+            paddingLeft: BASE_DIMENSION * 2,
+            color: theme.colors.textSecondary
         }
     });

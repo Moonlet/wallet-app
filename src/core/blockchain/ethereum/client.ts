@@ -201,7 +201,8 @@ export class Client extends BlockchainGenericClient {
                     },
                     broadcatedOnBlock: txInfo.blockNumber,
                     nonce: txInfo.nonce,
-                    status: getTransactionStatusByCode(txReceipt.status)
+                    status: getTransactionStatusByCode(txReceipt.status),
+                    token: config.tokens.ETH
                 };
             } catch (error) {
                 return Promise.reject(error.message);

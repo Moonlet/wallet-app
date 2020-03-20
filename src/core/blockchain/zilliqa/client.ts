@@ -165,7 +165,7 @@ export class Client extends BlockchainGenericClient {
                 ? toBech32Address(txData.toAddr)
                 : txData.toAddr;
 
-            let fromAddress = getAddressFromPublicKey(txData.senderPubKey.replace("0x", ""));
+            let fromAddress = getAddressFromPublicKey(txData.senderPubKey.replace('0x', ''));
 
             if (!isBech32(fromAddress)) {
                 fromAddress = toBech32Address(fromAddress);
@@ -201,7 +201,8 @@ export class Client extends BlockchainGenericClient {
                 },
                 broadcatedOnBlock: txData.receipt?.epoch_num,
                 nonce: txData.nonce,
-                status: txStatus
+                status: txStatus,
+                token: config.tokens.ZIL
             };
         } catch (error) {
             return Promise.reject(error.message);

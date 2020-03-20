@@ -24,7 +24,7 @@ export default (theme: ITheme) =>
             fontSize: 13,
             lineHeight: 18,
             color: theme.colors.textSecondary,
-            paddingLeft: BASE_DIMENSION * 2,
+            paddingLeft: BASE_DIMENSION,
             marginTop: BASE_DIMENSION
         }
     });

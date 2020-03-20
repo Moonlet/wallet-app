@@ -14,7 +14,7 @@
 #import <Firebase.h>
 #import "RNFirebaseNotifications.h"
 #import "RNFirebaseMessaging.h"
-
+#import <CallKit/CallKit.h>
 #import <PushKit/PushKit.h>
 #import "RNVoipPushNotificationManager.h"
 
@@ -106,6 +106,24 @@ fetchCompletionHandler:(nonnull void (^)(UIBackgroundFetchResult))completionHand
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
   // Process the received push
   [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
+
+ NSUUID *uuid = [[NSUUID alloc] initWithUUIDString:@"moonlet"];
+    CXCallUpdate *callUpdate = [[CXCallUpdate alloc] init];
+    callUpdate.remoteHandle = [[CXHandle alloc] initWithType:CXHandleTypeGeneric value:@""];
+    callUpdate.supportsDTMF = YES;
+    callUpdate.supportsHolding = YES;
+    callUpdate.supportsGrouping = YES;
+    callUpdate.supportsUngrouping = YES;
+    callUpdate.hasVideo = NO;
+    callUpdate.localizedCallerName = @"moonlet-transaction";
+   CXProviderConfiguration *providerConfiguration = [[CXProviderConfiguration alloc] initWithLocalizedName:@"moonlet-transaction"];
+  
+  CXProvider *sharedProvider = [[CXProvider alloc] initWithConfiguration:providerConfiguration];
+
+  [sharedProvider reportNewIncomingCallWithUUID:uuid update:callUpdate completion:^(NSError * _Nullable error) {
+      
+  }];
+
 }
 
 @end

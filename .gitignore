@@ -72,3 +72,5 @@ ios/GoogleService-Info.plist
 rpc.http
 test.js
 .env
+AuthKey_LFPLC6Z22X.p8
+apn-key.p8

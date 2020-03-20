@@ -10,9 +10,12 @@ import { withNavigationParams, INavigationProps } from '../../navigation/with-na
 import QRCode from 'qrcode';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 
+const navigationOptions = () => ({ header: null });
+
 export class OnboardingScreenComponent extends React.Component<
     INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
+    public static navigationOptions = navigationOptions;
     public qrCanvas: HTMLCanvasElement;
     public unsubscribe: () => void;
 

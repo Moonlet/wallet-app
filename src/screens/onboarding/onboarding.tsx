@@ -34,7 +34,11 @@ const mapDispatchToProps = {
     openLoadingModal
 };
 
+const navigationOptions = () => ({ header: null });
+
 export class OnboardingScreenComponent extends React.Component<IProps & IReduxProps> {
+    public static navigationOptions = navigationOptions;
+
     public mnemonic = [
         'pigeon',
         'road',

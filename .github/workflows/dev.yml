@@ -1,0 +1,162 @@
+on:
+  push:
+    branches:
+      - master
+      - deploy
+
+name: Deploy Beta
+jobs:
+  # unit-tests:
+  #   name: Unit tests
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - name: Set tag name
+  #       run: |-
+  #         BUILD=$(git rev-list --count $GITHUB_SHA)
+  #         VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
+  #         echo "::set-env name=CUSTOM_TAG::v${VERSION}.${BUILD}"
+  #     - name: Create GitHubRelease
+  #       uses: anothrNick/github-tag-action@master
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         RELEASE_BRANCHES: "master"
+  #     - name: Cache node modules
+  #       uses: actions/cache@v1
+  #       id: cache
+  #       with:
+  #         path: node_modules
+  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Generate icons
+  #       run: npm run generate-icons
+  #     - name: Run unit tests
+  #       run: npm test
+  #     - name: Upload coverage to Codecov
+  #       env:
+  #         CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+  #       run: |-
+  #         curl -s https://codecov.io/bash | bash -s -- \
+  #         -F "unittests" \
+  #         -Z || echo 'Codecov upload failed'
+  # beta-android:
+  #   name: Android app
+  #   runs-on: ubuntu-latest
+  #   needs: unit-tests
+  #   steps:
+  #     - name: Increase watchers
+  #       run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+  #     - uses: actions/checkout@v1
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - uses: actions/setup-ruby@v1
+  #       with:
+  #         ruby-version: "2.x"
+  #     - name: Generate firebase config file
+  #       run: echo '${{ secrets.FB_CONFIG_ANDROID_BETA }}' > android/app/google-services.json
+  #     - name: Setup key
+  #       uses: webfactory/ssh-agent@v0.1.1
+  #       with:
+  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
+  #     - name: Add to host
+  #       run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+  #     - name: Dependencies install
+  #       run: cd android && bundle install
+  #     - name: Cache node modules
+  #       uses: actions/cache@v1
+  #       id: cache
+  #       with:
+  #         path: node_modules
+  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Get sign ssh-keys
+  #       run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
+  #     - name: Generate fonts and icons
+  #       run: npm run generate-icons
+  #     - name: Run fastlane beta
+  #       run: cd android/fastlane && bundle exec fastlane beta
+  #       env:
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #         APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
+  #         NODE_OPTIONS: --max_old_space_size=4096
+  # beta-ios:
+    # name: iOS app
+    # runs-on: macos-latest
+    # needs: unit-tests
+    # steps:
+    #   - uses: actions/setup-node@v1
+    #     with:
+    #       node-version: "10.x"
+    #   - uses: actions/checkout@v1
+    #   - name: Setup key
+    #     uses: webfactory/ssh-agent@v0.1.1
+    #     with:
+    #       ssh-private-key: ${{ secrets.SSH_CERTS }}
+    #   - name: Add to host
+    #     run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+    #   - name: Generate firebase config file
+    #     run: echo '${{ secrets.FB_CONFIG_IOS_BETA }}' > ios/GoogleService-Info.plist
+    #   - name: Dependencies install
+    #     run: cd ios && bundle install
+    #   - name: Cache node modules
+    #     uses: actions/cache@v1
+    #     id: cache
+    #     with:
+    #       path: node_modules
+    #       key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+    #   - name: NPM install
+    #     run: npm i
+    #   - name: Cocoapods install
+    #     run: cd ios && pod install
+    #   - name: Generate fonts and icons
+    #     run: npm run generate-icons
+    #   - name: Run fastlane beta
+    #     run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane beta
+    #     env:
+    #       MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+    #       FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+    #       SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+    #       KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
+  beta-ext-chrome:
+    name: Chrome extension
+    runs-on: ubuntu-latest
+    # needs: unit-tests
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - uses: actions/checkout@v1
+      - name: NPM install
+        run: npm i
+      - name: Generate icons
+        run: npm run generate-icons
+      - name: Build Chrome extension
+        run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+      - name: Set tag name
+        run: |-
+          BUILD=$(git rev-list --count $GITHUB_SHA)
+          VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
+          echo "::set-env name=TAG_NAME::v${VERSION}.${BUILD}"
+      - name: Create Chrome extenion zip
+        run: cd extension/build/beta/chrome && zip -r ./chrome-extension-dev-$TAG_NAME.zip ./
+      - name: Upload Chrome extenion zip via FTP
+        env:
+          FTP_USER: ${{ secrets.MOONLET_DEV_FTP_USER }}
+          FTP_PASS: ${{ secrets.MOONLET_DEV_FTP_PASS }}
+        run: curl -T extension/build/beta/chrome/*.zip ftp://$FTP_USER:$FTP_PASS@files.moonlet.dev/subdomains/files.moonlet.dev/extension/chrome/
+      # - name: Upload binaries to release
+      #   uses: svenstaro/upload-release-action@v1-release
+      #   with:
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      #     file: extension/build/beta/chrome/*.zip
+      #     tag: ${{ env.TAG_NAME }}
+      #     overwrite: true
+      #     file_glob: true

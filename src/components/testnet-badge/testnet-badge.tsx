@@ -23,7 +23,7 @@ const mapStateToProps = (state: IReduxState) => {
 
     return {
         blockchain,
-        networkName: blockchain && getNetworkName(state, blockchain),
+        networkName: blockchain && state.preferences && getNetworkName(state, blockchain),
         testNet: state.preferences.testNet
     };
 };

@@ -15,7 +15,7 @@
 
 default_platform(:android)
 
-platform :android do
+platform :android do  
 
 
   desc "Submit a new Beta Build to AppCenter"
@@ -60,7 +60,11 @@ platform :android do
     )
     changelog = changelog_from_git_commits(commits_count: 1)
     
-    upload_to_play_store(track: "production", validate_only: true);
+    upload_to_play_store(
+      track: "production", 
+      validate_only: false,
+      json_key: '../app/moonlet-playstore-key/key.json'
+    );
   end
 
 end

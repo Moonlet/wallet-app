@@ -23,6 +23,10 @@ export const getChainId = (state: IReduxState, blockchain: Blockchain): ChainIdT
 };
 
 export const getNetworkName = (state: IReduxState, blockchain: Blockchain): string => {
+    if (!blockchain || !state.preferences) {
+        return '';
+    }
+
     const network = getBlockchain(blockchain).networks.find(
         value => value.chainId === getChainId(state, blockchain)
     );

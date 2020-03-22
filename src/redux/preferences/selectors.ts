@@ -9,7 +9,8 @@ export const getChainId = (state: IReduxState, blockchain: Blockchain): ChainIdT
     if (!BLOCKCHAIN_LIST.includes(blockchain)) {
         return '';
     }
-    const reduxObject = state.preferences.networks[blockchain];
+
+    const reduxObject = state.preferences?.networks && state.preferences?.networks[blockchain];
     const network =
         reduxObject === undefined
             ? getBlockchain(blockchain).config.networks
@@ -22,6 +23,10 @@ export const getChainId = (state: IReduxState, blockchain: Blockchain): ChainIdT
 };
 
 export const getNetworkName = (state: IReduxState, blockchain: Blockchain): string => {
+    if (!blockchain || !state.preferences) {
+        return '';
+    }
+
     const network = getBlockchain(blockchain).networks.find(
         value => value.chainId === getChainId(state, blockchain)
     );
@@ -68,7 +73,7 @@ export const getBlockchainsPortfolio = createSelector(
 
         BLOCKCHAIN_LIST.map(blockchain => {
             const config = getBlockchain(blockchain).config;
-            const reduxObject = preferences.blockchains[blockchain];
+            const reduxObject = preferences?.blockchains && preferences?.blockchains[blockchain];
 
             let blockchainObject: IBlockchainOptions;
             if (reduxObject === undefined) {

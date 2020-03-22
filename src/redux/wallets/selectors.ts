@@ -3,29 +3,37 @@ import { IAccountState, IWalletsState, IWalletState } from './state';
 import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
 
 import { createSelector } from 'reselect';
-import { getChainId } from '../preferences/selectors';
+import { getChainId, getBlockchains } from '../preferences/selectors';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 
-export const getSelectedBlockchain = createSelector(
+export const getWalletSelectedBlockchain = createSelector(
     (state: IReduxState): IWalletState => getSelectedWallet(state),
     wallet => (wallet ? wallet.selectedBlockchain : '')
 );
 
+export const getSelectedBlockchain = (state: IReduxState) => {
+    return getWalletSelectedBlockchain(state) || getBlockchains(state)[0];
+};
+
 export const getSelectedWallet = createSelector(
     (state: IReduxState) => state.wallets,
     (wallets: IWalletsState) => {
-        return Object.values(wallets).find(wallet => wallet.selected === true);
+        return (
+            Object.values(wallets).find(wallet => wallet.selected === true) ||
+            Object.values(wallets)[0]
+        );
     }
 );
 
 export const getSelectedAccount = createSelector(
     (state: IReduxState): IWalletState => getSelectedWallet(state),
-    wallet => {
+    (state: IReduxState): Blockchain => getSelectedBlockchain(state),
+    (wallet, selectedBlockchain) => {
         if (wallet === undefined) {
             return undefined;
         }
         const accounts = wallet.accounts.filter(
-            account => account.blockchain === wallet.selectedBlockchain
+            account => account.blockchain === selectedBlockchain
         );
         const acc = accounts
             ? accounts.find(

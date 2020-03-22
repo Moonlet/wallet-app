@@ -63,7 +63,7 @@ platform :android do
     upload_to_play_store(
       track: "production", 
       validate_only: false,
-      json_key: '../app/moonlet-playstore-key/key.json'
+      json_key: 'app/moonlet-playstore-key/key.json'
     );
   end
 

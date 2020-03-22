@@ -52,7 +52,7 @@ platform :android do
     gradle(
       task: "bundle",
       flavor: "stable",
-      build_type: "Release"
+      build_type: "Release",
       properties: {
         "versionName" => package["version"],
         "versionCode" => number_of_commits

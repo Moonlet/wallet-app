@@ -63,7 +63,12 @@ platform :android do
     upload_to_play_store(
       track: "alpha", 
       validate_only: false,
-      json_key: 'app/moonlet-playstore-key/key.json'
+      json_key: 'app/moonlet-playstore-key/key.json',
+
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
     );
   end
 

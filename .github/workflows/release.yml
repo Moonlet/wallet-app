@@ -1,9 +1,7 @@
 on:
-  push:
-    branches:
-      - master
-      - deploy
-      #from push will transform to release
+  create:
+    tag:
+      - v*
 
 name: Deploy in stores
 jobs:
@@ -49,6 +47,8 @@ jobs:
           APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           NODE_OPTIONS: --max_old_space_size=4096
+      # generate apk file and upload it to release
+
   # deploy-ios:
   #   name: iOS app
   #   runs-on: macos-latest
@@ -118,3 +118,4 @@ jobs:
   #         tag: ${{ env.TAG_NAME }}
   #         overwrite: true
   #         file_glob: true
+  #     # deploy in chrome store

@@ -3,7 +3,7 @@ on:
     tag:
       - v*
 
-name: Deploy in stores
+name: Release build & deploy
 jobs:
   deploy-android:
     name: Android app
@@ -49,43 +49,43 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=4096
       # generate apk file and upload it to release
 
-  # deploy-ios:
-  #   name: iOS app
-  #   runs-on: macos-latest
-  #   steps:
-  #     - uses: actions/setup-node@v1
-  #       with:
-  #         node-version: "10.x"
-  #     - uses: actions/checkout@v1
-  #     - name: Setup key
-  #       uses: webfactory/ssh-agent@v0.1.1
-  #       with:
-  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
-  #     - name: Add to host
-  #       run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-  #     - name: Generate firebase config file
-  #       run: echo '${{ secrets.FB_CONFIG_IOS_DEPLOY }}' > ios/release/GoogleService-Info.plist
-  #     - name: Dependencies install
-  #       run: cd ios && bundle install
-  #     - name: Cache node modules
-  #       uses: actions/cache@v1
-  #       id: cache
-  #       with:
-  #         path: node_modules
-  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
-  #     - name: NPM install
-  #       run: npm i
-  #     - name: Cocoapods install
-  #       run: cd ios && pod install
-  #     - name: Generate fonts and icons
-  #       run: npm run generate-icons
-  #     - name: Run fastlane deploy
-  #       run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane deploy
-  #       env:
-  #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-  #         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-  #         KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
+  deploy-ios:
+    name: iOS app
+    runs-on: macos-latest
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - uses: actions/checkout@v1
+      - name: Setup key
+        uses: webfactory/ssh-agent@v0.1.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_CERTS }}
+      - name: Add to host
+        run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+      - name: Generate firebase config file
+        run: echo '${{ secrets.FB_CONFIG_IOS_DEPLOY }}' > ios/release/GoogleService-Info.plist
+      - name: Dependencies install
+        run: cd ios && bundle install
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: NPM install
+        run: npm i
+      - name: Cocoapods install
+        run: cd ios && pod install
+      - name: Generate fonts and icons
+        run: npm run generate-icons
+      - name: Run fastlane deploy
+        run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane deploy
+        env:
+          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
   # beta-ext-chrome:
   #   name: Chrome extension
   #   runs-on: ubuntu-latest

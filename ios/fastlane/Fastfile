@@ -67,5 +67,53 @@ platform :ios do
     )
 
   end
+
+  lane :deploy do
+
+    package = load_json(json_path: "../package.json")
+    increment_version_number(version_number: package["version"])
+    increment_build_number(build_number: number_of_commits)
+
+
+   # File.write("metadata/en-US/release_notes.txt", changelog)  - this is for whats new in this version....
+
+    match(type: "appstore")
+    if is_ci
+      create_keychain(
+        name: "CI",
+        password: ENV['KEYCHAIN_TOKEN'],
+        default_keychain: true,
+        unlock: true,
+        timeout: 3600,
+        add_to_search_list: true
+      )
+
+      match(
+        type: "appstore",
+        keychain_name: "CI",
+        keychain_password: ENV['KEYCHAIN_TOKEN']
+      )
+
+    else
+      match(type: "appstore")
+    end
+ 
+    get_push_certificate(app_identifier: "com.moonlet")
+
+    gym(workspace: "Moonlet.xcworkspace", 
+      scheme: "Moonlet", 
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.moonlet" => "match AppStore com.moonlet"
+        },
+        "signingStyle": "manual",
+        compileBitcode: false
+      })
+    
+      upload_to_app_store(force: true, app_identifier: "com.moonlet", submit_for_review: true, phased_release: false, automatic_release: false)
+  
+
+  end
   
 end

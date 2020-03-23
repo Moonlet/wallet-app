@@ -50,8 +50,6 @@ buck-out/
 # https://docs.fastlane.tools/best-practices/source-control/
 
 */fastlane/report.xml
-*/fastlane/Preview.html
-*/fastlane/screenshots
 
 # Bundle artifact
 *.jsbundle
@@ -67,8 +65,11 @@ extension/build
 ios/Gemfile.lock
 
 # firebase config files
-android/app/google-services.json
+**/google-services.json
 ios/GoogleService-Info.plist
+ios/release/GoogleService-Info.plist
+
 rpc.http
 test.js
 .env
+

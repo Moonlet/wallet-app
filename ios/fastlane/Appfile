@@ -11,6 +11,6 @@ for_lane :beta do
     app_identifier "com.moonlet.beta"
 end
 
-for_lane :release do
+for_lane :deploy do
     app_identifier "com.moonlet"
 end

@@ -15,7 +15,7 @@
 
 default_platform(:android)
 
-platform :android do
+platform :android do  
 
 
   desc "Submit a new Beta Build to AppCenter"
@@ -43,6 +43,33 @@ platform :android do
       release_notes: changelog,
       notify_testers: true
     )
+  end
+
+  lane :deploy do
+    gradle(task: "clean")
+
+    package = load_json(json_path: "../package.json")
+    gradle(
+      task: "bundle",
+      flavor: "stable",
+      build_type: "Release",
+      properties: {
+        "versionName" => package["version"],
+        "versionCode" => number_of_commits
+      }
+    )
+    # changelog = changelog_from_git_commits(commits_count: 1)
+    
+    upload_to_play_store(
+      track: "alpha", 
+      validate_only: false,
+      json_key: 'app/moonlet-playstore-key/key.json',
+
+      skip_upload_metadata: true,
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true
+    );
   end
 
 end

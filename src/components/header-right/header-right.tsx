@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { Text } from '../../library';
+import { Text, normalize } from '../../library';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
@@ -19,7 +19,7 @@ export const HeaderRightComponent = (props: IProps) => (
         {props.text && <Text style={props.styles.text}>{props.text}</Text>}
         {props.icon && (
             <View style={props.styles.iconContainer}>
-                <Icon name={props.icon} size={ICON_SIZE} style={props.styles.icon} />
+                <Icon name={props.icon} size={normalize(ICON_SIZE)} style={props.styles.icon} />
             </View>
         )}
     </TouchableOpacity>

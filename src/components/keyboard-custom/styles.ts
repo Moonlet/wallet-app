@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
+import { normalize } from '../../library';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -17,63 +18,62 @@ export default (theme: ITheme) =>
         },
         headerButton: {
             flex: 1,
-            paddingVertical: BASE_DIMENSION,
+            paddingVertical: normalize(BASE_DIMENSION),
             backgroundColor: theme.colors.appBackground,
             borderWidth: 1
         },
         textButton: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             textAlign: 'center'
         },
         keyboardLayout: {
             flex: 1,
             backgroundColor: theme.colors.cardBackground,
-            padding: BASE_DIMENSION,
-            paddingBottom: BASE_DIMENSION * 2
+            padding: normalize(BASE_DIMENSION),
+            paddingBottom: normalize(BASE_DIMENSION * 2)
         },
         footerContainer: {
             backgroundColor: theme.colors.cardBackground,
-            paddingVertical: BASE_DIMENSION,
-            marginVertical: BASE_DIMENSION,
-            marginHorizontal: BASE_DIMENSION * 3,
+            paddingVertical: normalize(BASE_DIMENSION),
+            marginVertical: normalize(BASE_DIMENSION),
+            marginHorizontal: normalize(BASE_DIMENSION * 3),
             borderRadius: BORDER_RADIUS
         },
         footerText: {
             textAlign: 'center',
-            fontSize: 14,
+            fontSize: normalize(14),
             color: theme.colors.text
         },
         pasteWordText: {
-            fontSize: 14,
+            fontSize: normalize(14),
             textAlign: 'center',
             color: theme.colors.text
         },
         confirmWordText: {
             textAlign: 'center',
             color: theme.colors.accent,
-            fontSize: 14
+            fontSize: normalize(14)
         },
         rowContainer: {
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'center',
-            paddingVertical: 6
+            paddingVertical: normalize(6)
         },
         keyContainer: {
             flex: 1,
             backgroundColor: '#666666',
             borderRadius: BORDER_RADIUS,
-            paddingVertical: BASE_DIMENSION,
+            paddingVertical: normalize(BASE_DIMENSION),
             maxWidth: 35,
-            marginHorizontal: 3,
+            marginHorizontal: normalize(3),
             justifyContent: 'center',
             alignContent: 'center'
         },
         keyText: {
             flex: 1,
-            fontSize: 22,
-            lineHeight: 26,
+            fontSize: normalize(22),
+            lineHeight: normalize(26),
             textAlign: 'center',
             color: theme.colors.text
         },
@@ -81,11 +81,11 @@ export default (theme: ITheme) =>
             flex: 1,
             backgroundColor: '#444444',
             borderRadius: BORDER_RADIUS,
-            paddingVertical: BASE_DIMENSION,
+            paddingVertical: normalize(BASE_DIMENSION),
             maxWidth: 42,
             justifyContent: 'center',
             alignContent: 'center',
-            marginRight: BASE_DIMENSION
+            marginRight: normalize(BASE_DIMENSION)
         },
         upperIcon: {
             alignSelf: 'center',
@@ -95,11 +95,11 @@ export default (theme: ITheme) =>
             flex: 1,
             backgroundColor: '#444444',
             borderRadius: BORDER_RADIUS,
-            paddingVertical: BASE_DIMENSION,
+            paddingVertical: normalize(BASE_DIMENSION),
             maxWidth: 42,
             justifyContent: 'center',
             alignContent: 'center',
-            marginLeft: BASE_DIMENSION
+            marginLeft: normalize(BASE_DIMENSION)
         },
         deleteIcon: {
             alignSelf: 'center',

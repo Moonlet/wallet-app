@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Button } from '../../library';
+import { Text, Button, normalize } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
@@ -42,23 +42,25 @@ export const ListAccountComponent = (
                     source={{ iconComponent: BlockchainIcon }}
                     style={{
                         marginLeft: Platform.select({
-                            default: BASE_DIMENSION,
-                            web: BASE_DIMENSION / 4
+                            default: normalize(BASE_DIMENSION),
+                            web: normalize(BASE_DIMENSION / 4)
                         }),
                         marginRight: Platform.select({
-                            default: BASE_DIMENSION * 2,
-                            web: BASE_DIMENSION
+                            default: normalize(BASE_DIMENSION * 2),
+                            web: normalize(BASE_DIMENSION)
                         })
                     }}
                 />
             )}
 
             <View style={props.styles.labelContainer}>{label}</View>
+
             {props.rightIcon && !props.isCreate && (
                 <View style={props.styles.iconRightContainer}>
-                    <Icon name={props.rightIcon} size={20} style={props.styles.icon} />
+                    <Icon name={props.rightIcon} size={normalize(20)} style={props.styles.icon} />
                 </View>
             )}
+
             {props.isCreate && (
                 <Button style={props.styles.createButton} disabled>
                     {translate('App.labels.create')}

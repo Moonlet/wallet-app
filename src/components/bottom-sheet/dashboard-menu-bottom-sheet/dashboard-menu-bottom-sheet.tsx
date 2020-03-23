@@ -70,7 +70,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         WalletConnectClient.connect(value);
     };
 
-    public renderBottomSheetContent = () => {
+    public renderBottomSheetContent() {
         const { styles } = this.props;
         return (
             <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
@@ -131,7 +131,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                 />
             </View>
         );
-    };
+    }
 
     public render() {
         return (
@@ -142,7 +142,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     this.props.snapPoints.initialSnap,
                     this.props.snapPoints.bottomSheetHeight
                 ]}
-                renderContent={this.renderBottomSheetContent}
+                renderContent={() => this.renderBottomSheetContent()}
                 renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
                 onOpenStart={this.props.onOpenStart}
                 onCloseEnd={this.props.onCloseEnd}

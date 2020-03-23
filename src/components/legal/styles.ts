@@ -1,14 +1,15 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION } from '../../styles/dimensions';
+import { normalize } from '../../library';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
             backgroundColor: theme.colors.appBackground,
-            paddingHorizontal: BASE_DIMENSION * 2,
-            paddingVertical: BASE_DIMENSION * 4
+            paddingHorizontal: normalize(BASE_DIMENSION * 2),
+            paddingVertical: normalize(BASE_DIMENSION * 4)
         },
         topContainer: {
             flex: 1,
@@ -25,11 +26,11 @@ export default (theme: ITheme) =>
         },
         bottomButton: {
             width: '80%',
-            marginTop: BASE_DIMENSION * 3
+            marginTop: normalize(BASE_DIMENSION * 3)
         },
         rowContainer: {
             flexDirection: 'row',
-            paddingVertical: BASE_DIMENSION * 2,
+            paddingVertical: normalize(BASE_DIMENSION * 2),
             justifyContent: 'space-between',
             alignSelf: 'stretch'
         },
@@ -44,14 +45,13 @@ export default (theme: ITheme) =>
             alignSelf: 'flex-end'
         },
         walletTc: {
-            lineHeight: 22,
+            lineHeight: normalize(22),
             textAlign: 'center',
             color: theme.colors.textSecondary,
-            marginTop: BASE_DIMENSION * 6
+            marginTop: normalize(BASE_DIMENSION * 6)
         },
         text: {
-            fontSize: theme.fontSize.large,
-            lineHeight: 25,
+            lineHeight: normalize(25),
             color: theme.colors.text,
             letterSpacing: 0.38
         }

@@ -1,40 +1,36 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION } from '../../styles/dimensions';
+import { normalize } from '../../library';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            paddingBottom: BASE_DIMENSION * 2
+            paddingBottom: normalize(BASE_DIMENSION * 2)
         },
         balanceContainer: {
-            marginTop: 10,
+            marginTop: normalize(BASE_DIMENSION),
             flexWrap: 'wrap',
             justifyContent: 'center',
             flexDirection: 'row'
         },
         balance: {
-            fontSize: theme.fontSize.large,
+            fontSize: normalize(theme.fontSize.large),
             color: theme.colors.textSecondary
         },
         convert: {
-            marginLeft: 5,
-            fontSize: theme.fontSize.large,
+            marginLeft: normalize(BASE_DIMENSION / 2),
+            fontSize: normalize(theme.fontSize.large),
             color: theme.colors.textSecondary
         },
-
         balanceSymbolFiat: {
-            fontSize: 18,
+            fontSize: normalize(18),
             color: theme.colors.textSecondary,
-            marginLeft: 10
+            marginLeft: normalize(BASE_DIMENSION)
         },
-
         address: {
-            fontSize: 30,
+            fontSize: normalize(30),
             textAlign: 'center',
             fontWeight: 'bold'
-        },
-        icon: {
-            color: theme.colors.accent
         }
     });

@@ -17,14 +17,14 @@ export default (theme: ITheme) =>
         },
         confirmTextContainer: {
             flexDirection: 'row',
-            marginBottom: BASE_DIMENSION * 2
+            marginBottom: normalize(BASE_DIMENSION * 2)
         },
         textStyle: {
             lineHeight: normalize(21),
             color: theme.colors.text,
             opacity: 0.87,
             textAlign: 'center',
-            paddingHorizontal: BASE_DIMENSION * 6
+            paddingHorizontal: normalize(BASE_DIMENSION * 6)
         },
         imageStyle: {
             flex: 1,

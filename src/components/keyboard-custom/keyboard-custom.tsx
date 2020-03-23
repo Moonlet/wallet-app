@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { Text } from '../../library';
+import { Text, normalize } from '../../library';
 import { Icon } from '../icon';
 import { CustomKey } from './custom-key';
 import { ICON_SIZE } from '../../styles/dimensions';
@@ -51,14 +51,18 @@ export class KeyboardComponent extends React.Component<
 
         return (
             <View style={styles.rowContainer}>
-                {isLastRow ? (
+                {isLastRow && (
                     <TouchableOpacity
                         style={styles.upperIconContainer}
                         onPress={() => this.setState({ isCapsLock: !this.state.isCapsLock })}
                     >
-                        <Icon name="keyboard-shift-1" size={16} style={styles.upperIcon} />
+                        <Icon
+                            name="keyboard-shift-1"
+                            size={normalize(16)}
+                            style={styles.upperIcon}
+                        />
                     </TouchableOpacity>
-                ) : null}
+                )}
 
                 {rowValues.map((word: any, index: any) => {
                     const currentWord =
@@ -77,14 +81,18 @@ export class KeyboardComponent extends React.Component<
                     );
                 })}
 
-                {isLastRow ? (
+                {isLastRow && (
                     <TouchableOpacity
                         style={styles.deleteIconContainer}
                         onPress={this.props.handleDeleteKey}
                     >
-                        <Icon name="keyboard-delete-1" size={ICON_SIZE} style={styles.deleteIcon} />
+                        <Icon
+                            name="keyboard-delete-1"
+                            size={normalize(ICON_SIZE)}
+                            style={styles.deleteIcon}
+                        />
                     </TouchableOpacity>
-                ) : null}
+                )}
             </View>
         );
     };
@@ -125,7 +133,7 @@ export class KeyboardComponent extends React.Component<
 
     public render() {
         const styles = this.props.styles;
-        const footerButton = this.props.footerButton ? this.props.footerButton : null;
+        const footerButton = this.props.footerButton && this.props.footerButton;
 
         return (
             <View style={styles.container}>

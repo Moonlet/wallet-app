@@ -6,6 +6,7 @@ import { Icon } from '../../icon';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { Platform } from 'react-native';
+import { normalize } from '../../../library';
 
 interface IExternalProps {
     obRef: any;
@@ -23,7 +24,11 @@ export class BottomSheetHeaderComponent extends React.Component<
                 }}
                 style={this.props.styles.header}
             >
-                <Icon name="chevron-up" size={ICON_SIZE / 2} style={this.props.styles.icon} />
+                <Icon
+                    name="chevron-up"
+                    size={normalize(ICON_SIZE / 2)}
+                    style={this.props.styles.icon}
+                />
             </TouchableWithoutFeedback>
         );
     }

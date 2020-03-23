@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TextInput, TouchableOpacity } from 'react-native';
-import { Text, Button } from '../../library';
+import { Text, Button, normalize } from '../../library';
 import stylesProvider from './styles';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
@@ -156,7 +156,7 @@ export class AccountCreateComponent extends React.Component<
                                     onPress={this.onPressClearInput}
                                     style={[styles.rightAddressButton]}
                                 >
-                                    <Icon name="close" size={16} style={styles.icon} />
+                                    <Icon name="close" size={normalize(16)} style={styles.icon} />
                                 </TouchableOpacity>
                             )}
                         </View>

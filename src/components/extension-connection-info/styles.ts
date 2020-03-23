@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { normalize } from '../../library';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,8 +9,7 @@ export default (theme: ITheme) =>
             width: '100%'
         },
         text: {
-            fontSize: 16,
-            lineHeight: 21,
+            lineHeight: normalize(21),
             color: theme.colors.gradientDark,
             textAlign: 'center'
         }

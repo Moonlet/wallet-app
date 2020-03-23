@@ -11,6 +11,7 @@ import { readEncrypted } from '../../core/secure/storage';
 import { WC_CONNECTION } from '../../core/constants/app';
 import { getPassword } from '../../core/secure/keychain';
 import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface IExternalProps {
     obRef?: any;
@@ -28,7 +29,7 @@ const displayInfo = (text: string, label?: string) => (
     <TouchableOpacity
         style={{
             flexDirection: 'column',
-            paddingVertical: 8
+            paddingVertical: BASE_DIMENSION
         }}
         onPress={async () => {
             await Clipboard.setString(text);
@@ -57,9 +58,7 @@ export class DebugModalComponent extends React.Component<
     }
 
     public showDebug() {
-        this.setState({
-            visible: true
-        });
+        this.setState({ visible: true });
     }
 
     public async componentDidMount() {
@@ -110,23 +109,13 @@ export class DebugModalComponent extends React.Component<
                                 )}
                             </View>
                         </ScrollView>
-                        <View style={{ flex: 0, padding: 20 }}>
-                            <Button
-                                onPress={() => {
-                                    WalletConnectClient.reconnect();
-                                }}
-                            >
-                                Reconnect to WC
+                        <View style={{ flex: 0, padding: BASE_DIMENSION * 3 }}>
+                            <Button onPress={() => WalletConnectClient.reconnect()}>
+                                {`Reconnect to WC`}
                             </Button>
                             <Button
-                                onPress={() => {
-                                    this.setState({
-                                        visible: false
-                                    });
-                                }}
-                            >
-                                Back
-                            </Button>
+                                onPress={() => this.setState({ visible: false })}
+                            >{`Back`}</Button>
                         </View>
                     </View>
                 </Modal>

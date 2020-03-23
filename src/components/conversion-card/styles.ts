@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
+import { normalize } from '../../library';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,8 +9,8 @@ export default (theme: ITheme) =>
             flex: 1,
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
-            paddingVertical: BASE_DIMENSION,
-            marginHorizontal: BASE_DIMENSION / 2,
+            paddingVertical: normalize(BASE_DIMENSION),
+            marginHorizontal: normalize(BASE_DIMENSION / 2),
             justifyContent: 'center',
             alignItems: 'center'
         },
@@ -23,12 +24,11 @@ export default (theme: ITheme) =>
             color: theme.colors.negative
         },
         text: {
-            fontSize: 13,
-            lineHeight: 18
+            fontSize: normalize(13),
+            lineHeight: normalize(18)
         },
         convert: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             color: theme.colors.text
         }
     });

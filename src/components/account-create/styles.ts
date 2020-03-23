@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import { normalize } from '../../library';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,11 +9,11 @@ export default (theme: ITheme) =>
             flex: 1,
             flexDirection: 'column',
             justifyContent: 'center',
-            paddingHorizontal: BASE_DIMENSION * 2
+            paddingHorizontal: normalize(BASE_DIMENSION * 2)
         },
         createText: {
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalize(22),
+            lineHeight: normalize(28),
             fontWeight: 'bold',
             letterSpacing: 0.35,
             color: theme.colors.text,
@@ -20,20 +21,19 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION
         },
         chooseUsernameText: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
-            marginBottom: BASE_DIMENSION * 4
+            marginBottom: normalize(BASE_DIMENSION * 4)
         },
         congratsText: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
             color: theme.colors.accent
         },
         invalidText: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
             color: theme.colors.error
         },
         createButton: {
@@ -41,15 +41,14 @@ export default (theme: ITheme) =>
             alignSelf: 'center'
         },
         inputContainer: {
-            marginBottom: BASE_DIMENSION * 4
+            marginBottom: normalize(BASE_DIMENSION * 4)
         },
         inputBox: {
-            height: BASE_DIMENSION * 5,
+            height: normalize(BASE_DIMENSION * 5),
             borderRadius: BORDER_RADIUS,
-            borderColor: 'gray',
             alignSelf: 'stretch',
             backgroundColor: theme.colors.cardBackground,
-            paddingHorizontal: 12,
+            paddingHorizontal: normalize(BASE_DIMENSION + BASE_DIMENSION / 2),
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'
@@ -62,8 +61,8 @@ export default (theme: ITheme) =>
             color: theme.colors.accent
         },
         rightAddressButton: {
-            height: ICON_CONTAINER_SIZE,
-            width: ICON_CONTAINER_SIZE,
+            height: normalize(ICON_CONTAINER_SIZE),
+            width: normalize(ICON_CONTAINER_SIZE),
             justifyContent: 'flex-end',
             alignItems: 'center',
             flexDirection: 'row'

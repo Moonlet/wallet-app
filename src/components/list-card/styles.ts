@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 import { ITheme } from '../../core/theme/itheme';
+import { normalize } from '../../library';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,7 +9,7 @@ export default (theme: ITheme) =>
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            padding: BASE_DIMENSION * 2,
+            padding: normalize(BASE_DIMENSION * 2),
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
             marginBottom: BASE_DIMENSION,
@@ -19,8 +20,8 @@ export default (theme: ITheme) =>
             flex: 1
         },
         label: {
-            fontSize: 18,
-            lineHeight: 25,
+            fontSize: normalize(18),
+            lineHeight: normalize(25),
             fontWeight: '500',
             letterSpacing: 0.38,
             color: theme.colors.text
@@ -28,16 +29,9 @@ export default (theme: ITheme) =>
         selected: {
             borderColor: theme.colors.accentSecondary
         },
-        iconLeftContainer: {
-            height: ICON_CONTAINER_SIZE,
-            width: ICON_CONTAINER_SIZE,
-            alignItems: 'flex-start',
-            justifyContent: 'center'
-        },
-        iconRightContainer: {
-            height: ICON_CONTAINER_SIZE,
-            width: ICON_CONTAINER_SIZE,
-            alignItems: 'flex-end',
+        iconContainer: {
+            height: normalize(ICON_CONTAINER_SIZE),
+            width: normalize(ICON_CONTAINER_SIZE),
             justifyContent: 'center'
         },
         icon: {

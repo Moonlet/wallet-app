@@ -3,7 +3,7 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { Button } from '../../library/button/button';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { Text } from '../../library';
+import { Text, normalize } from '../../library';
 import { Icon } from '../../components/icon';
 import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
@@ -56,8 +56,10 @@ export const LegalComponent = (
                         style={props.styles.rowContainer}
                         onPress={() => setShowTC(true)}
                     >
-                        <Text style={props.styles.text}>{translate('App.labels.tc')}</Text>
-                        <Icon name="chevron-right" size={16} style={props.styles.icon} />
+                        <Text style={props.styles.text} large>
+                            {translate('App.labels.tc')}
+                        </Text>
+                        <Icon name="chevron-right" size={normalize(16)} style={props.styles.icon} />
                     </TouchableOpacity>
 
                     <View style={props.styles.divider} />
@@ -66,10 +68,10 @@ export const LegalComponent = (
                         style={props.styles.rowContainer}
                         onPress={() => setShowPrivacyPolicy(true)}
                     >
-                        <Text style={props.styles.text}>
+                        <Text style={props.styles.text} large>
                             {translate('App.labels.privacyPolicy')}
                         </Text>
-                        <Icon name="chevron-right" size={16} style={props.styles.icon} />
+                        <Icon name="chevron-right" size={normalize(16)} style={props.styles.icon} />
                     </TouchableOpacity>
 
                     <View style={props.styles.divider} />

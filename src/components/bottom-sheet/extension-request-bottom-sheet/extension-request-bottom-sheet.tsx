@@ -5,7 +5,7 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { Icon } from '../../icon';
-import { Text } from '../../../library';
+import { Text, normalize } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
@@ -35,14 +35,18 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
         Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(1) : null;
     }
 
-    public renderBottomSheetContent = () => {
+    public renderBottomSheetContent() {
         const { styles } = this.props;
 
         return (
             <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
                 <View style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
-                        <Icon name="arrow-right-dash" size={ICON_SIZE} style={styles.icon} />
+                        <Icon
+                            name="arrow-right-dash"
+                            size={normalize(ICON_SIZE)}
+                            style={styles.icon}
+                        />
                     </View>
                     <View style={styles.textContainer}>
                         <Text style={styles.title}>{this.props.data?.mainText}</Text>
@@ -55,15 +59,15 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
                 <View key="loading" style={styles.loadingContainer}>
                     {this.props.data?.state === 'pending' && <LoadingIndicator />}
                     {this.props.data?.state === 'completed' && (
-                        <Icon name="check-1" size={ICON_SIZE} style={styles.icon} />
+                        <Icon name="check-1" size={normalize(ICON_SIZE)} style={styles.icon} />
                     )}
                     {this.props.data?.state === 'rejected' && (
-                        <Icon name="warning" size={ICON_SIZE} style={styles.icon} />
+                        <Icon name="warning" size={normalize(ICON_SIZE)} style={styles.icon} />
                     )}
                 </View>
             </View>
         );
-    };
+    }
 
     public render() {
         return (
@@ -74,7 +78,7 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
                     this.props.snapPoints.initialSnap,
                     this.props.snapPoints.bottomSheetHeight
                 ]}
-                renderContent={this.renderBottomSheetContent}
+                renderContent={() => this.renderBottomSheetContent()}
                 renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
                 onOpenStart={this.props.onOpenStart}
                 onCloseEnd={this.props.onCloseEnd}

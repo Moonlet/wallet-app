@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import { normalize } from '../../library';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -9,8 +10,8 @@ export default (theme: ITheme) =>
             alignItems: 'center'
         },
         iconContainer: {
-            width: ICON_CONTAINER_SIZE,
-            height: ICON_CONTAINER_SIZE,
+            width: normalize(ICON_CONTAINER_SIZE),
+            height: normalize(ICON_CONTAINER_SIZE),
             alignItems: 'center',
             justifyContent: 'center',
             marginLeft: BASE_DIMENSION
@@ -19,8 +20,7 @@ export default (theme: ITheme) =>
             color: theme.colors.accent
         },
         text: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             color: theme.colors.text
         }
     });

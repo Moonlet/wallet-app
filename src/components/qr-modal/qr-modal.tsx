@@ -1,25 +1,38 @@
 import React from 'react';
-import { View, Modal, Platform, Linking } from 'react-native';
+import { View, Modal, Platform, Linking, PermissionsAndroid } from 'react-native';
 import { CameraKitCameraScreen, CameraKitCamera } from 'react-native-camera-kit';
 import { translate } from '../../core/i18n';
 import AndroidOpenSettings from 'react-native-android-open-settings';
 import { Dialog } from '../dialog/dialog';
+import { smartConnect } from '../../core/utils/smart-connect';
+import { canDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
+import { connect } from 'react-redux';
 
-export interface IProps {
+export interface IExternalProps {
     onQrCodeScanned: (qrCode: string) => any;
+    obRef?: any;
 }
+
+export interface IReduxProps {
+    canDisplayPasswordModal: typeof canDisplayPasswordModal;
+}
+
+const mapDispatchToProps = {
+    canDisplayPasswordModal
+};
 
 interface IState {
     isVisible: boolean;
 }
 
-export class QrModalReaderComponent extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
+export class QrModalReaderComponent extends React.Component<IExternalProps & IReduxProps, IState> {
+    constructor(props: IExternalProps & IReduxProps) {
         super(props);
 
         this.state = {
             isVisible: false
         };
+        props.obRef && props.obRef(this);
     }
 
     public openPhoneSettings() {
@@ -36,12 +49,36 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
         }
     }
 
+    private async requestCameraPermission() {
+        try {
+            const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA);
+            if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                return true;
+            } else {
+                return null;
+            }
+        } catch (err) {
+            throw null;
+        }
+    }
+
     public open = async () => {
+        this.props.canDisplayPasswordModal(false);
+
         let success = await CameraKitCamera.checkDeviceCameraAuthorizationStatus();
 
         if (success === -1) {
-            success = await CameraKitCamera.requestDeviceCameraAuthorization();
+            if (Platform.OS === 'android') {
+                try {
+                    success = await this.requestCameraPermission();
+                } catch (err) {
+                    success = null;
+                }
+            } else {
+                success = await CameraKitCamera.requestDeviceCameraAuthorization();
+            }
         }
+
         if (success) {
             this.setState({ isVisible: true });
         } else {
@@ -50,18 +87,16 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
                 translate('Send.cameraDisabledText'),
                 {
                     text: translate('App.labels.cancel'),
-                    onPress: () => {
-                        this.setState({ isVisible: false });
-                    }
+                    onPress: () => this.setState({ isVisible: false })
                 },
                 {
                     text: translate('App.labels.settings'),
-                    onPress: () => {
-                        this.openPhoneSettings();
-                    }
+                    onPress: () => this.openPhoneSettings()
                 }
             );
         }
+
+        this.props.canDisplayPasswordModal(true);
     };
 
     public render() {
@@ -89,4 +124,6 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const QrModalReader = QrModalReaderComponent;
+export const QrModalReader = smartConnect<IExternalProps>(QrModalReaderComponent, [
+    connect(null, mapDispatchToProps)
+]);

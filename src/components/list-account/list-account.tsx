@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Button, normalize } from '../../library';
+import { Text, Button } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
@@ -8,7 +8,7 @@ import Icon from '../icon';
 import TouchableOpacity from '../../library/touchable-opacity/touchable-opacity';
 import { translate } from '../../core/i18n';
 import { SmartImage } from '../../library/image/smart-image';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export interface IProps {
     label: string | JSX.Element;

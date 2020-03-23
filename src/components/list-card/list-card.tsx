@@ -1,11 +1,11 @@
 import React from 'react';
-import { Text, normalize } from '../../library';
+import { Text } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from '../icon';
-import { ICON_SIZE } from '../../styles/dimensions';
+import { ICON_SIZE, normalize } from '../../styles/dimensions';
 
 export interface IProps {
     label: string | JSX.Element;

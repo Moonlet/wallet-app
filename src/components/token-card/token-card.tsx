@@ -10,8 +10,7 @@ import { ITokenConfig } from '../../core/blockchain/types/token';
 import { Blockchain } from '../../core/blockchain/types';
 import { SmartImage } from '../../library/image/smart-image';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { BASE_DIMENSION } from '../../styles/dimensions';
-import { normalize } from '../../library';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export interface IProps {
     blockchain: Blockchain;

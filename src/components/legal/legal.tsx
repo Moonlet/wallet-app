@@ -3,7 +3,7 @@ import { View, Image, TouchableOpacity } from 'react-native';
 import { Button } from '../../library/button/button';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { Text, normalize } from '../../library';
+import { Text } from '../../library';
 import { Icon } from '../../components/icon';
 import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
@@ -12,6 +12,7 @@ import { appSetAcceptedTcVersion } from '../../redux/app/actions';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TC } from './terms-conditions/terms-conditions';
 import { PrivacyPolicy } from './privacy-policy/privacy-policy';
+import { normalize } from '../../styles/dimensions';
 
 interface IExternalProps {
     onAccept: () => void;

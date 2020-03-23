@@ -3,10 +3,10 @@ import { View, TouchableOpacity } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { Text, normalize } from '../../library';
+import { Text } from '../../library';
 import { Icon } from '../icon';
 import { CustomKey } from './custom-key';
-import { ICON_SIZE } from '../../styles/dimensions';
+import { ICON_SIZE, normalize } from '../../styles/dimensions';
 
 const keyboardLayout = [
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Dimensions, Animated, TouchableOpacity, Platform } from 'react-native';
-import { Text, normalize } from '../../library';
+import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
 import { TokenDashboard } from '../../components/token-dashboard/token-dashboard';
@@ -25,7 +25,7 @@ import {
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
-import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import { ICON_SIZE, ICON_CONTAINER_SIZE, normalize } from '../../styles/dimensions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';

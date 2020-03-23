@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { Icon } from '../icon';
-import { normalize } from '../../library';
+import { normalize } from '../../styles/dimensions';
 
 export interface IProps {
     name?: string;

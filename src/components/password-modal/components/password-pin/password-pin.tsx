@@ -3,7 +3,7 @@ import { View, Image, Animated, TouchableOpacity, Platform } from 'react-native'
 import { translate } from '../../../../core/i18n';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { Text, normalize } from '../../../../library';
+import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { hash } from '../../../../core/secure/encrypt';
@@ -11,6 +11,7 @@ import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
 import { biometricAuth, BiometryType } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';
+import { normalize } from '../../../../styles/dimensions';
 
 export interface IReduxProps {
     touchID: boolean;

@@ -34,10 +34,9 @@ import { TransactionDetails } from '../screens/transaction-details/transaction-d
 import { StatisticsScreen } from '../screens/statistics/statistics';
 import { WatchScreen } from '../screens/watch/watch';
 import { ManageAccountScreen } from '../screens/manage-account/manage-account';
-import { BASE_DIMENSION } from '../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
-import { normalize } from '../library';
 
 interface IDefaultNavOptions {
     navigation: any;

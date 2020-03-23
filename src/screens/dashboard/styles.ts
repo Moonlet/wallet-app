@@ -1,7 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
-import { normalize } from '../../library';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({

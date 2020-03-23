@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { Text, normalize } from '../../library';
+import { Text } from '../../library';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
@@ -11,6 +11,7 @@ import { Icon } from '../icon';
 import { IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { normalize } from '../../styles/dimensions';
 
 export interface IProps {
     onPress?: () => void;

@@ -12,7 +12,7 @@ import { ExtensionRequestBottomSheet } from './extension-request-bottom-sheet/ex
 import { IBottomSheet, BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { openBottomSheet, closeBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BlockchainNavigationBottomSheet } from './blockchain-navigation-bottom-sheet/blockchain-navigation-bottom-sheet';
-import { normalize } from '../../library';
+import { normalize } from '../../styles/dimensions';
 
 interface IReduxProps {
     bottomSheet: IBottomSheet;

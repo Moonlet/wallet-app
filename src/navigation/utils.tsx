@@ -3,7 +3,7 @@ import { View, Text } from 'react-native';
 import { Icon } from '../components/icon';
 import { COLORS } from '../styles/colors';
 import { StackViewStyleInterpolator } from 'react-navigation-stack';
-import { normalize } from '../library';
+import { normalize } from '../styles/dimensions';
 
 export const DummyScreen = () => (
     <View style={{ display: 'flex', justifyContent: 'center', flex: 1 }}>

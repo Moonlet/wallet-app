@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TextInput, TouchableOpacity } from 'react-native';
-import { Text, Button, normalize } from '../../library';
+import { Text, Button } from '../../library';
 import stylesProvider from './styles';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
@@ -17,6 +17,7 @@ import { PasswordModal } from '../password-modal/password-modal';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { Icon } from '../../components/icon';
 import { getChainId } from '../../redux/preferences/selectors';
+import { normalize } from '../../styles/dimensions';
 
 export interface IReduxProps {
     createAccount: typeof createAccount;

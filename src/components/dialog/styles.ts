@@ -1,7 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BORDER_RADIUS, BASE_DIMENSION } from '../../styles/dimensions';
-import { normalize } from '../../library';
+import { BORDER_RADIUS, BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({

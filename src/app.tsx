@@ -114,7 +114,7 @@ export default class App extends React.Component<{}, IState> {
             }
         });
 
-        if (appReady) {
+        if (appReady && Platform.OS !== 'web') {
             updateAddressMonitorTokens(store.getState().wallets);
         }
     };

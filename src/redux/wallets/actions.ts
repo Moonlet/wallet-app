@@ -405,7 +405,7 @@ export const updateTransactionFromBlockchain = (
             // select notification wallet and account
             // if two wallets (transferring between own wallets) select the receiving wallet
             const wallet =
-                wallets.length > 0
+                wallets.length > 1
                     ? wallets.find(loopWallet =>
                           loopWallet.accounts.some(
                               account => account.address.toLowerCase() === transaction.toAddress

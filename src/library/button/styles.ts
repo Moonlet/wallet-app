@@ -6,11 +6,11 @@ import { normalize } from '../text/text';
 export default (theme: ITheme) =>
     StyleSheet.create({
         button: {
-            paddingVertical: normalize(BASE_DIMENSION + BASE_DIMENSION / 2),
+            paddingVertical: BASE_DIMENSION + BASE_DIMENSION / 2,
             borderWidth: 2,
             borderColor: theme.colors.accentSecondary,
             borderRadius: BORDER_RADIUS,
-            paddingHorizontal: normalize(BASE_DIMENSION)
+            paddingHorizontal: BASE_DIMENSION
         },
         text: {
             lineHeight: normalize(22),

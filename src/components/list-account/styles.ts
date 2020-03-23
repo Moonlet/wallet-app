@@ -9,10 +9,10 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
-            padding: normalize(BASE_DIMENSION),
+            padding: BASE_DIMENSION,
             alignItems: 'center',
-            marginBottom: normalize(BASE_DIMENSION),
-            paddingVertical: normalize(BASE_DIMENSION * 2),
+            marginBottom: BASE_DIMENSION,
+            paddingVertical: BASE_DIMENSION * 2,
             borderWidth: 2,
             borderColor: theme.colors.cardBackground
         },
@@ -45,6 +45,6 @@ export default (theme: ITheme) =>
         createButton: {
             backgroundColor: theme.colors.accent,
             borderColor: theme.colors.accent,
-            paddingHorizontal: normalize(BASE_DIMENSION * 2)
+            paddingHorizontal: BASE_DIMENSION * 2
         }
     });

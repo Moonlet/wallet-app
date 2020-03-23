@@ -6,7 +6,7 @@ import { normalize } from '../../library';
 export default (theme: ITheme) =>
     StyleSheet.create({
         button: {
-            marginRight: normalize(BASE_DIMENSION),
+            marginRight: BASE_DIMENSION,
             flexDirection: 'row',
             alignItems: 'center'
         },

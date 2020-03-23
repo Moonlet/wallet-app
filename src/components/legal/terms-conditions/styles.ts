@@ -19,7 +19,7 @@ export default (theme: ITheme) =>
             height: normalize(ICON_CONTAINER_SIZE),
             alignItems: 'center',
             justifyContent: 'center',
-            marginLeft: normalize(BASE_DIMENSION)
+            marginLeft: BASE_DIMENSION
         },
         icon: {
             color: theme.colors.accent

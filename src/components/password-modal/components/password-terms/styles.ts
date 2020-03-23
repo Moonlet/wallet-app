@@ -7,9 +7,9 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            paddingHorizontal: normalize(BASE_DIMENSION * 5),
-            paddingTop: normalize(BASE_DIMENSION * 20),
-            paddingBottom: normalize(BASE_DIMENSION * 10),
+            paddingHorizontal: BASE_DIMENSION * 5,
+            paddingTop: BASE_DIMENSION * 20,
+            paddingBottom: BASE_DIMENSION * 10,
             backgroundColor: theme.colors.appBackground
         },
         bottomButton: {
@@ -17,14 +17,14 @@ export default (theme: ITheme) =>
         },
         confirmTextContainer: {
             flexDirection: 'row',
-            marginBottom: normalize(BASE_DIMENSION * 2)
+            marginBottom: BASE_DIMENSION * 2
         },
         textStyle: {
             lineHeight: normalize(21),
             color: theme.colors.text,
             opacity: 0.87,
             textAlign: 'center',
-            paddingHorizontal: normalize(BASE_DIMENSION * 6)
+            paddingHorizontal: BASE_DIMENSION * 6
         },
         imageStyle: {
             flex: 1,

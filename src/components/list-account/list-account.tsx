@@ -42,12 +42,12 @@ export const ListAccountComponent = (
                     source={{ iconComponent: BlockchainIcon }}
                     style={{
                         marginLeft: Platform.select({
-                            default: normalize(BASE_DIMENSION),
-                            web: normalize(BASE_DIMENSION / 4)
+                            default: BASE_DIMENSION,
+                            web: BASE_DIMENSION / 4
                         }),
                         marginRight: Platform.select({
-                            default: normalize(BASE_DIMENSION * 2),
-                            web: normalize(BASE_DIMENSION)
+                            default: BASE_DIMENSION * 2,
+                            web: BASE_DIMENSION
                         })
                     }}
                 />

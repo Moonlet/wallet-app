@@ -9,7 +9,7 @@ export default (theme: ITheme) =>
             display: 'flex',
             flexDirection: 'row',
             alignItems: 'center',
-            padding: normalize(BASE_DIMENSION * 2),
+            padding: BASE_DIMENSION * 2,
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
             marginBottom: BASE_DIMENSION,

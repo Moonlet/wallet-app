@@ -9,8 +9,8 @@ export default (theme: ITheme) =>
             flex: 1,
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
-            paddingVertical: normalize(BASE_DIMENSION),
-            marginHorizontal: normalize(BASE_DIMENSION / 2),
+            paddingVertical: BASE_DIMENSION,
+            marginHorizontal: BASE_DIMENSION / 2,
             justifyContent: 'center',
             alignItems: 'center'
         },

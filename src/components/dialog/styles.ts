@@ -24,7 +24,7 @@ export default (theme: ITheme) =>
             borderRadius: BORDER_RADIUS * 2
         },
         cancelButton: {
-            paddingHorizontal: normalize(BASE_DIMENSION * 2),
+            paddingHorizontal: BASE_DIMENSION * 2,
             borderWidth: 2,
             borderColor: theme.colors.textTertiary,
             backgroundColor: theme.colors.bottomSheetBackground
@@ -34,7 +34,7 @@ export default (theme: ITheme) =>
             color: theme.colors.textSecondary
         },
         confirmButton: {
-            paddingHorizontal: normalize(BASE_DIMENSION * 2),
+            paddingHorizontal: BASE_DIMENSION * 2,
             borderWidth: 2,
             borderColor: theme.colors.accentSecondary,
             backgroundColor: theme.colors.bottomSheetBackground
@@ -45,7 +45,7 @@ export default (theme: ITheme) =>
             color: theme.colors.accent
         },
         textInput: {
-            paddingHorizontal: normalize(BASE_DIMENSION),
+            paddingHorizontal: BASE_DIMENSION,
             backgroundColor: theme.colors.inputBackground,
             borderRadius: BORDER_RADIUS / 2,
             fontSize: normalize(11),

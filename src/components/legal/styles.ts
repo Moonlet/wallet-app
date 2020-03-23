@@ -8,8 +8,8 @@ export default (theme: ITheme) =>
         container: {
             flex: 1,
             backgroundColor: theme.colors.appBackground,
-            paddingHorizontal: normalize(BASE_DIMENSION * 2),
-            paddingVertical: normalize(BASE_DIMENSION * 4)
+            paddingHorizontal: BASE_DIMENSION * 2,
+            paddingVertical: BASE_DIMENSION * 4
         },
         topContainer: {
             flex: 1,
@@ -26,11 +26,11 @@ export default (theme: ITheme) =>
         },
         bottomButton: {
             width: '80%',
-            marginTop: normalize(BASE_DIMENSION * 3)
+            marginTop: BASE_DIMENSION * 3
         },
         rowContainer: {
             flexDirection: 'row',
-            paddingVertical: normalize(BASE_DIMENSION * 2),
+            paddingVertical: BASE_DIMENSION * 2,
             justifyContent: 'space-between',
             alignSelf: 'stretch'
         },
@@ -48,7 +48,7 @@ export default (theme: ITheme) =>
             lineHeight: normalize(22),
             textAlign: 'center',
             color: theme.colors.textSecondary,
-            marginTop: normalize(BASE_DIMENSION * 6)
+            marginTop: BASE_DIMENSION * 6
         },
         text: {
             lineHeight: normalize(25),

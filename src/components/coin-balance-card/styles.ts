@@ -14,13 +14,13 @@ export default (theme: ITheme) =>
         },
         rowContainer: {
             flexDirection: 'row',
-            marginBottom: normalize(BASE_DIMENSION)
+            marginBottom: BASE_DIMENSION
         },
         account: {
             fontSize: normalize(15),
             lineHeight: normalize(20),
             color: theme.colors.text,
-            marginRight: normalize(BASE_DIMENSION)
+            marginRight: BASE_DIMENSION
         },
         address: {
             fontSize: normalize(15),
@@ -33,7 +33,7 @@ export default (theme: ITheme) =>
             fontWeight: 'bold',
             letterSpacing: 0.4,
             color: theme.colors.text,
-            marginRight: normalize(BASE_DIMENSION * 2)
+            marginRight: BASE_DIMENSION * 2
         },
         secondaryText: {
             lineHeight: normalize(21),

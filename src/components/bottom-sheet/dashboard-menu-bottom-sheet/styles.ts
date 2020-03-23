@@ -7,18 +7,18 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         content: {
             backgroundColor: theme.colors.bottomSheetBackground,
-            paddingHorizontal: normalize(BASE_DIMENSION * 3),
-            paddingVertical: normalize(BASE_DIMENSION * 2)
+            paddingHorizontal: BASE_DIMENSION * 3,
+            paddingVertical: BASE_DIMENSION * 2
         },
         rowContainer: {
             flexDirection: 'row',
-            paddingVertical: normalize(BASE_DIMENSION),
-            marginBottom: normalize(BASE_DIMENSION * 2)
+            paddingVertical: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION * 2
         },
         iconContainer: {
             backgroundColor: theme.colors.appBackground,
-            padding: normalize(BASE_DIMENSION),
-            marginRight: normalize(BASE_DIMENSION * 2),
+            padding: BASE_DIMENSION,
+            marginRight: BASE_DIMENSION * 2,
             borderRadius: BORDER_RADIUS
         },
         icon: {

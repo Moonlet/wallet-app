@@ -9,7 +9,7 @@ export default (theme: ITheme) =>
             flex: 1,
             flexDirection: 'column',
             justifyContent: 'center',
-            paddingHorizontal: normalize(BASE_DIMENSION * 2)
+            paddingHorizontal: BASE_DIMENSION * 2
         },
         createText: {
             fontSize: normalize(22),
@@ -24,7 +24,7 @@ export default (theme: ITheme) =>
             lineHeight: normalize(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
-            marginBottom: normalize(BASE_DIMENSION * 4)
+            marginBottom: BASE_DIMENSION * 4
         },
         congratsText: {
             fontSize: normalize(15),
@@ -41,14 +41,14 @@ export default (theme: ITheme) =>
             alignSelf: 'center'
         },
         inputContainer: {
-            marginBottom: normalize(BASE_DIMENSION * 4)
+            marginBottom: BASE_DIMENSION * 4
         },
         inputBox: {
-            height: normalize(BASE_DIMENSION * 5),
+            height: BASE_DIMENSION * 5,
             borderRadius: BORDER_RADIUS,
             alignSelf: 'stretch',
             backgroundColor: theme.colors.cardBackground,
-            paddingHorizontal: normalize(BASE_DIMENSION + BASE_DIMENSION / 2),
+            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'

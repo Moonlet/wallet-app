@@ -18,7 +18,7 @@ export default (theme: ITheme) =>
         },
         headerButton: {
             flex: 1,
-            paddingVertical: normalize(BASE_DIMENSION),
+            paddingVertical: BASE_DIMENSION,
             backgroundColor: theme.colors.appBackground,
             borderWidth: 1
         },
@@ -29,14 +29,14 @@ export default (theme: ITheme) =>
         keyboardLayout: {
             flex: 1,
             backgroundColor: theme.colors.cardBackground,
-            padding: normalize(BASE_DIMENSION),
-            paddingBottom: normalize(BASE_DIMENSION * 2)
+            padding: BASE_DIMENSION,
+            paddingBottom: BASE_DIMENSION * 2
         },
         footerContainer: {
             backgroundColor: theme.colors.cardBackground,
-            paddingVertical: normalize(BASE_DIMENSION),
-            marginVertical: normalize(BASE_DIMENSION),
-            marginHorizontal: normalize(BASE_DIMENSION * 3),
+            paddingVertical: BASE_DIMENSION,
+            marginVertical: BASE_DIMENSION,
+            marginHorizontal: BASE_DIMENSION * 3,
             borderRadius: BORDER_RADIUS
         },
         footerText: {
@@ -64,7 +64,7 @@ export default (theme: ITheme) =>
             flex: 1,
             backgroundColor: '#666666',
             borderRadius: BORDER_RADIUS,
-            paddingVertical: normalize(BASE_DIMENSION),
+            paddingVertical: BASE_DIMENSION,
             maxWidth: 35,
             marginHorizontal: normalize(3),
             justifyContent: 'center',
@@ -81,11 +81,11 @@ export default (theme: ITheme) =>
             flex: 1,
             backgroundColor: '#444444',
             borderRadius: BORDER_RADIUS,
-            paddingVertical: normalize(BASE_DIMENSION),
+            paddingVertical: BASE_DIMENSION,
             maxWidth: 42,
             justifyContent: 'center',
             alignContent: 'center',
-            marginRight: normalize(BASE_DIMENSION)
+            marginRight: BASE_DIMENSION
         },
         upperIcon: {
             alignSelf: 'center',
@@ -95,11 +95,11 @@ export default (theme: ITheme) =>
             flex: 1,
             backgroundColor: '#444444',
             borderRadius: BORDER_RADIUS,
-            paddingVertical: normalize(BASE_DIMENSION),
+            paddingVertical: BASE_DIMENSION,
             maxWidth: 42,
             justifyContent: 'center',
             alignContent: 'center',
-            marginLeft: normalize(BASE_DIMENSION)
+            marginLeft: BASE_DIMENSION
         },
         deleteIcon: {
             alignSelf: 'center',

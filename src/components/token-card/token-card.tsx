@@ -30,10 +30,7 @@ export const TokenCardComponent = (props: IProps) => {
 
     return (
         <TouchableOpacity
-            style={[
-                styles.container,
-                { marginTop: props.index === 0 ? 0 : normalize(BASE_DIMENSION) }
-            ]}
+            style={[styles.container, { marginTop: props.index === 0 ? 0 : BASE_DIMENSION }]}
             onPress={() => {
                 props.navigation.navigate('Token', {
                     accountIndex: props.account.index,

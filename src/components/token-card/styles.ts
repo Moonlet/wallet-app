@@ -9,14 +9,14 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
-            paddingHorizontal: normalize(BASE_DIMENSION),
-            paddingVertical: normalize(BASE_DIMENSION * 2)
+            paddingHorizontal: BASE_DIMENSION,
+            paddingVertical: BASE_DIMENSION * 2
         },
         accountInfoContainer: {
             flex: 1,
             display: 'flex',
             flexDirection: 'column',
-            marginLeft: normalize(BASE_DIMENSION + BASE_DIMENSION / 2)
+            marginLeft: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         icon: {
             color: theme.colors.accent,
@@ -43,6 +43,6 @@ export default (theme: ITheme) =>
             height: normalize(ICON_CONTAINER_SIZE)
         },
         imageStyle: {
-            marginLeft: normalize(BASE_DIMENSION / 2)
+            marginLeft: BASE_DIMENSION / 2
         }
     });

@@ -25,30 +25,30 @@ export default (theme: ITheme) =>
             flex: 1,
             justifyContent: 'center',
             flexDirection: 'column',
-            marginHorizontal: normalize(BASE_DIMENSION * 8)
+            marginHorizontal: BASE_DIMENSION * 8
         },
         title: {
             fontSize: normalize(28),
             lineHeight: normalize(34),
             textAlign: 'center',
-            marginBottom: normalize(BASE_DIMENSION),
+            marginBottom: BASE_DIMENSION,
             color: theme.colors.text
         },
         subTitle: {
             lineHeight: normalize(22),
             textAlign: 'center',
-            marginBottom: normalize(BASE_DIMENSION * 4),
+            marginBottom: BASE_DIMENSION * 4,
             color: theme.colors.textSecondary
         },
         errorMessage: {
-            marginTop: normalize(BASE_DIMENSION * 2),
+            marginTop: BASE_DIMENSION * 2,
             lineHeight: normalize(21),
             color: theme.colors.error,
             textAlign: 'center'
         },
         digitsLayout: {
             flex: 1,
-            paddingBottom: normalize(BASE_DIMENSION * 2)
+            paddingBottom: BASE_DIMENSION * 2
         },
         keyRow: {
             flex: 1,
@@ -58,7 +58,7 @@ export default (theme: ITheme) =>
             flex: 1,
             justifyContent: 'center',
             backgroundColor: theme.colors.appBackground,
-            margin: normalize(BASE_DIMENSION / 4)
+            margin: BASE_DIMENSION / 4
         },
         keyText: {
             fontSize: normalize(28),

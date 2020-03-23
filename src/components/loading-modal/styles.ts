@@ -18,6 +18,6 @@ export default (theme: ITheme) =>
             lineHeight: normalize(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
-            marginTop: normalize(BASE_DIMENSION)
+            marginTop: BASE_DIMENSION
         }
     });

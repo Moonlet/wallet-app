@@ -11,12 +11,12 @@ export default (theme: ITheme) =>
             height: Platform.OS === 'web' ? 'calc(100vh - 122px)' : 'auto'
         },
         coinBalanceCard: {
-            paddingTop: normalize(BASE_DIMENSION * 4),
-            paddingBottom: normalize(BASE_DIMENSION * 6)
+            paddingTop: BASE_DIMENSION * 4,
+            paddingBottom: BASE_DIMENSION * 6
         },
         dashboardContainer: {
             flex: 1,
-            paddingHorizontal: normalize(BASE_DIMENSION * 2)
+            paddingHorizontal: BASE_DIMENSION * 2
         },
         selectorGradientContainer: {
             position: 'absolute',
@@ -31,8 +31,8 @@ export default (theme: ITheme) =>
             borderRadius: 20,
             height: normalize(40),
             flexDirection: 'row',
-            marginBottom: normalize(BASE_DIMENSION + BASE_DIMENSION / 2),
-            marginHorizontal: normalize(BASE_DIMENSION * 2),
+            marginBottom: BASE_DIMENSION + BASE_DIMENSION / 2,
+            marginHorizontal: BASE_DIMENSION * 2,
             overflow: 'hidden'
         },
         blockchainButton: {
@@ -41,7 +41,7 @@ export default (theme: ITheme) =>
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 16,
-            margin: normalize(BASE_DIMENSION / 2)
+            margin: BASE_DIMENSION / 2
         },
         blockchainButtonActive: {
             backgroundColor: theme.colors.textTertiary
@@ -54,7 +54,7 @@ export default (theme: ITheme) =>
             flex: 1
         },
         expandIconContainer: {
-            marginRight: normalize(BASE_DIMENSION * 2),
+            marginRight: BASE_DIMENSION * 2,
             justifyContent: 'center'
         },
         expandIcon: {

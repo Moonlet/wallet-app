@@ -15,7 +15,7 @@ export class SplashScreenComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    animation: LottieView;
+    public animation: LottieView;
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
@@ -23,10 +23,7 @@ export class SplashScreenComponent extends React.Component<
             showCancelButton: false
         };
 
-        Platform.OS === 'web' &&
-            setTimeout(() => {
-                this.setState({ showCancelButton: true });
-            }, 2800);
+        Platform.OS === 'web' && setTimeout(() => this.setState({ showCancelButton: true }), 2800);
     }
 
     public resetSession() {
@@ -35,16 +32,12 @@ export class SplashScreenComponent extends React.Component<
     }
 
     public renderCancelButton() {
+        const { styles } = this.props;
+
         return (
-            <View style={{ padding: 10, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ marginBottom: 15 }}>Connecting to phone...</Text>
-                <Button
-                    onPress={() => {
-                        this.resetSession();
-                    }}
-                >
-                    Cancel
-                </Button>
+            <View style={styles.connectingPhoneContainer}>
+                <Text style={styles.connectingText}>{`Connecting to phone...`}</Text>
+                <Button onPress={() => this.resetSession()}>{`Cancel`}</Button>
             </View>
         );
     }
@@ -54,25 +47,21 @@ export class SplashScreenComponent extends React.Component<
     }
 
     public render() {
-        const styles = this.props.styles;
+        const { styles } = this.props;
 
         return (
             <View style={styles.container}>
                 <View style={styles.lottieWrapper}>
                     <LottieView
+                        ref={animation => (this.animation = animation)}
                         source={require('../../assets/logo/logo-animation.json')}
                         style={styles.lottie}
                         autoPlay
                         loop={false}
-                        ref={animation => {
-                            this.animation = animation;
-                        }}
                         onAnimationFinish={() => this.loopAnimation()}
                     />
                 </View>
-                <View style={{ height: 160 }}>
-                    {this.state.showCancelButton && this.renderCancelButton()}
-                </View>
+                {this.state.showCancelButton && this.renderCancelButton()}
             </View>
         );
     }

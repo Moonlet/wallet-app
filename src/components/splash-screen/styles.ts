@@ -14,7 +14,15 @@ export default (theme: ITheme) =>
         },
         lottie: {
             ...StyleSheet.absoluteFillObject,
-            height: '100%',
-            top: -BASE_DIMENSION * 5
+            height: '100%'
+        },
+        connectingPhoneContainer: {
+            paddingHorizontal: BASE_DIMENSION * 6,
+            paddingBottom: BASE_DIMENSION * 4,
+            justifyContent: 'center'
+        },
+        connectingText: {
+            textAlign: 'center',
+            marginBottom: BASE_DIMENSION * 2
         }
     });

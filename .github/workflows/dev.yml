@@ -20,7 +20,7 @@ jobs:
         run: |-
           BUILD=$(git rev-list --count $GITHUB_SHA)
           VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
-          TAG_NAME=v${VERSION}.${BUILD}"
+          TAG_NAME="v${VERSION}.${BUILD}"
           curl --request POST \
                --url https://api.github.com/repos/moonlet/wallet-app/git/refs \
                --header "authorization: token $GITHUB_TOKEN" \

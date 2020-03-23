@@ -14,16 +14,18 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "10.x"
-      - name: Create Build tag
+      - name: Create version tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |-
           BUILD=$(git rev-list --count $GITHUB_SHA)
+          VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
+          TAG_NAME=v${VERSION}.${BUILD}"
           curl --request POST \
                --url https://api.github.com/repos/moonlet/wallet-app/git/refs \
                --header "authorization: token $GITHUB_TOKEN" \
                --header "content-type: application/json" \
-               --data "{\"ref\": \"refs/tags/build-$BUILD\",\"sha\": \"$GITHUB_SHA\"}"
+               --data "{\"ref\": \"refs/tags/$TAG_NAME\",\"sha\": \"$GITHUB_SHA\"}"
 
       - name: Cache node modules
         uses: actions/cache@v1
@@ -133,6 +135,12 @@ jobs:
         with:
           node-version: "10.x"
       - uses: actions/checkout@v1
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: NPM install
         run: npm i
       - name: Generate icons

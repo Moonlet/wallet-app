@@ -1,7 +1,7 @@
 on:
-  create:
-    tag:
-      - v*
+  release:
+    types: 
+      - published
 
 name: Release build & deploy
 jobs:
@@ -86,36 +86,42 @@ jobs:
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
-  # beta-ext-chrome:
-  #   name: Chrome extension
-  #   runs-on: ubuntu-latest
-  #   needs: unit-tests
-  #   steps:
-  #     - uses: actions/setup-node@v1
-  #       with:
-  #         node-version: "10.x"
-  #     - uses: actions/checkout@v1
-  #     - name: NPM install
-  #       run: npm i
-  #     - name: Generate icons
-  #       run: npm run generate-icons
-  #     - name: Build extension
-  #       run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
-  #       env:
-  #         NODE_OPTIONS: --max_old_space_size=4096
-  #     - name: Set tag name
-  #       run: |-
-  #         BUILD=$(git rev-list --count $GITHUB_SHA)
-  #         VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
-  #         echo "::set-env name=TAG_NAME::v${VERSION}.${BUILD}"
-  #     - name: Create extenion zip
-  #       run: cd extension/build/beta/chrome && zip -r ./chrome-extension-dev-$TAG_NAME.zip ./
-  #     - name: Upload binaries to release
-  #       uses: svenstaro/upload-release-action@v1-release
-  #       with:
-  #         repo_token: ${{ secrets.GITHUB_TOKEN }}
-  #         file: extension/build/beta/chrome/*.zip
-  #         tag: ${{ env.TAG_NAME }}
-  #         overwrite: true
-  #         file_glob: true
+  beta-ext-chrome:
+    name: Chrome extension
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    steps:
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "10.x"
+      - uses: actions/checkout@v1
+      - name: Cache node modules
+        uses: actions/cache@v1
+        id: cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+      - name: NPM install
+        run: npm i
+      - name: Generate icons
+        run: npm run generate-icons
+      - name: Build extension
+        run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
+        env:
+          NODE_OPTIONS: --max_old_space_size=4096
+      - name: Set tag name
+        run: |-
+          BUILD=$(git rev-list --count $GITHUB_SHA)
+          VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
+          echo "::set-env name=TAG_NAME::v${VERSION}.${BUILD}"
+      - name: Create extenion zip
+        run: cd extension/build/beta/chrome && zip -r ./chrome-extension-$TAG_NAME.zip ./
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v1-release
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: extension/build/beta/chrome/*.zip
+          tag: ${{ env.TAG_NAME }}
+          overwrite: true
+          file_glob: true
   #     # deploy in chrome store

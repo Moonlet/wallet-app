@@ -79,7 +79,7 @@ jobs:
       - name: NPM install
         run: npm i
       - name: Get sign ssh-keys
-        run: cd android && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
+        run: cd android/app && git clone git@gitlab.com:moonlet/moonlet-playstore-key.git
       - name: Generate fonts and icons
         run: npm run generate-icons
       - name: Run fastlane beta
@@ -87,6 +87,7 @@ jobs:
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           NODE_OPTIONS: --max_old_space_size=4096
   beta-ios:
     name: iOS app

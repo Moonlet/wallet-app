@@ -1,6 +1,7 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION } from '../../styles/dimensions';
+import { normalize } from '../../library';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -10,28 +11,28 @@ export default (theme: ITheme) =>
             height: Platform.OS === 'web' ? 'calc(100vh - 122px)' : 'auto'
         },
         coinBalanceCard: {
-            paddingTop: BASE_DIMENSION * 4,
-            paddingBottom: BASE_DIMENSION * 6
+            paddingTop: normalize(BASE_DIMENSION * 4),
+            paddingBottom: normalize(BASE_DIMENSION * 6)
         },
         dashboardContainer: {
             flex: 1,
-            paddingHorizontal: BASE_DIMENSION * 2
+            paddingHorizontal: normalize(BASE_DIMENSION * 2)
         },
         selectorGradientContainer: {
             position: 'absolute',
             left: 0,
             right: 0,
-            height: 70, // used for 20px
+            height: normalize(70), // used for 20px
             bottom: 0,
             justifyContent: 'flex-end'
         },
         blockchainSelectorContainer: {
             backgroundColor: theme.colors.cardBackground,
             borderRadius: 20,
-            height: 40,
+            height: normalize(40),
             flexDirection: 'row',
-            marginBottom: 12,
-            marginHorizontal: BASE_DIMENSION * 2,
+            marginBottom: normalize(BASE_DIMENSION + BASE_DIMENSION / 2),
+            marginHorizontal: normalize(BASE_DIMENSION * 2),
             overflow: 'hidden'
         },
         blockchainButton: {
@@ -40,20 +41,20 @@ export default (theme: ITheme) =>
             justifyContent: 'center',
             alignItems: 'center',
             borderRadius: 16,
-            margin: BASE_DIMENSION / 2
+            margin: normalize(BASE_DIMENSION / 2)
         },
         blockchainButtonActive: {
             backgroundColor: theme.colors.textTertiary
         },
         blockchainButtonTextActive: {
-            lineHeight: 18,
+            lineHeight: normalize(18),
             color: theme.colors.accent
         },
         coinDashboard: {
             flex: 1
         },
         expandIconContainer: {
-            marginRight: BASE_DIMENSION * 2,
+            marginRight: normalize(BASE_DIMENSION * 2),
             justifyContent: 'center'
         },
         expandIcon: {

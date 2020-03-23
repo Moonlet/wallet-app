@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { Text } from '../../library';
+import { Text, normalize } from '../../library';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
@@ -47,7 +47,7 @@ export const CoinBalanceCardComponent = (props: IProps) => (
                 }
                 blockchain={props.blockchain}
             />
-            <Icon name="chevron-down" size={18} style={props.styles.icon} />
+            <Icon name="chevron-down" size={normalize(18)} style={props.styles.icon} />
         </View>
         <Amount
             style={[props.styles.secondaryText, !props.active && props.styles.darkerText]}

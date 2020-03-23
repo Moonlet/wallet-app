@@ -1,19 +1,19 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BORDER_RADIUS, BASE_DIMENSION } from '../../styles/dimensions';
+import { normalize } from '../text/text';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         button: {
-            paddingVertical: BASE_DIMENSION + BASE_DIMENSION / 2,
+            paddingVertical: normalize(BASE_DIMENSION + BASE_DIMENSION / 2),
             borderWidth: 2,
             borderColor: theme.colors.accentSecondary,
             borderRadius: BORDER_RADIUS,
-            paddingHorizontal: BASE_DIMENSION
+            paddingHorizontal: normalize(BASE_DIMENSION)
         },
         text: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             fontWeight: '600',
             textAlign: 'center',
             color: theme.colors.accent

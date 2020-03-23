@@ -37,6 +37,7 @@ import { ManageAccountScreen } from '../screens/manage-account/manage-account';
 import { BASE_DIMENSION } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
+import { normalize } from '../library';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -53,8 +54,8 @@ const mainTabbedNavigationOptions: any = {
     tabBarOptions: {
         showIcon: true,
         labelStyle: {
-            fontSize: 12,
-            lineHeight: 15,
+            fontSize: normalize(12),
+            lineHeight: normalize(15),
             fontWeight: '500',
             letterSpacing: 0.3
         },
@@ -84,8 +85,8 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
     },
     headerTitleStyle: {
         flex: 1,
-        fontSize: 22,
-        lineHeight: 28,
+        fontSize: normalize(22),
+        lineHeight: normalize(28),
         color: themes[theme].colors.text,
         letterSpacing: 0.38,
         textAlign: 'center',

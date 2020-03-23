@@ -25,32 +25,30 @@ export default (theme: ITheme) =>
             flex: 1,
             justifyContent: 'center',
             flexDirection: 'column',
-            marginHorizontal: BASE_DIMENSION * 8
+            marginHorizontal: normalize(BASE_DIMENSION * 8)
         },
         title: {
             fontSize: normalize(28),
             lineHeight: normalize(34),
             textAlign: 'center',
-            letterSpacing: 0.36,
             marginBottom: BASE_DIMENSION,
             color: theme.colors.text
         },
         subTitle: {
             lineHeight: normalize(22),
             textAlign: 'center',
-            letterSpacing: 0.36,
             marginBottom: BASE_DIMENSION * 4,
             color: theme.colors.textSecondary
         },
         errorMessage: {
-            marginTop: BASE_DIMENSION * 2,
+            marginTop: normalize(BASE_DIMENSION * 2),
             lineHeight: normalize(21),
             color: theme.colors.error,
             textAlign: 'center'
         },
         digitsLayout: {
             flex: 1,
-            paddingBottom: BASE_DIMENSION * 2
+            paddingBottom: normalize(BASE_DIMENSION * 2)
         },
         keyRow: {
             flex: 1,
@@ -60,7 +58,7 @@ export default (theme: ITheme) =>
             flex: 1,
             justifyContent: 'center',
             backgroundColor: theme.colors.appBackground,
-            margin: 2
+            margin: normalize(2)
         },
         keyText: {
             fontSize: normalize(28),
@@ -93,11 +91,11 @@ export default (theme: ITheme) =>
             width: 1
         },
         pinInput: {
-            width: 20,
-            height: 20,
-            borderRadius: 10,
-            marginLeft: 10,
-            marginRight: 10
+            width: normalize(20),
+            height: normalize(20),
+            borderRadius: normalize(10),
+            marginLeft: normalize(10),
+            marginRight: normalize(10)
         },
         unchecked: {
             borderColor: theme.colors.text,
@@ -105,7 +103,7 @@ export default (theme: ITheme) =>
         },
         checked: {
             backgroundColor: theme.colors.accent,
-            borderRadius: 10
+            borderRadius: normalize(10)
         },
         reset: {
             lineHeight: normalize(22),

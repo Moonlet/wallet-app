@@ -11,6 +11,7 @@ import { Blockchain } from '../../core/blockchain/types';
 import { SmartImage } from '../../library/image/smart-image';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { BASE_DIMENSION } from '../../styles/dimensions';
+import { normalize } from '../../library';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -29,7 +30,10 @@ export const TokenCardComponent = (props: IProps) => {
 
     return (
         <TouchableOpacity
-            style={[styles.container, { marginTop: props.index === 0 ? 0 : BASE_DIMENSION }]}
+            style={[
+                styles.container,
+                { marginTop: props.index === 0 ? 0 : normalize(BASE_DIMENSION) }
+            ]}
             onPress={() => {
                 props.navigation.navigate('Token', {
                     accountIndex: props.account.index,
@@ -62,7 +66,7 @@ export const TokenCardComponent = (props: IProps) => {
                     convert
                 />
             </View>
-            <Icon name="chevron-right" size={18} style={styles.icon} />
+            <Icon name="chevron-right" size={normalize(18)} style={styles.icon} />
         </TouchableOpacity>
     );
 };

@@ -10,7 +10,7 @@ const { width: SCREEN_WIDTH } = ReactNative.Dimensions.get('window');
 // based on iPhone 11's scale
 const scale = SCREEN_WIDTH / 414;
 
-// can be used for width, height, top, bottom, fontSize, borderRadius, etc.
+// can be used for width, height, top, bottom, fontSize, borderRadius, margin, padding, etc.
 export const normalize = (size: number) => {
     const newSize = size * scale;
     if (ReactNative.Platform.OS === 'ios') {

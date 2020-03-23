@@ -6,6 +6,7 @@ import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { View } from 'react-native';
+import { normalize } from '..';
 
 export interface ISmartImageProps {
     source: ITokenIcon;
@@ -47,8 +48,8 @@ export const SmartImageComponent = (
     if (props.source?.iconComponent) {
         const IconComponent = props.source.iconComponent;
 
-        const iconSmallSize = ICON_SIZE;
-        const iconLargeSize = ICON_SIZE + ICON_SIZE / 2;
+        const iconSmallSize = normalize(ICON_SIZE);
+        const iconLargeSize = normalize(ICON_SIZE + ICON_SIZE / 2);
 
         return (
             <IconComponent

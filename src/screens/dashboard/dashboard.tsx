@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Dimensions, Animated, TouchableOpacity, Platform } from 'react-native';
-import { Text } from '../../library';
+import { Text, normalize } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
 import { TokenDashboard } from '../../components/token-dashboard/token-dashboard';
@@ -81,8 +81,8 @@ const MyTitle = ({ text }) => (
     <Text
         style={{
             flex: 1,
-            fontSize: 20,
-            lineHeight: 25,
+            fontSize: normalize(20),
+            lineHeight: normalize(25),
             letterSpacing: 0.38,
             textAlign: 'center'
         }}
@@ -100,22 +100,22 @@ const navigationOptions = ({ navigation }: any) => ({
     headerRight: (
         <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
-                style={{ width: ICON_CONTAINER_SIZE }}
+                style={{ width: normalize(ICON_CONTAINER_SIZE) }}
                 onPress={() => navigation.navigate('Wallets')}
             >
                 <Icon
                     name="money-wallet-1"
-                    size={ICON_SIZE}
+                    size={normalize(ICON_SIZE)}
                     style={{ color: themes.dark.colors.accent }}
                 />
             </TouchableOpacity>
             <TouchableOpacity
-                style={{ width: ICON_CONTAINER_SIZE }}
+                style={{ width: normalize(ICON_CONTAINER_SIZE) }}
                 onPress={() => navigation.state.params.setDashboardMenuBottomSheet()}
             >
                 <Icon
                     name="navigation-menu-vertical"
-                    size={ICON_SIZE}
+                    size={normalize(ICON_SIZE)}
                     style={{ color: themes.dark.colors.accent }}
                 />
             </TouchableOpacity>

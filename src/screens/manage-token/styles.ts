@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    ICON_CONTAINER_SIZE,
+    normalize
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -26,8 +31,7 @@ export default (theme: ITheme) =>
         },
         input: {
             flex: 1,
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             color: theme.colors.text
         },
         bottomButtonContainer: {
@@ -78,20 +82,20 @@ export default (theme: ITheme) =>
             color: theme.colors.accent
         },
         address: {
-            fontSize: 16,
-            lineHeight: 20,
+            fontSize: normalize(16),
+            lineHeight: normalize(20),
             color: theme.colors.textSecondary
         },
         tokenNameText: {
-            fontSize: 18,
-            lineHeight: 25,
+            fontSize: normalize(18),
+            lineHeight: normalize(25),
             letterSpacing: 0.38,
             color: theme.colors.text,
             fontWeight: '500'
         },
         tokenAddressText: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
             letterSpacing: 0.38,
             color: theme.colors.textTertiary
         },
@@ -100,8 +104,8 @@ export default (theme: ITheme) =>
             marginTop: BASE_DIMENSION * 10
         },
         noMatchText: {
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalize(22),
+            lineHeight: normalize(28),
             color: theme.colors.textTertiary,
             letterSpacing: 0.35,
             fontWeight: 'bold',
@@ -109,8 +113,7 @@ export default (theme: ITheme) =>
             textAlign: 'center'
         },
         noGiveUpText: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             color: theme.colors.textTertiary,
             textAlign: 'center'
         }

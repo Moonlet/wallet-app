@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -34,9 +34,9 @@ export default (theme: ITheme) =>
         inputLabel: {
             textAlign: 'right',
             alignSelf: 'center',
-            fontSize: 10,
+            fontSize: normalize(10),
             width: 18,
-            lineHeight: 30,
+            lineHeight: normalize(30),
             color: theme.colors.text,
             paddingTop: BASE_DIMENSION / 4
         },

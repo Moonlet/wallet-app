@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -22,8 +22,7 @@ export default (theme: ITheme) =>
             textAlign: 'center'
         },
         scanningDevices: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             color: theme.colors.textSecondary,
             paddingTop: BASE_DIMENSION * 4,
             marginBottom: BASE_DIMENSION * 5,
@@ -40,18 +39,16 @@ export default (theme: ITheme) =>
             flexDirection: 'column'
         },
         deviceName: {
-            fontSize: 16,
-            lineHeight: 21,
+            lineHeight: normalize(21),
             color: theme.colors.text
         },
         pairedText: {
-            fontSize: 16,
-            lineHeight: 21,
+            lineHeight: normalize(21),
             color: theme.colors.accent
         },
         deviceId: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             color: theme.colors.textSecondary
         },
         deviceIcon: {

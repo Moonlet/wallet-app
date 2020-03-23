@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -27,12 +27,12 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 2
         },
         inputText: {
-            fontSize: 14,
-            lineHeight: 21
+            fontSize: normalize(14),
+            lineHeight: normalize(21)
         },
         errorMessage: {
-            fontSize: 15,
-            lineHeight: 19,
+            fontSize: normalize(15),
+            lineHeight: normalize(19),
             color: theme.colors.error,
             textAlign: 'center',
             marginVertical: BASE_DIMENSION * 2
@@ -41,8 +41,8 @@ export default (theme: ITheme) =>
             textAlign: 'center'
         },
         label: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             paddingLeft: BASE_DIMENSION * 2,
             color: theme.colors.textSecondary
         }

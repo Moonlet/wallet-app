@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
 import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { normalize } from '../../../../library';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -27,16 +28,15 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION * 8
         },
         title: {
-            fontSize: 28,
-            lineHeight: 34,
+            fontSize: normalize(28),
+            lineHeight: normalize(34),
             textAlign: 'center',
             letterSpacing: 0.36,
             marginBottom: BASE_DIMENSION,
             color: theme.colors.text
         },
         subTitle: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             textAlign: 'center',
             letterSpacing: 0.36,
             marginBottom: BASE_DIMENSION * 4,
@@ -44,8 +44,7 @@ export default (theme: ITheme) =>
         },
         errorMessage: {
             marginTop: BASE_DIMENSION * 2,
-            fontSize: 16,
-            lineHeight: 21,
+            lineHeight: normalize(21),
             color: theme.colors.error,
             textAlign: 'center'
         },
@@ -64,8 +63,8 @@ export default (theme: ITheme) =>
             margin: 2
         },
         keyText: {
-            fontSize: 28,
-            lineHeight: 34,
+            fontSize: normalize(28),
+            lineHeight: normalize(34),
             color: theme.colors.text,
             textAlign: 'center'
         },
@@ -109,8 +108,7 @@ export default (theme: ITheme) =>
             borderRadius: 10
         },
         reset: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             fontWeight: '600',
             color: theme.colors.accent,
             textAlign: 'center'

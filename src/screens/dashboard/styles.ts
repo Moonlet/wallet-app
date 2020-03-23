@@ -46,7 +46,6 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.textTertiary
         },
         blockchainButtonTextActive: {
-            fontSize: 16,
             lineHeight: 18,
             color: theme.colors.accent
         },

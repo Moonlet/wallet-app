@@ -3,7 +3,7 @@ import { View, Image, Animated, TouchableOpacity, Platform } from 'react-native'
 import { translate } from '../../../../core/i18n';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { Text } from '../../../../library';
+import { Text, normalize } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { hash } from '../../../../core/secure/encrypt';
@@ -339,7 +339,7 @@ export class PasswordPinComponent extends React.Component<
                         });
                     }}
                 >
-                    <Icon name="keyboard-delete-1" size={40} style={styles.deleteIcon} />
+                    <Icon name="keyboard-delete-1" size={normalize(40)} style={styles.deleteIcon} />
                 </TouchableOpacity>
             </View>
         );

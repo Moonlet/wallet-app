@@ -8,7 +8,8 @@ import {
 import { shallow } from 'enzyme';
 
 const props: IProps = {
-    onQrCodeScanned: jest.fn()
+    onQrCodeScanned: jest.fn(),
+    canDisplayPasswordModal: jest.fn()
 };
 
 jest.mock('react-native-camera-kit', () => {

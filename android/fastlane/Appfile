@@ -1,2 +1,2 @@
-json_key_file("fastlane/moonlet-playstore-key/key.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+json_key_file("app/moonlet-playstore-key/key.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
 package_name("com.moonlet") # e.g. com.krausefx.app

@@ -13,8 +13,8 @@ export default (theme: ITheme) =>
         iconContainer: {
             alignItems: 'center',
             justifyContent: 'center',
-            height: normalize(ICON_CONTAINER_SIZE),
-            width: normalize(ICON_CONTAINER_SIZE)
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE
         },
         icon: {
             color: theme.colors.accent

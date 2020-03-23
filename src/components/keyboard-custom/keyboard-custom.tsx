@@ -86,11 +86,7 @@ export class KeyboardComponent extends React.Component<
                         style={styles.deleteIconContainer}
                         onPress={this.props.handleDeleteKey}
                     >
-                        <Icon
-                            name="keyboard-delete-1"
-                            size={normalize(ICON_SIZE)}
-                            style={styles.deleteIcon}
-                        />
+                        <Icon name="keyboard-delete-1" size={ICON_SIZE} style={styles.deleteIcon} />
                     </TouchableOpacity>
                 )}
             </View>

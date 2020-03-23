@@ -30,8 +30,8 @@ export default (theme: ITheme) =>
             borderColor: theme.colors.accentSecondary
         },
         iconRightContainer: {
-            height: normalize(ICON_CONTAINER_SIZE),
-            width: normalize(ICON_CONTAINER_SIZE),
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE,
             alignItems: 'flex-end',
             justifyContent: 'center'
         },
@@ -39,8 +39,8 @@ export default (theme: ITheme) =>
             color: theme.colors.accent
         },
         accountIcon: {
-            height: normalize(ICON_CONTAINER_SIZE),
-            width: normalize(ICON_CONTAINER_SIZE)
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE
         },
         createButton: {
             backgroundColor: theme.colors.accent,

@@ -100,22 +100,22 @@ const navigationOptions = ({ navigation }: any) => ({
     headerRight: (
         <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
-                style={{ width: normalize(ICON_CONTAINER_SIZE) }}
+                style={{ width: ICON_CONTAINER_SIZE }}
                 onPress={() => navigation.navigate('Wallets')}
             >
                 <Icon
                     name="money-wallet-1"
-                    size={normalize(ICON_SIZE)}
+                    size={ICON_SIZE}
                     style={{ color: themes.dark.colors.accent }}
                 />
             </TouchableOpacity>
             <TouchableOpacity
-                style={{ width: normalize(ICON_CONTAINER_SIZE) }}
+                style={{ width: ICON_CONTAINER_SIZE }}
                 onPress={() => navigation.state.params.setDashboardMenuBottomSheet()}
             >
                 <Icon
                     name="navigation-menu-vertical"
-                    size={normalize(ICON_SIZE)}
+                    size={ICON_SIZE}
                     style={{ color: themes.dark.colors.accent }}
                 />
             </TouchableOpacity>

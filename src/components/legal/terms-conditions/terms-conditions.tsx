@@ -8,7 +8,6 @@ import { ICON_SIZE } from '../../../styles/dimensions';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
 import { WebView } from '../../../library/webview/webview';
 import { SafeAreaView } from 'react-navigation';
-import { normalize } from '../../../library';
 
 interface IExternalProps {
     onClose?: () => void;
@@ -27,11 +26,7 @@ export const TCComponent = (
                         style={props.styles.button}
                     >
                         <View style={props.styles.iconContainer}>
-                            <Icon
-                                name="close"
-                                size={normalize(ICON_SIZE)}
-                                style={props.styles.icon}
-                            />
+                            <Icon name="close" size={ICON_SIZE} style={props.styles.icon} />
                         </View>
                     </TouchableOpacity>
                 )}

@@ -30,8 +30,8 @@ export default (theme: ITheme) =>
             borderColor: theme.colors.accentSecondary
         },
         iconContainer: {
-            height: normalize(ICON_CONTAINER_SIZE),
-            width: normalize(ICON_CONTAINER_SIZE),
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE,
             justifyContent: 'center'
         },
         icon: {

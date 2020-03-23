@@ -31,11 +31,7 @@ export const ListCardComponent = (
             <View style={[props.styles.card, props.selected && props.styles.selected, props.style]}>
                 {props.leftIcon && (
                     <View style={[props.styles.iconContainer, { alignItems: 'flex-start' }]}>
-                        <Icon
-                            name={props.leftIcon}
-                            size={normalize(ICON_SIZE)}
-                            style={props.styles.icon}
-                        />
+                        <Icon name={props.leftIcon} size={ICON_SIZE} style={props.styles.icon} />
                     </View>
                 )}
 

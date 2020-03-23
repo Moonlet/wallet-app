@@ -39,8 +39,8 @@ export default (theme: ITheme) =>
             color: theme.colors.textSecondary
         },
         tokenIcon: {
-            width: normalize(ICON_CONTAINER_SIZE),
-            height: normalize(ICON_CONTAINER_SIZE)
+            width: ICON_CONTAINER_SIZE,
+            height: ICON_CONTAINER_SIZE
         },
         imageStyle: {
             marginLeft: BASE_DIMENSION / 2

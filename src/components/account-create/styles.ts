@@ -61,8 +61,8 @@ export default (theme: ITheme) =>
             color: theme.colors.accent
         },
         rightAddressButton: {
-            height: normalize(ICON_CONTAINER_SIZE),
-            width: normalize(ICON_CONTAINER_SIZE),
+            height: ICON_CONTAINER_SIZE,
+            width: ICON_CONTAINER_SIZE,
             justifyContent: 'flex-end',
             alignItems: 'center',
             flexDirection: 'row'

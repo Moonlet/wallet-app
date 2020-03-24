@@ -1,25 +1,39 @@
 import React from 'react';
 import { View, Modal, Platform, Linking } from 'react-native';
-import { CameraKitCameraScreen, CameraKitCamera } from 'react-native-camera-kit';
+import { CameraKitCameraScreen } from 'react-native-camera-kit';
 import { translate } from '../../core/i18n';
 import AndroidOpenSettings from 'react-native-android-open-settings';
 import { Dialog } from '../dialog/dialog';
+import { smartConnect } from '../../core/utils/smart-connect';
+import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
+import { connect } from 'react-redux';
+import { checkDeviceCameraPermission } from '../../core/utils/request-permissions';
 
-export interface IProps {
+export interface IExternalProps {
     onQrCodeScanned: (qrCode: string) => any;
+    obRef?: any;
 }
+
+export interface IReduxProps {
+    setDisplayPasswordModal: typeof setDisplayPasswordModal;
+}
+
+const mapDispatchToProps = {
+    setDisplayPasswordModal
+};
 
 interface IState {
     isVisible: boolean;
 }
 
-export class QrModalReaderComponent extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
+export class QrModalReaderComponent extends React.Component<IExternalProps & IReduxProps, IState> {
+    constructor(props: IExternalProps & IReduxProps) {
         super(props);
 
         this.state = {
             isVisible: false
         };
+        props.obRef && props.obRef(this);
     }
 
     public openPhoneSettings() {
@@ -37,12 +51,11 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
     }
 
     public open = async () => {
-        let success = await CameraKitCamera.checkDeviceCameraAuthorizationStatus();
+        this.props.setDisplayPasswordModal(false);
 
-        if (success === -1) {
-            success = await CameraKitCamera.requestDeviceCameraAuthorization();
-        }
-        if (success) {
+        const accessGranted = await checkDeviceCameraPermission();
+
+        if (accessGranted) {
             this.setState({ isVisible: true });
         } else {
             Dialog.alert(
@@ -50,15 +63,11 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
                 translate('Send.cameraDisabledText'),
                 {
                     text: translate('App.labels.cancel'),
-                    onPress: () => {
-                        this.setState({ isVisible: false });
-                    }
+                    onPress: () => this.setState({ isVisible: false })
                 },
                 {
                     text: translate('App.labels.settings'),
-                    onPress: () => {
-                        this.openPhoneSettings();
-                    }
+                    onPress: () => this.openPhoneSettings()
                 }
             );
         }
@@ -76,11 +85,15 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
                     <CameraKitCameraScreen
                         testID="CameraKitCameraScreen"
                         actions={{ leftButtonText: translate('App.labels.cancel') }}
-                        onBottomButtonPressed={() => this.setState({ isVisible: false })}
+                        onBottomButtonPressed={() => {
+                            this.setState({ isVisible: false });
+                            this.props.setDisplayPasswordModal(true);
+                        }}
                         scanBarcode={true}
                         onReadCode={event => {
                             this.setState({ isVisible: false });
                             this.props.onQrCodeScanned(event.nativeEvent.codeStringValue);
+                            this.props.setDisplayPasswordModal(true);
                         }}
                     />
                 </View>
@@ -89,4 +102,6 @@ export class QrModalReaderComponent extends React.Component<IProps, IState> {
     }
 }
 
-export const QrModalReader = QrModalReaderComponent;
+export const QrModalReader = smartConnect<IExternalProps>(QrModalReaderComponent, [
+    connect(null, mapDispatchToProps)
+]);

@@ -19,8 +19,7 @@ import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/typ
 import {
     verifyAddressOnDevice,
     featureNotSupported,
-    toInitialState,
-    connectInProgress
+    toInitialState
 } from '../ui/screens/connectHardwareWallet/actions';
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
@@ -47,6 +46,7 @@ import BigNumber from 'bignumber.js';
 import { NotificationType } from '../../core/messaging/types';
 import { updateAddressMonitorTokens } from '../../core/address-monitor/index';
 import { Dialog } from '../../components/dialog/dialog';
+import { setDisplayPasswordModal } from '../ui/password-modal/actions';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -169,7 +169,7 @@ export const createHWWallet = (
 
         // in case you replace your connected ledger reset message
         dispatch(toInitialState());
-        dispatch(connectInProgress());
+        dispatch(setDisplayPasswordModal(false));
 
         const wallet = await HWWalletFactory.get(
             deviceVendor,
@@ -205,7 +205,10 @@ export const createHWWallet = (
         NavigationService.navigate('Dashboard', {}); // TODO: check this
 
         dispatch(toInitialState());
+        dispatch(setDisplayPasswordModal(true));
     } catch (e) {
+        dispatch(setDisplayPasswordModal(true));
+
         // this might not be the best place
         if (e === translate('CreateHardwareWallet.notSupported')) {
             dispatch(featureNotSupported());

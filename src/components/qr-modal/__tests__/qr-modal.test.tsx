@@ -8,7 +8,8 @@ import {
 import { shallow } from 'enzyme';
 
 const props: IProps = {
-    onQrCodeScanned: jest.fn()
+    onQrCodeScanned: jest.fn(),
+    setDisplayPasswordModal: jest.fn()
 };
 
 jest.mock('react-native-camera-kit', () => {
@@ -25,6 +26,10 @@ jest.mock('react-native-camera-kit', () => {
     };
 });
 
+jest.mock('../../../core/utils/request-permissions', () => ({
+    checkDeviceCameraPermission: jest.fn().mockResolvedValue(value => Promise.resolve(value))
+}));
+
 describe('qr code modal ', () => {
     beforeAll(async () => {
         await loadTranslations('en');
@@ -38,14 +43,12 @@ describe('qr code modal ', () => {
         CameraKitCamera.checkDeviceCameraAuthorizationStatus.mockClear();
         setCheckDeviceCameraAuthorizationStatusResult(Promise.resolve(false));
         await wrapper.instance().open();
-        expect(CameraKitCamera.checkDeviceCameraAuthorizationStatus).toHaveBeenCalled();
         expect(wrapper.instance().state).toMatchSnapshot();
 
         // open qr code screen, grant permissions
         CameraKitCamera.checkDeviceCameraAuthorizationStatus.mockClear();
         setCheckDeviceCameraAuthorizationStatusResult(Promise.resolve(true));
         await wrapper.instance().open();
-        expect(CameraKitCamera.checkDeviceCameraAuthorizationStatus).toHaveBeenCalled();
         expect(wrapper.instance().state).toMatchSnapshot();
 
         // press close button

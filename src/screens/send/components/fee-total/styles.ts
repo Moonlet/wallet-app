@@ -1,13 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {},
         feeTitle: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             color: theme.colors.textSecondary,
             paddingLeft: BASE_DIMENSION * 2,
             marginTop: BASE_DIMENSION
@@ -20,8 +20,8 @@ export default (theme: ITheme) =>
         },
         fee: {
             color: theme.colors.textSecondary,
-            fontSize: 16,
-            lineHeight: 21
+            fontSize: normalize(16),
+            lineHeight: normalize(21)
         },
         approxSign: {
             color: theme.colors.textSecondary

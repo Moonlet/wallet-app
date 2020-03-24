@@ -14,8 +14,8 @@ export default (theme: ITheme) =>
             flex: 1
         },
         message: {
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
             color: theme.colors.textSecondary,
             marginTop: BASE_DIMENSION * 2,
             marginBottom: BASE_DIMENSION * 5,

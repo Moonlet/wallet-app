@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
 import { ph, pw } from '../../../styles';
 
 export default (theme: ITheme) =>
@@ -19,16 +19,16 @@ export default (theme: ITheme) =>
         },
         launchingSoonText: {
             fontWeight: 'bold',
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalize(22),
+            lineHeight: normalize(28),
             textAlign: 'center',
             letterSpacing: 0.35,
             color: theme.colors.text,
             marginBottom: BASE_DIMENSION
         },
         workInProgress: {
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
             color: theme.colors.textSecondary,
             textAlign: 'center'
         }

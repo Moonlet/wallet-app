@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { ph, pw } from '../../styles';
-import { BASE_DIMENSION, SCREEN_HEIGHT } from '../../styles/dimensions';
+import { BASE_DIMENSION, SCREEN_HEIGHT, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -11,61 +11,50 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground,
             height: SCREEN_HEIGHT
         },
-
         scrollContainer: {
             flex: 1,
             marginVertical: BASE_DIMENSION * 2
         },
-
         walletList: {
             flexGrow: 1,
             paddingVertical: BASE_DIMENSION * 2
         },
-
         bottomContainer: {
             flexDirection: 'row',
             marginBottom: BASE_DIMENSION * 3
         },
-
         buttonContainer: {
             alignSelf: 'center',
             flexDirection: 'row'
         },
-
         bottomButton: {
             flex: 1,
-            width: 150,
+            width: normalize(150),
             flexBasis: 0,
             marginHorizontal: BASE_DIMENSION / 2
         },
-
         leftActionsContainer: {
             flexDirection: 'row'
         },
-
         action: {
             justifyContent: 'center',
             alignItems: 'center',
-            width: 72
+            width: normalize(72)
         },
-
         iconActionPositive: {
-            height: 40,
+            height: normalize(40),
             color: theme.colors.accent
         },
-
         iconActionNegative: {
-            height: 40,
+            height: normalize(40),
             color: theme.colors.error
         },
-
         textActionPositive: {
-            fontSize: 10,
+            fontSize: normalize(10),
             color: theme.colors.accent
         },
-
         textActionNegative: {
-            fontSize: 10,
+            fontSize: normalize(10),
             color: theme.colors.error
         },
         emptyWalletsContainer: {
@@ -74,18 +63,17 @@ export default (theme: ITheme) =>
             justifyContent: 'center'
         },
         connectLedger: {
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalize(22),
+            lineHeight: normalize(28),
             color: theme.colors.text,
-            opacity: 0.87,
             letterSpacing: 0.35,
             fontWeight: 'bold',
             marginBottom: BASE_DIMENSION,
             textAlign: 'center'
         },
         quicklyConnectLedger: {
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
             paddingHorizontal: BASE_DIMENSION * 4

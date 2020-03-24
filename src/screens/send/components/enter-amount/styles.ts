@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -38,14 +38,14 @@ export default (theme: ITheme) =>
             justifyContent: 'space-between'
         },
         textBalance: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             color: theme.colors.textSecondary,
             marginRight: BASE_DIMENSION / 2
         },
         allBalanceText: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             color: theme.colors.accent
         },
         addValueBox: {
@@ -57,8 +57,8 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION / 2
         },
         addValueText: {
-            fontSize: 12,
-            lineHeight: 16,
+            fontSize: normalize(12),
+            lineHeight: normalize(16),
             color: theme.colors.text,
             textAlign: 'center'
         },
@@ -67,8 +67,8 @@ export default (theme: ITheme) =>
             justifyContent: 'space-between'
         },
         receipientLabel: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             paddingLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         }

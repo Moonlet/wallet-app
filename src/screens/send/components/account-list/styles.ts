@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, ICON_CONTAINER_SIZE } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, ICON_CONTAINER_SIZE, normalize } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -45,7 +45,7 @@ export default (theme: ITheme) =>
         },
         textRow: {
             fontSize: theme.fontSize.regular,
-            lineHeight: 30
+            lineHeight: normalize(30)
         },
         leftIcon: {
             paddingLeft: BASE_DIMENSION * 2,

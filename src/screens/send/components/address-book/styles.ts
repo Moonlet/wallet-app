@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../../styles/dimensions';
 import { pw, ph } from '../../../../styles';
 
 export default (theme: ITheme) =>
@@ -28,8 +28,8 @@ export default (theme: ITheme) =>
         },
         emptyAddressText: {
             fontWeight: 'bold',
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalize(22),
+            lineHeight: normalize(28),
             textAlign: 'center',
             letterSpacing: 0.35,
             opacity: 0.4,
@@ -37,8 +37,8 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION
         },
         addAddressBookText: {
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
             textAlign: 'center',
             opacity: 0.3,
             paddingHorizontal: BASE_DIMENSION * 2,
@@ -73,7 +73,7 @@ export default (theme: ITheme) =>
         },
         textRow: {
             fontSize: theme.fontSize.regular,
-            lineHeight: 30
+            lineHeight: normalize(30)
         },
         leftIcon: {
             paddingLeft: BASE_DIMENSION * 2,
@@ -81,8 +81,8 @@ export default (theme: ITheme) =>
         },
         sectionTitle: {
             fontWeight: '600',
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
             color: theme.colors.text,
             paddingTop: BASE_DIMENSION
         },
@@ -111,12 +111,12 @@ export default (theme: ITheme) =>
         },
 
         textActionPositive: {
-            fontSize: 10,
+            fontSize: normalize(10),
             color: theme.colors.accent
         },
 
         textActionNegative: {
-            fontSize: 10,
+            fontSize: normalize(10),
             color: theme.colors.error
         }
     });

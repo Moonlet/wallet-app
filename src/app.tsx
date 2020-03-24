@@ -172,21 +172,19 @@ export default class App extends React.Component<{}, IState> {
     }
 
     public handleAppStateChange = (nextAppState: AppStateStatus) => {
+        const { appState } = this.state;
+
         if (nextAppState === APP_STATE_INACTIVE || nextAppState === APP_STATE_BACKGROUND) {
-            this.setState({
-                displayApplication: false
-            });
+            this.setState({ displayApplication: false });
         } else {
-            this.setState({
-                displayApplication: true
-            });
+            this.setState({ displayApplication: true });
         }
 
         if (
-            this.state.appState === APP_STATE_BACKGROUND &&
+            (appState === APP_STATE_BACKGROUND || appState === APP_STATE_INACTIVE) &&
             nextAppState === APP_STATE_ACTIVE &&
             Object.keys(store.getState().wallets).length >= 1 &&
-            store.getState().ui.screens.connectHardwareWallet.connectInProgress === false
+            store.getState().ui.passwordModal.displayPasswordModal === true
         ) {
             this.showPasswordModal();
         }

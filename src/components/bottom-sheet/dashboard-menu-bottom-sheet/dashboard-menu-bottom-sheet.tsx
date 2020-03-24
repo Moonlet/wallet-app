@@ -51,31 +51,27 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(1) : null;
     }
 
-    public transactionHistoryPress = () => {
+    public transactionHistoryPress() {
         this.props.onCloseEnd();
         NavigationService.navigate('TransactonsHistory', {});
-    };
+    }
 
-    public manageAccount = () => {
+    public manageAccount() {
         this.props.onCloseEnd();
         NavigationService.navigate('ManageAccount', {});
-    };
+    }
 
-    public connectExtension = () => {
-        this.qrCodeScanner.open();
-    };
-
-    public onQrCodeScanned = async (value: string) => {
+    public async onQrCodeScanned(value: string) {
         this.props.onCloseEnd();
         WalletConnectClient.connect(value);
-    };
+    }
 
-    public renderBottomSheetContent = () => {
+    public renderBottomSheetContent() {
         const { styles } = this.props;
         return (
             <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
                 <TouchableOpacity
-                    onPress={this.transactionHistoryPress}
+                    onPress={() => this.transactionHistoryPress()}
                     style={styles.rowContainer}
                 >
                     <View style={styles.iconContainer}>
@@ -94,7 +90,10 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
 
                 {getBlockchain(this.props.blockchain).config.ui.enableTokenManagement &&
                     Platform.OS !== 'web' && (
-                        <TouchableOpacity onPress={this.manageAccount} style={styles.rowContainer}>
+                        <TouchableOpacity
+                            onPress={() => this.manageAccount()}
+                            style={styles.rowContainer}
+                        >
                             <View style={styles.iconContainer}>
                                 <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
                             </View>
@@ -110,7 +109,10 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         </TouchableOpacity>
                     )}
 
-                <TouchableOpacity onPress={this.connectExtension} style={styles.rowContainer}>
+                <TouchableOpacity
+                    onPress={() => this.qrCodeScanner.open()}
+                    style={styles.rowContainer}
+                >
                     <View style={styles.iconContainer}>
                         <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
                     </View>
@@ -126,12 +128,12 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                 </TouchableOpacity>
 
                 <QrModalReader
-                    ref={ref => (this.qrCodeScanner = ref)}
-                    onQrCodeScanned={this.onQrCodeScanned}
+                    obRef={ref => (this.qrCodeScanner = ref)}
+                    onQrCodeScanned={value => this.onQrCodeScanned(value)}
                 />
             </View>
         );
-    };
+    }
 
     public render() {
         return (
@@ -142,7 +144,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     this.props.snapPoints.initialSnap,
                     this.props.snapPoints.bottomSheetHeight
                 ]}
-                renderContent={this.renderBottomSheetContent}
+                renderContent={() => this.renderBottomSheetContent()}
                 renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
                 onOpenStart={this.props.onOpenStart}
                 onCloseEnd={this.props.onCloseEnd}

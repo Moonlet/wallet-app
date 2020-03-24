@@ -16,7 +16,7 @@ Object {
 
 exports[`qr code modal  renders correctly 3`] = `
 Object {
-  "isVisible": false,
+  "isVisible": true,
 }
 `;
 

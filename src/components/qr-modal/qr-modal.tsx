@@ -5,7 +5,7 @@ import { translate } from '../../core/i18n';
 import AndroidOpenSettings from 'react-native-android-open-settings';
 import { Dialog } from '../dialog/dialog';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { canDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
+import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 import { connect } from 'react-redux';
 
 export interface IExternalProps {
@@ -14,11 +14,11 @@ export interface IExternalProps {
 }
 
 export interface IReduxProps {
-    canDisplayPasswordModal: typeof canDisplayPasswordModal;
+    setDisplayPasswordModal: typeof setDisplayPasswordModal;
 }
 
 const mapDispatchToProps = {
-    canDisplayPasswordModal
+    setDisplayPasswordModal
 };
 
 interface IState {
@@ -63,7 +63,7 @@ export class QrModalReaderComponent extends React.Component<IExternalProps & IRe
     }
 
     public open = async () => {
-        this.props.canDisplayPasswordModal(false);
+        this.props.setDisplayPasswordModal(false);
 
         let success = await CameraKitCamera.checkDeviceCameraAuthorizationStatus();
 
@@ -96,7 +96,7 @@ export class QrModalReaderComponent extends React.Component<IExternalProps & IRe
             );
         }
 
-        this.props.canDisplayPasswordModal(true);
+        this.props.setDisplayPasswordModal(true);
     };
 
     public render() {

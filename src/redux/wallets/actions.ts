@@ -46,7 +46,7 @@ import BigNumber from 'bignumber.js';
 import { NotificationType } from '../../core/messaging/types';
 import { updateAddressMonitorTokens } from '../../core/address-monitor/index';
 import { Dialog } from '../../components/dialog/dialog';
-import { canDisplayPasswordModal } from '../ui/password-modal/actions';
+import { setDisplayPasswordModal } from '../ui/password-modal/actions';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -169,7 +169,7 @@ export const createHWWallet = (
 
         // in case you replace your connected ledger reset message
         dispatch(toInitialState());
-        dispatch(canDisplayPasswordModal(false));
+        dispatch(setDisplayPasswordModal(false));
 
         const wallet = await HWWalletFactory.get(
             deviceVendor,
@@ -205,9 +205,9 @@ export const createHWWallet = (
         NavigationService.navigate('Dashboard', {}); // TODO: check this
 
         dispatch(toInitialState());
-        dispatch(canDisplayPasswordModal(true));
+        dispatch(setDisplayPasswordModal(true));
     } catch (e) {
-        dispatch(canDisplayPasswordModal(true));
+        dispatch(setDisplayPasswordModal(true));
 
         // this might not be the best place
         if (e === translate('CreateHardwareWallet.notSupported')) {

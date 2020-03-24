@@ -17,13 +17,12 @@ export default (theme: ITheme) =>
             padding: BASE_DIMENSION
         },
         address: {
-            fontSize: theme.fontSize.regular,
             color: theme.colors.textSecondary
         },
         name: {
             color: theme.colors.text,
-            lineHeight: BASE_DIMENSION * 3,
-            fontSize: theme.fontSize.regular + 1
+            fontSize: normalize(18),
+            lineHeight: normalize(23)
         },
         selectedText: {
             color: theme.colors.accent
@@ -42,13 +41,5 @@ export default (theme: ITheme) =>
         icon: {
             color: theme.colors.accent,
             alignSelf: 'center'
-        },
-        textRow: {
-            fontSize: theme.fontSize.regular,
-            lineHeight: normalize(30)
-        },
-        leftIcon: {
-            paddingLeft: BASE_DIMENSION * 2,
-            paddingRight: BASE_DIMENSION * 2
         }
     });

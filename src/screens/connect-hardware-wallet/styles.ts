@@ -34,7 +34,6 @@ export default (theme: ITheme) =>
         },
         textIndicator: {
             width: '90%',
-            fontSize: theme.fontSize.regular,
             textAlign: 'center',
             color: theme.colors.textSecondary,
             marginBottom: BASE_DIMENSION * 2

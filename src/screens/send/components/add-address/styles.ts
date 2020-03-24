@@ -54,7 +54,6 @@ export default (theme: ITheme) =>
             fontSize: theme.fontSize.small
         },
         addressNotInBookText: {
-            fontSize: theme.fontSize.regular,
             lineHeight: normalize(20),
             color: theme.colors.accent
         },

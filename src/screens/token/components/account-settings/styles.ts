@@ -65,7 +65,7 @@ export default (theme: ITheme) =>
             flex: 2
         },
         title: {
-            fontSize: theme.fontSize.regular,
+            lineHeight: normalize(19),
             textAlign: 'center',
             fontWeight: 'bold'
         },

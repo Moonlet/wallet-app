@@ -53,13 +53,12 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground
         },
         address: {
-            fontSize: theme.fontSize.regular,
             color: theme.colors.textSecondary
         },
         name: {
             color: theme.colors.text,
-            lineHeight: BASE_DIMENSION * 3,
-            fontSize: theme.fontSize.regular + 1
+            fontSize: normalize(18),
+            lineHeight: normalize(23)
         },
         divider: {
             width: '100%',
@@ -69,11 +68,7 @@ export default (theme: ITheme) =>
         icon: {
             alignSelf: 'center',
             color: theme.colors.accent,
-            padding: 4
-        },
-        textRow: {
-            fontSize: theme.fontSize.regular,
-            lineHeight: normalize(30)
+            padding: BASE_DIMENSION / 2
         },
         leftIcon: {
             paddingLeft: BASE_DIMENSION * 2,
@@ -89,32 +84,26 @@ export default (theme: ITheme) =>
         selectedText: {
             color: theme.colors.accent
         },
-
         leftActionsContainer: {
             flexDirection: 'row'
         },
-
         action: {
             justifyContent: 'center',
             alignItems: 'center',
-            width: 72
+            width: normalize(72)
         },
-
         iconActionPositive: {
-            height: 40,
+            height: normalize(40),
             color: theme.colors.accent
         },
-
         iconActionNegative: {
-            height: 40,
+            height: normalize(40),
             color: theme.colors.error
         },
-
         textActionPositive: {
             fontSize: normalize(10),
             color: theme.colors.accent
         },
-
         textActionNegative: {
             fontSize: normalize(10),
             color: theme.colors.error

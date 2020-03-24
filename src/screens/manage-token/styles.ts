@@ -31,6 +31,7 @@ export default (theme: ITheme) =>
         },
         input: {
             flex: 1,
+            fontSize: normalize(17),
             lineHeight: normalize(22),
             color: theme.colors.text
         },

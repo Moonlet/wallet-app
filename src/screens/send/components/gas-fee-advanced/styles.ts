@@ -10,7 +10,9 @@ export default (theme: ITheme) =>
         input: {
             flex: 1,
             color: theme.colors.text,
-            paddingRight: BASE_DIMENSION * 2
+            paddingRight: BASE_DIMENSION * 2,
+            fontSize: normalize(17),
+            lineHeight: normalize(22)
         },
         inputBox: {
             height: BASE_DIMENSION * 5,

@@ -11,7 +11,7 @@ import { AddressBook } from '../address-book/address-book';
 import { IContactState, IContactsState } from '../../../../redux/contacts/state';
 import { formatAddress } from '../../../../core/utils/format-address';
 import { Icon } from '../../../../components/icon';
-import { ICON_SIZE } from '../../../../styles/dimensions';
+import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import {
@@ -299,7 +299,7 @@ export class AddAddressComponent extends React.Component<
                     onPress={() => this.onPressClearInput()}
                     style={styles.rightAddressButton}
                 >
-                    <Icon name="close" size={16} style={styles.icon} />
+                    <Icon name="close" size={normalize(16)} style={styles.icon} />
                 </TouchableOpacity>
             );
         }

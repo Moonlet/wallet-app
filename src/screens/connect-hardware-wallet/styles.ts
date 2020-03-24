@@ -9,7 +9,6 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground,
             height: '100%'
         },
-
         configContainer: {
             width: '100%'
         },
@@ -28,7 +27,6 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             marginBottom: BASE_DIMENSION * 5
         },
-
         bottomButton: {
             width: '80%'
         },
@@ -41,10 +39,8 @@ export default (theme: ITheme) =>
         text: {
             fontSize: normalize(15),
             lineHeight: normalize(20),
-            color: theme.colors.text,
-            opacity: 0.87
+            color: theme.colors.text
         },
-
         headerRow: {
             flex: 1,
             flexDirection: 'row',
@@ -57,9 +53,9 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 4
         },
         circle: {
-            height: 50,
-            width: 50,
-            borderRadius: 25,
+            height: normalize(50),
+            width: normalize(50),
+            borderRadius: normalize(25),
             padding: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
             alignSelf: 'center',

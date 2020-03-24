@@ -17,7 +17,7 @@ export default (theme: ITheme) =>
             color: theme.colors.text
         },
         cursor: {
-            height: 20,
+            height: normalize(20),
             borderRadius: BORDER_RADIUS / 3,
             backgroundColor: theme.colors.accent
         }

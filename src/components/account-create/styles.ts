@@ -59,7 +59,9 @@ export default (theme: ITheme) =>
         },
         input: {
             flex: 1,
-            color: theme.colors.text
+            color: theme.colors.text,
+            fontSize: normalize(17),
+            lineHeight: normalize(22)
         },
         icon: {
             color: theme.colors.accent

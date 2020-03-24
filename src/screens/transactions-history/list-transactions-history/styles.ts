@@ -28,8 +28,7 @@ export default (theme: ITheme) =>
         },
         transactionTextPrimary: {
             lineHeight: normalize(21),
-            color: theme.colors.text,
-            opacity: 0.87
+            color: theme.colors.text
         },
         transactionTextSecondary: {
             fontSize: normalize(15),

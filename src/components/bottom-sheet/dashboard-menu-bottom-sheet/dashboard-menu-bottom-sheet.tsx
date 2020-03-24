@@ -7,7 +7,7 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import { Icon } from '../../icon';
 import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
-import { ICON_SIZE } from '../../../styles/dimensions';
+import { ICON_SIZE, normalize } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 import { QrModalReader } from '../../qr-modal/qr-modal';
 import { WalletConnectClient } from '../../../core/wallet-connect/wallet-connect-client';
@@ -89,7 +89,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             {translate('DashboardMenu.checkTransactions')}
                         </Text>
                     </View>
-                    <Icon name="chevron-right" size={16} style={styles.arrowRight} />
+                    <Icon name="chevron-right" size={normalize(16)} style={styles.arrowRight} />
                 </TouchableOpacity>
 
                 {getBlockchain(this.props.blockchain).config.ui.enableTokenManagement &&
@@ -106,7 +106,11 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                                     {translate('DashboardMenu.quicklyManage')}
                                 </Text>
                             </View>
-                            <Icon name="chevron-right" size={16} style={styles.arrowRight} />
+                            <Icon
+                                name="chevron-right"
+                                size={normalize(16)}
+                                style={styles.arrowRight}
+                            />
                         </TouchableOpacity>
                     )}
 
@@ -122,7 +126,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             {translate('DashboardMenu.scanCode')}
                         </Text>
                     </View>
-                    <Icon name="chevron-right" size={16} style={styles.arrowRight} />
+                    <Icon name="chevron-right" size={normalize(16)} style={styles.arrowRight} />
                 </TouchableOpacity>
 
                 <QrModalReader

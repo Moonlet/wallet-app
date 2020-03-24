@@ -21,9 +21,9 @@ export default (theme: ITheme) =>
         circle: {
             flexDirection: 'column',
             justifyContent: 'center',
-            height: 40,
-            width: 40,
-            borderRadius: 20,
+            height: normalize(40),
+            width: normalize(40),
+            borderRadius: normalize(20),
             backgroundColor: theme.colors.textTertiary
         },
         circleSelected: {

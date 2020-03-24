@@ -301,7 +301,7 @@ export class PasswordPinComponent extends React.Component<
                                     ? 'face-id'
                                     : 'touch-id'
                             }
-                            size={40}
+                            size={normalize(40)}
                             style={styles.touchIdIcon}
                         />
                     ) : (

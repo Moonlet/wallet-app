@@ -5,6 +5,7 @@ import { BORDER_RADIUS, BASE_DIMENSION, normalize } from '../../styles/dimension
 export default (theme: ITheme) =>
     StyleSheet.create({
         titleStyle: {
+            fontSize: normalize(17),
             lineHeight: normalize(22),
             fontWeight: '600',
             color: theme.colors.text
@@ -29,6 +30,7 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.bottomSheetBackground
         },
         cancelButtonText: {
+            fontSize: normalize(17),
             lineHeight: normalize(22),
             color: theme.colors.textSecondary
         },
@@ -39,6 +41,7 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.bottomSheetBackground
         },
         confirmButtonText: {
+            fontSize: normalize(17),
             lineHeight: normalize(22),
             fontWeight: '600',
             color: theme.colors.accent

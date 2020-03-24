@@ -23,12 +23,13 @@ export default (theme: ITheme) =>
         inputAddress: {
             flex: 1,
             color: theme.colors.text,
-            paddingRight: BASE_DIMENSION * 2
+            paddingRight: BASE_DIMENSION * 2,
+            fontSize: normalize(17),
+            lineHeight: normalize(22)
         },
         inputBox: {
             height: BASE_DIMENSION * 5,
             borderRadius: BORDER_RADIUS,
-            borderColor: 'gray',
             alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
             paddingHorizontal: BASE_DIMENSION,
@@ -59,12 +60,16 @@ export default (theme: ITheme) =>
         displayError: {
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
-            color: theme.colors.error
+            color: theme.colors.error,
+            fontSize: normalize(15),
+            lineHeight: normalize(19)
         },
         receipientWarning: {
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
-            color: theme.colors.warning
+            color: theme.colors.warning,
+            fontSize: normalize(15),
+            lineHeight: normalize(19)
         },
         icon: {
             color: theme.colors.accent

@@ -11,7 +11,9 @@ export default (theme: ITheme) =>
         inputText: {
             flex: 1,
             color: theme.colors.text,
-            paddingRight: BASE_DIMENSION * 2
+            paddingRight: BASE_DIMENSION * 2,
+            fontSize: normalize(17),
+            lineHeight: normalize(22)
         },
         inputBox: {
             height: BASE_DIMENSION * 5,
@@ -23,12 +25,16 @@ export default (theme: ITheme) =>
         displayError: {
             flex: 1,
             paddingLeft: BASE_DIMENSION,
-            color: theme.colors.error
+            color: theme.colors.error,
+            fontSize: normalize(15),
+            lineHeight: normalize(19)
         },
         receipientWarning: {
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
-            color: theme.colors.warning
+            color: theme.colors.warning,
+            fontSize: normalize(15),
+            lineHeight: normalize(19)
         },
         buttonRightOptions: {
             width: '100%',

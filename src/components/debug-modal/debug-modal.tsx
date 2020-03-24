@@ -11,7 +11,6 @@ import { readEncrypted } from '../../core/secure/storage';
 import { WC_CONNECTION } from '../../core/constants/app';
 import { getPassword } from '../../core/secure/keychain';
 import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
-import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface IExternalProps {
     obRef?: any;
@@ -24,25 +23,6 @@ interface IState {
     apnToken?: string;
     wcSession?: any;
 }
-
-const displayInfo = (text: string, label?: string) => (
-    <TouchableOpacity
-        style={{
-            flexDirection: 'column',
-            paddingVertical: BASE_DIMENSION
-        }}
-        onPress={async () => {
-            await Clipboard.setString(text);
-        }}
-    >
-        {label && (
-            <Text small darker>
-                {label}
-            </Text>
-        )}
-        <Text small>{text}</Text>
-    </TouchableOpacity>
-);
 
 export class DebugModalComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
@@ -73,53 +53,60 @@ export class DebugModalComponent extends React.Component<
         });
     }
 
+    private displayInfo(text: string, label?: string) {
+        return (
+            <TouchableOpacity
+                style={this.props.styles.row}
+                onPress={() => Clipboard.setString(text)}
+            >
+                {label && <Text darker>{label}</Text>}
+                <Text>{text}</Text>
+            </TouchableOpacity>
+        );
+    }
+
     public render() {
         return (
-            <View
-                style={{
-                    display: this.state.visible ? 'flex' : 'none',
-                    position: 'absolute',
-                    height: '100%'
-                }}
-            >
-                <Modal isVisible={this.state.visible}>
-                    <View style={this.props.styles.container}>
-                        <ScrollView style={{ flex: 1 }}>
-                            <View>
-                                {displayInfo(this.state.fcmToken, 'FCM token')}
-                                {Platform.OS === 'ios' &&
-                                    displayInfo(this.state.apnToken, 'APN token')}
-                                {displayInfo(
-                                    this.state.wcSession?.connected
-                                        ? 'connected'
-                                        : 'not connected / unk',
-                                    'WC connection'
-                                )}
-                                {displayInfo(this.state.wcSession?.bridge, 'WC bridge')}
-                                {displayInfo(this.state.wcSession?.key, 'WC key')}
-                                {displayInfo(this.state.wcSession?.clientId, 'WC client id')}
-                                {displayInfo(this.state.wcSession?.peerId, 'WC peer id')}
-                                {displayInfo(
-                                    this.state.wcSession?.handshakeId,
-                                    'WC handshakeId id'
-                                )}
-                                {displayInfo(
-                                    this.state.wcSession?.handshakeTopic,
-                                    'WC handshake topic'
-                                )}
-                            </View>
-                        </ScrollView>
-                        <View style={{ flex: 0, padding: BASE_DIMENSION * 3 }}>
-                            <Button onPress={() => WalletConnectClient.reconnect()}>
-                                {`Reconnect to WC`}
-                            </Button>
-                            <Button
-                                onPress={() => this.setState({ visible: false })}
-                            >{`Back`}</Button>
+            <Modal isVisible={this.state.visible}>
+                <View style={this.props.styles.container}>
+                    <ScrollView
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <View>
+                            {this.displayInfo(this.state.fcmToken, 'FCM token')}
+                            {Platform.OS === 'ios' &&
+                                this.displayInfo(this.state.apnToken, 'APN token')}
+                            {this.displayInfo(
+                                this.state.wcSession?.connected
+                                    ? 'connected'
+                                    : 'not connected / unk',
+                                'WC connection'
+                            )}
+                            {this.displayInfo(this.state.wcSession?.bridge, 'WC bridge')}
+                            {this.displayInfo(this.state.wcSession?.key, 'WC key')}
+                            {this.displayInfo(this.state.wcSession?.clientId, 'WC client id')}
+                            {this.displayInfo(this.state.wcSession?.peerId, 'WC peer id')}
+                            {this.displayInfo(
+                                this.state.wcSession?.handshakeId,
+                                'WC handshakeId id'
+                            )}
+                            {this.displayInfo(
+                                this.state.wcSession?.handshakeTopic,
+                                'WC handshake topic'
+                            )}
                         </View>
-                    </View>
-                </Modal>
-            </View>
+                    </ScrollView>
+
+                    <Button
+                        onPress={() => WalletConnectClient.reconnect()}
+                        style={this.props.styles.button}
+                    >
+                        {`Reconnect to WC`}
+                    </Button>
+                    <Button onPress={() => this.setState({ visible: false })}>{`Back`}</Button>
+                </View>
+            </Modal>
         );
     }
 }

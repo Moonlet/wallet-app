@@ -17,7 +17,7 @@ export default (theme: ITheme) =>
         },
         modalContainer: {
             backgroundColor: theme.colors.cardBackground,
-            height: 380,
+            height: normalize(380),
             borderRadius: BORDER_RADIUS * 2,
             marginHorizontal: BASE_DIMENSION * 3
         },

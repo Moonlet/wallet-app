@@ -69,14 +69,14 @@ export default (theme: ITheme) =>
         action: {
             justifyContent: 'center',
             alignItems: 'center',
-            width: 72
+            width: normalize(72)
         },
         iconActionPositive: {
-            height: 40,
+            height: normalize(40),
             color: theme.colors.accent
         },
         iconActionNegative: {
-            height: 40,
+            height: normalize(40),
             color: theme.colors.error
         },
         textActionPositive: {

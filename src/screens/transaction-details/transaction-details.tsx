@@ -18,6 +18,7 @@ import { Amount } from '../../components/amount/amount';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import moment from 'moment';
 import { getChainId } from '../../redux/preferences/selectors';
+import { normalize } from '../../styles/dimensions';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -149,7 +150,7 @@ export class TransactionDetailsComponent extends React.Component<
                                 {translate('Transaction.transactionID')}
                             </Text>
                         </View>
-                        <Icon name="chevron-right" size={16} style={styles.icon} />
+                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
                     </TouchableOpacity>
 
                     <View style={styles.rowContainer}>

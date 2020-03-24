@@ -27,6 +27,7 @@ import { isValidAddress as isValidAddressETH } from '../../core/blockchain/ether
 import { isValidAddress as isValidAddressZIL } from '../../core/blockchain/zilliqa/account';
 import { ChainIdType, Blockchain } from '../../core/blockchain/types';
 import { SmartImage } from '../../library/image/smart-image';
+import { normalize } from '../../styles/dimensions';
 
 export interface IReduxProps {
     selectedAccount: IAccountState;
@@ -234,7 +235,7 @@ export class ManageTokenComponent extends React.Component<
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
                     <View style={styles.inputBox}>
-                        <Icon name="search" size={14} style={styles.searchIcon} />
+                        <Icon name="search" size={normalize(14)} style={styles.searchIcon} />
                         <TextInput
                             style={styles.input}
                             placeholderTextColor={theme.colors.textTertiary}
@@ -260,7 +261,7 @@ export class ManageTokenComponent extends React.Component<
                                     })
                                 }
                             >
-                                <Icon name="close" size={16} style={styles.closeIcon} />
+                                <Icon name="close" size={normalize(16)} style={styles.closeIcon} />
                             </TouchableOpacity>
                         )}
                     </View>
@@ -289,7 +290,7 @@ export class ManageTokenComponent extends React.Component<
                             </View>
                             <View style={styles.iconContainer}>
                                 {this.state.isTokenSelected && (
-                                    <Icon name="check-1" size={16} style={styles.icon} />
+                                    <Icon name="check-1" size={normalize(16)} style={styles.icon} />
                                 )}
                             </View>
                         </TouchableOpacity>

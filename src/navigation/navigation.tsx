@@ -60,7 +60,7 @@ const mainTabbedNavigationOptions: any = {
         },
         style: {
             padding: BASE_DIMENSION,
-            height: 60
+            height: normalize(60)
         },
         indicatorStyle: {
             display: 'none'

@@ -229,7 +229,11 @@ export class DashboardScreenComponent extends React.Component<
                                 }
                                 style={styles.expandIconContainer}
                             >
-                                <Icon name="expand" size={28} style={styles.expandIcon} />
+                                <Icon
+                                    name="expand"
+                                    size={normalize(28)}
+                                    style={styles.expandIcon}
+                                />
                             </TouchableOpacity>
                         )}
                     </View>

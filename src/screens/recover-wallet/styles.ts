@@ -29,19 +29,19 @@ export default (theme: ITheme) =>
         inputContainer: {
             flex: 1,
             flexDirection: 'row',
-            height: 30
+            height: normalize(30)
         },
         inputLabel: {
             textAlign: 'right',
             alignSelf: 'center',
             fontSize: normalize(10),
-            width: 18,
+            width: normalize(18),
             lineHeight: normalize(30),
             color: theme.colors.text,
             paddingTop: BASE_DIMENSION / 4
         },
         suggestionButton: {
-            paddingVertical: 6,
+            paddingVertical: normalize(6),
             marginHorizontal: BASE_DIMENSION / 2
         },
         bottomButton: {

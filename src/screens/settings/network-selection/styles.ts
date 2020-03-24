@@ -18,8 +18,8 @@ export default (theme: ITheme) =>
         },
         textRow: {
             flex: 1,
-            fontSize: normalize(20),
-            lineHeight: normalize(25),
+            fontSize: normalize(17),
+            lineHeight: normalize(21),
             letterSpacing: 0.38,
             color: theme.colors.text
         },

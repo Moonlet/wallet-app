@@ -32,7 +32,7 @@ export default (theme: ITheme) =>
         textRowValue: {
             fontSize: normalize(15),
             color: theme.colors.textSecondary,
-            paddingRight: 8
+            paddingRight: BASE_DIMENSION
         },
         switch: {
             justifyContent: 'flex-end',

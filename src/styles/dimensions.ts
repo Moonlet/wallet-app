@@ -6,14 +6,7 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const scale = SCREEN_WIDTH / 414;
 
 // can be used for width, height, top, bottom, fontSize, borderRadius, margin, padding, etc.
-export const normalize = (size: number) => {
-    const newSize = size * scale;
-    if (Platform.OS === 'ios') {
-        return Math.round(PixelRatio.roundToNearestPixel(newSize));
-    } else {
-        return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
-    }
-};
+export const normalize = (size: number) => Math.round(PixelRatio.roundToNearestPixel(size * scale));
 
 export const BORDER_RADIUS = normalize(8);
 export const BASE_DIMENSION = normalize(8);

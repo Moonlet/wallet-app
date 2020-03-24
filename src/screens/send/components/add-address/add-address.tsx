@@ -346,7 +346,7 @@ export class AddAddressComponent extends React.Component<
                     onPress={() => this.onTransferBetweenAccounts()}
                     style={[styles.buttonRightOptions]}
                 >
-                    <Text style={styles.textTranferButton}>
+                    <Text style={styles.textTranferButton} small>
                         {this.state.showOwnAccounts
                             ? translate('App.labels.close')
                             : translate('Send.transferOwnAccounts')}

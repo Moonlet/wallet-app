@@ -28,7 +28,8 @@ export default (theme: ITheme) =>
         },
         feeConverted: {
             color: theme.colors.textSecondary,
-            fontSize: theme.fontSize.small
+            fontSize: normalize(12),
+            lineHeight: normalize(17)
         },
         containerFeeConverted: {
             paddingLeft: BASE_DIMENSION * 2,

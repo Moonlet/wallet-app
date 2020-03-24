@@ -50,8 +50,7 @@ export default (theme: ITheme) =>
         },
         textTranferButton: {
             color: theme.colors.accent,
-            lineHeight: normalize(21),
-            fontSize: theme.fontSize.small
+            lineHeight: normalize(19)
         },
         addressNotInBookText: {
             lineHeight: normalize(20),

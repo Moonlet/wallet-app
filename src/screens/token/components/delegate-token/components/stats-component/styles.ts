@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../../../../styles/dimensions';
 import { ITheme } from '../../../../../../core/theme/itheme';
 
 export default (theme: ITheme) =>
@@ -48,13 +48,13 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION
         },
         chartTextDetails: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             color: theme.colors.text
         },
         chartTextSecondary: {
-            fontSize: 11,
-            lineHeight: 13,
+            fontSize: normalize(11),
+            lineHeight: normalize(13),
             color: theme.colors.text
         },
         statContainer: {
@@ -63,20 +63,20 @@ export default (theme: ITheme) =>
             alignItems: 'center'
         },
         statLabelText: {
-            fontSize: 11,
-            lineHeight: 13,
+            fontSize: normalize(11),
+            lineHeight: normalize(13),
             color: theme.colors.textSecondary,
             marginBottom: BASE_DIMENSION / 2
         },
         statValueText: {
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
             fontWeight: '600',
             color: theme.colors.text
         },
         percentageText: {
-            fontSize: 8,
-            lineHeight: 12,
+            fontSize: normalize(8),
+            lineHeight: normalize(12),
             alignSelf: 'center'
         },
         percentageSquare: {

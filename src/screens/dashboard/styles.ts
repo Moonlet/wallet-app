@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -21,16 +21,16 @@ export default (theme: ITheme) =>
             position: 'absolute',
             left: 0,
             right: 0,
-            height: 70, // used for 20px
+            height: normalize(70), // used for 20px
             bottom: 0,
             justifyContent: 'flex-end'
         },
         blockchainSelectorContainer: {
             backgroundColor: theme.colors.cardBackground,
             borderRadius: 20,
-            height: 40,
+            height: normalize(40),
             flexDirection: 'row',
-            marginBottom: 12,
+            marginBottom: BASE_DIMENSION + BASE_DIMENSION / 2,
             marginHorizontal: BASE_DIMENSION * 2,
             overflow: 'hidden'
         },
@@ -46,8 +46,7 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.textTertiary
         },
         blockchainButtonTextActive: {
-            fontSize: 16,
-            lineHeight: 18,
+            lineHeight: normalize(18),
             color: theme.colors.accent
         },
         coinDashboard: {

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -28,14 +28,13 @@ export default (theme: ITheme) =>
             paddingRight: BASE_DIMENSION * 4
         },
         textPrimary: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             color: theme.colors.text,
             marginBottom: BASE_DIMENSION / 2
         },
         textSecondary: {
-            fontSize: 16,
-            lineHeight: 21,
+            fontSize: normalize(16),
+            lineHeight: normalize(21),
             color: theme.colors.textTertiary
         },
         icon: {

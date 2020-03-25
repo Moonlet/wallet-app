@@ -10,7 +10,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../core/i18n';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import { ICON_SIZE, BASE_DIMENSION } from '../../styles/dimensions';
+import { ICON_SIZE, BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { IAccountState, IWalletState } from '../../redux/wallets/state';
@@ -100,7 +100,7 @@ export class ManageAccountComponent extends React.Component<
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
-                    <Icon name="bin" size={32} style={styles.iconActionNegative} />
+                    <Icon name="bin" size={normalize(32)} style={styles.iconActionNegative} />
                     <Text style={styles.textActionNegative}>{translate('Token.deleteToken')}</Text>
                 </TouchableOpacity>
             </View>
@@ -189,7 +189,7 @@ export class ManageAccountComponent extends React.Component<
                             }
                         >
                             <Icon
-                                size={18}
+                                size={normalize(18)}
                                 name={item.value.active ? 'check-2-thicked' : 'check-2'}
                                 style={[
                                     {
@@ -202,7 +202,7 @@ export class ManageAccountComponent extends React.Component<
                         </TouchableOpacity>
                     )}
                     <TouchableOpacity style={styles.iconContainer} onLongPress={drag}>
-                        <Icon size={18} name="navigation-menu" style={styles.menuIcon} />
+                        <Icon size={normalize(18)} name="navigation-menu" style={styles.menuIcon} />
                     </TouchableOpacity>
                 </View>
             </Swipeable>

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
+import { normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,7 +9,7 @@ export default (theme: ITheme) =>
             borderColor: theme.colors.accent,
             flexDirection: 'row',
             width: '100%',
-            height: 40
+            height: normalize(40)
         },
 
         tabButton: {

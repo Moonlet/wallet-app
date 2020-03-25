@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -12,8 +12,8 @@ export default (theme: ITheme) =>
             alignItems: 'flex-end'
         },
         textTranferButton: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             color: theme.colors.accent
         },
         list: {

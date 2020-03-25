@@ -5,7 +5,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { View, TouchableOpacity } from 'react-native';
 import Icon from '../icon';
-import { ICON_SIZE } from '../../styles/dimensions';
+import { ICON_SIZE, normalize } from '../../styles/dimensions';
 
 export interface IProps {
     label: string | JSX.Element;
@@ -25,18 +25,25 @@ export const ListCardComponent = (
         ) : (
             props.label
         );
+
     return (
         <TouchableOpacity onPress={props.onPress}>
             <View style={[props.styles.card, props.selected && props.styles.selected, props.style]}>
                 {props.leftIcon && (
-                    <View style={props.styles.iconLeftContainer}>
+                    <View style={[props.styles.iconContainer, { alignItems: 'flex-start' }]}>
                         <Icon name={props.leftIcon} size={ICON_SIZE} style={props.styles.icon} />
                     </View>
                 )}
+
                 <View style={props.styles.labelContainer}>{label}</View>
+
                 {props.rightIcon && (
-                    <View style={props.styles.iconRightContainer}>
-                        <Icon name={props.rightIcon} size={18} style={props.styles.icon} />
+                    <View style={[props.styles.iconContainer, { alignItems: 'flex-end' }]}>
+                        <Icon
+                            name={props.rightIcon}
+                            size={normalize(18)}
+                            style={props.styles.icon}
+                        />
                     </View>
                 )}
             </View>

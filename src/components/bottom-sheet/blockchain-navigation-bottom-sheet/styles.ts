@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import { BASE_DIMENSION, ICON_CONTAINER_SIZE, BORDER_RADIUS } from '../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -27,14 +27,9 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION,
             borderWidth: 2
         },
-        icon: {
-            height: ICON_CONTAINER_SIZE,
-            width: ICON_CONTAINER_SIZE,
-            alignSelf: 'center'
-        },
         coinText: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             color: theme.colors.text,
             textAlign: 'center'
         }

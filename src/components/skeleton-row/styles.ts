@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
 
-const CIRCLE_SIZE = 40;
-const LINE_HEIGTH = 15;
+const CIRCLE_SIZE = normalize(40);
+const LINE_HEIGTH = normalize(15);
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -27,11 +27,11 @@ export default (theme: ITheme) =>
         firstRow: {
             height: LINE_HEIGTH,
             backgroundColor: theme.colors.cardBackground,
-            borderRadius: 8
+            borderRadius: BORDER_RADIUS
         },
         secondRow: {
             height: LINE_HEIGTH,
             backgroundColor: theme.colors.cardBackground,
-            borderRadius: 8
+            borderRadius: BORDER_RADIUS
         }
     });

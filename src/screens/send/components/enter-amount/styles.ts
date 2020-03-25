@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -11,7 +11,9 @@ export default (theme: ITheme) =>
         inputText: {
             flex: 1,
             color: theme.colors.text,
-            paddingRight: BASE_DIMENSION * 2
+            paddingRight: BASE_DIMENSION * 2,
+            fontSize: normalize(17),
+            lineHeight: normalize(22)
         },
         inputBox: {
             height: BASE_DIMENSION * 5,
@@ -23,12 +25,16 @@ export default (theme: ITheme) =>
         displayError: {
             flex: 1,
             paddingLeft: BASE_DIMENSION,
-            color: theme.colors.error
+            color: theme.colors.error,
+            fontSize: normalize(15),
+            lineHeight: normalize(19)
         },
         receipientWarning: {
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
-            color: theme.colors.warning
+            color: theme.colors.warning,
+            fontSize: normalize(15),
+            lineHeight: normalize(19)
         },
         buttonRightOptions: {
             width: '100%',
@@ -38,14 +44,14 @@ export default (theme: ITheme) =>
             justifyContent: 'space-between'
         },
         textBalance: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             color: theme.colors.textSecondary,
             marginRight: BASE_DIMENSION / 2
         },
         allBalanceText: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             color: theme.colors.accent
         },
         addValueBox: {
@@ -57,8 +63,8 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION / 2
         },
         addValueText: {
-            fontSize: 12,
-            lineHeight: 16,
+            fontSize: normalize(12),
+            lineHeight: normalize(16),
             color: theme.colors.text,
             textAlign: 'center'
         },
@@ -67,8 +73,8 @@ export default (theme: ITheme) =>
             justifyContent: 'space-between'
         },
         receipientLabel: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             paddingLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         }

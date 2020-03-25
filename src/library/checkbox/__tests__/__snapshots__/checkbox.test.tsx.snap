@@ -2,7 +2,7 @@
 
 exports[`library checkbox renders correctly 1`] = `
 "<TouchableOpacity disabled={[undefined]} onPress={[undefined]} style={{...}} activeOpacity={0.2}>
-  <Icon name=\\"check-2\\" size={18} style={{...}} allowFontScaling={false} />
+  <Icon name=\\"check-2\\" size={33} style={{...}} allowFontScaling={false} />
   <withTheme(TextComponent) style={{...}}>
     agree
   </withTheme(TextComponent)>

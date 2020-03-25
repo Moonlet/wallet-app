@@ -12,6 +12,7 @@ import { ExtensionRequestBottomSheet } from './extension-request-bottom-sheet/ex
 import { IBottomSheet, BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { openBottomSheet, closeBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BlockchainNavigationBottomSheet } from './blockchain-navigation-bottom-sheet/blockchain-navigation-bottom-sheet';
+import { normalize } from '../../styles/dimensions';
 
 interface IReduxProps {
     bottomSheet: IBottomSheet;
@@ -88,7 +89,7 @@ export class BottomSheetComponent extends React.Component<
                         <DashboardMenuBottomSheet
                             snapPoints={{
                                 initialSnap: Platform.OS === 'web' ? 300 : 0,
-                                bottomSheetHeight: 300
+                                bottomSheetHeight: normalize(300)
                             }}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
@@ -105,7 +106,7 @@ export class BottomSheetComponent extends React.Component<
                             activeOpacity={1}
                         />
                         <LedgerConnect
-                            snapPoints={{ initialSnap: 0, bottomSheetHeight: 300 }}
+                            snapPoints={{ initialSnap: 0, bottomSheetHeight: normalize(300) }}
                             blockchain={this.props.bottomSheet?.blockchain}
                             deviceModel={this.props.bottomSheet?.deviceModel}
                             connectionType={this.props.bottomSheet?.connectionType}
@@ -126,7 +127,7 @@ export class BottomSheetComponent extends React.Component<
                         <ExtensionRequestBottomSheet
                             snapPoints={{
                                 initialSnap: Platform.OS === 'web' ? 280 : 0,
-                                bottomSheetHeight: 280
+                                bottomSheetHeight: normalize(280)
                             }}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}
@@ -146,7 +147,7 @@ export class BottomSheetComponent extends React.Component<
                         <BlockchainNavigationBottomSheet
                             snapPoints={{
                                 initialSnap: Platform.OS === 'web' ? 400 : 0,
-                                bottomSheetHeight: 400
+                                bottomSheetHeight: normalize(400)
                             }}
                             onOpenStart={this.handleOpenStart}
                             onCloseEnd={this.handleCloseEnd}

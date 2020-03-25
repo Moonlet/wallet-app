@@ -11,6 +11,7 @@ import { Icon } from '../icon';
 import { IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { normalize } from '../../styles/dimensions';
 
 export interface IProps {
     onPress?: () => void;
@@ -47,7 +48,7 @@ export const CoinBalanceCardComponent = (props: IProps) => (
                 }
                 blockchain={props.blockchain}
             />
-            <Icon name="chevron-down" size={18} style={props.styles.icon} />
+            <Icon name="chevron-down" size={normalize(18)} style={props.styles.icon} />
         </View>
         <Amount
             style={[props.styles.secondaryText, !props.active && props.styles.darkerText]}

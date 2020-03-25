@@ -32,7 +32,7 @@ import { AccountSettings } from './components/account-settings/account-settings'
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 import { SmartImage } from '../../library/image/smart-image';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TransactionStatus } from '../../core/wallet/types';
 
 export interface IProps {
@@ -102,8 +102,8 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                 />
                 <Text
                     style={{
-                        fontSize: 22,
-                        lineHeight: 28,
+                        fontSize: normalize(22),
+                        lineHeight: normalize(28),
                         color: themes[theme].colors.text,
                         letterSpacing: 0.38,
                         textAlign: 'center',

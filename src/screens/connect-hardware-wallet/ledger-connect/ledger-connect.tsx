@@ -17,6 +17,7 @@ import { HWVendor, HWModel, HWConnection } from '../../../core/wallet/hw-wallet/
 import { delay } from '../../../core/utils/time';
 import { TransportFactory } from '../../../core/wallet/hw-wallet/ledger/transport-factory';
 import TouchableOpacity from '../../../library/touchable-opacity/touchable-opacity';
+import { normalize } from '../../../styles/dimensions';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -143,7 +144,7 @@ export class LedgerConnectComponent extends React.Component<
                 <View key="icon-background" style={this.props.styles.deviceIconBackground}>
                     <Icon
                         name="ledger-logo"
-                        size={24}
+                        size={normalize(24)}
                         style={[
                             this.props.styles.deviceIcon,
                             this.state.ledgerDevice?.id === item.id &&
@@ -171,7 +172,7 @@ export class LedgerConnectComponent extends React.Component<
                     )}
 
                     {this.state.ledgerDevice?.id === item.id && !this.state.loadingConnection && (
-                        <Icon name="check-1" size={16} style={this.props.styles.icon} />
+                        <Icon name="check-1" size={normalize(16)} style={this.props.styles.icon} />
                     )}
                 </View>
             </TouchableOpacity>

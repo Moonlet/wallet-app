@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    ICON_CONTAINER_SIZE,
+    normalize
+} from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -12,7 +17,7 @@ export default (theme: ITheme) =>
         },
         modalContainer: {
             backgroundColor: theme.colors.cardBackground,
-            height: 380,
+            height: normalize(380),
             borderRadius: BORDER_RADIUS * 2,
             marginHorizontal: BASE_DIMENSION * 3
         },
@@ -44,8 +49,8 @@ export default (theme: ITheme) =>
             paddingLeft: BASE_DIMENSION * 2
         },
         backText: {
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
             color: theme.colors.text
         },
         doneWrapper: {
@@ -60,7 +65,7 @@ export default (theme: ITheme) =>
             flex: 2
         },
         title: {
-            fontSize: theme.fontSize.regular,
+            lineHeight: normalize(19),
             textAlign: 'center',
             fontWeight: 'bold'
         },
@@ -77,8 +82,8 @@ export default (theme: ITheme) =>
             alignSelf: 'center'
         },
         textRow: {
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
             color: theme.colors.textSecondary
         }
     });

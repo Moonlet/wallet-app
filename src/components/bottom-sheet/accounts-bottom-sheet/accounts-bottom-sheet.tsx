@@ -66,7 +66,7 @@ export class AccountsBottomSheetComponent extends React.Component<
         });
     }
 
-    public renderBottomSheetContent = () => {
+    public renderBottomSheetContent() {
         const createAccountLabel = (
             <View>
                 <View style={this.props.styles.firstRow}>
@@ -173,7 +173,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                 </ScrollView>
             </View>
         );
-    };
+    }
 
     public render() {
         return (
@@ -184,7 +184,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                     this.props.snapPoints.initialSnap,
                     this.props.snapPoints.bottomSheetHeight
                 ]}
-                renderContent={this.renderBottomSheetContent}
+                renderContent={() => this.renderBottomSheetContent()}
                 renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
                 onOpenStart={this.props.onOpenStart}
                 onCloseEnd={this.props.onCloseEnd}

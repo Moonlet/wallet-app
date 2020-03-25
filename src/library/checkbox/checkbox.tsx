@@ -5,6 +5,7 @@ import { Text } from '../index';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { Icon } from '../../components/icon';
+import { normalize } from '../../styles/dimensions';
 
 export interface ICheckboxProps {
     children?: any;
@@ -24,7 +25,7 @@ export const CheckboxComponent = (props: ICheckboxProps) => (
     >
         <Icon
             name={props.checked ? 'check-2-thicked' : 'check-2'}
-            size={18}
+            size={normalize(18)}
             style={props.styles.icon}
         />
         {props.text && <Text style={props.styles.text}>{props.text}</Text>}

@@ -22,6 +22,7 @@ import { ListCard } from '../../components/list-card/list-card';
 import { Dialog } from '../../components/dialog/dialog';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
 import { delay } from '../../core/utils/time';
+import { normalize } from '../../styles/dimensions';
 
 export interface IReduxProps {
     wallets: {
@@ -148,7 +149,7 @@ export class WalletsScreenComponent extends React.Component<
         return (
             <View style={styles.leftActionsContainer}>
                 <TouchableOpacity style={styles.action} onPress={() => this.onPressDelete(wallet)}>
-                    <Icon name="bin" size={32} style={styles.iconActionNegative} />
+                    <Icon name="bin" size={normalize(32)} style={styles.iconActionNegative} />
                     <Text style={styles.textActionNegative}>
                         {translate('Wallets.deleteWallet')}
                     </Text>
@@ -161,7 +162,11 @@ export class WalletsScreenComponent extends React.Component<
                         }}
                         style={styles.action}
                     >
-                        <Icon name="view-1" size={32} style={styles.iconActionPositive} />
+                        <Icon
+                            name="view-1"
+                            size={normalize(32)}
+                            style={styles.iconActionPositive}
+                        />
                         <Text style={styles.textActionPositive}>{translate('Wallets.unveil')}</Text>
                     </TouchableOpacity>
                 )}
@@ -172,7 +177,7 @@ export class WalletsScreenComponent extends React.Component<
                         this.onPressEdit(wallet);
                     }}
                 >
-                    <Icon name="pencil" size={28} style={styles.iconActionPositive} />
+                    <Icon name="pencil" size={normalize(28)} style={styles.iconActionPositive} />
                     <Text style={styles.textActionPositive}>{translate('Wallets.editName')}</Text>
                 </TouchableOpacity>
             </View>

@@ -6,7 +6,7 @@ import { Icon } from '../../../components/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { Text } from '../../../library';
 import { IAccountState } from '../../../redux/wallets/state';
-import { ICON_SIZE } from '../../../styles/dimensions';
+import { ICON_SIZE, normalize } from '../../../styles/dimensions';
 import { Amount } from '../../../components/amount/amount';
 import { translate } from '../../../core/i18n';
 import { formatAddress } from '../../../core/utils/format-address';
@@ -105,7 +105,11 @@ export class TransactionsHistoryListComponent extends React.Component<
                         {`${moment(date).format('L')}, ${moment(date).format('LTS')}`}
                     </Text>
                 </View>
-                <Icon name="chevron-right" size={16} style={styles.transactionRightIcon} />
+                <Icon
+                    name="chevron-right"
+                    size={normalize(16)}
+                    style={styles.transactionRightIcon}
+                />
             </TouchableOpacity>
         );
     }

@@ -12,6 +12,7 @@ import { appSetAcceptedTcVersion } from '../../redux/app/actions';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TC } from './terms-conditions/terms-conditions';
 import { PrivacyPolicy } from './privacy-policy/privacy-policy';
+import { normalize } from '../../styles/dimensions';
 
 interface IExternalProps {
     onAccept: () => void;
@@ -56,8 +57,10 @@ export const LegalComponent = (
                         style={props.styles.rowContainer}
                         onPress={() => setShowTC(true)}
                     >
-                        <Text style={props.styles.text}>{translate('App.labels.tc')}</Text>
-                        <Icon name="chevron-right" size={16} style={props.styles.icon} />
+                        <Text style={props.styles.text} large>
+                            {translate('App.labels.tc')}
+                        </Text>
+                        <Icon name="chevron-right" size={normalize(16)} style={props.styles.icon} />
                     </TouchableOpacity>
 
                     <View style={props.styles.divider} />
@@ -66,10 +69,10 @@ export const LegalComponent = (
                         style={props.styles.rowContainer}
                         onPress={() => setShowPrivacyPolicy(true)}
                     >
-                        <Text style={props.styles.text}>
+                        <Text style={props.styles.text} large>
                             {translate('App.labels.privacyPolicy')}
                         </Text>
-                        <Icon name="chevron-right" size={16} style={props.styles.icon} />
+                        <Icon name="chevron-right" size={normalize(16)} style={props.styles.icon} />
                     </TouchableOpacity>
 
                     <View style={props.styles.divider} />

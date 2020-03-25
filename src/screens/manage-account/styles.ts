@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    ICON_CONTAINER_SIZE,
+    normalize
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -24,14 +29,14 @@ export default (theme: ITheme) =>
         },
         firstAmount: {
             fontWeight: '500',
-            fontSize: 18,
-            lineHeight: 25,
+            fontSize: normalize(18),
+            lineHeight: normalize(25),
             letterSpacing: 0.38,
             color: theme.colors.text
         },
         secondAmount: {
-            fontSize: 16,
-            lineHeight: 20,
+            fontSize: normalize(16),
+            lineHeight: normalize(20),
             color: theme.colors.textSecondary
         },
         menuIcon: {
@@ -64,22 +69,22 @@ export default (theme: ITheme) =>
         action: {
             justifyContent: 'center',
             alignItems: 'center',
-            width: 72
+            width: normalize(72)
         },
         iconActionPositive: {
-            height: 40,
+            height: normalize(40),
             color: theme.colors.accent
         },
         iconActionNegative: {
-            height: 40,
+            height: normalize(40),
             color: theme.colors.error
         },
         textActionPositive: {
-            fontSize: 10,
+            fontSize: normalize(10),
             color: theme.colors.accent
         },
         textActionNegative: {
-            fontSize: 10,
+            fontSize: normalize(10),
             color: theme.colors.error
         }
     });

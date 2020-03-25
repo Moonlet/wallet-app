@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, SCREEN_HEIGHT } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, SCREEN_HEIGHT, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -16,8 +16,8 @@ export default (theme: ITheme) =>
             paddingTop: BASE_DIMENSION * 3
         },
         receipientLabel: {
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             paddingLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         },
@@ -60,25 +60,25 @@ export default (theme: ITheme) =>
             paddingRight: BASE_DIMENSION * 2
         },
         bottomDefaultText: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
             color: theme.colors.text
         },
         bottomSendText: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
             color: theme.colors.accent,
             marginRight: BASE_DIMENSION / 2
         },
         bottomToText: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
             color: theme.colors.text,
             marginRight: BASE_DIMENSION / 2
         },
         bottomAmountText: {
-            fontSize: 11,
-            lineHeight: 13,
+            fontSize: normalize(11),
+            lineHeight: normalize(13),
             color: theme.colors.textTertiary
         },
         amountContainer: {
@@ -93,8 +93,8 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2
         },
         confirmTransactionText: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
             color: theme.colors.textSecondary,
             alignSelf: 'center'
         }

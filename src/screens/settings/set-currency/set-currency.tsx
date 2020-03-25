@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
 import { AVAILABLE_CURRENCIES } from '../../../core/constants/app';
 import { setCurrency } from '../../../redux/preferences/actions';
+import { normalize } from '../../../styles/dimensions';
 
 export interface IReduxProps {
     selectedCurrency: string;
@@ -47,7 +48,7 @@ export class SetCurrencyComponent extends React.Component<
                         >
                             <Text style={styles.textRow}>{currency}</Text>
                             {this.props.selectedCurrency === currency && (
-                                <Icon name="check-1" size={16} style={styles.icon} />
+                                <Icon name="check-1" size={normalize(16)} style={styles.icon} />
                             )}
                         </TouchableOpacity>
                         <View style={styles.divider} />

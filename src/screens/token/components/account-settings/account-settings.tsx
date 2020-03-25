@@ -9,7 +9,7 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { ICON_SIZE } from '../../../../styles/dimensions';
+import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { WalletFactory } from '../../../../core/wallet/wallet-factory';
 import { ChainIdType } from '../../../../core/blockchain/types';
@@ -175,7 +175,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                             </Text>
                                             <Icon
                                                 name="chevron-right"
-                                                size={16}
+                                                size={normalize(16)}
                                                 style={styles.rightIcon}
                                             />
                                         </View>
@@ -194,7 +194,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                         </Text>
                                         <Icon
                                             name="chevron-right"
-                                            size={16}
+                                            size={normalize(16)}
                                             style={styles.rightIcon}
                                         />
                                     </View>
@@ -212,7 +212,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                         </Text>
                                         <Icon
                                             name="chevron-right"
-                                            size={16}
+                                            size={normalize(16)}
                                             style={styles.rightIcon}
                                         />
                                     </View>
@@ -230,7 +230,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                                         </Text>
                                         <Icon
                                             name="chevron-right"
-                                            size={16}
+                                            size={normalize(16)}
                                             style={styles.rightIcon}
                                         />
                                     </View>

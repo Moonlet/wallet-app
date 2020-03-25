@@ -4,7 +4,7 @@ exports[`SendScreen renders correctly - button should show Copied in title 1`] =
 "<View style={{...}}>
   <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
   <View style={{...}}>
-    <QRCode value=\\"value\\" size={670} color=\\"black\\" backgroundColor=\\"white\\" logoSize={20} logoBackgroundColor=\\"white\\" logoMargin={2} logoBorderRadius={0} ecl=\\"M\\" onError={[undefined]} gradientDirection={{...}} linearGradient={{...}} enableLinearGradient={false} quietZone={0} />
+    <QRCode value=\\"value\\" size={600} color=\\"black\\" backgroundColor=\\"white\\" logoSize={20} logoBackgroundColor=\\"white\\" logoMargin={2} logoBorderRadius={0} ecl=\\"M\\" onError={[undefined]} gradientDirection={{...}} linearGradient={{...}} enableLinearGradient={false} quietZone={0} />
   </View>
   <withTheme(ButtonComponent) testID=\\"copy-clipboard\\" style={{...}} onPress={[Function: onPress]}>
     Copied
@@ -16,7 +16,7 @@ exports[`SendScreen renders correctly 1`] = `
 "<View style={{...}}>
   <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
   <View style={{...}}>
-    <QRCode value=\\"value\\" size={670} color=\\"black\\" backgroundColor=\\"white\\" logoSize={20} logoBackgroundColor=\\"white\\" logoMargin={2} logoBorderRadius={0} ecl=\\"M\\" onError={[undefined]} gradientDirection={{...}} linearGradient={{...}} enableLinearGradient={false} quietZone={0} />
+    <QRCode value=\\"value\\" size={600} color=\\"black\\" backgroundColor=\\"white\\" logoSize={20} logoBackgroundColor=\\"white\\" logoMargin={2} logoBorderRadius={0} ecl=\\"M\\" onError={[undefined]} gradientDirection={{...}} linearGradient={{...}} enableLinearGradient={false} quietZone={0} />
   </View>
   <withTheme(ButtonComponent) testID=\\"copy-clipboard\\" style={{...}} onPress={[Function: onPress]}>
     Copy to clipboard

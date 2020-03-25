@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -22,8 +22,7 @@ export default (theme: ITheme) =>
             borderWidth: 1
         },
         textButton: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             textAlign: 'center'
         },
         keyboardLayout: {
@@ -41,24 +40,24 @@ export default (theme: ITheme) =>
         },
         footerText: {
             textAlign: 'center',
-            fontSize: 14,
+            fontSize: normalize(14),
             color: theme.colors.text
         },
         pasteWordText: {
-            fontSize: 14,
+            fontSize: normalize(14),
             textAlign: 'center',
             color: theme.colors.text
         },
         confirmWordText: {
             textAlign: 'center',
             color: theme.colors.accent,
-            fontSize: 14
+            fontSize: normalize(14)
         },
         rowContainer: {
             flex: 1,
             flexDirection: 'row',
             justifyContent: 'center',
-            paddingVertical: 6
+            paddingVertical: normalize(6)
         },
         keyContainer: {
             flex: 1,
@@ -66,14 +65,14 @@ export default (theme: ITheme) =>
             borderRadius: BORDER_RADIUS,
             paddingVertical: BASE_DIMENSION,
             maxWidth: 35,
-            marginHorizontal: 3,
+            marginHorizontal: normalize(3),
             justifyContent: 'center',
             alignContent: 'center'
         },
         keyText: {
             flex: 1,
-            fontSize: 22,
-            lineHeight: 26,
+            fontSize: normalize(22),
+            lineHeight: normalize(26),
             textAlign: 'center',
             color: theme.colors.text
         },

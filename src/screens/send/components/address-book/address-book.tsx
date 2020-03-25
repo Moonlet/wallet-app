@@ -21,7 +21,7 @@ import { translate } from '../../../../core/i18n';
 import { Blockchain } from '../../../../core/blockchain/types';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteContact, updateContactName } from '../../../../redux/contacts/actions';
-import { ICON_SIZE } from '../../../../styles/dimensions';
+import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
 import { Dialog } from '../../../../components/dialog/dialog';
 
 export interface IReduxProps {
@@ -84,7 +84,7 @@ export class AddressBookComponent extends React.Component<
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
-                    <Icon name="bin" size={32} style={styles.iconActionNegative} />
+                    <Icon name="bin" size={normalize(32)} style={styles.iconActionNegative} />
                     <Text style={styles.textActionNegative}>{translate('Send.deleteContact')}</Text>
                 </TouchableOpacity>
 
@@ -95,7 +95,7 @@ export class AddressBookComponent extends React.Component<
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
-                    <Icon name="pencil" size={28} style={styles.iconActionPositive} />
+                    <Icon name="pencil" size={normalize(28)} style={styles.iconActionPositive} />
                     <Text style={styles.textActionPositive}>
                         {translate('Send.editContactName')}
                     </Text>

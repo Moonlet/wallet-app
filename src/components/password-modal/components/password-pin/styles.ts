@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -27,25 +27,21 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION * 8
         },
         title: {
-            fontSize: 28,
-            lineHeight: 34,
+            fontSize: normalize(28),
+            lineHeight: normalize(34),
             textAlign: 'center',
-            letterSpacing: 0.36,
             marginBottom: BASE_DIMENSION,
             color: theme.colors.text
         },
         subTitle: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             textAlign: 'center',
-            letterSpacing: 0.36,
             marginBottom: BASE_DIMENSION * 4,
             color: theme.colors.textSecondary
         },
         errorMessage: {
             marginTop: BASE_DIMENSION * 2,
-            fontSize: 16,
-            lineHeight: 21,
+            lineHeight: normalize(21),
             color: theme.colors.error,
             textAlign: 'center'
         },
@@ -61,11 +57,11 @@ export default (theme: ITheme) =>
             flex: 1,
             justifyContent: 'center',
             backgroundColor: theme.colors.appBackground,
-            margin: 2
+            margin: BASE_DIMENSION / 4
         },
         keyText: {
-            fontSize: 28,
-            lineHeight: 34,
+            fontSize: normalize(28),
+            lineHeight: normalize(34),
             color: theme.colors.text,
             textAlign: 'center'
         },
@@ -94,11 +90,11 @@ export default (theme: ITheme) =>
             width: 1
         },
         pinInput: {
-            width: 20,
-            height: 20,
-            borderRadius: 10,
-            marginLeft: 10,
-            marginRight: 10
+            width: normalize(20),
+            height: normalize(20),
+            borderRadius: normalize(10),
+            marginLeft: normalize(10),
+            marginRight: normalize(10)
         },
         unchecked: {
             borderColor: theme.colors.text,
@@ -106,11 +102,10 @@ export default (theme: ITheme) =>
         },
         checked: {
             backgroundColor: theme.colors.accent,
-            borderRadius: 10
+            borderRadius: normalize(10)
         },
         reset: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             fontWeight: '600',
             color: theme.colors.accent,
             textAlign: 'center'

@@ -20,7 +20,7 @@ import {
     getNrActiveBlockchains
 } from '../../../redux/preferences/selectors';
 import { Dialog } from '../../../components/dialog/dialog';
-import { BASE_DIMENSION } from '../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
 import { SmartImage } from '../../../library/image/smart-image';
 
 export interface IReduxProps {
@@ -111,7 +111,7 @@ export class BlockchainPortfolioComponent extends React.Component<
                     }}
                 >
                     <Icon
-                        size={18}
+                        size={normalize(18)}
                         name={item.value.active && networkAvailable ? 'check-2-thicked' : 'check-2'}
                         style={[
                             {
@@ -123,7 +123,7 @@ export class BlockchainPortfolioComponent extends React.Component<
                     />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconContainer} onLongPress={move}>
-                    <Icon size={18} name="navigation-menu" style={styles.menuIcon} />
+                    <Icon size={normalize(18)} name="navigation-menu" style={styles.menuIcon} />
                 </TouchableOpacity>
             </View>
         );

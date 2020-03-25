@@ -2,7 +2,7 @@ import * as Sentry from '@sentry/react-native';
 // Sentry setup
 if (!__DEV__) {
     Sentry.init({
-        dsn: 'https://a25bae06b15b4a09a5ecc4681f50d79f@sentry.io/1770011'
+        dsn: 'https://2c951fc8d1834886877276fa9a7e89bb@sentry.io/5173962'
     });
 }
 

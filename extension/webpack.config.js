@@ -87,7 +87,7 @@ const imageLoaderConfiguration = {
     }
 };
 
-module.exports = {
+module.exports = (env, argv) => ({
     entry: {
         // load any web API polyfills
         // path.resolve(appDirectory, 'polyfills-web.js'),
@@ -103,7 +103,7 @@ module.exports = {
             filename: 'index.html'
         }),
         new webpack.DefinePlugin({
-            __DEV__: false,
+            __DEV__: argv.mode === 'development',
             ...ENV_VARS,
             'process.env.TARGET': `"${TARGET}"`,
             'process.env.VERSION': `"${VERSION}"`
@@ -162,4 +162,4 @@ module.exports = {
     devServer: {
         hot: false
     }
-};
+});

@@ -66,5 +66,13 @@ export default (theme: ITheme) =>
             color: theme.colors.textTertiary,
             textAlign: 'center',
             paddingHorizontal: BASE_DIMENSION * 2
+        },
+        transactionListItemPending: {
+            backgroundColor: theme.colors.cardBackground,
+            paddingVertical: BASE_DIMENSION * 2
+        },
+        transactionListItemOthers: {
+            backgroundColor: theme.colors.appBackground,
+            paddingVertical: BASE_DIMENSION
         }
     });

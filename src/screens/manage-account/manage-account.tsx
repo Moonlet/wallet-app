@@ -80,7 +80,7 @@ export class ManageAccountComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
-    public accountsSwipeableRef: any = [];
+    public accountsSwipeableRef: ReadonlyArray<string> = [];
     public currentlyOpenSwipeable: string = null;
 
     public componentDidMount() {

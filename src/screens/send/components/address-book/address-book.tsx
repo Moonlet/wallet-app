@@ -23,11 +23,16 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteContact, updateContactName } from '../../../../redux/contacts/actions';
 import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
 import { Dialog } from '../../../../components/dialog/dialog';
+import { IHints, HintsScreen, HintsComponent } from '../../../../redux/app/state';
+import { showHint } from '../../../../redux/app/actions';
+import { DISPLAY_HINTS_TIMES } from '../../../../core/constants/app';
 
 export interface IReduxProps {
     contacts: ReadonlyArray<SectionListData<IContactState>>;
     deleteContact: typeof deleteContact;
     updateContactName: typeof updateContactName;
+    hints: IHints;
+    showHint: typeof showHint;
 }
 
 export interface IExternalProps {
@@ -38,13 +43,15 @@ export interface IExternalProps {
 
 export const mapStateToProps = (state: IReduxState, ownprops: IExternalProps) => {
     return {
-        contacts: selectContacts(state, ownprops.blockchain)
+        contacts: selectContacts(state, ownprops.blockchain),
+        hints: state.app.hints
     };
 };
 
 const mapDispatchToProps = {
     deleteContact,
-    updateContactName
+    updateContactName,
+    showHint
 };
 
 export class AddressBookComponent extends React.Component<
@@ -54,17 +61,27 @@ export class AddressBookComponent extends React.Component<
     public currentlyOpenSwipeable: string = null;
 
     public componentDidMount() {
-        if (this.props.contacts && this.props.contacts.length !== 0) {
+        this.showHints();
+    }
+
+    private showHints() {
+        if (
+            this.props.contacts &&
+            this.props.contacts.length !== 0 &&
+            this.props.hints.WALLETS_SCREEN.WALLETS_LIST < DISPLAY_HINTS_TIMES
+        ) {
             const contacts = Object.values(this.props.contacts[0]);
             const contact = contacts[1][0];
             const index = `${contact.blockchain}|${contact.address}`;
+            console.log('index: ', index);
 
             setTimeout(() => {
                 this.onSwipeableWillOpen(index);
-                this.contactsSwipeableRef[index]?.openLeft();
-            }, 500);
+                this.contactsSwipeableRef[index] && this.contactsSwipeableRef[index].openLeft();
+                this.props.showHint(HintsScreen.SEND_SCREEN, HintsComponent.ADDRESS_BOOK);
 
-            setTimeout(() => this.closeCurrentOpenedSwipable(), 1500);
+                setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
+            }, 500);
         }
     }
 

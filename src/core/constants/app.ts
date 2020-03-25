@@ -6,3 +6,4 @@ export const WC = {
     UPDATE_STATE: 'moonletUpdateState',
     PING: 'moonletPing'
 };
+export const DISPLAY_HINTS_TIMES = 3;

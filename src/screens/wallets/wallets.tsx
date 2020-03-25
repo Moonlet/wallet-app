@@ -23,6 +23,9 @@ import { Dialog } from '../../components/dialog/dialog';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
+import { showHint } from '../../redux/app/actions';
+import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
+import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 
 export interface IReduxProps {
     wallets: {
@@ -34,6 +37,8 @@ export interface IReduxProps {
     deleteWallet: typeof deleteWallet;
     walletsNr: number;
     updateWalletName: typeof updateWalletName;
+    hints: IHints;
+    showHint: typeof showHint;
 }
 
 interface IState {
@@ -52,14 +57,16 @@ const mapStateToProps = (state: IReduxState) => {
             )
         },
         walletsNr: Object.keys(state.wallets).length,
-        selectedWallet: getSelectedWallet(state)
+        selectedWallet: getSelectedWallet(state),
+        hints: state.app.hints
     };
 };
 
 const mapDispatchToProps = {
     setSelectedWallet,
     deleteWallet,
-    updateWalletName
+    updateWalletName,
+    showHint
 };
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -88,15 +95,23 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     public componentDidMount() {
-        if (this.props.wallets) {
+        this.showHints();
+    }
+
+    private showHints() {
+        if (
+            this.props.wallets &&
+            this.props.hints.WALLETS_SCREEN.WALLETS_LIST < DISPLAY_HINTS_TIMES
+        ) {
             const id = this.props.wallets[this.state.selectedTab][0].id;
 
             setTimeout(() => {
                 this.onSwipeableWillOpen(id);
-                this.walletSwipeableRef[id]?.openLeft();
-            }, 500);
+                this.walletSwipeableRef[id] && this.walletSwipeableRef[id].openLeft();
+                this.props.showHint(HintsScreen.WALLETS_SCREEN, HintsComponent.WALLETS_LIST);
 
-            setTimeout(() => this.closeCurrentOpenedSwipable(), 1500);
+                setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
+            }, 500);
         }
     }
 

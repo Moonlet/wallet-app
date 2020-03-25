@@ -50,8 +50,23 @@ const mapDispatchToProps = {
 export class AddressBookComponent extends React.Component<
     IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    public contactsSwipeableRef: ReadonlyArray<string> = new Array();
+    public contactsSwipeableRef: ReadonlyArray<string> = [];
     public currentlyOpenSwipeable: string = null;
+
+    public componentDidMount() {
+        if (this.props.contacts && this.props.contacts.length !== 0) {
+            const contacts = Object.values(this.props.contacts[0]);
+            const contact = contacts[1][0];
+            const index = `${contact.blockchain}|${contact.address}`;
+
+            setTimeout(() => {
+                this.onSwipeableWillOpen(index);
+                this.contactsSwipeableRef[index]?.openLeft();
+            }, 500);
+
+            setTimeout(() => this.closeCurrentOpenedSwipable(), 1500);
+        }
+    }
 
     public async onPressUpdate(contact: IContactState) {
         const inputValue: string = await Dialog.prompt(
@@ -131,6 +146,7 @@ export class AddressBookComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.rowContainer}
                     onPress={() => this.props.onContactSelected(contact)}
+                    activeOpacity={1}
                 >
                     <View>
                         <Text style={[styles.name, isSelected && styles.selectedText]}>

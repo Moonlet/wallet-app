@@ -14,6 +14,7 @@ export interface IProps {
     selected?: boolean;
     onPress?: any;
     style?: any;
+    disableOpacity?: boolean;
 }
 
 export const ListCardComponent = (
@@ -27,7 +28,7 @@ export const ListCardComponent = (
         );
 
     return (
-        <TouchableOpacity onPress={props.onPress}>
+        <TouchableOpacity onPress={props.onPress} activeOpacity={props?.disableOpacity ? 1 : 0.2}>
             <View style={[props.styles.card, props.selected && props.styles.selected, props.style]}>
                 {props.leftIcon && (
                     <View style={[props.styles.iconContainer, { alignItems: 'flex-start' }]}>

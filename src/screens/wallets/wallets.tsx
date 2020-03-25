@@ -87,6 +87,19 @@ export class WalletsScreenComponent extends React.Component<
         };
     }
 
+    public componentDidMount() {
+        if (this.props.wallets) {
+            const id = this.props.wallets[this.state.selectedTab][0].id;
+
+            setTimeout(() => {
+                this.onSwipeableWillOpen(id);
+                this.walletSwipeableRef[id]?.openLeft();
+            }, 500);
+
+            setTimeout(() => this.closeCurrentOpenedSwipable(), 1500);
+        }
+    }
+
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.walletsNr !== prevProps.walletsNr && this.props.walletsNr < 1) {
             // maybe check this in another screen?
@@ -144,7 +157,7 @@ export class WalletsScreenComponent extends React.Component<
         this.props.navigation.goBack(null);
     }
 
-    public renderLeftActions = (wallet: IWalletState) => {
+    public renderLeftActions(wallet: IWalletState) {
         const styles = this.props.styles;
         return (
             <View style={styles.leftActionsContainer}>
@@ -182,7 +195,7 @@ export class WalletsScreenComponent extends React.Component<
                 </TouchableOpacity>
             </View>
         );
-    };
+    }
 
     public closeCurrentOpenedSwipable() {
         this.walletSwipeableRef[this.currentlyOpenSwipeable] &&
@@ -258,6 +271,7 @@ export class WalletsScreenComponent extends React.Component<
                                                 'check-1'
                                             }
                                             selected={this.props.selectedWallet.id === wallet.id}
+                                            disableOpacity
                                         />
                                     </Swipeable>
                                 );

@@ -6,7 +6,7 @@ import { Icon } from '../../../components/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { Text } from '../../../library';
 import { IAccountState } from '../../../redux/wallets/state';
-import { ICON_SIZE, normalize } from '../../../styles/dimensions';
+import { ICON_SIZE, BASE_DIMENSION, normalize } from '../../../styles/dimensions';
 import { Amount } from '../../../components/amount/amount';
 import { translate } from '../../../core/i18n';
 import { formatAddress } from '../../../core/utils/format-address';
@@ -74,7 +74,19 @@ export class TransactionsHistoryListComponent extends React.Component<
         return (
             <TouchableOpacity
                 key={tx.id}
-                style={styles.transactionListItem}
+                style={[
+                    styles.transactionListItem,
+                    {
+                        backgroundColor:
+                            tx.status === TransactionStatus.PENDING
+                                ? theme.colors.cardBackground
+                                : theme.colors.appBackground,
+                        paddingVertical:
+                            tx.status === TransactionStatus.PENDING
+                                ? BASE_DIMENSION * 2
+                                : BASE_DIMENSION
+                    }
+                ]}
                 onPress={() =>
                     this.props.navigation.navigate('TransactionDetails', {
                         transaction: tx,

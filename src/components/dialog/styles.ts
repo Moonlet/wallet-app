@@ -13,8 +13,7 @@ export default (theme: ITheme) =>
         descriptionStyle: {
             fontSize: normalize(13),
             lineHeight: normalize(18),
-            color: theme.colors.textSecondary,
-            textAlign: 'center'
+            color: theme.colors.textSecondary
         },
         contentContainerStyle: {
             backgroundColor: theme.colors.bottomSheetBackground

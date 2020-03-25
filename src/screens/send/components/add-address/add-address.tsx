@@ -358,7 +358,7 @@ export class AddAddressComponent extends React.Component<
                 {this.renderListOrBook()}
 
                 <QrModalReader
-                    ref={ref => (this.qrCodeScanner = ref)}
+                    obRef={ref => (this.qrCodeScanner = ref)}
                     onQrCodeScanned={value => this.onQrCodeScanned(value)}
                 />
             </View>

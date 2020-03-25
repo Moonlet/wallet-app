@@ -2,7 +2,6 @@
 export const VERIFY_ADDRESS_ON_DEVICE = 'VERIFY_ADDRESS_ON_DEVICE';
 export const FEATURE_NOT_SUPPORTED = 'FEATURE_NOT_SUPPORTED';
 export const TO_INITIAL_STATE = 'TO_INITIAL_STATE';
-export const CONNECT_IN_PROGRESS = 'CONNECT_IN_PROGRESS';
 
 // actions creators
 export const verifyAddressOnDevice = (verify: boolean) => {
@@ -15,11 +14,6 @@ export const verifyAddressOnDevice = (verify: boolean) => {
 export const featureNotSupported = () => {
     return {
         type: FEATURE_NOT_SUPPORTED
-    };
-};
-export const connectInProgress = () => {
-    return {
-        type: CONNECT_IN_PROGRESS
     };
 };
 

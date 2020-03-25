@@ -4,7 +4,7 @@ exports[`CardList component renders correctly 1`] = `
 "<TouchableOpacity onPress={[Function: mockConstructor]} activeOpacity={0.2}>
   <View style={{...}}>
     <View style={{...}}>
-      <Icon name=\\"money-wallet-1\\" size={24} style={{...}} allowFontScaling={false} />
+      <Icon name=\\"money-wallet-1\\" size={44} style={{...}} allowFontScaling={false} />
     </View>
     <View style={{...}}>
       <withTheme(TextComponent) style={{...}}>
@@ -12,7 +12,7 @@ exports[`CardList component renders correctly 1`] = `
       </withTheme(TextComponent)>
     </View>
     <View style={{...}}>
-      <Icon name=\\"chevron-right\\" size={18} style={{...}} allowFontScaling={false} />
+      <Icon name=\\"chevron-right\\" size={33} style={{...}} allowFontScaling={false} />
     </View>
   </View>
 </TouchableOpacity>"

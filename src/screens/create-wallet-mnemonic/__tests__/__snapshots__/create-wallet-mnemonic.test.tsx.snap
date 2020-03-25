@@ -90,7 +90,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       </View>
     </View>
     <View style={{...}}>
-      <Icon name=\\"warning\\" size={24} style={{...}} allowFontScaling={false} />
+      <Icon name=\\"warning\\" size={44} style={{...}} allowFontScaling={false} />
       <withTheme(TextComponent) darker={true}>
         Please save the recovery phrase and keep it in a safe place. The recovery phrase is the only way to restore your Moonlet wallet in case you lose your phone or forget your password.
       </withTheme(TextComponent)>

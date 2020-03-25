@@ -8,7 +8,7 @@ import Icon from '../icon';
 import TouchableOpacity from '../../library/touchable-opacity/touchable-opacity';
 import { translate } from '../../core/i18n';
 import { SmartImage } from '../../library/image/smart-image';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export interface IProps {
     label: string | JSX.Element;
@@ -54,11 +54,13 @@ export const ListAccountComponent = (
             )}
 
             <View style={props.styles.labelContainer}>{label}</View>
+
             {props.rightIcon && !props.isCreate && (
                 <View style={props.styles.iconRightContainer}>
-                    <Icon name={props.rightIcon} size={20} style={props.styles.icon} />
+                    <Icon name={props.rightIcon} size={normalize(20)} style={props.styles.icon} />
                 </View>
             )}
+
             {props.isCreate && (
                 <Button style={props.styles.createButton} disabled>
                     {translate('App.labels.create')}

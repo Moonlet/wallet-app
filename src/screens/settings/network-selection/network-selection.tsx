@@ -12,6 +12,7 @@ import { setNetworkTestNetChainId } from '../../../redux/preferences/actions';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { INetworksOptions } from '../../../redux/preferences/state';
 import { getNetworks } from '../../../redux/preferences/selectors';
+import { normalize } from '../../../styles/dimensions';
 
 export interface INavigationParams {
     blockchain: Blockchain;
@@ -72,7 +73,7 @@ export class NetworkSelectionComponent extends React.Component<
                                                 network.chainId && (
                                                 <Icon
                                                     name="check-1"
-                                                    size={16}
+                                                    size={normalize(16)}
                                                     style={styles.icon}
                                                 />
                                             )}

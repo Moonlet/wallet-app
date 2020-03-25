@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -19,8 +19,7 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 2
         },
         textStyle: {
-            fontSize: 17,
-            lineHeight: 21,
+            lineHeight: normalize(21),
             color: theme.colors.text,
             opacity: 0.87,
             textAlign: 'center',

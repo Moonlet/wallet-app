@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -18,8 +18,8 @@ export default (theme: ITheme) =>
         },
         textRow: {
             flex: 1,
-            fontSize: 20,
-            lineHeight: 25,
+            fontSize: normalize(20),
+            lineHeight: normalize(25),
             letterSpacing: 0.38,
             color: theme.colors.text
         },

@@ -25,7 +25,7 @@ import {
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
-import { ICON_SIZE, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import { ICON_SIZE, ICON_CONTAINER_SIZE, normalize } from '../../styles/dimensions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
@@ -81,8 +81,8 @@ const MyTitle = ({ text }) => (
     <Text
         style={{
             flex: 1,
-            fontSize: 20,
-            lineHeight: 25,
+            fontSize: normalize(20),
+            lineHeight: normalize(25),
             letterSpacing: 0.38,
             textAlign: 'center'
         }}
@@ -229,7 +229,11 @@ export class DashboardScreenComponent extends React.Component<
                                 }
                                 style={styles.expandIconContainer}
                             >
-                                <Icon name="expand" size={28} style={styles.expandIcon} />
+                                <Icon
+                                    name="expand"
+                                    size={normalize(28)}
+                                    style={styles.expandIcon}
+                                />
                             </TouchableOpacity>
                         )}
                     </View>

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../../../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -15,8 +15,8 @@ export default (theme: ITheme) =>
         },
         keyText: {
             color: theme.colors.text,
-            fontSize: 20,
-            lineHeight: 25,
+            fontSize: normalize(20),
+            lineHeight: normalize(25),
             textAlign: 'center',
             letterSpacing: 0.38,
             flexWrap: 'wrap',
@@ -32,8 +32,8 @@ export default (theme: ITheme) =>
         },
         tipText: {
             flex: 1,
-            fontSize: 13,
-            lineHeight: 18,
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
             color: theme.colors.cardBackground
         },
         alertIcon: {
@@ -56,8 +56,8 @@ export default (theme: ITheme) =>
             color: theme.colors.accent
         },
         textRow: {
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
             color: theme.colors.accent
         }
     });

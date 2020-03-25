@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -21,17 +21,17 @@ export default (theme: ITheme) =>
         circle: {
             flexDirection: 'column',
             justifyContent: 'center',
-            height: 40,
-            width: 40,
-            borderRadius: 20,
+            height: normalize(40),
+            width: normalize(40),
+            borderRadius: normalize(20),
             backgroundColor: theme.colors.textTertiary
         },
         circleSelected: {
             backgroundColor: theme.colors.accentSecondary
         },
         number: {
-            fontSize: 19,
-            lineHeight: 24,
+            fontSize: normalize(19),
+            lineHeight: normalize(24),
             textAlign: 'center',
             color: theme.colors.textSecondary
         },
@@ -47,8 +47,8 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.accentSecondary
         },
         text: {
-            fontSize: 11,
-            lineHeight: 13,
+            fontSize: normalize(11),
+            lineHeight: normalize(13),
             color: theme.colors.text,
             textAlign: 'center'
         }

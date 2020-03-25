@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -9,7 +9,6 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground,
             height: '100%'
         },
-
         configContainer: {
             width: '100%'
         },
@@ -18,7 +17,7 @@ export default (theme: ITheme) =>
             alignItems: 'center'
         },
         activityContainer: {
-            marginBottom: 10,
+            marginBottom: BASE_DIMENSION * 2,
             alignItems: 'center'
         },
         bottomContainer: {
@@ -26,26 +25,22 @@ export default (theme: ITheme) =>
             justifyContent: 'center',
             alignSelf: 'stretch',
             alignItems: 'center',
-            marginBottom: 40
+            marginBottom: BASE_DIMENSION * 5
         },
-
         bottomButton: {
             width: '80%'
         },
         textIndicator: {
             width: '90%',
-            fontSize: theme.fontSize.regular,
             textAlign: 'center',
             color: theme.colors.textSecondary,
             marginBottom: BASE_DIMENSION * 2
         },
         text: {
-            fontSize: 15,
-            lineHeight: 20,
-            color: theme.colors.text,
-            opacity: 0.87
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
+            color: theme.colors.text
         },
-
         headerRow: {
             flex: 1,
             flexDirection: 'row',
@@ -58,9 +53,9 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 4
         },
         circle: {
-            height: 50,
-            width: 50,
-            borderRadius: 25,
+            height: normalize(50),
+            width: normalize(50),
+            borderRadius: normalize(25),
             padding: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
             alignSelf: 'center',
@@ -70,8 +65,8 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.accentSecondary
         },
         number: {
-            fontSize: 28,
-            lineHeight: 34,
+            fontSize: normalize(28),
+            lineHeight: normalize(34),
             textAlign: 'center',
             color: theme.colors.textSecondary
         },

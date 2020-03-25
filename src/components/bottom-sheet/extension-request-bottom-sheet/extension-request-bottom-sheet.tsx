@@ -35,7 +35,7 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
         Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(1) : null;
     }
 
-    public renderBottomSheetContent = () => {
+    public renderBottomSheetContent() {
         const { styles } = this.props;
 
         return (
@@ -63,7 +63,7 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
                 </View>
             </View>
         );
-    };
+    }
 
     public render() {
         return (
@@ -74,7 +74,7 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
                     this.props.snapPoints.initialSnap,
                     this.props.snapPoints.bottomSheetHeight
                 ]}
-                renderContent={this.renderBottomSheetContent}
+                renderContent={() => this.renderBottomSheetContent()}
                 renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
                 onOpenStart={this.props.onOpenStart}
                 onCloseEnd={this.props.onCloseEnd}

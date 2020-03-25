@@ -1,8 +1,9 @@
 import firebase from 'react-native-firebase';
-import { Alert } from 'react-native';
 import { dataMessageHandler } from '../handlers/data-message';
-import { INotificationPayload } from '../types';
+import { INotificationPayload, NotificationType } from '../types';
 import { notificationHandler } from '../handlers/notification';
+import { store } from '../../../redux/config';
+import { updateAddressMonitorTokens } from '../../address-monitor';
 
 // this file is in this format for testing purposes
 export class NotificationService {
@@ -35,7 +36,7 @@ export class NotificationService {
 
     public async createListeners() {
         this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(async fcmToken => {
-            // console.log(`Retrieved new token: ${fcmToken}`);
+            updateAddressMonitorTokens(store.getState().wallets);
         });
 
         this.messageListener = firebase.messaging().onMessage(message => {
@@ -43,29 +44,30 @@ export class NotificationService {
             dataMessageHandler(message.data);
         });
 
+        // when app is opened or in background and a notification is received
+        this.onNotificationListener = firebase.notifications().onNotification(notification => {
+            notification.android.setChannelId('default').setSound('default');
+
+            // if this is a transaction notification, handle it and update state and display another notification after that
+            if (notification.data.type === NotificationType.TRANSACTION) {
+                notificationHandler((notification as any).data, false);
+            } else {
+                firebase.notifications().displayNotification(notification);
+            }
+        });
+
+        // called when app is opened or in background and a regular notification is displaed
         this.notificationDisplayedListener = firebase
             .notifications()
             .onNotificationDisplayed(notification => {
-                // ANDROID: Remote notifications do not contain the channel ID. You will have to specify this manually if you'd like to re-display the notification.
+                //
             });
 
-        this.onNotificationListener = firebase.notifications().onNotification(notification => {
-            // UNCOMMENT IF YOU WANT ANDROID TO DISPLAY THE NOTIFICATION
-            notification.android.setChannelId('default').setSound('default');
-            firebase.notifications().displayNotification(notification);
-
-            Alert.alert('Push Notification', notification.body, [{ text: 'OK' }], {
-                cancelable: false
-            });
-        });
-
+        // when app is opened or in background and user taps on a notification
         this.onNotificationOpenedListener = firebase
             .notifications()
             .onNotificationOpened(notificationOpen => {
-                // check here for different types of notifications
-                // this gets called when app is opened but in background
                 notificationHandler((notificationOpen.notification as any).data, false);
-                // signExtensionTransaction(notification.data);
             });
     }
 
@@ -127,8 +129,7 @@ export class NotificationService {
             .getInitialNotification()
             .then(notificationOpen => {
                 if (notificationOpen) {
-                    // App was opened by a notification
-                    // check here for different types of notifications
+                    // app was opened by a notification
                     notificationHandler((notificationOpen.notification as any).data, true);
                 }
             });

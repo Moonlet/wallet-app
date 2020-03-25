@@ -1,6 +1,4 @@
-import { Platform } from 'react-native';
 import { Notifications } from '../messaging/notifications/notifications';
-import { getApnsToken } from '../messaging/silent/ios-voip-push-notification';
 import { Blockchain } from '../blockchain/types';
 import DeviceInfo from 'react-native-device-info';
 import { IWalletsState, IAccountState } from '../../redux/wallets/state';
@@ -8,8 +6,8 @@ import { IWalletsState, IAccountState } from '../../redux/wallets/state';
 const url = 'http://49.12.38.87:8080/notifications/register';
 const monitoredBlockchains = [Blockchain.ETHEREUM, Blockchain.ZILLIQA];
 
-const getDeviceToken = (): Promise<string> =>
-    Platform.OS === 'android' ? Notifications.getToken() : getApnsToken();
+// const getDeviceToken = (): Promise<string> =>
+//     Platform.OS === 'android' ? Notifications.getToken() : getApnsToken();
 
 export const updateAddressMonitorTokens = (wallets: IWalletsState) => {
     const addresses = {};
@@ -32,7 +30,7 @@ export const updateAddressMonitorTokens = (wallets: IWalletsState) => {
     }));
 
     const deviceId = DeviceInfo.getUniqueId();
-    getDeviceToken().then(token => {
+    Notifications.getToken().then(token => {
         const request = {
             method: 'POST',
             headers: {
@@ -40,7 +38,7 @@ export const updateAddressMonitorTokens = (wallets: IWalletsState) => {
             },
             body: JSON.stringify({
                 deviceId,
-                tokenType: Platform.OS === 'android' ? 'fcm' : 'apn',
+                tokenType: 'fcm',
                 token,
                 addresses: requestAddresses
             })

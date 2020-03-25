@@ -6,7 +6,10 @@ import 'react-native-gesture-handler';
 // Sentry setup
 if (!__DEV__) {
     Sentry.init({
-        dsn: 'https://a25bae06b15b4a09a5ecc4681f50d79f@sentry.io/1770011'
+        dsn: Platform.select({
+            ios: 'https://5a8226a9b01743d3bc32e2d21209e688@sentry.io/5173960',
+            android: 'https://afc2777059b34c159e948d6c5122c6fa@sentry.io/5173922'
+        })
     });
 }
 

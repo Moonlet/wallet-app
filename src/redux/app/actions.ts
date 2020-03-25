@@ -10,7 +10,7 @@ export const appSetAcceptedTcVersion = (version: number) => {
     };
 };
 
-export const updateDisplayedHints = (screen: HintsScreen, component: HintsComponent) => {
+export const updateDisplayedHint = (screen: HintsScreen, component: HintsComponent) => {
     return {
         type: SHOW_HINT,
         data: { screen, component }

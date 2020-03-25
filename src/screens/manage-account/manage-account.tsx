@@ -20,7 +20,7 @@ import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { SmartImage } from '../../library/image/smart-image';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { updateDisplayedHints } from '../../redux/app/actions';
+import { updateDisplayedHint } from '../../redux/app/actions';
 import { IHints, HintsScreen, HintsComponent } from '../../redux/app/state';
 import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 
@@ -34,14 +34,14 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
 
     hints: IHints;
-    updateDisplayedHints: typeof updateDisplayedHints;
+    updateDisplayedHint: typeof updateDisplayedHint;
 }
 
 const mapDispatchToProps = {
     toggleTokenActive,
     updateTokenOrder,
     removeToken,
-    updateDisplayedHints
+    updateDisplayedHint
 };
 
 const mapStateToProps = (state: IReduxState) => {
@@ -99,7 +99,7 @@ export class ManageAccountComponent extends React.Component<
 
             this.onSwipeableWillOpen(id);
             this.accountsSwipeableRef[id] && this.accountsSwipeableRef[id].openLeft();
-            this.props.updateDisplayedHints(HintsScreen.MANAGE_ACCOUNT, HintsComponent.TOKENS_LIST);
+            this.props.updateDisplayedHint(HintsScreen.MANAGE_ACCOUNT, HintsComponent.TOKENS_LIST);
 
             setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
         }

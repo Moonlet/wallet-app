@@ -23,7 +23,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
-import { updateDisplayedHints } from '../../redux/app/actions';
+import { updateDisplayedHint } from '../../redux/app/actions';
 import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
 import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 
@@ -38,7 +38,7 @@ export interface IReduxProps {
     walletsNr: number;
     updateWalletName: typeof updateWalletName;
     hints: IHints;
-    updateDisplayedHints: typeof updateDisplayedHints;
+    updateDisplayedHint: typeof updateDisplayedHint;
 }
 
 interface IState {
@@ -66,7 +66,7 @@ const mapDispatchToProps = {
     setSelectedWallet,
     deleteWallet,
     updateWalletName,
-    updateDisplayedHints
+    updateDisplayedHint
 };
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -107,10 +107,7 @@ export class WalletsScreenComponent extends React.Component<
 
             this.onSwipeableWillOpen(id);
             this.walletSwipeableRef[id] && this.walletSwipeableRef[id].openLeft();
-            this.props.updateDisplayedHints(
-                HintsScreen.WALLETS_SCREEN,
-                HintsComponent.WALLETS_LIST
-            );
+            this.props.updateDisplayedHint(HintsScreen.WALLETS_SCREEN, HintsComponent.WALLETS_LIST);
 
             setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
         }

@@ -42,14 +42,29 @@ export class DebugModalComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        this.setState({
-            fcmToken: await Notifications.getToken(),
-            apnToken: Platform.OS === 'ios' ? await getApnsToken() : '',
-            wcSession: await getPassword().then(
-                async keychainPassword =>
-                    keychainPassword &&
-                    JSON.parse(await readEncrypted(WC_CONNECTION, keychainPassword.password))
-            )
+        Notifications.getToken().then(fcmToken => {
+            this.setState({
+                fcmToken
+            });
+        });
+        Platform.OS === 'ios' &&
+            getApnsToken().then(apnToken => {
+                this.setState({
+                    apnToken
+                });
+            });
+        getPassword().then(async keychainPassword => {
+            if (keychainPassword) {
+                try {
+                    this.setState({
+                        wcSession: JSON.parse(
+                            await readEncrypted(WC_CONNECTION, keychainPassword.password)
+                        )
+                    });
+                } catch (e) {
+                    // @ts-ignore
+                }
+            }
         });
     }
 

@@ -20,7 +20,7 @@ import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { SmartImage } from '../../library/image/smart-image';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { showHint } from '../../redux/app/actions';
+import { updateDisplayedHints } from '../../redux/app/actions';
 import { IHints, HintsScreen, HintsComponent } from '../../redux/app/state';
 import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 
@@ -34,14 +34,14 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
 
     hints: IHints;
-    showHint: typeof showHint;
+    updateDisplayedHints: typeof updateDisplayedHints;
 }
 
 const mapDispatchToProps = {
     toggleTokenActive,
     updateTokenOrder,
     removeToken,
-    showHint
+    updateDisplayedHints
 };
 
 const mapStateToProps = (state: IReduxState) => {
@@ -85,7 +85,7 @@ export class ManageAccountComponent extends React.Component<
 
     public componentDidMount() {
         this.props.navigation.setParams({ blockchain: this.props.selectedAccount.blockchain });
-        this.showHints();
+        setTimeout(() => this.showHints(), 500);
     }
 
     private showHints() {
@@ -97,13 +97,11 @@ export class ManageAccountComponent extends React.Component<
         ) {
             const id = tokens[1];
 
-            setTimeout(() => {
-                this.onSwipeableWillOpen(id);
-                this.accountsSwipeableRef[id] && this.accountsSwipeableRef[id].openLeft();
-                this.props.showHint(HintsScreen.MANAGE_ACCOUNT, HintsComponent.TOKENS_LIST);
+            this.onSwipeableWillOpen(id);
+            this.accountsSwipeableRef[id] && this.accountsSwipeableRef[id].openLeft();
+            this.props.updateDisplayedHints(HintsScreen.MANAGE_ACCOUNT, HintsComponent.TOKENS_LIST);
 
-                setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
-            }, 500);
+            setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
         }
     }
 

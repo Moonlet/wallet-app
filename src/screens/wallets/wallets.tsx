@@ -23,7 +23,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
-import { showHint } from '../../redux/app/actions';
+import { updateDisplayedHints } from '../../redux/app/actions';
 import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
 import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 
@@ -38,7 +38,7 @@ export interface IReduxProps {
     walletsNr: number;
     updateWalletName: typeof updateWalletName;
     hints: IHints;
-    showHint: typeof showHint;
+    updateDisplayedHints: typeof updateDisplayedHints;
 }
 
 interface IState {
@@ -66,7 +66,7 @@ const mapDispatchToProps = {
     setSelectedWallet,
     deleteWallet,
     updateWalletName,
-    showHint
+    updateDisplayedHints
 };
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -95,7 +95,7 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.showHints();
+        setTimeout(() => this.showHints(), 500);
     }
 
     private showHints() {
@@ -105,13 +105,14 @@ export class WalletsScreenComponent extends React.Component<
         ) {
             const id = this.props.wallets[this.state.selectedTab][0].id;
 
-            setTimeout(() => {
-                this.onSwipeableWillOpen(id);
-                this.walletSwipeableRef[id] && this.walletSwipeableRef[id].openLeft();
-                this.props.showHint(HintsScreen.WALLETS_SCREEN, HintsComponent.WALLETS_LIST);
+            this.onSwipeableWillOpen(id);
+            this.walletSwipeableRef[id] && this.walletSwipeableRef[id].openLeft();
+            this.props.updateDisplayedHints(
+                HintsScreen.WALLETS_SCREEN,
+                HintsComponent.WALLETS_LIST
+            );
 
-                setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
-            }, 500);
+            setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
         }
     }
 

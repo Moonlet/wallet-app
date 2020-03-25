@@ -24,7 +24,7 @@ import { deleteContact, updateContactName } from '../../../../redux/contacts/act
 import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { IHints, HintsScreen, HintsComponent } from '../../../../redux/app/state';
-import { showHint } from '../../../../redux/app/actions';
+import { updateDisplayedHints } from '../../../../redux/app/actions';
 import { DISPLAY_HINTS_TIMES } from '../../../../core/constants/app';
 
 export interface IReduxProps {
@@ -32,7 +32,7 @@ export interface IReduxProps {
     deleteContact: typeof deleteContact;
     updateContactName: typeof updateContactName;
     hints: IHints;
-    showHint: typeof showHint;
+    updateDisplayedHints: typeof updateDisplayedHints;
 }
 
 export interface IExternalProps {
@@ -51,7 +51,7 @@ export const mapStateToProps = (state: IReduxState, ownprops: IExternalProps) =>
 const mapDispatchToProps = {
     deleteContact,
     updateContactName,
-    showHint
+    updateDisplayedHints
 };
 
 export class AddressBookComponent extends React.Component<
@@ -61,7 +61,7 @@ export class AddressBookComponent extends React.Component<
     public currentlyOpenSwipeable: string = null;
 
     public componentDidMount() {
-        this.showHints();
+        setTimeout(() => this.showHints(), 500);
     }
 
     private showHints() {
@@ -74,13 +74,11 @@ export class AddressBookComponent extends React.Component<
             const contact = contacts[1][0];
             const index = `${contact.blockchain}|${contact.address}`;
 
-            setTimeout(() => {
-                this.onSwipeableWillOpen(index);
-                this.contactsSwipeableRef[index] && this.contactsSwipeableRef[index].openLeft();
-                this.props.showHint(HintsScreen.SEND_SCREEN, HintsComponent.ADDRESS_BOOK);
+            this.onSwipeableWillOpen(index);
+            this.contactsSwipeableRef[index] && this.contactsSwipeableRef[index].openLeft();
+            this.props.updateDisplayedHints(HintsScreen.SEND_SCREEN, HintsComponent.ADDRESS_BOOK);
 
-                setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
-            }, 500);
+            setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
         }
     }
 

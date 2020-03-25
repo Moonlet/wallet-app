@@ -2,6 +2,17 @@
 
 exports[`app reducer should set initial state 1`] = `
 Object {
+  "hints": Object {
+    "MANAGE_ACCOUNT": Object {
+      "TOKENS_LIST": 0,
+    },
+    "SEND_SCREEN": Object {
+      "ADDRESS_BOOK": 0,
+    },
+    "WALLETS_SCREEN": Object {
+      "WALLETS_LIST": 0,
+    },
+  },
   "tcAcceptedVersion": undefined,
   "version": 1,
 }

@@ -68,12 +68,11 @@ export class AddressBookComponent extends React.Component<
         if (
             this.props.contacts &&
             this.props.contacts.length !== 0 &&
-            this.props.hints.WALLETS_SCREEN.WALLETS_LIST < DISPLAY_HINTS_TIMES
+            this.props.hints.SEND_SCREEN.ADDRESS_BOOK < DISPLAY_HINTS_TIMES
         ) {
             const contacts = Object.values(this.props.contacts[0]);
             const contact = contacts[1][0];
             const index = `${contact.blockchain}|${contact.address}`;
-            console.log('index: ', index);
 
             setTimeout(() => {
                 this.onSwipeableWillOpen(index);

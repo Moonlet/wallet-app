@@ -365,7 +365,7 @@ export class DashboardScreenComponent extends React.Component<
                     contentContainerStyle={[
                         styles.dashboardContainer,
                         {
-                            paddingTop: ANIMATION_MAX_HEIGHT
+                            paddingTop: ANIMATION_MAX_HEIGHT // TODO: animate this
                         }
                     ]}
                     showsVerticalScrollIndicator={false}

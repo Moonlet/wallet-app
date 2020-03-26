@@ -16,8 +16,8 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         input: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
             color: theme.colors.text
         },
         label: {

@@ -30,7 +30,13 @@ const props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider
         id: 'walletId',
         type: WalletType.HD
     },
-    theme: darkTheme
+    theme: darkTheme,
+    hints: {
+        WALLETS_SCREEN: {
+            WALLETS_LIST: 0
+        }
+    },
+    updateDisplayedHint: jest.fn().mockImplementation()
 };
 
 export default describe('Wallet screen', () => {

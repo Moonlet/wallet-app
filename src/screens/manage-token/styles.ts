@@ -31,8 +31,8 @@ export default (theme: ITheme) =>
         },
         input: {
             flex: 1,
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
             color: theme.colors.text
         },
         bottomButtonContainer: {

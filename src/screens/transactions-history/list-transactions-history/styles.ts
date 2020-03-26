@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../styles/dimensions';
 import { ITheme } from '../../../core/theme/itheme';
 import { ph, pw } from '../../../styles';
 
@@ -12,7 +12,8 @@ export default (theme: ITheme) =>
         transactionListItem: {
             flexDirection: 'row',
             paddingHorizontal: BASE_DIMENSION,
-            marginBottom: BASE_DIMENSION * 3
+            borderRadius: BORDER_RADIUS,
+            marginBottom: BASE_DIMENSION
         },
         transactionIcon: {
             alignSelf: 'center',
@@ -65,5 +66,13 @@ export default (theme: ITheme) =>
             color: theme.colors.textTertiary,
             textAlign: 'center',
             paddingHorizontal: BASE_DIMENSION * 2
+        },
+        transactionListItemPending: {
+            backgroundColor: theme.colors.cardBackground,
+            paddingVertical: BASE_DIMENSION * 2
+        },
+        transactionListItemOthers: {
+            backgroundColor: theme.colors.appBackground,
+            paddingVertical: BASE_DIMENSION
         }
     });

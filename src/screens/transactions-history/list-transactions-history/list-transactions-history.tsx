@@ -74,7 +74,12 @@ export class TransactionsHistoryListComponent extends React.Component<
         return (
             <TouchableOpacity
                 key={tx.id}
-                style={styles.transactionListItem}
+                style={[
+                    styles.transactionListItem,
+                    tx.status === TransactionStatus.PENDING
+                        ? styles.transactionListItemPending
+                        : styles.transactionListItemOthers
+                ]}
                 onPress={() =>
                     this.props.navigation.navigate('TransactionDetails', {
                         transaction: tx,

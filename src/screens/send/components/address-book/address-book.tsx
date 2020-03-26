@@ -23,11 +23,16 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteContact, updateContactName } from '../../../../redux/contacts/actions';
 import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
 import { Dialog } from '../../../../components/dialog/dialog';
+import { IHints, HintsScreen, HintsComponent } from '../../../../redux/app/state';
+import { updateDisplayedHint } from '../../../../redux/app/actions';
+import { DISPLAY_HINTS_TIMES } from '../../../../core/constants/app';
 
 export interface IReduxProps {
     contacts: ReadonlyArray<SectionListData<IContactState>>;
     deleteContact: typeof deleteContact;
     updateContactName: typeof updateContactName;
+    hints: IHints;
+    updateDisplayedHint: typeof updateDisplayedHint;
 }
 
 export interface IExternalProps {
@@ -38,20 +43,44 @@ export interface IExternalProps {
 
 export const mapStateToProps = (state: IReduxState, ownprops: IExternalProps) => {
     return {
-        contacts: selectContacts(state, ownprops.blockchain)
+        contacts: selectContacts(state, ownprops.blockchain),
+        hints: state.app.hints
     };
 };
 
 const mapDispatchToProps = {
     deleteContact,
-    updateContactName
+    updateContactName,
+    updateDisplayedHint
 };
 
 export class AddressBookComponent extends React.Component<
     IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    public contactsSwipeableRef: ReadonlyArray<string> = new Array();
+    public contactsSwipeableRef: ReadonlyArray<string> = [];
     public currentlyOpenSwipeable: string = null;
+
+    public componentDidMount() {
+        setTimeout(() => this.showHints(), 500);
+    }
+
+    private showHints() {
+        if (
+            this.props.contacts &&
+            this.props.contacts.length !== 0 &&
+            this.props.hints.SEND_SCREEN.ADDRESS_BOOK < DISPLAY_HINTS_TIMES
+        ) {
+            const contacts = Object.values(this.props.contacts[0]);
+            const contact = contacts[1][0];
+            const index = `${contact.blockchain}|${contact.address}`;
+
+            this.onSwipeableWillOpen(index);
+            this.contactsSwipeableRef[index] && this.contactsSwipeableRef[index].openLeft();
+            this.props.updateDisplayedHint(HintsScreen.SEND_SCREEN, HintsComponent.ADDRESS_BOOK);
+
+            setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
+        }
+    }
 
     public async onPressUpdate(contact: IContactState) {
         const inputValue: string = await Dialog.prompt(
@@ -131,6 +160,7 @@ export class AddressBookComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.rowContainer}
                     onPress={() => this.props.onContactSelected(contact)}
+                    activeOpacity={1}
                 >
                     <View>
                         <Text style={[styles.name, isSelected && styles.selectedText]}>

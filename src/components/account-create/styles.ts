@@ -60,8 +60,8 @@ export default (theme: ITheme) =>
         input: {
             flex: 1,
             color: theme.colors.text,
-            fontSize: normalize(17),
-            lineHeight: normalize(22)
+            fontSize: normalize(15),
+            lineHeight: normalize(20)
         },
         icon: {
             color: theme.colors.accent

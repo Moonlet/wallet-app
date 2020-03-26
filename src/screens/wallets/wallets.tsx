@@ -23,6 +23,9 @@ import { Dialog } from '../../components/dialog/dialog';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
+import { updateDisplayedHint } from '../../redux/app/actions';
+import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
+import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 
 export interface IReduxProps {
     wallets: {
@@ -34,6 +37,8 @@ export interface IReduxProps {
     deleteWallet: typeof deleteWallet;
     walletsNr: number;
     updateWalletName: typeof updateWalletName;
+    hints: IHints;
+    updateDisplayedHint: typeof updateDisplayedHint;
 }
 
 interface IState {
@@ -52,14 +57,16 @@ const mapStateToProps = (state: IReduxState) => {
             )
         },
         walletsNr: Object.keys(state.wallets).length,
-        selectedWallet: getSelectedWallet(state)
+        selectedWallet: getSelectedWallet(state),
+        hints: state.app.hints
     };
 };
 
 const mapDispatchToProps = {
     setSelectedWallet,
     deleteWallet,
-    updateWalletName
+    updateWalletName,
+    updateDisplayedHint
 };
 
 const navigationOptions = ({ navigation }: any) => ({
@@ -85,6 +92,25 @@ export class WalletsScreenComponent extends React.Component<
         this.state = {
             selectedTab: WalletType.HD
         };
+    }
+
+    public componentDidMount() {
+        setTimeout(() => this.showHints(), 500);
+    }
+
+    private showHints() {
+        if (
+            this.props.wallets &&
+            this.props.hints.WALLETS_SCREEN.WALLETS_LIST < DISPLAY_HINTS_TIMES
+        ) {
+            const id = this.props.wallets[this.state.selectedTab][0].id;
+
+            this.onSwipeableWillOpen(id);
+            this.walletSwipeableRef[id] && this.walletSwipeableRef[id].openLeft();
+            this.props.updateDisplayedHint(HintsScreen.WALLETS_SCREEN, HintsComponent.WALLETS_LIST);
+
+            setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
+        }
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
@@ -144,7 +170,7 @@ export class WalletsScreenComponent extends React.Component<
         this.props.navigation.goBack(null);
     }
 
-    public renderLeftActions = (wallet: IWalletState) => {
+    public renderLeftActions(wallet: IWalletState) {
         const styles = this.props.styles;
         return (
             <View style={styles.leftActionsContainer}>
@@ -182,7 +208,7 @@ export class WalletsScreenComponent extends React.Component<
                 </TouchableOpacity>
             </View>
         );
-    };
+    }
 
     public closeCurrentOpenedSwipable() {
         this.walletSwipeableRef[this.currentlyOpenSwipeable] &&
@@ -258,6 +284,7 @@ export class WalletsScreenComponent extends React.Component<
                                                 'check-1'
                                             }
                                             selected={this.props.selectedWallet.id === wallet.id}
+                                            disableOpacity
                                         />
                                     </Swipeable>
                                 );

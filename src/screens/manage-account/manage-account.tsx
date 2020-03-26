@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { Text, Swipeable } from '../../library';
+import { Text } from '../../library';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -19,6 +19,10 @@ import { toggleTokenActive, updateTokenOrder, removeToken } from '../../redux/wa
 import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { SmartImage } from '../../library/image/smart-image';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { updateDisplayedHint } from '../../redux/app/actions';
+import { IHints, HintsScreen, HintsComponent } from '../../redux/app/state';
+import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 
 export interface IReduxProps {
     toggleTokenActive: typeof toggleTokenActive;
@@ -28,12 +32,16 @@ export interface IReduxProps {
     tokens: [{ key: string; value: ITokenConfig }];
     wallet: IWalletState;
     selectedAccount: IAccountState;
+
+    hints: IHints;
+    updateDisplayedHint: typeof updateDisplayedHint;
 }
 
 const mapDispatchToProps = {
     toggleTokenActive,
     updateTokenOrder,
-    removeToken
+    removeToken,
+    updateDisplayedHint
 };
 
 const mapStateToProps = (state: IReduxState) => {
@@ -44,7 +52,8 @@ const mapStateToProps = (state: IReduxState) => {
             .map(key => ({ key, value: selectedAccount.tokens[key] }))
             .sort((a, b) => a.value.order - b.value.order),
         selectedAccount,
-        wallet: getSelectedWallet(state)
+        wallet: getSelectedWallet(state),
+        hints: state.app.hints
     };
 };
 
@@ -71,13 +80,29 @@ export class ManageAccountComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
-    public accountsSwipeableRef: ReadonlyArray<string> = new Array();
+    public accountsSwipeableRef: ReadonlyArray<string> = [];
     public currentlyOpenSwipeable: string = null;
 
     public componentDidMount() {
-        this.props.navigation.setParams({
-            blockchain: this.props.selectedAccount.blockchain
-        });
+        this.props.navigation.setParams({ blockchain: this.props.selectedAccount.blockchain });
+        setTimeout(() => this.showHints(), 500);
+    }
+
+    private showHints() {
+        const tokens = Object.keys(this.props.selectedAccount.tokens);
+        if (
+            tokens &&
+            tokens[1] &&
+            this.props.hints.MANAGE_ACCOUNT.TOKENS_LIST < DISPLAY_HINTS_TIMES
+        ) {
+            const id = tokens[1];
+
+            this.onSwipeableWillOpen(id);
+            this.accountsSwipeableRef[id] && this.accountsSwipeableRef[id].openLeft();
+            this.props.updateDisplayedHint(HintsScreen.MANAGE_ACCOUNT, HintsComponent.TOKENS_LIST);
+
+            setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
+        }
     }
 
     public closeCurrentOpenedSwipable() {
@@ -85,7 +110,7 @@ export class ManageAccountComponent extends React.Component<
             this.accountsSwipeableRef[this.currentlyOpenSwipeable].close();
     }
 
-    public renderLeftActions = (token: ITokenConfig) => {
+    public renderLeftActions(token: ITokenConfig) {
         const styles = this.props.styles;
         return (
             <View style={styles.leftActionsContainer}>
@@ -105,7 +130,7 @@ export class ManageAccountComponent extends React.Component<
                 </TouchableOpacity>
             </View>
         );
-    };
+    }
 
     public onSwipeableWillOpen(index: string) {
         if (
@@ -125,7 +150,7 @@ export class ManageAccountComponent extends React.Component<
     ) {
         const { styles, theme } = this.props;
         const blockchain = this.props.selectedAccount.blockchain;
-        const index = item.key;
+        const index = item.value.symbol;
 
         const TokenIcon = getBlockchain(blockchain).config.tokens[item.value.symbol]?.icon
             ?.iconComponent;
@@ -220,7 +245,7 @@ export class ManageAccountComponent extends React.Component<
                         this.renderToken(item, drag, isActive)
                     }
                     keyExtractor={(item: { key: string; value: ITokenConfig }) =>
-                        `token-${item.value.name}`
+                        `token-${item.value.symbol}`
                     }
                     onDragEnd={({ data }) => {
                         this.props.updateTokenOrder(

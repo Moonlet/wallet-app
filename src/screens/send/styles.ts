@@ -24,8 +24,6 @@ export default (theme: ITheme) =>
         inputBox: {
             height: BASE_DIMENSION * 5,
             borderRadius: BORDER_RADIUS,
-            borderColor: 'gray',
-            alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
             paddingHorizontal: BASE_DIMENSION,
             flexDirection: 'row',

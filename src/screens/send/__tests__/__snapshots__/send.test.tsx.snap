@@ -3,33 +3,35 @@
 exports[`SendScreen renders correctly 1`] = `
 "<View style={{...}}>
   <withTheme(Connect(TestnetBadgeComponent)) />
-  <View style={{...}}>
-    <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
-    <withTheme(Connect(AddAddressComponent)) account={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} onChange={[Function: onChange]} />
+  <ScrollViewMock contentContainerStyle={{...}} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
     <View style={{...}}>
-      <View style={{...}} />
+      <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
+      <withTheme(Connect(AddAddressComponent)) account={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} onChange={[Function: onChange]} />
       <View style={{...}}>
+        <View style={{...}} />
         <View style={{...}}>
           <View style={{...}}>
-            <withTheme(TextComponent) style={{...}}>
-              Send
-            </withTheme(TextComponent)>
-            <withTheme(TextComponent) style={{...}}>
-              To
-            </withTheme(TextComponent)>
-            <withTheme(TextComponent) style={{...}}>
-              ___...___
-            </withTheme(TextComponent)>
+            <View style={{...}}>
+              <withTheme(TextComponent) style={{...}}>
+                Send
+              </withTheme(TextComponent)>
+              <withTheme(TextComponent) style={{...}}>
+                To
+              </withTheme(TextComponent)>
+              <withTheme(TextComponent) style={{...}}>
+                ___...___
+              </withTheme(TextComponent)>
+            </View>
           </View>
-        </View>
-        <View style={{...}}>
-          <withTheme(ButtonComponent) style={{...}} primary={true} disabled={true} onPress={[Function: onPress]}>
-            Next
-          </withTheme(ButtonComponent)>
+          <View style={{...}}>
+            <withTheme(ButtonComponent) style={{...}} primary={true} disabled={true} onPress={[Function: onPress]}>
+              Next
+            </withTheme(ButtonComponent)>
+          </View>
         </View>
       </View>
     </View>
-  </View>
+  </ScrollViewMock>
   <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
 </View>"
 `;
@@ -37,33 +39,35 @@ exports[`SendScreen renders correctly 1`] = `
 exports[`SendScreen renders correctly 2`] = `
 "<View style={{...}}>
   <withTheme(Connect(TestnetBadgeComponent)) />
-  <View style={{...}}>
-    <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
-    <withTheme(Connect(AddAddressComponent)) account={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} onChange={[Function: onChange]} />
+  <ScrollViewMock contentContainerStyle={{...}} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
     <View style={{...}}>
-      <View style={{...}} />
+      <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
+      <withTheme(Connect(AddAddressComponent)) account={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} onChange={[Function: onChange]} />
       <View style={{...}}>
+        <View style={{...}} />
         <View style={{...}}>
           <View style={{...}}>
-            <withTheme(TextComponent) style={{...}}>
-              Send
-            </withTheme(TextComponent)>
-            <withTheme(TextComponent) style={{...}}>
-              To
-            </withTheme(TextComponent)>
-            <withTheme(TextComponent) style={{...}}>
-              ___...___
-            </withTheme(TextComponent)>
+            <View style={{...}}>
+              <withTheme(TextComponent) style={{...}}>
+                Send
+              </withTheme(TextComponent)>
+              <withTheme(TextComponent) style={{...}}>
+                To
+              </withTheme(TextComponent)>
+              <withTheme(TextComponent) style={{...}}>
+                ___...___
+              </withTheme(TextComponent)>
+            </View>
           </View>
-        </View>
-        <View style={{...}}>
-          <withTheme(ButtonComponent) style={{...}} primary={true} disabled={true} onPress={[Function: onPress]}>
-            Next
-          </withTheme(ButtonComponent)>
+          <View style={{...}}>
+            <withTheme(ButtonComponent) style={{...}} primary={true} disabled={true} onPress={[Function: onPress]}>
+              Next
+            </withTheme(ButtonComponent)>
+          </View>
         </View>
       </View>
     </View>
-  </View>
+  </ScrollViewMock>
   <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
 </View>"
 `;

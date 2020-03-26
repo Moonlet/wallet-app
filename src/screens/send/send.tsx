@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View, Platform, ScrollView } from 'react-native';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -442,39 +442,45 @@ export class SendScreenComponent extends React.Component<
             <View style={styles.container}>
                 <TestnetBadge />
 
-                <View style={styles.content}>
-                    <HeaderStepByStep
-                        steps={headerSteps}
-                        selectStep={selectedIdex => {
-                            const activeIndex = _.findIndex(headerSteps, ['active', true]);
+                <ScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={false}
+                    alwaysBounceVertical={false}
+                >
+                    <View style={styles.content}>
+                        <HeaderStepByStep
+                            steps={headerSteps}
+                            selectStep={selectedIdex => {
+                                const activeIndex = _.findIndex(headerSteps, ['active', true]);
 
-                            const steps = headerSteps;
-                            if (selectedIdex < activeIndex) {
-                                steps[activeIndex].active = false;
-                                steps[selectedIdex].active = true;
+                                const steps = headerSteps;
+                                if (selectedIdex < activeIndex) {
+                                    steps[activeIndex].active = false;
+                                    steps[selectedIdex].active = true;
+                                }
+
+                                this.setState({ headerSteps: steps });
+                            }}
+                        />
+
+                        {headerSteps.map((step, index) => {
+                            if (step.active) {
+                                switch (index) {
+                                    case 0:
+                                        return this.renderAddAddressContainer();
+                                    case 1:
+                                        return this.renderEnterAmount();
+                                    case 2:
+                                        return this.renderConfirmTransaction();
+                                    default:
+                                        return null;
+                                }
                             }
+                        })}
 
-                            this.setState({ headerSteps: steps });
-                        }}
-                    />
-
-                    {headerSteps.map((step, index) => {
-                        if (step.active) {
-                            switch (index) {
-                                case 0:
-                                    return this.renderAddAddressContainer();
-                                case 1:
-                                    return this.renderEnterAmount();
-                                case 2:
-                                    return this.renderConfirmTransaction();
-                                default:
-                                    return null;
-                            }
-                        }
-                    })}
-
-                    {this.renderBottomConfirm()}
-                </View>
+                        {this.renderBottomConfirm()}
+                    </View>
+                </ScrollView>
 
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>

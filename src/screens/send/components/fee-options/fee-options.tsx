@@ -179,7 +179,6 @@ export class FeeOptionsComponent extends React.Component<
                         blockchain={this.props.account.blockchain}
                         onInputFees={this.onInputAdvancedFees}
                         token={this.props.token}
-                        insufficientFundsFees={this.props.insufficientFundsFees}
                     />
                 )
             );
@@ -197,19 +196,28 @@ export class FeeOptionsComponent extends React.Component<
                         {this.state.showAdvancedOptions
                             ? this.renderAdvancedFees()
                             : this.renderSimpleFees()}
-                        {this.state.hasAdvancedOptions && (
-                            <TouchableOpacity
-                                testID="advanced-fees"
-                                onPress={this.onAdvancedButton}
-                                style={styles.buttonRightOptions}
-                            >
-                                <Text style={styles.textTranferButton}>
-                                    {this.state.showAdvancedOptions
-                                        ? translate('App.labels.simpleSetup')
-                                        : translate('App.labels.advancedSetup')}
-                                </Text>
-                            </TouchableOpacity>
-                        )}
+
+                        <View style={{ flexDirection: 'row' }}>
+                            <Text style={styles.displayErrorFees}>
+                                {this.props.insufficientFundsFees
+                                    ? translate('Send.insufficientFundsFees')
+                                    : ' '}
+                            </Text>
+
+                            {this.state.hasAdvancedOptions && (
+                                <TouchableOpacity
+                                    testID="advanced-fees"
+                                    onPress={this.onAdvancedButton}
+                                    style={styles.buttonRightOptions}
+                                >
+                                    <Text style={styles.textTranferButton}>
+                                        {this.state.showAdvancedOptions
+                                            ? translate('App.labels.simpleSetup')
+                                            : translate('App.labels.advancedSetup')}
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
+                        </View>
                     </React.Fragment>
                 )}
             </View>

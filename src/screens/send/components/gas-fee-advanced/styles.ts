@@ -41,12 +41,5 @@ export default (theme: ITheme) =>
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
             color: theme.colors.error
-        },
-        displayErrorFees: {
-            fontSize: normalize(15),
-            lineHeight: normalize(19),
-            paddingLeft: BASE_DIMENSION,
-            marginTop: BASE_DIMENSION,
-            color: theme.colors.error
         }
     });

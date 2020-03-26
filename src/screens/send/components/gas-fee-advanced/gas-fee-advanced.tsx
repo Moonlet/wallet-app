@@ -18,7 +18,6 @@ export interface IExternalProps {
     gasLimit: string;
     blockchain: Blockchain;
     onInputFees: (gasPrice: string, gasLimit: string, feeTotal: string) => any;
-    insufficientFundsFees: boolean;
 }
 interface IState {
     inputGasPrice: string;
@@ -158,12 +157,6 @@ export class GasFeeAvancedComponent extends React.Component<
                     blockchain={this.props.blockchain}
                     token={this.props.token}
                 />
-
-                {this.props.insufficientFundsFees && (
-                    <Text style={styles.displayErrorFees}>
-                        {translate('Send.insufficientFundsFees')}
-                    </Text>
-                )}
             </View>
         );
     }

@@ -21,6 +21,14 @@ export const getRemoteConfigFeatures = async () => {
         duration = 0;
     }
 
+    // Set default values
+    firebase.config().setDefaults({
+        [RemoteFeature.NEAR]: false,
+        [RemoteFeature.DEV_TOOLS]: false,
+        [RemoteFeature.COSMOS]: false,
+        [RemoteFeature.TC_VERSION]: undefined
+    });
+
     await firebase.config().fetch(duration);
     await firebase.config().activateFetched();
     const objects = await firebase

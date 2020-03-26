@@ -300,15 +300,15 @@ PODS:
     - React
   - react-native-background-timer (2.2.0):
     - React
-  - react-native-ble-plx (1.1.0):
+  - react-native-ble-plx (1.1.1):
     - React
     - react-native-ble-plx-swift
-  - react-native-ble-plx-swift (1.1.0)
-  - react-native-camera-kit (8.0.2):
+  - react-native-ble-plx-swift (1.1.1)
+  - react-native-camera-kit (8.0.4):
     - React
   - react-native-randombytes (3.5.3):
     - React
-  - react-native-webview (8.1.2):
+  - react-native-webview (8.2.1):
     - React
   - React-RCTActionSheet (0.61.1):
     - React-Core/RCTActionSheetHeaders (= 0.61.1)
@@ -345,7 +345,7 @@ PODS:
     - React-cxxreact (= 0.61.1)
     - React-jsi (= 0.61.1)
     - ReactCommon/jscallinvoker (= 0.61.1)
-  - RNCAsyncStorage (1.6.2):
+  - RNCAsyncStorage (1.8.1):
     - React
   - RNDeviceInfo (4.0.1):
     - React
@@ -353,24 +353,24 @@ PODS:
     - React
     - SDWebImage (~> 5.0)
     - SDWebImageWebPCoder (~> 0.2.3)
-  - RNFirebase (5.5.6):
+  - RNFirebase (5.6.0):
     - Firebase/Core
     - React
-    - RNFirebase/Crashlytics (= 5.5.6)
-  - RNFirebase/Crashlytics (5.5.6):
+    - RNFirebase/Crashlytics (= 5.6.0)
+  - RNFirebase/Crashlytics (5.6.0):
     - Crashlytics
     - Fabric
     - Firebase/Core
     - React
-  - RNGestureHandler (1.5.1):
+  - RNGestureHandler (1.6.0):
     - React
   - RNReanimated (1.7.0):
     - React
-  - RNScreens (2.0.0-alpha.8):
+  - RNScreens (2.3.0):
     - React
   - RNSecureKeyStore (1.0.0):
     - React
-  - RNSentry (1.0.9):
+  - RNSentry (1.3.3):
     - React
     - Sentry (~> 4.4.0)
   - RNSVG (12.0.3):
@@ -613,11 +613,11 @@ SPEC CHECKSUMS:
   React-jsinspector: 574d597112f9ea3d1b717f6fb62aef764c70dd6f
   react-native-aes: 22ea989d641f53ea7722fe6b146349ed66e6455d
   react-native-background-timer: 53c0e028a95d58b1f4498ef7ce152b6c6b337595
-  react-native-ble-plx: 05e16667ebf56cf802986379fd58a377847885e8
-  react-native-ble-plx-swift: e0d041529bd7ae66eb9731123eca3df3d132e8ec
-  react-native-camera-kit: 8d908f90f4d31943fcfad3bf89a5768249af794b
+  react-native-ble-plx: 304c7bee074a05581672c9990f375b3906808718
+  react-native-ble-plx-swift: eb64f02b988becb84a60164aba9fab5d6ddb6dc8
+  react-native-camera-kit: ded127598a48890a360fbf5e26cf7c44fcc5b873
   react-native-randombytes: 991545e6eaaf700b4ee384c291ef3d572e0b2ca8
-  react-native-webview: 055c7110f17c2f19c971f655064ee480638db668
+  react-native-webview: d3cf75764f98fd433f1222f5a7ca8e355ada2a15
   React-RCTActionSheet: af4d951113b1e068bb30611f91b984a7a73597ff
   React-RCTAnimation: 4f518d70bb6890b7c3d9d732f84786d6693ca297
   React-RCTBlob: 072a4888c08de0eef6d04eaa727d25e577e6ff26
@@ -628,15 +628,15 @@ SPEC CHECKSUMS:
   React-RCTText: 81b62b4e7f11531a5154e4daa5617670d5a2d5de
   React-RCTVibration: 8be61459e3749d1fb02cf414edd05b3007622882
   ReactCommon: 4fba5be89efdf0b5720e0adb3d8d7edf6e532db0
-  RNCAsyncStorage: 5ae4d57458804e99f73d427214442a6b10a53856
+  RNCAsyncStorage: 00bdf63f7f1e0f11d3323533dba4f222e58bf092
   RNDeviceInfo: 12faae605ba42a1a5041c3c41a77834bc23f049d
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
-  RNFirebase: ac0de8b24c6f91ae9459575491ed6a77327619c6
-  RNGestureHandler: 7add966bb5d90ee8cf38d4341f87814474357972
+  RNFirebase: 37daa9a346d070f9f6ee1f3b4aaf4c8e3b1d5d1c
+  RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
   RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
-  RNScreens: bfa9143ca291bcf3804c932f77b9617ff324704f
+  RNScreens: 03bf608b92ac0acf323f47d8f5b63a8f829340c8
   RNSecureKeyStore: f1ad870e53806453039f650720d2845c678d89c8
-  RNSentry: 2803ba8c8129dcf26b79e9b4d8c80168be6e4390
+  RNSentry: 86baf0c87120cd5eb491d073989f8cbc1a2174c6
   RNSVG: 7e16ddfc6e00d5aa69c9eb83e699bcce5dcb85d4
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   RNVoipPushNotification: 27ff53396bfd396bef52bf30a31353c1897b8e3a

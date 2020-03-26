@@ -9,7 +9,8 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION
         },
         buttonRightOptions: {
-            alignItems: 'flex-end'
+            alignItems: 'flex-end',
+            alignSelf: 'center'
         },
         textTranferButton: {
             fontSize: normalize(13),
@@ -19,5 +20,12 @@ export default (theme: ITheme) =>
         list: {
             flexGrow: 1,
             justifyContent: 'flex-start'
+        },
+        displayErrorFees: {
+            flex: 1,
+            fontSize: normalize(15),
+            lineHeight: normalize(19),
+            paddingLeft: BASE_DIMENSION,
+            color: theme.colors.error
         }
     });

@@ -353,12 +353,6 @@ export class DashboardScreenComponent extends React.Component<
         const { blockchains } = this.props;
         const blockchain: Blockchain = this.props.selectedBlockchain;
 
-        // const animateTokenDashboardTopPadding = this.animationValue.interpolate({
-        //     inputRange: [0, ANIMATION_MAX_HEIGHT / 2, ANIMATION_MAX_HEIGHT],
-        //     outputRange: [ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT / 2],
-        //     extrapolate: 'clamp'
-        // });
-
         return (
             <View style={{ flex: 1 }}>
                 <ScrollView

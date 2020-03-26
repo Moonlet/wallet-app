@@ -36,7 +36,7 @@ const props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider
             WALLETS_LIST: 0
         }
     },
-    showHint: jest.fn().mockImplementation()
+    updateDisplayedHint: jest.fn().mockImplementation()
 };
 
 export default describe('Wallet screen', () => {

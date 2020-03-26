@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -32,8 +32,8 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION / 2
         },
         transactionsTitle: {
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalize(22),
+            lineHeight: normalize(28),
             color: theme.colors.text,
             opacity: 0.87,
             fontWeight: 'bold',

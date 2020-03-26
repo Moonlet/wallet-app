@@ -9,28 +9,18 @@ interface IExternalProps {
     spinnerColor?: string;
 }
 
-export class LoadingIndicatorComponent extends React.Component<
-    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
-> {
-    constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
-        super(props);
-    }
-
-    public render() {
-        const styles = this.props.styles;
-        const theme = this.props.theme;
-        const { spinnerColor } = this.props;
-
-        return (
-            <View style={[styles.container, { backgroundColor: this.props.backgroundColor }]}>
-                <ActivityIndicator
-                    size="large"
-                    color={spinnerColor ? spinnerColor : theme.colors.accent}
-                />
-            </View>
-        );
-    }
-}
+export const LoadingIndicatorComponent = (
+    props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+) => {
+    return (
+        <View style={[props.styles.container, { backgroundColor: props.backgroundColor }]}>
+            <ActivityIndicator
+                size="large"
+                color={props.spinnerColor ? props.spinnerColor : props.theme.colors.accent}
+            />
+        </View>
+    );
+};
 
 export const LoadingIndicator = smartConnect<IExternalProps>(LoadingIndicatorComponent, [
     withTheme(stylesProvider)

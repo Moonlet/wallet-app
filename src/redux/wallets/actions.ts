@@ -22,7 +22,7 @@ import {
     toInitialState
 } from '../ui/screens/connectHardwareWallet/actions';
 import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
-import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
 import { REHYDRATE } from 'redux-persist';
@@ -364,7 +364,8 @@ export const updateTransactionFromBlockchain = (
     transactionHash: string,
     blockchain: Blockchain,
     chainId: string | number,
-    displayNotification: boolean = false
+    displayNotification: boolean,
+    navigateToTransaction: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const blockchainInstance = getBlockchain(blockchain);
@@ -377,7 +378,6 @@ export const updateTransactionFromBlockchain = (
         // console.log(e);
         return;
     }
-    const currentChainId = getChainId(state, blockchain);
 
     // search for wallets/accounts affected by this transaction
     const wallets = getWalletWithAddress(
@@ -387,17 +387,36 @@ export const updateTransactionFromBlockchain = (
     );
 
     if (wallets) {
-        wallets.forEach(wallet => {
+        wallets.forEach(wlt => {
             dispatch({
                 type: TRANSACTION_UPSERT,
                 data: {
-                    walletId: wallet.id,
+                    walletId: wlt.id,
                     transaction
                 }
             });
         });
 
-        if (displayNotification && currentChainId === chainId) {
+        // select notification wallet and account
+        // if two wallets (transferring between own wallets) select the receiving wallet
+        const wallet =
+            wallets.length > 1
+                ? wallets.find(loopWallet =>
+                      loopWallet.accounts.some(
+                          account => account.address.toLowerCase() === transaction.toAddress
+                      )
+                  )
+                : wallets[0];
+
+        const transactionAccount =
+            wallet.accounts.find(
+                account => account.address.toLowerCase() === transaction.toAddress
+            ) ||
+            wallet.accounts.find(account => account.address.toLowerCase() === transaction.address);
+
+        // const currentChainId = getChainId(state, blockchain);
+        // if (displayNotification && currentChainId === chainId) { - removed this for consistency with app closed notifications
+        if (displayNotification) {
             const amount = blockchainInstance.account.amountFromStd(
                 new BigNumber(transaction.amount)
             );
@@ -405,28 +424,9 @@ export const updateTransactionFromBlockchain = (
                 currency: blockchainInstance.config.coin
             });
 
-            // select notification wallet and account
-            // if two wallets (transferring between own wallets) select the receiving wallet
-            const wallet =
-                wallets.length > 1
-                    ? wallets.find(loopWallet =>
-                          loopWallet.accounts.some(
-                              account => account.address.toLowerCase() === transaction.toAddress
-                          )
-                      )
-                    : wallets[0];
-
-            const notificatonAccount =
-                wallet.accounts.find(
-                    account => account.address.toLowerCase() === transaction.toAddress
-                ) ||
-                wallet.accounts.find(
-                    account => account.address.toLowerCase() === transaction.address
-                );
-
             Notifications.displayNotification(
-                'Moonlet',
-                `${transaction.status}: Transaction of ${formattedAmount} from ${formatAddress(
+                transaction.status,
+                `Transaction of ${formattedAmount} from ${formatAddress(
                     transaction.address,
                     blockchain
                 )} to ${formatAddress(transaction.toAddress, blockchain)}`,
@@ -434,15 +434,29 @@ export const updateTransactionFromBlockchain = (
                     type: NotificationType.TRANSACTION_UPDATE,
                     data: {
                         walletId: wallet.id,
-                        accountIndex: notificatonAccount.index,
-                        token: notificatonAccount.tokens[getBlockchain(blockchain).config.coin],
+                        accountIndex: transactionAccount.index,
+                        token: transactionAccount.tokens[getBlockchain(blockchain).config.coin],
                         tokenLogo: getBlockchain(blockchain).config.tokens[
-                            getBlockchain(notificatonAccount.blockchain).config.coin
+                            getBlockchain(transactionAccount.blockchain).config.coin
                         ].icon,
                         blockchain
                     }
                 }
             );
+        }
+
+        if (navigateToTransaction) {
+            const navigationParams: NavigationParams = {
+                blockchain,
+                accountIndex: transactionAccount.index,
+                token: transactionAccount.tokens[getBlockchain(blockchain).config.coin],
+                tokenLogo: getBlockchain(blockchain).config.tokens[
+                    getBlockchain(transactionAccount.blockchain).config.coin
+                ].icon
+            };
+
+            dispatch(setSelectedWallet(wallet.id));
+            NavigationService.navigate('Token', navigationParams);
         }
     }
 };

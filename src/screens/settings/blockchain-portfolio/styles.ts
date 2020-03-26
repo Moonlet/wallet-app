@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    ICON_CONTAINER_SIZE,
+    normalize
+} from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -24,8 +29,8 @@ export default (theme: ITheme) =>
         },
         blockchainName: {
             fontWeight: '500',
-            fontSize: 18,
-            lineHeight: 25,
+            fontSize: normalize(18),
+            lineHeight: normalize(25),
             letterSpacing: 0.38,
             color: theme.colors.text,
             textTransform: 'capitalize',

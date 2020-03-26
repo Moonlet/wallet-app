@@ -34,7 +34,7 @@ import { TransactionDetails } from '../screens/transaction-details/transaction-d
 import { StatisticsScreen } from '../screens/statistics/statistics';
 import { WatchScreen } from '../screens/watch/watch';
 import { ManageAccountScreen } from '../screens/manage-account/manage-account';
-import { BASE_DIMENSION } from '../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 
@@ -53,14 +53,14 @@ const mainTabbedNavigationOptions: any = {
     tabBarOptions: {
         showIcon: true,
         labelStyle: {
-            fontSize: 12,
-            lineHeight: 15,
+            fontSize: normalize(12),
+            lineHeight: normalize(15),
             fontWeight: '500',
             letterSpacing: 0.3
         },
         style: {
             padding: BASE_DIMENSION,
-            height: 60
+            height: normalize(60)
         },
         indicatorStyle: {
             display: 'none'
@@ -84,8 +84,8 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
     },
     headerTitleStyle: {
         flex: 1,
-        fontSize: 22,
-        lineHeight: 28,
+        fontSize: normalize(22),
+        lineHeight: normalize(28),
         color: themes[theme].colors.text,
         letterSpacing: 0.38,
         textAlign: 'center',

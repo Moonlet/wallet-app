@@ -11,6 +11,7 @@ import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
 import { biometricAuth, BiometryType } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';
+import { normalize } from '../../../../styles/dimensions';
 
 export interface IReduxProps {
     touchID: boolean;
@@ -300,7 +301,7 @@ export class PasswordPinComponent extends React.Component<
                                     ? 'face-id'
                                     : 'touch-id'
                             }
-                            size={40}
+                            size={normalize(40)}
                             style={styles.touchIdIcon}
                         />
                     ) : (
@@ -339,7 +340,7 @@ export class PasswordPinComponent extends React.Component<
                         });
                     }}
                 >
-                    <Icon name="keyboard-delete-1" size={40} style={styles.deleteIcon} />
+                    <Icon name="keyboard-delete-1" size={normalize(40)} style={styles.deleteIcon} />
                 </TouchableOpacity>
             </View>
         );

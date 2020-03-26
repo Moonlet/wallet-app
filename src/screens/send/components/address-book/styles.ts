@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../../styles/dimensions';
 import { pw, ph } from '../../../../styles';
 
 export default (theme: ITheme) =>
@@ -28,8 +28,8 @@ export default (theme: ITheme) =>
         },
         emptyAddressText: {
             fontWeight: 'bold',
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalize(22),
+            lineHeight: normalize(28),
             textAlign: 'center',
             letterSpacing: 0.35,
             opacity: 0.4,
@@ -37,8 +37,8 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION
         },
         addAddressBookText: {
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
             textAlign: 'center',
             opacity: 0.3,
             paddingHorizontal: BASE_DIMENSION * 2,
@@ -53,13 +53,12 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground
         },
         address: {
-            fontSize: theme.fontSize.regular,
             color: theme.colors.textSecondary
         },
         name: {
             color: theme.colors.text,
-            lineHeight: BASE_DIMENSION * 3,
-            fontSize: theme.fontSize.regular + 1
+            fontSize: normalize(18),
+            lineHeight: normalize(23)
         },
         divider: {
             width: '100%',
@@ -69,11 +68,7 @@ export default (theme: ITheme) =>
         icon: {
             alignSelf: 'center',
             color: theme.colors.accent,
-            padding: 4
-        },
-        textRow: {
-            fontSize: theme.fontSize.regular,
-            lineHeight: 30
+            padding: BASE_DIMENSION / 2
         },
         leftIcon: {
             paddingLeft: BASE_DIMENSION * 2,
@@ -81,42 +76,36 @@ export default (theme: ITheme) =>
         },
         sectionTitle: {
             fontWeight: '600',
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
             color: theme.colors.text,
             paddingTop: BASE_DIMENSION
         },
         selectedText: {
             color: theme.colors.accent
         },
-
         leftActionsContainer: {
             flexDirection: 'row'
         },
-
         action: {
             justifyContent: 'center',
             alignItems: 'center',
-            width: 72
+            width: normalize(72)
         },
-
         iconActionPositive: {
-            height: 40,
+            height: normalize(40),
             color: theme.colors.accent
         },
-
         iconActionNegative: {
-            height: 40,
+            height: normalize(40),
             color: theme.colors.error
         },
-
         textActionPositive: {
-            fontSize: 10,
+            fontSize: normalize(10),
             color: theme.colors.accent
         },
-
         textActionNegative: {
-            fontSize: 10,
+            fontSize: normalize(10),
             color: theme.colors.error
         }
     });

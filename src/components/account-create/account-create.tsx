@@ -17,6 +17,7 @@ import { PasswordModal } from '../password-modal/password-modal';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { Icon } from '../../components/icon';
 import { getChainId } from '../../redux/preferences/selectors';
+import { normalize } from '../../styles/dimensions';
 
 export interface IReduxProps {
     createAccount: typeof createAccount;
@@ -156,7 +157,7 @@ export class AccountCreateComponent extends React.Component<
                                     onPress={this.onPressClearInput}
                                     style={[styles.rightAddressButton]}
                                 >
-                                    <Icon name="close" size={16} style={styles.icon} />
+                                    <Icon name="close" size={normalize(16)} style={styles.icon} />
                                 </TouchableOpacity>
                             )}
                         </View>

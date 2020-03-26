@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { pw } from '../../styles';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -25,8 +25,8 @@ export default (theme: ITheme) =>
             alignSelf: 'center'
         },
         welcomeTitle: {
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalize(22),
+            lineHeight: normalize(28),
             fontWeight: 'bold',
             textAlign: 'center',
             letterSpacing: 0.35,
@@ -45,23 +45,23 @@ export default (theme: ITheme) =>
             marginRight: BASE_DIMENSION * 2
         },
         number: {
-            fontSize: 17,
-            lineHeight: 21,
+            fontSize: normalize(17),
+            lineHeight: normalize(21),
             textAlign: 'center',
             color: theme.colors.accent,
             alignSelf: 'center',
             marginTop: BASE_DIMENSION / 2
         },
         welcomeTextWeb: {
-            fontSize: 16,
-            lineHeight: 21,
+            fontSize: normalize(16),
+            lineHeight: normalize(21),
             textAlign: 'center',
             color: theme.colors.textSecondary,
             paddingHorizontal: BASE_DIMENSION * 4
         },
         text: {
-            fontSize: 15,
-            lineHeight: 19,
+            fontSize: normalize(15),
+            lineHeight: normalize(19),
             color: theme.colors.text,
             marginTop: BASE_DIMENSION / 2
         },

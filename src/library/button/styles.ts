@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BORDER_RADIUS, BASE_DIMENSION } from '../../styles/dimensions';
+import { BORDER_RADIUS, BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -12,8 +12,7 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION
         },
         text: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             fontWeight: '600',
             textAlign: 'center',
             color: theme.colors.accent

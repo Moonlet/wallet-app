@@ -5,7 +5,7 @@ import { BASE_DIMENSION } from '../../styles/dimensions';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            marginHorizontal: BASE_DIMENSION * 2
+            marginHorizontal: BASE_DIMENSION
         },
         icon: {
             color: theme.colors.accent

@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    ICON_CONTAINER_SIZE,
+    normalize
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -11,8 +16,8 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2
         },
         createText: {
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalize(22),
+            lineHeight: normalize(28),
             fontWeight: 'bold',
             letterSpacing: 0.35,
             color: theme.colors.text,
@@ -20,20 +25,19 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION
         },
         chooseUsernameText: {
-            fontSize: 17,
-            lineHeight: 22,
+            lineHeight: normalize(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
             marginBottom: BASE_DIMENSION * 4
         },
         congratsText: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
             color: theme.colors.accent
         },
         invalidText: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
             color: theme.colors.error
         },
         createButton: {
@@ -46,17 +50,18 @@ export default (theme: ITheme) =>
         inputBox: {
             height: BASE_DIMENSION * 5,
             borderRadius: BORDER_RADIUS,
-            borderColor: 'gray',
             alignSelf: 'stretch',
             backgroundColor: theme.colors.cardBackground,
-            paddingHorizontal: 12,
+            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'
         },
         input: {
             flex: 1,
-            color: theme.colors.text
+            color: theme.colors.text,
+            fontSize: normalize(17),
+            lineHeight: normalize(22)
         },
         icon: {
             color: theme.colors.accent

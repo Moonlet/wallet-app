@@ -48,13 +48,13 @@ export const TextComponent = (props: ITextProps) => {
         text = formatNumber(amount, props.format);
     }
     return (
-        <ReactNative.Text
+        <ReactNative.Animated.Text
             style={getStyle(props)}
             numberOfLines={props.numberOfLines}
             ellipsizeMode={props.ellipsizeMode}
         >
             {text}
-        </ReactNative.Text>
+        </ReactNative.Animated.Text>
     );
 };
 

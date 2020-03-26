@@ -21,13 +21,15 @@ export default (theme: ITheme) =>
             flexDirection: 'column'
         },
         inputBox: {
-            flexDirection: 'row',
-            marginHorizontal: BASE_DIMENSION * 2,
-            marginBottom: BASE_DIMENSION * 2,
-            borderRadius: 10,
+            height: BASE_DIMENSION * 5,
+            borderRadius: BORDER_RADIUS,
+            alignSelf: 'stretch',
             backgroundColor: theme.colors.cardBackground,
             paddingHorizontal: BASE_DIMENSION,
-            paddingVertical: BASE_DIMENSION
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: BASE_DIMENSION * 2
         },
         input: {
             flex: 1,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, Animated, TouchableOpacity, Platform } from 'react-native';
+import { View, Dimensions, Animated, TouchableOpacity, Platform, ScrollView } from 'react-native';
 import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TokenDashboard } from '../../components/token-dashboard/token-dashboard';
@@ -361,7 +361,7 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View style={{ flex: 1 }}>
-                <Animated.ScrollView
+                <ScrollView
                     contentContainerStyle={[
                         styles.dashboardContainer,
                         {
@@ -373,6 +373,7 @@ export class DashboardScreenComponent extends React.Component<
                     onScroll={Animated.event([
                         { nativeEvent: { contentOffset: { y: this.animationValue } } }
                     ])}
+                    alwaysBounceVertical={false}
                 >
                     <TokenDashboard
                         account={this.props.selectedAccount}
@@ -380,7 +381,7 @@ export class DashboardScreenComponent extends React.Component<
                         navigation={this.props.navigation}
                         showBottomPadding={blockchains?.length > 1}
                     />
-                </Animated.ScrollView>
+                </ScrollView>
 
                 {this.renderCoinBalanceCard()}
             </View>

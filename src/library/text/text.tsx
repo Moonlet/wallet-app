@@ -4,21 +4,27 @@ import * as ReactNative from 'react-native';
 import { formatNumber, INumberFormatOptions } from '../../core/utils/format-number';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
+import { smartConnect } from '../../core/utils/smart-connect';
 
-export interface ITextProps {
+export interface IExternalProps {
     children?: any;
     style?: any;
     darker?: boolean;
     small?: boolean;
+    large?: boolean;
     format?: INumberFormatOptions;
-    styles: ReturnType<typeof stylesProvider>;
     numberOfLines?: number;
     ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
+    isAnimated?: boolean;
+}
+
+export interface ITextProps {
+    styles: ReturnType<typeof stylesProvider>;
 }
 
 const styleModifiers = ['darker', 'small', 'large'];
 
-const getStyle = (props: ITextProps) => {
+const getStyle = (props: IExternalProps & ITextProps) => {
     // default text style
     let style = [props.styles.default];
 
@@ -40,22 +46,35 @@ const getStyle = (props: ITextProps) => {
     return style;
 };
 
-export const TextComponent = (props: ITextProps) => {
+export const TextComponent = (props: IExternalProps & ITextProps) => {
     let text = props.children;
 
     if (props.format) {
         const amount = parseFloat(text);
         text = formatNumber(amount, props.format);
     }
-    return (
-        <ReactNative.Text
-            style={getStyle(props)}
-            numberOfLines={props.numberOfLines}
-            ellipsizeMode={props.ellipsizeMode}
-        >
-            {text}
-        </ReactNative.Text>
-    );
+
+    if (props?.isAnimated) {
+        return (
+            <ReactNative.Animated.Text
+                style={getStyle(props)}
+                numberOfLines={props.numberOfLines}
+                ellipsizeMode={props.ellipsizeMode}
+            >
+                {text}
+            </ReactNative.Animated.Text>
+        );
+    } else {
+        return (
+            <ReactNative.Text
+                style={getStyle(props)}
+                numberOfLines={props.numberOfLines}
+                ellipsizeMode={props.ellipsizeMode}
+            >
+                {text}
+            </ReactNative.Text>
+        );
+    }
 };
 
-export const Text = withTheme(stylesProvider)(TextComponent);
+export const Text = smartConnect<IExternalProps>(TextComponent, [withTheme(stylesProvider)]);

@@ -1,31 +1,31 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`text library components renders correctly formatted text 1`] = `
-"<AnimatedComponent style={{...}} numberOfLines={[undefined]} ellipsizeMode={[undefined]}>
+"<Text style={{...}} numberOfLines={[undefined]} ellipsizeMode={[undefined]}>
   100.133
-</AnimatedComponent>"
+</Text>"
 `;
 
 exports[`text library components renders correctly regular text 1`] = `
-"<AnimatedComponent style={{...}} numberOfLines={[undefined]} ellipsizeMode={[undefined]}>
+"<Text style={{...}} numberOfLines={[undefined]} ellipsizeMode={[undefined]}>
   dummy
-</AnimatedComponent>"
+</Text>"
 `;
 
 exports[`text library components renders correctly small text 1`] = `
-"<AnimatedComponent style={{...}} numberOfLines={[undefined]} ellipsizeMode={[undefined]}>
+"<Text style={{...}} numberOfLines={[undefined]} ellipsizeMode={[undefined]}>
   test
-</AnimatedComponent>"
+</Text>"
 `;
 
 exports[`text library components renders correctly text with multiple styles 1`] = `
-"<AnimatedComponent style={{...}} numberOfLines={[undefined]} ellipsizeMode={[undefined]}>
+"<Text style={{...}} numberOfLines={[undefined]} ellipsizeMode={[undefined]}>
   test
-</AnimatedComponent>"
+</Text>"
 `;
 
 exports[`text library components renders correctly text with style provided via prop 1`] = `
-"<AnimatedComponent style={{...}} numberOfLines={[undefined]} ellipsizeMode={[undefined]}>
+"<Text style={{...}} numberOfLines={[undefined]} ellipsizeMode={[undefined]}>
   test
-</AnimatedComponent>"
+</Text>"
 `;

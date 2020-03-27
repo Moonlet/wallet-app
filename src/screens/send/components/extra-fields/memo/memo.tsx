@@ -42,7 +42,7 @@ export class MemoComponent extends React.Component<
                 <View style={[styles.inputBox, styles.inputBoxTop]}>
                     <TextInput
                         testID="memo"
-                        style={styles.input}
+                        style={styles.inputText}
                         placeholderTextColor={theme.colors.textSecondary}
                         autoCapitalize={'none'}
                         autoCorrect={false}

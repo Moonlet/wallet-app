@@ -10,11 +10,15 @@ export default (theme: ITheme) =>
             height: Platform.OS === 'web' ? 'calc(100vh - 122px)' : 'auto'
         },
         coinBalanceCard: {
-            paddingTop: BASE_DIMENSION * 4,
-            paddingBottom: BASE_DIMENSION * 6
+            backgroundColor: theme.colors.appBackground,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            justifyContent: 'center'
         },
         dashboardContainer: {
-            flex: 1,
+            flexGrow: 1,
             paddingHorizontal: BASE_DIMENSION * 2
         },
         selectorGradientContainer: {
@@ -27,7 +31,7 @@ export default (theme: ITheme) =>
         },
         blockchainSelectorContainer: {
             backgroundColor: theme.colors.cardBackground,
-            borderRadius: 20,
+            borderRadius: normalize(20),
             height: normalize(40),
             flexDirection: 'row',
             marginBottom: BASE_DIMENSION + BASE_DIMENSION / 2,
@@ -39,7 +43,7 @@ export default (theme: ITheme) =>
             flexBasis: 0,
             justifyContent: 'center',
             alignItems: 'center',
-            borderRadius: 16,
+            borderRadius: normalize(16),
             margin: BASE_DIMENSION / 2
         },
         blockchainButtonActive: {
@@ -63,5 +67,43 @@ export default (theme: ITheme) =>
         bottomBlockchainContainer: {
             flex: 1,
             flexDirection: 'row'
+        },
+        darkerText: {
+            color: theme.colors.textSecondary
+        },
+        row: {
+            flexDirection: 'row',
+            justifyContent: 'center'
+        },
+        rowContainer: {
+            flexDirection: 'row',
+            marginBottom: BASE_DIMENSION,
+            justifyContent: 'center'
+        },
+        account: {
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
+            color: theme.colors.text,
+            marginRight: BASE_DIMENSION
+        },
+        address: {
+            fontSize: normalize(15),
+            lineHeight: normalize(20),
+            color: theme.colors.accent
+        },
+        mainText: {
+            fontWeight: 'bold',
+            letterSpacing: 0.4,
+            color: theme.colors.textSecondary,
+            marginRight: BASE_DIMENSION * 2
+        },
+        secondaryText: {
+            fontSize: normalize(16),
+            color: theme.colors.textSecondary
+        },
+        icon: {
+            alignSelf: 'center',
+            color: theme.colors.accent,
+            fontWeight: 'bold'
         }
     });

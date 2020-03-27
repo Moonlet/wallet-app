@@ -6,7 +6,7 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            paddingBottom: BASE_DIMENSION * 2,
+            paddingBottom: BASE_DIMENSION + BASE_DIMENSION / 2,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
             height: SCREEN_HEIGHT
@@ -24,8 +24,6 @@ export default (theme: ITheme) =>
         inputBox: {
             height: BASE_DIMENSION * 5,
             borderRadius: BORDER_RADIUS,
-            borderColor: 'gray',
-            alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
             paddingHorizontal: BASE_DIMENSION,
             flexDirection: 'row',

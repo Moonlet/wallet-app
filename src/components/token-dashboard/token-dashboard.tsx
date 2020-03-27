@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
-import { ConversionCard } from '../conversion-card/conversion-card';
+import { View } from 'react-native';
+// import { ConversionCard } from '../conversion-card/conversion-card';
 import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+// import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { TokenCard } from '../token-card/token-card';
 import { ITokenConfig } from '../../core/blockchain/types/token';
+import { normalize } from '../../styles/dimensions';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -17,13 +18,13 @@ export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
-const conversionCards = ['USD', 'BTC', 'ETH'];
+// const conversionCards = ['USD', 'BTC', 'ETH'];
 
 export const TokenDashboardComponent = (
     props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => (
     <View style={props.styles.container}>
-        <View style={props.styles.exchangeCardContainer}>
+        {/* <View style={props.styles.exchangeCardContainer}>
             {props.blockchain &&
                 conversionCards.map(
                     (toCurrency, i) =>
@@ -36,14 +37,13 @@ export const TokenDashboardComponent = (
                             />
                         )
                 )}
-        </View>
+        </View> */}
 
-        <ScrollView
-            contentContainerStyle={[
-                props.styles.scrollContainer,
-                { paddingBottom: props.showBottomPadding ? 70 : 0 }
+        <View
+            style={[
+                props.styles.tokensContainer,
+                { paddingBottom: props.showBottomPadding ? normalize(70) : 0 }
             ]}
-            showsVerticalScrollIndicator={false}
         >
             {props.account?.tokens &&
                 Object.values(props.account.tokens).map(
@@ -59,7 +59,7 @@ export const TokenDashboardComponent = (
                             />
                         )
                 )}
-        </ScrollView>
+        </View>
     </View>
 );
 export const TokenDashboard = withTheme(stylesProvider)(TokenDashboardComponent);

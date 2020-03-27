@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform, ScrollView } from 'react-native';
+import { View, Platform } from 'react-native';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -37,6 +37,7 @@ import { EnterAmount } from './components/enter-amount/enter-amount';
 import { Amount } from '../../components/amount/amount';
 import _ from 'lodash';
 import { AddAddress } from './components/add-address/add-address';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -442,7 +443,7 @@ export class SendScreenComponent extends React.Component<
             <View style={styles.container}>
                 <TestnetBadge />
 
-                <ScrollView
+                <KeyboardAwareScrollView
                     contentContainerStyle={{ flexGrow: 1 }}
                     showsVerticalScrollIndicator={false}
                     alwaysBounceVertical={false}
@@ -480,7 +481,7 @@ export class SendScreenComponent extends React.Component<
 
                         {this.renderBottomConfirm()}
                     </View>
-                </ScrollView>
+                </KeyboardAwareScrollView>
 
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>

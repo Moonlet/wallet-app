@@ -38,8 +38,8 @@ export class Eth implements IHardwareWalletApp {
         const transaction = new Transaction(
             {
                 nonce: '0x' + tx.nonce.toString(16),
-                gasPrice: '0x' + tx.feeOptions.gasPrice,
-                gasLimit: '0x' + tx.feeOptions.gasLimit,
+                gasPrice: '0x' + new BigNumber(tx.feeOptions.gasPrice).toString(16),
+                gasLimit: '0x' + new BigNumber(tx.feeOptions.gasLimit).toString(16),
                 to: tx.toAddress,
                 value: '0x' + new BigNumber(tx.amount).toString(16)
             },

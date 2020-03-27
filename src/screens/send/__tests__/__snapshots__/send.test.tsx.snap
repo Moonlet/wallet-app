@@ -30,7 +30,6 @@ exports[`SendScreen renders correctly 1`] = `
       </View>
     </View>
   </View>
-  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
 </View>"
 `;
 
@@ -64,6 +63,5 @@ exports[`SendScreen renders correctly 2`] = `
       </View>
     </View>
   </View>
-  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
 </View>"
 `;

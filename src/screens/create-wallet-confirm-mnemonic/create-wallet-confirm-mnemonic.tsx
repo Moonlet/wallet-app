@@ -162,9 +162,9 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                                 (n: number) => mnemonicsInput[n] === mnemonic[n]
                             );
                             if (valid) {
-                                // TODO
-                                // subtitle={translate('CreateWalletMnemonicConfirm.password')}
-                                PasswordModal.createPassword().then(password =>
+                                PasswordModal.createPassword(
+                                    translate('CreateWalletMnemonicConfirm.password')
+                                ).then(password =>
                                     props.createHDWallet(mnemonic.join(' '), password, () => {
                                         props.navigation.dispatch(StackActions.popToTop());
                                         props.navigation.navigate(

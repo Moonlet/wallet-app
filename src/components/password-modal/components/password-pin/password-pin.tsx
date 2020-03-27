@@ -20,6 +20,7 @@ const digitsLayout = [
 ];
 const ZERO = 0;
 const PASSWORD_LENGTH = 6;
+const EMPTY_STRING = ' ';
 
 export interface IReduxProps {
     touchID: boolean;
@@ -31,12 +32,12 @@ export interface IExternalProps {
     onPasswordEntered: (data: { password?: string }) => void;
     onBiometryLogin: (success: boolean) => void;
     errorMessage: string;
+    clearErrorMessage: () => void;
 }
 
 interface IState {
     password: string;
     biometryType: BiometryType;
-    errorMessage: string;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -56,8 +57,7 @@ export class PasswordPinComponent extends React.Component<
 
         this.state = {
             password: '',
-            biometryType: undefined,
-            errorMessage: props.errorMessage
+            biometryType: undefined
         };
         this.shakeAnimation = new Animated.Value(0);
 
@@ -69,23 +69,20 @@ export class PasswordPinComponent extends React.Component<
 
     public componentDidUpdate(prevProps: IExternalProps) {
         if (this.props.errorMessage !== prevProps.errorMessage) {
-            this.setState({ errorMessage: this.props.errorMessage });
-            if (this.props.errorMessage !== '') {
-                this.setState({ password: '' });
+            if (this.props.errorMessage !== EMPTY_STRING) {
                 this.startShake();
             }
         }
     }
 
     public fillPassword(digit: string) {
-        if (this.state.errorMessage !== '') {
-            this.setState({ errorMessage: ' ' });
-        }
+        this.props.clearErrorMessage();
         if (this.state.password.length < PASSWORD_LENGTH) {
             this.setState({ password: this.state.password.concat(digit) }, async () => {
                 if (this.state.password.length === PASSWORD_LENGTH) {
                     const passHash = await hash(this.state.password);
                     this.props.onPasswordEntered({ password: passHash });
+                    this.setState({ password: '' });
                 }
             });
         }
@@ -239,7 +236,8 @@ export class PasswordPinComponent extends React.Component<
                         if (isTouchID) {
                             this.biometryAuth();
                         } else {
-                            this.setState({ password: '', errorMessage: ' ' }); // Reset button
+                            this.setState({ password: '' });
+                            this.props.clearErrorMessage();
                         }
                     }}
                 >
@@ -283,10 +281,8 @@ export class PasswordPinComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.keyContainer}
                     onPress={() => {
-                        this.setState({
-                            password: this.state.password.slice(0, -1),
-                            errorMessage: ' '
-                        });
+                        this.setState({ password: this.state.password.slice(0, -1) });
+                        this.props.clearErrorMessage();
                     }}
                 >
                     <Icon name="keyboard-delete-1" size={normalize(40)} style={styles.deleteIcon} />
@@ -309,7 +305,7 @@ export class PasswordPinComponent extends React.Component<
                     <Text style={styles.subTitle}>{this.props.subtitle}</Text>
                     {this.renderInputDots()}
 
-                    <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
+                    <Text style={styles.errorMessage}>{this.props.errorMessage}</Text>
                 </View>
 
                 <View style={styles.digitsLayout}>

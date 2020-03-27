@@ -31,10 +31,12 @@ export interface IState {
     error: string;
 }
 
+const EMPTY_STRING = ' ';
+
 export class PasswordModal extends React.Component<{}, IState> {
     public static refDeferred: Deferred<PasswordModal> = new Deferred();
 
-    constructor(props) {
+    constructor(props: {}) {
         super(props);
         PasswordModal.refDeferred.resolve(this);
         this.state = {
@@ -44,7 +46,7 @@ export class PasswordModal extends React.Component<{}, IState> {
             password: undefined,
             newPassword: undefined,
             currentStep: undefined,
-            error: ' '
+            error: EMPTY_STRING
         };
     }
 
@@ -53,9 +55,9 @@ export class PasswordModal extends React.Component<{}, IState> {
         return ref.getPassword(title, subtitle);
     }
 
-    public static async createPassword() {
+    public static async createPassword(subtitle?: string) {
         const ref = await PasswordModal.refDeferred.promise;
-        return ref.createPassword();
+        return ref.createPassword(subtitle);
     }
 
     public static async changePassword() {
@@ -76,10 +78,12 @@ export class PasswordModal extends React.Component<{}, IState> {
         return this.resultDeferred.promise;
     }
 
-    public createPassword() {
+    public createPassword(subtitle?: string) {
         this.resultDeferred = new Deferred();
         this.setState({
             visible: true,
+            title: translate('Password.setupPinTitle'),
+            subtitle,
             currentStep: ScreenStep.CREATE_PIN_TERMS
         });
         return this.resultDeferred.promise;
@@ -101,34 +105,38 @@ export class PasswordModal extends React.Component<{}, IState> {
     @bind
     private async updateState(data: { password?: string }) {
         switch (this.state.currentStep) {
+            // Enter PIN Flow
             case ScreenStep.ENTER_PIN:
                 const verify = await this.verifyPassword(data.password);
                 if (verify) {
                     // set failed logins = 0
                     this.resultDeferred && this.resultDeferred.resolve(data.password);
                     this.setState({ visible: false });
-                } else {
-                    // reject
                 }
                 break;
 
+            // Create PIN Flow
             case ScreenStep.CREATE_PIN_TERMS:
                 this.setState({ currentStep: ScreenStep.CREATE_PIN });
                 break;
             case ScreenStep.CREATE_PIN:
                 this.setState({
                     currentStep: ScreenStep.CREATE_PIN_CONFIRM,
-                    password: data.password
+                    password: data.password,
+                    title: translate('Password.verifyPinTitle'),
+                    subtitle: translate('Password.verifyPinSubtitle')
                 });
                 break;
             case ScreenStep.CREATE_PIN_CONFIRM:
                 if (this.state.password === data.password) {
-                    // TODO: promise resolve
+                    this.resultDeferred && this.resultDeferred.resolve(data.password);
+                    this.setState({ visible: false });
                 } else {
-                    // TODO: show error
+                    this.setState({ error: translate('Password.invalidPassword') });
                 }
                 break;
 
+            // Change PIN Flow
             case ScreenStep.CHANGE_PIN_TERMS:
                 this.setState({ currentStep: ScreenStep.CHANGE_PIN_CURRENT });
                 break;
@@ -157,7 +165,7 @@ export class PasswordModal extends React.Component<{}, IState> {
     }
 
     private async verifyPassword(value: string): Promise<boolean> {
-        this.setState({ error: ' ' });
+        this.setState({ error: EMPTY_STRING });
         if (Platform.OS === 'web') {
             return true;
         } else {
@@ -165,7 +173,7 @@ export class PasswordModal extends React.Component<{}, IState> {
                 const passwordCredentials = await getPassword();
                 if (passwordCredentials) {
                     if (value === passwordCredentials.password) {
-                        this.setState({ error: ' ' });
+                        this.setState({ error: EMPTY_STRING });
                         return true;
                     } else {
                         this.setState({ error: translate('Password.invalidPassword') });
@@ -190,7 +198,6 @@ export class PasswordModal extends React.Component<{}, IState> {
                 currentStep === ScreenStep.CHANGE_PIN_TERMS ? (
                     <PasswordTerms
                         onAcknowledged={this.updateState}
-                        // onAcknowledged={() => this.onAcknowledged()}
                         // changePIN={this.state.changePIN}
                     />
                 ) : (
@@ -206,6 +213,7 @@ export class PasswordModal extends React.Component<{}, IState> {
                             }
                         }}
                         errorMessage={this.state.error}
+                        clearErrorMessage={() => this.setState({ error: EMPTY_STRING })}
                     />
                 )}
                 {/* <View

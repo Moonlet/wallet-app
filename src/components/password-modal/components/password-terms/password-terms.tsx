@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import { View, Image } from 'react-native';
-import {
-    Button,
-    Checkbox
-    // Text
-} from '../../../../library';
+import { Button, Checkbox, Text } from '../../../../library';
 
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -12,7 +8,7 @@ import { translate } from '../../../../core/i18n';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 
 export interface IExternalProps {
-    onAcknowledged: any; // () => any;
+    onAcknowledged: (data: {}) => any;
     // changePIN: boolean;
 }
 
@@ -23,9 +19,8 @@ export const PasswordTermsComponent = (
 
     return (
         <View style={props.styles.container}>
-            {/* {!props.changePIN && (
-                <Text style={props.styles.textStyle}>{translate('Password.termsBody')}</Text>
-            )} */}
+            {/* !props.changePIN */}
+            <Text style={props.styles.textStyle}>{translate('Password.termsBody')}</Text>
 
             <View style={props.styles.imageStyle}>
                 <Image
@@ -47,7 +42,7 @@ export const PasswordTermsComponent = (
                     primary
                     disabled={!acknowledged}
                     onPress={() => {
-                        props.onAcknowledged();
+                        props.onAcknowledged({});
                     }}
                 >
                     {translate('App.labels.understand')}

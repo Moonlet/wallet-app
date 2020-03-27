@@ -102,16 +102,16 @@ export class RecoverWalletScreenComponent extends React.Component<
         }
 
         // TODO
-        // subtitle={translate('Password.recoverWalletPinSubtitle')}
-        PasswordModal.createPassword().then(password =>
-            this.props.createHDWallet(this.state.mnemonic.join(' '), password, () => {
-                this.props.navigation.dispatch(StackActions.popToTop());
-                this.props.navigation.navigate(
-                    'MainNavigation',
-                    {},
-                    NavigationActions.navigate({ routeName: 'Dashboard' })
-                );
-            })
+        PasswordModal.createPassword(translate('Password.recoverWalletPinSubtitle')).then(
+            password =>
+                this.props.createHDWallet(this.state.mnemonic.join(' '), password, () => {
+                    this.props.navigation.dispatch(StackActions.popToTop());
+                    this.props.navigation.navigate(
+                        'MainNavigation',
+                        {},
+                        NavigationActions.navigate({ routeName: 'Dashboard' })
+                    );
+                })
         );
     }
 

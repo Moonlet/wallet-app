@@ -162,7 +162,9 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                                 (n: number) => mnemonicsInput[n] === mnemonic[n]
                             );
                             if (valid) {
-                                this.passwordModal.requestPassword().then(password =>
+                                // TODO
+                                // subtitle={translate('CreateWalletMnemonicConfirm.password')}
+                                PasswordModal.createPassword().then(password =>
                                     props.createHDWallet(mnemonic.join(' '), password, () => {
                                         props.navigation.dispatch(StackActions.popToTop());
                                         props.navigation.navigate(
@@ -181,12 +183,6 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                     }
                 ]}
                 disableSpace
-            />
-
-            <PasswordModal
-                shouldCreatePassword={true}
-                subtitle={translate('CreateWalletMnemonicConfirm.password')}
-                obRef={ref => (this.passwordModal = ref)}
             />
         </View>
     );

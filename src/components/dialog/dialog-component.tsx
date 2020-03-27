@@ -41,7 +41,7 @@ export class DialogComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    public static ref: Deferred = new Deferred();
+    public static ref: Deferred<DialogComponent> = new Deferred();
 
     public static async alert(
         title: string,

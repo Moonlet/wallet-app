@@ -35,7 +35,6 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    public passwordModal: any;
 
     constructor(props: any) {
         super(props);
@@ -49,14 +48,15 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.passwordModal
-            .requestPassword()
-            .then(password => {
-                this.populateMnemonic(password);
-            })
-            .catch(() => {
-                this.props.navigation.goBack(null);
-            });
+        PasswordModal.getPassword(
+            translate('Password.pinTitleUnlock'),
+            translate('Password.subtitleMnemonic')
+        ).then(password => this.populateMnemonic(password));
+
+        // TODO: decide if check here the password
+        // or request password on the screen from it's navigating here
+
+        // catch this.props.navigation.goBack(null);
     }
 
     public componentWillUnmount() {
@@ -118,11 +118,6 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
                         </View>
                     </React.Fragment>
                 )}
-
-                <PasswordModal
-                    subtitle={translate('Password.subtitleMnemonic')}
-                    obRef={ref => (this.passwordModal = ref)}
-                />
             </View>
         );
     }

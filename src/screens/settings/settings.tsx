@@ -64,7 +64,6 @@ export class SettingsScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    public passwordModal = null;
     debugModal: any;
 
     constructor(
@@ -122,9 +121,9 @@ export class SettingsScreenComponent extends React.Component<
                             </Text>
                             <Switch
                                 onValueChange={() =>
-                                    this.passwordModal
-                                        .requestPassword()
-                                        .then(() => this.props.toggleTouchID())
+                                    PasswordModal.getPassword().then(() =>
+                                        this.props.toggleTouchID()
+                                    )
                                 }
                                 value={this.props.touchID}
                                 trackColor={{
@@ -170,10 +169,10 @@ export class SettingsScreenComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.rowContainer}
                     onPress={() =>
-                        this.setState({ changePIN: true }, () => {
-                            this.passwordModal
-                                .requestPassword()
-                                .then((pass: { newPassword: string; oldPassword: string }) => {
+                        this.setState({ changePIN: true }, () =>
+                            // TODO: changePIN
+                            PasswordModal.changePassword().then(
+                                (pass: { newPassword: string; oldPassword: string }) => {
                                     this.props.changePIN(pass.newPassword, pass.oldPassword);
 
                                     // disable changePIN if you want to reattempt to change the PIN code
@@ -183,8 +182,9 @@ export class SettingsScreenComponent extends React.Component<
                                             translate('Settings.successChangePin')
                                         )
                                     );
-                                });
-                        })
+                                }
+                            )
+                        )
                     }
                 >
                     <Text style={styles.textRow}>{translate('Settings.changePin')}</Text>
@@ -374,10 +374,6 @@ export class SettingsScreenComponent extends React.Component<
                     )}
                 </ScrollView>
 
-                <PasswordModal
-                    obRef={ref => (this.passwordModal = ref)}
-                    changePIN={this.state.changePIN}
-                />
                 <DebugModal obRef={ref => (this.debugModal = ref)} />
             </View>
         );

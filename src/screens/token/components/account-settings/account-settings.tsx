@@ -40,8 +40,6 @@ interface IState {
 }
 
 export class AccountSettingsComponent extends React.Component<IProps & IExternalProps, IState> {
-    public passwordModal = null;
-
     constructor(props: IProps & IExternalProps) {
         super(props);
 
@@ -55,8 +53,9 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         };
     }
 
-    public revealPrivateKey = async () => {
-        const password = await this.passwordModal.requestPassword();
+    public async revealPrivateKey() {
+        // TODO: not working because of modal over modal
+        const password = await PasswordModal.getPassword();
 
         this.setState({ showKeyScreen: true, isLoading: true });
 
@@ -77,7 +76,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             showSecurityWarning: true,
             isLoading: false
         });
-    };
+    }
 
     public revealPublicKey() {
         this.setState({
@@ -239,7 +238,6 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                         )}
                     </View>
                 </View>
-                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </Modal>
         );
     }

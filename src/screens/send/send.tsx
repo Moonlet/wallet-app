@@ -89,7 +89,6 @@ export class SendScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    public passwordModal = null;
 
     constructor(
         props: INavigationProps<INavigationParams> &
@@ -152,7 +151,7 @@ export class SendScreenComponent extends React.Component<
             return;
         }
 
-        this.passwordModal.requestPassword().then(password => {
+        PasswordModal.getPassword().then(password => {
             this.props.sendTransferTransaction(
                 this.props.account,
                 this.state.toAddress,
@@ -475,8 +474,6 @@ export class SendScreenComponent extends React.Component<
 
                     {this.renderBottomConfirm()}
                 </View>
-
-                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>
         );
     }

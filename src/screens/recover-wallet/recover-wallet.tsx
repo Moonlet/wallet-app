@@ -45,7 +45,6 @@ export class RecoverWalletScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    public passwordModal = null;
     public suggestionsScrollView: any;
     public inputView: any = [];
 
@@ -102,7 +101,9 @@ export class RecoverWalletScreenComponent extends React.Component<
             return;
         }
 
-        this.passwordModal.requestPassword().then(password =>
+        // TODO
+        // subtitle={translate('Password.recoverWalletPinSubtitle')}
+        PasswordModal.createPassword().then(password =>
             this.props.createHDWallet(this.state.mnemonic.join(' '), password, () => {
                 this.props.navigation.dispatch(StackActions.popToTop());
                 this.props.navigation.navigate(
@@ -185,12 +186,6 @@ export class RecoverWalletScreenComponent extends React.Component<
                         }
                     ]}
                     disableSpace
-                />
-
-                <PasswordModal
-                    shouldCreatePassword={true}
-                    subtitle={translate('Password.recoverWalletPinSubtitle')}
-                    obRef={ref => (this.passwordModal = ref)}
                 />
             </View>
         );

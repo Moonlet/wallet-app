@@ -52,8 +52,6 @@ export class AccountCreateComponent extends React.Component<
     IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    public passwordModal = null;
-
     constructor(
         props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
@@ -104,7 +102,7 @@ export class AccountCreateComponent extends React.Component<
     };
 
     public createAccount = async () => {
-        const password = await this.passwordModal.requestPassword();
+        const password = await PasswordModal.getPassword();
         this.setState({ isLoading: true });
         this.props.createAccount(this.props.blockchain, this.state.inputAccout, password);
     };
@@ -201,8 +199,6 @@ export class AccountCreateComponent extends React.Component<
                             ? translate('App.labels.create')
                             : translate('App.labels.check')}
                     </Button>
-
-                    <PasswordModal obRef={ref => (this.passwordModal = ref)} />
                 </View>
             );
         }

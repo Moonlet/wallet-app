@@ -327,6 +327,7 @@ export class DashboardScreenComponent extends React.Component<
                             token={config.coin}
                             tokenDecimals={config.tokens[config.coin].decimals}
                             blockchain={blockchain}
+                            isAnimated={true}
                         />
                         <Icon name="chevron-down" size={normalize(18)} style={styles.icon} />
                     </View>
@@ -341,6 +342,7 @@ export class DashboardScreenComponent extends React.Component<
                             tokenDecimals={config.tokens[config.coin].decimals}
                             blockchain={blockchain}
                             convert
+                            isAnimated={true}
                         />
                     </View>
                 </TouchableOpacity>

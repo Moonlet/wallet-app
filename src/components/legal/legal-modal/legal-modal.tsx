@@ -28,7 +28,7 @@ const mapStateToProps = (state: IReduxState) => {
 interface IState {
     showModal: boolean;
     tcLatestVersion: number;
-    isOnboardingFlow: boolean;
+    allowBackButton: boolean;
 }
 
 export class LegalModalComponent extends React.Component<
@@ -42,7 +42,7 @@ export class LegalModalComponent extends React.Component<
         this.state = {
             showModal: false,
             tcLatestVersion: undefined,
-            isOnboardingFlow: false
+            allowBackButton: false
         };
     }
 
@@ -71,7 +71,12 @@ export class LegalModalComponent extends React.Component<
             const isOnboardingFlow =
                 currentNavigatorRouteName === 'OnboardingNavigation' &&
                 NavigationService.getCurrentRoute() !== 'Onboarding';
-            this.setState({ isOnboardingFlow });
+
+            if (isOnboardingFlow === true) {
+                this.setState({ allowBackButton: true });
+            } else {
+                this.setState({ allowBackButton: false });
+            }
 
             const showLegalModal =
                 (isOnboardingFlow || currentNavigatorRouteName !== 'OnboardingNavigation') &&
@@ -95,7 +100,7 @@ export class LegalModalComponent extends React.Component<
                     <Legal
                         tcLatestVersion={this.state.tcLatestVersion}
                         onAccept={() => this.setState({ showModal: false })}
-                        showClose={this.state.isOnboardingFlow}
+                        showClose={this.state.allowBackButton}
                         onClose={() => {
                             this.setState({ showModal: false });
                             NavigationService.goBack();

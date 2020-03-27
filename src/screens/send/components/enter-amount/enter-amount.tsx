@@ -7,13 +7,14 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { translate } from '../../../../core/i18n';
 import { Amount } from '../../../../components/amount/amount';
 import { Blockchain } from '../../../../core/blockchain/types';
-import { ITokenConfig } from '../../../../core/blockchain/types/token';
 import BigNumber from 'bignumber.js';
+import { ITokenState } from '../../../../redux/tokens/state';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export interface IExternalProps {
     availableAmount: string;
     blockchain: Blockchain;
-    token: ITokenConfig;
+    token: ITokenState;
     value: string;
     onChange: (value: string) => any;
     insufficientFunds: boolean;
@@ -64,7 +65,9 @@ export const EnterAmountComponent = (
                     <Amount
                         style={styles.allBalanceText}
                         token={props.token.symbol}
-                        tokenDecimals={props.token.decimals}
+                        tokenDecimals={
+                            getTokenConfig(props.blockchain, props.token.symbol).decimals
+                        }
                         amount={props.token.balance?.value}
                         blockchain={props.blockchain}
                     />

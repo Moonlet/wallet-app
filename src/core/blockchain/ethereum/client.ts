@@ -16,6 +16,7 @@ import { Erc20Client } from './tokens/erc20-client';
 import { TokenType } from '../types/token';
 import { NameService } from './name-service';
 import { getTransactionStatusByCode } from './transaction';
+import { convertTokenConfig } from '../../../redux/tokens/static-selectors';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -89,6 +90,7 @@ export class Client extends BlockchainGenericClient {
         const dataBuffer = Buffer.from(response.result.replace('0x', ''), 'hex');
 
         const result = abi.rawDecode(returnTypes, dataBuffer);
+
         if (result.length === 1) {
             return result.toString();
         } else {
@@ -202,7 +204,7 @@ export class Client extends BlockchainGenericClient {
                     broadcatedOnBlock: txInfo.blockNumber,
                     nonce: txInfo.nonce,
                     status: getTransactionStatusByCode(txReceipt.status),
-                    token: config.tokens.ETH
+                    token: convertTokenConfig(config.tokens.ETH)
                 };
             } catch (error) {
                 return Promise.reject(error.message);

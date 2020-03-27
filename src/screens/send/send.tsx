@@ -19,7 +19,7 @@ import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { BASE_DIMENSION } from '../../styles/dimensions';
-import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
+import { TokenType } from '../../core/blockchain/types/token';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { IAccountState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
@@ -38,6 +38,8 @@ import { Amount } from '../../components/amount/amount';
 import _ from 'lodash';
 import { AddAddress } from './components/add-address/add-address';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { ITokenState } from '../../redux/tokens/state';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -65,7 +67,7 @@ const mapDispatchToProps = {
 export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
-    token: ITokenConfig;
+    token: ITokenState;
 }
 
 interface IState {
@@ -181,10 +183,10 @@ export class SendScreenComponent extends React.Component<
     }
 
     public availableAmount() {
-        const token = this.props.account.tokens[this.props.token.symbol];
+        const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
-        let balance: BigNumber = new BigNumber(token.balance?.value);
-        if (this.props.token.type === TokenType.NATIVE) {
+        let balance: BigNumber = new BigNumber(this.props.token.balance?.value);
+        if (tokenConfig.type === TokenType.NATIVE) {
             balance = balance.minus(this.state.feeOptions?.feeTotal);
         }
 
@@ -198,6 +200,8 @@ export class SendScreenComponent extends React.Component<
     }
 
     public availableFunds() {
+        const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
+
         // Amount check
         const inputAmount = this.getInputAmountToStd();
         const availableAmount = new BigNumber(this.props.token.balance?.value);
@@ -213,7 +217,7 @@ export class SendScreenComponent extends React.Component<
         // Fees check
         const feeTotal = new BigNumber(this.state.feeOptions?.feeTotal);
 
-        if (this.props.token.type === TokenType.NATIVE) {
+        if (tokenConfig.type === TokenType.NATIVE) {
             // feeTotal + amount > available amount
             if (feeTotal.plus(inputAmount).isGreaterThan(availableAmount)) {
                 this.setState({ insufficientFundsFees: true });
@@ -259,18 +263,21 @@ export class SendScreenComponent extends React.Component<
 
     private getInputAmountToStd(): BigNumber {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+
         return blockchainInstance.account.amountToStd(
             new BigNumber(this.state.amount ? this.state.amount : 0),
-            this.props.token.decimals
+            tokenConfig.decimals
         );
     }
 
     private renderBottomConfirm() {
-        const { token, styles, account } = this.props;
+        const { styles, account } = this.props;
         const { amount, headerSteps } = this.state;
         const stdAmount = this.getInputAmountToStd();
 
         const activeIndex = _.findIndex(headerSteps, ['active', true]);
+        const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
         let disableButton: boolean;
         switch (activeIndex) {
@@ -326,14 +333,14 @@ export class SendScreenComponent extends React.Component<
                                     style={styles.bottomDefaultText}
                                 >
                                     {amount === ''
-                                        ? `_.___ ${token.symbol}`
-                                        : `${amount} ${token.symbol}`}
+                                        ? `_.___ ${tokenConfig.symbol}`
+                                        : `${amount} ${tokenConfig.symbol}`}
                                 </Text>
 
                                 <Amount
                                     style={styles.bottomAmountText}
-                                    token={token.symbol}
-                                    tokenDecimals={token.decimals}
+                                    token={tokenConfig.symbol}
+                                    tokenDecimals={tokenConfig.decimals}
                                     amount={stdAmount.toString()}
                                     blockchain={this.props.account.blockchain}
                                     convert
@@ -400,7 +407,8 @@ export class SendScreenComponent extends React.Component<
         const { blockchain } = account;
         const config = getBlockchain(blockchain).config;
         const extraFields = config.ui.extraFields;
-        const feeToken = account.tokens[config.coin];
+
+        const feeToken = getTokenConfig(account.blockchain, account.tokens[config.coin].symbol);
         const feeTokenSymbol = config.feeOptions.gasPriceToken;
 
         return (

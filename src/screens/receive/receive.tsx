@@ -14,13 +14,13 @@ import { connect } from 'react-redux';
 import { Blockchain } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
-import { ITokenConfig } from '../../core/blockchain/types/token';
 import { BASE_DIMENSION } from '../../styles/dimensions';
+import { ITokenState } from '../../redux/tokens/state';
 
 export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
-    token: ITokenConfig;
+    token: ITokenState;
 }
 
 export interface IReduxProps {

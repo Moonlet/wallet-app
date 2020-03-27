@@ -16,8 +16,7 @@ export const config: IBlockchainConfig = {
             icon: {
                 iconComponent: CosmosIcon
             },
-            order: 0,
-            active: true,
+            defaultOrder: 0,
             decimals: 6,
             ui: {
                 decimals: 3,

@@ -10,8 +10,8 @@ import {
     WALLET_CHANGE_NAME,
     TOGGLE_TOKEN_ACTIVE,
     UPDATE_TOKEN_ORDER,
-    REMOVE_TOKEN,
-    ADD_TOKEN,
+    REMOVE_TOKEN_FROM_ACCOUNT,
+    ADD_TOKEN_TO_ACCOUNT,
     WALLET_SELECT_ACCOUNT,
     WALLET_SELECT_BLOCKCHAIN,
     SELECT_WALLET,
@@ -248,7 +248,7 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                 }
             };
 
-        case REMOVE_TOKEN:
+        case REMOVE_TOKEN_FROM_ACCOUNT:
             const accountToRemoveToken = state[action.data.walletId].accounts.find(
                 account =>
                     account.address === action.data.account.address &&
@@ -270,7 +270,7 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                 }
             };
 
-        case ADD_TOKEN:
+        case ADD_TOKEN_TO_ACCOUNT:
             const accountToAddToken = state[action.data.walletId].accounts.find(
                 account =>
                     account.address === action.data.account.address &&

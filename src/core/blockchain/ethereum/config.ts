@@ -16,8 +16,7 @@ export const config: IBlockchainConfig = {
             icon: {
                 iconComponent: EthIcon
             },
-            order: 0,
-            active: true,
+            defaultOrder: 0,
             decimals: 18,
             ui: {
                 decimals: 4,

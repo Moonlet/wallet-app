@@ -7,6 +7,7 @@ import { TokenType } from '../blockchain/types/token';
 import { getBlockchain } from '../blockchain/blockchain-factory';
 import { Blockchain } from '../blockchain/types';
 import { IExchangeRates } from '../../redux/market/state';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
 
 export const calculateBalance = (account: IAccountState, exchangeRates: IExchangeRates) => {
     const tokenKeys = Object.keys(account.tokens);
@@ -14,9 +15,12 @@ export const calculateBalance = (account: IAccountState, exchangeRates: IExchang
 
     tokenKeys.map(key => {
         const token = account.tokens[key];
+        const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
+
         const tokenBalanceValue = new BigNumber(token.balance?.value);
+
         if (token.active) {
-            if (token.type === TokenType.NATIVE) {
+            if (tokenConfig.type === TokenType.NATIVE) {
                 balance = balance.plus(tokenBalanceValue);
             } else {
                 const amount = convertAmount(
@@ -25,7 +29,7 @@ export const calculateBalance = (account: IAccountState, exchangeRates: IExchang
                     tokenBalanceValue.toString(),
                     key,
                     getBlockchain(account.blockchain).config.coin,
-                    token.decimals
+                    tokenConfig.decimals
                 );
                 balance = balance.plus(amount);
             }

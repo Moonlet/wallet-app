@@ -9,6 +9,7 @@ import { toChecksumAddress } from '@zilliqa-js/crypto/dist/util';
 import { TransactionStatus } from '../../wallet/types';
 import { TokenType } from '../types/token';
 import { Zilliqa } from '.';
+import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 const schnorrSign = (msg: Buffer, privateKey: string): string => {
     const pubKey = privateToPublic(privateKey);
@@ -67,7 +68,8 @@ export const buildTransferTransaction = async (
     const client = Zilliqa.getClient(tx.chainId);
     const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
 
-    const tokenInfo = tx.account.tokens[tx.token];
+    const tokenInfo = getTokenConfig(tx.account.blockchain, tx.token);
+
     switch (tokenInfo.type) {
         case TokenType.ZRC2:
             return {
@@ -80,7 +82,7 @@ export const buildTransferTransaction = async (
                 blockchain: tx.account.blockchain,
                 chainId: tx.chainId,
                 type: TransactionType.TRANSFER,
-                token: tokenInfo,
+                token: tx.account.tokens[tx.token],
                 address: tx.account.address,
                 publicKey: tx.account.publicKey,
 
@@ -125,7 +127,7 @@ export const buildTransferTransaction = async (
                 blockchain: tx.account.blockchain,
                 chainId: tx.chainId,
                 type: TransactionType.TRANSFER,
-                token: tokenInfo,
+                token: tx.account.tokens[tx.token],
 
                 address: tx.account.address,
                 publicKey: tx.account.publicKey,
@@ -141,7 +143,8 @@ export const buildTransferTransaction = async (
 };
 
 export const getTransactionAmount = (tx: IBlockchainTransaction): string => {
-    if (tx.token?.type === TokenType.ZRC2) {
+    const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);
+    if (tokenInfo.type === TokenType.ZRC2) {
         return tx?.data?.params[1];
     } else {
         return tx.amount;

@@ -16,8 +16,7 @@ export const config: IBlockchainConfig = {
             icon: {
                 iconComponent: NearIcon
             },
-            order: 0,
-            active: true,
+            defaultOrder: 0,
             decimals: 24,
             ui: {
                 decimals: 4,

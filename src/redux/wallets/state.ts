@@ -1,7 +1,7 @@
 import { WalletType } from '../../core/wallet/types';
 import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
-import { ITokenConfig } from '../../core/blockchain/types/token';
+import { ITokenState } from '../tokens/state';
 
 export interface IWalletsState {
     [id: string]: IWalletState;
@@ -35,6 +35,6 @@ export interface IAccountState {
     publicKey: string;
     nonce?: number;
     tokens: {
-        [symbol: string]: ITokenConfig;
+        [symbol: string]: ITokenState;
     };
 }

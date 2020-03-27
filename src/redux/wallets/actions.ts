@@ -26,7 +26,7 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
 import { REHYDRATE } from 'redux-persist';
-import { TokenType, ITokenConfig } from '../../core/blockchain/types/token';
+import { TokenType } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
 import {
     getSelectedWallet,
@@ -47,6 +47,8 @@ import { NotificationType } from '../../core/messaging/types';
 import { updateAddressMonitorTokens } from '../../core/address-monitor/index';
 import { Dialog } from '../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../ui/password-modal/actions';
+import { getTokenConfig } from '../tokens/static-selectors';
+import { ITokenState } from '../tokens/state';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -59,8 +61,8 @@ export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
 export const TOGGLE_TOKEN_ACTIVE = 'TOGGLE_TOKEN_ACTIVE';
 export const UPDATE_TOKEN_ORDER = 'UPDATE_TOKEN_ORDER';
-export const REMOVE_TOKEN = 'REMOVE_TOKEN';
-export const ADD_TOKEN = 'ADD_TOKEN';
+export const REMOVE_TOKEN_FROM_ACCOUNT = 'REMOVE_TOKEN_FROM_ACCOUNT';
+export const ADD_TOKEN_TO_ACCOUNT = 'ADD_TOKEN_TO_ACCOUNT';
 export const WALLET_SELECT_ACCOUNT = 'WALLET_SELECT_ACCOUNT';
 export const WALLET_SELECT_BLOCKCHAIN = 'WALLET_SELECT_BLOCKCHAIN';
 export const SELECT_WALLET = 'SELECT_WALLET';
@@ -248,7 +250,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.COSMOS, 4)
         ]).then(async data => {
             data[0][0].selected = true; // first zil account
-            data[5][0].selected = true; // first eth account
+            //   data[5][0].selected = true; // first eth account
             const walletId = uuidv4();
             const accounts: IAccountState[] = data.reduce((out, acc) => out.concat(acc), []);
 
@@ -314,24 +316,24 @@ export const getBalance = (
             });
             try {
                 const chainId = getChainId(state, account.blockchain);
-                const tokenInfo = account.tokens[token];
+                const tokenConfig = getTokenConfig(account.blockchain, token);
                 const client = getBlockchain(blockchain).getClient(chainId);
 
                 let balance;
-                switch (tokenInfo.type) {
+                switch (tokenConfig.type) {
                     case TokenType.NATIVE: {
                         balance = await client.getBalance(address);
                         break;
                     }
                     default:
-                        if (client.tokens[tokenInfo.type]) {
-                            balance = await client.tokens[tokenInfo.type].getBalance(
-                                tokenInfo.contractAddress,
+                        if (client.tokens[tokenConfig.type]) {
+                            balance = await client.tokens[tokenConfig.type].getBalance(
+                                tokenConfig.contractAddress,
                                 address
                             );
                         } else {
                             throw new Error(
-                                `Token Type (${tokenInfo.type}) not handled for blockchain ${blockchain}.`
+                                `Token Type (${tokenConfig.type}) not handled for blockchain ${blockchain}.`
                             );
                         }
                 }
@@ -495,14 +497,13 @@ export const sendTransferTransaction = (
             connectionType: appWallet.hwOptions?.connectionType
         }); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
+        const tokenConfig = getTokenConfig(account.blockchain, token);
 
         const tx = await blockchainInstance.transaction.buildTransferTransaction({
             chainId,
             account,
             toAddress,
-            amount: blockchainInstance.account
-                .amountToStd(amount, account.tokens[token].decimals)
-                .toFixed(),
+            amount: blockchainInstance.account.amountToStd(amount, tokenConfig.decimals).toFixed(),
             token,
             feeOptions: {
                 gasPrice: feeOptions.gasPrice.toString(),
@@ -608,42 +609,47 @@ export const updateWalletName = (walletId: string, newName: string) => {
     };
 };
 
-export const toggleTokenActive = (
-    walletId: string,
-    account: IAccountState,
-    token: ITokenConfig
-) => {
-    return {
-        type: TOGGLE_TOKEN_ACTIVE,
-        data: { walletId, account, token }
-    };
-};
-
-export const updateTokenOrder = (
-    walletId: string,
-    account: IAccountState,
-    tokens: ITokenConfig[]
-) => {
-    return {
-        type: UPDATE_TOKEN_ORDER,
-        data: { walletId, account, tokens }
-    };
-};
-
-export const removeToken = (walletId: string, account: IAccountState, token: ITokenConfig) => {
-    return {
-        type: REMOVE_TOKEN,
-        data: { walletId, account, token }
-    };
-};
-
-export const addToken = (walletId: string, account: IAccountState, token: ITokenConfig) => (
+export const toggleTokenActive = (account: IAccountState, token: ITokenState) => (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
+    const selectedWallet: IWalletState = getSelectedWallet(getState());
+    return {
+        type: TOGGLE_TOKEN_ACTIVE,
+        data: { walletId: selectedWallet.id, account, token }
+    };
+};
+
+export const updateTokenOrder = (account: IAccountState, tokens: ITokenState[]) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const selectedWallet: IWalletState = getSelectedWallet(getState());
+    return {
+        type: UPDATE_TOKEN_ORDER,
+        data: { walletId: selectedWallet.id, account, tokens }
+    };
+};
+
+export const removeTokenFromAccount = (account: IAccountState, token: ITokenState) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const selectedWallet: IWalletState = getSelectedWallet(getState());
+    return {
+        type: REMOVE_TOKEN_FROM_ACCOUNT,
+        data: { walletId: selectedWallet.id, account, token }
+    };
+};
+
+export const addTokenToAccount = (account: IAccountState, token: ITokenState) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const selectedWallet: IWalletState = getSelectedWallet(getState());
     dispatch({
-        type: ADD_TOKEN,
-        data: { walletId, account, token }
+        type: ADD_TOKEN_TO_ACCOUNT,
+        data: { walletId: selectedWallet.id, account, token }
     });
     getBalance(account.blockchain, account.address, undefined, true)(dispatch, getState);
 };

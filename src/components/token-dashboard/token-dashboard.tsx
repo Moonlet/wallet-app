@@ -10,6 +10,7 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { TokenCard } from '../token-card/token-card';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { normalize } from '../../styles/dimensions';
+import { ITokenState } from '../../redux/tokens/state';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -47,7 +48,7 @@ export const TokenDashboardComponent = (
         >
             {props.account?.tokens &&
                 Object.values(props.account.tokens).map(
-                    (token: ITokenConfig, index: number) =>
+                    (token: ITokenState, index: number) =>
                         token.active && (
                             <TokenCard
                                 account={props.account}

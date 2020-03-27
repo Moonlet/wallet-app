@@ -43,8 +43,6 @@ export const sign = async (tx: IBlockchainTransaction, privateKey: string): Prom
 export const buildTransferTransaction = async (
     tx: ITransferTransaction
 ): Promise<IBlockchainTransaction> => {
-    const tokenInfo = tx.account.tokens[tx.token];
-
     const client = Cosmos.getClient(tx.chainId) as CosmosClient;
     const accountInfo = await client.getAccountInfo(tx.account.address);
     let denom = config.defaultUnit.toLowerCase();
@@ -95,7 +93,7 @@ export const buildTransferTransaction = async (
         blockchain: tx.account.blockchain,
         chainId: tx.chainId,
         type: TransactionType.TRANSFER,
-        token: tokenInfo,
+        token: tx.account.tokens[tx.token],
         address: tx.account.address,
         publicKey: tx.account.publicKey,
         toAddress: tx.toAddress,

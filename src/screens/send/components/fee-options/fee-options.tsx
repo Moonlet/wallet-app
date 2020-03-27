@@ -16,12 +16,13 @@ import { getChainId } from '../../../../redux/preferences/selectors';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import bind from 'bind-decorator';
-import { ITokenConfig } from '../../../../core/blockchain/types/token';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
+import { ITokenState } from '../../../../redux/tokens/state';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export interface IExternalProps {
-    token: ITokenConfig;
-    sendingToken: ITokenConfig;
+    token: ITokenState;
+    sendingToken: ITokenState;
     account: IAccountState;
     toAddress: string;
     onFeesChanged: (feeOptions: IFeeOptions) => any;
@@ -64,14 +65,19 @@ export class FeeOptionsComponent extends React.Component<
 
     public async getEstimatedFees() {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
+        const tokenSendingToken = getTokenConfig(
+            this.props.account.blockchain,
+            this.props.sendingToken.symbol
+        );
+
         const fees = await blockchainInstance
             .getClient(this.props.chainId)
             .calculateFees(
                 this.props.account.address,
                 this.props.toAddress,
                 1,
-                this.props.sendingToken.contractAddress,
-                this.props.sendingToken.type
+                tokenSendingToken.contractAddress,
+                tokenSendingToken.type
             );
 
         this.setState({ feeOptions: fees, isLoading: false });

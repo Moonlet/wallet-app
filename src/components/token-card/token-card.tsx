@@ -6,16 +6,16 @@ import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { Amount } from '../amount/amount';
-import { ITokenConfig } from '../../core/blockchain/types/token';
 import { Blockchain } from '../../core/blockchain/types';
 import { SmartImage } from '../../library/image/smart-image';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { ITokenState } from '../../redux/tokens/state';
 
 export interface IProps {
     blockchain: Blockchain;
-    token: ITokenConfig;
+    token: ITokenState;
     account: IAccountState;
     styles: ReturnType<typeof stylesProvider>;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -27,8 +27,7 @@ export const TokenCardComponent = (
 ) => {
     const styles = props.styles;
 
-    const TokenIcon = getBlockchain(props.blockchain).config.tokens[props.token.symbol]?.icon
-        ?.iconComponent;
+    const tokenConfig = getTokenConfig(props.account.blockchain, props.token.symbol);
 
     return (
         <TouchableHighlight
@@ -42,13 +41,22 @@ export const TokenCardComponent = (
                 });
             }}
         >
-            <View style={props.styles.container}>
-                <SmartImage
-                    source={{
-                        uri: props.token?.icon?.uri,
-                        iconComponent: TokenIcon
-                    }}
-                    style={props.styles.imageStyle}
+            <SmartImage source={tokenConfig.icon} style={props.styles.imageStyle} />
+            <View style={styles.accountInfoContainer}>
+                <Amount
+                    style={styles.firstAmount}
+                    token={props.token.symbol}
+                    tokenDecimals={tokenConfig.decimals}
+                    amount={props.token.balance?.value}
+                    blockchain={props.blockchain}
+                />
+                <Amount
+                    style={styles.secondAmount}
+                    token={props.token.symbol}
+                    tokenDecimals={tokenConfig.decimals}
+                    amount={props.token.balance?.value}
+                    blockchain={props.blockchain}
+                    convert
                 />
                 <View style={styles.accountInfoContainer}>
                     <Amount

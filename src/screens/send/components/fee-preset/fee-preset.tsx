@@ -5,10 +5,11 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Amount } from '../../../../components/amount/amount';
 import { Text } from '../../../../library';
 import { Blockchain } from '../../../../core/blockchain/types';
-import { ITokenConfig } from '../../../../core/blockchain/types/token';
+import { ITokenState } from '../../../../redux/tokens/state';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export interface IExternalProps {
-    token: ITokenConfig;
+    token: ITokenState;
     amount: string;
     blockchain: Blockchain;
     title: string;
@@ -34,6 +35,7 @@ export class FeePresetComponent extends React.Component<
 
     public render() {
         const styles = this.props.styles;
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
         return (
             <TouchableOpacity
                 testID="advanced-fees"
@@ -57,8 +59,8 @@ export class FeePresetComponent extends React.Component<
                     style={this.props.selected ? [styles.fee, styles.textSelected] : styles.fee}
                     amount={this.props.amount}
                     blockchain={this.props.blockchain}
-                    token={this.props.token.symbol} // TODO:  not working
-                    tokenDecimals={this.props.token.decimals}
+                    token={tokenConfig.symbol} // TODO:  not working
+                    tokenDecimals={tokenConfig.decimals}
                 />
                 <View style={styles.containerFeeConverted}>
                     <Text
@@ -78,8 +80,8 @@ export class FeePresetComponent extends React.Component<
                         }
                         amount={this.props.amount}
                         blockchain={this.props.blockchain}
-                        token={this.props.token.symbol}
-                        tokenDecimals={this.props.token.decimals}
+                        token={tokenConfig.symbol}
+                        tokenDecimals={tokenConfig.decimals}
                         convert
                     />
                 </View>

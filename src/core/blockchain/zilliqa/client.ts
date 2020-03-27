@@ -18,6 +18,7 @@ import { Zrc2Client } from './tokens/zrc2-client';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { getAddressFromPublicKey } from '@zilliqa-js/crypto/dist/util';
 import { TransactionStatus } from '../../wallet/types';
+import { convertTokenConfig } from '../../../redux/tokens/static-selectors';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -202,7 +203,7 @@ export class Client extends BlockchainGenericClient {
                 broadcatedOnBlock: txData.receipt?.epoch_num,
                 nonce: txData.nonce,
                 status: txStatus,
-                token: config.tokens.ZIL
+                token: convertTokenConfig(config.tokens.ZIL)
             };
         } catch (error) {
             return Promise.reject(error.message);

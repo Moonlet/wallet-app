@@ -15,6 +15,7 @@ import moment from 'moment';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { IBlockchainTransaction } from '../../../core/blockchain/types';
 import { TransactionStatus } from '../../../core/wallet/types';
+import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 export interface IExternalProps {
     transactions: IBlockchainTransaction[];
@@ -71,6 +72,8 @@ export class TransactionsHistoryListComponent extends React.Component<
         const tokens = getBlockchain(account.blockchain).config.tokens;
         const coin = getBlockchain(account.blockchain).config.coin;
 
+        const txTokenConfig = getTokenConfig(tx.blockchain, tx?.token?.symbol);
+
         return (
             <TouchableOpacity
                 key={tx.id}
@@ -98,8 +101,8 @@ export class TransactionsHistoryListComponent extends React.Component<
                         <Amount
                             amount={amount}
                             blockchain={account.blockchain}
-                            token={tx?.token?.symbol || coin}
-                            tokenDecimals={tx?.token?.decimals || tokens[coin].decimals}
+                            token={txTokenConfig.symbol || coin}
+                            tokenDecimals={txTokenConfig.decimals || tokens[coin].decimals}
                         />
 
                         <Text style={styles.transactionTextPrimary}>

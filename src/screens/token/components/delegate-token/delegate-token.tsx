@@ -17,7 +17,6 @@ import { INavigationProps } from '../../../../navigation/with-navigation-params'
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../../../core/blockchain/types';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { getChainId } from '../../../../redux/preferences/selectors';
-import { ITokenConfig } from '../../../../core/blockchain/types/token';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import bind from 'bind-decorator';
 import { AccountTab } from './components/account-tab/account-tab';
@@ -25,12 +24,13 @@ import { DelegationsTab } from './components/delegations-tab/delegations-tab';
 import { ValidatorsTab } from './components/validators-tab/validators-tab';
 import { TransactionsTab } from './components/transactions-tab/transactions-tab';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import { ITokenState } from '../../../../redux/tokens/state';
 
 export interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
     extensionTransactionPayload: any; // TODO add typing
-    token: ITokenConfig;
+    token: ITokenState;
     navigation: NavigationScreenProp<NavigationState>;
 }
 

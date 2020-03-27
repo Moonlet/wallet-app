@@ -15,21 +15,24 @@ import { themes } from '../../navigation/navigation';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { IAccountState, IWalletState } from '../../redux/wallets/state';
 import { Amount } from '../../components/amount/amount';
-import { toggleTokenActive, updateTokenOrder, removeToken } from '../../redux/wallets/actions';
-import { ITokenConfig, TokenType } from '../../core/blockchain/types/token';
+import { toggleTokenActive, updateTokenOrder } from '../../redux/wallets/actions';
+import { TokenType } from '../../core/blockchain/types/token';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { SmartImage } from '../../library/image/smart-image';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { ITokenState } from '../../redux/tokens/state';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { removeToken } from '../../redux/tokens/actions';
+import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 import { updateDisplayedHint } from '../../redux/app/actions';
 import { IHints, HintsScreen, HintsComponent } from '../../redux/app/state';
-import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 
 export interface IReduxProps {
     toggleTokenActive: typeof toggleTokenActive;
     updateTokenOrder: typeof updateTokenOrder;
     removeToken: typeof removeToken;
 
-    tokens: [{ key: string; value: ITokenConfig }];
+    tokens: [{ key: string; value: ITokenState }];
     wallet: IWalletState;
     selectedAccount: IAccountState;
 
@@ -110,18 +113,14 @@ export class ManageAccountComponent extends React.Component<
             this.accountsSwipeableRef[this.currentlyOpenSwipeable].close();
     }
 
-    public renderLeftActions(token: ITokenConfig) {
+    public renderLeftActions = (token: ITokenState) => {
         const styles = this.props.styles;
         return (
             <View style={styles.leftActionsContainer}>
                 <TouchableOpacity
                     style={styles.action}
                     onPress={() => {
-                        this.props.removeToken(
-                            this.props.wallet.id,
-                            this.props.selectedAccount,
-                            token
-                        );
+                        this.props.removeToken(this.props.selectedAccount, token);
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
@@ -130,7 +129,7 @@ export class ManageAccountComponent extends React.Component<
                 </TouchableOpacity>
             </View>
         );
-    }
+    };
 
     public onSwipeableWillOpen(index: string) {
         if (
@@ -144,7 +143,7 @@ export class ManageAccountComponent extends React.Component<
     }
 
     public renderToken(
-        item: { key: string; value: ITokenConfig },
+        item: { key: string; value: ITokenState },
         drag: () => void,
         isActive: boolean
     ) {
@@ -152,15 +151,14 @@ export class ManageAccountComponent extends React.Component<
         const blockchain = this.props.selectedAccount.blockchain;
         const index = item.value.symbol;
 
-        const TokenIcon = getBlockchain(blockchain).config.tokens[item.value.symbol]?.icon
-            ?.iconComponent;
+        const tokenConfig = getTokenConfig(blockchain, item.value.symbol);
 
         return (
             <Swipeable
                 key={index}
                 ref={ref => (this.accountsSwipeableRef[index] = ref)}
                 renderLeftActions={() =>
-                    item.value.type !== TokenType.NATIVE && this.renderLeftActions(item.value)
+                    tokenConfig.type !== TokenType.NATIVE && this.renderLeftActions(item.value)
                 }
                 onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
             >
@@ -178,39 +176,30 @@ export class ManageAccountComponent extends React.Component<
                     ]}
                 >
                     <View style={styles.infoContainer}>
-                        <SmartImage
-                            source={{
-                                uri: item.value?.icon?.uri,
-                                iconComponent: TokenIcon
-                            }}
-                        />
+                        <SmartImage source={tokenConfig.icon} />
                         <View style={styles.amountContainer}>
                             <Amount
                                 style={styles.firstAmount}
                                 amount={item.value.balance?.value.toString()}
                                 token={item.value.symbol}
-                                tokenDecimals={item.value.decimals}
+                                tokenDecimals={tokenConfig.decimals}
                                 blockchain={blockchain}
                             />
                             <Amount
                                 style={styles.secondAmount}
                                 amount={item.value.balance?.value.toString()}
                                 token={item.value.symbol}
-                                tokenDecimals={item.value.decimals}
+                                tokenDecimals={tokenConfig.decimals}
                                 blockchain={blockchain}
                                 convert
                             />
                         </View>
                     </View>
-                    {item.value.type !== TokenType.NATIVE && (
+                    {tokenConfig.type !== TokenType.NATIVE && (
                         <TouchableOpacity
                             style={styles.iconContainer}
                             onPressOut={() =>
-                                this.props.toggleTokenActive(
-                                    this.props.wallet.id,
-                                    this.props.selectedAccount,
-                                    item.value
-                                )
+                                this.props.toggleTokenActive(this.props.selectedAccount, item.value)
                             }
                         >
                             <Icon
@@ -236,7 +225,6 @@ export class ManageAccountComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
-
         return (
             <View style={styles.container}>
                 <DraggableFlatList
@@ -244,20 +232,19 @@ export class ManageAccountComponent extends React.Component<
                     renderItem={({ item, drag, isActive }) =>
                         this.renderToken(item, drag, isActive)
                     }
-                    keyExtractor={(item: { key: string; value: ITokenConfig }) =>
-                        `token-${item.value.symbol}`
+                    keyExtractor={(item: { key: string; value: ITokenState }) =>
+                        `token-${
+                            getTokenConfig(this.props.selectedAccount.blockchain, item.value.symbol)
+                                .name
+                        }`
                     }
                     onDragEnd={({ data }) => {
                         this.props.updateTokenOrder(
-                            this.props.wallet.id,
                             this.props.selectedAccount,
                             Object.assign(
                                 {},
                                 ...data.map(
-                                    (
-                                        item: { key: string; value: ITokenConfig },
-                                        index: number
-                                    ) => ({
+                                    (item: { key: string; value: ITokenState }, index: number) => ({
                                         [item.key]: { ...item.value, order: index }
                                     })
                                 )

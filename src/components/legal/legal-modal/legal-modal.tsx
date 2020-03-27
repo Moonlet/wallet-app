@@ -28,6 +28,7 @@ const mapStateToProps = (state: IReduxState) => {
 interface IState {
     showModal: boolean;
     tcLatestVersion: number;
+    isOnboardingFlow: boolean;
 }
 
 export class LegalModalComponent extends React.Component<
@@ -40,7 +41,8 @@ export class LegalModalComponent extends React.Component<
         super(props);
         this.state = {
             showModal: false,
-            tcLatestVersion: undefined
+            tcLatestVersion: undefined,
+            isOnboardingFlow: false
         };
     }
 
@@ -66,10 +68,13 @@ export class LegalModalComponent extends React.Component<
                 tcLatestVersion = Number(tcVersionAsyncStorage);
             }
 
+            const isOnboardingFlow =
+                currentNavigatorRouteName === 'OnboardingNavigation' &&
+                NavigationService.getCurrentRoute() !== 'Onboarding';
+            this.setState({ isOnboardingFlow });
+
             const showLegalModal =
-                ((currentNavigatorRouteName === 'OnboardingNavigation' &&
-                    NavigationService.getCurrentRoute() !== 'Onboarding') ||
-                    currentNavigatorRouteName !== 'OnboardingNavigation') &&
+                (isOnboardingFlow || currentNavigatorRouteName !== 'OnboardingNavigation') &&
                 tcLatestVersion !== undefined &&
                 (this.props.tcAcceptedVersion === undefined ||
                     tcLatestVersion > this.props.tcAcceptedVersion);
@@ -90,6 +95,11 @@ export class LegalModalComponent extends React.Component<
                     <Legal
                         tcLatestVersion={this.state.tcLatestVersion}
                         onAccept={() => this.setState({ showModal: false })}
+                        showClose={this.state.isOnboardingFlow}
+                        onClose={() => {
+                            this.setState({ showModal: false });
+                            NavigationService.goBack();
+                        }}
                     />
                 </View>
             </Modal>

@@ -3,7 +3,7 @@ import { Text } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableHighlight } from 'react-native';
 import Icon from '../icon';
 import { ICON_SIZE, normalize } from '../../styles/dimensions';
 
@@ -14,7 +14,6 @@ export interface IProps {
     selected?: boolean;
     onPress?: any;
     style?: any;
-    disableOpacity?: boolean;
 }
 
 export const ListCardComponent = (
@@ -28,7 +27,10 @@ export const ListCardComponent = (
         );
 
     return (
-        <TouchableOpacity onPress={props.onPress} activeOpacity={props?.disableOpacity ? 1 : 0.2}>
+        <TouchableHighlight
+            onPress={props.onPress}
+            underlayColor={props.theme.colors.appBackground}
+        >
             <View style={[props.styles.card, props.selected && props.styles.selected, props.style]}>
                 {props.leftIcon && (
                     <View style={[props.styles.iconContainer, { alignItems: 'flex-start' }]}>
@@ -48,7 +50,7 @@ export const ListCardComponent = (
                     </View>
                 )}
             </View>
-        </TouchableOpacity>
+        </TouchableHighlight>
     );
 };
 

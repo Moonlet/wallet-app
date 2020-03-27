@@ -61,7 +61,8 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/react-native-qrcode-svg'),
         path.resolve(appDirectory, 'node_modules/react-native-draggable-flatlist'),
         path.resolve(appDirectory, 'node_modules/react-native-fast-image'),
-        path.resolve(appDirectory, 'node_modules/react-native-fab-pie')
+        path.resolve(appDirectory, 'node_modules/react-native-fab-pie'),
+        path.resolve(appDirectory, 'node_modules/react-native-keyboard-aware-scroll-view')
         // path.resolve(appDirectory, 'node_modules/react-native-uncompiled')
     ],
     use: {

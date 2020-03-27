@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, Dimensions, Animated, TouchableOpacity, Platform } from 'react-native';
+import { View, Dimensions, Animated, TouchableOpacity, Platform, ScrollView } from 'react-native';
 import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { CoinBalanceCard } from '../../components/coin-balance-card/coin-balance-card';
 import { TokenDashboard } from '../../components/token-dashboard/token-dashboard';
 import { AccountCreate } from '../../components/account-create/account-create';
 import { IReduxState } from '../../redux/state';
@@ -25,7 +24,7 @@ import {
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
-import { ICON_SIZE, ICON_CONTAINER_SIZE, normalize } from '../../styles/dimensions';
+import { ICON_SIZE, ICON_CONTAINER_SIZE, BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
@@ -35,6 +34,11 @@ import { NavigationEvents, StackActions } from 'react-navigation';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 import { IExchangeRates } from '../../redux/market/state';
+import { formatAddress } from '../../core/utils/format-address';
+import { Amount } from '../../components/amount/amount';
+
+const ANIMATION_MAX_HEIGHT = normalize(160);
+const ANIMATION_MIN_HEIGHT = normalize(70);
 
 export interface IReduxProps {
     wallet: IWalletState;
@@ -52,6 +56,7 @@ export interface IReduxProps {
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
+// const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const mapStateToProps = (state: IReduxState) => {
     return {
@@ -128,9 +133,7 @@ export class DashboardScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-
-    public dashboardOpacity = new Animated.Value(1);
-    public balancesScrollView: any;
+    private animationValue: any = new Animated.Value(0);
 
     constructor(
         props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -253,59 +256,153 @@ export class DashboardScreenComponent extends React.Component<
         }
     }
 
-    public render() {
+    private renderCoinBalanceCard() {
+        const { styles, selectedAccount } = this.props;
+        const blockchain: Blockchain = this.props.selectedBlockchain;
+
+        const balance =
+            selectedAccount && calculateBalance(selectedAccount, this.props.exchangeRates);
+        const config = blockchain && getBlockchain(blockchain).config;
+
+        const animatePrimaryAmountFontSize = this.animationValue.interpolate({
+            inputRange: [0, ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT + 1],
+            outputRange: [normalize(30), normalize(19), normalize(19)],
+            extrapolate: 'clamp'
+        });
+
+        const animateConvertedAmountFontSize = this.animationValue.interpolate({
+            inputRange: [0, ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT + 1],
+            outputRange: [normalize(16), normalize(13), normalize(13)],
+            extrapolate: 'clamp'
+        });
+
+        const animateCoinBalanceCardHeight = this.animationValue.interpolate({
+            inputRange: [0, ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT + 1],
+            outputRange: [ANIMATION_MAX_HEIGHT, ANIMATION_MIN_HEIGHT, ANIMATION_MIN_HEIGHT],
+            extrapolate: 'clamp'
+        });
+
+        const animateHideAccountAddress = this.animationValue.interpolate({
+            inputRange: [0, ANIMATION_MAX_HEIGHT / 2, ANIMATION_MAX_HEIGHT],
+            outputRange: [0, 0, 1],
+            extrapolate: 'clamp'
+        });
+
+        const animateParimaryAmountVerticalPadding = this.animationValue.interpolate({
+            inputRange: [0, ANIMATION_MAX_HEIGHT / 2, ANIMATION_MAX_HEIGHT],
+            outputRange: [BASE_DIMENSION, BASE_DIMENSION / 2, 0],
+            extrapolate: 'clamp'
+        });
+
+        return (
+            <Animated.View
+                style={[styles.coinBalanceCard, { height: animateCoinBalanceCardHeight }]}
+            >
+                <TouchableOpacity
+                    onPress={() =>
+                        this.props.openBottomSheet(BottomSheetType.ACCOUNTS, { blockchain })
+                    }
+                >
+                    {selectedAccount && (
+                        <Animated.View style={[styles.row, { flex: animateHideAccountAddress }]}>
+                            <Text style={styles.account}>
+                                {selectedAccount.name || `Account ${selectedAccount.index + 1}`}
+                            </Text>
+                            <Text style={styles.address}>
+                                {formatAddress(selectedAccount.address, blockchain)}
+                            </Text>
+                        </Animated.View>
+                    )}
+
+                    <View style={styles.row}>
+                        <Amount
+                            style={[
+                                styles.mainText,
+                                {
+                                    fontSize: animatePrimaryAmountFontSize,
+                                    paddingVertical: animateParimaryAmountVerticalPadding
+                                }
+                            ]}
+                            amount={String(balance)}
+                            token={config.coin}
+                            tokenDecimals={config.tokens[config.coin].decimals}
+                            blockchain={blockchain}
+                            isAnimated={true}
+                        />
+                        <Icon name="chevron-down" size={normalize(18)} style={styles.icon} />
+                    </View>
+                    <View style={styles.row}>
+                        <Amount
+                            style={[
+                                styles.secondaryText,
+                                { fontSize: animateConvertedAmountFontSize }
+                            ]}
+                            amount={String(balance)}
+                            token={config.coin}
+                            tokenDecimals={config.tokens[config.coin].decimals}
+                            blockchain={blockchain}
+                            convert
+                            isAnimated={true}
+                        />
+                    </View>
+                </TouchableOpacity>
+            </Animated.View>
+        );
+    }
+
+    private renderTokenDashboard() {
         const styles = this.props.styles;
         const { blockchains } = this.props;
         const blockchain: Blockchain = this.props.selectedBlockchain;
+
+        return (
+            <View style={{ flex: 1 }}>
+                <ScrollView
+                    contentContainerStyle={[
+                        styles.dashboardContainer,
+                        {
+                            paddingTop: ANIMATION_MAX_HEIGHT // TODO: animate this
+                        }
+                    ]}
+                    showsVerticalScrollIndicator={false}
+                    scrollEventThrottle={16}
+                    onScroll={Animated.event([
+                        { nativeEvent: { contentOffset: { y: this.animationValue } } }
+                    ])}
+                    alwaysBounceVertical={false}
+                >
+                    <TokenDashboard
+                        account={this.props.selectedAccount}
+                        blockchain={blockchain}
+                        navigation={this.props.navigation}
+                        showBottomPadding={blockchains?.length > 1}
+                    />
+                </ScrollView>
+
+                {this.renderCoinBalanceCard()}
+            </View>
+        );
+    }
+
+    public render() {
+        const { blockchains, styles } = this.props;
+        const blockchain: Blockchain = this.props.selectedBlockchain;
         const showCreateAccount =
-            this.props.isCreateAccount && this.props.selectedBlockchainAccounts.length === 0;
+            this.props.isCreateAccount && this.props.selectedBlockchainAccounts?.length === 0;
 
         return (
             <View style={styles.container}>
                 {Platform.OS === 'web' && <ExtensionConnectionInfo />}
+
                 <TestnetBadge />
+
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />
+
                 {showCreateAccount && (
                     <AccountCreate blockchain={blockchain} navigation={this.props.navigation} />
                 )}
-                {!showCreateAccount && (
-                    <View style={styles.dashboardContainer}>
-                        <View style={styles.coinBalanceCard}>
-                            {this.props.selectedAccount && (
-                                <CoinBalanceCard
-                                    key={this.props.selectedAccount.address}
-                                    onPress={() =>
-                                        this.props.openBottomSheet(BottomSheetType.ACCOUNTS, {
-                                            blockchain
-                                        })
-                                    }
-                                    balance={calculateBalance(
-                                        this.props.selectedAccount,
-                                        this.props.exchangeRates
-                                    )}
-                                    blockchain={blockchain}
-                                    currency={getBlockchain(blockchain).config.coin}
-                                    toCurrency={this.props.userCurrency}
-                                    active={true}
-                                    selectedAccount={this.props.selectedAccount}
-                                />
-                            )}
-                        </View>
 
-                        {this.props.selectedAccount && (
-                            <Animated.View
-                                style={[styles.coinDashboard, { opacity: this.dashboardOpacity }]}
-                            >
-                                <TokenDashboard
-                                    account={this.props.selectedAccount}
-                                    blockchain={blockchain}
-                                    navigation={this.props.navigation}
-                                    showBottomPadding={blockchains.length > 1}
-                                />
-                            </Animated.View>
-                        )}
-                    </View>
-                )}
+                {!showCreateAccount && this.renderTokenDashboard()}
 
                 {blockchains.length > 1 && this.renderBottomBlockchainNav()}
             </View>

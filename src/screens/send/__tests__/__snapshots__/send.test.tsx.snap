@@ -3,7 +3,7 @@
 exports[`SendScreen renders correctly 1`] = `
 "<View style={{...}}>
   <withTheme(Connect(TestnetBadgeComponent)) />
-  <ScrollViewMock contentContainerStyle={{...}} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
+  <KeyboardAwareScrollViewMock contentContainerStyle={{...}} showsVerticalScrollIndicator={false} alwaysBounceVertical={false} enableAutomaticScroll={true} extraHeight={75} extraScrollHeight={0} enableResetScrollToCoords={true} keyboardOpeningTime={250} viewIsInsideTabBar={false} enableOnAndroid={false}>
     <View style={{...}}>
       <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
       <withTheme(Connect(AddAddressComponent)) account={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} onChange={[Function: onChange]} />
@@ -31,7 +31,7 @@ exports[`SendScreen renders correctly 1`] = `
         </View>
       </View>
     </View>
-  </ScrollViewMock>
+  </KeyboardAwareScrollViewMock>
   <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
 </View>"
 `;
@@ -39,7 +39,7 @@ exports[`SendScreen renders correctly 1`] = `
 exports[`SendScreen renders correctly 2`] = `
 "<View style={{...}}>
   <withTheme(Connect(TestnetBadgeComponent)) />
-  <ScrollViewMock contentContainerStyle={{...}} showsVerticalScrollIndicator={false} alwaysBounceVertical={false}>
+  <KeyboardAwareScrollViewMock contentContainerStyle={{...}} showsVerticalScrollIndicator={false} alwaysBounceVertical={false} enableAutomaticScroll={true} extraHeight={75} extraScrollHeight={0} enableResetScrollToCoords={true} keyboardOpeningTime={250} viewIsInsideTabBar={false} enableOnAndroid={false}>
     <View style={{...}}>
       <withTheme(HeaderStepByStepComponent) steps={{...}} selectStep={[Function: selectStep]} />
       <withTheme(Connect(AddAddressComponent)) account={{...}} blockchain=\\"ZILLIQA\\" chainId={[undefined]} onChange={[Function: onChange]} />
@@ -67,7 +67,7 @@ exports[`SendScreen renders correctly 2`] = `
         </View>
       </View>
     </View>
-  </ScrollViewMock>
+  </KeyboardAwareScrollViewMock>
   <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
 </View>"
 `;

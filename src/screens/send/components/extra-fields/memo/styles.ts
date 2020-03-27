@@ -9,16 +9,18 @@ export default (theme: ITheme) =>
             marginTop: 0,
             marginBottom: BASE_DIMENSION
         },
+        inputText: {
+            flex: 1,
+            color: theme.colors.text,
+            paddingRight: BASE_DIMENSION * 2,
+            fontSize: normalize(15)
+        },
         inputBox: {
-            paddingVertical: BASE_DIMENSION,
+            height: BASE_DIMENSION * 5,
             borderRadius: BORDER_RADIUS,
             backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2
-        },
-        input: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
-            color: theme.colors.text
+            paddingHorizontal: BASE_DIMENSION,
+            flexDirection: 'row'
         },
         label: {
             fontSize: normalize(13),

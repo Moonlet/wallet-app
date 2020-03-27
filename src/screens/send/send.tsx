@@ -37,6 +37,7 @@ import { EnterAmount } from './components/enter-amount/enter-amount';
 import { Amount } from '../../components/amount/amount';
 import _ from 'lodash';
 import { AddAddress } from './components/add-address/add-address';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -442,39 +443,45 @@ export class SendScreenComponent extends React.Component<
             <View style={styles.container}>
                 <TestnetBadge />
 
-                <View style={styles.content}>
-                    <HeaderStepByStep
-                        steps={headerSteps}
-                        selectStep={selectedIdex => {
-                            const activeIndex = _.findIndex(headerSteps, ['active', true]);
+                <KeyboardAwareScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={false}
+                    alwaysBounceVertical={false}
+                >
+                    <View style={styles.content}>
+                        <HeaderStepByStep
+                            steps={headerSteps}
+                            selectStep={selectedIdex => {
+                                const activeIndex = _.findIndex(headerSteps, ['active', true]);
 
-                            const steps = headerSteps;
-                            if (selectedIdex < activeIndex) {
-                                steps[activeIndex].active = false;
-                                steps[selectedIdex].active = true;
+                                const steps = headerSteps;
+                                if (selectedIdex < activeIndex) {
+                                    steps[activeIndex].active = false;
+                                    steps[selectedIdex].active = true;
+                                }
+
+                                this.setState({ headerSteps: steps });
+                            }}
+                        />
+
+                        {headerSteps.map((step, index) => {
+                            if (step.active) {
+                                switch (index) {
+                                    case 0:
+                                        return this.renderAddAddressContainer();
+                                    case 1:
+                                        return this.renderEnterAmount();
+                                    case 2:
+                                        return this.renderConfirmTransaction();
+                                    default:
+                                        return null;
+                                }
                             }
+                        })}
 
-                            this.setState({ headerSteps: steps });
-                        }}
-                    />
-
-                    {headerSteps.map((step, index) => {
-                        if (step.active) {
-                            switch (index) {
-                                case 0:
-                                    return this.renderAddAddressContainer();
-                                case 1:
-                                    return this.renderEnterAmount();
-                                case 2:
-                                    return this.renderConfirmTransaction();
-                                default:
-                                    return null;
-                            }
-                        }
-                    })}
-
-                    {this.renderBottomConfirm()}
-                </View>
+                        {this.renderBottomConfirm()}
+                    </View>
+                </KeyboardAwareScrollView>
 
                 <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>

@@ -6,7 +6,7 @@ import { translate } from '../../core/i18n';
 import { PasswordTerms } from './components/password-terms/password-terms';
 import Modal from '../../library/modal/modal';
 import bind from 'bind-decorator';
-import { getPassword } from '../../core/secure/keychain';
+import { getPassword, setPassword } from '../../core/secure/keychain';
 
 enum ScreenStep {
     ENTER_PIN = 'ENTER_PIN',
@@ -129,6 +129,7 @@ export class PasswordModal extends React.Component<{}, IState> {
                 break;
             case ScreenStep.CREATE_PIN_CONFIRM:
                 if (this.state.password === data.password) {
+                    await setPassword(data.password, false);
                     this.resultDeferred && this.resultDeferred.resolve(data.password);
                     this.setState({ visible: false });
                 } else {

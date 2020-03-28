@@ -204,7 +204,7 @@ export default class App extends React.Component<{}, IState> {
                                 }}
                             />
                             {!this.state.displayApplication && <ImageCanvas />}
-                            <PasswordModal />
+                            <PasswordModal.Component />
                             <BottomSheet />
                             <Dialog.Component />
                             <LoadingModal />

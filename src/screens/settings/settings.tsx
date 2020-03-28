@@ -168,24 +168,14 @@ export class SettingsScreenComponent extends React.Component<
 
                 <TouchableOpacity
                     style={styles.rowContainer}
-                    onPress={() =>
-                        this.setState({ changePIN: true }, () =>
-                            // TODO: changePIN
-                            PasswordModal.changePassword().then(
-                                (pass: { newPassword: string; oldPassword: string }) => {
-                                    this.props.changePIN(pass.newPassword, pass.oldPassword);
-
-                                    // disable changePIN if you want to reattempt to change the PIN code
-                                    this.setState({ changePIN: false }, () =>
-                                        Dialog.info(
-                                            translate('App.labels.success'),
-                                            translate('Settings.successChangePin')
-                                        )
-                                    );
-                                }
-                            )
-                        )
-                    }
+                    onPress={async () => {
+                        // TODO: changePIN
+                        await PasswordModal.changePassword();
+                        Dialog.info(
+                            translate('App.labels.success'),
+                            translate('Settings.successChangePin')
+                        );
+                    }}
                 >
                     <Text style={styles.textRow}>{translate('Settings.changePin')}</Text>
                     <Icon name="chevron-right" size={16} style={styles.icon} />

@@ -15,22 +15,25 @@ import { themes } from '../../navigation/navigation';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { IAccountState, IWalletState } from '../../redux/wallets/state';
 import { Amount } from '../../components/amount/amount';
-import { toggleTokenActive, updateTokenOrder } from '../../redux/wallets/actions';
+import {
+    toggleTokenActive,
+    updateTokenOrder,
+    removeTokenFromAccount
+} from '../../redux/wallets/actions';
 import { TokenType } from '../../core/blockchain/types/token';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { SmartImage } from '../../library/image/smart-image';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import { ITokenState } from '../../redux/tokens/state';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
-import { removeToken } from '../../redux/tokens/actions';
 import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 import { updateDisplayedHint } from '../../redux/app/actions';
 import { IHints, HintsScreen, HintsComponent } from '../../redux/app/state';
+import { ITokenState } from '../../redux/tokens/state';
 
 export interface IReduxProps {
     toggleTokenActive: typeof toggleTokenActive;
     updateTokenOrder: typeof updateTokenOrder;
-    removeToken: typeof removeToken;
+    removeTokenFromAccount: typeof removeTokenFromAccount;
 
     tokens: [{ key: string; value: ITokenState }];
     wallet: IWalletState;
@@ -43,7 +46,7 @@ export interface IReduxProps {
 const mapDispatchToProps = {
     toggleTokenActive,
     updateTokenOrder,
-    removeToken,
+    removeTokenFromAccount,
     updateDisplayedHint
 };
 
@@ -120,7 +123,7 @@ export class ManageAccountComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.action}
                     onPress={() => {
-                        this.props.removeToken(this.props.selectedAccount, token);
+                        this.props.removeTokenFromAccount(this.props.selectedAccount, token);
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
@@ -198,9 +201,12 @@ export class ManageAccountComponent extends React.Component<
                     {tokenConfig.type !== TokenType.NATIVE && (
                         <TouchableOpacity
                             style={styles.iconContainer}
-                            onPressOut={() =>
-                                this.props.toggleTokenActive(this.props.selectedAccount, item.value)
-                            }
+                            onPressOut={() => {
+                                this.props.toggleTokenActive(
+                                    this.props.selectedAccount,
+                                    item.value
+                                );
+                            }}
                         >
                             <Icon
                                 size={normalize(18)}

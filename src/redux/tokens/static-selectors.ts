@@ -14,23 +14,23 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
 
     const reduxToken = state.tokens;
 
-    return reduxToken.undefined[symbol];
+    return reduxToken[blockchain][symbol];
 };
 
 export const convertTokenConfig = (
     token: ITokenConfigState,
     account?: IAccountState
 ): ITokenState => {
-    const order = 0;
+    let order = 0;
     if (account) {
-        Object.values(account.tokens).sort((x, y) => y.order - x.order)[0]?.order || 0 + 1;
+        order = Object.values(account.tokens).sort((x, y) => y.order - x.order)[0]?.order || 0 + 1;
     }
     return {
         symbol: token.symbol,
         order: token.defaultOrder || order,
         active: true,
         balance: {
-            value: undefined,
+            value: '0',
             inProgress: false,
             timestamp: undefined,
             error: undefined

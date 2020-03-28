@@ -614,10 +614,10 @@ export const toggleTokenActive = (account: IAccountState, token: ITokenState) =>
     getState: () => IReduxState
 ) => {
     const selectedWallet: IWalletState = getSelectedWallet(getState());
-    return {
+    dispatch({
         type: TOGGLE_TOKEN_ACTIVE,
         data: { walletId: selectedWallet.id, account, token }
-    };
+    });
 };
 
 export const updateTokenOrder = (account: IAccountState, tokens: ITokenState[]) => (
@@ -625,10 +625,10 @@ export const updateTokenOrder = (account: IAccountState, tokens: ITokenState[]) 
     getState: () => IReduxState
 ) => {
     const selectedWallet: IWalletState = getSelectedWallet(getState());
-    return {
+    dispatch({
         type: UPDATE_TOKEN_ORDER,
         data: { walletId: selectedWallet.id, account, tokens }
-    };
+    });
 };
 
 export const removeTokenFromAccount = (account: IAccountState, token: ITokenState) => (
@@ -636,10 +636,10 @@ export const removeTokenFromAccount = (account: IAccountState, token: ITokenStat
     getState: () => IReduxState
 ) => {
     const selectedWallet: IWalletState = getSelectedWallet(getState());
-    return {
+    dispatch({
         type: REMOVE_TOKEN_FROM_ACCOUNT,
         data: { walletId: selectedWallet.id, account, token }
-    };
+    });
 };
 
 export const addTokenToAccount = (account: IAccountState, token: ITokenState) => (

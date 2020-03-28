@@ -115,24 +115,31 @@ export class ManageTokenComponent extends React.Component<
     };
 
     public convertTokenToState(staticToken: any, blockchainToken: any) {
+        // TODO enforce this after eth callContract is fixed
+        // if (blockchainToken) {
         if (blockchainToken) {
-            this.setState({
-                token: {
-                    name: blockchainToken.name,
-                    symbol: String(blockchainToken.symbol).toUpperCase(),
-                    icon: staticToken?.logo ? { uri: staticToken.logo } : GENERIC_TOKEN_ICON,
-                    type: this.getTokenType(this.props.selectedAccount.blockchain),
-                    contractAddress: blockchainToken.contractAddress,
-                    decimals: blockchainToken.decimals,
-                    ui: {
-                        decimals: blockchainToken.decimals,
-                        tokenScreenComponent: TokenScreenComponentType.DEFAULT
-                    }
-                }
-            });
-        } else {
-            this.setState({ showError: true, isLoading: false });
+            if (blockchainToken.name === '') blockchainToken = undefined;
         }
+        const symbol = blockchainToken ? blockchainToken.symbol : staticToken.symbol;
+        const decimals = blockchainToken ? blockchainToken.decimals : staticToken.decimals;
+        const contractAddress = staticToken ? staticToken.contractAddress : this.state.fieldInput;
+        this.setState({
+            token: {
+                name: blockchainToken ? blockchainToken.name : staticToken.name,
+                symbol: String(symbol).toUpperCase(),
+                icon: staticToken ? { uri: staticToken.logo } : GENERIC_TOKEN_ICON,
+                type: this.getTokenType(this.props.selectedAccount.blockchain),
+                contractAddress,
+                decimals,
+                ui: {
+                    decimals,
+                    tokenScreenComponent: TokenScreenComponentType.DEFAULT
+                }
+            }
+        });
+        // } else {
+        //     this.setState({ showError: true, isLoading: false });
+        // }
     }
 
     public async isContractAddress(input: string) {
@@ -141,7 +148,6 @@ export class ManageTokenComponent extends React.Component<
             const response = await blockchainInstance
                 .getClient(this.props.chainId)
                 .nameService.resolveText(input);
-
             if (response.code === ResolveTextCode.OK || ResolveTextCode.WARN_CHECKSUM) {
                 if (response.type === ResolveTextType.ADDRESS) {
                     return true;
@@ -178,7 +184,9 @@ export class ManageTokenComponent extends React.Component<
                     .getClient(this.props.chainId)
                     .tokens[tokenType].getTokenInfo(this.state.fieldInput)
             ]);
-            staticToken = getTokenInfo[0] ? getTokenInfo[0].json() : undefined;
+            if (getTokenInfo[0].status === 200) {
+                staticToken = await getTokenInfo[0].json();
+            }
             blockchainToken = getTokenInfo[1];
         } else {
             const fetchResponse = await fetch(
@@ -187,13 +195,9 @@ export class ManageTokenComponent extends React.Component<
             );
             if (fetchResponse.status === 200) {
                 staticToken = await fetchResponse.json();
-                //  try {
                 blockchainToken = await getBlockchain(blockchain)
                     .getClient(this.props.chainId)
                     .tokens[tokenType].getTokenInfo(staticToken.contractAddress);
-                // } catch (e) {
-                //     console.log('eeee', e);
-                // }
             } else {
                 this.setState({ showError: true, isLoading: false });
             }

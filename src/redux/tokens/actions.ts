@@ -12,12 +12,11 @@ export const addToken = (account: IAccountState, token: ITokenConfigState) => (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
-    addTokenToAccount(account, convertTokenConfig(token, account))(dispatch, getState);
-
     dispatch({
         type: ADD_TOKEN,
         data: { token, blockchain: account.blockchain }
     });
+    addTokenToAccount(account, convertTokenConfig(token, account))(dispatch, getState);
 };
 
 export const removeToken = (account: IAccountState, token: ITokenState) => (

@@ -28,6 +28,7 @@ const mapStateToProps = (state: IReduxState) => {
 interface IState {
     showModal: boolean;
     tcLatestVersion: number;
+    allowBackButton: boolean;
 }
 
 export class LegalModalComponent extends React.Component<
@@ -40,7 +41,8 @@ export class LegalModalComponent extends React.Component<
         super(props);
         this.state = {
             showModal: false,
-            tcLatestVersion: undefined
+            tcLatestVersion: undefined,
+            allowBackButton: false
         };
     }
 
@@ -66,10 +68,18 @@ export class LegalModalComponent extends React.Component<
                 tcLatestVersion = Number(tcVersionAsyncStorage);
             }
 
+            const isOnboardingFlow =
+                currentNavigatorRouteName === 'OnboardingNavigation' &&
+                NavigationService.getCurrentRoute() !== 'Onboarding';
+
+            if (isOnboardingFlow === true) {
+                this.setState({ allowBackButton: true });
+            } else {
+                this.setState({ allowBackButton: false });
+            }
+
             const showLegalModal =
-                ((currentNavigatorRouteName === 'OnboardingNavigation' &&
-                    NavigationService.getCurrentRoute() !== 'Onboarding') ||
-                    currentNavigatorRouteName !== 'OnboardingNavigation') &&
+                (isOnboardingFlow || currentNavigatorRouteName !== 'OnboardingNavigation') &&
                 tcLatestVersion !== undefined &&
                 (this.props.tcAcceptedVersion === undefined ||
                     tcLatestVersion > this.props.tcAcceptedVersion);
@@ -90,6 +100,11 @@ export class LegalModalComponent extends React.Component<
                     <Legal
                         tcLatestVersion={this.state.tcLatestVersion}
                         onAccept={() => this.setState({ showModal: false })}
+                        showClose={this.state.allowBackButton}
+                        onClose={() => {
+                            this.setState({ showModal: false });
+                            NavigationService.goBack();
+                        }}
                     />
                 </View>
             </Modal>

@@ -12,11 +12,14 @@ import { appSetAcceptedTcVersion } from '../../redux/app/actions';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TC } from './terms-conditions/terms-conditions';
 import { PrivacyPolicy } from './privacy-policy/privacy-policy';
-import { normalize } from '../../styles/dimensions';
+import { normalize, ICON_SIZE } from '../../styles/dimensions';
+import { SafeAreaView } from 'react-navigation';
 
 interface IExternalProps {
     onAccept: () => void;
     tcLatestVersion: number;
+    showClose?: boolean;
+    onClose?: () => void;
 }
 
 export interface IReduxProps {
@@ -42,7 +45,16 @@ export const LegalComponent = (
         return <PrivacyPolicy showClose onClose={() => setShowPrivacyPolicy(false)} />;
     } else
         return (
-            <View style={props.styles.container}>
+            <SafeAreaView forceInset={{ bottom: 'never' }} style={props.styles.container}>
+                {props.showClose && (
+                    <TouchableOpacity
+                        onPress={() => props.onClose && props.onClose()}
+                        style={props.styles.iconContainer}
+                    >
+                        <Icon name="arrow-left-1" size={ICON_SIZE} style={props.styles.backIcon} />
+                    </TouchableOpacity>
+                )}
+
                 <View style={props.styles.topContainer}>
                     <Text style={props.styles.walletTc}>{translate('CreateWalletTc.body')}</Text>
                     <Image
@@ -51,7 +63,6 @@ export const LegalComponent = (
                         style={props.styles.docImage}
                     />
                 </View>
-
                 <View style={props.styles.bottomContainer}>
                     <TouchableOpacity
                         style={props.styles.rowContainer}
@@ -88,7 +99,7 @@ export const LegalComponent = (
                         {translate('App.labels.accept')}
                     </Button>
                 </View>
-            </View>
+            </SafeAreaView>
         );
 };
 

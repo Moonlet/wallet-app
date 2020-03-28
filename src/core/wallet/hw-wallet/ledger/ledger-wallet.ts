@@ -53,12 +53,12 @@ export class LedgerWallet implements IWallet {
             const transport = await this.getTransport();
             const app = await AppFactory.get(blockchain, transport);
             const address = await app.getAddress(index, 0, undefined);
-
+            const config = getBlockchain(blockchain).config;
             const tokens = {};
 
             Object.keys(getBlockchain(blockchain).config.tokens).map(key => {
-                const token = convertTokenConfig(getBlockchain(blockchain).config.tokens[key]);
-                tokens[key] = token;
+                const token = convertTokenConfig(config.tokens[config.defaultChainId][key]);
+                tokens[config.defaultChainId][key] = token;
             });
 
             const account: IAccountState = {

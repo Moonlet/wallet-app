@@ -2,6 +2,29 @@ import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
 import CosmosIcon from '../../../assets/icons/blockchains/cosmos.svg';
+import { ITokenConfigState } from '../../../redux/tokens/state';
+
+export const ATOM_NATIVE: ITokenConfigState = {
+    name: 'Atom',
+    symbol: 'ATOM',
+    icon: {
+        iconComponent: CosmosIcon
+    },
+    defaultOrder: 0,
+    decimals: 6,
+    ui: {
+        decimals: 3,
+        tokenScreenComponent: TokenScreenComponentType.DEFAULT // TODO: DELEGATE is in progress
+    },
+    type: TokenType.NATIVE,
+    units: {
+        UATOM: new BigNumber(1),
+        ATOM: new BigNumber(Math.pow(10, 6))
+    },
+    symbolMap: {
+        'gaia-13007': 'umuon'
+    }
+};
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/118'/0'/0`,
@@ -9,27 +32,13 @@ export const config: IBlockchainConfig = {
     coin: 'ATOM',
     defaultUnit: 'UATOM',
     iconComponent: CosmosIcon,
+    defaultChainId: 'cosmoshub-3',
     tokens: {
-        ATOM: {
-            name: 'Atom',
-            symbol: 'ATOM',
-            icon: {
-                iconComponent: CosmosIcon
-            },
-            defaultOrder: 0,
-            decimals: 6,
-            ui: {
-                decimals: 3,
-                tokenScreenComponent: TokenScreenComponentType.DEFAULT // TODO: DELEGATE is in progress
-            },
-            type: TokenType.NATIVE,
-            units: {
-                UATOM: new BigNumber(1),
-                ATOM: new BigNumber(Math.pow(10, 6))
-            },
-            symbolMap: {
-                'gaia-13007': 'umuon'
-            }
+        'gaia-13007': {
+            ATOM: ATOM_NATIVE
+        },
+        'cosmoshub-3': {
+            ATOM: ATOM_NATIVE
         }
     },
     feeOptions: {

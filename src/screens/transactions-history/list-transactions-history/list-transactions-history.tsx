@@ -69,7 +69,6 @@ export class TransactionsHistoryListComponent extends React.Component<
                 break;
         }
 
-        const tokens = getBlockchain(account.blockchain).config.tokens;
         const coin = getBlockchain(account.blockchain).config.coin;
 
         const txTokenConfig = getTokenConfig(tx.blockchain, tx?.token?.symbol);
@@ -102,7 +101,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                             amount={amount}
                             blockchain={account.blockchain}
                             token={txTokenConfig.symbol || coin}
-                            tokenDecimals={txTokenConfig.decimals || tokens[coin].decimals}
+                            tokenDecimals={txTokenConfig.decimals}
                         />
 
                         <Text style={styles.transactionTextPrimary}>

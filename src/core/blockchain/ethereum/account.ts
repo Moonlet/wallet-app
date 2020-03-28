@@ -42,8 +42,8 @@ export const privateToAddress = (privateKey: string): string => {
 export const getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {
     const tokens = {};
     Object.keys(config.tokens).map(key => {
-        const token = convertTokenConfig(config.tokens[key]);
-        tokens[key] = token;
+        const token = convertTokenConfig(config.tokens[config.defaultChainId][key]);
+        tokens[config.defaultChainId][key] = token;
     });
 
     return {
@@ -58,14 +58,14 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
 
 export const amountToStd = (
     value: BigNumber | number | string,
-    decimals: number = config.tokens[config.coin].decimals
+    decimals: number = config.tokens[config.defaultChainId][config.coin].decimals
 ): BigNumber => {
     return new BigNumber(value).multipliedBy(new BigNumber(10).pow(decimals));
 };
 
 export const amountFromStd = (
     value: BigNumber | number | string,
-    decimals: number = config.tokens[config.coin].decimals
+    decimals: number = config.tokens[config.defaultChainId][config.coin].decimals
 ): BigNumber => {
     return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals));
 };

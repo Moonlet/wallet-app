@@ -12,6 +12,7 @@ import { IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { normalize } from '../../styles/dimensions';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
 
 export interface IProps {
     onPress?: () => void;
@@ -42,9 +43,8 @@ export const CoinBalanceCardComponent = (props: IProps) => (
                 amount={props.balance.toString()}
                 token={getBlockchain(props.blockchain).config.coin}
                 tokenDecimals={
-                    getBlockchain(props.blockchain).config.tokens[
-                        getBlockchain(props.blockchain).config.coin
-                    ].decimals
+                    getTokenConfig(props.blockchain, getBlockchain(props.blockchain).config.coin)
+                        .decimals
                 }
                 blockchain={props.blockchain}
             />
@@ -55,9 +55,8 @@ export const CoinBalanceCardComponent = (props: IProps) => (
             amount={props.balance.toString()}
             token={getBlockchain(props.blockchain).config.coin}
             tokenDecimals={
-                getBlockchain(props.blockchain).config.tokens[
-                    getBlockchain(props.blockchain).config.coin
-                ].decimals
+                getTokenConfig(props.blockchain, getBlockchain(props.blockchain).config.coin)
+                    .decimals
             }
             blockchain={props.blockchain}
             convert

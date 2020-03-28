@@ -9,6 +9,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { Amount } from '../amount/amount';
 import { Blockchain } from '../../core/blockchain/types';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
 
 export interface IReduxProps {
     change: any;
@@ -45,9 +46,8 @@ export const ConversionCardComponent = (
                 convertTo={props.toCurrency} // not working
                 blockchain={props.blockchain}
                 tokenDecimals={
-                    getBlockchain(props.blockchain).config.tokens[
-                        getBlockchain(props.blockchain).config.coin
-                    ].decimals
+                    getTokenConfig(props.blockchain, getBlockchain(props.blockchain).config.coin)
+                        .decimals
                 }
             />
             <Text

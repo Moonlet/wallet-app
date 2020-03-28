@@ -65,7 +65,6 @@ export class TransactionDetailsComponent extends React.Component<
 
         const date = new Date(transaction.date.signed);
 
-        const tokens = getBlockchain(account.blockchain).config.tokens;
         const coin = getBlockchain(account.blockchain).config.coin;
 
         const blockchainInstance = getBlockchain(account.blockchain);
@@ -94,7 +93,7 @@ export class TransactionDetailsComponent extends React.Component<
                             amount={amount}
                             blockchain={account.blockchain}
                             token={transaction?.token?.symbol || coin}
-                            tokenDecimals={tokenConfig.decimals || tokens[coin].decimals}
+                            tokenDecimals={tokenConfig.decimals}
                         />
                         <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
                     </View>

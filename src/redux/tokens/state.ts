@@ -4,9 +4,9 @@ import { ChainIdType } from '../../core/blockchain/types';
 
 export interface ITokensConfigState {
     [blockchain: string]: {
-        //    [chainId]: {
-        [symbol: string]: ITokenConfigState;
-        //   };
+        [chainId: string]: {
+            [symbol: string]: ITokenConfigState;
+        };
     };
 }
 

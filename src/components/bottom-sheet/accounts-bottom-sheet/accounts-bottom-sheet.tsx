@@ -19,6 +19,7 @@ import { translate } from '../../../core/i18n';
 import { enableCreateAccount } from '../../../redux/ui/screens/dashboard/actions';
 import { ListAccount } from '../../list-account/list-account';
 import { IExchangeRates } from '../../../redux/market/state';
+import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -101,6 +102,10 @@ export class AccountsBottomSheetComponent extends React.Component<
                     {this.props.accounts.map((account: IAccountState, index: number) => {
                         const selected = this.props.selectedAccount.address === account.address;
                         const blockchain = account.blockchain;
+                        const tokenConfig = getTokenConfig(
+                            blockchain,
+                            getBlockchain(blockchain).config.coin
+                        );
 
                         const label = (
                             <View>
@@ -118,22 +123,14 @@ export class AccountsBottomSheetComponent extends React.Component<
                                         amount={calculateBalance(account, this.props.exchangeRates)}
                                         blockchain={blockchain}
                                         token={getBlockchain(blockchain).config.coin}
-                                        tokenDecimals={
-                                            getBlockchain(blockchain).config.tokens[
-                                                getBlockchain(blockchain).config.coin
-                                            ].decimals
-                                        }
+                                        tokenDecimals={tokenConfig.decimals}
                                     />
                                     <Amount
                                         style={this.props.styles.secondAmountText}
                                         amount={calculateBalance(account, this.props.exchangeRates)}
                                         blockchain={blockchain}
                                         token={getBlockchain(blockchain).config.coin}
-                                        tokenDecimals={
-                                            getBlockchain(blockchain).config.tokens[
-                                                getBlockchain(blockchain).config.coin
-                                            ].decimals
-                                        }
+                                        tokenDecimals={tokenConfig.decimals}
                                         convert
                                     />
                                 </View>

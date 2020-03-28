@@ -2,6 +2,26 @@ import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
 import NearIcon from '../../../assets/icons/blockchains/near.svg';
+import { ITokenConfigState } from '../../../redux/tokens/state';
+
+export const NEAR_NATIVE: ITokenConfigState = {
+    name: 'Near',
+    symbol: 'NEAR',
+    icon: {
+        iconComponent: NearIcon
+    },
+    defaultOrder: 0,
+    decimals: 24,
+    ui: {
+        decimals: 4,
+        tokenScreenComponent: TokenScreenComponentType.DEFAULT
+    },
+    type: TokenType.NATIVE,
+    units: {
+        YNEAR: new BigNumber(1),
+        NEAR: new BigNumber(Math.pow(10, 24))
+    }
+};
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/397'`,
@@ -9,24 +29,10 @@ export const config: IBlockchainConfig = {
     coin: 'NEAR',
     defaultUnit: 'YNEAR',
     iconComponent: NearIcon,
+    defaultChainId: 'testnet',
     tokens: {
-        NEAR: {
-            name: 'Near',
-            symbol: 'NEAR',
-            icon: {
-                iconComponent: NearIcon
-            },
-            defaultOrder: 0,
-            decimals: 24,
-            ui: {
-                decimals: 4,
-                tokenScreenComponent: TokenScreenComponentType.DEFAULT
-            },
-            type: TokenType.NATIVE,
-            units: {
-                YNEAR: new BigNumber(1),
-                NEAR: new BigNumber(Math.pow(10, 24))
-            }
+        testnet: {
+            NEAR: NEAR_NATIVE
         }
     },
     feeOptions: {

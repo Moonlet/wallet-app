@@ -3,18 +3,20 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { store } from '../config';
 import { ITokenConfigState, ITokenState } from './state';
 import { IAccountState } from '../wallets/state';
+import { getChainId } from '../preferences/selectors';
 
 export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenConfigState => {
     const blockchainToken = getBlockchain(blockchain).config.tokens[symbol];
-
-    if (blockchainToken) {
-        return blockchainToken;
-    }
     const state = store.getState();
+    const chainId = getChainId(state, blockchain);
+
+    if (blockchainToken[chainId]) {
+        return blockchainToken[chainId];
+    }
 
     const reduxToken = state.tokens;
 
-    return reduxToken[blockchain][symbol];
+    return reduxToken[blockchain][chainId][symbol];
 };
 
 export const convertTokenConfig = (

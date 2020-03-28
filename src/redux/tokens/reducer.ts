@@ -11,7 +11,10 @@ export default (state: ITokensConfigState = intialState, action: IAction) => {
                 ...state,
                 [action.data.blockchain]: {
                     ...state[action.data.blockchain],
-                    [action.data.token.symbol]: action.data.token
+                    [action.data.chainId]: {
+                        ...state[action.data.chainId],
+                        [action.data.token.symbol]: action.data.token
+                    }
                 }
             };
 

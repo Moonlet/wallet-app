@@ -2,6 +2,27 @@ import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
 import ZilIcon from '../../../assets/icons/blockchains/zil.svg';
+import { ITokenConfigState } from '../../../redux/tokens/state';
+
+export const ZIL_NATIVE: ITokenConfigState = {
+    name: 'Zilliqa',
+    symbol: 'ZIL',
+    icon: {
+        iconComponent: ZilIcon
+    },
+    defaultOrder: 0,
+    decimals: 12,
+    ui: {
+        decimals: 3,
+        tokenScreenComponent: TokenScreenComponentType.DEFAULT
+    },
+    type: TokenType.NATIVE,
+    units: {
+        QA: new BigNumber(1),
+        LI: new BigNumber(Math.pow(10, 6)),
+        ZIL: new BigNumber(Math.pow(10, 12))
+    }
+};
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/313'/0'/0`,
@@ -9,25 +30,13 @@ export const config: IBlockchainConfig = {
     coin: 'ZIL',
     defaultUnit: 'QA',
     iconComponent: ZilIcon,
+    defaultChainId: '1',
     tokens: {
-        ZIL: {
-            name: 'Zilliqa',
-            symbol: 'ZIL',
-            icon: {
-                iconComponent: ZilIcon
-            },
-            defaultOrder: 0,
-            decimals: 12,
-            ui: {
-                decimals: 3,
-                tokenScreenComponent: TokenScreenComponentType.DEFAULT
-            },
-            type: TokenType.NATIVE,
-            units: {
-                QA: new BigNumber(1),
-                LI: new BigNumber(Math.pow(10, 6)),
-                ZIL: new BigNumber(Math.pow(10, 12))
-            }
+        '333': {
+            ZIL: ZIL_NATIVE
+        },
+        '1': {
+            ZIL: ZIL_NATIVE
         }
     },
     feeOptions: {

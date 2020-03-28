@@ -12,9 +12,12 @@ export interface IBlockchainConfig {
     derivationType: DerivationType;
     coin: string;
     defaultUnit: string;
+    defaultChainId: string;
     iconComponent: React.ComponentType<any>;
     tokens: {
-        [symbol: string]: ITokenConfigState;
+        [chainId: string]: {
+            [symbol: string]: ITokenConfigState;
+        };
     };
     feeOptions: {
         gasPriceToken: string;

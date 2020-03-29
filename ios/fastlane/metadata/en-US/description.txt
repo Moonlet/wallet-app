@@ -1,1 +1,25 @@
-Moonlet is a blockchain agnostic, cross-platform, non custodial, delegating as a service solution for PoS networks that will help token holders to manage their assets, simply, fast and secure. 
+Moonlet is a cryptocurrency wallet that allows you to store easily and secure all your different crypto assets.
+ 
+-- BLOCKCHAIN AGNOSTIC --
+Currently we support Zilliqa (ZIL), Singapore Dollar (XSGD), Ethereum (ETH) and many other ERC20 tokens, but more and more crypto assets are coming soon. 
+
+-- EASY TO USE --
+You can send crypto assets to anyone in the world from the convenience of your mobile phone or laptop. Moonlet is simply to use and put users first.
+ 
+-- NON-CUSTODIAL --
+Moonlet is a non-custodial wallet. It gives you full control over your funds, therefore it is much safer and secure, all transactions happen directly on the blockchain. 
+ 
+-- HANDSHAKE LOGIN --
+This is a feature within Moonlet that helps you to use your wallet as a gateway to blockchain apps. You are always in control when interacting on the new decentralised web since you’ll have to use your smartphone to sign any transaction.
+ 
+-- TRANSACTION NOTIFICATIONS --
+You don’t need to control and check transactions manually. With Moonlet, you’ll get notified immediately when you send or receive funds. As well you’ll be able to check all transaction states in the transaction history.
+ 
+-- HARDWARE WALLET --
+In case you want to use one more security standard, you can simply use your hardware wallet. Moonlet integrates with Ledger, for both Nano S and Nano X models.
+ 
+-- SECURED ENVIRONMENT  --
+Moonlet is proactively looking to identify and improve the security of its features and assets by employing provider’s services in terms of grey box penetration testing & vulnerability assessment, code review.
+ 
+-- CONTINUOUS SUPPORT --
+Crypto can be confusing. We do know that. That’s why you can reach us easily through the app. We’re here to help you.

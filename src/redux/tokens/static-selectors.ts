@@ -1,8 +1,8 @@
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { store } from '../config';
-import { ITokenConfigState, ITokenState } from './state';
-import { IAccountState, ITokensAccountState } from '../wallets/state';
+import { ITokenConfigState } from './state';
+import { IAccountState, ITokensAccountState, ITokenState } from '../wallets/state';
 import { getChainId } from '../preferences/selectors';
 
 export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenConfigState => {
@@ -46,7 +46,7 @@ export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountStat
     return tokenList;
 };
 
-export const convertTokenConfig = (
+export const generateAccountTokenState = (
     token: ITokenConfigState,
     account?: IAccountState
 ): ITokenState => {

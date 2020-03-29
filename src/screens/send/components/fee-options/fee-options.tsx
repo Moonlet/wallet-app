@@ -1,5 +1,5 @@
 import React from 'react';
-import { IAccountState } from '../../../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import stylesProvider from './styles';
 import { Text } from '../../../../library';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -17,7 +17,6 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import bind from 'bind-decorator';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
-import { ITokenState } from '../../../../redux/tokens/state';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export interface IExternalProps {

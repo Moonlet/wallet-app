@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 // import { ConversionCard } from '../conversion-card/conversion-card';
-import { IAccountState } from '../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { Blockchain } from '../../core/blockchain/types';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -9,7 +9,6 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 // import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { TokenCard } from '../token-card/token-card';
 import { normalize } from '../../styles/dimensions';
-import { ITokenState } from '../../redux/tokens/state';
 import { selectedChainId } from '../../redux/tokens/static-selectors';
 
 export interface IProps {

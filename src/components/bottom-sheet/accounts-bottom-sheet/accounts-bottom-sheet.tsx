@@ -107,6 +107,8 @@ export class AccountsBottomSheetComponent extends React.Component<
                             getBlockchain(blockchain).config.coin
                         );
 
+                        const balance = calculateBalance(account, this.props.exchangeRates);
+
                         const label = (
                             <View>
                                 <View style={this.props.styles.firstRow}>
@@ -120,14 +122,14 @@ export class AccountsBottomSheetComponent extends React.Component<
                                 <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
                                     <Amount
                                         style={this.props.styles.fistAmountText}
-                                        amount={calculateBalance(account, this.props.exchangeRates)}
+                                        amount={balance}
                                         blockchain={blockchain}
                                         token={getBlockchain(blockchain).config.coin}
                                         tokenDecimals={tokenConfig.decimals}
                                     />
                                     <Amount
                                         style={this.props.styles.secondAmountText}
-                                        amount={calculateBalance(account, this.props.exchangeRates)}
+                                        amount={balance}
                                         blockchain={blockchain}
                                         token={getBlockchain(blockchain).config.coin}
                                         tokenDecimals={tokenConfig.decimals}

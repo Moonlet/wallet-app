@@ -8,7 +8,7 @@ import { translate } from '../../../../core/i18n';
 import { Amount } from '../../../../components/amount/amount';
 import { Blockchain } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
-import { ITokenState } from '../../../../redux/tokens/state';
+import { ITokenState } from '../../../../redux/wallets/state';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export interface IExternalProps {

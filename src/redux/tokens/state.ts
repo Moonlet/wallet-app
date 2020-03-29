@@ -30,15 +30,3 @@ export interface ITokenConfigState {
         [testnet: string]: string;
     };
 }
-
-export interface ITokenState {
-    symbol: string;
-    order: number;
-    active: boolean;
-    balance?: {
-        value: string;
-        inProgress: boolean;
-        timestamp: number;
-        error: any;
-    };
-}

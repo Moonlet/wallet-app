@@ -5,7 +5,7 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Amount } from '../../../../components/amount/amount';
 import { Text } from '../../../../library';
 import { Blockchain } from '../../../../core/blockchain/types';
-import { ITokenState } from '../../../../redux/tokens/state';
+import { ITokenState } from '../../../../redux/wallets/state';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export interface IExternalProps {

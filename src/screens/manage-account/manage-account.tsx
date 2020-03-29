@@ -13,7 +13,7 @@ import DraggableFlatList from 'react-native-draggable-flatlist';
 import { ICON_SIZE, BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
-import { IAccountState, IWalletState } from '../../redux/wallets/state';
+import { IAccountState, IWalletState, ITokenState } from '../../redux/wallets/state';
 import { Amount } from '../../components/amount/amount';
 import {
     toggleTokenActive,
@@ -28,7 +28,6 @@ import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 import { updateDisplayedHint } from '../../redux/app/actions';
 import { IHints, HintsScreen, HintsComponent } from '../../redux/app/state';
-import { ITokenState } from '../../redux/tokens/state';
 import { ChainIdType } from '../../core/blockchain/types';
 import { getChainId } from '../../redux/preferences/selectors';
 

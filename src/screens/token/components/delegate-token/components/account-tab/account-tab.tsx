@@ -5,14 +5,13 @@ import { IThemeProps, withTheme } from '../../../../../../core/theme/with-theme'
 import { smartConnect } from '../../../../../../core/utils/smart-connect';
 import { Blockchain, ChainIdType } from '../../../../../../core/blockchain/types';
 import { AccountAddress } from '../../../../../../components/account-address/account-address';
-import { IAccountState } from '../../../../../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../redux/state';
 import { getAccount } from '../../../../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
 import { StatsComponent } from '../stats-component/stats-component';
 import { getBlockchain } from '../../../../../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../../../../../redux/preferences/selectors';
-import { ITokenState } from '../../../../../../redux/tokens/state';
 
 export interface IProps {
     accountIndex: number;

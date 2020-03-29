@@ -21,7 +21,7 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 import { TokenType } from '../../core/blockchain/types/token';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
-import { IAccountState } from '../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import {
@@ -39,7 +39,6 @@ import _ from 'lodash';
 import { AddAddress } from './components/add-address/add-address';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
-import { ITokenState } from '../../redux/tokens/state';
 
 export interface IReduxProps {
     account: IAccountState;

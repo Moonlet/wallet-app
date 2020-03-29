@@ -10,7 +10,7 @@ import { Blockchain } from '../../../../core/blockchain/types';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { isInteger } from '../../../../core/utils/format-number';
 import { smartConnect } from '../../../../core/utils/smart-connect';
-import { ITokenState } from '../../../../redux/tokens/state';
+import { ITokenState } from '../../../../redux/wallets/state';
 
 export interface IExternalProps {
     token: ITokenState;

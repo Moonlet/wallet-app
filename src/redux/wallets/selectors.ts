@@ -4,7 +4,7 @@ import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types'
 
 import { createSelector } from 'reselect';
 import { getChainId, getBlockchains } from '../preferences/selectors';
-import { ITokenState } from '../tokens/state';
+import { ITokenState } from '../wallets/state';
 
 export const getWalletSelectedBlockchain = createSelector(
     (state: IReduxState): IWalletState => getSelectedWallet(state),

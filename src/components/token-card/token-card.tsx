@@ -1,6 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { IAccountState } from '../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { Icon } from '../icon';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -11,7 +11,6 @@ import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
-import { ITokenState } from '../../redux/tokens/state';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -62,14 +61,14 @@ export const TokenCardComponent = (
                     <Amount
                         style={styles.firstAmount}
                         token={props.token.symbol}
-                        tokenDecimals={props.token.decimals}
+                        tokenDecimals={tokenConfig.decimals}
                         amount={props.token.balance?.value}
                         blockchain={props.blockchain}
                     />
                     <Amount
                         style={styles.secondAmount}
                         token={props.token.symbol}
-                        tokenDecimals={props.token.decimals}
+                        tokenDecimals={tokenConfig.decimals}
                         amount={props.token.balance?.value}
                         blockchain={props.blockchain}
                         convert

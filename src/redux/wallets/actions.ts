@@ -48,7 +48,7 @@ import { updateAddressMonitorTokens } from '../../core/address-monitor/index';
 import { Dialog } from '../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../ui/password-modal/actions';
 import { getTokenConfig } from '../tokens/static-selectors';
-import { ITokenState } from '../tokens/state';
+import { ITokenState } from '../wallets/state';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';

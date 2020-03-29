@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, Platform } from 'react-native';
 import stylesProvider from './styles';
-import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
+import { IAccountState, IWalletState, ITokenState } from '../../../../redux/wallets/state';
 import {
     getAccountFilteredTransactions,
     getAccount,
@@ -27,7 +27,6 @@ import { sendTransferTransaction } from '../../../../redux/wallets/actions';
 import { Dialog } from '../../../../components/dialog/dialog';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
-import { ITokenState } from '../../../../redux/tokens/state';
 
 export interface IProps {
     accountIndex: number;

@@ -16,7 +16,7 @@ import { Erc20Client } from './tokens/erc20-client';
 import { TokenType } from '../types/token';
 import { NameService } from './name-service';
 import { getTransactionStatusByCode } from './transaction';
-import { convertTokenConfig } from '../../../redux/tokens/static-selectors';
+import { generateAccountTokenState } from '../../../redux/tokens/static-selectors';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -203,7 +203,7 @@ export class Client extends BlockchainGenericClient {
                     broadcatedOnBlock: txInfo.blockNumber,
                     nonce: txInfo.nonce,
                     status: getTransactionStatusByCode(txReceipt.status),
-                    token: convertTokenConfig(config.tokens[config.defaultChainId].ETH)
+                    token: generateAccountTokenState(config.tokens[config.defaultChainId].ETH)
                 };
             } catch (error) {
                 return Promise.reject(error.message);

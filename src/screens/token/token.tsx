@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Platform } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
-import { IAccountState, IWalletState } from '../../redux/wallets/state';
+import { IAccountState, IWalletState, ITokenState } from '../../redux/wallets/state';
 import {
     getAccountFilteredTransactions,
     getAccount,
@@ -34,7 +34,6 @@ import { ExtensionConnectionInfo } from '../../components/extension-connection-i
 import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TransactionStatus } from '../../core/wallet/types';
-import { ITokenState } from '../../redux/tokens/state';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 
 export interface IProps {

@@ -1,13 +1,12 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Text } from '../../library';
-import { IAccountState } from '../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { ITheme } from '../../core/theme/itheme';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
 import { formatAddress } from '../../core/utils/format-address';
 import { Amount } from '../amount/amount';
-import { ITokenState } from '../../redux/tokens/state';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 
 export interface IProps {

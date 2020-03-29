@@ -21,7 +21,6 @@ import { convertTokenConfig } from '../../../redux/tokens/static-selectors';
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
-
         this.tokens[TokenType.ERC20] = new Erc20Client(this);
         this.nameService = new NameService();
     }

@@ -60,7 +60,7 @@ export const buildTransferTransaction = async (
                 blockchain: tx.account.blockchain,
                 chainId: tx.chainId,
                 type: TransactionType.TRANSFER,
-                token: tx.account.tokens[tx.token],
+                token: tx.account.tokens[tx.chainId][tx.token],
                 address: tx.account.address,
                 publicKey: tx.account.publicKey,
                 toAddress: tokenInfo.contractAddress,
@@ -93,7 +93,7 @@ export const buildTransferTransaction = async (
                 blockchain: tx.account.blockchain,
                 chainId: tx.chainId,
                 type: TransactionType.TRANSFER,
-                token: tx.account.tokens[tx.token],
+                token: tx.account.tokens[tx.chainId][tx.token],
 
                 address: tx.account.address,
                 publicKey: tx.account.publicKey,

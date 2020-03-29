@@ -290,6 +290,7 @@ export const getBalance = (
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
     const wallet = getSelectedWallet(state);
+    const chainId = getChainId(state, blockchain);
     if (wallet === undefined) {
         return;
     }
@@ -298,15 +299,16 @@ export const getBalance = (
     )[0];
 
     if (token) {
-        const balanceInProgress = account?.tokens[token]?.balance?.inProgress;
-        const balanceTimestamp = account?.tokens[token]?.balance?.timestamp || 0;
+        const balanceInProgress = account?.tokens[chainId][token]?.balance?.inProgress;
+        const balanceTimestamp = account?.tokens[chainId][token]?.balance?.timestamp || 0;
 
         if (force || (!balanceInProgress && balanceTimestamp + 10 * 3600 < Date.now())) {
             const data = {
                 walletId: wallet.id,
                 address,
                 token,
-                blockchain
+                blockchain,
+                chainId
             };
 
             dispatch({
@@ -315,7 +317,6 @@ export const getBalance = (
                 inProgress: true
             });
             try {
-                const chainId = getChainId(state, account.blockchain);
                 const tokenConfig = getTokenConfig(account.blockchain, token);
                 const client = getBlockchain(blockchain).getClient(chainId);
 
@@ -355,7 +356,7 @@ export const getBalance = (
         }
     } else {
         // call get balance for all tokens
-        Object.keys(account.tokens || {}).map(tokenSymbol => {
+        Object.keys(account.tokens[chainId] || {}).map(tokenSymbol => {
             // console.log(`getBalance(${blockchain}, ${address}, ${tokenSymbol}, ${force})`);
             getBalance(blockchain, address, tokenSymbol, force)(dispatch, getState);
         });
@@ -647,9 +648,10 @@ export const addTokenToAccount = (account: IAccountState, token: ITokenState) =>
     getState: () => IReduxState
 ) => {
     const selectedWallet: IWalletState = getSelectedWallet(getState());
+    const chainId = getChainId(getState(), account.blockchain);
     dispatch({
         type: ADD_TOKEN_TO_ACCOUNT,
-        data: { walletId: selectedWallet.id, account, token }
+        data: { walletId: selectedWallet.id, account, token, chainId }
     });
     getBalance(account.blockchain, account.address, undefined, true)(dispatch, getState);
 };
@@ -682,7 +684,7 @@ export const createAccount = (
     if (txId) {
         account.address = newAccountId;
 
-        account.tokens[blockchain].balance = {
+        account.tokens[chainId][blockchainInstance.config.coin].balance = {
             value: '0',
             inProgress: false,
             timestamp: undefined,

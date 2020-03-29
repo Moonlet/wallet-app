@@ -1,8 +1,8 @@
 import { IAccountState } from '../wallets/state';
-import { ITokenConfigState, ITokenState } from './state';
+import { ITokenConfigState } from './state';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
-import { addTokenToAccount, removeTokenFromAccount } from '../wallets/actions';
+import { addTokenToAccount } from '../wallets/actions';
 import { convertTokenConfig } from './static-selectors';
 import { getChainId } from '../preferences/selectors';
 
@@ -20,16 +20,4 @@ export const addToken = (account: IAccountState, token: ITokenConfigState) => (
         data: { token, chainId, blockchain }
     });
     addTokenToAccount(account, convertTokenConfig(token, account))(dispatch, getState);
-};
-
-export const removeToken = (account: IAccountState, token: ITokenState) => (
-    dispatch: Dispatch<any>,
-    getState: () => IReduxState
-) => {
-    removeTokenFromAccount(account, token)(dispatch, getState);
-
-    // dispatch({
-    //     type: ADD_TOKEN,
-    //     data: { token }
-    // });
 };

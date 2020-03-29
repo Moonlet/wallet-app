@@ -226,7 +226,8 @@ export class SendScreenComponent extends React.Component<
             }
         } else {
             const nativeCoin = getBlockchain(this.props.account.blockchain).config.coin;
-            const nativeCoinBalance = this.props.account.tokens[nativeCoin].balance?.value;
+            const nativeCoinBalance = this.props.account.tokens[this.props.chainId][nativeCoin]
+                .balance?.value;
             const availableBalance = new BigNumber(nativeCoinBalance);
 
             // ERC20 / ZRC2
@@ -391,7 +392,7 @@ export class SendScreenComponent extends React.Component<
                     onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions
-                    token={this.props.account.tokens[config.coin]}
+                    token={this.props.account.tokens[this.props.chainId][config.coin]}
                     sendingToken={this.props.token}
                     account={this.props.account}
                     toAddress={this.state.toAddress}
@@ -403,12 +404,15 @@ export class SendScreenComponent extends React.Component<
     }
 
     private renderConfirmTransaction() {
-        const { account, styles } = this.props;
+        const { account, chainId, styles } = this.props;
         const { blockchain } = account;
         const config = getBlockchain(blockchain).config;
         const extraFields = config.ui.extraFields;
 
-        const feeToken = getTokenConfig(account.blockchain, account.tokens[config.coin].symbol);
+        const feeToken = getTokenConfig(
+            account.blockchain,
+            account.tokens[chainId][config.coin].symbol
+        );
         const feeTokenSymbol = config.feeOptions.gasPriceToken;
 
         return (

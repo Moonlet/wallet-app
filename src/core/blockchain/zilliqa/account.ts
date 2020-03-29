@@ -11,7 +11,7 @@ import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
 import HDNode from 'hdkey';
-import { convertTokenConfig } from '../../../redux/tokens/static-selectors';
+import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 
 export const getAccountDerivationPath = (accountIndex): string => {
     return `${accountIndex}`;
@@ -42,19 +42,13 @@ export const privateToAddress = (privateKey: string): string => {
 };
 
 export const getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {
-    const tokens = {};
-    Object.keys(config.tokens).map(key => {
-        const token = convertTokenConfig(config.tokens[config.defaultChainId][key]);
-        tokens[key] = token;
-    });
-
     return {
         index,
         selected: false,
         publicKey: privateToPublic(privateKey),
         address: privateToAddress(privateKey),
         blockchain: Blockchain.ZILLIQA,
-        tokens
+        tokens: generateTokensConfig(Blockchain.ZILLIQA)
     };
 };
 

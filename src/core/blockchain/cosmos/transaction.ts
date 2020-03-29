@@ -46,7 +46,7 @@ export const buildTransferTransaction = async (
     const client = Cosmos.getClient(tx.chainId) as CosmosClient;
     const accountInfo = await client.getAccountInfo(tx.account.address);
     let denom = config.defaultUnit.toLowerCase();
-    const symbolMap = config.tokens[config.coin].symbolMap;
+    const symbolMap = config.tokens[tx.chainId][config.coin].symbolMap;
     if (symbolMap !== undefined) {
         Object.keys(symbolMap).map(key => {
             if (key === tx.chainId) {
@@ -93,7 +93,7 @@ export const buildTransferTransaction = async (
         blockchain: tx.account.blockchain,
         chainId: tx.chainId,
         type: TransactionType.TRANSFER,
-        token: tx.account.tokens[tx.token],
+        token: tx.account.tokens[tx.chainId][tx.token],
         address: tx.account.address,
         publicKey: tx.account.publicKey,
         toAddress: tx.toAddress,

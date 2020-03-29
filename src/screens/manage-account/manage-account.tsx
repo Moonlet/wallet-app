@@ -29,6 +29,8 @@ import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 import { updateDisplayedHint } from '../../redux/app/actions';
 import { IHints, HintsScreen, HintsComponent } from '../../redux/app/state';
 import { ITokenState } from '../../redux/tokens/state';
+import { ChainIdType } from '../../core/blockchain/types';
+import { getChainId } from '../../redux/preferences/selectors';
 
 export interface IReduxProps {
     toggleTokenActive: typeof toggleTokenActive;
@@ -38,7 +40,7 @@ export interface IReduxProps {
     tokens: [{ key: string; value: ITokenState }];
     wallet: IWalletState;
     selectedAccount: IAccountState;
-
+    chainId: ChainIdType;
     hints: IHints;
     updateDisplayedHint: typeof updateDisplayedHint;
 }
@@ -52,10 +54,14 @@ const mapDispatchToProps = {
 
 const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
+    const chainId = getChainId(state, selectedAccount.blockchain);
 
     return {
-        tokens: Object.keys(selectedAccount.tokens)
-            .map(key => ({ key, value: selectedAccount.tokens[key] }))
+        tokens: Object.keys(selectedAccount.tokens[chainId])
+            .map(key => ({
+                key,
+                value: selectedAccount.tokens[chainId][key]
+            }))
             .sort((a, b) => a.value.order - b.value.order),
         selectedAccount,
         wallet: getSelectedWallet(state),

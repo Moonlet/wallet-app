@@ -11,6 +11,7 @@ import { TokenCard } from '../token-card/token-card';
 import { ITokenConfig } from '../../core/blockchain/types/token';
 import { normalize } from '../../styles/dimensions';
 import { ITokenState } from '../../redux/tokens/state';
+import { selectedChainId } from '../../redux/tokens/static-selectors';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -47,7 +48,7 @@ export const TokenDashboardComponent = (
             ]}
         >
             {props.account?.tokens &&
-                Object.values(props.account.tokens).map(
+                Object.values(props.account.tokens[selectedChainId(props.account.blockchain)]).map(
                     (token: ITokenState, index: number) =>
                         token.active && (
                             <TokenCard

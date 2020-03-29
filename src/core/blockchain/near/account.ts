@@ -7,7 +7,7 @@ import { convert } from '../common/account';
 import bs58 from 'bs58';
 import * as nacl from 'tweetnacl';
 import { HDKeyEd25519 } from '../../wallet/hd-wallet/hd-key/hd-key-ed25519';
-import { convertTokenConfig } from '../../../redux/tokens/static-selectors';
+import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 
 export const getAccountDerivationPath = (accountIndex): string => {
     return `${accountIndex}'`;
@@ -42,19 +42,13 @@ export const privateToAddress = (privateKey: string): string => {
 export const getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {
     const keyPair = nacl.sign.keyPair.fromSecretKey(bs58.decode(privateKey));
 
-    const tokens = {};
-    Object.keys(config.tokens).map(key => {
-        const token = convertTokenConfig(config.tokens[config.defaultChainId][key]);
-        tokens[key] = token;
-    });
-
     return {
         index,
         selected: false,
         publicKey: 'ed25519:' + bs58.encode(Buffer.from(keyPair.publicKey)),
         address: 'ed25519:' + bs58.encode(Buffer.from(keyPair.publicKey)),
         blockchain: Blockchain.NEAR,
-        tokens
+        tokens: generateTokensConfig(Blockchain.NEAR)
     };
 };
 

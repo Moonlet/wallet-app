@@ -5,8 +5,7 @@ import { HWModel, HWConnection } from '../types';
 import { AppFactory } from './apps-factory';
 import { TransportFactory } from './transport-factory';
 import { delay } from '../../../utils/time';
-import { getBlockchain } from '../../../blockchain/blockchain-factory';
-import { convertTokenConfig } from '../../../../redux/tokens/static-selectors';
+import { generateTokensConfig } from '../../../../redux/tokens/static-selectors';
 
 export class LedgerWallet implements IWallet {
     private deviceId: string;
@@ -53,13 +52,6 @@ export class LedgerWallet implements IWallet {
             const transport = await this.getTransport();
             const app = await AppFactory.get(blockchain, transport);
             const address = await app.getAddress(index, 0, undefined);
-            const config = getBlockchain(blockchain).config;
-            const tokens = {};
-
-            Object.keys(getBlockchain(blockchain).config.tokens).map(key => {
-                const token = convertTokenConfig(config.tokens[config.defaultChainId][key]);
-                tokens[config.defaultChainId][key] = token;
-            });
 
             const account: IAccountState = {
                 index,
@@ -67,7 +59,7 @@ export class LedgerWallet implements IWallet {
                 publicKey: address.publicKey,
                 address: address.address,
                 blockchain,
-                tokens
+                tokens: generateTokensConfig(blockchain)
             };
             accounts.push(account);
             return Promise.resolve(accounts);

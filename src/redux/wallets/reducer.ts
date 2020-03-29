@@ -126,8 +126,10 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                             account.address === action.data.address &&
                             account.blockchain === action.data.blockchain
                         ) {
-                            account.tokens[action.data.token].balance = newBalance(
-                                account.tokens[action.data.token].balance,
+                            account.tokens[action.data.chainId][
+                                action.data.token
+                            ].balance = newBalance(
+                                account.tokens[action.data.chainId][action.data.token].balance,
                                 action
                             );
                         }
@@ -277,7 +279,8 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                     account.blockchain === action.data.account.blockchain
             );
 
-            accountToAddToken.tokens[action.data.token.symbol] = action.data.token;
+            accountToAddToken.tokens[action.data.chainId][action.data.token.symbol] =
+                action.data.token;
 
             return {
                 ...state,

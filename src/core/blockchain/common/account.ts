@@ -12,7 +12,7 @@ export const convert = (
     }
 
     if (info) {
-        const units = info.tokens[info.coin].units;
+        const units = info.tokens[info.defaultChainId][info.coin].units;
         if (units[fromUnit] && units[toUnit]) {
             return value.multipliedBy(units[fromUnit]).dividedBy(units[toUnit]);
         } else {

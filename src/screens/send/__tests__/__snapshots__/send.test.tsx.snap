@@ -1,5 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+<<<<<<< HEAD
 exports[`SendScreen renders correctly 1`] = `
 "<View style={{...}}>
   <withTheme(Connect(TestnetBadgeComponent)) />
@@ -71,3 +72,6 @@ exports[`SendScreen renders correctly 2`] = `
   <withTheme(PasswordModalComponent) obRef={[Function: obRef]} />
 </View>"
 `;
+=======
+exports[`SendScreen renders correctly 1`] = `"send"`;
+>>>>>>> update tests

@@ -8,7 +8,6 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 // import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { TokenCard } from '../token-card/token-card';
-import { ITokenConfig } from '../../core/blockchain/types/token';
 import { normalize } from '../../styles/dimensions';
 import { ITokenState } from '../../redux/tokens/state';
 import { selectedChainId } from '../../redux/tokens/static-selectors';

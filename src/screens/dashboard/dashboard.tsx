@@ -325,7 +325,9 @@ export class DashboardScreenComponent extends React.Component<
                             ]}
                             amount={String(balance)}
                             token={config.coin}
-                            tokenDecimals={config.tokens[config.coin].decimals}
+                            tokenDecimals={
+                                config.tokens[config.defaultChainId][config.coin].decimals
+                            }
                             blockchain={blockchain}
                             isAnimated={true}
                         />
@@ -339,7 +341,9 @@ export class DashboardScreenComponent extends React.Component<
                             ]}
                             amount={String(balance)}
                             token={config.coin}
-                            tokenDecimals={config.tokens[config.coin].decimals}
+                            tokenDecimals={
+                                config.tokens[config.defaultChainId][config.coin].decimals
+                            }
                             blockchain={blockchain}
                             convert
                             isAnimated={true}

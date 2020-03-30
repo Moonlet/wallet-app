@@ -6,11 +6,7 @@ const defaultOptions = {
 };
 
 export const setPassword = async (password: string, shouldEncrypt: boolean = true) => {
-    try {
-        await RNSecureKeyStore.remove(defaultOptions.service);
-    } catch (err) {
-        //
-    }
+    clearPassword();
 
     if (shouldEncrypt) {
         password = await hash(password);
@@ -33,4 +29,12 @@ export const getPassword = async () => {
     return {
         password
     };
+};
+
+export const clearPassword = async () => {
+    try {
+        await RNSecureKeyStore.remove(defaultOptions.service);
+    } catch (err) {
+        //
+    }
 };

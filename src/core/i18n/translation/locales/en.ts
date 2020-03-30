@@ -144,6 +144,8 @@ export const translation: ITranslations = {
             pinTitleUnlock: 'Enter PIN code',
             pinSubtitleUnlock: 'Your PIN is required\nto unlock Moonlet',
             invalidPassword: 'Invalid Password',
+            invalidPasswordAttempt: 'Invalid Password\nYou have 1 attempt left',
+            invalidPasswordAttempts: 'Invalid Password\nYou have {{attempts}} attempts left',
             genericError: 'Operation could not be completed',
             subtitleMnemonic: 'Your PIN is required to view mnemonic',
             subtitleDeleteWallet: 'Your PIN is required to delete wallet',
@@ -160,7 +162,17 @@ export const translation: ITranslations = {
             connectHardwareWalletPinSubtitle:
                 'Your PIN is required\nto connect your hardware wallet',
             moonletDisabled: 'Moonlet is disabled',
-            disabledDetails: 'try again in {{minutes}} minutes'
+            disabledDetails: 'try again in {{duration}} {{measurement}}'
+        },
+        Time: {
+            second: 'second',
+            seconds: 'seconds',
+            minute: 'minute',
+            minutes: 'minutes',
+            hour: 'hour',
+            hours: 'hours',
+            day: 'day',
+            days: 'days'
         },
         Send: {
             inputAddress: 'Search public addresses or domain names',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 import { Deferred } from '../../core/utils/deferred';
 import { PasswordPin } from './components/password-pin/password-pin';
 import { translate } from '../../core/i18n';
@@ -8,6 +8,9 @@ import Modal from '../../library/modal/modal';
 import bind from 'bind-decorator';
 import { getPassword, setPassword } from '../../core/secure/keychain';
 import { changePIN } from '../../redux/wallets/actions';
+import { Text } from '../../library';
+import { IThemeProps } from '../../core/theme/with-theme';
+import stylesProvider from './styles';
 
 enum ScreenStep {
     ENTER_PIN = 'ENTER_PIN',
@@ -29,7 +32,7 @@ export interface IState {
     password: string;
     newPassword: string;
     currentStep: ScreenStep;
-    error: string;
+    errorMessage: string;
 }
 
 const EMPTY_STRING = ' ';
@@ -42,10 +45,13 @@ export const mapDispatchToProps = {
     changePIN
 };
 
-export class PasswordModalComponent extends React.Component<IReduxProps, IState> {
+export class PasswordModalComponent extends React.Component<
+    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
     public static refDeferred: Deferred<PasswordModalComponent> = new Deferred();
 
-    constructor(props: IReduxProps) {
+    constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         PasswordModalComponent.refDeferred.resolve(this);
         this.state = {
@@ -55,7 +61,7 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
             password: undefined,
             newPassword: undefined,
             currentStep: undefined,
-            error: EMPTY_STRING
+            errorMessage: EMPTY_STRING
         };
     }
 
@@ -113,10 +119,13 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
     //     // promise reject
     // }
 
+    private clearErrorMessage() {
+        this.setState({ errorMessage: EMPTY_STRING });
+    }
+
     @bind
     private async updateState(data: { password?: string }) {
         const isPasswordValid = await this.verifyPassword(data.password);
-        this.setState({ error: EMPTY_STRING }); // TODO: check this
 
         switch (this.state.currentStep) {
             // Enter PIN Flow
@@ -125,6 +134,8 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
                     // set failed logins = 0
                     this.resultDeferred && this.resultDeferred.resolve(data.password);
                     this.setState({ visible: false });
+                } else {
+                    this.setState({ errorMessage: translate('Password.invalidPassword') });
                 }
                 break;
 
@@ -146,7 +157,7 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
                     this.resultDeferred && this.resultDeferred.resolve(data.password);
                     this.setState({ visible: false });
                 } else {
-                    this.setState({ error: translate('Password.invalidPassword') });
+                    this.setState({ errorMessage: translate('Password.invalidPassword') });
                 }
                 break;
 
@@ -163,7 +174,7 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
                         subtitle: translate('Password.setupPinSubtitle')
                     });
                 } else {
-                    this.setState({ error: translate('Password.invalidPassword') });
+                    this.setState({ errorMessage: translate('Password.invalidPassword') });
                 }
                 break;
             case ScreenStep.CHANGE_PIN_NEW:
@@ -179,11 +190,11 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
                     // Save new PIN in storage
                     // this.state.password is the old password
                     this.props.changePIN(this.state.newPassword, this.state.password);
-                    await setPassword(data.password, false);
+                    await setPassword(this.state.newPassword, false);
                     this.resultDeferred && this.resultDeferred.resolve(this.state.newPassword);
                     this.setState({ visible: false });
                 } else {
-                    this.setState({ error: translate('Password.invalidPassword') });
+                    this.setState({ errorMessage: translate('Password.invalidPassword') });
                 }
                 break;
 
@@ -193,41 +204,42 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
     }
 
     private async verifyPassword(value: string): Promise<boolean> {
-        this.setState({ error: EMPTY_STRING });
         if (Platform.OS === 'web') {
             return true;
         } else {
             try {
                 const passwordCredentials = await getPassword();
-                if (passwordCredentials) {
-                    if (value === passwordCredentials.password) {
-                        this.setState({ error: EMPTY_STRING });
-                        return true;
-                    } else {
-                        this.setState({ error: translate('Password.invalidPassword') });
-                        return false;
-                    }
-                } else {
-                    this.setState({ error: translate('Password.genericError') });
-                    return false;
-                }
+                return value === passwordCredentials.password;
             } catch {
-                this.setState({ error: translate('Password.genericError') });
+                this.setState({ errorMessage: translate('Password.genericError') });
                 return false;
             }
         }
     }
 
+    private renderMoonletDisabled() {
+        const { styles } = this.props;
+
+        return (
+            <View style={styles.wrongPasswordContainer}>
+                <Text style={styles.moonletDisabled}>{translate('Password.moonletDisabled')}</Text>
+                <Text style={styles.disabledDetails}>
+                    {translate('Password.disabledDetails', {
+                        minutes: 20
+                    })}
+                </Text>
+            </View>
+        );
+    }
+
     public render() {
         const { currentStep } = this.state;
+
         return (
             <Modal isVisible={this.state.visible} animationInTiming={5} animationOutTiming={5}>
                 {currentStep === ScreenStep.CREATE_PIN_TERMS ||
                 currentStep === ScreenStep.CHANGE_PIN_TERMS ? (
-                    <PasswordTerms
-                        onAcknowledged={() => this.updateState({})}
-                        // changePIN={this.state.changePIN}
-                    />
+                    <PasswordTerms onAcknowledged={() => this.updateState({})} />
                 ) : (
                     <PasswordPin
                         title={this.state.title}
@@ -240,23 +252,12 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
                                 // console.log('ERROR BIOMETRY');
                             }
                         }}
-                        errorMessage={this.state.error}
-                        clearErrorMessage={() => this.setState({ error: EMPTY_STRING })}
+                        errorMessage={this.state.errorMessage}
+                        clearErrorMessage={() => this.clearErrorMessage()}
                     />
                 )}
-                {/* <View
-                    style={{
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        backgroundColor: '#000000BF',
-                        justifyContent: 'center'
-                    }}
-                >
-                    <Text>Countdown</Text>
-                </View> */}
+
+                {false && this.renderMoonletDisabled()}
             </Modal>
         );
     }

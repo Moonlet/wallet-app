@@ -158,7 +158,9 @@ export const translation: ITranslations = {
             changePinSubtitle: 'Your current PIN is required in order to change it',
             recoverWalletPinSubtitle: 'Your PIN is required\nto recover your Moonlet wallet',
             connectHardwareWalletPinSubtitle:
-                'Your PIN is required\nto connect your hardware wallet'
+                'Your PIN is required\nto connect your hardware wallet',
+            moonletDisabled: 'Moonlet is disabled',
+            disabledDetails: 'try again in {{minutes}} minutes'
         },
         Send: {
             inputAddress: 'Search public addresses or domain names',

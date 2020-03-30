@@ -83,6 +83,7 @@ export class PasswordPinComponent extends React.Component<
                     const passHash = await hash(this.state.password);
                     this.props.onPasswordEntered({ password: passHash });
                     this.setState({ password: '' });
+                    this.props.clearErrorMessage();
                 }
             });
         }

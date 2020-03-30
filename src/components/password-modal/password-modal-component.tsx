@@ -46,7 +46,7 @@ export interface IState {
     enableBiometryAuth: boolean;
     countdownListenerTime: number;
     allowBackButton: boolean;
-    showAttemptsLabel: boolean;
+    showAttempts: boolean;
 }
 
 const EMPTY_STRING = ' ';
@@ -95,7 +95,7 @@ export class PasswordModalComponent extends React.Component<
             enableBiometryAuth: true,
             countdownListenerTime: 0,
             allowBackButton: false,
-            showAttemptsLabel: false
+            showAttempts: false
         };
     }
 
@@ -139,6 +139,8 @@ export class PasswordModalComponent extends React.Component<
 
     public getPassword(title?: string, subtitle?: string): Promise<string> {
         this.resultDeferred = new Deferred();
+        this.clearErrorMessage();
+
         this.setState({
             visible: true,
             title: title || translate('Password.pinTitleUnlock'),
@@ -146,13 +148,16 @@ export class PasswordModalComponent extends React.Component<
             currentStep: ScreenStep.ENTER_PIN,
             enableBiometryAuth: true,
             allowBackButton: false,
-            showAttemptsLabel: true
+            showAttempts: true
         });
+
         return this.resultDeferred.promise;
     }
 
     public createPassword(subtitle?: string) {
         this.resultDeferred = new Deferred();
+        this.clearErrorMessage();
+
         this.setState({
             visible: true,
             title: translate('Password.setupPinTitle'),
@@ -160,13 +165,16 @@ export class PasswordModalComponent extends React.Component<
             currentStep: ScreenStep.CREATE_PIN_TERMS,
             enableBiometryAuth: false,
             allowBackButton: true,
-            showAttemptsLabel: false
+            showAttempts: false
         });
+
         return this.resultDeferred.promise;
     }
 
     public changePassword() {
         this.resultDeferred = new Deferred();
+        this.clearErrorMessage();
+
         this.setState({
             visible: true,
             title: translate('Password.pinTitleUnlock'),
@@ -174,8 +182,9 @@ export class PasswordModalComponent extends React.Component<
             currentStep: ScreenStep.CHANGE_PIN_TERMS,
             enableBiometryAuth: false,
             allowBackButton: true,
-            showAttemptsLabel: true
+            showAttempts: true
         });
+
         return this.resultDeferred.promise;
     }
 
@@ -213,7 +222,7 @@ export class PasswordModalComponent extends React.Component<
     private async handleWrongPassword() {
         this.setCountdownListener();
 
-        if (this.state.showAttemptsLabel) {
+        if (this.state.showAttempts) {
             this.handlePasswordAttempts();
 
             this.props.incrementFailedLogins();
@@ -297,7 +306,8 @@ export class PasswordModalComponent extends React.Component<
                     currentStep: ScreenStep.CHANGE_PIN_CONFIRM,
                     title: translate('Password.verifyPinTitle'),
                     subtitle: translate('Password.verifyPinSubtitle'),
-                    newPassword: data.password
+                    newPassword: data.password,
+                    showAttempts: false // disable wipe data
                 });
                 break;
             case ScreenStep.CHANGE_PIN_CONFIRM:

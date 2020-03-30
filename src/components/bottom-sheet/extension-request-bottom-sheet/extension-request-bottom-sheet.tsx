@@ -78,6 +78,7 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
                 renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
                 onOpenStart={this.props.onOpenStart}
                 onCloseEnd={this.props.onCloseEnd}
+                enabledInnerScrolling={false}
             />
         );
     }

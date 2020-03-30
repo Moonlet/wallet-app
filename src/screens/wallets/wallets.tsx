@@ -284,7 +284,6 @@ export class WalletsScreenComponent extends React.Component<
                                                 'check-1'
                                             }
                                             selected={this.props.selectedWallet.id === wallet.id}
-                                            disableOpacity
                                         />
                                     </Swipeable>
                                 );

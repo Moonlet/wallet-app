@@ -256,6 +256,7 @@ export class LedgerConnectComponent extends React.Component<
                         this.scannerUnsubscribe.unsubscribe();
                     }
                 }}
+                enabledInnerScrolling={false}
             />
         );
     }

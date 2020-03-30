@@ -6,7 +6,7 @@ import {
     TransactionMessageType,
     ITransferTransactionExtraFields
 } from '../../core/blockchain/types';
-import { WalletType, IWallet } from '../../core/wallet/types';
+import { WalletType, IWallet, TransactionStatus } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
 import { IAction } from '../types';
 import { Dispatch } from 'react';
@@ -32,7 +32,8 @@ import {
     getSelectedWallet,
     getAccounts,
     getSelectedAccount,
-    getWalletWithAddress
+    getWalletWithAddress,
+    getWalletIdWithTransaction
 } from './selectors';
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
@@ -57,6 +58,7 @@ export const WALLET_CHANGE_NAME = 'WALLET_CHANGE_NAME';
 export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const TRANSACTION_UPSERT = 'TRANSACTION_UPSERT';
+export const UPDATE_TRANSACTION_STATUS = 'UPDATE_TRANSACTION_STATUS';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
 export const TOGGLE_TOKEN_ACTIVE = 'TOGGLE_TOKEN_ACTIVE';
@@ -367,6 +369,7 @@ export const updateTransactionFromBlockchain = (
     transactionHash: string,
     blockchain: Blockchain,
     chainId: string | number,
+    broadcastedOnBlock: number,
     displayNotification: boolean,
     navigateToTransaction: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
@@ -378,7 +381,20 @@ export const updateTransactionFromBlockchain = (
     try {
         transaction = await client.getTransactionInfo(transactionHash);
     } catch (e) {
-        // console.log(e);
+        const currentBlock = await client.getCurrentBlock();
+        if (currentBlock.number - broadcastedOnBlock > blockchainInstance.config.nrBlocksPassed) {
+            const walletId = getWalletIdWithTransaction(state, transactionHash);
+            if (walletId) {
+                dispatch({
+                    type: UPDATE_TRANSACTION_STATUS,
+                    data: {
+                        walletId,
+                        transactionHash,
+                        status: TransactionStatus.DROPPED
+                    }
+                });
+            }
+        }
         return;
     }
 

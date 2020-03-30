@@ -30,6 +30,7 @@ export const config: IBlockchainConfig = {
     coin: 'ETH',
     defaultUnit: 'WEI',
     iconComponent: EthIcon,
+    nrBlocksPassed: 10,
     tokens: {
         ETH: ETH_NATIVE
     },

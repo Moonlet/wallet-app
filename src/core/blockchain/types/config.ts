@@ -13,6 +13,7 @@ export interface IBlockchainConfig {
     coin: string;
     defaultUnit: string;
     iconComponent: React.ComponentType<any>;
+    nrBlocksPassed: number;
     tokens: {
         [symbol: string]: ITokenConfigState;
     };

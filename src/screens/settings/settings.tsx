@@ -121,11 +121,10 @@ export class SettingsScreenComponent extends React.Component<
                                     : translate('BiometryType.FingerprintLogin')}
                             </Text>
                             <Switch
-                                onValueChange={() =>
-                                    PasswordModal.getPassword().then(() =>
-                                        this.props.toggleTouchID()
-                                    )
-                                }
+                                onValueChange={async () => {
+                                    await PasswordModal.getPassword();
+                                    this.props.toggleTouchID();
+                                }}
                                 value={this.props.touchID}
                                 trackColor={{
                                     true: this.props.theme.colors.cardBackground,

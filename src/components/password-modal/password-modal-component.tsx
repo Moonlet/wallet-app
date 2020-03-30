@@ -33,6 +33,7 @@ export interface IState {
     newPassword: string;
     currentStep: ScreenStep;
     errorMessage: string;
+    enableBiometryAuth: boolean;
 }
 
 const EMPTY_STRING = ' ';
@@ -61,7 +62,8 @@ export class PasswordModalComponent extends React.Component<
             password: undefined,
             newPassword: undefined,
             currentStep: undefined,
-            errorMessage: EMPTY_STRING
+            errorMessage: EMPTY_STRING,
+            enableBiometryAuth: true
         };
     }
 
@@ -88,7 +90,8 @@ export class PasswordModalComponent extends React.Component<
             visible: true,
             title: title || translate('Password.pinTitleUnlock'),
             subtitle: subtitle || translate('Password.pinSubtitleUnlock'),
-            currentStep: ScreenStep.ENTER_PIN
+            currentStep: ScreenStep.ENTER_PIN,
+            enableBiometryAuth: true
         });
         return this.resultDeferred.promise;
     }
@@ -99,7 +102,8 @@ export class PasswordModalComponent extends React.Component<
             visible: true,
             title: translate('Password.setupPinTitle'),
             subtitle,
-            currentStep: ScreenStep.CREATE_PIN_TERMS
+            currentStep: ScreenStep.CREATE_PIN_TERMS,
+            enableBiometryAuth: false
         });
         return this.resultDeferred.promise;
     }
@@ -110,7 +114,8 @@ export class PasswordModalComponent extends React.Component<
             visible: true,
             title: translate('Password.pinTitleUnlock'),
             subtitle: translate('Password.changePinSubtitle'),
-            currentStep: ScreenStep.CHANGE_PIN_TERMS
+            currentStep: ScreenStep.CHANGE_PIN_TERMS,
+            enableBiometryAuth: false
         });
         return this.resultDeferred.promise;
     }
@@ -124,8 +129,11 @@ export class PasswordModalComponent extends React.Component<
     }
 
     @bind
-    private async updateState(data: { password?: string }) {
-        const isPasswordValid = await this.verifyPassword(data.password);
+    private async updateState(data: { password?: string; biometryAuthResult?: boolean }) {
+        let isPasswordValid = await this.verifyPassword(data.password);
+        if (data?.biometryAuthResult === true) {
+            isPasswordValid = data.biometryAuthResult;
+        }
 
         switch (this.state.currentStep) {
             // Enter PIN Flow
@@ -246,14 +254,15 @@ export class PasswordModalComponent extends React.Component<
                         subtitle={this.state.subtitle}
                         onPasswordEntered={this.updateState}
                         onBiometryLogin={(success: boolean) => {
-                            if (success) {
-                                this.updateState({});
+                            if (success === true) {
+                                this.updateState({ biometryAuthResult: true });
                             } else {
-                                // console.log('ERROR BIOMETRY');
+                                this.updateState({ biometryAuthResult: false });
                             }
                         }}
                         errorMessage={this.state.errorMessage}
                         clearErrorMessage={() => this.clearErrorMessage()}
+                        enableBiometryAuth={this.state.enableBiometryAuth}
                     />
                 )}
 

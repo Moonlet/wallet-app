@@ -33,6 +33,7 @@ export interface IExternalProps {
     onBiometryLogin: (success: boolean) => void;
     errorMessage: string;
     clearErrorMessage: () => void;
+    enableBiometryAuth: boolean;
 }
 
 interface IState {
@@ -61,10 +62,9 @@ export class PasswordPinComponent extends React.Component<
         };
         this.shakeAnimation = new Animated.Value(0);
 
-        // TODO
-        // if (!props.changePIN) {
-        //     this.biometryAuth();
-        // }
+        if (props.enableBiometryAuth === true) {
+            this.biometryAuth();
+        }
     }
 
     public componentDidUpdate(prevProps: IExternalProps) {
@@ -217,24 +217,25 @@ export class PasswordPinComponent extends React.Component<
             .then(success => {
                 if (success) {
                     this.props.onBiometryLogin(true);
+                } else {
+                    this.props.onBiometryLogin(false);
                 }
             })
             .catch(error => {
-                //
+                this.props.onBiometryLogin(false);
             });
     }
 
     public renderFooterRow = () => {
         const styles = this.props.styles;
-        const isTouchID = this.props.touchID; // && !this.props.changePIN;
-        // TODO
+        const isBiometryAuth = this.props.touchID && this.props.enableBiometryAuth;
 
         return (
             <View style={styles.keyRow}>
                 <TouchableOpacity
                     style={styles.keyContainer}
                     onPress={() => {
-                        if (isTouchID) {
+                        if (isBiometryAuth) {
                             this.biometryAuth();
                         } else {
                             this.setState({ password: '' });
@@ -242,7 +243,7 @@ export class PasswordPinComponent extends React.Component<
                         }
                     }}
                 >
-                    {isTouchID ? (
+                    {isBiometryAuth ? (
                         <Icon
                             name={
                                 Platform.OS === 'ios' && this.state.biometryType === 'FaceID'

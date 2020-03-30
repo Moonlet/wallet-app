@@ -102,6 +102,8 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
         this.resultDeferred = new Deferred();
         this.setState({
             visible: true,
+            title: translate('Password.pinTitleUnlock'),
+            subtitle: translate('Password.changePinSubtitle'),
             currentStep: ScreenStep.CHANGE_PIN_TERMS
         });
         return this.resultDeferred.promise;
@@ -114,6 +116,7 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
     @bind
     private async updateState(data: { password?: string }) {
         const isPasswordValid = await this.verifyPassword(data.password);
+        this.setState({ error: EMPTY_STRING }); // TODO: check this
 
         switch (this.state.currentStep) {
             // Enter PIN Flow
@@ -155,7 +158,9 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
                 if (isPasswordValid) {
                     this.setState({
                         currentStep: ScreenStep.CHANGE_PIN_NEW,
-                        password: data.password
+                        password: data.password,
+                        title: translate('Password.setupPinTitle'),
+                        subtitle: translate('Password.setupPinSubtitle')
                     });
                 } else {
                     this.setState({ error: translate('Password.invalidPassword') });
@@ -164,17 +169,25 @@ export class PasswordModalComponent extends React.Component<IReduxProps, IState>
             case ScreenStep.CHANGE_PIN_NEW:
                 this.setState({
                     currentStep: ScreenStep.CHANGE_PIN_CONFIRM,
+                    title: translate('Password.verifyPinTitle'),
+                    subtitle: translate('Password.verifyPinSubtitle'),
                     newPassword: data.password
                 });
                 break;
             case ScreenStep.CHANGE_PIN_CONFIRM:
                 if (this.state.newPassword === data.password) {
-                    this.props.changePIN(this.state.newPassword, data.password);
-                    // TODO: save in storage
-                    // TODO: promise resolve
+                    // Save new PIN in storage
+                    // this.state.password is the old password
+                    this.props.changePIN(this.state.newPassword, this.state.password);
+                    await setPassword(data.password, false);
+                    this.resultDeferred && this.resultDeferred.resolve(this.state.newPassword);
+                    this.setState({ visible: false });
                 } else {
-                    // TODO: show error
+                    this.setState({ error: translate('Password.invalidPassword') });
                 }
+                break;
+
+            default:
                 break;
         }
     }

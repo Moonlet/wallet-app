@@ -28,6 +28,7 @@ import { changePIN } from '../../redux/wallets/actions';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
+import { delay } from '../../core/utils/time';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -169,8 +170,8 @@ export class SettingsScreenComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.rowContainer}
                     onPress={async () => {
-                        // TODO: changePIN
                         await PasswordModal.changePassword();
+                        await delay(500);
                         Dialog.info(
                             translate('App.labels.success'),
                             translate('Settings.successChangePin')

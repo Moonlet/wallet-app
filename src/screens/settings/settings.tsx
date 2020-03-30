@@ -177,12 +177,16 @@ export class SettingsScreenComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.rowContainer}
                     onPress={async () => {
-                        await PasswordModal.changePassword();
-                        await delay(500);
-                        Dialog.info(
-                            translate('App.labels.success'),
-                            translate('Settings.successChangePin')
-                        );
+                        try {
+                            await PasswordModal.changePassword();
+                            await delay(500);
+                            Dialog.info(
+                                translate('App.labels.success'),
+                                translate('Settings.successChangePin')
+                            );
+                        } catch (err) {
+                            //
+                        }
                     }}
                 >
                     <Text style={styles.textRow}>{translate('Settings.changePin')}</Text>

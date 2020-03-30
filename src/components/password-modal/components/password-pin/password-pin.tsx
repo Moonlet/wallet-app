@@ -11,7 +11,8 @@ import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
 import { biometricAuth, BiometryType } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';
-import { normalize } from '../../../../styles/dimensions';
+import { normalize, ICON_SIZE } from '../../../../styles/dimensions';
+import { SafeAreaView } from 'react-navigation';
 
 const digitsLayout = [
     [1, 2, 3],
@@ -34,6 +35,8 @@ export interface IExternalProps {
     errorMessage: string;
     clearErrorMessage: () => void;
     enableBiometryAuth: boolean;
+    allowBackButton: boolean;
+    onBackButtonTap: () => void;
 }
 
 interface IState {
@@ -297,11 +300,19 @@ export class PasswordPinComponent extends React.Component<
         const { styles } = this.props;
 
         return (
-            <View style={styles.container}>
+            <SafeAreaView forceInset={{ bottom: 'never' }} style={styles.container}>
                 <Image
                     style={styles.logoImage}
                     source={require('../../../../assets/images/png/moonlet_space_gray.png')}
                 />
+                {this.props.allowBackButton && (
+                    <TouchableOpacity
+                        onPress={() => this.props.onBackButtonTap()}
+                        style={styles.backIconContainer}
+                    >
+                        <Icon name="close" size={ICON_SIZE} style={styles.backIcon} />
+                    </TouchableOpacity>
+                )}
                 <View style={styles.headerContainer}>
                     <Text style={styles.title}>{this.props.title}</Text>
                     <Text style={styles.subTitle}>{this.props.subtitle}</Text>
@@ -349,7 +360,7 @@ export class PasswordPinComponent extends React.Component<
                     />
                     {this.renderFooterRow()}
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 }

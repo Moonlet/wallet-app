@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, normalize, ICON_CONTAINER_SIZE } from '../../../../styles/dimensions';
+import { ph, pw } from '../../../../styles';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -17,8 +18,8 @@ export default (theme: ITheme) =>
             alignSelf: 'center',
             resizeMode: 'cover',
             opacity: 0.1,
-            height: '50%',
-            width: '100%'
+            height: ph(50),
+            width: pw(100)
         },
         headerContainer: {
             flex: 1,
@@ -109,5 +110,15 @@ export default (theme: ITheme) =>
             fontWeight: '600',
             color: theme.colors.accent,
             textAlign: 'center'
+        },
+        backIconContainer: {
+            width: ICON_CONTAINER_SIZE,
+            height: ICON_CONTAINER_SIZE,
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginLeft: BASE_DIMENSION
+        },
+        backIcon: {
+            color: theme.colors.accent
         }
     });

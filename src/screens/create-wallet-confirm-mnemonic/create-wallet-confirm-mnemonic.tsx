@@ -157,23 +157,29 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                     },
                     {
                         label: translate('App.labels.confirm'),
-                        onPress: () => {
+                        onPress: async () => {
                             const valid = testWords.every(
                                 (n: number) => mnemonicsInput[n] === mnemonic[n]
                             );
                             if (valid) {
-                                PasswordModal.createPassword(
-                                    translate('CreateWalletMnemonicConfirm.password')
-                                ).then(password =>
+                                try {
+                                    const password = await PasswordModal.createPassword(
+                                        translate('CreateWalletMnemonicConfirm.password')
+                                    );
+
                                     props.createHDWallet(mnemonic.join(' '), password, () => {
                                         props.navigation.dispatch(StackActions.popToTop());
                                         props.navigation.navigate(
                                             'MainNavigation',
                                             {},
-                                            NavigationActions.navigate({ routeName: 'Dashboard' })
+                                            NavigationActions.navigate({
+                                                routeName: 'Dashboard'
+                                            })
                                         );
-                                    })
-                                );
+                                    });
+                                } catch (err) {
+                                    //
+                                }
                             } else {
                                 setError(true);
                             }

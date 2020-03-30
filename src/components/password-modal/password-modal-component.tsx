@@ -45,6 +45,7 @@ export interface IState {
     errorMessage: string;
     enableBiometryAuth: boolean;
     countdownListenerTime: number;
+    allowBackButton: boolean;
 }
 
 const EMPTY_STRING = ' ';
@@ -91,7 +92,8 @@ export class PasswordModalComponent extends React.Component<
             currentStep: undefined,
             errorMessage: EMPTY_STRING,
             enableBiometryAuth: true,
-            countdownListenerTime: 0
+            countdownListenerTime: 0,
+            allowBackButton: false
         };
     }
 
@@ -140,7 +142,8 @@ export class PasswordModalComponent extends React.Component<
             title: title || translate('Password.pinTitleUnlock'),
             subtitle: subtitle || translate('Password.pinSubtitleUnlock'),
             currentStep: ScreenStep.ENTER_PIN,
-            enableBiometryAuth: true
+            enableBiometryAuth: true,
+            allowBackButton: false
         });
         return this.resultDeferred.promise;
     }
@@ -152,7 +155,8 @@ export class PasswordModalComponent extends React.Component<
             title: translate('Password.setupPinTitle'),
             subtitle,
             currentStep: ScreenStep.CREATE_PIN_TERMS,
-            enableBiometryAuth: false
+            enableBiometryAuth: false,
+            allowBackButton: true
         });
         return this.resultDeferred.promise;
     }
@@ -164,14 +168,16 @@ export class PasswordModalComponent extends React.Component<
             title: translate('Password.pinTitleUnlock'),
             subtitle: translate('Password.changePinSubtitle'),
             currentStep: ScreenStep.CHANGE_PIN_TERMS,
-            enableBiometryAuth: false
+            enableBiometryAuth: false,
+            allowBackButton: true
         });
         return this.resultDeferred.promise;
     }
 
-    // private onCloseTap() {
-    //     // promise reject
-    // }
+    private onBackButtonTap() {
+        this.setState({ visible: false });
+        this.resultDeferred && this.resultDeferred.reject();
+    }
 
     private clearErrorMessage() {
         this.setState({ errorMessage: EMPTY_STRING });
@@ -383,6 +389,8 @@ export class PasswordModalComponent extends React.Component<
                         errorMessage={this.state.errorMessage}
                         clearErrorMessage={() => this.clearErrorMessage()}
                         enableBiometryAuth={this.state.enableBiometryAuth}
+                        allowBackButton={this.state.allowBackButton}
+                        onBackButtonTap={() => this.onBackButtonTap()}
                     />
                 )}
 

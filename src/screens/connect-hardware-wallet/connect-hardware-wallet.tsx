@@ -299,16 +299,20 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             testID="button-next"
                             style={props.styles.bottomButton}
                             onPress={async () => {
-                                PasswordModal.createPassword(
-                                    translate('Password.connectHardwareWalletPinSubtitle')
-                                ).then(async () => {
-                                    await delay(100);
-                                    this.props.openBottomSheet(BottomSheetType.LEDGER_CONNECT, {
-                                        blockchain: this.state.blockchain,
-                                        deviceModel: this.state.device,
-                                        connectionType: this.state.connection
+                                try {
+                                    PasswordModal.createPassword(
+                                        translate('Password.connectHardwareWalletPinSubtitle')
+                                    ).then(async () => {
+                                        await delay(500);
+                                        this.props.openBottomSheet(BottomSheetType.LEDGER_CONNECT, {
+                                            blockchain: this.state.blockchain,
+                                            deviceModel: this.state.device,
+                                            connectionType: this.state.connection
+                                        });
                                     });
-                                });
+                                } catch (err) {
+                                    //
+                                }
                             }}
                         >
                             {translate('App.labels.connect')}

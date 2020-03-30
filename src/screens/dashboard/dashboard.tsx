@@ -36,6 +36,7 @@ import { ExtensionConnectionInfo } from '../../components/extension-connection-i
 import { IExchangeRates } from '../../redux/market/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { Amount } from '../../components/amount/amount';
+import { WalletType } from '../../core/wallet/types';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -395,6 +396,11 @@ export class DashboardScreenComponent extends React.Component<
         const showCreateAccount =
             this.props.isCreateAccount && this.props.selectedBlockchainAccounts?.length === 0;
 
+        /* Hardware wallets can have only one blockchain active */
+        let renderBottomNav = false;
+        const isHWWallet = this.props.wallet ? this.props.wallet.type === WalletType.HW : false;
+        if (blockchains.length > 1 && !isHWWallet) renderBottomNav = true;
+
         return (
             <View style={styles.container}>
                 {Platform.OS === 'web' && <ExtensionConnectionInfo />}
@@ -409,7 +415,7 @@ export class DashboardScreenComponent extends React.Component<
 
                 {!showCreateAccount && this.renderTokenDashboard()}
 
-                {blockchains.length > 1 && this.renderBottomBlockchainNav()}
+                {renderBottomNav && this.renderBottomBlockchainNav()}
             </View>
         );
     }

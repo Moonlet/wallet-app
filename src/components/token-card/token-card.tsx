@@ -40,23 +40,8 @@ export const TokenCardComponent = (
                 });
             }}
         >
-            <SmartImage source={tokenConfig.icon} style={props.styles.imageStyle} />
-            <View style={styles.accountInfoContainer}>
-                <Amount
-                    style={styles.firstAmount}
-                    token={props.token.symbol}
-                    tokenDecimals={tokenConfig.decimals}
-                    amount={props.token.balance?.value}
-                    blockchain={props.blockchain}
-                />
-                <Amount
-                    style={styles.secondAmount}
-                    token={props.token.symbol}
-                    tokenDecimals={tokenConfig.decimals}
-                    amount={props.token.balance?.value}
-                    blockchain={props.blockchain}
-                    convert
-                />
+            <View style={props.styles.container}>
+                <SmartImage source={tokenConfig.icon} style={props.styles.imageStyle} />
                 <View style={styles.accountInfoContainer}>
                     <Amount
                         style={styles.firstAmount}

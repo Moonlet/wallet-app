@@ -1,4 +1,4 @@
-import { Blockchain, ChainIdType } from '../../core/blockchain/types';
+import { Blockchain } from '../../core/blockchain/types';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { store } from '../config';
 import { ITokenConfigState } from './state';
@@ -10,8 +10,8 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
     const state = store.getState();
     const chainId = getChainId(state, blockchain);
 
-    if (blockchainToken[chainId][symbol]) {
-        return blockchainToken[chainId][symbol];
+    if (blockchainToken[symbol]) {
+        return blockchainToken[symbol];
     }
 
     const reduxToken = state.tokens;
@@ -20,16 +20,16 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
 };
 
 export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountState => {
-    const tokens = getBlockchain(blockchain).config.tokens;
+    const networks = getBlockchain(blockchain).config.networks;
+    const blockchainTokens = getBlockchain(blockchain).config.tokens;
 
     const tokenList: ITokensAccountState = {};
-    Object.keys(tokens).map(chainIdKey => {
-        const object = tokens[chainIdKey];
+    Object.values(networks).map(chainId => {
         const tokenValue = {};
-        Object.keys(object).map(symbolKey => {
+        Object.keys(blockchainTokens).map(symbolKey => {
             const accountToken = {
                 symbol: symbolKey,
-                order: object[symbolKey].defaultOrder || 0,
+                order: blockchainTokens[symbolKey].defaultOrder || 0,
                 active: true,
                 balance: {
                     value: '0',
@@ -40,7 +40,7 @@ export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountStat
             };
             tokenValue[symbolKey] = accountToken;
         });
-        tokenList[chainIdKey] = tokenValue;
+        tokenList[chainId] = tokenValue;
     });
 
     return tokenList;
@@ -70,9 +70,4 @@ export const generateAccountTokenState = (
             error: undefined
         }
     };
-};
-
-export const selectedChainId = (blockchain: Blockchain): ChainIdType => {
-    const state = store.getState();
-    return getChainId(state, blockchain);
 };

@@ -52,14 +52,14 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
 
 export const amountToStd = (
     value: BigNumber | number | string,
-    decimals: number = config.tokens[config.defaultChainId][config.coin].decimals
+    decimals: number = config.tokens[config.coin].decimals
 ): BigNumber => {
     return new BigNumber(value).multipliedBy(new BigNumber(10).pow(decimals));
 };
 
 export const amountFromStd = (
     value: BigNumber | number | string,
-    decimals: number = config.tokens[config.defaultChainId][config.coin].decimals
+    decimals: number = config.tokens[config.coin].decimals
 ): BigNumber => {
     return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals));
 };

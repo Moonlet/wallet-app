@@ -32,14 +32,8 @@ export const config: IBlockchainConfig = {
     coin: 'ATOM',
     defaultUnit: 'UATOM',
     iconComponent: CosmosIcon,
-    defaultChainId: 'cosmoshub-3',
     tokens: {
-        'gaia-13007': {
-            ATOM: ATOM_NATIVE
-        },
-        'cosmoshub-3': {
-            ATOM: ATOM_NATIVE
-        }
+        ATOM: ATOM_NATIVE
     },
     feeOptions: {
         gasPriceToken: 'ATOM',

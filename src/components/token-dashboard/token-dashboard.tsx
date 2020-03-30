@@ -2,20 +2,20 @@ import React from 'react';
 import { View } from 'react-native';
 // import { ConversionCard } from '../conversion-card/conversion-card';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
-import { Blockchain } from '../../core/blockchain/types';
+import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 // import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { TokenCard } from '../token-card/token-card';
 import { normalize } from '../../styles/dimensions';
-import { selectedChainId } from '../../redux/tokens/static-selectors';
 
 export interface IProps {
     blockchain: Blockchain;
     account: IAccountState;
     showBottomPadding: boolean;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    chainId: ChainIdType;
 }
 
 // const conversionCards = ['USD', 'BTC', 'ETH'];
@@ -46,7 +46,7 @@ export const TokenDashboardComponent = (
             ]}
         >
             {props.account?.tokens &&
-                Object.values(props.account.tokens[selectedChainId(props.account.blockchain)]).map(
+                Object.values(props.account.tokens[props.chainId]).map(
                     (token: ITokenState, index: number) =>
                         token.active && (
                             <TokenCard

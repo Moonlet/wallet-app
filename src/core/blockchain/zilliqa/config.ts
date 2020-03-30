@@ -30,14 +30,8 @@ export const config: IBlockchainConfig = {
     coin: 'ZIL',
     defaultUnit: 'QA',
     iconComponent: ZilIcon,
-    defaultChainId: '1',
     tokens: {
-        '333': {
-            ZIL: ZIL_NATIVE
-        },
-        '1': {
-            ZIL: ZIL_NATIVE
-        }
+        ZIL: ZIL_NATIVE
     },
     feeOptions: {
         gasPriceToken: 'ZIL',

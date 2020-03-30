@@ -20,6 +20,8 @@ import { enableCreateAccount } from '../../../redux/ui/screens/dashboard/actions
 import { ListAccount } from '../../list-account/list-account';
 import { IExchangeRates } from '../../../redux/market/state';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { getChainId } from '../../../redux/preferences/selectors';
+import { ChainIdType } from '../../../core/blockchain/types';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -32,13 +34,16 @@ export interface IReduxProps {
     getBalance: typeof getBalance;
     exchangeRates: IExchangeRates;
     accounts: IAccountState[];
+    chainId: ChainIdType;
     enableCreateAccount: typeof enableCreateAccount;
 }
 const mapStateToProps = (state: IReduxState) => {
+    const selectedAccount = getSelectedAccount(state);
     return {
         selectedAccount: getSelectedAccount(state),
         exchangeRates: state.market.exchangeRates,
-        accounts: getAccounts(state, getSelectedAccount(state).blockchain)
+        accounts: getAccounts(state, selectedAccount.blockchain),
+        chainId: getChainId(state, selectedAccount.blockchain)
     };
 };
 const mapDispatchToProps = {
@@ -102,12 +107,13 @@ export class AccountsBottomSheetComponent extends React.Component<
                     {this.props.accounts.map((account: IAccountState, index: number) => {
                         const selected = this.props.selectedAccount.address === account.address;
                         const blockchain = account.blockchain;
-                        const tokenConfig = getTokenConfig(
-                            blockchain,
-                            getBlockchain(blockchain).config.coin
-                        );
+                        const tokenConfig = getTokenConfig(blockchain, blockchainConfig.coin);
 
-                        const balance = calculateBalance(account, this.props.exchangeRates);
+                        const balance = calculateBalance(
+                            account,
+                            this.props.chainId,
+                            this.props.exchangeRates
+                        );
 
                         const label = (
                             <View>

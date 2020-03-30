@@ -6,7 +6,7 @@ import { TokenDashboard } from '../../components/token-dashboard/token-dashboard
 import { AccountCreate } from '../../components/account-create/account-create';
 import { IReduxState } from '../../redux/state';
 import { IWalletState, IAccountState } from '../../redux/wallets/state';
-import { Blockchain } from '../../core/blockchain/types';
+import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import LinearGradient from 'react-native-linear-gradient';
 
 import stylesProvider from './styles';
@@ -29,7 +29,7 @@ import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
-import { getBlockchains } from '../../redux/preferences/selectors';
+import { getBlockchains, getChainId } from '../../redux/preferences/selectors';
 import { NavigationEvents, StackActions } from 'react-navigation';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
@@ -53,12 +53,15 @@ export interface IReduxProps {
     isCreateAccount: boolean;
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
+    chainId: ChainIdType;
 }
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
 // const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const mapStateToProps = (state: IReduxState) => {
+    const selectedAccount = getSelectedAccount(state);
+
     return {
         wallet: getSelectedWallet(state),
         walletsNr: Object.keys(state.wallets).length,
@@ -68,7 +71,8 @@ const mapStateToProps = (state: IReduxState) => {
         exchangeRates: state.market.exchangeRates,
         isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
         selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
-        userCurrency: state.preferences.currency
+        userCurrency: state.preferences.currency,
+        chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : ''
     };
 };
 
@@ -257,11 +261,11 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     private renderCoinBalanceCard() {
-        const { styles, selectedAccount } = this.props;
+        const { styles, selectedAccount, chainId } = this.props;
         const blockchain: Blockchain = this.props.selectedBlockchain;
 
         const balance =
-            selectedAccount && calculateBalance(selectedAccount, this.props.exchangeRates);
+            selectedAccount && calculateBalance(selectedAccount, chainId, this.props.exchangeRates);
         const config = blockchain && getBlockchain(blockchain).config;
 
         const animatePrimaryAmountFontSize = this.animationValue.interpolate({
@@ -325,9 +329,7 @@ export class DashboardScreenComponent extends React.Component<
                             ]}
                             amount={String(balance)}
                             token={config.coin}
-                            tokenDecimals={
-                                config.tokens[config.defaultChainId][config.coin].decimals
-                            }
+                            tokenDecimals={config.tokens[config.coin].decimals}
                             blockchain={blockchain}
                             isAnimated={true}
                         />
@@ -341,9 +343,7 @@ export class DashboardScreenComponent extends React.Component<
                             ]}
                             amount={String(balance)}
                             token={config.coin}
-                            tokenDecimals={
-                                config.tokens[config.defaultChainId][config.coin].decimals
-                            }
+                            tokenDecimals={config.tokens[config.coin].decimals}
                             blockchain={blockchain}
                             convert
                             isAnimated={true}
@@ -356,7 +356,7 @@ export class DashboardScreenComponent extends React.Component<
 
     private renderTokenDashboard() {
         const styles = this.props.styles;
-        const { blockchains } = this.props;
+        const { blockchains, chainId } = this.props;
         const blockchain: Blockchain = this.props.selectedBlockchain;
 
         return (
@@ -380,6 +380,7 @@ export class DashboardScreenComponent extends React.Component<
                         blockchain={blockchain}
                         navigation={this.props.navigation}
                         showBottomPadding={blockchains?.length > 1}
+                        chainId={chainId}
                     />
                 </ScrollView>
 

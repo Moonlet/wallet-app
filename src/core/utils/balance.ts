@@ -5,12 +5,15 @@ import BigNumber from 'bignumber.js';
 import { TokenType } from '../blockchain/types/token';
 
 import { getBlockchain } from '../blockchain/blockchain-factory';
-import { Blockchain } from '../blockchain/types';
+import { Blockchain, ChainIdType } from '../blockchain/types';
 import { IExchangeRates } from '../../redux/market/state';
-import { getTokenConfig, selectedChainId } from '../../redux/tokens/static-selectors';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
 
-export const calculateBalance = (account: IAccountState, exchangeRates: IExchangeRates) => {
-    const chainId = selectedChainId(account.blockchain);
+export const calculateBalance = (
+    account: IAccountState,
+    chainId: ChainIdType,
+    exchangeRates: IExchangeRates
+) => {
     const tokenKeys = Object.keys(account.tokens[chainId]);
     let balance = new BigNumber(0);
 

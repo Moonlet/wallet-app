@@ -29,11 +29,8 @@ export const config: IBlockchainConfig = {
     coin: 'NEAR',
     defaultUnit: 'YNEAR',
     iconComponent: NearIcon,
-    defaultChainId: 'testnet',
     tokens: {
-        testnet: {
-            NEAR: NEAR_NATIVE
-        }
+        NEAR: NEAR_NATIVE
     },
     feeOptions: {
         gasPriceToken: 'NEAR',

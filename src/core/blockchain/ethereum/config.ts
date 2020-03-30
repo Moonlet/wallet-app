@@ -30,14 +30,8 @@ export const config: IBlockchainConfig = {
     coin: 'ETH',
     defaultUnit: 'WEI',
     iconComponent: EthIcon,
-    defaultChainId: '1',
     tokens: {
-        '4': {
-            ETH: ETH_NATIVE
-        },
-        '1': {
-            ETH: ETH_NATIVE
-        }
+        ETH: ETH_NATIVE
     },
     feeOptions: {
         gasPriceToken: 'ETH',

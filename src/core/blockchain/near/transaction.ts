@@ -51,8 +51,6 @@ export const sign = async (
 export const buildTransferTransaction = async (
     tx: ITransferTransaction
 ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> => {
-    const tokenInfo = tx.account.tokens[tx.token];
-
     const client = Near.getClient(tx.chainId);
     const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
     const blockInfo = await client.getCurrentBlock();
@@ -67,7 +65,7 @@ export const buildTransferTransaction = async (
         blockchain: tx.account.blockchain,
         chainId: tx.chainId,
         type: TransactionType.TRANSFER,
-        token: tokenInfo,
+        token: tx.account.tokens[tx.chainId][tx.token],
 
         address: tx.account.address,
         publicKey: tx.account.publicKey,

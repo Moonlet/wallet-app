@@ -8,12 +8,12 @@ import { FeeTotal } from '../fee-total/fee-total';
 import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { ITokenConfig } from '../../../../core/blockchain/types/token';
 import { isInteger } from '../../../../core/utils/format-number';
 import { smartConnect } from '../../../../core/utils/smart-connect';
+import { ITokenState } from '../../../../redux/wallets/state';
 
 export interface IExternalProps {
-    token: ITokenConfig;
+    token: ITokenState;
     gasPrice: string;
     gasLimit: string;
     blockchain: Blockchain;

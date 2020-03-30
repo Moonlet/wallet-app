@@ -4,13 +4,12 @@ import { NavigationParams } from 'react-navigation';
 
 export const signExtensionTransaction = payload => {
     const data = payload.params[0];
+    const blockchainConfig = getBlockchain(data.selectedAccount.blockchain).config;
     const navigationParams: NavigationParams = {
         blockchain: data.selectedAccount.blockchain,
         accountIndex: data.selectedAccount.index,
         token: data.token,
-        tokenLogo: getBlockchain(data.selectedAccount.blockchain).config.tokens[
-            getBlockchain(data.selectedAccount.blockchain).config.coin
-        ].icon,
+        tokenLogo: blockchainConfig.tokens[blockchainConfig.coin].icon,
         extensionTransactionPayload: payload
     };
 

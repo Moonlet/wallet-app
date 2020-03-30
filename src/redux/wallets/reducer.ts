@@ -10,8 +10,8 @@ import {
     WALLET_CHANGE_NAME,
     TOGGLE_TOKEN_ACTIVE,
     UPDATE_TOKEN_ORDER,
-    REMOVE_TOKEN,
-    ADD_TOKEN,
+    REMOVE_TOKEN_FROM_ACCOUNT,
+    ADD_TOKEN_TO_ACCOUNT,
     WALLET_SELECT_ACCOUNT,
     WALLET_SELECT_BLOCKCHAIN,
     SELECT_WALLET,
@@ -126,8 +126,10 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                             account.address === action.data.address &&
                             account.blockchain === action.data.blockchain
                         ) {
-                            account.tokens[action.data.token].balance = newBalance(
-                                account.tokens[action.data.token].balance,
+                            account.tokens[action.data.chainId][
+                                action.data.token
+                            ].balance = newBalance(
+                                account.tokens[action.data.chainId][action.data.token].balance,
                                 action
                             );
                         }
@@ -248,7 +250,7 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                 }
             };
 
-        case REMOVE_TOKEN:
+        case REMOVE_TOKEN_FROM_ACCOUNT:
             const accountToRemoveToken = state[action.data.walletId].accounts.find(
                 account =>
                     account.address === action.data.account.address &&
@@ -270,14 +272,15 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                 }
             };
 
-        case ADD_TOKEN:
+        case ADD_TOKEN_TO_ACCOUNT:
             const accountToAddToken = state[action.data.walletId].accounts.find(
                 account =>
                     account.address === action.data.account.address &&
                     account.blockchain === action.data.account.blockchain
             );
 
-            accountToAddToken.tokens[action.data.token.symbol] = action.data.token;
+            accountToAddToken.tokens[action.data.chainId][action.data.token.symbol] =
+                action.data.token;
 
             return {
                 ...state,

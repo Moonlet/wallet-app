@@ -5,6 +5,8 @@ import { randomBytes } from 'crypto';
 
 Enzyme.configure({ adapter: new Adapter() });
 
+jest.mock('./src/redux/config');
+
 // Mocks
 jest.mock('react-navigation', () => {
     return {

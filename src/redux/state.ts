@@ -4,6 +4,7 @@ import { IPrefState } from './preferences/state';
 import { IContactsState } from './contacts/state';
 import { IUiState } from './ui/state';
 import { IMarketState } from './market/state';
+import { ITokensConfigState } from './tokens/state';
 
 export interface IReduxState {
     app: IAppState;
@@ -12,5 +13,6 @@ export interface IReduxState {
     preferences: IPrefState;
     ui: IUiState;
     market: IMarketState;
+    tokens: ITokensConfigState;
     _persist: object;
 }

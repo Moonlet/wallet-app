@@ -1,5 +1,3 @@
-import BigNumber from 'bignumber.js';
-
 export enum TokenType {
     NATIVE = 'NATIVE',
     ERC20 = 'ERC20',
@@ -14,33 +12,6 @@ export enum TokenScreenComponentType {
 export interface ITokenIcon {
     uri?: string;
     iconComponent?: React.ComponentType<any>;
-}
-
-export interface ITokenConfig {
-    name: string;
-    symbol: string;
-    icon?: ITokenIcon;
-    type: TokenType;
-    contractAddress?: string;
-    decimals: number;
-    ui: {
-        decimals: number;
-        tokenScreenComponent: TokenScreenComponentType;
-    };
-    units?: {
-        [unit: string]: BigNumber;
-    };
-    symbolMap?: {
-        [testnet: string]: string;
-    };
-    order: number;
-    active: boolean;
-    balance?: {
-        value: string;
-        inProgress: boolean;
-        timestamp: number;
-        error: any;
-    };
 }
 
 export const GENERIC_TOKEN_ICON = {

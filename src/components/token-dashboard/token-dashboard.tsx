@@ -1,14 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
 // import { ConversionCard } from '../conversion-card/conversion-card';
-import { IAccountState } from '../../redux/wallets/state';
-import { Blockchain } from '../../core/blockchain/types';
+import { IAccountState, ITokenState } from '../../redux/wallets/state';
+import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 // import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { TokenCard } from '../token-card/token-card';
-import { ITokenConfig } from '../../core/blockchain/types/token';
 import { normalize } from '../../styles/dimensions';
 
 export interface IProps {
@@ -16,6 +15,7 @@ export interface IProps {
     account: IAccountState;
     showBottomPadding: boolean;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    chainId: ChainIdType;
 }
 
 // const conversionCards = ['USD', 'BTC', 'ETH'];
@@ -46,8 +46,8 @@ export const TokenDashboardComponent = (
             ]}
         >
             {props.account?.tokens &&
-                Object.values(props.account.tokens).map(
-                    (token: ITokenConfig, index: number) =>
+                Object.values(props.account.tokens[props.chainId]).map(
+                    (token: ITokenState, index: number) =>
                         token.active && (
                             <TokenCard
                                 account={props.account}

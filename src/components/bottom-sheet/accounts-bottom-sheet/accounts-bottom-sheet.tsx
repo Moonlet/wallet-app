@@ -19,6 +19,9 @@ import { translate } from '../../../core/i18n';
 import { enableCreateAccount } from '../../../redux/ui/screens/dashboard/actions';
 import { ListAccount } from '../../list-account/list-account';
 import { IExchangeRates } from '../../../redux/market/state';
+import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { getChainId } from '../../../redux/preferences/selectors';
+import { ChainIdType } from '../../../core/blockchain/types';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -31,13 +34,16 @@ export interface IReduxProps {
     getBalance: typeof getBalance;
     exchangeRates: IExchangeRates;
     accounts: IAccountState[];
+    chainId: ChainIdType;
     enableCreateAccount: typeof enableCreateAccount;
 }
 const mapStateToProps = (state: IReduxState) => {
+    const selectedAccount = getSelectedAccount(state);
     return {
         selectedAccount: getSelectedAccount(state),
         exchangeRates: state.market.exchangeRates,
-        accounts: getAccounts(state, getSelectedAccount(state).blockchain)
+        accounts: getAccounts(state, selectedAccount.blockchain),
+        chainId: getChainId(state, selectedAccount.blockchain)
     };
 };
 const mapDispatchToProps = {
@@ -101,6 +107,13 @@ export class AccountsBottomSheetComponent extends React.Component<
                     {this.props.accounts.map((account: IAccountState, index: number) => {
                         const selected = this.props.selectedAccount.address === account.address;
                         const blockchain = account.blockchain;
+                        const tokenConfig = getTokenConfig(blockchain, blockchainConfig.coin);
+
+                        const balance = calculateBalance(
+                            account,
+                            this.props.chainId,
+                            this.props.exchangeRates
+                        );
 
                         const label = (
                             <View>
@@ -115,25 +128,17 @@ export class AccountsBottomSheetComponent extends React.Component<
                                 <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
                                     <Amount
                                         style={this.props.styles.fistAmountText}
-                                        amount={calculateBalance(account, this.props.exchangeRates)}
+                                        amount={balance}
                                         blockchain={blockchain}
-                                        token={getBlockchain(blockchain).config.coin}
-                                        tokenDecimals={
-                                            getBlockchain(blockchain).config.tokens[
-                                                getBlockchain(blockchain).config.coin
-                                            ].decimals
-                                        }
+                                        token={blockchainConfig.coin}
+                                        tokenDecimals={tokenConfig.decimals}
                                     />
                                     <Amount
                                         style={this.props.styles.secondAmountText}
-                                        amount={calculateBalance(account, this.props.exchangeRates)}
+                                        amount={balance}
                                         blockchain={blockchain}
-                                        token={getBlockchain(blockchain).config.coin}
-                                        tokenDecimals={
-                                            getBlockchain(blockchain).config.tokens[
-                                                getBlockchain(blockchain).config.coin
-                                            ].decimals
-                                        }
+                                        token={blockchainConfig.coin}
+                                        tokenDecimals={tokenConfig.decimals}
                                         convert
                                     />
                                 </View>
@@ -143,7 +148,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                         return (
                             <ListAccount
                                 key={index}
-                                leftIcon={getBlockchain(blockchain).config.iconComponent}
+                                leftIcon={blockchainConfig.iconComponent}
                                 rightIcon={selected ? 'check-1' : undefined}
                                 label={label}
                                 selected={selected}
@@ -158,10 +163,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                     {blockchainConfig.ui.enableAccountCreation &&
                         this.props.accounts.length < blockchainConfig.ui.maxAccountsNumber && (
                             <ListAccount
-                                leftIcon={
-                                    getBlockchain(this.props.selectedAccount.blockchain).config
-                                        .iconComponent
-                                }
+                                leftIcon={blockchainConfig.iconComponent}
                                 isCreate
                                 label={createAccountLabel}
                                 onPress={() => {

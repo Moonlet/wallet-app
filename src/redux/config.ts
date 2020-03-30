@@ -10,6 +10,7 @@ import prefReducer from './preferences/reducer';
 import contactsReducer from './contacts/reducer';
 import { walletConnectMiddleware } from './utils/wallet-connect-middleware';
 import { uiReducer } from './ui/reducer';
+import tokensReducer from './tokens/reducer';
 
 const composeEnhancers = composeWithDevTools({
     // options like actionSanitizer, stateSanitizer
@@ -18,6 +19,7 @@ const composeEnhancers = composeWithDevTools({
 export const rootReducer = combineReducers({
     app: appReducer,
     wallets: walletsReducer,
+    tokens: tokensReducer,
     market: marketReducer,
     preferences: prefReducer,
     ui: uiReducer,

@@ -8,26 +8,30 @@ Object {
   "publicKey": "PUBLIC_KEY",
   "selected": false,
   "tokens": Object {
-    "ETH": Object {
-      "active": true,
-      "decimals": 18,
-      "icon": Object {
-        "iconComponent": Object {
-          "testUri": "../../../src/assets/icons/blockchains/eth.svg",
+    "1": Object {
+      "ETH": Object {
+        "active": true,
+        "balance": Object {
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "value": "0",
         },
+        "order": 0,
+        "symbol": "ETH",
       },
-      "name": "Ethereum",
-      "order": 0,
-      "symbol": "ETH",
-      "type": "NATIVE",
-      "ui": Object {
-        "decimals": 4,
-        "tokenScreenComponent": "DEFAULT",
-      },
-      "units": Object {
-        "ETH": "1000000000000000000",
-        "GWEI": "1000000000",
-        "WEI": "1",
+    },
+    "4": Object {
+      "ETH": Object {
+        "active": true,
+        "balance": Object {
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "value": "0",
+        },
+        "order": 0,
+        "symbol": "ETH",
       },
     },
   },

@@ -8,26 +8,30 @@ Object {
   "publicKey": "PUBLIC_KEY",
   "selected": false,
   "tokens": Object {
-    "ZIL": Object {
-      "active": true,
-      "decimals": 12,
-      "icon": Object {
-        "iconComponent": Object {
-          "testUri": "../../../src/assets/icons/blockchains/zil.svg",
+    "1": Object {
+      "ZIL": Object {
+        "active": true,
+        "balance": Object {
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "value": "0",
         },
+        "order": 0,
+        "symbol": "ZIL",
       },
-      "name": "Zilliqa",
-      "order": 0,
-      "symbol": "ZIL",
-      "type": "NATIVE",
-      "ui": Object {
-        "decimals": 3,
-        "tokenScreenComponent": "DEFAULT",
-      },
-      "units": Object {
-        "LI": "1000000",
-        "QA": "1",
-        "ZIL": "1000000000000",
+    },
+    "333": Object {
+      "ZIL": Object {
+        "active": true,
+        "balance": Object {
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "value": "0",
+        },
+        "order": 0,
+        "symbol": "ZIL",
       },
     },
   },

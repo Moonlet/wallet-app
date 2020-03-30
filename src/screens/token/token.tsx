@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Platform } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
-import { IAccountState, IWalletState } from '../../redux/wallets/state';
+import { IAccountState, IWalletState, ITokenState } from '../../redux/wallets/state';
 import {
     getAccountFilteredTransactions,
     getAccount,
@@ -25,7 +25,7 @@ import {
 } from '../../redux/wallets/actions';
 import { getChainId } from '../../redux/preferences/selectors';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
-import { ITokenConfig, TokenScreenComponentType } from '../../core/blockchain/types/token';
+import { TokenScreenComponentType } from '../../core/blockchain/types/token';
 import { DefaultTokenScreen } from './components/default-token/default-token';
 import { DelegateTokenScreen } from './components/delegate-token/delegate-token';
 import { AccountSettings } from './components/account-settings/account-settings';
@@ -34,6 +34,7 @@ import { ExtensionConnectionInfo } from '../../components/extension-connection-i
 import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TransactionStatus } from '../../core/wallet/types';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -54,7 +55,7 @@ export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
     extensionTransactionPayload: any; // TODO add typing
-    token: ITokenConfig;
+    token: ITokenState;
 }
 
 interface IState {
@@ -158,7 +159,9 @@ export class TokenScreenComponent extends React.Component<
     public openSettingsMenu = () => this.setState({ settingsVisible: !this.state.settingsVisible });
 
     renderComponent() {
-        switch (this.props.token.ui.tokenScreenComponent) {
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+
+        switch (tokenConfig.ui.tokenScreenComponent) {
             case TokenScreenComponentType.DELEGATE:
                 return (
                     <DelegateTokenScreen

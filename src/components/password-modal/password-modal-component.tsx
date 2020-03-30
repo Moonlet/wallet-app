@@ -46,6 +46,7 @@ export interface IState {
     enableBiometryAuth: boolean;
     countdownListenerTime: number;
     allowBackButton: boolean;
+    showAttemptsLabel: boolean;
 }
 
 const EMPTY_STRING = ' ';
@@ -93,7 +94,8 @@ export class PasswordModalComponent extends React.Component<
             errorMessage: EMPTY_STRING,
             enableBiometryAuth: true,
             countdownListenerTime: 0,
-            allowBackButton: false
+            allowBackButton: false,
+            showAttemptsLabel: false
         };
     }
 
@@ -143,7 +145,8 @@ export class PasswordModalComponent extends React.Component<
             subtitle: subtitle || translate('Password.pinSubtitleUnlock'),
             currentStep: ScreenStep.ENTER_PIN,
             enableBiometryAuth: true,
-            allowBackButton: false
+            allowBackButton: false,
+            showAttemptsLabel: true
         });
         return this.resultDeferred.promise;
     }
@@ -156,7 +159,8 @@ export class PasswordModalComponent extends React.Component<
             subtitle,
             currentStep: ScreenStep.CREATE_PIN_TERMS,
             enableBiometryAuth: false,
-            allowBackButton: true
+            allowBackButton: true,
+            showAttemptsLabel: false
         });
         return this.resultDeferred.promise;
     }
@@ -169,7 +173,8 @@ export class PasswordModalComponent extends React.Component<
             subtitle: translate('Password.changePinSubtitle'),
             currentStep: ScreenStep.CHANGE_PIN_TERMS,
             enableBiometryAuth: false,
-            allowBackButton: true
+            allowBackButton: true,
+            showAttemptsLabel: true
         });
         return this.resultDeferred.promise;
     }
@@ -183,9 +188,7 @@ export class PasswordModalComponent extends React.Component<
         this.setState({ errorMessage: EMPTY_STRING });
     }
 
-    private async handleWrongPassword() {
-        this.setCountdownListener();
-
+    private handlePasswordAttempts() {
         let index = 0;
         for (let i = 0; i < Object.keys(FAILED_LOGIN_BLOCKING).length; i++) {
             if (this.props.failedLogins < Number(Object.keys(FAILED_LOGIN_BLOCKING)[i])) {
@@ -205,19 +208,29 @@ export class PasswordModalComponent extends React.Component<
                     ? translate('Password.invalidPassword')
                     : translate('Password.invalidPasswordAttempts', { attempts })
         });
+    }
 
-        this.props.incrementFailedLogins();
+    private async handleWrongPassword() {
+        this.setCountdownListener();
 
-        this.props.setAppBlockUntil(
-            new Date(new Date().getTime() + FAILED_LOGIN_BLOCKING[this.props.failedLogins])
-        );
+        if (this.state.showAttemptsLabel) {
+            this.handlePasswordAttempts();
 
-        if (this.props.failedLogins === RESET_APP_FAILED_LOGINS) {
-            NavigationService.popToTop();
-            NavigationService.navigate('OnboardingNavigation', {});
-            this.setState({ visible: false });
-            this.props.resetAllData();
-            await clearPassword();
+            this.props.incrementFailedLogins();
+
+            this.props.setAppBlockUntil(
+                new Date(new Date().getTime() + FAILED_LOGIN_BLOCKING[this.props.failedLogins])
+            );
+
+            if (this.props.failedLogins === RESET_APP_FAILED_LOGINS) {
+                NavigationService.popToTop();
+                NavigationService.navigate('OnboardingNavigation', {});
+                this.setState({ visible: false });
+                this.props.resetAllData();
+                await clearPassword();
+            }
+        } else {
+            this.setState({ errorMessage: translate('Password.invalidPassword') });
         }
     }
 

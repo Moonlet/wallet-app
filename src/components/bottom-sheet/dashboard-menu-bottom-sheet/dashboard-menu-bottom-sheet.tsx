@@ -11,13 +11,13 @@ import { ICON_SIZE, normalize } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 import { QrModalReader } from '../../qr-modal/qr-modal';
 import { WalletConnectClient } from '../../../core/wallet-connect/wallet-connect-client';
-import TouchableOpacity from '../../../library/touchable-opacity/touchable-opacity';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { Blockchain } from '../../../core/blockchain/types';
 import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
+import TouchableHighlight from '../../../library/touchable-highlight/touchable-highlight';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -67,69 +67,75 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
     }
 
     public renderBottomSheetContent() {
-        const { styles } = this.props;
+        const { styles, theme } = this.props;
         return (
             <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
-                <TouchableOpacity
+                <TouchableHighlight
                     onPress={() => this.transactionHistoryPress()}
-                    style={styles.rowContainer}
+                    underlayColor={theme.colors.bottomSheetBackground}
                 >
-                    <View style={styles.iconContainer}>
-                        <Icon name="archive-locker" size={ICON_SIZE} style={styles.icon} />
+                    <View style={styles.rowContainer}>
+                        <View style={styles.iconContainer}>
+                            <Icon name="archive-locker" size={ICON_SIZE} style={styles.icon} />
+                        </View>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.title}>
+                                {translate('DashboardMenu.transactionHistory')}
+                            </Text>
+                            <Text style={styles.description}>
+                                {translate('DashboardMenu.checkTransactions')}
+                            </Text>
+                        </View>
+                        <Icon name="chevron-right" size={normalize(16)} style={styles.arrowRight} />
                     </View>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.title}>
-                            {translate('DashboardMenu.transactionHistory')}
-                        </Text>
-                        <Text style={styles.description}>
-                            {translate('DashboardMenu.checkTransactions')}
-                        </Text>
-                    </View>
-                    <Icon name="chevron-right" size={normalize(16)} style={styles.arrowRight} />
-                </TouchableOpacity>
+                </TouchableHighlight>
 
                 {getBlockchain(this.props.blockchain).config.ui.enableTokenManagement &&
                     Platform.OS !== 'web' && (
-                        <TouchableOpacity
+                        <TouchableHighlight
                             onPress={() => this.manageAccount()}
-                            style={styles.rowContainer}
+                            underlayColor={theme.colors.bottomSheetBackground}
                         >
-                            <View style={styles.iconContainer}>
-                                <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
+                            <View style={styles.rowContainer}>
+                                <View style={styles.iconContainer}>
+                                    <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
+                                </View>
+                                <View style={styles.textContainer}>
+                                    <Text style={styles.title}>
+                                        {translate('DashboardMenu.manageAccount')}
+                                    </Text>
+                                    <Text style={styles.description}>
+                                        {translate('DashboardMenu.quicklyManage')}
+                                    </Text>
+                                </View>
+                                <Icon
+                                    name="chevron-right"
+                                    size={normalize(16)}
+                                    style={styles.arrowRight}
+                                />
                             </View>
-                            <View style={styles.textContainer}>
-                                <Text style={styles.title}>
-                                    {translate('DashboardMenu.manageAccount')}
-                                </Text>
-                                <Text style={styles.description}>
-                                    {translate('DashboardMenu.quicklyManage')}
-                                </Text>
-                            </View>
-                            <Icon
-                                name="chevron-right"
-                                size={normalize(16)}
-                                style={styles.arrowRight}
-                            />
-                        </TouchableOpacity>
+                        </TouchableHighlight>
                     )}
 
-                <TouchableOpacity
+                <TouchableHighlight
                     onPress={() => this.qrCodeScanner.open()}
-                    style={styles.rowContainer}
+                    underlayColor={theme.colors.bottomSheetBackground}
                 >
-                    <View style={styles.iconContainer}>
-                        <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
+                    <View style={styles.rowContainer}>
+                        <View style={styles.iconContainer}>
+                            <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
+                        </View>
+                        <View style={styles.textContainer}>
+                            <Text style={styles.title}>
+                                {translate('DashboardMenu.connectExtension')}
+                            </Text>
+                            <Text style={styles.description}>
+                                {translate('DashboardMenu.scanCode')}
+                            </Text>
+                        </View>
+                        <Icon name="chevron-right" size={normalize(16)} style={styles.arrowRight} />
                     </View>
-                    <View style={styles.textContainer}>
-                        <Text style={styles.title}>
-                            {translate('DashboardMenu.connectExtension')}
-                        </Text>
-                        <Text style={styles.description}>
-                            {translate('DashboardMenu.scanCode')}
-                        </Text>
-                    </View>
-                    <Icon name="chevron-right" size={normalize(16)} style={styles.arrowRight} />
-                </TouchableOpacity>
+                </TouchableHighlight>
 
                 <QrModalReader
                     obRef={ref => (this.qrCodeScanner = ref)}
@@ -152,6 +158,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                 renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
                 onOpenStart={this.props.onOpenStart}
                 onCloseEnd={this.props.onCloseEnd}
+                enabledInnerScrolling={false}
             />
         );
     }

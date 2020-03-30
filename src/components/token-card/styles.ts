@@ -16,6 +16,10 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION,
             paddingVertical: BASE_DIMENSION * 2
         },
+        cardRow: {
+            flex: 1,
+            flexDirection: 'row'
+        },
         accountInfoContainer: {
             flex: 1,
             display: 'flex',

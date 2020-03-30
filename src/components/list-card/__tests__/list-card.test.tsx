@@ -13,7 +13,8 @@ const props: IProps & IThemeProps<ReturnType<typeof stylesProvider>> = {
     rightIcon: 'chevron-right',
     selected: true,
     onPress: jest.fn(),
-    styles: stylesProvider(darkTheme)
+    styles: stylesProvider(darkTheme),
+    theme: darkTheme
 };
 
 describe('CardList component', () => {

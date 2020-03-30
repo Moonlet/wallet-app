@@ -29,6 +29,7 @@ import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-
 import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
 import { delay } from '../../core/utils/time';
+import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -42,6 +43,7 @@ export interface IReduxProps {
     touchID: boolean;
     toggleTouchID: typeof toggleTouchID;
     changePIN: typeof changePIN;
+    setDisplayPasswordModal: typeof setDisplayPasswordModal;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -52,7 +54,8 @@ const mapStateToProps = (state: IReduxState) => ({
 
 const mapDispatchToProps = {
     toggleTouchID,
-    changePIN
+    changePIN,
+    setDisplayPasswordModal
 };
 
 const navigationOptions = () => ({
@@ -123,7 +126,12 @@ export class SettingsScreenComponent extends React.Component<
                             <Switch
                                 onValueChange={async () => {
                                     await PasswordModal.getPassword();
+
+                                    // TouchID enables background mode and this will generate another password modal to be shown
+                                    this.props.setDisplayPasswordModal(false);
                                     this.props.toggleTouchID();
+                                    await delay(1000);
+                                    this.props.setDisplayPasswordModal(true);
                                 }}
                                 value={this.props.touchID}
                                 trackColor={{

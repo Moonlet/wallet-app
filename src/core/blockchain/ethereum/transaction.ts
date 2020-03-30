@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js';
 import { TokenType } from '../types/token';
 import { TransactionStatus } from '../../wallet/types';
 import { Ethereum } from '.';
+import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 export const sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
     const transaction = new Transaction(
@@ -42,7 +43,7 @@ export const getTransactionStatusByCode = (status): TransactionStatus => {
 export const buildTransferTransaction = async (
     tx: ITransferTransaction
 ): Promise<IBlockchainTransaction> => {
-    const tokenInfo = tx.account.tokens[tx.token];
+    const tokenInfo = getTokenConfig(tx.account.blockchain, tx.token);
 
     const client = Ethereum.getClient(tx.chainId);
     const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
@@ -59,12 +60,10 @@ export const buildTransferTransaction = async (
                 blockchain: tx.account.blockchain,
                 chainId: tx.chainId,
                 type: TransactionType.TRANSFER,
-                token: tokenInfo,
+                token: tx.account.tokens[tx.chainId][tx.token],
                 address: tx.account.address,
                 publicKey: tx.account.publicKey,
-
                 toAddress: tokenInfo.contractAddress,
-
                 amount: '0',
                 feeOptions: tx.feeOptions,
                 broadcatedOnBlock: undefined,
@@ -94,7 +93,7 @@ export const buildTransferTransaction = async (
                 blockchain: tx.account.blockchain,
                 chainId: tx.chainId,
                 type: TransactionType.TRANSFER,
-                token: tokenInfo,
+                token: tx.account.tokens[tx.chainId][tx.token],
 
                 address: tx.account.address,
                 publicKey: tx.account.publicKey,
@@ -110,7 +109,8 @@ export const buildTransferTransaction = async (
 };
 
 export const getTransactionAmount = (tx: IBlockchainTransaction): string => {
-    if (tx.token?.type === TokenType.ERC20) {
+    const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);
+    if (tokenInfo.type === TokenType.ERC20) {
         return tx?.data?.params[1];
     } else {
         return tx.amount;

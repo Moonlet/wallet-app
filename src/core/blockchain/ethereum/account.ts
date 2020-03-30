@@ -5,7 +5,7 @@ import { BigNumber } from 'bignumber.js';
 import { convert } from '../common/account';
 import { config } from './config';
 import HDNode from 'hdkey';
-import klona from 'klona';
+import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 
 export const getAccountDerivationPath = (accountIndex): string => {
     return `${accountIndex}`;
@@ -46,7 +46,7 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
         publicKey: privateToPublic(privateKey),
         address: privateToAddress(privateKey),
         blockchain: Blockchain.ETHEREUM,
-        tokens: klona(config.tokens)
+        tokens: generateTokensConfig(Blockchain.ETHEREUM)
     };
 };
 

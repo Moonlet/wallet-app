@@ -19,6 +19,7 @@ import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import moment from 'moment';
 import { getChainId } from '../../redux/preferences/selectors';
 import { normalize } from '../../styles/dimensions';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -64,11 +65,11 @@ export class TransactionDetailsComponent extends React.Component<
 
         const date = new Date(transaction.date.signed);
 
-        const tokens = getBlockchain(account.blockchain).config.tokens;
-        const coin = getBlockchain(account.blockchain).config.coin;
-
         const blockchainInstance = getBlockchain(account.blockchain);
+        const coin = blockchainInstance.config.coin;
         const amount = blockchainInstance.transaction.getTransactionAmount(transaction);
+
+        const tokenConfig = getTokenConfig(account.blockchain, transaction?.token?.symbol);
 
         return (
             <View style={styles.container}>
@@ -91,7 +92,7 @@ export class TransactionDetailsComponent extends React.Component<
                             amount={amount}
                             blockchain={account.blockchain}
                             token={transaction?.token?.symbol || coin}
-                            tokenDecimals={transaction?.token?.decimals || tokens[coin].decimals}
+                            tokenDecimals={tokenConfig.decimals}
                         />
                         <Text style={styles.textSecondary}>{translate('Send.amount')}</Text>
                     </View>

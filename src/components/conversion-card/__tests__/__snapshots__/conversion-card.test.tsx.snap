@@ -1,27 +1,3 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`conversion card component renders correctly 1`] = `
-"<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    ZIL
-    ETH
-  </withTheme(TextComponent)>
-  <Connect(AmountComponent) amount=\\"1\\" token=\\"ZIL\\" style={{...}} convertTo=\\"ETH\\" blockchain=\\"ETHEREUM\\" tokenDecimals={18} />
-  <withTheme(TextComponent) style={{...}}>
-    0.0216%
-  </withTheme(TextComponent)>
-</View>"
-`;
-
-exports[`conversion card component renders correctly negative values 1`] = `
-"<View style={{...}}>
-  <withTheme(TextComponent) style={{...}}>
-    ZIL
-    ETH
-  </withTheme(TextComponent)>
-  <Connect(AmountComponent) amount=\\"1\\" token=\\"ZIL\\" style={{...}} convertTo=\\"ETH\\" blockchain=\\"ETHEREUM\\" tokenDecimals={18} />
-  <withTheme(TextComponent) style={{...}}>
-    -0.0216%
-  </withTheme(TextComponent)>
-</View>"
-`;
+exports[`conversion card component renders correctly 1`] = `"conversion card"`;

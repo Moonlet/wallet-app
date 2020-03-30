@@ -61,9 +61,10 @@ export class BlockchainNavigationBottomSheetComponent extends React.Component<
 
     public renderToken = (blockchain: Blockchain) => {
         const { styles, theme } = this.props;
+        const blockchainConfig = getBlockchain(blockchain).config;
 
-        const coin = getBlockchain(blockchain).config.coin;
-        const BlockchainIcon = getBlockchain(blockchain).config.iconComponent;
+        const coin = blockchainConfig.coin;
+        const BlockchainIcon = blockchainConfig.iconComponent;
 
         return (
             <TouchableOpacity

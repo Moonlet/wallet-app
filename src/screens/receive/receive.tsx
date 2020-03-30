@@ -7,20 +7,19 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
 import QRCode from 'react-native-qrcode-svg';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
-import { IAccountState } from '../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { AccountAddress } from '../../components/account-address/account-address';
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
 import { Blockchain } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
-import { ITokenConfig } from '../../core/blockchain/types/token';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
-    token: ITokenConfig;
+    token: ITokenState;
 }
 
 export interface IReduxProps {

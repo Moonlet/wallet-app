@@ -2,6 +2,27 @@ import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
 import EthIcon from '../../../assets/icons/blockchains/eth.svg';
+import { ITokenConfigState } from '../../../redux/tokens/state';
+
+export const ETH_NATIVE: ITokenConfigState = {
+    name: 'Ethereum',
+    symbol: 'ETH',
+    icon: {
+        iconComponent: EthIcon
+    },
+    defaultOrder: 0,
+    decimals: 18,
+    ui: {
+        decimals: 4,
+        tokenScreenComponent: TokenScreenComponentType.DEFAULT
+    },
+    type: TokenType.NATIVE,
+    units: {
+        WEI: new BigNumber(1),
+        GWEI: new BigNumber(Math.pow(10, 9)),
+        ETH: new BigNumber(Math.pow(10, 18))
+    }
+};
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/60'/0'/0`,
@@ -10,26 +31,7 @@ export const config: IBlockchainConfig = {
     defaultUnit: 'WEI',
     iconComponent: EthIcon,
     tokens: {
-        ETH: {
-            name: 'Ethereum',
-            symbol: 'ETH',
-            icon: {
-                iconComponent: EthIcon
-            },
-            order: 0,
-            active: true,
-            decimals: 18,
-            ui: {
-                decimals: 4,
-                tokenScreenComponent: TokenScreenComponentType.DEFAULT
-            },
-            type: TokenType.NATIVE,
-            units: {
-                WEI: new BigNumber(1),
-                GWEI: new BigNumber(Math.pow(10, 9)),
-                ETH: new BigNumber(Math.pow(10, 18))
-            }
-        }
+        ETH: ETH_NATIVE
     },
     feeOptions: {
         gasPriceToken: 'ETH',

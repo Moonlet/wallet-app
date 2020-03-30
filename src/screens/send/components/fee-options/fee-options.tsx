@@ -1,5 +1,5 @@
 import React from 'react';
-import { IAccountState } from '../../../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import stylesProvider from './styles';
 import { Text } from '../../../../library';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
@@ -16,12 +16,12 @@ import { getChainId } from '../../../../redux/preferences/selectors';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import bind from 'bind-decorator';
-import { ITokenConfig } from '../../../../core/blockchain/types/token';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export interface IExternalProps {
-    token: ITokenConfig;
-    sendingToken: ITokenConfig;
+    token: ITokenState;
+    sendingToken: ITokenState;
     account: IAccountState;
     toAddress: string;
     onFeesChanged: (feeOptions: IFeeOptions) => any;
@@ -49,11 +49,12 @@ export class FeeOptionsComponent extends React.Component<
         props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps
     ) {
         super(props);
-        const feeOptions = getBlockchain(this.props.account.blockchain).config.feeOptions;
+        const blockchainConfig = getBlockchain(props.account.blockchain).config;
+        const feeOptions = blockchainConfig.feeOptions;
 
         this.state = {
             feeOptions: undefined,
-            blockchainConfig: getBlockchain(props.account.blockchain).config,
+            blockchainConfig,
             showAdvancedOptions: false,
             hasAdvancedOptions: !!feeOptions.ui.feeComponentAdvanced,
             selectedPreset: feeOptions.ui.defaultPreset,
@@ -64,14 +65,19 @@ export class FeeOptionsComponent extends React.Component<
 
     public async getEstimatedFees() {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
+        const tokenSendingToken = getTokenConfig(
+            this.props.account.blockchain,
+            this.props.sendingToken.symbol
+        );
+
         const fees = await blockchainInstance
             .getClient(this.props.chainId)
             .calculateFees(
                 this.props.account.address,
                 this.props.toAddress,
                 1,
-                this.props.sendingToken.contractAddress,
-                this.props.sendingToken.type
+                tokenSendingToken.contractAddress,
+                tokenSendingToken.type
             );
 
         this.setState({ feeOptions: fees, isLoading: false });

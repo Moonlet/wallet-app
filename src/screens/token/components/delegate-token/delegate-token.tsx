@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
-import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
+import { IAccountState, IWalletState, ITokenState } from '../../../../redux/wallets/state';
 import {
     getAccountFilteredTransactions,
     getAccount,
@@ -16,7 +16,6 @@ import { translate } from '../../../../core/i18n';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../../../core/blockchain/types';
 import { getChainId } from '../../../../redux/preferences/selectors';
-import { ITokenConfig } from '../../../../core/blockchain/types/token';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import bind from 'bind-decorator';
 import { AccountTab } from './components/account-tab/account-tab';
@@ -29,7 +28,7 @@ export interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
     extensionTransactionPayload: any; // TODO add typing
-    token: ITokenConfig;
+    token: ITokenState;
     navigation: NavigationScreenProp<NavigationState>;
 }
 

@@ -1,6 +1,7 @@
 import { BigNumber } from 'bignumber.js';
-import { ITokenConfig, TokenType } from './token';
+import { TokenType } from './token';
 import { ChainIdType } from '.';
+import { ITokenConfigState } from '../../../redux/tokens/state';
 
 export enum DerivationType {
     HD_KEY = 'HD_KEY',
@@ -13,7 +14,7 @@ export interface IBlockchainConfig {
     defaultUnit: string;
     iconComponent: React.ComponentType<any>;
     tokens: {
-        [symbol: string]: ITokenConfig;
+        [symbol: string]: ITokenConfigState;
     };
     feeOptions: {
         gasPriceToken: string;

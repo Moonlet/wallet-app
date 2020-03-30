@@ -4,10 +4,10 @@ import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
 import HDNode from 'hdkey';
-import klona from 'klona';
 import bech32 from 'bech32';
 import { createHash } from 'crypto';
 import secp256k1 from 'secp256k1';
+import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 
 export const ADDRESS_PREFIX = 'cosmos';
 
@@ -57,7 +57,7 @@ export const getAccountFromPrivateKey = (privateKey: string, index: number): IAc
         publicKey: privateToPublic(privateKey),
         address: privateToAddress(privateKey),
         blockchain: Blockchain.COSMOS,
-        tokens: klona(config.tokens)
+        tokens: generateTokensConfig(Blockchain.COSMOS)
     };
 };
 

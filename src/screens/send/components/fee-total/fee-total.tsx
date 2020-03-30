@@ -6,10 +6,11 @@ import { Amount } from '../../../../components/amount/amount';
 import { Text } from '../../../../library';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { translate } from '../../../../core/i18n';
-import { ITokenConfig } from '../../../../core/blockchain/types/token';
+import { ITokenState } from '../../../../redux/wallets/state';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export interface IExternalProps {
-    token: ITokenConfig;
+    token: ITokenState;
     amount: string;
     blockchain: Blockchain;
 }
@@ -19,6 +20,7 @@ export class FeeTotalComponent extends React.Component<
 > {
     public render() {
         const styles = this.props.styles;
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
 
         return (
             <View style={styles.container}>
@@ -28,8 +30,8 @@ export class FeeTotalComponent extends React.Component<
                         style={styles.fee}
                         amount={this.props.amount}
                         blockchain={this.props.blockchain}
-                        token={this.props.token.symbol}
-                        tokenDecimals={this.props.token.decimals}
+                        token={tokenConfig.symbol}
+                        tokenDecimals={tokenConfig.decimals}
                     />
                 </View>
                 <View style={styles.containerFeeConverted}>
@@ -38,8 +40,8 @@ export class FeeTotalComponent extends React.Component<
                         style={styles.feeConverted}
                         amount={this.props.amount}
                         blockchain={this.props.blockchain}
-                        token={this.props.token.symbol}
-                        tokenDecimals={this.props.token.decimals}
+                        token={tokenConfig.symbol}
+                        tokenDecimals={tokenConfig.decimals}
                         convert
                     />
                 </View>

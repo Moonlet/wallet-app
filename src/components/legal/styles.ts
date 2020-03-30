@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -53,5 +53,13 @@ export default (theme: ITheme) =>
             lineHeight: normalize(25),
             color: theme.colors.text,
             letterSpacing: 0.38
+        },
+        iconContainer: {
+            width: ICON_CONTAINER_SIZE,
+            height: ICON_CONTAINER_SIZE,
+            justifyContent: 'center'
+        },
+        backIcon: {
+            color: theme.colors.accent
         }
     });

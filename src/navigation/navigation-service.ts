@@ -29,6 +29,10 @@ export const NavigationService = (() => {
         navigator.dispatch(StackActions.popToTop());
     };
 
+    const goBack = () => {
+        navigator.dispatch(NavigationActions.back());
+    };
+
     const getRecursiveRoute = routeState => {
         if (Array.isArray(routeState.routes)) {
             return getRecursiveRoute(routeState.routes[routeState.index]);
@@ -44,6 +48,7 @@ export const NavigationService = (() => {
         navigate,
         replace,
         popToTop,
-        getCurrentRoute
+        getCurrentRoute,
+        goBack
     };
 })();

@@ -2,11 +2,6 @@
 
 exports[`coin dashboard component renders correctly 1`] = `
 "<View style={{...}}>
-  <View style={{...}}>
-    <withTheme(Connect(ConversionCardComponent)) fromCurrency=\\"ZIL\\" toCurrency=\\"USD\\" blockchain=\\"ZILLIQA\\" />
-    <withTheme(Connect(ConversionCardComponent)) fromCurrency=\\"ZIL\\" toCurrency=\\"BTC\\" blockchain=\\"ZILLIQA\\" />
-    <withTheme(Connect(ConversionCardComponent)) fromCurrency=\\"ZIL\\" toCurrency=\\"ETH\\" blockchain=\\"ZILLIQA\\" />
-  </View>
-  <ScrollViewMock contentContainerStyle={{...}} showsVerticalScrollIndicator={false} />
+  <View style={{...}} />
 </View>"
 `;

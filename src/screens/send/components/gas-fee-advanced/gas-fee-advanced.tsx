@@ -124,6 +124,7 @@ export class GasFeeAvancedComponent extends React.Component<
                         returnKeyType="done"
                     />
                 </View>
+
                 {this.state.displayErrorGasPrice && (
                     <Text style={styles.displayError}>{translate('Fee.errorGasPrice')}</Text>
                 )}
@@ -148,6 +149,7 @@ export class GasFeeAvancedComponent extends React.Component<
                         returnKeyType="done"
                     />
                 </View>
+
                 {this.state.displayErrorGasLimit && (
                     <Text style={styles.displayError}>{translate('Fee.errorLimitPrice')}</Text>
                 )}

@@ -10,10 +10,10 @@ export default (theme: ITheme) =>
         exchangeCardContainer: {
             display: 'flex',
             flexDirection: 'row',
-            marginHorizontal: -BASE_DIMENSION / 2,
+            // marginHorizontal: -BASE_DIMENSION / 2,
             marginBottom: BASE_DIMENSION
         },
-        scrollContainer: {
-            flexGrow: 1
+        tokensContainer: {
+            flex: 1
         }
     });

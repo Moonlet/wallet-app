@@ -16,6 +16,7 @@ interface IExternalProps {
     style?: any;
     tokenDecimals: number;
     uiDecimals?: number;
+    isAnimated?: boolean;
 }
 
 export interface IReduxProps {
@@ -41,6 +42,7 @@ export const AmountComponent = (props: IExternalProps & IReduxProps) => {
                 currency: convertTo,
                 maximumFractionDigits: props.uiDecimals || 4
             }}
+            isAnimated={props.isAnimated}
         >
             {amount}
         </Text>

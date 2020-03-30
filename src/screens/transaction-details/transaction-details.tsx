@@ -65,9 +65,8 @@ export class TransactionDetailsComponent extends React.Component<
 
         const date = new Date(transaction.date.signed);
 
-        const coin = getBlockchain(account.blockchain).config.coin;
-
         const blockchainInstance = getBlockchain(account.blockchain);
+        const coin = blockchainInstance.config.coin;
         const amount = blockchainInstance.transaction.getTransactionAmount(transaction);
 
         const tokenConfig = getTokenConfig(account.blockchain, transaction?.token?.symbol);

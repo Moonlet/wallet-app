@@ -130,14 +130,14 @@ export class AccountsBottomSheetComponent extends React.Component<
                                         style={this.props.styles.fistAmountText}
                                         amount={balance}
                                         blockchain={blockchain}
-                                        token={getBlockchain(blockchain).config.coin}
+                                        token={blockchainConfig.coin}
                                         tokenDecimals={tokenConfig.decimals}
                                     />
                                     <Amount
                                         style={this.props.styles.secondAmountText}
                                         amount={balance}
                                         blockchain={blockchain}
-                                        token={getBlockchain(blockchain).config.coin}
+                                        token={blockchainConfig.coin}
                                         tokenDecimals={tokenConfig.decimals}
                                         convert
                                     />
@@ -148,7 +148,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                         return (
                             <ListAccount
                                 key={index}
-                                leftIcon={getBlockchain(blockchain).config.iconComponent}
+                                leftIcon={blockchainConfig.iconComponent}
                                 rightIcon={selected ? 'check-1' : undefined}
                                 label={label}
                                 selected={selected}
@@ -163,10 +163,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                     {blockchainConfig.ui.enableAccountCreation &&
                         this.props.accounts.length < blockchainConfig.ui.maxAccountsNumber && (
                             <ListAccount
-                                leftIcon={
-                                    getBlockchain(this.props.selectedAccount.blockchain).config
-                                        .iconComponent
-                                }
+                                leftIcon={blockchainConfig.iconComponent}
                                 isCreate
                                 label={createAccountLabel}
                                 onPress={() => {

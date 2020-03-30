@@ -69,7 +69,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 break;
         }
 
-        const coin = getBlockchain(account.blockchain).config.coin;
+        const coin = blockchainInstance.config.coin;
 
         const txTokenConfig = getTokenConfig(tx.blockchain, tx?.token?.symbol);
 

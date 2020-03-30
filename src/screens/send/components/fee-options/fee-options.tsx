@@ -49,11 +49,12 @@ export class FeeOptionsComponent extends React.Component<
         props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps
     ) {
         super(props);
-        const feeOptions = getBlockchain(this.props.account.blockchain).config.feeOptions;
+        const blockchainConfig = getBlockchain(props.account.blockchain).config;
+        const feeOptions = blockchainConfig.feeOptions;
 
         this.state = {
             feeOptions: undefined,
-            blockchainConfig: getBlockchain(props.account.blockchain).config,
+            blockchainConfig,
             showAdvancedOptions: false,
             hasAdvancedOptions: !!feeOptions.ui.feeComponentAdvanced,
             selectedPreset: feeOptions.ui.defaultPreset,

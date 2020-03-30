@@ -6,12 +6,12 @@ import { IAccountState, ITokensAccountState, ITokenState } from '../wallets/stat
 import { getChainId } from '../preferences/selectors';
 
 export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenConfigState => {
-    const blockchainToken = getBlockchain(blockchain).config.tokens;
+    const blockchainTokens = getBlockchain(blockchain).config.tokens;
     const state = store.getState();
     const chainId = getChainId(state, blockchain);
 
-    if (blockchainToken[symbol]) {
-        return blockchainToken[symbol];
+    if (blockchainTokens[symbol]) {
+        return blockchainTokens[symbol];
     }
 
     const reduxToken = state.tokens;
@@ -20,16 +20,15 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
 };
 
 export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountState => {
-    const networks = getBlockchain(blockchain).config.networks;
-    const blockchainTokens = getBlockchain(blockchain).config.tokens;
+    const blockchainConfig = getBlockchain(blockchain).config;
 
     const tokenList: ITokensAccountState = {};
-    Object.values(networks).map(chainId => {
+    Object.values(blockchainConfig.networks).map(chainId => {
         const tokenValue = {};
-        Object.keys(blockchainTokens).map(symbolKey => {
+        Object.keys(blockchainConfig.tokens).map(symbolKey => {
             const accountToken = {
                 symbol: symbolKey,
-                order: blockchainTokens[symbolKey].defaultOrder || 0,
+                order: blockchainConfig.tokens[symbolKey].defaultOrder || 0,
                 active: true,
                 balance: {
                     value: '0',

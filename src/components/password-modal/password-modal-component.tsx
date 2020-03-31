@@ -210,7 +210,7 @@ export class PasswordModalComponent extends React.Component<
         const attempts: number = Number(failedLoginBlocking[index]) - this.props.failedLogins - 1;
 
         this.setState({
-            errorMessage: translate('Password.invalidPassword', { attempts }, attempts)
+            errorMessage: translate('Password.invalidPasswordAtttempts', { attempts }, attempts)
         });
     }
 

@@ -143,13 +143,12 @@ export const translation: ITranslations = {
             verifyPinSubtitle: 'Please re-enter your new PIN code',
             pinTitleUnlock: 'Enter PIN code',
             pinSubtitleUnlock: 'Your PIN is required\nto unlock Moonlet',
-            invalidPassword: {
-                text: 'Invalid Password',
+            invalidPassword: 'Invalid Password',
+            invalidPasswordAtttempts: {
+                text: 'Invalid Password\nYou have {{attempts}} attempts left',
                 ordinal: false,
                 forms: {
-                    one: 'Invalid Password\nYou have 1 attempt left',
-                    other: 'Invalid Password\nYou have {{attempts}} attempts left',
-                    zero: 'Invalid Password'
+                    one: 'Invalid Password\nYou have 1 attempt left'
                 }
             },
             genericError: 'Operation could not be completed',

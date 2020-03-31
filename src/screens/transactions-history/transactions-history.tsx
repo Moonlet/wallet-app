@@ -28,25 +28,21 @@ const mapStateToProps = (state: IReduxState) => {
     };
 };
 
-export class TransactionsHistoryScreenComponent extends React.Component<
-    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & INavigationProps
-> {
-    public static navigationOptions = navigationOptions;
+export const TransactionsHistoryScreenComponent = (
+    props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & INavigationProps
+) => {
+    return (
+        <View style={props.styles.container}>
+            <TransactionsHistoryList
+                transactions={props.transactions}
+                account={props.selectedAccount}
+                navigation={props.navigation}
+            />
+        </View>
+    );
+};
 
-    public render() {
-        const styles = this.props.styles;
-
-        return (
-            <View style={styles.container}>
-                <TransactionsHistoryList
-                    transactions={this.props.transactions}
-                    account={this.props.selectedAccount}
-                    navigation={this.props.navigation}
-                />
-            </View>
-        );
-    }
-}
+TransactionsHistoryScreenComponent.navigationOptions = navigationOptions;
 
 export const TransactionsHistoryScreen = smartConnect(TransactionsHistoryScreenComponent, [
     connect(mapStateToProps, null),

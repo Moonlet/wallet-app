@@ -29,7 +29,7 @@ export const config: IBlockchainConfig = {
     derivationType: DerivationType.HD_KEY,
     coin: 'ZIL',
     defaultUnit: 'QA',
-    nrBlocksPassed: 10,
+    droppedTxBlocksThreshold: 10,
     iconComponent: ZilIcon,
     tokens: {
         ZIL: ZIL_NATIVE

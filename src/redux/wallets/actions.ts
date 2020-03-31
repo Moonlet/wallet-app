@@ -33,7 +33,7 @@ import {
     getAccounts,
     getSelectedAccount,
     getWalletWithAddress,
-    getWalletIdWithTransaction
+    getWalletAndTransactionForHash
 } from './selectors';
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
@@ -58,7 +58,6 @@ export const WALLET_CHANGE_NAME = 'WALLET_CHANGE_NAME';
 export const ACCOUNT_GET_BALANCE = 'ACCOUNT_GET_BALANCE';
 export const TRANSACTION_PUBLISHED = 'TRANSACTION_PUBLISHED';
 export const TRANSACTION_UPSERT = 'TRANSACTION_UPSERT';
-export const UPDATE_TRANSACTION_STATUS = 'UPDATE_TRANSACTION_STATUS';
 export const ACCOUNT_ADD = 'ACCOUNT_ADD';
 export const ACCOUNT_REMOVE = 'ACCOUNT_REMOVE';
 export const TOGGLE_TOKEN_ACTIVE = 'TOGGLE_TOKEN_ACTIVE';
@@ -382,15 +381,21 @@ export const updateTransactionFromBlockchain = (
         transaction = await client.getTransactionInfo(transactionHash);
     } catch (e) {
         const currentBlock = await client.getCurrentBlock();
-        if (currentBlock.number - broadcastedOnBlock > blockchainInstance.config.nrBlocksPassed) {
-            const walletId = getWalletIdWithTransaction(state, transactionHash);
-            if (walletId) {
+        if (
+            currentBlock.number - broadcastedOnBlock >
+            blockchainInstance.config.droppedTxBlocksThreshold
+        ) {
+            const response = getWalletAndTransactionForHash(state, transactionHash);
+            if (response) {
+                transaction = {
+                    ...response.transaction,
+                    status: TransactionStatus.DROPPED
+                };
                 dispatch({
-                    type: UPDATE_TRANSACTION_STATUS,
+                    type: TRANSACTION_UPSERT,
                     data: {
-                        walletId,
-                        transactionHash,
-                        status: TransactionStatus.DROPPED
+                        walletId: response.walletId,
+                        transaction
                     }
                 });
             }

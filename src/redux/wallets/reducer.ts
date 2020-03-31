@@ -15,8 +15,7 @@ import {
     WALLET_SELECT_ACCOUNT,
     WALLET_SELECT_BLOCKCHAIN,
     SELECT_WALLET,
-    TRANSACTION_UPSERT,
-    UPDATE_TRANSACTION_STATUS
+    TRANSACTION_UPSERT
 } from './actions';
 import { REHYDRATE } from 'redux-persist';
 import BigNumber from 'bignumber.js';
@@ -153,23 +152,6 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                     transactions: {
                         ...state[action.data.walletId].transactions,
                         [action.data.hash]: transaction
-                    }
-                }
-            };
-
-        case UPDATE_TRANSACTION_STATUS:
-            return {
-                ...state,
-                [action.data.walletId]: {
-                    ...state[action.data.walletId],
-                    transactions: {
-                        ...state[action.data.walletId].transactions,
-                        [action.data.transactionHash]: {
-                            ...state[action.data.walletId].transactions[
-                                action.data.transactionHash
-                            ],
-                            status: action.data.status
-                        }
                     }
                 }
             };

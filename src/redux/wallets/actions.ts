@@ -47,7 +47,7 @@ import { NotificationType } from '../../core/messaging/types';
 import { updateAddressMonitorTokens } from '../../core/address-monitor/index';
 import { Dialog } from '../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../ui/password-modal/actions';
-import { getTokenConfig } from '../tokens/static-selectors';
+import { getTokenConfig, generateAccountTokenState } from '../tokens/static-selectors';
 import { ITokenState } from '../wallets/state';
 import { clearPassword } from '../../core/secure/keychain';
 import { delay } from '../../core/utils/time';
@@ -405,9 +405,13 @@ export const updateTransactionFromBlockchain = (
     }
 
     // search for wallets/accounts affected by this transaction
+    const receivingAddress =
+        transaction.token.type === TokenType.NATIVE
+            ? transaction.toAddress
+            : transaction.data?.params[0];
     const wallets = getWalletWithAddress(
         state,
-        [transaction.address, transaction.toAddress],
+        [transaction.address, receivingAddress],
         blockchain
     );
 
@@ -428,25 +432,26 @@ export const updateTransactionFromBlockchain = (
             wallets.length > 1
                 ? wallets.find(loopWallet =>
                       loopWallet.accounts.some(
-                          account => account.address.toLowerCase() === transaction.toAddress
+                          account => account.address.toLowerCase() === receivingAddress
                       )
                   )
                 : wallets[0];
 
         const transactionAccount =
-            wallet.accounts.find(
-                account => account.address.toLowerCase() === transaction.toAddress
-            ) ||
+            wallet.accounts.find(account => account.address.toLowerCase() === receivingAddress) ||
             wallet.accounts.find(account => account.address.toLowerCase() === transaction.address);
 
         // const currentChainId = getChainId(state, blockchain);
         // if (displayNotification && currentChainId === chainId) { - removed this for consistency with app closed notifications
+
+        const tokenConfig = getTokenConfig(blockchain, transaction.token.symbol);
+
         if (displayNotification) {
             const amount = blockchainInstance.account.amountFromStd(
-                new BigNumber(transaction.amount)
+                new BigNumber(blockchainInstance.transaction.getTransactionAmount(transaction))
             );
             const formattedAmount = formatNumber(amount, {
-                currency: blockchainInstance.config.coin
+                currency: transaction.token.symbol
             });
 
             Notifications.displayNotification(
@@ -454,16 +459,14 @@ export const updateTransactionFromBlockchain = (
                 `Transaction of ${formattedAmount} from ${formatAddress(
                     transaction.address,
                     blockchain
-                )} to ${formatAddress(transaction.toAddress, blockchain)}`,
+                )} to ${formatAddress(receivingAddress, blockchain)}`,
                 {
                     type: NotificationType.TRANSACTION_UPDATE,
                     data: {
                         walletId: wallet.id,
                         accountIndex: transactionAccount.index,
-                        token: transactionAccount.tokens[getBlockchain(blockchain).config.coin],
-                        tokenLogo: getBlockchain(blockchain).config.tokens[
-                            getBlockchain(transactionAccount.blockchain).config.coin
-                        ].icon,
+                        token: generateAccountTokenState(tokenConfig),
+                        tokenLogo: tokenConfig.icon,
                         blockchain
                     }
                 }
@@ -474,10 +477,8 @@ export const updateTransactionFromBlockchain = (
             const navigationParams: NavigationParams = {
                 blockchain,
                 accountIndex: transactionAccount.index,
-                token: transactionAccount.tokens[getBlockchain(blockchain).config.coin],
-                tokenLogo: getBlockchain(blockchain).config.tokens[
-                    getBlockchain(transactionAccount.blockchain).config.coin
-                ].icon
+                token: generateAccountTokenState(tokenConfig),
+                tokenLogo: tokenConfig.icon
             };
 
             dispatch(setSelectedWallet(wallet.id));

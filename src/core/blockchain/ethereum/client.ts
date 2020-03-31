@@ -13,10 +13,12 @@ import { config } from './config';
 import { convertUnit } from '../ethereum/account';
 import abi from 'ethereumjs-abi';
 import { Erc20Client } from './tokens/erc20-client';
-import { TokenType } from '../types/token';
+import { TokenType, TokenScreenComponentType } from '../types/token';
 import { NameService } from './name-service';
 import { getTransactionStatusByCode } from './transaction';
 import { generateAccountTokenState } from '../../../redux/tokens/static-selectors';
+
+const inputRegex = /^(\w{10})(\w{24})(\w{40})(\w{64})$/;
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -160,7 +162,7 @@ export class Client extends BlockchainGenericClient {
             this.http.jsonRpc('eth_getTransactionReceipt', transactionHash)
         ];
 
-        return Promise.all(rpcCalls).then(res => {
+        return Promise.all(rpcCalls).then(async res => {
             try {
                 if (!res[0].result) {
                     throw new Error(
@@ -177,6 +179,16 @@ export class Client extends BlockchainGenericClient {
 
                 const txInfo = res[0].result;
                 const txReceipt = res[1].result;
+                let token = config.tokens.ETH;
+                const data: any = {};
+
+                const tokenInfo = await this.getTokenTransferInfo(txInfo);
+                if (tokenInfo) {
+                    token = tokenInfo.token;
+                    txInfo.to = tokenInfo.address;
+
+                    data.params = [txInfo.to, tokenInfo.amount];
+                }
 
                 return {
                     id: transactionHash,
@@ -195,6 +207,7 @@ export class Client extends BlockchainGenericClient {
 
                     toAddress: txInfo.to,
                     amount: txInfo.value,
+                    data,
                     feeOptions: {
                         gasPrice: txInfo.gasPrice,
                         gasLimit: txInfo.gas,
@@ -203,12 +216,36 @@ export class Client extends BlockchainGenericClient {
                     broadcatedOnBlock: txInfo.blockNumber,
                     nonce: txInfo.nonce,
                     status: getTransactionStatusByCode(txReceipt.status),
-                    token: generateAccountTokenState(config.tokens.ETH)
+                    token: generateAccountTokenState(token)
                 };
             } catch (error) {
                 return Promise.reject(error.message);
             }
         });
+    }
+
+    async getTokenTransferInfo(txInfo: any) {
+        if (!txInfo.input) {
+            return false;
+        }
+
+        const parts = txInfo.input.match(inputRegex);
+
+        if (parts.length === 5 && parts[1] === '0xa9059cbb') {
+            const token = await this.tokens[TokenType.ERC20].getTokenInfo(txInfo.to);
+            token.type = TokenType.ERC20;
+            token.ui = {
+                decimals: token.decimals,
+                tokenScreenComponent: TokenScreenComponentType.DEFAULT
+            };
+            return {
+                address: '0x' + parts[3],
+                amount: '0x' + parts[4],
+                token
+            };
+        }
+
+        return false;
     }
 
     private async estimateFees(

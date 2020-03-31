@@ -34,20 +34,32 @@ export class Zrc2Client {
     }
 
     public async getTokenInfo(contractAddress) {
-        const smartContractSubState = await this.client.getSmartContractSubState(
-            contractAddress,
-            'implementation'
-        );
+        const smartContractSubState = await this.client
+            .getSmartContractSubState(contractAddress, 'implementation')
+            .catch(e => {
+                return null;
+            });
+
+        if (!smartContractSubState?.implementation) {
+            return null;
+        }
 
         const smartContractInit = await this.client.getSmartContractInit(
             smartContractSubState?.implementation
         );
 
         return {
-            symbol: this.findSmartContractSubField(smartContractInit, 'symbol'),
+            symbol: this.findSmartContractSubField(smartContractInit, 'symbol').toUpperCase(),
             name: this.findSmartContractSubField(smartContractInit, 'name'),
             decimals: this.findSmartContractSubField(smartContractInit, 'decimals')
         };
+    }
+
+    public extractEventParamsValue(
+        params: { type: string; value: string; vname: string }[],
+        paramName: string
+    ) {
+        return params.find(paramOjb => paramOjb.vname === paramName)?.value || '';
     }
 
     private findSmartContractSubField(smartContractInit, field: string) {

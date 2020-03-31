@@ -19,9 +19,9 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 2
         },
         textStyle: {
-            lineHeight: normalize(21),
+            fontSize: normalize(19),
+            lineHeight: normalize(25),
             color: theme.colors.text,
-            opacity: 0.87,
             textAlign: 'center',
             paddingHorizontal: BASE_DIMENSION * 6
         },

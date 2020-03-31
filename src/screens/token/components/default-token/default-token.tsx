@@ -68,8 +68,6 @@ const mapDispatchToProps = {
 export class DefaultTokenScreenComponent extends React.Component<
     INavigationProps & IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    public passwordModal: any;
-
     constructor(
         props: INavigationProps &
             IProps &
@@ -113,8 +111,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                 {
                     text: translate('App.labels.sign'),
                     onPress: () => {
-                        this.passwordModal
-                            .requestPassword()
+                        PasswordModal.getPassword()
                             .then(password => {
                                 WalletConnectClient.getConnector().approveRequest({
                                     id: this.props.extensionTransactionPayload.id,
@@ -133,6 +130,8 @@ export class DefaultTokenScreenComponent extends React.Component<
                                 );
                             })
                             .catch(() => {
+                                // TODO
+
                                 // maybe retry here
                                 WalletConnectClient.getConnector().rejectRequest({
                                     id: this.props.extensionTransactionPayload.id,
@@ -197,8 +196,6 @@ export class DefaultTokenScreenComponent extends React.Component<
                         />
                     </View>
                 </ScrollView>
-
-                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>
         );
     }

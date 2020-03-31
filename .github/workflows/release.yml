@@ -1,7 +1,10 @@
 on:
-  release:
-    types: 
-      - published
+  # release:
+  #   types:
+  #     - published
+  push:
+    branches:
+      - deploy-test
 
 name: Release build & deploy
 jobs:

@@ -146,12 +146,17 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     public async onDeleteConfirmed(wallet: IWalletState) {
-        await PasswordModal.getPassword(
-            translate('Password.pinTitleUnlock'),
-            translate('Password.subtitleDeleteWallet')
-        );
-        this.props.deleteWallet(wallet.id);
+        try {
+            await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleDeleteWallet')
+            );
+            this.props.deleteWallet(wallet.id);
+        } catch (err) {
+            //
+        }
     }
+    a;
 
     public onPressUnveil(wallet: any) {
         this.props.navigation.navigate('ViewWalletMnemonic', { wallet });

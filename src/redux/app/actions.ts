@@ -1,4 +1,6 @@
 import { HintsComponent, HintsScreen } from './state';
+import { IReduxState } from '../state';
+import { clearPassword } from '../../core/secure/keychain';
 
 export const SET_ACCEPTED_TC_VERSION = 'SET_ACCEPTED_TC_VERSION';
 export const SHOW_HINT = 'SHOW_HINT';
@@ -40,8 +42,7 @@ export const setAppBlockUntil = (date: Date) => {
     };
 };
 
-export const resetAllData = () => {
-    return {
-        type: RESET_ALL_DATA
-    };
+export const resetAllData = () => async (dispatch, getState: () => IReduxState) => {
+    clearPassword(); // clear keychain storage
+    dispatch({ type: RESET_ALL_DATA });
 };

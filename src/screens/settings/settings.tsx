@@ -24,7 +24,6 @@ import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { Dialog } from '../../components/dialog/dialog';
-import { changePIN } from '../../redux/wallets/actions';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
@@ -34,7 +33,6 @@ import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 export interface IState {
     isTouchIDSupported: boolean;
     biometryType: BiometryType;
-    changePIN: boolean;
 }
 
 export interface IReduxProps {
@@ -42,7 +40,6 @@ export interface IReduxProps {
     deviceId: string;
     touchID: boolean;
     toggleTouchID: typeof toggleTouchID;
-    changePIN: typeof changePIN;
     setDisplayPasswordModal: typeof setDisplayPasswordModal;
 }
 
@@ -54,7 +51,6 @@ const mapStateToProps = (state: IReduxState) => ({
 
 const mapDispatchToProps = {
     toggleTouchID,
-    changePIN,
     setDisplayPasswordModal
 };
 
@@ -77,8 +73,7 @@ export class SettingsScreenComponent extends React.Component<
 
         this.state = {
             isTouchIDSupported: false,
-            biometryType: undefined,
-            changePIN: false
+            biometryType: undefined
         };
 
         biometricAuth

@@ -162,7 +162,11 @@ export default class App extends React.Component<{}, IState> {
             return;
         }
 
-        await PasswordModal.getPassword();
+        try {
+            await PasswordModal.getPassword();
+        } catch (err) {
+            //
+        }
 
         this.setState({
             displayApplication: true,

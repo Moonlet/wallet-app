@@ -21,7 +21,6 @@ const digitsLayout = [
 ];
 const ZERO = 0;
 const PASSWORD_LENGTH = 6;
-const EMPTY_STRING = ' ';
 
 export interface IReduxProps {
     touchID: boolean;
@@ -72,7 +71,7 @@ export class PasswordPinComponent extends React.Component<
 
     public componentDidUpdate(prevProps: IExternalProps) {
         if (this.props.errorMessage !== prevProps.errorMessage) {
-            if (this.props.errorMessage !== EMPTY_STRING) {
+            if (this.props.errorMessage !== '') {
                 this.startShake();
             }
         }

@@ -47,16 +47,19 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
         forbidScreenshots();
     }
 
-    public componentDidMount() {
-        PasswordModal.getPassword(
-            translate('Password.pinTitleUnlock'),
-            translate('Password.subtitleMnemonic')
-        ).then(password => this.populateMnemonic(password));
-
+    public async componentDidMount() {
         // TODO: decide if check here the password
         // or request password on the screen from it's navigating here
 
-        // catch this.props.navigation.goBack(null);
+        try {
+            const password = await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleMnemonic')
+            );
+            this.populateMnemonic(password);
+        } catch (err) {
+            this.props.navigation.goBack(null);
+        }
     }
 
     public componentWillUnmount() {

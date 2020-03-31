@@ -153,7 +153,8 @@ export class SendScreenComponent extends React.Component<
             return;
         }
 
-        PasswordModal.getPassword().then(password => {
+        try {
+            const password = await PasswordModal.getPassword();
             this.props.sendTransferTransaction(
                 this.props.account,
                 this.state.toAddress,
@@ -164,7 +165,9 @@ export class SendScreenComponent extends React.Component<
                 this.props.navigation,
                 { memo: this.state.memo }
             );
-        });
+        } catch (err) {
+            //
+        }
     }
 
     public onFeesChanged(feeOptions: IFeeOptions) {

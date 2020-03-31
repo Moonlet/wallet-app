@@ -6,7 +6,7 @@ import { translate } from '../../core/i18n';
 import { PasswordTerms } from './components/password-terms/password-terms';
 import Modal from '../../library/modal/modal';
 import bind from 'bind-decorator';
-import { getPassword, setPassword, clearPassword } from '../../core/secure/keychain';
+import { getPassword, setPassword } from '../../core/secure/keychain';
 import { changePIN } from '../../redux/wallets/actions';
 import { Text } from '../../library';
 import { IThemeProps } from '../../core/theme/with-theme';
@@ -49,8 +49,6 @@ export interface IState {
     showAttempts: boolean;
 }
 
-const EMPTY_STRING = ' ';
-
 export interface IReduxProps {
     changePIN: typeof changePIN;
     failedLogins: number;
@@ -91,7 +89,7 @@ export class PasswordModalComponent extends React.Component<
             password: undefined,
             newPassword: undefined,
             currentStep: undefined,
-            errorMessage: EMPTY_STRING,
+            errorMessage: undefined,
             enableBiometryAuth: true,
             countdownListenerTime: 0,
             allowBackButton: false,
@@ -161,7 +159,7 @@ export class PasswordModalComponent extends React.Component<
         this.setState({
             visible: true,
             title: translate('Password.setupPinTitle'),
-            subtitle,
+            subtitle: subtitle || translate('Password.createPinSubtitle'),
             currentStep: ScreenStep.CREATE_PIN_TERMS,
             enableBiometryAuth: false,
             allowBackButton: true,
@@ -194,28 +192,25 @@ export class PasswordModalComponent extends React.Component<
     }
 
     private clearErrorMessage() {
-        this.setState({ errorMessage: EMPTY_STRING });
+        this.setState({ errorMessage: '' });
     }
 
     private handlePasswordAttempts() {
-        let index = 0;
-        for (let i = 0; i < Object.keys(FAILED_LOGIN_BLOCKING).length; i++) {
-            if (this.props.failedLogins < Number(Object.keys(FAILED_LOGIN_BLOCKING)[i])) {
-                index = i;
-                break;
-            }
-        }
+        const failedLoginBlocking = Object.keys(FAILED_LOGIN_BLOCKING)
+            .concat(String(RESET_APP_FAILED_LOGINS))
+            .reverse();
 
-        const attempts: number =
-            Number(Object.keys(FAILED_LOGIN_BLOCKING)[index]) - this.props.failedLogins - 1;
+        let index = 0;
+        failedLoginBlocking.map((failedLogin, i) => {
+            if (this.props.failedLogins < Number(failedLogin)) {
+                index = i;
+            }
+        });
+
+        const attempts: number = Number(failedLoginBlocking[index]) - this.props.failedLogins - 1;
 
         this.setState({
-            errorMessage:
-                attempts === 1
-                    ? translate('Password.invalidPasswordAttempt')
-                    : attempts === 0
-                    ? translate('Password.invalidPassword')
-                    : translate('Password.invalidPasswordAttempts', { attempts })
+            errorMessage: translate('Password.invalidPassword', { attempts }, attempts)
         });
     }
 
@@ -227,16 +222,16 @@ export class PasswordModalComponent extends React.Component<
 
             this.props.incrementFailedLogins();
 
-            this.props.setAppBlockUntil(
-                new Date(new Date().getTime() + FAILED_LOGIN_BLOCKING[this.props.failedLogins])
-            );
+            const failedLoginBlocking = FAILED_LOGIN_BLOCKING[this.props.failedLogins];
+            if (failedLoginBlocking) {
+                this.props.setAppBlockUntil(new Date(new Date().getTime() + failedLoginBlocking));
+            }
 
             if (this.props.failedLogins === RESET_APP_FAILED_LOGINS) {
                 NavigationService.popToTop();
                 NavigationService.navigate('OnboardingNavigation', {});
                 this.setState({ visible: false });
                 this.props.resetAllData();
-                await clearPassword();
             }
         } else {
             this.setState({ errorMessage: translate('Password.invalidPassword') });
@@ -361,16 +356,16 @@ export class PasswordModalComponent extends React.Component<
         let timeMeasurement: string;
         let coundownTime: number;
         if (days > 0) {
-            timeMeasurement = days === 1 ? translate('Time.day') : translate('Time.days');
+            timeMeasurement = translate('Time.day', undefined, days);
             coundownTime = days;
         } else if (hours > 0) {
-            timeMeasurement = hours === 1 ? translate('Time.hour') : translate('Time.hours');
+            timeMeasurement = translate('Time.hour', undefined, hours);
             coundownTime = hours;
         } else if (minutes > 0) {
-            timeMeasurement = minutes === 1 ? translate('Time.minute') : translate('Time.minutes');
+            timeMeasurement = translate('Time.minute', undefined, minutes);
             coundownTime = minutes;
         } else {
-            timeMeasurement = seconds === 1 ? translate('Time.second') : translate('Time.seconds');
+            timeMeasurement = translate('Time.second', undefined, seconds);
             coundownTime = seconds;
         }
 

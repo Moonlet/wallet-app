@@ -29,7 +29,12 @@ export const getRemoteConfigFeatures = async () => {
         [RemoteFeature.TC_VERSION]: undefined
     });
 
-    await firebase.config().fetch(duration);
+    try {
+        await firebase.config().fetch(duration);
+    } catch (err) {
+        //
+    }
+
     await firebase.config().activateFetched();
     const objects = await firebase
         .config()

@@ -486,10 +486,14 @@ export const sendTransferTransaction = (
         dispatch({
             type: DISPLAY_MESSAGE,
             data: {
-                text: TransactionMessageText.SIGNING,
+                text:
+                    appWallet.type === WalletType.HW
+                        ? TransactionMessageText.CONNECTING_LEDGER
+                        : TransactionMessageText.SIGNING,
                 type: TransactionMessageType.INFO
             }
         });
+
         const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
             pass: password,
             deviceVendor: appWallet.hwOptions?.deviceVendor,
@@ -514,13 +518,6 @@ export const sendTransferTransaction = (
         });
 
         if (appWallet.type === WalletType.HW) {
-            dispatch({
-                type: DISPLAY_MESSAGE,
-                data: {
-                    text: TransactionMessageText.OPEN_APP,
-                    type: TransactionMessageType.INFO
-                }
-            });
             await (wallet as LedgerWallet).onAppOpened(account.blockchain);
 
             dispatch({

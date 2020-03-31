@@ -127,7 +127,7 @@ export const translation: ITranslations = {
             BLE: 'Bluetooth',
             scanningDevices: 'Scanning for ledger device',
             paired: 'has been paired',
-            OPEN_APP: 'Please open {{app}} app on your Ledger'
+            openApp: 'Open {{app}} app on your Ledger to continue...'
         },
         Fee: {
             feeTitle: 'Transaction fee',
@@ -323,6 +323,7 @@ export const translation: ITranslations = {
             OPEN_APP: 'Please open {{app}} app on your Ledger',
             BROADCASTING: 'Broadcasting transaction',
             SIGNING: 'Signing transaction',
+            CONNECTING_LEDGER: 'Connecting to your ledger. Make sure your device is unlocked',
             TR_UNDERPRICED: 'Transaction underpriced: gas price might be too low',
             NOT_ENOUGH_TOKENS: 'Insufficient funds for transaction',
             COSMOS_ERROR_12: 'Insufficient fee',

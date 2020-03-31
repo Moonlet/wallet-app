@@ -1,6 +1,6 @@
 on:
   release:
-    types: 
+    types:
       - published
 
 name: Release build & deploy
@@ -89,7 +89,6 @@ jobs:
   beta-ext-chrome:
     name: Chrome extension
     runs-on: ubuntu-latest
-    needs: unit-tests
     steps:
       - uses: actions/setup-node@v1
         with:

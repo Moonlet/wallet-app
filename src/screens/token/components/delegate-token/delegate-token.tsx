@@ -15,7 +15,6 @@ import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../../../core/blockchain/types';
-import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import bind from 'bind-decorator';
@@ -63,8 +62,6 @@ export class DelegateTokenScreenComponent extends React.Component<
     INavigationProps & IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    public passwordModal: any;
-
     constructor(
         props: INavigationProps &
             IProps &
@@ -206,7 +203,6 @@ export class DelegateTokenScreenComponent extends React.Component<
             <View style={styles.container}>
                 {this.renderTabButtons()}
                 {this.renderTabs()}
-                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>
         );
     }

@@ -11,34 +11,8 @@ import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
 import { biometricAuth, BiometryType } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';
-import { normalize } from '../../../../styles/dimensions';
-
-export interface IReduxProps {
-    touchID: boolean;
-}
-
-export interface IExternalProps {
-    title: string;
-    subtitle: string;
-    updatePinProps: boolean;
-    onPasswordEntered: (value: string) => Promise<string>;
-    onBiometryLogin: (success: boolean) => void;
-    clearPasswordInput: boolean;
-    changePIN: boolean;
-}
-
-interface IState {
-    password: string;
-    errorMessage: string;
-    passToVerify: string;
-    biometryType: BiometryType;
-    updatePinProps: boolean;
-    clearPasswordInput: boolean;
-}
-
-const mapStateToProps = (state: IReduxState) => ({
-    touchID: state.preferences.touchID
-});
+import { normalize, ICON_SIZE } from '../../../../styles/dimensions';
+import { SafeAreaView } from 'react-navigation';
 
 const digitsLayout = [
     [1, 2, 3],
@@ -48,28 +22,35 @@ const digitsLayout = [
 const ZERO = 0;
 const PASSWORD_LENGTH = 6;
 
+export interface IReduxProps {
+    touchID: boolean;
+}
+
+export interface IExternalProps {
+    title: string;
+    subtitle: string;
+    onPasswordEntered: (data: { password?: string }) => void;
+    onBiometryLogin: (success: boolean) => void;
+    errorMessage: string;
+    clearErrorMessage: () => void;
+    enableBiometryAuth: boolean;
+    allowBackButton: boolean;
+    onBackButtonTap: () => void;
+}
+
+interface IState {
+    password: string;
+    biometryType: BiometryType;
+}
+
+const mapStateToProps = (state: IReduxState) => ({
+    touchID: state.preferences.touchID
+});
+
 export class PasswordPinComponent extends React.Component<
     IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    public static getDerivedStateFromProps(nextProps, prevState) {
-        if (nextProps.updatePinProps !== prevState.updatePinProps) {
-            return {
-                password: '',
-                errorMessage: '',
-                updatePinProps: nextProps.updatePinProps,
-                passToVerify: prevState.password // save the password to compare it
-            };
-        } else if (nextProps.clearPasswordInput !== prevState.clearPasswordInput) {
-            return {
-                password: '',
-                errorMessage: '',
-                clearPasswordInput: nextProps.clearPasswordInput
-            };
-        } else {
-            return {};
-        }
-    }
     private shakeAnimation: Animated.Value;
 
     constructor(
@@ -79,65 +60,32 @@ export class PasswordPinComponent extends React.Component<
 
         this.state = {
             password: '',
-            errorMessage: '',
-            passToVerify: '',
-            updatePinProps: false,
-            biometryType: undefined,
-            clearPasswordInput: false
+            biometryType: undefined
         };
         this.shakeAnimation = new Animated.Value(0);
 
-        if (!props.changePIN) {
+        if (props.enableBiometryAuth === true) {
             this.biometryAuth();
         }
     }
 
-    public async onEnterPassword() {
-        if (this.state.passToVerify !== '' && this.state.passToVerify !== this.state.password) {
-            this.setState({
-                errorMessage: translate('Password.dontMatch'),
-                password: ''
-            });
-            return;
-        }
-        if (Platform.OS === 'web') {
-            this.props.onPasswordEntered(this.state.password);
-            this.setState({
-                errorMessage: '',
-                password: ''
-            });
-            return;
-        }
-        try {
-            const passHash = await hash(this.state.password);
-            const resultVerificationPass = await this.props.onPasswordEntered(passHash);
-
-            if (resultVerificationPass !== undefined) {
-                this.setState({
-                    errorMessage: resultVerificationPass,
-                    password: ''
-                });
+    public componentDidUpdate(prevProps: IExternalProps) {
+        if (this.props.errorMessage !== prevProps.errorMessage) {
+            if (this.props.errorMessage) {
                 this.startShake();
             }
-        } catch (e) {
-            this.startShake();
-            this.setState({
-                errorMessage: translate('Password.genericError'),
-                password: ''
-            });
         }
     }
 
     public fillPassword(digit: string) {
-        if (this.state.errorMessage !== '') {
-            this.setState({
-                errorMessage: ''
-            });
-        }
+        this.props.clearErrorMessage();
         if (this.state.password.length < PASSWORD_LENGTH) {
-            this.setState({ password: this.state.password.concat(digit) }, () => {
+            this.setState({ password: this.state.password.concat(digit) }, async () => {
                 if (this.state.password.length === PASSWORD_LENGTH) {
-                    this.onEnterPassword();
+                    const passHash = await hash(this.state.password);
+                    this.props.onPasswordEntered({ password: passHash });
+                    this.setState({ password: '' });
+                    this.props.clearErrorMessage();
                 }
             });
         }
@@ -179,7 +127,7 @@ export class PasswordPinComponent extends React.Component<
     }
 
     public renderInputDots() {
-        const styles = this.props.styles;
+        const { styles } = this.props;
         return (
             <Animated.View
                 style={[styles.inputRow, { transform: [{ translateX: this.shakeAnimation }] }]}
@@ -198,9 +146,9 @@ export class PasswordPinComponent extends React.Component<
             </Animated.View>
         );
     }
-    public renderRow = (rowValues: any, row: number) => {
-        const styles = this.props.styles;
 
+    public renderRow(rowValues: any, row: number) {
+        const { styles } = this.props;
         return (
             <View style={styles.keyRow}>
                 {rowValues.map((digit: string, index: any) => {
@@ -234,9 +182,9 @@ export class PasswordPinComponent extends React.Component<
                 })}
             </View>
         );
-    };
+    }
 
-    public biometryAuth = () => {
+    public biometryAuth() {
         if (this.props.touchID) {
             biometricAuth
                 .isSupported()
@@ -250,7 +198,7 @@ export class PasswordPinComponent extends React.Component<
                     // Failure code if the user's device does not have touchID or faceID enabled
                 });
         }
-    };
+    }
 
     public authenticate() {
         const { theme } = this.props;
@@ -271,30 +219,33 @@ export class PasswordPinComponent extends React.Component<
             .then(success => {
                 if (success) {
                     this.props.onBiometryLogin(true);
+                } else {
+                    this.props.onBiometryLogin(false);
                 }
             })
             .catch(error => {
-                //
+                this.props.onBiometryLogin(false);
             });
     }
 
     public renderFooterRow = () => {
         const styles = this.props.styles;
-        const isTouchID = this.props.touchID && !this.props.changePIN;
+        const isBiometryAuth = this.props.touchID && this.props.enableBiometryAuth;
 
         return (
             <View style={styles.keyRow}>
                 <TouchableOpacity
                     style={styles.keyContainer}
                     onPress={() => {
-                        if (isTouchID) {
+                        if (isBiometryAuth) {
                             this.biometryAuth();
                         } else {
-                            this.setState({ password: '', errorMessage: '' }); // Reset button
+                            this.setState({ password: '' });
+                            this.props.clearErrorMessage();
                         }
                     }}
                 >
-                    {isTouchID ? (
+                    {isBiometryAuth ? (
                         <Icon
                             name={
                                 Platform.OS === 'ios' && this.state.biometryType === 'FaceID'
@@ -334,10 +285,8 @@ export class PasswordPinComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.keyContainer}
                     onPress={() => {
-                        this.setState({
-                            password: this.state.password.slice(0, -1),
-                            errorMessage: ''
-                        });
+                        this.setState({ password: this.state.password.slice(0, -1) });
+                        this.props.clearErrorMessage();
                     }}
                 >
                     <Icon name="keyboard-delete-1" size={normalize(40)} style={styles.deleteIcon} />
@@ -347,20 +296,28 @@ export class PasswordPinComponent extends React.Component<
     };
 
     public render() {
-        const styles = this.props.styles;
+        const { styles } = this.props;
 
         return (
-            <View style={styles.container}>
+            <SafeAreaView forceInset={{ bottom: 'never' }} style={styles.container}>
                 <Image
                     style={styles.logoImage}
                     source={require('../../../../assets/images/png/moonlet_space_gray.png')}
                 />
+                {this.props.allowBackButton && (
+                    <TouchableOpacity
+                        onPress={() => this.props.onBackButtonTap()}
+                        style={styles.backIconContainer}
+                    >
+                        <Icon name="close" size={ICON_SIZE} style={styles.backIcon} />
+                    </TouchableOpacity>
+                )}
                 <View style={styles.headerContainer}>
                     <Text style={styles.title}>{this.props.title}</Text>
                     <Text style={styles.subTitle}>{this.props.subtitle}</Text>
                     {this.renderInputDots()}
 
-                    <Text style={styles.errorMessage}>{this.state.errorMessage}</Text>
+                    <Text style={styles.errorMessage}>{this.props.errorMessage}</Text>
                 </View>
 
                 <View style={styles.digitsLayout}>
@@ -402,7 +359,7 @@ export class PasswordPinComponent extends React.Component<
                     />
                     {this.renderFooterRow()}
                 </View>
-            </View>
+            </SafeAreaView>
         );
     }
 }

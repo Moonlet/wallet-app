@@ -25,7 +25,7 @@ exports[`Wallet screen renders correctly 1`] = `
         </View>
       </TouchableOpacity>
       <View style={{...}} />
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+      <TouchableOpacity style={{...}} onPress={[Function: _callee2]} activeOpacity={0.2}>
         <withTheme(TextComponent) style={{...}}>
           Change PIN
         </withTheme(TextComponent)>
@@ -131,7 +131,6 @@ exports[`Wallet screen renders correctly 1`] = `
       </View>
     </TouchableOpacity>
   </ScrollViewMock>
-  <withTheme(PasswordModalComponent) obRef={[Function: obRef]} changePIN={false} />
   <withTheme(DebugModalComponent) obRef={[Function: obRef]} />
 </View>"
 `;

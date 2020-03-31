@@ -40,8 +40,6 @@ interface IState {
 }
 
 export class AccountSettingsComponent extends React.Component<IProps & IExternalProps, IState> {
-    public passwordModal = null;
-
     constructor(props: IProps & IExternalProps) {
         super(props);
 
@@ -55,29 +53,34 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         };
     }
 
-    public revealPrivateKey = async () => {
-        const password = await this.passwordModal.requestPassword();
+    public async revealPrivateKey() {
+        try {
+            // TODO: not working because of modal over modal
+            const password = await PasswordModal.getPassword();
 
-        this.setState({ showKeyScreen: true, isLoading: true });
+            this.setState({ showKeyScreen: true, isLoading: true });
 
-        const hdWallet = await WalletFactory.get(this.props.wallet.id, this.props.wallet.type, {
-            pass: password
-        });
+            const hdWallet = await WalletFactory.get(this.props.wallet.id, this.props.wallet.type, {
+                pass: password
+            });
 
-        const privateKey = hdWallet.getPrivateKey(
-            this.props.account.blockchain,
-            this.props.account.index
-        );
+            const privateKey = hdWallet.getPrivateKey(
+                this.props.account.blockchain,
+                this.props.account.index
+            );
 
-        this.setState({
-            showKeyScreen: true,
-            showBackButton: true,
-            title: translate('AccountSettings.revealPrivate'),
-            key: privateKey,
-            showSecurityWarning: true,
-            isLoading: false
-        });
-    };
+            this.setState({
+                showKeyScreen: true,
+                showBackButton: true,
+                title: translate('AccountSettings.revealPrivate'),
+                key: privateKey,
+                showSecurityWarning: true,
+                isLoading: false
+            });
+        } catch (err) {
+            //
+        }
+    }
 
     public revealPublicKey() {
         this.setState({
@@ -239,7 +242,6 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                         )}
                     </View>
                 </View>
-                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </Modal>
         );
     }

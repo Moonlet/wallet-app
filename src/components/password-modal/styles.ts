@@ -1,52 +1,29 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
-        container: {
-            flex: 1,
-            paddingHorizontal: BASE_DIMENSION * 2,
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            backgroundColor: theme.colors.appBackground
+        wrongPasswordContainer: {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: '#000000BF',
+            justifyContent: 'center'
         },
-        topContainer: {
-            flex: 1,
-            justifyContent: 'center',
-            width: '100%'
-        },
-        input: {
-            flex: 1,
-            color: theme.colors.text
-        },
-        inputBox: {
-            height: BASE_DIMENSION * 5,
-            borderRadius: BORDER_RADIUS,
-            alignSelf: 'stretch',
-            backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2,
-            marginTop: BASE_DIMENSION * 5,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-        },
-        icon: {
-            color: theme.colors.accent,
-            padding: BASE_DIMENSION / 2
-        },
-        bottomContainer: {
-            width: '80%',
-            flex: 0,
-            alignSelf: 'center',
-            alignItems: 'center',
-            marginBottom: BASE_DIMENSION * 7
-        },
-        bottomButton: {
-            width: '100%'
-        },
-        errorMessage: {
+        moonletDisabled: {
+            fontSize: normalize(34),
+            lineHeight: normalize(41),
+            color: theme.colors.textSecondary,
+            marginBottom: BASE_DIMENSION / 2,
             textAlign: 'center',
-            width: '100%'
+            letterSpacing: 0.35
+        },
+        disabledDetails: {
+            lineHeight: normalize(22),
+            color: theme.colors.textSecondary,
+            textAlign: 'center'
         }
     });

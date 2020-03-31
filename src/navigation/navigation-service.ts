@@ -25,6 +25,10 @@ export const NavigationService = (() => {
         );
     };
 
+    const popToTop = () => {
+        navigator.dispatch(StackActions.popToTop());
+    };
+
     const goBack = () => {
         navigator.dispatch(NavigationActions.back());
     };
@@ -43,6 +47,7 @@ export const NavigationService = (() => {
         setTopLevelNavigator,
         navigate,
         replace,
+        popToTop,
         getCurrentRoute,
         goBack
     };

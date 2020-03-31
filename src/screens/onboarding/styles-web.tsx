@@ -38,19 +38,18 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 2
         },
         circle: {
-            height: 30,
-            width: 30,
-            borderRadius: 15,
+            height: normalize(30),
+            width: normalize(30),
+            borderRadius: normalize(15),
             backgroundColor: theme.colors.accentSecondary,
-            marginRight: BASE_DIMENSION * 2
+            marginRight: BASE_DIMENSION * 2,
+            justifyContent: 'center'
         },
         number: {
             fontSize: normalize(17),
             lineHeight: normalize(21),
             textAlign: 'center',
-            color: theme.colors.accent,
-            alignSelf: 'center',
-            marginTop: BASE_DIMENSION / 2
+            color: theme.colors.accent
         },
         welcomeTextWeb: {
             fontSize: normalize(16),

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, FlatList, Platform } from 'react-native';
+import { View, FlatList, Platform, TouchableOpacity } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -16,7 +16,6 @@ import { Blockchain } from '../../../core/blockchain/types';
 import { HWVendor, HWModel, HWConnection } from '../../../core/wallet/hw-wallet/types';
 import { delay } from '../../../core/utils/time';
 import { TransportFactory } from '../../../core/wallet/hw-wallet/ledger/transport-factory';
-import TouchableOpacity from '../../../library/touchable-opacity/touchable-opacity';
 import { normalize } from '../../../styles/dimensions';
 
 interface IExternalProps {
@@ -24,8 +23,7 @@ interface IExternalProps {
     blockchain: Blockchain;
     deviceModel: HWModel;
     connectionType: HWConnection;
-    onOpenStart: () => void;
-    onCloseEnd: () => void;
+    onClose: () => void;
 }
 
 interface IReduxProps {
@@ -82,8 +80,8 @@ export class LedgerConnectComponent extends React.Component<
                 // this.props.navigation
             )
             .then(() => {
-                Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(0) : null;
-                this.props.onCloseEnd();
+                Platform.OS !== 'web' && this.bottomSheet.current.snapTo(0);
+                this.props.onClose();
                 if (this.scannerUnsubscribe) {
                     this.scannerUnsubscribe.unsubscribe();
                 }
@@ -248,10 +246,14 @@ export class LedgerConnectComponent extends React.Component<
                     this.props.snapPoints.bottomSheetHeight
                 ]}
                 renderContent={this.renderBottomSheetContent}
-                renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
-                onOpenStart={this.props.onOpenStart}
+                renderHeader={() => (
+                    <BottomSheetHeader
+                        obRef={this.bottomSheet}
+                        onClose={() => this.props.onClose()}
+                    />
+                )}
                 onCloseEnd={() => {
-                    this.props.onCloseEnd();
+                    this.props.onClose();
                     if (this.scannerUnsubscribe) {
                         this.scannerUnsubscribe.unsubscribe();
                     }

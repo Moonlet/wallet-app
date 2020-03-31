@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View, Platform, TouchableHighlight } from 'react-native';
 import { Text, Button } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -8,7 +8,6 @@ import Icon from '../icon';
 import { translate } from '../../core/i18n';
 import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
-import TouchableHighlight from '../../library/touchable-highlight/touchable-highlight';
 
 export interface IProps {
     label: string | JSX.Element;

@@ -9,25 +9,24 @@ import { Platform } from 'react-native';
 
 interface IExternalProps {
     obRef: any;
+    onClose: () => void;
 }
 
-export class BottomSheetHeaderComponent extends React.Component<
-    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
-> {
-    public render() {
-        return (
-            <TouchableWithoutFeedback
-                onPress={() => {
-                    Platform.OS !== 'web' ? this.props.obRef.current.snapTo(0) : null;
-                    this.props.obRef.current.props.onCloseEnd();
-                }}
-                style={this.props.styles.header}
-            >
-                <Icon name="chevron-up" size={ICON_SIZE / 2} style={this.props.styles.icon} />
-            </TouchableWithoutFeedback>
-        );
-    }
-}
+export const BottomSheetHeaderComponent = (
+    props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+) => {
+    return (
+        <TouchableWithoutFeedback
+            onPress={() => {
+                Platform.OS !== 'web' && props.obRef.current.snapTo(0);
+                props.onClose();
+            }}
+            style={props.styles.header}
+        >
+            <Icon name="chevron-up" size={ICON_SIZE / 2} style={props.styles.icon} />
+        </TouchableWithoutFeedback>
+    );
+};
 
 export const BottomSheetHeader = smartConnect<IExternalProps>(BottomSheetHeaderComponent, [
     withTheme(stylesProvider)

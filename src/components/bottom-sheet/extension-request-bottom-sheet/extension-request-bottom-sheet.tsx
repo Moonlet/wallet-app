@@ -14,8 +14,7 @@ import { IBottomSheetExtensionRequestData } from '../../../redux/ui/bottomSheet/
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
-    onOpenStart: () => void;
-    onCloseEnd: () => void;
+    onClose: () => void;
     data: IBottomSheetExtensionRequestData;
 }
 
@@ -31,8 +30,7 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.bottomSheet.current.props.onOpenStart();
-        Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(1) : null;
+        Platform.OS !== 'web' && this.bottomSheet.current.snapTo(1);
     }
 
     public renderBottomSheetContent() {
@@ -75,9 +73,12 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
                     this.props.snapPoints.bottomSheetHeight
                 ]}
                 renderContent={() => this.renderBottomSheetContent()}
-                renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
-                onOpenStart={this.props.onOpenStart}
-                onCloseEnd={this.props.onCloseEnd}
+                renderHeader={() => (
+                    <BottomSheetHeader
+                        obRef={this.bottomSheet}
+                        onClose={() => this.props.onClose()}
+                    />
+                )}
                 enabledInnerScrolling={false}
             />
         );

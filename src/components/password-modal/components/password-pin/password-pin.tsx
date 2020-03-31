@@ -71,7 +71,7 @@ export class PasswordPinComponent extends React.Component<
 
     public componentDidUpdate(prevProps: IExternalProps) {
         if (this.props.errorMessage !== prevProps.errorMessage) {
-            if (this.props.errorMessage !== '') {
+            if (this.props.errorMessage) {
                 this.startShake();
             }
         }

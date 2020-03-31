@@ -192,13 +192,13 @@ export class PasswordModalComponent extends React.Component<
     }
 
     private clearErrorMessage() {
-        this.setState({ errorMessage: '' });
+        this.setState({ errorMessage: undefined });
     }
 
     private handlePasswordAttempts() {
         const failedLoginBlocking = Object.keys(FAILED_LOGIN_BLOCKING)
             .concat(String(RESET_APP_FAILED_LOGINS))
-            .reverse();
+            .sort((a: any, b: any) => b - a);
 
         let index = 0;
         failedLoginBlocking.map((failedLogin, i) => {

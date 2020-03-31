@@ -9,6 +9,7 @@ import {
     PREF_SET_BLOCKCHAIN_ORDER,
     PREF_SET_DEVICE_ID
 } from './actions';
+import { RESET_ALL_DATA } from '../app/actions';
 
 const initialState: IPrefState = {
     currency: 'USD',
@@ -62,12 +63,16 @@ export default (state: IPrefState = initialState, action: IAction): IPrefState =
                 ...state,
                 currency: action.data.currency
             };
-            break;
+
         case PREF_SET_DEVICE_ID:
             return {
                 ...state,
                 deviceId: action.data.deviceId
             };
+
+        case RESET_ALL_DATA:
+            return initialState;
+
         default:
             break;
     }

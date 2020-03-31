@@ -2,6 +2,8 @@
 
 exports[`app reducer should set initial state 1`] = `
 Object {
+  "blockUntil": undefined,
+  "failedLogins": 0,
   "hints": Object {
     "MANAGE_ACCOUNT": Object {
       "TOKENS_LIST": 0,

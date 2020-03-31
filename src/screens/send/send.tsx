@@ -91,7 +91,6 @@ export class SendScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    public passwordModal = null;
 
     constructor(
         props: INavigationProps<INavigationParams> &
@@ -154,7 +153,8 @@ export class SendScreenComponent extends React.Component<
             return;
         }
 
-        this.passwordModal.requestPassword().then(password => {
+        try {
+            const password = await PasswordModal.getPassword();
             this.props.sendTransferTransaction(
                 this.props.account,
                 this.state.toAddress,
@@ -165,7 +165,9 @@ export class SendScreenComponent extends React.Component<
                 this.props.navigation,
                 { memo: this.state.memo }
             );
-        });
+        } catch (err) {
+            //
+        }
     }
 
     public onFeesChanged(feeOptions: IFeeOptions) {
@@ -493,8 +495,6 @@ export class SendScreenComponent extends React.Component<
                         {this.renderBottomConfirm()}
                     </View>
                 </KeyboardAwareScrollView>
-
-                <PasswordModal obRef={ref => (this.passwordModal = ref)} />
             </View>
         );
     }

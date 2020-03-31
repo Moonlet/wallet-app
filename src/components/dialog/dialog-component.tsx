@@ -41,7 +41,7 @@ export class DialogComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    public static ref: Deferred = new Deferred();
+    public static ref: Deferred<DialogComponent> = new Deferred();
 
     public static async alert(
         title: string,
@@ -51,9 +51,7 @@ export class DialogComponent extends React.Component<
     ): Promise<boolean> {
         const ref = await DialogComponent.ref.promise;
 
-        const res = await ref.showAlert(title, message, cancelButton, confirmButton);
-
-        return res;
+        return ref.showAlert(title, message, cancelButton, confirmButton);
     }
 
     public static async prompt(
@@ -66,7 +64,7 @@ export class DialogComponent extends React.Component<
     ): Promise<string> {
         const ref = await DialogComponent.ref.promise;
 
-        const res = await ref.showPrompt(
+        return ref.showPrompt(
             title,
             message,
             cancelButtonText || translate('App.labels.cancel'),
@@ -74,24 +72,18 @@ export class DialogComponent extends React.Component<
             defaultInputValue,
             keyboardType
         );
-
-        return res;
     }
 
     public static async confirm(title: string, message: string): Promise<boolean> {
         const ref = await DialogComponent.ref.promise;
 
-        const res = await ref.showConfirm(title, message);
-
-        return res;
+        return ref.showConfirm(title, message);
     }
 
     public static async info(title: string, message: string): Promise<boolean> {
         const ref = await DialogComponent.ref.promise;
 
-        const res = await ref.showInfo(title, message);
-
-        return res;
+        return ref.showInfo(title, message);
     }
 
     public input = null;

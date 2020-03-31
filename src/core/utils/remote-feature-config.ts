@@ -31,25 +31,25 @@ export const getRemoteConfigFeatures = async () => {
 
     try {
         await firebase.config().fetch(duration);
+        await firebase.config().activateFetched();
+
+        const objects = await firebase
+            .config()
+            .getValues([
+                RemoteFeature.NEAR,
+                RemoteFeature.COSMOS,
+                RemoteFeature.DEV_TOOLS,
+                RemoteFeature.TC_VERSION
+            ]);
+
+        featuresConfig = {};
+        // Retrieve values
+        Object.keys(objects).forEach(key => {
+            featuresConfig[key] = objects[key].val();
+        });
     } catch (err) {
         //
     }
-
-    await firebase.config().activateFetched();
-    const objects = await firebase
-        .config()
-        .getValues([
-            RemoteFeature.NEAR,
-            RemoteFeature.COSMOS,
-            RemoteFeature.DEV_TOOLS,
-            RemoteFeature.TC_VERSION
-        ]);
-
-    featuresConfig = {};
-    // Retrieve values
-    Object.keys(objects).forEach(key => {
-        featuresConfig[key] = objects[key].val();
-    });
 
     return featuresConfig;
 };

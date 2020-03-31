@@ -100,6 +100,7 @@ export class WalletsScreenComponent extends React.Component<
     private showHints() {
         if (
             this.props.wallets &&
+            this.props.wallets[this.state.selectedTab].length !== 0 &&
             this.props.hints.WALLETS_SCREEN.WALLETS_LIST < DISPLAY_HINTS_TIMES
         ) {
             const id = this.props.wallets[this.state.selectedTab][0].id;

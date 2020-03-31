@@ -406,9 +406,10 @@ export const updateTransactionFromBlockchain = (
 
     // search for wallets/accounts affected by this transaction
     const receivingAddress =
-        transaction.token.type === TokenType.NATIVE
+        transaction.token.symbol === blockchainInstance.config.coin
             ? transaction.toAddress
             : transaction.data?.params[0];
+
     const wallets = getWalletWithAddress(
         state,
         [transaction.address, receivingAddress],

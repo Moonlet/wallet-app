@@ -231,7 +231,7 @@ export class Client extends BlockchainGenericClient {
 
         const parts = txInfo.input.match(inputRegex);
 
-        if (parts.length === 5 && parts[1] === '0xa9059cbb') {
+        if (parts?.length === 5 && parts[1] === '0xa9059cbb') {
             const token = await this.tokens[TokenType.ERC20].getTokenInfo(txInfo.to);
             token.type = TokenType.ERC20;
             token.ui = {

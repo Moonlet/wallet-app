@@ -31,6 +31,5 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
     </withTheme(TextComponent)>
   </View>
   <withTheme(KeyboardComponent) handleTextUpdate={[Function: handleTextUpdate]} handleDeleteKey={[Function: handleDeleteKey]} buttons={{...}} disableSpace={true} />
-  <withTheme(PasswordModalComponent) shouldCreatePassword={true} subtitle=\\"Your PIN is required\\\\nto create your Moonlet wallet\\" obRef={[Function: obRef]} />
 </View>"
 `;

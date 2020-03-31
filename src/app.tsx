@@ -32,7 +32,6 @@ import { setDeviceId } from './redux/preferences/actions';
 
 const AppContainer = createAppContainer(RootNavigation);
 
-// const store = configureStore();
 const persistor = persistStore(store);
 
 const APP_STATE_ACTIVE: AppStateStatus = 'active';
@@ -43,7 +42,6 @@ interface IState {
     appReady: boolean;
     splashAnimationDone: boolean;
     appState: AppStateStatus;
-    showPasswordModal: boolean;
     displayApplication: boolean;
     navigationState: any;
 }
@@ -65,7 +63,6 @@ export default class App extends React.Component<{}, IState> {
             appReady: false,
             splashAnimationDone: false,
             appState: AppState.currentState,
-            showPasswordModal: false,
             displayApplication: true,
             navigationState: undefined
         };
@@ -160,12 +157,18 @@ export default class App extends React.Component<{}, IState> {
         Notifications.removeListeners();
     }
 
-    public showPasswordModal() {
+    public async showPasswordModal() {
         if (Platform.OS === 'web') {
             return;
         }
+
+        try {
+            await PasswordModal.getPassword();
+        } catch (err) {
+            //
+        }
+
         this.setState({
-            showPasswordModal: true,
             displayApplication: true,
             appState: APP_STATE_ACTIVE
         });
@@ -205,15 +208,7 @@ export default class App extends React.Component<{}, IState> {
                                 }}
                             />
                             {!this.state.displayApplication && <ImageCanvas />}
-                            <PasswordModal
-                                visible={this.state.showPasswordModal}
-                                onPassword={() =>
-                                    this.setState({
-                                        showPasswordModal: false,
-                                        displayApplication: true
-                                    })
-                                }
-                            />
+                            <PasswordModal.Component />
                             <BottomSheet />
                             <Dialog.Component />
                             <LoadingModal />

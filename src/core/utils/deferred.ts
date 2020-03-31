@@ -1,10 +1,10 @@
-export class Deferred {
-    public promise;
+export class Deferred<T> {
+    public promise: Promise<T>;
     public resolve;
     public reject;
 
     constructor() {
-        this.promise = new Promise((resolve, reject) => {
+        this.promise = new Promise<T>((resolve, reject) => {
             this.resolve = resolve;
             this.reject = reject;
         });

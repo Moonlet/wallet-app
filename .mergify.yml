@@ -1,0 +1,16 @@
+pull_request_rules:
+  - name: Automatic merge on approval
+    conditions:
+      - "#approved-reviews-by>=1"
+      - status-success=codecov/changes
+      - status-success=codecov/patch
+      - status-success=codecov/project
+      - status-success=security/snyk - android/app/build.gradle (Moonlet)
+      - status-success=security/snyk - android/build.gradle (Moonlet)
+      - status-success=security/snyk - package.json (Moonlet)
+      - status-success=Run checks
+    actions:
+      merge:
+        method: squash
+        strict: smart
+        strict_method: merge

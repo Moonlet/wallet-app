@@ -160,6 +160,7 @@ export class ManageTokenComponent extends React.Component<
     }
 
     public async findToken() {
+        this.setState({ isLoading: true });
         const blockchain = this.props.selectedAccount.blockchain;
         const tokenSymbol = this.getReduxTokenSymbol();
         if (tokenSymbol) {
@@ -208,6 +209,7 @@ export class ManageTokenComponent extends React.Component<
         } else {
             this.setState({ showError: true, isLoading: false });
         }
+        this.setState({ isLoading: false });
     }
 
     public saveToken() {

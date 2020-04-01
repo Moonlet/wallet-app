@@ -282,6 +282,33 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
         );
     }
 
+    private async openBottomSheet() {
+        await delay(500); // TODO: check here and find a solution to fix
+        this.props.openBottomSheet(BottomSheetType.LEDGER_CONNECT, {
+            blockchain: this.state.blockchain,
+            deviceModel: this.state.device,
+            connectionType: this.state.connection
+        });
+    }
+
+    private async connect() {
+        try {
+            await PasswordModal.getPassword(undefined, undefined, {
+                shouldCreatePassword: true
+            });
+            this.openBottomSheet();
+        } catch (err) {
+            try {
+                await PasswordModal.createPassword(
+                    translate('Password.connectHardwareWalletPinSubtitle')
+                );
+                this.openBottomSheet();
+            } catch (err) {
+                //
+            }
+        }
+    }
+
     public render() {
         const props = this.props;
         return (
@@ -298,21 +325,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                         <Button
                             testID="button-next"
                             style={props.styles.bottomButton}
-                            onPress={async () => {
-                                try {
-                                    await PasswordModal.createPassword(
-                                        translate('Password.connectHardwareWalletPinSubtitle')
-                                    );
-                                    await delay(500);
-                                    this.props.openBottomSheet(BottomSheetType.LEDGER_CONNECT, {
-                                        blockchain: this.state.blockchain,
-                                        deviceModel: this.state.device,
-                                        connectionType: this.state.connection
-                                    });
-                                } catch (err) {
-                                    //
-                                }
-                            }}
+                            onPress={() => this.connect()}
                         >
                             {translate('App.labels.connect')}
                         </Button>

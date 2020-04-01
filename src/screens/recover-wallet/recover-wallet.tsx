@@ -95,6 +95,17 @@ export class RecoverWalletScreenComponent extends React.Component<
 
     public mnemonicsFilled = () => this.state.mnemonic.indexOf('') === -1;
 
+    private createWallet(password: string) {
+        this.props.createHDWallet(this.state.mnemonic.join(' '), password, () => {
+            this.props.navigation.dispatch(StackActions.popToTop());
+            this.props.navigation.navigate(
+                'MainNavigation',
+                {},
+                NavigationActions.navigate({ routeName: 'Dashboard' })
+            );
+        });
+    }
+
     public async confirm() {
         if (!this.validateMnemonicWords() || !Mnemonic.verify(this.state.mnemonic.join(' '))) {
             // TODO: display an error somewhere
@@ -102,20 +113,19 @@ export class RecoverWalletScreenComponent extends React.Component<
         }
 
         try {
-            const password = await PasswordModal.createPassword(
-                translate('Password.recoverWalletPinSubtitle')
-            );
-
-            this.props.createHDWallet(this.state.mnemonic.join(' '), password, () => {
-                this.props.navigation.dispatch(StackActions.popToTop());
-                this.props.navigation.navigate(
-                    'MainNavigation',
-                    {},
-                    NavigationActions.navigate({ routeName: 'Dashboard' })
-                );
+            const currentPassword = await PasswordModal.getPassword(undefined, undefined, {
+                shouldCreatePassword: true
             });
+            this.createWallet(currentPassword);
         } catch (err) {
-            //
+            try {
+                const newPassword = await PasswordModal.createPassword(
+                    translate('Password.recoverWalletPinSubtitle')
+                );
+                this.createWallet(newPassword);
+            } catch (err) {
+                //
+            }
         }
     }
 

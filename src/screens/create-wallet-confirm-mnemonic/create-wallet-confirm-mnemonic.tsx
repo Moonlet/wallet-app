@@ -84,6 +84,35 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
         setTestWords(randomNumbers);
     }
 
+    const createWallet = (password: string) => {
+        props.createHDWallet(mnemonic.join(' '), password, () => {
+            props.navigation.dispatch(StackActions.popToTop());
+            props.navigation.navigate(
+                'MainNavigation',
+                {},
+                NavigationActions.navigate({ routeName: 'Dashboard' })
+            );
+        });
+    };
+
+    const confirm = async () => {
+        try {
+            const currentPassword = await PasswordModal.getPassword(undefined, undefined, {
+                shouldCreatePassword: true
+            });
+            createWallet(currentPassword);
+        } catch (err) {
+            try {
+                const newPassword = await PasswordModal.createPassword(
+                    translate('CreateWalletMnemonicConfirm.password')
+                );
+                createWallet(newPassword);
+            } catch (err) {
+                //
+            }
+        }
+    };
+
     return (
         <View style={props.styles.container}>
             <Text darker style={{ textAlign: 'center' }}>
@@ -157,29 +186,12 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                     },
                     {
                         label: translate('App.labels.confirm'),
-                        onPress: async () => {
+                        onPress: () => {
                             const valid = testWords.every(
                                 (n: number) => mnemonicsInput[n] === mnemonic[n]
                             );
                             if (valid) {
-                                try {
-                                    const password = await PasswordModal.createPassword(
-                                        translate('CreateWalletMnemonicConfirm.password')
-                                    );
-
-                                    props.createHDWallet(mnemonic.join(' '), password, () => {
-                                        props.navigation.dispatch(StackActions.popToTop());
-                                        props.navigation.navigate(
-                                            'MainNavigation',
-                                            {},
-                                            NavigationActions.navigate({
-                                                routeName: 'Dashboard'
-                                            })
-                                        );
-                                    });
-                                } catch (err) {
-                                    //
-                                }
+                                confirm();
                             } else {
                                 setError(true);
                             }

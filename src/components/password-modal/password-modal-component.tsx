@@ -118,9 +118,13 @@ export class PasswordModalComponent extends React.Component<
         clearInterval(this.countdownListener);
     }
 
-    public static async getPassword(title?: string, subtitle?: string) {
+    public static async getPassword(
+        title?: string,
+        subtitle?: string,
+        data?: { shouldCreatePassword?: boolean }
+    ) {
         const ref = await PasswordModalComponent.refDeferred.promise;
-        return ref.getPassword(title, subtitle);
+        return ref.getPassword(title, subtitle, data);
     }
 
     public static async createPassword(subtitle?: string) {
@@ -135,8 +139,20 @@ export class PasswordModalComponent extends React.Component<
 
     private resultDeferred: any;
 
-    public getPassword(title?: string, subtitle?: string): Promise<string> {
+    public async getPassword(
+        title: string,
+        subtitle: string,
+        data: { shouldCreatePassword?: boolean }
+    ): Promise<string> {
         this.resultDeferred = new Deferred();
+
+        if (data?.shouldCreatePassword) {
+            const passwordCredentials = await getPassword();
+            if (passwordCredentials.password === null) {
+                this.resultDeferred && this.resultDeferred.reject();
+            }
+        }
+
         this.clearErrorMessage();
 
         this.setState({
@@ -152,7 +168,7 @@ export class PasswordModalComponent extends React.Component<
         return this.resultDeferred.promise;
     }
 
-    public createPassword(subtitle?: string) {
+    public createPassword(subtitle: string) {
         this.resultDeferred = new Deferred();
         this.clearErrorMessage();
 

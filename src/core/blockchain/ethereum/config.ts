@@ -30,6 +30,7 @@ export const config: IBlockchainConfig = {
     coin: 'ETH',
     defaultUnit: 'WEI',
     iconComponent: EthIcon,
+    droppedTxBlocksThreshold: 50,
     tokens: {
         ETH: ETH_NATIVE
     },

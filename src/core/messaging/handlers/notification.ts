@@ -44,6 +44,7 @@ const handleNotification = (
                     data.transactionHash,
                     data.blockchain,
                     data.chainId,
+                    data.broadcastedOnBlock,
                     !openedByNotification,
                     openedByNotification
                 ) as any

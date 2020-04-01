@@ -141,3 +141,19 @@ export const getWalletWithAddress = (
                 addresses.includes(account.address.toLowerCase())
         )
     );
+
+// search for wallet that contains specific transaction and return it
+export const getWalletAndTransactionForHash = (
+    state: IReduxState,
+    transactionHash: string
+): { walletId: string; transaction: IBlockchainTransaction } => {
+    let transaction: IBlockchainTransaction;
+    const wallets = Object.values(state.wallets).filter(wallet => {
+        if (wallet.transactions[transactionHash] !== undefined) {
+            transaction = wallet.transactions[transactionHash];
+            return wallet;
+        }
+    });
+    if (wallets.length) return { walletId: wallets[0].id, transaction };
+    return undefined;
+};

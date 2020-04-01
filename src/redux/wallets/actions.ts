@@ -6,7 +6,7 @@ import {
     TransactionMessageType,
     ITransferTransactionExtraFields
 } from '../../core/blockchain/types';
-import { WalletType, IWallet } from '../../core/wallet/types';
+import { WalletType, IWallet, TransactionStatus } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
 import { IAction } from '../types';
 import { Dispatch } from 'react';
@@ -32,7 +32,8 @@ import {
     getSelectedWallet,
     getAccounts,
     getSelectedAccount,
-    getWalletWithAddress
+    getWalletWithAddress,
+    getWalletAndTransactionForHash
 } from './selectors';
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
@@ -367,6 +368,7 @@ export const updateTransactionFromBlockchain = (
     transactionHash: string,
     blockchain: Blockchain,
     chainId: string | number,
+    broadcastedOnBlock: number,
     displayNotification: boolean,
     navigateToTransaction: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
@@ -378,7 +380,26 @@ export const updateTransactionFromBlockchain = (
     try {
         transaction = await client.getTransactionInfo(transactionHash);
     } catch (e) {
-        // console.log(e);
+        const currentBlock = await client.getCurrentBlock();
+        if (
+            currentBlock.number - broadcastedOnBlock >
+            blockchainInstance.config.droppedTxBlocksThreshold
+        ) {
+            const response = getWalletAndTransactionForHash(state, transactionHash);
+            if (response) {
+                transaction = {
+                    ...response.transaction,
+                    status: TransactionStatus.DROPPED
+                };
+                dispatch({
+                    type: TRANSACTION_UPSERT,
+                    data: {
+                        walletId: response.walletId,
+                        transaction
+                    }
+                });
+            }
+        }
         return;
     }
 

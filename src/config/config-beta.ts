@@ -4,7 +4,7 @@ export const CONFIG: IAppConfig = {
     supportUrl: 'https://moonlet.xyz/links/support',
     env: process.env.MOONLET_SOME_KEY,
     tokensUrl: 'https://static.moonlet.dev/tokens/',
-    firebaseFetchDuration: 0
+    firebaseConfigFetchInterval: 0
 };
 
 export default CONFIG;

@@ -13,7 +13,7 @@ export enum RemoteFeature {
 let featuresConfig = {};
 
 export const getRemoteConfigFeatures = async () => {
-    const duration = CONFIG.firebaseFetchDuration;
+    const duration = CONFIG.firebaseConfigFetchInterval;
     if (__DEV__) {
         firebase.config().enableDeveloperMode();
     }

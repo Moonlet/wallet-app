@@ -518,6 +518,13 @@ export const sendTransferTransaction = (
         });
 
         if (appWallet.type === WalletType.HW) {
+            dispatch({
+                type: DISPLAY_MESSAGE,
+                data: {
+                    text: TransactionMessageText.OPEN_APP,
+                    type: TransactionMessageType.INFO
+                }
+            });
             await (wallet as LedgerWallet).onAppOpened(account.blockchain);
 
             dispatch({

@@ -2,7 +2,6 @@ on:
   push:
     branches:
       - master
-      - deploy
 
 name: Beta build & deploy
 jobs:
@@ -46,7 +45,7 @@ jobs:
           curl -s https://codecov.io/bash | bash -s -- \
           -F "unittests" \
           -Z || echo 'Codecov upload failed'
-          
+
       - name: Sentry release setup
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

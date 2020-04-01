@@ -8,8 +8,7 @@ import { translate } from '../../../../core/i18n';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 
 export interface IExternalProps {
-    onAcknowledged: () => any;
-    changePIN: boolean;
+    onAcknowledged: () => void;
 }
 
 export const PasswordTermsComponent = (
@@ -19,9 +18,7 @@ export const PasswordTermsComponent = (
 
     return (
         <View style={props.styles.container}>
-            {!props.changePIN && (
-                <Text style={props.styles.textStyle}>{translate('Password.termsBody')}</Text>
-            )}
+            <Text style={props.styles.textStyle}>{translate('Password.termsBody')}</Text>
 
             <View style={props.styles.imageStyle}>
                 <Image
@@ -42,9 +39,7 @@ export const PasswordTermsComponent = (
                     style={props.styles.bottomButton}
                     primary
                     disabled={!acknowledged}
-                    onPress={() => {
-                        props.onAcknowledged();
-                    }}
+                    onPress={() => props.onAcknowledged()}
                 >
                     {translate('App.labels.understand')}
                 </Button>

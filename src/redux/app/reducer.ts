@@ -1,6 +1,13 @@
 import { IAppState } from './state';
 import { IAction } from '../types';
-import { SET_ACCEPTED_TC_VERSION, SHOW_HINT } from './actions';
+import {
+    SET_ACCEPTED_TC_VERSION,
+    SHOW_HINT,
+    RESET_FAILED_LOGINS,
+    INCREMENT_FAILED_LOGINS,
+    SET_APP_BLOCK_UNTIL,
+    RESET_ALL_DATA
+} from './actions';
 
 const intialState: IAppState = {
     version: 1,
@@ -15,7 +22,9 @@ const intialState: IAppState = {
         MANAGE_ACCOUNT: {
             TOKENS_LIST: 0
         }
-    }
+    },
+    failedLogins: 0,
+    blockUntil: undefined
 };
 
 export default (state: IAppState = intialState, action: IAction): IAppState => {
@@ -37,6 +46,27 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
                     }
                 }
             };
+
+        case RESET_FAILED_LOGINS:
+            return {
+                ...state,
+                failedLogins: 0
+            };
+
+        case INCREMENT_FAILED_LOGINS:
+            return {
+                ...state,
+                failedLogins: state.failedLogins + 1
+            };
+
+        case SET_APP_BLOCK_UNTIL:
+            return {
+                ...state,
+                blockUntil: action.data.date
+            };
+
+        case RESET_ALL_DATA:
+            return intialState;
 
         default:
             break;

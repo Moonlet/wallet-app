@@ -60,7 +60,6 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    public passwordModal = null;
 
     constructor(props: any) {
         super(props);
@@ -300,25 +299,25 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             testID="button-next"
                             style={props.styles.bottomButton}
                             onPress={async () => {
-                                this.passwordModal.requestPassword().then(async () => {
-                                    await delay(100);
+                                try {
+                                    await PasswordModal.createPassword(
+                                        translate('Password.connectHardwareWalletPinSubtitle')
+                                    );
+                                    await delay(500);
                                     this.props.openBottomSheet(BottomSheetType.LEDGER_CONNECT, {
                                         blockchain: this.state.blockchain,
                                         deviceModel: this.state.device,
                                         connectionType: this.state.connection
                                     });
-                                });
+                                } catch (err) {
+                                    //
+                                }
                             }}
                         >
                             {translate('App.labels.connect')}
                         </Button>
                     </View>
                 )}
-                <PasswordModal
-                    shouldCreatePassword={true}
-                    subtitle={translate('Password.connectHardwareWalletPinSubtitle')}
-                    obRef={ref => (this.passwordModal = ref)}
-                />
             </View>
         );
     }

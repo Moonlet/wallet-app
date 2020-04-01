@@ -79,7 +79,6 @@ export class WalletsScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    public passwordModal = null;
 
     public walletSwipeableRef: ReadonlyArray<string> = [];
     public currentlyOpenSwipeable: string = null;
@@ -101,6 +100,7 @@ export class WalletsScreenComponent extends React.Component<
     private showHints() {
         if (
             this.props.wallets &&
+            this.props.wallets[this.state.selectedTab].length !== 0 &&
             this.props.hints.WALLETS_SCREEN.WALLETS_LIST < DISPLAY_HINTS_TIMES
         ) {
             const id = this.props.wallets[this.state.selectedTab][0].id;
@@ -146,9 +146,18 @@ export class WalletsScreenComponent extends React.Component<
         }
     }
 
-    public onDeleteConfirmed(wallet: IWalletState) {
-        this.passwordModal.requestPassword().then(() => this.props.deleteWallet(wallet.id));
+    public async onDeleteConfirmed(wallet: IWalletState) {
+        try {
+            await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleDeleteWallet')
+            );
+            this.props.deleteWallet(wallet.id);
+        } catch (err) {
+            //
+        }
     }
+    a;
 
     public onPressUnveil(wallet: any) {
         this.props.navigation.navigate('ViewWalletMnemonic', { wallet });
@@ -330,11 +339,6 @@ export class WalletsScreenComponent extends React.Component<
                         }[selectedTab]
                     }
                 </View>
-
-                <PasswordModal
-                    subtitle={translate('Password.subtitleDeleteWallet')}
-                    obRef={ref => (this.passwordModal = ref)}
-                />
             </View>
         );
     }

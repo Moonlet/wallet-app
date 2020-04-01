@@ -25,8 +25,7 @@ import { ChainIdType } from '../../../core/blockchain/types';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
-    onOpenStart: () => void;
-    onCloseEnd: () => void;
+    onClose: () => void;
 }
 export interface IReduxProps {
     setSelectedAccount: typeof setSelectedAccount;
@@ -65,8 +64,7 @@ export class AccountsBottomSheetComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.bottomSheet.current.props.onOpenStart();
-        Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(1) : null;
+        Platform.OS !== 'web' && this.bottomSheet.current.snapTo(1);
         this.props.accounts.map(acc => {
             this.props.getBalance(acc.blockchain, acc.address, undefined, false);
         });
@@ -153,7 +151,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                                 label={label}
                                 selected={selected}
                                 onPress={() => {
-                                    this.props.onCloseEnd();
+                                    this.props.onClose();
                                     this.props.setSelectedAccount(account);
                                 }}
                             />
@@ -167,7 +165,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                                 isCreate
                                 label={createAccountLabel}
                                 onPress={() => {
-                                    this.props.onCloseEnd();
+                                    this.props.onClose();
                                     this.props.enableCreateAccount();
                                 }}
                             />
@@ -187,10 +185,14 @@ export class AccountsBottomSheetComponent extends React.Component<
                     this.props.snapPoints.bottomSheetHeight
                 ]}
                 renderContent={() => this.renderBottomSheetContent()}
-                renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
-                onOpenStart={this.props.onOpenStart}
-                onCloseEnd={this.props.onCloseEnd}
+                renderHeader={() => (
+                    <BottomSheetHeader
+                        obRef={this.bottomSheet}
+                        onClose={() => this.props.onClose()}
+                    />
+                )}
                 enabledInnerScrolling={false}
+                enabledContentTapInteraction={false}
             />
         );
     }

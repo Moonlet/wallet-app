@@ -21,30 +21,33 @@ export const getRemoteConfigFeatures = async () => {
         duration = 0;
     }
 
-    // Set default values
-    firebase.config().setDefaults({
-        [RemoteFeature.NEAR]: false,
-        [RemoteFeature.DEV_TOOLS]: false,
-        [RemoteFeature.COSMOS]: false,
-        [RemoteFeature.TC_VERSION]: undefined
-    });
+    try {
+        await firebase.config().fetch(duration);
+        await firebase.config().activateFetched();
 
-    await firebase.config().fetch(duration);
-    await firebase.config().activateFetched();
-    const objects = await firebase
-        .config()
-        .getValues([
-            RemoteFeature.NEAR,
-            RemoteFeature.COSMOS,
-            RemoteFeature.DEV_TOOLS,
-            RemoteFeature.TC_VERSION
-        ]);
+        const objects = await firebase
+            .config()
+            .getValues([
+                RemoteFeature.NEAR,
+                RemoteFeature.COSMOS,
+                RemoteFeature.DEV_TOOLS,
+                RemoteFeature.TC_VERSION
+            ]);
 
-    featuresConfig = {};
-    // Retrieve values
-    Object.keys(objects).forEach(key => {
-        featuresConfig[key] = objects[key].val();
-    });
+        featuresConfig = {};
+        // Retrieve values
+        Object.keys(objects).forEach(key => {
+            featuresConfig[key] = objects[key].val();
+        });
+    } catch (err) {
+        // Set default values
+        featuresConfig = {
+            [RemoteFeature.NEAR]: JSON.stringify([]),
+            [RemoteFeature.DEV_TOOLS]: JSON.stringify([]),
+            [RemoteFeature.COSMOS]: JSON.stringify([]),
+            [RemoteFeature.TC_VERSION]: undefined
+        };
+    }
 
     return featuresConfig;
 };

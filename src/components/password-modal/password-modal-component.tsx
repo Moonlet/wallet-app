@@ -428,7 +428,7 @@ export class PasswordModalComponent extends React.Component<
                     />
                 )}
 
-                {false && this.isMoonletDisabled() && this.renderMoonletDisabled()}
+                {this.isMoonletDisabled() && this.renderMoonletDisabled()}
             </Modal>
         );
     }

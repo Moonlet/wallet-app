@@ -88,6 +88,7 @@ export class DialogComponent extends React.Component<
 
     public input = null;
     private dialogDeferred = null;
+    private dialogHideDeffered;
 
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
@@ -121,6 +122,7 @@ export class DialogComponent extends React.Component<
         confirmButton: IAlertButton
     ): Promise<boolean> {
         this.dialogDeferred = new Deferred();
+        this.dialogHideDeffered = new Deferred();
 
         this.setState({
             visible: true,
@@ -143,6 +145,7 @@ export class DialogComponent extends React.Component<
         keyboardType?: KeyboardTypeOptions
     ): Promise<string> {
         this.dialogDeferred = new Deferred();
+        this.dialogHideDeffered = new Deferred();
 
         this.setState({
             visible: true,
@@ -160,6 +163,7 @@ export class DialogComponent extends React.Component<
 
     public async showConfirm(title: string, message: string): Promise<boolean> {
         this.dialogDeferred = new Deferred();
+        this.dialogHideDeffered = new Deferred();
 
         this.setState({
             visible: true,
@@ -173,6 +177,7 @@ export class DialogComponent extends React.Component<
 
     public async showInfo(title: string, message: string): Promise<boolean> {
         this.dialogDeferred = new Deferred();
+        this.dialogHideDeffered = new Deferred();
 
         this.setState({
             visible: true,
@@ -184,7 +189,7 @@ export class DialogComponent extends React.Component<
         return this.dialogDeferred.promise;
     }
 
-    public closeDialog = () =>
+    public async closeDialog() {
         this.setState({
             visible: false,
             dialogType: undefined,
@@ -193,108 +198,106 @@ export class DialogComponent extends React.Component<
             inputValue: ''
         });
 
-    public cancelButtonPress = () => {
+        await this.dialogHideDeffered?.promise;
+    }
+
+    public async cancelButtonPress() {
         switch (this.state.dialogType) {
             case DialogType.ALERT:
-                this.closeDialog();
+                await this.closeDialog();
                 this.state.cancelButton?.onPress && this.state.cancelButton?.onPress();
                 break;
             case DialogType.CONFIRM:
-                this.closeDialog();
+                await this.closeDialog();
                 this.dialogDeferred && this.dialogDeferred.resolve(false);
                 break;
             case DialogType.PROMPT:
-                this.closeDialog();
+                await this.closeDialog();
                 this.dialogDeferred && this.dialogDeferred.resolve('');
                 break;
             default:
-                this.closeDialog();
+                await this.closeDialog();
                 break;
         }
-    };
+    }
 
-    public confirmButtonPress = () => {
+    public async confirmButtonPress() {
         switch (this.state.dialogType) {
             case DialogType.ALERT:
-                this.closeDialog();
+                await this.closeDialog();
                 this.state.confirmButton?.onPress && this.state.confirmButton?.onPress();
                 break;
             case DialogType.CONFIRM:
-                this.closeDialog();
+                await this.closeDialog();
                 this.dialogDeferred && this.dialogDeferred.resolve(true);
                 break;
             case DialogType.PROMPT:
-                this.closeDialog();
+                await this.closeDialog();
                 this.dialogDeferred && this.dialogDeferred.resolve(this.state.inputValue);
                 break;
             case DialogType.INFO:
-                this.closeDialog();
+                await this.closeDialog();
                 this.dialogDeferred && this.dialogDeferred.resolve(true);
                 break;
             default:
-                this.closeDialog();
+                await this.closeDialog();
                 break;
         }
-    };
+    }
 
     public render() {
         const { styles, theme } = this.props;
 
-        if (this.state.visible) {
-            return (
-                <View style={styles.dialogContainer}>
-                    <RNDialog.Container
-                        visible={this.state.visible}
-                        blurStyle={styles.contentContainerStyle}
-                        contentStyle={styles.contentContainerStyle}
-                    >
-                        <RNDialog.Title style={styles.titleStyle}>
-                            {this.state.title}
-                        </RNDialog.Title>
-                        <RNDialog.Description style={styles.descriptionStyle}>
-                            {this.state.message}
-                        </RNDialog.Description>
-                        {this.state.dialogType === DialogType.PROMPT && (
-                            <RNDialog.Input
-                                style={Platform.OS === 'android' && styles.textInput}
-                                onChangeText={inputValue => this.setState({ inputValue })}
-                                label={this.state.defaultInputValue}
-                            />
-                        )}
-                        {this.state.dialogType !== DialogType.INFO && (
-                            <RNDialog.Button
-                                label={
-                                    this.state.dialogType === DialogType.ALERT
-                                        ? this.state.cancelButton?.text
-                                            ? this.state.cancelButton.text
-                                            : translate('App.labels.cancel')
-                                        : this.state.dialogType === DialogType.CONFIRM
-                                        ? translate('App.labels.cancel')
-                                        : this.state.cancelButtonText
-                                }
-                                onPress={this.cancelButtonPress}
-                                color={theme.colors.accent}
-                            />
-                        )}
+        return (
+            <View style={styles.dialogContainer}>
+                <RNDialog.Container
+                    visible={this.state.visible}
+                    blurStyle={styles.contentContainerStyle}
+                    contentStyle={styles.contentContainerStyle}
+                    onModalHide={() => this.dialogHideDeffered?.resolve()}
+                >
+                    <RNDialog.Title style={styles.titleStyle}>{this.state.title}</RNDialog.Title>
+                    <RNDialog.Description style={styles.descriptionStyle}>
+                        {this.state.message}
+                    </RNDialog.Description>
+                    {this.state.dialogType === DialogType.PROMPT && (
+                        <RNDialog.Input
+                            style={Platform.OS === 'android' && styles.textInput}
+                            onChangeText={inputValue => this.setState({ inputValue })}
+                            label={this.state.defaultInputValue}
+                        />
+                    )}
+                    {this.state.dialogType !== DialogType.INFO && (
                         <RNDialog.Button
                             label={
                                 this.state.dialogType === DialogType.ALERT
-                                    ? this.state.confirmButton?.text
-                                        ? this.state.confirmButton.text
-                                        : translate('App.labels.ok')
-                                    : this.state.dialogType === DialogType.CONFIRM ||
-                                      this.state.dialogType === DialogType.INFO
-                                    ? translate('App.labels.ok')
-                                    : this.state.confirmButtonText
+                                    ? this.state.cancelButton?.text
+                                        ? this.state.cancelButton.text
+                                        : translate('App.labels.cancel')
+                                    : this.state.dialogType === DialogType.CONFIRM
+                                    ? translate('App.labels.cancel')
+                                    : this.state.cancelButtonText
                             }
-                            onPress={this.confirmButtonPress}
+                            onPress={() => this.cancelButtonPress()}
                             color={theme.colors.accent}
                         />
-                    </RNDialog.Container>
-                </View>
-            );
-        } else {
-            return <View />;
-        }
+                    )}
+                    <RNDialog.Button
+                        label={
+                            this.state.dialogType === DialogType.ALERT
+                                ? this.state.confirmButton?.text
+                                    ? this.state.confirmButton.text
+                                    : translate('App.labels.ok')
+                                : this.state.dialogType === DialogType.CONFIRM ||
+                                  this.state.dialogType === DialogType.INFO
+                                ? translate('App.labels.ok')
+                                : this.state.confirmButtonText
+                        }
+                        onPress={() => this.confirmButtonPress()}
+                        color={theme.colors.accent}
+                    />
+                </RNDialog.Container>
+            </View>
+        );
     }
 }

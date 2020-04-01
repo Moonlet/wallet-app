@@ -21,7 +21,6 @@ import { HeaderLeftClose } from '../../components/header-left-close/header-left-
 import { ListCard } from '../../components/list-card/list-card';
 import { Dialog } from '../../components/dialog/dialog';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
-import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
 import { updateDisplayedHint } from '../../redux/app/actions';
 import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
@@ -141,7 +140,6 @@ export class WalletsScreenComponent extends React.Component<
             )
         ) {
             this.closeCurrentOpenedSwipable();
-            await delay(100);
             this.onDeleteConfirmed(wallet);
         }
     }

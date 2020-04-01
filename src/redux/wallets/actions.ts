@@ -39,7 +39,6 @@ import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
 import { openLoadingModal, closeLoadingModal, DISPLAY_MESSAGE } from '../ui/loading-modal/actions';
-import { delay } from '../../core/utils/time';
 import { formatAddress } from '../../core/utils/format-address';
 import { Notifications } from '../../core/messaging/notifications/notifications';
 import { formatNumber } from '../../core/utils/format-number';
@@ -228,7 +227,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     dispatch(openLoadingModal());
 
     // TODO: check here and find a solution to fix
-    await delay(500);
+    // await delay(500);
 
     try {
         const wallet = new HDWallet(mnemonic);
@@ -588,7 +587,7 @@ export const sendTransferTransaction = (
         closeLoadingModal()(dispatch, getState);
 
         // TODO: check here and find a solution to fix
-        await delay(500);
+        // await delay(500);
 
         const message = translate('LoadingModal.' + errorMessage, { app: account.blockchain });
 

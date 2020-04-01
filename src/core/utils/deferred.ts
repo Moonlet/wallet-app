@@ -1,4 +1,4 @@
-export class Deferred<T> {
+export class Deferred<T = any> {
     public promise: Promise<T>;
     public resolve;
     public reject;

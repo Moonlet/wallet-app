@@ -1,6 +1,7 @@
 import firebase from 'react-native-firebase';
 import DeviceInfo from 'react-native-device-info';
 import AsyncStorage from '@react-native-community/async-storage';
+import CONFIG from '../../config';
 
 export enum RemoteFeature {
     NEAR = 'feature_near',
@@ -9,16 +10,12 @@ export enum RemoteFeature {
     TC_VERSION = 'tcVersion'
 }
 
-let featuresConfig;
+let featuresConfig = {};
 
 export const getRemoteConfigFeatures = async () => {
-    // TODO: decide if 15 min should be the optimal fetch duration
-    // set fetch cache duration to 15 min for live environment
-    // TODO - before launch set duration back to 15 minutes
-    let duration = 0;
+    const duration = CONFIG.firebaseConfigFetchInterval;
     if (__DEV__) {
         firebase.config().enableDeveloperMode();
-        duration = 0;
     }
 
     try {
@@ -34,7 +31,6 @@ export const getRemoteConfigFeatures = async () => {
                 RemoteFeature.TC_VERSION
             ]);
 
-        featuresConfig = {};
         // Retrieve values
         Object.keys(objects).forEach(key => {
             featuresConfig[key] = objects[key].val();

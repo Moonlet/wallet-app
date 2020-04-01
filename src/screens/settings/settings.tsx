@@ -27,7 +27,6 @@ import { Dialog } from '../../components/dialog/dialog';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
-import { delay } from '../../core/utils/time';
 import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 
 export interface IState {
@@ -125,7 +124,7 @@ export class SettingsScreenComponent extends React.Component<
                                     // TouchID enables background mode and this will generate another password modal to be shown
                                     this.props.setDisplayPasswordModal(false);
                                     this.props.toggleTouchID();
-                                    await delay(1000);
+                                    // await delay(1000);
                                     this.props.setDisplayPasswordModal(true);
                                 }}
                                 value={this.props.touchID}
@@ -174,7 +173,7 @@ export class SettingsScreenComponent extends React.Component<
                     onPress={async () => {
                         try {
                             await PasswordModal.changePassword();
-                            await delay(500);
+                            // await delay(500);
                             Dialog.info(
                                 translate('App.labels.success'),
                                 translate('Settings.successChangePin')

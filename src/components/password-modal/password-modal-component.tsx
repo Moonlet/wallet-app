@@ -77,7 +77,8 @@ export class PasswordModalComponent extends React.Component<
     IState
 > {
     public static refDeferred: Deferred<PasswordModalComponent> = new Deferred();
-    public countdownListener;
+    private modalOnHideDeffered: Deferred;
+    private countdownListener;
 
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
@@ -155,6 +156,7 @@ export class PasswordModalComponent extends React.Component<
 
         this.clearErrorMessage();
 
+        this.modalOnHideDeffered = new Deferred();
         this.setState({
             visible: true,
             title: title || translate('Password.pinTitleUnlock'),
@@ -172,6 +174,7 @@ export class PasswordModalComponent extends React.Component<
         this.resultDeferred = new Deferred();
         this.clearErrorMessage();
 
+        this.modalOnHideDeffered = new Deferred();
         this.setState({
             visible: true,
             title: translate('Password.setupPinTitle'),
@@ -189,6 +192,7 @@ export class PasswordModalComponent extends React.Component<
         this.resultDeferred = new Deferred();
         this.clearErrorMessage();
 
+        this.modalOnHideDeffered = new Deferred();
         this.setState({
             visible: true,
             title: translate('Password.pinTitleUnlock'),
@@ -202,9 +206,10 @@ export class PasswordModalComponent extends React.Component<
         return this.resultDeferred.promise;
     }
 
-    private onBackButtonTap() {
+    private async onBackButtonTap() {
         this.setState({ visible: false });
-        this.resultDeferred && this.resultDeferred.reject();
+        await this.modalOnHideDeffered?.promise;
+        this.resultDeferred?.reject();
     }
 
     private clearErrorMessage() {
@@ -247,6 +252,7 @@ export class PasswordModalComponent extends React.Component<
                 NavigationService.popToTop();
                 NavigationService.navigate('OnboardingNavigation', {});
                 this.setState({ visible: false });
+                await this.modalOnHideDeffered?.promise;
                 this.props.resetAllData();
             }
         } else {
@@ -267,8 +273,9 @@ export class PasswordModalComponent extends React.Component<
                 if (isPasswordValid) {
                     this.props.resetFailedLogins();
                     this.props.setAppBlockUntil(undefined);
-                    this.resultDeferred && this.resultDeferred.resolve(data.password);
                     this.setState({ visible: false });
+                    await this.modalOnHideDeffered.promise;
+                    this.resultDeferred?.resolve(data.password);
                 } else {
                     this.handleWrongPassword();
                 }
@@ -289,8 +296,9 @@ export class PasswordModalComponent extends React.Component<
             case ScreenStep.CREATE_PIN_CONFIRM:
                 if (this.state.password === data.password) {
                     await setPassword(data.password, false);
-                    this.resultDeferred && this.resultDeferred.resolve(data.password);
                     this.setState({ visible: false });
+                    await this.modalOnHideDeffered?.promise;
+                    this.resultDeferred?.resolve(data.password);
                 } else {
                     this.handleWrongPassword();
                 }
@@ -327,8 +335,9 @@ export class PasswordModalComponent extends React.Component<
                     // this.state.password is the old password
                     this.props.changePIN(this.state.newPassword, this.state.password);
                     await setPassword(this.state.newPassword, false);
-                    this.resultDeferred && this.resultDeferred.resolve(this.state.newPassword);
                     this.setState({ visible: false });
+                    await this.modalOnHideDeffered?.promise;
+                    this.resultDeferred?.resolve(this.state.newPassword);
                 } else {
                     this.handleWrongPassword();
                 }
@@ -404,7 +413,12 @@ export class PasswordModalComponent extends React.Component<
 
     public render() {
         return (
-            <Modal isVisible={this.state.visible} animationInTiming={5} animationOutTiming={5}>
+            <Modal
+                isVisible={this.state.visible}
+                animationInTiming={5}
+                animationOutTiming={5}
+                onModalHide={() => this.modalOnHideDeffered?.resolve()}
+            >
                 {this.state.currentStep === ScreenStep.CREATE_PIN_TERMS ||
                 this.state.currentStep === ScreenStep.CHANGE_PIN_TERMS ? (
                     <PasswordTerms onAcknowledged={() => this.updateState({})} />

@@ -118,9 +118,13 @@ export class PasswordModalComponent extends React.Component<
         clearInterval(this.countdownListener);
     }
 
-    public static async getPassword(title?: string, subtitle?: string) {
+    public static async getPassword(
+        title?: string,
+        subtitle?: string,
+        data?: { shouldCreatePassword?: boolean }
+    ) {
         const ref = await PasswordModalComponent.refDeferred.promise;
-        return ref.getPassword(title, subtitle);
+        return ref.getPassword(title, subtitle, data);
     }
 
     public static async createPassword(subtitle?: string) {
@@ -135,8 +139,20 @@ export class PasswordModalComponent extends React.Component<
 
     private resultDeferred: any;
 
-    public getPassword(title?: string, subtitle?: string): Promise<string> {
+    public async getPassword(
+        title: string,
+        subtitle: string,
+        data: { shouldCreatePassword?: boolean }
+    ): Promise<string> {
         this.resultDeferred = new Deferred();
+
+        if (data?.shouldCreatePassword) {
+            const passwordCredentials = await getPassword();
+            if (passwordCredentials.password === null) {
+                this.resultDeferred && this.resultDeferred.reject();
+            }
+        }
+
         this.clearErrorMessage();
 
         this.setState({
@@ -152,32 +168,19 @@ export class PasswordModalComponent extends React.Component<
         return this.resultDeferred.promise;
     }
 
-    public async createPassword(subtitle?: string) {
+    public createPassword(subtitle: string) {
         this.resultDeferred = new Deferred();
         this.clearErrorMessage();
 
-        const passwordCredentials = await getPassword();
-        if (passwordCredentials && passwordCredentials.password) {
-            this.setState({
-                visible: true,
-                title: translate('Password.pinTitleUnlock'),
-                subtitle: translate('Password.pinSubtitleUnlock'),
-                currentStep: ScreenStep.ENTER_PIN,
-                enableBiometryAuth: true,
-                allowBackButton: true,
-                showAttempts: true
-            });
-        } else {
-            this.setState({
-                visible: true,
-                title: translate('Password.setupPinTitle'),
-                subtitle: subtitle || translate('Password.createPinSubtitle'),
-                currentStep: ScreenStep.CREATE_PIN_TERMS,
-                enableBiometryAuth: false,
-                allowBackButton: true,
-                showAttempts: false
-            });
-        }
+        this.setState({
+            visible: true,
+            title: translate('Password.setupPinTitle'),
+            subtitle: subtitle || translate('Password.createPinSubtitle'),
+            currentStep: ScreenStep.CREATE_PIN_TERMS,
+            enableBiometryAuth: false,
+            allowBackButton: true,
+            showAttempts: false
+        });
 
         return this.resultDeferred.promise;
     }
@@ -425,7 +428,7 @@ export class PasswordModalComponent extends React.Component<
                     />
                 )}
 
-                {this.isMoonletDisabled() && this.renderMoonletDisabled()}
+                {false && this.isMoonletDisabled() && this.renderMoonletDisabled()}
             </Modal>
         );
     }

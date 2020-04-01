@@ -98,8 +98,7 @@ export class LedgerConnectComponent extends React.Component<
     });
 
     public async componentDidMount() {
-        this.bottomSheet.current.props.onOpenStart();
-        Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(1) : null;
+        Platform.OS !== 'web' && this.bottomSheet.current.snapTo(1);
 
         await delay(500);
         this.scannerUnsubscribe = await TransportFactory.scan(this.props.connectionType, event => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform, FlatList } from 'react-native';
+import { View, Platform, FlatList, TouchableHighlight } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -13,13 +13,11 @@ import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { Blockchain } from '../../../core/blockchain/types';
 import { setSelectedBlockchain } from '../../../redux/wallets/actions';
 import { Text } from '../../../library/text/text';
-import TouchableOpacity from '../../../library/touchable-opacity/touchable-opacity';
 import { SmartImage } from '../../../library/image/smart-image';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
-    onOpenStart: () => void;
-    onCloseEnd: () => void;
+    onClose: () => void;
 }
 export interface IReduxProps {
     blockchains: Blockchain[];
@@ -55,8 +53,7 @@ export class BlockchainNavigationBottomSheetComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.bottomSheet.current.props.onOpenStart();
-        Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(1) : null;
+        Platform.OS !== 'web' && this.bottomSheet.current.snapTo(1);
     }
 
     public renderToken = (blockchain: Blockchain) => {
@@ -67,28 +64,31 @@ export class BlockchainNavigationBottomSheetComponent extends React.Component<
         const BlockchainIcon = blockchainConfig.iconComponent;
 
         return (
-            <TouchableOpacity
+            <TouchableHighlight
                 onPress={() => {
                     this.props.setSelectedBlockchain(blockchain);
-                    this.props.onCloseEnd();
+                    this.props.onClose();
                 }}
+                underlayColor={theme.colors.bottomSheetBackground}
                 style={styles.tokenContainer}
             >
-                <View
-                    style={[
-                        styles.tokenImageContainer,
-                        {
-                            borderColor:
-                                this.props.selectedBlockchain === blockchain
-                                    ? theme.colors.accentSecondary
-                                    : theme.colors.cardBackground
-                        }
-                    ]}
-                >
-                    <SmartImage source={{ iconComponent: BlockchainIcon }} />
+                <View style={{ flex: 1 }}>
+                    <View
+                        style={[
+                            styles.tokenImageContainer,
+                            {
+                                borderColor:
+                                    this.props.selectedBlockchain === blockchain
+                                        ? theme.colors.accentSecondary
+                                        : theme.colors.cardBackground
+                            }
+                        ]}
+                    >
+                        <SmartImage source={{ iconComponent: BlockchainIcon }} />
+                    </View>
+                    <Text style={styles.coinText}>{coin}</Text>
                 </View>
-                <Text style={styles.coinText}>{coin}</Text>
-            </TouchableOpacity>
+            </TouchableHighlight>
         );
     };
 
@@ -125,10 +125,14 @@ export class BlockchainNavigationBottomSheetComponent extends React.Component<
                     this.props.snapPoints.bottomSheetHeight
                 ]}
                 renderContent={() => this.renderBottomSheetContent()}
-                renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
-                onOpenStart={this.props.onOpenStart}
-                onCloseEnd={this.props.onCloseEnd}
+                renderHeader={() => (
+                    <BottomSheetHeader
+                        obRef={this.bottomSheet}
+                        onClose={() => this.props.onClose()}
+                    />
+                )}
                 enabledInnerScrolling={false}
+                enabledContentTapInteraction={false}
             />
         );
     }

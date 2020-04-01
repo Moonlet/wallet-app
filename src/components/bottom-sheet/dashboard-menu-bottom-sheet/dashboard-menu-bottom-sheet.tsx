@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View, Platform, TouchableHighlight } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -17,12 +17,10 @@ import { Blockchain } from '../../../core/blockchain/types';
 import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
-import TouchableHighlight from '../../../library/touchable-highlight/touchable-highlight';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
-    onOpenStart: () => void;
-    onCloseEnd: () => void;
+    onClose: () => void;
 }
 
 export interface IReduxProps {
@@ -47,22 +45,21 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
     }
 
     public componentDidMount() {
-        this.bottomSheet.current.props.onOpenStart();
-        Platform.OS !== 'web' ? this.bottomSheet.current.snapTo(1) : null;
+        Platform.OS !== 'web' && this.bottomSheet.current.snapTo(1);
     }
 
     public transactionHistoryPress() {
-        this.props.onCloseEnd();
+        this.props.onClose();
         NavigationService.navigate('TransactonsHistory', {});
     }
 
     public manageAccount() {
-        this.props.onCloseEnd();
+        this.props.onClose();
         NavigationService.navigate('ManageAccount', {});
     }
 
     public async onQrCodeScanned(value: string) {
-        this.props.onCloseEnd();
+        this.props.onClose();
         WalletConnectClient.connect(value);
     }
 
@@ -155,10 +152,14 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     this.props.snapPoints.bottomSheetHeight
                 ]}
                 renderContent={() => this.renderBottomSheetContent()}
-                renderHeader={() => <BottomSheetHeader obRef={this.bottomSheet} />}
-                onOpenStart={this.props.onOpenStart}
-                onCloseEnd={this.props.onCloseEnd}
+                renderHeader={() => (
+                    <BottomSheetHeader
+                        obRef={this.bottomSheet}
+                        onClose={() => this.props.onClose()}
+                    />
+                )}
                 enabledInnerScrolling={false}
+                enabledContentTapInteraction={false}
             />
         );
     }

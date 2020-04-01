@@ -50,6 +50,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../ui/password-modal/actions';
 import { getTokenConfig } from '../tokens/static-selectors';
 import { ITokenState } from '../wallets/state';
+import { clearPassword } from '../../core/secure/keychain';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -610,7 +611,7 @@ export const sendTransferTransaction = (
     }
 };
 
-export const deleteWallet = (walletId: string) => (
+export const deleteWallet = (walletId: string) => async (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
@@ -619,6 +620,8 @@ export const deleteWallet = (walletId: string) => (
         const nextWallet = Object.values(state.wallets).find(wallet => wallet.id !== walletId);
         if (nextWallet) {
             dispatch(setSelectedWallet(nextWallet.id));
+        } else {
+            await clearPassword(); // clear keychain storage
         }
     }
     dispatch({

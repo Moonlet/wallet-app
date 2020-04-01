@@ -152,19 +152,32 @@ export class PasswordModalComponent extends React.Component<
         return this.resultDeferred.promise;
     }
 
-    public createPassword(subtitle?: string) {
+    public async createPassword(subtitle?: string) {
         this.resultDeferred = new Deferred();
         this.clearErrorMessage();
 
-        this.setState({
-            visible: true,
-            title: translate('Password.setupPinTitle'),
-            subtitle: subtitle || translate('Password.createPinSubtitle'),
-            currentStep: ScreenStep.CREATE_PIN_TERMS,
-            enableBiometryAuth: false,
-            allowBackButton: true,
-            showAttempts: false
-        });
+        const passwordCredentials = await getPassword();
+        if (passwordCredentials && passwordCredentials.password) {
+            this.setState({
+                visible: true,
+                title: translate('Password.pinTitleUnlock'),
+                subtitle: translate('Password.pinSubtitleUnlock'),
+                currentStep: ScreenStep.ENTER_PIN,
+                enableBiometryAuth: true,
+                allowBackButton: true,
+                showAttempts: true
+            });
+        } else {
+            this.setState({
+                visible: true,
+                title: translate('Password.setupPinTitle'),
+                subtitle: subtitle || translate('Password.createPinSubtitle'),
+                currentStep: ScreenStep.CREATE_PIN_TERMS,
+                enableBiometryAuth: false,
+                allowBackButton: true,
+                showAttempts: false
+            });
+        }
 
         return this.resultDeferred.promise;
     }

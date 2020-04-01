@@ -1,6 +1,7 @@
 import { IAction } from '../types';
 import { IContactsState } from './state';
 import { CONTACT_ADD, CONTACT_DELETE, CONTACT_UPDATE_NAME } from './actions';
+import { RESET_ALL_DATA } from '../app/actions';
 
 const initialState: IContactsState = {};
 
@@ -24,6 +25,9 @@ export default (state: IContactsState = initialState, action: IAction) => {
                     name: action.data.name
                 }
             };
+
+        case RESET_ALL_DATA:
+            return initialState;
 
         default:
             break;

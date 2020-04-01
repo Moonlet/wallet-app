@@ -2,6 +2,8 @@ export interface IAppState {
     version: number;
     tcAcceptedVersion: number;
     hints: IHints;
+    failedLogins: number;
+    blockUntil: Date;
 }
 
 export interface IHints {

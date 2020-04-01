@@ -24,15 +24,15 @@ import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { Dialog } from '../../components/dialog/dialog';
-import { changePIN } from '../../redux/wallets/actions';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
+import { delay } from '../../core/utils/time';
+import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 
 export interface IState {
     isTouchIDSupported: boolean;
     biometryType: BiometryType;
-    changePIN: boolean;
 }
 
 export interface IReduxProps {
@@ -40,7 +40,7 @@ export interface IReduxProps {
     deviceId: string;
     touchID: boolean;
     toggleTouchID: typeof toggleTouchID;
-    changePIN: typeof changePIN;
+    setDisplayPasswordModal: typeof setDisplayPasswordModal;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -51,7 +51,7 @@ const mapStateToProps = (state: IReduxState) => ({
 
 const mapDispatchToProps = {
     toggleTouchID,
-    changePIN
+    setDisplayPasswordModal
 };
 
 const navigationOptions = () => ({
@@ -64,7 +64,6 @@ export class SettingsScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    public passwordModal = null;
     debugModal: any;
 
     constructor(
@@ -74,8 +73,7 @@ export class SettingsScreenComponent extends React.Component<
 
         this.state = {
             isTouchIDSupported: false,
-            biometryType: undefined,
-            changePIN: false
+            biometryType: undefined
         };
 
         biometricAuth
@@ -121,11 +119,15 @@ export class SettingsScreenComponent extends React.Component<
                                     : translate('BiometryType.FingerprintLogin')}
                             </Text>
                             <Switch
-                                onValueChange={() =>
-                                    this.passwordModal
-                                        .requestPassword()
-                                        .then(() => this.props.toggleTouchID())
-                                }
+                                onValueChange={async () => {
+                                    await PasswordModal.getPassword();
+
+                                    // TouchID enables background mode and this will generate another password modal to be shown
+                                    this.props.setDisplayPasswordModal(false);
+                                    this.props.toggleTouchID();
+                                    await delay(1000);
+                                    this.props.setDisplayPasswordModal(true);
+                                }}
                                 value={this.props.touchID}
                                 trackColor={{
                                     true: this.props.theme.colors.cardBackground,
@@ -169,23 +171,18 @@ export class SettingsScreenComponent extends React.Component<
 
                 <TouchableOpacity
                     style={styles.rowContainer}
-                    onPress={() =>
-                        this.setState({ changePIN: true }, () => {
-                            this.passwordModal
-                                .requestPassword()
-                                .then((pass: { newPassword: string; oldPassword: string }) => {
-                                    this.props.changePIN(pass.newPassword, pass.oldPassword);
-
-                                    // disable changePIN if you want to reattempt to change the PIN code
-                                    this.setState({ changePIN: false }, () =>
-                                        Dialog.info(
-                                            translate('App.labels.success'),
-                                            translate('Settings.successChangePin')
-                                        )
-                                    );
-                                });
-                        })
-                    }
+                    onPress={async () => {
+                        try {
+                            await PasswordModal.changePassword();
+                            await delay(500);
+                            Dialog.info(
+                                translate('App.labels.success'),
+                                translate('Settings.successChangePin')
+                            );
+                        } catch (err) {
+                            //
+                        }
+                    }}
                 >
                     <Text style={styles.textRow}>{translate('Settings.changePin')}</Text>
                     <Icon name="chevron-right" size={16} style={styles.icon} />
@@ -374,10 +371,6 @@ export class SettingsScreenComponent extends React.Component<
                     )}
                 </ScrollView>
 
-                <PasswordModal
-                    obRef={ref => (this.passwordModal = ref)}
-                    changePIN={this.state.changePIN}
-                />
                 <DebugModal obRef={ref => (this.debugModal = ref)} />
             </View>
         );

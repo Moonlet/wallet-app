@@ -144,6 +144,13 @@ export const translation: ITranslations = {
             pinTitleUnlock: 'Enter PIN code',
             pinSubtitleUnlock: 'Your PIN is required\nto unlock Moonlet',
             invalidPassword: 'Invalid Password',
+            invalidPasswordAtttempts: {
+                text: 'Invalid Password\nYou have {{attempts}} attempts left',
+                ordinal: false,
+                forms: {
+                    one: 'Invalid Password\nYou have 1 attempt left'
+                }
+            },
             genericError: 'Operation could not be completed',
             subtitleMnemonic: 'Your PIN is required to view mnemonic',
             subtitleDeleteWallet: 'Your PIN is required to delete wallet',
@@ -158,7 +165,40 @@ export const translation: ITranslations = {
             changePinSubtitle: 'Your current PIN is required in order to change it',
             recoverWalletPinSubtitle: 'Your PIN is required\nto recover your Moonlet wallet',
             connectHardwareWalletPinSubtitle:
-                'Your PIN is required\nto connect your hardware wallet'
+                'Your PIN is required\nto connect your hardware wallet',
+            moonletDisabled: 'Moonlet is disabled',
+            disabledDetails: 'try again in {{duration}} {{measurement}}',
+            createPinSubtitle: 'Your PIN is required\nfor your Moonlet wallet'
+        },
+        Time: {
+            second: {
+                text: 'seconds',
+                ordinal: false,
+                forms: {
+                    one: 'second'
+                }
+            },
+            minute: {
+                text: 'minutes',
+                ordinal: false,
+                forms: {
+                    one: 'minute'
+                }
+            },
+            hour: {
+                text: 'hours',
+                ordinal: false,
+                forms: {
+                    one: 'hour'
+                }
+            },
+            day: {
+                text: 'days',
+                ordinal: false,
+                forms: {
+                    one: 'day'
+                }
+            }
         },
         Send: {
             inputAddress: 'Search public addresses or domain names',

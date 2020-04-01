@@ -79,9 +79,6 @@ export default class App extends React.Component<{}, IState> {
 
         // decide the bar style on lightTheme
         StatusBar.setBarStyle('light-content', true);
-        if (Platform.OS === 'android') {
-            StatusBar.setBackgroundColor(darkTheme.colors.appBackground);
-        }
     }
 
     public updateAppReady = () => {

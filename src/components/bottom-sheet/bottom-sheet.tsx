@@ -34,25 +34,9 @@ const mapDispatchToProps = {
 export class BottomSheetComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    public allowBottomSheetCloseEnd: boolean;
-
-    constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
-        super(props);
-        this.allowBottomSheetCloseEnd = false;
-    }
-
-    public handleOpenStart = () => {
-        this.allowBottomSheetCloseEnd = true;
-        return;
-    };
-
-    public handleCloseEnd = () => {
-        if (!this.allowBottomSheetCloseEnd) {
-            return;
-        }
+    private handleClose() {
         this.props.closeBottomSheet();
-        this.allowBottomSheetCloseEnd = false; // used to reset
-    };
+    }
 
     public render() {
         switch (this.props.bottomSheet?.type) {
@@ -60,7 +44,7 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <TouchableOpacity
-                            onPress={this.handleCloseEnd}
+                            onPress={() => this.handleClose()}
                             style={this.props.styles.container}
                             activeOpacity={1}
                         />
@@ -72,8 +56,7 @@ export class BottomSheetComponent extends React.Component<
                                         : 0,
                                 bottomSheetHeight: (Dimensions.get('window').height * 3) / 4
                             }}
-                            onOpenStart={this.handleOpenStart}
-                            onCloseEnd={this.handleCloseEnd}
+                            onClose={() => this.handleClose()}
                         />
                     </View>
                 );
@@ -82,7 +65,7 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <TouchableOpacity
-                            onPress={this.handleCloseEnd}
+                            onPress={() => this.handleClose()}
                             style={this.props.styles.container}
                             activeOpacity={1}
                         />
@@ -91,8 +74,7 @@ export class BottomSheetComponent extends React.Component<
                                 initialSnap: Platform.OS === 'web' ? 300 : 0,
                                 bottomSheetHeight: normalize(300)
                             }}
-                            onOpenStart={this.handleOpenStart}
-                            onCloseEnd={this.handleCloseEnd}
+                            onClose={() => this.handleClose()}
                         />
                     </View>
                 );
@@ -101,7 +83,7 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <TouchableOpacity
-                            onPress={this.handleCloseEnd}
+                            onPress={() => this.handleClose()}
                             style={this.props.styles.container}
                             activeOpacity={1}
                         />
@@ -110,8 +92,7 @@ export class BottomSheetComponent extends React.Component<
                             blockchain={this.props.bottomSheet?.blockchain}
                             deviceModel={this.props.bottomSheet?.deviceModel}
                             connectionType={this.props.bottomSheet?.connectionType}
-                            onOpenStart={this.handleOpenStart}
-                            onCloseEnd={this.handleCloseEnd}
+                            onClose={() => this.handleClose()}
                         />
                     </View>
                 );
@@ -120,7 +101,7 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <TouchableOpacity
-                            onPress={this.handleCloseEnd}
+                            onPress={() => this.handleClose()}
                             style={this.props.styles.container}
                             activeOpacity={1}
                         />
@@ -129,8 +110,7 @@ export class BottomSheetComponent extends React.Component<
                                 initialSnap: Platform.OS === 'web' ? 280 : 0,
                                 bottomSheetHeight: normalize(280)
                             }}
-                            onOpenStart={this.handleOpenStart}
-                            onCloseEnd={this.handleCloseEnd}
+                            onClose={() => this.handleClose()}
                             data={this.props.bottomSheet?.data}
                         />
                     </View>
@@ -140,7 +120,7 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <TouchableOpacity
-                            onPress={this.handleCloseEnd}
+                            onPress={() => this.handleClose()}
                             style={this.props.styles.container}
                             activeOpacity={1}
                         />
@@ -149,8 +129,7 @@ export class BottomSheetComponent extends React.Component<
                                 initialSnap: Platform.OS === 'web' ? 400 : 0,
                                 bottomSheetHeight: normalize(400)
                             }}
-                            onOpenStart={this.handleOpenStart}
-                            onCloseEnd={this.handleCloseEnd}
+                            onClose={() => this.handleClose()}
                         />
                     </View>
                 );

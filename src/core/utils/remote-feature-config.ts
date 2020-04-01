@@ -41,8 +41,16 @@ export const getRemoteConfigFeatures = async () => {
             [RemoteFeature.NEAR]: JSON.stringify([]),
             [RemoteFeature.DEV_TOOLS]: JSON.stringify([]),
             [RemoteFeature.COSMOS]: JSON.stringify([]),
-            [RemoteFeature.TC_VERSION]: undefined
+            [RemoteFeature.TC_VERSION]: '0'
         };
+    }
+
+    for (const key of Object.keys(featuresConfig)) {
+        try {
+            featuresConfig[key] = JSON.parse(featuresConfig[key]);
+        } catch {
+            // console.error(`${key} from remote feature config is not a valid JSON string`);
+        }
     }
 
     return featuresConfig;
@@ -58,7 +66,7 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
             feature === RemoteFeature.DEV_TOOLS) &&
         featuresConfig
     ) {
-        const values = JSON.parse(featuresConfig[feature]);
+        const values = featuresConfig[feature];
         if (values.length > 0) {
             const uniqueId = values.filter(id => id === DeviceInfo.getUniqueId());
             if (uniqueId.length) {
@@ -71,7 +79,7 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
 
 export const getFirebaseTCVersion = async (): Promise<number> => {
     if (featuresConfig) {
-        const tcVersion = JSON.parse(featuresConfig[RemoteFeature.TC_VERSION]);
+        const tcVersion = featuresConfig[RemoteFeature.TC_VERSION];
 
         if (tcVersion) {
             await AsyncStorage.setItem('tcAcceptedVersion', String(tcVersion));

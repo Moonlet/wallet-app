@@ -21,14 +21,6 @@ export const getRemoteConfigFeatures = async () => {
         duration = 0;
     }
 
-    // Set default values
-    firebase.config().setDefaults({
-        [RemoteFeature.NEAR]: false,
-        [RemoteFeature.DEV_TOOLS]: false,
-        [RemoteFeature.COSMOS]: false,
-        [RemoteFeature.TC_VERSION]: undefined
-    });
-
     try {
         await firebase.config().fetch(duration);
         await firebase.config().activateFetched();
@@ -48,7 +40,13 @@ export const getRemoteConfigFeatures = async () => {
             featuresConfig[key] = objects[key].val();
         });
     } catch (err) {
-        //
+        // Set default values
+        featuresConfig = {
+            [RemoteFeature.NEAR]: JSON.stringify([]),
+            [RemoteFeature.DEV_TOOLS]: JSON.stringify([]),
+            [RemoteFeature.COSMOS]: JSON.stringify([]),
+            [RemoteFeature.TC_VERSION]: undefined
+        };
     }
 
     return featuresConfig;

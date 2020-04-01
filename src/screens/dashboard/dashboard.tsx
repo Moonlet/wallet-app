@@ -289,7 +289,16 @@ export class DashboardScreenComponent extends React.Component<
 
         const animateHideAccountAddress = this.animationValue.interpolate({
             inputRange: [0, ANIMATION_MAX_HEIGHT / 2, ANIMATION_MAX_HEIGHT],
-            outputRange: [0, 0, 1],
+            outputRange: Platform.select({
+                default: [0, 0, 1],
+                web: [1, 1, 0]
+            }),
+            extrapolate: 'clamp'
+        });
+
+        const animateOpacityAccountAddressWeb = this.animationValue.interpolate({
+            inputRange: [0, ANIMATION_MIN_HEIGHT / 2, ANIMATION_MAX_HEIGHT],
+            outputRange: [1, 0.5, 0],
             extrapolate: 'clamp'
         });
 
@@ -309,7 +318,18 @@ export class DashboardScreenComponent extends React.Component<
                     }
                 >
                     {selectedAccount && (
-                        <Animated.View style={[styles.row, { flex: animateHideAccountAddress }]}>
+                        <Animated.View
+                            style={[
+                                styles.row,
+                                {
+                                    flex: animateHideAccountAddress,
+                                    opacity: Platform.select({
+                                        default: 1,
+                                        web: animateOpacityAccountAddressWeb
+                                    })
+                                }
+                            ]}
+                        >
                             <Text style={styles.account}>
                                 {selectedAccount.name || `Account ${selectedAccount.index + 1}`}
                             </Text>

@@ -28,5 +28,6 @@ export const trimState = (state: IReduxState) => ({
     app: state.app,
     wallets: trimWallets(state.wallets),
     contacts: state.contacts,
-    preferences: state.preferences
+    preferences: state.preferences,
+    tokens: state.tokens
 });

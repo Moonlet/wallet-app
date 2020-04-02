@@ -21,7 +21,46 @@ Object {
         "symbol": "ETH",
       },
     },
+    "15": Object {
+      "ETH": Object {
+        "active": true,
+        "balance": Object {
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "value": "0",
+        },
+        "order": 0,
+        "symbol": "ETH",
+      },
+    },
+    "3": Object {
+      "ETH": Object {
+        "active": true,
+        "balance": Object {
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "value": "0",
+        },
+        "order": 0,
+        "symbol": "ETH",
+      },
+    },
     "4": Object {
+      "ETH": Object {
+        "active": true,
+        "balance": Object {
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "value": "0",
+        },
+        "order": 0,
+        "symbol": "ETH",
+      },
+    },
+    "42": Object {
       "ETH": Object {
         "active": true,
         "balance": Object {

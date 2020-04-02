@@ -99,6 +99,7 @@ jobs:
           APPCENTER_TOKEN: ${{ secrets.APPCENTER_TOKEN }}
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           NODE_OPTIONS: --max_old_space_size=4096
+          NODE_ENV: production
   beta-ios:
     name: iOS app
     runs-on: macos-latest
@@ -137,6 +138,7 @@ jobs:
           FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
+          NODE_ENV: production
   beta-ext-chrome:
     name: Chrome extension
     runs-on: ubuntu-latest

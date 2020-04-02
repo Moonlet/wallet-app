@@ -23,7 +23,7 @@ export interface IExternalProps {
     account: IAccountState;
     wallet: IWalletState;
     chainId: ChainIdType;
-    isVisible: boolean;
+    visible: boolean;
 }
 
 interface IState {
@@ -33,7 +33,7 @@ interface IState {
     key: string;
     showSecurityWarning: boolean;
     isLoading: boolean;
-    isModalVisible: boolean;
+    displayOtherModal: boolean;
 }
 
 export class AccountSettingsModalComponent extends React.Component<
@@ -50,22 +50,16 @@ export class AccountSettingsModalComponent extends React.Component<
             key: '',
             showSecurityWarning: false,
             isLoading: false,
-            isModalVisible: props.isVisible
+            displayOtherModal: false
         };
     }
 
-    public componentDidUpdate(prevProps: IExternalProps) {
-        if (this.props.isVisible !== prevProps.isVisible) {
-            this.setState({ isModalVisible: this.props.isVisible });
-        }
-    }
-
-    public revealPrivateKey() {
+    private revealPrivateKey() {
         try {
-            this.setState({ isModalVisible: false }, async () => {
+            this.setState({ displayOtherModal: true }, async () => {
                 const password = await PasswordModal.getPassword();
 
-                this.setState({ showKeyScreen: true, isLoading: true, isModalVisible: true });
+                this.setState({ showKeyScreen: true, isLoading: true, displayOtherModal: false });
 
                 const hdWallet = await WalletFactory.get(
                     this.props.wallet.id,
@@ -92,7 +86,7 @@ export class AccountSettingsModalComponent extends React.Component<
         }
     }
 
-    public revealPublicKey() {
+    private revealPublicKey() {
         this.setState({
             showKeyScreen: true,
             showBackButton: true,
@@ -102,7 +96,7 @@ export class AccountSettingsModalComponent extends React.Component<
         });
     }
 
-    public viewOn() {
+    private viewOn() {
         const url = getBlockchain(this.props.account.blockchain)
             .networks.filter(n => n.chainId === this.props.chainId)[0]
             .explorer.getAccountUrl(this.props.account.address);
@@ -113,11 +107,19 @@ export class AccountSettingsModalComponent extends React.Component<
         });
     }
 
-    public reportIssue() {
+    private reportIssue() {
         Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
             if (supported) {
                 Linking.openURL(CONFIG.supportUrl);
             }
+        });
+    }
+
+    private closeModal() {
+        this.props.onDonePressed();
+        this.setState({
+            showKeyScreen: false,
+            showBackButton: false
         });
     }
 
@@ -126,7 +128,7 @@ export class AccountSettingsModalComponent extends React.Component<
         const viewOnName = getBlockchain(this.props.account.blockchain).networks[0].explorer.name;
 
         return (
-            <Modal isVisible={this.state.isModalVisible}>
+            <Modal isVisible={this.props.visible && !this.state.displayOtherModal}>
                 <View style={styles.container}>
                     <View style={styles.modalContainer}>
                         <View style={styles.header}>
@@ -156,7 +158,7 @@ export class AccountSettingsModalComponent extends React.Component<
                             </View>
 
                             <View style={styles.doneWrapper}>
-                                <TouchableOpacity onPress={() => this.props.onDonePressed()}>
+                                <TouchableOpacity onPress={() => this.closeModal()}>
                                     <Text style={styles.doneButton}>
                                         {translate('App.buttons.done')}
                                     </Text>

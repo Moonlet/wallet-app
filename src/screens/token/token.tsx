@@ -197,7 +197,7 @@ export class TokenScreenComponent extends React.Component<
                 {Platform.OS === 'web' && <ExtensionConnectionInfo />}
                 {this.renderComponent()}
                 <AccountSettingsModal
-                    isVisible={this.state.settingsVisible}
+                    visible={this.state.settingsVisible}
                     onDonePressed={() => this.openSettingsMenu()}
                     account={this.props.account}
                     wallet={this.props.wallet}

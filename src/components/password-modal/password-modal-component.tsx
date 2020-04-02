@@ -230,18 +230,24 @@ export class PasswordModalComponent extends React.Component<
 
         const attempts: number = Number(failedLoginBlocking[index]) - this.props.failedLogins - 1;
 
-        this.setState({
-            errorMessage: translate('Password.invalidPasswordAtttempts', { attempts }, attempts)
-        });
+        if (this.props.failedLogins === RESET_APP_FAILED_LOGINS - 1) {
+            // last attempt before erasing all the data
+            this.setState({
+                errorMessage: translate('Password.invalidPasswordLastAttempt')
+            });
+        } else {
+            this.setState({
+                errorMessage: translate('Password.invalidPasswordAtttempts', { attempts }, attempts)
+            });
+        }
     }
 
     private async handleWrongPassword() {
         this.setCountdownListener();
 
         if (this.state.showAttempts) {
-            this.handlePasswordAttempts();
-
             this.props.incrementFailedLogins();
+            this.handlePasswordAttempts();
 
             const failedLoginBlocking = FAILED_LOGIN_BLOCKING[this.props.failedLogins];
             if (failedLoginBlocking) {
@@ -254,6 +260,7 @@ export class PasswordModalComponent extends React.Component<
                 this.setState({ visible: false });
                 await this.modalOnHideDeffered?.promise;
                 this.props.resetAllData();
+                this.props.resetFailedLogins();
             }
         } else {
             this.setState({ errorMessage: translate('Password.invalidPassword') });

@@ -151,6 +151,7 @@ export const translation: ITranslations = {
                     one: 'Invalid Password\nYou have 1 attempt left'
                 }
             },
+            invalidPasswordLastAttempt: `You have only 1 attempt left.\nIf you fail, all your data will be cleared and you'll need your secret phrases to restore your wallets.`,
             genericError: 'Operation could not be completed',
             subtitleMnemonic: 'Your PIN is required to view mnemonic',
             subtitleDeleteWallet: 'Your PIN is required to delete wallet',

@@ -74,6 +74,7 @@ export class PasswordPinComponent extends React.Component<
         if (this.props.errorMessage !== prevProps.errorMessage) {
             if (this.props.errorMessage) {
                 this.startShake();
+                this.setState({ password: '' });
             }
         }
     }
@@ -85,7 +86,6 @@ export class PasswordPinComponent extends React.Component<
                 if (this.state.password.length === PASSWORD_LENGTH) {
                     const passHash = await hash(this.state.password);
                     this.props.onPasswordEntered({ password: passHash });
-                    this.setState({ password: '' });
                     this.props.clearErrorMessage();
                 }
             });

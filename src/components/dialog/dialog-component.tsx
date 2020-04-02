@@ -262,8 +262,8 @@ export class DialogComponent extends React.Component<
                 {this.state.dialogType === DialogType.PROMPT && (
                     <RNDialog.Input
                         style={Platform.select({
-                            android: styles.textInputAndroid,
-                            ios: styles.textInputIos
+                            ios: styles.textInputIOS,
+                            default: styles.textInputDefault
                         })}
                         onChangeText={inputValue => this.setState({ inputValue })}
                         label={this.state.defaultInputValue}

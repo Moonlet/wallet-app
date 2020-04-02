@@ -46,14 +46,6 @@ export default (theme: ITheme) =>
             fontWeight: '600',
             color: theme.colors.accent
         },
-        textInput: {
-            paddingHorizontal: BASE_DIMENSION,
-            backgroundColor: theme.colors.inputBackground,
-            borderRadius: BORDER_RADIUS / 2,
-            fontSize: normalize(11),
-            lineHeight: normalize(13),
-            color: theme.colors.text
-        },
         dialogContainer: {
             position: 'absolute',
             top: 0,
@@ -65,5 +57,18 @@ export default (theme: ITheme) =>
         },
         'dialogContainer>div': {
             borderWidth: 0
+        },
+        textInputDefault: {
+            paddingHorizontal: BASE_DIMENSION,
+            backgroundColor: theme.colors.inputBackground,
+            borderRadius: BORDER_RADIUS / 2,
+            fontSize: normalize(11),
+            lineHeight: normalize(13),
+            color: theme.colors.text
+        },
+        textInputIOS: {
+            fontSize: normalize(11),
+            lineHeight: normalize(13),
+            color: theme.colors.bottomSheetBackground
         }
     });

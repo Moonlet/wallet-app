@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, TouchableOpacity, Linking, Platform, Modal } from 'react-native';
+import { View, TouchableOpacity, Linking, Platform } from 'react-native';
 import stylesProvider from './styles';
-import { withTheme } from '../../../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
 import { Icon } from '../../../../components/icon';
-import { ITheme } from '../../../../core/theme/itheme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
@@ -17,17 +16,14 @@ import { LoadingIndicator } from '../../../../components/loading-indicator/loadi
 import { WalletType } from '../../../../core/wallet/types';
 import { ViewKey } from './components/view-key/view-key';
 import CONFIG from '../../../../config';
-
-export interface IProps {
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
+import Modal from '../../../../library/modal/modal';
 
 export interface IExternalProps {
     onDonePressed: () => any;
     account: IAccountState;
     wallet: IWalletState;
     chainId: ChainIdType;
+    isVisible: boolean;
 }
 
 interface IState {
@@ -37,10 +33,14 @@ interface IState {
     key: string;
     showSecurityWarning: boolean;
     isLoading: boolean;
+    isModalVisible: boolean;
 }
 
-export class AccountSettingsComponent extends React.Component<IProps & IExternalProps, IState> {
-    constructor(props: IProps & IExternalProps) {
+export class AccountSettingsModalComponent extends React.Component<
+    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
+    constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
         this.state = {
@@ -49,33 +49,43 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             title: translate('AccountSettings.manageAccount'),
             key: '',
             showSecurityWarning: false,
-            isLoading: false
+            isLoading: false,
+            isModalVisible: props.isVisible
         };
     }
 
-    public async revealPrivateKey() {
+    public componentDidUpdate(prevProps: IExternalProps) {
+        if (this.props.isVisible !== prevProps.isVisible) {
+            this.setState({ isModalVisible: this.props.isVisible });
+        }
+    }
+
+    public revealPrivateKey() {
         try {
-            // TODO: not working because of modal over modal
-            const password = await PasswordModal.getPassword();
+            this.setState({ isModalVisible: false }, async () => {
+                const password = await PasswordModal.getPassword();
 
-            this.setState({ showKeyScreen: true, isLoading: true });
+                this.setState({ showKeyScreen: true, isLoading: true, isModalVisible: true });
 
-            const hdWallet = await WalletFactory.get(this.props.wallet.id, this.props.wallet.type, {
-                pass: password
-            });
+                const hdWallet = await WalletFactory.get(
+                    this.props.wallet.id,
+                    this.props.wallet.type,
+                    { pass: password }
+                );
 
-            const privateKey = hdWallet.getPrivateKey(
-                this.props.account.blockchain,
-                this.props.account.index
-            );
+                const privateKey = hdWallet.getPrivateKey(
+                    this.props.account.blockchain,
+                    this.props.account.index
+                );
 
-            this.setState({
-                showKeyScreen: true,
-                showBackButton: true,
-                title: translate('AccountSettings.revealPrivate'),
-                key: privateKey,
-                showSecurityWarning: true,
-                isLoading: false
+                this.setState({
+                    showKeyScreen: true,
+                    showBackButton: true,
+                    title: translate('AccountSettings.revealPrivate'),
+                    key: privateKey,
+                    showSecurityWarning: true,
+                    isLoading: false
+                });
             });
         } catch (err) {
             //
@@ -116,7 +126,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         const viewOnName = getBlockchain(this.props.account.blockchain).networks[0].explorer.name;
 
         return (
-            <Modal visible={true} transparent={true} animationType="fade">
+            <Modal isVisible={this.state.isModalVisible}>
                 <View style={styles.container}>
                     <View style={styles.modalContainer}>
                         <View style={styles.header}>
@@ -247,6 +257,6 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
     }
 }
 
-export const AccountSettings = smartConnect<IExternalProps>(AccountSettingsComponent, [
+export const AccountSettingsModal = smartConnect<IExternalProps>(AccountSettingsModalComponent, [
     withTheme(stylesProvider)
 ]);

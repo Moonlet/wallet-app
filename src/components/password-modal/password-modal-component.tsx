@@ -408,7 +408,11 @@ export class PasswordModalComponent extends React.Component<
     }
 
     private isMoonletDisabled(): boolean {
-        return this.props.blockUntil && new Date(this.props.blockUntil) > this.getCurrentDate();
+        if (this.props.blockUntil) {
+            return this.props.blockUntil && new Date(this.props.blockUntil) > this.getCurrentDate();
+        } else {
+            return false;
+        }
     }
 
     public render() {
@@ -421,7 +425,11 @@ export class PasswordModalComponent extends React.Component<
             >
                 {this.state.currentStep === ScreenStep.CREATE_PIN_TERMS ||
                 this.state.currentStep === ScreenStep.CHANGE_PIN_TERMS ? (
-                    <PasswordTerms onAcknowledged={() => this.updateState({})} />
+                    <PasswordTerms
+                        onAcknowledged={() => this.updateState({})}
+                        allowBackButton={this.state.allowBackButton}
+                        onBackButtonTap={() => this.onBackButtonTap()}
+                    />
                 ) : (
                     <PasswordPin
                         title={this.state.title}
@@ -430,8 +438,6 @@ export class PasswordModalComponent extends React.Component<
                         onBiometryLogin={(success: boolean) => {
                             if (success === true) {
                                 this.updateState({ biometryAuthResult: true });
-                            } else {
-                                this.updateState({ biometryAuthResult: false });
                             }
                         }}
                         errorMessage={this.state.errorMessage}
@@ -439,6 +445,7 @@ export class PasswordModalComponent extends React.Component<
                         enableBiometryAuth={this.state.enableBiometryAuth}
                         allowBackButton={this.state.allowBackButton}
                         onBackButtonTap={() => this.onBackButtonTap()}
+                        isMoonletDisabled={this.isMoonletDisabled()}
                     />
                 )}
 

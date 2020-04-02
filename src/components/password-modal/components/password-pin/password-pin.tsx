@@ -36,6 +36,7 @@ export interface IExternalProps {
     enableBiometryAuth: boolean;
     allowBackButton: boolean;
     onBackButtonTap: () => void;
+    isMoonletDisabled: boolean;
 }
 
 interface IState {
@@ -64,7 +65,7 @@ export class PasswordPinComponent extends React.Component<
         };
         this.shakeAnimation = new Animated.Value(0);
 
-        if (props.enableBiometryAuth === true) {
+        if (props.enableBiometryAuth === true && props.isMoonletDisabled === false) {
             this.biometryAuth();
         }
     }
@@ -219,12 +220,10 @@ export class PasswordPinComponent extends React.Component<
             .then(success => {
                 if (success) {
                     this.props.onBiometryLogin(true);
-                } else {
-                    this.props.onBiometryLogin(false);
                 }
             })
             .catch(error => {
-                this.props.onBiometryLogin(false);
+                //
             });
     }
 

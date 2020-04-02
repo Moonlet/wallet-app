@@ -408,7 +408,11 @@ export class PasswordModalComponent extends React.Component<
     }
 
     private isMoonletDisabled(): boolean {
-        return this.props.blockUntil && new Date(this.props.blockUntil) > this.getCurrentDate();
+        if (this.props.blockUntil) {
+            return this.props.blockUntil && new Date(this.props.blockUntil) > this.getCurrentDate();
+        } else {
+            return false;
+        }
     }
 
     public render() {
@@ -430,8 +434,6 @@ export class PasswordModalComponent extends React.Component<
                         onBiometryLogin={(success: boolean) => {
                             if (success === true) {
                                 this.updateState({ biometryAuthResult: true });
-                            } else {
-                                this.updateState({ biometryAuthResult: false });
                             }
                         }}
                         errorMessage={this.state.errorMessage}
@@ -439,6 +441,7 @@ export class PasswordModalComponent extends React.Component<
                         enableBiometryAuth={this.state.enableBiometryAuth}
                         allowBackButton={this.state.allowBackButton}
                         onBackButtonTap={() => this.onBackButtonTap()}
+                        isMoonletDisabled={this.isMoonletDisabled()}
                     />
                 )}
 

@@ -21,9 +21,10 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
 
 export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountState => {
     const blockchainConfig = getBlockchain(blockchain).config;
+    const networks = getBlockchain(blockchain).networks;
 
     const tokenList: ITokensAccountState = {};
-    Object.values(blockchainConfig.networks).map(chainId => {
+    Object.values(networks).map(network => {
         const tokenValue = {};
         Object.keys(blockchainConfig.tokens).map(symbolKey => {
             const accountToken = {
@@ -39,7 +40,7 @@ export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountStat
             };
             tokenValue[symbolKey] = accountToken;
         });
-        tokenList[chainId] = tokenValue;
+        tokenList[network.chainId] = tokenValue;
     });
 
     return tokenList;

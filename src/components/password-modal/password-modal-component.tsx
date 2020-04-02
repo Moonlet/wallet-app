@@ -421,7 +421,11 @@ export class PasswordModalComponent extends React.Component<
             >
                 {this.state.currentStep === ScreenStep.CREATE_PIN_TERMS ||
                 this.state.currentStep === ScreenStep.CHANGE_PIN_TERMS ? (
-                    <PasswordTerms onAcknowledged={() => this.updateState({})} />
+                    <PasswordTerms
+                        onAcknowledged={() => this.updateState({})}
+                        allowBackButton={this.state.allowBackButton}
+                        onBackButtonTap={() => this.onBackButtonTap()}
+                    />
                 ) : (
                     <PasswordPin
                         title={this.state.title}

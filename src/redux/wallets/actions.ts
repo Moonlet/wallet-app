@@ -379,7 +379,7 @@ export const updateTransactionFromBlockchain = (
     let transaction;
 
     try {
-        transaction = await client.getTransactionInfo(transactionHash);
+        transaction = await client.clientUtils.getTransaction(transactionHash);
     } catch (e) {
         const currentBlock = await client.getCurrentBlock();
         if (

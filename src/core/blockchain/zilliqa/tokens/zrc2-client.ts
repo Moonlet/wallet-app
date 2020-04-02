@@ -34,15 +34,10 @@ export class Zrc2Client {
     }
 
     public async getTokenInfo(contractAddress) {
-        const smartContractSubState = await this.client
-            .getSmartContractSubState(contractAddress, 'implementation')
-            .catch(e => {
-                return null;
-            });
-
-        if (!smartContractSubState?.implementation) {
-            return null;
-        }
+        const smartContractSubState = await this.client.getSmartContractSubState(
+            contractAddress,
+            'implementation'
+        );
 
         const smartContractInit = await this.client.getSmartContractInit(
             smartContractSubState?.implementation

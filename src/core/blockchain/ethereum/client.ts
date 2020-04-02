@@ -1,30 +1,20 @@
-import {
-    BlockchainGenericClient,
-    ChainIdType,
-    IBlockInfo,
-    TransactionMessageText,
-    IBlockchainTransaction,
-    Blockchain,
-    TransactionType
-} from '../types';
+import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionMessageText } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convertUnit } from '../ethereum/account';
 import abi from 'ethereumjs-abi';
 import { Erc20Client } from './tokens/erc20-client';
-import { TokenType, TokenScreenComponentType } from '../types/token';
+import { TokenType } from '../types/token';
 import { NameService } from './name-service';
-import { getTransactionStatusByCode } from './transaction';
-import { generateAccountTokenState } from '../../../redux/tokens/static-selectors';
-
-const inputRegex = /^(\w{10})(\w{24})(\w{40})(\w{64})$/;
+import { ClientUtils } from './client-utils';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
         this.tokens[TokenType.ERC20] = new Erc20Client(this);
         this.nameService = new NameService();
+        this.clientUtils = new ClientUtils(this);
     }
 
     public getBalance(address: string): Promise<BigNumber> {
@@ -154,98 +144,6 @@ export class Client extends BlockchainGenericClient {
             presets: presets ? presets : config.feeOptions.defaults.gasPricePresets,
             feeTotal: gasPrice.multipliedBy(gasLimit).toString()
         };
-    }
-
-    public getTransactionInfo(transactionHash): Promise<IBlockchainTransaction<any>> {
-        const rpcCalls = [
-            this.http.jsonRpc('eth_getTransactionByHash', transactionHash),
-            this.http.jsonRpc('eth_getTransactionReceipt', transactionHash)
-        ];
-
-        return Promise.all(rpcCalls).then(async res => {
-            try {
-                if (!res[0].result) {
-                    throw new Error(
-                        res[0].error.message ||
-                            `Error getting transaction info for ${transactionHash}`
-                    );
-                }
-                if (!res[1].result) {
-                    throw new Error(
-                        res[1].error.message ||
-                            `Error getting transaction receipt for ${transactionHash}`
-                    );
-                }
-
-                const txInfo = res[0].result;
-                const txReceipt = res[1].result;
-                let token = config.tokens.ETH;
-                const data: any = {};
-
-                const tokenInfo = await this.getTokenTransferInfo(txInfo);
-                if (tokenInfo) {
-                    token = tokenInfo.token;
-                    txInfo.to = tokenInfo.address;
-
-                    data.params = [txInfo.to, tokenInfo.amount];
-                }
-
-                return {
-                    id: transactionHash,
-                    date: {
-                        created: Date.now(),
-                        signed: Date.now(),
-                        broadcasted: Date.now(),
-                        confirmed: Date.now()
-                    },
-                    blockchain: Blockchain.ETHEREUM,
-                    chainId: this.chainId,
-                    type: TransactionType.TRANSFER,
-
-                    address: txInfo.from,
-                    publicKey: '', // TODO: get publicKey form vrs
-
-                    toAddress: txInfo.to,
-                    amount: txInfo.value,
-                    data,
-                    feeOptions: {
-                        gasPrice: txInfo.gasPrice,
-                        gasLimit: txInfo.gas,
-                        feeTotal: txReceipt.gasUsed
-                    },
-                    broadcatedOnBlock: txInfo.blockNumber,
-                    nonce: txInfo.nonce,
-                    status: getTransactionStatusByCode(txReceipt.status),
-                    token: generateAccountTokenState(token)
-                };
-            } catch (error) {
-                return Promise.reject(error.message);
-            }
-        });
-    }
-
-    async getTokenTransferInfo(txInfo: any) {
-        if (!txInfo.input) {
-            return false;
-        }
-
-        const parts = txInfo.input.match(inputRegex);
-
-        if (parts?.length === 5 && parts[1] === '0xa9059cbb') {
-            const token = await this.tokens[TokenType.ERC20].getTokenInfo(txInfo.to);
-            token.type = TokenType.ERC20;
-            token.ui = {
-                decimals: token.decimals,
-                tokenScreenComponent: TokenScreenComponentType.DEFAULT
-            };
-            return {
-                address: '0x' + parts[3],
-                amount: '0x' + parts[4],
-                token
-            };
-        }
-
-        return false;
     }
 
     private async estimateFees(

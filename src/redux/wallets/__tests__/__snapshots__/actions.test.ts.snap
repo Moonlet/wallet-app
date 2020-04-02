@@ -39,6 +39,19 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "symbol": "ZIL",
                   },
                 },
+                "2": Object {
+                  "ZIL": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ZIL",
+                  },
+                },
                 "333": Object {
                   "ZIL": Object {
                     "active": true,
@@ -62,6 +75,19 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "selected": false,
               "tokens": Object {
                 "1": Object {
+                  "ZIL": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ZIL",
+                  },
+                },
+                "2": Object {
                   "ZIL": Object {
                     "active": true,
                     "balance": Object {
@@ -109,6 +135,19 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "symbol": "ZIL",
                   },
                 },
+                "2": Object {
+                  "ZIL": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ZIL",
+                  },
+                },
                 "333": Object {
                   "ZIL": Object {
                     "active": true,
@@ -132,6 +171,19 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "selected": false,
               "tokens": Object {
                 "1": Object {
+                  "ZIL": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ZIL",
+                  },
+                },
+                "2": Object {
                   "ZIL": Object {
                     "active": true,
                     "balance": Object {
@@ -179,6 +231,19 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "symbol": "ZIL",
                   },
                 },
+                "2": Object {
+                  "ZIL": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ZIL",
+                  },
+                },
                 "333": Object {
                   "ZIL": Object {
                     "active": true,
@@ -214,7 +279,46 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "symbol": "ETH",
                   },
                 },
+                "15": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
+                "3": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
                 "4": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
+                "42": Object {
                   "ETH": Object {
                     "active": true,
                     "balance": Object {
@@ -249,7 +353,46 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "symbol": "ETH",
                   },
                 },
+                "15": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
+                "3": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
                 "4": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
+                "42": Object {
                   "ETH": Object {
                     "active": true,
                     "balance": Object {
@@ -284,7 +427,46 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "symbol": "ETH",
                   },
                 },
+                "15": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
+                "3": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
                 "4": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
+                "42": Object {
                   "ETH": Object {
                     "active": true,
                     "balance": Object {
@@ -319,7 +501,46 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "symbol": "ETH",
                   },
                 },
+                "15": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
+                "3": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
                 "4": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
+                "42": Object {
                   "ETH": Object {
                     "active": true,
                     "balance": Object {
@@ -354,7 +575,46 @@ exports[`wallet actions createHDWallet working properly 1`] = `
                     "symbol": "ETH",
                   },
                 },
+                "15": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
+                "3": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
                 "4": Object {
+                  "ETH": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "ETH",
+                  },
+                },
+                "42": Object {
                   "ETH": Object {
                     "active": true,
                     "balance": Object {

@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, TouchableOpacity, Linking, Platform, Modal } from 'react-native';
+import { View, TouchableOpacity, Linking, Platform } from 'react-native';
 import stylesProvider from './styles';
-import { withTheme } from '../../../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
 import { Icon } from '../../../../components/icon';
-import { ITheme } from '../../../../core/theme/itheme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
@@ -17,17 +16,15 @@ import { LoadingIndicator } from '../../../../components/loading-indicator/loadi
 import { WalletType } from '../../../../core/wallet/types';
 import { ViewKey } from './components/view-key/view-key';
 import CONFIG from '../../../../config';
-
-export interface IProps {
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
+import Modal from '../../../../library/modal/modal';
+import { Deferred } from '../../../../core/utils/deferred';
 
 export interface IExternalProps {
     onDonePressed: () => any;
     account: IAccountState;
     wallet: IWalletState;
     chainId: ChainIdType;
+    visible: boolean;
 }
 
 interface IState {
@@ -37,10 +34,16 @@ interface IState {
     key: string;
     showSecurityWarning: boolean;
     isLoading: boolean;
+    displayOtherModal: boolean;
 }
 
-export class AccountSettingsComponent extends React.Component<IProps & IExternalProps, IState> {
-    constructor(props: IProps & IExternalProps) {
+export class AccountSettingsModalComponent extends React.Component<
+    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
+    private modalOnHideDeffered: Deferred;
+
+    constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
         this.state = {
@@ -49,40 +52,46 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
             title: translate('AccountSettings.manageAccount'),
             key: '',
             showSecurityWarning: false,
-            isLoading: false
+            isLoading: false,
+            displayOtherModal: false
         };
+        this.modalOnHideDeffered = new Deferred();
     }
 
-    public async revealPrivateKey() {
+    private revealPrivateKey() {
         try {
-            // TODO: not working because of modal over modal
-            const password = await PasswordModal.getPassword();
+            this.setState({ displayOtherModal: true }, async () => {
+                await this.modalOnHideDeffered?.promise;
+                const password = await PasswordModal.getPassword();
 
-            this.setState({ showKeyScreen: true, isLoading: true });
+                this.setState({ showKeyScreen: true, isLoading: true, displayOtherModal: false });
 
-            const hdWallet = await WalletFactory.get(this.props.wallet.id, this.props.wallet.type, {
-                pass: password
-            });
+                const hdWallet = await WalletFactory.get(
+                    this.props.wallet.id,
+                    this.props.wallet.type,
+                    { pass: password }
+                );
 
-            const privateKey = hdWallet.getPrivateKey(
-                this.props.account.blockchain,
-                this.props.account.index
-            );
+                const privateKey = hdWallet.getPrivateKey(
+                    this.props.account.blockchain,
+                    this.props.account.index
+                );
 
-            this.setState({
-                showKeyScreen: true,
-                showBackButton: true,
-                title: translate('AccountSettings.revealPrivate'),
-                key: privateKey,
-                showSecurityWarning: true,
-                isLoading: false
+                this.setState({
+                    showKeyScreen: true,
+                    showBackButton: true,
+                    title: translate('AccountSettings.revealPrivate'),
+                    key: privateKey,
+                    showSecurityWarning: true,
+                    isLoading: false
+                });
             });
         } catch (err) {
             //
         }
     }
 
-    public revealPublicKey() {
+    private revealPublicKey() {
         this.setState({
             showKeyScreen: true,
             showBackButton: true,
@@ -92,7 +101,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         });
     }
 
-    public viewOn() {
+    private viewOn() {
         const url = getBlockchain(this.props.account.blockchain)
             .networks.filter(n => n.chainId === this.props.chainId)[0]
             .explorer.getAccountUrl(this.props.account.address);
@@ -103,7 +112,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         });
     }
 
-    public reportIssue() {
+    private reportIssue() {
         Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
             if (supported) {
                 Linking.openURL(CONFIG.supportUrl);
@@ -111,12 +120,24 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
         });
     }
 
+    private async closeModal() {
+        this.props.onDonePressed();
+        this.setState({
+            showKeyScreen: false,
+            showBackButton: false
+        });
+        await this.modalOnHideDeffered?.promise;
+    }
+
     public render() {
         const styles = this.props.styles;
         const viewOnName = getBlockchain(this.props.account.blockchain).networks[0].explorer.name;
 
         return (
-            <Modal visible={true} transparent={true} animationType="fade">
+            <Modal
+                isVisible={this.props.visible && !this.state.displayOtherModal}
+                onModalHide={() => this.modalOnHideDeffered?.resolve()}
+            >
                 <View style={styles.container}>
                     <View style={styles.modalContainer}>
                         <View style={styles.header}>
@@ -146,7 +167,7 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
                             </View>
 
                             <View style={styles.doneWrapper}>
-                                <TouchableOpacity onPress={() => this.props.onDonePressed()}>
+                                <TouchableOpacity onPress={() => this.closeModal()}>
                                     <Text style={styles.doneButton}>
                                         {translate('App.buttons.done')}
                                     </Text>
@@ -247,6 +268,6 @@ export class AccountSettingsComponent extends React.Component<IProps & IExternal
     }
 }
 
-export const AccountSettings = smartConnect<IExternalProps>(AccountSettingsComponent, [
+export const AccountSettingsModal = smartConnect<IExternalProps>(AccountSettingsModalComponent, [
     withTheme(stylesProvider)
 ]);

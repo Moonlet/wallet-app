@@ -10,7 +10,7 @@ import {
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: 'rgba(0,0,0,0.4)',
+            backgroundColor: theme.colors.overlayBackground,
             flex: 1,
             justifyContent: 'center',
             alignContent: 'center'

@@ -14,7 +14,7 @@ export class Client extends BlockchainGenericClient {
         super(chainId, networks);
         this.tokens[TokenType.ERC20] = new Erc20Client(this);
         this.nameService = new NameService();
-        this.clientUtils = new ClientUtils(this);
+        this.utils = new ClientUtils(this);
     }
 
     public getBalance(address: string): Promise<BigNumber> {

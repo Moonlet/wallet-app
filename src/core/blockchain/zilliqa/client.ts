@@ -21,7 +21,7 @@ export class Client extends BlockchainGenericClient {
 
         this.nameService = new NameService();
         this.tokens[TokenType.ZRC2] = new Zrc2Client(this);
-        this.clientUtils = new ClientUtils(this);
+        this.utils = new ClientUtils(this);
     }
 
     public async getBalance(address: string): Promise<BigNumber> {

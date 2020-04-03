@@ -379,7 +379,7 @@ export const updateTransactionFromBlockchain = (
     let transaction;
 
     try {
-        transaction = await client.clientUtils.getTransaction(transactionHash);
+        transaction = await client.utils.getTransaction(transactionHash);
     } catch (e) {
         const currentBlock = await client.getCurrentBlock();
         if (
@@ -441,6 +441,14 @@ export const updateTransactionFromBlockchain = (
         const transactionAccount =
             wallet.accounts.find(account => account.address.toLowerCase() === receivingAddress) ||
             wallet.accounts.find(account => account.address.toLowerCase() === transaction.address);
+
+        // update balance
+        getBalance(
+            blockchain,
+            transactionAccount.address,
+            transaction.token.symbol,
+            true
+        )(dispatch, getState);
 
         // const currentChainId = getChainId(state, blockchain);
         // if (displayNotification && currentChainId === chainId) { - removed this for consistency with app closed notifications

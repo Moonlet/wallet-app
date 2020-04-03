@@ -80,6 +80,7 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
                     />
                 )}
                 enabledInnerScrolling={false}
+                onCloseEnd={() => this.props.onClose()}
             />
         );
     }

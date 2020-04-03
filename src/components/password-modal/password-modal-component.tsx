@@ -21,6 +21,8 @@ import {
 import { RESET_APP_FAILED_LOGINS, FAILED_LOGIN_BLOCKING } from '../../core/constants/app';
 import moment from 'moment';
 import { NavigationService } from '../../navigation/navigation-service';
+import NetInfo from '@react-native-community/netinfo';
+import ntpClient from 'react-native-ntp-client';
 
 enum ScreenStep {
     ENTER_PIN = 'ENTER_PIN',
@@ -47,6 +49,9 @@ export interface IState {
     countdownListenerTime: number;
     allowBackButton: boolean;
     showAttempts: boolean;
+    hasInternetConnection: boolean;
+    isMoonletDisabled: boolean;
+    currentDate: Date;
 }
 
 export interface IReduxProps {
@@ -79,6 +84,7 @@ export class PasswordModalComponent extends React.Component<
     public static refDeferred: Deferred<PasswordModalComponent> = new Deferred();
     private modalOnHideDeffered: Deferred;
     private countdownListener;
+    private netInfoListener;
     private passwordPin;
 
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
@@ -95,29 +101,88 @@ export class PasswordModalComponent extends React.Component<
             enableBiometryAuth: true,
             countdownListenerTime: 0,
             allowBackButton: false,
-            showAttempts: false
+            showAttempts: false,
+            hasInternetConnection: false,
+            isMoonletDisabled: false,
+            currentDate: undefined
         };
     }
 
     public componentDidMount() {
-        this.setCountdownListener();
+        if (this.props.blockUntil) {
+            this.setState({ isMoonletDisabled: true });
+
+            // Use fetch here because NetInfo listener with setInterval needs 1 sec to load
+            NetInfo.fetch().then(state => {
+                if (state.isConnected === false) {
+                    this.setState({ isMoonletDisabled: true });
+                }
+            });
+        }
+
+        this.setNetInfoListener();
+    }
+
+    private setNetInfoListener() {
+        this.netInfoListener = NetInfo.addEventListener(state => {
+            this.setState({ hasInternetConnection: state.isConnected });
+            if (state.isConnected === false && this.props.blockUntil) {
+                // Disable Moonlet because Device has NO internet connection and blockUntil is set
+                this.setState({ isMoonletDisabled: true });
+                clearInterval(this.countdownListener);
+            } else {
+                // Device has internet connection
+                this.setCountdownListener();
+            }
+        });
+    }
+
+    private getCurrentDate() {
+        const ntpServer = 'pool.ntp.org';
+        const ntpPort = 123;
+        ntpClient.getNetworkTime(ntpServer, ntpPort, (error: any, date: any) => {
+            if (date) {
+                this.setState({ currentDate: new Date(date) });
+            } else {
+                this.setState({ currentDate: undefined });
+            }
+        });
     }
 
     private setCountdownListener() {
-        if (this.props.setAppBlockUntil) {
+        if (this.props.blockUntil) {
+            this.getCurrentDate();
+
             clearInterval(this.countdownListener);
-            this.countdownListener = setInterval(
-                () =>
-                    this.setState(prevstate => ({
-                        countdownListenerTime: prevstate.countdownListenerTime + 1
-                    })),
-                1000
-            );
+            this.countdownListener = setInterval(async () => {
+                this.setState(prevstate => ({
+                    countdownListenerTime: prevstate.countdownListenerTime + 1
+                }));
+                this.getCurrentDate();
+
+                if (this.state.currentDate) {
+                    const duration = moment.duration(
+                        moment(new Date(this.props.blockUntil)).diff(this.state.currentDate)
+                    );
+                    if (duration.asSeconds() > 0) {
+                        this.setState({ isMoonletDisabled: true });
+                    } else {
+                        this.setState({ isMoonletDisabled: false, currentDate: undefined });
+                        this.props.setAppBlockUntil(undefined); // Reset app block until
+                        clearInterval(this.countdownListener); // Clear countdown listener
+                        this.clearErrorMessage();
+                    }
+                } else {
+                    // Disable Moonlet because NTP date is undefined
+                    this.setState({ isMoonletDisabled: true });
+                }
+            }, 1000);
         }
     }
 
     public componentWillUnmount() {
         clearInterval(this.countdownListener);
+        this.netInfoListener();
     }
 
     public static async getPassword(
@@ -244,8 +309,6 @@ export class PasswordModalComponent extends React.Component<
     }
 
     private async handleWrongPassword() {
-        this.setCountdownListener();
-
         if (this.state.showAttempts) {
             this.props.incrementFailedLogins();
             this.handlePasswordAttempts();
@@ -253,6 +316,11 @@ export class PasswordModalComponent extends React.Component<
             const failedLoginBlocking = FAILED_LOGIN_BLOCKING[this.props.failedLogins];
             if (failedLoginBlocking) {
                 this.props.setAppBlockUntil(new Date(new Date().getTime() + failedLoginBlocking));
+                // Disable Moonlet
+                this.setState({ isMoonletDisabled: true }, () => {
+                    // Start Countdown
+                    this.setCountdownListener();
+                });
             }
 
             if (this.props.failedLogins === RESET_APP_FAILED_LOGINS) {
@@ -373,56 +441,62 @@ export class PasswordModalComponent extends React.Component<
         }
     }
 
-    private getCurrentDate(): Date {
-        // TODO: check currentDate not to be hacked
-        return new Date();
-    }
-
     private renderMoonletDisabled() {
         const { blockUntil, styles } = this.props;
 
-        const currentDate = moment(this.getCurrentDate());
-        const duration = moment.duration(moment(new Date(blockUntil)).diff(currentDate));
+        if (this.state.hasInternetConnection) {
+            const currentDate = moment(this.state.currentDate);
+            const duration = moment.duration(moment(new Date(blockUntil)).diff(currentDate));
 
-        const seconds = Math.floor(duration.asSeconds());
-        const minutes = Math.floor(duration.asMinutes());
-        const hours = Math.floor(duration.asHours());
-        const days = Math.floor(duration.asDays());
+            const seconds = Math.floor(duration.asSeconds());
+            const minutes = Math.floor(duration.asMinutes());
+            const hours = Math.floor(duration.asHours());
+            const days = Math.floor(duration.asDays());
 
-        let timeMeasurement: string;
-        let coundownTime: number;
-        if (days > 0) {
-            timeMeasurement = translate('Time.day', undefined, days);
-            coundownTime = days;
-        } else if (hours > 0) {
-            timeMeasurement = translate('Time.hour', undefined, hours);
-            coundownTime = hours;
-        } else if (minutes > 0) {
-            timeMeasurement = translate('Time.minute', undefined, minutes);
-            coundownTime = minutes;
+            let timeMeasurement: string;
+            let coundownTime: number = 0;
+            if (days > 0) {
+                timeMeasurement = translate('Time.day', undefined, days);
+                coundownTime = days;
+            } else if (hours > 0) {
+                timeMeasurement = translate('Time.hour', undefined, hours);
+                coundownTime = hours;
+            } else if (minutes > 0) {
+                timeMeasurement = translate('Time.minute', undefined, minutes);
+                coundownTime = minutes;
+            } else {
+                if (seconds > 0) {
+                    coundownTime = seconds;
+                }
+                timeMeasurement = translate('Time.second', undefined, seconds);
+            }
+
+            return (
+                <View style={styles.wrongPasswordContainer}>
+                    <Text style={styles.moonletDisabled}>
+                        {translate('Password.moonletDisabled')}
+                    </Text>
+                    <Text style={styles.disabledDetails}>
+                        {seconds < -5 // -5 as a Buffer
+                            ? translate('Password.disabledDetectChangedDate')
+                            : translate('Password.disabledDetails', {
+                                  duration: coundownTime,
+                                  measurement: timeMeasurement
+                              })}
+                    </Text>
+                </View>
+            );
         } else {
-            timeMeasurement = translate('Time.second', undefined, seconds);
-            coundownTime = seconds;
-        }
-
-        return (
-            <View style={styles.wrongPasswordContainer}>
-                <Text style={styles.moonletDisabled}>{translate('Password.moonletDisabled')}</Text>
-                <Text style={styles.disabledDetails}>
-                    {translate('Password.disabledDetails', {
-                        duration: coundownTime,
-                        measurement: timeMeasurement
-                    })}
-                </Text>
-            </View>
-        );
-    }
-
-    private isMoonletDisabled(): boolean {
-        if (this.props.blockUntil) {
-            return this.props.blockUntil && new Date(this.props.blockUntil) > this.getCurrentDate();
-        } else {
-            return false;
+            return (
+                <View style={styles.wrongPasswordContainer}>
+                    <Text style={styles.moonletDisabled}>
+                        {translate('Password.moonletDisabled')}
+                    </Text>
+                    <Text style={styles.disabledDetails}>
+                        {translate('Password.activateInternet')}
+                    </Text>
+                </View>
+            );
         }
     }
 
@@ -457,11 +531,11 @@ export class PasswordModalComponent extends React.Component<
                         enableBiometryAuth={this.state.enableBiometryAuth}
                         allowBackButton={this.state.allowBackButton}
                         onBackButtonTap={() => this.onBackButtonTap()}
-                        isMoonletDisabled={this.isMoonletDisabled()}
+                        isMoonletDisabled={this.state.isMoonletDisabled}
                     />
                 )}
 
-                {this.isMoonletDisabled() && this.renderMoonletDisabled()}
+                {this.state.isMoonletDisabled && this.renderMoonletDisabled()}
             </Modal>
         );
     }

@@ -79,6 +79,7 @@ export class PasswordModalComponent extends React.Component<
     public static refDeferred: Deferred<PasswordModalComponent> = new Deferred();
     private modalOnHideDeffered: Deferred;
     private countdownListener;
+    private passwordPin;
 
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
@@ -223,12 +224,12 @@ export class PasswordModalComponent extends React.Component<
 
         let index = 0;
         failedLoginBlocking.map((failedLogin, i) => {
-            if (this.props.failedLogins < Number(failedLogin)) {
+            if (this.props.failedLogins <= Number(failedLogin)) {
                 index = i;
             }
         });
 
-        const attempts: number = Number(failedLoginBlocking[index]) - this.props.failedLogins - 1;
+        const attempts: number = Number(failedLoginBlocking[index]) - this.props.failedLogins;
 
         if (this.props.failedLogins === RESET_APP_FAILED_LOGINS - 1) {
             // last attempt before erasing all the data
@@ -278,9 +279,9 @@ export class PasswordModalComponent extends React.Component<
             // Enter PIN Flow
             case ScreenStep.ENTER_PIN:
                 if (isPasswordValid) {
+                    this.setState({ visible: false });
                     this.props.resetFailedLogins();
                     this.props.setAppBlockUntil(undefined);
-                    this.setState({ visible: false });
                     await this.modalOnHideDeffered.promise;
                     this.resultDeferred?.resolve(data.password);
                 } else {
@@ -293,6 +294,7 @@ export class PasswordModalComponent extends React.Component<
                 this.setState({ currentStep: ScreenStep.CREATE_PIN });
                 break;
             case ScreenStep.CREATE_PIN:
+                this.passwordPin.clearPasswordInput();
                 this.setState({
                     currentStep: ScreenStep.CREATE_PIN_CONFIRM,
                     password: data.password,
@@ -302,8 +304,8 @@ export class PasswordModalComponent extends React.Component<
                 break;
             case ScreenStep.CREATE_PIN_CONFIRM:
                 if (this.state.password === data.password) {
-                    await setPassword(data.password, false);
                     this.setState({ visible: false });
+                    await setPassword(data.password, false);
                     await this.modalOnHideDeffered?.promise;
                     this.resultDeferred?.resolve(data.password);
                 } else {
@@ -317,6 +319,7 @@ export class PasswordModalComponent extends React.Component<
                 break;
             case ScreenStep.CHANGE_PIN_CURRENT:
                 if (isPasswordValid) {
+                    this.passwordPin.clearPasswordInput();
                     this.setState({
                         currentStep: ScreenStep.CHANGE_PIN_NEW,
                         password: data.password,
@@ -328,6 +331,7 @@ export class PasswordModalComponent extends React.Component<
                 }
                 break;
             case ScreenStep.CHANGE_PIN_NEW:
+                this.passwordPin.clearPasswordInput();
                 this.setState({
                     currentStep: ScreenStep.CHANGE_PIN_CONFIRM,
                     title: translate('Password.verifyPinTitle'),
@@ -340,9 +344,9 @@ export class PasswordModalComponent extends React.Component<
                 if (this.state.newPassword === data.password) {
                     // Save new PIN in storage
                     // this.state.password is the old password
+                    this.setState({ visible: false });
                     this.props.changePIN(this.state.newPassword, this.state.password);
                     await setPassword(this.state.newPassword, false);
-                    this.setState({ visible: false });
                     await this.modalOnHideDeffered?.promise;
                     this.resultDeferred?.resolve(this.state.newPassword);
                 } else {
@@ -439,6 +443,7 @@ export class PasswordModalComponent extends React.Component<
                     />
                 ) : (
                     <PasswordPin
+                        obRef={ref => (this.passwordPin = ref)}
                         title={this.state.title}
                         subtitle={this.state.subtitle}
                         onPasswordEntered={this.updateState}

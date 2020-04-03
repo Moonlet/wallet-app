@@ -50,6 +50,7 @@ import { setDisplayPasswordModal } from '../ui/password-modal/actions';
 import { getTokenConfig } from '../tokens/static-selectors';
 import { ITokenState } from '../wallets/state';
 import { clearPassword } from '../../core/secure/keychain';
+import { delay } from '../../core/utils/time';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -227,7 +228,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     dispatch(openLoadingModal());
 
     // TODO: check here and find a solution to fix
-    // await delay(500);
+    await delay(0);
 
     try {
         const wallet = new HDWallet(mnemonic);

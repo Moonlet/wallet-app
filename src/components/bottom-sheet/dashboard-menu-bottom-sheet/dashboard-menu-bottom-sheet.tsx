@@ -160,6 +160,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                 )}
                 enabledInnerScrolling={false}
                 enabledContentTapInteraction={false}
+                onCloseEnd={() => this.props.onClose()}
             />
         );
     }

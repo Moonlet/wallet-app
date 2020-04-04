@@ -23,6 +23,7 @@ import moment from 'moment';
 import { NavigationService } from '../../navigation/navigation-service';
 import NetInfo from '@react-native-community/netinfo';
 import ntpClient from 'react-native-ntp-client';
+import CONFIG from '../../config';
 
 enum ScreenStep {
     ENTER_PIN = 'ENTER_PIN',
@@ -46,7 +47,6 @@ export interface IState {
     currentStep: ScreenStep;
     errorMessage: string;
     enableBiometryAuth: boolean;
-    countdownListenerTime: number;
     allowBackButton: boolean;
     showAttempts: boolean;
     hasInternetConnection: boolean;
@@ -99,7 +99,6 @@ export class PasswordModalComponent extends React.Component<
             currentStep: undefined,
             errorMessage: undefined,
             enableBiometryAuth: true,
-            countdownListenerTime: 0,
             allowBackButton: false,
             showAttempts: false,
             hasInternetConnection: false,
@@ -138,9 +137,7 @@ export class PasswordModalComponent extends React.Component<
     }
 
     private getCurrentDate() {
-        const ntpServer = 'pool.ntp.org';
-        const ntpPort = 123;
-        ntpClient.getNetworkTime(ntpServer, ntpPort, (error: any, date: any) => {
+        ntpClient.getNetworkTime(CONFIG.ntpServer, CONFIG.ntpPort, (error: any, date: any) => {
             if (date) {
                 this.setState({ currentDate: new Date(date) });
             } else {
@@ -155,9 +152,6 @@ export class PasswordModalComponent extends React.Component<
 
             clearInterval(this.countdownListener);
             this.countdownListener = setInterval(async () => {
-                this.setState(prevstate => ({
-                    countdownListenerTime: prevstate.countdownListenerTime + 1
-                }));
                 this.getCurrentDate();
 
                 if (this.state.currentDate) {
@@ -310,11 +304,16 @@ export class PasswordModalComponent extends React.Component<
 
     private async handleWrongPassword() {
         if (this.state.showAttempts) {
+            // this.getCurrentDate(); // used in order to set app block until
             this.props.incrementFailedLogins();
             this.handlePasswordAttempts();
 
             const failedLoginBlocking = FAILED_LOGIN_BLOCKING[this.props.failedLogins];
             if (failedLoginBlocking) {
+                // TODO: use here this.state.currentDate instead of new Date()
+                // But we need to make some checks here:
+                // - need to see what happens ff the user does NOT have internet connection when blocks the app
+                // - because this.state.currentDate will be undefined and new Date() can be hacked
                 this.props.setAppBlockUntil(new Date(new Date().getTime() + failedLoginBlocking));
                 // Disable Moonlet
                 this.setState({ isMoonletDisabled: true }, () => {

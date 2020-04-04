@@ -21,19 +21,6 @@ Object {
         "symbol": "ZIL",
       },
     },
-    "2": Object {
-      "ZIL": Object {
-        "active": true,
-        "balance": Object {
-          "error": undefined,
-          "inProgress": false,
-          "timestamp": undefined,
-          "value": "0",
-        },
-        "order": 0,
-        "symbol": "ZIL",
-      },
-    },
     "333": Object {
       "ZIL": Object {
         "active": true,

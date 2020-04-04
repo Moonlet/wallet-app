@@ -4,7 +4,8 @@ import {
     IFeeOptions,
     TransactionMessageText,
     TransactionMessageType,
-    ITransferTransactionExtraFields
+    ITransferTransactionExtraFields,
+    ChainIdType
 } from '../../core/blockchain/types';
 import { WalletType, IWallet, TransactionStatus } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
@@ -47,7 +48,7 @@ import { NotificationType } from '../../core/messaging/types';
 import { updateAddressMonitorTokens } from '../../core/address-monitor/index';
 import { Dialog } from '../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../ui/password-modal/actions';
-import { getTokenConfig } from '../tokens/static-selectors';
+import { getTokenConfig, generateAccountTokenState } from '../tokens/static-selectors';
 import { ITokenState } from '../wallets/state';
 import { clearPassword } from '../../core/secure/keychain';
 import { delay } from '../../core/utils/time';
@@ -118,6 +119,10 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
             undefined,
             true
         )(dispatch, getState);
+        const chainId = getChainId(state, selectedAccount.blockchain);
+        if (selectedAccount.tokens && selectedAccount.tokens[chainId] === undefined) {
+            generateTokensForChainId(blockchain, chainId)(dispatch, getState);
+        }
     }
 };
 
@@ -125,10 +130,13 @@ export const setSelectedAccount = (account: IAccountState) => (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
-    const wallet = getSelectedWallet(getState());
+    const state = getState();
+    const wallet = getSelectedWallet(state);
+
     if (wallet === undefined) {
         return;
     }
+
     dispatch({
         type: WALLET_SELECT_ACCOUNT,
         data: {
@@ -671,15 +679,34 @@ export const removeTokenFromAccount = (account: IAccountState, token: ITokenStat
     });
 };
 
-export const addTokenToAccount = (account: IAccountState, token: ITokenState) => (
+export const generateTokensForChainId = (blockchain: Blockchain, chainId: ChainIdType) => (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
+    const tokens = getBlockchain(blockchain).config.tokens;
+    const accounts = getAccounts(getState(), blockchain);
+
+    accounts.map(account => {
+        Object.keys(tokens).map(symbol => {
+            addTokenToAccount(
+                account,
+                generateAccountTokenState(getTokenConfig(blockchain, symbol), account, chainId),
+                chainId
+            )(dispatch, getState);
+        });
+    });
+};
+
+export const addTokenToAccount = (
+    account: IAccountState,
+    token: ITokenState,
+    chainId?: ChainIdType
+) => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
     const selectedWallet: IWalletState = getSelectedWallet(getState());
-    const chainId = getChainId(getState(), account.blockchain);
+    const chainIdValue = chainId ? chainId : getChainId(getState(), account.blockchain);
     dispatch({
         type: ADD_TOKEN_TO_ACCOUNT,
-        data: { walletId: selectedWallet.id, account, token, chainId }
+        data: { walletId: selectedWallet.id, account, token, chainId: chainIdValue }
     });
     getBalance(account.blockchain, account.address, undefined, true)(dispatch, getState);
 };

@@ -58,15 +58,19 @@ export const getAccountFilteredTransactions = (
         acc => acc.index === accountIndex && acc.blockchain === blockchain
     );
     const transactions = selectedWallet.transactions;
+
+    const addressToLowercase = account.address.toLowerCase();
+
     if (transactions) {
-        return Object.values(selectedWallet.transactions)
+        return Object.values(transactions)
             .filter(
                 tx =>
-                    (tx.address.toLowerCase() === account.address.toLowerCase() ||
-                        tx.toAddress.toLowerCase() === account.address.toLowerCase()) &&
+                    (tx.address.toLowerCase() === addressToLowercase ||
+                        tx.toAddress.toLowerCase() === addressToLowercase ||
+                        tx.data?.params[0].toLowerCase() === addressToLowercase) &&
                     tx.blockchain === blockchain &&
                     tx.chainId === chainId &&
-                    tx.token?.symbol === token.symbol
+                    tx.token?.symbol.toLowerCase() === token.symbol.toLowerCase()
             )
             .sort(
                 (tx1: IBlockchainTransaction, tx2: IBlockchainTransaction) =>

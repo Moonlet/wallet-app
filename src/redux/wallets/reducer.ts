@@ -280,8 +280,17 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                     account.blockchain === action.data.account.blockchain
             );
 
-            accountToAddToken.tokens[action.data.chainId][action.data.token.symbol] =
-                action.data.token;
+            if (accountToAddToken.tokens[action.data.chainId]) {
+                accountToAddToken.tokens[action.data.chainId][action.data.token.symbol] =
+                    action.data.token;
+            } else {
+                accountToAddToken.tokens = {
+                    ...accountToAddToken.tokens,
+                    [action.data.chainId]: {
+                        [action.data.token.symbol]: action.data.token
+                    }
+                };
+            }
 
             return {
                 ...state,

@@ -1,4 +1,12 @@
-import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionMessageText } from '../types';
+import {
+    BlockchainGenericClient,
+    ChainIdType,
+    IBlockInfo,
+    TransactionMessageText,
+    IBlockchainTransaction,
+    Blockchain,
+    TransactionType
+} from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
@@ -8,6 +16,7 @@ import { Erc20Client } from './tokens/erc20-client';
 import { TokenType } from '../types/token';
 import { NameService } from './name-service';
 import { ClientUtils } from './client-utils';
+import { getTransactionStatusByCode } from './transaction';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -144,6 +153,63 @@ export class Client extends BlockchainGenericClient {
             presets: presets ? presets : config.feeOptions.defaults.gasPricePresets,
             feeTotal: gasPrice.multipliedBy(gasLimit).toString()
         };
+    }
+
+    public getTransactionInfo(transactionHash): Promise<IBlockchainTransaction<any>> {
+        const rpcCalls = [
+            this.http.jsonRpc('eth_getTransactionByHash', transactionHash),
+            this.http.jsonRpc('eth_getTransactionReceipt', transactionHash)
+        ];
+
+        return Promise.all(rpcCalls).then(res => {
+            try {
+                if (!res[0].result) {
+                    throw new Error(
+                        res[0].error.message ||
+                            `Error getting transaction info for ${transactionHash}`
+                    );
+                }
+                if (!res[1].result) {
+                    throw new Error(
+                        res[1].error.message ||
+                            `Error getting transaction receipt for ${transactionHash}`
+                    );
+                }
+
+                const txInfo = res[0].result;
+                const txReceipt = res[1].result;
+
+                return {
+                    id: transactionHash,
+                    date: {
+                        created: Date.now(),
+                        signed: Date.now(),
+                        broadcasted: Date.now(),
+                        confirmed: Date.now()
+                    },
+                    blockchain: Blockchain.ETHEREUM,
+                    chainId: this.chainId,
+                    type: TransactionType.TRANSFER,
+
+                    address: txInfo.from,
+                    publicKey: '', // TODO: get publicKey form vrs
+
+                    toAddress: txInfo.to,
+                    amount: txInfo.value,
+                    feeOptions: {
+                        gasPrice: txInfo.gasPrice,
+                        gasLimit: txInfo.gas,
+                        feeTotal: txReceipt.gasUsed
+                    },
+                    broadcatedOnBlock: txInfo.blockNumber,
+                    nonce: txInfo.nonce,
+                    status: getTransactionStatusByCode(txReceipt.status),
+                    token: config.tokens.ETH
+                };
+            } catch (error) {
+                return Promise.reject(error.message);
+            }
+        });
     }
 
     private async estimateFees(

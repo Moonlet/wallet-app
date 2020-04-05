@@ -43,12 +43,12 @@ export const getTransactionStatusByCode = (status): TransactionStatus => {
 export const buildTransferTransaction = async (
     tx: ITransferTransaction
 ): Promise<IBlockchainTransaction> => {
-    const tokenInfo = getTokenConfig(tx.account.blockchain, tx.token);
+    const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
 
     const client = Ethereum.getClient(tx.chainId);
     const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
 
-    switch (tokenInfo.type) {
+    switch (tokenConfig.type) {
         case TokenType.ERC20:
             return {
                 date: {
@@ -60,10 +60,10 @@ export const buildTransferTransaction = async (
                 blockchain: tx.account.blockchain,
                 chainId: tx.chainId,
                 type: TransactionType.TRANSFER,
-                token: tx.account.tokens[tx.chainId][tx.token],
+                token: tokenConfig,
                 address: tx.account.address,
                 publicKey: tx.account.publicKey,
-                toAddress: tokenInfo.contractAddress,
+                toAddress: tokenConfig.contractAddress,
                 amount: '0',
                 feeOptions: tx.feeOptions,
                 broadcatedOnBlock: undefined,
@@ -93,8 +93,7 @@ export const buildTransferTransaction = async (
                 blockchain: tx.account.blockchain,
                 chainId: tx.chainId,
                 type: TransactionType.TRANSFER,
-                token: tx.account.tokens[tx.chainId][tx.token],
-
+                token: tokenConfig,
                 address: tx.account.address,
                 publicKey: tx.account.publicKey,
 

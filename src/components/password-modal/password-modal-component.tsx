@@ -25,6 +25,8 @@ import NetInfo from '@react-native-community/netinfo';
 import ntpClient from 'react-native-ntp-client';
 import CONFIG from '../../config';
 
+const BLOCK_UNTIL_WAIT_INTERNET_CONNECTION = 'BLOCK_UNTIL_WAIT_INTERNET_CONNECTION';
+
 enum ScreenStep {
     ENTER_PIN = 'ENTER_PIN',
 
@@ -57,7 +59,7 @@ export interface IState {
 export interface IReduxProps {
     changePIN: typeof changePIN;
     failedLogins: number;
-    blockUntil: Date;
+    blockUntil: Date | string;
     incrementFailedLogins: typeof incrementFailedLogins;
     resetFailedLogins: typeof resetFailedLogins;
     setAppBlockUntil: typeof setAppBlockUntil;
@@ -86,6 +88,7 @@ export class PasswordModalComponent extends React.Component<
     private countdownListener;
     private netInfoListener;
     private passwordPin;
+    private fetchCurrentDate;
 
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
@@ -108,7 +111,10 @@ export class PasswordModalComponent extends React.Component<
     }
 
     public componentDidMount() {
-        if (this.props.blockUntil) {
+        if (
+            moment(new Date(this.props.blockUntil)).isValid() ||
+            this.props.blockUntil === BLOCK_UNTIL_WAIT_INTERNET_CONNECTION
+        ) {
             this.setState({ isMoonletDisabled: true });
 
             // Use fetch here because NetInfo listener with setInterval needs 1 sec to load
@@ -131,52 +137,74 @@ export class PasswordModalComponent extends React.Component<
                 clearInterval(this.countdownListener);
             } else {
                 // Device has internet connection
-                this.setCountdownListener();
+
+                if (this.props.blockUntil) {
+                    if (this.props.blockUntil === BLOCK_UNTIL_WAIT_INTERNET_CONNECTION) {
+                        // Block until is not set
+                        // Fetch current date until we have a date from server in order to set block until
+                        this.handleAppBlock();
+                    } else {
+                        // Block until is set with the proper date
+                        // Start Countdown
+                        this.setCountdownListener();
+                    }
+                }
             }
         });
     }
 
-    private getCurrentDate() {
+    private getCurrentDate(callback: (date: Date) => void) {
         ntpClient.getNetworkTime(CONFIG.ntpServer, CONFIG.ntpPort, (error: any, date: any) => {
             if (date) {
-                this.setState({ currentDate: new Date(date) });
+                const currentDate: Date = new Date(date);
+                if (
+                    moment(new Date(currentDate)).isValid() &&
+                    moment(new Date(currentDate)).year() >= 2020
+                ) {
+                    this.setState({ currentDate }, () => callback(currentDate));
+                } else {
+                    this.setState({ currentDate: undefined }, () => callback(undefined));
+                }
             } else {
-                this.setState({ currentDate: undefined });
+                this.setState({ currentDate: undefined }, () => callback(undefined));
             }
         });
     }
 
     private setCountdownListener() {
-        if (this.props.blockUntil) {
-            this.getCurrentDate();
-
-            clearInterval(this.countdownListener);
-            this.countdownListener = setInterval(async () => {
-                this.getCurrentDate();
-
-                if (this.state.currentDate) {
-                    const duration = moment.duration(
-                        moment(new Date(this.props.blockUntil)).diff(this.state.currentDate)
-                    );
-                    if (duration.asSeconds() > 0) {
+        clearInterval(this.countdownListener);
+        this.countdownListener = setInterval(() => {
+            this.getCurrentDate((currentDate: Date) => {
+                if (moment(currentDate)) {
+                    if (
+                        this.props.blockUntil &&
+                        moment
+                            .duration(moment(this.props.blockUntil).diff(moment(currentDate)))
+                            .asSeconds() > 0
+                    ) {
+                        // Show countdown
                         this.setState({ isMoonletDisabled: true });
                     } else {
+                        // Close countdown, enable Moonlet
                         this.setState({ isMoonletDisabled: false, currentDate: undefined });
                         this.props.setAppBlockUntil(undefined); // Reset app block until
-                        clearInterval(this.countdownListener); // Clear countdown listener
+                        if (this.countdownListener) {
+                            clearInterval(this.countdownListener); // Clear countdown listener
+                        }
                         this.clearErrorMessage();
                     }
                 } else {
                     // Disable Moonlet because NTP date is undefined
                     this.setState({ isMoonletDisabled: true });
                 }
-            }, 1000);
-        }
+            });
+        }, 2000); // NTP fetch may take longer in some cases
     }
 
     public componentWillUnmount() {
         clearInterval(this.countdownListener);
         this.netInfoListener();
+        clearInterval(this.fetchCurrentDate);
     }
 
     public static async getPassword(
@@ -302,25 +330,51 @@ export class PasswordModalComponent extends React.Component<
         }
     }
 
+    private setAppBlockUntil(currentDate: Date, failedLoginBlocking: number) {
+        // if (moment(new Date(currentDate)).isValid()) {
+        this.props.setAppBlockUntil(
+            new Date(new Date(currentDate).getTime() + failedLoginBlocking)
+        );
+
+        clearInterval(this.fetchCurrentDate);
+
+        // Start Countdown
+        this.setCountdownListener();
+        // }
+    }
+
+    private async handleAppBlock() {
+        const failedLoginBlocking = FAILED_LOGIN_BLOCKING[this.props.failedLogins];
+        if (failedLoginBlocking) {
+            // Disable Moonlet
+            this.setState({ isMoonletDisabled: true });
+            this.getCurrentDate((currentDate: Date) => {
+                if (moment(new Date(currentDate)).isValid()) {
+                    this.setAppBlockUntil(currentDate, failedLoginBlocking);
+                } else {
+                    // If the app is blocked wihtout any internet connection
+                    // If you close and open again the app, the need a flag to detect that the app has been already blocked
+                    this.props.setAppBlockUntil(BLOCK_UNTIL_WAIT_INTERNET_CONNECTION);
+
+                    // Fetch current date until we have a date from server
+                    clearInterval(this.fetchCurrentDate);
+                    this.fetchCurrentDate = setInterval(() => {
+                        this.getCurrentDate((_currentDate: Date) => {
+                            if (moment(new Date(_currentDate)).isValid()) {
+                                this.setAppBlockUntil(_currentDate, failedLoginBlocking);
+                            }
+                        });
+                    }, 1000);
+                }
+            });
+        }
+    }
+
     private async handleWrongPassword() {
         if (this.state.showAttempts) {
-            // this.getCurrentDate(); // used in order to set app block until
             this.props.incrementFailedLogins();
             this.handlePasswordAttempts();
-
-            const failedLoginBlocking = FAILED_LOGIN_BLOCKING[this.props.failedLogins];
-            if (failedLoginBlocking) {
-                // TODO: use here this.state.currentDate instead of new Date()
-                // But we need to make some checks here:
-                // - need to see what happens ff the user does NOT have internet connection when blocks the app
-                // - because this.state.currentDate will be undefined and new Date() can be hacked
-                this.props.setAppBlockUntil(new Date(new Date().getTime() + failedLoginBlocking));
-                // Disable Moonlet
-                this.setState({ isMoonletDisabled: true }, () => {
-                    // Start Countdown
-                    this.setCountdownListener();
-                });
-            }
+            this.handleAppBlock();
 
             if (this.props.failedLogins === RESET_APP_FAILED_LOGINS) {
                 NavigationService.popToTop();
@@ -441,33 +495,43 @@ export class PasswordModalComponent extends React.Component<
     }
 
     private renderMoonletDisabled() {
-        const { blockUntil, styles } = this.props;
+        const { styles } = this.props;
 
         if (this.state.hasInternetConnection) {
             const currentDate = moment(this.state.currentDate);
-            const duration = moment.duration(moment(new Date(blockUntil)).diff(currentDate));
 
-            const seconds = Math.floor(duration.asSeconds());
-            const minutes = Math.floor(duration.asMinutes());
-            const hours = Math.floor(duration.asHours());
-            const days = Math.floor(duration.asDays());
-
+            let duration = null;
             let timeMeasurement: string;
             let coundownTime: number = 0;
-            if (days > 0) {
-                timeMeasurement = translate('Time.day', undefined, days);
-                coundownTime = days;
-            } else if (hours > 0) {
-                timeMeasurement = translate('Time.hour', undefined, hours);
-                coundownTime = hours;
-            } else if (minutes > 0) {
-                timeMeasurement = translate('Time.minute', undefined, minutes);
-                coundownTime = minutes;
-            } else {
-                if (seconds > 0) {
-                    coundownTime = seconds;
+            let showSeconds: boolean = false;
+
+            if (moment(new Date(this.props.blockUntil)).isValid()) {
+                duration = moment.duration(
+                    moment(new Date(this.props.blockUntil)).diff(currentDate)
+                );
+
+                const seconds = Math.floor(duration.asSeconds());
+                const minutes = Math.floor(duration.asMinutes());
+                const hours = Math.floor(duration.asHours());
+                const days = Math.floor(duration.asDays());
+
+                if (days > 0) {
+                    timeMeasurement = translate('Time.day', undefined, days);
+                    coundownTime = days;
+                } else if (hours > 0) {
+                    timeMeasurement = translate('Time.hour', undefined, hours);
+                    coundownTime = hours;
+                } else if (minutes > 0) {
+                    timeMeasurement = translate('Time.minute', undefined, minutes);
+                    coundownTime = minutes;
+                } else {
+                    showSeconds = true;
+
+                    if (seconds > 0) {
+                        coundownTime = seconds;
+                    }
+                    timeMeasurement = translate('Time.second', undefined, seconds);
                 }
-                timeMeasurement = translate('Time.second', undefined, seconds);
             }
 
             return (
@@ -475,14 +539,16 @@ export class PasswordModalComponent extends React.Component<
                     <Text style={styles.moonletDisabled}>
                         {translate('Password.moonletDisabled')}
                     </Text>
-                    <Text style={styles.disabledDetails}>
-                        {seconds < -5 // -5 as a Buffer
-                            ? translate('Password.disabledDetectChangedDate')
-                            : translate('Password.disabledDetails', {
-                                  duration: coundownTime,
-                                  measurement: timeMeasurement
-                              })}
-                    </Text>
+                    {timeMeasurement && (
+                        <Text style={styles.disabledDetails}>
+                            {showSeconds
+                                ? translate('Password.disabledDetailsSeconds')
+                                : translate('Password.disabledDetails', {
+                                      duration: coundownTime,
+                                      measurement: timeMeasurement
+                                  })}
+                        </Text>
+                    )}
                 </View>
             );
         } else {

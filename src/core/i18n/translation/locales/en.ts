@@ -169,10 +169,9 @@ export const translation: ITranslations = {
                 'Your PIN is required\nto connect your hardware wallet',
             moonletDisabled: 'Moonlet is disabled',
             disabledDetails: 'try again in {{duration}} {{measurement}}',
+            disabledDetailsSeconds: 'try again in a few seconds',
             createPinSubtitle: 'Your PIN is required\nfor your Moonlet wallet',
-            activateInternet: 'Please activate the internet connection',
-            disabledDetectChangedDate:
-                'We have detected that different date has been set on your device. Please update it'
+            activateInternet: 'Please activate the internet connection'
         },
         Time: {
             second: {

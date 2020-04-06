@@ -3,22 +3,17 @@ import {
     IFeeOptions,
     ChainIdType,
     IBlockInfo,
-    TransactionMessageText,
-    IBlockchainTransaction,
-    Blockchain,
-    TransactionType
+    TransactionMessageText
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
-import { fromBech32Address, toBech32Address } from '@zilliqa-js/crypto/dist/bech32';
+import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { config } from './config';
 import { NameService } from './name-service';
 import { TokenType } from '../types/token';
 import { Zrc2Client } from './tokens/zrc2-client';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
-import { getAddressFromPublicKey } from '@zilliqa-js/crypto/dist/util';
-import { TransactionStatus } from '../../wallet/types';
-import { generateAccountTokenState } from '../../../redux/tokens/static-selectors';
+import { ClientUtils } from './client-utils';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -26,6 +21,7 @@ export class Client extends BlockchainGenericClient {
 
         this.nameService = new NameService();
         this.tokens[TokenType.ZRC2] = new Zrc2Client(this);
+        this.utils = new ClientUtils(this);
     }
 
     public async getBalance(address: string): Promise<BigNumber> {
@@ -144,70 +140,7 @@ export class Client extends BlockchainGenericClient {
         } else {
             addr = address.replace('0x', '').toLowerCase();
         }
-
         return this.call('GetSmartContractInit', [addr]).then(response => response?.result);
-    }
-
-    public async getTransactionInfo(transactionHash): Promise<IBlockchainTransaction<any>> {
-        try {
-            const txData = await this.http
-                .jsonRpc('GetTransaction', [transactionHash])
-                .then(response => {
-                    if (!response.result) {
-                        throw new Error(
-                            response.error.message ||
-                                `Error getting transaction info for ${transactionHash}`
-                        );
-                    }
-                    return response.result;
-                });
-
-            const toAddress = !isBech32(txData.toAddr)
-                ? toBech32Address(txData.toAddr)
-                : txData.toAddr;
-
-            let fromAddress = getAddressFromPublicKey(txData.senderPubKey.replace('0x', ''));
-
-            if (!isBech32(fromAddress)) {
-                fromAddress = toBech32Address(fromAddress);
-            }
-
-            const txStatus = txData.receipt
-                ? txData.receipt.success
-                    ? TransactionStatus.SUCCESS
-                    : TransactionStatus.FAILED
-                : TransactionStatus.PENDING;
-
-            return {
-                id: txData.ID,
-                date: {
-                    created: Date.now(),
-                    signed: Date.now(),
-                    broadcasted: Date.now(),
-                    confirmed: Date.now()
-                },
-                blockchain: Blockchain.ZILLIQA,
-                chainId: this.chainId,
-                type: TransactionType.TRANSFER,
-
-                address: fromAddress,
-                publicKey: txData.senderPubKey,
-
-                toAddress,
-                amount: txData.amount,
-                feeOptions: {
-                    gasPrice: txData.gasPrice,
-                    gasLimit: txData.gasLimit,
-                    feeTotal: txData.receipt?.cumulative_gas
-                },
-                broadcatedOnBlock: txData.receipt?.epoch_num,
-                nonce: txData.nonce,
-                status: txStatus,
-                token: generateAccountTokenState(config.tokens.ZIL)
-            };
-        } catch (error) {
-            return Promise.reject(error.message);
-        }
     }
 
     private async estimateFees(): Promise<any> {

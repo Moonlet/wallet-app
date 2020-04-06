@@ -1,7 +1,7 @@
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { getSelectedAccount, getSelectedBlockchain } from '../wallets/selectors';
-import { getBalance, setSelectedBlockchain } from '../wallets/actions';
+import { getBalance, setSelectedBlockchain, generateTokensForChainId } from '../wallets/actions';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { IBlockchainsOptions } from './state';
 import { IAction } from '../types';
@@ -47,11 +47,24 @@ export const setBlockchainOrder = (blockchains: IBlockchainsOptions[]) => {
     };
 };
 
-export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: ChainIdType) => {
-    return {
+export const setNetworkTestNetChainId = (blockchain: Blockchain, chainId: ChainIdType) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+    const selectedAccount = getSelectedAccount(state);
+
+    if (selectedAccount) {
+        const tokens = selectedAccount.tokens;
+        if (tokens && tokens[chainId] === undefined) {
+            generateTokensForChainId(blockchain, chainId)(dispatch, getState);
+        }
+    }
+
+    dispatch({
         type: PREF_SET_NETWORK_TEST_NET_CHAIN_ID,
         data: { blockchain, chainId }
-    };
+    });
 };
 
 export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IReduxState) => {

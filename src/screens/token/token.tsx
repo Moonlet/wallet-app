@@ -28,13 +28,14 @@ import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { TokenScreenComponentType } from '../../core/blockchain/types/token';
 import { DefaultTokenScreen } from './components/default-token/default-token';
 import { DelegateTokenScreen } from './components/delegate-token/delegate-token';
-import { AccountSettings } from './components/account-settings/account-settings';
+import { AccountSettingsModal } from './components/account-settings/account-settings';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TransactionStatus } from '../../core/wallet/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import bind from 'bind-decorator';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -87,7 +88,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
     headerRight: () => (
         <HeaderRight
             icon="navigation-menu-horizontal"
-            onPress={navigation.state.params ? navigation.state.params.openSettingsMenu : undefined}
+            onPress={navigation.state.params && navigation.state.params.openSettingsMenu}
         />
     ),
     headerTitle: () => {
@@ -134,9 +135,7 @@ export class TokenScreenComponent extends React.Component<
         };
     }
     public componentDidMount() {
-        this.props.navigation.setParams({
-            openSettingsMenu: this.openSettingsMenu
-        });
+        this.props.navigation.setParams({ openSettingsMenu: this.openSettingsMenu });
         this.props.getBalance(
             this.props.account.blockchain,
             this.props.account.address,
@@ -157,9 +156,12 @@ export class TokenScreenComponent extends React.Component<
         });
     }
 
-    public openSettingsMenu = () => this.setState({ settingsVisible: !this.state.settingsVisible });
+    @bind
+    public openSettingsMenu() {
+        this.setState({ settingsVisible: !this.state.settingsVisible });
+    }
 
-    renderComponent() {
+    private renderComponent() {
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
 
         switch (tokenConfig.ui.tokenScreenComponent) {
@@ -194,14 +196,13 @@ export class TokenScreenComponent extends React.Component<
                 <TestnetBadge />
                 {Platform.OS === 'web' && <ExtensionConnectionInfo />}
                 {this.renderComponent()}
-                {this.state.settingsVisible && (
-                    <AccountSettings
-                        onDonePressed={this.openSettingsMenu}
-                        account={this.props.account}
-                        wallet={this.props.wallet}
-                        chainId={this.props.chainId}
-                    />
-                )}
+                <AccountSettingsModal
+                    visible={this.state.settingsVisible}
+                    onDonePressed={() => this.openSettingsMenu()}
+                    account={this.props.account}
+                    wallet={this.props.wallet}
+                    chainId={this.props.chainId}
+                />
             </View>
         );
     }

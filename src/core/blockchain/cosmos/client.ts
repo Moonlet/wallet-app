@@ -4,17 +4,13 @@ import { networks } from './networks';
 import { config } from './config';
 import { NameService } from './name-service';
 import { TokenType } from '../types/token';
+import { ClientUtils } from './client-utils';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
         this.nameService = new NameService();
-    }
-
-    public getTransactionInfo(
-        transactionHash: string
-    ): Promise<import('../types').IBlockchainTransaction<any>> {
-        throw new Error('Method not implemented.');
+        this.utils = new ClientUtils();
     }
 
     public async getBalance(address: string): Promise<BigNumber> {

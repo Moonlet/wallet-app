@@ -4,7 +4,8 @@ import {
     IFeeOptions,
     TransactionMessageText,
     TransactionMessageType,
-    ITransferTransactionExtraFields
+    ITransferTransactionExtraFields,
+    ChainIdType
 } from '../../core/blockchain/types';
 import { WalletType, IWallet, TransactionStatus } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
@@ -47,9 +48,10 @@ import { NotificationType } from '../../core/messaging/types';
 import { updateAddressMonitorTokens } from '../../core/address-monitor/index';
 import { Dialog } from '../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../ui/password-modal/actions';
-import { getTokenConfig } from '../tokens/static-selectors';
+import { getTokenConfig, generateAccountTokenState } from '../tokens/static-selectors';
 import { ITokenState } from '../wallets/state';
 import { clearPassword } from '../../core/secure/keychain';
+import { delay } from '../../core/utils/time';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -117,6 +119,10 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
             undefined,
             true
         )(dispatch, getState);
+        const chainId = getChainId(state, selectedAccount.blockchain);
+        if (selectedAccount.tokens && selectedAccount.tokens[chainId] === undefined) {
+            generateTokensForChainId(blockchain, chainId)(dispatch, getState);
+        }
     }
 };
 
@@ -124,10 +130,13 @@ export const setSelectedAccount = (account: IAccountState) => (
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
-    const wallet = getSelectedWallet(getState());
+    const state = getState();
+    const wallet = getSelectedWallet(state);
+
     if (wallet === undefined) {
         return;
     }
+
     dispatch({
         type: WALLET_SELECT_ACCOUNT,
         data: {
@@ -227,7 +236,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     dispatch(openLoadingModal());
 
     // TODO: check here and find a solution to fix
-    // await delay(500);
+    await delay(0);
 
     try {
         const wallet = new HDWallet(mnemonic);
@@ -378,7 +387,7 @@ export const updateTransactionFromBlockchain = (
     let transaction;
 
     try {
-        transaction = await client.getTransactionInfo(transactionHash);
+        transaction = await client.utils.getTransaction(transactionHash);
     } catch (e) {
         const currentBlock = await client.getCurrentBlock();
         if (
@@ -404,9 +413,14 @@ export const updateTransactionFromBlockchain = (
     }
 
     // search for wallets/accounts affected by this transaction
+    const receivingAddress =
+        transaction.token.symbol === blockchainInstance.config.coin
+            ? transaction.toAddress
+            : transaction.data?.params[0];
+
     const wallets = getWalletWithAddress(
         state,
-        [transaction.address, transaction.toAddress],
+        [transaction.address, receivingAddress],
         blockchain
     );
 
@@ -427,25 +441,34 @@ export const updateTransactionFromBlockchain = (
             wallets.length > 1
                 ? wallets.find(loopWallet =>
                       loopWallet.accounts.some(
-                          account => account.address.toLowerCase() === transaction.toAddress
+                          account => account.address.toLowerCase() === receivingAddress
                       )
                   )
                 : wallets[0];
 
         const transactionAccount =
-            wallet.accounts.find(
-                account => account.address.toLowerCase() === transaction.toAddress
-            ) ||
+            wallet.accounts.find(account => account.address.toLowerCase() === receivingAddress) ||
             wallet.accounts.find(account => account.address.toLowerCase() === transaction.address);
+
+        // update balance
+        getBalance(
+            blockchain,
+            transactionAccount.address,
+            transaction.token.symbol,
+            true
+        )(dispatch, getState);
 
         // const currentChainId = getChainId(state, blockchain);
         // if (displayNotification && currentChainId === chainId) { - removed this for consistency with app closed notifications
+
+        const tokenConfig = getTokenConfig(blockchain, transaction.token.symbol);
+
         if (displayNotification) {
             const amount = blockchainInstance.account.amountFromStd(
-                new BigNumber(transaction.amount)
+                new BigNumber(blockchainInstance.transaction.getTransactionAmount(transaction))
             );
             const formattedAmount = formatNumber(amount, {
-                currency: blockchainInstance.config.coin
+                currency: transaction.token.symbol
             });
 
             Notifications.displayNotification(
@@ -453,16 +476,14 @@ export const updateTransactionFromBlockchain = (
                 `Transaction of ${formattedAmount} from ${formatAddress(
                     transaction.address,
                     blockchain
-                )} to ${formatAddress(transaction.toAddress, blockchain)}`,
+                )} to ${formatAddress(receivingAddress, blockchain)}`,
                 {
                     type: NotificationType.TRANSACTION_UPDATE,
                     data: {
                         walletId: wallet.id,
                         accountIndex: transactionAccount.index,
-                        token: transactionAccount.tokens[getBlockchain(blockchain).config.coin],
-                        tokenLogo: getBlockchain(blockchain).config.tokens[
-                            getBlockchain(transactionAccount.blockchain).config.coin
-                        ].icon,
+                        token: generateAccountTokenState(tokenConfig),
+                        tokenLogo: tokenConfig.icon,
                         blockchain
                     }
                 }
@@ -473,10 +494,8 @@ export const updateTransactionFromBlockchain = (
             const navigationParams: NavigationParams = {
                 blockchain,
                 accountIndex: transactionAccount.index,
-                token: transactionAccount.tokens[getBlockchain(blockchain).config.coin],
-                tokenLogo: getBlockchain(blockchain).config.tokens[
-                    getBlockchain(transactionAccount.blockchain).config.coin
-                ].icon
+                token: generateAccountTokenState(tokenConfig),
+                tokenLogo: tokenConfig.icon
             };
 
             dispatch(setSelectedWallet(wallet.id));
@@ -670,15 +689,34 @@ export const removeTokenFromAccount = (account: IAccountState, token: ITokenStat
     });
 };
 
-export const addTokenToAccount = (account: IAccountState, token: ITokenState) => (
+export const generateTokensForChainId = (blockchain: Blockchain, chainId: ChainIdType) => (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
+    const tokens = getBlockchain(blockchain).config.tokens;
+    const accounts = getAccounts(getState(), blockchain);
+
+    accounts.map(account => {
+        Object.keys(tokens).map(symbol => {
+            addTokenToAccount(
+                account,
+                generateAccountTokenState(getTokenConfig(blockchain, symbol), account, chainId),
+                chainId
+            )(dispatch, getState);
+        });
+    });
+};
+
+export const addTokenToAccount = (
+    account: IAccountState,
+    token: ITokenState,
+    chainId?: ChainIdType
+) => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
     const selectedWallet: IWalletState = getSelectedWallet(getState());
-    const chainId = getChainId(getState(), account.blockchain);
+    const chainIdValue = chainId ? chainId : getChainId(getState(), account.blockchain);
     dispatch({
         type: ADD_TOKEN_TO_ACCOUNT,
-        data: { walletId: selectedWallet.id, account, token, chainId }
+        data: { walletId: selectedWallet.id, account, token, chainId: chainIdValue }
     });
     getBalance(account.blockchain, account.address, undefined, true)(dispatch, getState);
 };

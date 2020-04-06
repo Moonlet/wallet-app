@@ -193,6 +193,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                 )}
                 enabledInnerScrolling={false}
                 enabledContentTapInteraction={false}
+                onCloseEnd={() => this.props.onClose()}
             />
         );
     }

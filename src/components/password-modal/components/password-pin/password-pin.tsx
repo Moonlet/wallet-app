@@ -13,6 +13,7 @@ import { biometricAuth, BiometryType } from '../../../../core/biometric-auth/bio
 import { IReduxState } from '../../../../redux/state';
 import { normalize, ICON_SIZE } from '../../../../styles/dimensions';
 import { SafeAreaView } from 'react-navigation';
+import { getPassword } from '../../../../core/secure/keychain';
 
 const digitsLayout = [
     [1, 2, 3],
@@ -27,6 +28,7 @@ export interface IReduxProps {
 }
 
 export interface IExternalProps {
+    obRef: any;
     title: string;
     subtitle: string;
     onPasswordEntered: (data: { password?: string }) => void;
@@ -36,11 +38,13 @@ export interface IExternalProps {
     enableBiometryAuth: boolean;
     allowBackButton: boolean;
     onBackButtonTap: () => void;
+    isMoonletDisabled: boolean;
 }
 
 interface IState {
     password: string;
     biometryType: BiometryType;
+    isFillPasswordEnabled: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -60,12 +64,33 @@ export class PasswordPinComponent extends React.Component<
 
         this.state = {
             password: '',
-            biometryType: undefined
+            biometryType: undefined,
+            isFillPasswordEnabled: true
         };
         this.shakeAnimation = new Animated.Value(0);
+        props.obRef && props.obRef(this);
+    }
 
-        if (props.enableBiometryAuth === true) {
+    public async componentDidMount() {
+        if (
+            this.props.enableBiometryAuth === true &&
+            this.props.isMoonletDisabled === false &&
+            (await this.hasMoonletPasswordStoredInKeychain()) === true
+        ) {
             this.biometryAuth();
+        }
+    }
+
+    private async hasMoonletPasswordStoredInKeychain(): Promise<boolean> {
+        try {
+            const passwordCredentials = await getPassword();
+            if (passwordCredentials.password) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch {
+            return false;
         }
     }
 
@@ -77,21 +102,26 @@ export class PasswordPinComponent extends React.Component<
         }
     }
 
+    public clearPasswordInput() {
+        this.setState({ password: '' });
+    }
+
     public fillPassword(digit: string) {
-        this.props.clearErrorMessage();
-        if (this.state.password.length < PASSWORD_LENGTH) {
-            this.setState({ password: this.state.password.concat(digit) }, async () => {
-                if (this.state.password.length === PASSWORD_LENGTH) {
-                    const passHash = await hash(this.state.password);
-                    this.props.onPasswordEntered({ password: passHash });
-                    this.setState({ password: '' });
-                    this.props.clearErrorMessage();
-                }
-            });
+        if (this.state.isFillPasswordEnabled) {
+            this.props.clearErrorMessage();
+            if (this.state.password.length < PASSWORD_LENGTH) {
+                this.setState({ password: this.state.password.concat(digit) }, async () => {
+                    if (this.state.password.length === PASSWORD_LENGTH) {
+                        const passHash = await hash(this.state.password);
+                        this.props.onPasswordEntered({ password: passHash });
+                    }
+                });
+            }
         }
     }
 
     public startShake() {
+        this.setState({ isFillPasswordEnabled: false });
         Animated.sequence([
             Animated.timing(this.shakeAnimation, {
                 toValue: 20,
@@ -123,7 +153,10 @@ export class PasswordPinComponent extends React.Component<
                 duration: 50,
                 useNativeDriver: true
             })
-        ]).start();
+        ]).start(() => {
+            this.clearPasswordInput();
+            this.setState({ isFillPasswordEnabled: true });
+        });
     }
 
     public renderInputDots() {
@@ -219,12 +252,10 @@ export class PasswordPinComponent extends React.Component<
             .then(success => {
                 if (success) {
                     this.props.onBiometryLogin(true);
-                } else {
-                    this.props.onBiometryLogin(false);
                 }
             })
             .catch(error => {
-                this.props.onBiometryLogin(false);
+                //
             });
     }
 

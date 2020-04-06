@@ -44,10 +44,17 @@ export class Zrc2Client {
         );
 
         return {
-            symbol: this.findSmartContractSubField(smartContractInit, 'symbol'),
+            symbol: this.findSmartContractSubField(smartContractInit, 'symbol').toUpperCase(),
             name: this.findSmartContractSubField(smartContractInit, 'name'),
             decimals: this.findSmartContractSubField(smartContractInit, 'decimals')
         };
+    }
+
+    public extractEventParamsValue(
+        params: { type: string; value: string; vname: string }[],
+        paramName: string
+    ) {
+        return params.find(paramOjb => paramOjb.vname === paramName)?.value || '';
     }
 
     private findSmartContractSubField(smartContractInit, field: string) {

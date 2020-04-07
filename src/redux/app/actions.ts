@@ -35,7 +35,7 @@ export const resetFailedLogins = () => {
     };
 };
 
-export const setAppBlockUntil = (date: Date) => {
+export const setAppBlockUntil = (date: Date | string) => {
     return {
         type: SET_APP_BLOCK_UNTIL,
         data: { date }

@@ -11,7 +11,8 @@ export default (theme: ITheme) =>
             right: 0,
             bottom: 0,
             backgroundColor: '#000000BF',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            paddingHorizontal: BASE_DIMENSION * 4
         },
         moonletDisabled: {
             fontSize: normalize(34),

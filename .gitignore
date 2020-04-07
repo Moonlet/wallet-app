@@ -29,6 +29,8 @@ build/
 .gradle
 local.properties
 *.iml
+android/app/.cxx
+android/.settings
 
 # node.js
 #

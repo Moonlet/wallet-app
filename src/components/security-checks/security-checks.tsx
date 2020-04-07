@@ -46,20 +46,22 @@ export class SecurityChecksComponent extends React.Component<
         let shouldDisplayWarning = false;
         let warningType: SecurityWarningType;
 
-        const jailMonkey = await JailMonkey.getConstants();
+        if (Platform.OS !== 'web') {
+            const jailMonkey = await JailMonkey.getConstants();
 
-        if (DeviceInfo.isEmulatorSync()) {
-            shouldDisplayWarning = true;
-            warningType = 'emulator';
-        } else if (jailMonkey.isJailBroken) {
-            shouldDisplayWarning = true;
-            warningType = 'jailBreak';
-        } else if (jailMonkey.isDebuggedMode) {
-            shouldDisplayWarning = true;
-            warningType = 'debugged';
-        } else if (jailMonkey.hookDetected) {
-            shouldDisplayWarning = true;
-            warningType = 'hookDetected';
+            if (DeviceInfo.isEmulatorSync()) {
+                shouldDisplayWarning = true;
+                warningType = 'emulator';
+            } else if (jailMonkey.isJailBroken) {
+                shouldDisplayWarning = true;
+                warningType = 'jailBreak';
+            } else if (jailMonkey.isDebuggedMode) {
+                shouldDisplayWarning = true;
+                warningType = 'debugged';
+            } else if (jailMonkey.hookDetected) {
+                shouldDisplayWarning = true;
+                warningType = 'hookDetected';
+            }
         }
 
         if (shouldDisplayWarning) {
@@ -123,9 +125,6 @@ export class SecurityChecksComponent extends React.Component<
                         </View>
                     </View>
                 </SafeAreaView>
-
-                {/* <Button onPress={() => BackHandler.exitApp()}>EXIT</Button>
-                <Button onPress={() => this.continue()}>GO</Button> */}
             </Modal>
         );
     }

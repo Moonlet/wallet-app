@@ -210,7 +210,7 @@ export default class App extends React.Component<{}, IState> {
                             {!this.state.displayApplication && <ImageCanvas />}
                             <PasswordModal.Component />
                             <BottomSheet />
-                            <Dialog.Component />
+                            {Platform.OS !== 'web' && <Dialog.Component />}
                             <LoadingModal />
                             <LegalModal navigationState={this.state.navigationState} />
                         </ThemeContext.Provider>

@@ -1,6 +1,7 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { pw, ph } from '../../styles';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -41,8 +42,8 @@ export default (theme: ITheme) =>
             justifyContent: 'center'
         },
         imageStyle: {
-            width: Dimensions.get('window').width * 0.5,
-            height: Dimensions.get('window').width * 0.5,
+            width: pw(50),
+            height: ph(50),
             opacity: 0.7
         }
     });

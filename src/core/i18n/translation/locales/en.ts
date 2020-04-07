@@ -372,6 +372,29 @@ export const translation: ITranslations = {
             NOT_ENOUGH_TOKENS: 'Insufficient funds for transaction',
             COSMOS_ERROR_12: 'Insufficient fee',
             COSMOS_ERROR_14: 'Insufficient funds for transaction'
+        },
+        SecurityChecks: {
+            title: 'Security Warning!',
+            ios: {
+                emulator:
+                    'You are running the application in iOS simulator, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                jailBreak:
+                    'Your device might be jail broken, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                debugged:
+                    "We've detected a debugger proccess connected to Moonlet, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.",
+                hookDetected:
+                    "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk."
+            },
+            android: {
+                emulator:
+                    'You are running the application in emulator, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                jailBreak:
+                    'Your device might be rooted, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                debugged:
+                    "We've detected a debugger proccess connected to Moonlet, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.",
+                hookDetected:
+                    "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk."
+            }
         }
     },
     plural: (n: number, ord?: boolean) => {

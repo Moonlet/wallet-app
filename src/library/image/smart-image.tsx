@@ -4,7 +4,6 @@ import { ITokenIcon } from '../../core/blockchain/types/token';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { ICON_SIZE } from '../../styles/dimensions';
 import { View } from 'react-native';
 
 export interface ISmartImageProps {
@@ -25,43 +24,28 @@ export enum ResizeMode {
     center = 'center'
 }
 
-const getStyle = (props: ISmartImageProps & IProps) => {
-    // default image style
-    let style = [props.styles.icon];
-
-    // style from props
-    if (props.style) {
-        if (Array.isArray(props.style)) {
-            style = style.concat(props.style);
-        } else {
-            style.push(props.style);
-        }
-    }
-
-    return style;
-};
-
+// TODO make this component more generic, and create a new Component for Icons
 export const SmartImageComponent = (
     props: ISmartImageProps & IProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
+    const style = props?.small ? props.styles.small : props.styles.large;
     if (props.source?.iconComponent) {
         const IconComponent = props.source.iconComponent;
-
-        const iconSmallSize = ICON_SIZE;
-        const iconLargeSize = ICON_SIZE + ICON_SIZE / 2;
+        const width = props?.style?.width || style.width;
+        const height = props?.style?.height || style.height;
 
         return (
             <IconComponent
-                width={props?.small ? iconSmallSize : iconLargeSize}
-                height={props?.small ? iconSmallSize : iconLargeSize}
-                style={getStyle(props)}
+                width={width}
+                height={height}
+                style={[props.styles.icon, style, props.style]}
             />
         );
     } else if (props.source?.uri) {
         return (
             <FastImage
                 source={props.source}
-                style={getStyle(props)}
+                style={[props.styles.icon, style, props.style]}
                 resizeMode={props?.resizeMode || ResizeMode.contain}
             />
         );

@@ -171,7 +171,8 @@ export const translation: ITranslations = {
             disabledDetails: 'try again in {{duration}} {{measurement}}',
             disabledDetailsSeconds: 'try again in a few seconds',
             createPinSubtitle: 'Your PIN is required\nfor your Moonlet wallet',
-            activateInternet: 'Please activate the internet connection'
+            activateInternet: 'Please activate the internet connection',
+            alreadyHavePin: 'You already have this PIN!\nPlease choose another one'
         },
         Time: {
             second: {

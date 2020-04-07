@@ -77,6 +77,7 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
+    // bundleInRelease: false,
     bundleCommand: "ram-bundle",
     extraPackagerArgs: ["--indexed-ram-bundle"],
     enableHermes: false,  // clean and rebuild if changing
@@ -206,6 +207,12 @@ android {
                         versionCodes.get(abi) * 1048576 + defaultConfig.versionCode
             }
 
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
         }
     }
 }

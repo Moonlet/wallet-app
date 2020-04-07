@@ -1,7 +1,8 @@
-import { IAccountState, ITokenState } from '../../../redux/wallets/state';
+import { IAccountState } from '../../../redux/wallets/state';
 import { Blockchain, ChainIdType } from '.';
 import { TransactionStatus } from '../../wallet/types';
 import BigNumber from 'bignumber.js';
+import { ITokenConfigState } from '../../../redux/tokens/state';
 
 export interface IBlockchainTransactionUtils {
     sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string>;
@@ -21,7 +22,7 @@ export interface IBlockchainTransaction<IAdditionalInfoType = any> {
     blockchain: Blockchain;
     chainId: ChainIdType;
     type: TransactionType;
-    token?: ITokenState;
+    token?: ITokenConfigState;
     address: string;
     publicKey: string;
     toAddress: string;

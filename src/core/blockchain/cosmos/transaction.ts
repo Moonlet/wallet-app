@@ -7,6 +7,7 @@ import { Client as CosmosClient } from './client';
 import { Cosmos } from '.';
 import { BigNumber } from 'bignumber.js';
 import { sortObject } from '../../utils/sort-object';
+import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 export const sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
     const hash = createHash('sha256')
@@ -83,6 +84,8 @@ export const buildTransferTransaction = async (
         sequence: accountInfo.sequence
     };
 
+    const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
+
     return {
         date: {
             created: Date.now(),
@@ -93,7 +96,7 @@ export const buildTransferTransaction = async (
         blockchain: tx.account.blockchain,
         chainId: tx.chainId,
         type: TransactionType.TRANSFER,
-        token: tx.account.tokens[tx.chainId][tx.token],
+        token: tokenConfig,
         address: tx.account.address,
         publicKey: tx.account.publicKey,
         toAddress: tx.toAddress,

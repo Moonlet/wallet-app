@@ -18,8 +18,7 @@ import { StackActions, NavigationActions } from 'react-navigation';
 import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { forbidScreenshots, allowScreenshots } from '../../core/utils/screenshot';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
-
-const MNEMONIC_LENGTH = 12;
+import { MNEMONIC_LENGTH } from '../../core/constants/app';
 
 interface IState {
     mnemonic: string[];

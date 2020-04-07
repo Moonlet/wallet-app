@@ -11,8 +11,8 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { allowScreenshots, forbidScreenshots } from '../../core/utils/screenshot';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
+import { MNEMONIC_LENGTH } from '../../core/constants/app';
 
-const MNEMONIC_LENGTH = 12;
 const NR_MNEMONICS_SCREEN = 4;
 
 export interface INavigationParams {

@@ -14,8 +14,7 @@ import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
-
-const MNEMONIC_LENGTH = 12;
+import { MNEMONIC_LENGTH } from '../../core/constants/app';
 
 export interface IReduxProps {
     createHDWallet: typeof createHDWallet;

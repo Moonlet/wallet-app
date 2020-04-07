@@ -299,9 +299,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
             this.openBottomSheet();
         } catch (err) {
             try {
-                await PasswordModal.createPassword(
-                    translate('Password.connectHardwareWalletPinSubtitle')
-                );
+                await PasswordModal.createPassword();
                 this.openBottomSheet();
             } catch (err) {
                 //

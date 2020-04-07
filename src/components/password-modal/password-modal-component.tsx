@@ -216,9 +216,9 @@ export class PasswordModalComponent extends React.Component<
         return ref.getPassword(title, subtitle, data);
     }
 
-    public static async createPassword(subtitle?: string) {
+    public static async createPassword() {
         const ref = await PasswordModalComponent.refDeferred.promise;
-        return ref.createPassword(subtitle);
+        return ref.createPassword();
     }
 
     public static async changePassword() {
@@ -258,7 +258,7 @@ export class PasswordModalComponent extends React.Component<
         return this.resultDeferred.promise;
     }
 
-    public createPassword(subtitle: string) {
+    public createPassword() {
         this.resultDeferred = new Deferred();
         this.clearErrorMessage();
 
@@ -266,7 +266,7 @@ export class PasswordModalComponent extends React.Component<
         this.setState({
             visible: true,
             title: translate('Password.setupPinTitle'),
-            subtitle: subtitle || translate('Password.createPinSubtitle'),
+            subtitle: translate('Password.setupPinSubtitle'),
             currentStep: ScreenStep.CREATE_PIN_TERMS,
             enableBiometryAuth: false,
             allowBackButton: true,

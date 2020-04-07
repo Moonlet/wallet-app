@@ -28,6 +28,9 @@ describe('creat wallet terms screen component', () => {
     it('navigates to create screen', () => {
         const wrapper = shallow(<OnboardingScreenComponent {...props} />);
         wrapper.find('[testID="button-create"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletMnemonic');
+        expect(props.navigation.navigate).toHaveBeenCalledWith('CreateWalletMnemonic', {
+            step: 1,
+            mnemonic: undefined
+        });
     });
 });

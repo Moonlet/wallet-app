@@ -306,7 +306,11 @@ PODS:
   - react-native-ble-plx-swift (1.1.1)
   - react-native-camera-kit (8.0.4):
     - React
+  - react-native-netinfo (5.7.0):
+    - React
   - react-native-randombytes (3.5.3):
+    - React
+  - react-native-udp (3.0.0):
     - React
   - react-native-webview (8.2.1):
     - React
@@ -421,7 +425,9 @@ DEPENDENCIES:
   - react-native-ble-plx (from `../node_modules/react-native-ble-plx`)
   - react-native-ble-plx-swift (from `../node_modules/react-native-ble-plx`)
   - react-native-camera-kit (from `../node_modules/react-native-camera-kit`)
+  - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
+  - react-native-udp (from `../node_modules/react-native-udp`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -520,8 +526,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-ble-plx"
   react-native-camera-kit:
     :path: "../node_modules/react-native-camera-kit"
+  react-native-netinfo:
+    :path: "../node_modules/@react-native-community/netinfo"
   react-native-randombytes:
     :path: "../node_modules/react-native-randombytes"
+  react-native-udp:
+    :path: "../node_modules/react-native-udp"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -616,7 +626,9 @@ SPEC CHECKSUMS:
   react-native-ble-plx: 304c7bee074a05581672c9990f375b3906808718
   react-native-ble-plx-swift: eb64f02b988becb84a60164aba9fab5d6ddb6dc8
   react-native-camera-kit: ded127598a48890a360fbf5e26cf7c44fcc5b873
+  react-native-netinfo: 61a837131d5f0194d22f8048a456d8f31a074baa
   react-native-randombytes: 991545e6eaaf700b4ee384c291ef3d572e0b2ca8
+  react-native-udp: 0c1afee1a1eb2b494b25e0c8ab39c783412e0984
   react-native-webview: d3cf75764f98fd433f1222f5a7ca8e355ada2a15
   React-RCTActionSheet: af4d951113b1e068bb30611f91b984a7a73597ff
   React-RCTAnimation: 4f518d70bb6890b7c3d9d732f84786d6693ca297
@@ -648,4 +660,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: eb4c90488aa13900d7ec0ed35cd04b71cd4508c6
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1

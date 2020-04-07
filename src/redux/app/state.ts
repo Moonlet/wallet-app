@@ -3,7 +3,7 @@ export interface IAppState {
     tcAcceptedVersion: number;
     hints: IHints;
     failedLogins: number;
-    blockUntil: Date;
+    blockUntil: Date | string;
 }
 
 export interface IHints {

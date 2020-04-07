@@ -12,6 +12,7 @@ import {
     INavigationProps
 } from '../../../../../../navigation/with-navigation-params';
 import { allowScreenshots, forbidScreenshots } from '../../../../../../core/utils/screenshot';
+import { isFeatureActive, RemoteFeature } from '../../../../../../core/utils/remote-feature-config';
 
 export interface IExternalProps {
     value: string;
@@ -58,23 +59,27 @@ export class ViewKeyComponent extends React.Component<
                     </View>
                 )}
 
-                <View style={styles.divider} />
+                {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
+                    <View>
+                        <View style={styles.divider} />
 
-                <TouchableOpacity
-                    testID="copy-clipboard"
-                    style={styles.rowContainer}
-                    onPress={() => {
-                        Clipboard.setString(this.props.value);
-                        this.setState({ copied: true });
-                    }}
-                >
-                    <Icon name="copy" size={ICON_SIZE} style={styles.icon} />
-                    <Text style={styles.textRow}>
-                        {this.state.copied === false
-                            ? translate('App.buttons.clipboardBtn')
-                            : translate('App.buttons.copiedBtn')}
-                    </Text>
-                </TouchableOpacity>
+                        <TouchableOpacity
+                            testID="copy-clipboard"
+                            style={styles.rowContainer}
+                            onPress={() => {
+                                Clipboard.setString(this.props.value);
+                                this.setState({ copied: true });
+                            }}
+                        >
+                            <Icon name="copy" size={ICON_SIZE} style={styles.icon} />
+                            <Text style={styles.textRow}>
+                                {this.state.copied === false
+                                    ? translate('App.buttons.clipboardBtn')
+                                    : translate('App.buttons.copiedBtn')}
+                            </Text>
+                        </TouchableOpacity>
+                    </View>
+                )}
             </View>
         );
     }

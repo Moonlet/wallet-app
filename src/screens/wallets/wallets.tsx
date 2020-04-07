@@ -129,7 +129,10 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     public onPressCreate() {
-        this.props.navigation.navigate('CreateWalletMnemonic');
+        this.props.navigation.navigate('CreateWalletMnemonic', {
+            mnemonic: undefined,
+            step: 1
+        });
     }
 
     public async onPressDelete(wallet: IWalletState) {

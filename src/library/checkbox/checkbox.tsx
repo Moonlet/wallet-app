@@ -15,6 +15,7 @@ export interface ICheckboxProps {
     checked?: boolean;
     onPress?: any;
     styles: ReturnType<typeof stylesProvider>;
+    textStyle?: any;
 }
 
 export const CheckboxComponent = (props: ICheckboxProps) => (
@@ -28,7 +29,7 @@ export const CheckboxComponent = (props: ICheckboxProps) => (
             size={normalize(18)}
             style={props.styles.icon}
         />
-        {props.text && <Text style={props.styles.text}>{props.text}</Text>}
+        {props.text && <Text style={[props.styles.text, props.textStyle]}>{props.text}</Text>}
     </TouchableOpacity>
 );
 

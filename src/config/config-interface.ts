@@ -3,4 +3,6 @@ export interface IAppConfig {
     env: string;
     tokensUrl: string;
     firebaseConfigFetchInterval: number;
+    ntpServer: string;
+    ntpPort: number;
 }

@@ -7,6 +7,7 @@ import { KeyPair, PublicKey } from 'nearlib/src.ts/utils/key_pair';
 import { base_decode } from 'nearlib/src.ts/utils/serialize';
 import BN from 'bn.js';
 import sha256 from 'js-sha256';
+import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 export const sign = async (
     tx: IBlockchainTransaction<INearTransactionAdditionalInfoType>,
@@ -55,6 +56,8 @@ export const buildTransferTransaction = async (
     const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
     const blockInfo = await client.getCurrentBlock();
 
+    const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
+
     return {
         date: {
             created: Date.now(),
@@ -65,7 +68,7 @@ export const buildTransferTransaction = async (
         blockchain: tx.account.blockchain,
         chainId: tx.chainId,
         type: TransactionType.TRANSFER,
-        token: tx.account.tokens[tx.chainId][tx.token],
+        token: tokenConfig,
 
         address: tx.account.address,
         publicKey: tx.account.publicKey,

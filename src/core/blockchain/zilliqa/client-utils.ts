@@ -7,7 +7,6 @@ import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { config } from './config';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { TransactionStatus } from '../../wallet/types';
-import { generateAccountTokenState } from '../../../redux/tokens/static-selectors';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -82,7 +81,7 @@ export class ClientUtils implements IClientUtils {
             broadcatedOnBlock: txData.receipt?.epoch_num,
             nonce: txData.nonce,
             status: this.getTransactionStatus(txData, token),
-            token: generateAccountTokenState(token)
+            token
         };
     }
 

@@ -239,7 +239,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 1100;
-				ORGANIZATIONNAME = Moonlet;
+				ORGANIZATIONNAME = "JAXABLE SRL";
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = 8T5TG4TVDY;

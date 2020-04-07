@@ -453,13 +453,19 @@ export class PasswordModalComponent extends React.Component<
                 break;
             case ScreenStep.CHANGE_PIN_NEW:
                 this.passwordPin.clearPasswordInput();
-                this.setState({
-                    currentStep: ScreenStep.CHANGE_PIN_CONFIRM,
-                    title: translate('Password.verifyPinTitle'),
-                    subtitle: translate('Password.verifyPinSubtitle'),
-                    newPassword: data.password,
-                    showAttempts: false // disable wipe data
-                });
+                if (this.state.password === data.password) {
+                    // Cannot change PIN with the same PIN
+                    this.setState({ errorMessage: translate('Password.alreadyHavePin') });
+                } else {
+                    // Confirm new Pin
+                    this.setState({
+                        currentStep: ScreenStep.CHANGE_PIN_CONFIRM,
+                        title: translate('Password.verifyPinTitle'),
+                        subtitle: translate('Password.verifyPinSubtitle'),
+                        newPassword: data.password,
+                        showAttempts: false // disable wipe data
+                    });
+                }
                 break;
             case ScreenStep.CHANGE_PIN_CONFIRM:
                 if (this.state.newPassword === data.password) {

@@ -11,18 +11,24 @@ import { delay } from '../../../core/utils/time';
 const props: IProps = {
     // @ts-ignore
     navigation: {
-        navigate: jest.fn()
+        dispatch: jest.fn(),
+        navigate: jest.fn(),
+        state: {
+            params: {
+                step: 1,
+                mnemonic: undefined
+            }
+        }
     },
-    styles: styleProvider(darkTheme)
+    styles: styleProvider(darkTheme),
+    step: 1
 };
 
 jest.mock('../../../core/wallet/hd-wallet/mnemonic');
 
 describe('creat wallet terms screen component', () => {
     beforeAll(async () => {
-        Mnemonic.generate = jest.fn(() =>
-            Promise.resolve('1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24')
-        );
+        Mnemonic.generate = jest.fn(() => Promise.resolve('1 2 3 4 5 6 7 8 9 10 11 12'));
 
         await loadTranslations('en');
     });
@@ -33,22 +39,9 @@ describe('creat wallet terms screen component', () => {
         expect(wrapper.debug()).toMatchSnapshot();
     });
 
-    it('navigates to next screen', () => {
+    it('navigates to CreateWalletConfirmMnemonic screen', () => {
         const wrapper = shallow(<CreateWalletMnemonicScreenComponent {...props} />);
         wrapper.find('[testID="button-next"]').simulate('Press');
-        expect(props.navigation.navigate).toHaveBeenCalledTimes(1);
+        expect(props.navigation.dispatch).toHaveBeenCalledTimes(1);
     });
-
-    // it('sets correct navigation options', () => {
-    //     const navigationProp = { navigation: { state: { params: { goBack: jest.fn() } } } };
-    //     const options = navigationOptions(navigationProp);
-    //     expect(options.headerLeft()).toMatchSnapshot();
-    //     expect(options).toMatchSnapshot();
-    // });
-
-    // it('does not have a back button if no goBack param is set', () => {
-    //     const navigationProp = { navigation: {} };
-    //     const options = navigationOptions(navigationProp);
-    //     expect(options.headerLeft()).toBe(null);
-    // });
 });

@@ -15,6 +15,7 @@ import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
 import { ICON_SIZE } from '../../styles/dimensions';
 import { allowScreenshots, forbidScreenshots } from '../../core/utils/screenshot';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface INavigationParams {
     wallet: IWalletState;
@@ -104,21 +105,23 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
                             </View>
                         </View>
 
-                        <View style={styles.bottomContainer}>
-                            <Button
-                                disabled={copied}
-                                onPress={() => {
-                                    Clipboard.setString(
-                                        this.state.mnemonic.toString().replace(/,/g, ' ')
-                                    );
-                                    this.setState({ copied: true });
-                                }}
-                            >
-                                {copied
-                                    ? translate('App.buttons.copiedBtn')
-                                    : translate('App.buttons.clipboardBtn')}
-                            </Button>
-                        </View>
+                        {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
+                            <View style={styles.bottomContainer}>
+                                <Button
+                                    disabled={copied}
+                                    onPress={() => {
+                                        Clipboard.setString(
+                                            this.state.mnemonic.toString().replace(/,/g, ' ')
+                                        );
+                                        this.setState({ copied: true });
+                                    }}
+                                >
+                                    {copied
+                                        ? translate('App.buttons.copiedBtn')
+                                        : translate('App.buttons.clipboardBtn')}
+                                </Button>
+                            </View>
+                        )}
                     </React.Fragment>
                 )}
             </View>

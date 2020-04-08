@@ -14,3 +14,4 @@ export const FAILED_LOGIN_BLOCKING = {
     9: 60 * 60 * 1000, // 1h
     12: 24 * 60 * 60 * 1000 // 1 day
 };
+export const MNEMONIC_LENGTH = 12;

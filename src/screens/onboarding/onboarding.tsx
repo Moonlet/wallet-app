@@ -70,7 +70,10 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
         this.props.navigation.navigate('RecoverWallet');
     }
     public onPressCreate() {
-        this.props.navigation.navigate('CreateWalletMnemonic');
+        this.props.navigation.navigate('CreateWalletMnemonic', {
+            mnemonic: undefined,
+            step: 1
+        });
     }
 
     public onPressConnect() {

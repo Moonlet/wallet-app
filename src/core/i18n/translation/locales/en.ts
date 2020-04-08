@@ -104,7 +104,13 @@ export const translation: ITranslations = {
         },
         CreateWalletMnemonic: {
             body:
-                'Please save the recovery phrase and keep it in a safe place. The recovery phrase is the only way to restore your Moonlet wallet in case you lose your phone or forget your password.'
+                'Please save the recovery phrase and keep it in a safe place. The recovery phrase is the only way to restore your Moonlet wallet in case you lose your phone or forget your password.',
+            title:
+                'Here’s your recovery phrase. Please write all {{mnemonicLength}} words down and keep them safe.',
+            mnemonicInfo: 'Write down the words from {{from}} to {{to}}:',
+            terms:
+                'The recovery phrase is the only way to restore your Moonlet wallet in case you lose your phone or forget your password. Don’t lose it!',
+            copy: 'Copy entire mnemonic'
         },
         CreateWalletMnemonicConfirm: {
             body:

@@ -15,11 +15,18 @@ const keyboardLayout = [
     ['z', 'x', 'c', 'v', 'b', 'n', 'm']
 ];
 
+export interface IKeyboardButton {
+    label: string;
+    onPress: () => void;
+    style?: {};
+    disabled?: boolean;
+}
+
 export interface IProps {
     showNumeric?: boolean;
     handleTextUpdate: (key: any) => void;
     handleDeleteKey: () => void;
-    buttons?: { label: string; onPress: () => void; style?: {}; disabled?: boolean }[];
+    buttons?: IKeyboardButton[];
     footerButton?: { label?: string; onPress: () => void; style?: {} };
     disableSpace?: boolean;
 }

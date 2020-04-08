@@ -2,105 +2,34 @@
 
 exports[`creat wallet terms screen component renders correctly 1`] = `
 "<View style={{...}}>
+  <withTheme(TextComponent) style={{...}}>
+    Here’s your recovery phrase. Please write all 12 words down and keep them safe.
+  </withTheme(TextComponent)>
   <View style={{...}}>
-    <View style={{...}}>
-      <View style={{...}}>
-        <withTheme(TextComponent) style={{...}}>
-          1. 1
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          2. 2
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          3. 3
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          4. 4
-        </withTheme(TextComponent)>
-      </View>
-      <View style={{...}}>
-        <withTheme(TextComponent) style={{...}}>
-          5. 5
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          6. 6
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          7. 7
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          8. 8
-        </withTheme(TextComponent)>
-      </View>
-      <View style={{...}}>
-        <withTheme(TextComponent) style={{...}}>
-          9. 9
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          10. 10
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          11. 11
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          12. 12
-        </withTheme(TextComponent)>
-      </View>
-      <View style={{...}}>
-        <withTheme(TextComponent) style={{...}}>
-          13. 13
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          14. 14
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          15. 15
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          16. 16
-        </withTheme(TextComponent)>
-      </View>
-      <View style={{...}}>
-        <withTheme(TextComponent) style={{...}}>
-          17. 17
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          18. 18
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          19. 19
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          20. 20
-        </withTheme(TextComponent)>
-      </View>
-      <View style={{...}}>
-        <withTheme(TextComponent) style={{...}}>
-          21. 21
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          22. 22
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          23. 23
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}}>
-          24. 24
-        </withTheme(TextComponent)>
-      </View>
-    </View>
-    <View style={{...}}>
-      <Icon name=\\"warning\\" size={44} style={{...}} allowFontScaling={false} />
-      <withTheme(TextComponent) darker={true}>
-        Please save the recovery phrase and keep it in a safe place. The recovery phrase is the only way to restore your Moonlet wallet in case you lose your phone or forget your password.
-      </withTheme(TextComponent)>
-    </View>
+    <withTheme(TextComponent) style={{...}}>
+      Write down the words from 1 to 4:
+    </withTheme(TextComponent)>
+    <withTheme(TextComponent) style={{...}}>
+      1. 1
+    </withTheme(TextComponent)>
+    <withTheme(TextComponent) style={{...}}>
+      2. 2
+    </withTheme(TextComponent)>
+    <withTheme(TextComponent) style={{...}}>
+      3. 3
+    </withTheme(TextComponent)>
+    <withTheme(TextComponent) style={{...}}>
+      4. 4
+    </withTheme(TextComponent)>
+  </View>
+  <View style={{...}}>
+    <withTheme(CheckboxComponent) onPress={[Function: onPress]} checked={false} text=\\"The recovery phrase is the only way to restore your Moonlet wallet in case you lose your phone or forget your password. Don’t lose it!\\" textStyle={{...}} />
   </View>
   <View style={{...}}>
     <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]}>
-      Copy
+      Copy entire mnemonic
     </withTheme(ButtonComponent)>
-    <withTheme(ButtonComponent) testID=\\"button-next\\" primary={true} onPress={[Function: onPress]}>
+    <withTheme(ButtonComponent) testID=\\"button-next\\" primary={true} onPress={[Function: onPress]} disabled={true}>
       Next
     </withTheme(ButtonComponent)>
   </View>

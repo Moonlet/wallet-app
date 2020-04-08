@@ -72,32 +72,7 @@ describe('creat wallet terms screen component', () => {
         instance.setMnemonicText('pa');
         expect(spySetState).toBeCalledWith({
             indexForSuggestions: 0,
-            mnemonic: [
-                'pa',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
-            ],
+            mnemonic: ['pa', '', '', '', '', '', '', '', '', '', '', ''],
             suggestions: [
                 'pact',
                 'paddle',
@@ -130,32 +105,7 @@ describe('creat wallet terms screen component', () => {
         wrapper.find('[testID="button-suggestion-0"]').simulate('press');
 
         expect(spySetState).toBeCalledWith({
-            mnemonic: [
-                'pact',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
-            ]
+            mnemonic: ['pact', '', '', '', '', '', '', '', '', '', '', '']
         });
     });
 

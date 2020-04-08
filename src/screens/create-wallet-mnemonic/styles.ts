@@ -1,6 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -9,41 +9,50 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2,
             backgroundColor: theme.colors.appBackground
         },
-        topContainer: {
+        title: {
+            fontSize: normalize(20),
+            lineHeight: normalize(25),
+            color: theme.colors.textSecondary,
+            paddingTop: BASE_DIMENSION * 2
+        },
+        mnemonicContainer: {
             flex: 1,
-            alignItems: 'center',
-            paddingTop: BASE_DIMENSION * 8
+            justifyContent: 'center',
+            flexDirection: 'column'
+        },
+        mnemonicInfoText: {
+            fontSize: normalize(20),
+            lineHeight: normalize(25),
+            color: theme.colors.textSecondary,
+            marginBottom: BASE_DIMENSION * 2
+        },
+        secretWord: {
+            fontSize: normalize(23),
+            lineHeight: normalize(34),
+            color: theme.colors.textSecondary,
+            marginLeft: BASE_DIMENSION * 5,
+            fontWeight: 'bold'
+        },
+        checkboxContainer: {
+            flexDirection: 'row',
+            marginBottom: BASE_DIMENSION,
+            paddingHorizontal: BASE_DIMENSION * 2
+        },
+        checkboxText: {
+            fontSize: normalize(15),
+            lineHeight: normalize(21),
+            color: theme.colors.text,
+            marginRight: Platform.select({
+                ios: BASE_DIMENSION * 4,
+                default: BASE_DIMENSION * 2
+            })
         },
         bottomContainer: {
             marginHorizontal: BASE_DIMENSION * 2,
             marginBottom: BASE_DIMENSION * 6
         },
-        mnemonicContainer: {
-            backgroundColor: theme.colors.cardBackground,
-            borderRadius: BORDER_RADIUS,
-            padding: BASE_DIMENSION,
-            alignSelf: 'stretch'
-        },
-        mnemonicLine: {
-            flexDirection: 'row',
-            paddingVertical: BASE_DIMENSION
-        },
-        mnemonicWord: {
-            flex: 1,
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
-            color: theme.colors.text
-        },
         copyButton: {
-            marginBottom: BASE_DIMENSION * 2
-        },
-        textContainer: {
-            flexDirection: 'row',
-            marginTop: BASE_DIMENSION * 3,
-            marginHorizontal: BASE_DIMENSION * 2
-        },
-        alertIcon: {
-            color: theme.colors.warning,
-            marginRight: BASE_DIMENSION
+            marginBottom: BASE_DIMENSION * 2,
+            marginTop: BASE_DIMENSION
         }
     });

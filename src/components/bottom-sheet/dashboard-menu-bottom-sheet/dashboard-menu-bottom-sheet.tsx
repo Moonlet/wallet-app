@@ -9,8 +9,6 @@ import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { ICON_SIZE, normalize } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
-import { QrModalReader } from '../../qr-modal/qr-modal';
-import { WalletConnectClient } from '../../../core/wallet-connect/wallet-connect-client';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { Blockchain } from '../../../core/blockchain/types';
@@ -35,7 +33,6 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
     IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public bottomSheet: any;
-    public qrCodeScanner: any;
 
     constructor(
         props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -58,9 +55,9 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         NavigationService.navigate('ManageAccount', {});
     }
 
-    public async onQrCodeScanned(value: string) {
+    public connectExtension() {
         this.props.onClose();
-        WalletConnectClient.connect(value);
+        NavigationService.navigate('ConnectExtension', {});
     }
 
     public renderBottomSheetContent() {
@@ -115,7 +112,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     )}
 
                 <TouchableHighlight
-                    onPress={() => this.qrCodeScanner.open()}
+                    onPress={() => this.connectExtension()}
                     underlayColor={theme.colors.bottomSheetBackground}
                 >
                     <View style={styles.rowContainer}>
@@ -133,11 +130,6 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         <Icon name="chevron-right" size={normalize(16)} style={styles.arrowRight} />
                     </View>
                 </TouchableHighlight>
-
-                <QrModalReader
-                    obRef={ref => (this.qrCodeScanner = ref)}
-                    onQrCodeScanned={value => this.onQrCodeScanned(value)}
-                />
             </View>
         );
     }

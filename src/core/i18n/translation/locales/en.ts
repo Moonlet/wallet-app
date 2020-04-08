@@ -396,6 +396,11 @@ export const translation: ITranslations = {
                 hookDetected:
                     "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk."
             }
+        },
+        ConnectExtension: {
+            title: 'Connect extension',
+            buttonScan: 'Scan QR code',
+            body: 'Quickly connect extension and use Moonlet on your laptop or desktop computers'
         }
     },
     plural: (n: number, ord?: boolean) => {

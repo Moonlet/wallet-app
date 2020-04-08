@@ -6,8 +6,7 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            flexDirection: 'row',
-            width: '100%'
+            flexDirection: 'row'
         },
         icon: {
             color: theme.colors.accent,
@@ -17,7 +16,6 @@ export default (theme: ITheme) =>
         text: {
             fontSize: normalize(17),
             lineHeight: normalize(22),
-            color: theme.colors.text,
-            opacity: 0.67
+            color: theme.colors.textSecondary
         }
     });

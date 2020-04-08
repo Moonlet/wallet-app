@@ -1,6 +1,6 @@
 {
     "name": "moonlet",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "private": true,
     "scripts": {
         "generate-icons": "mkdir -p resources/fonts && icon-font-generator ./src/assets/icons/svg/*.svg -o resources/fonts --height 1024 --types ttf",
@@ -57,6 +57,7 @@
         "hoist-non-react-statics": "^3.3.0",
         "immutable": "^3.8.2",
         "intl": "^1.2.5",
+        "jail-monkey": "^2.3.2",
         "js-sha256": "^0.9.0",
         "klona": "^1.1.1",
         "ledger-cosmos-js": "^2.1.7",

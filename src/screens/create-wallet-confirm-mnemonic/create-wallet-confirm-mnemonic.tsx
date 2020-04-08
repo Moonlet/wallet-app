@@ -14,6 +14,7 @@ import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
+import { MNEMONIC_LENGTH } from '../../core/constants/app';
 
 export interface IReduxProps {
     createHDWallet: typeof createHDWallet;
@@ -75,7 +76,7 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
     if (testWords.length < 3) {
         const randomNumbers: any = [];
         while (randomNumbers.length < 3) {
-            const n = Math.floor(Math.random() * 24);
+            const n = Math.floor(Math.random() * MNEMONIC_LENGTH);
             if (!randomNumbers.includes(n)) {
                 randomNumbers.push(n);
             }

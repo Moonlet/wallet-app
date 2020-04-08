@@ -11,11 +11,14 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { createHDWallet } from '../../redux/wallets/actions';
 import { Mnemonic } from '../../core/wallet/hd-wallet/mnemonic';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { KeyboardCustom } from '../../components/keyboard-custom/keyboard-custom';
+import { KeyboardCustom, IKeyboardButton } from '../../components/keyboard-custom/keyboard-custom';
 import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
+import { forbidScreenshots, allowScreenshots } from '../../core/utils/screenshot';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { MNEMONIC_LENGTH } from '../../core/constants/app';
 
 interface IState {
     mnemonic: string[];
@@ -56,15 +59,21 @@ export class RecoverWalletScreenComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            mnemonic: new Array(24).fill(''),
+            mnemonic: new Array(MNEMONIC_LENGTH).fill(''),
             // mnemonic24: 'panic club above clarify orbit resist illegal feel bus remember aspect field test bubble dog trap awesome hand room rice heavy idle faint salmon'.split(' '),
             // mnemonic12: 'author tumble model pretty exile little shoulder frost bridge mistake devote mixed'.split(' '),
             suggestions: [],
             errors: [],
             indexForSuggestions: -1,
             validInputs: [],
-            numberMnemonics: 24
+            numberMnemonics: MNEMONIC_LENGTH
         };
+
+        forbidScreenshots();
+    }
+
+    public componentWillUnmount() {
+        allowScreenshots();
     }
 
     public setMnemonicText(text: string) {
@@ -130,6 +139,30 @@ export class RecoverWalletScreenComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
+        const keyboardButtons: IKeyboardButton[] = [];
+
+        if (isFeatureActive(RemoteFeature.DEV_TOOLS)) {
+            keyboardButtons.push({
+                label: translate('App.labels.paste'),
+                onPress: () => this.pasteFromClipboard(),
+                disabled: this.mnemonicsFilled()
+            });
+        }
+
+        keyboardButtons.push(
+            {
+                label: translate('App.labels.nextWord'),
+                onPress: () => this.focusInput(this.state.indexForSuggestions + 1),
+                disabled: this.mnemonicsFilled()
+            },
+            {
+                label: translate('App.labels.confirm'),
+                onPress: () => this.confirm(),
+                style: { color: this.props.theme.colors.accent },
+                disabled: !this.mnemonicsFilled()
+            }
+        );
+
         return (
             <View style={styles.container}>
                 <TabSelect
@@ -179,24 +212,7 @@ export class RecoverWalletScreenComponent extends React.Component<
                 <KeyboardCustom
                     handleTextUpdate={(text: string) => this.setMnemonicText(text)}
                     handleDeleteKey={() => this.deleteMnemonicText()}
-                    buttons={[
-                        {
-                            label: translate('App.labels.paste'),
-                            onPress: () => this.pasteFromClipboard(),
-                            disabled: this.mnemonicsFilled()
-                        },
-                        {
-                            label: translate('App.labels.nextWord'),
-                            onPress: () => this.focusInput(this.state.indexForSuggestions + 1),
-                            disabled: this.mnemonicsFilled()
-                        },
-                        {
-                            label: translate('App.labels.confirm'),
-                            onPress: () => this.confirm(),
-                            style: { color: this.props.theme.colors.accent },
-                            disabled: !this.mnemonicsFilled()
-                        }
-                    ]}
+                    buttons={keyboardButtons}
                     disableSpace
                 />
             </View>

@@ -6,7 +6,11 @@ import { translate } from '../../core/i18n';
 import { PasswordTerms } from './components/password-terms/password-terms';
 import Modal from '../../library/modal/modal';
 import bind from 'bind-decorator';
-import { getPassword, setPassword } from '../../core/secure/keychain';
+import {
+    getEncryptionKey,
+    verifyPinInput,
+    generateEncryptionKey
+} from '../../core/secure/keychain';
 import { changePIN } from '../../redux/wallets/actions';
 import { Text } from '../../library';
 import { IThemeProps } from '../../core/theme/with-theme';
@@ -236,7 +240,7 @@ export class PasswordModalComponent extends React.Component<
         this.resultDeferred = new Deferred();
 
         if (data?.shouldCreatePassword) {
-            const passwordCredentials = await getPassword();
+            const passwordCredentials = await getEncryptionKey('');
             if (passwordCredentials.password === null) {
                 this.resultDeferred && this.resultDeferred.reject();
             }
@@ -391,11 +395,10 @@ export class PasswordModalComponent extends React.Component<
 
     @bind
     private async updateState(data: { password?: string; biometryAuthResult?: boolean }) {
-        let isPasswordValid = await this.verifyPassword(data.password);
-        if (data?.biometryAuthResult === true) {
-            isPasswordValid = data.biometryAuthResult;
+        let isPasswordValid = data.biometryAuthResult;
+        if (data?.biometryAuthResult !== true) {
+            isPasswordValid = await this.verifyPassword(data.password);
         }
-
         switch (this.state.currentStep) {
             // Enter PIN Flow
             case ScreenStep.ENTER_PIN:
@@ -426,7 +429,7 @@ export class PasswordModalComponent extends React.Component<
             case ScreenStep.CREATE_PIN_CONFIRM:
                 if (this.state.password === data.password) {
                     this.setState({ visible: false });
-                    await setPassword(data.password, false);
+                    await generateEncryptionKey(data.password);
                     await this.modalOnHideDeffered?.promise;
                     this.resultDeferred?.resolve(data.password);
                 } else {
@@ -473,7 +476,6 @@ export class PasswordModalComponent extends React.Component<
                     // this.state.password is the old password
                     this.setState({ visible: false });
                     this.props.changePIN(this.state.newPassword, this.state.password);
-                    await setPassword(this.state.newPassword, false);
                     await this.modalOnHideDeffered?.promise;
                     this.resultDeferred?.resolve(this.state.newPassword);
                 } else {
@@ -491,8 +493,7 @@ export class PasswordModalComponent extends React.Component<
             return true;
         } else {
             try {
-                const passwordCredentials = await getPassword();
-                return value === passwordCredentials.password;
+                return await verifyPinInput(value);
             } catch {
                 this.setState({ errorMessage: translate('Password.genericError') });
                 return false;

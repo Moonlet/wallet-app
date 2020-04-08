@@ -1,8 +1,8 @@
-export const setPassword = async (password: string, shouldEncrypt: boolean = true) => {
+export const setEncryptionKey = async (password: string, shouldEncrypt: boolean = true) => {
     return Promise.resolve('');
 };
 
-export const getPassword = async () => {
+export const getEncryptionKey = async () => {
     return Promise.resolve({ password: '' });
 };
 

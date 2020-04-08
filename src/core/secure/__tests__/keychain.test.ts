@@ -1,4 +1,4 @@
-import { setPassword, getPassword } from '../keychain';
+import { getPassword, setPassword } from '../keychain';
 import { hash } from '../encrypt';
 
 jest.mock('@react-native-community/async-storage', () => ({
@@ -17,7 +17,6 @@ jest.mock('@react-native-community/async-storage', () => ({
 
 describe('keychain', () => {
     test('set password', async () => {
-        await setPassword('000000');
         const keychainPassword = await getPassword();
         expect(keychainPassword.password).toBe(await hash('000000'));
     });

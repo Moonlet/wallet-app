@@ -6,14 +6,12 @@ import stylesProvider from './styles';
 import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { hash } from '../../../../core/secure/encrypt';
 import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
 import { biometricAuth, BiometryType } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';
 import { normalize, ICON_SIZE } from '../../../../styles/dimensions';
 import { SafeAreaView } from 'react-navigation';
-import { getPassword } from '../../../../core/secure/keychain';
 
 const digitsLayout = [
     [1, 2, 3],
@@ -72,25 +70,8 @@ export class PasswordPinComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        if (
-            this.props.enableBiometryAuth === true &&
-            this.props.isMoonletDisabled === false &&
-            (await this.hasMoonletPasswordStoredInKeychain()) === true
-        ) {
+        if (this.props.enableBiometryAuth === true && this.props.isMoonletDisabled === false) {
             this.biometryAuth();
-        }
-    }
-
-    private async hasMoonletPasswordStoredInKeychain(): Promise<boolean> {
-        try {
-            const passwordCredentials = await getPassword();
-            if (passwordCredentials.password) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch {
-            return false;
         }
     }
 
@@ -112,8 +93,7 @@ export class PasswordPinComponent extends React.Component<
             if (this.state.password.length < PASSWORD_LENGTH) {
                 this.setState({ password: this.state.password.concat(digit) }, async () => {
                     if (this.state.password.length === PASSWORD_LENGTH) {
-                        const passHash = await hash(this.state.password);
-                        this.props.onPasswordEntered({ password: passHash });
+                        this.props.onPasswordEntered({ password: this.state.password });
                     }
                 });
             }

@@ -35,7 +35,7 @@ export const loadTranslations = (language: Language) => {
 
 const getKeyConfig = (key: string): ITranslation | string => {
     const keyParts = key.split('.');
-    let config = store.translations.texts as any;
+    let config = store?.translations?.texts as any;
 
     for (const keyPart of keyParts) {
         if (config && config[keyPart]) {

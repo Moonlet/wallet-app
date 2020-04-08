@@ -29,6 +29,7 @@ import { IExchangeRates } from './redux/market/state';
 import { updateAddressMonitorTokens } from './core/address-monitor';
 import DeviceInfo from 'react-native-device-info';
 import { setDeviceId } from './redux/preferences/actions';
+import { SecurityChecks } from './components/security-checks/security-checks';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -56,6 +57,7 @@ export default class App extends React.Component<{}, IState> {
     private remoteFeatureConfigLoaded: boolean = false;
     private unsub: any;
     private notificationsConfigured: boolean = false;
+    private securityChecksDone: boolean = false;
 
     constructor(props: any) {
         super(props);
@@ -83,6 +85,7 @@ export default class App extends React.Component<{}, IState> {
 
     public updateAppReady = () => {
         const appReady =
+            this.securityChecksDone &&
             this.translationsLoaded &&
             this.reduxStateLoaded &&
             this.state.splashAnimationDone &&
@@ -207,7 +210,7 @@ export default class App extends React.Component<{}, IState> {
                             {!this.state.displayApplication && <ImageCanvas />}
                             <PasswordModal.Component />
                             <BottomSheet />
-                            <Dialog.Component />
+                            {Platform.OS !== 'web' && <Dialog.Component />}
                             <LoadingModal />
                             <LegalModal navigationState={this.state.navigationState} />
                         </ThemeContext.Provider>
@@ -215,7 +218,17 @@ export default class App extends React.Component<{}, IState> {
                 </Provider>
             );
         } else {
-            return <SplashScreen />;
+            return (
+                <>
+                    <SplashScreen />
+                    <SecurityChecks
+                        onReady={() => {
+                            this.securityChecksDone = true;
+                            this.updateAppReady();
+                        }}
+                    />
+                </>
+            );
         }
     }
 }

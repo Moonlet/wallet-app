@@ -41,6 +41,7 @@ test('renders correctly', async () => {
     expect(element.reduxStateLoaded).toBe(true);
     expect(element.state.splashAnimationDone).toBe(false);
 
+    element.securityChecksDone = true;
     (storeMock as any).triggerStoreSubscribe();
     await delay(1000);
 

@@ -10,7 +10,7 @@ interface ISmartImageProps {
     style?: any;
 }
 
-enum ResizeMode {
+export enum ResizeMode {
     contain = 'contain',
     cover = 'cover',
     stretch = 'stretch',

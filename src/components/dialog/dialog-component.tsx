@@ -44,7 +44,7 @@ export class DialogComponent extends React.Component<
 > {
     private static refDeferred: Deferred<DialogComponent> = new Deferred();
     private dialogHideDeffered: Deferred;
-    private resultDeferred: any;
+    private resultDeferred: Deferred;
 
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
@@ -184,7 +184,7 @@ export class DialogComponent extends React.Component<
         return this.resultDeferred.promise;
     }
 
-    private onCloseDialog(callback?: () => void) {
+    private onCloseDialog(callback: () => void) {
         this.setState({ visible: false }, () => callback());
     }
 
@@ -214,7 +214,9 @@ export class DialogComponent extends React.Component<
                 });
                 break;
             default:
-                this.onCloseDialog();
+                this.onCloseDialog(() => {
+                    //
+                });
                 break;
         }
     }
@@ -246,7 +248,9 @@ export class DialogComponent extends React.Component<
                 });
                 break;
             default:
-                this.onCloseDialog();
+                this.onCloseDialog(() => {
+                    //
+                });
                 break;
         }
     }

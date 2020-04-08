@@ -117,8 +117,7 @@ export const translation: ITranslations = {
                 'To make sure you have written down all of your recovery words, please enter the following:',
             errors: {
                 tryAgain: 'Please try again'
-            },
-            password: 'Your PIN is required\nto create your Moonlet wallet'
+            }
         },
         CreateHardwareWallet: {
             device: 'Device: {{device}}',
@@ -170,13 +169,9 @@ export const translation: ITranslations = {
             touchSensor: 'Touch sensor',
             showPasscode: 'Show Passcode',
             changePinSubtitle: 'Your current PIN is required in order to change it',
-            recoverWalletPinSubtitle: 'Your PIN is required\nto recover your Moonlet wallet',
-            connectHardwareWalletPinSubtitle:
-                'Your PIN is required\nto connect your hardware wallet',
             moonletDisabled: 'Moonlet is disabled',
             disabledDetails: 'try again in {{duration}} {{measurement}}',
             disabledDetailsSeconds: 'try again in a few seconds',
-            createPinSubtitle: 'Your PIN is required\nfor your Moonlet wallet',
             activateInternet: 'Please activate the internet connection',
             alreadyHavePin: 'You already have this PIN!\nPlease choose another one'
         },

@@ -104,9 +104,7 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
             createWallet(currentPassword);
         } catch (err) {
             try {
-                const newPassword = await PasswordModal.createPassword(
-                    translate('CreateWalletMnemonicConfirm.password')
-                );
+                const newPassword = await PasswordModal.createPassword();
                 createWallet(newPassword);
             } catch (err) {
                 //

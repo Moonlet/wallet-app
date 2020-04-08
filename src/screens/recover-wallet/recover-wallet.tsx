@@ -128,9 +128,7 @@ export class RecoverWalletScreenComponent extends React.Component<
             this.createWallet(currentPassword);
         } catch (err) {
             try {
-                const newPassword = await PasswordModal.createPassword(
-                    translate('Password.recoverWalletPinSubtitle')
-                );
+                const newPassword = await PasswordModal.createPassword();
                 this.createWallet(newPassword);
             } catch (err) {
                 //

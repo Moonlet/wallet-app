@@ -5,6 +5,7 @@ import stylesProvider from './styles';
 import { Deferred } from '../../core/utils/deferred';
 import RNDialog from 'react-native-dialog';
 import { translate } from '../../core/i18n';
+import bind from 'bind-decorator';
 
 export interface IAlertButton {
     text?: string;
@@ -41,57 +42,13 @@ export class DialogComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    public static ref: Deferred<DialogComponent> = new Deferred();
-
-    public static async alert(
-        title: string,
-        message: string,
-        cancelButton: IAlertButton,
-        confirmButton: IAlertButton
-    ): Promise<boolean> {
-        const ref = await DialogComponent.ref.promise;
-
-        return ref.showAlert(title, message, cancelButton, confirmButton);
-    }
-
-    public static async prompt(
-        title: string,
-        message: string,
-        cancelButtonText?: string,
-        confirmButtonText?: string,
-        defaultInputValue?: string,
-        keyboardType?: KeyboardTypeOptions
-    ): Promise<string> {
-        const ref = await DialogComponent.ref.promise;
-
-        return ref.showPrompt(
-            title,
-            message,
-            cancelButtonText || translate('App.labels.cancel'),
-            confirmButtonText || translate('App.labels.save'),
-            defaultInputValue,
-            keyboardType
-        );
-    }
-
-    public static async confirm(title: string, message: string): Promise<boolean> {
-        const ref = await DialogComponent.ref.promise;
-
-        return ref.showConfirm(title, message);
-    }
-
-    public static async info(title: string, message: string): Promise<boolean> {
-        const ref = await DialogComponent.ref.promise;
-
-        return ref.showInfo(title, message);
-    }
-
-    public input = null;
-    private dialogDeferred = null;
-    private dialogHideDeffered;
+    private static refDeferred: Deferred<DialogComponent> = new Deferred();
+    private dialogHideDeffered: Deferred;
+    private resultDeferred: any;
 
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
+        DialogComponent.refDeferred.resolve(this);
 
         this.state = {
             visible: false,
@@ -111,8 +68,45 @@ export class DialogComponent extends React.Component<
             inputValue: '',
             keyboardType: 'default'
         };
+    }
 
-        DialogComponent.ref.resolve(this);
+    public static async alert(
+        title: string,
+        message: string,
+        cancelButton: IAlertButton,
+        confirmButton: IAlertButton
+    ): Promise<boolean> {
+        const ref = await DialogComponent.refDeferred.promise;
+        return ref.showAlert(title, message, cancelButton, confirmButton);
+    }
+
+    public static async prompt(
+        title: string,
+        message: string,
+        cancelButtonText?: string,
+        confirmButtonText?: string,
+        defaultInputValue?: string,
+        keyboardType?: KeyboardTypeOptions
+    ): Promise<string> {
+        const ref = await DialogComponent.refDeferred.promise;
+        return ref.showPrompt(
+            title,
+            message,
+            cancelButtonText || translate('App.labels.cancel'),
+            confirmButtonText || translate('App.labels.save'),
+            defaultInputValue,
+            keyboardType
+        );
+    }
+
+    public static async confirm(title: string, message: string): Promise<boolean> {
+        const ref = await DialogComponent.refDeferred.promise;
+        return ref.showConfirm(title, message);
+    }
+
+    public static async info(title: string, message: string): Promise<boolean> {
+        const ref = await DialogComponent.refDeferred.promise;
+        return ref.showInfo(title, message);
     }
 
     public async showAlert(
@@ -121,7 +115,7 @@ export class DialogComponent extends React.Component<
         cancelButton: IAlertButton,
         confirmButton: IAlertButton
     ): Promise<boolean> {
-        this.dialogDeferred = new Deferred();
+        this.resultDeferred = new Deferred();
         this.dialogHideDeffered = new Deferred();
 
         this.setState({
@@ -133,7 +127,7 @@ export class DialogComponent extends React.Component<
             confirmButton
         });
 
-        return this.dialogDeferred.promise;
+        return this.resultDeferred.promise;
     }
 
     public async showPrompt(
@@ -144,7 +138,7 @@ export class DialogComponent extends React.Component<
         defaultInputValue?: string,
         keyboardType?: KeyboardTypeOptions
     ): Promise<string> {
-        this.dialogDeferred = new Deferred();
+        this.resultDeferred = new Deferred();
         this.dialogHideDeffered = new Deferred();
 
         this.setState({
@@ -155,14 +149,15 @@ export class DialogComponent extends React.Component<
             cancelButtonText,
             confirmButtonText,
             defaultInputValue,
-            keyboardType
+            keyboardType,
+            inputValue: ''
         });
 
-        return this.dialogDeferred.promise;
+        return this.resultDeferred.promise;
     }
 
     public async showConfirm(title: string, message: string): Promise<boolean> {
-        this.dialogDeferred = new Deferred();
+        this.resultDeferred = new Deferred();
         this.dialogHideDeffered = new Deferred();
 
         this.setState({
@@ -172,11 +167,11 @@ export class DialogComponent extends React.Component<
             message
         });
 
-        return this.dialogDeferred.promise;
+        return this.resultDeferred.promise;
     }
 
     public async showInfo(title: string, message: string): Promise<boolean> {
-        this.dialogDeferred = new Deferred();
+        this.resultDeferred = new Deferred();
         this.dialogHideDeffered = new Deferred();
 
         this.setState({
@@ -186,61 +181,72 @@ export class DialogComponent extends React.Component<
             message
         });
 
-        return this.dialogDeferred.promise;
+        return this.resultDeferred.promise;
     }
 
-    public async closeDialog() {
-        this.setState({
-            visible: false,
-            dialogType: undefined,
-            cancelButton: undefined,
-            confirmButton: undefined,
-            inputValue: ''
-        });
-
-        await this.dialogHideDeffered?.promise;
+    private onCloseDialog(callback?: () => void) {
+        this.setState({ visible: false }, () => callback());
     }
 
-    public async cancelButtonPress() {
+    @bind
+    private onBackCloseDialog() {
+        this.setState({ visible: false });
+    }
+
+    public cancelButtonPress() {
         switch (this.state.dialogType) {
             case DialogType.ALERT:
-                await this.closeDialog();
-                this.state.cancelButton?.onPress && this.state.cancelButton?.onPress();
+                this.onCloseDialog(async () => {
+                    await this.dialogHideDeffered?.promise;
+                    this.state.cancelButton?.onPress();
+                });
                 break;
             case DialogType.CONFIRM:
-                await this.closeDialog();
-                this.dialogDeferred && this.dialogDeferred.resolve(false);
+                this.onCloseDialog(async () => {
+                    await this.dialogHideDeffered?.promise;
+                    this.resultDeferred?.resolve(false);
+                });
                 break;
             case DialogType.PROMPT:
-                await this.closeDialog();
-                this.dialogDeferred && this.dialogDeferred.resolve('');
+                this.onCloseDialog(async () => {
+                    await this.dialogHideDeffered?.promise;
+                    this.resultDeferred?.resolve('');
+                });
                 break;
             default:
-                await this.closeDialog();
+                this.onCloseDialog();
                 break;
         }
     }
 
-    public async confirmButtonPress() {
+    public confirmButtonPress() {
         switch (this.state.dialogType) {
             case DialogType.ALERT:
-                await this.closeDialog();
-                this.state.confirmButton?.onPress && this.state.confirmButton?.onPress();
+                this.onCloseDialog(async () => {
+                    await this.dialogHideDeffered?.promise;
+                    this.state.confirmButton?.onPress();
+                });
                 break;
             case DialogType.CONFIRM:
-                await this.closeDialog();
-                this.dialogDeferred && this.dialogDeferred.resolve(true);
+                this.onCloseDialog(async () => {
+                    await this.dialogHideDeffered?.promise;
+                    this.resultDeferred?.resolve(true);
+                });
                 break;
             case DialogType.PROMPT:
-                await this.closeDialog();
-                this.dialogDeferred && this.dialogDeferred.resolve(this.state.inputValue);
+                this.onCloseDialog(async () => {
+                    await this.dialogHideDeffered?.promise;
+                    this.resultDeferred?.resolve(this.state.inputValue);
+                });
                 break;
             case DialogType.INFO:
-                await this.closeDialog();
-                this.dialogDeferred && this.dialogDeferred.resolve(true);
+                this.onCloseDialog(async () => {
+                    await this.dialogHideDeffered?.promise;
+                    this.resultDeferred?.resolve(true);
+                });
                 break;
             default:
-                await this.closeDialog();
+                this.onCloseDialog();
                 break;
         }
     }
@@ -254,6 +260,9 @@ export class DialogComponent extends React.Component<
                 blurStyle={styles.contentContainerStyle}
                 contentStyle={styles.contentContainerStyle}
                 onModalHide={() => this.dialogHideDeffered?.resolve()}
+                {...{
+                    onBackdropPress: this.onBackCloseDialog
+                }}
             >
                 <RNDialog.Title style={styles.titleStyle}>{this.state.title}</RNDialog.Title>
                 <RNDialog.Description style={styles.descriptionStyle}>

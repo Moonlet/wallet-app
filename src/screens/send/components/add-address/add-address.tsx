@@ -12,7 +12,6 @@ import { IContactState, IContactsState } from '../../../../redux/contacts/state'
 import { formatAddress } from '../../../../core/utils/format-address';
 import { Icon } from '../../../../components/icon';
 import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
-import { Dialog } from '../../../../components/dialog/dialog';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import {
     ResolveTextCode,
@@ -79,24 +78,6 @@ export class AddAddressComponent extends React.Component<
         };
     }
 
-    public async alertModalAddAddress() {
-        // TODO: check this, it's not opening all the time
-        const inputValue = await Dialog.prompt(
-            translate('Send.alertTitle'),
-            translate('Send.alertDescription')
-        );
-
-        const contactData: IContactState = {
-            blockchain: this.props.account.blockchain,
-            name: inputValue,
-            address: this.state.toAddress
-        };
-
-        if (inputValue !== '') {
-            this.props.addContact(contactData);
-        }
-    }
-
     private async onPressQrCodeIcon() {
         this.qrCodeScanner.open();
     }
@@ -130,7 +111,11 @@ export class AddAddressComponent extends React.Component<
             addressNotInWalletAccounts === true
         ) {
             return (
-                <TouchableOpacity onPress={() => this.alertModalAddAddress()}>
+                <TouchableOpacity
+                    onPress={() => {
+                        this.props.addContact(this.props.account.blockchain, this.state.toAddress);
+                    }}
+                >
                     <Text style={styles.addressNotInBookText}>
                         {translate('Send.addressNotInBook')}
                     </Text>

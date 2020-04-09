@@ -42,12 +42,9 @@ export class ConnectExtensionScreenComponent extends React.Component<
         this.connectionInterval = setInterval(() => {
             const isConnected = WalletConnectClient.isConnected();
             this.setState({ isConnected });
-            try {
-                !isConnected && deleteFromStorage(WC_CONNECTION);
-            } catch (err) {
-                //
-            }
-        }, 500);
+            // TODO (WIP): if disconnect from extension (tap Sign out button)
+            // when reopen the app, the connection is still visible
+        }, 1000);
     }
 
     public componentWillUnmount() {

@@ -84,7 +84,7 @@ export class ViewKeyComponent extends React.Component<
                         onPressIn={() => this.setState({ unveilMnemonic: true })}
                         onPressOut={() => this.setState({ unveilMnemonic: false })}
                     >
-                        <Icon name="eye" size={ICON_SIZE} style={styles.icon} />
+                        <Icon name="view-1" size={ICON_SIZE} style={styles.icon} />
                         <Text style={styles.textRow}>{translate('App.labels.holdUnveil')}</Text>
                     </TouchableOpacity>
                 )}

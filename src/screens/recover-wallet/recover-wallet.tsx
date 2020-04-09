@@ -149,11 +149,8 @@ export class RecoverWalletScreenComponent extends React.Component<
         const keyboardButtons: IKeyboardButton[] = [
             {
                 label: translate('App.labels.holdUnveil'),
-                onPress: () => {
-                    //
-                },
                 onPressIn: () => this.setState({ unveilMnemonic: true }),
-                onPressOut: () => this.setState({ unveilMnemonic: false })
+                onPressOut: () => setTimeout(() => this.setState({ unveilMnemonic: false }), 250)
             },
             {
                 label: translate('App.labels.nextWord'),

@@ -17,7 +17,7 @@ const keyboardLayout = [
 
 export interface IKeyboardButton {
     label: string;
-    onPress: () => void;
+    onPress?: () => void;
     style?: {};
     disabled?: boolean;
     onPressIn?: () => void;

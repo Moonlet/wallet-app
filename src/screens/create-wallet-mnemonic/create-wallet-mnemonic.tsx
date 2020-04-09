@@ -99,7 +99,9 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
                     <Button
                         style={styles.unveilButton}
                         onPressIn={() => this.setState({ unveilMnemonic: true })}
-                        onPressOut={() => this.setState({ unveilMnemonic: false })}
+                        onPressOut={() =>
+                            setTimeout(() => this.setState({ unveilMnemonic: false }), 250)
+                        }
                     >
                         {translate('App.labels.holdUnveil')}
                     </Button>

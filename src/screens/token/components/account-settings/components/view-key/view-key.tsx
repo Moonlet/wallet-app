@@ -82,7 +82,9 @@ export class ViewKeyComponent extends React.Component<
                         testID="unveil-mnemonic"
                         style={styles.holdUnveilContainer}
                         onPressIn={() => this.setState({ unveilMnemonic: true })}
-                        onPressOut={() => this.setState({ unveilMnemonic: false })}
+                        onPressOut={() =>
+                            setTimeout(() => this.setState({ unveilMnemonic: false }), 250)
+                        }
                     >
                         <Icon name="view-1" size={ICON_SIZE} style={styles.icon} />
                         <Text style={styles.textRow}>{translate('App.labels.holdUnveil')}</Text>

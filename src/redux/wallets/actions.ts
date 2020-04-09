@@ -50,7 +50,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../ui/password-modal/actions';
 import { getTokenConfig, generateAccountTokenState } from '../tokens/static-selectors';
 import { ITokenState } from '../wallets/state';
-import { clearPinCode, getEncryptionKey, KEY_PIN_SAMPLE } from '../../core/secure/keychain';
+import { clearPinCode, getEncryptionKey, generateEncryptionKey } from '../../core/secure/keychain';
 import { delay } from '../../core/utils/time';
 
 // actions consts
@@ -772,8 +772,7 @@ export const changePIN = (newPassword: string, oldPassword: string) => async (
     const state = getState();
 
     const encryptionKey = await getEncryptionKey(oldPassword);
-    const newEncryptionKey = await getEncryptionKey(newPassword);
-    await storeEncrypted(uuidv4(), KEY_PIN_SAMPLE, newEncryptionKey);
+    const newEncryptionKey = await generateEncryptionKey(newPassword);
 
     Object.values(state.wallets).map(async (wallet: IWalletState) => {
         const walletId = wallet.id;

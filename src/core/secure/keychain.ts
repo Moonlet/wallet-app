@@ -12,10 +12,11 @@ const defaultOptions = {
 
 export const KEY_PIN_SAMPLE = 'moonletPinSample';
 
-export const generateEncryptionKey = async (pinCode: string) => {
+export const generateEncryptionKey = async (pinCode: string): Promise<string> => {
     await setBaseEncryptionKey();
     const encryptionKey = await getEncryptionKey(pinCode);
     await storeEncrypted(uuidv4(), KEY_PIN_SAMPLE, encryptionKey);
+    return encryptionKey;
 };
 
 export const setBaseEncryptionKey = async () => {
@@ -54,37 +55,16 @@ export const getBaseEncryptionKey = async () => {
 };
 
 export const getEncryptionKey = async (pinCode: string) => {
-    let password = null;
-    try {
-        // Retrieve the credentials
-        const credentials = await Keychain.getGenericPassword({
-            service: defaultOptions.serviceEncryption
-        });
-        if (credentials) {
-            password = credentials.password;
-        } else {
-            //     console.log(' get encryption key');
-        }
-    } catch (error) {
-        //  console.log("Keychain couldn't be accessed!", error);
-    }
+    let password = await getBaseEncryptionKey();
     if (password !== null) {
         password = await hash(password, pinCode);
     }
-    // console.log('get ecnrypti', password);
     return password;
 };
 
-export const verifyPinInput = async (
-    pinCode: string,
-    biometricLogin: boolean
-): Promise<boolean> => {
-    let code: string = pinCode;
-    if (biometricLogin && pinCode === '') {
-        code = await getPinCode();
-    }
+export const verifyPinCode = async (pinCode: string): Promise<boolean> => {
     try {
-        const encryptionKey = await getEncryptionKey(code);
+        const encryptionKey = await getEncryptionKey(pinCode);
         await readEncrypted(KEY_PIN_SAMPLE, encryptionKey);
         return true;
     } catch (e) {
@@ -93,8 +73,8 @@ export const verifyPinInput = async (
 };
 
 export const setPinCode = async (pinCode: string) => {
-    clearPinCode();
     try {
+        await clearPinCode();
         await Keychain.setGenericPassword(defaultOptions.usernamePin, pinCode, {
             service: defaultOptions.servicePin,
             accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,

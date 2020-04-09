@@ -8,8 +8,9 @@ import Modal from '../../library/modal/modal';
 import bind from 'bind-decorator';
 import {
     getEncryptionKey,
-    verifyPinInput,
-    generateEncryptionKey
+    verifyPinCode,
+    generateEncryptionKey,
+    getPinCode
 } from '../../core/secure/keychain';
 import { changePIN } from '../../redux/wallets/actions';
 import { Text } from '../../library';
@@ -491,7 +492,8 @@ export class PasswordModalComponent extends React.Component<
             return true;
         } else {
             try {
-                return await verifyPinInput(value, biometricLogin);
+                const pinCode = biometricLogin ? await getPinCode() : value; // this will trigger biometric auth
+                return await verifyPinCode(pinCode);
             } catch {
                 this.setState({ errorMessage: translate('Password.genericError') });
                 return false;

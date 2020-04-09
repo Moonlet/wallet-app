@@ -402,7 +402,8 @@ export const translation: ITranslations = {
             buttonScan: 'Scan QR code',
             body: 'Quickly connect extension and use Moonlet on your laptop or desktop computers',
             disconnect: 'Disconnect',
-            disconnectInfo: 'Do you want to disconnect from this device?'
+            disconnectInfo: 'Do you want to disconnect from this device?',
+            currentlyActive: 'Currently active'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -1,6 +1,6 @@
 import RNWalletConnect from '@walletconnect/react-native';
 import { getPassword } from '../secure/keychain';
-import { storeEncrypted, readEncrypted } from '../secure/storage';
+import { storeEncrypted, readEncrypted, deleteFromStorage } from '../secure/storage';
 import { WC_CONNECTION, WC } from '../constants/app';
 import { trimState } from './wc-state-helper';
 import { Notifications } from '../messaging/notifications/notifications';
@@ -204,6 +204,7 @@ export const WalletConnectClient = (() => {
 
     const disconnect = () => {
         walletConnector && walletConnector.killSession();
+        deleteFromStorage(WC_CONNECTION);
     };
 
     const getConnector = () => walletConnector;

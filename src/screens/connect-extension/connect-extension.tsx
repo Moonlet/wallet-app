@@ -12,6 +12,8 @@ import { normalize } from '../../styles/dimensions';
 import { Icon } from '../../components/icon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DialogComponent } from '../../components/dialog/dialog-component';
+import { deleteFromStorage } from '../../core/secure/storage';
+import { WC_CONNECTION } from '../../core/constants/app';
 
 export const navigationOptions = () => ({
     title: translate('ConnectExtension.title')
@@ -38,7 +40,13 @@ export class ConnectExtensionScreenComponent extends React.Component<
 
     public componentDidMount() {
         this.connectionInterval = setInterval(() => {
-            this.setState({ isConnected: WalletConnectClient.isConnected() });
+            const isConnected = WalletConnectClient.isConnected();
+            this.setState({ isConnected });
+            try {
+                !isConnected && deleteFromStorage(WC_CONNECTION);
+            } catch (err) {
+                //
+            }
         }, 500);
     }
 
@@ -71,7 +79,9 @@ export class ConnectExtensionScreenComponent extends React.Component<
                     <View style={styles.connectionsContainer}>
                         <View style={styles.connectionBox}>
                             <Icon name="monitor" size={normalize(32)} style={styles.computerIcon} />
-                            <Text style={styles.connectionInfoText}>{`Currently active`}</Text>
+                            <Text style={styles.connectionInfoText}>
+                                {translate('ConnectExtension.currentlyActive')}
+                            </Text>
                             <TouchableOpacity onPress={() => this.disconnectExtension()}>
                                 <Icon
                                     name="flash-off"

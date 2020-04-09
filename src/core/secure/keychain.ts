@@ -30,7 +30,7 @@ export const setBaseEncryptionKey = async () => {
             rules: Keychain.SECURITY_RULES.AUTOMATIC_UPGRADE
         });
     } catch (e) {
-        //    console.log('error set encryption password', e);
+        //
     }
 };
 
@@ -43,14 +43,11 @@ export const getBaseEncryptionKey = async () => {
         });
         if (credentials) {
             password = credentials.password;
-        } else {
-            //     console.log(' get encryption key');
         }
     } catch (error) {
-        //  console.log("Keychain couldn't be accessed!", error);
+        //
     }
 
-    // console.log('get ecnrypti', password);
     return password;
 };
 
@@ -85,7 +82,7 @@ export const setPinCode = async (pinCode: string) => {
             rules: Keychain.SECURITY_RULES.AUTOMATIC_UPGRADE
         });
     } catch (e) {
-        //  console.log('set Password error', e);
+        //
     }
 };
 
@@ -99,11 +96,9 @@ export const getPinCode = async () => {
         });
         if (credentials) {
             password = credentials.password;
-        } else {
-            //       console.log('No credentials stored get password');
         }
     } catch (error) {
-        //    console.log("Keychain couldn't be accessed!", error);
+        //
     }
 
     return password;

@@ -204,8 +204,12 @@ export class PasswordPinComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.keyContainer}
                     onPress={() => {
-                        this.setState({ password: '' });
-                        this.props.clearErrorMessage();
+                        if (isBiometryAuth) {
+                            this.props.onPasswordEntered({ password: '' });
+                        } else {
+                            this.setState({ password: '' });
+                            this.props.clearErrorMessage();
+                        }
                     }}
                 >
                     {isBiometryAuth ? (

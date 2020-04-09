@@ -28,6 +28,7 @@ import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-
 import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
 import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
+import { clearPinCode, setPinCode } from '../../core/secure/keychain';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -119,7 +120,14 @@ export class SettingsScreenComponent extends React.Component<
                             </Text>
                             <Switch
                                 onValueChange={async () => {
-                                    await PasswordModal.getPassword();
+                                    const password = await PasswordModal.getPassword();
+
+                                    if (this.props.touchID) {
+                                        // disable touch id - delete pin
+                                        await clearPinCode();
+                                    } else {
+                                        await setPinCode(password);
+                                    }
 
                                     // TouchID enables background mode and this will generate another password modal to be shown
                                     this.props.setDisplayPasswordModal(false);

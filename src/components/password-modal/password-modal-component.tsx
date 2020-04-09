@@ -10,7 +10,8 @@ import {
     getEncryptionKey,
     verifyPinCode,
     generateEncryptionKey,
-    getPinCode
+    getPinCode,
+    setPinCode
 } from '../../core/secure/keychain';
 import { changePIN } from '../../redux/wallets/actions';
 import { Text } from '../../library';
@@ -29,6 +30,7 @@ import { NavigationService } from '../../navigation/navigation-service';
 import NetInfo from '@react-native-community/netinfo';
 import ntpClient from 'react-native-ntp-client';
 import CONFIG from '../../config';
+import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 
 const BLOCK_UNTIL_WAIT_INTERNET_CONNECTION = 'BLOCK_UNTIL_WAIT_INTERNET_CONNECTION';
 
@@ -69,6 +71,7 @@ export interface IReduxProps {
     resetFailedLogins: typeof resetFailedLogins;
     setAppBlockUntil: typeof setAppBlockUntil;
     resetAllData: typeof resetAllData;
+    setDisplayPasswordModal: typeof setDisplayPasswordModal;
 }
 
 export const mapStateToProps = (state: IReduxState) => ({
@@ -82,7 +85,8 @@ export const mapDispatchToProps = {
     incrementFailedLogins,
     resetFailedLogins,
     setAppBlockUntil,
-    resetAllData
+    resetAllData,
+    setDisplayPasswordModal
 };
 
 export class PasswordModalComponent extends React.Component<
@@ -396,17 +400,22 @@ export class PasswordModalComponent extends React.Component<
         switch (this.state.currentStep) {
             // Enter PIN Flow
             case ScreenStep.ENTER_PIN:
-                const isPasswordValid = await this.verifyPassword(
-                    data.password,
-                    data.password === '' ? this.props.biometricActive : false
-                );
+                let password = data.password;
+                const shouldConsiderBiometric =
+                    data.password === '' ? this.props.biometricActive : false;
+                if (shouldConsiderBiometric) {
+                    this.props.setDisplayPasswordModal(false);
+                    password = await getPinCode();
+                    this.props.setDisplayPasswordModal(true);
+                }
+                const isPasswordValid = await this.verifyPassword(password);
                 if (isPasswordValid) {
                     this.setState({ visible: false });
                     this.props.resetFailedLogins();
                     this.props.setAppBlockUntil(undefined);
                     await this.modalOnHideDeffered.promise;
-                    this.resultDeferred?.resolve(data.password);
-                } else {
+                    this.resultDeferred?.resolve(password);
+                } else if (shouldConsiderBiometric === false) {
                     this.handleWrongPassword();
                 }
                 break;
@@ -428,6 +437,7 @@ export class PasswordModalComponent extends React.Component<
                 if (this.state.password === data.password) {
                     this.setState({ visible: false });
                     await generateEncryptionKey(data.password);
+                    if (this.props.biometricActive) await setPinCode(data.password);
                     await this.modalOnHideDeffered?.promise;
                     this.resultDeferred?.resolve(data.password);
                 } else {
@@ -440,7 +450,7 @@ export class PasswordModalComponent extends React.Component<
                 this.setState({ currentStep: ScreenStep.CHANGE_PIN_CURRENT });
                 break;
             case ScreenStep.CHANGE_PIN_CURRENT:
-                const passwordValid = await this.verifyPassword(data.password, false);
+                const passwordValid = await this.verifyPassword(data.password);
                 if (passwordValid) {
                     this.passwordPin.clearPasswordInput();
                     this.setState({
@@ -487,13 +497,12 @@ export class PasswordModalComponent extends React.Component<
         }
     }
 
-    private async verifyPassword(value: string, biometricLogin: boolean): Promise<boolean> {
+    private async verifyPassword(value: string): Promise<boolean> {
         if (Platform.OS === 'web') {
             return true;
         } else {
             try {
-                const pinCode = biometricLogin ? await getPinCode() : value; // this will trigger biometric auth
-                return await verifyPinCode(pinCode);
+                return await verifyPinCode(value);
             } catch {
                 this.setState({ errorMessage: translate('Password.genericError') });
                 return false;

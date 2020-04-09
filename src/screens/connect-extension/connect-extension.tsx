@@ -67,6 +67,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
             )
         ) {
             WalletConnectClient.disconnect();
+            deleteFromStorage(WC_CONNECTION);
         }
     }
 

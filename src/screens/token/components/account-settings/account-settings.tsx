@@ -14,7 +14,7 @@ import { WalletFactory } from '../../../../core/wallet/wallet-factory';
 import { ChainIdType } from '../../../../core/blockchain/types';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { WalletType } from '../../../../core/wallet/types';
-import { ViewKey } from './components/view-key/view-key';
+import { ViewKey, KeyType } from './components/view-key/view-key';
 import CONFIG from '../../../../config';
 import Modal from '../../../../library/modal/modal';
 import { Deferred } from '../../../../core/utils/deferred';
@@ -35,6 +35,7 @@ interface IState {
     showSecurityWarning: boolean;
     isLoading: boolean;
     displayOtherModal: boolean;
+    keyType: KeyType;
 }
 
 export class AccountSettingsModalComponent extends React.Component<
@@ -53,7 +54,8 @@ export class AccountSettingsModalComponent extends React.Component<
             key: '',
             showSecurityWarning: false,
             isLoading: false,
-            displayOtherModal: false
+            displayOtherModal: false,
+            keyType: undefined
         };
         this.modalOnHideDeffered = new Deferred();
     }
@@ -83,7 +85,8 @@ export class AccountSettingsModalComponent extends React.Component<
                     title: translate('AccountSettings.revealPrivate'),
                     key: privateKey,
                     showSecurityWarning: true,
-                    isLoading: false
+                    isLoading: false,
+                    keyType: KeyType.private
                 });
             });
         } catch (err) {
@@ -97,7 +100,8 @@ export class AccountSettingsModalComponent extends React.Component<
             showBackButton: true,
             title: translate('AccountSettings.revealPublic'),
             key: this.props.account.publicKey,
-            showSecurityWarning: false
+            showSecurityWarning: false,
+            keyType: KeyType.public
         });
     }
 
@@ -182,6 +186,7 @@ export class AccountSettingsModalComponent extends React.Component<
                                     key={this.state.key}
                                     value={this.state.key}
                                     showSecurityWarning={this.state.showSecurityWarning}
+                                    keyType={this.state.keyType}
                                 />
                             )
                         ) : (

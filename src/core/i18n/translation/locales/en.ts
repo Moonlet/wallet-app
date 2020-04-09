@@ -45,6 +45,7 @@ export const translation: ITranslations = {
                 find: 'Find',
                 from: 'From',
                 half: 'Half',
+                holdUnveil: 'Hold to unveil',
                 ledgerType: 'Ledger type',
                 legal: 'Legal',
                 low: 'Low',

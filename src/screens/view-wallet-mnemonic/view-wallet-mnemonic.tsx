@@ -16,6 +16,7 @@ import { ICON_SIZE } from '../../styles/dimensions';
 import { allowScreenshots, forbidScreenshots } from '../../core/utils/screenshot';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { NavigationService } from '../../navigation/navigation-service';
 
 export interface INavigationParams {
     wallet: IWalletState;
@@ -25,6 +26,7 @@ interface IState {
     mnemonic: string[];
     copied: boolean;
     isLoading: boolean;
+    unveilMnemonic: boolean;
 }
 
 export const navigationOptions = () => ({
@@ -42,7 +44,8 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
         this.state = {
             mnemonic: new Array(24).fill(''),
             copied: false,
-            isLoading: true
+            isLoading: true,
+            unveilMnemonic: false
         };
 
         forbidScreenshots();
@@ -59,7 +62,7 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
             );
             this.populateMnemonic(password);
         } catch (err) {
-            this.props.navigation.goBack(null);
+            NavigationService.goBack();
         }
     }
 
@@ -87,7 +90,11 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
                                             <View style={styles.mnemonicLine} key={i}>
                                                 {line.map((w, k) => (
                                                     <Text small key={k} style={styles.mnemonicWord}>
-                                                        {i + k + 1}. {w}
+                                                        {`${i + k + 1}. ${
+                                                            this.state.unveilMnemonic
+                                                                ? w
+                                                                : '********'
+                                                        }`}
                                                     </Text>
                                                 ))}
                                             </View>
@@ -105,10 +112,9 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
                             </View>
                         </View>
 
-                        {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
-                            <View style={styles.bottomContainer}>
+                        <View style={styles.bottomContainer}>
+                            {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
                                 <Button
-                                    disabled={copied}
                                     onPress={() => {
                                         Clipboard.setString(
                                             this.state.mnemonic.toString().replace(/,/g, ' ')
@@ -120,8 +126,16 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
                                         ? translate('App.buttons.copiedBtn')
                                         : translate('App.buttons.clipboardBtn')}
                                 </Button>
-                            </View>
-                        )}
+                            )}
+
+                            <Button
+                                style={styles.unveilButton}
+                                onPressIn={() => this.setState({ unveilMnemonic: true })}
+                                onPressOut={() => this.setState({ unveilMnemonic: false })}
+                            >
+                                {translate('App.labels.holdUnveil')}
+                            </Button>
+                        </View>
                     </React.Fragment>
                 )}
             </View>

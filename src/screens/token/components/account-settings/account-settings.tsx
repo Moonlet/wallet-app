@@ -20,6 +20,7 @@ import Modal from '../../../../library/modal/modal';
 import { Deferred } from '../../../../core/utils/deferred';
 
 export interface IExternalProps {
+    obRef: any;
     onDonePressed: () => any;
     account: IAccountState;
     wallet: IWalletState;
@@ -56,6 +57,18 @@ export class AccountSettingsModalComponent extends React.Component<
             displayOtherModal: false
         };
         this.modalOnHideDeffered = new Deferred();
+        props.obRef && props.obRef(this);
+    }
+
+    public resetAccountSettingsModal() {
+        this.setState({
+            showKeyScreen: false,
+            showBackButton: false,
+            key: '',
+            showSecurityWarning: false,
+            isLoading: false,
+            displayOtherModal: false
+        });
     }
 
     private revealPrivateKey() {

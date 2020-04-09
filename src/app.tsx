@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { StatusBar, Platform, AppState, AppStateStatus } from 'react-native';
+import { StatusBar, Platform, AppState } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { RootNavigation } from './navigation/navigation';
 import { store } from './redux/config';
@@ -30,19 +30,16 @@ import { updateAddressMonitorTokens } from './core/address-monitor';
 import DeviceInfo from 'react-native-device-info';
 import { setDeviceId } from './redux/preferences/actions';
 import { SecurityChecks } from './components/security-checks/security-checks';
+import { APP_STATE_STATUS } from './core/constants/app';
 
 const AppContainer = createAppContainer(RootNavigation);
 
 const persistor = persistStore(store);
 
-const APP_STATE_ACTIVE: AppStateStatus = 'active';
-const APP_STATE_BACKGROUND: AppStateStatus = 'background';
-const APP_STATE_INACTIVE: AppStateStatus = 'inactive';
-
 interface IState {
     appReady: boolean;
     splashAnimationDone: boolean;
-    appState: AppStateStatus;
+    appState: APP_STATE_STATUS;
     displayApplication: boolean;
     navigationState: any;
 }
@@ -64,7 +61,7 @@ export default class App extends React.Component<{}, IState> {
         this.state = {
             appReady: false,
             splashAnimationDone: false,
-            appState: AppState.currentState,
+            appState: AppState.currentState as APP_STATE_STATUS,
             displayApplication: true,
             navigationState: undefined
         };
@@ -104,7 +101,7 @@ export default class App extends React.Component<{}, IState> {
         this.setState({ appReady }, () => {
             if (
                 this.state.appReady &&
-                this.state.appState === APP_STATE_ACTIVE &&
+                this.state.appState === APP_STATE_STATUS.ACTIVE &&
                 Object.keys(store.getState().wallets).length >= 1
             ) {
                 this.showPasswordModal();
@@ -170,22 +167,25 @@ export default class App extends React.Component<{}, IState> {
 
         this.setState({
             displayApplication: true,
-            appState: APP_STATE_ACTIVE
+            appState: APP_STATE_STATUS.ACTIVE
         });
     }
 
-    public handleAppStateChange = (nextAppState: AppStateStatus) => {
+    public handleAppStateChange = (nextAppState: APP_STATE_STATUS) => {
         const { appState } = this.state;
 
-        if (nextAppState === APP_STATE_INACTIVE || nextAppState === APP_STATE_BACKGROUND) {
+        if (
+            nextAppState === APP_STATE_STATUS.INACTIVE ||
+            nextAppState === APP_STATE_STATUS.BACKGROUND
+        ) {
             this.setState({ displayApplication: false });
         } else {
             this.setState({ displayApplication: true });
         }
 
         if (
-            (appState === APP_STATE_BACKGROUND || appState === APP_STATE_INACTIVE) &&
-            nextAppState === APP_STATE_ACTIVE &&
+            (appState === APP_STATE_STATUS.BACKGROUND || appState === APP_STATE_STATUS.INACTIVE) &&
+            nextAppState === APP_STATE_STATUS.ACTIVE &&
             Object.keys(store.getState().wallets).length >= 1 &&
             store.getState().ui.passwordModal.displayPasswordModal === true
         ) {

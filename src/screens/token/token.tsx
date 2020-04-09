@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View, Platform, AppState, AppStateStatus } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, IWalletState, ITokenState } from '../../redux/wallets/state';
@@ -36,6 +36,7 @@ import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TransactionStatus } from '../../core/wallet/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import bind from 'bind-decorator';
+import { APP_STATE_STATUS } from '../../core/constants/app';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -126,6 +127,7 @@ export class TokenScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public passwordModal: any;
+    public accountSettingsModal: any;
 
     constructor(props: INavigationProps<INavigationParams> & IReduxProps & IProps) {
         super(props);
@@ -135,6 +137,8 @@ export class TokenScreenComponent extends React.Component<
         };
     }
     public componentDidMount() {
+        AppState.addEventListener('change', this.handleAppStateChange);
+
         this.props.navigation.setParams({ openSettingsMenu: this.openSettingsMenu });
         this.props.getBalance(
             this.props.account.blockchain,
@@ -154,6 +158,21 @@ export class TokenScreenComponent extends React.Component<
                 );
             }
         });
+    }
+
+    public handleAppStateChange = (nextAppState: AppStateStatus) => {
+        if (
+            nextAppState === APP_STATE_STATUS.BACKGROUND ||
+            nextAppState === APP_STATE_STATUS.INACTIVE
+        ) {
+            this.setState({ settingsVisible: false }, () => {
+                this.accountSettingsModal.resetAccountSettingsModal();
+            });
+        }
+    };
+
+    public componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange);
     }
 
     @bind
@@ -197,6 +216,7 @@ export class TokenScreenComponent extends React.Component<
                 {Platform.OS === 'web' && <ExtensionConnectionInfo />}
                 {this.renderComponent()}
                 <AccountSettingsModal
+                    obRef={ref => (this.accountSettingsModal = ref)}
                     visible={this.state.settingsVisible}
                     onDonePressed={() => this.openSettingsMenu()}
                     account={this.props.account}

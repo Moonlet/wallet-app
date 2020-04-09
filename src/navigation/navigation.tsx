@@ -198,9 +198,6 @@ export const SettingsNavigation = createStackNavigator(
         BackupWallet: {
             screen: BackupWalletScreen
         },
-        ConnectExtension: {
-            screen: ConnectExtensionScreen
-        },
 
         // wallet creation
         CreateWalletMnemonic: {

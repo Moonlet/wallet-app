@@ -37,7 +37,9 @@ export const ButtonComponent = (props: IButtonProps) => (
             props.disabledSecondary && props.styles.buttonDisabledSecondary,
             props.style,
             {
-                paddingVertical: props?.leftIcon ? BASE_DIMENSION : BASE_DIMENSION + BASE_DIMENSION
+                paddingVertical: props?.leftIcon
+                    ? BASE_DIMENSION
+                    : BASE_DIMENSION + BASE_DIMENSION / 2
             }
         ]}
     >

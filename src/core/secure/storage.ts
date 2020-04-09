@@ -24,7 +24,6 @@ export const readEncrypted = async (key: string, hash: string) => {
         }
         return Promise.reject(`No data in storage for key ${KEY_PREFIX}${key}`);
     } catch (e) {
-        //     console.log('ddddddreadEncrypted ', e);
         return Promise.reject(e);
     }
 };

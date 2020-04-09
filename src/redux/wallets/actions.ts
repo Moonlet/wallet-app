@@ -773,8 +773,7 @@ export const changePIN = (newPassword: string, oldPassword: string) => async (
 
     const encryptionKey = await getEncryptionKey(oldPassword);
     const newEncryptionKey = await getEncryptionKey(newPassword);
-    const moonletPinSample = await readEncrypted(KEY_PIN_SAMPLE, encryptionKey);
-    await storeEncrypted(moonletPinSample, KEY_PIN_SAMPLE, newEncryptionKey);
+    await storeEncrypted(uuidv4(), KEY_PIN_SAMPLE, newEncryptionKey);
 
     Object.values(state.wallets).map(async (wallet: IWalletState) => {
         const walletId = wallet.id;

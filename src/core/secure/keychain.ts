@@ -1,6 +1,7 @@
 import * as Keychain from 'react-native-keychain';
 import { generateRandomEncryptionKey, hash } from './encrypt';
 import { storeEncrypted, readEncrypted } from './storage';
+import uuidv4 from 'uuid/v4';
 
 const defaultOptions = {
     serviceEncryption: 'com.moonlet.encryption',
@@ -11,12 +12,10 @@ const defaultOptions = {
 
 export const KEY_PIN_SAMPLE = 'moonletPinSample';
 
-const moonletPinSample = 'this is a test to encrypt password';
-
 export const generateEncryptionKey = async (pinCode: string) => {
     await setBaseEncryptionKey();
     const encryptionKey = await getEncryptionKey(pinCode);
-    await storeEncrypted(moonletPinSample, KEY_PIN_SAMPLE, encryptionKey);
+    await storeEncrypted(uuidv4(), KEY_PIN_SAMPLE, encryptionKey);
 };
 
 export const setBaseEncryptionKey = async () => {
@@ -86,10 +85,8 @@ export const verifyPinInput = async (
     }
     try {
         const encryptionKey = await getEncryptionKey(code);
-        //  console.log('vvvv', encryptionKey, pinCode);
-        const state = await readEncrypted(KEY_PIN_SAMPLE, encryptionKey);
-        //  console.log('vvvv', encryptionKey, pinCode);
-        return moonletPinSample === state;
+        await readEncrypted(KEY_PIN_SAMPLE, encryptionKey);
+        return true;
     } catch (e) {
         return false;
     }

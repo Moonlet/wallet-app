@@ -85,6 +85,8 @@ export class PasswordModalComponent extends React.Component<
 > {
     public static refDeferred: Deferred<PasswordModalComponent> = new Deferred();
     private modalOnHideDeffered: Deferred;
+    private resultDeferred: Deferred;
+
     private countdownListener;
     private netInfoListener;
     private passwordPin;
@@ -225,8 +227,6 @@ export class PasswordModalComponent extends React.Component<
         const ref = await PasswordModalComponent.refDeferred.promise;
         return ref.changePassword();
     }
-
-    private resultDeferred: any;
 
     public async getPassword(
         title: string,

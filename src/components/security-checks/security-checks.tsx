@@ -39,7 +39,13 @@ export class SecurityChecksComponent extends React.Component<
             warningType: undefined
         };
 
-        this.doChecks();
+        !__DEV__ && this.doChecks();
+    }
+
+    public componentDidMount() {
+        if (__DEV__) {
+            typeof this.props.onReady === 'function' && this.props.onReady();
+        }
     }
 
     private async doChecks() {

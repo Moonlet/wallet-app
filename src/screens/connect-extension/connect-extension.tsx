@@ -17,20 +17,38 @@ export const navigationOptions = () => ({
     title: translate('ConnectExtension.title')
 });
 
+interface IState {
+    isConnected: boolean;
+}
+
 export class ConnectExtensionScreenComponent extends React.Component<
-    IThemeProps<ReturnType<typeof stylesProvider>>
+    IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
     public static navigationOptions = navigationOptions;
     public qrCodeScanner: any;
+    public connectionInterval: any;
 
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
+        this.state = {
+            isConnected: WalletConnectClient.isConnected()
+        };
+    }
+
+    public componentDidMount() {
+        this.connectionInterval = setInterval(() => {
+            this.setState({ isConnected: WalletConnectClient.isConnected() });
+        }, 500);
+    }
+
+    public componentWillUnmount() {
+        clearInterval(this.connectionInterval);
     }
 
     @bind
     private async onQrCodeScanned(value: string) {
         WalletConnectClient.connect(value);
-        // this.forceUpdate();
     }
 
     private async disconnectExtension() {
@@ -41,18 +59,15 @@ export class ConnectExtensionScreenComponent extends React.Component<
             )
         ) {
             WalletConnectClient.disconnect();
-            // this.forceUpdate();
         }
     }
 
     public render() {
         const { styles } = this.props;
-        const isConnected = WalletConnectClient.isConnected();
-        // console.log('isConnected: ', isConnected);
 
         return (
             <View style={styles.container}>
-                {isConnected ? (
+                {this.state.isConnected ? (
                     <View style={styles.connectionsContainer}>
                         <View style={styles.connectionBox}>
                             <Icon name="monitor" size={normalize(32)} style={styles.computerIcon} />
@@ -82,7 +97,8 @@ export class ConnectExtensionScreenComponent extends React.Component<
                     primary
                     onPress={() => this.qrCodeScanner.open()}
                     style={styles.scanButton}
-                    disabled={isConnected}
+                    disabled={this.state.isConnected}
+                    leftIcon="qr-code-scan"
                 >
                     {translate('ConnectExtension.buttonScan')}
                 </Button>

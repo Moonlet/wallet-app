@@ -44,13 +44,13 @@ export default (theme: ITheme) =>
         computerIcon: {
             alignSelf: 'center',
             marginRight: BASE_DIMENSION * 3,
-            color: theme.colors.textSecondary
+            color: theme.colors.text
         },
         connectionInfoText: {
             flex: 1,
             fontSize: normalize(17),
             lineHeight: normalize(22),
-            color: theme.colors.textSecondary,
+            color: theme.colors.text,
             paddingRight: BASE_DIMENSION,
             alignSelf: 'center'
         },

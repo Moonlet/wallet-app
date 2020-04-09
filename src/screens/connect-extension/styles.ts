@@ -31,5 +31,31 @@ export default (theme: ITheme) =>
         scanButton: {
             marginHorizontal: BASE_DIMENSION * 2,
             marginBottom: BASE_DIMENSION * 4
+        },
+        connectionsContainer: {
+            flex: 1,
+            flexDirection: 'column'
+        },
+        connectionBox: {
+            flexDirection: 'row',
+            paddingVertical: BASE_DIMENSION + BASE_DIMENSION / 2,
+            paddingHorizontal: BASE_DIMENSION * 2
+        },
+        computerIcon: {
+            alignSelf: 'center',
+            marginRight: BASE_DIMENSION * 3,
+            color: theme.colors.textSecondary
+        },
+        connectionInfoText: {
+            flex: 1,
+            fontSize: normalize(17),
+            lineHeight: normalize(22),
+            color: theme.colors.textSecondary,
+            paddingRight: BASE_DIMENSION,
+            alignSelf: 'center'
+        },
+        flashIcon: {
+            alignSelf: 'center',
+            color: theme.colors.error
         }
     });

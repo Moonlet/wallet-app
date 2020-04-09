@@ -400,7 +400,9 @@ export const translation: ITranslations = {
         ConnectExtension: {
             title: 'Connect extension',
             buttonScan: 'Scan QR code',
-            body: 'Quickly connect extension and use Moonlet on your laptop or desktop computers'
+            body: 'Quickly connect extension and use Moonlet on your laptop or desktop computers',
+            disconnect: 'Disconnect',
+            disconnectInfo: 'Do you want to disconnect from this device?'
         }
     },
     plural: (n: number, ord?: boolean) => {

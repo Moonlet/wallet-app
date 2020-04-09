@@ -8,6 +8,10 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import bind from 'bind-decorator';
+import { normalize } from '../../styles/dimensions';
+import { Icon } from '../../components/icon';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { DialogComponent } from '../../components/dialog/dialog-component';
 
 export const navigationOptions = () => ({
     title: translate('ConnectExtension.title')
@@ -26,32 +30,62 @@ export class ConnectExtensionScreenComponent extends React.Component<
     @bind
     private async onQrCodeScanned(value: string) {
         WalletConnectClient.connect(value);
+        // this.forceUpdate();
+    }
+
+    private async disconnectExtension() {
+        if (
+            await DialogComponent.confirm(
+                translate('ConnectExtension.disconnect'),
+                translate('ConnectExtension.disconnectInfo')
+            )
+        ) {
+            WalletConnectClient.disconnect();
+            // this.forceUpdate();
+        }
     }
 
     public render() {
         const { styles } = this.props;
+        const isConnected = WalletConnectClient.isConnected();
+        // console.log('isConnected: ', isConnected);
 
         return (
             <View style={styles.container}>
-                <View style={styles.emptyContainer}>
-                    <Image
-                        style={styles.moonletImage}
-                        source={require('../../assets/images/png/moonlet_space_gray.png')}
-                    />
-                    <Text style={styles.quicklyConnectText}>
-                        {translate('ConnectExtension.body')}
-                    </Text>
-                </View>
-
-                {!WalletConnectClient.isConnected() && (
-                    <Button
-                        primary
-                        onPress={() => this.qrCodeScanner.open()}
-                        style={styles.scanButton}
-                    >
-                        {translate('ConnectExtension.buttonScan')}
-                    </Button>
+                {isConnected ? (
+                    <View style={styles.connectionsContainer}>
+                        <View style={styles.connectionBox}>
+                            <Icon name="monitor" size={normalize(32)} style={styles.computerIcon} />
+                            <Text style={styles.connectionInfoText}>{`Currently active`}</Text>
+                            <TouchableOpacity onPress={() => this.disconnectExtension()}>
+                                <Icon
+                                    name="flash-off"
+                                    size={normalize(32)}
+                                    style={styles.flashIcon}
+                                />
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                ) : (
+                    <View style={styles.emptyContainer}>
+                        <Image
+                            style={styles.moonletImage}
+                            source={require('../../assets/images/png/moonlet_space_gray.png')}
+                        />
+                        <Text style={styles.quicklyConnectText}>
+                            {translate('ConnectExtension.body')}
+                        </Text>
+                    </View>
                 )}
+
+                <Button
+                    primary
+                    onPress={() => this.qrCodeScanner.open()}
+                    style={styles.scanButton}
+                    disabled={isConnected}
+                >
+                    {translate('ConnectExtension.buttonScan')}
+                </Button>
 
                 <QrModalReader
                     obRef={ref => (this.qrCodeScanner = ref)}

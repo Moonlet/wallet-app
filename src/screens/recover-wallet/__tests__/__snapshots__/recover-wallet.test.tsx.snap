@@ -85,7 +85,12 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       </View>
     </View>
   </View>
-  <ScrollViewMock horizontal={true} overScrollMode=\\"never\\" snapToAlignment=\\"start\\" showsHorizontalScrollIndicator={false} contentContainerStyle={{...}} keyboardShouldPersistTaps=\\"handled\\" />
+  <View>
+    <ScrollViewMock horizontal={true} overScrollMode=\\"never\\" snapToAlignment=\\"start\\" showsHorizontalScrollIndicator={false} contentContainerStyle={{...}} keyboardShouldPersistTaps=\\"handled\\" />
+  </View>
+  <withTheme(ButtonComponent) onPress={[Function: onPress]} style={{...}}>
+    Paste
+  </withTheme(ButtonComponent)>
   <withTheme(KeyboardComponent) handleTextUpdate={[Function: handleTextUpdate]} handleDeleteKey={[Function: handleDeleteKey]} buttons={{...}} disableSpace={true} />
 </View>"
 `;

@@ -22,7 +22,6 @@ import { Blockchain } from '../../../../core/blockchain/types';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteContact, updateContactName } from '../../../../redux/contacts/actions';
 import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
-import { Dialog } from '../../../../components/dialog/dialog';
 import { IHints, HintsScreen, HintsComponent } from '../../../../redux/app/state';
 import { updateDisplayedHint } from '../../../../redux/app/actions';
 import { DISPLAY_HINTS_TIMES } from '../../../../core/constants/app';
@@ -82,21 +81,6 @@ export class AddressBookComponent extends React.Component<
         }
     }
 
-    public async onPressUpdate(contact: IContactState) {
-        const inputValue: string = await Dialog.prompt(
-            translate('Send.alertEditTitle'),
-            translate('Send.alertEditDescription')
-        );
-
-        if (inputValue !== '') {
-            this.props.updateContactName({
-                address: contact.address,
-                blockchain: contact.blockchain,
-                name: inputValue
-            });
-        }
-    }
-
     public closeCurrentOpenedSwipable() {
         this.contactsSwipeableRef[this.currentlyOpenSwipeable] &&
             this.contactsSwipeableRef[this.currentlyOpenSwipeable].close();
@@ -120,7 +104,7 @@ export class AddressBookComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.action}
                     onPress={() => {
-                        this.onPressUpdate(contact);
+                        this.props.updateContactName(contact.blockchain, contact.address);
                         this.closeCurrentOpenedSwipable();
                     }}
                 >

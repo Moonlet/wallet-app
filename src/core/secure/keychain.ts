@@ -9,15 +9,17 @@ const defaultOptions = {
     servicePin: 'com.moonlet.pin'
 };
 
-const stateToEncrypt = 'this is a test to encrypt password';
+export const KEY_PIN_SAMPLE = 'moonletPinSample';
+
+const moonletPinSample = 'this is a test to encrypt password';
 
 export const generateEncryptionKey = async (pinCode: string) => {
-    await setEncryptionKey();
+    await setBaseEncryptionKey();
     const encryptionKey = await getEncryptionKey(pinCode);
-    await storeEncrypted(stateToEncrypt, 'stateToEncrypt', encryptionKey);
+    await storeEncrypted(moonletPinSample, KEY_PIN_SAMPLE, encryptionKey);
 };
 
-export const setEncryptionKey = async () => {
+export const setBaseEncryptionKey = async () => {
     const encryptionKey = await generateRandomEncryptionKey();
     try {
         await Keychain.setGenericPassword(defaultOptions.usernameEncryption, encryptionKey, {
@@ -30,6 +32,26 @@ export const setEncryptionKey = async () => {
     } catch (e) {
         //    console.log('error set encryption password', e);
     }
+};
+
+export const getBaseEncryptionKey = async () => {
+    let password = null;
+    try {
+        // Retrieve the credentials
+        const credentials = await Keychain.getGenericPassword({
+            service: defaultOptions.serviceEncryption
+        });
+        if (credentials) {
+            password = credentials.password;
+        } else {
+            //     console.log(' get encryption key');
+        }
+    } catch (error) {
+        //  console.log("Keychain couldn't be accessed!", error);
+    }
+
+    // console.log('get ecnrypti', password);
+    return password;
 };
 
 export const getEncryptionKey = async (pinCode: string) => {
@@ -54,20 +76,27 @@ export const getEncryptionKey = async (pinCode: string) => {
     return password;
 };
 
-export const verifyPinInput = async (pinCode: string): Promise<boolean> => {
+export const verifyPinInput = async (
+    pinCode: string,
+    biometricLogin: boolean
+): Promise<boolean> => {
+    let code: string = pinCode;
+    if (biometricLogin) {
+        code = await getPinCode();
+    }
     try {
-        const encryptionKey = await getEncryptionKey(pinCode);
+        const encryptionKey = await getEncryptionKey(code);
         //  console.log('vvvv', encryptionKey, pinCode);
-        const state = await readEncrypted('stateToEncrypt', encryptionKey);
+        const state = await readEncrypted(KEY_PIN_SAMPLE, encryptionKey);
         //  console.log('vvvv', encryptionKey, pinCode);
-        return stateToEncrypt === state;
+        return moonletPinSample === state;
     } catch (e) {
         return false;
     }
 };
 
-export const setPassword = async (pinCode: string) => {
-    clearPassword();
+export const setPinCode = async (pinCode: string) => {
+    clearPinCode();
     try {
         await Keychain.setGenericPassword(defaultOptions.usernamePin, pinCode, {
             service: defaultOptions.servicePin,
@@ -83,7 +112,7 @@ export const setPassword = async (pinCode: string) => {
     }
 };
 
-export const getPassword = async () => {
+export const getPinCode = async () => {
     let password = null;
     try {
         // Retrieve the credentials
@@ -100,12 +129,10 @@ export const getPassword = async () => {
         //    console.log("Keychain couldn't be accessed!", error);
     }
 
-    return {
-        password
-    };
+    return password;
 };
 
-export const clearPassword = async () => {
+export const clearPinCode = async () => {
     try {
         await Keychain.resetGenericPassword({ service: defaultOptions.servicePin });
     } catch (err) {

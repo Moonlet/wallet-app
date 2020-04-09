@@ -1,4 +1,4 @@
-import { getPassword, setPassword } from '../keychain';
+import { getPassword, setPinCode } from '../keychain';
 import { hash } from '../encrypt';
 
 jest.mock('@react-native-community/async-storage', () => ({

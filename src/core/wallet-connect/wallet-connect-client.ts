@@ -1,5 +1,5 @@
 import RNWalletConnect from '@walletconnect/react-native';
-import { getEncryptionKey } from '../secure/keychain';
+import { getBaseEncryptionKey } from '../secure/keychain';
 import { storeEncrypted, readEncrypted } from '../secure/storage';
 import { WC_CONNECTION, WC } from '../constants/app';
 import { trimState } from './wc-state-helper';
@@ -38,12 +38,12 @@ export const WalletConnectClient = (() => {
     // store encrypted the connection data for reconnecting later
     const storeConnection = async () => {
         // TODO - this need to ask for user password
-        const keychainPassword = await getEncryptionKey('');
+        const keychainPassword = await getBaseEncryptionKey();
         if (keychainPassword) {
             storeEncrypted(
                 JSON.stringify(walletConnector.session),
                 WC_CONNECTION,
-                keychainPassword.password
+                keychainPassword
             );
         }
     };
@@ -149,10 +149,10 @@ export const WalletConnectClient = (() => {
 
     const reconnect = () => {
         return new Promise((resolve, reject) => {
-            getEncryptionKey('')
+            getBaseEncryptionKey()
                 .then(keychainPassword => {
                     if (keychainPassword) {
-                        readEncrypted(WC_CONNECTION, keychainPassword.password)
+                        readEncrypted(WC_CONNECTION, keychainPassword)
                             .then(async conn => {
                                 walletConnector && walletConnector.killSession();
                                 walletConnector = new RNWalletConnect(

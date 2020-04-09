@@ -395,13 +395,13 @@ export class PasswordModalComponent extends React.Component<
 
     @bind
     private async updateState(data: { password?: string; biometryAuthResult?: boolean }) {
-        let isPasswordValid = data.biometryAuthResult;
-        if (data?.biometryAuthResult !== true) {
-            isPasswordValid = await this.verifyPassword(data.password);
-        }
         switch (this.state.currentStep) {
             // Enter PIN Flow
             case ScreenStep.ENTER_PIN:
+                const isPasswordValid = await this.verifyPassword(
+                    data.password,
+                    data.biometryAuthResult
+                );
                 if (isPasswordValid) {
                     this.setState({ visible: false });
                     this.props.resetFailedLogins();
@@ -488,12 +488,12 @@ export class PasswordModalComponent extends React.Component<
         }
     }
 
-    private async verifyPassword(value: string): Promise<boolean> {
+    private async verifyPassword(value: string, biometricLogin: boolean): Promise<boolean> {
         if (Platform.OS === 'web') {
             return true;
         } else {
             try {
-                return await verifyPinInput(value);
+                return await verifyPinInput(value, biometricLogin);
             } catch {
                 this.setState({ errorMessage: translate('Password.genericError') });
                 return false;

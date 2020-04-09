@@ -39,12 +39,21 @@ export class ConnectExtensionScreenComponent extends React.Component<
     }
 
     public componentDidMount() {
+        // TODO: if connection is closed from the extension (tap Sign out button)
+        // the wallet connection is still persisted on the phone's AsyncStorage
+        // we have to detect this and deleteFromStorage(WC_CONNECTION);
+
         this.connectionInterval = setInterval(() => {
-            const isConnected = WalletConnectClient.isConnected();
-            this.setState({ isConnected });
-            // TODO (WIP): if disconnect from extension (tap Sign out button)
-            // when reopen the app, the connection is still visible
+            // TODO: find a better to detect isConnected
+            WalletConnectClient.isConnected() === true && this.setState({ isConnected: true });
         }, 1000);
+
+        WalletConnectClient.onDisconnect(res => {
+            if (res?.event === 'disconnect') {
+                this.setState({ isConnected: false });
+                deleteFromStorage(WC_CONNECTION);
+            }
+        });
     }
 
     public componentWillUnmount() {
@@ -63,6 +72,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                 translate('ConnectExtension.disconnectInfo')
             )
         ) {
+            this.setState({ isConnected: false });
             WalletConnectClient.disconnect();
             deleteFromStorage(WC_CONNECTION);
         }

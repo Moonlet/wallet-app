@@ -80,7 +80,7 @@ export const verifyPinInput = async (
     biometricLogin: boolean
 ): Promise<boolean> => {
     let code: string = pinCode;
-    if (biometricLogin) {
+    if (biometricLogin && pinCode === '') {
         code = await getPinCode();
     }
     try {

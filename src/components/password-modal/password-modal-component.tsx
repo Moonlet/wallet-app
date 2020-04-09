@@ -52,7 +52,6 @@ export interface IState {
     newPassword: string;
     currentStep: ScreenStep;
     errorMessage: string;
-    enableBiometryAuth: boolean;
     allowBackButton: boolean;
     showAttempts: boolean;
     hasInternetConnection: boolean;
@@ -64,6 +63,7 @@ export interface IReduxProps {
     changePIN: typeof changePIN;
     failedLogins: number;
     blockUntil: Date | string;
+    biometricActive: boolean;
     incrementFailedLogins: typeof incrementFailedLogins;
     resetFailedLogins: typeof resetFailedLogins;
     setAppBlockUntil: typeof setAppBlockUntil;
@@ -72,7 +72,8 @@ export interface IReduxProps {
 
 export const mapStateToProps = (state: IReduxState) => ({
     failedLogins: state.app.failedLogins,
-    blockUntil: state.app.blockUntil
+    blockUntil: state.app.blockUntil,
+    biometricActive: state.preferences.touchID
 });
 
 export const mapDispatchToProps = {
@@ -107,7 +108,6 @@ export class PasswordModalComponent extends React.Component<
             newPassword: undefined,
             currentStep: undefined,
             errorMessage: undefined,
-            enableBiometryAuth: true,
             allowBackButton: false,
             showAttempts: false,
             hasInternetConnection: false,
@@ -254,7 +254,6 @@ export class PasswordModalComponent extends React.Component<
             title: title || translate('Password.pinTitleUnlock'),
             subtitle: subtitle || translate('Password.pinSubtitleUnlock'),
             currentStep: ScreenStep.ENTER_PIN,
-            enableBiometryAuth: true,
             allowBackButton: false,
             showAttempts: true
         });
@@ -272,7 +271,6 @@ export class PasswordModalComponent extends React.Component<
             title: translate('Password.setupPinTitle'),
             subtitle: translate('Password.setupPinSubtitle'),
             currentStep: ScreenStep.CREATE_PIN_TERMS,
-            enableBiometryAuth: false,
             allowBackButton: true,
             showAttempts: false
         });
@@ -290,7 +288,6 @@ export class PasswordModalComponent extends React.Component<
             title: translate('Password.pinTitleUnlock'),
             subtitle: translate('Password.changePinSubtitle'),
             currentStep: ScreenStep.CHANGE_PIN_TERMS,
-            enableBiometryAuth: false,
             allowBackButton: true,
             showAttempts: true
         });
@@ -400,7 +397,7 @@ export class PasswordModalComponent extends React.Component<
             case ScreenStep.ENTER_PIN:
                 const isPasswordValid = await this.verifyPassword(
                     data.password,
-                    data.biometryAuthResult
+                    data.password === '' ? this.props.biometricActive : false
                 );
                 if (isPasswordValid) {
                     this.setState({ visible: false });
@@ -442,7 +439,8 @@ export class PasswordModalComponent extends React.Component<
                 this.setState({ currentStep: ScreenStep.CHANGE_PIN_CURRENT });
                 break;
             case ScreenStep.CHANGE_PIN_CURRENT:
-                if (isPasswordValid) {
+                const passwordValid = await this.verifyPassword(data.password, false);
+                if (passwordValid) {
                     this.passwordPin.clearPasswordInput();
                     this.setState({
                         currentStep: ScreenStep.CHANGE_PIN_NEW,
@@ -593,14 +591,8 @@ export class PasswordModalComponent extends React.Component<
                         title={this.state.title}
                         subtitle={this.state.subtitle}
                         onPasswordEntered={this.updateState}
-                        onBiometryLogin={(success: boolean) => {
-                            if (success === true) {
-                                this.updateState({ biometryAuthResult: true });
-                            }
-                        }}
                         errorMessage={this.state.errorMessage}
                         clearErrorMessage={() => this.clearErrorMessage()}
-                        enableBiometryAuth={this.state.enableBiometryAuth}
                         allowBackButton={this.state.allowBackButton}
                         onBackButtonTap={() => this.onBackButtonTap()}
                         isMoonletDisabled={this.state.isMoonletDisabled}

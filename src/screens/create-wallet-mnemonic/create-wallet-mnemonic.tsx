@@ -24,6 +24,7 @@ interface IState {
     mnemonic: string[];
     copied: boolean;
     accepted: boolean;
+    unveilMnemonic: boolean;
 }
 
 export const navigationOptions = () => ({
@@ -43,7 +44,8 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
         this.state = {
             mnemonic: new Array(MNEMONIC_LENGTH).fill(''),
             copied: false,
-            accepted: false
+            accepted: false,
+            unveilMnemonic: false
         };
 
         forbidScreenshots();
@@ -86,9 +88,23 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
 
                     {[...Array(NR_MNEMONICS_SCREEN).keys()].map(i => (
                         <Text key={`mnemonic-${i + indexFrom + 1}`} style={styles.secretWord}>
-                            {`${i + indexFrom + 1}. ${this.state.mnemonic[indexFrom + i]}`}
+                            {`${i + indexFrom + 1}. ${
+                                this.state.unveilMnemonic
+                                    ? this.state.mnemonic[indexFrom + i]
+                                    : '**********'
+                            }`}
                         </Text>
                     ))}
+
+                    <Button
+                        style={styles.unveilButton}
+                        onPressIn={() => this.setState({ unveilMnemonic: true })}
+                        onPressOut={() =>
+                            setTimeout(() => this.setState({ unveilMnemonic: false }), 250)
+                        }
+                    >
+                        {translate('App.labels.holdUnveil')}
+                    </Button>
                 </View>
 
                 {this.props.step === 1 && (

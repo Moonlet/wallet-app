@@ -19,6 +19,7 @@ import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { forbidScreenshots, allowScreenshots } from '../../core/utils/screenshot';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { MNEMONIC_LENGTH } from '../../core/constants/app';
+import { DialogComponent } from '../../components/dialog/dialog-component';
 
 interface IState {
     mnemonic: string[];
@@ -27,6 +28,7 @@ interface IState {
     errors: number[];
     validInputs: number[];
     numberMnemonics: number;
+    unveilMnemonic: boolean;
 }
 
 export interface IReduxProps {
@@ -66,7 +68,8 @@ export class RecoverWalletScreenComponent extends React.Component<
             errors: [],
             indexForSuggestions: -1,
             validInputs: [],
-            numberMnemonics: MNEMONIC_LENGTH
+            numberMnemonics: MNEMONIC_LENGTH,
+            unveilMnemonic: false
         };
 
         forbidScreenshots();
@@ -118,6 +121,10 @@ export class RecoverWalletScreenComponent extends React.Component<
     public async confirm() {
         if (!this.validateMnemonicWords() || !Mnemonic.verify(this.state.mnemonic.join(' '))) {
             // TODO: display an error somewhere
+            DialogComponent.info(
+                translate('App.labels.warning'),
+                translate('App.labels.mnemonicNotValid')
+            );
             return;
         }
 
@@ -139,17 +146,12 @@ export class RecoverWalletScreenComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
-        const keyboardButtons: IKeyboardButton[] = [];
-
-        if (isFeatureActive(RemoteFeature.DEV_TOOLS)) {
-            keyboardButtons.push({
-                label: translate('App.labels.paste'),
-                onPress: () => this.pasteFromClipboard(),
-                disabled: this.mnemonicsFilled()
-            });
-        }
-
-        keyboardButtons.push(
+        const keyboardButtons: IKeyboardButton[] = [
+            {
+                label: translate('App.labels.holdUnveil'),
+                onPressIn: () => this.setState({ unveilMnemonic: true }),
+                onPressOut: () => setTimeout(() => this.setState({ unveilMnemonic: false }), 250)
+            },
             {
                 label: translate('App.labels.nextWord'),
                 onPress: () => this.focusInput(this.state.indexForSuggestions + 1),
@@ -161,7 +163,7 @@ export class RecoverWalletScreenComponent extends React.Component<
                 style: { color: this.props.theme.colors.accent },
                 disabled: !this.mnemonicsFilled()
             }
-        );
+        ];
 
         return (
             <View style={styles.container}>
@@ -186,28 +188,36 @@ export class RecoverWalletScreenComponent extends React.Component<
 
                 <View style={styles.mnemonicContainer}>{this.getInputMatrix()}</View>
 
-                <ScrollView
-                    ref={ref => (this.suggestionsScrollView = ref)}
-                    horizontal
-                    overScrollMode={'never'}
-                    snapToAlignment={'start'}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.suggestionsContainer}
-                    keyboardShouldPersistTaps={'handled'}
-                >
-                    {this.state.suggestions.map((word, i) => (
-                        <View key={i}>
-                            <Button
-                                testID={`button-suggestion-${i}`}
-                                secondary
-                                style={styles.suggestionButton}
-                                onPress={() => this.fillMnemonicText(word)}
-                            >
-                                {word}
-                            </Button>
-                        </View>
-                    ))}
-                </ScrollView>
+                <View>
+                    <ScrollView
+                        ref={ref => (this.suggestionsScrollView = ref)}
+                        horizontal
+                        overScrollMode={'never'}
+                        snapToAlignment={'start'}
+                        showsHorizontalScrollIndicator={false}
+                        contentContainerStyle={styles.suggestionsContainer}
+                        keyboardShouldPersistTaps={'handled'}
+                    >
+                        {this.state.suggestions.map((word, i) => (
+                            <View key={i}>
+                                <Button
+                                    testID={`button-suggestion-${i}`}
+                                    secondary
+                                    style={styles.suggestionButton}
+                                    onPress={() => this.fillMnemonicText(word)}
+                                >
+                                    {word}
+                                </Button>
+                            </View>
+                        ))}
+                    </ScrollView>
+                </View>
+
+                {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
+                    <Button onPress={() => this.pasteFromClipboard()} style={styles.pasteButton}>
+                        {translate('App.labels.paste')}
+                    </Button>
+                )}
 
                 <KeyboardCustom
                     handleTextUpdate={(text: string) => this.setMnemonicText(text)}
@@ -343,6 +353,11 @@ export class RecoverWalletScreenComponent extends React.Component<
                 labelColor = this.props.theme.colors.error;
             }
 
+            let word = this.state.mnemonic[index];
+            if (word !== '' && isValid && !this.state.unveilMnemonic && !isFocus) {
+                word = '**********';
+            }
+
             output.push(
                 <View style={this.props.styles.inputContainer} key={index}>
                     <Text style={[this.props.styles.inputLabel, { color: labelColor }]}>
@@ -355,7 +370,7 @@ export class RecoverWalletScreenComponent extends React.Component<
                             this.props.styles.inputLabel,
                             { flex: 1 }
                         ]}
-                        word={this.state.mnemonic[index]}
+                        word={word}
                         onFocus={() => this.focusInput(index)}
                         onBlur={() => this.validateWord()}
                         isFocus={isFocus}

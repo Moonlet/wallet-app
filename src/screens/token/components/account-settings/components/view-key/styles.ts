@@ -44,11 +44,17 @@ export default (theme: ITheme) =>
         divider: {
             width: '100%',
             height: 1,
-            backgroundColor: 'rgba(0,0,0,0.4)'
+            backgroundColor: 'rgba(0,0,0,0.4)',
+            marginBottom: BASE_DIMENSION * 2
         },
-        rowContainer: {
+        holdUnveilContainer: {
             flexDirection: 'row',
-            paddingVertical: BASE_DIMENSION * 2,
+            paddingBottom: BASE_DIMENSION * 2,
+            alignItems: 'center'
+        },
+        copyClipboardContainer: {
+            flexDirection: 'row',
+            paddingBottom: BASE_DIMENSION * 2,
             alignItems: 'center'
         },
         icon: {

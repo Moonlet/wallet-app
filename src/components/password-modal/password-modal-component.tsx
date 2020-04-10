@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, View } from 'react-native';
+import { Platform, View, AppState } from 'react-native';
 import { Deferred } from '../../core/utils/deferred';
 import { PasswordPin } from './components/password-pin/password-pin';
 import { translate } from '../../core/i18n';
@@ -24,7 +24,11 @@ import {
     setAppBlockUntil,
     resetAllData
 } from '../../redux/app/actions';
-import { RESET_APP_FAILED_LOGINS, FAILED_LOGIN_BLOCKING } from '../../core/constants/app';
+import {
+    RESET_APP_FAILED_LOGINS,
+    FAILED_LOGIN_BLOCKING,
+    AppStateStatus
+} from '../../core/constants/app';
 import moment from 'moment';
 import { NavigationService } from '../../navigation/navigation-service';
 import NetInfo from '@react-native-community/netinfo';
@@ -60,6 +64,9 @@ export interface IState {
     hasInternetConnection: boolean;
     isMoonletDisabled: boolean;
     currentDate: Date;
+    appState: AppStateStatus;
+    biometricFlow: boolean;
+    pinCode: string;
 }
 
 export interface IReduxProps {
@@ -67,6 +74,8 @@ export interface IReduxProps {
     failedLogins: number;
     blockUntil: Date | string;
     biometricActive: boolean;
+    displayPasswordModal: boolean;
+    nrWallets: number;
     incrementFailedLogins: typeof incrementFailedLogins;
     resetFailedLogins: typeof resetFailedLogins;
     setAppBlockUntil: typeof setAppBlockUntil;
@@ -77,7 +86,9 @@ export interface IReduxProps {
 export const mapStateToProps = (state: IReduxState) => ({
     failedLogins: state.app.failedLogins,
     blockUntil: state.app.blockUntil,
-    biometricActive: state.preferences.touchID
+    biometricActive: state.preferences.touchID,
+    displayPasswordModal: state.ui.passwordModal.displayPasswordModal,
+    nrWallets: Object.keys(state.wallets).length
 });
 
 export const mapDispatchToProps = {
@@ -117,11 +128,36 @@ export class PasswordModalComponent extends React.Component<
             showAttempts: false,
             hasInternetConnection: false,
             isMoonletDisabled: false,
-            currentDate: undefined
+            currentDate: undefined,
+            appState: AppState.currentState as AppStateStatus,
+            biometricFlow: false,
+            pinCode: ''
         };
     }
 
+    handleAppStateChange = (nextAppState: AppStateStatus) => {
+        //        console.log('passwordModal handleAppStateChange', this.state.appState, nextAppState);
+        const { appState } = this.state;
+
+        if (
+            (appState === AppStateStatus.BACKGROUND || appState === AppStateStatus.INACTIVE) &&
+            nextAppState === AppStateStatus.ACTIVE &&
+            this.props.nrWallets >= 1 &&
+            this.props.displayPasswordModal === true
+        ) {
+            if (this.state.biometricFlow) {
+                this.updateState({ password: this.state.pinCode });
+                this.setState({ biometricFlow: false });
+            } else if (this.state.visible === false) {
+                this.getPassword(undefined, undefined, undefined);
+            }
+        }
+        this.setState({ appState: nextAppState });
+    };
+
     public componentDidMount() {
+        AppState.addEventListener('change', this.handleAppStateChange);
+
         if (
             moment(new Date(this.props.blockUntil)).isValid() ||
             this.props.blockUntil === BLOCK_UNTIL_WAIT_INTERNET_CONNECTION
@@ -216,6 +252,7 @@ export class PasswordModalComponent extends React.Component<
         clearInterval(this.countdownListener);
         this.netInfoListener();
         clearInterval(this.fetchCurrentDate);
+        AppState.removeEventListener('change', this.handleAppStateChange);
     }
 
     public static async getPassword(
@@ -271,6 +308,20 @@ export class PasswordModalComponent extends React.Component<
             allowBackButton: false,
             showAttempts: true
         });
+
+        if (this.props.biometricActive && this.state.isMoonletDisabled === false) {
+            this.setState({
+                biometricFlow: true
+            });
+            getPinCode()
+                .then(pinCode => {
+                    // if (this.state.appState == AppStateStatus.ACTIVE) {
+                    //     this.updateState({ password: pinCode });
+                    // }
+                    this.setState({ pinCode });
+                })
+                .catch();
+        }
 
         return this.resultDeferred.promise;
     }
@@ -406,22 +457,21 @@ export class PasswordModalComponent extends React.Component<
 
     @bind
     private async updateState(data: { password?: string }) {
-        const shouldConsiderBiometric = data.password === '' ? this.props.biometricActive : false;
         switch (this.state.currentStep) {
             // Enter PIN Flow
             case ScreenStep.ENTER_PIN:
-                let password = data.password;
-                if (shouldConsiderBiometric) {
-                    password = await getPinCode();
-                }
-                const isPasswordValid = await this.verifyPassword(password);
+                const isPasswordValid = await this.verifyPassword(data.password);
                 if (isPasswordValid) {
+                    // console.log(
+                    //     'update state password modal visible befor state false - ',
+                    //     this.state.visible
+                    // );
                     this.setState({ visible: false });
                     this.props.resetFailedLogins();
                     this.props.setAppBlockUntil(undefined);
                     await this.modalOnHideDeffered.promise;
-                    this.resultDeferred?.resolve(password);
-                } else if (shouldConsiderBiometric === false) {
+                    this.resultDeferred?.resolve(data.password);
+                } else {
                     this.handleWrongPassword();
                 }
                 break;
@@ -466,9 +516,7 @@ export class PasswordModalComponent extends React.Component<
                         subtitle: translate('Password.setupPinSubtitle')
                     });
                 } else {
-                    if (shouldConsiderBiometric === false) {
-                        this.handleWrongPassword();
-                    }
+                    this.handleWrongPassword();
                 }
                 break;
             case ScreenStep.CHANGE_PIN_NEW:
@@ -617,7 +665,7 @@ export class PasswordModalComponent extends React.Component<
                         clearErrorMessage={() => this.clearErrorMessage()}
                         allowBackButton={this.state.allowBackButton}
                         onBackButtonTap={() => this.onBackButtonTap()}
-                        isMoonletDisabled={this.state.isMoonletDisabled}
+                        onBiometricLogin={() => this.getPassword(undefined, undefined, undefined)}
                     />
                 )}
 

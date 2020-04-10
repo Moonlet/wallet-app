@@ -37,7 +37,6 @@ export const WalletConnectClient = (() => {
 
     // store encrypted the connection data for reconnecting later
     const storeConnection = async () => {
-        // TODO - this need to ask for user password
         const keychainPassword = await getBaseEncryptionKey();
         if (keychainPassword) {
             storeEncrypted(

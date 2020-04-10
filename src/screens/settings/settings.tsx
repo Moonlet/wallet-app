@@ -120,20 +120,22 @@ export class SettingsScreenComponent extends React.Component<
                             </Text>
                             <Switch
                                 onValueChange={async () => {
-                                    const password = await PasswordModal.getPassword();
-
-                                    if (this.props.touchID) {
-                                        // disable touch id - delete pin
-                                        await clearPinCode();
-                                    } else {
-                                        await setPinCode(password);
+                                    try {
+                                        const password = await PasswordModal.getPassword();
+                                        if (this.props.touchID) {
+                                            // disable touch id - delete pin
+                                            await clearPinCode();
+                                        } else {
+                                            await setPinCode(password);
+                                        }
+                                        // TouchID enables background mode and this will generate another password modal to be shown
+                                        this.props.setDisplayPasswordModal(false);
+                                        this.props.toggleTouchID();
+                                        // await delay(1000);
+                                        this.props.setDisplayPasswordModal(true);
+                                    } catch {
+                                        //
                                     }
-
-                                    // TouchID enables background mode and this will generate another password modal to be shown
-                                    this.props.setDisplayPasswordModal(false);
-                                    this.props.toggleTouchID();
-                                    // await delay(1000);
-                                    this.props.setDisplayPasswordModal(true);
                                 }}
                                 value={this.props.touchID}
                                 trackColor={{

@@ -8,7 +8,7 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
-import { BiometryType } from '../../../../core/biometric-auth/biometric-auth';
+import { BiometryType, biometricAuth } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';
 import { normalize, ICON_SIZE } from '../../../../styles/dimensions';
 import { SafeAreaView } from 'react-navigation';
@@ -30,11 +30,11 @@ export interface IExternalProps {
     title: string;
     subtitle: string;
     onPasswordEntered: (data: { password?: string }) => void;
+    onBiometricLogin: () => void;
     errorMessage: string;
     clearErrorMessage: () => void;
     allowBackButton: boolean;
     onBackButtonTap: () => void;
-    isMoonletDisabled: boolean;
 }
 
 interface IState {
@@ -68,9 +68,16 @@ export class PasswordPinComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        if (this.props.isMoonletDisabled === false && this.props.touchID === true) {
-            this.props.onPasswordEntered({ password: this.state.password });
-        }
+        biometricAuth
+            .isSupported()
+            .then(biometryType => {
+                if (Platform.OS === 'ios') {
+                    this.setState({ biometryType });
+                }
+            })
+            .catch(() => {
+                //
+            });
     }
 
     public componentDidUpdate(prevProps: IExternalProps) {
@@ -205,7 +212,7 @@ export class PasswordPinComponent extends React.Component<
                     style={styles.keyContainer}
                     onPress={() => {
                         if (isBiometryAuth) {
-                            this.props.onPasswordEntered({ password: '' });
+                            this.props.onBiometricLogin();
                         } else {
                             this.setState({ password: '' });
                             this.props.clearErrorMessage();

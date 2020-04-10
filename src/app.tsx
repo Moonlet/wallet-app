@@ -163,7 +163,8 @@ export default class App extends React.Component<{}, IState> {
         }
 
         try {
-            await PasswordModal.getPassword();
+            const isVisible = await PasswordModal.isVisible();
+            if (!isVisible) await PasswordModal.getPassword();
         } catch (err) {
             //
         }

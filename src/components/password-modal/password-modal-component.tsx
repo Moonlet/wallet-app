@@ -237,6 +237,15 @@ export class PasswordModalComponent extends React.Component<
         return ref.changePassword();
     }
 
+    public static async isVisible() {
+        const ref = await PasswordModalComponent.refDeferred.promise;
+        return ref.isVisible();
+    }
+
+    public isVisible(): boolean {
+        return this.state.visible;
+    }
+
     public async getPassword(
         title: string,
         subtitle: string,
@@ -403,7 +412,6 @@ export class PasswordModalComponent extends React.Component<
             case ScreenStep.ENTER_PIN:
                 let password = data.password;
                 if (shouldConsiderBiometric) {
-                    this.props.setDisplayPasswordModal(false);
                     password = await getPinCode();
                 }
                 const isPasswordValid = await this.verifyPassword(password);
@@ -590,10 +598,7 @@ export class PasswordModalComponent extends React.Component<
                 isVisible={this.state.visible}
                 animationInTiming={5}
                 animationOutTiming={5}
-                onModalHide={() => {
-                    this.props.setDisplayPasswordModal(true);
-                    this.modalOnHideDeffered?.resolve();
-                }}
+                onModalHide={() => this.modalOnHideDeffered?.resolve()}
             >
                 {this.state.currentStep === ScreenStep.CREATE_PIN_TERMS ||
                 this.state.currentStep === ScreenStep.CHANGE_PIN_TERMS ? (

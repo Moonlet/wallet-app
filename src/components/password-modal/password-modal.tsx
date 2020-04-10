@@ -19,4 +19,6 @@ export class PasswordModal {
     public static createPassword = PasswordModalComponent.createPassword;
 
     public static changePassword = PasswordModalComponent.changePassword;
+
+    public static isVisible = PasswordModalComponent.isVisible;
 }

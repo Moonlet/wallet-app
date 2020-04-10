@@ -7,7 +7,7 @@ import { PasswordTerms } from './components/password-terms/password-terms';
 import Modal from '../../library/modal/modal';
 import bind from 'bind-decorator';
 import {
-    getEncryptionKey,
+    getBaseEncryptionKey,
     verifyPinCode,
     generateEncryptionKey,
     getPinCode,
@@ -245,8 +245,8 @@ export class PasswordModalComponent extends React.Component<
         this.resultDeferred = new Deferred();
 
         if (data?.shouldCreatePassword) {
-            const passwordCredentials = await getEncryptionKey('');
-            if (passwordCredentials.password === null) {
+            const password = await getBaseEncryptionKey();
+            if (password === null) {
                 this.resultDeferred && this.resultDeferred.reject();
             }
         }
@@ -396,17 +396,15 @@ export class PasswordModalComponent extends React.Component<
     }
 
     @bind
-    private async updateState(data: { password?: string; biometryAuthResult?: boolean }) {
+    private async updateState(data: { password?: string }) {
+        const shouldConsiderBiometric = data.password === '' ? this.props.biometricActive : false;
         switch (this.state.currentStep) {
             // Enter PIN Flow
             case ScreenStep.ENTER_PIN:
                 let password = data.password;
-                const shouldConsiderBiometric =
-                    data.password === '' ? this.props.biometricActive : false;
                 if (shouldConsiderBiometric) {
                     this.props.setDisplayPasswordModal(false);
                     password = await getPinCode();
-                    this.props.setDisplayPasswordModal(true);
                 }
                 const isPasswordValid = await this.verifyPassword(password);
                 if (isPasswordValid) {
@@ -460,7 +458,9 @@ export class PasswordModalComponent extends React.Component<
                         subtitle: translate('Password.setupPinSubtitle')
                     });
                 } else {
-                    this.handleWrongPassword();
+                    if (shouldConsiderBiometric === false) {
+                        this.handleWrongPassword();
+                    }
                 }
                 break;
             case ScreenStep.CHANGE_PIN_NEW:
@@ -485,6 +485,9 @@ export class PasswordModalComponent extends React.Component<
                     // this.state.password is the old password
                     this.setState({ visible: false });
                     this.props.changePIN(this.state.newPassword, this.state.password);
+                    await generateEncryptionKey(this.state.newPassword);
+                    if (this.props.biometricActive) await setPinCode(this.state.newPassword);
+
                     await this.modalOnHideDeffered?.promise;
                     this.resultDeferred?.resolve(this.state.newPassword);
                 } else {
@@ -587,7 +590,10 @@ export class PasswordModalComponent extends React.Component<
                 isVisible={this.state.visible}
                 animationInTiming={5}
                 animationOutTiming={5}
-                onModalHide={() => this.modalOnHideDeffered?.resolve()}
+                onModalHide={() => {
+                    this.props.setDisplayPasswordModal(true);
+                    this.modalOnHideDeffered?.resolve();
+                }}
             >
                 {this.state.currentStep === ScreenStep.CREATE_PIN_TERMS ||
                 this.state.currentStep === ScreenStep.CHANGE_PIN_TERMS ? (

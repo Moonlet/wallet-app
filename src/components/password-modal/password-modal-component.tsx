@@ -665,7 +665,10 @@ export class PasswordModalComponent extends React.Component<
                         clearErrorMessage={() => this.clearErrorMessage()}
                         allowBackButton={this.state.allowBackButton}
                         onBackButtonTap={() => this.onBackButtonTap()}
-                        onBiometricLogin={() => this.getPassword(undefined, undefined, undefined)}
+                        onBiometricLogin={() => {
+                            this.setState({ biometricFlow: true });
+                            this.getPassword(undefined, undefined, undefined);
+                        }}
                     />
                 )}
 

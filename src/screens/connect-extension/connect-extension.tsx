@@ -12,7 +12,7 @@ import { normalize } from '../../styles/dimensions';
 import { Icon } from '../../components/icon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DialogComponent } from '../../components/dialog/dialog-component';
-import { deleteFromStorage } from '../../core/secure/storage';
+import { deleteFromStorage, getItemFromStorage } from '../../core/secure/storage';
 import { WC_CONNECTION } from '../../core/constants/app';
 
 export const navigationOptions = () => ({
@@ -39,18 +39,20 @@ export class ConnectExtensionScreenComponent extends React.Component<
     }
 
     public componentDidMount() {
-        // TODO: if connection is closed from the extension (tap Sign out button)
-        // the wallet connection is still persisted on the phone's AsyncStorage
-        // we have to detect this and deleteFromStorage(WC_CONNECTION);
-
-        this.connectionInterval = setInterval(() => {
-            // TODO: find a better to detect isConnected
-            WalletConnectClient.isConnected() === true && this.setState({ isConnected: true });
+        this.connectionInterval = setInterval(async () => {
+            try {
+                if (await getItemFromStorage(WC_CONNECTION)) {
+                    this.setState({ isConnected: true });
+                } else {
+                    this.setState({ isConnected: false });
+                }
+            } catch (err) {
+                this.setState({ isConnected: false });
+            }
         }, 1000);
 
         WalletConnectClient.onDisconnect(res => {
             if (res?.event === 'disconnect') {
-                this.setState({ isConnected: false });
                 deleteFromStorage(WC_CONNECTION);
             }
         });

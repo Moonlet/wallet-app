@@ -17,9 +17,11 @@ const keyboardLayout = [
 
 export interface IKeyboardButton {
     label: string;
-    onPress: () => void;
+    onPress?: () => void;
     style?: {};
     disabled?: boolean;
+    onPressIn?: () => void;
+    onPressOut?: () => void;
 }
 
 export interface IProps {
@@ -103,10 +105,12 @@ export class KeyboardComponent extends React.Component<
     public renderButtons = () => {
         const styles = this.props.styles;
 
-        return this.props.buttons?.map((button: any, index: any) => (
+        return this.props.buttons?.map((button: IKeyboardButton, index: any) => (
             <TouchableOpacity
                 key={index}
                 onPress={button.onPress}
+                onPressIn={button?.onPressIn}
+                onPressOut={button?.onPressOut}
                 disabled={button?.disabled}
                 style={[
                     styles.headerButton,

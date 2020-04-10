@@ -54,5 +54,9 @@ export default (theme: ITheme) =>
         copyButton: {
             marginBottom: BASE_DIMENSION * 2,
             marginTop: BASE_DIMENSION
+        },
+        unveilButton: {
+            marginTop: BASE_DIMENSION * 2,
+            marginHorizontal: BASE_DIMENSION * 2
         }
     });

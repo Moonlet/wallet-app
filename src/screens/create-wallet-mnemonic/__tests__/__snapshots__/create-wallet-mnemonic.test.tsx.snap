@@ -10,17 +10,20 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       Write down the words from 1 to 4:
     </withTheme(TextComponent)>
     <withTheme(TextComponent) style={{...}}>
-      1. 1
+      1. **********
     </withTheme(TextComponent)>
     <withTheme(TextComponent) style={{...}}>
-      2. 2
+      2. **********
     </withTheme(TextComponent)>
     <withTheme(TextComponent) style={{...}}>
-      3. 3
+      3. **********
     </withTheme(TextComponent)>
     <withTheme(TextComponent) style={{...}}>
-      4. 4
+      4. **********
     </withTheme(TextComponent)>
+    <withTheme(ButtonComponent) style={{...}} onPressIn={[Function: onPressIn]} onPressOut={[Function: onPressOut]}>
+      Hold to unveil
+    </withTheme(ButtonComponent)>
   </View>
   <View style={{...}}>
     <withTheme(CheckboxComponent) onPress={[Function: onPress]} checked={false} text=\\"The recovery phrase is the only way to restore your Moonlet wallet in case you lose your phone or forget your password. Don’t lose it!\\" textStyle={{...}} />

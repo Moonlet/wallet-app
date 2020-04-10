@@ -42,11 +42,15 @@ export default (theme: ITheme) =>
         },
         suggestionButton: {
             paddingVertical: normalize(6),
-            marginHorizontal: BASE_DIMENSION / 2
+            marginHorizontal: BASE_DIMENSION / 2,
+            borderWidth: 1
         },
         bottomButton: {
             flex: 1,
             flexBasis: 0,
             marginHorizontal: BASE_DIMENSION / 2
+        },
+        pasteButton: {
+            marginTop: BASE_DIMENSION * 2
         }
     });

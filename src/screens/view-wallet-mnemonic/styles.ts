@@ -48,5 +48,8 @@ export default (theme: ITheme) =>
             alignSelf: 'center',
             color: theme.colors.cardBackground,
             marginRight: BASE_DIMENSION
+        },
+        unveilButton: {
+            marginTop: BASE_DIMENSION * 2
         }
     });

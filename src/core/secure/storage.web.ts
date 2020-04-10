@@ -9,3 +9,7 @@ export const readEncrypted = async (key: string, hash: string) => {
 export const deleteFromStorage = async (key: string) => {
     return Promise.resolve('NOT_IMPLEMENTED');
 };
+
+export const getItemFromStorage = async (key: string) => {
+    return Promise.resolve('NOT_IMPLEMENTED');
+};

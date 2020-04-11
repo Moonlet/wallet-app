@@ -4,6 +4,8 @@ import { Text } from '../index';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
+import { Icon } from '../../components/icon';
+import { normalize, BASE_DIMENSION } from '../../styles/dimensions';
 
 /**
  * default:    text and border 'accent' color
@@ -20,6 +22,7 @@ export interface IButtonProps {
     disabledSecondary?: boolean;
     onPress?: any;
     styles: ReturnType<typeof stylesProvider>;
+    leftIcon?: string;
     onPressIn?: any;
     onPressOut?: any;
 }
@@ -36,9 +39,17 @@ export const ButtonComponent = (props: IButtonProps) => (
             props.secondary && props.styles.buttonSecondary,
             props.disabled && props.styles.buttonDisabled,
             props.disabledSecondary && props.styles.buttonDisabledSecondary,
-            props.style
+            props.style,
+            {
+                paddingVertical: props?.leftIcon
+                    ? BASE_DIMENSION
+                    : BASE_DIMENSION + BASE_DIMENSION / 2
+            }
         ]}
     >
+        {props?.leftIcon && (
+            <Icon name={props.leftIcon} size={normalize(32)} style={props.styles.leftIcon} />
+        )}
         <Text
             style={[
                 props.styles.text,

@@ -37,6 +37,7 @@ import { ManageAccountScreen } from '../screens/manage-account/manage-account';
 import { BASE_DIMENSION, normalize } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
+import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -128,6 +129,9 @@ export const WalletNavigation = createStackNavigator(
         },
         ManageToken: {
             screen: ManageTokenScreen
+        },
+        ConnectExtension: {
+            screen: ConnectExtensionScreen
         },
 
         // wallet creation

@@ -5,17 +5,19 @@ import { BORDER_RADIUS, BASE_DIMENSION, normalize } from '../../styles/dimension
 export default (theme: ITheme) =>
     StyleSheet.create({
         button: {
-            paddingVertical: BASE_DIMENSION + BASE_DIMENSION / 2,
+            flexDirection: 'row',
             borderWidth: 2,
             borderColor: theme.colors.accentSecondary,
             borderRadius: BORDER_RADIUS,
-            paddingHorizontal: BASE_DIMENSION
+            paddingHorizontal: BASE_DIMENSION,
+            justifyContent: 'center'
         },
         text: {
             lineHeight: normalize(22),
-            fontWeight: '600',
+            fontWeight: 'bold',
             textAlign: 'center',
-            color: theme.colors.accent
+            color: theme.colors.accent,
+            alignSelf: 'center'
         },
         buttonPrimary: {
             backgroundColor: theme.colors.accent,
@@ -43,5 +45,9 @@ export default (theme: ITheme) =>
         },
         textDisabledSecondary: {
             color: theme.colors.textTertiary
+        },
+        leftIcon: {
+            color: theme.colors.appBackground,
+            marginRight: BASE_DIMENSION
         }
     });

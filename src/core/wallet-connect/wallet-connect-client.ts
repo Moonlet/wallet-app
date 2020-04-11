@@ -146,6 +146,13 @@ export const WalletConnectClient = (() => {
         });
     };
 
+    const onDisconnect = (callback: (payload: any) => void) => {
+        walletConnector &&
+            walletConnector.on('disconnect', (error, payload) => {
+                payload && callback(payload);
+            });
+    };
+
     const reconnect = () => {
         return new Promise((resolve, reject) => {
             getBaseEncryptionKey()
@@ -220,6 +227,7 @@ export const WalletConnectClient = (() => {
         setStore,
         isConnected,
         getConnector,
-        checkConnection
+        checkConnection,
+        onDisconnect
     };
 })();

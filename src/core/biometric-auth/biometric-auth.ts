@@ -1,4 +1,4 @@
-import TouchID, { AuthenticateConfig } from 'react-native-touch-id';
+import TouchID from 'react-native-touch-id';
 
 /**
  * The supported biometry type
@@ -16,9 +16,6 @@ interface IsSupportedConfig {
 }
 
 export const biometricAuth = {
-    authenticate(reason?: string, config?: AuthenticateConfig) {
-        return TouchID.authenticate(reason, config);
-    },
     isSupported(config?: IsSupportedConfig): Promise<BiometryType> {
         return TouchID.isSupported(config);
     }

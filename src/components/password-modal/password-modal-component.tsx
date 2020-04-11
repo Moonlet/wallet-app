@@ -1,12 +1,18 @@
 import React from 'react';
-import { Platform, View } from 'react-native';
+import { Platform, View, AppState } from 'react-native';
 import { Deferred } from '../../core/utils/deferred';
 import { PasswordPin } from './components/password-pin/password-pin';
 import { translate } from '../../core/i18n';
 import { PasswordTerms } from './components/password-terms/password-terms';
 import Modal from '../../library/modal/modal';
 import bind from 'bind-decorator';
-import { getPassword, setPassword } from '../../core/secure/keychain';
+import {
+    getBaseEncryptionKey,
+    verifyPinCode,
+    generateEncryptionKey,
+    getPinCode,
+    setPinCode
+} from '../../core/secure/keychain';
 import { changePIN } from '../../redux/wallets/actions';
 import { Text } from '../../library';
 import { IThemeProps } from '../../core/theme/with-theme';
@@ -18,12 +24,17 @@ import {
     setAppBlockUntil,
     resetAllData
 } from '../../redux/app/actions';
-import { RESET_APP_FAILED_LOGINS, FAILED_LOGIN_BLOCKING } from '../../core/constants/app';
+import {
+    RESET_APP_FAILED_LOGINS,
+    FAILED_LOGIN_BLOCKING,
+    AppStateStatus
+} from '../../core/constants/app';
 import moment from 'moment';
 import { NavigationService } from '../../navigation/navigation-service';
 import NetInfo from '@react-native-community/netinfo';
 import ntpClient from 'react-native-ntp-client';
 import CONFIG from '../../config';
+import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 
 const BLOCK_UNTIL_WAIT_INTERNET_CONNECTION = 'BLOCK_UNTIL_WAIT_INTERNET_CONNECTION';
 
@@ -48,27 +59,36 @@ export interface IState {
     newPassword: string;
     currentStep: ScreenStep;
     errorMessage: string;
-    enableBiometryAuth: boolean;
     allowBackButton: boolean;
     showAttempts: boolean;
     hasInternetConnection: boolean;
     isMoonletDisabled: boolean;
     currentDate: Date;
+    appState: AppStateStatus;
+    biometricFlow: boolean;
+    pinCode: string;
 }
 
 export interface IReduxProps {
     changePIN: typeof changePIN;
     failedLogins: number;
     blockUntil: Date | string;
+    biometricActive: boolean;
+    displayPasswordModal: boolean;
+    nrWallets: number;
     incrementFailedLogins: typeof incrementFailedLogins;
     resetFailedLogins: typeof resetFailedLogins;
     setAppBlockUntil: typeof setAppBlockUntil;
     resetAllData: typeof resetAllData;
+    setDisplayPasswordModal: typeof setDisplayPasswordModal;
 }
 
 export const mapStateToProps = (state: IReduxState) => ({
     failedLogins: state.app.failedLogins,
-    blockUntil: state.app.blockUntil
+    blockUntil: state.app.blockUntil,
+    biometricActive: state.preferences.touchID,
+    displayPasswordModal: state.ui.passwordModal.displayPasswordModal,
+    nrWallets: Object.keys(state.wallets).length
 });
 
 export const mapDispatchToProps = {
@@ -76,7 +96,8 @@ export const mapDispatchToProps = {
     incrementFailedLogins,
     resetFailedLogins,
     setAppBlockUntil,
-    resetAllData
+    resetAllData,
+    setDisplayPasswordModal
 };
 
 export class PasswordModalComponent extends React.Component<
@@ -103,16 +124,40 @@ export class PasswordModalComponent extends React.Component<
             newPassword: undefined,
             currentStep: undefined,
             errorMessage: undefined,
-            enableBiometryAuth: true,
             allowBackButton: false,
             showAttempts: false,
             hasInternetConnection: false,
             isMoonletDisabled: false,
-            currentDate: undefined
+            currentDate: undefined,
+            appState: AppState.currentState as AppStateStatus,
+            biometricFlow: false,
+            pinCode: ''
         };
     }
 
+    handleAppStateChange = (nextAppState: AppStateStatus) => {
+        //        console.log('passwordModal handleAppStateChange', this.state.appState, nextAppState);
+        const { appState } = this.state;
+
+        if (
+            (appState === AppStateStatus.BACKGROUND || appState === AppStateStatus.INACTIVE) &&
+            nextAppState === AppStateStatus.ACTIVE &&
+            this.props.nrWallets >= 1 &&
+            this.props.displayPasswordModal === true
+        ) {
+            if (this.state.biometricFlow) {
+                this.updateState({ password: this.state.pinCode });
+                this.setState({ biometricFlow: false });
+            } else if (this.state.visible === false) {
+                this.getPassword(undefined, undefined, undefined);
+            }
+        }
+        this.setState({ appState: nextAppState });
+    };
+
     public componentDidMount() {
+        AppState.addEventListener('change', this.handleAppStateChange);
+
         if (
             moment(new Date(this.props.blockUntil)).isValid() ||
             this.props.blockUntil === BLOCK_UNTIL_WAIT_INTERNET_CONNECTION
@@ -207,6 +252,7 @@ export class PasswordModalComponent extends React.Component<
         clearInterval(this.countdownListener);
         this.netInfoListener();
         clearInterval(this.fetchCurrentDate);
+        AppState.removeEventListener('change', this.handleAppStateChange);
     }
 
     public static async getPassword(
@@ -228,6 +274,15 @@ export class PasswordModalComponent extends React.Component<
         return ref.changePassword();
     }
 
+    public static async isVisible() {
+        const ref = await PasswordModalComponent.refDeferred.promise;
+        return ref.isVisible();
+    }
+
+    public isVisible(): boolean {
+        return this.state.visible;
+    }
+
     public async getPassword(
         title: string,
         subtitle: string,
@@ -236,8 +291,8 @@ export class PasswordModalComponent extends React.Component<
         this.resultDeferred = new Deferred();
 
         if (data?.shouldCreatePassword) {
-            const passwordCredentials = await getPassword();
-            if (passwordCredentials.password === null) {
+            const password = await getBaseEncryptionKey();
+            if (password === null) {
                 this.resultDeferred && this.resultDeferred.reject();
             }
         }
@@ -250,10 +305,23 @@ export class PasswordModalComponent extends React.Component<
             title: title || translate('Password.pinTitleUnlock'),
             subtitle: subtitle || translate('Password.pinSubtitleUnlock'),
             currentStep: ScreenStep.ENTER_PIN,
-            enableBiometryAuth: true,
             allowBackButton: false,
             showAttempts: true
         });
+
+        if (this.props.biometricActive && this.state.isMoonletDisabled === false) {
+            this.setState({
+                biometricFlow: true
+            });
+            getPinCode()
+                .then(pinCode => {
+                    // if (this.state.appState == AppStateStatus.ACTIVE) {
+                    //     this.updateState({ password: pinCode });
+                    // }
+                    this.setState({ pinCode });
+                })
+                .catch();
+        }
 
         return this.resultDeferred.promise;
     }
@@ -268,7 +336,6 @@ export class PasswordModalComponent extends React.Component<
             title: translate('Password.setupPinTitle'),
             subtitle: translate('Password.setupPinSubtitle'),
             currentStep: ScreenStep.CREATE_PIN_TERMS,
-            enableBiometryAuth: false,
             allowBackButton: true,
             showAttempts: false
         });
@@ -286,7 +353,6 @@ export class PasswordModalComponent extends React.Component<
             title: translate('Password.pinTitleUnlock'),
             subtitle: translate('Password.changePinSubtitle'),
             currentStep: ScreenStep.CHANGE_PIN_TERMS,
-            enableBiometryAuth: false,
             allowBackButton: true,
             showAttempts: true
         });
@@ -390,16 +456,16 @@ export class PasswordModalComponent extends React.Component<
     }
 
     @bind
-    private async updateState(data: { password?: string; biometryAuthResult?: boolean }) {
-        let isPasswordValid = await this.verifyPassword(data.password);
-        if (data?.biometryAuthResult === true) {
-            isPasswordValid = data.biometryAuthResult;
-        }
-
+    private async updateState(data: { password?: string }) {
         switch (this.state.currentStep) {
             // Enter PIN Flow
             case ScreenStep.ENTER_PIN:
+                const isPasswordValid = await this.verifyPassword(data.password);
                 if (isPasswordValid) {
+                    // console.log(
+                    //     'update state password modal visible befor state false - ',
+                    //     this.state.visible
+                    // );
                     this.setState({ visible: false });
                     this.props.resetFailedLogins();
                     this.props.setAppBlockUntil(undefined);
@@ -426,7 +492,8 @@ export class PasswordModalComponent extends React.Component<
             case ScreenStep.CREATE_PIN_CONFIRM:
                 if (this.state.password === data.password) {
                     this.setState({ visible: false });
-                    await setPassword(data.password, false);
+                    await generateEncryptionKey(data.password);
+                    if (this.props.biometricActive) await setPinCode(data.password);
                     await this.modalOnHideDeffered?.promise;
                     this.resultDeferred?.resolve(data.password);
                 } else {
@@ -439,7 +506,8 @@ export class PasswordModalComponent extends React.Component<
                 this.setState({ currentStep: ScreenStep.CHANGE_PIN_CURRENT });
                 break;
             case ScreenStep.CHANGE_PIN_CURRENT:
-                if (isPasswordValid) {
+                const passwordValid = await this.verifyPassword(data.password);
+                if (passwordValid) {
                     this.passwordPin.clearPasswordInput();
                     this.setState({
                         currentStep: ScreenStep.CHANGE_PIN_NEW,
@@ -473,7 +541,9 @@ export class PasswordModalComponent extends React.Component<
                     // this.state.password is the old password
                     this.setState({ visible: false });
                     this.props.changePIN(this.state.newPassword, this.state.password);
-                    await setPassword(this.state.newPassword, false);
+                    await generateEncryptionKey(this.state.newPassword);
+                    if (this.props.biometricActive) await setPinCode(this.state.newPassword);
+
                     await this.modalOnHideDeffered?.promise;
                     this.resultDeferred?.resolve(this.state.newPassword);
                 } else {
@@ -491,8 +561,7 @@ export class PasswordModalComponent extends React.Component<
             return true;
         } else {
             try {
-                const passwordCredentials = await getPassword();
-                return value === passwordCredentials.password;
+                return await verifyPinCode(value);
             } catch {
                 this.setState({ errorMessage: translate('Password.genericError') });
                 return false;
@@ -592,17 +661,14 @@ export class PasswordModalComponent extends React.Component<
                         title={this.state.title}
                         subtitle={this.state.subtitle}
                         onPasswordEntered={this.updateState}
-                        onBiometryLogin={(success: boolean) => {
-                            if (success === true) {
-                                this.updateState({ biometryAuthResult: true });
-                            }
-                        }}
                         errorMessage={this.state.errorMessage}
                         clearErrorMessage={() => this.clearErrorMessage()}
-                        enableBiometryAuth={this.state.enableBiometryAuth}
                         allowBackButton={this.state.allowBackButton}
                         onBackButtonTap={() => this.onBackButtonTap()}
-                        isMoonletDisabled={this.state.isMoonletDisabled}
+                        onBiometricLogin={() => {
+                            this.setState({ biometricFlow: true });
+                            this.getPassword(undefined, undefined, undefined);
+                        }}
                     />
                 )}
 

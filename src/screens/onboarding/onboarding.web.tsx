@@ -22,9 +22,6 @@ export class OnboardingScreenComponent extends React.Component<
     public componentDidMount() {
         if (!WalletConnectWeb.isConnected()) {
             WalletConnectWeb.connect().then(uri => {
-                // tslint:disable-next-line
-                console.log(uri);
-
                 QRCode.toCanvas(this.qrCanvas, uri, { errorCorrectionLevel: 'H' });
                 this.unsubscribe = WalletConnectWeb.subscribe('connect', payload => {
                     WalletConnectWeb.getState().then(() => {

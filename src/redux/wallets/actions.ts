@@ -50,7 +50,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../ui/password-modal/actions';
 import { getTokenConfig, generateAccountTokenState } from '../tokens/static-selectors';
 import { ITokenState } from '../wallets/state';
-import { clearPassword } from '../../core/secure/keychain';
+import { clearPinCode, getEncryptionKey, generateEncryptionKey } from '../../core/secure/keychain';
 import { delay } from '../../core/utils/time';
 
 // actions consts
@@ -275,7 +275,8 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
                 })
             );
 
-            await storeEncrypted(mnemonic, walletId, password);
+            const encryptionKey = await getEncryptionKey(password);
+            await storeEncrypted(mnemonic, walletId, encryptionKey);
 
             dispatch(setSelectedWallet(walletId));
             callback && callback();
@@ -639,7 +640,7 @@ export const deleteWallet = (walletId: string) => async (
         if (nextWallet) {
             dispatch(setSelectedWallet(nextWallet.id));
         } else {
-            await clearPassword(); // clear keychain storage
+            await clearPinCode(); // clear keychain storage
         }
     }
     dispatch({
@@ -770,11 +771,14 @@ export const changePIN = (newPassword: string, oldPassword: string) => async (
 ) => {
     const state = getState();
 
+    const encryptionKey = await getEncryptionKey(oldPassword);
+    const newEncryptionKey = await generateEncryptionKey(newPassword);
+
     Object.values(state.wallets).map(async (wallet: IWalletState) => {
         const walletId = wallet.id;
 
-        const mnemonic = await readEncrypted(walletId, oldPassword);
+        const mnemonic = await readEncrypted(walletId, encryptionKey);
 
-        await storeEncrypted(mnemonic, walletId, newPassword);
+        await storeEncrypted(mnemonic, walletId, newEncryptionKey);
     });
 };

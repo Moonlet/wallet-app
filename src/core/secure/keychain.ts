@@ -1,39 +1,112 @@
-import RNSecureKeyStore, { ACCESSIBLE } from 'react-native-secure-key-store';
-import { hash } from './encrypt';
+import * as Keychain from 'react-native-keychain';
+import { generateRandomEncryptionKey, hash } from './encrypt';
+import { storeEncrypted, readEncrypted } from './storage';
+import uuidv4 from 'uuid/v4';
 
 const defaultOptions = {
-    service: 'com.moonlet'
+    serviceEncryption: 'com.moonlet.encryption',
+    usernameEncryption: 'moonlet-encryption-key',
+    usernamePin: 'moonlet-pin',
+    servicePin: 'com.moonlet.pin'
 };
 
-export const setPassword = async (password: string, shouldEncrypt: boolean = true) => {
-    clearPassword();
+export const KEY_PIN_SAMPLE = 'moonletPinSample';
 
-    if (shouldEncrypt) {
-        password = await hash(password);
+export const generateEncryptionKey = async (pinCode: string): Promise<string> => {
+    await setBaseEncryptionKey();
+    const encryptionKey = await getEncryptionKey(pinCode);
+    await storeEncrypted(uuidv4(), KEY_PIN_SAMPLE, encryptionKey);
+    return encryptionKey;
+};
+
+export const setBaseEncryptionKey = async () => {
+    const encryptionKey = await generateRandomEncryptionKey();
+    try {
+        await Keychain.setGenericPassword(defaultOptions.usernameEncryption, encryptionKey, {
+            service: defaultOptions.serviceEncryption,
+            storage: Keychain.STORAGE_TYPE.AES,
+            accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+            securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
+            rules: Keychain.SECURITY_RULES.AUTOMATIC_UPGRADE
+        });
+    } catch (e) {
+        //
     }
-
-    await RNSecureKeyStore.set(defaultOptions.service, password, {
-        accessible: ACCESSIBLE.WHEN_UNLOCKED
-    });
 };
 
-export const getPassword = async () => {
+export const getBaseEncryptionKey = async () => {
     let password = null;
     try {
-        password = await RNSecureKeyStore.get(defaultOptions.service);
-    } catch (err) {
-        // if password it's not set
-        // [Error: {"message":"key does not present"}]
+        // Retrieve the credentials
+        const credentials = await Keychain.getGenericPassword({
+            service: defaultOptions.serviceEncryption
+        });
+        if (credentials) {
+            password = credentials.password;
+        }
+    } catch (error) {
+        //
     }
 
-    return {
-        password
-    };
+    return password;
 };
 
-export const clearPassword = async () => {
+export const getEncryptionKey = async (pinCode: string) => {
+    let password = await getBaseEncryptionKey();
+    if (password !== null) {
+        password = await hash(password, pinCode);
+    }
+    return password;
+};
+
+export const verifyPinCode = async (pinCode: string): Promise<boolean> => {
     try {
-        await RNSecureKeyStore.remove(defaultOptions.service);
+        const encryptionKey = await getEncryptionKey(pinCode);
+        await readEncrypted(KEY_PIN_SAMPLE, encryptionKey);
+        return true;
+    } catch (e) {
+        return false;
+    }
+};
+
+export const setPinCode = async (pinCode: string) => {
+    try {
+        await clearPinCode();
+        await Keychain.setGenericPassword(defaultOptions.usernamePin, pinCode, {
+            service: defaultOptions.servicePin,
+            accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+            securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
+            authenticationType: Keychain.AUTHENTICATION_TYPE.BIOMETRICS,
+            storage: Keychain.STORAGE_TYPE.RSA,
+            accessControl: Keychain.ACCESS_CONTROL.BIOMETRY_CURRENT_SET,
+            rules: Keychain.SECURITY_RULES.AUTOMATIC_UPGRADE
+        });
+    } catch (e) {
+        //
+    }
+};
+
+export const getPinCode = async () => {
+    let password = null;
+    try {
+        // Retrieve the credentials
+        const credentials = await Keychain.getGenericPassword({
+            service: defaultOptions.servicePin,
+            storage: Keychain.STORAGE_TYPE.RSA
+        });
+        if (credentials) {
+            password = credentials.password;
+        }
+    } catch (error) {
+        //
+    }
+
+    return password;
+};
+
+export const clearPinCode = async () => {
+    try {
+        await Keychain.resetGenericPassword({ service: defaultOptions.servicePin });
     } catch (err) {
         //
     }

@@ -7,7 +7,13 @@ const HASH_COST = 5000;
 const IV_LENGTH = 16;
 const SEPARATOR = '!';
 
-export const hash = async (text: string) => Aes.pbkdf2(text, SALT, HASH_COST, HASH_LENGTH);
+export const hash = async (text: string, salt: string = SALT) =>
+    Aes.pbkdf2(text, salt, HASH_COST, HASH_LENGTH);
+
+export const generateRandomEncryptionKey = async () => {
+    const randomKey = await Aes.randomKey(IV_LENGTH);
+    return Aes.pbkdf2(randomKey, SALT, HASH_COST, HASH_LENGTH);
+};
 
 // aes encrypt
 export const encrypt = async (data: string, key: string) => {

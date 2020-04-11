@@ -5,7 +5,6 @@ const KEY_PREFIX = 'mw-';
 
 export const storeEncrypted = async (data: string, key: string, hash: string) => {
     const encryptedData = await encrypt(data, hash);
-
     try {
         await AsyncStorage.setItem(`${KEY_PREFIX}${key}`, encryptedData);
     } catch (e) {

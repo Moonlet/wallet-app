@@ -1,6 +1,6 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { StatusBar, Platform, AppState, AppStateStatus } from 'react-native';
+import { StatusBar, Platform, AppState } from 'react-native';
 import { createAppContainer } from 'react-navigation';
 import { RootNavigation } from './navigation/navigation';
 import { store } from './redux/config';
@@ -30,14 +30,11 @@ import { updateAddressMonitorTokens } from './core/address-monitor';
 import DeviceInfo from 'react-native-device-info';
 import { setDeviceId } from './redux/preferences/actions';
 import { SecurityChecks } from './components/security-checks/security-checks';
+import { AppStateStatus } from './core/constants/app';
 
 const AppContainer = createAppContainer(RootNavigation);
 
 const persistor = persistStore(store);
-
-const APP_STATE_ACTIVE: AppStateStatus = 'active';
-const APP_STATE_BACKGROUND: AppStateStatus = 'background';
-const APP_STATE_INACTIVE: AppStateStatus = 'inactive';
 
 interface IState {
     appReady: boolean;
@@ -64,7 +61,7 @@ export default class App extends React.Component<{}, IState> {
         this.state = {
             appReady: false,
             splashAnimationDone: false,
-            appState: AppState.currentState,
+            appState: AppState.currentState as AppStateStatus,
             displayApplication: true,
             navigationState: undefined
         };
@@ -104,7 +101,7 @@ export default class App extends React.Component<{}, IState> {
         this.setState({ appReady }, () => {
             if (
                 this.state.appReady &&
-                this.state.appState === APP_STATE_ACTIVE &&
+                this.state.appState === AppStateStatus.ACTIVE &&
                 Object.keys(store.getState().wallets).length >= 1
             ) {
                 this.showPasswordModal();
@@ -170,27 +167,31 @@ export default class App extends React.Component<{}, IState> {
 
         this.setState({
             displayApplication: true,
-            appState: APP_STATE_ACTIVE
+            appState: AppStateStatus.ACTIVE
         });
     }
 
     public handleAppStateChange = (nextAppState: AppStateStatus) => {
-        const { appState } = this.state;
+        // const { appState } = this.state;
+        //        console.log('appstate  tsx', appState, nextAppState);
 
-        if (nextAppState === APP_STATE_INACTIVE || nextAppState === APP_STATE_BACKGROUND) {
+        if (
+            nextAppState === AppStateStatus.INACTIVE ||
+            nextAppState === AppStateStatus.BACKGROUND
+        ) {
             this.setState({ displayApplication: false });
         } else {
             this.setState({ displayApplication: true });
         }
 
-        if (
-            (appState === APP_STATE_BACKGROUND || appState === APP_STATE_INACTIVE) &&
-            nextAppState === APP_STATE_ACTIVE &&
-            Object.keys(store.getState().wallets).length >= 1 &&
-            store.getState().ui.passwordModal.displayPasswordModal === true
-        ) {
-            this.showPasswordModal();
-        }
+        // if (
+        //     (appState === APP_STATE_BACKGROUND || appState === APP_STATE_INACTIVE) &&
+        //     nextAppState === APP_STATE_ACTIVE &&
+        //     Object.keys(store.getState().wallets).length >= 1 &&
+        //     store.getState().ui.passwordModal.displayPasswordModal === true
+        // ) {
+        //     this.showPasswordModal();
+        // }
         this.setState({ appState: nextAppState });
     };
 

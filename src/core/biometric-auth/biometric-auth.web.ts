@@ -1,5 +1,3 @@
-import { AuthenticateConfig } from 'react-native-touch-id';
-
 /**
  * The supported biometry type
  */
@@ -16,9 +14,6 @@ interface IsSupportedConfig {
 }
 
 export const biometricAuth = {
-    authenticate(reason?: string, config?: AuthenticateConfig): Promise<boolean> {
-        return;
-    },
     isSupported(config?: IsSupportedConfig): Promise<BiometryType> {
         return Promise.reject('NOT_SUPPORTED');
     }

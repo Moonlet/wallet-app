@@ -1,1 +1,3 @@
+Hello,
 
+We created a video presenting the connection flow with a Ledger hardware wallet. You can find it here: https://youtu.be/w9TNelbmqWQ

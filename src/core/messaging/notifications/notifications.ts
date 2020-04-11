@@ -15,7 +15,6 @@ export class NotificationService {
 
     public async getToken() {
         const fcmToken = await firebase.messaging().getToken();
-        // console.log('Messaging permissions enabled: ' + fcmToken);
         return fcmToken;
     }
 
@@ -30,7 +29,7 @@ export class NotificationService {
             await firebase.messaging().requestPermission();
             this.getToken();
         } catch (error) {
-            // TODO: console.log('Messaging permission rejected');
+            // TODO: 'Messaging permission rejected';
         }
     }
 

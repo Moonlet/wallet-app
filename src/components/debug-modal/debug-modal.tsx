@@ -9,7 +9,7 @@ import { Notifications } from '../../core/messaging/notifications/notifications'
 import { getApnsToken } from '../../core/messaging/silent/ios-voip-push-notification';
 import { readEncrypted } from '../../core/secure/storage';
 import { WC_CONNECTION } from '../../core/constants/app';
-import { getPassword } from '../../core/secure/keychain';
+import { getBaseEncryptionKey } from '../../core/secure/keychain';
 import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
 
 export interface IExternalProps {
@@ -53,13 +53,11 @@ export class DebugModalComponent extends React.Component<
                     apnToken
                 });
             });
-        getPassword().then(async keychainPassword => {
+        getBaseEncryptionKey().then(async keychainPassword => {
             if (keychainPassword) {
                 try {
                     this.setState({
-                        wcSession: JSON.parse(
-                            await readEncrypted(WC_CONNECTION, keychainPassword.password)
-                        )
+                        wcSession: JSON.parse(await readEncrypted(WC_CONNECTION, keychainPassword))
                     });
                 } catch (e) {
                     // @ts-ignore

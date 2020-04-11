@@ -4,7 +4,7 @@ jest.mock('../../config');
 
 jest.mock('../../../core/secure/keychain', () => {
     return {
-        getPassword: () => Promise.resolve({ password: 'pass' })
+        getEncryptionKey: () => Promise.resolve({ password: 'pass' })
     };
 });
 

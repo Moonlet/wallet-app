@@ -6,14 +6,12 @@ import stylesProvider from './styles';
 import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { hash } from '../../../../core/secure/encrypt';
 import { Icon } from '../../../icon';
 import LinearGradient from 'react-native-linear-gradient';
-import { biometricAuth, BiometryType } from '../../../../core/biometric-auth/biometric-auth';
+import { BiometryType, biometricAuth } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';
 import { normalize, ICON_SIZE } from '../../../../styles/dimensions';
 import { SafeAreaView } from 'react-navigation';
-import { getPassword } from '../../../../core/secure/keychain';
 
 const digitsLayout = [
     [1, 2, 3],
@@ -32,13 +30,11 @@ export interface IExternalProps {
     title: string;
     subtitle: string;
     onPasswordEntered: (data: { password?: string }) => void;
-    onBiometryLogin: (success: boolean) => void;
+    onBiometricLogin: () => void;
     errorMessage: string;
     clearErrorMessage: () => void;
-    enableBiometryAuth: boolean;
     allowBackButton: boolean;
     onBackButtonTap: () => void;
-    isMoonletDisabled: boolean;
 }
 
 interface IState {
@@ -72,26 +68,16 @@ export class PasswordPinComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        if (
-            this.props.enableBiometryAuth === true &&
-            this.props.isMoonletDisabled === false &&
-            (await this.hasMoonletPasswordStoredInKeychain()) === true
-        ) {
-            this.biometryAuth();
-        }
-    }
-
-    private async hasMoonletPasswordStoredInKeychain(): Promise<boolean> {
-        try {
-            const passwordCredentials = await getPassword();
-            if (passwordCredentials.password) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch {
-            return false;
-        }
+        biometricAuth
+            .isSupported()
+            .then(biometryType => {
+                if (Platform.OS === 'ios') {
+                    this.setState({ biometryType });
+                }
+            })
+            .catch(() => {
+                //
+            });
     }
 
     public componentDidUpdate(prevProps: IExternalProps) {
@@ -112,8 +98,7 @@ export class PasswordPinComponent extends React.Component<
             if (this.state.password.length < PASSWORD_LENGTH) {
                 this.setState({ password: this.state.password.concat(digit) }, async () => {
                     if (this.state.password.length === PASSWORD_LENGTH) {
-                        const passHash = await hash(this.state.password);
-                        this.props.onPasswordEntered({ password: passHash });
+                        this.props.onPasswordEntered({ password: this.state.password });
                     }
                 });
             }
@@ -217,51 +202,9 @@ export class PasswordPinComponent extends React.Component<
         );
     }
 
-    public biometryAuth() {
-        if (this.props.touchID) {
-            biometricAuth
-                .isSupported()
-                .then(biometryType => {
-                    if (Platform.OS === 'ios') {
-                        this.setState({ biometryType });
-                    }
-                    this.authenticate();
-                })
-                .catch(error => {
-                    // Failure code if the user's device does not have touchID or faceID enabled
-                });
-        }
-    }
-
-    public authenticate() {
-        const { theme } = this.props;
-
-        const touchIDConfig = {
-            title: translate('Password.authRequired'),
-            imageColor: theme.colors.accent,
-            imageErrorColor: theme.colors.error,
-            sensorDescription: translate('Password.touchSensor'),
-            sensorErrorDescription: translate('App.labels.failed'),
-            cancelText: translate('App.labels.cancel'),
-            fallbackLabel: translate('Password.showPasscode'),
-            passcodeFallback: false
-        };
-
-        return biometricAuth
-            .authenticate(translate('Password.authToContinue'), touchIDConfig)
-            .then(success => {
-                if (success) {
-                    this.props.onBiometryLogin(true);
-                }
-            })
-            .catch(error => {
-                //
-            });
-    }
-
     public renderFooterRow = () => {
         const styles = this.props.styles;
-        const isBiometryAuth = this.props.touchID && this.props.enableBiometryAuth;
+        const isBiometryAuth = this.props.touchID;
 
         return (
             <View style={styles.keyRow}>
@@ -269,7 +212,7 @@ export class PasswordPinComponent extends React.Component<
                     style={styles.keyContainer}
                     onPress={() => {
                         if (isBiometryAuth) {
-                            this.biometryAuth();
+                            this.props.onBiometricLogin();
                         } else {
                             this.setState({ password: '' });
                             this.props.clearErrorMessage();

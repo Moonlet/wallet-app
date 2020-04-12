@@ -102,7 +102,10 @@ export const getPinCode = async () => {
         // console.log('keychain error', JSON.stringify(error, null, 4));
         if (error.message.indexOf('Authentication failed') >= 0) {
             return getPinCode();
-        } else if (error.message.indexOf('Cancel') >= 0) {
+        } else if (
+            error.message.indexOf('Cancel') >= 0 ||
+            error.message.indexOf('User canceled the operation.') >= 0
+        ) {
             return Promise.reject('CANCELED');
         } else if (error.message.indexOf('Too many attempts') >= 0) {
             return Promise.reject('TOO_MANY_ATTEMPTS');

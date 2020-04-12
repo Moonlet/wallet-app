@@ -94,11 +94,24 @@ export const getPinCode = async () => {
             service: defaultOptions.servicePin,
             storage: Keychain.STORAGE_TYPE.RSA
         });
+        // console.log('keychain credentials', credentials);
         if (credentials) {
             password = credentials.password;
         }
     } catch (error) {
-        //
+        // console.log('keychain error', JSON.stringify(error, null, 4));
+        if (error.message.indexOf('Authentication failed') >= 0) {
+            return getPinCode();
+        } else if (
+            error.message.indexOf('Cancel') >= 0 ||
+            error.message.indexOf('User canceled the operation.') >= 0
+        ) {
+            return Promise.reject('CANCELED');
+        } else if (error.message.indexOf('Too many attempts') >= 0) {
+            return Promise.reject('TOO_MANY_ATTEMPTS');
+        } else {
+            return Promise.reject(error.message);
+        }
     }
 
     return password;

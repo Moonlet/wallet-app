@@ -136,19 +136,27 @@ export class PasswordModalComponent extends React.Component<
     }
 
     handleAppStateChange = (nextAppState: AppStateStatus) => {
-        //        console.log('passwordModal handleAppStateChange', this.state.appState, nextAppState);
-        const { appState } = this.state;
+        // console.log('passwordModal handleAppStateChange', this.state.appState, nextAppState);
 
         if (
-            (appState === AppStateStatus.BACKGROUND || appState === AppStateStatus.INACTIVE) &&
             nextAppState === AppStateStatus.ACTIVE &&
             this.props.nrWallets >= 1 &&
             this.props.displayPasswordModal === true
         ) {
+            // console.log('app is active');
             if (this.state.biometricFlow) {
-                this.updateState({ password: this.state.pinCode });
-                this.setState({ biometricFlow: false });
-            } else if (this.state.visible === false) {
+                // console.log('biometric flow', 'after fingerprint');
+                if (this.state.pinCode) {
+                    // console.log('pincode is set', 'update state');
+                    this.updateState({ password: this.state.pinCode });
+                } else {
+                    // console.log('pin is null', 'biometricFlow -> false');
+                    this.setState({ biometricFlow: false });
+                }
+            }
+
+            if (!this.state.visible) {
+                // console.log('should display password modal');
                 this.getPassword(undefined, undefined, undefined);
             }
         }
@@ -298,7 +306,7 @@ export class PasswordModalComponent extends React.Component<
         }
 
         this.clearErrorMessage();
-
+        // console.log('getPassword', 'display modal');
         this.modalOnHideDeffered = new Deferred();
         this.setState({
             visible: true,
@@ -313,14 +321,23 @@ export class PasswordModalComponent extends React.Component<
             this.setState({
                 biometricFlow: true
             });
+            // console.log('trigger biometric login');
             getPinCode()
                 .then(pinCode => {
-                    // if (this.state.appState == AppStateStatus.ACTIVE) {
-                    //     this.updateState({ password: pinCode });
-                    // }
-                    this.setState({ pinCode });
+                    if (pinCode && this.state.appState === AppStateStatus.ACTIVE) {
+                        // console.log('pin ok, update state');
+                        this.updateState({ password: pinCode });
+                    } else {
+                        // console.log('pin falsy', JSON.stringify(pinCode));
+                        this.setState({ pinCode });
+                    }
                 })
-                .catch();
+                .catch(e => {
+                    this.setState({
+                        biometricFlow: false
+                    });
+                    // console.log('getPinCode error', e);
+                });
         }
 
         return this.resultDeferred.promise;

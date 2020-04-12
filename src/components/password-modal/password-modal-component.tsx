@@ -483,7 +483,7 @@ export class PasswordModalComponent extends React.Component<
                     //     'update state password modal visible befor state false - ',
                     //     this.state.visible
                     // );
-                    this.setState({ visible: false });
+                    this.setState({ visible: false, biometricFlow: false });
                     this.props.resetFailedLogins();
                     this.props.setAppBlockUntil(undefined);
                     await this.modalOnHideDeffered.promise;

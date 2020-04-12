@@ -29,6 +29,8 @@ import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
 import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 import { clearPinCode, setPinCode } from '../../core/secure/keychain';
+import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
+import { delay } from '../../core/utils/time';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -41,6 +43,8 @@ export interface IReduxProps {
     touchID: boolean;
     toggleTouchID: typeof toggleTouchID;
     setDisplayPasswordModal: typeof setDisplayPasswordModal;
+    openLoadingModal: typeof openLoadingModal;
+    closeLoadingModal: typeof closeLoadingModal;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -51,7 +55,9 @@ const mapStateToProps = (state: IReduxState) => ({
 
 const mapDispatchToProps = {
     toggleTouchID,
-    setDisplayPasswordModal
+    setDisplayPasswordModal,
+    openLoadingModal,
+    closeLoadingModal
 };
 
 const navigationOptions = () => ({
@@ -121,20 +127,29 @@ export class SettingsScreenComponent extends React.Component<
                             <Switch
                                 onValueChange={async () => {
                                     try {
-                                        const password = await PasswordModal.getPassword();
                                         if (this.props.touchID) {
                                             // disable touch id - delete pin
                                             await clearPinCode();
                                         } else {
+                                            this.props.openLoadingModal();
+                                            const password = await PasswordModal.getPassword(
+                                                undefined,
+                                                undefined,
+                                                {
+                                                    showCloseButton: true
+                                                }
+                                            );
+                                            await delay(0);
                                             await setPinCode(password);
                                         }
                                         // TouchID enables background mode and this will generate another password modal to be shown
-                                        this.props.setDisplayPasswordModal(false);
+                                        // this.props.setDisplayPasswordModal(false);
                                         this.props.toggleTouchID();
-                                        // await delay(1000);
-                                        this.props.setDisplayPasswordModal(true);
+                                        // this.props.setDisplayPasswordModal(true);
                                     } catch {
                                         //
+                                    } finally {
+                                        this.props.closeLoadingModal();
                                     }
                                 }}
                                 value={this.props.touchID}

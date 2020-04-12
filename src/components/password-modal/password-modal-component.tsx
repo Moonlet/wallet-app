@@ -266,10 +266,10 @@ export class PasswordModalComponent extends React.Component<
     public static async getPassword(
         title?: string,
         subtitle?: string,
-        data?: { shouldCreatePassword?: boolean }
+        options?: { shouldCreatePassword?: boolean; showCloseButton?: boolean }
     ) {
         const ref = await PasswordModalComponent.refDeferred.promise;
-        return ref.getPassword(title, subtitle, data);
+        return ref.getPassword(title, subtitle, options);
     }
 
     public static async createPassword() {
@@ -291,14 +291,15 @@ export class PasswordModalComponent extends React.Component<
         return this.state.visible;
     }
 
+    // TODO: we need to get rid of shouldCreatePassword - it's confusing
     public async getPassword(
         title: string,
         subtitle: string,
-        data: { shouldCreatePassword?: boolean }
+        options: { shouldCreatePassword?: boolean; showCloseButton?: boolean }
     ): Promise<string> {
         this.resultDeferred = new Deferred();
 
-        if (data?.shouldCreatePassword) {
+        if (options?.shouldCreatePassword) {
             const password = await getBaseEncryptionKey();
             if (password === null) {
                 this.resultDeferred && this.resultDeferred.reject();
@@ -313,14 +314,12 @@ export class PasswordModalComponent extends React.Component<
             title: title || translate('Password.pinTitleUnlock'),
             subtitle: subtitle || translate('Password.pinSubtitleUnlock'),
             currentStep: ScreenStep.ENTER_PIN,
-            allowBackButton: false,
-            showAttempts: true
+            allowBackButton: !!options?.showCloseButton,
+            showAttempts: true,
+            biometricFlow: this.props.biometricActive && !this.state.isMoonletDisabled
         });
 
-        if (this.props.biometricActive && this.state.isMoonletDisabled === false) {
-            this.setState({
-                biometricFlow: true
-            });
+        if (this.props.biometricActive && !this.state.isMoonletDisabled) {
             // console.log('trigger biometric login');
             getPinCode()
                 .then(pinCode => {

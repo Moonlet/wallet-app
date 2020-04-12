@@ -208,7 +208,9 @@ export default class App extends React.Component<{}, IState> {
                                     this.setState({ navigationState: newState });
                                 }}
                             />
-                            {!this.state.displayApplication && <ImageCanvas />}
+                            {Platform.OS !== 'android' && !this.state.displayApplication && (
+                                <ImageCanvas />
+                            )}
                             <PasswordModal.Component />
                             <BottomSheet />
                             {Platform.OS !== 'web' && <Dialog.Component />}

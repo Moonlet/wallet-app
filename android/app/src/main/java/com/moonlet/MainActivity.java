@@ -30,12 +30,12 @@ public class MainActivity extends ReactActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    this.antidebug();
+    // this.antidebug();
   }
 
-  static {
-    System.loadLibrary("anti-debug");
-  }
+  // static {
+  // System.loadLibrary("anti-debug");
+  // }
 
-  public native void antidebug();
+  // public native void antidebug();
 }

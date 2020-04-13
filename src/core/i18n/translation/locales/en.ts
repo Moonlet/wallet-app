@@ -163,6 +163,7 @@ export const translation: ITranslations = {
             genericError: 'Operation could not be completed',
             subtitleMnemonic: 'Your PIN is required to view mnemonic',
             subtitleDeleteWallet: 'Your PIN is required to delete wallet',
+            subtitleSignTransaction: 'Your PIN is required\nto sign your transaction',
             dontMatch: "PIN code doesn't match",
             termsBody: 'You need to setup a PIN to secure your wallet.',
             termsCheckboxLabel:

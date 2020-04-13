@@ -3,7 +3,7 @@ import { generateRandomEncryptionKey, hash } from './encrypt';
 import { storeEncrypted, readEncrypted, deleteFromStorage } from './storage';
 import DeviceInfo from 'react-native-device-info';
 import uuidv4 from 'uuid/v4';
-import { Settings } from 'react-native';
+import { Platform } from 'react-native';
 
 const defaultOptions = {
     serviceEncryption: 'com.moonlet.encryption',
@@ -15,13 +15,16 @@ const defaultOptions = {
 export const KEY_PIN_SAMPLE = 'moonletPinSample';
 
 export const clearKeychain = async () => {
-    if (!Settings.get('appIsInstalled')) {
-        clearPinCode();
-        deleteFromStorage(KEY_PIN_SAMPLE);
-        await Keychain.resetGenericPassword({ service: defaultOptions.serviceEncryption });
-        Settings.set({
-            appIsInstalled: true
-        });
+    if (Platform.OS === 'ios') {
+        const Settings = require('react-native').Settings;
+        if (!Settings.get('appIsInstalled')) {
+            clearPinCode();
+            deleteFromStorage(KEY_PIN_SAMPLE);
+            await Keychain.resetGenericPassword({ service: defaultOptions.serviceEncryption });
+            Settings.set({
+                appIsInstalled: true
+            });
+        }
     }
 };
 

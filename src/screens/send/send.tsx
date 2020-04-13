@@ -154,7 +154,11 @@ export class SendScreenComponent extends React.Component<
         }
 
         try {
-            const password = await PasswordModal.getPassword();
+            const password = await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleSignTransaction'),
+                { sensitive: true, showCloseButton: true }
+            );
             this.props.sendTransferTransaction(
                 this.props.account,
                 this.state.toAddress,

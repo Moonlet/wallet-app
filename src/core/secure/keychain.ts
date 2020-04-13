@@ -14,7 +14,7 @@ const defaultOptions = {
 
 export const KEY_PIN_SAMPLE = 'moonletPinSample';
 
-export const clearKeychain = async () => {
+export const iosClearKeychainOnInstall = async () => {
     if (Platform.OS === 'ios') {
         const Settings = require('react-native').Settings;
         if (!Settings.get('appIsInstalled')) {
@@ -51,7 +51,7 @@ export const setBaseEncryptionKey = async () => {
 };
 
 export const getBaseEncryptionKey = async () => {
-    await clearKeychain();
+    await iosClearKeychainOnInstall();
     let password = null;
     try {
         // Retrieve the credentials
@@ -104,7 +104,7 @@ export const setPinCode = async (pinCode: string) => {
 };
 
 export const getPinCode = async () => {
-    await clearKeychain();
+    await iosClearKeychainOnInstall();
     let password = null;
     try {
         // Retrieve the credentials

@@ -16,8 +16,6 @@ import { LoadingIndicator } from '../../../../components/loading-indicator/loadi
 import { WalletType } from '../../../../core/wallet/types';
 import { ViewKey, KeyType } from './components/view-key/view-key';
 import CONFIG from '../../../../config';
-import Modal from '../../../../library/modal/modal';
-import { Deferred } from '../../../../core/utils/deferred';
 
 export interface IExternalProps {
     onDonePressed: () => any;
@@ -42,8 +40,6 @@ export class AccountSettingsModalComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    private modalOnHideDeffered: Deferred;
-
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
@@ -57,13 +53,11 @@ export class AccountSettingsModalComponent extends React.Component<
             displayOtherModal: false,
             keyType: undefined
         };
-        this.modalOnHideDeffered = new Deferred();
     }
 
     private revealPrivateKey() {
         try {
             this.setState({ displayOtherModal: true }, async () => {
-                await this.modalOnHideDeffered?.promise;
                 const password = await PasswordModal.getPassword();
 
                 this.setState({ showKeyScreen: true, isLoading: true, displayOtherModal: false });
@@ -124,24 +118,20 @@ export class AccountSettingsModalComponent extends React.Component<
         });
     }
 
-    private async closeModal() {
+    private closeModal() {
         this.props.onDonePressed();
         this.setState({
             showKeyScreen: false,
             showBackButton: false
         });
-        await this.modalOnHideDeffered?.promise;
     }
 
     public render() {
         const styles = this.props.styles;
         const viewOnName = getBlockchain(this.props.account.blockchain).networks[0].explorer.name;
 
-        return (
-            <Modal
-                isVisible={this.props.visible && !this.state.displayOtherModal}
-                onModalHide={() => this.modalOnHideDeffered?.resolve()}
-            >
+        if (this.props.visible && !this.state.displayOtherModal) {
+            return (
                 <View style={styles.container}>
                     <View style={styles.modalContainer}>
                         <View style={styles.header}>
@@ -268,8 +258,10 @@ export class AccountSettingsModalComponent extends React.Component<
                         )}
                     </View>
                 </View>
-            </Modal>
-        );
+            );
+        } else {
+            return null;
+        }
     }
 }
 

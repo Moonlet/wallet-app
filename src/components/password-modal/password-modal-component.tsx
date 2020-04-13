@@ -65,6 +65,7 @@ export interface IState {
     isMoonletDisabled: boolean;
     currentDate: Date;
     appState: AppStateStatus;
+    sensitive: boolean;
     biometricFlow: boolean;
     hideBiometricButton: boolean;
     pinCode: string;
@@ -132,6 +133,7 @@ export class PasswordModalComponent extends React.Component<
             currentDate: undefined,
             appState: AppState.currentState as AppStateStatus,
             biometricFlow: false,
+            sensitive: false,
             hideBiometricButton: false,
             pinCode: ''
         };
@@ -145,21 +147,26 @@ export class PasswordModalComponent extends React.Component<
             this.props.nrWallets >= 1 &&
             this.props.displayPasswordModal === true
         ) {
-            // console.log('app is active');
-            if (this.state.biometricFlow) {
-                // console.log('biometric flow', 'after fingerprint');
-                if (this.state.pinCode) {
-                    // console.log('pincode is set', 'update state');
-                    this.updateState({ password: this.state.pinCode });
-                } else {
-                    // console.log('pin is null', 'biometricFlow -> false');
-                    this.setState({ biometricFlow: false });
-                }
-            }
-
-            if (!this.state.visible) {
-                // console.log('should display password modal');
+            if (this.state.sensitive) {
+                this.resultDeferred.reject('CANCELED');
                 this.getPassword(undefined, undefined, undefined);
+            } else {
+                // console.log('app is active');
+                if (this.state.biometricFlow) {
+                    // console.log('biometric flow', 'after fingerprint');
+                    if (this.state.pinCode) {
+                        // console.log('pincode is set', 'update state');
+                        this.updateState({ password: this.state.pinCode });
+                    } else {
+                        // console.log('pin is null', 'biometricFlow -> false');
+                        this.setState({ biometricFlow: false });
+                    }
+                }
+
+                if (!this.state.visible) {
+                    // console.log('should display password modal');
+                    this.getPassword(undefined, undefined, undefined);
+                }
             }
         }
         this.setState({ appState: nextAppState });
@@ -268,7 +275,7 @@ export class PasswordModalComponent extends React.Component<
     public static async getPassword(
         title?: string,
         subtitle?: string,
-        options?: { shouldCreatePassword?: boolean; showCloseButton?: boolean }
+        options?: { shouldCreatePassword?: boolean; showCloseButton?: boolean; sensitive?: boolean }
     ) {
         const ref = await PasswordModalComponent.refDeferred.promise;
         return ref.getPassword(title, subtitle, options);
@@ -293,11 +300,21 @@ export class PasswordModalComponent extends React.Component<
         return this.state.visible;
     }
 
-    // TODO: we need to get rid of shouldCreatePassword - it's confusing
+    /**
+     * @param title
+     * @param subtitle
+     * @param options
+     * @param options.shouldCreatePassword will return a rejection if a password is not already set in keychain
+     * @param options.showCloseButton will display a x button in top left corner
+     * @param options.sensitive will return rejection if app goes in backgroun in login proccess, also disables biometric login
+     *
+     * TODO: we need to get rid of shouldCreatePassword - it's confusing
+     * TODO: refactor this to accept only one parameter as object
+     */
     public async getPassword(
         title: string,
         subtitle: string,
-        options: { shouldCreatePassword?: boolean; showCloseButton?: boolean }
+        options: { shouldCreatePassword?: boolean; showCloseButton?: boolean; sensitive?: boolean }
     ): Promise<string> {
         this.resultDeferred = new Deferred();
 
@@ -318,28 +335,32 @@ export class PasswordModalComponent extends React.Component<
             currentStep: ScreenStep.ENTER_PIN,
             allowBackButton: !!options?.showCloseButton,
             showAttempts: true,
-            biometricFlow: this.props.biometricActive && !this.state.isMoonletDisabled,
-            hideBiometricButton: false
+            biometricFlow:
+                !options?.sensitive && this.props.biometricActive && !this.state.isMoonletDisabled,
+            hideBiometricButton: !!options?.sensitive,
+            sensitive: !!options?.sensitive
         });
 
-        if (this.props.biometricActive && !this.state.isMoonletDisabled) {
+        if (!options?.sensitive && this.props.biometricActive && !this.state.isMoonletDisabled) {
             // console.log('trigger biometric login');
-            getPinCode()
-                .then(pinCode => {
-                    if (pinCode && this.state.appState === AppStateStatus.ACTIVE) {
-                        // console.log('pin ok, update state');
-                        this.updateState({ password: pinCode });
-                    } else {
-                        // console.log('pin falsy', JSON.stringify(pinCode));
-                        this.setState({ pinCode });
-                    }
-                })
-                .catch(e => {
-                    this.setState({
-                        biometricFlow: false
+            setTimeout(() => {
+                getPinCode()
+                    .then(pinCode => {
+                        if (pinCode && this.state.appState === AppStateStatus.ACTIVE) {
+                            // console.log('pin ok, update state');
+                            this.updateState({ password: pinCode });
+                        } else {
+                            // console.log('pin falsy', JSON.stringify(pinCode));
+                            this.setState({ pinCode });
+                        }
+                    })
+                    .catch(e => {
+                        this.setState({
+                            biometricFlow: false
+                        });
+                        // console.log('getPinCode error', e);
                     });
-                    // console.log('getPinCode error', e);
-                });
+            }, 50);
         }
 
         return this.resultDeferred.promise;
@@ -357,7 +378,8 @@ export class PasswordModalComponent extends React.Component<
             currentStep: ScreenStep.CREATE_PIN_TERMS,
             allowBackButton: true,
             showAttempts: false,
-            hideBiometricButton: true
+            hideBiometricButton: true,
+            sensitive: false
         });
 
         return this.resultDeferred.promise;
@@ -375,7 +397,8 @@ export class PasswordModalComponent extends React.Component<
             currentStep: ScreenStep.CHANGE_PIN_TERMS,
             allowBackButton: true,
             showAttempts: true,
-            hideBiometricButton: true
+            hideBiometricButton: true,
+            sensitive: false
         });
 
         return this.resultDeferred.promise;
@@ -487,7 +510,7 @@ export class PasswordModalComponent extends React.Component<
                     //     'update state password modal visible befor state false - ',
                     //     this.state.visible
                     // );
-                    this.setState({ visible: false, biometricFlow: false });
+                    this.setState({ visible: false, biometricFlow: false, sensitive: false });
                     this.props.resetFailedLogins();
                     this.props.setAppBlockUntil(undefined);
                     await this.modalOnHideDeffered.promise;

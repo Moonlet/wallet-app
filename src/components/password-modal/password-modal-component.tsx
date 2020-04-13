@@ -66,6 +66,7 @@ export interface IState {
     currentDate: Date;
     appState: AppStateStatus;
     biometricFlow: boolean;
+    hideBiometricButton: boolean;
     pinCode: string;
 }
 
@@ -131,6 +132,7 @@ export class PasswordModalComponent extends React.Component<
             currentDate: undefined,
             appState: AppState.currentState as AppStateStatus,
             biometricFlow: false,
+            hideBiometricButton: false,
             pinCode: ''
         };
     }
@@ -316,7 +318,8 @@ export class PasswordModalComponent extends React.Component<
             currentStep: ScreenStep.ENTER_PIN,
             allowBackButton: !!options?.showCloseButton,
             showAttempts: true,
-            biometricFlow: this.props.biometricActive && !this.state.isMoonletDisabled
+            biometricFlow: this.props.biometricActive && !this.state.isMoonletDisabled,
+            hideBiometricButton: false
         });
 
         if (this.props.biometricActive && !this.state.isMoonletDisabled) {
@@ -353,7 +356,8 @@ export class PasswordModalComponent extends React.Component<
             subtitle: translate('Password.setupPinSubtitle'),
             currentStep: ScreenStep.CREATE_PIN_TERMS,
             allowBackButton: true,
-            showAttempts: false
+            showAttempts: false,
+            hideBiometricButton: true
         });
 
         return this.resultDeferred.promise;
@@ -370,7 +374,8 @@ export class PasswordModalComponent extends React.Component<
             subtitle: translate('Password.changePinSubtitle'),
             currentStep: ScreenStep.CHANGE_PIN_TERMS,
             allowBackButton: true,
-            showAttempts: true
+            showAttempts: true,
+            hideBiometricButton: true
         });
 
         return this.resultDeferred.promise;
@@ -681,6 +686,7 @@ export class PasswordModalComponent extends React.Component<
                         clearErrorMessage={() => this.clearErrorMessage()}
                         allowBackButton={this.state.allowBackButton}
                         onBackButtonTap={() => this.onBackButtonTap()}
+                        hideBiometricButton={this.state.hideBiometricButton}
                         onBiometricLogin={() => {
                             this.setState({ biometricFlow: true });
                             this.getPassword(undefined, undefined, undefined);

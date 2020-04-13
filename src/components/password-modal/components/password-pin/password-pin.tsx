@@ -30,6 +30,7 @@ export interface IExternalProps {
     title: string;
     subtitle: string;
     onPasswordEntered: (data: { password?: string }) => void;
+    hideBiometricButton: boolean;
     onBiometricLogin: () => void;
     errorMessage: string;
     clearErrorMessage: () => void;
@@ -204,7 +205,7 @@ export class PasswordPinComponent extends React.Component<
 
     public renderFooterRow = () => {
         const styles = this.props.styles;
-        const isBiometryAuth = this.props.touchID;
+        const isBiometryAuth = !this.props.hideBiometricButton && this.props.touchID;
 
         return (
             <View style={styles.keyRow}>

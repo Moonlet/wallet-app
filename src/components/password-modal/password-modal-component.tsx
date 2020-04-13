@@ -360,7 +360,7 @@ export class PasswordModalComponent extends React.Component<
                         });
                         // console.log('getPinCode error', e);
                     });
-            }, 50);
+            }, 100);
         }
 
         return this.resultDeferred.promise;

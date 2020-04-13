@@ -15,7 +15,7 @@ export default (theme: ITheme) =>
             bottom: 0,
             left: 0,
             right: 0,
-            backgroundColor: theme.colors.overlayBackground, // TODO: decide this
+            backgroundColor: theme.colors.overlayBackground,
             flex: 1,
             justifyContent: 'center',
             alignContent: 'center'

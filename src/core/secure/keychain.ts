@@ -1,6 +1,7 @@
 import * as Keychain from 'react-native-keychain';
 import { generateRandomEncryptionKey, hash } from './encrypt';
 import { storeEncrypted, readEncrypted } from './storage';
+import DeviceInfo from 'react-native-device-info';
 import uuidv4 from 'uuid/v4';
 
 const defaultOptions = {
@@ -101,6 +102,9 @@ export const getPinCode = async () => {
     } catch (error) {
         // console.log('keychain error', JSON.stringify(error, null, 4));
         if (error.message.indexOf('Authentication failed') >= 0) {
+            if (DeviceInfo.getManufacturerSync() === 'OnePlus') {
+                return Promise.reject('FAILED');
+            }
             return getPinCode();
         } else if (
             error.message.indexOf('Cancel') >= 0 ||

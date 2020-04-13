@@ -12,6 +12,7 @@ import { BiometryType, biometricAuth } from '../../../../core/biometric-auth/bio
 import { IReduxState } from '../../../../redux/state';
 import { normalize, ICON_SIZE } from '../../../../styles/dimensions';
 import { SafeAreaView } from 'react-navigation';
+import DeviceInfo from 'react-native-device-info';
 
 const digitsLayout = [
     [1, 2, 3],
@@ -203,9 +204,12 @@ export class PasswordPinComponent extends React.Component<
         );
     }
 
-    public renderFooterRow = () => {
+    public renderFooterRow() {
         const styles = this.props.styles;
-        const isBiometryAuth = !this.props.hideBiometricButton && this.props.touchID;
+        const isBiometryAuth =
+            !this.props.hideBiometricButton &&
+            this.props.touchID &&
+            DeviceInfo.getManufacturerSync() !== 'OnePlus';
 
         return (
             <View style={styles.keyRow}>
@@ -268,7 +272,7 @@ export class PasswordPinComponent extends React.Component<
                 </TouchableOpacity>
             </View>
         );
-    };
+    }
 
     public render() {
         const { styles } = this.props;

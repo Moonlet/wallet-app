@@ -7,9 +7,9 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import { createHWWallet } from '../../../redux/wallets/actions';
 import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
-import { BottomSheetHeader } from '../../../components/bottom-sheet/header/header';
-import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
-import { Icon } from '../../../components/icon';
+import { BottomSheetHeader } from '../header/header';
+import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
+import { Icon } from '../../icon';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { Blockchain } from '../../../core/blockchain/types';
@@ -47,7 +47,7 @@ interface IState {
     ledgerDevice: any;
 }
 
-export class LedgerConnectComponent extends React.Component<
+export class LedgerConnectBottomSheetComponent extends React.Component<
     IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
@@ -258,6 +258,7 @@ export class LedgerConnectComponent extends React.Component<
                     }
                 }}
                 enabledInnerScrolling={false}
+                enabledContentTapInteraction={false}
             />
         );
     }
@@ -267,13 +268,16 @@ const mapDispatchToProps = {
     createHWWallet
 };
 
-export const LedgerConnect = smartConnect<IExternalProps>(LedgerConnectComponent, [
-    withTheme(stylesProvider),
-    connect(
-        (state: IReduxState) => ({
-            verifyAddress: state.ui.screens.connectHardwareWallet.verifyAddress,
-            featureNotSupported: state.ui.screens.connectHardwareWallet.featureNotSupported
-        }),
-        mapDispatchToProps
-    )
-]);
+export const LedgerConnectBottomSheet = smartConnect<IExternalProps>(
+    LedgerConnectBottomSheetComponent,
+    [
+        withTheme(stylesProvider),
+        connect(
+            (state: IReduxState) => ({
+                verifyAddress: state.ui.screens.connectHardwareWallet.verifyAddress,
+                featureNotSupported: state.ui.screens.connectHardwareWallet.featureNotSupported
+            }),
+            mapDispatchToProps
+        )
+    ]
+);

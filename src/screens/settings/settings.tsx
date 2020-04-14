@@ -31,6 +31,7 @@ import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 import { clearPinCode, setPinCode } from '../../core/secure/keychain';
 import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { delay } from '../../core/utils/time';
+import { normalize } from '../../styles/dimensions';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -142,10 +143,7 @@ export class SettingsScreenComponent extends React.Component<
                                             await delay(0);
                                             await setPinCode(password);
                                         }
-                                        // TouchID enables background mode and this will generate another password modal to be shown
-                                        // this.props.setDisplayPasswordModal(false);
                                         this.props.toggleTouchID();
-                                        // this.props.setDisplayPasswordModal(true);
                                     } catch {
                                         //
                                     } finally {
@@ -175,7 +173,7 @@ export class SettingsScreenComponent extends React.Component<
                 >
                     <Text style={styles.textRow}>{translate('Settings.manageWallet')}</Text>
                     <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={16} style={styles.icon} />
+                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
                     </View>
                 </TouchableOpacity>
 
@@ -187,7 +185,7 @@ export class SettingsScreenComponent extends React.Component<
                 >
                     <Text style={styles.textRow}>{translate('Settings.backupWallet')}</Text>
                     <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={16} style={styles.icon} />
+                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
                     </View>
                 </TouchableOpacity>
 
@@ -197,19 +195,21 @@ export class SettingsScreenComponent extends React.Component<
                     style={styles.rowContainer}
                     onPress={async () => {
                         try {
+                            this.props.openLoadingModal();
                             await PasswordModal.changePassword();
-                            // await delay(500);
                             Dialog.info(
                                 translate('App.labels.success'),
                                 translate('Settings.successChangePin')
                             );
-                        } catch (err) {
+                        } catch {
                             //
+                        } finally {
+                            this.props.closeLoadingModal();
                         }
                     }}
                 >
                     <Text style={styles.textRow}>{translate('Settings.changePin')}</Text>
-                    <Icon name="chevron-right" size={16} style={styles.icon} />
+                    <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
                 </TouchableOpacity>
 
                 <View style={styles.divider} />
@@ -231,7 +231,7 @@ export class SettingsScreenComponent extends React.Component<
                     <Text style={styles.textRow}>{translate('Settings.defaultCurrency')}</Text>
                     <View style={styles.rightContainer}>
                         <Text style={styles.rightValue}>{this.props.currency}</Text>
-                        <Icon name="chevron-right" size={16} style={styles.icon} />
+                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
                     </View>
                 </TouchableOpacity>
 
@@ -242,7 +242,7 @@ export class SettingsScreenComponent extends React.Component<
                     onPress={() => navigation.navigate('BlockchainPortfolio')}
                 >
                     <Text style={styles.textRow}>{translate('Settings.blockchainPortfolio')}</Text>
-                    <Icon name="chevron-right" size={16} style={styles.icon} />
+                    <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
                 </TouchableOpacity>
 
                 <View style={styles.divider} />
@@ -266,7 +266,7 @@ export class SettingsScreenComponent extends React.Component<
                 >
                     <Text style={styles.textRow}>{translate('Settings.reportIssue')}</Text>
                     <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={16} style={styles.icon} />
+                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
                     </View>
                 </TouchableOpacity>
 
@@ -288,7 +288,7 @@ export class SettingsScreenComponent extends React.Component<
                 >
                     <Text style={styles.textRow}>{translate('Settings.mainnetTestnet')}</Text>
                     <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={16} style={styles.icon} />
+                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
                     </View>
                 </TouchableOpacity>
 
@@ -310,7 +310,7 @@ export class SettingsScreenComponent extends React.Component<
                 >
                     <Text style={styles.textRow}>{translate('App.labels.tc')}</Text>
                     <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={16} style={styles.icon} />
+                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
                     </View>
                 </TouchableOpacity>
 
@@ -322,7 +322,7 @@ export class SettingsScreenComponent extends React.Component<
                 >
                     <Text style={styles.textRow}>{translate('Settings.privacyPolicy')}</Text>
                     <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={16} style={styles.icon} />
+                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
                     </View>
                 </TouchableOpacity>
 
@@ -378,7 +378,11 @@ export class SettingsScreenComponent extends React.Component<
                         >
                             <Text style={styles.textRow}>Debug Info</Text>
                             <View style={styles.rightContainer}>
-                                <Icon name="chevron-right" size={16} style={styles.icon} />
+                                <Icon
+                                    name="chevron-right"
+                                    size={normalize(16)}
+                                    style={styles.icon}
+                                />
                             </View>
                         </TouchableOpacity>
                     )}

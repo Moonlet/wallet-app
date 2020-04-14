@@ -88,7 +88,7 @@ export class WalletsScreenComponent extends React.Component<
         super(props);
 
         this.state = {
-            selectedTab: WalletType.HD
+            selectedTab: props.selectedWallet.type
         };
     }
 

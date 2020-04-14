@@ -78,6 +78,9 @@ export class Client extends BlockchainGenericClient {
             if (errorMessage.includes('transaction underpriced')) {
                 return Promise.reject(TransactionMessageText.TR_UNDERPRICED);
             }
+            if (errorMessage.includes("Contract account won't accept normal txn")) {
+                return Promise.reject(TransactionMessageText.CONTRACT_TX_NORMAL_NOT_ALLOWED);
+            }
         });
     }
 

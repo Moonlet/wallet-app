@@ -226,7 +226,10 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                                   ...account,
                                   tokens: {
                                       ...account.tokens,
-                                      [action.data.token.symbol]: token
+                                      [action.data.chainId]: {
+                                          ...account.tokens[action.data.chainId],
+                                          [action.data.token.symbol]: token
+                                      }
                                   }
                               }
                             : account
@@ -244,7 +247,10 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                         account.blockchain === action.data.account.blockchain
                             ? {
                                   ...account,
-                                  tokens: action.data.tokens
+                                  tokens: {
+                                      ...account.tokens,
+                                      [action.data.chainId]: action.data.tokens
+                                  }
                               }
                             : account
                     )
@@ -258,7 +264,7 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                     account.blockchain === action.data.account.blockchain
             );
 
-            delete accountToRemoveToken.tokens[action.data.token.symbol];
+            delete accountToRemoveToken.tokens[action.data.chainId][action.data.token.symbol];
 
             return {
                 ...state,

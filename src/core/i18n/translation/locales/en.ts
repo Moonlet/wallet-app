@@ -376,7 +376,9 @@ export const translation: ITranslations = {
             TR_UNDERPRICED: 'Transaction underpriced: gas price might be too low',
             NOT_ENOUGH_TOKENS: 'Insufficient funds for transaction',
             COSMOS_ERROR_12: 'Insufficient fee',
-            COSMOS_ERROR_14: 'Insufficient funds for transaction'
+            COSMOS_ERROR_14: 'Insufficient funds for transaction',
+            CONTRACT_TX_NORMAL_NOT_ALLOWED:
+                "{{address}} is a smart contract that doesn't accept normal transactions"
         },
         SecurityChecks: {
             title: 'Security Warning!',

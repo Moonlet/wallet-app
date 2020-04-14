@@ -1,10 +1,10 @@
 import React from 'react';
-import { View, Dimensions, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
-import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { BASE_DIMENSION, SCREEN_WIDTH } from '../../../../styles/dimensions';
 import _ from 'lodash';
 
 export interface IExternalProps {
@@ -41,11 +41,7 @@ export const HeaderStepByStepComponent = (
                 {index !== steps.length - 1 && (
                     <View
                         style={[
-                            {
-                                width:
-                                    Dimensions.get('window').width / steps.length -
-                                    BASE_DIMENSION * steps.length
-                            },
+                            { width: SCREEN_WIDTH / steps.length - BASE_DIMENSION * steps.length },
                             styles.divider,
                             isDividerSelected && styles.dividerSelected
                         ]}

@@ -1,6 +1,6 @@
 import { Platform, Dimensions, PixelRatio } from 'react-native';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
+export const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // based on iPhone 11's scale
 const scale = SCREEN_WIDTH / 414;

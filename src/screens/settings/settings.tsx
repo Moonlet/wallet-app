@@ -11,7 +11,7 @@ import {
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
-import { toggleTouchID } from '../../redux/preferences/actions';
+import { toggleBiometricAuth } from '../../redux/preferences/actions';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { Icon } from '../../components/icon';
@@ -40,21 +40,21 @@ export interface IState {
 export interface IReduxProps {
     currency: string;
     deviceId: string;
-    touchID: boolean;
-    toggleTouchID: typeof toggleTouchID;
+    biometricActive: boolean;
+    toggleBiometricAuth: typeof toggleBiometricAuth;
     setDisplayPasswordModal: typeof setDisplayPasswordModal;
     openLoadingModal: typeof openLoadingModal;
     closeLoadingModal: typeof closeLoadingModal;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
-    touchID: state.preferences.touchID,
+    biometricActive: state.preferences.biometricActive,
     currency: state.preferences.currency,
     deviceId: state.preferences.deviceId
 });
 
 const mapDispatchToProps = {
-    toggleTouchID,
+    toggleBiometricAuth,
     setDisplayPasswordModal,
     openLoadingModal,
     closeLoadingModal
@@ -127,7 +127,7 @@ export class SettingsScreenComponent extends React.Component<
                             <Switch
                                 onValueChange={async () => {
                                     try {
-                                        if (this.props.touchID) {
+                                        if (this.props.biometricActive) {
                                             // disable touch id - delete pin
                                             await clearPinCode();
                                         } else {
@@ -144,7 +144,7 @@ export class SettingsScreenComponent extends React.Component<
                                         }
                                         // TouchID enables background mode and this will generate another password modal to be shown
                                         // this.props.setDisplayPasswordModal(false);
-                                        this.props.toggleTouchID();
+                                        this.props.toggleBiometricAuth();
                                         // this.props.setDisplayPasswordModal(true);
                                     } catch {
                                         //
@@ -152,13 +152,13 @@ export class SettingsScreenComponent extends React.Component<
                                         this.props.closeLoadingModal();
                                     }
                                 }}
-                                value={this.props.touchID}
+                                value={this.props.biometricActive}
                                 trackColor={{
                                     true: this.props.theme.colors.cardBackground,
                                     false: this.props.theme.colors.cardBackground
                                 }}
                                 thumbColor={
-                                    this.props.touchID
+                                    this.props.biometricActive
                                         ? theme.colors.accent
                                         : theme.colors.textTertiary
                                 }

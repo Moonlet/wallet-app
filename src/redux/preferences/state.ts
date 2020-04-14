@@ -3,7 +3,7 @@ import { ChainIdType } from '../../core/blockchain/types';
 export interface IPrefState {
     currency: string;
     testNet: boolean;
-    touchID: boolean;
+    biometricActive: boolean;
     networks: INetworksOptions;
     blockchains: IBlockchainsOptions;
     deviceId: string;

@@ -52,6 +52,7 @@ import { getTokenConfig, generateAccountTokenState } from '../tokens/static-sele
 import { ITokenState } from '../wallets/state';
 import { clearPinCode, getEncryptionKey, generateEncryptionKey } from '../../core/secure/keychain';
 import { delay } from '../../core/utils/time';
+import { disableBiometricAuth } from '../preferences/actions';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -641,6 +642,7 @@ export const deleteWallet = (walletId: string) => async (
             dispatch(setSelectedWallet(nextWallet.id));
         } else {
             await clearPinCode(); // clear keychain storage
+            dispatch(disableBiometricAuth());
         }
     }
     dispatch({

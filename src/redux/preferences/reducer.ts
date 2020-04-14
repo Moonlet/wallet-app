@@ -2,7 +2,8 @@ import { IPrefState } from './state';
 import { IAction } from '../types';
 import {
     PREF_SET_CURRENCY,
-    TOGGLE_TOUCH_ID,
+    TOGGLE_BIOMETRIC_AUTH,
+    DISABLE_BIOMETRIC_AUTH,
     SET_TEST_NET,
     PREF_SET_NETWORK_TEST_NET_CHAIN_ID,
     PREF_SET_BLOCKCHAIN_ACTIVE_STATE,
@@ -14,7 +15,7 @@ import { RESET_ALL_DATA } from '../app/actions';
 const initialState: IPrefState = {
     currency: 'USD',
     testNet: false,
-    touchID: false,
+    biometricActive: false,
     networks: {},
     blockchains: {},
     deviceId: ''
@@ -33,6 +34,7 @@ export default (state: IPrefState = initialState, action: IAction): IPrefState =
                     }
                 }
             };
+
         case PREF_SET_BLOCKCHAIN_ACTIVE_STATE:
             return {
                 ...state,
@@ -44,20 +46,31 @@ export default (state: IPrefState = initialState, action: IAction): IPrefState =
                     }
                 }
             };
+
         case PREF_SET_BLOCKCHAIN_ORDER:
             return {
                 ...state,
                 blockchains: action.data.blockchains
             };
+
         case SET_TEST_NET:
             return {
                 ...state,
                 testNet: !state.testNet
             };
-        case TOGGLE_TOUCH_ID:
-            state = { ...state };
-            state.touchID = !state.touchID;
-            break;
+
+        case TOGGLE_BIOMETRIC_AUTH:
+            return {
+                ...state,
+                biometricActive: !state.biometricActive
+            };
+
+        case DISABLE_BIOMETRIC_AUTH:
+            return {
+                ...state,
+                biometricActive: false
+            };
+
         case PREF_SET_CURRENCY:
             return {
                 ...state,

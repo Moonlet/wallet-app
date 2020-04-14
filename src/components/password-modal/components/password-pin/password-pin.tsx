@@ -23,7 +23,7 @@ const ZERO = 0;
 const PASSWORD_LENGTH = 6;
 
 export interface IReduxProps {
-    touchID: boolean;
+    biometricActive: boolean;
 }
 
 export interface IExternalProps {
@@ -46,7 +46,7 @@ interface IState {
 }
 
 const mapStateToProps = (state: IReduxState) => ({
-    touchID: state.preferences.touchID
+    biometricActive: state.preferences.biometricActive
 });
 
 export class PasswordPinComponent extends React.Component<
@@ -208,7 +208,7 @@ export class PasswordPinComponent extends React.Component<
         const styles = this.props.styles;
         const isBiometryAuth =
             !this.props.hideBiometricButton &&
-            this.props.touchID &&
+            this.props.biometricActive &&
             DeviceInfo.getManufacturerSync() !== 'OnePlus';
 
         return (

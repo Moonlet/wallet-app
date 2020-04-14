@@ -41,5 +41,9 @@ export default (theme: ITheme) =>
         arrowRight: {
             color: theme.colors.accent,
             alignSelf: 'center'
+        },
+        scrollArea: {
+            flexGrow: 1,
+            paddingBottom: BASE_DIMENSION * 4
         }
     });

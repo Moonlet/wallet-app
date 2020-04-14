@@ -71,8 +71,8 @@ export class BottomSheetComponent extends React.Component<
                         />
                         <DashboardMenuBottomSheet
                             snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? 300 : 0,
-                                bottomSheetHeight: normalize(300)
+                                initialSnap: Platform.OS === 'web' ? normalize(208) : 0,
+                                bottomSheetHeight: normalize(208)
                             }}
                             onClose={() => this.handleClose()}
                         />
@@ -107,7 +107,7 @@ export class BottomSheetComponent extends React.Component<
                         />
                         <ExtensionRequestBottomSheet
                             snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? 280 : 0,
+                                initialSnap: Platform.OS === 'web' ? normalize(280) : 0,
                                 bottomSheetHeight: normalize(280)
                             }}
                             onClose={() => this.handleClose()}
@@ -126,7 +126,7 @@ export class BottomSheetComponent extends React.Component<
                         />
                         <BlockchainNavigationBottomSheet
                             snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? 400 : 0,
+                                initialSnap: Platform.OS === 'web' ? normalize(400) : 0,
                                 bottomSheetHeight: normalize(400)
                             }}
                             onClose={() => this.handleClose()}

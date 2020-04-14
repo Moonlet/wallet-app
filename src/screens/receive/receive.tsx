@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Clipboard, Dimensions } from 'react-native';
+import { View, Clipboard } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { Button } from '../../library/button/button';
@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { Blockchain } from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, SCREEN_WIDTH } from '../../styles/dimensions';
 
 export interface INavigationParams {
     accountIndex: number;
@@ -48,10 +48,12 @@ export const ReceiveScreenComponent = (
         <View style={props.styles.container}>
             <AccountAddress account={props.account} token={props.navigation.state.params.token} />
             <View style={props.styles.qrCodeContainer}>
-                <QRCode
-                    value={props.account.address}
-                    size={Dimensions.get('window').width - BASE_DIMENSION * 10}
-                />
+                <View style={props.styles.qrCode}>
+                    <QRCode
+                        value={props.account.address}
+                        size={SCREEN_WIDTH - BASE_DIMENSION * 10}
+                    />
+                </View>
             </View>
 
             <Button

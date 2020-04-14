@@ -12,7 +12,7 @@ import { ExtensionRequestBottomSheet } from './extension-request-bottom-sheet/ex
 import { IBottomSheet, BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { openBottomSheet, closeBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BlockchainNavigationBottomSheet } from './blockchain-navigation-bottom-sheet/blockchain-navigation-bottom-sheet';
-import { normalize } from '../../styles/dimensions';
+import { normalize, BASE_DIMENSION } from '../../styles/dimensions';
 
 interface IReduxProps {
     bottomSheet: IBottomSheet;
@@ -72,7 +72,10 @@ export class BottomSheetComponent extends React.Component<
                         <DashboardMenuBottomSheet
                             snapPoints={{
                                 initialSnap: Platform.OS === 'web' ? normalize(208) : 0,
-                                bottomSheetHeight: normalize(208)
+                                bottomSheetHeight: Platform.select({
+                                    default: normalize(208),
+                                    android: normalize(208) + BASE_DIMENSION // Used to remove unnecessary scroll area
+                                })
                             }}
                             onClose={() => this.handleClose()}
                         />

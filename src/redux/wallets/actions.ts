@@ -213,8 +213,10 @@ export const createHWWallet = (
         dispatch(addWallet(walletData));
 
         dispatch(setSelectedWallet(walletId));
+        updateAddressMonitorTokens(getState().wallets);
+
         NavigationService.navigate('MainNavigation', {});
-        NavigationService.navigate('Dashboard', {}); // TODO: check this
+        NavigationService.navigate('Dashboard', {});
 
         dispatch(toInitialState());
         dispatch(setDisplayPasswordModal(true));
@@ -660,36 +662,39 @@ export const updateWalletName = (walletId: string, newName: string) => {
     };
 };
 
-export const toggleTokenActive = (account: IAccountState, token: ITokenState) => (
-    dispatch: Dispatch<any>,
-    getState: () => IReduxState
-) => {
+export const toggleTokenActive = (
+    account: IAccountState,
+    token: ITokenState,
+    chainId: ChainIdType
+) => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
     const selectedWallet: IWalletState = getSelectedWallet(getState());
     dispatch({
         type: TOGGLE_TOKEN_ACTIVE,
-        data: { walletId: selectedWallet.id, account, token }
+        data: { walletId: selectedWallet.id, account, token, chainId }
     });
 };
 
-export const updateTokenOrder = (account: IAccountState, tokens: ITokenState[]) => (
-    dispatch: Dispatch<any>,
-    getState: () => IReduxState
-) => {
+export const updateTokenOrder = (
+    account: IAccountState,
+    tokens: ITokenState[],
+    chainId: ChainIdType
+) => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
     const selectedWallet: IWalletState = getSelectedWallet(getState());
     dispatch({
         type: UPDATE_TOKEN_ORDER,
-        data: { walletId: selectedWallet.id, account, tokens }
+        data: { walletId: selectedWallet.id, account, tokens, chainId }
     });
 };
 
-export const removeTokenFromAccount = (account: IAccountState, token: ITokenState) => (
-    dispatch: Dispatch<any>,
-    getState: () => IReduxState
-) => {
+export const removeTokenFromAccount = (
+    account: IAccountState,
+    token: ITokenState,
+    chainId: ChainIdType
+) => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
     const selectedWallet: IWalletState = getSelectedWallet(getState());
     dispatch({
         type: REMOVE_TOKEN_FROM_ACCOUNT,
-        data: { walletId: selectedWallet.id, account, token }
+        data: { walletId: selectedWallet.id, account, token, chainId }
     });
 };
 

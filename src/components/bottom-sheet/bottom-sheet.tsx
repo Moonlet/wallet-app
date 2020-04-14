@@ -7,12 +7,12 @@ import stylesProvider from './styles';
 import { IReduxState } from '../../redux/state';
 import { AccountsBottomSheet } from './accounts-bottom-sheet/accounts-bottom-sheet';
 import { DashboardMenuBottomSheet } from './dashboard-menu-bottom-sheet/dashboard-menu-bottom-sheet';
-import { LedgerConnect } from '../../screens/connect-hardware-wallet/ledger-connect/ledger-connect';
 import { ExtensionRequestBottomSheet } from './extension-request-bottom-sheet/extension-request-bottom-sheet';
 import { IBottomSheet, BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { openBottomSheet, closeBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BlockchainNavigationBottomSheet } from './blockchain-navigation-bottom-sheet/blockchain-navigation-bottom-sheet';
-import { normalize } from '../../styles/dimensions';
+import { normalize, BASE_DIMENSION } from '../../styles/dimensions';
+import { LedgerConnectBottomSheet } from './ledger-connect-bottom-sheet/ledger-connect-bottom-sheet';
 
 interface IReduxProps {
     bottomSheet: IBottomSheet;
@@ -71,8 +71,11 @@ export class BottomSheetComponent extends React.Component<
                         />
                         <DashboardMenuBottomSheet
                             snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? 300 : 0,
-                                bottomSheetHeight: normalize(300)
+                                initialSnap: Platform.OS === 'web' ? normalize(208) : 0,
+                                bottomSheetHeight: Platform.select({
+                                    default: normalize(208),
+                                    android: normalize(208) + BASE_DIMENSION // Used to remove unnecessary scroll area
+                                })
                             }}
                             onClose={() => this.handleClose()}
                         />
@@ -87,7 +90,7 @@ export class BottomSheetComponent extends React.Component<
                             style={this.props.styles.container}
                             activeOpacity={1}
                         />
-                        <LedgerConnect
+                        <LedgerConnectBottomSheet
                             snapPoints={{ initialSnap: 0, bottomSheetHeight: normalize(300) }}
                             blockchain={this.props.bottomSheet?.blockchain}
                             deviceModel={this.props.bottomSheet?.deviceModel}
@@ -107,7 +110,7 @@ export class BottomSheetComponent extends React.Component<
                         />
                         <ExtensionRequestBottomSheet
                             snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? 280 : 0,
+                                initialSnap: Platform.OS === 'web' ? normalize(280) : 0,
                                 bottomSheetHeight: normalize(280)
                             }}
                             onClose={() => this.handleClose()}
@@ -126,7 +129,7 @@ export class BottomSheetComponent extends React.Component<
                         />
                         <BlockchainNavigationBottomSheet
                             snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? 400 : 0,
+                                initialSnap: Platform.OS === 'web' ? normalize(400) : 0,
                                 bottomSheetHeight: normalize(400)
                             }}
                             onClose={() => this.handleClose()}

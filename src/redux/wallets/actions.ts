@@ -609,7 +609,10 @@ export const sendTransferTransaction = (
         // TODO: check here and find a solution to fix
         // await delay(500);
 
-        const message = translate('LoadingModal.' + errorMessage, { app: account.blockchain });
+        const message = translate('LoadingModal.' + errorMessage, {
+            app: account.blockchain,
+            address: formatAddress(toAddress, account.blockchain)
+        });
 
         Dialog.alert(
             translate('LoadingModal.txFailed'),

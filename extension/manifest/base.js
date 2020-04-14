@@ -7,7 +7,7 @@ module.exports = {
     background: {
         scripts: ['bundle.background.js']
     },
-
+    content_security_policy: "script-src 'self'; object-src 'self'",
     icons: {
         16: 'icons/moonlet-16px.png',
         48: 'icons/moonlet-48px.png',

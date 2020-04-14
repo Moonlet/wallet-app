@@ -50,7 +50,11 @@ import { Dialog } from '../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../ui/password-modal/actions';
 import { getTokenConfig, generateAccountTokenState } from '../tokens/static-selectors';
 import { ITokenState } from '../wallets/state';
-import { clearPinCode, getEncryptionKey, generateEncryptionKey } from '../../core/secure/keychain';
+import {
+    getEncryptionKey,
+    generateEncryptionKey,
+    clearEncryptionKey
+} from '../../core/secure/keychain';
 import { delay } from '../../core/utils/time';
 import { disableBiometricAuth } from '../preferences/actions';
 
@@ -641,7 +645,7 @@ export const deleteWallet = (walletId: string) => async (
         if (nextWallet) {
             dispatch(setSelectedWallet(nextWallet.id));
         } else {
-            await clearPinCode(); // clear keychain storage
+            await clearEncryptionKey();
             dispatch(disableBiometricAuth());
         }
     }

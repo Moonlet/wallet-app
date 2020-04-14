@@ -50,7 +50,8 @@ export const AccountListComponent = (
                                     style={styles.icon}
                                 />
                             </TouchableOpacity>
-                            <View style={styles.divider} />
+
+                            {index !== accounts.length - 1 && <View style={styles.divider} />}
                         </View>
                     );
                 })}

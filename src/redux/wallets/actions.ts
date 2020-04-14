@@ -213,8 +213,10 @@ export const createHWWallet = (
         dispatch(addWallet(walletData));
 
         dispatch(setSelectedWallet(walletId));
+        updateAddressMonitorTokens(getState().wallets);
+
         NavigationService.navigate('MainNavigation', {});
-        NavigationService.navigate('Dashboard', {}); // TODO: check this
+        NavigationService.navigate('Dashboard', {});
 
         dispatch(toInitialState());
         dispatch(setDisplayPasswordModal(true));

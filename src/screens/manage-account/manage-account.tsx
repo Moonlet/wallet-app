@@ -64,7 +64,8 @@ const mapStateToProps = (state: IReduxState) => {
             .sort((a, b) => a.value.order - b.value.order),
         selectedAccount,
         wallet: getSelectedWallet(state),
-        hints: state.app.hints
+        hints: state.app.hints,
+        chainId
     };
 };
 
@@ -121,14 +122,18 @@ export class ManageAccountComponent extends React.Component<
             this.accountsSwipeableRef[this.currentlyOpenSwipeable].close();
     }
 
-    public renderLeftActions = (token: ITokenState) => {
+    public renderLeftActions(token: ITokenState) {
         const styles = this.props.styles;
         return (
             <View style={styles.leftActionsContainer}>
                 <TouchableOpacity
                     style={styles.action}
                     onPress={() => {
-                        this.props.removeTokenFromAccount(this.props.selectedAccount, token);
+                        this.props.removeTokenFromAccount(
+                            this.props.selectedAccount,
+                            token,
+                            this.props.chainId
+                        );
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
@@ -137,7 +142,7 @@ export class ManageAccountComponent extends React.Component<
                 </TouchableOpacity>
             </View>
         );
-    };
+    }
 
     public onSwipeableWillOpen(index: string) {
         if (
@@ -209,7 +214,8 @@ export class ManageAccountComponent extends React.Component<
                             onPressOut={() => {
                                 this.props.toggleTokenActive(
                                     this.props.selectedAccount,
-                                    item.value
+                                    item.value,
+                                    this.props.chainId
                                 );
                             }}
                         >
@@ -259,7 +265,8 @@ export class ManageAccountComponent extends React.Component<
                                         [item.key]: { ...item.value, order: index }
                                     })
                                 )
-                            )
+                            ),
+                            this.props.chainId
                         );
                     }}
                 />

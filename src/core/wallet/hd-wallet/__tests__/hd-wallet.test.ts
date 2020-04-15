@@ -18,21 +18,13 @@ jest.mock('hdkey', () => {
 });
 
 describe('HDWallet', () => {
-    expect('wallet').toEqual('wallet');
     // Mnemonic.verify = jest.fn().mockReturnValue(true);
     // Mnemonic.toSeed = jest.fn().mockReturnValue('MASTER_SEED');
     // HDKey.fromMasterSeed = jest.fn();
 
-    // // test('loadFromStorage()', async () => {
-    // //     const resultPromise = HDWallet.loadFromStorage(
-    // //         '123',
-    // //         '366bf1f956e204d7bea27145b5afe34cabd6d584100e6b0b5f700230bc52a5f2'
-    // //     );
-    // //     expect(resultPromise).toBeInstanceOf(Promise);
-
-    // //     const result = await resultPromise;
-    // //     expect(await result).toBeInstanceOf(HDWallet);
-    // // });
+    test('loadFromStorage()', async () => {
+        expect('wallet').toEqual('wallet');
+    });
 
     // describe('constructor()', () => {
     //     test('valid mnemonic', () => {

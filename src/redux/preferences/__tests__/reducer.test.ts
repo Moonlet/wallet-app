@@ -14,16 +14,16 @@ describe('preferences reducer', () => {
         ).toMatchSnapshot();
     });
 
-    test('should handle TOGGLE_TOUCH_ID', () => {
+    test('should handle TOGGLE_BIOMETRIC_AUTH', () => {
         expect(
             reducer(undefined as any, {
-                type: actions.TOGGLE_TOUCH_ID,
+                type: actions.TOGGLE_BIOMETRIC_AUTH,
                 data: ''
             })
         ).toEqual({
             currency: 'USD',
             testNet: false,
-            touchID: true,
+            biometricActive: true,
             networks: {},
             blockchains: {},
             deviceId: ''

@@ -176,31 +176,39 @@ export class ManageTokenComponent extends React.Component<
         let blockchainToken;
 
         if (isContractAddress) {
-            const getTokenInfo = await Promise.all([
-                fetch(
+            try {
+                const getTokenInfo = await Promise.all([
+                    fetch(
+                        CONFIG.tokensUrl +
+                            `${blockchain.toLocaleLowerCase()}/${this.state.fieldInput.toLocaleLowerCase()}.json`
+                    ),
+                    getBlockchain(blockchain)
+                        .getClient(this.props.chainId)
+                        .tokens[tokenType].getTokenInfo(this.state.fieldInput)
+                ]);
+                if (getTokenInfo[0].status === 200) {
+                    staticToken = await getTokenInfo[0].json();
+                }
+                blockchainToken = getTokenInfo[1];
+            } catch {
+                //
+            }
+        } else {
+            try {
+                const fetchResponse = await fetch(
                     CONFIG.tokensUrl +
                         `${blockchain.toLocaleLowerCase()}/${this.state.fieldInput.toLocaleLowerCase()}.json`
-                ),
-                getBlockchain(blockchain)
-                    .getClient(this.props.chainId)
-                    .tokens[tokenType].getTokenInfo(this.state.fieldInput)
-            ]);
-            if (getTokenInfo[0].status === 200) {
-                staticToken = await getTokenInfo[0].json();
-            }
-            blockchainToken = getTokenInfo[1];
-        } else {
-            const fetchResponse = await fetch(
-                CONFIG.tokensUrl +
-                    `${blockchain.toLocaleLowerCase()}/${this.state.fieldInput.toLocaleLowerCase()}.json`
-            );
-            if (fetchResponse.status === 200) {
-                staticToken = await fetchResponse.json();
-                blockchainToken = await getBlockchain(blockchain)
-                    .getClient(this.props.chainId)
-                    .tokens[tokenType].getTokenInfo(staticToken.contractAddress);
-            } else {
-                this.setState({ showError: true, isLoading: false });
+                );
+                if (fetchResponse.status === 200) {
+                    staticToken = await fetchResponse.json();
+                    blockchainToken = await getBlockchain(blockchain)
+                        .getClient(this.props.chainId)
+                        .tokens[tokenType].getTokenInfo(staticToken.contractAddress);
+                } else {
+                    this.setState({ showError: true, isLoading: false });
+                }
+            } catch {
+                //
             }
         }
 

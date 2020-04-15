@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Dimensions, Animated, TouchableOpacity, Platform, ScrollView } from 'react-native';
+import { View, Animated, TouchableOpacity, Platform, ScrollView } from 'react-native';
 import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TokenDashboard } from '../../components/token-dashboard/token-dashboard';
@@ -24,7 +24,13 @@ import {
 import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { Icon } from '../../components/icon';
 import { themes } from '../../navigation/navigation';
-import { ICON_SIZE, ICON_CONTAINER_SIZE, BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import {
+    ICON_SIZE,
+    ICON_CONTAINER_SIZE,
+    BASE_DIMENSION,
+    normalize,
+    SCREEN_WIDTH
+} from '../../styles/dimensions';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
@@ -56,9 +62,6 @@ export interface IReduxProps {
     userCurrency: string;
     chainId: ChainIdType;
 }
-
-const SCREEN_WIDTH = Dimensions.get('window').width;
-// const SCREEN_HEIGHT = Dimensions.get('window').height;
 
 const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
@@ -182,7 +185,7 @@ export class DashboardScreenComponent extends React.Component<
         this.props.openBottomSheet(BottomSheetType.DASHBOARD_MENU);
     };
 
-    public renderBlockchain = (blockchain: Blockchain) => {
+    private renderBlockchain(blockchain: Blockchain) {
         const { styles, blockchains } = this.props;
 
         return (
@@ -191,9 +194,7 @@ export class DashboardScreenComponent extends React.Component<
                 style={[
                     styles.blockchainButton,
                     this.props.selectedBlockchain === blockchain && styles.blockchainButtonActive,
-                    {
-                        width: blockchains.length > 4 ? SCREEN_WIDTH / 4 : null
-                    }
+                    { width: blockchains.length > 4 ? SCREEN_WIDTH / 4 : 0 }
                 ]}
                 onPress={() => this.props.setSelectedBlockchain(blockchain)}
             >
@@ -207,9 +208,9 @@ export class DashboardScreenComponent extends React.Component<
                 </Text>
             </TouchableOpacity>
         );
-    };
+    }
 
-    public renderBottomBlockchainNav = () => {
+    public renderBottomBlockchainNav() {
         const { styles, blockchains } = this.props;
         const { extraSelectedBlockchain } = this.state;
 
@@ -248,7 +249,7 @@ export class DashboardScreenComponent extends React.Component<
                 </View>
             </LinearGradient>
         );
-    };
+    }
 
     public onFocus() {
         if (this.props.selectedAccount) {

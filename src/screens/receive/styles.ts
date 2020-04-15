@@ -18,6 +18,10 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             marginBottom: BASE_DIMENSION * 4
         },
+        qrCode: {
+            padding: BASE_DIMENSION * 2,
+            backgroundColor: '#FFFFFF'
+        },
         bottomButton: {
             marginHorizontal: BASE_DIMENSION * 2,
             marginBottom: BASE_DIMENSION * 3

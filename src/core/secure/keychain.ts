@@ -120,12 +120,10 @@ export const getPinCode = async () => {
             service: defaultOptions.servicePin,
             storage: Keychain.STORAGE_TYPE.RSA
         });
-        // console.log('keychain credentials', credentials);
         if (credentials) {
             password = credentials.password;
         }
     } catch (error) {
-        // console.log('keychain error', JSON.stringify(error, null, 4));
         if (error.message.indexOf('Authentication failed') >= 0) {
             if (DeviceInfo.getManufacturerSync() === 'OnePlus') {
                 return Promise.reject('FAILED');

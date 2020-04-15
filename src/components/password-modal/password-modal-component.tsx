@@ -140,8 +140,6 @@ export class PasswordModalComponent extends React.Component<
     }
 
     handleAppStateChange = (nextAppState: AppStateStatus) => {
-        // console.log('passwordModal handleAppStateChange', this.state.appState, nextAppState);
-
         if (
             nextAppState === AppStateStatus.ACTIVE &&
             this.props.nrWallets >= 1 &&
@@ -151,20 +149,14 @@ export class PasswordModalComponent extends React.Component<
                 this.resultDeferred.reject('CANCELED');
                 this.getPassword(undefined, undefined, undefined);
             } else {
-                // console.log('app is active');
                 if (this.state.biometricFlow) {
-                    // console.log('biometric flow', 'after fingerprint');
                     if (this.state.pinCode) {
-                        // console.log('pincode is set', 'update state');
                         this.updateState({ password: this.state.pinCode });
                     } else {
-                        // console.log('pin is null', 'biometricFlow -> false');
                         this.setState({ biometricFlow: false });
                     }
                 }
-
                 if (!this.state.visible) {
-                    // console.log('should display password modal');
                     this.getPassword(undefined, undefined, undefined);
                 }
             }
@@ -326,7 +318,6 @@ export class PasswordModalComponent extends React.Component<
         }
 
         this.clearErrorMessage();
-        // console.log('getPassword', 'display modal');
         this.modalOnHideDeffered = new Deferred();
         this.setState({
             visible: true,
@@ -342,15 +333,12 @@ export class PasswordModalComponent extends React.Component<
         });
 
         if (!options?.sensitive && this.props.biometricActive && !this.state.isMoonletDisabled) {
-            // console.log('trigger biometric login');
             setTimeout(() => {
                 getPinCode()
                     .then(pinCode => {
                         if (pinCode && this.state.appState === AppStateStatus.ACTIVE) {
-                            // console.log('pin ok, update state');
                             this.updateState({ password: pinCode });
                         } else {
-                            // console.log('pin falsy', JSON.stringify(pinCode));
                             this.setState({ pinCode });
                         }
                     })
@@ -358,7 +346,6 @@ export class PasswordModalComponent extends React.Component<
                         this.setState({
                             biometricFlow: false
                         });
-                        // console.log('getPinCode error', e);
                     });
             }, 100);
         }
@@ -506,10 +493,6 @@ export class PasswordModalComponent extends React.Component<
             case ScreenStep.ENTER_PIN:
                 const isPasswordValid = await this.verifyPassword(data.password);
                 if (isPasswordValid) {
-                    // console.log(
-                    //     'update state password modal visible befor state false - ',
-                    //     this.state.visible
-                    // );
                     this.setState({ visible: false, biometricFlow: false, sensitive: false });
                     this.props.resetFailedLogins();
                     this.props.setAppBlockUntil(undefined);

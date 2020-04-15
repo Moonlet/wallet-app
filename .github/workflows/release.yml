@@ -1,7 +1,7 @@
 on:
-  push:
-    branches:
-      - release
+  release:
+    types:
+      - published
 
 name: Release build & deploy
 jobs:
@@ -49,4 +49,78 @@ jobs:
           NODE_OPTIONS: --max_old_space_size=4096
       # generate apk file and upload it to release
 
-  
+  # deploy-ios:
+  #   name: iOS app
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - uses: actions/checkout@v1
+  #     - name: Setup key
+  #       uses: webfactory/ssh-agent@v0.1.1
+  #       with:
+  #         ssh-private-key: ${{ secrets.SSH_CERTS }}
+  #     - name: Add to host
+  #       run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+  #     - name: Generate firebase config file
+  #       run: echo '${{ secrets.FB_CONFIG_IOS_DEPLOY }}' > ios/release/GoogleService-Info.plist
+  #     - name: Dependencies install
+  #       run: cd ios && bundle install
+  #     - name: Cache node modules
+  #       uses: actions/cache@v1
+  #       id: cache
+  #       with:
+  #         path: node_modules
+  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Cocoapods install
+  #       run: cd ios && pod install
+  #     - name: Generate fonts and icons
+  #       run: npm run generate-icons
+  #     - name: Run fastlane deploy
+  #       run: xcversion select 11.1 && cd ios/fastlane && bundle exec fastlane deploy
+  #       env:
+  #         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  #         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+  #         SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+  #         KEYCHAIN_TOKEN: ${{ secrets.KEYCHAIN_TOKEN }}
+  # beta-ext-chrome:
+  #   name: Chrome extension
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "10.x"
+  #     - uses: actions/checkout@v1
+  #     - name: Cache node modules
+  #       uses: actions/cache@v1
+  #       id: cache
+  #       with:
+  #         path: node_modules
+  #         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+  #     - name: NPM install
+  #       run: npm i
+  #     - name: Generate icons
+  #       run: npm run generate-icons
+  #     - name: Build extension
+  #       run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
+  #       env:
+  #         NODE_OPTIONS: --max_old_space_size=4096
+  #     - name: Set tag name
+  #       run: |-
+  #         BUILD=$(git rev-list --count $GITHUB_SHA)
+  #         VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
+  #         echo "::set-env name=TAG_NAME::v${VERSION}.${BUILD}"
+  #     - name: Create extenion zip
+  #       run: cd extension/build/beta/chrome && zip -r ./chrome-extension-$TAG_NAME.zip ./
+  #     - name: Upload binaries to release
+  #       uses: svenstaro/upload-release-action@v1-release
+  #       with:
+  #         repo_token: ${{ secrets.GITHUB_TOKEN }}
+  #         file: extension/build/beta/chrome/*.zip
+  #         tag: ${{ env.TAG_NAME }}
+  #         overwrite: true
+  #         file_glob: true
+  #     # deploy in chrome store

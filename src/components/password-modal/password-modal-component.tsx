@@ -493,10 +493,6 @@ export class PasswordModalComponent extends React.Component<
             case ScreenStep.ENTER_PIN:
                 const isPasswordValid = await this.verifyPassword(data.password);
                 if (isPasswordValid) {
-                    // console.log(
-                    //     'update state password modal visible befor state false - ',
-                    //     this.state.visible
-                    // );
                     this.setState({ visible: false, biometricFlow: false, sensitive: false });
                     this.props.resetFailedLogins();
                     this.props.setAppBlockUntil(undefined);

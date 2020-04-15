@@ -140,8 +140,6 @@ export class PasswordModalComponent extends React.Component<
     }
 
     handleAppStateChange = (nextAppState: AppStateStatus) => {
-        // console.log('passwordModal handleAppStateChange', this.state.appState, nextAppState);
-
         if (
             nextAppState === AppStateStatus.ACTIVE &&
             this.props.nrWallets >= 1 &&
@@ -151,9 +149,7 @@ export class PasswordModalComponent extends React.Component<
                 this.resultDeferred.reject('CANCELED');
                 this.getPassword(undefined, undefined, undefined);
             } else {
-                // console.log('app is active');
                 if (this.state.biometricFlow) {
-                    // console.log('biometric flow', 'after fingerprint');
                     if (this.state.pinCode) {
                         // console.log('pincode is set', 'update state');
                         this.updateState({ password: this.state.pinCode });

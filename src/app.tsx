@@ -172,9 +172,6 @@ export default class App extends React.Component<{}, IState> {
     }
 
     public handleAppStateChange = (nextAppState: AppStateStatus) => {
-        // const { appState } = this.state;
-        //        console.log('appstate  tsx', appState, nextAppState);
-
         if (
             nextAppState === AppStateStatus.INACTIVE ||
             nextAppState === AppStateStatus.BACKGROUND
@@ -183,15 +180,6 @@ export default class App extends React.Component<{}, IState> {
         } else {
             this.setState({ displayApplication: true });
         }
-
-        // if (
-        //     (appState === APP_STATE_BACKGROUND || appState === APP_STATE_INACTIVE) &&
-        //     nextAppState === APP_STATE_ACTIVE &&
-        //     Object.keys(store.getState().wallets).length >= 1 &&
-        //     store.getState().ui.passwordModal.displayPasswordModal === true
-        // ) {
-        //     this.showPasswordModal();
-        // }
         this.setState({ appState: nextAppState });
     };
 

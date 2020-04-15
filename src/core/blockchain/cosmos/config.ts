@@ -33,6 +33,7 @@ export const config: IBlockchainConfig = {
     defaultUnit: 'UATOM',
     iconComponent: CosmosIcon,
     droppedTxBlocksThreshold: 10,
+    autoAddedTokensSymbols: {},
     tokens: {
         ATOM: ATOM_NATIVE
     },

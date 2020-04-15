@@ -14,6 +14,11 @@ export interface IBlockchainConfig {
     defaultUnit: string;
     iconComponent: React.ComponentType<any>;
     droppedTxBlocksThreshold: number;
+    autoAddedTokensSymbols: {
+        [chainId: string]: {
+            [symbol: string]: ITokenConfigState;
+        };
+    };
     tokens: {
         [symbol: string]: ITokenConfigState;
     };

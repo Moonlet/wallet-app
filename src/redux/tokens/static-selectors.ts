@@ -4,6 +4,7 @@ import { store } from '../config';
 import { ITokenConfigState } from './state';
 import { IAccountState, ITokensAccountState, ITokenState } from '../wallets/state';
 import { getChainId } from '../preferences/selectors';
+import { addTokenForBlockchain } from './actions';
 
 export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenConfigState => {
     const blockchainTokens = getBlockchain(blockchain).config.tokens;
@@ -22,27 +23,48 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
 export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountState => {
     const blockchainConfig = getBlockchain(blockchain).config;
 
+    // generate tokens
+
     const tokenList: ITokensAccountState = {};
     Object.values(blockchainConfig.networks).map(chainId => {
         const tokenValue = {};
         Object.keys(blockchainConfig.tokens).map(symbolKey => {
-            const accountToken = {
-                symbol: symbolKey,
-                order: blockchainConfig.tokens[symbolKey].defaultOrder || 0,
-                active: true,
-                balance: {
-                    value: '0',
-                    inProgress: false,
-                    timestamp: undefined,
-                    error: undefined
-                }
-            };
-            tokenValue[symbolKey] = accountToken;
+            const order = blockchainConfig.tokens[symbolKey].defaultOrder || 0;
+            tokenValue[symbolKey] = accountToken(symbolKey, order);
         });
         tokenList[chainId] = tokenValue;
     });
 
+    const tokens = blockchainConfig.autoAddedTokensSymbols;
+    Object.keys(tokens).map(chainId => {
+        Object.keys(tokens[chainId]).map(symbolKey => {
+            store.dispatch(
+                addTokenForBlockchain(blockchain, tokens[chainId][symbolKey], chainId) as any
+            );
+
+            const order = tokens[chainId][symbolKey].defaultOrder || 999;
+            tokenList[chainId] = {
+                ...tokenList[chainId],
+                [symbolKey]: accountToken(symbolKey, order)
+            };
+        });
+    });
+
     return tokenList;
+};
+
+const accountToken = (symbolKey: string, order: number): ITokenState => {
+    return {
+        symbol: symbolKey,
+        order,
+        active: true,
+        balance: {
+            value: '0',
+            inProgress: false,
+            timestamp: undefined,
+            error: undefined
+        }
+    };
 };
 
 export const generateAccountTokenState = (

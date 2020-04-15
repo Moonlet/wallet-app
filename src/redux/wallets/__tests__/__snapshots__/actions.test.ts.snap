@@ -27,6 +27,17 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "selected": true,
               "tokens": Object {
                 "1": Object {
+                  "XSGD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 999,
+                    "symbol": "XSGD",
+                  },
                   "ZIL": Object {
                     "active": true,
                     "balance": Object {
@@ -62,6 +73,17 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "selected": false,
               "tokens": Object {
                 "1": Object {
+                  "XSGD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 999,
+                    "symbol": "XSGD",
+                  },
                   "ZIL": Object {
                     "active": true,
                     "balance": Object {
@@ -97,6 +119,17 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "selected": false,
               "tokens": Object {
                 "1": Object {
+                  "XSGD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 999,
+                    "symbol": "XSGD",
+                  },
                   "ZIL": Object {
                     "active": true,
                     "balance": Object {
@@ -132,6 +165,17 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "selected": false,
               "tokens": Object {
                 "1": Object {
+                  "XSGD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 999,
+                    "symbol": "XSGD",
+                  },
                   "ZIL": Object {
                     "active": true,
                     "balance": Object {
@@ -167,6 +211,17 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               "selected": false,
               "tokens": Object {
                 "1": Object {
+                  "XSGD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 999,
+                    "symbol": "XSGD",
+                  },
                   "ZIL": Object {
                     "active": true,
                     "balance": Object {

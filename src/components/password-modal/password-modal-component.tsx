@@ -318,7 +318,6 @@ export class PasswordModalComponent extends React.Component<
         }
 
         this.clearErrorMessage();
-        // console.log('getPassword', 'display modal');
         this.modalOnHideDeffered = new Deferred();
         this.setState({
             visible: true,
@@ -334,15 +333,12 @@ export class PasswordModalComponent extends React.Component<
         });
 
         if (!options?.sensitive && this.props.biometricActive && !this.state.isMoonletDisabled) {
-            // console.log('trigger biometric login');
             setTimeout(() => {
                 getPinCode()
                     .then(pinCode => {
                         if (pinCode && this.state.appState === AppStateStatus.ACTIVE) {
-                            // console.log('pin ok, update state');
                             this.updateState({ password: pinCode });
                         } else {
-                            // console.log('pin falsy', JSON.stringify(pinCode));
                             this.setState({ pinCode });
                         }
                     })
@@ -350,7 +346,6 @@ export class PasswordModalComponent extends React.Component<
                         this.setState({
                             biometricFlow: false
                         });
-                        // console.log('getPinCode error', e);
                     });
             }, 100);
         }

@@ -54,19 +54,24 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.settingsDivider
         },
         bottomContainer: {
-            padding: DEFAULT_BOTTOM_CONTAINER_PADDING,
+            flexDirection: 'row',
+            justifyContent: 'center'
+        },
+        buttonContainer: {
+            paddingRight: DEFAULT_BOTTOM_CONTAINER_PADDING,
+            paddingTop: DEFAULT_BOTTOM_CONTAINER_PADDING,
             paddingBottom: Platform.select({
                 default: DEFAULT_BOTTOM_CONTAINER_PADDING,
                 ios: isIphoneXorAbove() ? BASE_DIMENSION * 3 : DEFAULT_BOTTOM_CONTAINER_PADDING
-            }),
-            flexDirection: 'row',
-            justifyContent: 'center'
+            })
         },
         bottomTextContainer: {
             flex: 1,
             flexDirection: 'column',
             justifyContent: 'center',
-            paddingRight: BASE_DIMENSION * 2
+            paddingRight: BASE_DIMENSION * 2,
+            paddingLeft: BASE_DIMENSION + BASE_DIMENSION / 2,
+            paddingTop: BASE_DIMENSION / 4
         },
         bottomDefaultText: {
             fontSize: normalize(15),

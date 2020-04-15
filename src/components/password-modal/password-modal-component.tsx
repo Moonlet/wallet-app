@@ -151,16 +151,12 @@ export class PasswordModalComponent extends React.Component<
             } else {
                 if (this.state.biometricFlow) {
                     if (this.state.pinCode) {
-                        // console.log('pincode is set', 'update state');
                         this.updateState({ password: this.state.pinCode });
                     } else {
-                        // console.log('pin is null', 'biometricFlow -> false');
                         this.setState({ biometricFlow: false });
                     }
                 }
-
                 if (!this.state.visible) {
-                    // console.log('should display password modal');
                     this.getPassword(undefined, undefined, undefined);
                 }
             }

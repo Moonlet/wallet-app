@@ -30,6 +30,7 @@ export const config: IBlockchainConfig = {
     defaultUnit: 'YNEAR',
     iconComponent: NearIcon,
     droppedTxBlocksThreshold: 10,
+    autoAddedTokensSymbols: {},
     tokens: {
         NEAR: NEAR_NATIVE
     },

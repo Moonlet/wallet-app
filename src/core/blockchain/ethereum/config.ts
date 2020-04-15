@@ -31,6 +31,7 @@ export const config: IBlockchainConfig = {
     defaultUnit: 'WEI',
     iconComponent: EthIcon,
     droppedTxBlocksThreshold: 50,
+    autoAddedTokensSymbols: {},
     tokens: {
         ETH: ETH_NATIVE
     },

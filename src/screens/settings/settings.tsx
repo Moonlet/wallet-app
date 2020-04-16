@@ -28,7 +28,7 @@ import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-
 import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
 import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
-import { clearPinCode, setPinCode } from '../../core/secure/keychain';
+import { setPinCode } from '../../core/secure/keychain';
 import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
@@ -100,15 +100,15 @@ export class SettingsScreenComponent extends React.Component<
             });
     }
 
-    public reportIssueTouch = () => {
+    public reportIssueTouch() {
         Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
             if (supported) {
                 Linking.openURL(CONFIG.supportUrl);
             }
         });
-    };
+    }
 
-    public renderSecuritySection = () => {
+    public renderSecuritySection() {
         const { styles, navigation, theme } = this.props;
 
         return (
@@ -128,21 +128,15 @@ export class SettingsScreenComponent extends React.Component<
                             <Switch
                                 onValueChange={async () => {
                                     try {
-                                        if (this.props.biometricActive) {
-                                            // disable touch id - delete pin
-                                            await clearPinCode();
-                                        } else {
-                                            this.props.openLoadingModal();
-                                            const password = await PasswordModal.getPassword(
-                                                undefined,
-                                                undefined,
-                                                {
-                                                    showCloseButton: true
-                                                }
-                                            );
-                                            await delay(0);
-                                            await setPinCode(password);
-                                        }
+                                        this.props.openLoadingModal();
+                                        const password = await PasswordModal.getPassword(
+                                            undefined,
+                                            undefined,
+                                            { showCloseButton: true }
+                                        );
+                                        await delay(0);
+                                        await setPinCode(password);
+
                                         this.props.toggleBiometricAuth();
                                     } catch {
                                         //
@@ -215,9 +209,9 @@ export class SettingsScreenComponent extends React.Component<
                 <View style={styles.divider} />
             </View>
         );
-    };
+    }
 
-    public renderSetupSection = () => {
+    public renderSetupSection() {
         const { styles, navigation } = this.props;
 
         return (
@@ -248,9 +242,9 @@ export class SettingsScreenComponent extends React.Component<
                 <View style={styles.divider} />
             </View>
         );
-    };
+    }
 
-    public renderSupportSection = () => {
+    public renderSupportSection() {
         const { styles } = this.props;
 
         return (
@@ -273,9 +267,9 @@ export class SettingsScreenComponent extends React.Component<
                 <View style={styles.divider} />
             </View>
         );
-    };
+    }
 
-    public renderToolsSection = () => {
+    public renderToolsSection() {
         const { styles, navigation } = this.props;
 
         return (
@@ -295,9 +289,9 @@ export class SettingsScreenComponent extends React.Component<
                 <View style={styles.divider} />
             </View>
         );
-    };
+    }
 
-    public renderAboutSection = () => {
+    public renderAboutSection() {
         const { styles, navigation } = this.props;
 
         return (
@@ -353,7 +347,7 @@ export class SettingsScreenComponent extends React.Component<
                 <View style={styles.divider} />
             </View>
         );
-    };
+    }
 
     public render() {
         const { styles } = this.props;

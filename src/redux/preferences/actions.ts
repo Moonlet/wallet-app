@@ -10,7 +10,6 @@ import { getBlockchains, hasNetwork, getBlockchainsPortfolio } from './selectors
 // actions consts
 export const PREF_SET_CURRENCY = 'PREF_SET_CURRENCY';
 export const TOGGLE_BIOMETRIC_AUTH = 'TOGGLE_BIOMETRIC_AUTH';
-export const DISABLE_BIOMETRIC_AUTH = 'DISABLE_BIOMETRIC_AUTH';
 export const SET_TEST_NET = 'SET_TEST_NET';
 export const PREF_SET_BLOCKCHAIN_ACTIVE_STATE = 'PREF_SET_BLOCKCHAIN_ACTIVE_STATE';
 export const PREF_SET_BLOCKCHAIN_ORDER = 'PREF_SET_BLOCKCHAIN_ORDER';
@@ -94,12 +93,6 @@ export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IRe
 export function toggleBiometricAuth() {
     return {
         type: TOGGLE_BIOMETRIC_AUTH
-    };
-}
-
-export function disableBiometricAuth() {
-    return {
-        type: DISABLE_BIOMETRIC_AUTH
     };
 }
 

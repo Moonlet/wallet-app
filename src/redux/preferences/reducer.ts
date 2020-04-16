@@ -3,7 +3,6 @@ import { IAction } from '../types';
 import {
     PREF_SET_CURRENCY,
     TOGGLE_BIOMETRIC_AUTH,
-    DISABLE_BIOMETRIC_AUTH,
     SET_TEST_NET,
     PREF_SET_NETWORK_TEST_NET_CHAIN_ID,
     PREF_SET_BLOCKCHAIN_ACTIVE_STATE,
@@ -63,12 +62,6 @@ export default (state: IPrefState = initialState, action: IAction): IPrefState =
             return {
                 ...state,
                 biometricActive: !state.biometricActive
-            };
-
-        case DISABLE_BIOMETRIC_AUTH:
-            return {
-                ...state,
-                biometricActive: false
             };
 
         case PREF_SET_CURRENCY:

@@ -53,10 +53,11 @@ import { ITokenState } from '../wallets/state';
 import {
     getEncryptionKey,
     generateEncryptionKey,
-    clearEncryptionKey
+    clearEncryptionKey,
+    clearPinCode
 } from '../../core/secure/keychain';
 import { delay } from '../../core/utils/time';
-import { disableBiometricAuth } from '../preferences/actions';
+import { toggleBiometricAuth } from '../preferences/actions';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -650,8 +651,13 @@ export const deleteWallet = (walletId: string) => async (
         if (nextWallet) {
             dispatch(setSelectedWallet(nextWallet.id));
         } else {
+            // Clear Keychain Storage and reset Biometric Settings
+            clearPinCode();
             await clearEncryptionKey();
-            dispatch(disableBiometricAuth());
+            if (state.preferences.biometricActive) {
+                // Disable biometric auth
+                dispatch(toggleBiometricAuth());
+            }
         }
     }
     dispatch({

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="background">#121212</color>
-    <color name="notification_icon_color">#00DAFF</color>
+    <color name="notification_icon_color">#FFAB91</color>
 </resources>

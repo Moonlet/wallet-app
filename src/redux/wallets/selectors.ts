@@ -67,7 +67,8 @@ export const getAccountFilteredTransactions = (
                 tx =>
                     (tx.address.toLowerCase() === addressToLowercase ||
                         tx.toAddress.toLowerCase() === addressToLowercase ||
-                        tx.data?.params[0].toLowerCase() === addressToLowercase) &&
+                        (tx.data?.params &&
+                            tx.data?.params[0]?.toLowerCase() === addressToLowercase)) &&
                     tx.blockchain === blockchain &&
                     tx.chainId === chainId &&
                     tx.token?.symbol.toLowerCase() === token.symbol.toLowerCase()

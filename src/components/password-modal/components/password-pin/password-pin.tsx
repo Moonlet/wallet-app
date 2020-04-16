@@ -43,6 +43,7 @@ interface IState {
     password: string;
     biometryType: BiometryType;
     isFillPasswordEnabled: boolean;
+    biometricActive: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -63,7 +64,8 @@ export class PasswordPinComponent extends React.Component<
         this.state = {
             password: '',
             biometryType: undefined,
-            isFillPasswordEnabled: true
+            isFillPasswordEnabled: true,
+            biometricActive: props.touchID
         };
         this.shakeAnimation = new Animated.Value(0);
         props.obRef && props.obRef(this);
@@ -79,6 +81,7 @@ export class PasswordPinComponent extends React.Component<
             })
             .catch(() => {
                 //
+                this.setState({ biometricActive: false });
             });
     }
 
@@ -208,7 +211,7 @@ export class PasswordPinComponent extends React.Component<
         const styles = this.props.styles;
         const isBiometryAuth =
             !this.props.hideBiometricButton &&
-            this.props.touchID &&
+            this.state.biometricActive &&
             DeviceInfo.getManufacturerSync() !== 'OnePlus';
 
         return (

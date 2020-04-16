@@ -35,6 +35,7 @@ import NetInfo from '@react-native-community/netinfo';
 import ntpClient from 'react-native-ntp-client';
 import CONFIG from '../../config';
 import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
+import { biometricAuth } from '../../core/biometric-auth/biometric-auth';
 
 const BLOCK_UNTIL_WAIT_INTERNET_CONNECTION = 'BLOCK_UNTIL_WAIT_INTERNET_CONNECTION';
 
@@ -69,6 +70,7 @@ export interface IState {
     biometricFlow: boolean;
     hideBiometricButton: boolean;
     pinCode: string;
+    biometricActive: boolean;
 }
 
 export interface IReduxProps {
@@ -135,7 +137,8 @@ export class PasswordModalComponent extends React.Component<
             biometricFlow: false,
             sensitive: false,
             hideBiometricButton: false,
-            pinCode: ''
+            pinCode: '',
+            biometricActive: props.biometricActive
         };
     }
 
@@ -166,6 +169,16 @@ export class PasswordModalComponent extends React.Component<
 
     public componentDidMount() {
         AppState.addEventListener('change', this.handleAppStateChange);
+
+        biometricAuth
+            .isSupported()
+            .then(() => {
+                this.setState({ biometricActive: this.state.biometricActive });
+            })
+            .catch(() => {
+                // Failure code if the user's device does not have touchID or faceID enabled
+                this.setState({ biometricActive: false });
+            });
 
         if (
             moment(new Date(this.props.blockUntil)).isValid() ||
@@ -327,12 +340,12 @@ export class PasswordModalComponent extends React.Component<
             allowBackButton: !!options?.showCloseButton,
             showAttempts: true,
             biometricFlow:
-                !options?.sensitive && this.props.biometricActive && !this.state.isMoonletDisabled,
+                !options?.sensitive && this.state.biometricActive && !this.state.isMoonletDisabled,
             hideBiometricButton: !!options?.sensitive,
             sensitive: !!options?.sensitive
         });
 
-        if (!options?.sensitive && this.props.biometricActive && !this.state.isMoonletDisabled) {
+        if (!options?.sensitive && this.state.biometricActive && !this.state.isMoonletDisabled) {
             setTimeout(() => {
                 getPinCode()
                     .then(pinCode => {
@@ -520,7 +533,7 @@ export class PasswordModalComponent extends React.Component<
                 if (this.state.password === data.password) {
                     this.setState({ visible: false });
                     await generateEncryptionKey(data.password);
-                    if (this.props.biometricActive) await setPinCode(data.password);
+                    if (this.state.biometricActive) await setPinCode(data.password);
                     await this.modalOnHideDeffered?.promise;
                     this.resultDeferred?.resolve(data.password);
                 } else {
@@ -569,7 +582,7 @@ export class PasswordModalComponent extends React.Component<
                     this.setState({ visible: false });
                     this.props.changePIN(this.state.newPassword, this.state.password);
                     await generateEncryptionKey(this.state.newPassword);
-                    if (this.props.biometricActive) await setPinCode(this.state.newPassword);
+                    if (this.state.biometricActive) await setPinCode(this.state.newPassword);
 
                     await this.modalOnHideDeffered?.promise;
                     this.resultDeferred?.resolve(this.state.newPassword);

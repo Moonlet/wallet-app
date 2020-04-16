@@ -15,3 +15,8 @@ export const ICON_CONTAINER_SIZE = normalize(44);
 
 export const SCREEN_HEIGHT =
     Platform.OS === 'web' ? Dimensions.get('window').height - 64 : Dimensions.get('window').height;
+
+export const isIphoneXorAbove = () =>
+    Platform.OS === 'ios' &&
+    ((SCREEN_WIDTH === 375 && SCREEN_HEIGHT === 812) || // iPhone X, XS, 11 Pro
+        (SCREEN_WIDTH === 414 && SCREEN_HEIGHT === 896)); // iPhone XS Max, XR, 11, 11 Pro Max

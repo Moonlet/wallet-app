@@ -6,10 +6,13 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            padding: BASE_DIMENSION * 2,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
             height: Platform.OS === 'web' ? 'calc(100vh - 122px)' : 'auto'
+        },
+        scrollContainer: {
+            flexGrow: 1,
+            paddingHorizontal: BASE_DIMENSION * 2
         },
         rowContainer: {
             flexDirection: 'row',

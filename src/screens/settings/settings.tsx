@@ -355,7 +355,7 @@ export class SettingsScreenComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <ScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
+                    contentContainerStyle={styles.scrollContainer}
                     showsVerticalScrollIndicator={false}
                 >
                     {Platform.OS !== 'web' && this.renderSecuritySection()}

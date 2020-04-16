@@ -8,7 +8,7 @@ export const NavigationService = (() => {
     };
 
     const navigate = (routeName: string, params: NavigationParams) => {
-        navigator.dispatch(
+        navigator?.dispatch(
             NavigationActions.navigate({
                 routeName,
                 params
@@ -17,7 +17,7 @@ export const NavigationService = (() => {
     };
 
     const replace = (routeName: string, params: NavigationParams) => {
-        navigator.dispatch(
+        navigator?.dispatch(
             StackActions.replace({
                 routeName,
                 params
@@ -26,11 +26,11 @@ export const NavigationService = (() => {
     };
 
     const popToTop = () => {
-        navigator.dispatch(StackActions.popToTop());
+        navigator?.dispatch(StackActions.popToTop());
     };
 
     const goBack = () => {
-        navigator.dispatch(NavigationActions.back());
+        navigator?.dispatch(NavigationActions.back());
     };
 
     const getRecursiveRoute = routeState => {

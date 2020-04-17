@@ -28,7 +28,7 @@ import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-
 import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
 import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
-import { setPinCode } from '../../core/secure/keychain';
+import { setPinCode, clearPinCode } from '../../core/secure/keychain';
 import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
@@ -128,15 +128,18 @@ export class SettingsScreenComponent extends React.Component<
                             <Switch
                                 onValueChange={async () => {
                                     try {
-                                        this.props.openLoadingModal();
-                                        const password = await PasswordModal.getPassword(
-                                            undefined,
-                                            undefined,
-                                            { showCloseButton: true }
-                                        );
-                                        await delay(0);
-                                        await setPinCode(password);
-
+                                        if (this.props.biometricActive) {
+                                            await clearPinCode();
+                                        } else {
+                                            this.props.openLoadingModal();
+                                            const password = await PasswordModal.getPassword(
+                                                undefined,
+                                                undefined,
+                                                { showCloseButton: true }
+                                            );
+                                            await delay(0);
+                                            await setPinCode(password);
+                                        }
                                         this.props.toggleBiometricAuth();
                                     } catch {
                                         //

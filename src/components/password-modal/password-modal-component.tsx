@@ -88,7 +88,7 @@ export interface IReduxProps {
 export const mapStateToProps = (state: IReduxState) => ({
     failedLogins: state.app.failedLogins,
     blockUntil: state.app.blockUntil,
-    biometricActive: state.preferences.touchID,
+    biometricActive: state.preferences.biometricActive,
     displayPasswordModal: state.ui.passwordModal.displayPasswordModal,
     nrWallets: Object.keys(state.wallets).length
 });

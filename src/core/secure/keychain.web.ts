@@ -18,6 +18,10 @@ export const getBaseEncryptionKey = async () => {
     return Promise.resolve('');
 };
 
+export const clearEncryptionKey = async () => {
+    //
+};
+
 export const verifyPinCode = async (pinCode: string): Promise<boolean> => {
     return true;
 };

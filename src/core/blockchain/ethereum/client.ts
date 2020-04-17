@@ -96,54 +96,66 @@ export class Client extends BlockchainGenericClient {
         contractAddress?: string,
         tokenType: TokenType = TokenType.NATIVE
     ) {
-        const results = contractAddress
-            ? await this.estimateFees(from, to, amount, contractAddress)
-            : await this.estimateFees(from, to);
+        try {
+            const results = contractAddress
+                ? await this.estimateFees(from, to, amount, contractAddress)
+                : await this.estimateFees(from, to);
 
-        let presets: {
-            cheap: BigNumber;
-            standard: BigNumber;
-            fast: BigNumber;
-            fastest: BigNumber;
-        };
-        if (results[1]) {
-            const response = await results[1].json();
+            let presets: {
+                cheap: BigNumber;
+                standard: BigNumber;
+                fast: BigNumber;
+                fastest: BigNumber;
+            };
+            if (results[1]) {
+                const response = await results[1].json();
 
-            presets = {
-                cheap: convertUnit(
-                    new BigNumber(response.safeLow),
-                    config.feeOptions.ui.gasPriceUnit,
-                    config.defaultUnit
-                ),
-                standard: convertUnit(
-                    new BigNumber(response.average),
-                    config.feeOptions.ui.gasPriceUnit,
-                    config.defaultUnit
-                ),
-                fast: convertUnit(
-                    new BigNumber(response.fast),
-                    config.feeOptions.ui.gasPriceUnit,
-                    config.defaultUnit
-                ),
-                fastest: convertUnit(
-                    new BigNumber(response.fastest),
-                    config.feeOptions.ui.gasPriceUnit,
-                    config.defaultUnit
-                )
+                presets = {
+                    cheap: convertUnit(
+                        new BigNumber(response.safeLow),
+                        config.feeOptions.ui.gasPriceUnit,
+                        config.defaultUnit
+                    ),
+                    standard: convertUnit(
+                        new BigNumber(response.average),
+                        config.feeOptions.ui.gasPriceUnit,
+                        config.defaultUnit
+                    ),
+                    fast: convertUnit(
+                        new BigNumber(response.fast),
+                        config.feeOptions.ui.gasPriceUnit,
+                        config.defaultUnit
+                    ),
+                    fastest: convertUnit(
+                        new BigNumber(response.fastest),
+                        config.feeOptions.ui.gasPriceUnit,
+                        config.defaultUnit
+                    )
+                };
+            }
+
+            const gasPrice = presets?.standard || config.feeOptions.defaults.gasPrice;
+            const gasLimit = results[0].result
+                ? new BigNumber(parseInt(results[0].result, 16))
+                : config.feeOptions.defaults.gasLimit[tokenType];
+
+            return {
+                gasPrice: gasPrice.toString(),
+                gasLimit: gasLimit.toString(),
+                presets: presets ? presets : config.feeOptions.defaults.gasPricePresets,
+                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+            };
+        } catch {
+            const gasPrice = config.feeOptions.defaults.gasPrice;
+            const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
+
+            return {
+                gasPrice: gasPrice.toString(),
+                gasLimit: gasLimit.toString(),
+                presets: config.feeOptions.defaults.gasPricePresets,
+                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
             };
         }
-
-        const gasPrice = presets?.standard || config.feeOptions.defaults.gasPrice;
-        const gasLimit = results[0].result
-            ? new BigNumber(parseInt(results[0].result, 16))
-            : config.feeOptions.defaults.gasLimit[tokenType];
-
-        return {
-            gasPrice: gasPrice.toString(),
-            gasLimit: gasLimit.toString(),
-            presets: presets ? presets : config.feeOptions.defaults.gasPricePresets,
-            feeTotal: gasPrice.multipliedBy(gasLimit).toString()
-        };
     }
 
     private async estimateFees(

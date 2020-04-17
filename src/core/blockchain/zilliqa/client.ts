@@ -1,10 +1,4 @@
-import {
-    BlockchainGenericClient,
-    IFeeOptions,
-    ChainIdType,
-    IBlockInfo,
-    TransactionMessageText
-} from '../types';
+import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionMessageText } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
@@ -103,20 +97,28 @@ export class Client extends BlockchainGenericClient {
         contractAddress?,
         tokenType: TokenType = TokenType.NATIVE
     ) {
-        const result = await this.estimateFees();
-
-        const gasPrice = result.result
-            ? new BigNumber(Number(result.result))
-            : config.feeOptions.defaults.gasPrice;
         const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
 
-        const feeOptions: IFeeOptions = {
-            gasPrice: gasPrice.toString(),
-            gasLimit: gasLimit.toString(),
-            feeTotal: gasPrice.multipliedBy(gasLimit).toString()
-        };
+        try {
+            const result = await this.estimateFees();
 
-        return feeOptions;
+            const gasPrice = result.result
+                ? new BigNumber(Number(result.result))
+                : config.feeOptions.defaults.gasPrice;
+
+            return {
+                gasPrice: gasPrice.toString(),
+                gasLimit: gasLimit.toString(),
+                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+            };
+        } catch {
+            const gasPrice = config.feeOptions.defaults.gasPrice;
+            return {
+                gasPrice: gasPrice.toString(),
+                gasLimit: gasLimit.toString(),
+                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+            };
+        }
     }
 
     public async getSmartContractSubState(

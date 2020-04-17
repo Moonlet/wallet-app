@@ -70,24 +70,18 @@ export class FeeOptionsComponent extends React.Component<
             this.props.sendingToken.symbol
         );
 
-        try {
-            const fees = await blockchainInstance
-                .getClient(this.props.chainId)
-                .calculateFees(
-                    this.props.account.address,
-                    this.props.toAddress,
-                    1,
-                    tokenSendingToken.contractAddress,
-                    tokenSendingToken.type
-                );
+        const fees = await blockchainInstance
+            .getClient(this.props.chainId)
+            .calculateFees(
+                this.props.account.address,
+                this.props.toAddress,
+                1,
+                tokenSendingToken.contractAddress,
+                tokenSendingToken.type
+            );
 
-            this.setState({ feeOptions: fees });
-            this.props.onFeesChanged(fees);
-        } catch {
-            //
-        }
-
-        this.setState({ isLoading: false });
+        this.setState({ feeOptions: fees, isLoading: false });
+        this.props.onFeesChanged(fees);
     }
 
     @bind

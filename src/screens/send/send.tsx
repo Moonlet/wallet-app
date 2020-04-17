@@ -18,7 +18,7 @@ import { HeaderLeftClose } from '../../components/header-left-close/header-left-
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TokenType } from '../../core/blockchain/types/token';
 import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
@@ -355,9 +355,9 @@ export class SendScreenComponent extends React.Component<
                         )}
                     </View>
 
-                    <View style={{ alignSelf: 'center' }}>
+                    <View style={styles.buttonContainer}>
                         <Button
-                            style={{ width: 140 }}
+                            style={{ width: normalize(140) }}
                             primary
                             disabled={disableButton}
                             onPress={() => {

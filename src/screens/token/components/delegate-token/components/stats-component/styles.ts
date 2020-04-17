@@ -24,13 +24,13 @@ export default (theme: ITheme) =>
             justifyContent: 'space-between'
         },
         pieStyle: {
-            width: 100,
-            height: 100,
+            width: normalize(100),
+            height: normalize(100),
             flex: 1
         },
         chartView: {
-            height: 100,
-            width: 100,
+            height: normalize(100),
+            width: normalize(100),
             backgroundColor: theme.colors.appBackground,
             marginBottom: BASE_DIMENSION * 2,
             marginRight: BASE_DIMENSION * 2
@@ -90,9 +90,9 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION
         },
         dummyView: {
-            height: 100,
-            width: 100,
-            borderRadius: 50,
+            height: normalize(100),
+            width: normalize(100),
+            borderRadius: normalize(50),
             backgroundColor: theme.colors.cardBackground,
             marginBottom: BASE_DIMENSION
         }

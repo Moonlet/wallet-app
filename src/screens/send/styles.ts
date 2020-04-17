@@ -1,12 +1,19 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, SCREEN_HEIGHT, normalize } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    SCREEN_HEIGHT,
+    normalize,
+    isIphoneXorAbove
+} from '../../styles/dimensions';
+
+const DEFAULT_BOTTOM_CONTAINER_PADDING = BASE_DIMENSION + BASE_DIMENSION / 2;
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            paddingBottom: BASE_DIMENSION + BASE_DIMENSION / 2,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
             height: SCREEN_HEIGHT
@@ -47,15 +54,24 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.settingsDivider
         },
         bottomContainer: {
-            padding: BASE_DIMENSION + BASE_DIMENSION / 2,
             flexDirection: 'row',
             justifyContent: 'center'
+        },
+        buttonContainer: {
+            paddingRight: DEFAULT_BOTTOM_CONTAINER_PADDING,
+            paddingTop: DEFAULT_BOTTOM_CONTAINER_PADDING,
+            paddingBottom: Platform.select({
+                default: DEFAULT_BOTTOM_CONTAINER_PADDING,
+                ios: isIphoneXorAbove() ? BASE_DIMENSION * 3 : DEFAULT_BOTTOM_CONTAINER_PADDING
+            })
         },
         bottomTextContainer: {
             flex: 1,
             flexDirection: 'column',
             justifyContent: 'center',
-            paddingRight: BASE_DIMENSION * 2
+            paddingRight: BASE_DIMENSION * 2,
+            paddingLeft: BASE_DIMENSION + BASE_DIMENSION / 2,
+            paddingTop: BASE_DIMENSION / 4
         },
         bottomDefaultText: {
             fontSize: normalize(15),

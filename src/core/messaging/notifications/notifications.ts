@@ -4,6 +4,7 @@ import { INotificationPayload, NotificationType } from '../types';
 import { notificationHandler } from '../handlers/notification';
 import { store } from '../../../redux/config';
 import { updateAddressMonitorTokens } from '../../address-monitor';
+import { themes } from '../../../navigation/navigation';
 
 // this file is in this format for testing purposes
 export class NotificationService {
@@ -85,7 +86,9 @@ export class NotificationService {
             .setData(data)
             .android.setPriority(firebase.notifications.Android.Priority.High)
             .android.setChannelId('default')
-            .android.setAutoCancel(true);
+            .android.setAutoCancel(true)
+            .android.setSmallIcon('icon')
+            .android.setColor(themes.dark.colors.accent);
 
         firebase.notifications().displayNotification(notification);
     }
@@ -97,7 +100,9 @@ export class NotificationService {
             .setBody('This is a test notification')
             .android.setPriority(firebase.notifications.Android.Priority.High)
             .android.setChannelId('default')
-            .android.setAutoCancel(true);
+            .android.setAutoCancel(true)
+            .android.setSmallIcon('icon')
+            .android.setColor(themes.dark.colors.accent);
 
         firebase
             .notifications()

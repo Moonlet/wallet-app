@@ -86,7 +86,7 @@ export class AddressBookComponent extends React.Component<
             this.contactsSwipeableRef[this.currentlyOpenSwipeable].close();
     }
 
-    public renderLeftActions = (contact: IContactState) => {
+    public renderLeftActions(contact: IContactState) {
         const styles = this.props.styles;
         return (
             <View style={styles.leftActionsContainer}>
@@ -115,7 +115,7 @@ export class AddressBookComponent extends React.Component<
                 </TouchableOpacity>
             </View>
         );
-    };
+    }
 
     public onSwipeableWillOpen(index: string) {
         if (
@@ -128,18 +128,18 @@ export class AddressBookComponent extends React.Component<
         this.currentlyOpenSwipeable = index;
     }
 
-    public renderContact(contact: IContactState) {
+    public renderContact(contact: IContactState, index: number) {
         const styles = this.props.styles;
-        const index = `${contact.blockchain}|${contact.address}`;
+        const key = `${contact.blockchain}|${contact.address}`;
         const isSelected =
             this.props.selectedAddress.toLowerCase() === contact.address.toLowerCase();
 
         return (
             <Swipeable
-                key={index}
-                ref={ref => (this.contactsSwipeableRef[index] = ref)}
+                key={key}
+                ref={ref => (this.contactsSwipeableRef[key] = ref)}
                 renderLeftActions={() => this.renderLeftActions(contact)}
-                onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
+                onSwipeableWillOpen={() => this.onSwipeableWillOpen(key)}
             >
                 <TouchableOpacity
                     style={styles.rowContainer}
@@ -160,7 +160,8 @@ export class AddressBookComponent extends React.Component<
                         style={styles.icon}
                     />
                 </TouchableOpacity>
-                <View style={styles.divider} />
+
+                {index !== this.props.contacts.length - 1 && <View style={styles.divider} />}
             </Swipeable>
         );
     }
@@ -188,7 +189,7 @@ export class AddressBookComponent extends React.Component<
                     <SectionList
                         sections={contacts}
                         keyExtractor={item => `${item.blockchain}|${item.address}`}
-                        renderItem={({ item }) => this.renderContact(item)}
+                        renderItem={({ item, index }) => this.renderContact(item, index)}
                         renderSectionHeader={({ section: { title } }) => (
                             <Text style={styles.sectionTitle}>{title}</Text>
                         )}

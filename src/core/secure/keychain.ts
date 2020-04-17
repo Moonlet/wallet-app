@@ -19,8 +19,7 @@ export const iosClearKeychainOnInstall = async () => {
         const Settings = require('react-native').Settings;
         if (!Settings.get('appIsInstalled')) {
             clearPinCode();
-            deleteFromStorage(KEY_PIN_SAMPLE);
-            await Keychain.resetGenericPassword({ service: defaultOptions.serviceEncryption });
+            await clearEncryptionKey();
             Settings.set({
                 appIsInstalled: true
             });
@@ -66,6 +65,15 @@ export const getBaseEncryptionKey = async () => {
     }
 
     return password;
+};
+
+export const clearEncryptionKey = async () => {
+    try {
+        deleteFromStorage(KEY_PIN_SAMPLE);
+        await Keychain.resetGenericPassword({ service: defaultOptions.serviceEncryption });
+    } catch {
+        //
+    }
 };
 
 export const getEncryptionKey = async (pinCode: string) => {

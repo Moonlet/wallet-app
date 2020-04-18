@@ -16,7 +16,6 @@ import { ICON_SIZE } from '../../styles/dimensions';
 import { allowScreenshots, forbidScreenshots } from '../../core/utils/screenshot';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
-import { NavigationService } from '../../navigation/navigation-service';
 
 export interface INavigationParams {
     wallet: IWalletState;
@@ -52,9 +51,6 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
     }
 
     public async componentDidMount() {
-        // TODO: decide if check here the password
-        // or request password on the screen from it's navigating here
-
         try {
             const password = await PasswordModal.getPassword(
                 translate('Password.pinTitleUnlock'),
@@ -62,7 +58,7 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
             );
             this.populateMnemonic(password);
         } catch (err) {
-            NavigationService.goBack();
+            this.props.navigation.goBack(null);
         }
     }
 

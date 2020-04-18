@@ -198,33 +198,35 @@ export class FeeOptionsComponent extends React.Component<
                 {this.state.isLoading ? (
                     <LoadingIndicator />
                 ) : (
-                    <React.Fragment>
+                    <View>
                         {this.state.showAdvancedOptions
                             ? this.renderAdvancedFees()
                             : this.renderSimpleFees()}
 
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.displayErrorFees}>
-                                {this.props.insufficientFundsFees
-                                    ? translate('Send.insufficientFundsFees')
-                                    : ' '}
-                            </Text>
+                        {this.state.feeOptions && (
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={styles.displayErrorFees}>
+                                    {this.props.insufficientFundsFees
+                                        ? translate('Send.insufficientFundsFees')
+                                        : ' '}
+                                </Text>
 
-                            {this.state.hasAdvancedOptions && (
-                                <TouchableOpacity
-                                    testID="advanced-fees"
-                                    onPress={this.onAdvancedButton}
-                                    style={styles.buttonRightOptions}
-                                >
-                                    <Text style={styles.textTranferButton}>
-                                        {this.state.showAdvancedOptions
-                                            ? translate('App.labels.simpleSetup')
-                                            : translate('App.labels.advancedSetup')}
-                                    </Text>
-                                </TouchableOpacity>
-                            )}
-                        </View>
-                    </React.Fragment>
+                                {this.state.hasAdvancedOptions && (
+                                    <TouchableOpacity
+                                        testID="advanced-fees"
+                                        onPress={this.onAdvancedButton}
+                                        style={styles.buttonRightOptions}
+                                    >
+                                        <Text style={styles.textTranferButton}>
+                                            {this.state.showAdvancedOptions
+                                                ? translate('App.labels.simpleSetup')
+                                                : translate('App.labels.advancedSetup')}
+                                        </Text>
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        )}
+                    </View>
                 )}
             </View>
         );

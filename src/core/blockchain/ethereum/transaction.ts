@@ -47,6 +47,7 @@ export const buildTransferTransaction = async (
 
     const client = Ethereum.getClient(tx.chainId);
     const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
+    const blockInfo = await client.getCurrentBlock();
 
     switch (tokenConfig.type) {
         case TokenType.ERC20:
@@ -66,7 +67,7 @@ export const buildTransferTransaction = async (
                 toAddress: tokenConfig.contractAddress,
                 amount: '0',
                 feeOptions: tx.feeOptions,
-                broadcatedOnBlock: undefined,
+                broadcatedOnBlock: blockInfo.number,
                 nonce,
                 status: TransactionStatus.PENDING,
 

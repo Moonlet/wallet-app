@@ -46,6 +46,7 @@ export const buildTransferTransaction = async (
 ): Promise<IBlockchainTransaction> => {
     const client = Cosmos.getClient(tx.chainId) as CosmosClient;
     const accountInfo = await client.getAccountInfo(tx.account.address);
+    const blockInfo = await client.getCurrentBlock();
     let denom = config.defaultUnit.toLowerCase();
     const symbolMap = config.tokens[tx.chainId][config.coin].symbolMap;
     if (symbolMap !== undefined) {
@@ -102,7 +103,7 @@ export const buildTransferTransaction = async (
         toAddress: tx.toAddress,
         amount: tx.amount,
         feeOptions: tx.feeOptions,
-        broadcatedOnBlock: undefined,
+        broadcatedOnBlock: blockInfo.number,
         nonce: accountInfo.sequence,
         status: TransactionStatus.PENDING,
         additionalInfo: {

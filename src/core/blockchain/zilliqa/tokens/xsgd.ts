@@ -1,13 +1,12 @@
 import { ITokenConfigState } from '../../../../redux/tokens/state';
 import { TokenScreenComponentType, TokenType } from '../../types/token';
-import XsgdIcon from '../../../../assets/icons/blockchains/XSGD.svg';
 import BigNumber from 'bignumber.js';
 
 export const XSGD_MAINNET: ITokenConfigState = {
     name: 'Xsgd',
     symbol: 'XSGD',
     icon: {
-        iconComponent: XsgdIcon
+        uri: 'https://fire.moonlet.io/static/tokens/icons/xsgd.png'
     },
     contractAddress: 'zil1n0006zrsdtl0zj5mwac2rkaa442f4d37hntkv7',
     defaultOrder: 999,

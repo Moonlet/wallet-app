@@ -5,8 +5,9 @@ export const CONFIG: IAppConfig = {
     env: process.env.MOONLET_SOME_KEY,
     tokensUrl: 'https://fire.moonlet.dev/static/tokens/',
     dataApiUrl: 'https://api.moonlet.dev/data',
-    termsAndConditionsUrl: 'https://fire.moonlet.dev/static/terms/terms-of-service.html',
-    privacyPolicyUrl: 'https://fire.moonlet.dev/static/terms/privacy-policy.html',
+    termsAndConditionsUrl:
+        'https://fire.moonlet.dev/static/terms/terms-of-service.html?v=' + Date.now(),
+    privacyPolicyUrl: 'https://fire.moonlet.dev/static/terms/privacy-policy.html?v=' + Date.now(),
     firebaseConfigFetchInterval: 0,
     ntpServer: 'pool.ntp.org',
     ntpPort: 123

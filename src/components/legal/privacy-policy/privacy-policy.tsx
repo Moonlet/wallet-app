@@ -8,6 +8,7 @@ import { ICON_SIZE } from '../../../styles/dimensions';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
 import { WebView } from '../../../library/webview/webview';
 import { SafeAreaView } from 'react-navigation';
+import { CONFIG } from '../../../config';
 
 interface IExternalProps {
     onClose?: () => void;
@@ -33,7 +34,7 @@ export const PrivacyPolicyComponent = (
                 <View style={props.styles.webviewContainer}>
                     <WebView
                         startInLoadingState={true}
-                        source={{ uri: 'https://moonlet.xyz/cookie-policy-eu/' }}
+                        source={{ uri: CONFIG.privacyPolicyUrl }}
                         renderLoading={() => (
                             <View style={props.styles.loadingIndicator}>
                                 <LoadingIndicator />

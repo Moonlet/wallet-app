@@ -149,7 +149,7 @@ export class TokenScreenComponent extends React.Component<
                     transaction.id,
                     transaction.blockchain,
                     transaction.chainId,
-                    transaction.broadcatedOnBlock,
+                    transaction.broadcastedOnBlock,
                     false
                 );
             }

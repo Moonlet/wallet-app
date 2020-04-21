@@ -78,7 +78,7 @@ export class ClientUtils implements IClientUtils {
                 gasLimit: txInfo.gas,
                 feeTotal: txReceipt.gasUsed
             },
-            broadcatedOnBlock: txInfo.blockNumber,
+            broadcastedOnBlock: txInfo.blockNumber,
             nonce: txInfo.nonce,
             status: getTransactionStatusByCode(txReceipt.status),
             token

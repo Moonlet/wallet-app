@@ -67,7 +67,7 @@ export const buildTransferTransaction = async (
                 toAddress: tokenConfig.contractAddress,
                 amount: '0',
                 feeOptions: tx.feeOptions,
-                broadcatedOnBlock: blockInfo.number,
+                broadcastedOnBlock: blockInfo.number,
                 nonce,
                 status: TransactionStatus.PENDING,
 
@@ -101,7 +101,7 @@ export const buildTransferTransaction = async (
                 toAddress: tx.toAddress,
                 amount: tx.amount,
                 feeOptions: tx.feeOptions,
-                broadcatedOnBlock: undefined,
+                broadcastedOnBlock: undefined,
                 nonce,
                 status: TransactionStatus.PENDING
             };

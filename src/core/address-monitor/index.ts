@@ -2,8 +2,9 @@ import { Notifications } from '../messaging/notifications/notifications';
 import { Blockchain } from '../blockchain/types';
 import DeviceInfo from 'react-native-device-info';
 import { IWalletsState, IAccountState } from '../../redux/wallets/state';
+import { CONFIG } from '../../config';
 
-const url = 'http://49.12.38.87:8080/notifications/register';
+const url = CONFIG.dataApiUrl + '/notifications/register';
 const monitoredBlockchains = [Blockchain.ETHEREUM, Blockchain.ZILLIQA];
 
 // const getDeviceToken = (): Promise<string> =>

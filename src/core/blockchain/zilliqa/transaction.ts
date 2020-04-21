@@ -91,7 +91,7 @@ export const buildTransferTransaction = async (
 
                 amount: '0',
                 feeOptions: tx.feeOptions,
-                broadcastedOnBlock: blockInfo.number,
+                broadcastedOnBlock: blockInfo?.number,
                 nonce,
                 status: TransactionStatus.PENDING,
 

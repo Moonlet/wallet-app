@@ -76,7 +76,7 @@ export const buildTransferTransaction = async (
         toAddress: tx.toAddress,
         amount: tx.amount,
         feeOptions: tx.feeOptions,
-        broadcatedOnBlock: undefined,
+        broadcastedOnBlock: undefined,
         nonce,
         status: TransactionStatus.PENDING,
         additionalInfo: {

@@ -4,6 +4,7 @@ import { IAppState } from '../app/state';
 import { IWalletsState } from '../wallets/state';
 import { IContactsState } from '../contacts/state';
 import { IPrefState } from '../preferences/state';
+import { ITokensConfigState } from '../tokens/state';
 
 import { isEqual } from 'lodash';
 import { trimWallets } from '../../core/wallet-connect/wc-state-helper';
@@ -18,7 +19,14 @@ const getStatePatch = createSelector(
     (state: IReduxState) => state.wallets,
     (state: IReduxState) => state.contacts,
     (state: IReduxState) => state.preferences,
-    (app: IAppState, wallets: IWalletsState, contacts: IContactsState, preferences: IPrefState) => {
+    (state: IReduxState) => state.tokens,
+    (
+        app: IAppState,
+        wallets: IWalletsState,
+        contacts: IContactsState,
+        preferences: IPrefState,
+        tokens: ITokensConfigState
+    ) => {
         const trimmedWallets = trimWallets(wallets);
         const statePatch: any = {};
 
@@ -33,6 +41,9 @@ const getStatePatch = createSelector(
         }
         if (!isEqual(contacts, lastSentState?.contacts)) {
             statePatch.contacts = contacts;
+        }
+        if (!isEqual(tokens, lastSentState?.tokens)) {
+            statePatch.tokens = tokens;
         }
 
         if (statePatch) {

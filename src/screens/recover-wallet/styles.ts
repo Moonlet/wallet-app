@@ -1,13 +1,14 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize, SCREEN_HEIGHT } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
             backgroundColor: theme.colors.appBackground,
-            padding: BASE_DIMENSION * 2
+            padding: BASE_DIMENSION * 2,
+            height: SCREEN_HEIGHT // used for web
         },
         mnemonicContainer: {
             marginTop: BASE_DIMENSION * 3,

@@ -28,41 +28,46 @@ export const TokenCardComponent = (
 
     const tokenConfig = getTokenConfig(props.account.blockchain, props.token.symbol);
 
-    return (
-        <TouchableHighlight
-            style={{ marginTop: props.index === 0 ? 0 : BASE_DIMENSION }}
-            underlayColor={props.theme.colors.appBackground}
-            onPress={() => {
-                props.navigation.navigate('Token', {
-                    accountIndex: props.account.index,
-                    blockchain: props.account.blockchain,
-                    token: props.token
-                });
-            }}
-        >
-            <View style={props.styles.container}>
-                <SmartImage source={tokenConfig.icon} style={props.styles.imageStyle} />
-                <View style={styles.accountInfoContainer}>
-                    <Amount
-                        style={styles.firstAmount}
-                        token={props.token.symbol}
-                        tokenDecimals={tokenConfig.decimals}
-                        amount={props.token.balance?.value}
-                        blockchain={props.blockchain}
-                    />
-                    <Amount
-                        style={styles.secondAmount}
-                        token={props.token.symbol}
-                        tokenDecimals={tokenConfig.decimals}
-                        amount={props.token.balance?.value}
-                        blockchain={props.blockchain}
-                        convert
-                    />
+    if (tokenConfig) {
+        return (
+            <TouchableHighlight
+                style={{ marginTop: props.index === 0 ? 0 : BASE_DIMENSION }}
+                underlayColor={props.theme.colors.appBackground}
+                onPress={() => {
+                    props.navigation.navigate('Token', {
+                        accountIndex: props.account.index,
+                        blockchain: props.account.blockchain,
+                        token: props.token
+                    });
+                }}
+            >
+                <View style={props.styles.container}>
+                    <SmartImage source={tokenConfig.icon} style={props.styles.imageStyle} />
+                    <View style={styles.accountInfoContainer}>
+                        <Amount
+                            style={styles.firstAmount}
+                            token={props.token.symbol}
+                            tokenDecimals={tokenConfig.decimals}
+                            amount={props.token.balance?.value}
+                            blockchain={props.blockchain}
+                        />
+                        <Amount
+                            style={styles.secondAmount}
+                            token={props.token.symbol}
+                            tokenDecimals={tokenConfig.decimals}
+                            amount={props.token.balance?.value}
+                            blockchain={props.blockchain}
+                            convert
+                        />
+                    </View>
+                    <Icon name="chevron-right" size={normalize(18)} style={styles.icon} />
                 </View>
-                <Icon name="chevron-right" size={normalize(18)} style={styles.icon} />
-            </View>
-        </TouchableHighlight>
-    );
+            </TouchableHighlight>
+        );
+    } else {
+        // Used for web, tokens are not saved to state when ext is not connected with the phone
+        return null;
+    }
 };
 
 export const TokenCard = withTheme(stylesProvider)(TokenCardComponent);

@@ -1,6 +1,6 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize, SCREEN_HEIGHT } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,7 +8,7 @@ export default (theme: ITheme) =>
             flex: 1,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
-            height: Platform.OS === 'web' ? 'calc(100vh - 122px)' : 'auto'
+            height: SCREEN_HEIGHT // used for web
         },
         scrollContainer: {
             flexGrow: 1,

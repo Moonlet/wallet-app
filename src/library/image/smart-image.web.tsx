@@ -30,11 +30,16 @@ export const SmartImageComponent = (props: ISmartImageProps) => {
         return (
             <img
                 src={String(props.source.iconComponent)}
-                style={{ ...baseStyle, ...props.style }}
+                style={{ ...baseStyle, ...props.style, alignSelf: 'center' }}
             />
         );
     } else if (props.source?.uri) {
-        return <img src={props.source.uri} style={{ ...baseStyle, ...props.style }} />;
+        return (
+            <img
+                src={props.source.uri}
+                style={{ ...baseStyle, ...props.style, alignSelf: 'center' }}
+            />
+        );
     } else {
         return <div />;
     }

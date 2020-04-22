@@ -1,6 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize, SCREEN_HEIGHT } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -10,7 +10,8 @@ export default (theme: ITheme) =>
             paddingTop: BASE_DIMENSION * 4,
             paddingBottom: BASE_DIMENSION * 7,
             alignItems: 'center',
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            height: SCREEN_HEIGHT // used for web
         },
         inputContainer: {
             height: Dimensions.get('window').height / 2,

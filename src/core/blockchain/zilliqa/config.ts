@@ -3,7 +3,6 @@ import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
 import ZilIcon from '../../../assets/icons/blockchains/zil.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
-import { XSGD_MAINNET } from './tokens/xsgd';
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -33,9 +32,10 @@ export const config: IBlockchainConfig = {
     droppedTxBlocksThreshold: 10,
     iconComponent: ZilIcon,
     autoAddedTokensSymbols: {
-        '1': {
-            XSGD: XSGD_MAINNET
-        }
+        // remove for now until Zil has a stable contract
+        // '1': {
+        //     XSGD: XSGD_MAINNET
+        // }
     },
     tokens: {
         ZIL: ZIL_NATIVE

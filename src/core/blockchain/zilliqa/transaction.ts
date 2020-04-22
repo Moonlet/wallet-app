@@ -69,6 +69,7 @@ export const buildTransferTransaction = async (
     const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
 
     const tokenInfo = getTokenConfig(tx.account.blockchain, tx.token);
+    const blockInfo = await client.getCurrentBlock();
 
     switch (tokenInfo.type) {
         case TokenType.ZRC2:
@@ -90,7 +91,7 @@ export const buildTransferTransaction = async (
 
                 amount: '0',
                 feeOptions: tx.feeOptions,
-                broadcatedOnBlock: undefined,
+                broadcastedOnBlock: blockInfo?.number,
                 nonce,
                 status: TransactionStatus.PENDING,
 
@@ -135,7 +136,7 @@ export const buildTransferTransaction = async (
                 toAddress: tx.toAddress,
                 amount: tx.amount,
                 feeOptions: tx.feeOptions,
-                broadcatedOnBlock: undefined,
+                broadcastedOnBlock: blockInfo?.number,
                 nonce,
                 status: TransactionStatus.PENDING
             };

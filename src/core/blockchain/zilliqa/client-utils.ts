@@ -78,7 +78,7 @@ export class ClientUtils implements IClientUtils {
                 gasLimit: txData.gasLimit,
                 feeTotal: txData.receipt?.cumulative_gas
             },
-            broadcatedOnBlock: txData.receipt?.epoch_num,
+            broadcastedOnBlock: txData.receipt?.epoch_num,
             nonce: txData.nonce,
             status: this.getTransactionStatus(txData, token),
             token

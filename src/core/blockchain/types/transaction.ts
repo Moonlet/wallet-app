@@ -33,7 +33,7 @@ export interface IBlockchainTransaction<IAdditionalInfoType = any> {
         raw?: string;
     };
     feeOptions: IFeeOptions;
-    broadcatedOnBlock: number;
+    broadcastedOnBlock: number;
     nonce: number;
     status: TransactionStatus;
     additionalInfo?: IAdditionalInfoType;

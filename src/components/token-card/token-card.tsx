@@ -65,7 +65,8 @@ export const TokenCardComponent = (
             </TouchableHighlight>
         );
     } else {
-        // Used for web, tokens are not saved to state when ext is not connected with the phone
+        // Used for web platform, tokens are not saved in the web storage
+        // when the connection between the phone and web is lost
         return null;
     }
 };

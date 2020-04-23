@@ -89,7 +89,7 @@ exports[`Wallet screen renders correctly 1`] = `
       </withTheme(TextComponent)>
       <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
         <withTheme(TextComponent) style={{...}}>
-          Terms of Services
+          Terms of Service
         </withTheme(TextComponent)>
         <View style={{...}}>
           <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />

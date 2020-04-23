@@ -81,7 +81,7 @@ export const translation: ITranslations = {
                 success: 'Success',
                 support: 'Support',
                 symbol: 'Symbol',
-                tc: 'Terms of Services',
+                tc: 'Terms of Service',
                 to: 'To',
                 tools: 'Tools',
                 transactions: 'Transactions',
@@ -103,7 +103,7 @@ export const translation: ITranslations = {
             }
         },
         CreateWalletTc: {
-            body: 'Make sure you review our\nPrivacy policy and Terms of Services'
+            body: 'Make sure you review our\nPrivacy policy and Terms of Service'
         },
         CreateWalletMnemonic: {
             body:

@@ -84,18 +84,25 @@ export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainT
     const selectedWallet = getSelectedWallet(state);
     const selectedAccount = getSelectedAccount(state);
     const blockchain = getSelectedBlockchain(state);
+    const chainId = getChainId(state, blockchain);
 
     const account: IAccountState = selectedWallet.accounts.find(
         acc => acc.index === selectedAccount.index && acc.blockchain === selectedAccount.blockchain
     );
+
+    const addressToLowercase = account.address.toLowerCase();
+
     const transactions = selectedWallet.transactions;
     if (transactions) {
         return Object.values(selectedWallet.transactions)
             .filter(
                 tx =>
-                    (tx.address.toLowerCase() === account.address.toLowerCase() ||
-                        tx.toAddress.toLowerCase() === account.address.toLowerCase()) &&
-                    tx.blockchain === blockchain
+                    (tx.address.toLowerCase() === addressToLowercase ||
+                        tx.toAddress.toLowerCase() === addressToLowercase ||
+                        (tx.data?.params &&
+                            tx.data?.params[0]?.toLowerCase() === addressToLowercase)) &&
+                    tx.blockchain === blockchain &&
+                    tx.chainId === chainId
             )
             .sort(
                 (tx1: IBlockchainTransaction, tx2: IBlockchainTransaction) =>

@@ -495,10 +495,10 @@ export class SendScreenComponent extends React.Component<
                                 }
                             }
                         })}
-
-                        {this.renderBottomConfirm()}
                     </View>
                 </KeyboardAwareScrollView>
+
+                {this.renderBottomConfirm()}
             </View>
         );
     }

@@ -64,7 +64,7 @@ export default (theme: ITheme) =>
             backgroundColor: '#666666',
             borderRadius: BORDER_RADIUS,
             paddingVertical: BASE_DIMENSION,
-            maxWidth: 35,
+            maxWidth: normalize(35),
             marginHorizontal: normalize(3),
             justifyContent: 'center',
             alignContent: 'center'
@@ -81,7 +81,7 @@ export default (theme: ITheme) =>
             backgroundColor: '#444444',
             borderRadius: BORDER_RADIUS,
             paddingVertical: BASE_DIMENSION,
-            maxWidth: 42,
+            maxWidth: normalize(42),
             justifyContent: 'center',
             alignContent: 'center',
             marginRight: BASE_DIMENSION
@@ -95,7 +95,7 @@ export default (theme: ITheme) =>
             backgroundColor: '#444444',
             borderRadius: BORDER_RADIUS,
             paddingVertical: BASE_DIMENSION,
-            maxWidth: 42,
+            maxWidth: normalize(42),
             justifyContent: 'center',
             alignContent: 'center',
             marginLeft: BASE_DIMENSION

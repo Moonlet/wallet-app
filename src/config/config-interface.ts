@@ -8,4 +8,6 @@ export interface IAppConfig {
     privacyPolicyUrl: string;
     ntpServer: string;
     ntpPort: number;
+    extSyncUpdateStateUrl: string;
+    extSyncDisconnectUrl: string;
 }

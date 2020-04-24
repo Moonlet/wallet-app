@@ -10,7 +10,11 @@ export const CONFIG: IAppConfig = {
     privacyPolicyUrl: 'https://fire.moonlet.io/static/terms/privacy-policy.html?v=' + Date.now(),
     firebaseConfigFetchInterval: 15 * 60, // 15 mins
     ntpServer: 'pool.ntp.org',
-    ntpPort: 123
+    ntpPort: 123,
+    extSyncUpdateStateUrl:
+        'https://us-central1-moonlet-wallet-dev.cloudfunctions.net/extensionSync/updateState',
+    extSyncDisconnectUrl:
+        'https://us-central1-moonlet-wallet-dev.cloudfunctions.net/extensionSync/disconnect'
 };
 
 export default CONFIG;

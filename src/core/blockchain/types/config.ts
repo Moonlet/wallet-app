@@ -60,6 +60,7 @@ export interface IBlockchainConfig {
         enableAccountCreation: boolean;
         maxAccountsNumber: number;
         extraFields?: string[];
+        blockchainDisplay: string;
     };
     networks: {
         testNet: ChainIdType;

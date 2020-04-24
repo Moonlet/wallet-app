@@ -261,6 +261,11 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.ETHEREUM, 2),
             wallet.getAccounts(Blockchain.ETHEREUM, 3),
             wallet.getAccounts(Blockchain.ETHEREUM, 4),
+            wallet.getAccounts(Blockchain.CELO, 0),
+            wallet.getAccounts(Blockchain.CELO, 1),
+            wallet.getAccounts(Blockchain.CELO, 2),
+            wallet.getAccounts(Blockchain.CELO, 3),
+            wallet.getAccounts(Blockchain.CELO, 4),
             wallet.getAccounts(Blockchain.COSMOS, 0),
             wallet.getAccounts(Blockchain.COSMOS, 1),
             wallet.getAccounts(Blockchain.COSMOS, 2),
@@ -593,11 +598,9 @@ export const sendTransferTransaction = (
                 type: TransactionMessageType.INFO
             }
         });
-
         const txHash = await getBlockchain(account.blockchain)
             .getClient(chainId)
             .sendTransaction(transaction);
-
         if (txHash) {
             dispatch({
                 type: TRANSACTION_PUBLISHED,

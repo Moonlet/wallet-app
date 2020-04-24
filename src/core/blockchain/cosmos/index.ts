@@ -1,11 +1,15 @@
 import { config } from './config';
 import { networks } from './networks';
 import { Client } from './client';
-import * as transaction from './transaction';
-import * as account from './account';
+import { CosmosTransactionUtils } from './transaction';
+import { CosmosAccountUtils } from './account';
 
 import { IBlockchain, ChainIdType } from '../types';
 import { Stats } from './stats';
+
+const account = new CosmosAccountUtils();
+const transaction = new CosmosTransactionUtils();
+const clients = {};
 
 export const Cosmos: IBlockchain = {
     config,
@@ -14,5 +18,10 @@ export const Cosmos: IBlockchain = {
     account,
     Client,
     getStats: (chainId: ChainIdType) => new Stats(new Client(chainId), config),
-    getClient: (chainId: ChainIdType) => new Client(chainId)
+    getClient: (chainId: ChainIdType) => {
+        if (!clients[chainId]) {
+            clients[chainId] = new Client(chainId);
+        }
+        return clients[chainId];
+    }
 };

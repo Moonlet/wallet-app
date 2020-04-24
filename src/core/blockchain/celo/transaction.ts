@@ -1,18 +1,14 @@
-import {
-    IBlockchainTransaction,
-    ITransferTransaction,
-    TransactionType,
-    IBlockchainTransactionUtils
-} from '../types';
-import { Transaction } from 'ethereumjs-tx';
-import abi from 'ethereumjs-abi';
-import BigNumber from 'bignumber.js';
+import { EthereumTransactionUtils } from '../ethereum/transaction';
+import { ITransferTransaction, IBlockchainTransaction, TransactionType } from '../types';
+import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { Celo } from '.';
 import { TokenType } from '../types/token';
 import { TransactionStatus } from '../../wallet/types';
-import { Ethereum } from '.';
-import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import abi from 'ethereumjs-abi';
+import { Transaction } from 'ethereumjs-tx';
+import BigNumber from 'bignumber.js';
 
-export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
+export class CeloTransactionUtils extends EthereumTransactionUtils {
     public sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
         const transaction = new Transaction(
             {
@@ -33,25 +29,12 @@ export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
         return '0x' + transaction.serialize().toString('hex');
     };
 
-    public getTransactionStatusByCode = (status): TransactionStatus => {
-        switch (parseInt(status, 16)) {
-            case 0:
-                return TransactionStatus.FAILED;
-            case 1:
-                return TransactionStatus.SUCCESS;
-            case 2:
-                return TransactionStatus.PENDING;
-            default:
-                return TransactionStatus.FAILED;
-        }
-    };
-
     public buildTransferTransaction = async (
         tx: ITransferTransaction
     ): Promise<IBlockchainTransaction> => {
         const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
 
-        const client = Ethereum.getClient(tx.chainId);
+        const client = Celo.getClient(tx.chainId);
         const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
         const blockInfo = await client.getCurrentBlock();
 
@@ -111,15 +94,6 @@ export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
                     nonce,
                     status: TransactionStatus.PENDING
                 };
-        }
-    };
-
-    public getTransactionAmount = (tx: IBlockchainTransaction): string => {
-        const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);
-        if (tokenInfo.type === TokenType.ERC20) {
-            return tx?.data?.params[1];
-        } else {
-            return tx.amount;
         }
     };
 }

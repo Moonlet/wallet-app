@@ -17,7 +17,6 @@ export class HttpClient {
     }
 
     public post(path: string, body: {}): Promise<any> {
-        // console.log('RPC client', 'request', request);
         return fetch(this.url + path, {
             method: 'POST',
             headers: defaultHeaders,
@@ -36,8 +35,8 @@ export class HttpClient {
             params: Array.isArray(params) ? params : [params]
         };
 
-        // console.log('RPC client', 'request', this.url, body);
         return this.post('', body).then(async res => {
+            //            console.log('response', res, this.url);
             return res;
         });
     }

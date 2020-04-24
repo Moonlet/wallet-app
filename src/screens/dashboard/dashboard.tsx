@@ -204,7 +204,7 @@ export class DashboardScreenComponent extends React.Component<
                         styles.blockchainButtonTextActive
                     }
                 >
-                    {blockchain && getBlockchain(blockchain).config.coin}
+                    {blockchain && getBlockchain(blockchain).config.ui.blockchainDisplay}
                 </Text>
             </TouchableOpacity>
         );

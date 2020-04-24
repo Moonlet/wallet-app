@@ -11,6 +11,9 @@ import { getSelectedAccount, getSelectedAccountTransactions } from '../../redux/
 import { TransactionsHistoryList } from './list-transactions-history/list-transactions-history';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
 import { IBlockchainTransaction } from '../../core/blockchain/types';
+import { TransactionStatus } from '../../core/wallet/types';
+import { updateTransactionFromBlockchain } from '../../redux/wallets/actions';
+import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 
 export const navigationOptions = () => ({
     title: translate('DashboardMenu.transactionHistory')
@@ -19,6 +22,7 @@ export const navigationOptions = () => ({
 export interface IReduxProps {
     selectedAccount: IAccountState;
     transactions: IBlockchainTransaction[];
+    updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -28,11 +32,30 @@ const mapStateToProps = (state: IReduxState) => {
     };
 };
 
+const mapDispatchToProps = {
+    updateTransactionFromBlockchain
+};
+
 export const TransactionsHistoryScreenComponent = (
     props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & INavigationProps
 ) => {
+    React.useEffect(() => {
+        props.transactions?.map((transaction: IBlockchainTransaction) => {
+            if (transaction.status === TransactionStatus.PENDING) {
+                props.updateTransactionFromBlockchain(
+                    transaction.id,
+                    transaction.blockchain,
+                    transaction.chainId,
+                    transaction.broadcastedOnBlock,
+                    false
+                );
+            }
+        });
+    });
+
     return (
         <View style={props.styles.container}>
+            <TestnetBadge />
             <TransactionsHistoryList
                 transactions={props.transactions}
                 account={props.selectedAccount}
@@ -45,7 +68,7 @@ export const TransactionsHistoryScreenComponent = (
 TransactionsHistoryScreenComponent.navigationOptions = navigationOptions;
 
 export const TransactionsHistoryScreen = smartConnect(TransactionsHistoryScreenComponent, [
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider),
     withNavigationParams()
 ]);

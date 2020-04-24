@@ -20,7 +20,11 @@ export default (theme: ITheme) =>
         },
         content: {
             flex: 1,
-            paddingTop: BASE_DIMENSION * 3
+            paddingTop: BASE_DIMENSION * 3,
+            paddingBottom: Platform.select({
+                default: BASE_DIMENSION * 10,
+                ios: isIphoneXorAbove() ? BASE_DIMENSION * 11 : BASE_DIMENSION * 10
+            })
         },
         receipientLabel: {
             fontSize: normalize(13),
@@ -43,6 +47,10 @@ export default (theme: ITheme) =>
 
         // bottom container
         bottomWrapper: {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
             flexDirection: 'column',
             width: '100%',
             justifyContent: 'flex-end',

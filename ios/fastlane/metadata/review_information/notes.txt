@@ -1,3 +1,8 @@
 Hello,
 
-We created a video presenting the connection flow with a Ledger hardware wallet. You can find it here: https://youtu.be/w9TNelbmqWQ
+We have added a link where you can find the list of legal documents to prove that Jaxable owns Moonlet
+https://drive.google.com/drive/folders/1x0Md5cdD5HWn8KkUT_rUJkucbSGjMVQ_?usp=sharing 
+
+We created a video presenting the connection flow with a Ledger hardware wallet. 
+You can find it here: https://youtu.be/w9TNelbmqWQ
+

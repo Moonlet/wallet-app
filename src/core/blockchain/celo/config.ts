@@ -1,12 +1,13 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
+import CeloIcon from '../../../assets/icons/blockchains/celo.svg';
 import EthIcon from '../../../assets/icons/blockchains/eth.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 
-export const ETH_NATIVE: ITokenConfigState = {
-    name: 'Ethereum',
-    symbol: 'ETH',
+export const CELO_GOLD: ITokenConfigState = {
+    name: 'Celo Gold',
+    symbol: 'cGLD',
     icon: {
         iconComponent: EthIcon
     },
@@ -20,23 +21,23 @@ export const ETH_NATIVE: ITokenConfigState = {
     units: {
         WEI: new BigNumber(1),
         GWEI: new BigNumber(Math.pow(10, 9)),
-        ETH: new BigNumber(Math.pow(10, 18))
+        cGLD: new BigNumber(Math.pow(10, 18))
     }
 };
 
 export const config: IBlockchainConfig = {
-    derivationPath: `m/44'/60'/0'/0`,
+    derivationPath: `m/44'/52752'/0'/0`,
     derivationType: DerivationType.HD_KEY,
-    coin: 'ETH',
+    coin: 'cGLD',
     defaultUnit: 'WEI',
-    iconComponent: EthIcon,
+    iconComponent: CeloIcon,
     droppedTxBlocksThreshold: 50,
     autoAddedTokensSymbols: {},
     tokens: {
-        ETH: ETH_NATIVE
+        cGLD: CELO_GOLD
     },
     feeOptions: {
-        gasPriceToken: 'ETH',
+        gasPriceToken: 'cGLD',
         defaults: {
             gasPrice: new BigNumber(20000000000),
             gasLimit: {
@@ -63,10 +64,10 @@ export const config: IBlockchainConfig = {
         enableTokenManagement: true,
         enableAccountCreation: false,
         maxAccountsNumber: 5,
-        blockchainDisplay: 'ETH'
+        blockchainDisplay: 'CELO'
     },
     networks: {
-        testNet: 4,
+        testNet: 40120,
         mainNet: 1
     },
     defaultOrder: 1

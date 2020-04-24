@@ -5,13 +5,13 @@ import {
     ResolveTextCode,
     ResolveTextError
 } from '../types';
-import { isValidAddress, isValidChecksumAddress } from './account';
 import { IBlockchainNameService } from '../types/name-service';
+import { Ethereum } from '.';
 
 export class NameService implements IBlockchainNameService {
     public resolveText(text: string): Promise<IResolveTextResponse> {
-        const validAddress = isValidAddress(text);
-        const validChecksumAddress = isValidChecksumAddress(text);
+        const validAddress = Ethereum.account.isValidAddress(text);
+        const validChecksumAddress = Ethereum.account.isValidChecksumAddress(text);
 
         if (validAddress) {
             return Promise.resolve({

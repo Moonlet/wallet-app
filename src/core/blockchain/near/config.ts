@@ -52,7 +52,8 @@ export const config: IBlockchainConfig = {
     ui: {
         enableTokenManagement: false,
         enableAccountCreation: true,
-        maxAccountsNumber: 5
+        maxAccountsNumber: 5,
+        blockchainDisplay: 'NEAR'
     },
     networks: {
         testNet: 'testnet'

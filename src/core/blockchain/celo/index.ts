@@ -1,16 +1,16 @@
 import { config } from './config';
 import { networks } from './networks';
 import { Client } from './client';
-import { ZilliqaAccountUtils } from './account';
-import { ZilliqaTransactionUtils } from './transaction';
+import { CeloTransactionUtils } from './transaction';
+import { CeloAccountUtils } from './account';
 import { IBlockchain, ChainIdType } from '../types';
 import { Stats } from './stats';
 
-const account = new ZilliqaAccountUtils();
-const transaction = new ZilliqaTransactionUtils();
+const account = new CeloAccountUtils();
+const transaction = new CeloTransactionUtils();
 const clients = {};
 
-export const Zilliqa: IBlockchain = {
+export const Celo: IBlockchain = {
     config,
     networks,
     transaction,

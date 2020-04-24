@@ -1,11 +1,15 @@
 import { config } from './config';
 import { networks } from './networks';
 import { Client } from './client';
-import * as transaction from './transaction';
-import * as account from './account';
+import { NearTransactionUtils } from './transaction';
+import { NearAccountUtils } from './account';
 import { IBlockchain, ChainIdType } from '../types';
 import BigNumber from 'bignumber.js';
 import { Stats } from './stats';
+
+const account = new NearAccountUtils();
+const transaction = new NearTransactionUtils();
+const clients = {};
 
 export const Near: IBlockchain = {
     config,
@@ -14,7 +18,12 @@ export const Near: IBlockchain = {
     account,
     Client,
     getStats: (chainId: ChainIdType) => new Stats(new Client(chainId), config),
-    getClient: (chainId: ChainIdType) => new Client(chainId)
+    getClient: (chainId: ChainIdType) => {
+        if (!clients[chainId]) {
+            clients[chainId] = new Client(chainId);
+        }
+        return clients[chainId];
+    }
 };
 
 export enum NearTransactionActionType {

@@ -60,7 +60,8 @@ export const config: IBlockchainConfig = {
         addressDisplay: 'stripped',
         enableTokenManagement: true,
         enableAccountCreation: false,
-        maxAccountsNumber: 5
+        maxAccountsNumber: 5,
+        blockchainDisplay: 'ZIL'
     },
     networks: {
         testNet: 333,

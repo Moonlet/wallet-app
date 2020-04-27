@@ -12,7 +12,7 @@ import { Icon } from '../../components/icon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DialogComponent } from '../../components/dialog/dialog-component';
 import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage';
-import { WC_CONNECTION } from '../../core/constants/app';
+import { CONN_EXTENSION } from '../../core/constants/app';
 import { Notifications } from '../../core/messaging/notifications/notifications';
 import CONFIG from '../../config';
 import { sha256 } from 'js-sha256';
@@ -65,7 +65,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
 
         try {
             const keychainPassword = await getBaseEncryptionKey();
-            const connectionStorage = await readEncrypted(WC_CONNECTION, keychainPassword);
+            const connectionStorage = await readEncrypted(CONN_EXTENSION, keychainPassword);
 
             if (connectionStorage) {
                 this.setState({
@@ -128,7 +128,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
             // Store connection
             const keychainPassword = await getBaseEncryptionKey();
             if (keychainPassword) {
-                storeEncrypted(JSON.stringify(connection), WC_CONNECTION, keychainPassword);
+                storeEncrypted(JSON.stringify(connection), CONN_EXTENSION, keychainPassword);
             }
 
             // TODO: data json stringify state de app sanitise
@@ -180,7 +180,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
 
             try {
                 const keychainPassword = await getBaseEncryptionKey();
-                const connectionStorage = await readEncrypted(WC_CONNECTION, keychainPassword);
+                const connectionStorage = await readEncrypted(CONN_EXTENSION, keychainPassword);
 
                 if (connectionStorage) {
                     const connectionId = JSON.parse(connectionStorage).connectionId;
@@ -204,7 +204,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                         const resData = await disconnectResponse.json();
                         if (resData?.success === true) {
                             // Delete connection from async storage
-                            await deleteFromStorage(WC_CONNECTION);
+                            await deleteFromStorage(CONN_EXTENSION);
                             this.setState({ isConnected: false });
                         }
                     } catch {

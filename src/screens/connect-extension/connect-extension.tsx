@@ -145,16 +145,18 @@ export class ConnectExtensionScreenComponent extends React.Component<
                 })
             };
 
-            fetch(CONFIG.extSyncUpdateStateUrl, request)
-                .then(res => res.json())
-                .then(res => {
-                    if (res?.success === true) {
-                        this.setState({ isConnected: true, isLoading: false });
-                    } else {
-                        this.setState({ isConnected: false, isLoading: false });
-                    }
-                })
-                .catch(() => this.setState({ isConnected: false, isLoading: false }));
+            try {
+                const updateStateResponse = await fetch(CONFIG.extSyncUpdateStateUrl, request);
+                const resData = await updateStateResponse.json();
+
+                if (resData?.success === true) {
+                    this.setState({ isConnected: true, isLoading: false });
+                } else {
+                    this.setState({ isConnected: false, isLoading: false });
+                }
+            } catch {
+                this.setState({ isConnected: false, isLoading: false });
+            }
         } else {
             this.setState({ isLoading: false });
         }

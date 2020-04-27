@@ -138,7 +138,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     connectionId: connection.connectionId,
-                    data: JSON.stringify(trimState(store.getState())),
+                    data: JSON.stringify(trimState(store.getState())), // TODO: Encrypt this
                     authToken: sha256(connection.encKey),
                     fcmToken: await Notifications.getToken()
                 })

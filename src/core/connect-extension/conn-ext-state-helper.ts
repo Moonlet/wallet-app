@@ -2,6 +2,7 @@ import { IWalletsState, IWalletState } from '../../redux/wallets/state';
 import { IReduxState } from '../../redux/state';
 import { cloneDeep } from 'lodash';
 
+// TODO
 export const trimWallets = (wallets: IWalletsState) => {
     const trimmedWallets = { ...wallets };
 
@@ -24,6 +25,7 @@ export const trimWallets = (wallets: IWalletsState) => {
     return trimmedWallets;
 };
 
+// TODO: sanitise this
 export const trimState = (state: IReduxState) => ({
     app: state.app,
     wallets: trimWallets(state.wallets),

@@ -20,6 +20,8 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { isQrCodeValid, qrCodeRegex, qrCodeRegexExtraInfo } from '../../core/utils/format-number';
 import { getBaseEncryptionKey } from '../../core/secure/keychain';
 import { Dialog } from '../../components/dialog/dialog';
+import { trimState } from '../../core/connect-extension/conn-ext-state-helper';
+import { store } from '../../redux/config';
 
 export interface IQRCode {
     connectionId: string;
@@ -131,15 +133,12 @@ export class ConnectExtensionScreenComponent extends React.Component<
                 storeEncrypted(JSON.stringify(connection), CONN_EXTENSION, keychainPassword);
             }
 
-            // TODO: data json stringify state de app sanitise
-            const data = 'thisDataIsEncrypted!';
-
             const request = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     connectionId: connection.connectionId,
-                    data,
+                    data: JSON.stringify(trimState(store.getState())),
                     authToken: sha256(connection.encKey),
                     fcmToken: await Notifications.getToken()
                 })

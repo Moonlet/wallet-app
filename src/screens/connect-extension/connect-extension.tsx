@@ -150,16 +150,14 @@ export class ConnectExtensionScreenComponent extends React.Component<
                 const resData = await updateStateResponse.json();
 
                 if (resData?.success === true) {
-                    this.setState({ isConnected: true, isLoading: false });
-                } else {
-                    this.setState({ isConnected: false, isLoading: false });
+                    this.setState({ isConnected: true });
                 }
             } catch {
-                this.setState({ isConnected: false, isLoading: false });
+                //
             }
-        } else {
-            this.setState({ isLoading: false });
         }
+
+        this.setState({ isLoading: false });
     }
 
     @bind
@@ -179,6 +177,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
             )
         ) {
             this.setState({ isLoading: true });
+
             try {
                 const keychainPassword = await getBaseEncryptionKey();
                 const connectionStorage = await readEncrypted(WC_CONNECTION, keychainPassword);
@@ -189,33 +188,34 @@ export class ConnectExtensionScreenComponent extends React.Component<
 
                     const request = {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             connectionId,
                             authToken: sha256(authToken)
                         })
                     };
 
-                    fetch(CONFIG.extSyncDisconnectUrl, request)
-                        .then(res => res.json())
-                        .then(async res => {
-                            if (res?.success === true) {
-                                // Delete connection from async storage
-                                await deleteFromStorage(WC_CONNECTION);
-                                this.setState({ isConnected: false, isLoading: false });
-                            } else {
-                                this.setState({ isLoading: false });
-                            }
-                        })
-                        .catch(() => this.setState({ isLoading: false }));
-                } else {
-                    this.setState({ isLoading: false });
+                    try {
+                        const disconnectResponse = await fetch(
+                            CONFIG.extSyncDisconnectUrl,
+                            request
+                        );
+
+                        const resData = await disconnectResponse.json();
+                        if (resData?.success === true) {
+                            // Delete connection from async storage
+                            await deleteFromStorage(WC_CONNECTION);
+                            this.setState({ isConnected: false });
+                        }
+                    } catch {
+                        //
+                    }
                 }
-            } catch (err) {
-                this.setState({ isLoading: false });
+            } catch {
+                //
             }
+
+            this.setState({ isLoading: false });
         }
     }
 

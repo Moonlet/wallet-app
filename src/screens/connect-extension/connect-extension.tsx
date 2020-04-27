@@ -21,6 +21,13 @@ import { isQrCodeValid, qrCodeRegex, qrCodeRegexExtraInfo } from '../../core/uti
 import { getBaseEncryptionKey } from '../../core/secure/keychain';
 import { Dialog } from '../../components/dialog/dialog';
 
+export interface IQRCode {
+    connectionId: string;
+    encKey: string;
+    os?: string;
+    platform?: string;
+}
+
 export const navigationOptions = () => ({
     title: translate('ConnectExtension.title')
 });
@@ -74,55 +81,83 @@ export class ConnectExtensionScreenComponent extends React.Component<
         }
     }
 
+    private async extractQrCodeData(value: string): Promise<IQRCode> {
+        const connection: IQRCode = {
+            connectionId: undefined,
+            encKey: undefined,
+            os: undefined,
+            platform: undefined
+        };
+
+        const valueSplit = value.split(qrCodeRegex);
+        if (valueSplit[1]) {
+            connection.connectionId = valueSplit[1];
+        }
+
+        let extraValueSplit = valueSplit[4] && valueSplit[4].split(qrCodeRegexExtraInfo);
+        extraValueSplit =
+            extraValueSplit &&
+            extraValueSplit.filter(val => val !== '' && val !== '=' && val !== '&');
+
+        if (extraValueSplit[0] && extraValueSplit[0] === 'encKey') {
+            connection.encKey = extraValueSplit[1];
+        }
+
+        if (extraValueSplit[2] && extraValueSplit[2] === 'os') {
+            connection.os = extraValueSplit[3].replace('%20', ' ');
+        }
+
+        if (extraValueSplit[4] && extraValueSplit[4] === 'browser') {
+            connection.platform = extraValueSplit[5];
+        }
+
+        return connection;
+    }
+
     private async connectOrUpdateExtension(value: string) {
         this.setState({ isLoading: true });
 
-        const valueSplit = value.split(qrCodeRegex);
-        let extraValueSplit = valueSplit[4].split(qrCodeRegexExtraInfo);
-        extraValueSplit = extraValueSplit.filter(val => val !== '' && val !== '=' && val !== '&');
+        const connection = await this.extractQrCodeData(value);
 
-        const obj = {
-            connectionId: valueSplit[1],
-            encKey: extraValueSplit[0] === 'encKey' && extraValueSplit[1],
-            os: extraValueSplit[2] === 'os' && extraValueSplit[3].replace('%20', ' '),
-            platform: extraValueSplit[4] === 'browser' && extraValueSplit[5]
-        };
+        if (connection.connectionId && connection.encKey) {
+            this.setState({
+                os: connection.os,
+                platform: connection.platform
+            });
 
-        this.setState({
-            os: obj?.os,
-            platform: obj?.platform
-        });
+            // Store connection
+            const keychainPassword = await getBaseEncryptionKey();
+            if (keychainPassword) {
+                storeEncrypted(JSON.stringify(connection), WC_CONNECTION, keychainPassword);
+            }
 
-        // Store connection
-        const keychainPassword = await getBaseEncryptionKey();
-        if (keychainPassword) {
-            storeEncrypted(JSON.stringify(obj), WC_CONNECTION, keychainPassword);
+            // TODO: data json stringify state de app sanitise
+            const data = 'thisDataIsEncrypted!';
+
+            const request = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    connectionId: connection.connectionId,
+                    data,
+                    authToken: sha256(connection.encKey),
+                    fcmToken: await Notifications.getToken()
+                })
+            };
+
+            fetch(CONFIG.extSyncUpdateStateUrl, request)
+                .then(res => res.json())
+                .then(res => {
+                    if (res?.success === true) {
+                        this.setState({ isConnected: true, isLoading: false });
+                    } else {
+                        this.setState({ isConnected: false, isLoading: false });
+                    }
+                })
+                .catch(() => this.setState({ isConnected: false, isLoading: false }));
+        } else {
+            this.setState({ isLoading: false });
         }
-
-        // TODO: data json stringify state de app sanitise
-        const data = 'thisDataIsEncrypted!';
-
-        const request = {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                connectionId: obj.connectionId,
-                data,
-                authToken: sha256(obj.encKey),
-                fcmToken: await Notifications.getToken()
-            })
-        };
-
-        fetch(CONFIG.extSyncUpdateStateUrl, request)
-            .then(res => res.json())
-            .then(res => {
-                if (res?.success === true) {
-                    this.setState({ isConnected: true, isLoading: false });
-                } else {
-                    this.setState({ isConnected: false, isLoading: false });
-                }
-            })
-            .catch(() => this.setState({ isConnected: false, isLoading: false }));
     }
 
     @bind

@@ -111,11 +111,6 @@ export default class App extends React.Component<{}, IState> {
         if (appReady && Platform.OS !== 'web') {
             updateAddressMonitorTokens(store.getState().wallets);
         }
-
-        // TODO
-        // listen for store changes
-        // upload encrypted state for all connections
-        // update last sync for all connections
     };
 
     public componentDidMount() {

@@ -34,10 +34,14 @@ export interface IStorageWallets {
 }
 
 export interface IStorageTokens {
-    [chainId: string]: {
-        type: string;
-        symbol: string;
-        contract: string;
+    [blockchain: string]: {
+        [chainId: string]: {
+            [symbol: string]: {
+                type: string;
+                symbol: string;
+                contract: string;
+            };
+        };
     }[];
 }
 

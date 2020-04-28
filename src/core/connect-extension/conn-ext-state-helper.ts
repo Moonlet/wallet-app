@@ -4,6 +4,8 @@ import { cloneDeep } from 'lodash';
 import * as IExtStorage from './types';
 import { IPrefState } from '../../redux/preferences/state';
 import { IContactsState } from '../../redux/contacts/state';
+import { ITokensConfigState, ITokenConfigState } from '../../redux/tokens/state';
+import { ChainIdType } from '../blockchain/types';
 
 // TODO
 export const trimWallets = (wallets: IWalletsState) => {
@@ -28,6 +30,33 @@ export const trimWallets = (wallets: IWalletsState) => {
     return trimmedWallets;
 };
 
+export const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
+    const trimmedTokens: IExtStorage.IStorageTokens = {};
+
+    Object.keys(tokens).map((blockchain: string) => {
+        Object.keys(tokens[blockchain]).map((chainId: ChainIdType) => {
+            Object.values(tokens[blockchain][chainId]).map((token: ITokenConfigState) => {
+                Object.assign(trimmedTokens, {
+                    ...trimmedTokens,
+                    [blockchain]: {
+                        ...(trimmedTokens && trimmedTokens[blockchain]),
+                        [chainId]: {
+                            ...(trimmedTokens[blockchain] && trimmedTokens[blockchain][chainId]),
+                            [token.symbol]: {
+                                type: token.type,
+                                symbol: token.symbol,
+                                contractAddress: token.contractAddress
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    });
+
+    return trimmedTokens;
+};
+
 export const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
     return {
         currency: preferences.currency,
@@ -46,7 +75,7 @@ export const trimState = (state: IReduxState) => ({
     wallets: undefined, // trimWallets(state.wallets),
     contacts: trimContacts(state.contacts),
     preferences: trimPreferences(state.preferences),
-    tokens: undefined // state.tokens
+    tokens: trimTokens(state.tokens)
 });
 
 export const extensionState = (state: IReduxState): IExtStorage.IStorage => ({

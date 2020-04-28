@@ -78,6 +78,8 @@ export class ConnectExtensionScreenComponent extends React.Component<
                     os: connectionParse?.os,
                     platform: connectionParse?.platform
                 });
+
+                await this.syncExtension(connectionParse);
             }
 
             this.setState({ isLoading: false });
@@ -107,7 +109,26 @@ export class ConnectExtensionScreenComponent extends React.Component<
         return connection;
     }
 
-    private async connectOrUpdateExtension(value: string) {
+    private async syncExtension(connection: any) {
+        try {
+            const http = new HttpClient(CONFIG.extSyncUpdateStateUrl);
+            const res = await http.post('', {
+                connectionId: connection.connectionId,
+                data: await encrypt(
+                    JSON.stringify(extensionState(store.getState())),
+                    connection.encKey
+                ),
+                authToken: sha256(connection.encKey),
+                fcmToken: await Notifications.getToken()
+            });
+
+            return res;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    private async connectExtension(value: string) {
         this.setState({ isLoading: true });
 
         const connection = await this.extractQrCodeData(value);
@@ -119,18 +140,10 @@ export class ConnectExtensionScreenComponent extends React.Component<
             });
 
             try {
-                const http = new HttpClient(CONFIG.extSyncUpdateStateUrl);
-                const res = await http.post('', {
-                    connectionId: connection.connectionId,
-                    data: await encrypt(
-                        JSON.stringify(extensionState(store.getState())),
-                        connection.encKey
-                    ),
-                    authToken: sha256(connection.encKey),
-                    fcmToken: await Notifications.getToken()
-                });
+                const res = await this.syncExtension(connection);
 
                 if (res?.success === true) {
+                    // Extension has been connected
                     // Store connection
                     const keychainPassword = await getBaseEncryptionKey();
                     if (keychainPassword) {
@@ -157,7 +170,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
     @bind
     private async onQrCodeScanned(value: string) {
         if (isQrCodeValid(value)) {
-            this.connectOrUpdateExtension(value);
+            this.connectExtension(value);
         } else {
             Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.qrCodeError'));
         }

@@ -168,6 +168,12 @@ export class ConnectExtensionScreenComponent extends React.Component<
         }
     }
 
+    private async deleteConnection() {
+        // Delete connection from async storage
+        await deleteFromStorage(CONN_EXTENSION);
+        this.setState({ isConnected: false });
+    }
+
     private async disconnectExtension() {
         if (
             await DialogComponent.confirm(
@@ -199,13 +205,13 @@ export class ConnectExtensionScreenComponent extends React.Component<
 
                     const resData = await disconnectResponse.json();
                     if (resData?.success === true) {
-                        // Delete connection from async storage
-                        await deleteFromStorage(CONN_EXTENSION);
-                        this.setState({ isConnected: false });
+                        await this.deleteConnection();
                     }
                 }
             } catch {
-                //
+                // Disconnect has failed
+                // Delete connection so that the user can setup a new connection
+                await this.deleteConnection();
             }
 
             this.setState({ isLoading: false });

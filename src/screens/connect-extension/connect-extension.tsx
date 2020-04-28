@@ -68,14 +68,14 @@ export class ConnectExtensionScreenComponent extends React.Component<
 
         try {
             const encryptionKey = await getBaseEncryptionKey();
-            const connectionStorage = await readEncrypted(CONN_EXTENSION, encryptionKey);
+            const connection = await readEncrypted(CONN_EXTENSION, encryptionKey);
 
-            if (connectionStorage) {
-                const connectionStorageParse = JSON.parse(connectionStorage);
+            if (connection) {
+                const connectionParse = JSON.parse(connection);
                 this.setState({
                     isConnected: true,
-                    os: connectionStorageParse?.os,
-                    platform: connectionStorageParse?.platform
+                    os: connectionParse?.os,
+                    platform: connectionParse?.platform
                 });
             }
 
@@ -179,12 +179,12 @@ export class ConnectExtensionScreenComponent extends React.Component<
 
             try {
                 const keychainPassword = await getBaseEncryptionKey();
-                const connectionStorage = await readEncrypted(CONN_EXTENSION, keychainPassword);
+                const connection = await readEncrypted(CONN_EXTENSION, keychainPassword);
 
-                if (connectionStorage) {
-                    const connectionStorageParse = JSON.parse(connectionStorage);
-                    const connectionId = connectionStorageParse.connectionId;
-                    const authToken = connectionStorageParse.encKey;
+                if (connection) {
+                    const connectionParse = JSON.parse(connection);
+                    const connectionId = connectionParse.connectionId;
+                    const authToken = connectionParse.encKey;
 
                     const request = {
                         method: 'POST',

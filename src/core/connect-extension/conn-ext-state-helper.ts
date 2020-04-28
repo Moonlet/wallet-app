@@ -1,4 +1,4 @@
-import { IWalletsState } from '../../redux/wallets/state';
+import { IWalletsState, IWalletState, IAccountState } from '../../redux/wallets/state';
 import { IReduxState } from '../../redux/state';
 import { cloneDeep } from 'lodash';
 import * as IExtStorage from './types';
@@ -7,25 +7,47 @@ import { IContactsState } from '../../redux/contacts/state';
 import { ITokensConfigState, ITokenConfigState } from '../../redux/tokens/state';
 import { ChainIdType } from '../blockchain/types';
 
-// TODO
 export const trimWallets = (wallets: IWalletsState) => {
-    const trimmedWallets = { ...wallets };
+    const trimmedWallets: IExtStorage.IStorageWallets = {};
 
-    // Object.keys(trimmedWallets).forEach(id => {
-    //     const trimmedWallet: IExtStorage.IStorageWallets = cloneDeep(wallets[id]);
-    //     delete trimmedWallet.selectedBlockchain;
-    //     delete trimmedWallet.selected;
+    Object.keys(wallets).map((walletId: string) => {
+        const wallet: IWalletState = wallets[walletId];
+        const accountsTrimmed = [];
 
-    //     trimmedWallet.accounts = trimmedWallet.accounts.map(account => {
-    //         delete account.selected;
-    //         return {
-    //             ...account,
-    //             balance: null
-    //         };
-    //     });
+        wallet.accounts.map((account: IAccountState) => {
+            const tokensTrimmed = {};
 
-    //     trimmedWallets[id] = trimmedWallet;
-    // });
+            Object.keys(account.tokens).map((chainId: ChainIdType) => {
+                Object.assign(tokensTrimmed, {
+                    ...tokensTrimmed,
+                    [chainId]: Object.keys(account.tokens[chainId])
+                });
+            });
+
+            const accountTrimmed = {
+                index: account.index,
+                name: account.name,
+                address: account.address,
+                publicKey: account.publicKey,
+                tokens: tokensTrimmed
+            };
+
+            accountsTrimmed.push(accountTrimmed);
+        });
+
+        const trimmedWallet: IExtStorage.IStorageWallet = {
+            name: wallet.name,
+            type: wallet.type,
+            hwOptions: wallet?.hwOptions,
+            accounts: accountsTrimmed,
+            transactions: (wallet.transactions && Object.keys(wallet.transactions)) || [] // tx hash
+        };
+
+        Object.assign(trimmedWallets, {
+            ...trimmedWallets,
+            [walletId]: trimmedWallet
+        });
+    });
 
     return trimmedWallets;
 };
@@ -70,15 +92,14 @@ export const trimContacts = (contacts: IContactsState): IExtStorage.IStorageCont
     return Object.values(contacts);
 };
 
-// TODO: sanitise this
 export const trimState = (state: IReduxState) => ({
-    wallets: undefined, // trimWallets(state.wallets),
+    wallets: trimWallets(state.wallets),
     contacts: trimContacts(state.contacts),
     preferences: trimPreferences(state.preferences),
     tokens: trimTokens(state.tokens)
 });
 
 export const extensionState = (state: IReduxState): IExtStorage.IStorage => ({
-    version: 1,
+    version: 1, // TODO: where to set this
     state: trimState(state)
 });

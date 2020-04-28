@@ -1,4 +1,5 @@
 import { ChainIdType } from '../blockchain/types';
+import { HWConnection } from '../wallet/hw-wallet/types';
 
 export interface IStorage {
     version: number;
@@ -11,26 +12,29 @@ export interface IStorage {
 }
 
 export interface IStorageWallets {
-    [walletId: string]: {
-        name: string;
-        type: string; // WalletType
-        hwOptions?: {
-            // ??
-            deviceId: string;
-            deviceVendor: string; // HWVendor;
-            deviceModel: string; // HWModel;
-        };
-        accounts: {
-            index: string;
-            name: string;
-            address: string;
-            publicKey: string;
-            tokens: {
-                [chainId: string]: string[]; // array of symbols
-            };
-        }[];
-        transactions: string[];
+    [walletId: string]: IStorageWallet;
+}
+
+export interface IStorageWallet {
+    name: string;
+    type: string; // WalletType
+    hwOptions?: {
+        // ??
+        deviceId: string;
+        deviceVendor: string; // HWVendor;
+        deviceModel: string; // HWModel;
+        connectionType: HWConnection;
     };
+    accounts: {
+        index: string;
+        name: string;
+        address: string;
+        publicKey: string;
+        tokens: {
+            [chainId: string]: string[]; // array of symbols
+        };
+    }[];
+    transactions: string[];
 }
 
 export interface IStorageTokens {

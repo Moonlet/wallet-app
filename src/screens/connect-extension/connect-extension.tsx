@@ -23,6 +23,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { extensionState } from '../../core/connect-extension/conn-ext-state-helper';
 import { store } from '../../redux/config';
 import { encrypt } from '../../core/secure/encrypt';
+import { HttpClient } from '../../core/utils/http-client';
 
 export interface IQRCode {
     connectionId: string;
@@ -118,24 +119,18 @@ export class ConnectExtensionScreenComponent extends React.Component<
             });
 
             try {
-                const request = {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        connectionId: connection.connectionId,
-                        data: await encrypt(
-                            JSON.stringify(extensionState(store.getState())),
-                            connection.encKey
-                        ),
-                        authToken: sha256(connection.encKey),
-                        fcmToken: await Notifications.getToken()
-                    })
-                };
+                const http = new HttpClient(CONFIG.extSyncUpdateStateUrl);
+                const res = await http.post('', {
+                    connectionId: connection.connectionId,
+                    data: await encrypt(
+                        JSON.stringify(extensionState(store.getState())),
+                        connection.encKey
+                    ),
+                    authToken: sha256(connection.encKey),
+                    fcmToken: await Notifications.getToken()
+                });
 
-                const updateStateResponse = await fetch(CONFIG.extSyncUpdateStateUrl, request);
-                const resData = await updateStateResponse.json();
-
-                if (resData?.success === true) {
+                if (res?.success === true) {
                     // Store connection
                     const keychainPassword = await getBaseEncryptionKey();
                     if (keychainPassword) {
@@ -192,19 +187,13 @@ export class ConnectExtensionScreenComponent extends React.Component<
                     const connectionId = connectionParse.connectionId;
                     const authToken = connectionParse.encKey;
 
-                    const request = {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            connectionId,
-                            authToken: sha256(authToken)
-                        })
-                    };
+                    const http = new HttpClient(CONFIG.extSyncDisconnectUrl);
+                    const res = await http.post('', {
+                        connectionId,
+                        authToken: sha256(authToken)
+                    });
 
-                    const disconnectResponse = await fetch(CONFIG.extSyncDisconnectUrl, request);
-
-                    const resData = await disconnectResponse.json();
-                    if (resData?.success === true) {
+                    if (res?.success === true) {
                         await this.deleteConnection();
                     }
                 }

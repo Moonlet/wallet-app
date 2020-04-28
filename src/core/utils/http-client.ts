@@ -7,7 +7,7 @@ export class HttpClient {
     private lastId: number = 0;
     constructor(private url: string) {}
 
-    public get(path: string): Promise<any> {
+    public async get(path: string): Promise<any> {
         // console.log('RPC client', 'request', request);
         return fetch(this.url + path).then(async res => {
             const response = await res.json();
@@ -16,18 +16,22 @@ export class HttpClient {
         });
     }
 
-    public post(path: string, body: {}): Promise<any> {
+    public async post(path: string, body: {}): Promise<any> {
         // console.log('RPC client', 'request', request);
         return fetch(this.url + path, {
             method: 'POST',
             headers: defaultHeaders,
             body: JSON.stringify(body)
-        }).then(response => {
-            return response.json();
-        });
+        })
+            .then(response => {
+                return response.json();
+            })
+            .catch(err => {
+                throw err;
+            });
     }
 
-    public jsonRpc(method: string, params: any[] = []): Promise<any> {
+    public async jsonRpc(method: string, params: any[] = []): Promise<any> {
         const id = this.lastId++;
         const body = {
             jsonrpc: '2.0',

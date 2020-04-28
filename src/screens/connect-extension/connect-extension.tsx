@@ -22,6 +22,7 @@ import { getBaseEncryptionKey } from '../../core/secure/keychain';
 import { Dialog } from '../../components/dialog/dialog';
 import { trimState } from '../../core/connect-extension/conn-ext-state-helper';
 import { store } from '../../redux/config';
+import { encrypt } from '../../core/secure/encrypt';
 
 export interface IQRCode {
     connectionId: string;
@@ -127,28 +128,35 @@ export class ConnectExtensionScreenComponent extends React.Component<
                 platform: connection.platform
             });
 
-            // Store connection
-            const keychainPassword = await getBaseEncryptionKey();
-            if (keychainPassword) {
-                storeEncrypted(JSON.stringify(connection), CONN_EXTENSION, keychainPassword);
-            }
-
-            const request = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    connectionId: connection.connectionId,
-                    data: JSON.stringify(trimState(store.getState())), // TODO: Encrypt this
-                    authToken: sha256(connection.encKey),
-                    fcmToken: await Notifications.getToken()
-                })
-            };
-
             try {
+                const request = {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        connectionId: connection.connectionId,
+                        data: await encrypt(
+                            JSON.stringify(trimState(store.getState())),
+                            connection.encKey
+                        ),
+                        authToken: sha256(connection.encKey),
+                        fcmToken: await Notifications.getToken()
+                    })
+                };
+
                 const updateStateResponse = await fetch(CONFIG.extSyncUpdateStateUrl, request);
                 const resData = await updateStateResponse.json();
 
                 if (resData?.success === true) {
+                    // Store connection
+                    const keychainPassword = await getBaseEncryptionKey();
+                    if (keychainPassword) {
+                        storeEncrypted(
+                            JSON.stringify(connection),
+                            CONN_EXTENSION,
+                            keychainPassword
+                        );
+                    }
+
                     this.setState({ isConnected: true });
                 }
             } catch {

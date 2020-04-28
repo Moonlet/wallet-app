@@ -20,7 +20,7 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { isQrCodeValid, qrCodeRegex, qrCodeRegexExtraInfo } from '../../core/utils/format-number';
 import { getBaseEncryptionKey } from '../../core/secure/keychain';
 import { Dialog } from '../../components/dialog/dialog';
-import { trimState } from '../../core/connect-extension/conn-ext-state-helper';
+import { extensionState } from '../../core/connect-extension/conn-ext-state-helper';
 import { store } from '../../redux/config';
 import { encrypt } from '../../core/secure/encrypt';
 
@@ -135,7 +135,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                     body: JSON.stringify({
                         connectionId: connection.connectionId,
                         data: await encrypt(
-                            JSON.stringify(trimState(store.getState())),
+                            JSON.stringify(extensionState(store.getState())),
                             connection.encKey
                         ),
                         authToken: sha256(connection.encKey),

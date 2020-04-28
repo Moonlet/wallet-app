@@ -370,6 +370,181 @@ exports[`wallet actions createHDWallet working properly 1`] = `
               },
             },
             Object {
+              "address": "0x215e8474E43084c89F8C68d5D21F4014EB7E37a2",
+              "blockchain": "CELO",
+              "index": 0,
+              "publicKey": "0078fe68d4e4c748b78acbca4e12d00979681e61ccd13c10637c75a4c0d9899a0eda28ab173c313ed750192b264979a53e15e159ed4ae37a9eff9d64cf80fd4a",
+              "selected": false,
+              "tokens": Object {
+                "1": Object {
+                  "cGLD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "cGLD",
+                  },
+                },
+                "40120": Object {
+                  "cGLD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "cGLD",
+                  },
+                },
+              },
+            },
+            Object {
+              "address": "0xFF734F082F340407B60C842eaa2C87eEA5Bc38F5",
+              "blockchain": "CELO",
+              "index": 1,
+              "publicKey": "abd3a240fce005327f61b45b40260778c8de60f4bb2d2a9e7d88df66f202caa2caf42ebb2c15783df3cd0f38295b4b9d923983cb4f47802f129642fc54b0d692",
+              "selected": false,
+              "tokens": Object {
+                "1": Object {
+                  "cGLD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "cGLD",
+                  },
+                },
+                "40120": Object {
+                  "cGLD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "cGLD",
+                  },
+                },
+              },
+            },
+            Object {
+              "address": "0x2F106C29B08Ff87b6402CF63df2C7c46f6b45ff9",
+              "blockchain": "CELO",
+              "index": 2,
+              "publicKey": "8495068c0501d67934a940cc683f9fae12e4c5ecefb0ace1b4a95bba08e1407c00ce2f9d52664a72c52d9b3e3fed2c4ff12a217c888f06e4dca2b2cd73d751a8",
+              "selected": false,
+              "tokens": Object {
+                "1": Object {
+                  "cGLD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "cGLD",
+                  },
+                },
+                "40120": Object {
+                  "cGLD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "cGLD",
+                  },
+                },
+              },
+            },
+            Object {
+              "address": "0x8e8B49104ECFa51951d997Bf44c2781318cC469B",
+              "blockchain": "CELO",
+              "index": 3,
+              "publicKey": "8a79c53f5fef435d899c5cc6576fb285cb6b2b04cb408537f28ff19956e78563834acae045e2d7a8e327eb867360ae1221a6fc706fb5315d0d3838081f003715",
+              "selected": false,
+              "tokens": Object {
+                "1": Object {
+                  "cGLD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "cGLD",
+                  },
+                },
+                "40120": Object {
+                  "cGLD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "cGLD",
+                  },
+                },
+              },
+            },
+            Object {
+              "address": "0x4d16b795001C99eA7D2427d9CE182bDb98771fB2",
+              "blockchain": "CELO",
+              "index": 4,
+              "publicKey": "000e3003e05e30b6674c82e18c5164c48ee2d01a6388c7aa5bc19530c7688fe606af09404c997311b1dd5ef9c0085d5e7dea4aa86d18edf5001126525a22a8d8",
+              "selected": false,
+              "tokens": Object {
+                "1": Object {
+                  "cGLD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "cGLD",
+                  },
+                },
+                "40120": Object {
+                  "cGLD": Object {
+                    "active": true,
+                    "balance": Object {
+                      "error": undefined,
+                      "inProgress": false,
+                      "timestamp": undefined,
+                      "value": "0",
+                    },
+                    "order": 0,
+                    "symbol": "cGLD",
+                  },
+                },
+              },
+            },
+            Object {
               "address": "cosmos1mrf865hmk3prnkhtpqt8zdwu7kpmpd6l30ws3q",
               "blockchain": "COSMOS",
               "index": 0,

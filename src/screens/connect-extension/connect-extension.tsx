@@ -67,14 +67,15 @@ export class ConnectExtensionScreenComponent extends React.Component<
         this.setState({ isLoading: true });
 
         try {
-            const keychainPassword = await getBaseEncryptionKey();
-            const connectionStorage = await readEncrypted(CONN_EXTENSION, keychainPassword);
+            const encryptionKey = await getBaseEncryptionKey();
+            const connectionStorage = await readEncrypted(CONN_EXTENSION, encryptionKey);
 
             if (connectionStorage) {
+                const connectionStorageParse = JSON.parse(connectionStorage);
                 this.setState({
                     isConnected: true,
-                    os: JSON.parse(connectionStorage)?.os,
-                    platform: JSON.parse(connectionStorage)?.platform
+                    os: connectionStorageParse?.os,
+                    platform: connectionStorageParse?.platform
                 });
             }
 
@@ -181,8 +182,9 @@ export class ConnectExtensionScreenComponent extends React.Component<
                 const connectionStorage = await readEncrypted(CONN_EXTENSION, keychainPassword);
 
                 if (connectionStorage) {
-                    const connectionId = JSON.parse(connectionStorage).connectionId;
-                    const authToken = JSON.parse(connectionStorage).encKey;
+                    const connectionStorageParse = JSON.parse(connectionStorage);
+                    const connectionId = connectionStorageParse.connectionId;
+                    const authToken = connectionStorageParse.encKey;
 
                     const request = {
                         method: 'POST',
@@ -193,20 +195,13 @@ export class ConnectExtensionScreenComponent extends React.Component<
                         })
                     };
 
-                    try {
-                        const disconnectResponse = await fetch(
-                            CONFIG.extSyncDisconnectUrl,
-                            request
-                        );
+                    const disconnectResponse = await fetch(CONFIG.extSyncDisconnectUrl, request);
 
-                        const resData = await disconnectResponse.json();
-                        if (resData?.success === true) {
-                            // Delete connection from async storage
-                            await deleteFromStorage(CONN_EXTENSION);
-                            this.setState({ isConnected: false });
-                        }
-                    } catch {
-                        //
+                    const resData = await disconnectResponse.json();
+                    if (resData?.success === true) {
+                        // Delete connection from async storage
+                        await deleteFromStorage(CONN_EXTENSION);
+                        this.setState({ isConnected: false });
                     }
                 }
             } catch {

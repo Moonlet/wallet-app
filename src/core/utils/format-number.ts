@@ -52,7 +52,6 @@ const integerRegex = new RegExp(/^\d+$/);
 export const isInteger = (value: string) => integerRegex.test(value);
 
 export const qrCodeRegex = /^mooonletExtSync:([^\@]*)\@([^\/\?]*)([^\?]*)?\??(.*)/;
-export const qrCodeRegexExtraInfo = /([^\?=&]*)/;
 export const isQrCodeValid = (value: string) => qrCodeRegex.test(value);
 
 export const getUrlParams = (search = ``) => {

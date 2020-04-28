@@ -17,7 +17,7 @@ import { Notifications } from '../../core/messaging/notifications/notifications'
 import CONFIG from '../../config';
 import { sha256 } from 'js-sha256';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
-import { isQrCodeValid, qrCodeRegex, qrCodeRegexExtraInfo } from '../../core/utils/format-number';
+import { isQrCodeValid, qrCodeRegex, getUrlParams } from '../../core/utils/format-number';
 import { getBaseEncryptionKey } from '../../core/secure/keychain';
 import { Dialog } from '../../components/dialog/dialog';
 import { extensionState } from '../../core/connect-extension/conn-ext-state-helper';
@@ -92,26 +92,14 @@ export class ConnectExtensionScreenComponent extends React.Component<
             platform: undefined
         };
 
-        const valueSplit = value.split(qrCodeRegex);
-        if (valueSplit[1]) {
-            connection.connectionId = valueSplit[1];
-        }
+        const res = qrCodeRegex.exec(value);
+        if (res) {
+            const extraData: any = getUrlParams(res[4]);
 
-        let extraValueSplit = valueSplit[4] && valueSplit[4].split(qrCodeRegexExtraInfo);
-        extraValueSplit =
-            extraValueSplit &&
-            extraValueSplit.filter(val => val !== '' && val !== '=' && val !== '&');
-
-        if (extraValueSplit[0] && extraValueSplit[0] === 'encKey') {
-            connection.encKey = extraValueSplit[1];
-        }
-
-        if (extraValueSplit[2] && extraValueSplit[2] === 'os') {
-            connection.os = extraValueSplit[3].replace('%20', ' ');
-        }
-
-        if (extraValueSplit[4] && extraValueSplit[4] === 'browser') {
-            connection.platform = extraValueSplit[5];
+            connection.connectionId = res[1];
+            connection.encKey = extraData?.encKey;
+            connection.os = extraData?.os;
+            connection.platform = extraData?.browser;
         }
 
         return connection;
@@ -162,6 +150,9 @@ export class ConnectExtensionScreenComponent extends React.Component<
             } catch {
                 //
             }
+        } else {
+            // Invalid QR Code pattern
+            Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.qrCodeError'));
         }
 
         this.setState({ isLoading: false });

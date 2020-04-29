@@ -13,26 +13,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DialogComponent } from '../../components/dialog/dialog-component';
 import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage';
 import { CONN_EXTENSION } from '../../core/constants/app';
-import { Notifications } from '../../core/messaging/notifications/notifications';
-import CONFIG from '../../config';
-import { sha256 } from 'js-sha256';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getBaseEncryptionKey } from '../../core/secure/keychain';
 import { Dialog } from '../../components/dialog/dialog';
-import { extensionState } from '../../core/connect-extension/conn-ext-state-helper';
-import { store } from '../../redux/config';
-import { encrypt } from '../../core/secure/encrypt';
-import { HttpClient } from '../../core/utils/http-client';
 import { getUrlParams } from '../../core/connect-extension/utils';
+import { IQRCode } from '../../core/connect-extension/types';
+import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 
 const qrCodeRegex = /^mooonletExtSync:([^\@]*)\@([^\/\?]*)([^\?]*)?\??(.*)/;
-
-export interface IQRCode {
-    connectionId: string;
-    encKey: string;
-    os?: string;
-    platform?: string;
-}
 
 export const navigationOptions = () => ({
     title: translate('ConnectExtension.title')
@@ -51,6 +39,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public qrCodeScanner: any;
+    public connectExtension = new ConnectExtension();
 
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
@@ -81,7 +70,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                     platform: connectionParse?.platform
                 });
 
-                await this.syncExtension(connectionParse);
+                await this.connectExtension.syncExtension(connectionParse);
             }
 
             this.setState({ isLoading: false });
@@ -111,29 +100,10 @@ export class ConnectExtensionScreenComponent extends React.Component<
         return connection;
     }
 
-    private async syncExtension(connection: any): Promise<any> {
-        try {
-            const http = new HttpClient(CONFIG.extSyncUpdateStateUrl);
-            const res = await http.post('', {
-                connectionId: connection.connectionId,
-                data: await encrypt(
-                    JSON.stringify(extensionState(store.getState())),
-                    connection.encKey
-                ),
-                authToken: sha256(connection.encKey),
-                fcmToken: await Notifications.getToken()
-            });
-
-            return res;
-        } catch {
-            Promise.reject();
-        }
-    }
-
-    private async connectExtension(value: string) {
+    private async connExtension(value: string) {
         this.setState({ isLoading: true });
 
-        const connection = await this.extractQrCodeData(value);
+        const connection = this.extractQrCodeData(value);
 
         if (connection.connectionId && connection.encKey) {
             this.setState({
@@ -142,7 +112,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
             });
 
             try {
-                const res = await this.syncExtension(connection);
+                const res = await this.connectExtension.syncExtension(connection);
 
                 if (res?.success === true) {
                     // Extension has been connected
@@ -157,6 +127,11 @@ export class ConnectExtensionScreenComponent extends React.Component<
                     }
 
                     this.setState({ isConnected: true });
+                } else {
+                    Dialog.info(
+                        translate('App.labels.warning'),
+                        translate('ConnectExtension.error')
+                    );
                 }
             } catch {
                 Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.error'));
@@ -172,7 +147,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
     @bind
     private async onQrCodeScanned(value: string) {
         if (qrCodeRegex.test(value)) {
-            this.connectExtension(value);
+            this.connExtension(value);
         } else {
             Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.qrCodeError'));
         }
@@ -197,17 +172,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                 const keychainPassword = await getBaseEncryptionKey();
                 const connection = await readEncrypted(CONN_EXTENSION, keychainPassword);
 
-                if (connection) {
-                    const connectionParse = JSON.parse(connection);
-                    const connectionId = connectionParse.connectionId;
-                    const authToken = connectionParse.encKey;
-
-                    const http = new HttpClient(CONFIG.extSyncDisconnectUrl);
-                    await http.post('', {
-                        connectionId,
-                        authToken: sha256(authToken)
-                    });
-                }
+                connection && this.connectExtension.disconnectExtension(connection);
             } catch {
                 //
             }

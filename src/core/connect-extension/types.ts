@@ -1,6 +1,13 @@
 import { ChainIdType } from '../blockchain/types';
 import { HWConnection } from '../wallet/hw-wallet/types';
 
+export interface IQRCode {
+    connectionId: string;
+    encKey: string;
+    os?: string;
+    platform?: string;
+}
+
 export interface IStorage {
     version: number;
     state: {

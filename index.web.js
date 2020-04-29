@@ -16,7 +16,7 @@ import CONFIG from './src/config';
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['RCTRootView cancelTouches']);
 
-firebase.initializeApp(CONFIG.firebaseConfig);
+firebase.initializeApp(CONFIG.firebaseWebConfig);
 
 AppRegistry.registerComponent(appName, () => App);
 AppRegistry.runApplication(appName, { rootTag: document.getElementById('root') });

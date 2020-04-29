@@ -10,5 +10,5 @@ export interface IAppConfig {
     ntpPort: number;
     extSyncUpdateStateUrl: string;
     extSyncDisconnectUrl: string;
-    firebaseConfig: any;
+    firebaseWebConfig: any;
 }

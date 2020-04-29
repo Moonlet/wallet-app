@@ -1,5 +1,5 @@
 import { IAppConfig } from './config-interface';
-import { firebaseConfig } from './firebase-web/beta';
+import { firebaseWebConfig } from './firebase-web/beta';
 
 export const CONFIG: IAppConfig = {
     supportUrl: 'https://moonlet.xyz/links/support',
@@ -14,7 +14,7 @@ export const CONFIG: IAppConfig = {
     ntpPort: 123,
     extSyncUpdateStateUrl: 'https://fire.moonlet.dev/functions/updateState',
     extSyncDisconnectUrl: 'https://fire.moonlet.dev/functions/disconnect',
-    firebaseConfig
+    firebaseWebConfig
 };
 
 export default CONFIG;

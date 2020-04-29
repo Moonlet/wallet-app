@@ -9,12 +9,11 @@ if (!__DEV__) {
 import { AppRegistry, Platform } from 'react-native';
 import App from './src/app';
 import { name as appName } from './app.json';
+import firebase from 'firebase/app';
+import CONFIG from './src/config';
 
 // TODO remove this when fixed
 import { YellowBox } from 'react-native';
-import firebase from 'firebase/app';
-
-import CONFIG from './src/config';
 YellowBox.ignoreWarnings(['RCTRootView cancelTouches']);
 
 firebase.initializeApp(CONFIG.firebaseConfig);

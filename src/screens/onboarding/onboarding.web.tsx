@@ -8,8 +8,18 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import QRCode from 'qrcode';
-import { database } from 'firebase';
+import { database, storage } from 'firebase';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect.extension.web';
+import { HttpClientWeb } from '../../core/utils/http-client.web';
+// import { v4 as uuidv4 } from 'uuid';
+
+const BUCKET = 'gs://moonlet-extension-sync';
+
+const connectionId = '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000';
+// const connectionId = uuidv4();
+const encKey = '5be0e4c3a239e0027783a2e9c3bd8999cc450f777198156b3ff4f4a3e8b6c691';
+const os = 'Windows%2010';
+const platform = 'Chrome';
 
 const navigationOptions = () => ({ header: null });
 
@@ -20,26 +30,13 @@ export class OnboardingScreenComponent extends React.Component<
     public qrCanvas: HTMLCanvasElement;
     public connectExtensionWeb = new ConnectExtensionWeb();
 
-    public componentDidMount() {
-        // RealtimeDB
-        const realtimeDB = database().ref('extensionSync');
-        const connections = realtimeDB.child('connections');
-        connections.once('value', snapshot => {
-            snapshot.forEach(child => {
-                // console.log(child.key + ': ' + JSON.stringify(child.val()));
-            });
-        });
-
-        // TODO
-        // storage
-
+    public async componentDidMount() {
         if (this.connectExtensionWeb.isConnected()) {
             //
         } else {
             // Connect Extension
-            const uri =
-                'mooonletExtSync:11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000@firebase/?encKey=5be0e4c3a239e0027783a2e9c3bd8999cc450f777198156b3ff4f4a3e8b6c691&os=Windows%2010&browser=Chrome';
-            QRCode.toCanvas(this.qrCanvas, uri, { errorCorrectionLevel: 'H' });
+            await this.generateQrCode();
+            await this.listenLastSync();
         }
 
         //     if (!WalletConnectWeb.isConnected()) {
@@ -56,6 +53,56 @@ export class OnboardingScreenComponent extends React.Component<
         //             });
         //         });
         //     }
+    }
+
+    private async generateQrCode() {
+        const uri = `mooonletExtSync:${connectionId}@firebase/?encKey=${encKey}&os=${os}&browser=${platform}`;
+        await QRCode.toCanvas(this.qrCanvas, uri, { errorCorrectionLevel: 'H' });
+    }
+
+    private async downloadStorage() {
+        try {
+            // Firebase Storage
+            const urlDowndload = await storage()
+                .refFromURL(BUCKET)
+                .child(connectionId)
+                .getDownloadURL();
+
+            // console.log('urlDowndload: ', urlDowndload);
+
+            const httpClientWeb = new HttpClientWeb();
+            const data = await httpClientWeb.get(urlDowndload);
+            // console.log('state: ', data);
+            return data;
+        } catch (err) {
+            // console.log('ERROR: ', err);
+            Promise.reject();
+        }
+    }
+
+    private async listenLastSync() {
+        // RealtimeDB
+        const realtimeDB = database().ref('extensionSync');
+        const connections = realtimeDB.child('connections');
+        connections.child(connectionId).on('value', async (snapshot: any) => {
+            const snap = snapshot.val();
+
+            if (snap?.lastSynced) {
+                // console.log('snap: ', snap);
+                try {
+                    // Extension Download
+                    const extState = await this.downloadStorage();
+                    // console.log('extState: ', extState);
+                    // decrypt extState
+                    // Save state
+                    return extState;
+                } catch (err) {
+                    // console.log('EROARE: ', err);
+                }
+            } else {
+                // Connection does not exist
+            }
+        });
     }
 
     public render() {

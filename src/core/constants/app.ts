@@ -6,6 +6,7 @@ export const WC = {
     UPDATE_STATE: 'moonletUpdateState',
     PING: 'moonletPing'
 };
+export const CONN_EXTENSION = 'connectExtension';
 export const DISPLAY_HINTS_TIMES = 3;
 export const RESET_APP_FAILED_LOGINS = 15;
 export const FAILED_LOGIN_BLOCKING = {

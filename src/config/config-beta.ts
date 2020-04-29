@@ -12,6 +12,8 @@ export const CONFIG: IAppConfig = {
     firebaseConfigFetchInterval: 0,
     ntpServer: 'pool.ntp.org',
     ntpPort: 123,
+    extSyncUpdateStateUrl: 'https://fire.moonlet.dev/functions/updateState',
+    extSyncDisconnectUrl: 'https://fire.moonlet.dev/functions/disconnect',
     firebaseConfig
 };
 

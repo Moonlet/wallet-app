@@ -111,7 +111,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
         return connection;
     }
 
-    private async syncExtension(connection: any) {
+    private async syncExtension(connection: any): Promise<any> {
         try {
             const http = new HttpClient(CONFIG.extSyncUpdateStateUrl);
             const res = await http.post('', {
@@ -125,8 +125,8 @@ export class ConnectExtensionScreenComponent extends React.Component<
             });
 
             return res;
-        } catch (err) {
-            throw err;
+        } catch {
+            Promise.reject();
         }
     }
 

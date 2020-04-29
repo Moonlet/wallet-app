@@ -1,4 +1,5 @@
 import { IAppConfig } from './config-interface';
+import { firebaseConfig } from './firebase-web/beta';
 
 export const CONFIG: IAppConfig = {
     supportUrl: 'https://moonlet.xyz/links/support',
@@ -10,7 +11,8 @@ export const CONFIG: IAppConfig = {
     privacyPolicyUrl: 'https://fire.moonlet.dev/static/terms/privacy-policy.html?v=' + Date.now(),
     firebaseConfigFetchInterval: 0,
     ntpServer: 'pool.ntp.org',
-    ntpPort: 123
+    ntpPort: 123,
+    firebaseConfig
 };
 
 export default CONFIG;

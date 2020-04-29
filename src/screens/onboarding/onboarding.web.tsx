@@ -1,14 +1,15 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Text } from '../../library';
-import { NavigationActions } from 'react-navigation';
+// import { NavigationActions } from 'react-navigation';
 import stylesProvider from './styles-web';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import QRCode from 'qrcode';
-import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
+import { database } from 'firebase';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect.extension.web';
 
 const navigationOptions = () => ({ header: null });
 
@@ -17,33 +18,44 @@ export class OnboardingScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public qrCanvas: HTMLCanvasElement;
-    public unsubscribe: () => void;
+    public connectExtensionWeb = new ConnectExtensionWeb();
 
     public componentDidMount() {
-        if (!WalletConnectWeb.isConnected()) {
-            WalletConnectWeb.connect().then(uri => {
-                QRCode.toCanvas(this.qrCanvas, uri, { errorCorrectionLevel: 'H' });
-                this.unsubscribe = WalletConnectWeb.subscribe('connect', payload => {
-                    WalletConnectWeb.getState().then(() => {
-                        this.props.navigation.navigate(
-                            'MainNavigation',
-                            {},
-                            NavigationActions.navigate({ routeName: 'Dashboard' })
-                        );
-                    });
-                });
+        // RealtimeDB
+        const realtimeDB = database().ref('extensionSync');
+        const connections = realtimeDB.child('connections');
+        connections.once('value', snapshot => {
+            snapshot.forEach(child => {
+                // console.log(child.key + ': ' + JSON.stringify(child.val()));
             });
-        }
-    }
+        });
 
-    public componentWillUnmount() {
-        if (this.unsubscribe) {
-            this.unsubscribe();
-        }
-    }
+        // TODO
+        // storage
 
-    public onPressDisconnect() {
-        WalletConnectWeb.disconnect();
+        if (this.connectExtensionWeb.isConnected()) {
+            //
+        } else {
+            // Connect Extension
+            const uri =
+                'mooonletExtSync:11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000@firebase/?encKey=5be0e4c3a239e0027783a2e9c3bd8999cc450f777198156b3ff4f4a3e8b6c691&os=Windows%2010&browser=Chrome';
+            QRCode.toCanvas(this.qrCanvas, uri, { errorCorrectionLevel: 'H' });
+        }
+
+        //     if (!WalletConnectWeb.isConnected()) {
+        //         WalletConnectWeb.connect().then(uri => {
+        //             QRCode.toCanvas(this.qrCanvas, uri, { errorCorrectionLevel: 'H' });
+        //             this.unsubscribe = WalletConnectWeb.subscribe('connect', payload => {
+        //                 WalletConnectWeb.getState().then(() => {
+        //                     this.props.navigation.navigate(
+        //                         'MainNavigation',
+        //                         {},
+        //                         NavigationActions.navigate({ routeName: 'Dashboard' })
+        //                     );
+        //                 });
+        //             });
+        //         });
+        //     }
     }
 
     public render() {

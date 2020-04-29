@@ -70,6 +70,7 @@ ios/Gemfile.lock
 **/google-services.json
 ios/GoogleService-Info.plist
 ios/release/GoogleService-Info.plist
+/src/config/firebase-web/
 
 rpc.http
 test.js

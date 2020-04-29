@@ -8,4 +8,5 @@ export interface IAppConfig {
     privacyPolicyUrl: string;
     ntpServer: string;
     ntpPort: number;
+    firebaseConfig: any;
 }

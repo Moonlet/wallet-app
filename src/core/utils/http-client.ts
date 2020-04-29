@@ -22,13 +22,9 @@ export class HttpClient {
             method: 'POST',
             headers: defaultHeaders,
             body: JSON.stringify(body)
-        })
-            .then(response => {
-                return response.json();
-            })
-            .catch(err => {
-                throw err;
-            });
+        }).then(response => {
+            return response.json();
+        });
     }
 
     public async jsonRpc(method: string, params: any[] = []): Promise<any> {

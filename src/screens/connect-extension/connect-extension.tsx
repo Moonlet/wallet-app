@@ -17,13 +17,15 @@ import { Notifications } from '../../core/messaging/notifications/notifications'
 import CONFIG from '../../config';
 import { sha256 } from 'js-sha256';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
-import { isQrCodeValid, qrCodeRegex, getUrlParams } from '../../core/utils/format-number';
 import { getBaseEncryptionKey } from '../../core/secure/keychain';
 import { Dialog } from '../../components/dialog/dialog';
 import { extensionState } from '../../core/connect-extension/conn-ext-state-helper';
 import { store } from '../../redux/config';
 import { encrypt } from '../../core/secure/encrypt';
 import { HttpClient } from '../../core/utils/http-client';
+import { getUrlParams } from '../../core/connect-extension/utils';
+
+const qrCodeRegex = /^mooonletExtSync:([^\@]*)\@([^\/\?]*)([^\?]*)?\??(.*)/;
 
 export interface IQRCode {
     connectionId: string;
@@ -88,7 +90,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
         }
     }
 
-    private async extractQrCodeData(value: string): Promise<IQRCode> {
+    private extractQrCodeData(value: string): IQRCode {
         const connection: IQRCode = {
             connectionId: undefined,
             encKey: undefined,
@@ -157,7 +159,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                     this.setState({ isConnected: true });
                 }
             } catch {
-                //
+                Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.error'));
             }
         } else {
             // Invalid QR Code pattern
@@ -169,7 +171,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
 
     @bind
     private async onQrCodeScanned(value: string) {
-        if (isQrCodeValid(value)) {
+        if (qrCodeRegex.test(value)) {
             this.connectExtension(value);
         } else {
             Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.qrCodeError'));
@@ -201,20 +203,16 @@ export class ConnectExtensionScreenComponent extends React.Component<
                     const authToken = connectionParse.encKey;
 
                     const http = new HttpClient(CONFIG.extSyncDisconnectUrl);
-                    const res = await http.post('', {
+                    await http.post('', {
                         connectionId,
                         authToken: sha256(authToken)
                     });
-
-                    if (res?.success === true) {
-                        await this.deleteConnection();
-                    }
                 }
             } catch {
-                // Disconnect has failed
-                // Delete connection so that the user can setup a new connection
-                await this.deleteConnection();
+                //
             }
+
+            await this.deleteConnection();
 
             this.setState({ isLoading: false });
         }

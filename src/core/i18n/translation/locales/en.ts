@@ -410,7 +410,8 @@ export const translation: ITranslations = {
             disconnect: 'Disconnect',
             disconnectInfo: 'Do you want to disconnect from this device?',
             currentlyActive: 'Currently active',
-            qrCodeError: 'Invalid QR Code!'
+            qrCodeError: 'Invalid QR Code!',
+            error: 'The connection has failed! Please try again!'
         }
     },
     plural: (n: number, ord?: boolean) => {

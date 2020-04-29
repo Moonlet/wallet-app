@@ -5,15 +5,22 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import bind from 'bind-decorator';
 import { normalize } from '../../styles/dimensions';
 import { Icon } from '../../components/icon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DialogComponent } from '../../components/dialog/dialog-component';
-import { deleteFromStorage, getItemFromStorage } from '../../core/secure/storage';
-import { WC_CONNECTION } from '../../core/constants/app';
+import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage';
+import { CONN_EXTENSION } from '../../core/constants/app';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
+import { getBaseEncryptionKey } from '../../core/secure/keychain';
+import { Dialog } from '../../components/dialog/dialog';
+import { getUrlParams } from '../../core/connect-extension/utils';
+import { IQRCode } from '../../core/connect-extension/types';
+import { ConnectExtension } from '../../core/connect-extension/connect-extension';
+
+const qrCodeRegex = /^mooonletExtSync:([^\@]*)\@([^\/\?]*)([^\?]*)?\??(.*)/;
 
 export const navigationOptions = () => ({
     title: translate('ConnectExtension.title')
@@ -21,6 +28,9 @@ export const navigationOptions = () => ({
 
 interface IState {
     isConnected: boolean;
+    isLoading: boolean;
+    os: string;
+    platform: string;
 }
 
 export class ConnectExtensionScreenComponent extends React.Component<
@@ -29,42 +39,124 @@ export class ConnectExtensionScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public qrCodeScanner: any;
-    public connectionInterval: any;
+    public connectExtension = new ConnectExtension();
 
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.state = {
-            isConnected: WalletConnectClient.isConnected()
+            isConnected: false,
+            isLoading: false,
+            os: undefined,
+            platform: undefined
         };
     }
 
     public componentDidMount() {
-        this.connectionInterval = setInterval(async () => {
-            try {
-                if (await getItemFromStorage(WC_CONNECTION)) {
-                    this.setState({ isConnected: true });
-                } else {
-                    this.setState({ isConnected: false });
-                }
-            } catch (err) {
-                this.setState({ isConnected: false });
-            }
-        }, 1000);
-
-        WalletConnectClient.onDisconnect(res => {
-            if (res?.event === 'disconnect') {
-                deleteFromStorage(WC_CONNECTION);
-            }
-        });
+        this.getConnectionAsyncStorage();
     }
 
-    public componentWillUnmount() {
-        clearInterval(this.connectionInterval);
+    private async getConnectionAsyncStorage() {
+        this.setState({ isLoading: true });
+
+        try {
+            const encryptionKey = await getBaseEncryptionKey();
+            const connection = await readEncrypted(CONN_EXTENSION, encryptionKey);
+
+            if (connection) {
+                const connectionParse = JSON.parse(connection);
+                this.setState({
+                    isConnected: true,
+                    os: connectionParse?.os,
+                    platform: connectionParse?.platform
+                });
+
+                await this.connectExtension.syncExtension(connectionParse);
+            }
+
+            this.setState({ isLoading: false });
+        } catch {
+            this.setState({ isLoading: false });
+        }
+    }
+
+    private extractQrCodeData(value: string): IQRCode {
+        const connection: IQRCode = {
+            connectionId: undefined,
+            encKey: undefined,
+            os: undefined,
+            platform: undefined
+        };
+
+        const res = qrCodeRegex.exec(value);
+        if (res) {
+            const extraData: any = getUrlParams(res[4]);
+
+            connection.connectionId = res[1];
+            connection.encKey = extraData?.encKey;
+            connection.os = extraData?.os;
+            connection.platform = extraData?.browser;
+        }
+
+        return connection;
+    }
+
+    private async connExtension(value: string) {
+        this.setState({ isLoading: true });
+
+        const connection = this.extractQrCodeData(value);
+
+        if (connection.connectionId && connection.encKey) {
+            this.setState({
+                os: connection.os,
+                platform: connection.platform
+            });
+
+            try {
+                const res = await this.connectExtension.syncExtension(connection);
+
+                if (res?.success === true) {
+                    // Extension has been connected
+                    // Store connection
+                    const keychainPassword = await getBaseEncryptionKey();
+                    if (keychainPassword) {
+                        storeEncrypted(
+                            JSON.stringify(connection),
+                            CONN_EXTENSION,
+                            keychainPassword
+                        );
+                    }
+
+                    this.setState({ isConnected: true });
+                } else {
+                    Dialog.info(
+                        translate('App.labels.warning'),
+                        translate('ConnectExtension.error')
+                    );
+                }
+            } catch {
+                Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.error'));
+            }
+        } else {
+            // Invalid QR Code pattern
+            Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.qrCodeError'));
+        }
+
+        this.setState({ isLoading: false });
     }
 
     @bind
     private async onQrCodeScanned(value: string) {
-        WalletConnectClient.connect(value);
+        if (qrCodeRegex.test(value)) {
+            this.connExtension(value);
+        } else {
+            Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.qrCodeError'));
+        }
+    }
+
+    private async deleteConnection() {
+        // Delete connection from async storage
+        await deleteFromStorage(CONN_EXTENSION);
+        this.setState({ isConnected: false });
     }
 
     private async disconnectExtension() {
@@ -74,59 +166,89 @@ export class ConnectExtensionScreenComponent extends React.Component<
                 translate('ConnectExtension.disconnectInfo')
             )
         ) {
-            this.setState({ isConnected: false });
-            WalletConnectClient.disconnect();
-            deleteFromStorage(WC_CONNECTION);
+            this.setState({ isLoading: true });
+
+            try {
+                const keychainPassword = await getBaseEncryptionKey();
+                const connection = await readEncrypted(CONN_EXTENSION, keychainPassword);
+
+                connection && this.connectExtension.disconnectExtension(connection);
+            } catch {
+                //
+            }
+
+            await this.deleteConnection();
+
+            this.setState({ isLoading: false });
         }
     }
 
     public render() {
         const { styles } = this.props;
+        const { os, platform } = this.state;
 
         return (
             <View style={styles.container}>
-                {this.state.isConnected ? (
-                    <View style={styles.connectionsContainer}>
-                        <View style={styles.connectionBox}>
-                            <Icon name="monitor" size={normalize(32)} style={styles.computerIcon} />
-                            <Text style={styles.connectionInfoText}>
-                                {translate('ConnectExtension.currentlyActive')}
-                            </Text>
-                            <TouchableOpacity onPress={() => this.disconnectExtension()}>
-                                <Icon
-                                    name="flash-off"
-                                    size={normalize(32)}
-                                    style={styles.flashIcon}
-                                />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
+                {this.state.isLoading ? (
+                    <LoadingIndicator />
                 ) : (
-                    <View style={styles.emptyContainer}>
-                        <Image
-                            style={styles.moonletImage}
-                            source={require('../../assets/images/png/moonlet_space_gray.png')}
+                    <View style={{ flex: 1 }}>
+                        {this.state.isConnected ? (
+                            <View style={styles.connectionsContainer}>
+                                <View style={styles.connectionBox}>
+                                    <Icon
+                                        name="monitor"
+                                        size={normalize(32)}
+                                        style={styles.computerIcon}
+                                    />
+                                    <View style={styles.connDetailscontainer}>
+                                        <Text style={styles.connectionInfoText}>
+                                            {translate('ConnectExtension.currentlyActive')}
+                                        </Text>
+                                        <View style={styles.extraInfoContainer}>
+                                            {os && <Text style={styles.extraInfo}>{os}</Text>}
+                                            {platform && (
+                                                <Text style={styles.extraInfo}>{platform}</Text>
+                                            )}
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity onPress={() => this.disconnectExtension()}>
+                                        <Icon
+                                            name="flash-off"
+                                            size={normalize(32)}
+                                            style={styles.flashIcon}
+                                        />
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        ) : (
+                            <View style={styles.emptyContainer}>
+                                <Image
+                                    style={styles.moonletImage}
+                                    source={require('../../assets/images/png/moonlet_space_gray.png')}
+                                />
+                                <Text style={styles.quicklyConnectText}>
+                                    {translate('ConnectExtension.body')}
+                                </Text>
+                            </View>
+                        )}
+
+                        <Button
+                            primary
+                            onPress={() => this.qrCodeScanner.open()}
+                            style={styles.scanButton}
+                            disabled={this.state.isConnected}
+                            leftIcon="qr-code-scan"
+                        >
+                            {translate('ConnectExtension.buttonScan')}
+                        </Button>
+
+                        <QrModalReader
+                            obRef={ref => (this.qrCodeScanner = ref)}
+                            onQrCodeScanned={this.onQrCodeScanned}
                         />
-                        <Text style={styles.quicklyConnectText}>
-                            {translate('ConnectExtension.body')}
-                        </Text>
                     </View>
                 )}
-
-                <Button
-                    primary
-                    onPress={() => this.qrCodeScanner.open()}
-                    style={styles.scanButton}
-                    disabled={this.state.isConnected}
-                    leftIcon="qr-code-scan"
-                >
-                    {translate('ConnectExtension.buttonScan')}
-                </Button>
-
-                <QrModalReader
-                    obRef={ref => (this.qrCodeScanner = ref)}
-                    onQrCodeScanned={this.onQrCodeScanned}
-                />
             </View>
         );
     }

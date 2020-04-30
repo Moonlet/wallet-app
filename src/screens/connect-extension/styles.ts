@@ -46,16 +46,28 @@ export default (theme: ITheme) =>
             marginRight: BASE_DIMENSION * 3,
             color: theme.colors.text
         },
-        connectionInfoText: {
+        connDetailscontainer: {
             flex: 1,
+            flexDirection: 'column'
+        },
+        connectionInfoText: {
             fontSize: normalize(17),
             lineHeight: normalize(22),
             color: theme.colors.text,
-            paddingRight: BASE_DIMENSION,
-            alignSelf: 'center'
+            paddingRight: BASE_DIMENSION
         },
         flashIcon: {
             alignSelf: 'center',
             color: theme.colors.error
+        },
+        extraInfoContainer: {
+            flexDirection: 'row',
+            paddingTop: BASE_DIMENSION / 4
+        },
+        extraInfo: {
+            fontSize: normalize(11),
+            lineHeight: normalize(13),
+            color: theme.colors.textTertiary,
+            marginRight: BASE_DIMENSION / 2
         }
     });

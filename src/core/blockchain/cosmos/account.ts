@@ -10,23 +10,23 @@ import secp256k1 from 'secp256k1';
 import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 
 export class CosmosAccountUtils implements IBlockchainAccountUtils {
-    public getAccountDerivationPath = (accountIndex): string => {
+    public getAccountDerivationPath(accountIndex: number): string {
         return `${accountIndex}`;
-    };
+    }
 
-    public getPrivateKeyFromDerived = (derivedKey: HDNode): string => {
+    public getPrivateKeyFromDerived(derivedKey: HDNode): string {
         return derivedKey.privateKey.toString('hex');
-    };
+    }
 
-    public isValidChecksumAddress = (address: string): boolean => {
+    public isValidChecksumAddress(address: string): boolean {
         return this.isValidAddress(address);
-    };
+    }
 
-    public isValidAddress = (address: string): boolean => {
+    public isValidAddress(address: string): boolean {
         return /^cosmos1[0-9a-zA-Z]{38}$/.test(address) && bech32.decode(address) !== undefined;
-    };
+    }
 
-    public publicToAddress = (publicKey: string): string => {
+    public publicToAddress(publicKey: string): string {
         const sha = createHash('sha256')
             .update(Buffer.from(publicKey, 'hex'))
             .digest();
@@ -36,20 +36,20 @@ export class CosmosAccountUtils implements IBlockchainAccountUtils {
                 .digest()
         );
         return bech32.encode('cosmos', words);
-    };
+    }
 
-    public privateToPublic = (privateKey: string): string => {
+    public privateToPublic(privateKey: string): string {
         const bufferPrivateKey = Buffer.from(privateKey, 'hex');
 
         // @ts-ignore
         return secp256k1.publicKeyCreate(bufferPrivateKey, true).toString('hex');
-    };
+    }
 
-    public privateToAddress = (privateKey: string): string => {
+    public privateToAddress(privateKey: string): string {
         return this.publicToAddress(this.privateToPublic(privateKey));
-    };
+    }
 
-    public getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {
+    public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
         return {
             index,
             selected: false,
@@ -58,23 +58,23 @@ export class CosmosAccountUtils implements IBlockchainAccountUtils {
             blockchain: Blockchain.COSMOS,
             tokens: generateTokensConfig(Blockchain.COSMOS)
         };
-    };
+    }
 
-    public amountToStd = (
+    public amountToStd(
         value: BigNumber | number | string,
         decimals: number = config.tokens[config.coin].decimals
-    ): BigNumber => {
+    ): BigNumber {
         return new BigNumber(value).multipliedBy(new BigNumber(10).pow(decimals));
-    };
+    }
 
-    public amountFromStd = (
+    public amountFromStd(
         value: BigNumber | number | string,
         decimals: number = config.tokens[config.coin].decimals
-    ): BigNumber => {
+    ): BigNumber {
         return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals));
-    };
+    }
 
-    public convertUnit = (value: BigNumber, from: string, to: string): BigNumber => {
+    public convertUnit(value: BigNumber, from: string, to: string): BigNumber {
         return convert(value, from, to, config);
-    };
+    }
 }

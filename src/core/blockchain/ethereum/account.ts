@@ -8,39 +8,39 @@ import HDNode from 'hdkey';
 import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 
 export class EthereumAccountUtils implements IBlockchainAccountUtils {
-    public getAccountDerivationPath = (accountIndex): string => {
+    public getAccountDerivationPath(accountIndex: number): string {
         return `${accountIndex}`;
-    };
+    }
 
-    public getPrivateKeyFromDerived = (derivedKey: HDNode): string => {
+    public getPrivateKeyFromDerived(derivedKey: HDNode): string {
         return derivedKey.privateKey.toString('hex');
-    };
+    }
 
-    public isValidChecksumAddress = (address: string): boolean => {
+    public isValidChecksumAddress(address: string): boolean {
         return Util.isValidChecksumAddress(address);
-    };
+    }
 
-    public isValidAddress = (address: string): boolean => {
+    public isValidAddress(address: string): boolean {
         return Util.isValidAddress(address);
-    };
+    }
 
-    public publicToAddress = (publicKey: string): string => {
+    public publicToAddress(publicKey: string): string {
         return Util.toChecksumAddress(
             Util.publicToAddress(Buffer.from(publicKey, 'hex')).toString('hex')
         );
-    };
+    }
 
-    public privateToPublic = (privateKey: string): string => {
+    public privateToPublic(privateKey: string): string {
         return Util.privateToPublic(Buffer.from(privateKey, 'hex')).toString('hex');
-    };
+    }
 
-    public privateToAddress = (privateKey: string): string => {
+    public privateToAddress(privateKey: string): string {
         return Util.toChecksumAddress(
             Util.privateToAddress(Buffer.from(privateKey, 'hex')).toString('hex')
         );
-    };
+    }
 
-    public getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {
+    public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
         return {
             index,
             selected: false,
@@ -49,23 +49,23 @@ export class EthereumAccountUtils implements IBlockchainAccountUtils {
             blockchain: Blockchain.ETHEREUM,
             tokens: generateTokensConfig(Blockchain.ETHEREUM)
         };
-    };
+    }
 
-    public amountToStd = (
+    public amountToStd(
         value: BigNumber | number | string,
         decimals: number = config.tokens[config.coin].decimals
-    ): BigNumber => {
+    ): BigNumber {
         return new BigNumber(value).multipliedBy(new BigNumber(10).pow(decimals));
-    };
+    }
 
-    public amountFromStd = (
+    public amountFromStd(
         value: BigNumber | number | string,
         decimals: number = config.tokens[config.coin].decimals
-    ): BigNumber => {
+    ): BigNumber {
         return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals));
-    };
+    }
 
-    public convertUnit = (value: BigNumber, from: string, to: string): BigNumber => {
+    public convertUnit(value: BigNumber, from: string, to: string): BigNumber {
         return convert(value, from, to, config);
-    };
+    }
 }

@@ -14,35 +14,35 @@ import HDNode from 'hdkey';
 import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 
 export class ZilliqaAccountUtils implements IBlockchainAccountUtils {
-    public getAccountDerivationPath = (accountIndex): string => {
+    public getAccountDerivationPath(accountIndex: number): string {
         return `${accountIndex}`;
-    };
+    }
 
-    public getPrivateKeyFromDerived = (derivedKey: HDNode): string => {
+    public getPrivateKeyFromDerived(derivedKey: HDNode): string {
         return derivedKey.privateKey.toString('hex');
-    };
+    }
 
-    public isValidChecksumAddress = (address: string): boolean => {
+    public isValidChecksumAddress(address: string): boolean {
         return isBech32(address) && fromBech32Address(address) !== undefined;
-    };
+    }
 
-    public isValidAddress = (address: string): boolean => {
+    public isValidAddress(address: string): boolean {
         return isBech32(address) && fromBech32Address(address) !== undefined;
-    };
+    }
 
-    public publicToAddress = (publicKey: string): string => {
+    public publicToAddress(publicKey: string): string {
         return toBech32Address(getAddressFromPublicKey(publicKey));
-    };
+    }
 
-    public privateToPublic = (privateKey: string): string => {
+    public privateToPublic(privateKey: string): string {
         return getPubKeyFromPrivateKey(privateKey);
-    };
+    }
 
-    public privateToAddress = (privateKey: string): string => {
+    public privateToAddress(privateKey: string): string {
         return toBech32Address(getAddressFromPrivateKey(privateKey));
-    };
+    }
 
-    public getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {
+    public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
         return {
             index,
             selected: false,
@@ -51,23 +51,23 @@ export class ZilliqaAccountUtils implements IBlockchainAccountUtils {
             blockchain: Blockchain.ZILLIQA,
             tokens: generateTokensConfig(Blockchain.ZILLIQA)
         };
-    };
+    }
 
-    public amountToStd = (
+    public amountToStd(
         value: BigNumber | number | string,
         decimals: number = config.tokens[config.coin].decimals
-    ): BigNumber => {
+    ): BigNumber {
         return new BigNumber(value).multipliedBy(new BigNumber(10).pow(decimals));
-    };
+    }
 
-    public amountFromStd = (
+    public amountFromStd(
         value: BigNumber | number | string,
         decimals: number = config.tokens[config.coin].decimals
-    ): BigNumber => {
+    ): BigNumber {
         return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals));
-    };
+    }
 
-    public convertUnit = (value: BigNumber, from: string, to: string): BigNumber => {
+    public convertUnit(value: BigNumber, from: string, to: string): BigNumber {
         return convert(value, from, to, config);
-    };
+    }
 }

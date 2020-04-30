@@ -8,7 +8,7 @@ export interface IBlockchainTransactionUtils {
     sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string>;
     buildTransferTransaction(tx: ITransferTransaction): Promise<IBlockchainTransaction>;
     getTransactionAmount(tx: IBlockchainTransaction): string;
-    getTransactionStatusByCode(status): TransactionStatus;
+    getTransactionStatusByCode(status: any): TransactionStatus;
 }
 
 // tslint:disable-next-line:no-shadowed-variable

@@ -148,16 +148,16 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
         }
     };
 
-    public getTransactionAmount = (tx: IBlockchainTransaction): string => {
+    public getTransactionAmount(tx: IBlockchainTransaction): string {
         const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);
         if (tokenInfo.type === TokenType.ZRC2) {
             return tx?.data?.params[1];
         } else {
             return tx.amount;
         }
-    };
+    }
 
-    public getTransactionStatusByCode = (status): TransactionStatus => {
+    public getTransactionStatusByCode(status: any): TransactionStatus {
         switch (parseInt(status, 16)) {
             case 0:
                 return TransactionStatus.FAILED;
@@ -168,5 +168,5 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
             default:
                 return TransactionStatus.FAILED;
         }
-    };
+    }
 }

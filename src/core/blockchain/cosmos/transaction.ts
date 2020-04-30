@@ -122,10 +122,10 @@ export class CosmosTransactionUtils implements IBlockchainTransactionUtils {
         };
     };
 
-    public getTransactionAmount = (tx: IBlockchainTransaction): string => {
+    public getTransactionAmount(tx: IBlockchainTransaction): string {
         return tx.amount;
-    };
-    public getTransactionStatusByCode = (status): TransactionStatus => {
+    }
+    public getTransactionStatusByCode(status: any): TransactionStatus {
         switch (parseInt(status, 16)) {
             case 0:
                 return TransactionStatus.FAILED;
@@ -136,5 +136,5 @@ export class CosmosTransactionUtils implements IBlockchainTransactionUtils {
             default:
                 return TransactionStatus.FAILED;
         }
-    };
+    }
 }

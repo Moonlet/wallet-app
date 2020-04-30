@@ -1,7 +1,7 @@
 import { IAppConfig } from './config-interface';
 
 export const CONFIG: IAppConfig = {
-    supportUrl: 'https://moonlet.xyz/links/support',
+    supportUrl: 'https://moonlet.uvdesk.com/en/customer/create-ticket',
     env: process.env.MOONLET_SOME_KEY,
     tokensUrl: 'https://fire.moonlet.dev/static/tokens/',
     dataApiUrl: 'https://api.moonlet.dev/data',

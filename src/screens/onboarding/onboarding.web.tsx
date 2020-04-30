@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { Text } from '../../library';
-// import { NavigationActions } from 'react-navigation';
+import { NavigationActions } from 'react-navigation';
 import stylesProvider from './styles-web';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -27,11 +27,11 @@ export class OnboardingScreenComponent extends React.Component<
 
                 if (state) {
                     // Navigate to Dashboard
-                    // this.props.navigation.navigate(
-                    //     'MainNavigation',
-                    //     {},
-                    //     NavigationActions.navigate({ routeName: 'Dashboard' })
-                    // );
+                    this.props.navigation.navigate(
+                        'MainNavigation',
+                        {},
+                        NavigationActions.navigate({ routeName: 'Dashboard' })
+                    );
                 } else {
                     // State has not been loaded!
                 }

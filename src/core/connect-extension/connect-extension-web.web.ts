@@ -6,80 +6,110 @@ import { storage, database } from 'firebase';
 import { updateReduxState } from '../../redux/wallets/actions';
 import { setExtensionStateLoaded } from '../../redux/ui/extension/actions';
 import { merge } from 'lodash';
-// import { browser } from 'webextension-polyfill-ts';
+import { browser } from 'webextension-polyfill-ts';
+import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage.web';
+import { CONN_EXTENSION } from '../../core/constants/app';
 
-export class ConnectExtensionWeb {
-    public store: any = null;
-    public isConnected: boolean = false;
+export const ConnectExtensionWeb = (() => {
+    let store: any = null;
 
-    public connect(decryptedState: any) {
-        // console.log('store: ', this.store);
-        // console.log('connect decryptedState: ', decryptedState);
+    const storeConnection = async (conn: IQRCodeConn) => {
+        try {
+            const encKey = generateRandomEncryptionKey().toString(CryptoJS.enc.Base64);
+
+            if (encKey) {
+                // store session
+                await storeEncrypted(JSON.stringify(conn), CONN_EXTENSION, encKey);
+            }
+        } catch {
+            Promise.reject();
+        }
+    };
+
+    const disconnect = async (): Promise<void> => {
+        try {
+            // delete the connection session
+            await deleteFromStorage(CONN_EXTENSION);
+        } catch {
+            Promise.reject();
+        }
+    };
+
+    const getConnection = async (): Promise<any> => {
+        try {
+            const encKey = generateRandomEncryptionKey().toString(CryptoJS.enc.Base64);
+            const stored = await readEncrypted(CONN_EXTENSION, encKey);
+
+            return stored;
+        } catch (err) {
+            Promise.reject(err);
+        }
+    };
+
+    const isConnected = async (): Promise<boolean> => {
+        try {
+            const conn = await getConnection();
+            if (conn) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch {
+            Promise.reject();
+        }
+    };
+
+    const getState = () => {
+        return store && store.getState();
+    };
+
+    const storeState = (decryptedState: any) => {
+        // console.log('decryptedState: ', decryptedState);
 
         try {
-            this.store.dispatch(setExtensionStateLoaded());
-
-            const state = merge(this.store.getState(), decryptedState);
-            // console.log('state: ', state);
+            store.dispatch(setExtensionStateLoaded());
+            const state = merge(store.getState(), decryptedState);
             state.app.extensionStateLoaded = true;
-            this.store.dispatch(updateReduxState(state));
-
-            // console.log('store: ', this.store);
-
-            this.isConnected = true;
-
+            store.dispatch(updateReduxState(state));
             return;
-        } catch (err) {
-            // console.log('ERR:', err);
+        } catch {
+            //
         }
-    }
+    };
 
-    public disconnect() {
-        this.isConnected = false;
-        // TODO
-    }
+    const setStore = (storeReference: any) => {
+        store = storeReference;
+    };
 
-    public getIsConnected() {
-        return this.isConnected;
-    }
+    const getPlatformOS = async (): Promise<string> => {
+        const platformInfo = await browser.runtime.getPlatformInfo();
+        let os: string;
 
-    public getState() {
-        //
-    }
+        switch (platformInfo.os) {
+            case 'mac':
+                os = encodeURIComponent('Mac OS');
+                break;
+            case 'win':
+                os = 'Windows';
+                break;
+            case 'linux':
+                os = 'Linux';
+                break;
+            case 'android':
+                os = 'Android';
+                break;
+            default:
+                break;
+        }
 
-    public setStore(storeReference: any) {
-        this.store = storeReference;
-    }
+        return os;
+    };
 
-    // private async getPlatformOS() {
-    //     const platformInfo = await browser.runtime.getPlatformInfo();
-    //     let os: string = undefined;
-
-    //     switch (platformInfo.os) {
-    //         case 'mac':
-    //             os = 'Mac'; // encodeURI('Mac OS');
-    //             break;
-    //         case 'win':
-    //             os = 'Windows';
-    //             break;
-    //         case 'linux':
-    //             os = 'Linux';
-    //             break;
-    //         case 'android':
-    //             os = 'Android';
-    //             break;
-    //         default:
-    //             break;
-    //     }
-
-    //     return os;
-    // }
-
-    public async generateQRCodeUri(): Promise<{ uri: string; conn: IQRCodeConn }> {
+    const generateQRCodeUri = async (): Promise<{ uri: string; conn: IQRCodeConn }> => {
         const conn: IQRCodeConn = {
             connectionId: uuidv4(),
             encKey: generateRandomEncryptionKey().toString(CryptoJS.enc.Base64),
-            os: encodeURIComponent('Mac OS'),
+            os: await getPlatformOS(),
             platform: 'Chrome' // TODO
         };
 
@@ -92,9 +122,9 @@ export class ConnectExtensionWeb {
         }
 
         return { uri, conn };
-    }
+    };
 
-    public async downloadFileStorage(connectionId: string): Promise<string> {
+    const downloadFileStorage = async (connectionId: string): Promise<string> => {
         try {
             // Download file from Firebase Storage - State
             const urlDowndload = await storage()
@@ -110,9 +140,9 @@ export class ConnectExtensionWeb {
         } catch {
             Promise.reject();
         }
-    }
+    };
 
-    public async listenLastSync(conn: IQRCodeConn) {
+    const listenLastSync = async (conn: IQRCodeConn) => {
         // RealtimeDB
         const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
         const connections = realtimeDB.child(FirebaseRef.CONNECTIONS);
@@ -122,7 +152,7 @@ export class ConnectExtensionWeb {
             if (snap?.lastSynced && snap?.authToken) {
                 try {
                     // Extension the state from Firebase Storage
-                    const extState = await this.downloadFileStorage(conn.connectionId);
+                    const extState = await downloadFileStorage(conn.connectionId);
 
                     if (extState) {
                         // const encKey1 = snap.authToken;
@@ -133,21 +163,35 @@ export class ConnectExtensionWeb {
                         );
 
                         // Save state
-                        // console.log('decryptedState: ', decryptedState);
-                        this.connect(decryptedState);
+                        storeState(decryptedState);
+
+                        // Store connection
+                        await storeConnection(conn);
 
                         return decryptedState;
                     } else {
                         //
                     }
                 } catch (err) {
-                    // console.log('EROARE: ', err);
-                    Promise.reject();
+                    Promise.reject(err);
                 }
             } else {
                 // Connection does not exist! Waiting for connections...
                 // console.log('Connection does not exist! Waiting for connections...');
             }
         });
-    }
-}
+    };
+
+    return {
+        storeConnection,
+        disconnect,
+        getConnection,
+        isConnected,
+        getState,
+        storeState,
+        setStore,
+        generateQRCodeUri,
+        downloadFileStorage,
+        listenLastSync
+    };
+})();

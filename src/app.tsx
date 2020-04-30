@@ -14,8 +14,6 @@ import { PasswordModal } from './components/password-modal/password-modal';
 import { Notifications } from './core/messaging/notifications/notifications';
 import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-notification';
 import { BottomSheet } from './components/bottom-sheet/bottom-sheet';
-// import { WalletConnectClient } from './core/wallet-connect/wallet-connect-client';
-// import { WalletConnectWeb } from './core/wallet-connect/wallet-connect-web';
 import { NavigationService } from './navigation/navigation-service';
 import { Dialog } from './components/dialog/dialog';
 import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
@@ -53,7 +51,6 @@ export default class App extends React.Component<{}, IState> {
     private unsub: any;
     private notificationsConfigured: boolean = false;
     private securityChecksDone: boolean = false;
-    private connectExtensionWeb = new ConnectExtensionWeb();
 
     constructor(props: any) {
         super(props);
@@ -78,7 +75,7 @@ export default class App extends React.Component<{}, IState> {
         // decide the bar style on lightTheme
         StatusBar.setBarStyle('light-content', true);
 
-        Platform.OS === 'web' && this.connectExtensionWeb.setStore(store);
+        Platform.OS === 'web' && ConnectExtensionWeb.setStore(store);
     }
 
     public updateAppReady = () => {
@@ -136,14 +133,9 @@ export default class App extends React.Component<{}, IState> {
                     });
 
                     // trigger extension getState after state was loaded from storage
-                    // Platform.OS === 'web' &&
-                    //     WalletConnectWeb.isConnected() &&
-                    //     WalletConnectWeb.getState();
-
-                    // trigger extension getState after state was loaded from storage
                     Platform.OS === 'web' &&
-                        this.connectExtensionWeb.getIsConnected() &&
-                        this.connectExtensionWeb.getState();
+                        ConnectExtensionWeb.isConnected() &&
+                        ConnectExtensionWeb.getState();
                 }
             }
 

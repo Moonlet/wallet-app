@@ -17,26 +17,30 @@ export class OnboardingScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public qrCanvas: HTMLCanvasElement;
-    public connectExtensionWeb = new ConnectExtensionWeb();
 
     public async componentDidMount() {
-        if (this.connectExtensionWeb.getIsConnected()) {
-            // console.log('IS CONNECTED');
-            // getState().then(() => {
-            //     this.props.navigation.navigate(
-            //         'MainNavigation',
-            //         {},
-            //         NavigationActions.navigate({ routeName: 'Dashboard' })
-            //     );
-            // });
-        } else {
-            try {
-                const res = await this.connectExtensionWeb.generateQRCodeUri();
+        try {
+            if (await ConnectExtensionWeb.isConnected()) {
+                // Get State
+                const state = ConnectExtensionWeb.getState();
+
+                if (state) {
+                    // Navigate to Dashboard
+                    // this.props.navigation.navigate(
+                    //     'MainNavigation',
+                    //     {},
+                    //     NavigationActions.navigate({ routeName: 'Dashboard' })
+                    // );
+                } else {
+                    // console.log('State has not been loaded!');
+                }
+            } else {
+                const res = await ConnectExtensionWeb.generateQRCodeUri();
                 await QRCode.toCanvas(this.qrCanvas, res.uri, { errorCorrectionLevel: 'H' });
-                await this.connectExtensionWeb.listenLastSync(res.conn);
-            } catch (err) {
-                // console.log('error: ', err);
+                await ConnectExtensionWeb.listenLastSync(res.conn);
             }
+        } catch {
+            //
         }
     }
 

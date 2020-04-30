@@ -12,8 +12,12 @@ export const CONFIG: IAppConfig = {
     firebaseConfigFetchInterval: 0,
     ntpServer: 'pool.ntp.org',
     ntpPort: 123,
-    extSyncUpdateStateUrl: 'https://fire.moonlet.dev/functions/extensionSync/updateState',
-    extSyncDisconnectUrl: 'https://fire.moonlet.dev/functions/extensionSync/disconnect',
+    extSyncUpdateStateUrl:
+        'https://us-central1-moonlet-wallet-dev.cloudfunctions.net/extensionSync/updateState',
+    // extSyncUpdateStateUrl: 'https://fire.moonlet.dev/functions/extensionSync/updateState',
+    extSyncDisconnectUrl:
+        'https://us-central1-moonlet-wallet-dev.cloudfunctions.net/extensionSync/disconnect',
+    // extSyncDisconnectUrl: 'https://fire.moonlet.dev/functions/extensionSync/disconnect',
     firebaseWebConfig
 };
 

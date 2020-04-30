@@ -5,11 +5,9 @@ module.exports = {
     permissions: [
         'storage',
         'identity',
-        'https://api.moonlet.xyz/*',
         'https://firebasestorage.googleapis.com/*',
         'https://*.moonlet.dev/*',
-        'https://*.moonlet.io/*',
-        'https://us-central1-moonlet-wallet-dev.cloudfunctions.net/*'
+        'https://*.moonlet.io/*'
     ],
     optional_permissions: ['https://*/*'],
     background: {

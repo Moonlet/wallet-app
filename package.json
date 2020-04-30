@@ -164,6 +164,7 @@
         "tslint-microsoft-contrib": "^6.2.0",
         "tslint-react-native": "0.0.7",
         "typescript": "^3.7.5",
+        "webextension-polyfill-ts": "^0.14.0",
         "webpack": "^4.41.2",
         "webpack-cli": "^3.3.9",
         "webpack-dev-server": "^3.8.2",

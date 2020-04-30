@@ -8,11 +8,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import QRCode from 'qrcode';
-import { database } from 'firebase';
-import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension.web';
-import { decrypt } from '../../core/secure/encrypt.web';
-import CryptoJS from 'crypto-js';
-import { IQRCode } from '../../core/connect-extension/types';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web.web';
 
 const navigationOptions = () => ({ header: null });
 
@@ -24,67 +20,24 @@ export class OnboardingScreenComponent extends React.Component<
     public connectExtensionWeb = new ConnectExtensionWeb();
 
     public async componentDidMount() {
-        if (this.connectExtensionWeb.isConnected()) {
-            //
+        if (this.connectExtensionWeb.getIsConnected()) {
+            // console.log('IS CONNECTED');
+            // getState().then(() => {
+            //     this.props.navigation.navigate(
+            //         'MainNavigation',
+            //         {},
+            //         NavigationActions.navigate({ routeName: 'Dashboard' })
+            //     );
+            // });
         } else {
-            // Connect Extension
-            const res = await this.connectExtensionWeb.generateQRCodeUri();
-            await QRCode.toCanvas(this.qrCanvas, res.uri, { errorCorrectionLevel: 'H' });
-            await this.listenLastSync(res.conn);
-        }
-
-        //     if (!WalletConnectWeb.isConnected()) {
-        //         WalletConnectWeb.connect().then(uri => {
-        //             QRCode.toCanvas(this.qrCanvas, uri, { errorCorrectionLevel: 'H' });
-        //             this.unsubscribe = WalletConnectWeb.subscribe('connect', payload => {
-        //                 WalletConnectWeb.getState().then(() => {
-        //                     this.props.navigation.navigate(
-        //                         'MainNavigation',
-        //                         {},
-        //                         NavigationActions.navigate({ routeName: 'Dashboard' })
-        //                     );
-        //                 });
-        //             });
-        //         });
-        //     }
-    }
-
-    private async listenLastSync(conn: IQRCode) {
-        // RealtimeDB
-        const realtimeDB = database().ref('extensionSync');
-        const connections = realtimeDB.child('connections');
-        connections.child(conn.connectionId).on('value', async (snapshot: any) => {
-            const snap = snapshot.val();
-
-            if (snap?.lastSynced && snap?.authToken) {
-                try {
-                    // Extension the state from Firebase Storage
-                    const extState = await this.connectExtensionWeb.downloadFileStorage(
-                        conn.connectionId
-                    );
-
-                    if (extState) {
-                        // const encKey1 = snap.authToken;
-                        // console.log('encKey: ', encKey1);
-
-                        const decryptedState = JSON.parse(
-                            decrypt(extState, conn.encKey).toString(CryptoJS.enc.Utf8)
-                        );
-
-                        // Save state
-                        // console.log('decryptedState: ', decryptedState);
-                        return decryptedState;
-                    } else {
-                        //
-                    }
-                } catch (err) {
-                    // console.log('EROARE: ', err);
-                }
-            } else {
-                // Connection does not exist
-                // console.log('Connection does not exist! Waiting for connections...');
+            try {
+                const res = await this.connectExtensionWeb.generateQRCodeUri();
+                await QRCode.toCanvas(this.qrCanvas, res.uri, { errorCorrectionLevel: 'H' });
+                await this.connectExtensionWeb.listenLastSync(res.conn);
+            } catch (err) {
+                // console.log('error: ', err);
             }
-        });
+        }
     }
 
     public render() {

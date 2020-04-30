@@ -17,7 +17,7 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { getBaseEncryptionKey } from '../../core/secure/keychain';
 import { Dialog } from '../../components/dialog/dialog';
 import { getUrlParams } from '../../core/connect-extension/utils';
-import { IQRCode } from '../../core/connect-extension/types';
+import { IQRCodeConn } from '../../core/connect-extension/types';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 
 const qrCodeRegex = /^mooonletExtSync:([^\@]*)\@([^\/\?]*)([^\?]*)?\??(.*)/;
@@ -79,8 +79,8 @@ export class ConnectExtensionScreenComponent extends React.Component<
         }
     }
 
-    private extractQrCodeData(value: string): IQRCode {
-        const connection: IQRCode = {
+    private extractQrCodeData(value: string): IQRCodeConn {
+        const connection: IQRCodeConn = {
             connectionId: undefined,
             encKey: undefined,
             os: undefined,
@@ -206,10 +206,10 @@ export class ConnectExtensionScreenComponent extends React.Component<
                                             {translate('ConnectExtension.currentlyActive')}
                                         </Text>
                                         <View style={styles.extraInfoContainer}>
-                                            {os && <Text style={styles.extraInfo}>{os}</Text>}
                                             {platform && (
                                                 <Text style={styles.extraInfo}>{platform}</Text>
                                             )}
+                                            {os && <Text style={styles.extraInfo}>{os}</Text>}
                                         </View>
                                     </View>
                                     <TouchableOpacity onPress={() => this.disconnectExtension()}>

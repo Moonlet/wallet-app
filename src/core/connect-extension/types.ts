@@ -1,12 +1,19 @@
 import { ChainIdType } from '../blockchain/types';
 import { HWConnection } from '../wallet/hw-wallet/types';
 
-export interface IQRCode {
+export interface IQRCodeConn {
     connectionId: string;
     encKey: string;
     os?: string;
     platform?: string;
 }
+
+export enum FirebaseRef {
+    EXTENSION_SYNC = 'extensionSync',
+    CONNECTIONS = 'connections'
+}
+
+export const FIREBASE_BUCKET = 'gs://moonlet-extension-sync';
 
 export interface IStorage {
     version: number;

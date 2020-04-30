@@ -1,6 +1,6 @@
 import { HttpClient } from '../utils/http-client';
 import CONFIG from '../../config/config-beta';
-import { encrypt } from '../secure/encrypt';
+import { encrypt } from '../secure/encrypt.web';
 import { extensionState } from './conn-ext-state-helper';
 import { store } from '../../redux/config';
 import { Notifications } from '../messaging/notifications/notifications';
@@ -13,10 +13,7 @@ export class ConnectExtension {
             const http = new HttpClient(CONFIG.extSyncUpdateStateUrl);
             const res = await http.post('', {
                 connectionId: connection.connectionId,
-                data: await encrypt(
-                    JSON.stringify(extensionState(store.getState())),
-                    connection.encKey
-                ),
+                data: encrypt(JSON.stringify(extensionState(store.getState())), connection.encKey),
                 authToken: sha256(connection.encKey),
                 fcmToken: await Notifications.getToken()
             });

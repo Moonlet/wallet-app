@@ -409,7 +409,9 @@ export const translation: ITranslations = {
             body: 'Quickly connect extension and use Moonlet on your laptop or desktop computers',
             disconnect: 'Disconnect',
             disconnectInfo: 'Do you want to disconnect from this device?',
-            currentlyActive: 'Currently active'
+            currentlyActive: 'Currently active',
+            qrCodeError: 'Invalid QR Code!',
+            error: 'The connection has failed! Please try again!'
         }
     },
     plural: (n: number, ord?: boolean) => {

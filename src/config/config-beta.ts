@@ -10,7 +10,9 @@ export const CONFIG: IAppConfig = {
     privacyPolicyUrl: 'https://fire.moonlet.dev/static/terms/privacy-policy.html?v=' + Date.now(),
     firebaseConfigFetchInterval: 0,
     ntpServer: 'pool.ntp.org',
-    ntpPort: 123
+    ntpPort: 123,
+    extSyncUpdateStateUrl: 'https://fire.moonlet.dev/functions/updateState',
+    extSyncDisconnectUrl: 'https://fire.moonlet.dev/functions/disconnect'
 };
 
 export default CONFIG;

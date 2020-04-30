@@ -23,6 +23,7 @@ export class OnboardingScreenComponent extends React.Component<
             if (await ConnectExtensionWeb.isConnected()) {
                 // Get State
                 const state = ConnectExtensionWeb.getState();
+                // console.log('state: ', state);
 
                 if (state) {
                     // Navigate to Dashboard
@@ -32,7 +33,7 @@ export class OnboardingScreenComponent extends React.Component<
                     //     NavigationActions.navigate({ routeName: 'Dashboard' })
                     // );
                 } else {
-                    // console.log('State has not been loaded!');
+                    // State has not been loaded!
                 }
             } else {
                 const res = await ConnectExtensionWeb.generateQRCodeUri();

@@ -55,7 +55,7 @@ export const ConnectExtensionWeb = (() => {
                 return false;
             }
         } catch {
-            Promise.reject();
+            //
         }
     };
 
@@ -68,7 +68,7 @@ export const ConnectExtensionWeb = (() => {
 
         try {
             store.dispatch(setExtensionStateLoaded());
-            const state = merge(store.getState(), decryptedState);
+            const state = merge(store.getState(), decryptedState.state); // TODO: check - decryptedState.state
             state.app.extensionStateLoaded = true;
             store.dispatch(updateReduxState(state));
             return;
@@ -85,7 +85,7 @@ export const ConnectExtensionWeb = (() => {
         const platformInfo = await browser.runtime.getPlatformInfo();
         let os: string;
 
-        switch (platformInfo.os) {
+        switch (platformInfo?.os) {
             case 'mac':
                 os = encodeURIComponent('Mac OS');
                 break;
@@ -155,9 +155,6 @@ export const ConnectExtensionWeb = (() => {
                     const extState = await downloadFileStorage(conn.connectionId);
 
                     if (extState) {
-                        // const encKey1 = snap.authToken;
-                        // console.log('encKey: ', encKey1);
-
                         const decryptedState = JSON.parse(
                             decrypt(extState, conn.encKey).toString(CryptoJS.enc.Utf8)
                         );
@@ -177,7 +174,6 @@ export const ConnectExtensionWeb = (() => {
                 }
             } else {
                 // Connection does not exist! Waiting for connections...
-                // console.log('Connection does not exist! Waiting for connections...');
             }
         });
     };

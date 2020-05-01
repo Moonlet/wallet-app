@@ -11,9 +11,10 @@ import { CONN_EXTENSION } from '../../core/constants/app';
 import Bowser from 'bowser';
 import { browser } from 'webextension-polyfill-ts';
 import { buildState } from './conn-ext-build-state';
+import { store } from '../../redux/config';
 
 export const ConnectExtensionWeb = (() => {
-    let store: any = null;
+    // let store: any = null;
 
     const storeConnection = async (conn: IQRCodeConn) => {
         try {
@@ -55,6 +56,7 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
+    // TODO: remove this
     const getState = () => {
         return store && store.getState();
     };
@@ -65,16 +67,16 @@ export const ConnectExtensionWeb = (() => {
             const extState = buildState(decryptedState);
             const state = merge(store.getState(), extState);
             state.app.extensionStateLoaded = true;
-            store.dispatch(updateReduxState(state));
+            store.dispatch(updateReduxState(state) as any); // TODO: check this
             return;
         } catch {
             //
         }
     };
 
-    const setStore = (storeReference: any) => {
-        store = storeReference;
-    };
+    // const setStore = (storeReference: any) => {
+    // store = storeReference;
+    // };
 
     const getPlatformOS = async (): Promise<string> => {
         const platformInfo = await browser.runtime.getPlatformInfo();
@@ -159,9 +161,6 @@ export const ConnectExtensionWeb = (() => {
 
                         // remove listener for connectionId
                         connections.child(conn.connectionId).off('value');
-
-                        // return decryptedState;
-                        // TODO resolve()
                     } else {
                         //
                     }
@@ -181,7 +180,7 @@ export const ConnectExtensionWeb = (() => {
         isConnected,
         getState,
         storeState,
-        setStore,
+        // setStore,
         generateQRCodeUri,
         downloadFileStorage,
         listenLastSync

@@ -10,6 +10,7 @@ import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/sec
 import { CONN_EXTENSION } from '../../core/constants/app';
 import Bowser from 'bowser';
 import { browser } from 'webextension-polyfill-ts';
+import { buildState } from './conn-ext-build-state';
 
 export const ConnectExtensionWeb = (() => {
     let store: any = null;
@@ -59,11 +60,10 @@ export const ConnectExtensionWeb = (() => {
     };
 
     const storeState = (decryptedState: any) => {
-        // console.log('decryptedState: ', decryptedState);
-
         try {
             store.dispatch(setExtensionStateLoaded());
-            const state = merge(store.getState(), decryptedState.state); // TODO: check - decryptedState.state
+            const extState = buildState(decryptedState);
+            const state = merge(store.getState(), extState);
             state.app.extensionStateLoaded = true;
             store.dispatch(updateReduxState(state));
             return;

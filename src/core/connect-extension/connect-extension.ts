@@ -1,7 +1,7 @@
 import { HttpClient } from '../utils/http-client';
 import CONFIG from '../../config/config-beta';
 import { encrypt } from '../secure/encrypt.web';
-import { extensionState } from './conn-ext-state-helper';
+import { extensionState } from './conn-ext-trim-state';
 import { store } from '../../redux/config';
 import { Notifications } from '../messaging/notifications/notifications';
 import { IQRCodeConn } from './types';

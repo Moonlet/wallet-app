@@ -7,7 +7,7 @@ import { IContactsState } from '../../redux/contacts/state';
 import { ITokensConfigState, ITokenConfigState } from '../../redux/tokens/state';
 import { ChainIdType } from '../blockchain/types';
 
-export const trimWallets = (wallets: IWalletsState) => {
+const trimWallets = (wallets: IWalletsState) => {
     const trimmedWallets: IExtStorage.IStorageWallets = {};
 
     Object.keys(wallets).map((walletId: string) => {
@@ -52,7 +52,7 @@ export const trimWallets = (wallets: IWalletsState) => {
     return trimmedWallets;
 };
 
-export const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
+const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
     const trimmedTokens: IExtStorage.IStorageTokens = {};
 
     Object.keys(tokens).map((blockchain: string) => {
@@ -79,7 +79,7 @@ export const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageToke
     return trimmedTokens;
 };
 
-export const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
+const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
     return {
         currency: preferences.currency,
         testnet: preferences.testNet,
@@ -88,11 +88,11 @@ export const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePr
     };
 };
 
-export const trimContacts = (contacts: IContactsState): IExtStorage.IStorageContact[] => {
+const trimContacts = (contacts: IContactsState): IExtStorage.IStorageContact[] => {
     return Object.values(contacts);
 };
 
-export const trimState = (state: IReduxState) => ({
+const trimState = (state: IReduxState) => ({
     wallets: trimWallets(state.wallets),
     contacts: trimContacts(state.contacts),
     preferences: trimPreferences(state.preferences),

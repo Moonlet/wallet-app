@@ -16,8 +16,10 @@ export const readEncrypted = async (key: string, hash: string) => {
         const encryptedData = await browser.storage.local.get(fullKey);
         if (encryptedData && encryptedData[fullKey]) {
             return encryptedData[fullKey];
+        } else {
+            // No data in storage for key ${KEY_PREFIX}${key}
+            return undefined;
         }
-        return Promise.reject(`No data in storage for key ${KEY_PREFIX}${key}`);
     } catch (e) {
         return Promise.reject(e);
     }

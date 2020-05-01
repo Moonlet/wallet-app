@@ -9,6 +9,7 @@ import { merge } from 'lodash';
 import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage.web';
 import { CONN_EXTENSION } from '../../core/constants/app';
 import Bowser from 'bowser';
+import { browser } from 'webextension-polyfill-ts';
 
 export const ConnectExtensionWeb = (() => {
     let store: any = null;
@@ -75,14 +76,36 @@ export const ConnectExtensionWeb = (() => {
         store = storeReference;
     };
 
-    const generateQRCodeUri = async (): Promise<{ uri: string; conn: IQRCodeConn }> => {
-        const browser = Bowser.getParser(window.navigator.userAgent);
+    const getPlatformOS = async (): Promise<string> => {
+        const platformInfo = await browser.runtime.getPlatformInfo();
+        let os: string;
 
+        switch (platformInfo.os) {
+            case 'mac':
+                os = encodeURIComponent('Mac OS');
+                break;
+            case 'win':
+                os = 'Windows';
+                break;
+            case 'linux':
+                os = 'Linux';
+                break;
+            case 'android':
+                os = 'Android';
+                break;
+            default:
+                break;
+        }
+
+        return os;
+    };
+
+    const generateQRCodeUri = async (): Promise<{ uri: string; conn: IQRCodeConn }> => {
         const conn: IQRCodeConn = {
             connectionId: uuidv4(),
             encKey: generateRandomEncryptionKey().toString(CryptoJS.enc.Base64),
-            os: browser.getOSName(),
-            platform: browser.getBrowserName()
+            os: await getPlatformOS(),
+            platform: Bowser.getParser(window.navigator.userAgent).getBrowserName()
         };
 
         let uri = 'mooonletExtSync:' + conn.connectionId + '@firebase' + '/?encKey=' + conn.encKey;

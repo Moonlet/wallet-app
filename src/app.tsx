@@ -29,7 +29,7 @@ import DeviceInfo from 'react-native-device-info';
 import { setDeviceId } from './redux/preferences/actions';
 import { SecurityChecks } from './components/security-checks/security-checks';
 import { AppStateStatus } from './core/constants/app';
-import { ConnectExtensionWeb } from './core/connect-extension/connect-extension-web.web';
+import { ConnectExtensionWeb } from './core/connect-extension/connect-extension-web';
 
 const AppContainer = createAppContainer(RootNavigation);
 

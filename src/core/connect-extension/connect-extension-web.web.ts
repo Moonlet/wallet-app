@@ -15,12 +15,8 @@ export const ConnectExtensionWeb = (() => {
 
     const storeConnection = async (conn: IQRCodeConn) => {
         try {
-            const encKey = generateRandomEncryptionKey().toString(CryptoJS.enc.Base64);
-
-            if (encKey) {
-                // store session
-                await storeEncrypted(JSON.stringify(conn), CONN_EXTENSION, encKey);
-            }
+            // store session
+            await storeEncrypted(JSON.stringify(conn), CONN_EXTENSION, CONN_EXTENSION);
         } catch {
             Promise.reject();
         }
@@ -37,9 +33,7 @@ export const ConnectExtensionWeb = (() => {
 
     const getConnection = async (): Promise<any> => {
         try {
-            const encKey = generateRandomEncryptionKey().toString(CryptoJS.enc.Base64);
-            const stored = await readEncrypted(CONN_EXTENSION, encKey);
-
+            const stored = await readEncrypted(CONN_EXTENSION, CONN_EXTENSION);
             return stored;
         } catch (err) {
             Promise.reject(err);
@@ -111,10 +105,7 @@ export const ConnectExtensionWeb = (() => {
                 .getDownloadURL();
 
             const http = await fetch(urlDowndload);
-            const data = await http.text();
-            const res = data.toString();
-
-            return res.toString();
+            return (await http.text()).toString();
         } catch {
             Promise.reject();
         }
@@ -142,6 +133,9 @@ export const ConnectExtensionWeb = (() => {
 
                         // Store connection
                         await storeConnection(conn);
+
+                        // remove listener for connectionId
+                        connections.child(conn.connectionId).off('value');
 
                         return decryptedState;
                     } else {

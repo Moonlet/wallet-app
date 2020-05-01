@@ -31,7 +31,7 @@ import { setPinCode, clearPinCode } from '../../core/secure/keychain';
 import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
-import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web.web';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 
 export interface IState {
     isTouchIDSupported: boolean;

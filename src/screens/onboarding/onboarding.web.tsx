@@ -58,6 +58,8 @@ export class OnboardingScreenComponent extends React.Component<
                 await QRCode.toCanvas(this.qrCanvas, res.uri, { errorCorrectionLevel: 'H' });
 
                 await ConnectExtensionWeb.listenLastSync(res.conn);
+                // const resListen =
+                // console.log('resListen: ', resListen);
             }
         } catch {
             this.setState({ isLoading: false });

@@ -14,7 +14,7 @@ export const ConnectExtensionWeb = (() => {
     };
 
     const isConnected = async () => {
-        //
+        return false;
     };
 
     const getState = () => {

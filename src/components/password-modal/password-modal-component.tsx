@@ -670,7 +670,10 @@ export class PasswordModalComponent extends React.Component<
     public render() {
         return (
             <Modal
-                isVisible={this.state.visible}
+                isVisible={Platform.select({
+                    web: false,
+                    default: this.state.visible
+                })}
                 animationInTiming={5}
                 animationOutTiming={5}
                 onModalHide={() => this.modalOnHideDeffered?.resolve()}

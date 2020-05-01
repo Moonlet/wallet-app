@@ -160,7 +160,8 @@ export const ConnectExtensionWeb = (() => {
                         // remove listener for connectionId
                         connections.child(conn.connectionId).off('value');
 
-                        return decryptedState;
+                        // return decryptedState;
+                        // TODO resolve()
                     } else {
                         //
                     }

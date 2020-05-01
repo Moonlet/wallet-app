@@ -328,8 +328,12 @@ export class SettingsScreenComponent extends React.Component<
                 <View style={styles.rowContainer}>
                     <Text style={styles.textRow}>{translate('Settings.appVersion')}</Text>
                     <View style={styles.rightContainer}>
-                        {/* version + build number */}
-                        <Text style={styles.rightValue}>{DeviceInfo.getReadableVersion()}</Text>
+                        <Text style={styles.rightValue}>
+                            {Platform.OS === 'web'
+                                ? DeviceInfo.getVersion()
+                                : DeviceInfo.getReadableVersion() // version + build number
+                            }
+                        </Text>
                     </View>
                 </View>
 

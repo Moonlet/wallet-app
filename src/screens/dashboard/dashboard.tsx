@@ -31,7 +31,7 @@ import {
     normalize,
     SCREEN_WIDTH
 } from '../../styles/dimensions';
-import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
@@ -150,21 +150,21 @@ export class DashboardScreenComponent extends React.Component<
         this.state = {
             extraSelectedBlockchain: undefined
         };
-
-        if (Platform.OS === 'web') {
-            if (!WalletConnectWeb.isConnected()) {
-                props.navigation.navigate('OnboardingNavigation');
-            }
-        } else {
-            if (props.blockchains.length === 0 || props.walletsNr < 1) {
-                // maybe check this in another screen?
-                this.props.navigation.dispatch(StackActions.popToTop());
-                props.navigation.navigate('OnboardingNavigation');
-            }
-        }
     }
 
-    public componentDidMount() {
+    public async componentDidMount() {
+        if (Platform.OS === 'web') {
+            if ((await ConnectExtensionWeb.isConnected()) === false) {
+                this.props.navigation.navigate('OnboardingNavigation');
+            }
+        } else {
+            if (this.props.blockchains.length === 0 || this.props.walletsNr < 1) {
+                // maybe check this in another screen?
+                this.props.navigation.dispatch(StackActions.popToTop());
+                this.props.navigation.navigate('OnboardingNavigation');
+            }
+        }
+
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });

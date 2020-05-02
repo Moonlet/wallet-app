@@ -6,9 +6,9 @@ import { TokenType } from '../types/token';
 import { TransactionStatus } from '../../wallet/types';
 import abi from 'ethereumjs-abi';
 import BigNumber from 'bignumber.js';
-
+import { keccak256 } from './library/hash';
+import { encode } from './library/rlp';
 import elliptic from 'elliptic';
-import { Hash, RLP } from 'eth-lib';
 
 const toHex = value => {
     if (value && value !== '0x') {
@@ -33,12 +33,13 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
             '0x', // gatewayFeeRecipient
             '0x', // gatewayFee
             (tx.toAddress || '0x').toLowerCase(),
-            toHex(tx.amount),
+            '0x',
             (tx.data.raw || '0x').toLowerCase(),
             toHex(tx.chainId || 1)
         ];
-        const encodedTx = RLP.encode(txData.concat(['0x', '0x']));
-        const txHash = Hash.keccak256(encodedTx);
+
+        const encodedTx = encode(txData.concat(['0x', '0x']));
+        const txHash = keccak256(encodedTx);
         const addToV = Number(tx.chainId) * 2 + 35;
 
         privateKey = '0x' + privateKey.replace(/^0x/gi, '').toLowerCase();
@@ -55,7 +56,7 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
 
         const rawTx = txData.slice(0, 9).concat([signature.v, signature.r, signature.s]);
 
-        return RLP.encode(rawTx);
+        return encode(rawTx);
     };
 
     public buildTransferTransaction = async (
@@ -88,7 +89,6 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                     broadcastedOnBlock: blockInfo?.number,
                     nonce,
                     status: TransactionStatus.PENDING,
-
                     data: {
                         method: 'transfer',
                         params: [tx.toAddress, tx.amount],

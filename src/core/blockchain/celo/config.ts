@@ -1,29 +1,9 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenScreenComponentType } from '../types/token';
+import { TokenType } from '../types/token';
 import CeloIcon from '../../../assets/icons/blockchains/celo.svg';
-import EthIcon from '../../../assets/icons/blockchains/eth.svg';
-import { ITokenConfigState } from '../../../redux/tokens/state';
-
-export const CELO_GOLD: ITokenConfigState = {
-    name: 'Celo Gold',
-    symbol: 'cGLD',
-    icon: {
-        iconComponent: EthIcon
-    },
-    defaultOrder: 0,
-    decimals: 18,
-    ui: {
-        decimals: 4,
-        tokenScreenComponent: TokenScreenComponentType.DEFAULT
-    },
-    type: TokenType.NATIVE,
-    units: {
-        WEI: new BigNumber(1),
-        GWEI: new BigNumber(Math.pow(10, 9)),
-        cGLD: new BigNumber(Math.pow(10, 18))
-    }
-};
+import { CELO_GOLD_TESTNET_ALFAJORES } from './tokens/cGLD';
+import { CELO_USD_MAINNET, CELO_USD_TESTNET_ALFAJORES } from './tokens/cUSD';
 
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/52752'/0'/0`,
@@ -32,28 +12,28 @@ export const config: IBlockchainConfig = {
     defaultUnit: 'WEI',
     iconComponent: CeloIcon,
     droppedTxBlocksThreshold: 50,
-    autoAddedTokensSymbols: {},
+    autoAddedTokensSymbols: {
+        42220: {
+            cUSD: CELO_USD_MAINNET
+        },
+        44786: {
+            cUSD: CELO_USD_TESTNET_ALFAJORES
+        }
+    },
     tokens: {
-        cGLD: CELO_GOLD
+        cGLD: CELO_GOLD_TESTNET_ALFAJORES
     },
     feeOptions: {
         gasPriceToken: 'cGLD',
         defaults: {
             gasPrice: new BigNumber(20000000000),
             gasLimit: {
-                [TokenType.NATIVE]: new BigNumber(21000),
                 [TokenType.ERC20]: new BigNumber(100000)
-            },
-            gasPricePresets: {
-                cheap: new BigNumber(2000000000),
-                standard: new BigNumber(20000000000),
-                fast: new BigNumber(40000000000),
-                fastest: new BigNumber(120000000000)
             }
         },
         ui: {
             availableTokenTypes: [TokenType.ERC20],
-            feeComponent: 'FeePresets',
+            feeComponent: 'FeeTotal',
             feeComponentAdvanced: 'GasFeeAdvanced',
             gasPriceUnit: 'GWEI',
             defaultPreset: 'standard'
@@ -67,8 +47,8 @@ export const config: IBlockchainConfig = {
         blockchainDisplay: 'CELO'
     },
     networks: {
-        testNet: 40120,
-        mainNet: 1
+        testNet: 44786,
+        mainNet: 42220
     },
     defaultOrder: 1
 };

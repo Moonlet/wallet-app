@@ -158,7 +158,7 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    private async estimateFees(
+    public async estimateFees(
         from: string,
         to: string,
         amount?: BigNumber,

@@ -44,6 +44,8 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
+    // TODO: maybe find a better way to check this
+    // it would help if it's not a promise because Dashboard is loading
     const isConnected = async (): Promise<boolean> => {
         try {
             const conn = await getConnection();

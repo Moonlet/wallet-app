@@ -51,7 +51,13 @@ export interface IStorageWallet {
             [chainId: string]: string[]; // array of symbols
         };
     }[];
-    transactions: string[];
+    transactions: {
+        [txHash: string]: {
+            blockchain: Blockchain;
+            chainId: ChainIdType;
+            broadcastedOnBlock: number;
+        };
+    };
 }
 
 export interface IStorageTokens {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, Linking } from 'react-native';
+import { View, ScrollView, TouchableOpacity, Linking, Platform } from 'react-native';
 import { Icon } from '../../components/icon';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
@@ -44,16 +44,22 @@ export class TransactionDetailsComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
 
-    public goToExplorer = () => {
+    public goToExplorer() {
         const url = getBlockchain(this.props.account.blockchain)
             .networks.filter(n => n.chainId === this.props.chainId)[0]
             .explorer.getTransactionUrl(this.props.transaction.id);
+
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
-                Linking.openURL(url);
+                if (Platform.OS === 'web') {
+                    // TODO: check this
+                    window.open(url);
+                } else {
+                    Linking.openURL(url);
+                }
             }
         });
-    };
+    }
 
     public capitalizeString = (word: string) =>
         `${word.charAt(0).toUpperCase()}${word.slice(1).toLowerCase()}`;

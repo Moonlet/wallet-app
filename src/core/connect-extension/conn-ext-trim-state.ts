@@ -5,7 +5,7 @@ import * as IExtStorage from './types';
 import { IPrefState } from '../../redux/preferences/state';
 import { IContactsState } from '../../redux/contacts/state';
 import { ITokensConfigState, ITokenConfigState } from '../../redux/tokens/state';
-import { ChainIdType } from '../blockchain/types';
+import { ChainIdType, IBlockchainTransaction } from '../blockchain/types';
 
 const trimWallets = (wallets: IWalletsState) => {
     const trimmedWallets: IExtStorage.IStorageWallets = {};
@@ -37,12 +37,28 @@ const trimWallets = (wallets: IWalletsState) => {
             accountsTrimmed.push(accountTrimmed);
         });
 
+        const txsTrimmed = {};
+
+        wallet?.transactions &&
+            Object.keys(wallet.transactions).map((txHash: string) => {
+                const tx: IBlockchainTransaction = wallet.transactions[txHash];
+
+                Object.assign(txsTrimmed, {
+                    ...txsTrimmed,
+                    [txHash]: {
+                        blockchain: tx.blockchain,
+                        chainId: tx.chainId,
+                        broadcastedOnBlock: tx.broadcastedOnBlock
+                    }
+                });
+            });
+
         const trimmedWallet: IExtStorage.IStorageWallet = {
             name: wallet.name,
             type: wallet.type,
             hwOptions: wallet?.hwOptions,
             accounts: accountsTrimmed,
-            transactions: (wallet.transactions && Object.keys(wallet.transactions)) || [] // tx hash
+            transactions: txsTrimmed
         };
 
         Object.assign(trimmedWallets, {

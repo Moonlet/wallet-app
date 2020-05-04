@@ -2,7 +2,7 @@ import { IAppConfig } from './config-interface';
 import { firebaseWebConfig } from './firebase-web/beta';
 
 export const CONFIG: IAppConfig = {
-    supportUrl: 'https://moonlet.xyz/links/support',
+    supportUrl: 'https://moonlet.uvdesk.com/en/customer/create-ticket',
     env: process.env.MOONLET_SOME_KEY,
     tokensUrl: 'https://fire.moonlet.dev/static/tokens/',
     dataApiUrl: 'https://api.moonlet.dev/data',

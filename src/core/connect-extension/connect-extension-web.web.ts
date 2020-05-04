@@ -10,12 +10,10 @@ import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/sec
 import { CONN_EXTENSION } from '../../core/constants/app';
 import Bowser from 'bowser';
 import { browser } from 'webextension-polyfill-ts';
-import { buildState } from './conn-ext-build-state';
+import { buildState } from './conn-ext-build-state/conn-ext-build-state';
 import { store } from '../../redux/config';
 
 export const ConnectExtensionWeb = (() => {
-    // let store: any = null;
-
     const storeConnection = async (conn: IQRCodeConn) => {
         try {
             // store session
@@ -26,6 +24,7 @@ export const ConnectExtensionWeb = (() => {
     };
 
     const disconnect = async (): Promise<void> => {
+        // delete store ?
         try {
             // delete the connection session
             await deleteFromStorage(CONN_EXTENSION);
@@ -43,7 +42,14 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
+    // TODO: check if possible not to make this a promise
     const isConnected = async (): Promise<boolean> => {
+        // TODO: check here for state, rather than readEncrypted
+        // because readEncrypted is a Promise
+        // const rehydrated = store.getState()._persist.rehydrated;
+        // console.log('rehydrated: ', rehydrated);
+        // console.log('state: ', store.getState());
+
         try {
             const conn = await getConnection();
             if (conn) {
@@ -57,14 +63,15 @@ export const ConnectExtensionWeb = (() => {
     };
 
     // TODO: remove this
-    const getState = () => {
-        return store && store.getState();
-    };
+    // const getState = () => {
+    //     return store && store.getState();
+    // };
 
-    const storeState = (decryptedState: any) => {
+    const storeState = async (decryptedState: any) => {
         try {
             store.dispatch(setExtensionStateLoaded());
-            const extState = buildState(decryptedState);
+            const extState = await buildState(decryptedState);
+            // console.log('ext state after build: ', extState);
             const state = merge(store.getState(), extState);
             state.app.extensionStateLoaded = true;
             store.dispatch(updateReduxState(state) as any); // TODO: check this
@@ -173,16 +180,36 @@ export const ConnectExtensionWeb = (() => {
         });
     };
 
+    const test = async (conn: IQRCodeConn) => {
+        // Extension the state from Firebase Storage
+        const extState = await downloadFileStorage(conn.connectionId);
+
+        if (extState) {
+            const decryptedState = JSON.parse(
+                decrypt(extState, conn.encKey).toString(CryptoJS.enc.Utf8)
+            );
+
+            // Save state
+            storeState(decryptedState);
+
+            // Store connection
+            await storeConnection(conn);
+        } else {
+            // console.log('FAILED');
+        }
+    };
+
     return {
         storeConnection,
         disconnect,
         getConnection,
         isConnected,
-        getState,
+        // getState,
         storeState,
         // setStore,
         generateQRCodeUri,
         downloadFileStorage,
-        listenLastSync
+        listenLastSync,
+        test // TODO remove
     };
 })();

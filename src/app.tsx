@@ -29,7 +29,7 @@ import DeviceInfo from 'react-native-device-info';
 import { setDeviceId } from './redux/preferences/actions';
 import { SecurityChecks } from './components/security-checks/security-checks';
 import { AppStateStatus } from './core/constants/app';
-import { ConnectExtensionWeb } from './core/connect-extension/connect-extension-web';
+// import { ConnectExtensionWeb } from './core/connect-extension/connect-extension-web';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -75,7 +75,7 @@ export default class App extends React.Component<{}, IState> {
         // decide the bar style on lightTheme
         StatusBar.setBarStyle('light-content', true);
 
-        Platform.OS === 'web' && ConnectExtensionWeb.setStore(store);
+        // Platform.OS === 'web' && ConnectExtensionWeb.setStore(store);
     }
 
     public updateAppReady = () => {
@@ -133,9 +133,9 @@ export default class App extends React.Component<{}, IState> {
                     });
 
                     // trigger extension getState after state was loaded from storage
-                    Platform.OS === 'web' &&
-                        ConnectExtensionWeb.isConnected() &&
-                        ConnectExtensionWeb.getState();
+                    // Platform.OS === 'web' &&
+                    //     (await ConnectExtensionWeb.isConnected()) &&
+                    //     ConnectExtensionWeb.getState();
                 }
             }
 

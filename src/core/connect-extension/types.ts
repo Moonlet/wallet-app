@@ -57,7 +57,7 @@ export interface IStorageTokens {
             [symbol: string]: {
                 type: string;
                 symbol: string;
-                contract: string;
+                contractAddress: string;
             };
         };
     }[];

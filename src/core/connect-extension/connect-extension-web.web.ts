@@ -44,7 +44,6 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
-    // TODO: check if possible not to make this a promise
     const isConnected = async (): Promise<boolean> => {
         try {
             const conn = await getConnection();
@@ -53,20 +52,6 @@ export const ConnectExtensionWeb = (() => {
             } else {
                 return false;
             }
-        } catch {
-            //
-        }
-    };
-
-    const storeState = async (decryptedState: any) => {
-        try {
-            // Build extension state
-            const extState = await buildState(decryptedState);
-            const state = merge(store.getState(), extState);
-            state.app.extensionStateLoaded = true;
-            store.dispatch(updateReduxState(state) as any);
-            store.dispatch(setExtensionStateLoaded());
-            return;
         } catch {
             //
         }
@@ -130,6 +115,22 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
+    /**
+     * Build extension state
+     */
+    const storeState = async (decryptedState: any) => {
+        try {
+            const extState = await buildState(decryptedState);
+            const state = merge(store.getState(), extState);
+            state.app.extensionStateLoaded = true;
+            store.dispatch(updateReduxState(state) as any);
+            store.dispatch(setExtensionStateLoaded());
+            return;
+        } catch {
+            //
+        }
+    };
+
     const listenLastSync = (conn: IQRCodeConn) => {
         // RealtimeDB
         const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
@@ -180,7 +181,6 @@ export const ConnectExtensionWeb = (() => {
         disconnect,
         getConnection,
         isConnected,
-        storeState,
         generateQRCodeUri,
         downloadFileStorage,
         listenLastSync

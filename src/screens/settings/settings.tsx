@@ -32,6 +32,7 @@ import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-moda
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
+import { resetAllData } from '../../redux/app/actions';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -46,6 +47,7 @@ export interface IReduxProps {
     setDisplayPasswordModal: typeof setDisplayPasswordModal;
     openLoadingModal: typeof openLoadingModal;
     closeLoadingModal: typeof closeLoadingModal;
+    resetAllData: typeof resetAllData;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -58,7 +60,8 @@ const mapDispatchToProps = {
     toggleBiometricAuth,
     setDisplayPasswordModal,
     openLoadingModal,
-    closeLoadingModal
+    closeLoadingModal,
+    resetAllData
 };
 
 const navigationOptions = () => ({
@@ -393,6 +396,7 @@ export class SettingsScreenComponent extends React.Component<
                             style={styles.button}
                             onPress={async () => {
                                 await ConnectExtensionWeb.disconnect();
+                                this.props.resetAllData();
                                 location.reload();
                             }}
                         >

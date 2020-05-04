@@ -42,6 +42,7 @@ import { IExchangeRates } from '../../redux/market/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { Amount } from '../../components/amount/amount';
 import { WalletType } from '../../core/wallet/types';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -87,6 +88,7 @@ const mapDispatchToProps = {
 
 interface IState {
     extraSelectedBlockchain: Blockchain;
+    isLoading: boolean;
 }
 
 const MyTitle = ({ text }) => (
@@ -147,14 +149,19 @@ export class DashboardScreenComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            extraSelectedBlockchain: undefined
+            extraSelectedBlockchain: undefined,
+            isLoading: false
         };
     }
 
     public async componentDidMount() {
         if (Platform.OS === 'web') {
+            this.setState({ isLoading: true });
             if ((await ConnectExtensionWeb.isConnected()) === false) {
+                this.setState({ isLoading: false });
                 this.props.navigation.navigate('OnboardingNavigation');
+            } else {
+                this.setState({ isLoading: false });
             }
         } else {
             if (this.props.blockchains.length === 0 || this.props.walletsNr < 1) {
@@ -420,6 +427,14 @@ export class DashboardScreenComponent extends React.Component<
         let renderBottomNav = false;
         const isHWWallet = this.props.wallet ? this.props.wallet.type === WalletType.HW : false;
         if (blockchains.length > 1 && !isHWWallet) renderBottomNav = true;
+
+        if (Platform.OS === 'web' && this.state.isLoading) {
+            return (
+                <View style={styles.container}>
+                    <LoadingIndicator />
+                </View>
+            );
+        }
 
         return (
             <View style={styles.container}>

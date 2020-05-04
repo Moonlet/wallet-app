@@ -1,10 +1,11 @@
 import { IAction } from '../types';
 import { ADD_TOKEN } from './actions';
 import { ITokensConfigState } from './state';
+import { RESET_ALL_DATA } from '../app/actions';
 
-const intialState: ITokensConfigState = {};
+const initialState: ITokensConfigState = {};
 
-export default (state: ITokensConfigState = intialState, action: IAction) => {
+export default (state: ITokensConfigState = initialState, action: IAction) => {
     switch (action.type) {
         case ADD_TOKEN:
             const blockchain = state[action.data.blockchain];
@@ -31,6 +32,9 @@ export default (state: ITokensConfigState = intialState, action: IAction) => {
                     }
                 };
             }
+
+        case RESET_ALL_DATA:
+            return initialState;
 
         default:
             break;

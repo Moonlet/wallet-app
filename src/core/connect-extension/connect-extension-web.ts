@@ -17,10 +17,6 @@ export const ConnectExtensionWeb = (() => {
         return false;
     };
 
-    const storeState = (decryptedState: any) => {
-        //
-    };
-
     const generateQRCodeUri = async () => {
         //
     };
@@ -38,7 +34,6 @@ export const ConnectExtensionWeb = (() => {
         disconnect,
         getConnection,
         isConnected,
-        storeState,
         generateQRCodeUri,
         downloadFileStorage,
         listenLastSync

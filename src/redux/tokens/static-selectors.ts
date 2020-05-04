@@ -53,7 +53,7 @@ export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountStat
     return tokenList;
 };
 
-const accountToken = (symbolKey: string, order: number): ITokenState => {
+export const accountToken = (symbolKey: string, order: number): ITokenState => {
     return {
         symbol: symbolKey,
         order,

@@ -12,6 +12,7 @@ import Bowser from 'bowser';
 import { browser } from 'webextension-polyfill-ts';
 import { buildState } from './conn-ext-build-state/conn-ext-build-state';
 import { store } from '../../redux/config';
+import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 
 export const ConnectExtensionWeb = (() => {
     const storeConnection = async (conn: IQRCodeConn) => {
@@ -50,40 +51,33 @@ export const ConnectExtensionWeb = (() => {
         // console.log('rehydrated: ', rehydrated);
         // console.log('state: ', store.getState());
 
-        try {
-            const conn = await getConnection();
-            if (conn) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch {
-            //
-        }
+        return false;
+        // try {
+        //     const conn = await getConnection();
+        //     if (conn) {
+        //         return true;
+        //     } else {
+        //         return false;
+        //     }
+        // } catch {
+        //     //
+        // }
     };
-
-    // TODO: remove this
-    // const getState = () => {
-    //     return store && store.getState();
-    // };
 
     const storeState = async (decryptedState: any) => {
         try {
+            // Build extension state
             store.dispatch(setExtensionStateLoaded());
             const extState = await buildState(decryptedState);
             // console.log('ext state after build: ', extState);
             const state = merge(store.getState(), extState);
             state.app.extensionStateLoaded = true;
-            store.dispatch(updateReduxState(state) as any); // TODO: check this
+            store.dispatch(updateReduxState(state) as any);
             return;
         } catch {
             //
         }
     };
-
-    // const setStore = (storeReference: any) => {
-    // store = storeReference;
-    // };
 
     const getPlatformOS = async (): Promise<string> => {
         const platformInfo = await browser.runtime.getPlatformInfo();
@@ -143,7 +137,7 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
-    const listenLastSync = async (conn: IQRCodeConn) => {
+    const listenLastSync = (conn: IQRCodeConn) => {
         // RealtimeDB
         const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
         const connections = realtimeDB.child(FirebaseRef.CONNECTIONS);
@@ -151,6 +145,9 @@ export const ConnectExtensionWeb = (() => {
             const snap = snapshot.val();
 
             if (snap?.lastSynced && snap?.authToken) {
+                // show loading untill data is fetch and state is build
+                store.dispatch(openLoadingModal());
+
                 try {
                     // Extension the state from Firebase Storage
                     const extState = await downloadFileStorage(conn.connectionId);
@@ -168,10 +165,12 @@ export const ConnectExtensionWeb = (() => {
 
                         // remove listener for connectionId
                         connections.child(conn.connectionId).off('value');
-                    } else {
-                        //
                     }
+
+                    // close loading modal
+                    store.dispatch(closeLoadingModal() as any);
                 } catch (err) {
+                    store.dispatch(closeLoadingModal() as any);
                     Promise.reject(err);
                 }
             } else {
@@ -204,9 +203,7 @@ export const ConnectExtensionWeb = (() => {
         disconnect,
         getConnection,
         isConnected,
-        // getState,
         storeState,
-        // setStore,
         generateQRCodeUri,
         downloadFileStorage,
         listenLastSync,

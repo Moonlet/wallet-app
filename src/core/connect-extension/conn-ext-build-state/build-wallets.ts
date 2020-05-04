@@ -1,72 +1,66 @@
 import * as IExtStorage from '../types';
 import {
-    IWalletsState
-    // IWalletState,
-    // IAccountState
+    IWalletsState,
+    IWalletState,
+    IAccountState,
+    ITokensAccountState,
+    ITokenState
 } from '../../../redux/wallets/state';
-// import { ChainIdType } from '../../blockchain/types';
-// import { WalletType } from '../../wallet/types';
+import { ChainIdType, Blockchain } from '../../blockchain/types';
+import { accountToken } from '../../../redux/tokens/static-selectors';
 
-export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets) => {
-    // console.log('trimmedWallets: ', trimmedWallets);
+export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets): IWalletsState => {
     const wallets: IWalletsState = {};
 
-    Object.keys(trimmedWallets).map((walletId: string) => {
-        // let wallet: IWalletState = {};
+    Object.keys(trimmedWallets).map((walletId: string, walletIndex: number) => {
         const wallet = trimmedWallets[walletId];
-        // let accounts: IAccountState[] = [];
+        const accounts: IAccountState[] = [];
+        const transactions: any = {};
 
-        wallet.accounts.map(account => {
-            // const tokens = {};
-            // Object.keys(account.tokens).map((chainId: ChainIdType) => {
-            //     Object.assign(tokensTrimmed, {
-            //         ...tokensTrimmed,
-            //         [chainId]: Object.keys(account.tokens[chainId])
-            //     });
-            // });
-            // TODO
-            // index: number;
-            // selected: boolean;
-            // name?: string;
-            // blockchain: Blockchain;
-            // address: string;
-            // publicKey: string;
-            // nonce?: number;
-            // tokens: ITokensAccountState;
-            // const acc: IAccountState = {};
-            // const accountTrimmed = {
-            //     index: account.index,
-            //     name: account.name,
-            //     address: account.address,
-            //     publicKey: account.publicKey,
-            //     tokens: tokensTrimmed
-            // };
-            // accountsTrimmed.push(accountTrimmed);
+        wallet.accounts.map((account, accountIndex: number) => {
+            const accountTokens: ITokensAccountState = {};
+
+            Object.keys(account.tokens).map((chainId: ChainIdType) => {
+                account.tokens[chainId].map((symbol: string, index: number) => {
+                    const token: ITokenState = accountToken(symbol, index);
+
+                    Object.assign(accountTokens, {
+                        ...accountTokens,
+                        [chainId]: token
+                    });
+                });
+            });
+
+            const acc: IAccountState = {
+                index: account.index,
+                selected: walletIndex === 0 && accountIndex === 0 ? true : false,
+                name: account?.name,
+                blockchain: account.blockchain,
+                address: account.address,
+                publicKey: account.publicKey,
+                nonce: account?.nonce,
+                tokens: accountTokens
+            };
+
+            accounts.push(acc);
         });
 
-        // const buildWallet: IWalletState = {
-        //     name: wallet.name,
-        //     type: wallet.type as WalletType,
-        //     hwOptions: wallet?.hwOptions as any, // TODO: check
-        //     accounts: accountsTrimmed,
-        //     transactions: (wallet.transactions && Object.keys(wallet.transactions)) || [] // tx hash
-        // };
+        const buildWallet: IWalletState = {
+            id: walletId,
+            name: wallet.name,
+            selected: walletIndex === 0 ? true : false,
+            selectedBlockchain: Blockchain.ZILLIQA, // by default the first blockchain is selected
+            type: wallet.type,
+            hwOptions: wallet?.hwOptions as any,
+            accounts,
+            transactions // TODO
+        };
 
-        // Object.assign(trimmedWallets, {
-        //     ...trimmedWallets,
-        //     [walletId]: buildWallet
-        // });
+        Object.assign(wallets, {
+            ...wallets,
+            [walletId]: buildWallet
+        });
     });
-
-    // addWallet
-
-    // build tx
-
-    // IWalletState
-
-    // IAccountState
-    // ITokensAccountState
-    // ITokenState
 
     return wallets;
 };

@@ -3,7 +3,6 @@ import { buildTokens } from './build-tokens';
 import { buildWallets } from './build-wallets';
 
 export const buildState = async (extState: IExtStorage.IStorage): Promise<any> => {
-    // console.log('buildState extState: ', extState);
     return {
         app: {
             version: extState.version

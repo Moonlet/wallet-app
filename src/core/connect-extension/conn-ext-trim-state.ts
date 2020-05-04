@@ -26,9 +26,11 @@ const trimWallets = (wallets: IWalletsState) => {
 
             const accountTrimmed = {
                 index: account.index,
-                name: account.name,
+                name: account?.name,
+                blockchain: account.blockchain,
                 address: account.address,
                 publicKey: account.publicKey,
+                nonce: account?.nonce,
                 tokens: tokensTrimmed
             };
 

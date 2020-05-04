@@ -1,5 +1,6 @@
-import { ChainIdType } from '../blockchain/types';
+import { ChainIdType, Blockchain } from '../blockchain/types';
 import { HWConnection } from '../wallet/hw-wallet/types';
+import { WalletType } from '../wallet/types';
 
 export interface IQRCodeConn {
     connectionId: string;
@@ -31,7 +32,7 @@ export interface IStorageWallets {
 
 export interface IStorageWallet {
     name: string;
-    type: string; // WalletType
+    type: WalletType;
     hwOptions?: {
         // ??
         deviceId: string;
@@ -40,10 +41,12 @@ export interface IStorageWallet {
         connectionType: HWConnection;
     };
     accounts: {
-        index: string;
-        name: string;
+        index: number;
+        name?: string;
+        blockchain: Blockchain;
         address: string;
         publicKey: string;
+        nonce?: number;
         tokens: {
             [chainId: string]: string[]; // array of symbols
         };

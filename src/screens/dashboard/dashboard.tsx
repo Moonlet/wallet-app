@@ -211,7 +211,7 @@ export class DashboardScreenComponent extends React.Component<
                         styles.blockchainButtonTextActive
                     }
                 >
-                    {blockchain && getBlockchain(blockchain).config.ui.blockchainDisplay}
+                    {blockchain && getBlockchain(blockchain).config.ui.displayName}
                 </Text>
             </TouchableOpacity>
         );
@@ -412,7 +412,6 @@ export class DashboardScreenComponent extends React.Component<
                         chainId={chainId}
                     />
                 </ScrollView>
-
                 {this.renderCoinBalanceCard()}
             </View>
         );

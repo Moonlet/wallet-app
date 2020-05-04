@@ -52,6 +52,7 @@ export const convertAmount = (
 ): BigNumber => {
     const blockchainInstance = getBlockchain(blockchain);
     const valueBigNumber = new BigNumber(value);
+    //    console.log('valuBigNumber', valueBigNumber);
     const amount = blockchainInstance.account.amountFromStd(valueBigNumber, tokenDecimals);
 
     if (fromToken === toToken) {

@@ -27,7 +27,6 @@ export class Client extends EthereumClient {
 
     public sendTransaction(transaction): Promise<string> {
         return this.http.jsonRpc('eth_sendRawTransaction', [transaction]).then(res => {
-            //            console.log('res', res);
             if (res.result) {
                 return res.result;
             }
@@ -56,12 +55,12 @@ export class Client extends EthereumClient {
 
             const gasPriceRpc = await this.getGasPrice();
 
-            const gasPrice = gasPriceRpc ? gasPriceRpc : config.feeOptions.defaults.gasPrice;
+            const gasPrice = gasPriceRpc
+                ? gasPriceRpc.multipliedBy(1.5)
+                : config.feeOptions.defaults.gasPrice;
             const gasLimit = results[0].result
                 ? new BigNumber(parseInt(results[0].result, 16)).multipliedBy(1.5)
                 : config.feeOptions.defaults.gasLimit[tokenType];
-
-            //        console.log('gasPrice, gaslimit', gasPrice, gasLimit);
 
             return {
                 gasPrice: gasPrice.toString(),

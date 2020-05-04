@@ -63,7 +63,7 @@ export const config: IBlockchainConfig = {
         enableTokenManagement: true,
         enableAccountCreation: false,
         maxAccountsNumber: 5,
-        blockchainDisplay: 'ETH'
+        displayName: 'ETH'
     },
     networks: {
         testNet: 4,

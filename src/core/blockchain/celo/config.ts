@@ -44,7 +44,7 @@ export const config: IBlockchainConfig = {
         enableTokenManagement: true,
         enableAccountCreation: false,
         maxAccountsNumber: 5,
-        blockchainDisplay: 'CELO'
+        displayName: 'CELO'
     },
     networks: {
         testNet: 44786,

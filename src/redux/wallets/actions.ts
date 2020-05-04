@@ -471,7 +471,8 @@ export const updateTransactionFromBlockchain = (
 
         if (displayNotification) {
             const amount = blockchainInstance.account.amountFromStd(
-                new BigNumber(blockchainInstance.transaction.getTransactionAmount(transaction))
+                new BigNumber(blockchainInstance.transaction.getTransactionAmount(transaction)),
+                tokenConfig.decimals
             );
             const formattedAmount = formatNumber(amount, {
                 currency: transaction.token.symbol

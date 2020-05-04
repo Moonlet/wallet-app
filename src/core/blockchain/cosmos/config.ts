@@ -70,7 +70,7 @@ export const config: IBlockchainConfig = {
         enableAccountCreation: false,
         maxAccountsNumber: 5,
         extraFields: ['Memo'],
-        blockchainDisplay: 'COSMOS'
+        displayName: 'COSMOS'
     },
     networks: {
         testNet: 'gaia-13007',

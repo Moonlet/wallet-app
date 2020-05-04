@@ -8,6 +8,8 @@ import {
     GENERIC_TOKEN_ICON,
     TokenType
 } from '../../blockchain/types/token';
+import { addTokenForBlockchain } from '../../../redux/tokens/actions';
+import { store } from '../../../redux/config';
 
 const convertTokenToState = (
     tk: { type: TokenType; symbol: string; contractAddress: string },
@@ -78,6 +80,10 @@ export const buildTokens = async (
                                     }
                                 }
                             });
+
+                            store.dispatch(
+                                addTokenForBlockchain(blockchain, token, chainId) as any
+                            );
                         }
                     }
                 );

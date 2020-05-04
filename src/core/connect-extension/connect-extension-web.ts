@@ -17,17 +17,9 @@ export const ConnectExtensionWeb = (() => {
         return false;
     };
 
-    // const getState = () => {
-    //     //
-    // };
-
     const storeState = (decryptedState: any) => {
         //
     };
-
-    // const setStore = (storeReference: any) => {
-    //     //
-    // };
 
     const generateQRCodeUri = async () => {
         //
@@ -41,21 +33,14 @@ export const ConnectExtensionWeb = (() => {
         //
     };
 
-    const test = async (conn: any) => {
-        //
-    };
-
     return {
         storeConnection,
         disconnect,
         getConnection,
         isConnected,
-        // getState,
         storeState,
-        // setStore,
         generateQRCodeUri,
         downloadFileStorage,
-        listenLastSync,
-        test
+        listenLastSync
     };
 })();

@@ -12,16 +12,6 @@ import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extens
 
 const navigationOptions = () => ({ header: null });
 
-// const connectionId = '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000';
-// const encKey = '5be0e4c3a239e0027783a2e9c3bd8999cc450f777198156b3ff4f4a3e8b6c691';
-
-// const connectionId = '2639f212-d5a5-4d25-9d30-ac133c49b330';
-// const encKey =
-//     'ulOnLqnatyFV6elkcLelNdlci8SjX7jJBa3PJzsPtyPPmxqz7mtEG0PyN9Rpte0HtgjS1VZIb+omPv0Z8FG8kA==';
-
-// const os = 'Windows%2010';
-// const platform = 'Chrome';
-
 export class OnboardingScreenComponent extends React.Component<
     INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
@@ -29,33 +19,15 @@ export class OnboardingScreenComponent extends React.Component<
     public qrCanvas: HTMLCanvasElement;
 
     public async componentDidMount() {
-        // const uri = `mooonletExtSync:${connectionId}@firebase/?encKey=${encKey}&os=${os}&browser=${platform}`;
-        // QRCode.toCanvas(this.qrCanvas, uri, { errorCorrectionLevel: 'H' });
-        // await ConnectExtensionWeb.test({
-        //     connectionId,
-        //     encKey,
-        //     os,
-        //     platform
-        // });
-
         try {
             if (await ConnectExtensionWeb.isConnected()) {
-                // Get State
-                // const state = ConnectExtensionWeb.getState();
-                // console.log('state: ', state);
-                // if (state) {
-                // Navigate to Dashboard
                 this.props.navigation.navigate(
                     'MainNavigation',
                     {},
                     NavigationActions.navigate({ routeName: 'Dashboard' })
                 );
-                // } else {
-                // State has not been loaded!
-                // }
             } else {
                 const res = await ConnectExtensionWeb.generateQRCodeUri();
-                // console.log('conn: ', res.conn);
                 QRCode.toCanvas(this.qrCanvas, res.uri, { errorCorrectionLevel: 'H' });
                 ConnectExtensionWeb.listenLastSync(res.conn);
             }

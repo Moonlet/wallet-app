@@ -13,6 +13,7 @@ import { browser } from 'webextension-polyfill-ts';
 import { buildState } from './conn-ext-build-state/conn-ext-build-state';
 import { store } from '../../redux/config';
 import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
+import { NavigationService } from '../../navigation/navigation-service';
 
 export const ConnectExtensionWeb = (() => {
     const storeConnection = async (conn: IQRCodeConn) => {
@@ -45,34 +46,26 @@ export const ConnectExtensionWeb = (() => {
 
     // TODO: check if possible not to make this a promise
     const isConnected = async (): Promise<boolean> => {
-        // TODO: check here for state, rather than readEncrypted
-        // because readEncrypted is a Promise
-        // const rehydrated = store.getState()._persist.rehydrated;
-        // console.log('rehydrated: ', rehydrated);
-        // console.log('state: ', store.getState());
-
-        return false;
-        // try {
-        //     const conn = await getConnection();
-        //     if (conn) {
-        //         return true;
-        //     } else {
-        //         return false;
-        //     }
-        // } catch {
-        //     //
-        // }
+        try {
+            const conn = await getConnection();
+            if (conn) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch {
+            //
+        }
     };
 
     const storeState = async (decryptedState: any) => {
         try {
             // Build extension state
-            store.dispatch(setExtensionStateLoaded());
             const extState = await buildState(decryptedState);
-            // console.log('ext state after build: ', extState);
             const state = merge(store.getState(), extState);
             state.app.extensionStateLoaded = true;
             store.dispatch(updateReduxState(state) as any);
+            store.dispatch(setExtensionStateLoaded());
             return;
         } catch {
             //
@@ -165,6 +158,9 @@ export const ConnectExtensionWeb = (() => {
 
                         // remove listener for connectionId
                         connections.child(conn.connectionId).off('value');
+
+                        // navigate to Dashboard
+                        NavigationService.navigate('MainNavigation', {});
                     }
 
                     // close loading modal
@@ -179,25 +175,6 @@ export const ConnectExtensionWeb = (() => {
         });
     };
 
-    const test = async (conn: IQRCodeConn) => {
-        // Extension the state from Firebase Storage
-        const extState = await downloadFileStorage(conn.connectionId);
-
-        if (extState) {
-            const decryptedState = JSON.parse(
-                decrypt(extState, conn.encKey).toString(CryptoJS.enc.Utf8)
-            );
-
-            // Save state
-            storeState(decryptedState);
-
-            // Store connection
-            await storeConnection(conn);
-        } else {
-            // console.log('FAILED');
-        }
-    };
-
     return {
         storeConnection,
         disconnect,
@@ -206,7 +183,6 @@ export const ConnectExtensionWeb = (() => {
         storeState,
         generateQRCodeUri,
         downloadFileStorage,
-        listenLastSync,
-        test // TODO remove
+        listenLastSync
     };
 })();

@@ -14,7 +14,7 @@ export interface IReduxProps {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        stateLoaded: state.ui.extension.stateLoaded
+        stateLoaded: state.ui.extension.stateLoaded // TODO: check this
     };
 };
 

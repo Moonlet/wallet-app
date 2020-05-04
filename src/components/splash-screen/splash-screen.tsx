@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -23,10 +23,11 @@ export class SplashScreenComponent extends React.Component<
             showCancelButton: false
         };
 
-        Platform.OS === 'web' && setTimeout(() => this.setState({ showCancelButton: true }), 2800);
+        // Platform.OS === 'web' && setTimeout(() => this.setState({ showCancelButton: true }), 2800);
     }
 
     public resetSession() {
+        // TODO: WalletConnectWeb
         WalletConnectWeb.disconnect();
         location.reload();
     }
@@ -61,7 +62,7 @@ export class SplashScreenComponent extends React.Component<
                         onAnimationFinish={() => this.loopAnimation()}
                     />
                 </View>
-                {this.state.showCancelButton && this.renderCancelButton()}
+                {/* {this.state.showCancelButton && this.renderCancelButton()} */}
             </View>
         );
     }

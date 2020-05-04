@@ -38,7 +38,6 @@ import { calculateBalance } from '../../core/utils/balance';
 import { getBlockchains, getChainId } from '../../redux/preferences/selectors';
 import { NavigationEvents, StackActions } from 'react-navigation';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
-import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 import { IExchangeRates } from '../../redux/market/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { Amount } from '../../components/amount/amount';
@@ -424,7 +423,8 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                {Platform.OS === 'web' && <ExtensionConnectionInfo />}
+                {/* TODO: check this */}
+                {/* {Platform.OS === 'web' && <ExtensionConnectionInfo />} */}
 
                 <TestnetBadge />
 

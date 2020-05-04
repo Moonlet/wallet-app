@@ -74,8 +74,6 @@ export default class App extends React.Component<{}, IState> {
 
         // decide the bar style on lightTheme
         StatusBar.setBarStyle('light-content', true);
-
-        // Platform.OS === 'web' && ConnectExtensionWeb.setStore(store);
     }
 
     public updateAppReady = () => {

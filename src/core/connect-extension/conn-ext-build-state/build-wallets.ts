@@ -26,7 +26,10 @@ export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets): IWall
 
                     Object.assign(accountTokens, {
                         ...accountTokens,
-                        [chainId]: token
+                        [chainId]: {
+                            ...accountTokens[chainId],
+                            [symbol]: token
+                        }
                     });
                 });
             });

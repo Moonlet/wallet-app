@@ -439,9 +439,6 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                {/* TODO: check this */}
-                {/* {Platform.OS === 'web' && <ExtensionConnectionInfo />} */}
-
                 <TestnetBadge />
 
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />

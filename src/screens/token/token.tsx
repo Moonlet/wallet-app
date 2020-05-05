@@ -193,9 +193,9 @@ export class TokenScreenComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <TestnetBadge />
-                {/* TODO */}
-                {/* {Platform.OS === 'web' && <ExtensionConnectionInfo />}  */}
+
                 {this.renderComponent()}
+
                 <AccountSettingsModal
                     visible={this.state.settingsVisible}
                     onDonePressed={() => this.openSettingsMenu()}

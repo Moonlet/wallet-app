@@ -158,7 +158,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                         <Button
                             testID="button-send"
                             style={styles.button}
-                            disabled={!this.props.canSend}
+                            // disabled={!this.props.canSend} // TODO
                             onPress={() => {
                                 navigation.navigate('Send', {
                                     accountIndex: account.index,

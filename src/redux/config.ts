@@ -8,9 +8,9 @@ import appReducer from './app/reducer';
 import marketReducer from './market/reducer';
 import prefReducer from './preferences/reducer';
 import contactsReducer from './contacts/reducer';
-import { walletConnectMiddleware } from './utils/wallet-connect-middleware';
 import { uiReducer } from './ui/reducer';
 import tokensReducer from './tokens/reducer';
+import { connectExtensionMiddleware } from './utils/connect-extension-middleware';
 
 const composeEnhancers = composeWithDevTools({
     // options like actionSanitizer, stateSanitizer
@@ -30,7 +30,7 @@ const configureStore = () => {
     return createStore(
         persistReducer(persistConfig, rootReducer),
         {},
-        composeEnhancers(applyMiddleware(thunk, walletConnectMiddleware))
+        composeEnhancers(applyMiddleware(thunk, connectExtensionMiddleware))
     );
 };
 

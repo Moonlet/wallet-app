@@ -19,6 +19,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { getUrlParams } from '../../core/connect-extension/utils';
 import { IQRCodeConn } from '../../core/connect-extension/types';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 
 const qrCodeRegex = /^mooonletExtSync:([^\@]*)\@([^\/\?]*)([^\?]*)?\??(.*)/;
 
@@ -59,18 +60,16 @@ export class ConnectExtensionScreenComponent extends React.Component<
         this.setState({ isLoading: true });
 
         try {
-            const encryptionKey = await getBaseEncryptionKey();
-            const connection = await readEncrypted(CONN_EXTENSION, encryptionKey);
+            const connection = await ConnectExtensionWeb.getConnection();
 
             if (connection) {
-                const connectionParse = JSON.parse(connection);
                 this.setState({
                     isConnected: true,
-                    os: connectionParse?.os,
-                    platform: connectionParse?.platform
+                    os: connection?.os,
+                    platform: connection?.platform
                 });
 
-                await this.connectExtension.syncExtension(connectionParse);
+                await this.connectExtension.syncExtension(connection);
             }
 
             this.setState({ isLoading: false });

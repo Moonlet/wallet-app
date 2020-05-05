@@ -100,7 +100,7 @@ const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
 const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
     return {
         currency: preferences.currency,
-        testnet: preferences.testNet,
+        testNet: preferences.testNet,
         networks: cloneDeep(preferences.networks),
         blockchains: Object.keys(preferences.blockchains)
     };

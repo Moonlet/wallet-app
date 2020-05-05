@@ -80,7 +80,7 @@ export interface IStorageContact {
 
 export interface IStoragePreferences {
     currency: string;
-    testnet: boolean;
+    testNet: boolean;
     networks: IStorageNetworks;
     blockchains: string[];
 }

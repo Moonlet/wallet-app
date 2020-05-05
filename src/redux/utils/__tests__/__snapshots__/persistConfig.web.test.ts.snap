@@ -11,5 +11,6 @@ Object {
     "removeItem": [Function],
     "setItem": [Function],
   },
+  "version": 1,
 }
 `;

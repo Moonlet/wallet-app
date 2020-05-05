@@ -8,8 +8,6 @@ import {
 } from '../../../redux/wallets/state';
 import { ChainIdType, Blockchain } from '../../blockchain/types';
 import { accountToken } from '../../../redux/tokens/static-selectors';
-import { updateTransactionFromBlockchain } from '../../../redux/wallets/actions';
-import { store } from '../../../redux/config';
 
 export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets): IWalletsState => {
     const wallets: IWalletsState = {};
@@ -49,30 +47,31 @@ export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets): IWall
             accounts.push(acc);
         });
 
-        wallet?.transactions &&
-            Object.keys(wallet.transactions).map((txHash: string) => {
-                const tx = wallet.transactions[txHash];
+        // TODO: move this in other part - called after the handshake is done
+        // wallet?.transactions &&
+        //     Object.keys(wallet.transactions).map((txHash: string) => {
+        //         const tx = wallet.transactions[txHash];
 
-                store.dispatch(
-                    updateTransactionFromBlockchain(
-                        txHash,
-                        tx.blockchain,
-                        tx.chainId,
-                        tx.broadcastedOnBlock,
-                        false
-                    ) as any
-                );
-            });
+        //         store.dispatch(
+        //             updateTransactionFromBlockchain(
+        //                 txHash,
+        //                 tx.blockchain,
+        //                 tx.chainId,
+        //                 tx.broadcastedOnBlock,
+        //                 false
+        //             ) as any
+        //         );
+        //     });
 
         const buildWallet: IWalletState = {
             id: walletId,
             name: wallet.name,
             selected: walletIndex === 0 ? true : false,
-            selectedBlockchain: Blockchain.ZILLIQA, // by default the first blockchain is selected
+            selectedBlockchain: Blockchain.ZILLIQA, // TODO: check this
             type: wallet.type,
             hwOptions: wallet?.hwOptions as any,
             accounts,
-            transactions: {} // added above, using updateTransactionFromBlockchain
+            transactions: {}
         };
 
         Object.assign(wallets, {

@@ -9,6 +9,7 @@ export const RESET_FAILED_LOGINS = 'RESET_FAILED_LOGINS';
 export const INCREMENT_FAILED_LOGINS = 'INCREMENT_FAILED_LOGINS';
 export const SET_APP_BLOCK_UNTIL = 'SET_APP_BLOCK_UNTIL';
 export const RESET_ALL_DATA = 'RESET_ALL_DATA';
+export const REDUX_UPDATE_STATE = 'REDUX_UPDATE_STATE';
 
 export const appSetAcceptedTcVersion = (version: number) => {
     return {
@@ -46,4 +47,11 @@ export const setAppBlockUntil = (date: Date | string) => {
 export const resetAllData = () => async (dispatch, getState: () => IReduxState) => {
     Platform.OS !== 'web' && clearPinCode(); // clear keychain storage
     dispatch({ type: RESET_ALL_DATA });
+};
+
+export const reduxUpdateState = (state: any) => dispatch => {
+    dispatch({
+        type: REDUX_UPDATE_STATE,
+        data: { state }
+    });
 };

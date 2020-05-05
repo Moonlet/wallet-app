@@ -1,12 +1,13 @@
 // import WalletConnect from '@walletconnect/browser';
 import { WC } from '../constants/app';
-import { updateReduxState } from '../../redux/wallets/actions';
+// import { updateReduxState } from '../../redux/wallets/actions';
 import { WebStorage } from './wc-web-storage';
 import Connector from '@walletconnect/core';
 import * as cryptoLib from '@walletconnect/browser/src/webCrypto';
 import { setExtensionStateLoaded } from '../../redux/ui/extension/actions';
 import { merge } from 'lodash';
 
+// TODO: remove this
 export const WalletConnectWeb = (() => {
     let store = null;
     const subscribers = [];
@@ -46,7 +47,7 @@ export const WalletConnectWeb = (() => {
             case WC.UPDATE_STATE:
                 const state = merge(store.getState(), payload.params[0]);
 
-                store.dispatch(updateReduxState(state));
+                // store.dispatch(updateReduxState(state));
                 walletConnector.approveRequest({ id: payload.id, result: { state } });
                 break;
 
@@ -86,7 +87,7 @@ export const WalletConnectWeb = (() => {
                             } else {
                                 const state = merge(store.getState(), data.state);
                                 state.app.extensionStateLoaded = true;
-                                store.dispatch(updateReduxState(state));
+                                // store.dispatch(updateReduxState(state));
                                 resolve(data);
                             }
                         });

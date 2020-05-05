@@ -5,14 +5,11 @@ import { extensionState } from './conn-ext-trim-state';
 import { store } from '../../redux/config';
 import { Notifications } from '../messaging/notifications/notifications';
 import { IQRCodeConn } from './types';
-import { sha256 } from 'js-sha256';
-// import CryptoJS from 'crypto-js';
+import { sha256 } from 'js-sha256'; // maybe replace this with CryptoJS.SHA256
 
 export class ConnectExtension {
     public async syncExtension(connection: IQRCodeConn): Promise<any> {
         try {
-            // CryptoJS.SHA256(authToken);
-
             const http = new HttpClient(CONFIG.extSyncUpdateStateUrl);
             const res = await http.post('', {
                 connectionId: connection.connectionId,
@@ -23,14 +20,12 @@ export class ConnectExtension {
 
             return res;
         } catch {
-            Promise.reject();
+            //
         }
     }
 
     public async disconnectExtension(connection: any) {
         try {
-            // CryptoJS.SHA256(authToken);
-
             const connectionParse = JSON.parse(connection);
             const connectionId = connectionParse.connectionId;
             const authToken = connectionParse.encKey;
@@ -41,7 +36,7 @@ export class ConnectExtension {
                 authToken: sha256(authToken)
             });
         } catch {
-            Promise.reject();
+            //
         }
     }
 }

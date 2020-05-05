@@ -6,7 +6,8 @@ import {
     RESET_FAILED_LOGINS,
     INCREMENT_FAILED_LOGINS,
     SET_APP_BLOCK_UNTIL,
-    RESET_ALL_DATA
+    RESET_ALL_DATA,
+    REDUX_UPDATE_STATE
 } from './actions';
 
 const intialState: IAppState = {
@@ -67,6 +68,13 @@ export default (state: IAppState = intialState, action: IAction): IAppState => {
 
         case RESET_ALL_DATA:
             return intialState;
+
+        case REDUX_UPDATE_STATE: {
+            return {
+                ...state,
+                version: action.data.state.app.version
+            };
+        }
 
         default:
             break;

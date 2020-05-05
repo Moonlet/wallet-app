@@ -3,16 +3,10 @@ import { ChainIdType, Blockchain } from '../../blockchain/types';
 import { ITokensConfigState, ITokenConfigState } from '../../../redux/tokens/state';
 import CONFIG from '../../../config';
 import { getBlockchain } from '../../blockchain/blockchain-factory';
-import {
-    TokenScreenComponentType,
-    GENERIC_TOKEN_ICON,
-    TokenType
-} from '../../blockchain/types/token';
-import { addTokenForBlockchain } from '../../../redux/tokens/actions';
-import { store } from '../../../redux/config';
+import { TokenScreenComponentType, GENERIC_TOKEN_ICON } from '../../blockchain/types/token';
 
 const convertTokenToState = (
-    tk: { type: TokenType; symbol: string; contractAddress: string },
+    tk: IExtStorage.IStorageToken,
     staticToken: any,
     blockchainToken: any
 ): ITokenConfigState => {
@@ -35,59 +29,76 @@ const convertTokenToState = (
     };
 };
 
+const fetchToken = async (
+    blockchain: Blockchain,
+    chainId: ChainIdType,
+    tk: IExtStorage.IStorageToken
+): Promise<ITokenConfigState> => {
+    let staticToken;
+    let blockchainToken;
+
+    try {
+        const fetchResponse = await fetch(
+            CONFIG.tokensUrl +
+                `${blockchain.toLocaleLowerCase()}/${tk.symbol.toLocaleLowerCase()}.json`
+        );
+
+        if (fetchResponse.status === 200) {
+            staticToken = await fetchResponse.json();
+            blockchainToken = await getBlockchain(blockchain)
+                .getClient(chainId)
+                .tokens[tk.type].getTokenInfo(tk.contractAddress);
+        }
+    } catch {
+        //
+    }
+
+    if (staticToken || blockchainToken) {
+        return convertTokenToState(tk, staticToken, blockchainToken);
+    }
+
+    return undefined;
+};
+
 export const buildTokens = async (
     trimmedTokens: IExtStorage.IStorageTokens
 ): Promise<ITokensConfigState> => {
     const finalTokens: ITokensConfigState = {};
 
     await Promise.all(
-        Object.keys(trimmedTokens).map((blockchain: Blockchain) => {
-            Object.keys(trimmedTokens[blockchain]).map((chainId: ChainIdType) => {
-                Object.values(trimmedTokens[blockchain][chainId]).map(
-                    async (tk: { type: TokenType; symbol: string; contractAddress: string }) => {
-                        let token: ITokenConfigState;
+        Object.entries(trimmedTokens).map(async objBlockchain => {
+            // Blockchain level
+            const blockchain: Blockchain = objBlockchain[0] as Blockchain;
 
-                        let staticToken;
-                        let blockchainToken;
+            return Promise.all(
+                Object.entries(objBlockchain[1]).map(async objChainId => {
+                    // Chain Id level
+                    const chainId: ChainIdType = objChainId[0];
 
-                        try {
-                            const fetchResponse = await fetch(
-                                CONFIG.tokensUrl +
-                                    `${blockchain.toLocaleLowerCase()}/${tk.symbol.toLocaleLowerCase()}.json`
-                            );
+                    return Promise.all(
+                        Object.entries(objChainId[1]).map(async obj => {
+                            // Symbol level
+                            const trimmedToken: IExtStorage.IStorageToken = obj[1] as any;
 
-                            if (fetchResponse.status === 200) {
-                                staticToken = await fetchResponse.json();
-                                blockchainToken = await getBlockchain(blockchain)
-                                    .getClient(chainId)
-                                    .tokens[tk.type].getTokenInfo(tk.contractAddress);
-                            }
-                        } catch {
-                            //
-                        }
+                            const buildToken = await fetchToken(blockchain, chainId, trimmedToken);
 
-                        if (staticToken || blockchainToken) {
-                            token = convertTokenToState(tk, staticToken, blockchainToken);
-
-                            Object.assign(finalTokens, {
-                                ...finalTokens,
-                                [blockchain]: {
-                                    ...(finalTokens && finalTokens[blockchain]),
-                                    [chainId]: {
-                                        ...(finalTokens[blockchain] &&
-                                            finalTokens[blockchain][chainId]),
-                                        [token.symbol]: token
+                            if (buildToken) {
+                                Object.assign(finalTokens, {
+                                    ...finalTokens,
+                                    [blockchain]: {
+                                        ...(finalTokens && finalTokens[blockchain]),
+                                        [chainId]: {
+                                            ...(finalTokens[blockchain] &&
+                                                finalTokens[blockchain][chainId]),
+                                            [buildToken.symbol]: buildToken
+                                        }
                                     }
-                                }
-                            });
-
-                            store.dispatch(
-                                addTokenForBlockchain(blockchain, token, chainId) as any
-                            );
-                        }
-                    }
-                );
-            });
+                                });
+                            }
+                        })
+                    );
+                })
+            );
         })
     );
 

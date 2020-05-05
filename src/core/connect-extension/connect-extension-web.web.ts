@@ -3,9 +3,6 @@ import CryptoJS from 'crypto-js';
 import { v4 as uuidv4 } from 'uuid';
 import { IQRCodeConn, FirebaseRef, FIREBASE_BUCKET } from './types';
 import { storage, database } from 'firebase';
-import { updateReduxState } from '../../redux/wallets/actions';
-import { setExtensionStateLoaded } from '../../redux/ui/extension/actions';
-import { merge } from 'lodash';
 import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage.web';
 import { CONN_EXTENSION } from '../../core/constants/app';
 import Bowser from 'bowser';
@@ -14,6 +11,7 @@ import { buildState } from './conn-ext-build-state/conn-ext-build-state';
 import { store } from '../../redux/config';
 import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { NavigationService } from '../../navigation/navigation-service';
+import { reduxUpdateState } from '../../redux/app/actions';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -129,11 +127,8 @@ export const ConnectExtensionWeb = (() => {
     const storeState = async (decryptedState: any) => {
         try {
             const extState = await buildState(decryptedState);
-            const state = merge(store.getState(), extState);
-            state.app.extensionStateLoaded = true;
-            store.dispatch(updateReduxState(state) as any);
-            store.dispatch(setExtensionStateLoaded());
-            return;
+            store.dispatch(reduxUpdateState(extState) as any);
+            // extensionStateLoaded check if needed
         } catch {
             //
         }

@@ -53,17 +53,11 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
         };
     };
 
-    public amountToStd = (
-        value: BigNumber | number | string,
-        decimals: number = config.tokens[config.coin].decimals
-    ): BigNumber => {
+    public amountToStd = (value: BigNumber | number | string, decimals: number): BigNumber => {
         return new BigNumber(value).multipliedBy(new BigNumber(10).pow(decimals));
     };
 
-    public amountFromStd = (
-        value: BigNumber | number | string,
-        decimals: number = config.tokens[config.coin].decimals
-    ): BigNumber => {
+    public amountFromStd = (value: BigNumber | number | string, decimals: number): BigNumber => {
         return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals));
     };
 

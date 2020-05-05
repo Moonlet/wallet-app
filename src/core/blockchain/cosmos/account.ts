@@ -60,10 +60,7 @@ export class CosmosAccountUtils implements IBlockchainAccountUtils {
         };
     }
 
-    public amountToStd(
-        value: BigNumber | number | string,
-        decimals: number = config.tokens[config.coin].decimals
-    ): BigNumber {
+    public amountToStd(value: BigNumber | number | string, decimals: number): BigNumber {
         return new BigNumber(value).multipliedBy(new BigNumber(10).pow(decimals));
     }
 

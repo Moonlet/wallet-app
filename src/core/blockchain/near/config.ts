@@ -10,6 +10,7 @@ export const NEAR_NATIVE: ITokenConfigState = {
     icon: {
         iconComponent: NearIcon
     },
+    removable: false,
     defaultOrder: 0,
     decimals: 24,
     ui: {

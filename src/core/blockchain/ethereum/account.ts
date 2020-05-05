@@ -56,7 +56,6 @@ export class EthereumAccountUtils implements IBlockchainAccountUtils {
     }
 
     public amountFromStd(value: BigNumber | number | string, decimals: number): BigNumber {
-        //  console.log('value', value, decimals);
         return new BigNumber(value).dividedBy(new BigNumber(10).pow(decimals));
     }
 

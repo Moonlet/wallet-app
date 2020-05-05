@@ -10,6 +10,7 @@ export const ATOM_NATIVE: ITokenConfigState = {
     icon: {
         iconComponent: CosmosIcon
     },
+    removable: false,
     defaultOrder: 0,
     decimals: 6,
     ui: {

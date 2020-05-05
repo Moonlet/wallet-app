@@ -2,8 +2,6 @@ import { IAccountState } from '../../redux/wallets/state';
 
 import BigNumber from 'bignumber.js';
 
-import { TokenType } from '../blockchain/types/token';
-
 import { getBlockchain } from '../blockchain/blockchain-factory';
 import { Blockchain, ChainIdType } from '../blockchain/types';
 import { IExchangeRates } from '../../redux/market/state';
@@ -24,7 +22,7 @@ export const calculateBalance = (
         const tokenBalanceValue = new BigNumber(token.balance?.value);
 
         if (token.active) {
-            if (tokenConfig?.type === TokenType.NATIVE) {
+            if (tokenConfig.removable === false) {
                 balance = balance.plus(tokenBalanceValue);
             } else {
                 const amount = convertAmount(
@@ -32,8 +30,8 @@ export const calculateBalance = (
                     exchangeRates,
                     tokenBalanceValue.toString(),
                     key,
-                    getBlockchain(account.blockchain).config.coin,
-                    tokenConfig?.decimals
+                    tokenConfig.symbol,
+                    tokenConfig.decimals
                 );
                 balance = balance.plus(amount);
             }
@@ -52,9 +50,7 @@ export const convertAmount = (
 ): BigNumber => {
     const blockchainInstance = getBlockchain(blockchain);
     const valueBigNumber = new BigNumber(value);
-    //    console.log('valuBigNumber', valueBigNumber);
     const amount = blockchainInstance.account.amountFromStd(valueBigNumber, tokenDecimals);
-
     if (fromToken === toToken) {
         return amount;
     }

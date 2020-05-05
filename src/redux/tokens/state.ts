@@ -16,6 +16,7 @@ export interface ITokenConfigState {
     symbol: string;
     icon?: ITokenIcon;
     type: TokenType;
+    removable: boolean;
     contractAddress?: string;
     decimals: number;
     defaultOrder?: number;

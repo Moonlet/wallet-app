@@ -12,6 +12,7 @@ export const ZIL_NATIVE: ITokenConfigState = {
         iconComponent: ZilIcon
     },
     defaultOrder: 0,
+    removable: false,
     decimals: 12,
     ui: {
         decimals: 3,

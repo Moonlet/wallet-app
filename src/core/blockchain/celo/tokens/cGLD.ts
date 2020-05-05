@@ -9,14 +9,14 @@ export const CELO_GOLD_NATIVE: ITokenConfigState = {
     icon: {
         uri: 'https://fire.moonlet.io/static/tokens/icons/celo/cgld.png'
     },
-    contractAddress: '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
+    removable: false,
     defaultOrder: 0,
     decimals: 18,
     ui: {
         decimals: 4,
         tokenScreenComponent: TokenScreenComponentType.DEFAULT
     },
-    type: TokenType.ERC20,
+    type: TokenType.NATIVE,
     units: {
         WEI: new BigNumber(1),
         GWEI: new BigNumber(Math.pow(10, 9)),
@@ -30,6 +30,7 @@ export const CELO_GOLD_TESTNET_ALFAJORES: ITokenConfigState = {
     icon: {
         uri: 'https://fire.moonlet.io/static/tokens/icons/celo/cgld.png'
     },
+    removable: false,
     contractAddress: '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
     defaultOrder: 0,
     decimals: 18,

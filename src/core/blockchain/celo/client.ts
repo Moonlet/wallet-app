@@ -83,7 +83,6 @@ export class Client extends EthereumClient {
 
     public async getGasPrice(): Promise<BigNumber> {
         return this.http.jsonRpc('eth_gasPrice', []).then(res => {
-            //       console.log('gas', res.result);
             return new BigNumber(res.result, 16);
         });
     }

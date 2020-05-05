@@ -10,6 +10,7 @@ export const ETH_NATIVE: ITokenConfigState = {
     icon: {
         iconComponent: EthIcon
     },
+    removable: false,
     defaultOrder: 0,
     decimals: 18,
     ui: {

@@ -1,6 +1,6 @@
 import { IQRCodeConn } from './types';
 import { getBaseEncryptionKey } from '../secure/keychain';
-import { readEncrypted } from '../secure/storage';
+import { readEncrypted, deleteFromStorage } from '../secure/storage';
 import { CONN_EXTENSION } from '../constants/app';
 
 export const ConnectExtensionWeb = (() => {
@@ -9,7 +9,18 @@ export const ConnectExtensionWeb = (() => {
     };
 
     const disconnect = async () => {
-        //
+        try {
+            const connection = await ConnectExtensionWeb.getConnection();
+
+            if (connection) {
+                this.connectExtension.disconnectExtension(connection);
+            }
+        } catch {
+            //
+        }
+
+        // Delete connection from async storage
+        await deleteFromStorage(CONN_EXTENSION);
     };
 
     const getConnection = async () => {

@@ -11,7 +11,7 @@ import { normalize } from '../../styles/dimensions';
 import { Icon } from '../../components/icon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DialogComponent } from '../../components/dialog/dialog-component';
-import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
+import { storeEncrypted } from '../../core/secure/storage';
 import { CONN_EXTENSION } from '../../core/constants/app';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getBaseEncryptionKey } from '../../core/secure/keychain';
@@ -152,12 +152,6 @@ export class ConnectExtensionScreenComponent extends React.Component<
         }
     }
 
-    private async deleteConnection() {
-        // Delete connection from async storage
-        await deleteFromStorage(CONN_EXTENSION);
-        this.setState({ isConnected: false });
-    }
-
     private async disconnectExtension() {
         if (
             await DialogComponent.confirm(
@@ -167,19 +161,9 @@ export class ConnectExtensionScreenComponent extends React.Component<
         ) {
             this.setState({ isLoading: true });
 
-            try {
-                const connection = await ConnectExtensionWeb.getConnection();
+            await ConnectExtensionWeb.disconnect();
 
-                if (connection) {
-                    this.connectExtension.disconnectExtension(connection);
-                }
-            } catch {
-                //
-            }
-
-            await this.deleteConnection();
-
-            this.setState({ isLoading: false });
+            this.setState({ isLoading: false, isConnected: false });
         }
     }
 

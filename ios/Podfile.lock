@@ -379,7 +379,7 @@ PODS:
   - RNSentry (1.3.3):
     - React
     - Sentry (~> 4.4.0)
-  - RNSVG (12.0.3):
+  - RNSVG (12.1.0):
     - React
   - RNVectorIcons (6.6.0):
     - React
@@ -655,7 +655,7 @@ SPEC CHECKSUMS:
   RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
   RNScreens: 03bf608b92ac0acf323f47d8f5b63a8f829340c8
   RNSentry: 86baf0c87120cd5eb491d073989f8cbc1a2174c6
-  RNSVG: 7e16ddfc6e00d5aa69c9eb83e699bcce5dcb85d4
+  RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   RNVoipPushNotification: 27ff53396bfd396bef52bf30a31353c1897b8e3a
   SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
@@ -666,4 +666,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: eb4c90488aa13900d7ec0ed35cd04b71cd4508c6
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1

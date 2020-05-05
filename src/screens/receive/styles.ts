@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, SCREEN_HEIGHT } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -9,7 +9,8 @@ export default (theme: ITheme) =>
             padding: BASE_DIMENSION * 2,
             paddingTop: BASE_DIMENSION * 4,
             flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            height: SCREEN_HEIGHT // used for web
         },
         qrCodeContainer: {
             flex: 1,

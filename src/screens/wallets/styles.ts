@@ -9,7 +9,7 @@ export default (theme: ITheme) =>
             flex: 1,
             padding: BASE_DIMENSION * 2,
             backgroundColor: theme.colors.appBackground,
-            height: SCREEN_HEIGHT
+            height: SCREEN_HEIGHT // used for web
         },
         scrollContainer: {
             flex: 1,

@@ -17,7 +17,7 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
 
     const reduxToken = state.tokens;
 
-    return reduxToken[blockchain][chainId][symbol];
+    return reduxToken[blockchain] && reduxToken[blockchain][chainId][symbol];
 };
 
 export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountState => {

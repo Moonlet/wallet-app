@@ -305,21 +305,17 @@ export class WalletsScreenComponent extends React.Component<
                 <View style={styles.bottomContainer}>
                     {
                         {
-                            [WalletType.HD]: (
+                            [WalletType.HD]: Platform.OS !== 'web' && (
                                 <View style={styles.buttonContainer}>
                                     <Button
                                         style={styles.bottomButton}
-                                        onPress={() => {
-                                            this.onPressCreate();
-                                        }}
+                                        onPress={() => this.onPressCreate()}
                                     >
                                         {translate('App.labels.create')}
                                     </Button>
                                     <Button
                                         style={styles.bottomButton}
-                                        onPress={() => {
-                                            this.onPressRecover();
-                                        }}
+                                        onPress={() => this.onPressRecover()}
                                     >
                                         {translate('App.labels.recover')}
                                     </Button>

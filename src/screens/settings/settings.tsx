@@ -103,7 +103,11 @@ export class SettingsScreenComponent extends React.Component<
     public reportIssueTouch() {
         Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
             if (supported) {
-                Linking.openURL(CONFIG.supportUrl);
+                if (Platform.OS === 'web') {
+                    window.open(CONFIG.supportUrl);
+                } else {
+                    Linking.openURL(CONFIG.supportUrl);
+                }
             }
         });
     }
@@ -328,7 +332,6 @@ export class SettingsScreenComponent extends React.Component<
                 <View style={styles.rowContainer}>
                     <Text style={styles.textRow}>{translate('Settings.appVersion')}</Text>
                     <View style={styles.rightContainer}>
-                        {/* version + build number */}
                         <Text style={styles.rightValue}>{DeviceInfo.getReadableVersion()}</Text>
                     </View>
                 </View>

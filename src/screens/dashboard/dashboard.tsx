@@ -162,6 +162,7 @@ export class DashboardScreenComponent extends React.Component<
                 this.props.navigation.navigate('OnboardingNavigation');
             } else {
                 this.setState({ isLoading: false });
+                ConnectExtensionWeb.listenLastSync();
             }
         } else {
             if (this.props.blockchains.length === 0 || this.props.walletsNr < 1) {

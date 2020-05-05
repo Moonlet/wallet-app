@@ -16,6 +16,12 @@ import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-moda
 import { NavigationService } from '../../navigation/navigation-service';
 
 export const ConnectExtensionWeb = (() => {
+    const getRealtimeDBConnectionsRef = () => {
+        // RealtimeDB
+        const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
+        return realtimeDB.child(FirebaseRef.CONNECTIONS);
+    };
+
     const storeConnection = async (conn: IQRCodeConn) => {
         try {
             // store session
@@ -38,7 +44,7 @@ export const ConnectExtensionWeb = (() => {
     const getConnection = async (): Promise<any> => {
         try {
             const stored = await readEncrypted(CONN_EXTENSION, CONN_EXTENSION);
-            return stored;
+            return JSON.parse(stored);
         } catch (err) {
             Promise.reject(err);
         }
@@ -133,11 +139,46 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
-    const listenLastSync = (conn: IQRCodeConn) => {
-        // RealtimeDB
-        const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
-        const connections = realtimeDB.child(FirebaseRef.CONNECTIONS);
-        connections.child(conn.connectionId).on('value', async (snapshot: any) => {
+    const listenLastSync = async () => {
+        try {
+            const connection = await getConnection();
+
+            const connectionsRef = getRealtimeDBConnectionsRef();
+
+            if (connection && connection?.connectionId) {
+                connectionsRef.child(connection.connectionId).on('value', async (snapshot: any) => {
+                    const snap = snapshot.val();
+
+                    if (snap?.lastSynced && snap?.authToken) {
+                        try {
+                            // Extension the state from Firebase Storage
+                            const extState = await downloadFileStorage(connection.connectionId);
+
+                            if (extState) {
+                                const decryptedState = JSON.parse(
+                                    decrypt(extState, connection.encKey).toString(CryptoJS.enc.Utf8)
+                                );
+
+                                // Save state
+                                storeState(decryptedState);
+                            }
+                        } catch {
+                            //
+                        }
+                    } else {
+                        // Connection does not exist!
+                    }
+                });
+            }
+        } catch {
+            //
+        }
+    };
+
+    const listenLastSyncForConnect = (conn: IQRCodeConn) => {
+        const connectionsRef = getRealtimeDBConnectionsRef();
+
+        connectionsRef.child(conn.connectionId).on('value', async (snapshot: any) => {
             const snap = snapshot.val();
 
             if (snap?.lastSynced && snap?.authToken) {
@@ -160,7 +201,7 @@ export const ConnectExtensionWeb = (() => {
                         await storeConnection(conn);
 
                         // remove listener for connectionId
-                        connections.child(conn.connectionId).off('value');
+                        connectionsRef.child(conn.connectionId).off('value');
 
                         // navigate to Dashboard
                         NavigationService.navigate('MainNavigation', {});
@@ -185,6 +226,7 @@ export const ConnectExtensionWeb = (() => {
         isConnected,
         generateQRCodeUri,
         downloadFileStorage,
-        listenLastSync
+        listenLastSync,
+        listenLastSyncForConnect
     };
 })();

@@ -29,7 +29,7 @@ export class OnboardingScreenComponent extends React.Component<
             } else {
                 const res = await ConnectExtensionWeb.generateQRCodeUri();
                 QRCode.toCanvas(this.qrCanvas, res.uri, { errorCorrectionLevel: 'H' });
-                ConnectExtensionWeb.listenLastSync(res.conn);
+                ConnectExtensionWeb.listenLastSyncForConnect(res.conn);
             }
         } catch {
             //

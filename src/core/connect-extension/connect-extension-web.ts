@@ -50,7 +50,11 @@ export const ConnectExtensionWeb = (() => {
         //
     };
 
-    const listenLastSync = async (conn: IQRCodeConn) => {
+    const listenLastSync = async () => {
+        //
+    };
+
+    const listenLastSyncForConnect = (conn: IQRCodeConn) => {
         //
     };
 
@@ -61,6 +65,7 @@ export const ConnectExtensionWeb = (() => {
         isConnected,
         generateQRCodeUri,
         downloadFileStorage,
-        listenLastSync
+        listenLastSync,
+        listenLastSyncForConnect
     };
 })();

@@ -11,7 +11,7 @@ import { normalize } from '../../styles/dimensions';
 import { Icon } from '../../components/icon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DialogComponent } from '../../components/dialog/dialog-component';
-import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage';
+import { storeEncrypted, deleteFromStorage } from '../../core/secure/storage';
 import { CONN_EXTENSION } from '../../core/constants/app';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getBaseEncryptionKey } from '../../core/secure/keychain';
@@ -168,10 +168,11 @@ export class ConnectExtensionScreenComponent extends React.Component<
             this.setState({ isLoading: true });
 
             try {
-                const keychainPassword = await getBaseEncryptionKey();
-                const connection = await readEncrypted(CONN_EXTENSION, keychainPassword);
+                const connection = await ConnectExtensionWeb.getConnection();
 
-                connection && this.connectExtension.disconnectExtension(connection);
+                if (connection) {
+                    this.connectExtension.disconnectExtension(connection);
+                }
             } catch {
                 //
             }

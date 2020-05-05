@@ -7,8 +7,8 @@ import { Notifications } from '../messaging/notifications/notifications';
 import { IQRCodeConn } from './types';
 import { sha256 } from 'js-sha256'; // maybe replace this with CryptoJS.SHA256
 
-export class ConnectExtension {
-    public async syncExtension(connection: IQRCodeConn): Promise<any> {
+export const ConnectExtension = (() => {
+    const syncExtension = async (connection: IQRCodeConn): Promise<any> => {
         try {
             const http = new HttpClient(CONFIG.extSyncUpdateStateUrl);
             const res = await http.post('', {
@@ -22,9 +22,9 @@ export class ConnectExtension {
         } catch {
             //
         }
-    }
+    };
 
-    public async disconnectExtension(connection: any) {
+    const disconnectExtension = async (connection: any) => {
         try {
             const connectionParse = JSON.parse(connection);
             const connectionId = connectionParse.connectionId;
@@ -38,5 +38,10 @@ export class ConnectExtension {
         } catch {
             //
         }
-    }
-}
+    };
+
+    return {
+        syncExtension,
+        disconnectExtension
+    };
+})();

@@ -57,8 +57,6 @@ const getStatePatch = createSelector(
     }
 );
 
-const connectExtension = new ConnectExtension();
-
 export const connectExtensionMiddleware = store => next => async action => {
     next(action);
 
@@ -70,7 +68,7 @@ export const connectExtensionMiddleware = store => next => async action => {
                 const connection = await ConnectExtensionWeb.getConnection();
 
                 if (connection) {
-                    await connectExtension.syncExtension(connection);
+                    await ConnectExtension.syncExtension(connection);
                 }
             } catch {
                 lastSentState = {};

@@ -11,10 +11,7 @@ import { normalize } from '../../styles/dimensions';
 import { Icon } from '../../components/icon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DialogComponent } from '../../components/dialog/dialog-component';
-import { storeEncrypted } from '../../core/secure/storage';
-import { CONN_EXTENSION } from '../../core/constants/app';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
-import { getBaseEncryptionKey } from '../../core/secure/keychain';
 import { Dialog } from '../../components/dialog/dialog';
 import { getUrlParams } from '../../core/connect-extension/utils';
 import { IQRCodeConn } from '../../core/connect-extension/types';
@@ -40,7 +37,6 @@ export class ConnectExtensionScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public qrCodeScanner: any;
-    public connectExtension = new ConnectExtension();
 
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
@@ -69,7 +65,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                     platform: connection?.platform
                 });
 
-                await this.connectExtension.syncExtension(connection);
+                await ConnectExtension.syncExtension(connection);
             }
 
             this.setState({ isLoading: false });
@@ -110,30 +106,9 @@ export class ConnectExtensionScreenComponent extends React.Component<
                 platform: connection.platform
             });
 
-            try {
-                const res = await this.connectExtension.syncExtension(connection);
-
-                if (res?.success === true) {
-                    // Extension has been connected
-                    // Store connection
-                    const keychainPassword = await getBaseEncryptionKey();
-                    if (keychainPassword) {
-                        storeEncrypted(
-                            JSON.stringify(connection),
-                            CONN_EXTENSION,
-                            keychainPassword
-                        );
-                    }
-
-                    this.setState({ isConnected: true });
-                } else {
-                    Dialog.info(
-                        translate('App.labels.warning'),
-                        translate('ConnectExtension.error')
-                    );
-                }
-            } catch {
-                Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.error'));
+            const res = await ConnectExtensionWeb.storeConnection(connection);
+            if (res === true) {
+                this.setState({ isConnected: true });
             }
         } else {
             // Invalid QR Code pattern

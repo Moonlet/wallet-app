@@ -1,11 +1,31 @@
 import { IQRCodeConn } from './types';
 import { getBaseEncryptionKey } from '../secure/keychain';
-import { readEncrypted, deleteFromStorage } from '../secure/storage';
+import { readEncrypted, deleteFromStorage, storeEncrypted } from '../secure/storage';
 import { CONN_EXTENSION } from '../constants/app';
+import { Dialog } from '../../components/dialog/dialog';
+import { translate } from '../i18n';
+import { ConnectExtension } from './connect-extension';
 
 export const ConnectExtensionWeb = (() => {
-    const storeConnection = async (conn: IQRCodeConn) => {
-        //
+    const storeConnection = async (connection: IQRCodeConn): Promise<boolean> => {
+        try {
+            const res = await ConnectExtension.syncExtension(connection);
+
+            if (res?.success === true) {
+                // Extension has been connected
+                // Store connection
+                const keychainPassword = await getBaseEncryptionKey();
+                if (keychainPassword) {
+                    storeEncrypted(JSON.stringify(connection), CONN_EXTENSION, keychainPassword);
+                }
+
+                return true;
+            } else {
+                Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.error'));
+            }
+        } catch {
+            Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.error'));
+        }
     };
 
     const disconnect = async () => {
@@ -13,7 +33,7 @@ export const ConnectExtensionWeb = (() => {
             const connection = await ConnectExtensionWeb.getConnection();
 
             if (connection) {
-                this.connectExtension.disconnectExtension(connection);
+                ConnectExtension.disconnectExtension(connection);
             }
         } catch {
             //

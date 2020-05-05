@@ -7,7 +7,7 @@ export default (theme: ITheme) =>
         container: {
             flex: 1,
             backgroundColor: theme.colors.appBackground,
-            height: SCREEN_HEIGHT
+            height: SCREEN_HEIGHT // used for web
         },
         scrollContainer: {
             flexGrow: 1,

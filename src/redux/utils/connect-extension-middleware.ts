@@ -4,10 +4,10 @@ import { IAppState } from '../app/state';
 import { IWalletsState } from '../wallets/state';
 import { IContactsState } from '../contacts/state';
 import { IPrefState } from '../preferences/state';
+import { ITokensConfigState } from '../tokens/state';
 
 import { isEqual } from 'lodash';
 import { Platform } from 'react-native';
-import { ITokensConfigState } from '../tokens/state';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 
@@ -40,6 +40,9 @@ const getStatePatch = createSelector(
         }
         if (!isEqual(contacts, lastSentState?.contacts)) {
             statePatch.contacts = contacts;
+        }
+        if (!isEqual(tokens, lastSentState?.tokens)) {
+            statePatch.tokens = tokens;
         }
 
         if (!isEqual(tokens, lastSentState?.tokens)) {

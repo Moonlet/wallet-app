@@ -8,7 +8,7 @@ export default (theme: ITheme) =>
             flex: 1,
             flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
-            height: SCREEN_HEIGHT
+            height: SCREEN_HEIGHT // used for web
         },
         scrollContainer: {
             flexGrow: 1,

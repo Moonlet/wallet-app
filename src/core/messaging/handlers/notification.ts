@@ -1,10 +1,10 @@
 import { NotificationType, INotificationPayload } from '../types';
-import { signExtensionTransaction } from '../../wallet-connect/utils';
 import { NavigationParams } from 'react-navigation';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { store } from '../../../redux/config';
 import { setSelectedWallet, updateTransactionFromBlockchain } from '../../../redux/wallets/actions';
 import { takeOneAndSubscribeToStore } from '../../../redux/utils/helpers';
+import { signExtensionTransaction } from '../../connect-extension/utils';
 
 export const notificationHandler = async (
     notification: INotificationPayload,

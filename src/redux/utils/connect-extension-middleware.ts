@@ -6,7 +6,6 @@ import { IContactsState } from '../contacts/state';
 import { IPrefState } from '../preferences/state';
 
 import { isEqual } from 'lodash';
-import { trimWallets } from '../../core/wallet-connect/wc-state-helper';
 import { Platform } from 'react-native';
 import { ITokensConfigState } from '../tokens/state';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
@@ -27,14 +26,14 @@ const getStatePatch = createSelector(
         preferences: IPrefState,
         tokens: ITokensConfigState
     ) => {
-        const trimmedWallets = trimWallets(wallets);
+        // const trimmedWallets = trimWallets(wallets);
         const statePatch: any = {};
 
         if (!isEqual(app, lastSentState?.app)) {
             statePatch.app = app;
         }
-        if (!isEqual(trimmedWallets, lastSentState?.wallets)) {
-            statePatch.wallets = trimmedWallets;
+        if (!isEqual(wallets, lastSentState?.wallets)) {
+            statePatch.wallets = wallets; // TODO: is trimmedWallets needed instead of wallets ?
         }
         if (!isEqual(preferences, lastSentState?.preferences)) {
             statePatch.preferences = preferences;

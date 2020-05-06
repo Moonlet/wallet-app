@@ -15,7 +15,7 @@ import { sortObject } from '../../utils/sort-object';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 export class CosmosTransactionUtils implements IBlockchainTransactionUtils {
-    public sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
+    public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const hash = createHash('sha256')
             .update(JSON.stringify(sortObject(tx.additionalInfo.stdSignMsg)))
             .digest('hex');
@@ -45,11 +45,11 @@ export class CosmosTransactionUtils implements IBlockchainTransactionUtils {
             mode: 'sync'
         };
         return signedTx;
-    };
+    }
 
-    public buildTransferTransaction = async (
+    public async buildTransferTransaction(
         tx: ITransferTransaction
-    ): Promise<IBlockchainTransaction> => {
+    ): Promise<IBlockchainTransaction> {
         const client = Cosmos.getClient(tx.chainId) as CosmosClient;
         const accountInfo = await client.getAccountInfo(tx.account.address);
         const blockInfo = await client.getCurrentBlock();
@@ -120,7 +120,7 @@ export class CosmosTransactionUtils implements IBlockchainTransactionUtils {
                 stdSignMsg
             }
         };
-    };
+    }
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {
         return tx.amount;

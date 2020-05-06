@@ -15,10 +15,10 @@ import sha256 from 'js-sha256';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 export class NearTransactionUtils implements IBlockchainTransactionUtils {
-    public sign = async (
+    public async sign(
         tx: IBlockchainTransaction<INearTransactionAdditionalInfoType>,
         privateKey: string
-    ): Promise<any> => {
+    ): Promise<any> {
         // transaction actions
         const actions = tx.additionalInfo.actions
             .map(action => {
@@ -53,11 +53,11 @@ export class NearTransactionUtils implements IBlockchainTransactionUtils {
         };
         const signedTx = await signTransaction(nearTx, signer, tx.address, tx.chainId as string);
         return Buffer.from(signedTx[1].encode()).toString('base64');
-    };
+    }
 
-    public buildTransferTransaction = async (
+    public async buildTransferTransaction(
         tx: ITransferTransaction
-    ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> => {
+    ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const client = Near.getClient(tx.chainId);
         const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
         const blockInfo = await client.getCurrentBlock();
@@ -94,13 +94,13 @@ export class NearTransactionUtils implements IBlockchainTransactionUtils {
                 ]
             }
         };
-    };
+    }
 
-    public getTransactionAmount = (tx: IBlockchainTransaction): string => {
+    public getTransactionAmount(tx: IBlockchainTransaction): string {
         return tx.amount;
-    };
+    }
 
-    public getTransactionStatusByCode = (status): TransactionStatus => {
+    public getTransactionStatusByCode(status: any): TransactionStatus {
         switch (parseInt(status, 16)) {
             case 0:
                 return TransactionStatus.FAILED;
@@ -111,5 +111,5 @@ export class NearTransactionUtils implements IBlockchainTransactionUtils {
             default:
                 return TransactionStatus.FAILED;
         }
-    };
+    }
 }

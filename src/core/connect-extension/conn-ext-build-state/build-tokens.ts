@@ -20,6 +20,7 @@ const convertTokenToState = (
         symbol: tk.symbol,
         icon: staticToken ? { uri: staticToken.logo } : GENERIC_TOKEN_ICON,
         type: tk.type,
+        removable: tk.removable,
         contractAddress: tk.contractAddress,
         decimals,
         ui: {

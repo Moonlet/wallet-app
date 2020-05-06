@@ -4,7 +4,7 @@ import { Blockchain } from '../types';
 import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 
 export class CeloAccountUtils extends EthereumAccountUtils {
-    public getAccountFromPrivateKey = (privateKey: string, index: number): IAccountState => {
+    public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
         return {
             index,
             selected: false,
@@ -13,5 +13,5 @@ export class CeloAccountUtils extends EthereumAccountUtils {
             blockchain: Blockchain.CELO,
             tokens: generateTokensConfig(Blockchain.CELO)
         };
-    };
+    }
 }

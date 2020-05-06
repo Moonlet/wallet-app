@@ -70,7 +70,7 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public sendTransaction(transaction): Promise<string> {
+    public async sendTransaction(transaction): Promise<string> {
         return this.http.post('/txs', transaction).then(res => {
             if (res.code === undefined) {
                 return res.txhash;

@@ -24,7 +24,7 @@ const toHex = value => {
 };
 
 export class CeloTransactionUtils extends EthereumTransactionUtils {
-    public sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
+    public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const txData = [
             toHex(tx.nonce),
             toHex(tx.feeOptions.gasPrice),
@@ -57,11 +57,11 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
         const rawTx = txData.slice(0, 9).concat([signature.v, signature.r, signature.s]);
 
         return encode(rawTx);
-    };
+    }
 
-    public buildTransferTransaction = async (
+    public async buildTransferTransaction(
         tx: ITransferTransaction
-    ): Promise<IBlockchainTransaction> => {
+    ): Promise<IBlockchainTransaction> {
         const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
 
         const client = Celo.getClient(tx.chainId);
@@ -124,5 +124,5 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                     status: TransactionStatus.PENDING
                 };
         }
-    };
+    }
 }

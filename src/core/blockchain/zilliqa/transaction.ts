@@ -16,7 +16,7 @@ import { Zilliqa } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
-    public schnorrSign = (msg: Buffer, privateKey: string): string => {
+    public schnorrSign(msg: Buffer, privateKey: string): string {
         const pubKey = Zilliqa.account.privateToPublic(privateKey);
 
         const sig = schnorr.sign(msg, Buffer.from(privateKey, 'hex'), Buffer.from(pubKey, 'hex'));
@@ -31,9 +31,9 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
         }
 
         return r + s;
-    };
+    }
 
-    public sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<any> => {
+    public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const pubKey = Zilliqa.account.privateToPublic(privateKey);
         const transaction: any = {
             // tslint:disable-next-line: no-bitwise
@@ -65,11 +65,11 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
         transaction.toAddr = toChecksumAddress(transaction.toAddr).replace('0x', '');
 
         return transaction;
-    };
+    }
 
-    public buildTransferTransaction = async (
+    public async buildTransferTransaction(
         tx: ITransferTransaction
-    ): Promise<IBlockchainTransaction> => {
+    ): Promise<IBlockchainTransaction> {
         const client = Zilliqa.getClient(tx.chainId);
         const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
 
@@ -146,7 +146,7 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
                     status: TransactionStatus.PENDING
                 };
         }
-    };
+    }
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {
         const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);

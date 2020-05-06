@@ -13,7 +13,7 @@ import { Ethereum } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
-    public sign = async (tx: IBlockchainTransaction, privateKey: string): Promise<string> => {
+    public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<string> {
         const transaction = new Transaction(
             {
                 nonce: '0x' + tx.nonce.toString(16),
@@ -31,7 +31,7 @@ export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
         transaction.sign(Buffer.from(privateKey, 'hex'));
 
         return '0x' + transaction.serialize().toString('hex');
-    };
+    }
 
     public getTransactionStatusByCode(status: any): TransactionStatus {
         switch (parseInt(status, 16)) {
@@ -46,9 +46,9 @@ export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
         }
     }
 
-    public buildTransferTransaction = async (
+    public async buildTransferTransaction(
         tx: ITransferTransaction
-    ): Promise<IBlockchainTransaction> => {
+    ): Promise<IBlockchainTransaction> {
         const tokenConfig = getTokenConfig(tx.account.blockchain, tx.token);
 
         const client = Ethereum.getClient(tx.chainId);
@@ -112,7 +112,7 @@ export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
                     status: TransactionStatus.PENDING
                 };
         }
-    };
+    }
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {
         const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);

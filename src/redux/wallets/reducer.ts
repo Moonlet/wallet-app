@@ -1,5 +1,5 @@
 import { IAction } from '../types';
-import { IAccountState, IWalletsState } from './state';
+import { IAccountState, IWalletsState, ITokenState } from './state';
 import {
     WALLET_ADD,
     WALLET_DELETE,
@@ -19,7 +19,7 @@ import {
 } from './actions';
 import { REHYDRATE } from 'redux-persist';
 import BigNumber from 'bignumber.js';
-import { IBlockchainTransaction } from '../../core/blockchain/types';
+import { IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
 import { RESET_ALL_DATA, EXTENSION_UPDATE_STATE } from '../app/actions';
 
 const intialState: IWalletsState = {};
@@ -315,7 +315,42 @@ export default (state: IWalletsState = intialState, action: IAction) => {
             return intialState;
 
         case EXTENSION_UPDATE_STATE: {
-            return action.data.state.wallets;
+            // Keep wallet account tokens balances if already stored in redux
+            const firebaseWallets = action.data.state.wallets;
+
+            Object.keys(firebaseWallets).map((walletId: string) => {
+                firebaseWallets[walletId].accounts.map(
+                    (account: IAccountState, accountIndex: number) => {
+                        // Accounts layer
+
+                        Object.keys(account.tokens).map((chainId: ChainIdType) => {
+                            // Chain Id layer
+
+                            Object.keys(account.tokens[chainId]).map((symbol: string) => {
+                                // Symbol layer
+
+                                const firebaseToken: ITokenState = account.tokens[chainId][symbol];
+                                const reduxAccountTokens =
+                                    state[walletId] &&
+                                    state[walletId].accounts[accountIndex] &&
+                                    state[walletId].accounts[accountIndex].tokens;
+
+                                if (
+                                    reduxAccountTokens &&
+                                    reduxAccountTokens[chainId] &&
+                                    reduxAccountTokens[chainId][symbol]
+                                ) {
+                                    const reduxToken = reduxAccountTokens[chainId][symbol];
+
+                                    firebaseToken.balance = reduxToken.balance;
+                                }
+                            });
+                        });
+                    }
+                );
+            });
+
+            return firebaseWallets;
         }
 
         default:

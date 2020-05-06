@@ -24,16 +24,12 @@ export const ConnectExtension = (() => {
         }
     };
 
-    const disconnectExtension = async (connection: any) => {
+    const disconnectExtension = async (connection: IQRCodeConn) => {
         try {
-            const connectionParse = JSON.parse(connection);
-            const connectionId = connectionParse.connectionId;
-            const authToken = connectionParse.encKey;
-
             const http = new HttpClient(CONFIG.extSyncDisconnectUrl);
             await http.post('', {
-                connectionId,
-                authToken: sha256(authToken)
+                connectionId: connection.connectionId,
+                authToken: sha256(connection.encKey)
             });
         } catch {
             //

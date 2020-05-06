@@ -30,7 +30,7 @@ export const ConnectExtensionWeb = (() => {
 
     const disconnect = async () => {
         try {
-            const connection = await ConnectExtensionWeb.getConnection();
+            const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
 
             if (connection) {
                 ConnectExtension.disconnectExtension(connection);

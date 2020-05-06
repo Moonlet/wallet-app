@@ -1,5 +1,4 @@
 import { IAppConfig } from './config-interface';
-// @ts-ignore
 import { firebaseWebConfig } from './firebase-web-beta';
 
 export const CONFIG: IAppConfig = {

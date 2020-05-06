@@ -107,6 +107,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
             });
 
             const res = await ConnectExtensionWeb.storeConnection(connection);
+            // @ts-ignore - ignore for web
             if (res === true) {
                 this.setState({ isConnected: true });
             }

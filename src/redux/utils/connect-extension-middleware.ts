@@ -10,6 +10,7 @@ import { isEqual } from 'lodash';
 import { Platform } from 'react-native';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
+import { trimWallets } from '../../core/connect-extension/conn-ext-trim-state';
 
 let lastSentState: any = {};
 
@@ -26,14 +27,14 @@ const getStatePatch = createSelector(
         preferences: IPrefState,
         tokens: ITokensConfigState
     ) => {
-        // const trimmedWallets = trimWallets(wallets);
+        const trimmedWallets = trimWallets(wallets);
         const statePatch: any = {};
 
         if (!isEqual(app, lastSentState?.app)) {
             statePatch.app = app;
         }
-        if (!isEqual(wallets, lastSentState?.wallets)) {
-            statePatch.wallets = wallets; // TODO: is trimmedWallets needed instead of wallets ?
+        if (!isEqual(trimmedWallets, lastSentState?.trimmedWallets)) {
+            statePatch.trimmedWallets = trimmedWallets;
         }
         if (!isEqual(preferences, lastSentState?.preferences)) {
             statePatch.preferences = preferences;

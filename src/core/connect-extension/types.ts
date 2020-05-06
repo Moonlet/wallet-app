@@ -33,6 +33,8 @@ export interface IStorageWallets {
 
 export interface IStorageWallet {
     name: string;
+    selected: boolean;
+    selectedBlockchain: Blockchain;
     type: WalletType;
     hwOptions?: {
         // ??
@@ -43,6 +45,7 @@ export interface IStorageWallet {
     };
     accounts: {
         index: number;
+        selected: boolean;
         name?: string;
         blockchain: Blockchain;
         address: string;

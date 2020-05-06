@@ -6,17 +6,17 @@ import {
     ITokensAccountState,
     ITokenState
 } from '../../../redux/wallets/state';
-import { ChainIdType, Blockchain } from '../../blockchain/types';
+import { ChainIdType } from '../../blockchain/types';
 import { accountToken } from '../../../redux/tokens/static-selectors';
 
 export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets): IWalletsState => {
     const wallets: IWalletsState = {};
 
-    Object.keys(trimmedWallets).map((walletId: string, walletIndex: number) => {
+    Object.keys(trimmedWallets).map((walletId: string) => {
         const wallet = trimmedWallets[walletId];
         const accounts: IAccountState[] = [];
 
-        wallet.accounts.map((account, accountIndex: number) => {
+        wallet.accounts.map(account => {
             const accountTokens: ITokensAccountState = {};
 
             Object.keys(account.tokens).map((chainId: ChainIdType) => {
@@ -35,7 +35,7 @@ export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets): IWall
 
             const acc: IAccountState = {
                 index: account.index,
-                selected: walletIndex === 0 && accountIndex === 0 ? true : false,
+                selected: account.selected,
                 name: account?.name,
                 blockchain: account.blockchain,
                 address: account.address,
@@ -66,8 +66,8 @@ export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets): IWall
         const buildWallet: IWalletState = {
             id: walletId,
             name: wallet.name,
-            selected: walletIndex === 0 ? true : false,
-            selectedBlockchain: Blockchain.ZILLIQA, // TODO: check this
+            selected: wallet.selected,
+            selectedBlockchain: wallet.selectedBlockchain,
             type: wallet.type,
             hwOptions: wallet?.hwOptions as any,
             accounts,

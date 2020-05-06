@@ -7,7 +7,7 @@ import { IContactsState } from '../../redux/contacts/state';
 import { ITokensConfigState, ITokenConfigState } from '../../redux/tokens/state';
 import { ChainIdType, IBlockchainTransaction } from '../blockchain/types';
 
-const trimWallets = (wallets: IWalletsState) => {
+export const trimWallets = (wallets: IWalletsState) => {
     const trimmedWallets: IExtStorage.IStorageWallets = {};
 
     Object.keys(wallets).map((walletId: string) => {
@@ -26,6 +26,7 @@ const trimWallets = (wallets: IWalletsState) => {
 
             const accountTrimmed = {
                 index: account.index,
+                selected: account.selected,
                 name: account?.name,
                 blockchain: account.blockchain,
                 address: account.address,
@@ -55,6 +56,8 @@ const trimWallets = (wallets: IWalletsState) => {
 
         const trimmedWallet: IExtStorage.IStorageWallet = {
             name: wallet.name,
+            selected: wallet.selected,
+            selectedBlockchain: wallet.selectedBlockchain,
             type: wallet.type,
             hwOptions: wallet?.hwOptions,
             accounts: accountsTrimmed,

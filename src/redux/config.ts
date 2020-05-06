@@ -11,6 +11,7 @@ import contactsReducer from './contacts/reducer';
 import { uiReducer } from './ui/reducer';
 import tokensReducer from './tokens/reducer';
 import { connectExtensionMiddleware } from './utils/connect-extension-middleware';
+// import logger from 'redux-logger';
 
 const composeEnhancers = composeWithDevTools({
     // options like actionSanitizer, stateSanitizer
@@ -30,7 +31,7 @@ const configureStore = () => {
     return createStore(
         persistReducer(persistConfig, rootReducer),
         {},
-        composeEnhancers(applyMiddleware(thunk, connectExtensionMiddleware))
+        composeEnhancers(applyMiddleware(thunk, connectExtensionMiddleware)) // logger: for debugging
     );
 };
 

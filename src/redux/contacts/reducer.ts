@@ -1,7 +1,7 @@
 import { IAction } from '../types';
 import { IContactsState } from './state';
 import { CONTACT_ADD, CONTACT_DELETE, CONTACT_UPDATE_NAME } from './actions';
-import { RESET_ALL_DATA, REDUX_UPDATE_STATE } from '../app/actions';
+import { RESET_ALL_DATA, EXTENSION_UPDATE_STATE } from '../app/actions';
 
 const initialState: IContactsState = {};
 
@@ -29,7 +29,7 @@ export default (state: IContactsState = initialState, action: IAction) => {
         case RESET_ALL_DATA:
             return initialState;
 
-        case REDUX_UPDATE_STATE: {
+        case EXTENSION_UPDATE_STATE: {
             return action.data.state.contacts;
         }
 

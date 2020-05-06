@@ -20,7 +20,7 @@ import {
 import { REHYDRATE } from 'redux-persist';
 import BigNumber from 'bignumber.js';
 import { IBlockchainTransaction } from '../../core/blockchain/types';
-import { RESET_ALL_DATA, REDUX_UPDATE_STATE } from '../app/actions';
+import { RESET_ALL_DATA, EXTENSION_UPDATE_STATE } from '../app/actions';
 
 const intialState: IWalletsState = {};
 
@@ -314,7 +314,7 @@ export default (state: IWalletsState = intialState, action: IAction) => {
         case RESET_ALL_DATA:
             return intialState;
 
-        case REDUX_UPDATE_STATE: {
+        case EXTENSION_UPDATE_STATE: {
             return action.data.state.wallets;
         }
 

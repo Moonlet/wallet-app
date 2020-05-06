@@ -9,7 +9,7 @@ export const RESET_FAILED_LOGINS = 'RESET_FAILED_LOGINS';
 export const INCREMENT_FAILED_LOGINS = 'INCREMENT_FAILED_LOGINS';
 export const SET_APP_BLOCK_UNTIL = 'SET_APP_BLOCK_UNTIL';
 export const RESET_ALL_DATA = 'RESET_ALL_DATA';
-export const REDUX_UPDATE_STATE = 'REDUX_UPDATE_STATE';
+export const EXTENSION_UPDATE_STATE = 'EXTENSION_UPDATE_STATE';
 
 export const appSetAcceptedTcVersion = (version: number) => {
     return {
@@ -49,9 +49,9 @@ export const resetAllData = () => async (dispatch, getState: () => IReduxState) 
     dispatch({ type: RESET_ALL_DATA });
 };
 
-export const reduxUpdateState = (state: any) => dispatch => {
+export const extensionReduxUpdateState = (state: any) => dispatch => {
     dispatch({
-        type: REDUX_UPDATE_STATE,
+        type: EXTENSION_UPDATE_STATE,
         data: { state }
     });
 };

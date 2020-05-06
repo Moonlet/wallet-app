@@ -11,7 +11,7 @@ import { buildState } from './conn-ext-build-state/conn-ext-build-state';
 import { store } from '../../redux/config';
 import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { NavigationService } from '../../navigation/navigation-service';
-import { reduxUpdateState } from '../../redux/app/actions';
+import { extensionReduxUpdateState } from '../../redux/app/actions';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -131,7 +131,7 @@ export const ConnectExtensionWeb = (() => {
     const storeState = async (decryptedState: any) => {
         try {
             const extState = await buildState(decryptedState);
-            store.dispatch(reduxUpdateState(extState) as any);
+            store.dispatch(extensionReduxUpdateState(extState) as any);
             // extensionStateLoaded check if needed
         } catch {
             //

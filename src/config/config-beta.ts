@@ -1,5 +1,5 @@
 import { IAppConfig } from './config-interface';
-import { firebaseWebConfig } from './firebase-web-beta';
+import { firebaseConfig } from './firebase-web-beta';
 
 export const CONFIG: IAppConfig = {
     supportUrl: 'https://moonlet.uvdesk.com/en/customer/create-ticket',
@@ -14,7 +14,7 @@ export const CONFIG: IAppConfig = {
     ntpPort: 123,
     extSyncUpdateStateUrl: 'https://fire.moonlet.dev/functions/extensionSync/updateState',
     extSyncDisconnectUrl: 'https://fire.moonlet.dev/functions/extensionSync/disconnect',
-    firebaseWebConfig
+    firebaseWebConfig: firebaseConfig
 };
 
 export default CONFIG;

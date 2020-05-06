@@ -8,7 +8,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import QRCode from 'qrcode';
-import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web.web';
 
 const navigationOptions = () => ({ header: null });
 
@@ -17,33 +17,23 @@ export class OnboardingScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public qrCanvas: HTMLCanvasElement;
-    public unsubscribe: () => void;
 
-    public componentDidMount() {
-        if (!WalletConnectWeb.isConnected()) {
-            WalletConnectWeb.connect().then(uri => {
-                QRCode.toCanvas(this.qrCanvas, uri, { errorCorrectionLevel: 'H' });
-                this.unsubscribe = WalletConnectWeb.subscribe('connect', payload => {
-                    WalletConnectWeb.getState().then(() => {
-                        this.props.navigation.navigate(
-                            'MainNavigation',
-                            {},
-                            NavigationActions.navigate({ routeName: 'Dashboard' })
-                        );
-                    });
-                });
-            });
+    public async componentDidMount() {
+        try {
+            if (await ConnectExtensionWeb.isConnected()) {
+                this.props.navigation.navigate(
+                    'MainNavigation',
+                    {},
+                    NavigationActions.navigate({ routeName: 'Dashboard' })
+                );
+            } else {
+                const res = await ConnectExtensionWeb.generateQRCodeUri();
+                QRCode.toCanvas(this.qrCanvas, res.uri, { errorCorrectionLevel: 'H' });
+                ConnectExtensionWeb.listenLastSyncForConnect(res.conn);
+            }
+        } catch {
+            //
         }
-    }
-
-    public componentWillUnmount() {
-        if (this.unsubscribe) {
-            this.unsubscribe();
-        }
-    }
-
-    public onPressDisconnect() {
-        WalletConnectWeb.disconnect();
     }
 
     public render() {

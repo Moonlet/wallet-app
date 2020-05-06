@@ -108,6 +108,10 @@ jobs:
   #       run: BUILD=$(git rev-list --count $GITHUB_SHA) npm run ext:build:beta:chrome
   #       env:
   #         NODE_OPTIONS: --max_old_space_size=4096
+  #     - name: Generate firebase web config file
+  #       run: | 
+  #         echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
+  #         echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
   #     - name: Set tag name
   #       run: |-
   #         BUILD=$(git rev-list --count $GITHUB_SHA)

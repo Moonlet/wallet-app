@@ -11,14 +11,12 @@ import { normalize } from '../../styles/dimensions';
 import { Icon } from '../../components/icon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DialogComponent } from '../../components/dialog/dialog-component';
-import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage';
-import { CONN_EXTENSION } from '../../core/constants/app';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
-import { getBaseEncryptionKey } from '../../core/secure/keychain';
 import { Dialog } from '../../components/dialog/dialog';
 import { getUrlParams } from '../../core/connect-extension/utils';
-import { IQRCode } from '../../core/connect-extension/types';
+import { IQRCodeConn } from '../../core/connect-extension/types';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 
 const qrCodeRegex = /^mooonletExtSync:([^\@]*)\@([^\/\?]*)([^\?]*)?\??(.*)/;
 
@@ -39,7 +37,6 @@ export class ConnectExtensionScreenComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
     public qrCodeScanner: any;
-    public connectExtension = new ConnectExtension();
 
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
@@ -59,18 +56,16 @@ export class ConnectExtensionScreenComponent extends React.Component<
         this.setState({ isLoading: true });
 
         try {
-            const encryptionKey = await getBaseEncryptionKey();
-            const connection = await readEncrypted(CONN_EXTENSION, encryptionKey);
+            const connection = await ConnectExtensionWeb.getConnection();
 
             if (connection) {
-                const connectionParse = JSON.parse(connection);
                 this.setState({
                     isConnected: true,
-                    os: connectionParse?.os,
-                    platform: connectionParse?.platform
+                    os: connection?.os,
+                    platform: connection?.platform
                 });
 
-                await this.connectExtension.syncExtension(connectionParse);
+                await ConnectExtension.syncExtension(connection);
             }
 
             this.setState({ isLoading: false });
@@ -79,8 +74,8 @@ export class ConnectExtensionScreenComponent extends React.Component<
         }
     }
 
-    private extractQrCodeData(value: string): IQRCode {
-        const connection: IQRCode = {
+    private extractQrCodeData(value: string): IQRCodeConn {
+        const connection: IQRCodeConn = {
             connectionId: undefined,
             encKey: undefined,
             os: undefined,
@@ -111,30 +106,10 @@ export class ConnectExtensionScreenComponent extends React.Component<
                 platform: connection.platform
             });
 
-            try {
-                const res = await this.connectExtension.syncExtension(connection);
-
-                if (res?.success === true) {
-                    // Extension has been connected
-                    // Store connection
-                    const keychainPassword = await getBaseEncryptionKey();
-                    if (keychainPassword) {
-                        storeEncrypted(
-                            JSON.stringify(connection),
-                            CONN_EXTENSION,
-                            keychainPassword
-                        );
-                    }
-
-                    this.setState({ isConnected: true });
-                } else {
-                    Dialog.info(
-                        translate('App.labels.warning'),
-                        translate('ConnectExtension.error')
-                    );
-                }
-            } catch {
-                Dialog.info(translate('App.labels.warning'), translate('ConnectExtension.error'));
+            const res = await ConnectExtensionWeb.storeConnection(connection);
+            // @ts-ignore - ignore for web
+            if (res === true) {
+                this.setState({ isConnected: true });
             }
         } else {
             // Invalid QR Code pattern
@@ -153,12 +128,6 @@ export class ConnectExtensionScreenComponent extends React.Component<
         }
     }
 
-    private async deleteConnection() {
-        // Delete connection from async storage
-        await deleteFromStorage(CONN_EXTENSION);
-        this.setState({ isConnected: false });
-    }
-
     private async disconnectExtension() {
         if (
             await DialogComponent.confirm(
@@ -168,18 +137,9 @@ export class ConnectExtensionScreenComponent extends React.Component<
         ) {
             this.setState({ isLoading: true });
 
-            try {
-                const keychainPassword = await getBaseEncryptionKey();
-                const connection = await readEncrypted(CONN_EXTENSION, keychainPassword);
+            await ConnectExtensionWeb.disconnect();
 
-                connection && this.connectExtension.disconnectExtension(connection);
-            } catch {
-                //
-            }
-
-            await this.deleteConnection();
-
-            this.setState({ isLoading: false });
+            this.setState({ isLoading: false, isConnected: false });
         }
     }
 
@@ -206,10 +166,10 @@ export class ConnectExtensionScreenComponent extends React.Component<
                                             {translate('ConnectExtension.currentlyActive')}
                                         </Text>
                                         <View style={styles.extraInfoContainer}>
-                                            {os && <Text style={styles.extraInfo}>{os}</Text>}
                                             {platform && (
                                                 <Text style={styles.extraInfo}>{platform}</Text>
                                             )}
+                                            {os && <Text style={styles.extraInfo}>{os}</Text>}
                                         </View>
                                     </View>
                                     <TouchableOpacity onPress={() => this.disconnectExtension()}>

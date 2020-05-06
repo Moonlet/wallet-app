@@ -26,7 +26,6 @@ import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../core/i18n';
-import { REHYDRATE } from 'redux-persist';
 import { TokenType } from '../../core/blockchain/types/token';
 import { NavigationService } from '../../navigation/navigation-service';
 import {
@@ -150,13 +149,6 @@ export const setSelectedAccount = (account: IAccountState) => (
             blockchain: account.blockchain,
             index: account.index
         }
-    });
-};
-
-export const updateReduxState = (state: IReduxState) => dispatch => {
-    dispatch({
-        type: REHYDRATE,
-        payload: state
     });
 };
 

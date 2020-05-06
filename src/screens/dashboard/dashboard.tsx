@@ -31,18 +31,18 @@ import {
     normalize,
     SCREEN_WIDTH
 } from '../../styles/dimensions';
-import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { calculateBalance } from '../../core/utils/balance';
 import { getBlockchains, getChainId } from '../../redux/preferences/selectors';
 import { NavigationEvents, StackActions } from 'react-navigation';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
-import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 import { IExchangeRates } from '../../redux/market/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { Amount } from '../../components/amount/amount';
 import { WalletType } from '../../core/wallet/types';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -88,6 +88,7 @@ const mapDispatchToProps = {
 
 interface IState {
     extraSelectedBlockchain: Blockchain;
+    isLoading: boolean;
 }
 
 const MyTitle = ({ text }) => (
@@ -148,23 +149,29 @@ export class DashboardScreenComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            extraSelectedBlockchain: undefined
+            extraSelectedBlockchain: undefined,
+            isLoading: false
         };
-
-        if (Platform.OS === 'web') {
-            if (!WalletConnectWeb.isConnected()) {
-                props.navigation.navigate('OnboardingNavigation');
-            }
-        } else {
-            if (props.blockchains.length === 0 || props.walletsNr < 1) {
-                // maybe check this in another screen?
-                this.props.navigation.dispatch(StackActions.popToTop());
-                props.navigation.navigate('OnboardingNavigation');
-            }
-        }
     }
 
-    public componentDidMount() {
+    public async componentDidMount() {
+        if (Platform.OS === 'web') {
+            this.setState({ isLoading: true });
+            if ((await ConnectExtensionWeb.isConnected()) === false) {
+                this.setState({ isLoading: false });
+                this.props.navigation.navigate('OnboardingNavigation');
+            } else {
+                this.setState({ isLoading: false });
+                ConnectExtensionWeb.listenLastSync();
+            }
+        } else {
+            if (this.props.blockchains.length === 0 || this.props.walletsNr < 1) {
+                // maybe check this in another screen?
+                this.props.navigation.dispatch(StackActions.popToTop());
+                this.props.navigation.navigate('OnboardingNavigation');
+            }
+        }
+
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
@@ -422,10 +429,16 @@ export class DashboardScreenComponent extends React.Component<
         const isHWWallet = this.props.wallet ? this.props.wallet.type === WalletType.HW : false;
         if (blockchains.length > 1 && !isHWWallet) renderBottomNav = true;
 
+        if (Platform.OS === 'web' && this.state.isLoading) {
+            return (
+                <View style={styles.container}>
+                    <LoadingIndicator />
+                </View>
+            );
+        }
+
         return (
             <View style={styles.container}>
-                {Platform.OS === 'web' && <ExtensionConnectionInfo />}
-
                 <TestnetBadge />
 
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />

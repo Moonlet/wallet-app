@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View } from 'react-native';
 import { HeaderRight } from '../../components/header-right/header-right';
 import stylesProvider from './styles';
 import { IAccountState, IWalletState, ITokenState } from '../../redux/wallets/state';
@@ -30,7 +30,6 @@ import { DefaultTokenScreen } from './components/default-token/default-token';
 import { DelegateTokenScreen } from './components/delegate-token/delegate-token';
 import { AccountSettingsModal } from './components/account-settings/account-settings';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { ExtensionConnectionInfo } from '../../components/extension-connection-info/extension-connection-info';
 import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TransactionStatus } from '../../core/wallet/types';
@@ -194,8 +193,9 @@ export class TokenScreenComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <TestnetBadge />
-                {Platform.OS === 'web' && <ExtensionConnectionInfo />}
+
                 {this.renderComponent()}
+
                 <AccountSettingsModal
                     visible={this.state.settingsVisible}
                     onDonePressed={() => this.openSettingsMenu()}

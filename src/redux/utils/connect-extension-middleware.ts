@@ -7,10 +7,10 @@ import { IPrefState } from '../preferences/state';
 import { ITokensConfigState } from '../tokens/state';
 
 import { isEqual } from 'lodash';
-import { trimWallets } from '../../core/wallet-connect/wc-state-helper';
 import { Platform } from 'react-native';
-import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
-import { WC } from '../../core/constants/app';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
+import { ConnectExtension } from '../../core/connect-extension/connect-extension';
+import { trimWallets } from '../../core/connect-extension/conn-ext-trim-state';
 
 let lastSentState: any = {};
 
@@ -33,8 +33,8 @@ const getStatePatch = createSelector(
         if (!isEqual(app, lastSentState?.app)) {
             statePatch.app = app;
         }
-        if (!isEqual(trimmedWallets, lastSentState?.wallets)) {
-            statePatch.wallets = trimmedWallets;
+        if (!isEqual(trimmedWallets, lastSentState?.trimmedWallets)) {
+            statePatch.trimmedWallets = trimmedWallets;
         }
         if (!isEqual(preferences, lastSentState?.preferences)) {
             statePatch.preferences = preferences;
@@ -42,6 +42,10 @@ const getStatePatch = createSelector(
         if (!isEqual(contacts, lastSentState?.contacts)) {
             statePatch.contacts = contacts;
         }
+        if (!isEqual(tokens, lastSentState?.tokens)) {
+            statePatch.tokens = tokens;
+        }
+
         if (!isEqual(tokens, lastSentState?.tokens)) {
             statePatch.tokens = tokens;
         }
@@ -54,16 +58,22 @@ const getStatePatch = createSelector(
     }
 );
 
-export const walletConnectMiddleware = store => next => action => {
+export const connectExtensionMiddleware = store => next => async action => {
     next(action);
 
-    if (WalletConnectClient.isConnected() && Platform.OS !== 'web') {
+    if (Platform.OS !== 'web' && (await ConnectExtensionWeb.isConnected())) {
         const statePatch = getStatePatch(store.getState());
 
         if (Object.keys(statePatch).length > 0) {
-            WalletConnectClient.sendMessage(WC.UPDATE_STATE, statePatch).catch(() => {
+            try {
+                const connection = await ConnectExtensionWeb.getConnection();
+
+                if (connection) {
+                    await ConnectExtension.syncExtension(connection);
+                }
+            } catch {
                 lastSentState = {};
-            });
+            }
         }
     }
 };

@@ -4,9 +4,6 @@ import { ISilentMessage, SilentMessageType } from '../types';
 import { takeOneAndSubscribeToStore } from '../../../redux/utils/helpers';
 
 export const dataMessageHandler = async (message: ISilentMessage) => {
-    // meanwhile, try to reestablish WC connection if needed
-    // WalletConnectClient.checkConnection();
-
     // check here is app is in foreground ?
 
     // this is entry point for backgorund messaging

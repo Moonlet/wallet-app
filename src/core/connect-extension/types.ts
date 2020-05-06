@@ -1,12 +1,21 @@
-import { ChainIdType } from '../blockchain/types';
+import { ChainIdType, Blockchain } from '../blockchain/types';
 import { HWConnection } from '../wallet/hw-wallet/types';
+import { WalletType } from '../wallet/types';
+import { TokenType } from '../blockchain/types/token';
 
-export interface IQRCode {
+export interface IQRCodeConn {
     connectionId: string;
     encKey: string;
     os?: string;
     platform?: string;
 }
+
+export enum FirebaseRef {
+    EXTENSION_SYNC = 'extensionSync',
+    CONNECTIONS = 'connections'
+}
+
+export const FIREBASE_BUCKET = 'gs://moonlet-extension-sync';
 
 export interface IStorage {
     version: number;
@@ -24,7 +33,9 @@ export interface IStorageWallets {
 
 export interface IStorageWallet {
     name: string;
-    type: string; // WalletType
+    selected: boolean;
+    selectedBlockchain: Blockchain;
+    type: WalletType;
     hwOptions?: {
         // ??
         deviceId: string;
@@ -33,15 +44,30 @@ export interface IStorageWallet {
         connectionType: HWConnection;
     };
     accounts: {
-        index: string;
-        name: string;
+        index: number;
+        selected: boolean;
+        name?: string;
+        blockchain: Blockchain;
         address: string;
         publicKey: string;
+        nonce?: number;
         tokens: {
             [chainId: string]: string[]; // array of symbols
         };
     }[];
-    transactions: string[];
+    transactions: {
+        [txHash: string]: {
+            blockchain: Blockchain;
+            chainId: ChainIdType;
+            broadcastedOnBlock: number;
+        };
+    };
+}
+
+export interface IStorageToken {
+    type: TokenType;
+    symbol: string;
+    contractAddress: string;
 }
 
 export interface IStorageTokens {
@@ -50,7 +76,7 @@ export interface IStorageTokens {
             [symbol: string]: {
                 type: string;
                 symbol: string;
-                contract: string;
+                contractAddress: string;
             };
         };
     }[];
@@ -64,7 +90,7 @@ export interface IStorageContact {
 
 export interface IStoragePreferences {
     currency: string;
-    testnet: boolean;
+    testNet: boolean;
     networks: IStorageNetworks;
     blockchains: string[];
 }

@@ -37,6 +37,7 @@ export const generateEncryptionKey = async (pinCode: string): Promise<string> =>
 export const setBaseEncryptionKey = async () => {
     const encryptionKey = await generateRandomEncryptionKey();
     try {
+        // @ts-ignore
         await Keychain.setGenericPassword(defaultOptions.usernameEncryption, encryptionKey, {
             service: defaultOptions.serviceEncryption,
             storage: Keychain.STORAGE_TYPE.AES,

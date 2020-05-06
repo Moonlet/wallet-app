@@ -5,7 +5,7 @@ import * as IExtStorage from './types';
 import { IPrefState } from '../../redux/preferences/state';
 import { IContactsState } from '../../redux/contacts/state';
 import { ITokensConfigState, ITokenConfigState } from '../../redux/tokens/state';
-import { ChainIdType } from '../blockchain/types';
+import { ChainIdType, IBlockchainTransaction } from '../blockchain/types';
 
 export const trimWallets = (wallets: IWalletsState) => {
     const trimmedWallets: IExtStorage.IStorageWallets = {};
@@ -26,21 +26,42 @@ export const trimWallets = (wallets: IWalletsState) => {
 
             const accountTrimmed = {
                 index: account.index,
-                name: account.name,
+                selected: account.selected,
+                name: account?.name,
+                blockchain: account.blockchain,
                 address: account.address,
                 publicKey: account.publicKey,
+                nonce: account?.nonce,
                 tokens: tokensTrimmed
             };
 
             accountsTrimmed.push(accountTrimmed);
         });
 
+        const txsTrimmed = {};
+
+        wallet?.transactions &&
+            Object.keys(wallet.transactions).map((txHash: string) => {
+                const tx: IBlockchainTransaction = wallet.transactions[txHash];
+
+                Object.assign(txsTrimmed, {
+                    ...txsTrimmed,
+                    [txHash]: {
+                        blockchain: tx.blockchain,
+                        chainId: tx.chainId,
+                        broadcastedOnBlock: tx.broadcastedOnBlock
+                    }
+                });
+            });
+
         const trimmedWallet: IExtStorage.IStorageWallet = {
             name: wallet.name,
+            selected: wallet.selected,
+            selectedBlockchain: wallet.selectedBlockchain,
             type: wallet.type,
             hwOptions: wallet?.hwOptions,
             accounts: accountsTrimmed,
-            transactions: (wallet.transactions && Object.keys(wallet.transactions)) || [] // tx hash
+            transactions: txsTrimmed
         };
 
         Object.assign(trimmedWallets, {
@@ -52,7 +73,7 @@ export const trimWallets = (wallets: IWalletsState) => {
     return trimmedWallets;
 };
 
-export const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
+const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
     const trimmedTokens: IExtStorage.IStorageTokens = {};
 
     Object.keys(tokens).map((blockchain: string) => {
@@ -79,20 +100,20 @@ export const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageToke
     return trimmedTokens;
 };
 
-export const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
+const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
     return {
         currency: preferences.currency,
-        testnet: preferences.testNet,
+        testNet: preferences.testNet,
         networks: cloneDeep(preferences.networks),
         blockchains: Object.keys(preferences.blockchains)
     };
 };
 
-export const trimContacts = (contacts: IContactsState): IExtStorage.IStorageContact[] => {
+const trimContacts = (contacts: IContactsState): IExtStorage.IStorageContact[] => {
     return Object.values(contacts);
 };
 
-export const trimState = (state: IReduxState) => ({
+const trimState = (state: IReduxState) => ({
     wallets: trimWallets(state.wallets),
     contacts: trimContacts(state.contacts),
     preferences: trimPreferences(state.preferences),

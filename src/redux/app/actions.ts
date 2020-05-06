@@ -1,6 +1,7 @@
 import { HintsComponent, HintsScreen } from './state';
 import { IReduxState } from '../state';
 import { clearPinCode } from '../../core/secure/keychain';
+import { Platform } from 'react-native';
 
 export const SET_ACCEPTED_TC_VERSION = 'SET_ACCEPTED_TC_VERSION';
 export const SHOW_HINT = 'SHOW_HINT';
@@ -8,6 +9,7 @@ export const RESET_FAILED_LOGINS = 'RESET_FAILED_LOGINS';
 export const INCREMENT_FAILED_LOGINS = 'INCREMENT_FAILED_LOGINS';
 export const SET_APP_BLOCK_UNTIL = 'SET_APP_BLOCK_UNTIL';
 export const RESET_ALL_DATA = 'RESET_ALL_DATA';
+export const EXTENSION_UPDATE_STATE = 'EXTENSION_UPDATE_STATE';
 
 export const appSetAcceptedTcVersion = (version: number) => {
     return {
@@ -43,6 +45,13 @@ export const setAppBlockUntil = (date: Date | string) => {
 };
 
 export const resetAllData = () => async (dispatch, getState: () => IReduxState) => {
-    clearPinCode(); // clear keychain storage
+    Platform.OS !== 'web' && clearPinCode(); // clear keychain storage
     dispatch({ type: RESET_ALL_DATA });
+};
+
+export const extensionReduxUpdateState = (state: any) => dispatch => {
+    dispatch({
+        type: EXTENSION_UPDATE_STATE,
+        data: { state }
+    });
 };

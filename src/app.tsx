@@ -14,8 +14,6 @@ import { PasswordModal } from './components/password-modal/password-modal';
 import { Notifications } from './core/messaging/notifications/notifications';
 import { setupVoipNotification } from './core/messaging/silent/ios-voip-push-notification';
 import { BottomSheet } from './components/bottom-sheet/bottom-sheet';
-import { WalletConnectClient } from './core/wallet-connect/wallet-connect-client';
-import { WalletConnectWeb } from './core/wallet-connect/wallet-connect-web';
 import { NavigationService } from './navigation/navigation-service';
 import { Dialog } from './components/dialog/dialog';
 import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
@@ -43,9 +41,6 @@ interface IState {
     displayApplication: boolean;
     navigationState: any;
 }
-
-WalletConnectClient.setStore(store);
-WalletConnectWeb.setStore(store);
 
 export default class App extends React.Component<{}, IState> {
     public interval: any = null;
@@ -133,13 +128,6 @@ export default class App extends React.Component<{}, IState> {
                             store.dispatch(updateExchangeRates(exchangeRates));
                         }
                     });
-
-                    // trigger extension getState after state was loaded from storage
-                    Platform.OS === 'web' &&
-                        WalletConnectWeb.isConnected() &&
-                        WalletConnectWeb.getState();
-
-                    this.updateAppReady();
                 }
             }
 

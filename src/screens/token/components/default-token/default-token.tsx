@@ -21,7 +21,6 @@ import { formatNumber } from '../../../../core/utils/format-number';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { formatAddress } from '../../../../core/utils/format-address';
-import { WalletConnectClient } from '../../../../core/wallet-connect/wallet-connect-client';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { sendTransferTransaction } from '../../../../redux/wallets/actions';
 import { Dialog } from '../../../../components/dialog/dialog';
@@ -102,10 +101,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                     text: translate('App.labels.cancel'),
                     onPress: () => {
                         this.props.navigation.navigate('Dashboard');
-                        WalletConnectClient.getConnector().rejectRequest({
-                            id: this.props.extensionTransactionPayload.id,
-                            error: { message: 'Transaction refused' }
-                        });
+                        // TODO: Transaction refused
                     }
                 },
                 {
@@ -113,10 +109,8 @@ export class DefaultTokenScreenComponent extends React.Component<
                     onPress: () => {
                         PasswordModal.getPassword()
                             .then(password => {
-                                WalletConnectClient.getConnector().approveRequest({
-                                    id: this.props.extensionTransactionPayload.id,
-                                    result: {}
-                                });
+                                // TODO: approveRequest
+                                // id: this.props.extensionTransactionPayload.id
                                 this.props.sendTransferTransaction(
                                     account,
                                     toAddress,
@@ -131,12 +125,8 @@ export class DefaultTokenScreenComponent extends React.Component<
                             })
                             .catch(() => {
                                 // TODO
-
                                 // maybe retry here
-                                WalletConnectClient.getConnector().rejectRequest({
-                                    id: this.props.extensionTransactionPayload.id,
-                                    error: { message: 'Wrong password' }
-                                });
+                                // TODO: 'Wrong password'
                             });
                     }
                 }
@@ -158,7 +148,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                         <Button
                             testID="button-send"
                             style={styles.button}
-                            disabled={!this.props.canSend}
+                            // disabled={!this.props.canSend} // TODO
                             onPress={() => {
                                 navigation.navigate('Send', {
                                     accountIndex: account.index,

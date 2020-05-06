@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize, SCREEN_HEIGHT } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -10,7 +10,8 @@ export default (theme: ITheme) =>
             paddingBottom: BASE_DIMENSION * 2,
             paddingHorizontal: BASE_DIMENSION * 2,
             flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            height: SCREEN_HEIGHT
         },
         rowContainer: {
             flexDirection: 'column',

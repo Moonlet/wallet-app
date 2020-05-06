@@ -20,7 +20,6 @@ import BigNumber from 'bignumber.js';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TokenType } from '../../core/blockchain/types/token';
-import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
@@ -132,24 +131,25 @@ export class SendScreenComponent extends React.Component<
             };
             this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
 
-            WalletConnectWeb.signTransaction({
-                account: this.props.account,
-                toAddress: this.state.toAddress,
-                amount: this.state.amount,
-                token: this.props.token,
-                feeOptions: this.state.feeOptions,
-                walletId: this.props.selectedWalletId,
-                selectedAccount: this.props.selectedAccount
-            })
-                .then(() => {
-                    data.state = 'completed';
-                    this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
-                    this.props.navigation.goBack();
-                })
-                .catch(() => {
-                    data.state = 'rejected';
-                    this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
-                });
+            // TODO
+            // WalletConnectWeb.signTransaction({
+            //     account: this.props.account,
+            //     toAddress: this.state.toAddress,
+            //     amount: this.state.amount,
+            //     token: this.props.token,
+            //     feeOptions: this.state.feeOptions,
+            //     walletId: this.props.selectedWalletId,
+            //     selectedAccount: this.props.selectedAccount
+            // })
+            //     .then(() => {
+            //         data.state = 'completed';
+            //         this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
+            //         this.props.navigation.goBack();
+            //     })
+            //     .catch(() => {
+            //         data.state = 'rejected';
+            //         this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
+            //     });
             return;
         }
 

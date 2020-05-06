@@ -8,10 +8,9 @@ export class HttpClient {
     constructor(private url: string) {}
 
     public async get(path: string): Promise<any> {
-        // console.log('RPC client', 'request', request);
         return fetch(this.url + path).then(async res => {
             const response = await res.json();
-            //  console.log('RPC client', 'response', response);
+            // console.log('GET', 'response', response);
             return response;
         });
     }

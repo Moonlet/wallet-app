@@ -10,7 +10,6 @@ import { getApnsToken } from '../../core/messaging/silent/ios-voip-push-notifica
 import { readEncrypted } from '../../core/secure/storage';
 import { WC_CONNECTION } from '../../core/constants/app';
 import { getBaseEncryptionKey } from '../../core/secure/keychain';
-import { WalletConnectClient } from '../../core/wallet-connect/wallet-connect-client';
 
 export interface IExternalProps {
     obRef?: any;
@@ -111,12 +110,6 @@ export class DebugModalComponent extends React.Component<
                         </View>
                     </ScrollView>
 
-                    <Button
-                        onPress={() => WalletConnectClient.reconnect()}
-                        style={this.props.styles.button}
-                    >
-                        {`Reconnect to WC`}
-                    </Button>
                     <Button onPress={() => this.setState({ visible: false })}>{`Back`}</Button>
                 </View>
             </Modal>

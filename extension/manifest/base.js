@@ -2,7 +2,13 @@ module.exports = {
     name: 'Moonlet Wallet',
     version: '0.0.0',
     description: 'Moonlet Wallet Extension',
-    permissions: ['storage', 'identity', 'https://api.moonlet.xyz/*'],
+    permissions: [
+        'storage',
+        'identity',
+        'https://firebasestorage.googleapis.com/*',
+        'https://*.moonlet.dev/*',
+        'https://*.moonlet.io/*'
+    ],
     optional_permissions: ['https://*/*'],
     background: {
         scripts: ['bundle.background.js']

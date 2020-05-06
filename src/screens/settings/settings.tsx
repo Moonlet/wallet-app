@@ -22,7 +22,6 @@ import { HeaderIcon } from '../../components/header-icon/header-icon';
 import { translate } from '../../core/i18n';
 import { biometricAuth, BiometryType } from '../../core/biometric-auth/biometric-auth';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { WalletConnectWeb } from '../../core/wallet-connect/wallet-connect-web';
 import { Dialog } from '../../components/dialog/dialog';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { DebugModal } from '../../components/debug-modal/debug-modal';
@@ -32,6 +31,8 @@ import { setPinCode, clearPinCode } from '../../core/secure/keychain';
 import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
+import { resetAllData } from '../../redux/app/actions';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -46,6 +47,7 @@ export interface IReduxProps {
     setDisplayPasswordModal: typeof setDisplayPasswordModal;
     openLoadingModal: typeof openLoadingModal;
     closeLoadingModal: typeof closeLoadingModal;
+    resetAllData: typeof resetAllData;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
@@ -58,7 +60,8 @@ const mapDispatchToProps = {
     toggleBiometricAuth,
     setDisplayPasswordModal,
     openLoadingModal,
-    closeLoadingModal
+    closeLoadingModal,
+    resetAllData
 };
 
 const navigationOptions = () => ({
@@ -71,7 +74,7 @@ export class SettingsScreenComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    debugModal: any;
+    public debugModal: any;
 
     constructor(
         props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -390,8 +393,9 @@ export class SettingsScreenComponent extends React.Component<
                     {Platform.OS === 'web' && (
                         <Button
                             style={styles.button}
-                            onPress={() => {
-                                WalletConnectWeb.disconnect();
+                            onPress={async () => {
+                                await ConnectExtensionWeb.disconnect();
+                                this.props.resetAllData();
                                 location.reload();
                             }}
                         >

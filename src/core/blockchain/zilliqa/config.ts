@@ -12,6 +12,7 @@ export const ZIL_NATIVE: ITokenConfigState = {
         iconComponent: ZilIcon
     },
     defaultOrder: 0,
+    removable: false,
     decimals: 12,
     ui: {
         decimals: 3,
@@ -60,7 +61,8 @@ export const config: IBlockchainConfig = {
         addressDisplay: 'stripped',
         enableTokenManagement: true,
         enableAccountCreation: false,
-        maxAccountsNumber: 5
+        maxAccountsNumber: 5,
+        displayName: 'ZIL'
     },
     networks: {
         testNet: 333,

@@ -13,7 +13,7 @@ export enum Blockchain {
     ZILLIQA = 'ZILLIQA',
     NEAR = 'NEAR',
     COSMOS = 'COSMOS',
-    STELLAR = 'STELLAR'
+    CELO = 'CELO'
 }
 
 export interface IBlockchain {

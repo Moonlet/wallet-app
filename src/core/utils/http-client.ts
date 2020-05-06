@@ -35,8 +35,8 @@ export class HttpClient {
             params: Array.isArray(params) ? params : [params]
         };
 
-        // console.log('RPC client', 'request', this.url, body);
         return this.post('', body).then(async res => {
+            //            console.log('response', res, this.url);
             return res;
         });
     }

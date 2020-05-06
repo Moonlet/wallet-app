@@ -6,6 +6,7 @@ import CONFIG from '../../config';
 export enum RemoteFeature {
     NEAR = 'feature_near',
     COSMOS = 'feature_cosmos',
+    CELO = 'feature_celo',
     DEV_TOOLS = 'dev_tools',
     TC_VERSION = 'tcVersion'
 }
@@ -27,6 +28,7 @@ export const getRemoteConfigFeatures = async () => {
             .getValues([
                 RemoteFeature.NEAR,
                 RemoteFeature.COSMOS,
+                RemoteFeature.CELO,
                 RemoteFeature.DEV_TOOLS,
                 RemoteFeature.TC_VERSION
             ]);
@@ -41,6 +43,7 @@ export const getRemoteConfigFeatures = async () => {
             [RemoteFeature.NEAR]: JSON.stringify([]),
             [RemoteFeature.DEV_TOOLS]: JSON.stringify([]),
             [RemoteFeature.COSMOS]: JSON.stringify([]),
+            [RemoteFeature.CELO]: JSON.stringify([]),
             [RemoteFeature.TC_VERSION]: '0'
         };
     }
@@ -63,6 +66,7 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
     if (
         (feature === RemoteFeature.NEAR ||
             feature === RemoteFeature.COSMOS ||
+            feature === RemoteFeature.CELO ||
             feature === RemoteFeature.DEV_TOOLS) &&
         featuresConfig
     ) {

@@ -197,7 +197,10 @@ export class SendScreenComponent extends React.Component<
 
         if (balance.isGreaterThanOrEqualTo(0)) {
             const blockchainInstance = getBlockchain(this.props.account.blockchain);
-            const amountFromStd = blockchainInstance.account.amountFromStd(new BigNumber(balance));
+            const amountFromStd = blockchainInstance.account.amountFromStd(
+                new BigNumber(balance),
+                tokenConfig.decimals
+            );
             return amountFromStd.toString();
         } else {
             return new BigNumber(0).toString();

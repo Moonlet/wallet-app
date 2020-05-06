@@ -60,7 +60,7 @@ export class BlockchainNavigationBottomSheetComponent extends React.Component<
         const { styles, theme } = this.props;
         const blockchainConfig = getBlockchain(blockchain).config;
 
-        const coin = blockchainConfig.coin;
+        const coin = blockchainConfig.ui.displayName;
         const BlockchainIcon = blockchainConfig.iconComponent;
 
         return (

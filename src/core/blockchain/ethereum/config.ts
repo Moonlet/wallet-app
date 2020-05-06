@@ -10,6 +10,7 @@ export const ETH_NATIVE: ITokenConfigState = {
     icon: {
         iconComponent: EthIcon
     },
+    removable: false,
     defaultOrder: 0,
     decimals: 18,
     ui: {
@@ -62,7 +63,8 @@ export const config: IBlockchainConfig = {
         addressDisplay: 'stripped',
         enableTokenManagement: true,
         enableAccountCreation: false,
-        maxAccountsNumber: 5
+        maxAccountsNumber: 5,
+        displayName: 'ETH'
     },
     networks: {
         testNet: 4,

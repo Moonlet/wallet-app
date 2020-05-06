@@ -43,6 +43,7 @@ import { formatAddress } from '../../core/utils/format-address';
 import { Amount } from '../../components/amount/amount';
 import { WalletType } from '../../core/wallet/types';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -211,7 +212,7 @@ export class DashboardScreenComponent extends React.Component<
                         styles.blockchainButtonTextActive
                     }
                 >
-                    {blockchain && getBlockchain(blockchain).config.coin}
+                    {blockchain && getBlockchain(blockchain).config.ui.displayName}
                 </Text>
             </TouchableOpacity>
         );
@@ -316,6 +317,8 @@ export class DashboardScreenComponent extends React.Component<
             extrapolate: 'clamp'
         });
 
+        const tokenConfig = getTokenConfig(blockchain, config.coin);
+
         return (
             <Animated.View
                 style={[styles.coinBalanceCard, { height: animateCoinBalanceCardHeight }]}
@@ -357,8 +360,8 @@ export class DashboardScreenComponent extends React.Component<
                                 }
                             ]}
                             amount={String(balance)}
-                            token={config.coin}
-                            tokenDecimals={config.tokens[config.coin].decimals}
+                            token={tokenConfig.symbol}
+                            tokenDecimals={tokenConfig.decimals}
                             blockchain={blockchain}
                             isAnimated={true}
                         />
@@ -372,7 +375,7 @@ export class DashboardScreenComponent extends React.Component<
                             ]}
                             amount={String(balance)}
                             token={config.coin}
-                            tokenDecimals={config.tokens[config.coin].decimals}
+                            tokenDecimals={tokenConfig.decimals}
                             blockchain={blockchain}
                             convert
                             isAnimated={true}
@@ -412,7 +415,6 @@ export class DashboardScreenComponent extends React.Component<
                         chainId={chainId}
                     />
                 </ScrollView>
-
                 {this.renderCoinBalanceCard()}
             </View>
         );

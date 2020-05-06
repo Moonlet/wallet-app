@@ -10,6 +10,7 @@ export const NEAR_NATIVE: ITokenConfigState = {
     icon: {
         iconComponent: NearIcon
     },
+    removable: false,
     defaultOrder: 0,
     decimals: 24,
     ui: {
@@ -52,7 +53,8 @@ export const config: IBlockchainConfig = {
     ui: {
         enableTokenManagement: false,
         enableAccountCreation: true,
-        maxAccountsNumber: 5
+        maxAccountsNumber: 5,
+        displayName: 'NEAR'
     },
     networks: {
         testNet: 'testnet'

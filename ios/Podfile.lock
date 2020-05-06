@@ -2,6 +2,7 @@ PODS:
   - boost-for-react-native (1.63.0)
   - BVLinearGradient (2.5.6):
     - React
+  - CocoaAsyncSocket (7.6.4)
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
   - DoubleConversion (1.1.6)
@@ -298,7 +299,7 @@ PODS:
     - React-cxxreact (= 0.61.1)
     - React-jsi (= 0.61.1)
   - React-jsinspector (0.61.1)
-  - react-native-aes (1.3.6):
+  - react-native-aes (1.3.8):
     - React
   - react-native-background-timer (2.2.0):
     - React
@@ -308,13 +309,14 @@ PODS:
   - react-native-ble-plx-swift (1.1.1)
   - react-native-camera-kit (8.0.4):
     - React
-  - react-native-netinfo (5.7.0):
+  - react-native-netinfo (5.8.0):
     - React
   - react-native-randombytes (3.5.3):
     - React
-  - react-native-udp (3.0.0):
+  - react-native-udp (3.1.0):
+    - CocoaAsyncSocket
     - React
-  - react-native-webview (9.1.3):
+  - react-native-webview (9.4.0):
     - React
   - React-RCTActionSheet (0.61.1):
     - React-Core/RCTActionSheetHeaders (= 0.61.1)
@@ -351,7 +353,7 @@ PODS:
     - React-cxxreact (= 0.61.1)
     - React-jsi (= 0.61.1)
     - ReactCommon/jscallinvoker (= 0.61.1)
-  - RNCAsyncStorage (1.8.1):
+  - RNCAsyncStorage (1.9.0):
     - React
   - RNDeviceInfo (4.0.1):
     - React
@@ -368,15 +370,15 @@ PODS:
     - Fabric
     - Firebase/Core
     - React
-  - RNGestureHandler (1.6.0):
+  - RNGestureHandler (1.6.1):
     - React
   - RNKeychain (5.0.1):
     - React
-  - RNReanimated (1.7.0):
+  - RNReanimated (1.8.0):
     - React
-  - RNScreens (2.3.0):
+  - RNScreens (2.7.0):
     - React
-  - RNSentry (1.3.3):
+  - RNSentry (1.3.7):
     - React
     - Sentry (~> 4.4.0)
   - RNSVG (12.1.0):
@@ -461,6 +463,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
+    - CocoaAsyncSocket
     - Crashlytics
     - Fabric
     - Firebase
@@ -591,6 +594,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
+  CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
   DoubleConversion: 5805e889d232975c086db112ece9ed034df7a0b2
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
@@ -627,15 +631,15 @@ SPEC CHECKSUMS:
   React-jsi: 61ff417c95e6c3af50fb96399037e80752fb5ce7
   React-jsiexecutor: ee45274419eb95614bbbadb98e20684c5f29996e
   React-jsinspector: 574d597112f9ea3d1b717f6fb62aef764c70dd6f
-  react-native-aes: 22ea989d641f53ea7722fe6b146349ed66e6455d
+  react-native-aes: 6bbed31e8767d0ce1c6af07d255475fa79920c3c
   react-native-background-timer: 53c0e028a95d58b1f4498ef7ce152b6c6b337595
   react-native-ble-plx: 304c7bee074a05581672c9990f375b3906808718
   react-native-ble-plx-swift: eb64f02b988becb84a60164aba9fab5d6ddb6dc8
   react-native-camera-kit: ded127598a48890a360fbf5e26cf7c44fcc5b873
-  react-native-netinfo: 61a837131d5f0194d22f8048a456d8f31a074baa
+  react-native-netinfo: 6458a467af4b3b7b0b87a179776ba6ba469e4f22
   react-native-randombytes: 991545e6eaaf700b4ee384c291ef3d572e0b2ca8
-  react-native-udp: 0c1afee1a1eb2b494b25e0c8ab39c783412e0984
-  react-native-webview: e8e74869753ae9d0b021e63e1cd6f175ac824f07
+  react-native-udp: 70de81f5db94503d112f6d9ca08f27adb1c2c7af
+  react-native-webview: 0e2881d2e3e72ad52a82445c1a116c43205fd471
   React-RCTActionSheet: af4d951113b1e068bb30611f91b984a7a73597ff
   React-RCTAnimation: 4f518d70bb6890b7c3d9d732f84786d6693ca297
   React-RCTBlob: 072a4888c08de0eef6d04eaa727d25e577e6ff26
@@ -646,15 +650,15 @@ SPEC CHECKSUMS:
   React-RCTText: 81b62b4e7f11531a5154e4daa5617670d5a2d5de
   React-RCTVibration: 8be61459e3749d1fb02cf414edd05b3007622882
   ReactCommon: 4fba5be89efdf0b5720e0adb3d8d7edf6e532db0
-  RNCAsyncStorage: 00bdf63f7f1e0f11d3323533dba4f222e58bf092
+  RNCAsyncStorage: b16697280b08bab4b5f2f67f752d93d13a52e9ed
   RNDeviceInfo: 12faae605ba42a1a5041c3c41a77834bc23f049d
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
   RNFirebase: 37daa9a346d070f9f6ee1f3b4aaf4c8e3b1d5d1c
-  RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
+  RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
   RNKeychain: a5623de13ec5378bfb8035422e3dee4fa538660d
-  RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
-  RNScreens: 03bf608b92ac0acf323f47d8f5b63a8f829340c8
-  RNSentry: 86baf0c87120cd5eb491d073989f8cbc1a2174c6
+  RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
+  RNScreens: cf198f915f8a2bf163de94ca9f5bfc8d326c3706
+  RNSentry: 370623102247ebea20191b5fb549ecc7a275b324
   RNSVG: ce9d996113475209013317e48b05c21ee988d42e
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   RNVoipPushNotification: 27ff53396bfd396bef52bf30a31353c1897b8e3a
@@ -666,4 +670,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: eb4c90488aa13900d7ec0ed35cd04b71cd4508c6
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.8.4

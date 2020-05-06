@@ -88,7 +88,8 @@ const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
                             [token.symbol]: {
                                 type: token.type,
                                 symbol: token.symbol,
-                                contractAddress: token.contractAddress
+                                contractAddress: token.contractAddress,
+                                removable: token.removable
                             }
                         }
                     }

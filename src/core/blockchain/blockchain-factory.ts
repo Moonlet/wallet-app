@@ -3,6 +3,7 @@ import { Zilliqa } from './zilliqa';
 import { Ethereum } from './ethereum';
 import { Near } from './near';
 import { Cosmos } from './cosmos';
+import { Celo } from './celo';
 
 export const getBlockchain = (blockchain: Blockchain): IBlockchain => {
     switch (blockchain) {
@@ -14,6 +15,8 @@ export const getBlockchain = (blockchain: Blockchain): IBlockchain => {
             return Near;
         case Blockchain.COSMOS:
             return Cosmos;
+        case Blockchain.CELO:
+            return Celo;
         default:
             throw new Error(`getBlockchain: ${blockchain} implementation not found`);
     }
@@ -22,6 +25,7 @@ export const getBlockchain = (blockchain: Blockchain): IBlockchain => {
 export const BLOCKCHAIN_LIST = [
     Blockchain.ZILLIQA,
     Blockchain.ETHEREUM,
+    Blockchain.CELO,
     Blockchain.NEAR,
     Blockchain.COSMOS
 ];

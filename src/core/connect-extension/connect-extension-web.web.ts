@@ -39,10 +39,14 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
-    const getConnection = async (): Promise<any> => {
+    const getConnection = async (): Promise<IQRCodeConn> => {
         try {
             const stored = await readEncrypted(CONN_EXTENSION, CONN_EXTENSION);
-            return JSON.parse(stored);
+            if (stored) {
+                return JSON.parse(stored);
+            }
+
+            return undefined;
         } catch (err) {
             Promise.reject(err);
         }

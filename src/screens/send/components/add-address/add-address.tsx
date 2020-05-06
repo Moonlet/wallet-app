@@ -95,7 +95,7 @@ export class AddAddressComponent extends React.Component<
         });
     }
 
-    renderAddAddressToBook = () => {
+    private renderAddAddressToBook() {
         const { styles } = this.props;
 
         const addressNotInWalletAccounts =
@@ -122,7 +122,7 @@ export class AddAddressComponent extends React.Component<
                 </TouchableOpacity>
             );
         }
-    };
+    }
 
     private onAccountSelection(account: IAccountState) {
         this.setState({ toAddress: account.address });
@@ -338,7 +338,7 @@ export class AddAddressComponent extends React.Component<
                     </Text>
                 </TouchableOpacity>
 
-                {this.renderAddAddressToBook()}
+                {Platform.OS !== 'web' && this.renderAddAddressToBook()}
 
                 {this.renderListOrBook()}
 

@@ -36,8 +36,25 @@ export const ConnectExtension = (() => {
         }
     };
 
+    // TODO: sendRequestPayload type
+    const sendRequest = async (connection: IQRCodeConn, sendRequestPayload: any) => {
+        try {
+            const http = new HttpClient(CONFIG.extSyncSendRequestUrl);
+            const res = await http.post('', {
+                connectionId: connection.connectionId,
+                authToken: sha256(connection.encKey),
+                data: sendRequestPayload
+            });
+
+            return res;
+        } catch {
+            //
+        }
+    };
+
     return {
         syncExtension,
-        disconnectExtension
+        disconnectExtension,
+        sendRequest
     };
 })();

@@ -23,11 +23,11 @@ import { TokenType } from '../../core/blockchain/types/token';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
-import {
-    IBottomSheetExtensionRequestData,
-    IExtensionRequestType,
-    BottomSheetType
-} from '../../redux/ui/bottomSheet/state';
+// import {
+//     IBottomSheetExtensionRequestData,
+//     IExtensionRequestType,
+//     BottomSheetType
+// } from '../../redux/ui/bottomSheet/state';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { getChainId } from '../../redux/preferences/selectors';
 import { Memo } from './components/extra-fields/memo/memo';
@@ -38,6 +38,15 @@ import _ from 'lodash';
 import { AddAddress } from './components/add-address/add-address';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { IQRCodeConn } from '../../core/connect-extension/types';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
+import { ConnectExtension } from '../../core/connect-extension/connect-extension';
+// import { Dialog } from '../../components/dialog/dialog';
+import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
+
+export enum NOTIFICATION_TYPE {
+    MOONLET_TRANSFER = 'MOONLET_TRANSFER'
+}
 
 export interface IReduxProps {
     account: IAccountState;
@@ -46,6 +55,8 @@ export interface IReduxProps {
     selectedWalletId: string;
     selectedAccount: IAccountState;
     chainId: ChainIdType;
+    openLoadingModal: typeof openLoadingModal;
+    closeLoadingModal: typeof closeLoadingModal;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -116,20 +127,77 @@ export class SendScreenComponent extends React.Component<
 
     public async confirmPayment() {
         if (Platform.OS === 'web') {
+            // this.props.openLoadingModal();
             const formattedAmount = formatNumber(new BigNumber(this.state.amount), {
                 currency: getBlockchain(this.props.account.blockchain).config.coin
             });
 
-            const data: IBottomSheetExtensionRequestData = {
-                type: IExtensionRequestType.SIGN_TRANSACTION,
-                state: 'pending',
-                mainText: `${formattedAmount} to ${formatAddress(
-                    this.props.account.address,
-                    this.props.account.blockchain
-                )}`,
-                secondaryText: new Date().toLocaleDateString('en-GB')
+            const formattedAddress = formatAddress(
+                this.props.account.address,
+                this.props.account.blockchain
+            );
+
+            // const data: IBottomSheetExtensionRequestData = {
+            //     type: IExtensionRequestType.SIGN_TRANSACTION,
+            //     state: 'pending',
+            //     mainText: `${formattedAmount} to ${formatAddress(
+            //         this.props.account.address,
+            //         this.props.account.blockchain
+            //     )}`,
+            //     secondaryText: new Date().toLocaleDateString('en-GB')
+            // };
+            // this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
+
+            const account = this.props.account;
+            const token = this.props.token;
+
+            const blockchainInstance = getBlockchain(account.blockchain);
+            const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
+
+            const amount = blockchainInstance.account
+                .amountToStd(this.state.amount, tokenConfig.decimals)
+                .toFixed();
+
+            const tx = await blockchainInstance.transaction.buildTransferTransaction({
+                chainId: this.props.chainId,
+                account,
+                toAddress: this.state.toAddress,
+                amount,
+                token: token.symbol,
+                feeOptions: this.state.feeOptions,
+                extraFields: { memo: this.state.memo }
+            });
+
+            // TODO: encrypt tx
+            const sendRequestPayload = {
+                method: NOTIFICATION_TYPE.MOONLET_TRANSFER,
+                params: [tx],
+                notification: {
+                    title: 'Confirm transaction',
+                    body: `Open Moonlet to confirm the following transaction: send ${formattedAmount} to ${formattedAddress}`
+                }
             };
-            this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
+
+            try {
+                // TODO: move this to ConnectExtension.sendRequest
+                const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
+
+                if (connection) {
+                    const sendRequestRes = await ConnectExtension.sendRequest(
+                        connection,
+                        sendRequestPayload
+                    );
+                    // console.log('sendRequestRes: ', sendRequestRes);
+
+                    if (sendRequestRes?.success) {
+                        //
+                    }
+                }
+            } catch {
+                //
+            }
+
+            // this.props.closeLoadingModal();
 
             // TODO
             // WalletConnectWeb.signTransaction({
@@ -140,7 +208,7 @@ export class SendScreenComponent extends React.Component<
             //     feeOptions: this.state.feeOptions,
             //     walletId: this.props.selectedWalletId,
             //     selectedAccount: this.props.selectedAccount
-            // })
+            // });
             //     .then(() => {
             //         data.state = 'completed';
             //         this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });

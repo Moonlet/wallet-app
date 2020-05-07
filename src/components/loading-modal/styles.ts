@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize, SCREEN_HEIGHT } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,7 +8,7 @@ export default (theme: ITheme) =>
             position: 'absolute',
             display: 'flex',
             width: '100%',
-            height: SCREEN_HEIGHT,
+            height: '100%',
             backgroundColor: theme.colors.gradientDark,
             opacity: 0.75,
             justifyContent: 'center'

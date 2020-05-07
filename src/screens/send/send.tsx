@@ -3,7 +3,6 @@ import { View, Platform } from 'react-native';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { Button } from '../../library/button/button';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Text } from '../../library';
@@ -24,7 +23,7 @@ import { HeaderLeftClose } from '../../components/header-left-close/header-left-
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 import { TokenType } from '../../core/blockchain/types/token';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
@@ -46,6 +45,7 @@ import {
     displayMessage
 } from '../../redux/ui/loading-modal/actions';
 import { NOTIFICATION_TYPE } from '../../core/connect-extension/types';
+import { IHeaderStep, BottomConfirm } from './components/bottom-confirm/bottom-confirm';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -89,7 +89,7 @@ interface IState {
     feeOptions: IFeeOptions;
     showExtensionMessage: boolean;
     memo: string;
-    headerSteps: { step: number; title: string; active: boolean }[];
+    headerSteps: IHeaderStep[];
     insufficientFundsFees: boolean;
 }
 
@@ -318,109 +318,26 @@ export class SendScreenComponent extends React.Component<
     }
 
     private renderBottomConfirm() {
-        const { styles, account } = this.props;
-        const { amount, headerSteps } = this.state;
-        const stdAmount = this.getInputAmountToStd();
-
-        const activeIndex = _.findIndex(headerSteps, ['active', true]);
+        const activeIndex = _.findIndex(this.state.headerSteps, ['active', true]);
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
-        let disableButton: boolean;
-        switch (activeIndex) {
-            case 0:
-                // Add address
-                if (this.state.toAddress === '') disableButton = true;
-                break;
-            case 1:
-                // Enter amount
-                if (
-                    amount === '' ||
-                    this.state.insufficientFunds ||
-                    this.state.insufficientFundsFees ||
-                    isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
-                    isNaN(Number(this.state.feeOptions?.gasPrice))
-                )
-                    disableButton = true;
-                break;
-            case 2:
-                // Confirm transaction
-                disableButton = false;
-                break;
-            default:
-                disableButton = true;
-                break;
-        }
-
         return (
-            <View style={styles.bottomWrapper}>
-                <View style={styles.bottomDivider} />
-
-                <View style={styles.bottomContainer}>
-                    <View style={styles.bottomTextContainer}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.bottomSendText}>
-                                {translate('App.labels.send')}
-                            </Text>
-                            <Text style={[styles.bottomToText, { textTransform: 'lowercase' }]}>
-                                {translate('App.labels.to')}
-                            </Text>
-                            <Text style={styles.bottomDefaultText}>
-                                {this.state.toAddress !== ''
-                                    ? formatAddress(this.state.toAddress, account.blockchain)
-                                    : '___...___'}
-                            </Text>
-                        </View>
-
-                        {(activeIndex === 1 || activeIndex === 2) && (
-                            <React.Fragment>
-                                <Text
-                                    numberOfLines={1}
-                                    ellipsizeMode="middle"
-                                    style={styles.bottomDefaultText}
-                                >
-                                    {amount === ''
-                                        ? `_.___ ${tokenConfig.symbol}`
-                                        : `${amount} ${tokenConfig.symbol}`}
-                                </Text>
-
-                                <Amount
-                                    style={styles.bottomAmountText}
-                                    token={tokenConfig.symbol}
-                                    tokenDecimals={tokenConfig.decimals}
-                                    amount={stdAmount.toString()}
-                                    blockchain={this.props.account.blockchain}
-                                    convert
-                                />
-                            </React.Fragment>
-                        )}
-                    </View>
-
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            style={{ width: normalize(140) }}
-                            primary
-                            disabled={disableButton}
-                            onPress={() => {
-                                if (activeIndex === 2) {
-                                    this.confirmPayment();
-                                } else {
-                                    const steps = headerSteps;
-
-                                    steps[activeIndex].active = false;
-                                    steps[activeIndex + 1].active = true;
-
-                                    this.setState({ headerSteps: steps });
-                                }
-                            }}
-                        >
-                            {activeIndex === headerSteps.length - 1
-                                ? translate('App.labels.confirm')
-                                : translate('App.labels.next')}
-                        </Button>
-                    </View>
-                </View>
-            </View>
+            <BottomConfirm
+                toAddress={this.state.toAddress}
+                activeIndex={activeIndex}
+                amount={this.state.amount}
+                account={this.props.account}
+                feeOptions={this.state.feeOptions}
+                insufficientFunds={this.state.insufficientFunds}
+                insufficientFundsFees={this.state.insufficientFundsFees}
+                headerSteps={this.state.headerSteps}
+                tokenConfig={tokenConfig}
+                stdAmount={this.getInputAmountToStd()}
+                confirmPayment={() => this.confirmPayment()}
+                setHeaderSetps={(steps: IHeaderStep[]) => this.setState({ headerSteps: steps })}
+            />
         );
+        //
     }
 
     private renderEnterAmount() {

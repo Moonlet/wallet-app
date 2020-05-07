@@ -38,6 +38,7 @@ import { BASE_DIMENSION, normalize } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
+import { TransactionRequestScreen } from '../screens/transaction-request/transaction-request';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -133,6 +134,9 @@ export const WalletNavigation = createStackNavigator(
         ConnectExtension: {
             screen: ConnectExtensionScreen
         },
+        TransactionRequest: {
+            screen: TransactionRequestScreen
+        },
 
         // wallet creation
         CreateWalletMnemonic: {
@@ -198,6 +202,9 @@ export const SettingsNavigation = createStackNavigator(
         BackupWallet: {
             screen: BackupWalletScreen
         },
+        TransactionRequest: {
+            screen: TransactionRequestScreen
+        },
 
         // wallet creation
         CreateWalletMnemonic: {
@@ -229,6 +236,9 @@ export const StatisticsNavigation = createStackNavigator(
     {
         Statistics: {
             screen: StatisticsScreen
+        },
+        TransactionRequest: {
+            screen: TransactionRequestScreen
         }
     },
     {
@@ -244,6 +254,9 @@ export const WatchNavigation = createStackNavigator(
     {
         Watch: {
             screen: WatchScreen
+        },
+        TransactionRequest: {
+            screen: TransactionRequestScreen
         }
     },
     {

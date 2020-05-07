@@ -418,6 +418,9 @@ export const translation: ITranslations = {
             title: 'Confirm transaction',
             body:
                 'Open Moonlet to confirm the following transaction: send {{formattedAmount}} to {{formattedAddress}}'
+        },
+        TransactionRequest: {
+            title: 'Transaction request'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -18,8 +18,11 @@ jobs:
       - uses: actions/setup-ruby@v1
         with:
           ruby-version: "2.x"
-      - name: Generate firebase config file
-        run: echo '${{ secrets.FB_CONFIG_ANDROID_DEPLOY }}' > android/app/google-services.json
+      - name: Generate firebase config files
+        run: |
+          echo '${{ secrets.FB_CONFIG_ANDROID_DEPLOY }}' > android/app/google-services.json
+          echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
+          echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
       - name: Setup key
         uses: webfactory/ssh-agent@v0.1.1
         with:
@@ -63,8 +66,11 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_CERTS }}
       - name: Add to host
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
-      - name: Generate firebase config file
-        run: echo '${{ secrets.FB_CONFIG_IOS_DEPLOY }}' > ios/release/GoogleService-Info.plist
+      - name: Generate firebase config files
+        run: |
+          echo '${{ secrets.FB_CONFIG_IOS_DEPLOY }}' > ios/release/GoogleService-Info.plist
+          echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
+          echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
       - name: Dependencies install
         run: cd ios && bundle install
       - name: Cache node modules

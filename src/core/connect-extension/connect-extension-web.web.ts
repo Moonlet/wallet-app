@@ -224,7 +224,7 @@ export const ConnectExtensionWeb = (() => {
         });
     };
 
-    const getRequestIdParams = async (requestId: string) => {
+    const getRequestIdParams = async (requestId: string): Promise<any> => {
         //
     };
 

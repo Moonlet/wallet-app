@@ -16,7 +16,7 @@ export class Stats extends GenericStats<Client> {
 
 export const secondaryStatsValues = [
     {
-        label: 'Daily',
+        title: 'Daily',
         color: '#6A6A6A',
         type: IStatValueType.AMOUNT,
         data: {
@@ -26,7 +26,7 @@ export const secondaryStatsValues = [
         }
     },
     {
-        label: 'Monthly',
+        title: 'Monthly',
         color: '#6A6A6A',
         type: IStatValueType.AMOUNT,
         data: {
@@ -36,7 +36,7 @@ export const secondaryStatsValues = [
         }
     },
     {
-        label: 'Yearly',
+        title: 'Yearly',
         color: '#6A6A6A',
         type: IStatValueType.AMOUNT,
         data: {
@@ -49,7 +49,7 @@ export const secondaryStatsValues = [
 
 export const chartStatsValues = [
     {
-        label: 'Available',
+        title: 'Available',
         color: '#FFFFFF',
         type: IStatValueType.AMOUNT,
         data: {
@@ -59,7 +59,7 @@ export const chartStatsValues = [
         }
     },
     {
-        label: 'Delegated',
+        title: 'Delegated',
         color: '#00DAFF',
         type: IStatValueType.AMOUNT,
         data: {
@@ -69,7 +69,7 @@ export const chartStatsValues = [
         }
     },
     {
-        label: 'Undelegated',
+        title: 'Undelegated',
         color: '#AB7361',
         type: IStatValueType.AMOUNT,
         data: {
@@ -79,7 +79,7 @@ export const chartStatsValues = [
         }
     },
     {
-        label: 'Reward',
+        title: 'Reward',
         color: '#00E676',
         type: IStatValueType.AMOUNT,
         data: {
@@ -92,7 +92,7 @@ export const chartStatsValues = [
 
 export const topStatsValues = [
     {
-        label: 'No. of Validators',
+        title: 'No. of Validators',
         color: '#FFFFFF',
         type: IStatValueType.STRING,
         data: {
@@ -100,7 +100,7 @@ export const topStatsValues = [
         }
     },
     {
-        label: 'Avg. Commission',
+        title: 'Avg. Commission',
         color: '#FFFFFF',
         type: IStatValueType.STRING,
         data: {
@@ -108,7 +108,7 @@ export const topStatsValues = [
         }
     },
     {
-        label: 'Avg. Reward',
+        title: 'Avg. Reward',
         color: '#00E676',
         type: IStatValueType.STRING,
         data: {

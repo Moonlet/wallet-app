@@ -8,7 +8,8 @@ export enum IStatValueType {
 }
 
 export interface IStatValue {
-    label: string;
+    title: string;
+    subtitle?: string;
     color: string;
     type: IStatValueType;
     data: {

@@ -55,6 +55,14 @@ export const config: IBlockchainConfig = {
         }
     },
     ui: {
+        token: {
+            labels: {
+                tabAccount: 'App.labels.account',
+                tabDelegations: 'App.labels.myVotes',
+                tabValidators: 'App.labels.validators',
+                tabTransactions: 'App.labels.transactions'
+            }
+        },
         addressDisplay: 'stripped',
         enableTokenManagement: true,
         enableAccountCreation: false,

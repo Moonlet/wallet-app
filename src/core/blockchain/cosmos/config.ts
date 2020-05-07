@@ -15,7 +15,7 @@ export const ATOM_NATIVE: ITokenConfigState = {
     decimals: 6,
     ui: {
         decimals: 3,
-        tokenScreenComponent: TokenScreenComponentType.DEFAULT // TODO: DELEGATE is in progress
+        tokenScreenComponent: TokenScreenComponentType.DELEGATE // TODO: DELEGATE is in progress
     },
     type: TokenType.NATIVE,
     units: {

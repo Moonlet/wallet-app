@@ -52,6 +52,7 @@ export const translation: ITranslations = {
                 legal: 'Legal',
                 low: 'Low',
                 maybeLater: 'Maybe later',
+                myVotes: 'My Votes',
                 mnemonicNotValid: 'Your mnemonic is not valid!',
                 network: 'Network',
                 next: 'Next',

@@ -13,6 +13,7 @@ export const translation: ITranslations = {
                 advanced: 'Advanced',
                 advancedSetup: 'Advanced setup',
                 all: 'All',
+                amount: 'Amount',
                 average: 'Average',
                 cancel: 'Cancel',
                 cheap: 'Cheap',
@@ -420,7 +421,9 @@ export const translation: ITranslations = {
                 'Open Moonlet to confirm the following transaction: send {{formattedAmount}} to {{formattedAddress}}'
         },
         TransactionRequest: {
-            title: 'Transaction request'
+            title: 'Transaction request',
+            walletName: 'Wallet name',
+            accountName: 'Account name'
         }
     },
     plural: (n: number, ord?: boolean) => {

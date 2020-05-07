@@ -134,7 +134,7 @@ export class FeeOptionsComponent extends React.Component<
                         <FeeTotal
                             amount={this.state.feeOptions.feeTotal}
                             blockchain={this.props.account.blockchain}
-                            token={this.props.token}
+                            tokenSymbol={this.props.token.symbol}
                         />
                     )
                 );

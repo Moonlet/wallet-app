@@ -1,11 +1,14 @@
 import { config } from './config';
 import { networks } from './networks';
 import { Client } from './client';
-import * as transaction from './transaction';
-import * as account from './account';
-
+import { ZilliqaAccountUtils } from './account';
+import { ZilliqaTransactionUtils } from './transaction';
 import { IBlockchain, ChainIdType } from '../types';
 import { Stats } from './stats';
+
+const account = new ZilliqaAccountUtils();
+const transaction = new ZilliqaTransactionUtils();
+const clients = {};
 
 export const Zilliqa: IBlockchain = {
     config,
@@ -14,5 +17,10 @@ export const Zilliqa: IBlockchain = {
     account,
     Client,
     getStats: (chainId: ChainIdType) => new Stats(new Client(chainId), config),
-    getClient: (chainId: ChainIdType) => new Client(chainId)
+    getClient: (chainId: ChainIdType) => {
+        if (!clients[chainId]) {
+            clients[chainId] = new Client(chainId);
+        }
+        return clients[chainId];
+    }
 };

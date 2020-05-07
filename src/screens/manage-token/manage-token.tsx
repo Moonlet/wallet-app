@@ -129,6 +129,7 @@ export class ManageTokenComponent extends React.Component<
                 symbol: String(symbol).toUpperCase(),
                 icon: staticToken ? { uri: staticToken.logo } : GENERIC_TOKEN_ICON,
                 type: this.getTokenType(this.props.selectedAccount.blockchain),
+                removable: true,
                 contractAddress,
                 decimals,
                 ui: {

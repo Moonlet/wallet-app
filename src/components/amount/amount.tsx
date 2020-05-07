@@ -26,6 +26,7 @@ export interface IReduxProps {
 
 export const AmountComponent = (props: IExternalProps & IReduxProps) => {
     const convertTo = props.convertTo || props.convert ? props.userCurrency : props.token;
+
     const amount = convertAmount(
         props.blockchain,
         props.exchangeRates,

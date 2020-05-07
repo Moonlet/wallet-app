@@ -69,6 +69,7 @@ export interface IStorageToken {
     type: TokenType;
     symbol: string;
     contractAddress: string;
+    removable: boolean;
 }
 
 export interface IStorageTokens {
@@ -78,6 +79,7 @@ export interface IStorageTokens {
                 type: string;
                 symbol: string;
                 contractAddress: string;
+                removable: boolean;
             };
         };
     }[];

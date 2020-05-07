@@ -10,6 +10,7 @@ export const ATOM_NATIVE: ITokenConfigState = {
     icon: {
         iconComponent: CosmosIcon
     },
+    removable: false,
     defaultOrder: 0,
     decimals: 6,
     ui: {
@@ -69,7 +70,8 @@ export const config: IBlockchainConfig = {
         enableTokenManagement: false,
         enableAccountCreation: false,
         maxAccountsNumber: 5,
-        extraFields: ['Memo']
+        extraFields: ['Memo'],
+        displayName: 'COSMOS'
     },
     networks: {
         testNet: 'gaia-13007',

@@ -10,9 +10,7 @@ import { getEncryptionKey } from '../../secure/keychain';
 export class HDWallet implements IWallet {
     public static async loadFromStorage(walletId: string, pass: string): Promise<HDWallet> {
         const encryptionKey = await getEncryptionKey(pass);
-        //  console.log('passs', pass, encryptionKey);
         const data = await readEncrypted(walletId, encryptionKey);
-        //  console.log('passs', pass, data, encryptionKey);
         return Promise.resolve(new HDWallet(data.toString()));
     }
     private mnemonic: string;

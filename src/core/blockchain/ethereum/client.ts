@@ -2,12 +2,12 @@ import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionMessageTex
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
-import { convertUnit } from '../ethereum/account';
 import abi from 'ethereumjs-abi';
 import { Erc20Client } from './tokens/erc20-client';
 import { TokenType } from '../types/token';
 import { NameService } from './name-service';
 import { ClientUtils } from './client-utils';
+import { Ethereum } from '.';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -111,22 +111,22 @@ export class Client extends BlockchainGenericClient {
                 const response = await results[1].json();
 
                 presets = {
-                    cheap: convertUnit(
+                    cheap: Ethereum.account.convertUnit(
                         new BigNumber(response.safeLow),
                         config.feeOptions.ui.gasPriceUnit,
                         config.defaultUnit
                     ),
-                    standard: convertUnit(
+                    standard: Ethereum.account.convertUnit(
                         new BigNumber(response.average),
                         config.feeOptions.ui.gasPriceUnit,
                         config.defaultUnit
                     ),
-                    fast: convertUnit(
+                    fast: Ethereum.account.convertUnit(
                         new BigNumber(response.fast),
                         config.feeOptions.ui.gasPriceUnit,
                         config.defaultUnit
                     ),
-                    fastest: convertUnit(
+                    fastest: Ethereum.account.convertUnit(
                         new BigNumber(response.fastest),
                         config.feeOptions.ui.gasPriceUnit,
                         config.defaultUnit
@@ -158,7 +158,7 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    private async estimateFees(
+    public async estimateFees(
         from: string,
         to: string,
         amount?: BigNumber,

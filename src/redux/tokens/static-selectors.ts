@@ -11,13 +11,14 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
     const state = store.getState();
     const chainId = getChainId(state, blockchain);
 
+    const reduxToken = state.tokens;
+    if (reduxToken[blockchain]) {
+        if (reduxToken[blockchain][chainId]) return reduxToken[blockchain][chainId][symbol];
+    }
+
     if (blockchainTokens[symbol]) {
         return blockchainTokens[symbol];
     }
-
-    const reduxToken = state.tokens;
-
-    return reduxToken[blockchain] && reduxToken[blockchain][chainId][symbol];
 };
 
 export const generateTokensConfig = (blockchain: Blockchain): ITokensAccountState => {

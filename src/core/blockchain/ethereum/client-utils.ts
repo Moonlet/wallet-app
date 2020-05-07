@@ -5,7 +5,7 @@ import { ITokenConfigState } from '../../../redux/tokens/state';
 import { TokenType, TokenScreenComponentType } from '../types/token';
 import { config } from './config';
 import abi from 'ethereumjs-abi';
-import { getTransactionStatusByCode } from './transaction';
+import { Ethereum } from '.';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -80,7 +80,7 @@ export class ClientUtils implements IClientUtils {
             },
             broadcastedOnBlock: txInfo.blockNumber,
             nonce: txInfo.nonce,
-            status: getTransactionStatusByCode(txReceipt.status),
+            status: Ethereum.transaction.getTransactionStatusByCode(txReceipt.status),
             token
         };
     }

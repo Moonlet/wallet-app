@@ -20,7 +20,6 @@ import {
     updateTokenOrder,
     removeTokenFromAccount
 } from '../../redux/wallets/actions';
-import { TokenType } from '../../core/blockchain/types/token';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { SmartImage } from '../../library/image/smart-image';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -171,7 +170,7 @@ export class ManageAccountComponent extends React.Component<
                 key={index}
                 ref={ref => (this.accountsSwipeableRef[index] = ref)}
                 renderLeftActions={() =>
-                    tokenConfig.type !== TokenType.NATIVE && this.renderLeftActions(item.value)
+                    tokenConfig.removable === true && this.renderLeftActions(item.value)
                 }
                 onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
             >
@@ -208,7 +207,7 @@ export class ManageAccountComponent extends React.Component<
                             />
                         </View>
                     </View>
-                    {tokenConfig.type !== TokenType.NATIVE && (
+                    {tokenConfig.removable === true && (
                         <TouchableOpacity
                             style={styles.iconContainer}
                             onPressOut={() => {

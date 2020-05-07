@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize, SCREEN_HEIGHT } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,7 +8,7 @@ export default (theme: ITheme) =>
             position: 'absolute',
             display: 'flex',
             width: '100%',
-            height: '100%',
+            height: SCREEN_HEIGHT,
             backgroundColor: theme.colors.gradientDark,
             opacity: 0.75,
             justifyContent: 'center'
@@ -17,6 +17,7 @@ export default (theme: ITheme) =>
             lineHeight: normalize(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
-            marginTop: BASE_DIMENSION
+            marginTop: BASE_DIMENSION,
+            paddingHorizontal: BASE_DIMENSION * 4
         }
     });

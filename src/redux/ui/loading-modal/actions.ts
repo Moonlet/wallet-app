@@ -25,7 +25,7 @@ export const displayMessage = (value: TransactionMessageText, type: TransactionM
     return {
         type: DISPLAY_MESSAGE,
         data: {
-            message: value,
+            text: value,
             type
         }
     };

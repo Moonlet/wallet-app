@@ -13,7 +13,13 @@ import { withNavigationParams, INavigationProps } from '../../navigation/with-na
 import { sendTransferTransaction } from '../../redux/wallets/actions';
 import { getAccount, getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
-import { Blockchain, IFeeOptions, ChainIdType } from '../../core/blockchain/types';
+import {
+    Blockchain,
+    IFeeOptions,
+    ChainIdType,
+    TransactionMessageText,
+    TransactionMessageType
+} from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
@@ -23,11 +29,6 @@ import { TokenType } from '../../core/blockchain/types/token';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
-// import {
-//     IBottomSheetExtensionRequestData,
-//     IExtensionRequestType,
-//     BottomSheetType
-// } from '../../redux/ui/bottomSheet/state';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { getChainId } from '../../redux/preferences/selectors';
 import { Memo } from './components/extra-fields/memo/memo';
@@ -38,15 +39,13 @@ import _ from 'lodash';
 import { AddAddress } from './components/add-address/add-address';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
-import { IQRCodeConn } from '../../core/connect-extension/types';
-import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
-// import { Dialog } from '../../components/dialog/dialog';
-import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
-
-export enum NOTIFICATION_TYPE {
-    MOONLET_TRANSFER = 'MOONLET_TRANSFER'
-}
+import {
+    openLoadingModal,
+    closeLoadingModal,
+    displayMessage
+} from '../../redux/ui/loading-modal/actions';
+import { NOTIFICATION_TYPE } from '../../core/connect-extension/types';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -57,6 +56,7 @@ export interface IReduxProps {
     chainId: ChainIdType;
     openLoadingModal: typeof openLoadingModal;
     closeLoadingModal: typeof closeLoadingModal;
+    displayMessage: typeof displayMessage;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -70,7 +70,10 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 
 const mapDispatchToProps = {
     sendTransferTransaction,
-    openBottomSheet
+    openBottomSheet,
+    openLoadingModal,
+    closeLoadingModal,
+    displayMessage
 };
 
 export interface INavigationParams {
@@ -127,7 +130,12 @@ export class SendScreenComponent extends React.Component<
 
     public async confirmPayment() {
         if (Platform.OS === 'web') {
-            // this.props.openLoadingModal();
+            this.props.openLoadingModal();
+            this.props.displayMessage(
+                TransactionMessageText.WAITING_TX_CONFIRM,
+                TransactionMessageType.INFO
+            );
+
             const formattedAmount = formatNumber(new BigNumber(this.state.amount), {
                 currency: getBlockchain(this.props.account.blockchain).config.coin
             });
@@ -136,17 +144,6 @@ export class SendScreenComponent extends React.Component<
                 this.props.account.address,
                 this.props.account.blockchain
             );
-
-            // const data: IBottomSheetExtensionRequestData = {
-            //     type: IExtensionRequestType.SIGN_TRANSACTION,
-            //     state: 'pending',
-            //     mainText: `${formattedAmount} to ${formatAddress(
-            //         this.props.account.address,
-            //         this.props.account.blockchain
-            //     )}`,
-            //     secondaryText: new Date().toLocaleDateString('en-GB')
-            // };
-            // this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
 
             const account = this.props.account;
             const token = this.props.token;
@@ -168,56 +165,31 @@ export class SendScreenComponent extends React.Component<
                 extraFields: { memo: this.state.memo }
             });
 
-            // TODO: encrypt tx
+            // type
             const sendRequestPayload = {
                 method: NOTIFICATION_TYPE.MOONLET_TRANSFER,
                 params: [tx],
                 notification: {
-                    title: 'Confirm transaction',
-                    body: `Open Moonlet to confirm the following transaction: send ${formattedAmount} to ${formattedAddress}`
+                    title: translate('Notification.title'),
+                    body: translate('Notification.body', {
+                        formattedAmount,
+                        formattedAddress
+                    })
                 }
             };
 
             try {
-                // TODO: move this to ConnectExtension.sendRequest
-                const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
+                const sendRequestRes = await ConnectExtension.sendRequest(sendRequestPayload);
+                // console.log('sendRequestRes: ', sendRequestRes);
 
-                if (connection) {
-                    const sendRequestRes = await ConnectExtension.sendRequest(
-                        connection,
-                        sendRequestPayload
-                    );
-                    // console.log('sendRequestRes: ', sendRequestRes);
-
-                    if (sendRequestRes?.success) {
-                        //
-                    }
+                if (sendRequestRes?.success) {
+                    // window.confirm(sendRequestRes.data.requestId);
                 }
             } catch {
-                //
+                // reject
             }
 
-            // this.props.closeLoadingModal();
-
-            // TODO
-            // WalletConnectWeb.signTransaction({
-            //     account: this.props.account,
-            //     toAddress: this.state.toAddress,
-            //     amount: this.state.amount,
-            //     token: this.props.token,
-            //     feeOptions: this.state.feeOptions,
-            //     walletId: this.props.selectedWalletId,
-            //     selectedAccount: this.props.selectedAccount
-            // });
-            //     .then(() => {
-            //         data.state = 'completed';
-            //         this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
-            //         this.props.navigation.goBack();
-            //     })
-            //     .catch(() => {
-            //         data.state = 'rejected';
-            //         this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
-            //     });
+            this.props.closeLoadingModal();
             return;
         }
 

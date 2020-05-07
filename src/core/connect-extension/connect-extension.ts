@@ -1,11 +1,12 @@
 import { HttpClient } from '../utils/http-client';
 import CONFIG from '../../config/config-beta';
-import { encrypt } from '../secure/encrypt.web';
+import { encrypt } from '../secure/encrypt.web'; // TODO: check this, not oke .web
 import { extensionState } from './conn-ext-trim-state';
 import { store } from '../../redux/config';
 import { Notifications } from '../messaging/notifications/notifications';
 import { IQRCodeConn } from './types';
 import { sha256 } from 'js-sha256'; // maybe replace this with CryptoJS.SHA256
+import { ConnectExtensionWeb } from './connect-extension-web';
 
 export const ConnectExtension = (() => {
     const syncExtension = async (connection: IQRCodeConn): Promise<any> => {
@@ -24,8 +25,10 @@ export const ConnectExtension = (() => {
         }
     };
 
-    const disconnectExtension = async (connection: IQRCodeConn) => {
+    const disconnectExtension = async () => {
         try {
+            const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
+
             const http = new HttpClient(CONFIG.extSyncDisconnectUrl);
             await http.post('', {
                 connectionId: connection.connectionId,
@@ -37,13 +40,19 @@ export const ConnectExtension = (() => {
     };
 
     // TODO: sendRequestPayload type
-    const sendRequest = async (connection: IQRCodeConn, sendRequestPayload: any) => {
+    const sendRequest = async (sendRequestPayload: any) => {
         try {
+            const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
+
             const http = new HttpClient(CONFIG.extSyncSendRequestUrl);
             const res = await http.post('', {
                 connectionId: connection.connectionId,
                 authToken: sha256(connection.encKey),
-                data: sendRequestPayload
+                data: {
+                    method: sendRequestPayload.method,
+                    params: encrypt(JSON.stringify(sendRequestPayload.method), connection.encKey),
+                    notification: sendRequestPayload.notification
+                }
             });
 
             return res;

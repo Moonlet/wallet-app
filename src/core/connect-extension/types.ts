@@ -102,3 +102,7 @@ export interface IStorageNetworks {
         testNet?: ChainIdType;
     };
 }
+
+export enum NOTIFICATION_TYPE {
+    MOONLET_TRANSFER = 'MOONLET_TRANSFER'
+}

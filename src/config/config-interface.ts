@@ -11,5 +11,6 @@ export interface IAppConfig {
     extSyncUpdateStateUrl: string;
     extSyncDisconnectUrl: string;
     extSyncSendRequestUrl: string;
+    extSyncSendResponseUrl: string;
     firebaseWebConfig: any;
 }

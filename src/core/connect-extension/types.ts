@@ -12,7 +12,8 @@ export interface IQRCodeConn {
 
 export enum FirebaseRef {
     EXTENSION_SYNC = 'extensionSync',
-    CONNECTIONS = 'connections'
+    CONNECTIONS = 'connections',
+    REQUESTS = 'requests'
 }
 
 export const FIREBASE_BUCKET = 'gs://moonlet-extension-sync';
@@ -101,8 +102,4 @@ export interface IStorageNetworks {
         mainNet?: ChainIdType;
         testNet?: ChainIdType;
     };
-}
-
-export enum NOTIFICATION_TYPE {
-    MOONLET_TRANSFER = 'MOONLET_TRANSFER'
 }

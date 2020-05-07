@@ -22,7 +22,7 @@ export interface IHeaderStep {
 
 export interface IExternalProps {
     toAddress: string;
-    activeIndex?: number;
+    activeIndex: number;
     amount: string;
     account: IAccountState;
     feeOptions: IFeeOptions;

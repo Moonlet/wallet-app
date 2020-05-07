@@ -20,6 +20,12 @@ export const ConnectExtensionWeb = (() => {
         return realtimeDB.child(FirebaseRef.CONNECTIONS);
     };
 
+    const getRealtimeDBRequestsRef = () => {
+        // RealtimeDB
+        const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
+        return realtimeDB.child(FirebaseRef.REQUESTS);
+    };
+
     const storeConnection = async (conn: IQRCodeConn) => {
         try {
             // store session
@@ -218,6 +224,28 @@ export const ConnectExtensionWeb = (() => {
         });
     };
 
+    const getRequestIdParams = async (requestId: string) => {
+        //
+    };
+
+    const listenerReqResponse = async (requestId: string, callback: (txHash: string) => void) => {
+        try {
+            const requestsRef = getRealtimeDBRequestsRef();
+            requestsRef
+                .child(requestId)
+                .child('res')
+                .on('value', async (snapshot: any) => {
+                    if (snapshot.exists()) {
+                        const snap = await snapshot.val();
+
+                        callback(snap.txHash);
+                    }
+                });
+        } catch {
+            //
+        }
+    };
+
     return {
         storeConnection,
         disconnect,
@@ -226,6 +254,8 @@ export const ConnectExtensionWeb = (() => {
         generateQRCodeUri,
         downloadFileStorage,
         listenLastSync,
-        listenLastSyncForConnect
+        listenLastSyncForConnect,
+        getRequestIdParams,
+        listenerReqResponse
     };
 })();

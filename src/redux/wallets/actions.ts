@@ -57,6 +57,8 @@ import {
 } from '../../core/secure/keychain';
 import { delay } from '../../core/utils/time';
 import { toggleBiometricAuth } from '../preferences/actions';
+import { CLOSE_TX_REQUEST } from '../ui/transaction-request/actions';
+import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -502,6 +504,66 @@ export const updateTransactionFromBlockchain = (
             dispatch(setSelectedWallet(wallet.id));
             NavigationService.navigate('Token', navigationParams);
         }
+    }
+};
+
+export const signAndSendTransaction = (tx: any, password: string, requestId: string) => async (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+    const appWallet = getSelectedWallet(state);
+
+    dispatch(openLoadingModal());
+
+    try {
+        const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
+            pass: password,
+            deviceVendor: appWallet.hwOptions?.deviceVendor,
+            deviceModel: appWallet.hwOptions?.deviceModel,
+            deviceId: appWallet.hwOptions?.deviceId,
+            connectionType: appWallet.hwOptions?.connectionType
+        });
+
+        const transaction = await wallet.sign(tx.blockchain, tx.accountIndex, tx);
+
+        dispatch({
+            type: DISPLAY_MESSAGE,
+            data: {
+                text: TransactionMessageText.BROADCASTING,
+                type: TransactionMessageType.INFO
+            }
+        });
+
+        const txHash = await getBlockchain(tx.blockchain)
+            .getClient(tx.chainId)
+            .sendTransaction(transaction);
+
+        if (txHash) {
+            dispatch({
+                type: TRANSACTION_PUBLISHED,
+                data: {
+                    hash: txHash,
+                    tx,
+                    walletId: appWallet.id
+                }
+            });
+
+            const res = await ConnectExtension.sendResponse(requestId, { txHash });
+
+            if (res?.success === true) {
+                //
+            } else {
+                //
+            }
+
+            dispatch({ type: CLOSE_TX_REQUEST });
+        }
+
+        closeLoadingModal()(dispatch, getState);
+    } catch (err) {
+        //
+        closeLoadingModal()(dispatch, getState);
     }
 };
 

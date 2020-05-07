@@ -29,6 +29,7 @@ import DeviceInfo from 'react-native-device-info';
 import { setDeviceId } from './redux/preferences/actions';
 import { SecurityChecks } from './components/security-checks/security-checks';
 import { AppStateStatus } from './core/constants/app';
+import { TransactionRequestScreen } from './screens/transaction-request/transaction-request';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -190,6 +191,7 @@ export default class App extends React.Component<{}, IState> {
                             <PasswordModal.Component />
                             <BottomSheet />
                             {Platform.OS !== 'web' && <Dialog.Component />}
+                            <TransactionRequestScreen />
                             <LoadingModal />
                             <LegalModal navigationState={this.state.navigationState} />
                         </ThemeContext.Provider>

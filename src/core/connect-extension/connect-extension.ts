@@ -50,9 +50,27 @@ export const ConnectExtension = (() => {
                 authToken: sha256(connection.encKey),
                 data: {
                     method: sendRequestPayload.method,
-                    params: encrypt(JSON.stringify(sendRequestPayload.method), connection.encKey),
+                    params: encrypt(JSON.stringify(sendRequestPayload.params), connection.encKey),
                     notification: sendRequestPayload.notification
                 }
+            });
+
+            return res;
+        } catch {
+            //
+        }
+    };
+
+    const sendResponse = async (requestId: string, sendResponsePayload: any) => {
+        try {
+            const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
+
+            const http = new HttpClient(CONFIG.extSyncSendResponseUrl);
+            const res = await http.post('', {
+                connectionId: connection.connectionId,
+                requestId,
+                authToken: sha256(connection.encKey),
+                data: sendResponsePayload
             });
 
             return res;
@@ -64,6 +82,7 @@ export const ConnectExtension = (() => {
     return {
         syncExtension,
         disconnectExtension,
-        sendRequest
+        sendRequest,
+        sendResponse
     };
 })();

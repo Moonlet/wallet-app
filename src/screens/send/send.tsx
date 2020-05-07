@@ -44,8 +44,10 @@ import {
     closeLoadingModal,
     displayMessage
 } from '../../redux/ui/loading-modal/actions';
-import { NOTIFICATION_TYPE } from '../../core/connect-extension/types';
 import { IHeaderStep, BottomConfirm } from './components/bottom-confirm/bottom-confirm';
+import { NotificationType } from '../../core/messaging/types';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
+import { NavigationService } from '../../navigation/navigation-service';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -155,7 +157,7 @@ export class SendScreenComponent extends React.Component<
                 .amountToStd(this.state.amount, tokenConfig.decimals)
                 .toFixed();
 
-            const tx = await blockchainInstance.transaction.buildTransferTransaction({
+            const tx: any = await blockchainInstance.transaction.buildTransferTransaction({
                 chainId: this.props.chainId,
                 account,
                 toAddress: this.state.toAddress,
@@ -165,9 +167,12 @@ export class SendScreenComponent extends React.Component<
                 extraFields: { memo: this.state.memo }
             });
 
-            // type
+            // need account index for sign
+            tx.accountIndex = account.index;
+
+            // add type to this
             const sendRequestPayload = {
-                method: NOTIFICATION_TYPE.MOONLET_TRANSFER,
+                method: NotificationType.MOONLET_TRANSFER,
                 params: [tx],
                 notification: {
                     title: translate('Notification.title'),
@@ -180,37 +185,49 @@ export class SendScreenComponent extends React.Component<
 
             try {
                 const sendRequestRes = await ConnectExtension.sendRequest(sendRequestPayload);
-                // console.log('sendRequestRes: ', sendRequestRes);
 
                 if (sendRequestRes?.success) {
-                    // window.confirm(sendRequestRes.data.requestId);
+                    ConnectExtensionWeb.listenerReqResponse(
+                        sendRequestRes.data.requestId,
+                        (txHash: string) => {
+                            if (txHash) {
+                                //
+                                this.props.closeLoadingModal();
+                                NavigationService.goBack();
+                            } else {
+                                // error
+                            }
+                        }
+                    );
                 }
             } catch {
-                // reject
+                // show error message to the user
+                this.props.closeLoadingModal();
             }
 
-            this.props.closeLoadingModal();
             return;
-        }
+        } else {
+            // Mobile App
 
-        try {
-            const password = await PasswordModal.getPassword(
-                translate('Password.pinTitleUnlock'),
-                translate('Password.subtitleSignTransaction'),
-                { sensitive: true, showCloseButton: true }
-            );
-            this.props.sendTransferTransaction(
-                this.props.account,
-                this.state.toAddress,
-                this.state.amount,
-                this.props.token.symbol,
-                this.state.feeOptions,
-                password,
-                this.props.navigation,
-                { memo: this.state.memo }
-            );
-        } catch (err) {
-            //
+            try {
+                const password = await PasswordModal.getPassword(
+                    translate('Password.pinTitleUnlock'),
+                    translate('Password.subtitleSignTransaction'),
+                    { sensitive: true, showCloseButton: true }
+                );
+                this.props.sendTransferTransaction(
+                    this.props.account,
+                    this.state.toAddress,
+                    this.state.amount,
+                    this.props.token.symbol,
+                    this.state.feeOptions,
+                    password,
+                    this.props.navigation,
+                    { memo: this.state.memo }
+                );
+            } catch (err) {
+                //
+            }
         }
     }
 

@@ -9,7 +9,7 @@ import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
-import { sendTransferTransaction } from '../../redux/wallets/actions';
+import { sendTransferTransaction, addPublishedTxToAccount } from '../../redux/wallets/actions';
 import { getAccount, getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import {
@@ -17,7 +17,8 @@ import {
     IFeeOptions,
     ChainIdType,
     TransactionMessageText,
-    TransactionMessageType
+    TransactionMessageType,
+    IBlockchainTransaction
 } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
@@ -60,6 +61,7 @@ export interface IReduxProps {
     openLoadingModal: typeof openLoadingModal;
     closeLoadingModal: typeof closeLoadingModal;
     displayMessage: typeof displayMessage;
+    addPublishedTxToAccount: typeof addPublishedTxToAccount;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -77,7 +79,8 @@ const mapDispatchToProps = {
     openBottomSheet,
     openLoadingModal,
     closeLoadingModal,
-    displayMessage
+    displayMessage,
+    addPublishedTxToAccount
 };
 
 export interface INavigationParams {
@@ -179,11 +182,18 @@ export class SendScreenComponent extends React.Component<
                 const sendRequestRes = await ConnectExtension.sendRequest(sendRequestPayload);
 
                 if (sendRequestRes?.success) {
+                    // maybe set a timeout here for this listener
+                    // if it's too much waiting fot the web ext, to have a cancel button
                     ConnectExtensionWeb.listenerReqResponse(
                         sendRequestRes.data.requestId,
-                        (txHash: string) => {
-                            if (txHash) {
-                                //
+                        (res: { txHash: string; tx: IBlockchainTransaction }) => {
+                            if (res.txHash && res.tx) {
+                                this.props.addPublishedTxToAccount(
+                                    res.txHash,
+                                    res.tx,
+                                    this.props.selectedWalletId
+                                );
+
                                 this.props.closeLoadingModal();
                                 NavigationService.goBack();
                             } else {

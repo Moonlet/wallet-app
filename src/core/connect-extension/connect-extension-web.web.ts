@@ -1,7 +1,7 @@
 import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt.web';
 import CryptoJS from 'crypto-js';
 import { v4 as uuidv4 } from 'uuid';
-import { IQRCodeConn, FirebaseRef, FIREBASE_BUCKET } from './types';
+import { IQRCodeConn, FirebaseRef, FIREBASE_BUCKET, IStorage } from './types';
 import { storage, database } from 'firebase';
 import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage.web';
 import { CONN_EXTENSION } from '../../core/constants/app';
@@ -12,6 +12,8 @@ import { store } from '../../redux/config';
 import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { NavigationService } from '../../navigation/navigation-service';
 import { extensionReduxUpdateState } from '../../redux/app/actions';
+import { IBlockchainTransaction } from '../blockchain/types';
+import { buildTransactions } from './conn-ext-build-state/build-transactions';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -132,7 +134,7 @@ export const ConnectExtensionWeb = (() => {
     /**
      * Build extension state
      */
-    const storeState = async (decryptedState: any) => {
+    const storeState = async (decryptedState: IStorage) => {
         try {
             const extState = await buildState(decryptedState);
             store.dispatch(extensionReduxUpdateState(extState) as any);
@@ -164,6 +166,9 @@ export const ConnectExtensionWeb = (() => {
 
                                 // Save state
                                 storeState(decryptedState);
+
+                                // Build wallets transactions
+                                buildTransactions(decryptedState.state.wallets);
                             }
                         } catch {
                             //
@@ -208,6 +213,8 @@ export const ConnectExtensionWeb = (() => {
 
                         // navigate to Dashboard
                         NavigationService.navigate('MainNavigation', {});
+
+                        buildTransactions(decryptedState.state.wallets);
                     }
 
                     // close loading modal
@@ -226,8 +233,13 @@ export const ConnectExtensionWeb = (() => {
         //
     };
 
-    const listenerReqResponse = async (requestId: string, callback: (txHash: string) => void) => {
+    const listenerReqResponse = async (
+        requestId: string,
+        callback: (res: { txHash: string; tx: IBlockchainTransaction }) => void
+    ) => {
         try {
+            const connection = await getConnection();
+
             const requestsRef = getRealtimeDBRequestsRef();
             requestsRef
                 .child(requestId)
@@ -236,7 +248,11 @@ export const ConnectExtensionWeb = (() => {
                     if (snapshot.exists()) {
                         const snap = await snapshot.val();
 
-                        callback(snap.txHash);
+                        const tx: IBlockchainTransaction = JSON.parse(
+                            decrypt(snap.tx, connection.encKey).toString(CryptoJS.enc.Utf8)
+                        );
+
+                        callback({ txHash: snap.txHash, tx });
                     }
                 });
         } catch {

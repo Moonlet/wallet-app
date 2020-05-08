@@ -152,17 +152,10 @@ export class SendScreenComponent extends React.Component<
             const account = this.props.account;
             const token = this.props.token;
 
-            const blockchainInstance = getBlockchain(account.blockchain);
-            const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
-
-            const amount = blockchainInstance.account
-                .amountToStd(this.state.amount, tokenConfig.decimals)
-                .toFixed();
-
             const moonletTransferPayload: any = {
                 account,
                 toAddress: this.state.toAddress,
-                amount,
+                amount: this.state.amount,
                 token: token.symbol,
                 feeOptions: this.state.feeOptions,
                 extraFields: { memo: this.state.memo },

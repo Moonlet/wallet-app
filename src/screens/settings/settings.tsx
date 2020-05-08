@@ -341,20 +341,27 @@ export class SettingsScreenComponent extends React.Component<
 
                 <View style={styles.divider} />
 
-                <TouchableOpacity
-                    style={styles.colContainer}
-                    onPress={() => {
-                        Clipboard.setString(this.props.deviceId);
-                        Dialog.info(translate('App.labels.success'), translate('Settings.copied'));
-                    }}
-                >
-                    <Text style={[styles.textRow, styles.textRowMargin]}>
-                        {translate('Settings.deviceId')}
-                    </Text>
-                    <Text style={styles.rightValue}>{this.props.deviceId}</Text>
-                </TouchableOpacity>
+                {Platform.OS !== 'web' && (
+                    <View>
+                        <TouchableOpacity
+                            style={styles.colContainer}
+                            onPress={() => {
+                                Clipboard.setString(this.props.deviceId);
+                                Dialog.info(
+                                    translate('App.labels.success'),
+                                    translate('Settings.copied')
+                                );
+                            }}
+                        >
+                            <Text style={[styles.textRow, styles.textRowMargin]}>
+                                {translate('Settings.deviceId')}
+                            </Text>
+                            <Text style={styles.rightValue}>{this.props.deviceId}</Text>
+                        </TouchableOpacity>
 
-                <View style={styles.divider} />
+                        <View style={styles.divider} />
+                    </View>
+                )}
             </View>
         );
     }

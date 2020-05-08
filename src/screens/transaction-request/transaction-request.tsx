@@ -16,8 +16,9 @@ import { normalize } from '../../styles/dimensions';
 import { formatAddress } from '../../core/utils/format-address';
 import { FeeTotal } from '../send/components/fee-total/fee-total';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
-import { Amount } from '../../components/amount/amount';
-import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { formatNumber } from '../../core/utils/format-number';
+import BigNumber from 'bignumber.js';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -106,7 +107,6 @@ export class TransactionRequestScreenComponent extends React.Component<
     }
 
     private renderMoonletTransferForm() {
-        const { styles } = this.props;
         const { moonletTransferPayload } = this.state;
 
         if (moonletTransferPayload) {
@@ -115,7 +115,10 @@ export class TransactionRequestScreenComponent extends React.Component<
 
             const from = formatAddress(account.address, blockchain);
             const recipient = formatAddress(moonletTransferPayload.toAddress, blockchain);
-            const tokenConfig = getTokenConfig(blockchain, moonletTransferPayload.token);
+
+            const formattedAmount = formatNumber(new BigNumber(moonletTransferPayload.amount), {
+                currency: getBlockchain(blockchain).config.coin
+            });
 
             return (
                 <View style={{ flex: 1 }}>
@@ -129,18 +132,7 @@ export class TransactionRequestScreenComponent extends React.Component<
                     )}
                     {this.renderField(translate('App.labels.from'), from)}
                     {this.renderField(translate('App.labels.recipient'), recipient)}
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.receipientLabel}>{translate('App.labels.amount')}</Text>
-                        <View style={styles.inputBox}>
-                            <Amount
-                                style={styles.confirmTransactionText}
-                                amount={moonletTransferPayload.amount}
-                                token={moonletTransferPayload.token}
-                                tokenDecimals={tokenConfig.decimals}
-                                blockchain={blockchain}
-                            />
-                        </View>
-                    </View>
+                    {this.renderField(translate('App.labels.amount'), formattedAmount)}
                     <FeeTotal
                         amount={moonletTransferPayload.feeOptions.feeTotal}
                         blockchain={blockchain}

@@ -166,8 +166,7 @@ export class SendScreenComponent extends React.Component<
                 token: token.symbol,
                 feeOptions: this.state.feeOptions,
                 extraFields: { memo: this.state.memo },
-                walletName: this.props.selectedWalletNane, // extra data needed for Tx Request Screen
-                chainId: this.props.chainId // need this?
+                walletName: this.props.selectedWalletNane // extra data needed for Tx Request Screen
             };
 
             // add type to this

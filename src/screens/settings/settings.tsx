@@ -115,6 +115,23 @@ export class SettingsScreenComponent extends React.Component<
         });
     }
 
+    private renderRow(label: string, callback: any) {
+        const { styles } = this.props;
+
+        return (
+            <View>
+                <TouchableOpacity style={styles.rowContainer} onPress={() => callback()}>
+                    <Text style={styles.textRow}>{label}</Text>
+                    <View style={styles.rightContainer}>
+                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
+                    </View>
+                </TouchableOpacity>
+
+                <View style={styles.divider} />
+            </View>
+        );
+    }
+
     public renderSecuritySection() {
         const { styles, navigation, theme } = this.props;
 
@@ -171,52 +188,28 @@ export class SettingsScreenComponent extends React.Component<
                     </View>
                 )}
 
-                <TouchableOpacity
-                    style={styles.rowContainer}
-                    onPress={() => navigation.navigate('Wallets')}
-                >
-                    <Text style={styles.textRow}>{translate('Settings.manageWallet')}</Text>
-                    <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
-                    </View>
-                </TouchableOpacity>
+                {this.renderRow(translate('Settings.manageWallet'), () =>
+                    navigation.navigate('Wallets')
+                )}
 
-                <View style={styles.divider} />
+                {this.renderRow(translate('Settings.backupWallet'), () =>
+                    navigation.navigate('BackupWallet')
+                )}
 
-                <TouchableOpacity
-                    style={styles.rowContainer}
-                    onPress={() => navigation.navigate('BackupWallet')}
-                >
-                    <Text style={styles.textRow}>{translate('Settings.backupWallet')}</Text>
-                    <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
-                    </View>
-                </TouchableOpacity>
-
-                <View style={styles.divider} />
-
-                <TouchableOpacity
-                    style={styles.rowContainer}
-                    onPress={async () => {
-                        try {
-                            this.props.openLoadingModal();
-                            await PasswordModal.changePassword();
-                            Dialog.info(
-                                translate('App.labels.success'),
-                                translate('Settings.successChangePin')
-                            );
-                        } catch {
-                            //
-                        } finally {
-                            this.props.closeLoadingModal();
-                        }
-                    }}
-                >
-                    <Text style={styles.textRow}>{translate('Settings.changePin')}</Text>
-                    <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
-                </TouchableOpacity>
-
-                <View style={styles.divider} />
+                {this.renderRow(translate('Settings.changePin'), async () => {
+                    try {
+                        this.props.openLoadingModal();
+                        await PasswordModal.changePassword();
+                        Dialog.info(
+                            translate('App.labels.success'),
+                            translate('Settings.successChangePin')
+                        );
+                    } catch {
+                        //
+                    } finally {
+                        this.props.closeLoadingModal();
+                    }
+                })}
             </View>
         );
     }
@@ -228,28 +221,13 @@ export class SettingsScreenComponent extends React.Component<
             <View>
                 <Text style={styles.textHeader}>{translate('App.labels.setup').toUpperCase()}</Text>
 
-                <TouchableOpacity
-                    style={styles.rowContainer}
-                    onPress={() => navigation.navigate('SetCurrency')}
-                >
-                    <Text style={styles.textRow}>{translate('Settings.defaultCurrency')}</Text>
-                    <View style={styles.rightContainer}>
-                        <Text style={styles.rightValue}>{this.props.currency}</Text>
-                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
-                    </View>
-                </TouchableOpacity>
+                {this.renderRow(translate('Settings.defaultCurrency'), () =>
+                    navigation.navigate('SetCurrency')
+                )}
 
-                <View style={styles.divider} />
-
-                <TouchableOpacity
-                    style={styles.rowContainer}
-                    onPress={() => navigation.navigate('BlockchainPortfolio')}
-                >
-                    <Text style={styles.textRow}>{translate('Settings.blockchainPortfolio')}</Text>
-                    <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
-                </TouchableOpacity>
-
-                <View style={styles.divider} />
+                {this.renderRow(translate('Settings.blockchainPortfolio'), () =>
+                    navigation.navigate('BlockchainPortfolio')
+                )}
             </View>
         );
     }
@@ -263,18 +241,7 @@ export class SettingsScreenComponent extends React.Component<
                     {translate('App.labels.support').toUpperCase()}
                 </Text>
 
-                <TouchableOpacity
-                    testID={'report-issue'}
-                    style={styles.rowContainer}
-                    onPress={this.reportIssueTouch}
-                >
-                    <Text style={styles.textRow}>{translate('Settings.reportIssue')}</Text>
-                    <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
-                    </View>
-                </TouchableOpacity>
-
-                <View style={styles.divider} />
+                {this.renderRow(translate('Settings.reportIssue'), () => this.reportIssueTouch())}
             </View>
         );
     }
@@ -286,17 +253,9 @@ export class SettingsScreenComponent extends React.Component<
             <View>
                 <Text style={styles.textHeader}>{translate('App.labels.tools').toUpperCase()}</Text>
 
-                <TouchableOpacity
-                    style={styles.rowContainer}
-                    onPress={() => navigation.navigate('NetworkOptions')}
-                >
-                    <Text style={styles.textRow}>{translate('Settings.mainnetTestnet')}</Text>
-                    <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
-                    </View>
-                </TouchableOpacity>
-
-                <View style={styles.divider} />
+                {this.renderRow(translate('Settings.mainnetTestnet'), () =>
+                    navigation.navigate('NetworkOptions')
+                )}
             </View>
         );
     }
@@ -308,29 +267,13 @@ export class SettingsScreenComponent extends React.Component<
             <View>
                 <Text style={styles.textHeader}>{translate('App.labels.about').toUpperCase()}</Text>
 
-                <TouchableOpacity
-                    style={styles.rowContainer}
-                    onPress={() => navigation.navigate('TermsConditions')}
-                >
-                    <Text style={styles.textRow}>{translate('App.labels.tc')}</Text>
-                    <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
-                    </View>
-                </TouchableOpacity>
+                {this.renderRow(translate('App.labels.tc'), () =>
+                    navigation.navigate('TermsConditions')
+                )}
 
-                <View style={styles.divider} />
-
-                <TouchableOpacity
-                    style={styles.rowContainer}
-                    onPress={() => navigation.navigate('PrivacyPolicy')}
-                >
-                    <Text style={styles.textRow}>{translate('Settings.privacyPolicy')}</Text>
-                    <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
-                    </View>
-                </TouchableOpacity>
-
-                <View style={styles.divider} />
+                {this.renderRow(translate('Settings.privacyPolicy'), () =>
+                    navigation.navigate('PrivacyPolicy')
+                )}
 
                 <View style={styles.rowContainer}>
                     <Text style={styles.textRow}>{translate('Settings.appVersion')}</Text>

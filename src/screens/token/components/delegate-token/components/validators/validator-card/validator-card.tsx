@@ -1,18 +1,18 @@
 import React from 'react';
 import { View, TouchableHighlight } from 'react-native';
 import stylesProvider from './styles';
-import { IThemeProps, withTheme } from '../../core/theme/with-theme';
-import { SmartImage } from '../../library/image/smart-image';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
-import { Icon } from '../../components/icon';
-import { smartConnect } from '../../core/utils/smart-connect';
-import { Text } from '../../library';
-import { IStatValue } from '../../core/blockchain/types/stats';
+import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
+import { SmartImage } from '../../../../../../../library/image/smart-image';
+import { BASE_DIMENSION, normalize } from '../../../../../../../styles/dimensions';
+import { Icon } from '../../../../../../../components/icon';
+import { smartConnect } from '../../../../../../../core/utils/smart-connect';
+import { Text } from '../../../../../../../library';
+import { IStatValue } from '../../../../../../../core/blockchain/types/stats';
 
 export interface IExternalProps {
     icon: string;
-    name: string;
-    position: string;
+    labelName: string;
+    smallLabelName: string;
     website: string;
     rightTitle: string;
     rightSubtitle: string;
@@ -32,10 +32,7 @@ export const ValidatorCardComponent = (
         >
             <View style={props.styles.cardContainer}>
                 <View style={props.styles.topContainer}>
-                    <SmartImage
-                        source={{ uri: 'https://fire.moonlet.io/static/tokens/icons/xsgd.png' }}
-                        style={props.styles.imageStyle}
-                    />
+                    <SmartImage source={{ uri: props.icon }} style={props.styles.imageStyle} />
                     <View style={props.styles.topRow}>
                         <View style={props.styles.topRowFirstLine}>
                             <View style={props.styles.primaryTextContainer}>
@@ -45,17 +42,19 @@ export const ValidatorCardComponent = (
                                         { paddingRight: BASE_DIMENSION / 2 }
                                     ]}
                                 >
-                                    {`Moonlet`}
+                                    {props.labelName}
                                 </Text>
-                                <Text style={props.styles.tertiaryText}>{`10th`}</Text>
+                                <Text style={props.styles.tertiaryText}>
+                                    {props.smallLabelName}
+                                </Text>
                             </View>
 
-                            <Text style={props.styles.primaryText}>{`My Votes`}</Text>
+                            <Text style={props.styles.primaryText}>{props.rightTitle}</Text>
                         </View>
 
                         <View style={props.styles.topRowSecondLine}>
-                            <Text style={props.styles.secondaryText}>{`moonlet.io`}</Text>
-                            <Text style={props.styles.amountText}>{`1,000.00 cGLD`}</Text>
+                            <Text style={props.styles.secondaryText}>{props.website}</Text>
+                            <Text style={props.styles.amountText}>{props.rightSubtitle}</Text>
                         </View>
                     </View>
 
@@ -99,4 +98,6 @@ export const ValidatorCardComponent = (
     );
 };
 
-export const ValidatorCard = smartConnect(ValidatorCardComponent, [withTheme(stylesProvider)]);
+export const ValidatorCard = smartConnect<IExternalProps>(ValidatorCardComponent, [
+    withTheme(stylesProvider)
+]);

@@ -37,3 +37,19 @@ export abstract class GenericStats<Client = BlockchainGenericClient> {
         throw new Error('Not Implemented');
     }
 }
+
+export enum CardActionType {
+    CHECKBOX = 'CHECKBOX',
+    NAVIGATE = 'CHECKBOX'
+}
+
+export interface IValidatorCardComponent {
+    icon: string;
+    labelName: string;
+    smallLabelName: string;
+    website: string;
+    rightTitle: string;
+    rightSubtitle: string;
+    actionType: CardActionType;
+    bottomStats: IStatValue[];
+}

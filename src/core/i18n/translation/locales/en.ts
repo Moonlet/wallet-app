@@ -355,7 +355,8 @@ export const translation: ITranslations = {
             deleteToken: 'Delete token',
             searchToken: 'Search by symbol or contract address',
             noMatch: 'Nothing matches your search',
-            noGiveUp: `But don't give up – check the search string you entered and give it one more try`
+            noGiveUp: `But don't give up – check the search string you entered and give it one more try`,
+            searchValidators: 'Search for validators'
         },
         CreateAccount: {
             createAccount: 'Create new account!',

@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
-import { ITheme } from '../../core/theme/itheme';
-import { BORDER_RADIUS, BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { ITheme } from '../../../../../../../core/theme/itheme';
+import {
+    BORDER_RADIUS,
+    BASE_DIMENSION,
+    normalize,
+    ICON_CONTAINER_SIZE
+} from '../../../../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -10,7 +15,8 @@ export default (theme: ITheme) =>
             borderRadius: BORDER_RADIUS,
             paddingVertical: BASE_DIMENSION * 2,
             paddingLeft: BASE_DIMENSION * 2,
-            paddingRight: BASE_DIMENSION * 3
+            paddingRight: BASE_DIMENSION * 3,
+            marginBottom: BASE_DIMENSION
         },
         topContainer: {
             flexDirection: 'row',
@@ -49,8 +55,11 @@ export default (theme: ITheme) =>
             color: theme.colors.textTertiary
         },
         imageStyle: {
+            width: ICON_CONTAINER_SIZE,
+            height: ICON_CONTAINER_SIZE,
             marginRight: BASE_DIMENSION + BASE_DIMENSION / 2,
-            marginTop: BASE_DIMENSION
+            marginTop: BASE_DIMENSION / 2,
+            borderRadius: ICON_CONTAINER_SIZE
         },
         amountText: {
             fontSize: normalize(11),

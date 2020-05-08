@@ -18,10 +18,10 @@ import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../../../cor
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import bind from 'bind-decorator';
-import { AccountTab } from './components/account-tab/account-tab';
-import { DelegationsTab } from './components/delegations-tab/delegations-tab';
-import { ValidatorsTab } from './components/validators-tab/validators-tab';
-import { TransactionsTab } from './components/transactions-tab/transactions-tab';
+import { AccountTab } from './components/tabs/account-tab/account-tab';
+import { DelegationsTab } from './components/tabs/delegations-tab/delegations-tab';
+import { ValidatorsTab } from './components/tabs/validators-tab/validators-tab';
+import { TransactionsTab } from './components/tabs/transactions-tab/transactions-tab';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 
 export interface IProps {

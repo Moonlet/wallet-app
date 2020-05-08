@@ -1,9 +1,9 @@
 import React from 'react';
 import { View } from 'react-native';
 import stylesProvider from './styles';
-import { Text } from '../../../../../../library';
-import { IThemeProps, withTheme } from '../../../../../../core/theme/with-theme';
-import { smartConnect } from '../../../../../../core/utils/smart-connect';
+import { Text } from '../../../../../../../library';
+import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
+import { smartConnect } from '../../../../../../../core/utils/smart-connect';
 
 export class TransactionsTabComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>

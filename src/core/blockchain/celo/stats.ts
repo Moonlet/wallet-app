@@ -1,4 +1,10 @@
-import { GenericStats, IStatValueType, AccountStats } from '../types/stats';
+import {
+    GenericStats,
+    IStatValueType,
+    AccountStats,
+    IValidatorCardComponent,
+    CardActionType
+} from '../types/stats';
 import { Client } from './client';
 import { Blockchain } from '../types/blockchain';
 
@@ -129,3 +135,91 @@ export const topStatsValues = [
         }
     }
 ];
+
+export const moonletValidator: IValidatorCardComponent = {
+    icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
+    labelName: 'Moonlet',
+    smallLabelName: '10th',
+    website: 'http://moonlet.io',
+    rightTitle: 'My Votes',
+    rightSubtitle: '1,000.00 cGLD',
+    actionType: CardActionType.CHECKBOX,
+    bottomStats: [
+        {
+            title: 'Validators',
+            color: '#FFFFFF',
+            type: IStatValueType.STRING,
+            data: {
+                value: '2/2'
+            }
+        },
+        {
+            title: 'Voting Power',
+            color: '#FFFFFF',
+            type: IStatValueType.STRING,
+            data: {
+                value: '0.64%'
+            }
+        },
+        {
+            title: 'Uptime',
+            color: '#FFFFFF',
+            type: IStatValueType.STRING,
+            data: {
+                value: '99.99%'
+            }
+        },
+        {
+            title: 'Reward',
+            color: '#00E676',
+            type: IStatValueType.STRING,
+            data: {
+                value: '8.64%'
+            }
+        }
+    ]
+};
+
+export const chainLayerValidator: IValidatorCardComponent = {
+    icon: 'https://thecelo.com/logos/0x4fc4ea624db2e4a1d6195a03744d505cbcd9431b.jpg',
+    labelName: 'ChainLayer',
+    smallLabelName: '10th',
+    website: 'http://chainlayer.io',
+    rightTitle: 'My Votes',
+    rightSubtitle: '2,000.00 cGLD',
+    actionType: CardActionType.CHECKBOX,
+    bottomStats: [
+        {
+            title: 'Validators',
+            color: '#FFFFFF',
+            type: IStatValueType.STRING,
+            data: {
+                value: '3/3'
+            }
+        },
+        {
+            title: 'Voting Power',
+            color: '#FFFFFF',
+            type: IStatValueType.STRING,
+            data: {
+                value: '0.64%'
+            }
+        },
+        {
+            title: 'Uptime',
+            color: '#FFFFFF',
+            type: IStatValueType.STRING,
+            data: {
+                value: '99.99%'
+            }
+        },
+        {
+            title: 'Reward',
+            color: '#00E676',
+            type: IStatValueType.STRING,
+            data: {
+                value: '8.64%'
+            }
+        }
+    ]
+};

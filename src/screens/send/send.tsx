@@ -349,7 +349,6 @@ export class SendScreenComponent extends React.Component<
                 setHeaderSetps={(steps: IHeaderStep[]) => this.setState({ headerSteps: steps })}
             />
         );
-        //
     }
 
     private renderEnterAmount() {

@@ -14,15 +14,9 @@ export const buildTransactions = (trimmedWallets: IExtStorage.IStorageWallets) =
                 const tx = wallet.transactions[txHash];
                 const reduxTransaction = reduxWallet?.transactions[txHash];
 
-                // console.log('tx: ', tx);
-                // console.log('reduxTransaction: ', reduxTransaction);
-
                 if (reduxTransaction) {
                     // tx already in redux
-                    // console.log('TX ALREADY IN STATE');
                 } else {
-                    // console.log('ADD TX: ', tx);
-                    // if tx has been posted on blockchain
                     store.dispatch(
                         updateTransactionFromBlockchain(
                             txHash,

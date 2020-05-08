@@ -13,6 +13,7 @@ import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-moda
 import { NavigationService } from '../../navigation/navigation-service';
 import { extensionReduxUpdateState } from '../../redux/app/actions';
 import { IBlockchainTransaction } from '../blockchain/types';
+import { buildTransactions } from './conn-ext-build-state/build-transactions';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -167,7 +168,7 @@ export const ConnectExtensionWeb = (() => {
                                 storeState(decryptedState);
 
                                 // Build wallets transactions
-                                // buildTransactions(decryptedState.state.wallets);
+                                buildTransactions(decryptedState.state.wallets);
                             }
                         } catch {
                             //
@@ -213,7 +214,7 @@ export const ConnectExtensionWeb = (() => {
                         // navigate to Dashboard
                         NavigationService.navigate('MainNavigation', {});
 
-                        // buildTransactions(decryptedState.state.wallets);
+                        buildTransactions(decryptedState.state.wallets);
                     }
 
                     // close loading modal

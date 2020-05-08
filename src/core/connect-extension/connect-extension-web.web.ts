@@ -15,13 +15,11 @@ import { extensionReduxUpdateState } from '../../redux/app/actions';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
-        // RealtimeDB
         const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
         return realtimeDB.child(FirebaseRef.CONNECTIONS);
     };
 
     const getRealtimeDBRequestsRef = () => {
-        // RealtimeDB
         const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
         return realtimeDB.child(FirebaseRef.REQUESTS);
     };

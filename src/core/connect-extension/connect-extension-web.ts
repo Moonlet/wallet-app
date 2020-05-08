@@ -11,7 +11,6 @@ import CryptoJS from 'crypto-js';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBRequestsRef = () => {
-        // RealtimeDB
         const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
         return realtimeDB.child(FirebaseRef.REQUESTS);
     };

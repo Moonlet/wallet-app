@@ -6,13 +6,14 @@ import { Amount } from '../../../../components/amount/amount';
 import { Text } from '../../../../library';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { translate } from '../../../../core/i18n';
-import { ITokenState } from '../../../../redux/wallets/state';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
+import { smartConnect } from '../../../../core/utils/smart-connect';
 
 export interface IExternalProps {
-    token: ITokenState;
+    tokenSymbol: string;
     amount: string;
     blockchain: Blockchain;
+    backgroundColor?: string;
 }
 
 export class FeeTotalComponent extends React.Component<
@@ -20,12 +21,21 @@ export class FeeTotalComponent extends React.Component<
 > {
     public render() {
         const styles = this.props.styles;
-        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.tokenSymbol);
 
         return (
             <View style={styles.container}>
                 <Text style={styles.feeTitle}>{translate('App.labels.fees')}</Text>
-                <View style={styles.feeWrapper}>
+                <View
+                    style={[
+                        styles.feeWrapper,
+                        {
+                            backgroundColor: this.props.backgroundColor
+                                ? this.props.backgroundColor
+                                : this.props.theme.colors.cardBackground
+                        }
+                    ]}
+                >
                     <Amount
                         style={styles.fee}
                         amount={this.props.amount}
@@ -50,4 +60,6 @@ export class FeeTotalComponent extends React.Component<
     }
 }
 
-export const FeeTotal = withTheme(stylesProvider)(FeeTotalComponent);
+export const FeeTotal = smartConnect<IExternalProps>(FeeTotalComponent, [
+    withTheme(stylesProvider)
+]);

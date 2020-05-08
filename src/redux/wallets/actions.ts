@@ -57,6 +57,8 @@ import {
 } from '../../core/secure/keychain';
 import { delay } from '../../core/utils/time';
 import { toggleBiometricAuth } from '../preferences/actions';
+import { CLOSE_TX_REQUEST } from '../ui/transaction-request/actions';
+import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -520,7 +522,8 @@ export const sendTransferTransaction = (
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransferTransactionExtraFields,
-    goBack: boolean = true
+    goBack: boolean = true,
+    sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
@@ -603,6 +606,19 @@ export const sendTransferTransaction = (
                     walletId: appWallet.id
                 }
             });
+
+            if (sendResponse) {
+                const res = await ConnectExtension.sendResponse(sendResponse.requestId, { txHash });
+
+                if (res?.success === true) {
+                    //
+                } else {
+                    //
+                }
+
+                dispatch({ type: CLOSE_TX_REQUEST });
+            }
+
             closeLoadingModal()(dispatch, getState);
             goBack && navigation.goBack();
             return;

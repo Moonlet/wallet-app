@@ -6,6 +6,7 @@ import { store } from '../../redux/config';
 import { Notifications } from '../messaging/notifications/notifications';
 import { IQRCodeConn } from './types';
 import { sha256 } from 'js-sha256'; // maybe replace this with CryptoJS.SHA256
+import { ConnectExtensionWeb } from './connect-extension-web';
 
 export const ConnectExtension = (() => {
     const syncExtension = async (connection: IQRCodeConn): Promise<any> => {
@@ -24,8 +25,10 @@ export const ConnectExtension = (() => {
         }
     };
 
-    const disconnectExtension = async (connection: IQRCodeConn) => {
+    const disconnectExtension = async () => {
         try {
+            const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
+
             const http = new HttpClient(CONFIG.extSyncDisconnectUrl);
             await http.post('', {
                 connectionId: connection.connectionId,
@@ -36,8 +39,50 @@ export const ConnectExtension = (() => {
         }
     };
 
+    // TODO: sendRequestPayload type
+    const sendRequest = async (sendRequestPayload: any) => {
+        try {
+            const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
+
+            const http = new HttpClient(CONFIG.extSyncSendRequestUrl);
+            const res = await http.post('', {
+                connectionId: connection.connectionId,
+                authToken: sha256(connection.encKey),
+                data: {
+                    method: sendRequestPayload.method,
+                    params: encrypt(JSON.stringify(sendRequestPayload.params), connection.encKey),
+                    notification: sendRequestPayload.notification
+                }
+            });
+
+            return res;
+        } catch {
+            //
+        }
+    };
+
+    const sendResponse = async (requestId: string, sendResponsePayload: any) => {
+        try {
+            const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
+
+            const http = new HttpClient(CONFIG.extSyncSendResponseUrl);
+            const res = await http.post('', {
+                connectionId: connection.connectionId,
+                requestId,
+                authToken: sha256(connection.encKey),
+                data: sendResponsePayload
+            });
+
+            return res;
+        } catch {
+            //
+        }
+    };
+
     return {
         syncExtension,
-        disconnectExtension
+        disconnectExtension,
+        sendRequest,
+        sendResponse
     };
 })();

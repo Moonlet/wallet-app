@@ -11,6 +11,7 @@ import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { isInteger } from '../../../../core/utils/format-number';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { ITokenState } from '../../../../redux/wallets/state';
+import { BASE_DIMENSION } from '../../../../styles/dimensions';
 
 export interface IExternalProps {
     token: ITokenState;
@@ -154,11 +155,13 @@ export class GasFeeAvancedComponent extends React.Component<
                     <Text style={styles.displayError}>{translate('Fee.errorLimitPrice')}</Text>
                 )}
 
-                <FeeTotal
-                    amount={gasPrice.multipliedBy(gasLimit).toString()}
-                    blockchain={this.props.blockchain}
-                    token={this.props.token}
-                />
+                <View style={{ marginTop: BASE_DIMENSION }}>
+                    <FeeTotal
+                        amount={gasPrice.multipliedBy(gasLimit).toString()}
+                        blockchain={this.props.blockchain}
+                        tokenSymbol={this.props.token.symbol}
+                    />
+                </View>
             </View>
         );
     }

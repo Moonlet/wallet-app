@@ -1,12 +1,20 @@
-import { IQRCodeConn } from './types';
+import { IQRCodeConn, FirebaseRef } from './types';
 import { getBaseEncryptionKey } from '../secure/keychain';
 import { readEncrypted, deleteFromStorage, storeEncrypted } from '../secure/storage';
 import { CONN_EXTENSION } from '../constants/app';
 import { Dialog } from '../../components/dialog/dialog';
 import { translate } from '../i18n';
 import { ConnectExtension } from './connect-extension';
+import { database } from 'react-native-firebase';
+import { decrypt } from '../secure/encrypt.web';
+import CryptoJS from 'crypto-js';
 
 export const ConnectExtensionWeb = (() => {
+    const getRealtimeDBRequestsRef = () => {
+        const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
+        return realtimeDB.child(FirebaseRef.REQUESTS);
+    };
+
     const storeConnection = async (connection: IQRCodeConn): Promise<boolean> => {
         try {
             const res = await ConnectExtension.syncExtension(connection);
@@ -30,11 +38,7 @@ export const ConnectExtensionWeb = (() => {
 
     const disconnect = async () => {
         try {
-            const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
-
-            if (connection) {
-                ConnectExtension.disconnectExtension(connection);
-            }
+            ConnectExtension.disconnectExtension();
         } catch {
             //
         }
@@ -89,6 +93,37 @@ export const ConnectExtensionWeb = (() => {
         //
     };
 
+    const getRequestIdParams = async (requestId: string) => {
+        try {
+            const requestsRef = getRealtimeDBRequestsRef();
+            const dataSnap = await requestsRef
+                .child(requestId)
+                .child('req')
+                .child('params')
+                .once('value');
+
+            const data = await dataSnap.val();
+
+            const connection = await getConnection();
+
+            if (connection) {
+                const decrypted = JSON.parse(
+                    decrypt(data, connection.encKey).toString(CryptoJS.enc.Utf8)
+                );
+
+                return decrypted[0]; // transaction
+            }
+
+            return undefined;
+        } catch {
+            //
+        }
+    };
+
+    const listenerReqResponse = async (requestId: string, callback: (txHash: string) => void) => {
+        //
+    };
+
     return {
         storeConnection,
         disconnect,
@@ -97,6 +132,8 @@ export const ConnectExtensionWeb = (() => {
         generateQRCodeUri,
         downloadFileStorage,
         listenLastSync,
-        listenLastSyncForConnect
+        listenLastSyncForConnect,
+        getRequestIdParams,
+        listenerReqResponse
     };
 })();

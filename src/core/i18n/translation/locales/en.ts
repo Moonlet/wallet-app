@@ -13,6 +13,7 @@ export const translation: ITranslations = {
                 advanced: 'Advanced',
                 advancedSetup: 'Advanced setup',
                 all: 'All',
+                amount: 'Amount',
                 average: 'Average',
                 cancel: 'Cancel',
                 cheap: 'Cheap',
@@ -378,7 +379,8 @@ export const translation: ITranslations = {
             COSMOS_ERROR_12: 'Insufficient fee',
             COSMOS_ERROR_14: 'Insufficient funds for transaction',
             CONTRACT_TX_NORMAL_NOT_ALLOWED:
-                "{{address}} is a smart contract that doesn't accept normal transactions"
+                "{{address}} is a smart contract that doesn't accept normal transactions",
+            WAITING_TX_CONFIRM: 'Waiting for transaction confirmation from your mobile'
         },
         SecurityChecks: {
             title: 'Security Warning!',
@@ -412,6 +414,18 @@ export const translation: ITranslations = {
             currentlyActive: 'Currently active',
             qrCodeError: 'Invalid QR Code!',
             error: 'The connection has failed! Please try again!'
+        },
+        Notifications: {
+            extensionTx: {
+                title: 'Confirm transaction',
+                body:
+                    'Open Moonlet to confirm the following transaction: send {{formattedAmount}} to {{formattedAddress}}'
+            }
+        },
+        TransactionRequest: {
+            title: 'Transaction request',
+            walletName: 'Wallet name',
+            accountName: 'Account name'
         }
     },
     plural: (n: number, ord?: boolean) => {

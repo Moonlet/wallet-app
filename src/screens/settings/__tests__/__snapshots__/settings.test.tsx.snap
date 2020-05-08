@@ -7,104 +7,125 @@ exports[`Wallet screen renders correctly 1`] = `
       <withTheme(TextComponent) style={{...}}>
         SECURITY
       </withTheme(TextComponent)>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Manage wallet
-        </withTheme(TextComponent)>
-        <View style={{...}}>
-          <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
-        </View>
-      </TouchableOpacity>
-      <View style={{...}} />
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Backup wallet
-        </withTheme(TextComponent)>
-        <View style={{...}}>
-          <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
-        </View>
-      </TouchableOpacity>
-      <View style={{...}} />
-      <TouchableOpacity style={{...}} onPress={[Function: _callee2]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Change PIN
-        </withTheme(TextComponent)>
-        <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
-      </TouchableOpacity>
-      <View style={{...}} />
+      <View>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Manage wallet
+          </withTheme(TextComponent)>
+          <View style={{...}}>
+            <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
+          </View>
+        </TouchableOpacity>
+        <View style={{...}} />
+      </View>
+      <View>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Backup wallet
+          </withTheme(TextComponent)>
+          <View style={{...}}>
+            <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
+          </View>
+        </TouchableOpacity>
+        <View style={{...}} />
+      </View>
+      <View>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Change PIN
+          </withTheme(TextComponent)>
+          <View style={{...}}>
+            <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
+          </View>
+        </TouchableOpacity>
+        <View style={{...}} />
+      </View>
     </View>
     <View>
       <withTheme(TextComponent) style={{...}}>
         SETUP
       </withTheme(TextComponent)>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Default currency
-        </withTheme(TextComponent)>
-        <View style={{...}}>
-          <withTheme(TextComponent) style={{...}} />
-          <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
-        </View>
-      </TouchableOpacity>
-      <View style={{...}} />
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Blockchain portfolio
-        </withTheme(TextComponent)>
-        <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
-      </TouchableOpacity>
-      <View style={{...}} />
+      <View>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Default currency
+          </withTheme(TextComponent)>
+          <View style={{...}}>
+            <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
+          </View>
+        </TouchableOpacity>
+        <View style={{...}} />
+      </View>
+      <View>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Blockchain portfolio
+          </withTheme(TextComponent)>
+          <View style={{...}}>
+            <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
+          </View>
+        </TouchableOpacity>
+        <View style={{...}} />
+      </View>
     </View>
     <View>
       <withTheme(TextComponent) style={{...}}>
         SUPPORT
       </withTheme(TextComponent)>
-      <TouchableOpacity testID=\\"report-issue\\" style={{...}} onPress={[Function: reportIssueTouch]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Report issue
-        </withTheme(TextComponent)>
-        <View style={{...}}>
-          <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
-        </View>
-      </TouchableOpacity>
-      <View style={{...}} />
+      <View>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Report issue
+          </withTheme(TextComponent)>
+          <View style={{...}}>
+            <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
+          </View>
+        </TouchableOpacity>
+        <View style={{...}} />
+      </View>
     </View>
     <View>
       <withTheme(TextComponent) style={{...}}>
         TOOLS
       </withTheme(TextComponent)>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Mainnet/Testnet
-        </withTheme(TextComponent)>
-        <View style={{...}}>
-          <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
-        </View>
-      </TouchableOpacity>
-      <View style={{...}} />
+      <View>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Mainnet/Testnet
+          </withTheme(TextComponent)>
+          <View style={{...}}>
+            <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
+          </View>
+        </TouchableOpacity>
+        <View style={{...}} />
+      </View>
     </View>
     <View>
       <withTheme(TextComponent) style={{...}}>
         ABOUT
       </withTheme(TextComponent)>
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Terms of Service
-        </withTheme(TextComponent)>
-        <View style={{...}}>
-          <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
-        </View>
-      </TouchableOpacity>
-      <View style={{...}} />
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Privacy policy
-        </withTheme(TextComponent)>
-        <View style={{...}}>
-          <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
-        </View>
-      </TouchableOpacity>
-      <View style={{...}} />
+      <View>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Terms of Service
+          </withTheme(TextComponent)>
+          <View style={{...}}>
+            <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
+          </View>
+        </TouchableOpacity>
+        <View style={{...}} />
+      </View>
+      <View>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Privacy policy
+          </withTheme(TextComponent)>
+          <View style={{...}}>
+            <Icon name=\\"chevron-right\\" size={29} style={{...}} allowFontScaling={false} />
+          </View>
+        </TouchableOpacity>
+        <View style={{...}} />
+      </View>
       <View style={{...}}>
         <withTheme(TextComponent) style={{...}}>
           Application version
@@ -114,13 +135,15 @@ exports[`Wallet screen renders correctly 1`] = `
         </View>
       </View>
       <View style={{...}} />
-      <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
-        <withTheme(TextComponent) style={{...}}>
-          Device ID
-        </withTheme(TextComponent)>
-        <withTheme(TextComponent) style={{...}} />
-      </TouchableOpacity>
-      <View style={{...}} />
+      <View>
+        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+          <withTheme(TextComponent) style={{...}}>
+            Device ID
+          </withTheme(TextComponent)>
+          <withTheme(TextComponent) style={{...}} />
+        </TouchableOpacity>
+        <View style={{...}} />
+      </View>
     </View>
     <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
       <withTheme(TextComponent) style={{...}}>

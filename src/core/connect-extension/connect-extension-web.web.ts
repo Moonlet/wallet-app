@@ -15,9 +15,13 @@ import { extensionReduxUpdateState } from '../../redux/app/actions';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
-        // RealtimeDB
         const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
         return realtimeDB.child(FirebaseRef.CONNECTIONS);
+    };
+
+    const getRealtimeDBRequestsRef = () => {
+        const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
+        return realtimeDB.child(FirebaseRef.REQUESTS);
     };
 
     const storeConnection = async (conn: IQRCodeConn) => {
@@ -218,6 +222,28 @@ export const ConnectExtensionWeb = (() => {
         });
     };
 
+    const getRequestIdParams = async (requestId: string): Promise<any> => {
+        //
+    };
+
+    const listenerReqResponse = async (requestId: string, callback: (txHash: string) => void) => {
+        try {
+            const requestsRef = getRealtimeDBRequestsRef();
+            requestsRef
+                .child(requestId)
+                .child('res')
+                .on('value', async (snapshot: any) => {
+                    if (snapshot.exists()) {
+                        const snap = await snapshot.val();
+
+                        callback(snap.txHash);
+                    }
+                });
+        } catch {
+            //
+        }
+    };
+
     return {
         storeConnection,
         disconnect,
@@ -226,6 +252,8 @@ export const ConnectExtensionWeb = (() => {
         generateQRCodeUri,
         downloadFileStorage,
         listenLastSync,
-        listenLastSyncForConnect
+        listenLastSyncForConnect,
+        getRequestIdParams,
+        listenerReqResponse
     };
 })();

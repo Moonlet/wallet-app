@@ -5,6 +5,7 @@ import { store } from '../../../redux/config';
 import { setSelectedWallet, updateTransactionFromBlockchain } from '../../../redux/wallets/actions';
 import { takeOneAndSubscribeToStore } from '../../../redux/utils/helpers';
 import { signExtensionTransaction } from '../../connect-extension/utils';
+import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
 
 export const notificationHandler = async (
     notification: INotificationPayload,
@@ -66,6 +67,17 @@ const handleNotification = (
 
         case NotificationType.EXTENSION_TRANSACTION:
             signExtensionTransaction(notification.data);
+            break;
+
+        case NotificationType.MOONLET_TRANSFER:
+            const requestId = JSON.parse(notification.data)?.requestId;
+
+            if (requestId) {
+                store.dispatch(openTransactionRequest(requestId));
+            } else {
+                //
+            }
+
             break;
 
         default:

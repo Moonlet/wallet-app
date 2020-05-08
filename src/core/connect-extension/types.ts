@@ -12,7 +12,8 @@ export interface IQRCodeConn {
 
 export enum FirebaseRef {
     EXTENSION_SYNC = 'extensionSync',
-    CONNECTIONS = 'connections'
+    CONNECTIONS = 'connections',
+    REQUESTS = 'requests'
 }
 
 export const FIREBASE_BUCKET = 'gs://moonlet-extension-sync';

@@ -3,7 +3,6 @@ import { View, Platform } from 'react-native';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { Button } from '../../library/button/button';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Text } from '../../library';
@@ -13,21 +12,22 @@ import { withNavigationParams, INavigationProps } from '../../navigation/with-na
 import { sendTransferTransaction } from '../../redux/wallets/actions';
 import { getAccount, getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
-import { Blockchain, IFeeOptions, ChainIdType } from '../../core/blockchain/types';
+import {
+    Blockchain,
+    IFeeOptions,
+    ChainIdType,
+    TransactionMessageText,
+    TransactionMessageType
+} from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 import { TokenType } from '../../core/blockchain/types/token';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
-import {
-    IBottomSheetExtensionRequestData,
-    IExtensionRequestType,
-    BottomSheetType
-} from '../../redux/ui/bottomSheet/state';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { getChainId } from '../../redux/preferences/selectors';
 import { Memo } from './components/extra-fields/memo/memo';
@@ -38,20 +38,35 @@ import _ from 'lodash';
 import { AddAddress } from './components/add-address/add-address';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { ConnectExtension } from '../../core/connect-extension/connect-extension';
+import {
+    openLoadingModal,
+    closeLoadingModal,
+    displayMessage
+} from '../../redux/ui/loading-modal/actions';
+import { IHeaderStep, BottomConfirm } from './components/bottom-confirm/bottom-confirm';
+import { NotificationType } from '../../core/messaging/types';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
+import { NavigationService } from '../../navigation/navigation-service';
 
 export interface IReduxProps {
     account: IAccountState;
     sendTransferTransaction: typeof sendTransferTransaction;
     openBottomSheet: typeof openBottomSheet;
     selectedWalletId: string;
+    selectedWalletName: string;
     selectedAccount: IAccountState;
     chainId: ChainIdType;
+    openLoadingModal: typeof openLoadingModal;
+    closeLoadingModal: typeof closeLoadingModal;
+    displayMessage: typeof displayMessage;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         selectedWalletId: getSelectedWallet(state).id,
+        selectedWalletName: getSelectedWallet(state).name,
         selectedAccount: getSelectedAccount(state),
         chainId: getChainId(state, ownProps.blockchain)
     };
@@ -59,7 +74,10 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 
 const mapDispatchToProps = {
     sendTransferTransaction,
-    openBottomSheet
+    openBottomSheet,
+    openLoadingModal,
+    closeLoadingModal,
+    displayMessage
 };
 
 export interface INavigationParams {
@@ -75,7 +93,7 @@ interface IState {
     feeOptions: IFeeOptions;
     showExtensionMessage: boolean;
     memo: string;
-    headerSteps: { step: number; title: string; active: boolean }[];
+    headerSteps: IHeaderStep[];
     insufficientFundsFees: boolean;
 }
 
@@ -116,61 +134,92 @@ export class SendScreenComponent extends React.Component<
 
     public async confirmPayment() {
         if (Platform.OS === 'web') {
+            this.props.openLoadingModal();
+            this.props.displayMessage(
+                TransactionMessageText.WAITING_TX_CONFIRM,
+                TransactionMessageType.INFO
+            );
+
             const formattedAmount = formatNumber(new BigNumber(this.state.amount), {
                 currency: getBlockchain(this.props.account.blockchain).config.coin
             });
 
-            const data: IBottomSheetExtensionRequestData = {
-                type: IExtensionRequestType.SIGN_TRANSACTION,
-                state: 'pending',
-                mainText: `${formattedAmount} to ${formatAddress(
-                    this.props.account.address,
-                    this.props.account.blockchain
-                )}`,
-                secondaryText: new Date().toLocaleDateString('en-GB')
+            const formattedAddress = formatAddress(
+                this.props.account.address,
+                this.props.account.blockchain
+            );
+
+            const account = this.props.account;
+            const token = this.props.token;
+
+            const moonletTransferPayload: any = {
+                account,
+                toAddress: this.state.toAddress,
+                amount: this.state.amount,
+                token: token.symbol,
+                feeOptions: this.state.feeOptions,
+                extraFields: { memo: this.state.memo },
+                walletName: this.props.selectedWalletName // extra data needed for Tx Request Screen
             };
-            this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
 
-            // TODO
-            // WalletConnectWeb.signTransaction({
-            //     account: this.props.account,
-            //     toAddress: this.state.toAddress,
-            //     amount: this.state.amount,
-            //     token: this.props.token,
-            //     feeOptions: this.state.feeOptions,
-            //     walletId: this.props.selectedWalletId,
-            //     selectedAccount: this.props.selectedAccount
-            // })
-            //     .then(() => {
-            //         data.state = 'completed';
-            //         this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
-            //         this.props.navigation.goBack();
-            //     })
-            //     .catch(() => {
-            //         data.state = 'rejected';
-            //         this.props.openBottomSheet(BottomSheetType.EXTENSION_REQUEST, { data });
-            //     });
+            // add type to this
+            const sendRequestPayload = {
+                method: NotificationType.MOONLET_TRANSFER,
+                params: [moonletTransferPayload],
+                notification: {
+                    title: translate('Notifications.extensionTx.title'),
+                    body: translate('Notifications.extensionTx.body', {
+                        formattedAmount,
+                        formattedAddress
+                    })
+                }
+            };
+
+            try {
+                const sendRequestRes = await ConnectExtension.sendRequest(sendRequestPayload);
+
+                if (sendRequestRes?.success) {
+                    ConnectExtensionWeb.listenerReqResponse(
+                        sendRequestRes.data.requestId,
+                        (txHash: string) => {
+                            if (txHash) {
+                                //
+                                this.props.closeLoadingModal();
+                                NavigationService.goBack();
+                            } else {
+                                // error
+                            }
+                        }
+                    );
+                }
+            } catch {
+                // show error message to the user
+                this.props.closeLoadingModal();
+            }
+
             return;
-        }
+        } else {
+            // Mobile App
 
-        try {
-            const password = await PasswordModal.getPassword(
-                translate('Password.pinTitleUnlock'),
-                translate('Password.subtitleSignTransaction'),
-                { sensitive: true, showCloseButton: true }
-            );
-            this.props.sendTransferTransaction(
-                this.props.account,
-                this.state.toAddress,
-                this.state.amount,
-                this.props.token.symbol,
-                this.state.feeOptions,
-                password,
-                this.props.navigation,
-                { memo: this.state.memo }
-            );
-        } catch (err) {
-            //
+            try {
+                const password = await PasswordModal.getPassword(
+                    translate('Password.pinTitleUnlock'),
+                    translate('Password.subtitleSignTransaction'),
+                    { sensitive: true, showCloseButton: true }
+                );
+                this.props.sendTransferTransaction(
+                    this.props.account,
+                    this.state.toAddress,
+                    this.state.amount,
+                    this.props.token.symbol,
+                    this.state.feeOptions,
+                    password,
+                    this.props.navigation,
+                    { memo: this.state.memo }
+                );
+            } catch (err) {
+                //
+            }
         }
     }
 
@@ -281,108 +330,24 @@ export class SendScreenComponent extends React.Component<
     }
 
     private renderBottomConfirm() {
-        const { styles, account } = this.props;
-        const { amount, headerSteps } = this.state;
-        const stdAmount = this.getInputAmountToStd();
-
-        const activeIndex = _.findIndex(headerSteps, ['active', true]);
+        const activeIndex = _.findIndex(this.state.headerSteps, ['active', true]);
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
-        let disableButton: boolean;
-        switch (activeIndex) {
-            case 0:
-                // Add address
-                if (this.state.toAddress === '') disableButton = true;
-                break;
-            case 1:
-                // Enter amount
-                if (
-                    amount === '' ||
-                    this.state.insufficientFunds ||
-                    this.state.insufficientFundsFees ||
-                    isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
-                    isNaN(Number(this.state.feeOptions?.gasPrice))
-                )
-                    disableButton = true;
-                break;
-            case 2:
-                // Confirm transaction
-                disableButton = false;
-                break;
-            default:
-                disableButton = true;
-                break;
-        }
-
         return (
-            <View style={styles.bottomWrapper}>
-                <View style={styles.bottomDivider} />
-
-                <View style={styles.bottomContainer}>
-                    <View style={styles.bottomTextContainer}>
-                        <View style={{ flexDirection: 'row' }}>
-                            <Text style={styles.bottomSendText}>
-                                {translate('App.labels.send')}
-                            </Text>
-                            <Text style={[styles.bottomToText, { textTransform: 'lowercase' }]}>
-                                {translate('App.labels.to')}
-                            </Text>
-                            <Text style={styles.bottomDefaultText}>
-                                {this.state.toAddress !== ''
-                                    ? formatAddress(this.state.toAddress, account.blockchain)
-                                    : '___...___'}
-                            </Text>
-                        </View>
-
-                        {(activeIndex === 1 || activeIndex === 2) && (
-                            <React.Fragment>
-                                <Text
-                                    numberOfLines={1}
-                                    ellipsizeMode="middle"
-                                    style={styles.bottomDefaultText}
-                                >
-                                    {amount === ''
-                                        ? `_.___ ${tokenConfig.symbol}`
-                                        : `${amount} ${tokenConfig.symbol}`}
-                                </Text>
-
-                                <Amount
-                                    style={styles.bottomAmountText}
-                                    token={tokenConfig.symbol}
-                                    tokenDecimals={tokenConfig.decimals}
-                                    amount={stdAmount.toString()}
-                                    blockchain={this.props.account.blockchain}
-                                    convert
-                                />
-                            </React.Fragment>
-                        )}
-                    </View>
-
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            style={{ width: normalize(140) }}
-                            primary
-                            disabled={disableButton}
-                            onPress={() => {
-                                if (activeIndex === 2) {
-                                    this.confirmPayment();
-                                } else {
-                                    const steps = headerSteps;
-
-                                    steps[activeIndex].active = false;
-                                    steps[activeIndex + 1].active = true;
-
-                                    this.setState({ headerSteps: steps });
-                                }
-                            }}
-                        >
-                            {activeIndex === headerSteps.length - 1
-                                ? translate('App.labels.confirm')
-                                : translate('App.labels.next')}
-                        </Button>
-                    </View>
-                </View>
-            </View>
+            <BottomConfirm
+                toAddress={this.state.toAddress}
+                activeIndex={activeIndex}
+                amount={this.state.amount}
+                account={this.props.account}
+                feeOptions={this.state.feeOptions}
+                insufficientFunds={this.state.insufficientFunds}
+                insufficientFundsFees={this.state.insufficientFundsFees}
+                headerSteps={this.state.headerSteps}
+                tokenConfig={tokenConfig}
+                stdAmount={this.getInputAmountToStd()}
+                confirmPayment={() => this.confirmPayment()}
+                setHeaderSetps={(steps: IHeaderStep[]) => this.setState({ headerSteps: steps })}
+            />
         );
     }
 

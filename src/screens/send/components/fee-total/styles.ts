@@ -9,8 +9,7 @@ export default (theme: ITheme) =>
             fontSize: normalize(13),
             lineHeight: normalize(18),
             color: theme.colors.textSecondary,
-            paddingLeft: BASE_DIMENSION * 2,
-            marginTop: BASE_DIMENSION
+            paddingLeft: BASE_DIMENSION * 2
         },
         feeWrapper: {
             borderRadius: BORDER_RADIUS,

@@ -2,7 +2,8 @@ export enum NotificationType {
     EXTENSION_TRANSACTION = 'EXTENSION_TRANSACTION',
     TRANSACTION_UPDATE = 'TRANSACTION_UPDATE',
     TRANSACTION = 'TRANSACTION',
-    INFO = 'INFO'
+    INFO = 'INFO',
+    MOONLET_TRANSFER = 'MOONLET_TRANSFER'
 }
 
 export enum SilentMessageType {

@@ -159,25 +159,21 @@ export class SendScreenComponent extends React.Component<
                 .amountToStd(this.state.amount, tokenConfig.decimals)
                 .toFixed();
 
-            const tx: any = await blockchainInstance.transaction.buildTransferTransaction({
-                chainId: this.props.chainId,
+            const moonletTransferPayload: any = {
                 account,
                 toAddress: this.state.toAddress,
                 amount,
                 token: token.symbol,
                 feeOptions: this.state.feeOptions,
-                extraFields: { memo: this.state.memo }
-            });
-
-            // need account index for sign
-            tx.accountIndex = account.index;
-            tx.walletName = this.props.selectedWalletNane;
-            tx.accountName = account?.name || `Account ${account.index + 1}`;
+                extraFields: { memo: this.state.memo },
+                walletName: this.props.selectedWalletNane, // extra data needed for Tx Request Screen
+                chainId: this.props.chainId // need this?
+            };
 
             // add type to this
             const sendRequestPayload = {
                 method: NotificationType.MOONLET_TRANSFER,
-                params: [tx],
+                params: [moonletTransferPayload],
                 notification: {
                     title: translate('Notification.title'),
                     body: translate('Notification.body', {

@@ -9,7 +9,7 @@ import { closeTransactionRequest } from '../../redux/ui/transaction-request/acti
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { signAndSendTransaction } from '../../redux/wallets/actions';
+import { sendTransferTransaction } from '../../redux/wallets/actions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import Icon from '../../components/icon';
 import { normalize } from '../../styles/dimensions';
@@ -23,7 +23,7 @@ export interface IReduxProps {
     isVisible: boolean;
     requestId: string;
     closeTransactionRequest: typeof closeTransactionRequest;
-    signAndSendTransaction: typeof signAndSendTransaction;
+    sendTransferTransaction: typeof sendTransferTransaction;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
@@ -35,11 +35,11 @@ export const mapStateToProps = (state: IReduxState) => {
 
 const mapDispatchToProps = {
     closeTransactionRequest,
-    signAndSendTransaction
+    sendTransferTransaction
 };
 
 export interface IState {
-    transaction: any;
+    moonletTransferPayload: any;
 }
 
 export class TransactionRequestScreenComponent extends React.Component<
@@ -49,32 +49,32 @@ export class TransactionRequestScreenComponent extends React.Component<
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.state = {
-            transaction: undefined
+            moonletTransferPayload: undefined
         };
     }
 
     public componentDidMount() {
         if (this.props.requestId) {
-            this.getTransactionDetails();
+            this.getTransferPayload();
         }
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.requestId !== prevProps.requestId && this.props.requestId !== null) {
-            this.getTransactionDetails();
+            this.getTransferPayload();
         }
     }
 
-    private async getTransactionDetails() {
+    private async getTransferPayload() {
         try {
-            const tx = await ConnectExtensionWeb.getRequestIdParams(this.props.requestId);
-            if (tx) {
-                this.setState({ transaction: tx });
+            const payload = await ConnectExtensionWeb.getRequestIdParams(this.props.requestId);
+            if (payload) {
+                this.setState({ moonletTransferPayload: payload });
             } else {
-                this.setState({ transaction: undefined });
+                this.setState({ moonletTransferPayload: undefined });
             }
         } catch {
-            this.setState({ transaction: undefined });
+            this.setState({ moonletTransferPayload: undefined });
         }
     }
 
@@ -86,10 +86,19 @@ export class TransactionRequestScreenComponent extends React.Component<
                 { sensitive: true, showCloseButton: true }
             );
 
-            this.props.signAndSendTransaction(
-                this.state.transaction,
+            const { moonletTransferPayload } = this.state;
+
+            this.props.sendTransferTransaction(
+                moonletTransferPayload.account,
+                moonletTransferPayload.toAddress,
+                moonletTransferPayload.amount,
+                moonletTransferPayload.token,
+                moonletTransferPayload.feeOptions,
                 password,
-                this.props.requestId
+                undefined, // navigation - not needed
+                moonletTransferPayload.extraFields,
+                false, // goBack
+                { requestId: this.props.requestId }
             );
         } catch {
             //
@@ -98,24 +107,25 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     private renderMoonletTransferForm() {
         const { styles } = this.props;
-        const { transaction } = this.state;
+        const { moonletTransferPayload } = this.state;
 
-        if (transaction) {
-            const blockchain = transaction.blockchain;
+        if (moonletTransferPayload) {
+            const account = moonletTransferPayload.account;
+            const blockchain = account.blockchain;
 
-            const from = formatAddress(transaction.address, blockchain);
-            const recipient = formatAddress(transaction.toAddress, blockchain);
-            const tokenConfig = getTokenConfig(blockchain, transaction.token.symbol);
+            const from = formatAddress(account.address, blockchain);
+            const recipient = formatAddress(moonletTransferPayload.toAddress, blockchain);
+            const tokenConfig = getTokenConfig(blockchain, moonletTransferPayload.token);
 
             return (
                 <View style={{ flex: 1 }}>
                     {this.renderField(
                         translate('TransactionRequest.walletName'),
-                        transaction.walletName
+                        moonletTransferPayload.walletName
                     )}
                     {this.renderField(
                         translate('TransactionRequest.accountName'),
-                        transaction.accountName
+                        account?.name || `Account ${account.index + 1}`
                     )}
                     {this.renderField(translate('App.labels.from'), from)}
                     {this.renderField(translate('App.labels.recipient'), recipient)}
@@ -124,17 +134,17 @@ export class TransactionRequestScreenComponent extends React.Component<
                         <View style={styles.inputBox}>
                             <Amount
                                 style={styles.confirmTransactionText}
-                                amount={transaction.amount}
-                                token={transaction.token.symbol}
+                                amount={moonletTransferPayload.amount}
+                                token={moonletTransferPayload.token}
                                 tokenDecimals={tokenConfig.decimals}
                                 blockchain={blockchain}
                             />
                         </View>
                     </View>
                     <FeeTotal
-                        amount={transaction.feeOptions.feeTotal}
+                        amount={moonletTransferPayload.feeOptions.feeTotal}
                         blockchain={blockchain}
-                        tokenSymbol={transaction.token.symbol}
+                        tokenSymbol={moonletTransferPayload.token}
                         backgroundColor={this.props.theme.colors.inputBackground}
                     />
                 </View>
@@ -174,7 +184,7 @@ export class TransactionRequestScreenComponent extends React.Component<
                     <Button
                         onPress={() => this.confirm()}
                         primary
-                        disabled={this.state.transaction === undefined}
+                        disabled={this.state.moonletTransferPayload === undefined}
                     >
                         {translate('App.labels.confirm')}
                     </Button>

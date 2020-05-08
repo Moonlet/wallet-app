@@ -47,22 +47,6 @@ export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets): IWall
             accounts.push(acc);
         });
 
-        // TODO: move this in other part - called after the handshake is done
-        // wallet?.transactions &&
-        //     Object.keys(wallet.transactions).map((txHash: string) => {
-        //         const tx = wallet.transactions[txHash];
-
-        //         store.dispatch(
-        //             updateTransactionFromBlockchain(
-        //                 txHash,
-        //                 tx.blockchain,
-        //                 tx.chainId,
-        //                 tx.broadcastedOnBlock,
-        //                 false
-        //             ) as any
-        //         );
-        //     });
-
         const buildWallet: IWalletState = {
             id: walletId,
             name: wallet.name,

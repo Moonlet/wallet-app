@@ -8,6 +8,7 @@ import { ConnectExtension } from './connect-extension';
 import { database } from 'react-native-firebase';
 import { decrypt } from '../secure/encrypt.web';
 import CryptoJS from 'crypto-js';
+import { IBlockchainTransaction } from '../blockchain/types';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBRequestsRef = () => {
@@ -120,7 +121,10 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
-    const listenerReqResponse = async (requestId: string, callback: (txHash: string) => void) => {
+    const listenerReqResponse = async (
+        requestId: string,
+        callback: (res: { txHash: string; tx: IBlockchainTransaction }) => void
+    ) => {
         //
     };
 

@@ -415,10 +415,12 @@ export const translation: ITranslations = {
             qrCodeError: 'Invalid QR Code!',
             error: 'The connection has failed! Please try again!'
         },
-        Notification: {
-            title: 'Confirm transaction',
-            body:
-                'Open Moonlet to confirm the following transaction: send {{formattedAmount}} to {{formattedAddress}}'
+        Notifications: {
+            extensionTx: {
+                title: 'Confirm transaction',
+                body:
+                    'Open Moonlet to confirm the following transaction: send {{formattedAmount}} to {{formattedAddress}}'
+            }
         },
         TransactionRequest: {
             title: 'Transaction request',

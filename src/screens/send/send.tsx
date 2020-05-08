@@ -175,8 +175,8 @@ export class SendScreenComponent extends React.Component<
                 method: NotificationType.MOONLET_TRANSFER,
                 params: [moonletTransferPayload],
                 notification: {
-                    title: translate('Notification.title'),
-                    body: translate('Notification.body', {
+                    title: translate('Notifications.extensionTx.title'),
+                    body: translate('Notifications.extensionTx.body', {
                         formattedAmount,
                         formattedAddress
                     })

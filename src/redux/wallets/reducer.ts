@@ -350,7 +350,7 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                 );
 
                 // keep already stored transactions
-                firebaseWallets[walletId].transactions = state[walletId]?.transactions;
+                firebaseWallets[walletId].transactions = state[walletId]?.transactions || {};
             });
 
             return firebaseWallets;

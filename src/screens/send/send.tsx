@@ -54,7 +54,7 @@ export interface IReduxProps {
     sendTransferTransaction: typeof sendTransferTransaction;
     openBottomSheet: typeof openBottomSheet;
     selectedWalletId: string;
-    selectedWalletNane: string;
+    selectedWalletName: string;
     selectedAccount: IAccountState;
     chainId: ChainIdType;
     openLoadingModal: typeof openLoadingModal;
@@ -66,7 +66,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         selectedWalletId: getSelectedWallet(state).id,
-        selectedWalletNane: getSelectedWallet(state).name,
+        selectedWalletName: getSelectedWallet(state).name,
         selectedAccount: getSelectedAccount(state),
         chainId: getChainId(state, ownProps.blockchain)
     };
@@ -159,7 +159,7 @@ export class SendScreenComponent extends React.Component<
                 token: token.symbol,
                 feeOptions: this.state.feeOptions,
                 extraFields: { memo: this.state.memo },
-                walletName: this.props.selectedWalletNane // extra data needed for Tx Request Screen
+                walletName: this.props.selectedWalletName // extra data needed for Tx Request Screen
             };
 
             // add type to this

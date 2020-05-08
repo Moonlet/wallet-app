@@ -1,4 +1,4 @@
-export const AVAILABLE_CURRENCIES = ['USD', 'EUR', 'JPY', 'SGD', 'CNY', 'USDT', 'DAI'];
+export const AVAILABLE_CURRENCIES = ['USD', 'EUR', 'GBP', 'JPY', 'SGD', 'CNY', 'USDT', 'DAI'];
 export const WC_CONNECTION = 'wcConnection';
 export const WC = {
     GET_STATE: 'moonletGetState',

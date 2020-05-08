@@ -39,7 +39,11 @@ export const ConnectExtensionWeb = (() => {
 
     const disconnect = async () => {
         try {
-            ConnectExtension.disconnectExtension();
+            const connection = await getConnection();
+
+            if (connection) {
+                ConnectExtension.disconnectExtension(connection);
+            }
         } catch {
             //
         }

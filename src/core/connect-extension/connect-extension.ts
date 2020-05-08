@@ -26,10 +26,8 @@ export const ConnectExtension = (() => {
         }
     };
 
-    const disconnectExtension = async () => {
+    const disconnectExtension = async (connection: IQRCodeConn) => {
         try {
-            const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
-
             const http = new HttpClient(CONFIG.extSyncDisconnectUrl);
             await http.post('', {
                 connectionId: connection.connectionId,

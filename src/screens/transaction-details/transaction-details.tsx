@@ -52,7 +52,6 @@ export class TransactionDetailsComponent extends React.Component<
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
                 if (Platform.OS === 'web') {
-                    // TODO: check this
                     window.open(url);
                 } else {
                     Linking.openURL(url);
@@ -147,7 +146,7 @@ export class TransactionDetailsComponent extends React.Component<
                     <TouchableOpacity
                         testID={'transaction-id'}
                         style={styles.transactionIdContainer}
-                        onPress={this.goToExplorer}
+                        onPress={() => this.goToExplorer()}
                     >
                         <View style={styles.transactionId}>
                             <Text numberOfLines={1} ellipsizeMode="tail" style={styles.textPrimary}>

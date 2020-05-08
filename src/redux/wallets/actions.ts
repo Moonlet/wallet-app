@@ -5,7 +5,8 @@ import {
     TransactionMessageText,
     TransactionMessageType,
     ITransferTransactionExtraFields,
-    ChainIdType
+    ChainIdType,
+    IBlockchainTransaction
 } from '../../core/blockchain/types';
 import { WalletType, IWallet, TransactionStatus } from '../../core/wallet/types';
 import { IWalletState, IAccountState } from './state';
@@ -608,7 +609,10 @@ export const sendTransferTransaction = (
             });
 
             if (sendResponse) {
-                const res = await ConnectExtension.sendResponse(sendResponse.requestId, { txHash });
+                const res = await ConnectExtension.sendResponse(sendResponse.requestId, {
+                    txHash,
+                    tx
+                });
 
                 if (res?.success === true) {
                     //
@@ -812,5 +816,20 @@ export const changePIN = (newPassword: string, oldPassword: string) => async (
         const mnemonic = await readEncrypted(walletId, encryptionKey);
 
         await storeEncrypted(mnemonic, walletId, newEncryptionKey);
+    });
+};
+
+export const addPublishedTxToAccount = (
+    txHash: string,
+    tx: IBlockchainTransaction,
+    walletId: string
+) => (dispatch: Dispatch<any>, getState: () => IReduxState) => {
+    dispatch({
+        type: TRANSACTION_PUBLISHED,
+        data: {
+            hash: txHash,
+            tx,
+            walletId
+        }
     });
 };

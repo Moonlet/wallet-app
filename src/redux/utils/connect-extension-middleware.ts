@@ -27,6 +27,7 @@ const getStatePatch = createSelector(
         preferences: IPrefState,
         tokens: ITokensConfigState
     ) => {
+        // TODO: here we should not trigger on get balances
         const trimmedWallets = trimWallets(wallets);
         const statePatch: any = {};
 

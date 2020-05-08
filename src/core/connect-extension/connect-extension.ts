@@ -7,6 +7,7 @@ import { Notifications } from '../messaging/notifications/notifications';
 import { IQRCodeConn } from './types';
 import { sha256 } from 'js-sha256'; // maybe replace this with CryptoJS.SHA256
 import { ConnectExtensionWeb } from './connect-extension-web';
+import { IBlockchainTransaction } from '../blockchain/types';
 
 export const ConnectExtension = (() => {
     const syncExtension = async (connection: IQRCodeConn): Promise<any> => {
@@ -25,10 +26,8 @@ export const ConnectExtension = (() => {
         }
     };
 
-    const disconnectExtension = async () => {
+    const disconnectExtension = async (connection: IQRCodeConn) => {
         try {
-            const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
-
             const http = new HttpClient(CONFIG.extSyncDisconnectUrl);
             await http.post('', {
                 connectionId: connection.connectionId,
@@ -61,7 +60,10 @@ export const ConnectExtension = (() => {
         }
     };
 
-    const sendResponse = async (requestId: string, sendResponsePayload: any) => {
+    const sendResponse = async (
+        requestId: string,
+        sendResponsePayload: { txHash: string; tx: IBlockchainTransaction }
+    ) => {
         try {
             const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
 
@@ -70,7 +72,10 @@ export const ConnectExtension = (() => {
                 connectionId: connection.connectionId,
                 requestId,
                 authToken: sha256(connection.encKey),
-                data: sendResponsePayload
+                data: {
+                    txHash: sendResponsePayload.txHash,
+                    tx: encrypt(JSON.stringify(sendResponsePayload.tx), connection.encKey)
+                }
             });
 
             return res;

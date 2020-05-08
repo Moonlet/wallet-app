@@ -72,9 +72,11 @@ export class TransactionRequestScreenComponent extends React.Component<
             if (payload) {
                 this.setState({ moonletTransferPayload: payload });
             } else {
+                // TODO: show error message to the user - requestId has not been received
                 this.setState({ moonletTransferPayload: undefined });
             }
         } catch {
+            // TODO: show error message to the user - requestId has not been received
             this.setState({ moonletTransferPayload: undefined });
         }
     }

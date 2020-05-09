@@ -6,7 +6,8 @@ Object {
     "ui",
   ],
   "key": "root",
+  "migrate": [Function],
   "storage": undefined,
-  "version": 1,
+  "version": 2,
 }
 `;

@@ -60,9 +60,9 @@ export const getRemoteConfigFeatures = async () => {
 };
 
 export const isFeatureActive = (feature: RemoteFeature): boolean => {
-    // if (__DEV__) {
-    //     return true;
-    // }
+    if (__DEV__) {
+        return true;
+    }
     if (
         (feature === RemoteFeature.NEAR ||
             feature === RemoteFeature.COSMOS ||

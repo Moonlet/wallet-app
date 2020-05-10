@@ -15,7 +15,6 @@ import { Blockchain } from '../../../core/blockchain/types';
 import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
-import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 import { ScrollView } from 'react-native-gesture-handler';
 
 interface IExternalProps {
@@ -122,35 +121,29 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             </TouchableHighlight>
                         )}
 
-                    {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
-                        <TouchableHighlight
-                            onPress={() => this.connectExtension()}
-                            underlayColor={theme.colors.bottomSheetBackground}
-                        >
-                            <View style={styles.rowContainer}>
-                                <View style={styles.iconContainer}>
-                                    <Icon
-                                        name="qr-code-scan"
-                                        size={ICON_SIZE}
-                                        style={styles.icon}
-                                    />
-                                </View>
-                                <View style={styles.textContainer}>
-                                    <Text style={styles.title}>
-                                        {translate('DashboardMenu.connectExtension')}
-                                    </Text>
-                                    <Text style={styles.description}>
-                                        {translate('DashboardMenu.scanCode')}
-                                    </Text>
-                                </View>
-                                <Icon
-                                    name="chevron-right"
-                                    size={normalize(16)}
-                                    style={styles.arrowRight}
-                                />
+                    <TouchableHighlight
+                        onPress={() => this.connectExtension()}
+                        underlayColor={theme.colors.bottomSheetBackground}
+                    >
+                        <View style={styles.rowContainer}>
+                            <View style={styles.iconContainer}>
+                                <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
                             </View>
-                        </TouchableHighlight>
-                    )}
+                            <View style={styles.textContainer}>
+                                <Text style={styles.title}>
+                                    {translate('DashboardMenu.connectExtension')}
+                                </Text>
+                                <Text style={styles.description}>
+                                    {translate('DashboardMenu.scanCode')}
+                                </Text>
+                            </View>
+                            <Icon
+                                name="chevron-right"
+                                size={normalize(16)}
+                                style={styles.arrowRight}
+                            />
+                        </View>
+                    </TouchableHighlight>
                 </ScrollView>
             </View>
         );

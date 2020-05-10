@@ -37,7 +37,7 @@ jobs:
       - name: Generate icons
         run: npm run generate-icons
       - name: Generate firebase web config file
-        run: | 
+        run: |
           echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
           echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
       - name: Run unit tests
@@ -123,7 +123,7 @@ jobs:
       - name: Add to host
         run: ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
       - name: Generate firebase config file
-        run: | 
+        run: |
           echo '${{ secrets.FB_CONFIG_IOS_BETA }}' > ios/GoogleService-Info.plist
           echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
           echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
@@ -165,7 +165,7 @@ jobs:
           path: node_modules
           key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
       - name: Generate firebase web config file
-        run: | 
+        run: |
           echo '${{ secrets.FB_CONFIG_WEB_BETA }}' > src/config/firebase-web-beta.ts
           echo '${{ secrets.FB_CONFIG_WEB_DEPLOY }}' > src/config/firebase-web-release.ts
       - name: NPM install

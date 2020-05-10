@@ -12,8 +12,12 @@ export const getTokenConfig = (blockchain: Blockchain, symbol: string): ITokenCo
     const chainId = getChainId(state, blockchain);
 
     const reduxToken = state.tokens;
-    if (reduxToken[blockchain]) {
-        if (reduxToken[blockchain][chainId]) return reduxToken[blockchain][chainId][symbol];
+    if (
+        reduxToken[blockchain] &&
+        reduxToken[blockchain][chainId] &&
+        reduxToken[blockchain][chainId][symbol]
+    ) {
+        return reduxToken[blockchain][chainId][symbol];
     }
 
     if (blockchainTokens[symbol]) {

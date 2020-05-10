@@ -27,6 +27,56 @@ export const ATOM_NATIVE: ITokenConfigState = {
     }
 };
 
+export const accountCTA = {
+    mainCta: {
+        title: 'App.labels.quickDelegate',
+        image: '',
+        style: ''
+    },
+    otherCta: [
+        {
+            title: 'App.labels.quickDelegate',
+            image: '',
+            style: ''
+        },
+        {
+            title: 'App.labels.quickDelegate',
+            image: '',
+            style: ''
+        }
+    ]
+};
+
+const validatorCTA = {
+    mainCta: {
+        title: 'App.labels.delegate',
+        image: '',
+        style: ''
+    },
+    otherCta: [
+        {
+            title: 'App.labels.claimReward',
+            image: '',
+            style: ''
+        },
+        {
+            title: 'App.labels.reinvest',
+            image: '',
+            style: ''
+        },
+        {
+            title: 'App.labels.redelegate',
+            image: '',
+            style: ''
+        },
+        {
+            title: 'App.labels.undelegate',
+            image: '',
+            style: ''
+        }
+    ]
+};
+
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/118'/0'/0`,
     derivationType: DerivationType.HD_KEY,
@@ -64,7 +114,13 @@ export const config: IBlockchainConfig = {
                 tabDelegations: 'App.labels.delegations',
                 tabValidators: 'App.labels.validators',
                 tabTransactions: 'App.labels.transactions'
-            }
+            },
+            accountCTA,
+            delegationCTA: {
+                mainCta: accountCTA.mainCta,
+                otherCta: []
+            },
+            validatorCTA
         },
         addressDisplay: 'stripped',
         enableTokenManagement: false,

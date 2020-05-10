@@ -18,3 +18,9 @@ export const GENERIC_TOKEN_ICON = {
     uri:
         'https://raw.githubusercontent.com/atomiclabs/cryptocurrency-icons/master/128/icon/generic.png'
 };
+
+export interface IButtonCTA {
+    title: string;
+    image: string;
+    style: any;
+}

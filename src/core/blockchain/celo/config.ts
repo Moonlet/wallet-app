@@ -14,6 +14,51 @@ import {
     CELO_USD_TESTNET_BAKLAVA
 } from './tokens/cUSD';
 
+export const accountCTA = {
+    mainCta: {
+        title: 'App.labels.quickVote',
+        image: '',
+        style: ''
+    },
+    otherCta: [
+        {
+            title: 'App.labels.quickVote',
+            image: '',
+            style: ''
+        },
+        {
+            title: 'App.labels.quickVote',
+            image: '',
+            style: ''
+        }
+    ]
+};
+
+const validatorCTA = {
+    mainCta: {
+        title: 'App.labels.vote',
+        image: '',
+        style: ''
+    },
+    otherCta: [
+        {
+            title: 'App.labels.revote',
+            image: '',
+            style: ''
+        },
+        {
+            title: 'App.labels.unvote',
+            image: '',
+            style: ''
+        },
+        {
+            title: 'App.labels.unlock',
+            image: '',
+            style: ''
+        }
+    ]
+};
+
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/52752'/0'/0`,
     derivationType: DerivationType.HD_KEY,
@@ -61,7 +106,13 @@ export const config: IBlockchainConfig = {
                 tabDelegations: 'App.labels.myVotes',
                 tabValidators: 'App.labels.validators',
                 tabTransactions: 'App.labels.transactions'
-            }
+            },
+            accountCTA,
+            delegationCTA: {
+                mainCta: accountCTA.mainCta,
+                otherCta: []
+            },
+            validatorCTA
         },
         addressDisplay: 'stripped',
         enableTokenManagement: true,

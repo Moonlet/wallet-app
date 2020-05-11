@@ -185,6 +185,8 @@ export class SendScreenComponent extends React.Component<
                                 <Button
                                     // primary
                                     onPress={async () => {
+                                        await LoadingModal.close();
+
                                         try {
                                             await ConnectExtension.deleteRequest(
                                                 sendRequestRes.data.requestId
@@ -192,7 +194,6 @@ export class SendScreenComponent extends React.Component<
                                         } catch {
                                             //
                                         }
-                                        await LoadingModal.close();
                                     }}
                                 >
                                     {translate('App.labels.cancel')}

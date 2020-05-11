@@ -96,8 +96,11 @@ export class LoadingModalComponent extends React.Component<
             return (
                 <View style={this.props.styles.container}>
                     <ActivityIndicator size="large" color={this.props.theme.colors.accent} />
-                    {message?.component && Component}
-                    {msg && <Text style={this.props.styles.message}>{msg}</Text>}
+                    {msg ? (
+                        <Text style={this.props.styles.message}>{msg}</Text>
+                    ) : message?.component ? (
+                        Component
+                    ) : null}
                 </View>
             );
         } else {

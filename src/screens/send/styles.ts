@@ -60,5 +60,18 @@ export default (theme: ITheme) =>
             lineHeight: normalize(20),
             color: theme.colors.textSecondary,
             alignSelf: 'center'
+        },
+
+        // Other
+        loadingModalContainer: {
+            flexDirection: 'column',
+            paddingHorizontal: BASE_DIMENSION * 4
+        },
+        loadingModalMessage: {
+            lineHeight: normalize(22),
+            color: theme.colors.textSecondary,
+            textAlign: 'center',
+            marginTop: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION * 8
         }
     });

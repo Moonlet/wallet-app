@@ -5,7 +5,7 @@ import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { Text } from '../../library';
+import { Text, Button } from '../../library';
 import { translate } from '../../core/i18n';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
@@ -171,6 +171,36 @@ export class SendScreenComponent extends React.Component<
                 const sendRequestRes = await ConnectExtension.sendRequest(sendRequestPayload);
 
                 if (sendRequestRes?.success) {
+                    await LoadingModal.open({
+                        type: TransactionMessageType.COMPONENT,
+                        component: (
+                            <View style={this.props.styles.loadingModalContainer}>
+                                <Text style={this.props.styles.loadingModalMessage}>
+                                    {translate(
+                                        'LoadingModal.' +
+                                            TransactionMessageText.WAITING_TX_CONFIRM_CANCEL,
+                                        { app: this.props.blockchain }
+                                    )}
+                                </Text>
+                                <Button
+                                    // primary
+                                    onPress={async () => {
+                                        try {
+                                            await ConnectExtension.deleteRequest(
+                                                sendRequestRes.data.requestId
+                                            );
+                                        } catch {
+                                            //
+                                        }
+                                        await LoadingModal.close();
+                                    }}
+                                >
+                                    {translate('App.labels.cancel')}
+                                </Button>
+                            </View>
+                        )
+                    });
+
                     ConnectExtensionWeb.listenerReqResponse(
                         sendRequestRes.data.requestId,
                         async (res: {

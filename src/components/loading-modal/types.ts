@@ -3,7 +3,7 @@ import { TransactionMessageType, TransactionMessageText } from '../../core/block
 export interface ILoadingModalMessage {
     type: TransactionMessageType;
     text?: TransactionMessageText;
-    component?: React.ComponentType;
+    component?: any; // React.ComponentType<any>;
 }
 
 export interface ILoadingModalState {

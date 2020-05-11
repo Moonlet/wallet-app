@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
 import stylesProvider from './styles';
@@ -41,6 +41,7 @@ const mapDispatchToProps = {
 
 export interface IState {
     moonletTransferPayload: any;
+    tryAgain: boolean;
 }
 
 export class TransactionRequestScreenComponent extends React.Component<
@@ -50,7 +51,8 @@ export class TransactionRequestScreenComponent extends React.Component<
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.state = {
-            moonletTransferPayload: undefined
+            moonletTransferPayload: undefined,
+            tryAgain: false
         };
     }
 
@@ -68,16 +70,26 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     private async getTransferPayload() {
         try {
+            // Reset Try again and start loading
+            this.setState({
+                moonletTransferPayload: undefined,
+                tryAgain: false
+            });
+
             const payload = await ConnectExtensionWeb.getRequestIdParams(this.props.requestId);
             if (payload) {
                 this.setState({ moonletTransferPayload: payload });
             } else {
-                // TODO: show error message to the user - requestId has not been received
-                this.setState({ moonletTransferPayload: undefined });
+                this.setState({
+                    moonletTransferPayload: undefined,
+                    tryAgain: true
+                });
             }
         } catch {
-            // TODO: show error message to the user - requestId has not been received
-            this.setState({ moonletTransferPayload: undefined });
+            this.setState({
+                moonletTransferPayload: undefined,
+                tryAgain: true
+            });
         }
     }
 
@@ -110,6 +122,7 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     private renderMoonletTransferForm() {
         const { moonletTransferPayload } = this.state;
+        const { styles } = this.props;
 
         if (moonletTransferPayload) {
             const account = moonletTransferPayload.account;
@@ -141,6 +154,32 @@ export class TransactionRequestScreenComponent extends React.Component<
                         tokenSymbol={moonletTransferPayload.token}
                         backgroundColor={this.props.theme.colors.inputBackground}
                     />
+
+                    <Button
+                        onPress={() => this.confirm()}
+                        primary
+                        disabled={this.state.moonletTransferPayload === undefined}
+                    >
+                        {translate('App.labels.confirm')}
+                    </Button>
+                </View>
+            );
+        } else if (this.state.tryAgain) {
+            return (
+                <View style={{ flex: 1 }}>
+                    <View style={styles.errorContainer}>
+                        <Image
+                            style={styles.logoImage}
+                            source={require('../../assets/images/png/moonlet_space_gray.png')}
+                        />
+                        <Text style={styles.errorMessage}>
+                            {translate('TransactionRequest.errorMessage')}
+                        </Text>
+                    </View>
+
+                    <Button onPress={() => this.getTransferPayload()} primary>
+                        {translate('App.labels.tryAgain')}
+                    </Button>
                 </View>
             );
         } else {
@@ -174,14 +213,6 @@ export class TransactionRequestScreenComponent extends React.Component<
                     <Text style={styles.title}>{translate('TransactionRequest.title')}</Text>
 
                     <View style={styles.content}>{this.renderMoonletTransferForm()}</View>
-
-                    <Button
-                        onPress={() => this.confirm()}
-                        primary
-                        disabled={this.state.moonletTransferPayload === undefined}
-                    >
-                        {translate('App.labels.confirm')}
-                    </Button>
 
                     <TouchableOpacity
                         onPress={() => this.props.closeTransactionRequest()}

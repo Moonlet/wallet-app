@@ -425,7 +425,8 @@ export const translation: ITranslations = {
         TransactionRequest: {
             title: 'Transaction request',
             walletName: 'Wallet name',
-            accountName: 'Account name'
+            accountName: 'Account name',
+            errorMessage: 'An error has occured! Please try again!'
         }
     },
     plural: (n: number, ord?: boolean) => {

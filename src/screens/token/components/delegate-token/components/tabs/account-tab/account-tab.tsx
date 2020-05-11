@@ -14,7 +14,6 @@ import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-f
 import { getChainId } from '../../../../../../../redux/preferences/selectors';
 import { DelegationCTA } from '../../../../../../../components/delegation-cta/delegation-cta';
 import { Button } from '../../../../../../../library';
-import { IButtonCTA } from '../../../../../../../core/blockchain/types/token';
 import { translate } from '../../../../../../../core/i18n';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
 
@@ -57,22 +56,24 @@ export class AccountTabComponent extends React.Component<
                 </View>
                 <View style={styles.bottomContainer}>
                     <View style={styles.buttonsRowContainer}>
-                        {tokenUiConfig.accountCTA.otherCta.map((cta: IButtonCTA, index: number) => (
-                            <Button
-                                key={`cta-${index}`}
-                                style={styles.button}
-                                wrapperStyle={{ flex: 1 }}
-                                leftIcon={cta.iconName}
-                                onPress={() =>
-                                    NavigationService.navigate(
-                                        cta.navigateTo.screen,
-                                        cta.navigateTo.params
-                                    )
-                                }
-                            >
-                                {translate(cta.title)}
-                            </Button>
-                        ))}
+                        <Button
+                            key={`cta-send`}
+                            style={styles.button}
+                            wrapperStyle={{ flex: 1 }}
+                            leftIcon={'arrow-right'}
+                            onPress={() => NavigationService.navigate('Send', {})}
+                        >
+                            {translate('App.labels.send')}
+                        </Button>
+                        <Button
+                            key={`cta-receive`}
+                            style={styles.button}
+                            wrapperStyle={{ flex: 1 }}
+                            leftIcon={'arrow-right'}
+                            onPress={() => NavigationService.navigate('Receive', {})}
+                        >
+                            {translate('App.labels.receive')}
+                        </Button>
                     </View>
                     <DelegationCTA mainCta={tokenUiConfig.accountCTA.mainCta} />
                 </View>

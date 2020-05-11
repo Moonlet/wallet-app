@@ -16,24 +16,24 @@ export class ValidatorScreenComponent extends React.Component<
     public render() {
         const { styles } = this.props;
         const mainCta: IButtonCTA = {
-            title: 'Vote',
+            title: 'App.labels.vote',
             iconName: 'eye',
             navigateTo: { screen: undefined, params: undefined }
         };
 
         const otherCta: IButtonCTA[] = [
             {
-                title: 'Revote',
+                title: 'App.labels.revote',
                 iconName: 'eye',
                 navigateTo: { screen: undefined, params: undefined }
             },
             {
-                title: 'Unvote',
+                title: 'App.labels.unvote',
                 iconName: 'eye',
                 navigateTo: { screen: undefined, params: undefined }
             },
             {
-                title: 'Unlock',
+                title: 'App.labels.unlock',
                 iconName: 'eye',
                 navigateTo: { screen: undefined, params: undefined }
             }

@@ -326,6 +326,7 @@ export class WalletsScreenComponent extends React.Component<
                             <View style={styles.buttonContainer}>
                                 <Button
                                     style={styles.bottomButton}
+                                    wrapperStyle={{ flex: 1 }}
                                     onPress={() => {
                                         this.onPressCreateHW();
                                     }}

@@ -7,6 +7,7 @@ import { IButtonCTA } from '../../core/blockchain/types/token';
 import { Button } from '../../library';
 import { BORDER_RADIUS } from '../../styles/dimensions';
 import { NavigationService } from '../../navigation/navigation-service';
+import { translate } from '../../core/i18n/translation/translate';
 
 export interface IExternalProps {
     mainCta: IButtonCTA;
@@ -30,7 +31,7 @@ export const DelegationCTAComponent = (
                                     cta.navigateTo.params
                                 )
                             }
-                            bottomLabel={cta.title}
+                            bottomLabel={translate(cta.title)}
                             style={{ borderRadius: BORDER_RADIUS + BORDER_RADIUS / 2 }}
                         />
                     ))}
@@ -46,7 +47,7 @@ export const DelegationCTAComponent = (
                     )
                 }
             >
-                {props.mainCta.title}
+                {translate(props.mainCta.title)}
             </Button>
         </View>
     );

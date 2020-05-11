@@ -18,7 +18,6 @@ import { Blockchain } from '../../../../../../../core/blockchain/types';
 const validators = [chainLayerValidator, moonletValidator];
 
 export interface IProps {
-    accountIndex: number;
     blockchain: Blockchain;
 }
 
@@ -63,12 +62,7 @@ export class ValidatorsTabComponent extends React.Component<
                     />
                 </View>
                 <ValidatorsList validators={this.state.validatorsList} />
-                {/* <View style={styles.bottomContainer}>
-                    <DelegationCTA
-                        mainCta={tokenUiConfig.accountCTA.mainCta}
-                        otherCta={tokenUiConfig.accountCTA.otherCta}
-                    />
-                </View> */}
+                {/* <DelegationCTA mainCta={tokenUiConfig.accountCTA.mainCta} /> */}
             </View>
         );
     }

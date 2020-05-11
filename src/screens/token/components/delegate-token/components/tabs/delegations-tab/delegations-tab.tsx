@@ -12,8 +12,13 @@ import { SearchInput } from '../../../../../../../components/search-input/search
 import { translate } from '../../../../../../../core/i18n';
 import { bind } from 'bind-decorator';
 import { IValidatorCardComponent } from '../../../../../../../core/blockchain/types/stats';
+import { Blockchain } from '../../../../../../../core/blockchain/types/blockchain';
 
 const validators = [moonletValidator, chainLayerValidator, chainLayerValidator];
+
+export interface IProps {
+    blockchain: Blockchain;
+}
 
 interface IState {
     validatorsList: IValidatorCardComponent[];
@@ -23,7 +28,7 @@ export class DelegationsTabComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
         this.state = {
@@ -61,4 +66,6 @@ export class DelegationsTabComponent extends React.Component<
     }
 }
 
-export const DelegationsTab = smartConnect(DelegationsTabComponent, [withTheme(stylesProvider)]);
+export const DelegationsTab = smartConnect<IProps>(DelegationsTabComponent, [
+    withTheme(stylesProvider)
+]);

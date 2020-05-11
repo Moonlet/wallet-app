@@ -22,7 +22,7 @@ export default (theme: ITheme) =>
         },
         bottomContainer: {
             marginTop: BASE_DIMENSION * 3,
-            marginHorizontal: BASE_DIMENSION * 4
+            marginHorizontal: BASE_DIMENSION * 2
         },
         buttonsRowContainer: {
             flexDirection: 'row',

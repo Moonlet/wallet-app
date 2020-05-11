@@ -90,6 +90,7 @@ export const ConnectExtension = (() => {
 
             const http = new HttpClient(CONFIG.extSync.deleteRequestUrl);
             const res = await http.post('', {
+                connectionId: connection.connectionId,
                 requestId,
                 authToken: sha256(connection.encKey)
             });

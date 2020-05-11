@@ -137,23 +137,25 @@ export class TransactionRequestScreenComponent extends React.Component<
 
             return (
                 <View style={{ flex: 1 }}>
-                    {this.renderField(
-                        translate('TransactionRequest.walletName'),
-                        moonletTransferPayload.walletName
-                    )}
-                    {this.renderField(
-                        translate('TransactionRequest.accountName'),
-                        account?.name || `Account ${account.index + 1}`
-                    )}
-                    {this.renderField(translate('App.labels.from'), from)}
-                    {this.renderField(translate('App.labels.recipient'), recipient)}
-                    {this.renderField(translate('App.labels.amount'), formattedAmount)}
-                    <FeeTotal
-                        amount={moonletTransferPayload.feeOptions.feeTotal}
-                        blockchain={blockchain}
-                        tokenSymbol={moonletTransferPayload.token}
-                        backgroundColor={this.props.theme.colors.inputBackground}
-                    />
+                    <View style={{ flex: 1 }}>
+                        {this.renderField(
+                            translate('TransactionRequest.walletName'),
+                            moonletTransferPayload.walletName
+                        )}
+                        {this.renderField(
+                            translate('TransactionRequest.accountName'),
+                            account?.name || `Account ${account.index + 1}`
+                        )}
+                        {this.renderField(translate('App.labels.from'), from)}
+                        {this.renderField(translate('App.labels.recipient'), recipient)}
+                        {this.renderField(translate('App.labels.amount'), formattedAmount)}
+                        <FeeTotal
+                            amount={moonletTransferPayload.feeOptions.feeTotal}
+                            blockchain={blockchain}
+                            tokenSymbol={moonletTransferPayload.token}
+                            backgroundColor={this.props.theme.colors.inputBackground}
+                        />
+                    </View>
 
                     <Button
                         onPress={() => this.confirm()}

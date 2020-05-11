@@ -97,14 +97,14 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     private async cancelTransactionRequest() {
         try {
+            this.props.closeTransactionRequest();
+
             if (this.props.requestId) {
                 await ConnectExtension.sendResponse(this.props.requestId, {
                     result: undefined,
                     errorCode: ResponsePayloadType.CANCEL
                 });
             }
-
-            this.props.closeTransactionRequest();
         } catch {
             this.props.closeTransactionRequest();
         }

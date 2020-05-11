@@ -9,7 +9,7 @@ export default (theme: ITheme) =>
         },
         button: {
             flexDirection: 'row',
-            borderWidth: 2,
+            borderWidth: 1,
             borderColor: theme.colors.accentSecondary,
             borderRadius: BORDER_RADIUS,
             paddingHorizontal: BASE_DIMENSION,

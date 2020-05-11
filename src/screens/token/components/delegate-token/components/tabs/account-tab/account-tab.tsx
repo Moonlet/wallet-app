@@ -13,6 +13,10 @@ import { StatsComponent } from '../../stats-component/stats-component';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../../../../../../redux/preferences/selectors';
 import { DelegationCTA } from '../../../../../../../components/delegation-cta/delegation-cta';
+import { Button } from '../../../../../../../library';
+import { IButtonCTA } from '../../../../../../../core/blockchain/types/token';
+import { translate } from '../../../../../../../core/i18n';
+import { NavigationService } from '../../../../../../../navigation/navigation-service';
 
 export interface IProps {
     accountIndex: number;
@@ -47,13 +51,30 @@ export class AccountTabComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <AccountAddress account={this.props.account} token={this.props.token} />
-                <StatsComponent accountStats={accountStats} />
+                <View style={{ flex: 1 }}>
+                    <AccountAddress account={this.props.account} token={this.props.token} />
+                    <StatsComponent accountStats={accountStats} />
+                </View>
                 <View style={styles.bottomContainer}>
-                    <DelegationCTA
-                        mainCta={tokenUiConfig.accountCTA.mainCta}
-                        otherCta={tokenUiConfig.accountCTA.otherCta}
-                    />
+                    <View style={styles.buttonsRowContainer}>
+                        {tokenUiConfig.accountCTA.otherCta.map((cta: IButtonCTA, index: number) => (
+                            <Button
+                                key={`cta-${index}`}
+                                style={styles.button}
+                                wrapperStyle={{ flex: 1 }}
+                                leftIcon={cta.iconName}
+                                onPress={() =>
+                                    NavigationService.navigate(
+                                        cta.navigateTo.screen,
+                                        cta.navigateTo.params
+                                    )
+                                }
+                            >
+                                {translate(cta.title)}
+                            </Button>
+                        ))}
+                    </View>
+                    <DelegationCTA mainCta={tokenUiConfig.accountCTA.mainCta} />
                 </View>
             </View>
         );

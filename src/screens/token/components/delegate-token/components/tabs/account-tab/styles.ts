@@ -8,7 +8,8 @@ export default (theme: ITheme) =>
             flex: 1,
             backgroundColor: theme.colors.appBackground,
             paddingHorizontal: BASE_DIMENSION,
-            marginTop: BASE_DIMENSION * 3
+            marginTop: BASE_DIMENSION * 3,
+            paddingBottom: BASE_DIMENSION * 5
         },
         text: {
             fontWeight: 'bold',
@@ -22,5 +23,13 @@ export default (theme: ITheme) =>
         bottomContainer: {
             marginTop: BASE_DIMENSION * 3,
             marginHorizontal: BASE_DIMENSION * 4
+        },
+        buttonsRowContainer: {
+            flexDirection: 'row',
+            marginBottom: BASE_DIMENSION * 2,
+            marginHorizontal: -BASE_DIMENSION / 2 // used to remove horizontal margins from buttons
+        },
+        button: {
+            marginHorizontal: BASE_DIMENSION / 2
         }
     });

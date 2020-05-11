@@ -87,7 +87,7 @@ export class DelegateTokenScreenComponent extends React.Component<
     //     extensionTransactionPayload: any; // TODO add typing
     //     token: ITokenConfig;
     // }
-    renderTabs() {
+    private renderTabs() {
         const config = getBlockchain(this.props.blockchain).config;
         switch (this.state.activeTab) {
             case config.ui.token.labels.tabAccount:
@@ -108,7 +108,7 @@ export class DelegateTokenScreenComponent extends React.Component<
         }
     }
 
-    renderTabButtons() {
+    private renderTabButtons() {
         const { styles } = this.props;
         const stylesTabActive = [styles.tabInactive, styles.tabActive];
         const stylesTabInactive = [styles.tabInactive];

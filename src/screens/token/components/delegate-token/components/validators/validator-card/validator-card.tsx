@@ -27,7 +27,11 @@ export const ValidatorCardComponent = (
     return (
         <TouchableHighlight
             onPress={() => {
-                NavigationService.navigate('Validator', {});
+                NavigationService.navigate('Validator', {
+                    icon: props.icon,
+                    labelName: props.labelName,
+                    website: props.website
+                });
             }}
             underlayColor={props.theme.colors.appBackground}
         >

@@ -183,7 +183,6 @@ export class SendScreenComponent extends React.Component<
                                     )}
                                 </Text>
                                 <Button
-                                    // primary
                                     onPress={async () => {
                                         await LoadingModal.close();
 

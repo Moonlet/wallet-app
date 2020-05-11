@@ -43,7 +43,7 @@ const mapDispatchToProps = {
 
 export interface IState {
     moonletTransferPayload: any;
-    tryAgain: boolean;
+    isError: boolean;
 }
 
 export class TransactionRequestScreenComponent extends React.Component<
@@ -54,7 +54,7 @@ export class TransactionRequestScreenComponent extends React.Component<
         super(props);
         this.state = {
             moonletTransferPayload: undefined,
-            tryAgain: false
+            isError: false
         };
     }
 
@@ -72,25 +72,20 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     private async getTransferPayload() {
         try {
-            // Reset Try again and start loading
-            this.setState({
-                moonletTransferPayload: undefined,
-                tryAgain: false
-            });
-
             const payload = await ConnectExtensionWeb.getRequestIdParams(this.props.requestId);
+
             if (payload) {
                 this.setState({ moonletTransferPayload: payload });
             } else {
                 this.setState({
                     moonletTransferPayload: undefined,
-                    tryAgain: true
+                    isError: true
                 });
             }
         } catch {
             this.setState({
                 moonletTransferPayload: undefined,
-                tryAgain: true
+                isError: true
             });
         }
     }
@@ -183,7 +178,7 @@ export class TransactionRequestScreenComponent extends React.Component<
                     </Button>
                 </View>
             );
-        } else if (this.state.tryAgain) {
+        } else if (this.state.isError) {
             return (
                 <View style={{ flex: 1 }}>
                     <View style={styles.errorContainer}>
@@ -196,8 +191,8 @@ export class TransactionRequestScreenComponent extends React.Component<
                         </Text>
                     </View>
 
-                    <Button onPress={() => this.getTransferPayload()} primary>
-                        {translate('App.labels.tryAgain')}
+                    <Button onPress={() => this.cancelTransactionRequest()} primary>
+                        {translate('App.labels.cancel')}
                     </Button>
                 </View>
             );

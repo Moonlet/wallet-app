@@ -37,23 +37,23 @@ export const accountCTA = {
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.vote',
-        iconName: '',
-        navigateTo: { screen: '', params: '' }
+        iconName: 'eye',
+        navigateTo: { screen: undefined, params: undefined }
     },
     otherCta: [
         {
             title: 'App.labels.revote',
-            iconName: '',
+            iconName: 'eye',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.unvote',
-            iconName: '',
+            iconName: 'eye',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.unlock',
-            iconName: '',
+            iconName: 'eye',
             navigateTo: { screen: undefined, params: undefined }
         }
     ]

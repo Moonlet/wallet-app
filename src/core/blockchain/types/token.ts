@@ -21,6 +21,6 @@ export const GENERIC_TOKEN_ICON = {
 
 export interface IButtonCTA {
     title: string;
-    image: string;
-    style: any;
+    iconName: string;
+    navigateTo: { screen: string; params: any };
 }

@@ -5,9 +5,9 @@ import { ITheme } from '../../../../../../core/theme/itheme';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            flex: 1,
             flexDirection: 'column',
-            marginTop: BASE_DIMENSION * 2
+            marginTop: BASE_DIMENSION * 2,
+            marginBottom: BASE_DIMENSION * 3
         },
         topStatsContainer: {
             flexDirection: 'row',

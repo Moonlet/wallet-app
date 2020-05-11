@@ -22,5 +22,9 @@ export default (theme: ITheme) =>
             letterSpacing: 0.35,
             color: theme.colors.text,
             marginBottom: BASE_DIMENSION * 2
+        },
+        bottomContainer: {
+            marginTop: BASE_DIMENSION * 3,
+            marginHorizontal: BASE_DIMENSION * 4
         }
     });

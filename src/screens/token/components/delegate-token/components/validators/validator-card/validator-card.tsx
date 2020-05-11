@@ -8,6 +8,7 @@ import { Icon } from '../../../../../../../components/icon';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
 import { Text } from '../../../../../../../library';
 import { IStatValue } from '../../../../../../../core/blockchain/types/stats';
+import { NavigationService } from '../../../../../../../navigation/navigation-service';
 
 export interface IExternalProps {
     icon: string;
@@ -26,7 +27,7 @@ export const ValidatorCardComponent = (
     return (
         <TouchableHighlight
             onPress={() => {
-                //
+                NavigationService.navigate('Validator', {});
             }}
             underlayColor={props.theme.colors.appBackground}
         >

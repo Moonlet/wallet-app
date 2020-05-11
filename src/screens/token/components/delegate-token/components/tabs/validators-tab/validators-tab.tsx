@@ -12,8 +12,15 @@ import { SearchInput } from '../../../../../../../components/search-input/search
 import { translate } from '../../../../../../../core/i18n';
 import { bind } from 'bind-decorator';
 import { IValidatorCardComponent } from '../../../../../../../core/blockchain/types/stats';
+// import { DelegationCTA } from '../../../../../../../components/delegation-cta/delegation-cta';
+import { Blockchain } from '../../../../../../../core/blockchain/types';
 
 const validators = [chainLayerValidator, moonletValidator];
+
+export interface IProps {
+    accountIndex: number;
+    blockchain: Blockchain;
+}
 
 interface IState {
     validatorsList: IValidatorCardComponent[];
@@ -56,6 +63,12 @@ export class ValidatorsTabComponent extends React.Component<
                     />
                 </View>
                 <ValidatorsList validators={this.state.validatorsList} />
+                {/* <View style={styles.bottomContainer}>
+                    <DelegationCTA
+                        mainCta={tokenUiConfig.accountCTA.mainCta}
+                        otherCta={tokenUiConfig.accountCTA.otherCta}
+                    />
+                </View> */}
             </View>
         );
     }

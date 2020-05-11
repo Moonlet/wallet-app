@@ -4,6 +4,9 @@ import { BORDER_RADIUS, BASE_DIMENSION, normalize } from '../../styles/dimension
 
 export default (theme: ITheme) =>
     StyleSheet.create({
+        container: {
+            flexDirection: 'column'
+        },
         button: {
             flexDirection: 'row',
             borderWidth: 2,
@@ -47,7 +50,18 @@ export default (theme: ITheme) =>
             color: theme.colors.textTertiary
         },
         leftIcon: {
+            color: theme.colors.accent,
+            alignSelf: 'center'
+        },
+        leftIconPrimary: {
             color: theme.colors.appBackground,
-            marginRight: BASE_DIMENSION
+            alignSelf: 'center'
+        },
+        bottomLabel: {
+            fontSize: normalize(13),
+            lineHeight: normalize(18),
+            color: theme.colors.text,
+            marginTop: BASE_DIMENSION / 2,
+            textAlign: 'center'
         }
     });

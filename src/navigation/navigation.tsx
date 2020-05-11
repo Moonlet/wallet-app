@@ -38,6 +38,7 @@ import { BASE_DIMENSION, normalize } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
+import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -132,6 +133,9 @@ export const WalletNavigation = createStackNavigator(
         },
         ConnectExtension: {
             screen: ConnectExtensionScreen
+        },
+        Validator: {
+            screen: ValidatorScreen
         },
 
         // wallet creation

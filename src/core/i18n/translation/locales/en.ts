@@ -63,7 +63,7 @@ export const translation: ITranslations = {
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
                 quickDelegate: 'Quick Delegate',
-                quickVote: 'Quick Vode',
+                quickVote: 'Quick Vote',
                 receive: 'Receive',
                 recipient: 'Recipient',
                 recover: 'Recover',

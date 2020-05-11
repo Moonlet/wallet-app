@@ -17,19 +17,19 @@ import {
 export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickVote',
-        image: '',
-        style: ''
+        iconName: 'eye',
+        navigateTo: { screen: undefined, params: undefined }
     },
     otherCta: [
         {
-            title: 'App.labels.quickVote',
-            image: '',
-            style: ''
+            title: 'App.labels.send',
+            iconName: 'eye',
+            navigateTo: { screen: undefined, params: undefined }
         },
         {
-            title: 'App.labels.quickVote',
-            image: '',
-            style: ''
+            title: 'App.labels.receive',
+            iconName: 'eye',
+            navigateTo: { screen: undefined, params: undefined }
         }
     ]
 };
@@ -37,24 +37,24 @@ export const accountCTA = {
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.vote',
-        image: '',
-        style: ''
+        iconName: '',
+        navigateTo: { screen: '', params: '' }
     },
     otherCta: [
         {
             title: 'App.labels.revote',
-            image: '',
-            style: ''
+            iconName: '',
+            navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.unvote',
-            image: '',
-            style: ''
+            iconName: '',
+            navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.unlock',
-            image: '',
-            style: ''
+            iconName: '',
+            navigateTo: { screen: undefined, params: undefined }
         }
     ]
 };

@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { StatsComponent } from '../../stats-component/stats-component';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../../../../../../redux/preferences/selectors';
+import { DelegationCTA } from '../../../../../../../components/delegation-cta/delegation-cta';
 
 export interface IProps {
     accountIndex: number;
@@ -42,11 +43,18 @@ export class AccountTabComponent extends React.Component<
         const stats = blockchainInstance.getStats(this.props.chainId);
 
         const accountStats = stats.getAccountDelegateStats();
+        const tokenUiConfig = blockchainInstance.config.ui.token;
 
         return (
             <View style={styles.container}>
                 <AccountAddress account={this.props.account} token={this.props.token} />
                 <StatsComponent accountStats={accountStats} />
+                <View style={styles.bottomContainer}>
+                    <DelegationCTA
+                        mainCta={tokenUiConfig.accountCTA.mainCta}
+                        otherCta={tokenUiConfig.accountCTA.otherCta}
+                    />
+                </View>
             </View>
         );
     }

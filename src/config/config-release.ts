@@ -1,6 +1,8 @@
 import { IAppConfig } from './config-interface';
 import { firebaseConfig } from './firebase-web-release';
 
+const extSyncBaseUrl = 'https://fire.moonlet.io/functions/extensionSync';
+
 export const CONFIG: IAppConfig = {
     supportUrl: 'https://moonlet.uvdesk.com/en/customer/create-ticket',
     env: process.env.MOONLET_SOME_KEY,
@@ -12,10 +14,13 @@ export const CONFIG: IAppConfig = {
     firebaseConfigFetchInterval: 15 * 60, // 15 mins
     ntpServer: 'pool.ntp.org',
     ntpPort: 123,
-    extSyncUpdateStateUrl: 'https://fire.moonlet.io/functions/extensionSync/updateState',
-    extSyncDisconnectUrl: 'https://fire.moonlet.io/functions/extensionSync/disconnect',
-    extSyncSendRequestUrl: 'https://fire.moonlet.io/functions/extensionSync/sendRequest',
-    extSyncSendResponseUrl: 'https://fire.moonlet.io/functions/extensionSync/sendResponse',
+    extSync: {
+        updateStateUrl: extSyncBaseUrl + '/updateState',
+        disconnectUrl: extSyncBaseUrl + '/disconnect',
+        sendRequestUrl: extSyncBaseUrl + '/sendRequest',
+        sendResponseUrl: extSyncBaseUrl + '/sendResponse',
+        deleteRequestUrl: extSyncBaseUrl + '/deleteRequest'
+    },
     firebaseWebConfig: firebaseConfig
 };
 

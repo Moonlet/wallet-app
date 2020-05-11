@@ -9,11 +9,11 @@ import Bowser from 'bowser';
 import { browser } from 'webextension-polyfill-ts';
 import { buildState } from './conn-ext-build-state/conn-ext-build-state';
 import { store } from '../../redux/config';
-import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { NavigationService } from '../../navigation/navigation-service';
 import { extensionReduxUpdateState } from '../../redux/app/actions';
 import { IBlockchainTransaction } from '../blockchain/types';
 import { buildTransactions } from './conn-ext-build-state/build-transactions';
+import { LoadingModal } from '../../components/loading-modal/loading-modal';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -191,7 +191,7 @@ export const ConnectExtensionWeb = (() => {
 
             if (snap?.lastSynced && snap?.authToken) {
                 // show loading untill data is fetch and state is build
-                store.dispatch(openLoadingModal());
+                await LoadingModal.open();
 
                 try {
                     // Extension the state from Firebase Storage
@@ -218,9 +218,9 @@ export const ConnectExtensionWeb = (() => {
                     }
 
                     // close loading modal
-                    store.dispatch(closeLoadingModal() as any);
+                    await LoadingModal.close();
                 } catch (err) {
-                    store.dispatch(closeLoadingModal() as any);
+                    await LoadingModal.close();
                     Promise.reject(err);
                 }
             } else {

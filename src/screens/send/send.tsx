@@ -40,15 +40,11 @@ import { AddAddress } from './components/add-address/add-address';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
-import {
-    openLoadingModal,
-    closeLoadingModal,
-    displayMessage
-} from '../../redux/ui/loading-modal/actions';
 import { IHeaderStep, BottomConfirm } from './components/bottom-confirm/bottom-confirm';
 import { NotificationType } from '../../core/messaging/types';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { NavigationService } from '../../navigation/navigation-service';
+import { LoadingModal } from '../../components/loading-modal/loading-modal';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -58,9 +54,6 @@ export interface IReduxProps {
     selectedWalletName: string;
     selectedAccount: IAccountState;
     chainId: ChainIdType;
-    openLoadingModal: typeof openLoadingModal;
-    closeLoadingModal: typeof closeLoadingModal;
-    displayMessage: typeof displayMessage;
     addPublishedTxToAccount: typeof addPublishedTxToAccount;
 }
 
@@ -77,9 +70,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 const mapDispatchToProps = {
     sendTransferTransaction,
     openBottomSheet,
-    openLoadingModal,
-    closeLoadingModal,
-    displayMessage,
     addPublishedTxToAccount
 };
 
@@ -137,11 +127,10 @@ export class SendScreenComponent extends React.Component<
 
     public async confirmPayment() {
         if (Platform.OS === 'web') {
-            this.props.openLoadingModal();
-            this.props.displayMessage(
-                TransactionMessageText.WAITING_TX_CONFIRM,
-                TransactionMessageType.INFO
-            );
+            await LoadingModal.open({
+                text: TransactionMessageText.WAITING_TX_CONFIRM,
+                type: TransactionMessageType.INFO
+            });
 
             const formattedAmount = formatNumber(new BigNumber(this.state.amount), {
                 currency: getBlockchain(this.props.account.blockchain).config.coin
@@ -184,12 +173,12 @@ export class SendScreenComponent extends React.Component<
                 if (sendRequestRes?.success) {
                     ConnectExtensionWeb.listenerReqResponse(
                         sendRequestRes.data.requestId,
-                        (res: {
+                        async (res: {
                             result: { txHash: string; tx: IBlockchainTransaction };
                             errorCode: string;
                         }) => {
                             if (res.errorCode) {
-                                this.props.closeLoadingModal();
+                                await LoadingModal.close();
                             } else if (res.result?.txHash && res.result?.tx) {
                                 this.props.addPublishedTxToAccount(
                                     res.result.txHash,
@@ -197,7 +186,7 @@ export class SendScreenComponent extends React.Component<
                                     this.props.selectedWalletId
                                 );
 
-                                this.props.closeLoadingModal();
+                                await LoadingModal.close();
                                 NavigationService.goBack();
                             } else {
                                 // error
@@ -207,7 +196,7 @@ export class SendScreenComponent extends React.Component<
                 }
             } catch {
                 // show error message to the user
-                this.props.closeLoadingModal();
+                await LoadingModal.close();
             }
 
             return;

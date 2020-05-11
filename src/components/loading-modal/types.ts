@@ -1,4 +1,4 @@
-import { TransactionMessageText, TransactionMessageType } from '../../../core/blockchain/types';
+import { TransactionMessageType, TransactionMessageText } from '../../core/blockchain/types';
 
 export interface ILoadingModalMessage {
     type: TransactionMessageType;

@@ -586,6 +586,7 @@ export const sendTransferTransaction = (
                 }
             });
         }
+
         const transaction = await wallet.sign(account.blockchain, account.index, tx);
 
         dispatch({
@@ -595,9 +596,11 @@ export const sendTransferTransaction = (
                 type: TransactionMessageType.INFO
             }
         });
+
         const txHash = await getBlockchain(account.blockchain)
             .getClient(chainId)
             .sendTransaction(transaction);
+
         if (txHash) {
             dispatch({
                 type: TRANSACTION_PUBLISHED,
@@ -610,8 +613,10 @@ export const sendTransferTransaction = (
 
             if (sendResponse) {
                 const res = await ConnectExtension.sendResponse(sendResponse.requestId, {
-                    txHash,
-                    tx
+                    result: {
+                        txHash,
+                        tx
+                    }
                 });
 
                 if (res?.success === true) {
@@ -638,22 +643,7 @@ export const sendTransferTransaction = (
             address: formatAddress(toAddress, account.blockchain)
         });
 
-        Dialog.alert(
-            translate('LoadingModal.txFailed'),
-            message,
-            {
-                text: translate('App.labels.cancel'),
-                onPress: () => {
-                    //
-                }
-            },
-            {
-                text: translate('App.labels.tryAgain'),
-                onPress: () => {
-                    //
-                }
-            }
-        );
+        Dialog.info(translate('LoadingModal.txFailed'), message);
     }
 };
 

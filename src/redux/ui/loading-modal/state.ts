@@ -1,8 +1,9 @@
 import { TransactionMessageText, TransactionMessageType } from '../../../core/blockchain/types';
 
 export interface ILoadingModalMessage {
-    text: TransactionMessageText;
     type: TransactionMessageType;
+    text?: TransactionMessageText;
+    component?: React.ComponentType;
 }
 
 export interface ILoadingModalState {

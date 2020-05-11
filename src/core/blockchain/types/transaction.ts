@@ -80,7 +80,8 @@ export interface ITransferTransactionExtraFields {
 export enum TransactionMessageType {
     INFO = 'INFO',
     ERROR = 'ERROR',
-    WARNING = 'WARNING'
+    WARNING = 'WARNING',
+    COMPONENT = 'COMPONENT'
 }
 
 export enum TransactionMessageText {

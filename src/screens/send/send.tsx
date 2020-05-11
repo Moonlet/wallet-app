@@ -182,15 +182,18 @@ export class SendScreenComponent extends React.Component<
                 const sendRequestRes = await ConnectExtension.sendRequest(sendRequestPayload);
 
                 if (sendRequestRes?.success) {
-                    // maybe set a timeout here for this listener
-                    // if it's too much waiting fot the web ext, to have a cancel button
                     ConnectExtensionWeb.listenerReqResponse(
                         sendRequestRes.data.requestId,
-                        (res: { txHash: string; tx: IBlockchainTransaction }) => {
-                            if (res.txHash && res.tx) {
+                        (res: {
+                            result: { txHash: string; tx: IBlockchainTransaction };
+                            errorCode: string;
+                        }) => {
+                            if (res.errorCode) {
+                                this.props.closeLoadingModal();
+                            } else if (res.result?.txHash && res.result?.tx) {
                                 this.props.addPublishedTxToAccount(
-                                    res.txHash,
-                                    res.tx,
+                                    res.result.txHash,
+                                    res.result.tx,
                                     this.props.selectedWalletId
                                 );
 

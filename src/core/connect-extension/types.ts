@@ -1,4 +1,4 @@
-import { ChainIdType, Blockchain } from '../blockchain/types';
+import { ChainIdType, Blockchain, IBlockchainTransaction } from '../blockchain/types';
 import { HWConnection } from '../wallet/hw-wallet/types';
 import { WalletType } from '../wallet/types';
 import { TokenType } from '../blockchain/types/token';
@@ -14,6 +14,20 @@ export enum FirebaseRef {
     EXTENSION_SYNC = 'extensionSync',
     CONNECTIONS = 'connections',
     REQUESTS = 'requests'
+}
+
+export interface SendResponsePayloadData {
+    txHash: string;
+    tx: IBlockchainTransaction;
+}
+
+export enum ResponsePayloadType {
+    CANCEL = 'CANCEL'
+}
+
+export interface ResponsePayload {
+    result: any;
+    errorCode?: string;
 }
 
 export const FIREBASE_BUCKET = 'gs://moonlet-extension-sync';

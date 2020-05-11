@@ -19,6 +19,8 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { formatNumber } from '../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { ConnectExtension } from '../../core/connect-extension/connect-extension';
+import { ResponsePayloadType } from '../../core/connect-extension/types';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -90,6 +92,21 @@ export class TransactionRequestScreenComponent extends React.Component<
                 moonletTransferPayload: undefined,
                 tryAgain: true
             });
+        }
+    }
+
+    private async cancelTransactionRequest() {
+        try {
+            if (this.props.requestId) {
+                await ConnectExtension.sendResponse(this.props.requestId, {
+                    result: undefined,
+                    errorCode: ResponsePayloadType.CANCEL
+                });
+            }
+
+            this.props.closeTransactionRequest();
+        } catch {
+            this.props.closeTransactionRequest();
         }
     }
 
@@ -217,7 +234,7 @@ export class TransactionRequestScreenComponent extends React.Component<
                     <View style={styles.content}>{this.renderMoonletTransferForm()}</View>
 
                     <TouchableOpacity
-                        onPress={() => this.props.closeTransactionRequest()}
+                        onPress={() => this.cancelTransactionRequest()}
                         style={styles.closeButtonContainer}
                     >
                         <Icon name={'close'} size={normalize(20)} style={styles.closeButton} />

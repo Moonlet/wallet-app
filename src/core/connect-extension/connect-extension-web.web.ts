@@ -235,7 +235,10 @@ export const ConnectExtensionWeb = (() => {
 
     const listenerReqResponse = async (
         requestId: string,
-        callback: (res: { txHash: string; tx: IBlockchainTransaction }) => void
+        callback: (res: {
+            result: { txHash: string; tx: IBlockchainTransaction };
+            errorCode: string;
+        }) => void
     ) => {
         try {
             const connection = await getConnection();
@@ -248,11 +251,24 @@ export const ConnectExtensionWeb = (() => {
                     if (snapshot.exists()) {
                         const snap = await snapshot.val();
 
-                        const tx: IBlockchainTransaction = JSON.parse(
-                            decrypt(snap.tx, connection.encKey).toString(CryptoJS.enc.Utf8)
-                        );
+                        const result = { txHash: undefined, tx: undefined };
 
-                        callback({ txHash: snap.txHash, tx });
+                        if (snap?.result) {
+                            result.txHash = snap.result.txHash;
+
+                            const tx: IBlockchainTransaction = JSON.parse(
+                                decrypt(snap.result.tx, connection.encKey).toString(
+                                    CryptoJS.enc.Utf8
+                                )
+                            );
+
+                            result.tx = tx;
+                        }
+
+                        callback({
+                            result,
+                            errorCode: snap?.errorCode
+                        });
                     }
                 });
         } catch {

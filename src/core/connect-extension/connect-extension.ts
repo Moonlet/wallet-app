@@ -4,10 +4,9 @@ import { encrypt } from '../secure/encrypt.web';
 import { extensionState } from './conn-ext-trim-state';
 import { store } from '../../redux/config';
 import { Notifications } from '../messaging/notifications/notifications';
-import { IQRCodeConn } from './types';
+import { IQRCodeConn, ResponsePayload } from './types';
 import { sha256 } from 'js-sha256'; // maybe replace this with CryptoJS.SHA256
 import { ConnectExtensionWeb } from './connect-extension-web';
-import { IBlockchainTransaction } from '../blockchain/types';
 
 export const ConnectExtension = (() => {
     const syncExtension = async (connection: IQRCodeConn): Promise<any> => {
@@ -60,10 +59,7 @@ export const ConnectExtension = (() => {
         }
     };
 
-    const sendResponse = async (
-        requestId: string,
-        sendResponsePayload: { txHash: string; tx: IBlockchainTransaction }
-    ) => {
+    const sendResponse = async (requestId: string, sendResponsePayload: ResponsePayload) => {
         try {
             const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
 
@@ -73,8 +69,14 @@ export const ConnectExtension = (() => {
                 requestId,
                 authToken: sha256(connection.encKey),
                 data: {
-                    txHash: sendResponsePayload.txHash,
-                    tx: encrypt(JSON.stringify(sendResponsePayload.tx), connection.encKey)
+                    result: sendResponsePayload.result && {
+                        txHash: sendResponsePayload.result.txHash,
+                        tx: encrypt(
+                            JSON.stringify(sendResponsePayload.result.tx),
+                            connection.encKey
+                        )
+                    },
+                    errorCode: sendResponsePayload?.errorCode
                 }
             });
 

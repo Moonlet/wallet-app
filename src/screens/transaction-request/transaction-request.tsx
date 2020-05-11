@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Image } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
 import stylesProvider from './styles';
@@ -19,6 +19,8 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { formatNumber } from '../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { ConnectExtension } from '../../core/connect-extension/connect-extension';
+import { ResponsePayloadType } from '../../core/connect-extension/types';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -41,6 +43,7 @@ const mapDispatchToProps = {
 
 export interface IState {
     moonletTransferPayload: any;
+    isError: boolean;
 }
 
 export class TransactionRequestScreenComponent extends React.Component<
@@ -50,7 +53,8 @@ export class TransactionRequestScreenComponent extends React.Component<
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.state = {
-            moonletTransferPayload: undefined
+            moonletTransferPayload: undefined,
+            isError: false
         };
     }
 
@@ -69,15 +73,35 @@ export class TransactionRequestScreenComponent extends React.Component<
     private async getTransferPayload() {
         try {
             const payload = await ConnectExtensionWeb.getRequestIdParams(this.props.requestId);
+
             if (payload) {
                 this.setState({ moonletTransferPayload: payload });
             } else {
-                // TODO: show error message to the user - requestId has not been received
-                this.setState({ moonletTransferPayload: undefined });
+                this.setState({
+                    moonletTransferPayload: undefined,
+                    isError: true
+                });
             }
         } catch {
-            // TODO: show error message to the user - requestId has not been received
-            this.setState({ moonletTransferPayload: undefined });
+            this.setState({
+                moonletTransferPayload: undefined,
+                isError: true
+            });
+        }
+    }
+
+    private async cancelTransactionRequest() {
+        try {
+            this.props.closeTransactionRequest();
+
+            if (this.props.requestId) {
+                await ConnectExtension.sendResponse(this.props.requestId, {
+                    result: undefined,
+                    errorCode: ResponsePayloadType.CANCEL
+                });
+            }
+        } catch {
+            this.props.closeTransactionRequest();
         }
     }
 
@@ -110,6 +134,7 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     private renderMoonletTransferForm() {
         const { moonletTransferPayload } = this.state;
+        const { styles } = this.props;
 
         if (moonletTransferPayload) {
             const account = moonletTransferPayload.account;
@@ -124,23 +149,51 @@ export class TransactionRequestScreenComponent extends React.Component<
 
             return (
                 <View style={{ flex: 1 }}>
-                    {this.renderField(
-                        translate('TransactionRequest.walletName'),
-                        moonletTransferPayload.walletName
-                    )}
-                    {this.renderField(
-                        translate('TransactionRequest.accountName'),
-                        account?.name || `Account ${account.index + 1}`
-                    )}
-                    {this.renderField(translate('App.labels.from'), from)}
-                    {this.renderField(translate('App.labels.recipient'), recipient)}
-                    {this.renderField(translate('App.labels.amount'), formattedAmount)}
-                    <FeeTotal
-                        amount={moonletTransferPayload.feeOptions.feeTotal}
-                        blockchain={blockchain}
-                        tokenSymbol={moonletTransferPayload.token}
-                        backgroundColor={this.props.theme.colors.inputBackground}
-                    />
+                    <View style={{ flex: 1 }}>
+                        {this.renderField(
+                            translate('TransactionRequest.walletName'),
+                            moonletTransferPayload.walletName
+                        )}
+                        {this.renderField(
+                            translate('TransactionRequest.accountName'),
+                            account?.name || `Account ${account.index + 1}`
+                        )}
+                        {this.renderField(translate('App.labels.from'), from)}
+                        {this.renderField(translate('App.labels.recipient'), recipient)}
+                        {this.renderField(translate('App.labels.amount'), formattedAmount)}
+                        <FeeTotal
+                            amount={moonletTransferPayload.feeOptions.feeTotal}
+                            blockchain={blockchain}
+                            tokenSymbol={moonletTransferPayload.token}
+                            backgroundColor={this.props.theme.colors.inputBackground}
+                        />
+                    </View>
+
+                    <Button
+                        onPress={() => this.confirm()}
+                        primary
+                        disabled={this.state.moonletTransferPayload === undefined}
+                    >
+                        {translate('App.labels.confirm')}
+                    </Button>
+                </View>
+            );
+        } else if (this.state.isError) {
+            return (
+                <View style={{ flex: 1 }}>
+                    <View style={styles.errorContainer}>
+                        <Image
+                            style={styles.logoImage}
+                            source={require('../../assets/images/png/moonlet_space_gray.png')}
+                        />
+                        <Text style={styles.errorMessage}>
+                            {translate('TransactionRequest.errorMessage')}
+                        </Text>
+                    </View>
+
+                    <Button onPress={() => this.cancelTransactionRequest()} primary>
+                        {translate('App.labels.cancel')}
+                    </Button>
                 </View>
             );
         } else {
@@ -175,16 +228,8 @@ export class TransactionRequestScreenComponent extends React.Component<
 
                     <View style={styles.content}>{this.renderMoonletTransferForm()}</View>
 
-                    <Button
-                        onPress={() => this.confirm()}
-                        primary
-                        disabled={this.state.moonletTransferPayload === undefined}
-                    >
-                        {translate('App.labels.confirm')}
-                    </Button>
-
                     <TouchableOpacity
-                        onPress={() => this.props.closeTransactionRequest()}
+                        onPress={() => this.cancelTransactionRequest()}
                         style={styles.closeButtonContainer}
                     >
                         <Icon name={'close'} size={normalize(20)} style={styles.closeButton} />

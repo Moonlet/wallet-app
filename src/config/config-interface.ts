@@ -8,9 +8,12 @@ export interface IAppConfig {
     privacyPolicyUrl: string;
     ntpServer: string;
     ntpPort: number;
-    extSyncUpdateStateUrl: string;
-    extSyncDisconnectUrl: string;
-    extSyncSendRequestUrl: string;
-    extSyncSendResponseUrl: string;
+    extSync: {
+        updateStateUrl: string;
+        disconnectUrl: string;
+        sendRequestUrl: string;
+        sendResponseUrl: string;
+        deleteRequestUrl: string;
+    };
     firebaseWebConfig: any;
 }

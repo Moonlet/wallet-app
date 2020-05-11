@@ -18,7 +18,6 @@ import { NavigationService } from './navigation/navigation-service';
 import { Dialog } from './components/dialog/dialog';
 import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
 import { ImageCanvas } from './components/image-canvas/image-canvas';
-import { LoadingModal } from './components/loading-modal/loading-modal';
 import { subscribeExchangeRates } from './core/utils/exchange-rates';
 import { updateExchangeRates } from './redux/market/actions';
 import { takeOneAndSubscribeToStore } from './redux/utils/helpers';
@@ -30,6 +29,7 @@ import { setDeviceId } from './redux/preferences/actions';
 import { SecurityChecks } from './components/security-checks/security-checks';
 import { AppStateStatus } from './core/constants/app';
 import { TransactionRequestScreen } from './screens/transaction-request/transaction-request';
+import { LoadingModal } from './components/loading-modal/loading-modal';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -192,7 +192,7 @@ export default class App extends React.Component<{}, IState> {
                             <BottomSheet />
                             {Platform.OS !== 'web' && <Dialog.Component />}
                             <TransactionRequestScreen />
-                            <LoadingModal />
+                            <LoadingModal.Component />
                             <LegalModal navigationState={this.state.navigationState} />
                         </ThemeContext.Provider>
                     </PersistGate>

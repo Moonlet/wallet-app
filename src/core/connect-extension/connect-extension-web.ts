@@ -127,7 +127,10 @@ export const ConnectExtensionWeb = (() => {
 
     const listenerReqResponse = async (
         requestId: string,
-        callback: (res: { txHash: string; tx: IBlockchainTransaction }) => void
+        callback: (res: {
+            result: { txHash: string; tx: IBlockchainTransaction };
+            errorCode: string;
+        }) => void
     ) => {
         //
     };

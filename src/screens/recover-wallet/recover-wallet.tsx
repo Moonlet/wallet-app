@@ -15,7 +15,6 @@ import { KeyboardCustom, IKeyboardButton } from '../../components/keyboard-custo
 import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { StackActions, NavigationActions } from 'react-navigation';
-import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { forbidScreenshots, allowScreenshots } from '../../core/utils/screenshot';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { MNEMONIC_LENGTH } from '../../core/constants/app';
@@ -33,12 +32,10 @@ interface IState {
 
 export interface IReduxProps {
     createHDWallet: typeof createHDWallet;
-    openLoadingModal: typeof openLoadingModal;
 }
 
 const mapDispatchToProps = {
-    createHDWallet,
-    openLoadingModal
+    createHDWallet
 };
 
 export const navigationOptions = () => ({

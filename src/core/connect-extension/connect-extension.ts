@@ -4,15 +4,14 @@ import { encrypt } from '../secure/encrypt.web';
 import { extensionState } from './conn-ext-trim-state';
 import { store } from '../../redux/config';
 import { Notifications } from '../messaging/notifications/notifications';
-import { IQRCodeConn } from './types';
+import { IQRCodeConn, ResponsePayload } from './types';
 import { sha256 } from 'js-sha256'; // maybe replace this with CryptoJS.SHA256
 import { ConnectExtensionWeb } from './connect-extension-web';
-import { IBlockchainTransaction } from '../blockchain/types';
 
 export const ConnectExtension = (() => {
     const syncExtension = async (connection: IQRCodeConn): Promise<any> => {
         try {
-            const http = new HttpClient(CONFIG.extSyncUpdateStateUrl);
+            const http = new HttpClient(CONFIG.extSync.updateStateUrl);
             const res = await http.post('', {
                 connectionId: connection.connectionId,
                 data: encrypt(JSON.stringify(extensionState(store.getState())), connection.encKey),
@@ -28,7 +27,7 @@ export const ConnectExtension = (() => {
 
     const disconnectExtension = async (connection: IQRCodeConn) => {
         try {
-            const http = new HttpClient(CONFIG.extSyncDisconnectUrl);
+            const http = new HttpClient(CONFIG.extSync.disconnectUrl);
             await http.post('', {
                 connectionId: connection.connectionId,
                 authToken: sha256(connection.encKey)
@@ -43,7 +42,7 @@ export const ConnectExtension = (() => {
         try {
             const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
 
-            const http = new HttpClient(CONFIG.extSyncSendRequestUrl);
+            const http = new HttpClient(CONFIG.extSync.sendRequestUrl);
             const res = await http.post('', {
                 connectionId: connection.connectionId,
                 authToken: sha256(connection.encKey),
@@ -60,22 +59,42 @@ export const ConnectExtension = (() => {
         }
     };
 
-    const sendResponse = async (
-        requestId: string,
-        sendResponsePayload: { txHash: string; tx: IBlockchainTransaction }
-    ) => {
+    const sendResponse = async (requestId: string, sendResponsePayload: ResponsePayload) => {
         try {
             const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
 
-            const http = new HttpClient(CONFIG.extSyncSendResponseUrl);
+            const http = new HttpClient(CONFIG.extSync.sendResponseUrl);
             const res = await http.post('', {
                 connectionId: connection.connectionId,
                 requestId,
                 authToken: sha256(connection.encKey),
                 data: {
-                    txHash: sendResponsePayload.txHash,
-                    tx: encrypt(JSON.stringify(sendResponsePayload.tx), connection.encKey)
+                    result: sendResponsePayload.result && {
+                        txHash: sendResponsePayload.result.txHash,
+                        tx: encrypt(
+                            JSON.stringify(sendResponsePayload.result.tx),
+                            connection.encKey
+                        )
+                    },
+                    errorCode: sendResponsePayload?.errorCode
                 }
+            });
+
+            return res;
+        } catch {
+            //
+        }
+    };
+
+    const deleteRequest = async (requestId: string) => {
+        try {
+            const connection: IQRCodeConn = await ConnectExtensionWeb.getConnection();
+
+            const http = new HttpClient(CONFIG.extSync.deleteRequestUrl);
+            const res = await http.post('', {
+                connectionId: connection.connectionId,
+                requestId,
+                authToken: sha256(connection.encKey)
             });
 
             return res;
@@ -88,6 +107,7 @@ export const ConnectExtension = (() => {
         syncExtension,
         disconnectExtension,
         sendRequest,
-        sendResponse
+        sendResponse,
+        deleteRequest
     };
 })();

@@ -5,7 +5,7 @@ import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { Text } from '../../library';
+import { Text, Button } from '../../library';
 import { translate } from '../../core/i18n';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
@@ -40,15 +40,11 @@ import { AddAddress } from './components/add-address/add-address';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
-import {
-    openLoadingModal,
-    closeLoadingModal,
-    displayMessage
-} from '../../redux/ui/loading-modal/actions';
 import { IHeaderStep, BottomConfirm } from './components/bottom-confirm/bottom-confirm';
 import { NotificationType } from '../../core/messaging/types';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { NavigationService } from '../../navigation/navigation-service';
+import { LoadingModal } from '../../components/loading-modal/loading-modal';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -58,9 +54,6 @@ export interface IReduxProps {
     selectedWalletName: string;
     selectedAccount: IAccountState;
     chainId: ChainIdType;
-    openLoadingModal: typeof openLoadingModal;
-    closeLoadingModal: typeof closeLoadingModal;
-    displayMessage: typeof displayMessage;
     addPublishedTxToAccount: typeof addPublishedTxToAccount;
 }
 
@@ -77,9 +70,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 const mapDispatchToProps = {
     sendTransferTransaction,
     openBottomSheet,
-    openLoadingModal,
-    closeLoadingModal,
-    displayMessage,
     addPublishedTxToAccount
 };
 
@@ -137,11 +127,10 @@ export class SendScreenComponent extends React.Component<
 
     public async confirmPayment() {
         if (Platform.OS === 'web') {
-            this.props.openLoadingModal();
-            this.props.displayMessage(
-                TransactionMessageText.WAITING_TX_CONFIRM,
-                TransactionMessageType.INFO
-            );
+            await LoadingModal.open({
+                text: TransactionMessageText.WAITING_TX_CONFIRM,
+                type: TransactionMessageType.INFO
+            });
 
             const formattedAmount = formatNumber(new BigNumber(this.state.amount), {
                 currency: getBlockchain(this.props.account.blockchain).config.coin
@@ -182,19 +171,52 @@ export class SendScreenComponent extends React.Component<
                 const sendRequestRes = await ConnectExtension.sendRequest(sendRequestPayload);
 
                 if (sendRequestRes?.success) {
-                    // maybe set a timeout here for this listener
-                    // if it's too much waiting fot the web ext, to have a cancel button
+                    await LoadingModal.open({
+                        type: TransactionMessageType.COMPONENT,
+                        component: (
+                            <View style={this.props.styles.loadingModalContainer}>
+                                <Text style={this.props.styles.loadingModalMessage}>
+                                    {translate(
+                                        'LoadingModal.' +
+                                            TransactionMessageText.WAITING_TX_CONFIRM_CANCEL,
+                                        { app: this.props.blockchain }
+                                    )}
+                                </Text>
+                                <Button
+                                    onPress={async () => {
+                                        await LoadingModal.close();
+
+                                        try {
+                                            await ConnectExtension.deleteRequest(
+                                                sendRequestRes.data.requestId
+                                            );
+                                        } catch {
+                                            //
+                                        }
+                                    }}
+                                >
+                                    {translate('App.labels.cancel')}
+                                </Button>
+                            </View>
+                        )
+                    });
+
                     ConnectExtensionWeb.listenerReqResponse(
                         sendRequestRes.data.requestId,
-                        (res: { txHash: string; tx: IBlockchainTransaction }) => {
-                            if (res.txHash && res.tx) {
+                        async (res: {
+                            result: { txHash: string; tx: IBlockchainTransaction };
+                            errorCode: string;
+                        }) => {
+                            if (res.errorCode) {
+                                await LoadingModal.close();
+                            } else if (res.result?.txHash && res.result?.tx) {
                                 this.props.addPublishedTxToAccount(
-                                    res.txHash,
-                                    res.tx,
+                                    res.result.txHash,
+                                    res.result.tx,
                                     this.props.selectedWalletId
                                 );
 
-                                this.props.closeLoadingModal();
+                                await LoadingModal.close();
                                 NavigationService.goBack();
                             } else {
                                 // error
@@ -204,7 +226,7 @@ export class SendScreenComponent extends React.Component<
                 }
             } catch {
                 // show error message to the user
-                this.props.closeLoadingModal();
+                await LoadingModal.close();
             }
 
             return;

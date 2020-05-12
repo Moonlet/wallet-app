@@ -1,6 +1,6 @@
 {
     "name": "moonlet",
-    "version": "1.3.1",
+    "version": "1.4.1",
     "private": true,
     "scripts": {
         "generate-icons": "mkdir -p resources/fonts && icon-font-generator ./src/assets/icons/svg/*.svg -o resources/fonts --height 1024 --types ttf",
@@ -12,6 +12,7 @@
         "ext": "TARGET=beta BROWSER=chrome NODE_ENV=development webpack --mode development --config ./extension/webpack.config.js --watch --info-verbosity verbose",
         "ext:build": "node --max_old_space_size=6144 ./node_modules/.bin/webpack -p --config ./extension/webpack.config.js",
         "ext:build:beta:chrome": "TARGET=beta BROWSER=chrome npm run ext:build",
+        "ext:build:release:chrome": "TARGET=release BROWSER=chrome npm run ext:build",
         "ext:build:beta:firefox": "TARGET=beta BROWSER=firefox npm run ext:build",
         "start": "(tsc -w --noEmit & react-native start --reset-cache)",
         "test": "jest",

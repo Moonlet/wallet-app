@@ -39,7 +39,6 @@ import {
 import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
-import { openLoadingModal, closeLoadingModal, DISPLAY_MESSAGE } from '../ui/loading-modal/actions';
 import { formatAddress } from '../../core/utils/format-address';
 import { Notifications } from '../../core/messaging/notifications/notifications';
 import { formatNumber } from '../../core/utils/format-number';
@@ -60,6 +59,7 @@ import { delay } from '../../core/utils/time';
 import { toggleBiometricAuth } from '../preferences/actions';
 import { CLOSE_TX_REQUEST } from '../ui/transaction-request/actions';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
+import { LoadingModal } from '../../components/loading-modal/loading-modal';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -236,7 +236,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
     dispatch: Dispatch<IAction<any>>,
     getState: () => IReduxState
 ) => {
-    dispatch(openLoadingModal());
+    await LoadingModal.open();
 
     // TODO: check here and find a solution to fix
     await delay(0);
@@ -288,14 +288,14 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
 
             dispatch(setSelectedWallet(walletId));
             callback && callback();
-            closeLoadingModal()(dispatch, getState);
+            await LoadingModal.close();
 
             updateAddressMonitorTokens(getState().wallets);
         });
     } catch (e) {
         // console.log(e);
         // TODO best way to handle this?
-        closeLoadingModal()(dispatch, getState);
+        await LoadingModal.close();
     }
     // TODO  - error handling
 };
@@ -531,18 +531,13 @@ export const sendTransferTransaction = (
 
     const appWallet = getSelectedWallet(state);
 
-    dispatch(openLoadingModal());
-
     try {
-        dispatch({
-            type: DISPLAY_MESSAGE,
-            data: {
-                text:
-                    appWallet.type === WalletType.HW
-                        ? TransactionMessageText.CONNECTING_LEDGER
-                        : TransactionMessageText.SIGNING,
-                type: TransactionMessageType.INFO
-            }
+        await LoadingModal.open({
+            type: TransactionMessageType.INFO,
+            text:
+                appWallet.type === WalletType.HW
+                    ? TransactionMessageText.CONNECTING_LEDGER
+                    : TransactionMessageText.SIGNING
         });
 
         const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
@@ -569,35 +564,30 @@ export const sendTransferTransaction = (
         });
 
         if (appWallet.type === WalletType.HW) {
-            dispatch({
-                type: DISPLAY_MESSAGE,
-                data: {
-                    text: TransactionMessageText.OPEN_APP,
-                    type: TransactionMessageType.INFO
-                }
+            await LoadingModal.showMessage({
+                text: TransactionMessageText.OPEN_APP,
+                type: TransactionMessageType.INFO
             });
+
             await (wallet as LedgerWallet).onAppOpened(account.blockchain);
 
-            dispatch({
-                type: DISPLAY_MESSAGE,
-                data: {
-                    text: TransactionMessageText.REVIEW_TRANSACTION,
-                    type: TransactionMessageType.INFO
-                }
+            await LoadingModal.showMessage({
+                text: TransactionMessageText.REVIEW_TRANSACTION,
+                type: TransactionMessageType.INFO
             });
         }
+
         const transaction = await wallet.sign(account.blockchain, account.index, tx);
 
-        dispatch({
-            type: DISPLAY_MESSAGE,
-            data: {
-                text: TransactionMessageText.BROADCASTING,
-                type: TransactionMessageType.INFO
-            }
+        await LoadingModal.showMessage({
+            text: TransactionMessageText.BROADCASTING,
+            type: TransactionMessageType.INFO
         });
+
         const txHash = await getBlockchain(account.blockchain)
             .getClient(chainId)
             .sendTransaction(transaction);
+
         if (txHash) {
             dispatch({
                 type: TRANSACTION_PUBLISHED,
@@ -610,8 +600,10 @@ export const sendTransferTransaction = (
 
             if (sendResponse) {
                 const res = await ConnectExtension.sendResponse(sendResponse.requestId, {
-                    txHash,
-                    tx
+                    result: {
+                        txHash,
+                        tx
+                    }
                 });
 
                 if (res?.success === true) {
@@ -623,12 +615,12 @@ export const sendTransferTransaction = (
                 dispatch({ type: CLOSE_TX_REQUEST });
             }
 
-            closeLoadingModal()(dispatch, getState);
+            await LoadingModal.close();
             goBack && navigation.goBack();
             return;
         }
     } catch (errorMessage) {
-        closeLoadingModal()(dispatch, getState);
+        await LoadingModal.close();
 
         // TODO: check here and find a solution to fix
         // await delay(500);
@@ -638,22 +630,7 @@ export const sendTransferTransaction = (
             address: formatAddress(toAddress, account.blockchain)
         });
 
-        Dialog.alert(
-            translate('LoadingModal.txFailed'),
-            message,
-            {
-                text: translate('App.labels.cancel'),
-                onPress: () => {
-                    //
-                }
-            },
-            {
-                text: translate('App.labels.tryAgain'),
-                onPress: () => {
-                    //
-                }
-            }
-        );
+        Dialog.info(translate('LoadingModal.txFailed'), message);
     }
 };
 

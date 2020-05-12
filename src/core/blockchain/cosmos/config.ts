@@ -117,8 +117,7 @@ export const config: IBlockchainConfig = {
             },
             accountCTA,
             delegationCTA: {
-                mainCta: accountCTA.mainCta,
-                otherCta: []
+                mainCta: accountCTA.mainCta
             },
             validatorCTA
         },

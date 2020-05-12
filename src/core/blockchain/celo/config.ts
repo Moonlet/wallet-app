@@ -17,43 +17,31 @@ import {
 export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickVote',
-        iconName: 'eye',
+        iconName: 'vote',
         navigateTo: { screen: undefined, params: undefined }
-    },
-    otherCta: [
-        {
-            title: 'App.labels.send',
-            iconName: 'eye',
-            navigateTo: { screen: undefined, params: undefined }
-        },
-        {
-            title: 'App.labels.receive',
-            iconName: 'eye',
-            navigateTo: { screen: undefined, params: undefined }
-        }
-    ]
+    }
 };
 
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.vote',
-        iconName: 'eye',
+        iconName: 'vote',
         navigateTo: { screen: undefined, params: undefined }
     },
     otherCta: [
         {
             title: 'App.labels.revote',
-            iconName: 'eye',
+            iconName: 'revote',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.unvote',
-            iconName: 'eye',
+            iconName: 'unvote',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.unlock',
-            iconName: 'eye',
+            iconName: 'unlock',
             navigateTo: { screen: undefined, params: undefined }
         }
     ]
@@ -109,8 +97,7 @@ export const config: IBlockchainConfig = {
             },
             accountCTA,
             delegationCTA: {
-                mainCta: accountCTA.mainCta,
-                otherCta: []
+                mainCta: accountCTA.mainCta
             },
             validatorCTA
         },

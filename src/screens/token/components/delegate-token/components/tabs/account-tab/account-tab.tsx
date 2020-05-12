@@ -61,7 +61,13 @@ export class AccountTabComponent extends React.Component<
                             style={styles.button}
                             wrapperStyle={{ flex: 1 }}
                             leftIcon={'arrow-right'}
-                            onPress={() => NavigationService.navigate('Send', {})}
+                            onPress={() =>
+                                NavigationService.navigate('Send', {
+                                    accountIndex: this.props.account.index,
+                                    blockchain: this.props.account.blockchain,
+                                    token: this.props.token
+                                })
+                            }
                         >
                             {translate('App.labels.send')}
                         </Button>
@@ -69,8 +75,14 @@ export class AccountTabComponent extends React.Component<
                             key={`cta-receive`}
                             style={styles.button}
                             wrapperStyle={{ flex: 1 }}
-                            leftIcon={'arrow-right'}
-                            onPress={() => NavigationService.navigate('Receive', {})}
+                            leftIcon={'qr-code-scan'}
+                            onPress={() =>
+                                NavigationService.navigate('Receive', {
+                                    accountIndex: this.props.account.index,
+                                    blockchain: this.props.account.blockchain,
+                                    token: this.props.token
+                                })
+                            }
                         >
                             {translate('App.labels.receive')}
                         </Button>

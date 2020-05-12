@@ -11,9 +11,11 @@ import { ValidatorsList } from '../../validators/validators-list/validators-list
 import { SearchInput } from '../../../../../../../components/search-input/search-input';
 import { translate } from '../../../../../../../core/i18n';
 import { bind } from 'bind-decorator';
-import { IValidatorCardComponent } from '../../../../../../../core/blockchain/types/stats';
+import { IValidatorCard } from '../../../../../../../core/blockchain/types/stats';
 // import { DelegationCTA } from '../../../../../../../components/delegation-cta/delegation-cta';
 import { Blockchain } from '../../../../../../../core/blockchain/types';
+import { DelegationCTA } from '../../../../../../../components/delegation-cta/delegation-cta';
+import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 
 const validators = [chainLayerValidator, moonletValidator];
 
@@ -22,14 +24,14 @@ export interface IProps {
 }
 
 interface IState {
-    validatorsList: IValidatorCardComponent[];
+    validatorsList: IValidatorCard[];
 }
 
 export class ValidatorsTabComponent extends React.Component<
-    IThemeProps<ReturnType<typeof stylesProvider>>,
+    IProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
         this.state = {
@@ -52,20 +54,30 @@ export class ValidatorsTabComponent extends React.Component<
 
     public render() {
         const styles = this.props.styles;
+        const tokenUiConfig = getBlockchain(this.props.blockchain).config.ui.token;
         return (
             <View style={styles.container}>
-                <View style={styles.inputContainer}>
-                    <SearchInput
-                        placeholderText={translate('Token.searchValidators')}
-                        onChangeText={this.onSearchInput}
-                        onClose={this.onClose}
+                <View style={{ flex: 1 }}>
+                    <View style={styles.inputContainer}>
+                        <SearchInput
+                            placeholderText={translate('Token.searchValidators')}
+                            onChangeText={this.onSearchInput}
+                            onClose={this.onClose}
+                        />
+                    </View>
+                    <ValidatorsList
+                        validators={this.state.validatorsList}
+                        blockchain={this.props.blockchain}
                     />
                 </View>
-                <ValidatorsList validators={this.state.validatorsList} />
-                {/* <DelegationCTA mainCta={tokenUiConfig.accountCTA.mainCta} /> */}
+                <View style={styles.bottomContainer}>
+                    <DelegationCTA mainCta={tokenUiConfig.accountCTA.mainCta} />
+                </View>
             </View>
         );
     }
 }
 
-export const ValidatorsTab = smartConnect(ValidatorsTabComponent, [withTheme(stylesProvider)]);
+export const ValidatorsTab = smartConnect<IProps>(ValidatorsTabComponent, [
+    withTheme(stylesProvider)
+]);

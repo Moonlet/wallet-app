@@ -7,8 +7,11 @@ import { BASE_DIMENSION, normalize } from '../../../../../../../styles/dimension
 import { Icon } from '../../../../../../../components/icon';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
 import { Text } from '../../../../../../../library';
-import { IStatValue } from '../../../../../../../core/blockchain/types/stats';
+import { IStatValue, IStatValueType } from '../../../../../../../core/blockchain/types/stats';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
+import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
+import { Blockchain } from '../../../../../../../core/blockchain/types/blockchain';
+import { chainLayerValidator } from '../../../../../../../core/blockchain/cosmos/stats';
 
 export interface IExternalProps {
     icon: string;
@@ -19,6 +22,16 @@ export interface IExternalProps {
     rightSubtitle: string;
     actionType: string;
     bottomStats: IStatValue[];
+    blockchain: Blockchain;
+}
+
+export function getValueString(stat: IStatValue) {
+    switch (stat.type) {
+        case IStatValueType.STRING:
+            return stat.data.value;
+        case IStatValueType.AMOUNT:
+            return stat.data.value + ' ' + stat.data.tokenSymbol; // TODO format text based on blockchain
+    }
 }
 
 export const ValidatorCardComponent = (
@@ -28,9 +41,11 @@ export const ValidatorCardComponent = (
         <TouchableHighlight
             onPress={() => {
                 NavigationService.navigate('Validator', {
-                    icon: props.icon,
-                    labelName: props.labelName,
-                    website: props.website
+                    blockchain: props.blockchain,
+                    validator:
+                        props.blockchain === Blockchain.CELO
+                            ? moonletValidator
+                            : chainLayerValidator // DUMMY DATA
                 });
             }}
             underlayColor={props.theme.colors.appBackground}
@@ -69,34 +84,15 @@ export const ValidatorCardComponent = (
                         style={props.styles.chevronRight}
                     />
                 </View>
-
                 <View style={props.styles.bottomContainer}>
-                    <View>
-                        <Text style={props.styles.bottomSecondaryText}>{`Validators`}</Text>
-                        <Text style={props.styles.bottomPrimaryText}>{`2/2`}</Text>
-                    </View>
-
-                    <View>
-                        <Text style={props.styles.bottomSecondaryText}>{`Voting Power`}</Text>
-                        <Text style={props.styles.bottomPrimaryText}>{`0.64%`}</Text>
-                    </View>
-
-                    <View>
-                        <Text style={props.styles.bottomSecondaryText}>{`Uptime`}</Text>
-                        <Text style={props.styles.bottomPrimaryText}>{`99.99%`}</Text>
-                    </View>
-
-                    <View>
-                        <Text style={props.styles.bottomSecondaryText}>{`Reward`}</Text>
-                        <Text
-                            style={[
-                                props.styles.bottomPrimaryText,
-                                { color: props.theme.colors.positive }
-                            ]}
-                        >
-                            {`6.00%`}
-                        </Text>
-                    </View>
+                    {props.bottomStats.map((stat: IStatValue, i: number) => (
+                        <View key={i}>
+                            <Text style={props.styles.bottomSecondaryText}>{stat.title}</Text>
+                            <Text style={[props.styles.bottomPrimaryText, { color: stat.color }]}>
+                                {getValueString(stat)}
+                            </Text>
+                        </View>
+                    ))}
                 </View>
             </View>
         </TouchableHighlight>

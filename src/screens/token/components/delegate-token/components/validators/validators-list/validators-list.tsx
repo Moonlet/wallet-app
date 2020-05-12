@@ -4,10 +4,12 @@ import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { ValidatorCard } from '../validator-card/validator-card';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
-import { IValidatorCardComponent } from '../../../../../../../core/blockchain/types/stats';
+import { IValidatorCard } from '../../../../../../../core/blockchain/types/stats';
+import { Blockchain } from '../../../../../../../core/blockchain/types';
 
 interface IExternalProps {
-    validators: IValidatorCardComponent[];
+    validators: IValidatorCard[];
+    blockchain: Blockchain;
 }
 
 export const ValidatorsListComponent = (
@@ -15,7 +17,7 @@ export const ValidatorsListComponent = (
 ) => {
     return (
         <View style={props.styles.container}>
-            {props.validators.map((validator: IValidatorCardComponent, index: number) => (
+            {props.validators.map((validator: IValidatorCard, index: number) => (
                 <ValidatorCard
                     key={index}
                     icon={validator.icon}
@@ -26,6 +28,7 @@ export const ValidatorsListComponent = (
                     rightSubtitle={validator.rightSubtitle}
                     actionType={validator.actionType}
                     bottomStats={validator.bottomStats}
+                    blockchain={props.blockchain}
                 />
             ))}
         </View>

@@ -43,7 +43,7 @@ export enum CardActionType {
     NAVIGATE = 'CHECKBOX'
 }
 
-export interface IValidatorCardComponent {
+export interface IValidatorCard {
     icon: string;
     labelName: string;
     smallLabelName: string;

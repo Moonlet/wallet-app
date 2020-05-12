@@ -56,11 +56,9 @@ export interface IBlockchainConfig {
             };
             accountCTA: {
                 mainCta: IButtonCTA;
-                otherCta: IButtonCTA[];
             };
             delegationCTA: {
                 mainCta: IButtonCTA;
-                otherCta: IButtonCTA[];
             };
             validatorCTA: {
                 mainCta: IButtonCTA;

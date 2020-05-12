@@ -40,11 +40,17 @@ import { AddAddress } from './components/add-address/add-address';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
-import { IHeaderStep, BottomConfirm } from './components/bottom-confirm/bottom-confirm';
 import { NotificationType } from '../../core/messaging/types';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { NavigationService } from '../../navigation/navigation-service';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
+import { BottomCta } from '../../components/bottom-cta/bottom-cta';
+
+interface IHeaderStep {
+    step: number;
+    title: string;
+    active: boolean;
+}
 
 export interface IReduxProps {
     account: IAccountState;
@@ -365,20 +371,62 @@ export class SendScreenComponent extends React.Component<
         const activeIndex = _.findIndex(this.state.headerSteps, ['active', true]);
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
+        let disableButton: boolean;
+        switch (activeIndex) {
+            case 0:
+                // Add address
+                if (this.state.toAddress === '') disableButton = true;
+                break;
+            case 1:
+                // Enter amount
+                if (
+                    this.state.amount === '' ||
+                    this.state.insufficientFunds ||
+                    this.state.insufficientFundsFees ||
+                    isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
+                    isNaN(Number(this.state.feeOptions?.gasPrice))
+                )
+                    disableButton = true;
+                break;
+            case 2:
+                // Confirm transaction
+                disableButton = false;
+                break;
+            default:
+                disableButton = true;
+                break;
+        }
+
         return (
-            <BottomConfirm
-                toAddress={this.state.toAddress}
-                activeIndex={activeIndex}
-                amount={this.state.amount}
-                account={this.props.account}
-                feeOptions={this.state.feeOptions}
-                insufficientFunds={this.state.insufficientFunds}
-                insufficientFundsFees={this.state.insufficientFundsFees}
-                headerSteps={this.state.headerSteps}
-                tokenConfig={tokenConfig}
-                stdAmount={this.getInputAmountToStd()}
-                confirmPayment={() => this.confirmPayment()}
-                setHeaderSetps={(steps: IHeaderStep[]) => this.setState({ headerSteps: steps })}
+            <BottomCta
+                options={{
+                    label: translate('App.labels.send'),
+                    action: translate('App.labels.to'),
+                    value: formatAddress(this.state.toAddress, this.props.account.blockchain),
+                    amountVisible: activeIndex === 1 || activeIndex === 2,
+                    tokenConfig,
+                    stdAmount: this.getInputAmountToStd(),
+                    account: this.props.account
+                }}
+                button={{
+                    label:
+                        activeIndex === this.state.headerSteps.length - 1
+                            ? translate('App.labels.confirm')
+                            : translate('App.labels.next'),
+                    onPress: () => {
+                        if (activeIndex === 2) {
+                            this.confirmPayment();
+                        } else {
+                            const steps = this.state.headerSteps;
+
+                            steps[activeIndex].active = false;
+                            steps[activeIndex + 1].active = true;
+
+                            this.setState({ headerSteps: steps });
+                        }
+                    },
+                    disabled: disableButton
+                }}
             />
         );
     }

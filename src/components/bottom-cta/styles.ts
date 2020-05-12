@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
-import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, normalize, isIphoneXorAbove } from '../../../../styles/dimensions';
+import { ITheme } from '../../core/theme/itheme';
+import { BASE_DIMENSION, normalize, isIphoneXorAbove } from '../../styles/dimensions';
 
 const DEFAULT_BOTTOM_CONTAINER_PADDING = BASE_DIMENSION + BASE_DIMENSION / 2;
 
@@ -50,7 +50,6 @@ export default (theme: ITheme) =>
         bottomSendText: {
             fontSize: normalize(15),
             lineHeight: normalize(20),
-            color: theme.colors.accent,
             marginRight: BASE_DIMENSION / 2
         },
         bottomToText: {

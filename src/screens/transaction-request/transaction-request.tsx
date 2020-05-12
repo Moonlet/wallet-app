@@ -21,6 +21,8 @@ import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { ResponsePayloadType } from '../../core/connect-extension/types';
+import { BottomCta } from '../../components/bottom-cta/bottom-cta';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -147,9 +149,18 @@ export class TransactionRequestScreenComponent extends React.Component<
                 currency: getBlockchain(blockchain).config.coin
             });
 
+            const tokenConfig = getTokenConfig(blockchain, moonletTransferPayload.token);
+
+            const blockchainInstance = getBlockchain(blockchain);
+
+            const stdAmount = blockchainInstance.account.amountToStd(
+                new BigNumber(moonletTransferPayload.amount),
+                tokenConfig.decimals
+            );
+
             return (
                 <View style={{ flex: 1 }}>
-                    <View style={{ flex: 1 }}>
+                    <View style={styles.moonletTransferContainer}>
                         {this.renderField(
                             translate('TransactionRequest.walletName'),
                             moonletTransferPayload.walletName
@@ -169,18 +180,27 @@ export class TransactionRequestScreenComponent extends React.Component<
                         />
                     </View>
 
-                    <Button
-                        onPress={() => this.confirm()}
-                        primary
-                        disabled={this.state.moonletTransferPayload === undefined}
-                    >
-                        {translate('App.labels.confirm')}
-                    </Button>
+                    <BottomCta
+                        options={{
+                            label: translate('App.labels.send'),
+                            action: translate('App.labels.to'),
+                            value: recipient,
+                            amountVisible: true,
+                            tokenConfig,
+                            stdAmount,
+                            account
+                        }}
+                        button={{
+                            label: translate('App.labels.confirm'),
+                            onPress: () => this.confirm(),
+                            disabled: this.state.moonletTransferPayload === undefined
+                        }}
+                    />
                 </View>
             );
         } else if (this.state.isError) {
             return (
-                <View style={{ flex: 1 }}>
+                <View style={styles.errorWrapper}>
                     <View style={styles.errorContainer}>
                         <Image
                             style={styles.logoImage}

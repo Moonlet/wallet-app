@@ -3,7 +3,7 @@ import { firebaseConfig } from './firebase-web-beta';
 
 const extSyncBaseUrl = 'https://fire.moonlet.dev/functions/extensionSync';
 
-export const CONFIG: IAppConfig = {
+export const CONFIG_BETA: IAppConfig = {
     supportUrl: 'https://moonlet.uvdesk.com/en/customer/create-ticket',
     env: process.env.MOONLET_SOME_KEY,
     tokensUrl: 'https://fire.moonlet.dev/static/tokens/',
@@ -15,6 +15,7 @@ export const CONFIG: IAppConfig = {
     ntpServer: 'pool.ntp.org',
     ntpPort: 123,
     extSync: {
+        bucket: 'gs://moonlet-extension-sync',
         updateStateUrl: extSyncBaseUrl + '/updateState',
         disconnectUrl: extSyncBaseUrl + '/disconnect',
         sendRequestUrl: extSyncBaseUrl + '/sendRequest',
@@ -23,5 +24,3 @@ export const CONFIG: IAppConfig = {
     },
     firebaseWebConfig: firebaseConfig
 };
-
-export default CONFIG;

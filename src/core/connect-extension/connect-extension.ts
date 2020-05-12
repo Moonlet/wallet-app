@@ -1,5 +1,5 @@
 import { HttpClient } from '../utils/http-client';
-import CONFIG from '../../config/config-beta';
+import CONFIG from '../../config';
 import { encrypt } from '../secure/encrypt.web';
 import { extensionState } from './conn-ext-trim-state';
 import { store } from '../../redux/config';

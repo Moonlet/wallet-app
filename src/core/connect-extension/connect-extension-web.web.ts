@@ -1,7 +1,7 @@
 import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt.web';
 import CryptoJS from 'crypto-js';
 import { v4 as uuidv4 } from 'uuid';
-import { IQRCodeConn, FirebaseRef, FIREBASE_BUCKET, IStorage } from './types';
+import { IQRCodeConn, FirebaseRef, IStorage } from './types';
 import { storage, database } from 'firebase';
 import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage.web';
 import { CONN_EXTENSION } from '../../core/constants/app';
@@ -14,6 +14,7 @@ import { extensionReduxUpdateState } from '../../redux/app/actions';
 import { IBlockchainTransaction } from '../blockchain/types';
 import { buildTransactions } from './conn-ext-build-state/build-transactions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
+import CONFIG from '../../config';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -120,7 +121,7 @@ export const ConnectExtensionWeb = (() => {
         try {
             // Download file from Firebase Storage - State
             const urlDowndload = await storage()
-                .refFromURL(FIREBASE_BUCKET)
+                .refFromURL(CONFIG.extSync.bucket)
                 .child(connectionId)
                 .getDownloadURL();
 

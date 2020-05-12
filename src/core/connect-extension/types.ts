@@ -30,8 +30,6 @@ export interface ResponsePayload {
     errorCode?: string;
 }
 
-export const FIREBASE_BUCKET = 'gs://moonlet-extension-sync';
-
 export interface IStorage {
     version: number;
     state: {

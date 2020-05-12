@@ -9,6 +9,7 @@ export interface IAppConfig {
     ntpServer: string;
     ntpPort: number;
     extSync: {
+        bucket: string;
         updateStateUrl: string;
         disconnectUrl: string;
         sendRequestUrl: string;

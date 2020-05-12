@@ -1,5 +1,5 @@
-import CONFIG_BETA from './config-beta';
-import CONFIG_RELEASE from './config-release';
+import { CONFIG_BETA } from './config-beta';
+import { CONFIG_RELEASE } from './config-release';
 import DeviceInfo from 'react-native-device-info';
 
 let CONF = CONFIG_RELEASE;

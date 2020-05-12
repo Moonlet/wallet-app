@@ -30,9 +30,9 @@ export default (theme: ITheme) =>
         },
         closeButtonContainer: {
             position: 'absolute',
-            top: CONTAINER_TOP_PADDING,
-            left: BASE_DIMENSION * 2,
-            backgroundColor: 'red'
+            top: CONTAINER_TOP_PADDING - BASE_DIMENSION / 2,
+            left: BASE_DIMENSION + BASE_DIMENSION / 2,
+            padding: BASE_DIMENSION
         },
         closeButton: {
             color: theme.colors.accent,

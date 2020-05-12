@@ -54,7 +54,8 @@ export const convertAmount = (
     if (fromToken === toToken) {
         return amount;
     }
-    if (value && exchangeRates[fromToken]) {
+
+    if (value && exchangeRates[fromToken] && exchangeRates[toToken]) {
         return amount.multipliedBy(exchangeRates[fromToken]).dividedBy(exchangeRates[toToken]);
     }
 

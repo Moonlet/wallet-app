@@ -4,13 +4,12 @@ import { storeEncrypted, readEncrypted, deleteFromStorage } from './storage';
 import DeviceInfo from 'react-native-device-info';
 import uuidv4 from 'uuid/v4';
 import { Platform } from 'react-native';
-import CONFIG from '../../config/config-beta';
 
 const defaultOptions = {
-    serviceEncryption: `${CONFIG.keychain}.encryption`,
-    usernameEncryption: `${CONFIG.keychain}-encryption-key`,
-    usernamePin: `${CONFIG.keychain}-pin`,
-    servicePin: `${CONFIG.keychain}.pin`
+    serviceEncryption: 'com.moonlet.encryption',
+    usernameEncryption: 'moonlet-encryption-key',
+    usernamePin: 'moonlet-pin',
+    servicePin: 'com.moonlet.pin'
 };
 
 export const KEY_PIN_SAMPLE = 'moonletPinSample';

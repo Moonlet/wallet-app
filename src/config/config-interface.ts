@@ -13,5 +13,4 @@ export interface IAppConfig {
     extSyncSendRequestUrl: string;
     extSyncSendResponseUrl: string;
     firebaseWebConfig: any;
-    keychain: string;
 }

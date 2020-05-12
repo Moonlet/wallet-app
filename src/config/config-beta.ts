@@ -16,8 +16,7 @@ export const CONFIG: IAppConfig = {
     extSyncDisconnectUrl: 'https://fire.moonlet.dev/functions/extensionSync/disconnect',
     extSyncSendRequestUrl: 'https://fire.moonlet.dev/functions/extensionSync/sendRequest',
     extSyncSendResponseUrl: 'https://fire.moonlet.dev/functions/extensionSync/sendResponse',
-    firebaseWebConfig: firebaseConfig,
-    keychain: 'com.moonlet.beta'
+    firebaseWebConfig: firebaseConfig
 };
 
 export default CONFIG;

@@ -204,7 +204,7 @@ export const ConnectExtensionWeb = (() => {
                         );
 
                         // Save state
-                        storeState(decryptedState);
+                        await storeState(decryptedState);
 
                         // Store connection
                         await storeConnection(conn);

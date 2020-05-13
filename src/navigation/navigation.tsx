@@ -270,7 +270,7 @@ export const navigationConfig = {
         screen: StatisticsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('performance-money-increase')
+            tabBarIcon: menuIcon('reinvest')
         })
     },
     Watch: {

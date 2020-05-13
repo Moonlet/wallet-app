@@ -30,48 +30,36 @@ export const ATOM_NATIVE: ITokenConfigState = {
 export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickDelegate',
-        iconName: '',
+        iconName: 'vote',
         navigateTo: { screen: undefined, params: undefined }
-    },
-    otherCta: [
-        {
-            title: 'App.labels.quickDelegate',
-            iconName: '',
-            navigateTo: { screen: undefined, params: undefined }
-        },
-        {
-            title: 'App.labels.quickDelegate',
-            iconName: '',
-            navigateTo: { screen: undefined, params: undefined }
-        }
-    ]
+    }
 };
 
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.delegate',
-        iconName: '',
+        iconName: 'vote',
         navigateTo: { screen: undefined, params: undefined }
     },
     otherCta: [
         {
             title: 'App.labels.claimReward',
-            iconName: '',
+            iconName: 'claim-reward',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.reinvest',
-            iconName: '',
+            iconName: 'reinvest',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.redelegate',
-            iconName: '',
+            iconName: 'revote',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.undelegate',
-            iconName: '',
+            iconName: 'unvote',
             navigateTo: { screen: undefined, params: undefined }
         }
     ]

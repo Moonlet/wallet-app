@@ -9,56 +9,40 @@ import { Amount } from '../../components/amount/amount';
 import { Blockchain } from '../../core/blockchain/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
-import { normalize, BASE_DIMENSION } from '../../styles/dimensions';
 import { SmartImage } from '../../library/image/smart-image';
 import { IValidatorCard } from '../../core/blockchain/types/stats';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { themes } from '../../navigation/navigation';
 
 export interface INavigationParams {
     validator: IValidatorCard;
     blockchain: Blockchain;
 }
 
-const navigationOptions = ({ navigation, theme }: any) => ({
-    headerTitle: (
+const HeaderTitleComponent = (
+    props: INavigationProps<INavigationParams> & IThemeProps<ReturnType<typeof stylesProvider>>
+) => {
+    return (
         <View style={{ flexDirection: 'row' }}>
             <SmartImage
-                source={{ uri: navigation.state.params.validator.icon }}
-                style={{
-                    height: normalize(36),
-                    width: normalize(36),
-                    borderRadius: normalize(36),
-                    marginRight: BASE_DIMENSION * 2,
-                    alignSelf: 'center'
-                }}
+                source={{ uri: props.navigation.state.params.validator.icon }}
+                style={props.styles.navigationImage}
             />
             <View style={{ flexDirection: 'column' }}>
-                <Text
-                    style={{
-                        fontSize: normalize(22),
-                        lineHeight: normalize(28),
-                        fontWeight: 'bold',
-                        letterSpacing: 0.35,
-                        color: '#FFFFFF',
-                        textAlign: 'center'
-                    }}
-                >
-                    {navigation.state.params.validator.labelName}
+                <Text style={props.styles.labelName}>
+                    {props.navigation.state.params.validator.labelName}
                 </Text>
-                <Text
-                    style={{
-                        fontSize: normalize(11),
-                        lineHeight: normalize(13),
-                        color: themes[theme].colors.textSecondary,
-                        textAlign: 'center'
-                    }}
-                >
-                    {navigation.state.params.validator.website}
+                <Text style={props.styles.website}>
+                    {props.navigation.state.params.validator.website}
                 </Text>
             </View>
         </View>
-    )
+    );
+};
+
+const HeaderTitle = withTheme(stylesProvider)(HeaderTitleComponent);
+
+const navigationOptions = ({ navigation }: any) => ({
+    headerTitle: () => <HeaderTitle navigation={navigation} />
 });
 
 export class ValidatorScreenComponent extends React.Component<
@@ -69,12 +53,11 @@ export class ValidatorScreenComponent extends React.Component<
     public static navigationOptions = navigationOptions;
 
     public render() {
-        const { styles } = this.props;
-        const config = getBlockchain(this.props.blockchain).config;
+        const { styles, blockchain, validator } = this.props;
+        const config = getBlockchain(blockchain).config;
 
-        const textTop = `Total Votes (11th)`;
-        const amount = '2790000000000000000000000';
-        const blockchain = Blockchain.CELO;
+        const textTop = `${validator.totalLabel} (${validator.rank})`;
+        const amount = '2900000';
         const token = getTokenConfig(blockchain, config.coin);
 
         return (
@@ -85,14 +68,14 @@ export class ValidatorScreenComponent extends React.Component<
                         style={styles.title}
                         amount={amount}
                         token={token.symbol}
-                        tokenDecimals={getTokenConfig(this.props.blockchain, token.symbol).decimals}
+                        tokenDecimals={token.decimals}
                         blockchain={blockchain}
                     />
                     <Amount
                         style={styles.subTitle}
                         amount={amount}
                         token={token.symbol}
-                        tokenDecimals={getTokenConfig(blockchain, token.symbol).decimals}
+                        tokenDecimals={token.decimals}
                         blockchain={blockchain}
                         convert
                     />

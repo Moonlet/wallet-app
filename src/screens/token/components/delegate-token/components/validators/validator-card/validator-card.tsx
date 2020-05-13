@@ -16,7 +16,7 @@ import { chainLayerValidator } from '../../../../../../../core/blockchain/cosmos
 export interface IExternalProps {
     icon: string;
     labelName: string;
-    smallLabelName: string;
+    rank: string;
     website: string;
     rightTitle: string;
     rightSubtitle: string;
@@ -64,9 +64,7 @@ export const ValidatorCardComponent = (
                                 >
                                     {props.labelName}
                                 </Text>
-                                <Text style={props.styles.tertiaryText}>
-                                    {props.smallLabelName}
-                                </Text>
+                                <Text style={props.styles.tertiaryText}>{props.rank}</Text>
                             </View>
 
                             <Text style={props.styles.primaryText}>{props.rightTitle}</Text>

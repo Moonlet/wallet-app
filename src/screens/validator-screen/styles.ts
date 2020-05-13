@@ -41,5 +41,28 @@ export default (theme: ITheme) =>
         },
         bottomContainer: {
             marginHorizontal: BASE_DIMENSION
+        },
+
+        // navigation
+        navigationImage: {
+            height: normalize(36),
+            width: normalize(36),
+            borderRadius: normalize(36),
+            marginRight: BASE_DIMENSION * 2,
+            alignSelf: 'center'
+        },
+        labelName: {
+            fontSize: normalize(22),
+            lineHeight: normalize(28),
+            fontWeight: 'bold',
+            letterSpacing: 0.35,
+            color: '#FFFFFF',
+            textAlign: 'center'
+        },
+        website: {
+            fontSize: normalize(11),
+            lineHeight: normalize(13),
+            color: theme.colors.textSecondary,
+            textAlign: 'center'
         }
     });

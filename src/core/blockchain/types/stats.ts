@@ -46,7 +46,8 @@ export enum CardActionType {
 export interface IValidatorCard {
     icon: string;
     labelName: string;
-    smallLabelName: string;
+    rank: string;
+    totalLabel: string;
     website: string;
     rightTitle: string;
     rightSubtitle: string;

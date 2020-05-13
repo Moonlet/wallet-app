@@ -126,7 +126,8 @@ export const topStatsValues = [
 export const moonletValidator: IValidatorCard = {
     icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
     labelName: 'Moonlet',
-    smallLabelName: '10th',
+    rank: '10th',
+    totalLabel: 'Total Delegated',
     website: 'http://moonlet.io',
     rightTitle: 'Delegation',
     rightSubtitle: '1,000.00 ATOM',
@@ -170,7 +171,8 @@ export const moonletValidator: IValidatorCard = {
 export const chainLayerValidator: IValidatorCard = {
     icon: 'https://thecelo.com/logos/0x4fc4ea624db2e4a1d6195a03744d505cbcd9431b.jpg',
     labelName: 'ChainLayer',
-    smallLabelName: '10th',
+    rank: '10th',
+    totalLabel: 'Total Delegated',
     website: 'http://chainlayer.io',
     rightTitle: 'Delegation',
     rightSubtitle: '2,000.00 ATOM',

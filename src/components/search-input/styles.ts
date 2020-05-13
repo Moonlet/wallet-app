@@ -9,7 +9,7 @@ export default (theme: ITheme) =>
             flexDirection: 'column'
         },
         inputBox: {
-            height: BASE_DIMENSION * 4,
+            height: BASE_DIMENSION * 5,
             borderRadius: BORDER_RADIUS,
             alignSelf: 'stretch',
             backgroundColor: theme.colors.cardBackground,

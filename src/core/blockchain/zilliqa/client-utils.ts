@@ -38,7 +38,10 @@ export class ClientUtils implements IClientUtils {
 
         if (token.type === TokenType.ZRC2) {
             const transferEvent = (txData.receipt?.event_logs || []).find(
-                event => event._eventname === 'Transfer'
+                event =>
+                    ['Transfer', 'TransferSuccess', 'TransferFromSuccess'].indexOf(
+                        event._eventname
+                    ) >= 0
             );
 
             data.params = [

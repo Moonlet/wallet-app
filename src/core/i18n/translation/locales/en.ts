@@ -393,7 +393,9 @@ export const translation: ITranslations = {
             COSMOS_ERROR_14: 'Insufficient funds for transaction',
             CONTRACT_TX_NORMAL_NOT_ALLOWED:
                 "{{address}} is a smart contract that doesn't accept normal transactions",
-            WAITING_TX_CONFIRM: 'Waiting for transaction confirmation from your mobile'
+            WAITING_TX_CONFIRM: 'Waiting for transaction confirmation from your mobile.',
+            WAITING_TX_CONFIRM_CANCEL:
+                'Waiting for transaction confirmation from your mobile. If you changed your mind please click on cancel below.'
         },
         SecurityChecks: {
             title: 'Security Warning!',
@@ -438,7 +440,8 @@ export const translation: ITranslations = {
         TransactionRequest: {
             title: 'Transaction request',
             walletName: 'Wallet name',
-            accountName: 'Account name'
+            accountName: 'Account name',
+            errorMessage: 'Transaction request is not valid anymore.'
         }
     },
     plural: (n: number, ord?: boolean) => {

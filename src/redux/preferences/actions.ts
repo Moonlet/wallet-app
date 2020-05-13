@@ -82,12 +82,14 @@ export const toggleTestNet = () => (dispatch: Dispatch<any>, getState: () => IRe
     }
 
     const selectedAccount = getSelectedAccount(getState());
-    getBalance(
-        selectedAccount.blockchain,
-        selectedAccount.address,
-        undefined,
-        true
-    )(dispatch, getState);
+    if (selectedAccount) {
+        getBalance(
+            selectedAccount.blockchain,
+            selectedAccount.address,
+            undefined,
+            true
+        )(dispatch, getState);
+    }
 };
 
 export function toggleBiometricAuth() {

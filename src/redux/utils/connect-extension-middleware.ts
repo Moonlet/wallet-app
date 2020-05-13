@@ -84,7 +84,7 @@ export const connectExtensionMiddleware = store => next => async action => {
 
                 if (storageStateHash) {
                     if (storageStateHash !== currentStateHash) {
-                        // Synct Extension with the new state
+                        // Sync Extension with the new state
                         if (Object.keys(statePatch).length > 0) {
                             try {
                                 const connection = await ConnectExtensionWeb.getConnection();

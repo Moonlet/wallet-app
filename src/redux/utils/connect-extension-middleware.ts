@@ -99,10 +99,12 @@ export const connectExtensionMiddleware = store => next => async action => {
                     }
                 } else {
                     // Save State Hash to Async Storage
+                    // @ts-ignore - ignore for web
                     await storeItemToStorage(currentStateHash, CONN_EXTENSION_STATE);
                 }
             } catch {
                 // Save State Hash to Async Storage
+                // @ts-ignore - ignore for web
                 await storeItemToStorage(currentStateHash, CONN_EXTENSION_STATE);
             }
         }

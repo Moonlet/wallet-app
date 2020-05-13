@@ -103,9 +103,14 @@ export class AccountSettingsModalComponent extends React.Component<
         const url = getBlockchain(this.props.account.blockchain)
             .networks.filter(n => n.chainId === this.props.chainId)[0]
             .explorer.getAccountUrl(this.props.account.address);
+
         Linking.canOpenURL(url).then(supported => {
             if (supported) {
-                Linking.openURL(url);
+                if (Platform.OS === 'web') {
+                    window.open(url);
+                } else {
+                    Linking.openURL(url);
+                }
             }
         });
     }
@@ -113,7 +118,11 @@ export class AccountSettingsModalComponent extends React.Component<
     private reportIssue() {
         Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
             if (supported) {
-                Linking.openURL(CONFIG.supportUrl);
+                if (Platform.OS === 'web') {
+                    window.open(CONFIG.supportUrl);
+                } else {
+                    Linking.openURL(CONFIG.supportUrl);
+                }
             }
         });
     }

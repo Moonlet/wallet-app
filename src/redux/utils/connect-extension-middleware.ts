@@ -82,22 +82,20 @@ export const connectExtensionMiddleware = store => next => async action => {
             try {
                 const storageStateHash = await getItemFromStorage(CONN_EXTENSION_STATE);
 
-                if (storageStateHash) {
-                    if (storageStateHash !== currentStateHash) {
-                        // Sync Extension with the new state
-                        if (Object.keys(statePatch).length > 0) {
-                            try {
-                                const connection = await ConnectExtensionWeb.getConnection();
+                if (storageStateHash && storageStateHash !== currentStateHash) {
+                    // Sync Extension with the new state
+                    if (Object.keys(statePatch).length > 0) {
+                        try {
+                            const connection = await ConnectExtensionWeb.getConnection();
 
-                                if (connection) {
-                                    await ConnectExtension.syncExtension(connection);
-                                }
-                            } catch {
-                                lastSentState = {};
+                            if (connection) {
+                                await ConnectExtension.syncExtension(connection);
                             }
+                        } catch {
+                            lastSentState = {};
                         }
                     }
-                } else {
+
                     // Save State Hash to Async Storage
                     // @ts-ignore - ignore for web
                     await storeItemToStorage(currentStateHash, CONN_EXTENSION_STATE);

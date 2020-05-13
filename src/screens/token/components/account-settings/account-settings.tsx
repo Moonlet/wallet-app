@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, Linking, Platform } from 'react-native';
+import { View, TouchableOpacity, Platform } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
@@ -16,6 +16,7 @@ import { LoadingIndicator } from '../../../../components/loading-indicator/loadi
 import { WalletType } from '../../../../core/wallet/types';
 import { ViewKey, KeyType } from './components/view-key/view-key';
 import CONFIG from '../../../../config';
+import { openURL } from '../../../../core/utils/format-string';
 
 export interface IExternalProps {
     onDonePressed: () => any;
@@ -104,27 +105,11 @@ export class AccountSettingsModalComponent extends React.Component<
             .networks.filter(n => n.chainId === this.props.chainId)[0]
             .explorer.getAccountUrl(this.props.account.address);
 
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-                if (Platform.OS === 'web') {
-                    window.open(url);
-                } else {
-                    Linking.openURL(url);
-                }
-            }
-        });
+        openURL(url);
     }
 
     private reportIssue() {
-        Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
-            if (supported) {
-                if (Platform.OS === 'web') {
-                    window.open(CONFIG.supportUrl);
-                } else {
-                    Linking.openURL(CONFIG.supportUrl);
-                }
-            }
-        });
+        openURL(CONFIG.supportUrl);
     }
 
     private closeModal() {

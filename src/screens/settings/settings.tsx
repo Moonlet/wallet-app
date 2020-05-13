@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-    ScrollView,
-    View,
-    Switch,
-    TouchableOpacity,
-    Platform,
-    Clipboard,
-    Linking
-} from 'react-native';
+import { ScrollView, View, Switch, TouchableOpacity, Platform, Clipboard } from 'react-native';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { Text, Button } from '../../library';
 import { IReduxState } from '../../redux/state';
@@ -33,6 +25,7 @@ import { normalize } from '../../styles/dimensions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { resetAllData } from '../../redux/app/actions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
+import { openURL } from '../../core/utils/format-string';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -100,15 +93,7 @@ export class SettingsScreenComponent extends React.Component<
     }
 
     public reportIssueTouch() {
-        Linking.canOpenURL(CONFIG.supportUrl).then(supported => {
-            if (supported) {
-                if (Platform.OS === 'web') {
-                    window.open(CONFIG.supportUrl);
-                } else {
-                    Linking.openURL(CONFIG.supportUrl);
-                }
-            }
-        });
+        openURL(CONFIG.supportUrl);
     }
 
     private renderRow(label: string, callback: any) {

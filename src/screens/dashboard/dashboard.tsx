@@ -187,6 +187,12 @@ export class DashboardScreenComponent extends React.Component<
                 this.setState({ extraSelectedBlockchain: this.props.selectedBlockchain });
             }
         }
+
+        if (this.props.selectedAccount !== prevProps.selectedAccount && Platform.OS === 'web') {
+            // Used on web to get balances when selectedAccount is changed
+            // NavigationEvents is not enough for the web in order to get balances
+            this.onFocus();
+        }
     }
 
     public setDashboardMenuBottomSheet = () => {

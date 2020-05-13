@@ -33,6 +33,14 @@ export const deleteFromStorage = async (key: string) => {
     }
 };
 
+export const storeItemToStorage = async (data: string, key: string) => {
+    try {
+        await AsyncStorage.setItem(`${KEY_PREFIX}${key}`, data);
+    } catch (e) {
+        return Promise.reject();
+    }
+};
+
 export const getItemFromStorage = async (key: string) => {
     try {
         return Promise.resolve(await AsyncStorage.getItem(`${KEY_PREFIX}${key}`));

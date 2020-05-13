@@ -421,7 +421,7 @@ export class DashboardScreenComponent extends React.Component<
                         chainId={chainId}
                     />
                 </ScrollView>
-                {this.renderCoinBalanceCard()}
+                {this.props.selectedBlockchain && this.renderCoinBalanceCard()}
             </View>
         );
     }

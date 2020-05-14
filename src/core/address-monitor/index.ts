@@ -3,12 +3,11 @@ import { Blockchain } from '../blockchain/types';
 import DeviceInfo from 'react-native-device-info';
 import { IWalletsState, IAccountState } from '../../redux/wallets/state';
 import { CONFIG } from '../../config';
+import { HttpClient } from '../utils/http-client';
 
 const url = CONFIG.dataApiUrl + '/notifications/register';
+const http = new HttpClient(url);
 const monitoredBlockchains = [Blockchain.ETHEREUM, Blockchain.ZILLIQA];
-
-// const getDeviceToken = (): Promise<string> =>
-//     Platform.OS === 'android' ? Notifications.getToken() : getApnsToken();
 
 export const updateAddressMonitorTokens = (wallets: IWalletsState) => {
     const addresses = {};
@@ -32,19 +31,11 @@ export const updateAddressMonitorTokens = (wallets: IWalletsState) => {
 
     const deviceId = DeviceInfo.getUniqueId();
     Notifications.getToken().then(token => {
-        const request = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                deviceId,
-                tokenType: 'fcm',
-                token,
-                addresses: requestAddresses
-            })
-        };
-
-        fetch(url, request);
+        http.post('', {
+            deviceId,
+            tokenType: 'fcm',
+            token,
+            addresses: requestAddresses
+        });
     });
 };

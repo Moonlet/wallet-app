@@ -385,7 +385,7 @@ export const getBalance = (
 export const updateTransactionFromBlockchain = (
     transactionHash: string,
     blockchain: Blockchain,
-    chainId: string | number,
+    chainId: ChainIdType,
     broadcastedOnBlock: number,
     displayNotification: boolean,
     navigateToTransaction: boolean = false

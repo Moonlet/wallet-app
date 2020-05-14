@@ -14,8 +14,8 @@ export class ClientUtils implements IClientUtils {
     async getTransaction(hash: string): Promise<IBlockchainTransaction> {
         const txData = await this.client.http.jsonRpc('GetTransaction', [hash]).then(response => {
             if (!response.result) {
-                Promise.reject(
-                    response.error.message || `Error getting transaction info for ${hash}`
+                return Promise.reject(
+                    response.message || `Error getting transaction receipt for ${hash}`
                 );
             }
             return response.result;

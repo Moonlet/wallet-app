@@ -39,9 +39,9 @@ export interface IReduxProps {
 const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
     return {
-        selectedAccount: getSelectedAccount(state),
+        selectedAccount,
         exchangeRates: state.market.exchangeRates,
-        accounts: getAccounts(state, selectedAccount.blockchain),
+        accounts: selectedAccount ? getAccounts(state, selectedAccount.blockchain) : [],
         chainId: getChainId(state, selectedAccount.blockchain)
     };
 };
@@ -107,11 +107,9 @@ export class AccountsBottomSheetComponent extends React.Component<
                         const blockchain = account.blockchain;
                         const tokenConfig = getTokenConfig(blockchain, blockchainConfig.coin);
 
-                        const balance = calculateBalance(
-                            account,
-                            this.props.chainId,
-                            this.props.exchangeRates
-                        );
+                        const balance =
+                            this.props.selectedAccount &&
+                            calculateBalance(account, this.props.chainId, this.props.exchangeRates);
 
                         const label = (
                             <View>

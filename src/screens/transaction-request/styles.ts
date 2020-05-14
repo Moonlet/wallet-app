@@ -6,6 +6,7 @@ import {
     BORDER_RADIUS,
     isIphoneXorAbove
 } from '../../styles/dimensions';
+import { pw, ph } from '../../styles';
 
 // TODO: check this or find a better way
 const CONTAINER_TOP_PADDING =
@@ -74,5 +75,23 @@ export default (theme: ITheme) =>
             lineHeight: normalize(20),
             color: theme.colors.textSecondary,
             alignSelf: 'center'
+        },
+        errorContainer: {
+            flex: 1,
+            justifyContent: 'center',
+            flexDirection: 'column'
+        },
+        logoImage: {
+            height: ph(30),
+            width: pw(60),
+            alignSelf: 'center',
+            resizeMode: 'contain',
+            marginBottom: BASE_DIMENSION * 2
+        },
+        errorMessage: {
+            fontSize: normalize(19),
+            lineHeight: normalize(25),
+            textAlign: 'center',
+            color: theme.colors.textSecondary
         }
     });

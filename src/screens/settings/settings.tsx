@@ -28,11 +28,11 @@ import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
 import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 import { setPinCode, clearPinCode } from '../../core/secure/keychain';
-import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { resetAllData } from '../../redux/app/actions';
+import { LoadingModal } from '../../components/loading-modal/loading-modal';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -45,8 +45,6 @@ export interface IReduxProps {
     biometricActive: boolean;
     toggleBiometricAuth: typeof toggleBiometricAuth;
     setDisplayPasswordModal: typeof setDisplayPasswordModal;
-    openLoadingModal: typeof openLoadingModal;
-    closeLoadingModal: typeof closeLoadingModal;
     resetAllData: typeof resetAllData;
 }
 
@@ -59,8 +57,6 @@ const mapStateToProps = (state: IReduxState) => ({
 const mapDispatchToProps = {
     toggleBiometricAuth,
     setDisplayPasswordModal,
-    openLoadingModal,
-    closeLoadingModal,
     resetAllData
 };
 
@@ -155,7 +151,8 @@ export class SettingsScreenComponent extends React.Component<
                                         if (this.props.biometricActive) {
                                             await clearPinCode();
                                         } else {
-                                            this.props.openLoadingModal();
+                                            await LoadingModal.open();
+
                                             const password = await PasswordModal.getPassword(
                                                 undefined,
                                                 undefined,
@@ -168,7 +165,7 @@ export class SettingsScreenComponent extends React.Component<
                                     } catch {
                                         //
                                     } finally {
-                                        this.props.closeLoadingModal();
+                                        await LoadingModal.close();
                                     }
                                 }}
                                 value={this.props.biometricActive}
@@ -198,7 +195,7 @@ export class SettingsScreenComponent extends React.Component<
 
                 {this.renderRow(translate('Settings.changePin'), async () => {
                     try {
-                        this.props.openLoadingModal();
+                        await LoadingModal.open();
                         await PasswordModal.changePassword();
                         Dialog.info(
                             translate('App.labels.success'),
@@ -207,7 +204,7 @@ export class SettingsScreenComponent extends React.Component<
                     } catch {
                         //
                     } finally {
-                        this.props.closeLoadingModal();
+                        await LoadingModal.close();
                     }
                 })}
             </View>

@@ -80,7 +80,8 @@ export interface ITransferTransactionExtraFields {
 export enum TransactionMessageType {
     INFO = 'INFO',
     ERROR = 'ERROR',
-    WARNING = 'WARNING'
+    WARNING = 'WARNING',
+    COMPONENT = 'COMPONENT'
 }
 
 export enum TransactionMessageText {
@@ -92,5 +93,6 @@ export enum TransactionMessageText {
     TR_UNDERPRICED = 'TR_UNDERPRICED',
     NOT_ENOUGH_TOKENS = 'NOT_ENOUGH_TOKENS',
     CONTRACT_TX_NORMAL_NOT_ALLOWED = 'CONTRACT_TX_NORMAL_NOT_ALLOWED',
-    WAITING_TX_CONFIRM = 'WAITING_TX_CONFIRM'
+    WAITING_TX_CONFIRM = 'WAITING_TX_CONFIRM',
+    WAITING_TX_CONFIRM_CANCEL = 'WAITING_TX_CONFIRM_CANCEL'
 }

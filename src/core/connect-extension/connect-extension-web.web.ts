@@ -1,7 +1,7 @@
 import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt.web';
 import CryptoJS from 'crypto-js';
 import { v4 as uuidv4 } from 'uuid';
-import { IQRCodeConn, FirebaseRef, FIREBASE_BUCKET, IStorage } from './types';
+import { IQRCodeConn, FirebaseRef, IStorage } from './types';
 import { storage, database } from 'firebase';
 import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage.web';
 import { CONN_EXTENSION } from '../../core/constants/app';
@@ -9,11 +9,12 @@ import Bowser from 'bowser';
 import { browser } from 'webextension-polyfill-ts';
 import { buildState } from './conn-ext-build-state/conn-ext-build-state';
 import { store } from '../../redux/config';
-import { openLoadingModal, closeLoadingModal } from '../../redux/ui/loading-modal/actions';
 import { NavigationService } from '../../navigation/navigation-service';
 import { extensionReduxUpdateState } from '../../redux/app/actions';
 import { IBlockchainTransaction } from '../blockchain/types';
 import { buildTransactions } from './conn-ext-build-state/build-transactions';
+import { LoadingModal } from '../../components/loading-modal/loading-modal';
+import CONFIG from '../../config';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -120,7 +121,7 @@ export const ConnectExtensionWeb = (() => {
         try {
             // Download file from Firebase Storage - State
             const urlDowndload = await storage()
-                .refFromURL(FIREBASE_BUCKET)
+                .refFromURL(CONFIG.extSync.bucket)
                 .child(connectionId)
                 .getDownloadURL();
 
@@ -191,7 +192,7 @@ export const ConnectExtensionWeb = (() => {
 
             if (snap?.lastSynced && snap?.authToken) {
                 // show loading untill data is fetch and state is build
-                store.dispatch(openLoadingModal());
+                await LoadingModal.open();
 
                 try {
                     // Extension the state from Firebase Storage
@@ -218,9 +219,9 @@ export const ConnectExtensionWeb = (() => {
                     }
 
                     // close loading modal
-                    store.dispatch(closeLoadingModal() as any);
+                    await LoadingModal.close();
                 } catch (err) {
-                    store.dispatch(closeLoadingModal() as any);
+                    await LoadingModal.close();
                     Promise.reject(err);
                 }
             } else {
@@ -235,7 +236,10 @@ export const ConnectExtensionWeb = (() => {
 
     const listenerReqResponse = async (
         requestId: string,
-        callback: (res: { txHash: string; tx: IBlockchainTransaction }) => void
+        callback: (res: {
+            result: { txHash: string; tx: IBlockchainTransaction };
+            errorCode: string;
+        }) => void
     ) => {
         try {
             const connection = await getConnection();
@@ -248,11 +252,24 @@ export const ConnectExtensionWeb = (() => {
                     if (snapshot.exists()) {
                         const snap = await snapshot.val();
 
-                        const tx: IBlockchainTransaction = JSON.parse(
-                            decrypt(snap.tx, connection.encKey).toString(CryptoJS.enc.Utf8)
-                        );
+                        const result = { txHash: undefined, tx: undefined };
 
-                        callback({ txHash: snap.txHash, tx });
+                        if (snap?.result) {
+                            result.txHash = snap.result.txHash;
+
+                            const tx: IBlockchainTransaction = JSON.parse(
+                                decrypt(snap.result.tx, connection.encKey).toString(
+                                    CryptoJS.enc.Utf8
+                                )
+                            );
+
+                            result.tx = tx;
+                        }
+
+                        callback({
+                            result,
+                            errorCode: snap?.errorCode
+                        });
                     }
                 });
         } catch {

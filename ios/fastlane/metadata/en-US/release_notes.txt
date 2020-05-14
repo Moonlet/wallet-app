@@ -1,1 +1,4 @@
+Fixed: We did a few changes here and there, fixed some bugs that were quite annoying, brought some new features into the light. The good stuff is the same but now there's more of it. Here's what's outstanding:
 
+- It handshakes smoothly with browser extension
+- Both inbound and outbound notifications enabled

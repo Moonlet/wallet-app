@@ -16,7 +16,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { generateEncryptionKey } from '../../core/secure/keychain';
 import { translate } from '../../core/i18n';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
-import { openLoadingModal } from '../../redux/ui/loading-modal/actions';
+import { LoadingModal } from '../../components/loading-modal/loading-modal';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -25,12 +25,10 @@ export interface IProps {
 
 export interface IReduxProps {
     createHDWallet: typeof createHDWallet;
-    openLoadingModal: typeof openLoadingModal;
 }
 
 const mapDispatchToProps = {
-    createHDWallet,
-    openLoadingModal
+    createHDWallet
 };
 
 const navigationOptions = () => ({ header: null });
@@ -80,7 +78,7 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
     }
 
     public async onPressGenerateWallet() {
-        this.props.openLoadingModal();
+        await LoadingModal.open();
         await generateEncryptionKey('000000');
         this.props.createHDWallet(this.mnemonic.join(' '), '000000', () => {
             this.props.navigation.dispatch(StackActions.popToTop());

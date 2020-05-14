@@ -44,6 +44,7 @@ import { Amount } from '../../components/amount/amount';
 import { WalletType } from '../../core/wallet/types';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { resetAllData } from '../../redux/app/actions';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -62,6 +63,7 @@ export interface IReduxProps {
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
     chainId: ChainIdType;
+    resetAllData: typeof resetAllData;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -84,7 +86,8 @@ const mapStateToProps = (state: IReduxState) => {
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
-    setSelectedBlockchain
+    setSelectedBlockchain,
+    resetAllData
 };
 
 interface IState {
@@ -164,6 +167,20 @@ export class DashboardScreenComponent extends React.Component<
             } else {
                 this.setState({ isLoading: false });
                 ConnectExtensionWeb.listenLastSync();
+
+                try {
+                    const isStored = await ConnectExtensionWeb.isConnectionIdStoredFirebase();
+
+                    if (isStored === false) {
+                        this.setState({ isLoading: true });
+
+                        await ConnectExtensionWeb.disconnect();
+                        this.props.resetAllData();
+                        location.reload();
+                    }
+                } catch {
+                    //
+                }
             }
         } else {
             if (this.props.blockchains.length === 0 || this.props.walletsNr < 1) {

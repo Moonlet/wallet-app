@@ -277,6 +277,23 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
+    const isConnectionIdStoredFirebase = async (): Promise<boolean> => {
+        try {
+            const connection = await getConnection();
+
+            if (connection) {
+                const connectionsRef = getRealtimeDBConnectionsRef();
+                const dataSnap = await connectionsRef.child(connection.connectionId).once('value');
+
+                return dataSnap.exists();
+            } else {
+                return Promise.reject();
+            }
+        } catch (err) {
+            return Promise.reject(err);
+        }
+    };
+
     return {
         storeConnection,
         disconnect,
@@ -287,6 +304,7 @@ export const ConnectExtensionWeb = (() => {
         listenLastSync,
         listenLastSyncForConnect,
         getRequestIdParams,
-        listenerReqResponse
+        listenerReqResponse,
+        isConnectionIdStoredFirebase
     };
 })();

@@ -11,6 +11,11 @@ import CryptoJS from 'crypto-js';
 import { IBlockchainTransaction } from '../blockchain/types';
 
 export const ConnectExtensionWeb = (() => {
+    const getRealtimeDBConnectionsRef = () => {
+        const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
+        return realtimeDB.child(FirebaseRef.CONNECTIONS);
+    };
+
     const getRealtimeDBRequestsRef = () => {
         const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
         return realtimeDB.child(FirebaseRef.REQUESTS);
@@ -135,6 +140,23 @@ export const ConnectExtensionWeb = (() => {
         //
     };
 
+    const isConnectionIdStoredFirebase = async (): Promise<boolean> => {
+        try {
+            const connection = await getConnection();
+
+            if (connection) {
+                const connectionsRef = getRealtimeDBConnectionsRef();
+                const dataSnap = await connectionsRef.child(connection.connectionId).once('value');
+
+                return dataSnap.exists();
+            } else {
+                return Promise.reject();
+            }
+        } catch (err) {
+            return Promise.reject(err);
+        }
+    };
+
     return {
         storeConnection,
         disconnect,
@@ -145,6 +167,7 @@ export const ConnectExtensionWeb = (() => {
         listenLastSync,
         listenLastSyncForConnect,
         getRequestIdParams,
-        listenerReqResponse
+        listenerReqResponse,
+        isConnectionIdStoredFirebase
     };
 })();

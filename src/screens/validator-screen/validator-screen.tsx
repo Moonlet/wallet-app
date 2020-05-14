@@ -57,7 +57,7 @@ export class ValidatorScreenComponent extends React.Component<
         const config = getBlockchain(blockchain).config;
 
         const textTop = `${validator.totalLabel} (${validator.rank})`;
-        const amount = '2900000';
+        const amount = validator.totalAmountStd;
         const token = getTokenConfig(blockchain, config.coin);
 
         return (

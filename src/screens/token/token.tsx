@@ -170,7 +170,6 @@ export class TokenScreenComponent extends React.Component<
                         accountIndex={this.props.accountIndex}
                         blockchain={this.props.blockchain}
                         token={this.props.token}
-                        extensionTransactionPayload={this.props.extensionTransactionPayload}
                         navigation={this.props.navigation}
                     />
                 );

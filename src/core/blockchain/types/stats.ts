@@ -47,6 +47,7 @@ export interface IValidatorCard {
     icon: string;
     labelName: string;
     rank: string;
+    totalAmountStd: string;
     totalLabel: string;
     website: string;
     rightTitle: string;

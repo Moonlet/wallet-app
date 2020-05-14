@@ -27,7 +27,6 @@ import { NavigationScreenProp, NavigationState } from 'react-navigation';
 export interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
-    extensionTransactionPayload: any; // TODO add typing
     token: ITokenState;
     navigation: NavigationScreenProp<NavigationState>;
 }
@@ -53,7 +52,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
             ownProps.token
         ),
         wallet: getSelectedWallet(state),
-        extensionTransactionPayload: ownProps.extensionTransactionPayload,
         chainId: getChainId(state, ownProps.blockchain)
     };
 };
@@ -81,12 +79,6 @@ export class DelegateTokenScreenComponent extends React.Component<
         this.setState({ activeTab: tab });
     }
 
-    // export interface IProps {
-    //     accountIndex: number;
-    //     blockchain: Blockchain;
-    //     extensionTransactionPayload: any; // TODO add typing
-    //     token: ITokenConfig;
-    // }
     private renderTabs() {
         const config = getBlockchain(this.props.blockchain).config;
         switch (this.state.activeTab) {
@@ -95,7 +87,6 @@ export class DelegateTokenScreenComponent extends React.Component<
                     <AccountTab
                         accountIndex={this.props.accountIndex}
                         blockchain={this.props.blockchain}
-                        extensionTransactionPayload={this.props.extensionTransactionPayload}
                         token={this.props.token}
                     />
                 );

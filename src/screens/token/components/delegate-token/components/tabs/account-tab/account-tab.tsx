@@ -20,7 +20,6 @@ import { NavigationService } from '../../../../../../../navigation/navigation-se
 export interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
-    extensionTransactionPayload: any; // TODO add typing
     token: ITokenState;
 }
 

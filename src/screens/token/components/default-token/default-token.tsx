@@ -109,8 +109,6 @@ export class DefaultTokenScreenComponent extends React.Component<
                     onPress: () => {
                         PasswordModal.getPassword()
                             .then(password => {
-                                // TODO: approveRequest
-                                // id: this.props.extensionTransactionPayload.id
                                 this.props.sendTransferTransaction(
                                     account,
                                     toAddress,

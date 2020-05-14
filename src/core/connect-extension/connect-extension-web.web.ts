@@ -201,7 +201,7 @@ export const ConnectExtensionWeb = (() => {
                         const decryptedState = JSON.parse(await decrypt(extState, conn.encKey));
 
                         // Save state
-                        storeState(decryptedState);
+                        await storeState(decryptedState);
 
                         // Store connection
                         await storeConnection(conn);

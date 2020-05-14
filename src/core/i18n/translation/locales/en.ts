@@ -321,7 +321,7 @@ export const translation: ITranslations = {
             welcomeTextWeb: 'To use this extension, install our mobile app and scan the code',
             webStep1: 'Open Moonlet app on your mobile',
             webStep2: 'Tap on menu icon from the header',
-            webStep3: 'Select icon to start scan the code'
+            webStep3: 'Scan the QR code to connect'
         },
         Account: {
             noTransactions: 'No transactions available',

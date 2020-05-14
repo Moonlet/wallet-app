@@ -12,7 +12,7 @@ import {
     generateEncryptionKey,
     getPinCode,
     setPinCode
-} from '../../core/secure/keychain';
+} from '../../core/secure/keychain/keychain';
 import { changePIN } from '../../redux/wallets/actions';
 import { Text } from '../../library';
 import { IThemeProps } from '../../core/theme/with-theme';

@@ -1,9 +1,8 @@
-import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt.web';
-import CryptoJS from 'crypto-js';
+import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt/encrypt.web';
 import { v4 as uuidv4 } from 'uuid';
 import { IQRCodeConn, FirebaseRef, IStorage } from './types';
 import { storage, database } from 'firebase';
-import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage.web';
+import { storeEncrypted, readEncrypted, deleteFromStorage } from '../secure/storage/storage.web';
 import { CONN_EXTENSION } from '../../core/constants/app';
 import Bowser from 'bowser';
 import { browser } from 'webextension-polyfill-ts';
@@ -101,7 +100,7 @@ export const ConnectExtensionWeb = (() => {
     const generateQRCodeUri = async (): Promise<{ uri: string; conn: IQRCodeConn }> => {
         const conn: IQRCodeConn = {
             connectionId: uuidv4(),
-            encKey: generateRandomEncryptionKey().toString(CryptoJS.enc.Base64),
+            encKey: await generateRandomEncryptionKey(),
             os: await getPlatformOS(),
             platform: Bowser.getParser(window.navigator.userAgent).getBrowserName()
         };
@@ -162,7 +161,7 @@ export const ConnectExtensionWeb = (() => {
 
                             if (extState) {
                                 const decryptedState = JSON.parse(
-                                    decrypt(extState, connection.encKey).toString(CryptoJS.enc.Utf8)
+                                    await decrypt(extState, connection.encKey)
                                 );
 
                                 // Save state
@@ -199,9 +198,7 @@ export const ConnectExtensionWeb = (() => {
                     const extState = await downloadFileStorage(conn.connectionId);
 
                     if (extState) {
-                        const decryptedState = JSON.parse(
-                            decrypt(extState, conn.encKey).toString(CryptoJS.enc.Utf8)
-                        );
+                        const decryptedState = JSON.parse(await decrypt(extState, conn.encKey));
 
                         // Save state
                         storeState(decryptedState);
@@ -258,9 +255,7 @@ export const ConnectExtensionWeb = (() => {
                             result.txHash = snap.result.txHash;
 
                             const tx: IBlockchainTransaction = JSON.parse(
-                                decrypt(snap.result.tx, connection.encKey).toString(
-                                    CryptoJS.enc.Utf8
-                                )
+                                await decrypt(snap.result.tx, connection.encKey)
                             );
 
                             result.tx = tx;

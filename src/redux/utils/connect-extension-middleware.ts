@@ -15,8 +15,8 @@ import {
     trimContacts,
     trimPreferences
 } from '../../core/connect-extension/conn-ext-trim-state';
-import { hash } from '../../core/secure/encrypt';
-import { getItemFromStorage, storeItemToStorage } from '../../core/secure/storage';
+import { hash } from '../../core/secure/encrypt/encrypt';
+import { getItemFromStorage, storeItemToStorage } from '../../core/secure/storage/storage';
 import { CONN_EXTENSION } from '../../core/constants/app';
 
 let lastSentState: any = {};

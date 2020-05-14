@@ -29,7 +29,8 @@ import {
     ICON_CONTAINER_SIZE,
     BASE_DIMENSION,
     normalize,
-    SCREEN_WIDTH
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT
 } from '../../styles/dimensions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
@@ -446,7 +447,19 @@ export class DashboardScreenComponent extends React.Component<
         }
 
         return (
-            <View style={styles.container}>
+            <View
+                style={[
+                    styles.container,
+                    {
+                        height:
+                            Platform.OS === 'web'
+                                ? blockchains.length === 1
+                                    ? SCREEN_HEIGHT
+                                    : 'calc(100vh - 122px)'
+                                : 'auto'
+                    }
+                ]}
+            >
                 <TestnetBadge />
 
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />

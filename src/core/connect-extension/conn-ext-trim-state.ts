@@ -106,7 +106,7 @@ const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferenc
         currency: preferences.currency,
         testNet: preferences.testNet,
         networks: cloneDeep(preferences.networks),
-        blockchains: Object.keys(preferences.blockchains)
+        blockchains: cloneDeep(preferences.blockchains)
     };
 };
 

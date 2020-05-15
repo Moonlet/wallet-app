@@ -1,13 +1,13 @@
 import React from 'react';
-import { View, Modal, Platform, Linking } from 'react-native';
+import { View, Modal } from 'react-native';
 import { CameraKitCameraScreen } from 'react-native-camera-kit';
 import { translate } from '../../core/i18n';
-import AndroidOpenSettings from 'react-native-android-open-settings';
 import { Dialog } from '../dialog/dialog';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
 import { connect } from 'react-redux';
 import { checkDeviceCameraPermission } from '../../core/utils/request-permissions';
+import { openPhoneSettings } from '../../core/utils/linking-handler';
 
 export interface IExternalProps {
     onQrCodeScanned: (qrCode: string) => any;
@@ -36,21 +36,7 @@ export class QrModalReaderComponent extends React.Component<IExternalProps & IRe
         props.obRef && props.obRef(this);
     }
 
-    public openPhoneSettings() {
-        if (Platform.OS === 'ios') {
-            Linking.canOpenURL('app-settings:')
-                .then(supported => {
-                    if (supported) {
-                        return Linking.openURL('app-settings:');
-                    }
-                })
-                .catch();
-        } else {
-            AndroidOpenSettings.appDetailsSettings();
-        }
-    }
-
-    public open = async () => {
+    public async open() {
         this.props.setDisplayPasswordModal(false);
 
         const accessGranted = await checkDeviceCameraPermission();
@@ -67,11 +53,11 @@ export class QrModalReaderComponent extends React.Component<IExternalProps & IRe
                 },
                 {
                     text: translate('App.labels.settings'),
-                    onPress: () => this.openPhoneSettings()
+                    onPress: () => openPhoneSettings()
                 }
             );
         }
-    };
+    }
 
     public render() {
         return (

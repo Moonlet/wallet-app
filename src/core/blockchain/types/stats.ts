@@ -33,7 +33,7 @@ export abstract class GenericStats<Client = BlockchainGenericClient> {
         this.config = config;
     }
 
-    public getAccountDelegateStats(): AccountStats {
+    public async getAccountDelegateStats(): Promise<AccountStats> {
         throw new Error('Not Implemented');
     }
 }

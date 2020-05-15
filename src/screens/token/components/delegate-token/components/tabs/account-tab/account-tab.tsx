@@ -12,10 +12,11 @@ import { connect } from 'react-redux';
 import { StatsComponent } from '../../stats-component/stats-component';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../../../../../../redux/preferences/selectors';
-import { DelegationCTA } from '../../../../../../../components/delegation-cta/delegation-cta';
+import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { Button } from '../../../../../../../library';
 import { translate } from '../../../../../../../core/i18n';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
+import { AccountStats } from '../../../../../../../core/blockchain/types/stats';
 
 export interface IProps {
     accountIndex: number;
@@ -35,23 +36,45 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
     };
 };
 
+interface IState {
+    accountStats: AccountStats;
+}
+
 export class AccountTabComponent extends React.Component<
-    IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
+    constructor(props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+        super(props);
+
+        this.state = {
+            accountStats: undefined
+        };
+    }
+    public componentDidMount() {
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+        blockchainInstance
+            .getStats(this.props.chainId)
+            .getAccountDelegateStats()
+            .then(accStats => {
+                this.setState({ accountStats: accStats });
+            })
+            .catch();
+    }
+
     public render() {
         const styles = this.props.styles;
 
         const blockchainInstance = getBlockchain(this.props.blockchain);
-        const stats = blockchainInstance.getStats(this.props.chainId);
-
-        const accountStats = stats.getAccountDelegateStats();
         const tokenUiConfig = blockchainInstance.config.ui.token;
 
         return (
             <View style={styles.container}>
                 <View style={{ flex: 1 }}>
                     <AccountAddress account={this.props.account} token={this.props.token} />
-                    <StatsComponent accountStats={accountStats} />
+                    {this.state.accountStats && (
+                        <StatsComponent accountStats={this.state.accountStats} />
+                    )}
                 </View>
                 <View style={styles.bottomContainer}>
                     <View style={styles.buttonsRowContainer}>
@@ -86,7 +109,7 @@ export class AccountTabComponent extends React.Component<
                             {translate('App.labels.receive')}
                         </Button>
                     </View>
-                    <DelegationCTA mainCta={tokenUiConfig.accountCTA.mainCta} />
+                    <CtaGroup mainCta={tokenUiConfig.accountCTA.mainCta} />
                 </View>
             </View>
         );

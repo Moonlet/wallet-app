@@ -9,7 +9,7 @@ import { Client } from './client';
 import { Blockchain } from '../types/blockchain';
 
 export class Stats extends GenericStats<Client> {
-    public getAccountDelegateStats(): AccountStats {
+    public async getAccountDelegateStats(): Promise<AccountStats> {
         return {
             topStats: topStatsValues,
             chartStats: chartStatsValues,

@@ -62,7 +62,7 @@ export interface IBlockchainConfig {
             };
             validatorCTA: {
                 mainCta: IButtonCTA;
-                otherCta: IButtonCTA[];
+                otherCtas: IButtonCTA[];
             };
         };
         addressDisplay?: 'stripped';

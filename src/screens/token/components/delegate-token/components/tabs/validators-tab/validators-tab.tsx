@@ -14,7 +14,7 @@ import { bind } from 'bind-decorator';
 import { IValidatorCard } from '../../../../../../../core/blockchain/types/stats';
 // import { DelegationCTA } from '../../../../../../../components/delegation-cta/delegation-cta';
 import { Blockchain } from '../../../../../../../core/blockchain/types';
-import { DelegationCTA } from '../../../../../../../components/delegation-cta/delegation-cta';
+import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 
 const validators = [chainLayerValidator, moonletValidator];
@@ -71,7 +71,7 @@ export class ValidatorsTabComponent extends React.Component<
                     />
                 </View>
                 <View style={styles.bottomContainer}>
-                    <DelegationCTA mainCta={tokenUiConfig.accountCTA.mainCta} />
+                    <CtaGroup mainCta={tokenUiConfig.accountCTA.mainCta} />
                 </View>
             </View>
         );

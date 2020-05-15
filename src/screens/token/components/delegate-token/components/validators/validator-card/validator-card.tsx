@@ -9,9 +9,11 @@ import { smartConnect } from '../../../../../../../core/utils/smart-connect';
 import { Text } from '../../../../../../../library';
 import { IStatValue, IStatValueType } from '../../../../../../../core/blockchain/types/stats';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
-import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
+import { getValidator } from '../../../../../../../core/blockchain/celo/stats';
 import { Blockchain } from '../../../../../../../core/blockchain/types/blockchain';
-import { chainLayerValidator } from '../../../../../../../core/blockchain/cosmos/stats';
+import { formatNumber } from '../../../../../../../core/utils/format-number';
+import BigNumber from 'bignumber.js';
+import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 
 export interface IExternalProps {
     icon: string;
@@ -30,7 +32,9 @@ export function getValueString(stat: IStatValue) {
         case IStatValueType.STRING:
             return stat.data.value;
         case IStatValueType.AMOUNT:
-            return stat.data.value + ' ' + stat.data.tokenSymbol; // TODO format text based on blockchain
+            return formatNumber(new BigNumber(stat.data.value), {
+                currency: getBlockchain(this.props.blockchain).config.coin
+            });
     }
 }
 
@@ -42,10 +46,7 @@ export const ValidatorCardComponent = (
             onPress={() => {
                 NavigationService.navigate('Validator', {
                     blockchain: props.blockchain,
-                    validator:
-                        props.blockchain === Blockchain.CELO
-                            ? moonletValidator
-                            : chainLayerValidator // DUMMY DATA
+                    validator: getValidator(props.blockchain)
                 });
             }}
             underlayColor={props.theme.colors.appBackground}

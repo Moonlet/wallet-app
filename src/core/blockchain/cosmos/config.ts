@@ -41,7 +41,7 @@ const validatorCTA = {
         iconName: 'vote',
         navigateTo: { screen: undefined, params: undefined }
     },
-    otherCta: [
+    otherCtas: [
         {
             title: 'App.labels.claimReward',
             iconName: 'claim-reward',

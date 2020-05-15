@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { DelegationCTA } from '../../components/delegation-cta/delegation-cta';
+import { CtaGroup } from '../../components/cta-group/cta-group';
 import { Text } from '../../library';
 import { Amount } from '../../components/amount/amount';
 import { Blockchain } from '../../core/blockchain/types';
@@ -83,9 +83,9 @@ export class ValidatorScreenComponent extends React.Component<
                 <View style={{ flex: 1 }}></View>
 
                 <View style={styles.bottomContainer}>
-                    <DelegationCTA
+                    <CtaGroup
                         mainCta={config.ui.token.validatorCTA.mainCta}
-                        otherCta={config.ui.token.validatorCTA.otherCta}
+                        otherCtas={config.ui.token.validatorCTA.otherCtas}
                     />
                 </View>
             </View>

@@ -8,8 +8,10 @@ import {
 import { Client } from './client';
 import { Blockchain } from '../types/blockchain';
 
+import { chainLayerValidator as cosmosChainLayerValidator } from '../cosmos/stats';
+
 export class Stats extends GenericStats<Client> {
-    public getAccountDelegateStats(): AccountStats {
+    public async getAccountDelegateStats(): Promise<AccountStats> {
         return {
             topStats: topStatsValues,
             chartStats: chartStatsValues,
@@ -226,4 +228,9 @@ export const chainLayerValidator: IValidatorCard = {
             }
         }
     ]
+};
+
+export const getValidator = (blockchain: Blockchain) => {
+    if (blockchain === Blockchain.CELO) return moonletValidator;
+    else cosmosChainLayerValidator;
 };

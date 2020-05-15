@@ -11,17 +11,17 @@ import { translate } from '../../core/i18n/translation/translate';
 
 export interface IExternalProps {
     mainCta: IButtonCTA;
-    otherCta?: IButtonCTA[];
+    otherCtas?: IButtonCTA[];
 }
 
-export const DelegationCTAComponent = (
+export const CtaGroupComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     return (
         <View style={props.styles.container}>
-            {props?.otherCta && (
+            {props?.otherCtas && (
                 <View style={props.styles.topContainer}>
-                    {props.otherCta.map((cta: IButtonCTA, index: number) => (
+                    {props.otherCtas.map((cta: IButtonCTA, index: number) => (
                         <Button
                             key={`cta-${index}`}
                             leftIcon={cta.iconName}
@@ -53,6 +53,6 @@ export const DelegationCTAComponent = (
     );
 };
 
-export const DelegationCTA = smartConnect<IExternalProps>(DelegationCTAComponent, [
+export const CtaGroup = smartConnect<IExternalProps>(CtaGroupComponent, [
     withTheme(stylesProvider)
 ]);

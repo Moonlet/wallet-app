@@ -13,7 +13,7 @@ import { translate } from '../../../../../../../core/i18n';
 import { bind } from 'bind-decorator';
 import { IValidatorCard } from '../../../../../../../core/blockchain/types/stats';
 import { Blockchain } from '../../../../../../../core/blockchain/types/blockchain';
-import { DelegationCTA } from '../../../../../../../components/delegation-cta/delegation-cta';
+import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 
 const validators = [moonletValidator, chainLayerValidator, chainLayerValidator];
@@ -70,7 +70,7 @@ export class DelegationsTabComponent extends React.Component<
                     />
                 </View>
                 <View style={styles.bottomContainer}>
-                    <DelegationCTA mainCta={tokenUiConfig.accountCTA.mainCta} />
+                    <CtaGroup mainCta={tokenUiConfig.accountCTA.mainCta} />
                 </View>
             </View>
         );

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { BASE_DIMENSION, normalize } from '../../../../../../styles/dimensions';
-import { ITheme } from '../../../../../../core/theme/itheme';
+import { BASE_DIMENSION, normalize } from '../../../../../../../styles/dimensions';
+import { ITheme } from '../../../../../../../core/theme/itheme';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -8,8 +8,18 @@ export default (theme: ITheme) =>
             flex: 1,
             backgroundColor: theme.colors.appBackground,
             paddingHorizontal: BASE_DIMENSION,
-            marginTop: BASE_DIMENSION * 3
+            marginTop: BASE_DIMENSION * 3,
+            paddingBottom: BASE_DIMENSION * 5
         },
+        inputContainer: {
+            marginHorizontal: BASE_DIMENSION * 2,
+            marginBottom: BASE_DIMENSION
+        },
+        bottomContainer: {
+            marginTop: BASE_DIMENSION * 3,
+            marginHorizontal: BASE_DIMENSION * 2
+        },
+
         text: {
             fontWeight: 'bold',
             fontSize: normalize(22),

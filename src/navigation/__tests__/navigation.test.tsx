@@ -17,7 +17,7 @@ export default describe('Navigation', () => {
             (menuIcon as any).mockClear();
 
             navigationConfig.Statistics.navigationOptions();
-            expect(menuIcon).toHaveBeenCalledWith('performance-money-increase');
+            expect(menuIcon).toHaveBeenCalledWith('reinvest');
             (menuIcon as any).mockClear();
 
             navigationConfig.Settings.navigationOptions();

@@ -302,40 +302,41 @@ export class WalletsScreenComponent extends React.Component<
                     </ScrollView>
                 </View>
 
-                <View style={styles.bottomContainer}>
+                {
                     {
-                        {
-                            [WalletType.HD]: Platform.OS !== 'web' && (
-                                <View style={styles.buttonContainer}>
-                                    <Button
-                                        style={styles.bottomButton}
-                                        onPress={() => this.onPressCreate()}
-                                    >
-                                        {translate('App.labels.create')}
-                                    </Button>
-                                    <Button
-                                        style={styles.bottomButton}
-                                        onPress={() => this.onPressRecover()}
-                                    >
-                                        {translate('App.labels.recover')}
-                                    </Button>
-                                </View>
-                            ),
-                            [WalletType.HW]: Platform.OS !== 'web' && (
-                                <View style={styles.buttonContainer}>
-                                    <Button
-                                        style={styles.bottomButton}
-                                        onPress={() => {
-                                            this.onPressCreateHW();
-                                        }}
-                                    >
-                                        {translate('App.labels.startConnect')}
-                                    </Button>
-                                </View>
-                            )
-                        }[selectedTab]
-                    }
-                </View>
+                        [WalletType.HD]: Platform.OS !== 'web' && (
+                            <View style={styles.buttonContainer}>
+                                <Button
+                                    style={styles.bottomButton}
+                                    wrapperStyle={{ flex: 1 }}
+                                    onPress={() => this.onPressCreate()}
+                                >
+                                    {translate('App.labels.create')}
+                                </Button>
+                                <Button
+                                    style={styles.bottomButton}
+                                    wrapperStyle={{ flex: 1 }}
+                                    onPress={() => this.onPressRecover()}
+                                >
+                                    {translate('App.labels.recover')}
+                                </Button>
+                            </View>
+                        ),
+                        [WalletType.HW]: Platform.OS !== 'web' && (
+                            <View style={styles.buttonContainer}>
+                                <Button
+                                    style={styles.bottomButton}
+                                    wrapperStyle={{ flex: 1 }}
+                                    onPress={() => {
+                                        this.onPressCreateHW();
+                                    }}
+                                >
+                                    {translate('App.labels.startConnect')}
+                                </Button>
+                            </View>
+                        )
+                    }[selectedTab]
+                }
             </View>
         );
     }

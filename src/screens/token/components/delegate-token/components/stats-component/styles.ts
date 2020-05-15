@@ -5,16 +5,16 @@ import { ITheme } from '../../../../../../core/theme/itheme';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            flex: 1,
             flexDirection: 'column',
-            marginTop: BASE_DIMENSION * 2
+            marginTop: BASE_DIMENSION * 2,
+            marginBottom: BASE_DIMENSION * 3
         },
         topStatsContainer: {
             flexDirection: 'row',
             borderRadius: BORDER_RADIUS,
             backgroundColor: theme.colors.cardBackground,
             paddingVertical: BASE_DIMENSION,
-            marginBottom: BASE_DIMENSION * 2
+            marginBottom: BASE_DIMENSION * 3
         },
         chartRowContainer: {
             flexDirection: 'row'
@@ -46,6 +46,19 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             justifyContent: 'space-between',
             marginBottom: BASE_DIMENSION
+        },
+        detailRowTitle: {
+            lineHeight: normalize(10),
+            flexDirection: 'column'
+        },
+        chartTextDetailsTitle: {
+            fontSize: normalize(14),
+            lineHeight: normalize(13)
+        },
+        chartTextDetailsSubTitle: {
+            letterSpacing: normalize(4),
+            fontSize: normalize(10),
+            lineHeight: normalize(10)
         },
         chartTextDetails: {
             fontSize: normalize(13),

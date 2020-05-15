@@ -14,7 +14,7 @@ export const CELO_GOLD_NATIVE: ITokenConfigState = {
     decimals: 18,
     ui: {
         decimals: 4,
-        tokenScreenComponent: TokenScreenComponentType.DEFAULT
+        tokenScreenComponent: TokenScreenComponentType.DELEGATE
     },
     type: TokenType.NATIVE,
     units: {
@@ -36,7 +36,7 @@ export const CELO_GOLD_TESTNET_ALFAJORES: ITokenConfigState = {
     decimals: 18,
     ui: {
         decimals: 4,
-        tokenScreenComponent: TokenScreenComponentType.DEFAULT
+        tokenScreenComponent: TokenScreenComponentType.DELEGATE
     },
     type: TokenType.ERC20,
     units: {

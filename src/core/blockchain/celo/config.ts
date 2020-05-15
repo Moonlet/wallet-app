@@ -14,6 +14,39 @@ import {
     CELO_USD_TESTNET_BAKLAVA
 } from './tokens/cUSD';
 
+export const accountCTA = {
+    mainCta: {
+        title: 'App.labels.quickVote',
+        iconName: 'vote',
+        navigateTo: { screen: undefined, params: undefined }
+    }
+};
+
+const validatorCTA = {
+    mainCta: {
+        title: 'App.labels.vote',
+        iconName: 'vote',
+        navigateTo: { screen: undefined, params: undefined }
+    },
+    otherCtas: [
+        {
+            title: 'App.labels.revote',
+            iconName: 'revote',
+            navigateTo: { screen: undefined, params: undefined }
+        },
+        {
+            title: 'App.labels.unvote',
+            iconName: 'unvote',
+            navigateTo: { screen: undefined, params: undefined }
+        },
+        {
+            title: 'App.labels.unlock',
+            iconName: 'unlock',
+            navigateTo: { screen: undefined, params: undefined }
+        }
+    ]
+};
+
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/52752'/0'/0`,
     derivationType: DerivationType.HD_KEY,
@@ -55,6 +88,19 @@ export const config: IBlockchainConfig = {
         }
     },
     ui: {
+        token: {
+            labels: {
+                tabAccount: 'App.labels.account',
+                tabDelegations: 'App.labels.myVotes',
+                tabValidators: 'App.labels.validators',
+                tabTransactions: 'App.labels.transactions'
+            },
+            accountCTA,
+            delegationCTA: {
+                mainCta: accountCTA.mainCta
+            },
+            validatorCTA
+        },
         addressDisplay: 'stripped',
         enableTokenManagement: true,
         enableAccountCreation: false,

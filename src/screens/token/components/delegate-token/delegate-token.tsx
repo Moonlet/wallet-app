@@ -18,16 +18,15 @@ import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../../../cor
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import bind from 'bind-decorator';
-import { AccountTab } from './components/account-tab/account-tab';
-import { DelegationsTab } from './components/delegations-tab/delegations-tab';
-import { ValidatorsTab } from './components/validators-tab/validators-tab';
-import { TransactionsTab } from './components/transactions-tab/transactions-tab';
+import { AccountTab } from './components/tabs/account-tab/account-tab';
+import { DelegationsTab } from './components/tabs/delegations-tab/delegations-tab';
+import { ValidatorsTab } from './components/tabs/validators-tab/validators-tab';
+import { TransactionsTab } from './components/tabs/transactions-tab/transactions-tab';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 
 export interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
-    extensionTransactionPayload: any; // TODO add typing
     token: ITokenState;
     navigation: NavigationScreenProp<NavigationState>;
 }
@@ -53,7 +52,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
             ownProps.token
         ),
         wallet: getSelectedWallet(state),
-        extensionTransactionPayload: ownProps.extensionTransactionPayload,
         chainId: getChainId(state, ownProps.blockchain)
     };
 };
@@ -81,13 +79,7 @@ export class DelegateTokenScreenComponent extends React.Component<
         this.setState({ activeTab: tab });
     }
 
-    // export interface IProps {
-    //     accountIndex: number;
-    //     blockchain: Blockchain;
-    //     extensionTransactionPayload: any; // TODO add typing
-    //     token: ITokenConfig;
-    // }
-    renderTabs() {
+    private renderTabs() {
         const config = getBlockchain(this.props.blockchain).config;
         switch (this.state.activeTab) {
             case config.ui.token.labels.tabAccount:
@@ -95,20 +87,19 @@ export class DelegateTokenScreenComponent extends React.Component<
                     <AccountTab
                         accountIndex={this.props.accountIndex}
                         blockchain={this.props.blockchain}
-                        extensionTransactionPayload={this.props.extensionTransactionPayload}
                         token={this.props.token}
-                    ></AccountTab>
+                    />
                 );
             case config.ui.token.labels.tabDelegations:
-                return <DelegationsTab></DelegationsTab>;
+                return <DelegationsTab blockchain={this.props.blockchain} />;
             case config.ui.token.labels.tabValidators:
-                return <ValidatorsTab></ValidatorsTab>;
+                return <ValidatorsTab blockchain={this.props.blockchain} />;
             case config.ui.token.labels.tabTransactions:
-                return <TransactionsTab></TransactionsTab>;
+                return <TransactionsTab />;
         }
     }
 
-    renderTabButtons() {
+    private renderTabButtons() {
         const { styles } = this.props;
         const stylesTabActive = [styles.tabInactive, styles.tabActive];
         const stylesTabInactive = [styles.tabInactive];

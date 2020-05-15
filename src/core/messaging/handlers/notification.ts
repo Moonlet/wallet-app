@@ -46,7 +46,6 @@ const handleNotification = (
                     data.blockchain,
                     data.chainId,
                     data.broadcastedOnBlock,
-                    !openedByNotification,
                     openedByNotification
                 ) as any
             );

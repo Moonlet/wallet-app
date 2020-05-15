@@ -52,7 +52,11 @@ export class NotificationService {
             if (notification.data.type === NotificationType.TRANSACTION) {
                 notificationHandler((notification as any).data, false);
             } else {
-                firebase.notifications().displayNotification(notification);
+                this.displayNotification(
+                    notification.title,
+                    notification.body,
+                    (notification as any).data
+                );
             }
         });
 

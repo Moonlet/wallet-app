@@ -92,7 +92,6 @@ export const verifyPinCode = async (pinCode: string): Promise<boolean> => {
         await readEncrypted(KEY_PIN_SAMPLE, encryptionKey);
         return true;
     } catch (err) {
-        Sentry.captureException(new Error(JSON.stringify(err))); // needed?
         return false;
     }
 };
@@ -140,7 +139,7 @@ export const getPinCode = async () => {
         } else if (error.message.indexOf('Too many attempts') >= 0) {
             return Promise.reject('TOO_MANY_ATTEMPTS');
         } else {
-            Sentry.captureException(new Error(JSON.stringify(error))); // needed?
+            Sentry.captureException(new Error(JSON.stringify(error)));
             return Promise.reject(error.message);
         }
     }

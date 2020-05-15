@@ -20,7 +20,7 @@ import moment from 'moment';
 import { getChainId } from '../../redux/preferences/selectors';
 import { normalize } from '../../styles/dimensions';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
-import { openURL } from '../../core/utils/format-string';
+import { openURL } from '../../core/utils/linking-handler';
 
 export interface IReduxProps {
     account: IAccountState;

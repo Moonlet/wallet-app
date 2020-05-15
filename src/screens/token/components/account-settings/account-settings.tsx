@@ -16,7 +16,7 @@ import { LoadingIndicator } from '../../../../components/loading-indicator/loadi
 import { WalletType } from '../../../../core/wallet/types';
 import { ViewKey, KeyType } from './components/view-key/view-key';
 import CONFIG from '../../../../config';
-import { openURL } from '../../../../core/utils/format-string';
+import { openURL } from '../../../../core/utils/linking-handler';
 
 export interface IExternalProps {
     onDonePressed: () => any;

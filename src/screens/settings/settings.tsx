@@ -25,7 +25,7 @@ import { normalize } from '../../styles/dimensions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { resetAllData } from '../../redux/app/actions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
-import { openURL } from '../../core/utils/format-string';
+import { openURL } from '../../core/utils/linking-handler';
 
 export interface IState {
     isTouchIDSupported: boolean;

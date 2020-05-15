@@ -11,7 +11,7 @@ export default describe('NavigationUtils', () => {
 
     describe('menuIcon', () => {
         test('renders corectly', () => {
-            const Comp = menuIcon('accounting-coins-stack');
+            const Comp = menuIcon('claim-reward');
             expect(shallow(<Comp />).debug()).toMatchSnapshot('unfocused');
             expect(shallow(<Comp focused={true} />).debug()).toMatchSnapshot('focused');
         });

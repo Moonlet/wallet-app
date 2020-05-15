@@ -109,8 +109,6 @@ export class DefaultTokenScreenComponent extends React.Component<
                     onPress: () => {
                         PasswordModal.getPassword()
                             .then(password => {
-                                // TODO: approveRequest
-                                // id: this.props.extensionTransactionPayload.id
                                 this.props.sendTransferTransaction(
                                     account,
                                     toAddress,
@@ -148,6 +146,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                         <Button
                             testID="button-send"
                             style={styles.button}
+                            wrapperStyle={{ flex: 1 }}
                             // disabled={!this.props.canSend} // TODO
                             onPress={() => {
                                 navigation.navigate('Send', {
@@ -162,6 +161,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                         <Button
                             testID="button-receive"
                             style={styles.button}
+                            wrapperStyle={{ flex: 1 }}
                             onPress={() => {
                                 navigation.navigate('Receive', {
                                     accountIndex: account.index,

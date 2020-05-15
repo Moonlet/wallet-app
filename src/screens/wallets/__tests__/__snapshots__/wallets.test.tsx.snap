@@ -11,14 +11,12 @@ exports[`Wallet screen renders correctly 1`] = `
     </ScrollViewMock>
   </View>
   <View style={{...}}>
-    <View style={{...}}>
-      <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]}>
-        Create
-      </withTheme(ButtonComponent)>
-      <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]}>
-        Recover
-      </withTheme(ButtonComponent)>
-    </View>
+    <withTheme(ButtonComponent) style={{...}} wrapperStyle={{...}} onPress={[Function: onPress]}>
+      Create
+    </withTheme(ButtonComponent)>
+    <withTheme(ButtonComponent) style={{...}} wrapperStyle={{...}} onPress={[Function: onPress]}>
+      Recover
+    </withTheme(ButtonComponent)>
   </View>
 </View>"
 `;

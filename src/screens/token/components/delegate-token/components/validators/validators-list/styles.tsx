@@ -1,14 +1,12 @@
 import { StyleSheet } from 'react-native';
-import { BASE_DIMENSION, normalize } from '../../../../../../styles/dimensions';
-import { ITheme } from '../../../../../../core/theme/itheme';
+import { ITheme } from '../../../../../../../core/theme/itheme';
+import { BASE_DIMENSION, normalize } from '../../../../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: theme.colors.appBackground,
-            paddingHorizontal: BASE_DIMENSION,
-            marginTop: BASE_DIMENSION * 3
+            backgroundColor: theme.colors.appBackground
         },
         text: {
             fontWeight: 'bold',

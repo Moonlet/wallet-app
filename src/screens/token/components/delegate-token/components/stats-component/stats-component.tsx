@@ -44,7 +44,7 @@ export class StatsComponentInternal extends React.Component<
         const styles = this.props.styles;
         return this.props.accountStats.topStats.map((stat: IStatValue, i: number) => (
             <View key={i} style={styles.statContainer}>
-                <Text style={styles.statLabelText}>{stat.label}</Text>
+                <Text style={styles.statLabelText}>{stat.title}</Text>
                 <Text style={[styles.statValueText, { color: stat.color }]}>
                     {this.getValueString(stat)}
                 </Text>
@@ -56,7 +56,16 @@ export class StatsComponentInternal extends React.Component<
         const styles = this.props.styles;
         return this.props.accountStats.chartStats.map((stat: IStatValue, i: number) => (
             <View key={i + 'secondaryStats'} style={styles.chartDetailsRow}>
-                <Text style={[styles.chartTextDetails, { color: stat.color }]}>{stat.label}</Text>
+                <View key={i + 'secondaryStats-title'} style={styles.detailRowTitle}>
+                    <Text style={[styles.chartTextDetailsTitle, { color: stat.color }]}>
+                        {stat.title}
+                    </Text>
+                    {stat.subtitle && (
+                        <Text style={[styles.chartTextDetailsSubTitle, { color: stat.color }]}>
+                            {stat.subtitle}
+                        </Text>
+                    )}
+                </View>
                 <Text style={[styles.chartTextDetails, { color: stat.color }]}>
                     {this.getValueString(stat)}
                 </Text>
@@ -68,7 +77,7 @@ export class StatsComponentInternal extends React.Component<
         return this.props.accountStats.secondaryStats.map((stat: IStatValue, i: number) => (
             <View key={i + 'detailStats'} style={styles.chartDetailsRow}>
                 <Text key={i + 'label'} style={[styles.chartTextSecondary, { color: stat.color }]}>
-                    {stat.label}
+                    {stat.title}
                 </Text>
                 <Text
                     key={i + 'content'}

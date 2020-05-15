@@ -15,7 +15,7 @@ export const ATOM_NATIVE: ITokenConfigState = {
     decimals: 6,
     ui: {
         decimals: 3,
-        tokenScreenComponent: TokenScreenComponentType.DEFAULT // TODO: DELEGATE is in progress
+        tokenScreenComponent: TokenScreenComponentType.DELEGATE
     },
     type: TokenType.NATIVE,
     units: {
@@ -25,6 +25,44 @@ export const ATOM_NATIVE: ITokenConfigState = {
     symbolMap: {
         'gaia-13007': 'umuon'
     }
+};
+
+export const accountCTA = {
+    mainCta: {
+        title: 'App.labels.quickDelegate',
+        iconName: 'vote',
+        navigateTo: { screen: undefined, params: undefined }
+    }
+};
+
+const validatorCTA = {
+    mainCta: {
+        title: 'App.labels.delegate',
+        iconName: 'vote',
+        navigateTo: { screen: undefined, params: undefined }
+    },
+    otherCtas: [
+        {
+            title: 'App.labels.claimReward',
+            iconName: 'claim-reward',
+            navigateTo: { screen: undefined, params: undefined }
+        },
+        {
+            title: 'App.labels.reinvest',
+            iconName: 'reinvest',
+            navigateTo: { screen: undefined, params: undefined }
+        },
+        {
+            title: 'App.labels.redelegate',
+            iconName: 'revote',
+            navigateTo: { screen: undefined, params: undefined }
+        },
+        {
+            title: 'App.labels.undelegate',
+            iconName: 'unvote',
+            navigateTo: { screen: undefined, params: undefined }
+        }
+    ]
 };
 
 export const config: IBlockchainConfig = {
@@ -64,7 +102,12 @@ export const config: IBlockchainConfig = {
                 tabDelegations: 'App.labels.delegations',
                 tabValidators: 'App.labels.validators',
                 tabTransactions: 'App.labels.transactions'
-            }
+            },
+            accountCTA,
+            delegationCTA: {
+                mainCta: accountCTA.mainCta
+            },
+            validatorCTA
         },
         addressDisplay: 'stripped',
         enableTokenManagement: false,

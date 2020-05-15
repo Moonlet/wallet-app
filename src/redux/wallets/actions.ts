@@ -60,6 +60,7 @@ import { toggleBiometricAuth } from '../preferences/actions';
 import { CLOSE_TX_REQUEST } from '../ui/transaction-request/actions';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
+import * as Sentry from '@sentry/react-native';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -227,6 +228,8 @@ export const createHWWallet = (
         // this might not be the best place
         if (e === translate('CreateHardwareWallet.notSupported')) {
             dispatch(featureNotSupported());
+        } else {
+            Sentry.captureException(new Error(JSON.stringify(e)));
         }
         throw new Error(e);
     }
@@ -292,12 +295,12 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
 
             updateAddressMonitorTokens(getState().wallets);
         });
-    } catch (e) {
-        // console.log(e);
+    } catch (err) {
+        Sentry.captureException(new Error(JSON.stringify(err)));
+
         // TODO best way to handle this?
         await LoadingModal.close();
     }
-    // TODO  - error handling
 };
 
 // will check balance for a coin or all coins if needed

@@ -19,6 +19,7 @@ import { forbidScreenshots, allowScreenshots } from '../../core/utils/screenshot
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { MNEMONIC_LENGTH } from '../../core/constants/app';
 import { DialogComponent } from '../../components/dialog/dialog-component';
+import * as Sentry from '@sentry/react-native';
 
 interface IState {
     mnemonic: string[];
@@ -135,7 +136,8 @@ export class RecoverWalletScreenComponent extends React.Component<
                 const newPassword = await PasswordModal.createPassword();
                 this.createWallet(newPassword);
             } catch (err) {
-                //
+                Sentry.captureException(new Error(JSON.stringify(err)));
+                return Promise.reject(err);
             }
         }
     }

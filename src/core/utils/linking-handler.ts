@@ -2,15 +2,11 @@ import { Platform, Linking } from 'react-native';
 import AndroidOpenSettings from 'react-native-android-open-settings';
 
 export const openURL = (url: string) => {
-    if (Platform.OS === 'web') {
-        window.open(url);
-    } else {
-        Linking.canOpenURL(url).then(supported => {
-            if (supported) {
-                Linking.openURL(url);
-            }
-        });
-    }
+    Linking.canOpenURL(url).then(supported => {
+        if (supported) {
+            Linking.openURL(url);
+        }
+    });
 };
 
 export const openPhoneSettings = () => {

@@ -1,5 +1,5 @@
 import { NativeModules } from 'react-native';
-import { SALT, HASH_COST, HASH_LENGTH, SEPARATOR, IV_LENGTH } from './types';
+import { SALT, HASH_COST, HASH_LENGTH, SEPARATOR, IV_LENGTH } from './consts';
 
 const Aes = NativeModules.Aes;
 

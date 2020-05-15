@@ -1,5 +1,5 @@
 import { browser } from 'webextension-polyfill-ts';
-import { KEY_PREFIX } from './types';
+import { KEY_PREFIX } from './consts';
 
 // TODO: encrypt this
 export const storeEncrypted = async (data: string, key: string, hash: string): Promise<void> => {

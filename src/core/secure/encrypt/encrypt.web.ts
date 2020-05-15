@@ -2,7 +2,7 @@ import AES from 'crypto-js/aes';
 import pbkdf2 from 'crypto-js/pbkdf2';
 import { v4 as uuidv4 } from 'uuid';
 import CryptoJS from 'crypto-js';
-import { SALT, HASH_COST, HASH_LENGTH, ITERATIONS, IV_LENGTH } from './types';
+import { SALT, HASH_COST, HASH_LENGTH, ITERATIONS, IV_LENGTH } from './consts';
 
 export const hash = async (text: string, salt: string = SALT): Promise<string> => {
     return pbkdf2(text, salt, HASH_COST, HASH_LENGTH).toString(CryptoJS.enc.Utf8);

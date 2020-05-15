@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import { encrypt, decrypt } from '../encrypt/encrypt';
-import { KEY_PREFIX } from './types';
+import { KEY_PREFIX } from './consts';
 
 export const storeEncrypted = async (data: string, key: string, hash: string): Promise<void> => {
     const encryptedData = await encrypt(data, hash);

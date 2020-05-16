@@ -40,10 +40,6 @@ import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
 import { formatAddress } from '../../core/utils/format-address';
-import { Notifications } from '../../core/messaging/notifications/notifications';
-import { formatNumber } from '../../core/utils/format-number';
-import BigNumber from 'bignumber.js';
-import { NotificationType } from '../../core/messaging/types';
 import { updateAddressMonitorTokens } from '../../core/address-monitor/index';
 import { Dialog } from '../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../ui/password-modal/actions';
@@ -390,7 +386,6 @@ export const updateTransactionFromBlockchain = (
     blockchain: Blockchain,
     chainId: ChainIdType,
     broadcastedOnBlock: number,
-    displayNotification: boolean,
     navigateToTransaction: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
@@ -474,34 +469,6 @@ export const updateTransactionFromBlockchain = (
         // if (displayNotification && currentChainId === chainId) { - removed this for consistency with app closed notifications
 
         const tokenConfig = getTokenConfig(blockchain, transaction.token.symbol);
-
-        if (displayNotification) {
-            const amount = blockchainInstance.account.amountFromStd(
-                new BigNumber(blockchainInstance.transaction.getTransactionAmount(transaction)),
-                tokenConfig.decimals
-            );
-            const formattedAmount = formatNumber(amount, {
-                currency: transaction.token.symbol
-            });
-
-            Notifications.displayNotification(
-                transaction.status,
-                `Transaction of ${formattedAmount} from ${formatAddress(
-                    transaction.address,
-                    blockchain
-                )} to ${formatAddress(receivingAddress, blockchain)}`,
-                {
-                    type: NotificationType.TRANSACTION_UPDATE,
-                    data: {
-                        walletId: wallet.id,
-                        accountIndex: transactionAccount.index,
-                        token: generateAccountTokenState(tokenConfig),
-                        tokenLogo: tokenConfig.icon,
-                        blockchain
-                    }
-                }
-            );
-        }
 
         if (navigateToTransaction) {
             const navigationParams: NavigationParams = {

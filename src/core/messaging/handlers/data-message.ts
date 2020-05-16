@@ -25,8 +25,7 @@ const handleMessages = (message: ISilentMessage) => {
                     data.transactionHash,
                     data.blockchain,
                     data.chainId,
-                    data.broadcastedOnBlock,
-                    true
+                    data.broadcastedOnBlock
                 )
             );
             break;

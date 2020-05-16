@@ -46,8 +46,7 @@ export const TransactionsHistoryScreenComponent = (
                     transaction.id,
                     transaction.blockchain,
                     transaction.chainId,
-                    transaction.broadcastedOnBlock,
-                    false
+                    transaction.broadcastedOnBlock
                 );
             }
         });

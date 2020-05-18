@@ -1,5 +1,9 @@
 import { StyleSheet } from 'react-native';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    normalizeFontAndLineHeight
+} from '../../../styles/dimensions';
 import { ITheme } from '../../../core/theme/itheme';
 import { ph, pw } from '../../../styles';
 
@@ -28,12 +32,12 @@ export default (theme: ITheme) =>
             alignItems: 'baseline'
         },
         transactionTextPrimary: {
-            lineHeight: normalize(21),
+            lineHeight: normalizeFontAndLineHeight(21),
             color: theme.colors.text
         },
         transactionTextSecondary: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textTertiary
         },
         transactionRightIcon: {
@@ -54,15 +58,15 @@ export default (theme: ITheme) =>
         },
         noTransactionsText: {
             fontWeight: 'bold',
-            fontSize: normalize(22),
-            lineHeight: normalize(28),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             textAlign: 'center',
             letterSpacing: 0.35,
             color: theme.colors.textSecondary,
             marginBottom: BASE_DIMENSION
         },
         transactionHistoryText: {
-            lineHeight: normalize(22),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textTertiary,
             textAlign: 'center',
             paddingHorizontal: BASE_DIMENSION * 2

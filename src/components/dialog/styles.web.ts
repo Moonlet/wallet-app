@@ -1,18 +1,18 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BORDER_RADIUS, BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BORDER_RADIUS, BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         titleStyle: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             fontWeight: '600',
             color: theme.colors.text
         },
         descriptionStyle: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             color: theme.colors.textSecondary,
             textAlign: 'center'
         },
@@ -30,8 +30,8 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.bottomSheetBackground
         },
         cancelButtonText: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textSecondary
         },
         confirmButton: {
@@ -41,8 +41,8 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.bottomSheetBackground
         },
         confirmButtonText: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             fontWeight: '600',
             color: theme.colors.accent
         },
@@ -62,13 +62,13 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION,
             backgroundColor: theme.colors.inputBackground,
             borderRadius: BORDER_RADIUS / 2,
-            fontSize: normalize(11),
-            lineHeight: normalize(13),
+            fontSize: normalizeFontAndLineHeight(11),
+            lineHeight: normalizeFontAndLineHeight(13),
             color: theme.colors.text
         },
         textInputIOS: {
-            fontSize: normalize(11),
-            lineHeight: normalize(13),
+            fontSize: normalizeFontAndLineHeight(11),
+            lineHeight: normalizeFontAndLineHeight(13),
             color: theme.colors.bottomSheetBackground
         }
     });

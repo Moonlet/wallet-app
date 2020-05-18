@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { SCREEN_HEIGHT, BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import {
+    SCREEN_HEIGHT,
+    BASE_DIMENSION,
+    normalize,
+    normalizeFontAndLineHeight
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -15,27 +20,27 @@ export default (theme: ITheme) =>
             flexDirection: 'column'
         },
         topText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary,
             textAlign: 'center'
         },
         title: {
-            fontSize: normalize(30),
-            lineHeight: normalize(41),
+            fontSize: normalizeFontAndLineHeight(30),
+            lineHeight: normalizeFontAndLineHeight(41),
             color: '#FFFFFF',
             letterSpacing: 0.4,
             textAlign: 'center',
             marginVertical: BASE_DIMENSION
         },
         token: {
-            fontSize: normalize(16),
-            lineHeight: normalize(21),
+            fontSize: normalizeFontAndLineHeight(16),
+            lineHeight: normalizeFontAndLineHeight(21),
             color: '#FFFFFF'
         },
         subTitle: {
-            fontSize: normalize(16),
-            lineHeight: normalize(21),
+            fontSize: normalizeFontAndLineHeight(16),
+            lineHeight: normalizeFontAndLineHeight(21),
             color: theme.colors.text,
             textAlign: 'center'
         },
@@ -52,16 +57,16 @@ export default (theme: ITheme) =>
             alignSelf: 'center'
         },
         labelName: {
-            fontSize: normalize(22),
-            lineHeight: normalize(28),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             fontWeight: 'bold',
             letterSpacing: 0.35,
             color: '#FFFFFF',
             textAlign: 'center'
         },
         website: {
-            fontSize: normalize(11),
-            lineHeight: normalize(13),
+            fontSize: normalizeFontAndLineHeight(11),
+            lineHeight: normalizeFontAndLineHeight(13),
             color: theme.colors.textSecondary,
             textAlign: 'center'
         }

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -14,21 +14,21 @@ export default (theme: ITheme) =>
             flexDirection: 'row'
         },
         balance: {
-            fontSize: normalize(theme.fontSize.large),
+            fontSize: normalizeFontAndLineHeight(theme.fontSize.large),
             color: theme.colors.textSecondary
         },
         convert: {
             marginLeft: BASE_DIMENSION / 2,
-            fontSize: normalize(theme.fontSize.large),
+            fontSize: normalizeFontAndLineHeight(theme.fontSize.large),
             color: theme.colors.textSecondary
         },
         balanceSymbolFiat: {
-            fontSize: normalize(18),
+            fontSize: normalizeFontAndLineHeight(18),
             color: theme.colors.textSecondary,
             marginLeft: BASE_DIMENSION
         },
         address: {
-            fontSize: normalize(30),
+            fontSize: normalizeFontAndLineHeight(30),
             textAlign: 'center',
             fontWeight: 'bold'
         }

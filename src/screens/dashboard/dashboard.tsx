@@ -29,7 +29,9 @@ import {
     ICON_CONTAINER_SIZE,
     BASE_DIMENSION,
     normalize,
-    SCREEN_WIDTH
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    normalizeFontAndLineHeight
 } from '../../styles/dimensions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
@@ -96,8 +98,8 @@ const MyTitle = ({ text }) => (
     <Text
         style={{
             flex: 1,
-            fontSize: normalize(20),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(20),
+            lineHeight: normalizeFontAndLineHeight(25),
             letterSpacing: 0.38,
             textAlign: 'center'
         }}
@@ -286,13 +288,21 @@ export class DashboardScreenComponent extends React.Component<
 
         const animatePrimaryAmountFontSize = this.animationValue.interpolate({
             inputRange: [0, ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT + 1],
-            outputRange: [normalize(30), normalize(19), normalize(19)],
+            outputRange: [
+                normalizeFontAndLineHeight(30),
+                normalizeFontAndLineHeight(19),
+                normalizeFontAndLineHeight(19)
+            ],
             extrapolate: 'clamp'
         });
 
         const animateConvertedAmountFontSize = this.animationValue.interpolate({
             inputRange: [0, ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT + 1],
-            outputRange: [normalize(16), normalize(13), normalize(13)],
+            outputRange: [
+                normalizeFontAndLineHeight(16),
+                normalizeFontAndLineHeight(13),
+                normalizeFontAndLineHeight(13)
+            ],
             extrapolate: 'clamp'
         });
 
@@ -446,7 +456,19 @@ export class DashboardScreenComponent extends React.Component<
         }
 
         return (
-            <View style={styles.container}>
+            <View
+                style={[
+                    styles.container,
+                    {
+                        height:
+                            Platform.OS === 'web'
+                                ? blockchains.length === 1
+                                    ? SCREEN_HEIGHT
+                                    : 'calc(100vh - 122px)'
+                                : 'auto'
+                    }
+                ]}
+            >
                 <TestnetBadge />
 
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />

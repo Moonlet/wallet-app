@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize, SCREEN_HEIGHT } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalizeFontAndLineHeight, SCREEN_HEIGHT } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -11,8 +11,8 @@ export default (theme: ITheme) =>
             height: SCREEN_HEIGHT // used for web
         },
         title: {
-            fontSize: normalize(20),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(20),
+            lineHeight: normalizeFontAndLineHeight(25),
             color: theme.colors.textSecondary,
             paddingTop: BASE_DIMENSION * 2
         },
@@ -22,14 +22,14 @@ export default (theme: ITheme) =>
             flexDirection: 'column'
         },
         mnemonicInfoText: {
-            fontSize: normalize(20),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(20),
+            lineHeight: normalizeFontAndLineHeight(25),
             color: theme.colors.textSecondary,
             marginBottom: BASE_DIMENSION * 2
         },
         secretWord: {
-            fontSize: normalize(23),
-            lineHeight: normalize(34),
+            fontSize: normalizeFontAndLineHeight(23),
+            lineHeight: normalizeFontAndLineHeight(34),
             color: theme.colors.textSecondary,
             marginLeft: BASE_DIMENSION * 5,
             fontWeight: 'bold'
@@ -40,8 +40,8 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2
         },
         checkboxText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(21),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(21),
             color: theme.colors.text,
             marginRight: Platform.select({
                 ios: BASE_DIMENSION * 4,

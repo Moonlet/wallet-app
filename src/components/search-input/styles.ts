@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalizeFontAndLineHeight } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -21,7 +21,7 @@ export default (theme: ITheme) =>
         },
         input: {
             flex: 1,
-            fontSize: normalize(15),
+            fontSize: normalizeFontAndLineHeight(15),
             color: theme.colors.text
         },
         closeIconContainer: {

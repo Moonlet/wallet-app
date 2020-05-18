@@ -4,7 +4,7 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     SCREEN_HEIGHT,
-    normalize,
+    normalizeFontAndLineHeight,
     isIphoneXorAbove
 } from '../../styles/dimensions';
 
@@ -25,8 +25,8 @@ export default (theme: ITheme) =>
             })
         },
         receipientLabel: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             paddingLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         },
@@ -56,8 +56,8 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2
         },
         confirmTransactionText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary,
             alignSelf: 'center'
         },
@@ -68,7 +68,7 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 4
         },
         loadingModalMessage: {
-            lineHeight: normalize(22),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
             marginTop: BASE_DIMENSION,

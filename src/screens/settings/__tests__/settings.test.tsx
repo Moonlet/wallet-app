@@ -17,13 +17,6 @@ const props: IReduxProps = {
     theme: darkTheme
 };
 
-jest.mock('react-native-device-info', () => {
-    return {
-        getBundleId: jest.fn(),
-        getReadableVersion: jest.fn()
-    };
-});
-
 export default describe('Wallet screen', () => {
     beforeAll(async () => {
         await loadTranslations('en');

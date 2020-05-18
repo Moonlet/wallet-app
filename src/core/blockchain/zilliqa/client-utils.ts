@@ -12,16 +12,9 @@ export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
 
     async getTransaction(hash: string): Promise<IBlockchainTransaction> {
-        const txData = await this.client.http.jsonRpc('GetTransaction', [hash]).then(response => {
-            if (!response.result) {
-                return Promise.reject(
-                    response.message || `Error getting transaction receipt for ${hash}`
-                );
-            }
-            return response.result;
-        });
-
-        return this.buildTransactionFromBlockchain(txData);
+        return this.client
+            .call('GetTransaction', [hash])
+            .then(result => this.buildTransactionFromBlockchain(result));
     }
 
     async buildTransactionFromBlockchain(txData): Promise<IBlockchainTransaction> {
@@ -33,59 +26,63 @@ export class ClientUtils implements IClientUtils {
         const toAddress = !isBech32(txData.toAddr) ? toBech32Address(txData.toAddr) : txData.toAddr;
 
         // const tokenInfo = await this.client.tokens[TokenType.ZRC2].getTokenInfo(toAddress);
-        const token = await this.getToken(toAddress);
-        const data: any = {};
+        try {
+            const token = await this.getToken(toAddress);
+            const data: any = {};
 
-        if (token.type === TokenType.ZRC2) {
-            const transferEvent = (txData.receipt?.event_logs || []).find(
-                event =>
-                    ['Transfer', 'TransferSuccess', 'TransferFromSuccess'].indexOf(
-                        event._eventname
-                    ) >= 0
-            );
+            if (token.type === TokenType.ZRC2) {
+                const transferEvent = (txData.receipt?.event_logs || []).find(
+                    event =>
+                        ['Transfer', 'TransferSuccess', 'TransferFromSuccess'].indexOf(
+                            event._eventname
+                        ) >= 0
+                );
 
-            data.params = [
-                toBech32Address(
+                data.params = [
+                    toBech32Address(
+                        this.client.tokens[TokenType.ZRC2].extractEventParamsValue(
+                            transferEvent.params,
+                            'recipient'
+                        )
+                    ),
                     this.client.tokens[TokenType.ZRC2].extractEventParamsValue(
                         transferEvent.params,
-                        'recipient'
+                        'amount'
                     )
-                ),
-                this.client.tokens[TokenType.ZRC2].extractEventParamsValue(
-                    transferEvent.params,
-                    'amount'
-                )
-            ];
+                ];
+            }
+
+            return {
+                id: txData.ID,
+                date: {
+                    created: Date.now(),
+                    signed: Date.now(),
+                    broadcasted: Date.now(),
+                    confirmed: Date.now()
+                },
+                blockchain: Blockchain.ZILLIQA,
+                chainId: this.client.chainId,
+                type: TransactionType.TRANSFER,
+
+                address: fromAddress,
+                publicKey: txData.senderPubKey,
+
+                toAddress,
+                amount: txData.amount,
+                data,
+                feeOptions: {
+                    gasPrice: txData.gasPrice,
+                    gasLimit: txData.gasLimit,
+                    feeTotal: txData.receipt?.cumulative_gas
+                },
+                broadcastedOnBlock: txData.receipt?.epoch_num,
+                nonce: txData.nonce,
+                status: this.getTransactionStatus(txData, token),
+                token
+            };
+        } catch (err) {
+            return Promise.reject(err);
         }
-
-        return {
-            id: txData.ID,
-            date: {
-                created: Date.now(),
-                signed: Date.now(),
-                broadcasted: Date.now(),
-                confirmed: Date.now()
-            },
-            blockchain: Blockchain.ZILLIQA,
-            chainId: this.client.chainId,
-            type: TransactionType.TRANSFER,
-
-            address: fromAddress,
-            publicKey: txData.senderPubKey,
-
-            toAddress,
-            amount: txData.amount,
-            data,
-            feeOptions: {
-                gasPrice: txData.gasPrice,
-                gasLimit: txData.gasLimit,
-                feeTotal: txData.receipt?.cumulative_gas
-            },
-            broadcastedOnBlock: txData.receipt?.epoch_num,
-            nonce: txData.nonce,
-            status: this.getTransactionStatus(txData, token),
-            token
-        };
     }
 
     async getToken(toAddress: string): Promise<ITokenConfigState> {

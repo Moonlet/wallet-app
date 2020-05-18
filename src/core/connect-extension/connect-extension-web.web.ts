@@ -14,6 +14,7 @@ import { IBlockchainTransaction } from '../blockchain/types';
 import { buildTransactions } from './conn-ext-build-state/build-transactions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import CONFIG from '../../config';
+import * as Sentry from '@sentry/react-native';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -30,8 +31,8 @@ export const ConnectExtensionWeb = (() => {
         try {
             // store session
             await storeEncrypted(JSON.stringify(conn), CONN_EXTENSION, CONN_EXTENSION);
-        } catch {
-            Promise.reject();
+        } catch (err) {
+            return Promise.reject(err);
         }
     };
 
@@ -40,8 +41,8 @@ export const ConnectExtensionWeb = (() => {
         try {
             // delete the connection session
             await deleteFromStorage(CONN_EXTENSION);
-        } catch {
-            Promise.reject();
+        } catch (err) {
+            return Promise.reject(err);
         }
     };
 
@@ -54,7 +55,7 @@ export const ConnectExtensionWeb = (() => {
 
             return undefined;
         } catch (err) {
-            Promise.reject(err);
+            return Promise.reject(err);
         }
     };
 
@@ -126,8 +127,9 @@ export const ConnectExtensionWeb = (() => {
 
             const http = await fetch(urlDowndload);
             return (await http.text()).toString();
-        } catch {
-            Promise.reject();
+        } catch (err) {
+            Sentry.captureException(new Error(JSON.stringify(err)));
+            return Promise.reject();
         }
     };
 
@@ -139,8 +141,8 @@ export const ConnectExtensionWeb = (() => {
             const extState = await buildState(decryptedState);
             store.dispatch(extensionReduxUpdateState(extState) as any);
             // extensionStateLoaded check if needed
-        } catch {
-            //
+        } catch (err) {
+            Sentry.captureException(new Error(JSON.stringify(err)));
         }
     };
 
@@ -170,8 +172,8 @@ export const ConnectExtensionWeb = (() => {
                                 // Build wallets transactions
                                 buildTransactions(decryptedState.state.wallets);
                             }
-                        } catch {
-                            //
+                        } catch (err) {
+                            Sentry.captureException(new Error(JSON.stringify(err)));
                         }
                     } else {
                         // Connection does not exist!
@@ -219,7 +221,8 @@ export const ConnectExtensionWeb = (() => {
                     await LoadingModal.close();
                 } catch (err) {
                     await LoadingModal.close();
-                    Promise.reject(err);
+                    Sentry.captureException(new Error(JSON.stringify(err)));
+                    return Promise.reject(err);
                 }
             } else {
                 // Connection does not exist! Waiting for connections...

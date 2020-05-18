@@ -14,8 +14,6 @@ export const buildPreferences = (trimmedPreferences: IExtStorage.IStoragePrefere
         });
     });
 
-    // TODO: add inactive blockchains
-
     return {
         currency: trimmedPreferences.currency,
         testNet: trimmedPreferences.testNet,

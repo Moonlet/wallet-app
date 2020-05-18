@@ -9,6 +9,7 @@ import { getSelectedBlockchain } from '../../redux/wallets/selectors';
 import { Blockchain, TransactionMessageType } from '../../core/blockchain/types';
 import { Deferred } from '../../core/utils/deferred';
 import { ILoadingModalMessage } from './types';
+import { setInstance, waitForInstance } from '../../core/utils/class-registry';
 
 export interface IReduxProps {
     blockchain: Blockchain;
@@ -29,12 +30,11 @@ export class LoadingModalComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    private static refDeferred: Deferred<LoadingModalComponent> = new Deferred();
     private resultDeferred: Deferred;
 
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
-        LoadingModalComponent.refDeferred.resolve(this);
+        setInstance(LoadingModalComponent, this);
         this.state = {
             isVisible: false,
             message: undefined
@@ -42,18 +42,21 @@ export class LoadingModalComponent extends React.Component<
     }
 
     public static async open(message?: ILoadingModalMessage) {
-        const ref = await LoadingModalComponent.refDeferred.promise;
-        return ref.open(message);
+        return waitForInstance<LoadingModalComponent>(LoadingModalComponent).then(ref =>
+            ref.open(message)
+        );
     }
 
     public static async close() {
-        const ref = await LoadingModalComponent.refDeferred.promise;
-        return ref.close();
+        return waitForInstance<LoadingModalComponent>(LoadingModalComponent).then(ref =>
+            ref.close()
+        );
     }
 
     public static async showMessage(message: ILoadingModalMessage) {
-        const ref = await LoadingModalComponent.refDeferred.promise;
-        return ref.showMessage(message);
+        return waitForInstance<LoadingModalComponent>(LoadingModalComponent).then(ref =>
+            ref.showMessage(message)
+        );
     }
 
     private open(message: ILoadingModalMessage) {

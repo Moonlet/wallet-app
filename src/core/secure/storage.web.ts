@@ -1,12 +1,14 @@
 import { browser } from 'webextension-polyfill-ts';
+import * as Sentry from '@sentry/browser';
 
 const KEY_PREFIX = 'mw-';
 
 export const storeEncrypted = async (data: string, key: string, hash: string) => {
     try {
         await browser.storage.local.set({ [`${KEY_PREFIX}${key}`]: data });
-    } catch (e) {
-        return Promise.reject(e);
+    } catch (err) {
+        Sentry.captureException(new Error(JSON.stringify(err)));
+        return Promise.reject(err);
     }
 };
 
@@ -20,23 +22,26 @@ export const readEncrypted = async (key: string, hash: string) => {
             // No data in storage for key ${KEY_PREFIX}${key}
             return undefined;
         }
-    } catch (e) {
-        return Promise.reject(e);
+    } catch (err) {
+        Sentry.captureException(new Error(JSON.stringify(err)));
+        return Promise.reject(err);
     }
 };
 
 export const deleteFromStorage = async (key: string) => {
     try {
         await browser.storage.local.remove(`${KEY_PREFIX}${key}`);
-    } catch (e) {
-        return Promise.reject(e);
+    } catch (err) {
+        Sentry.captureException(new Error(JSON.stringify(err)));
+        return Promise.reject(err);
     }
 };
 
 export const getItemFromStorage = async (key: string) => {
     try {
         return Promise.resolve(await browser.storage.local.get(`${KEY_PREFIX}${key}`));
-    } catch (e) {
-        return Promise.reject(e);
+    } catch (err) {
+        Sentry.captureException(new Error(JSON.stringify(err)));
+        return Promise.reject(err);
     }
 };

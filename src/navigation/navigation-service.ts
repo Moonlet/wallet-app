@@ -41,7 +41,21 @@ export const NavigationService = (() => {
         }
     };
 
+    const getRecursiveRouteWithParams = (routeState: any) => {
+        if (Array.isArray(routeState.routes)) {
+            return getRecursiveRouteWithParams(routeState.routes[routeState.index]);
+        } else {
+            return {
+                routeName: routeState.routeName,
+                params: routeState?.params
+            };
+        }
+    };
+
     const getCurrentRoute = () => navigator && getRecursiveRoute(navigator.state.nav);
+
+    const getCurrentRouteWithParams = () =>
+        navigator && getRecursiveRouteWithParams(navigator.state.nav);
 
     return {
         setTopLevelNavigator,
@@ -49,6 +63,7 @@ export const NavigationService = (() => {
         replace,
         popToTop,
         getCurrentRoute,
-        goBack
+        goBack,
+        getCurrentRouteWithParams
     };
 })();

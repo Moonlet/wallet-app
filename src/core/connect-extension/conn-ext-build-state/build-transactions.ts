@@ -22,8 +22,7 @@ export const buildTransactions = (trimmedWallets: IExtStorage.IStorageWallets) =
                             txHash,
                             tx.blockchain,
                             tx.chainId,
-                            tx.broadcastedOnBlock,
-                            false
+                            tx.broadcastedOnBlock
                         ) as any
                     );
                 }

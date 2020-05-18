@@ -8,7 +8,8 @@ export enum IStatValueType {
 }
 
 export interface IStatValue {
-    label: string;
+    title: string;
+    subtitle?: string;
     color: string;
     type: IStatValueType;
     data: {
@@ -32,7 +33,25 @@ export abstract class GenericStats<Client = BlockchainGenericClient> {
         this.config = config;
     }
 
-    public getAccountDelegateStats(): AccountStats {
+    public async getAccountDelegateStats(): Promise<AccountStats> {
         throw new Error('Not Implemented');
     }
+}
+
+export enum CardActionType {
+    CHECKBOX = 'CHECKBOX',
+    NAVIGATE = 'CHECKBOX'
+}
+
+export interface IValidatorCard {
+    icon: string;
+    labelName: string;
+    rank: string;
+    totalAmountStd: string;
+    totalLabel: string;
+    website: string;
+    rightTitle: string;
+    rightSubtitle: string;
+    actionType: CardActionType;
+    bottomStats: IStatValue[];
 }

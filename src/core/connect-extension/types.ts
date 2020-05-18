@@ -107,12 +107,7 @@ export interface IStoragePreferences {
     currency: string;
     testNet: boolean;
     networks: IStorageNetworks;
-    blockchains: {
-        [blockchain: string]: {
-            order: number;
-            active: boolean;
-        };
-    };
+    blockchains: string[];
 }
 
 export interface IStorageNetworks {

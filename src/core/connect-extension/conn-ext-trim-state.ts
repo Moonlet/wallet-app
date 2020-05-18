@@ -102,27 +102,19 @@ const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
 };
 
 const trimPrefBlockchains = (blockchains: IBlockchainsOptions) => {
-    const trimmedBlockchains = {};
-
-    Object.keys(blockchains).map((blockchain: Blockchain) => {
-        Object.assign(trimmedBlockchains, {
-            ...trimmedBlockchains,
-            [blockchain]: {
-                order: blockchains[blockchain].order,
-                active: blockchains[blockchain].active
-            }
-        });
-    });
-
-    return trimmedBlockchains;
+    return Object.keys(blockchains)
+        .filter((blockchain: Blockchain) => blockchains[blockchain].active === true)
+        .sort((a, b) => blockchains[a].order - blockchains[b].order);
 };
 
 const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
+    const blockchains = trimPrefBlockchains(preferences.blockchains);
+
     return {
         currency: preferences.currency,
         testNet: preferences.testNet,
         networks: cloneDeep(preferences.networks),
-        blockchains: trimPrefBlockchains(preferences.blockchains)
+        blockchains
     };
 };
 

@@ -107,7 +107,7 @@ const trimPrefBlockchains = (blockchains: IBlockchainsOptions) => {
         .sort((a, b) => blockchains[a].order - blockchains[b].order);
 };
 
-const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
+export const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
     return {
         currency: preferences.currency,
         testNet: preferences.testNet,

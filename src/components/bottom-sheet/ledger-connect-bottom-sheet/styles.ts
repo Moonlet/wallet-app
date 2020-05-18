@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    normalizeFontAndLineHeight
+} from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -14,15 +18,15 @@ export default (theme: ITheme) =>
             flex: 1
         },
         message: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textSecondary,
             marginTop: BASE_DIMENSION * 2,
             marginBottom: BASE_DIMENSION * 5,
             textAlign: 'center'
         },
         scanningDevices: {
-            lineHeight: normalize(22),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textSecondary,
             paddingTop: BASE_DIMENSION * 4,
             marginBottom: BASE_DIMENSION * 5,
@@ -39,16 +43,16 @@ export default (theme: ITheme) =>
             flexDirection: 'column'
         },
         deviceName: {
-            lineHeight: normalize(21),
+            lineHeight: normalizeFontAndLineHeight(21),
             color: theme.colors.text
         },
         pairedText: {
-            lineHeight: normalize(21),
+            lineHeight: normalizeFontAndLineHeight(21),
             color: theme.colors.accent
         },
         deviceId: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             color: theme.colors.textSecondary
         },
         deviceIcon: {

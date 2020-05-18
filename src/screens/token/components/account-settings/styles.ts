@@ -4,7 +4,8 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
-    normalize
+    normalize,
+    normalizeFontAndLineHeight
 } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -54,8 +55,8 @@ export default (theme: ITheme) =>
             paddingLeft: BASE_DIMENSION * 2
         },
         backText: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.text
         },
         doneWrapper: {
@@ -70,7 +71,7 @@ export default (theme: ITheme) =>
             flex: 2
         },
         title: {
-            lineHeight: normalize(19),
+            lineHeight: normalizeFontAndLineHeight(19),
             textAlign: 'center',
             fontWeight: 'bold'
         },
@@ -87,8 +88,8 @@ export default (theme: ITheme) =>
             alignSelf: 'center'
         },
         textRow: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textSecondary
         }
     });

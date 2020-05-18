@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { Text, Button } from '../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -32,6 +32,8 @@ import { normalize } from '../../styles/dimensions';
 import { ITokenConfigState } from '../../redux/tokens/state';
 import { addToken } from '../../redux/tokens/actions';
 import { CONFIG } from '../../config';
+import { SearchInput } from '../../components/search-input/search-input';
+import { bind } from 'bind-decorator';
 
 export interface IReduxProps {
     selectedAccount: IAccountState;
@@ -226,44 +228,33 @@ export class ManageTokenComponent extends React.Component<
         this.props.navigation.goBack();
     }
 
+    @bind
+    public onSearchInput(text: string) {
+        this.setState({ fieldInput: text, isTokenSelected: false });
+    }
+
+    @bind
+    public onClose() {
+        this.setState({
+            fieldInput: undefined,
+            token: undefined,
+            showError: false,
+            isLoading: false,
+            isTokenSelected: false
+        });
+    }
+
     public render() {
-        const { styles, theme } = this.props;
+        const { styles } = this.props;
 
         return (
             <View style={styles.container}>
                 <View style={styles.inputContainer}>
-                    <View style={styles.inputBox}>
-                        <Icon name="search" size={normalize(14)} style={styles.searchIcon} />
-                        <TextInput
-                            style={styles.input}
-                            placeholderTextColor={theme.colors.textTertiary}
-                            placeholder={translate('Token.searchToken')}
-                            autoCapitalize={'none'}
-                            autoCorrect={false}
-                            selectionColor={theme.colors.accent}
-                            value={this.state.fieldInput}
-                            onChangeText={value =>
-                                this.setState({ fieldInput: value, isTokenSelected: false })
-                            }
-                        />
-                        {this.state.fieldInput !== '' && this.state.fieldInput !== undefined && (
-                            <TouchableOpacity
-                                style={styles.closeIconContainer}
-                                onPress={() =>
-                                    this.setState({
-                                        fieldInput: undefined,
-                                        token: undefined,
-                                        showError: false,
-                                        isLoading: false,
-                                        isTokenSelected: false
-                                    })
-                                }
-                            >
-                                <Icon name="close" size={normalize(16)} style={styles.closeIcon} />
-                            </TouchableOpacity>
-                        )}
-                    </View>
-
+                    <SearchInput
+                        placeholderText={translate('Token.searchToken')}
+                        onChangeText={this.onSearchInput}
+                        onClose={this.onClose}
+                    />
                     {this.state.isLoading && <LoadingIndicator />}
 
                     {this.state.token && this.state.token?.symbol && (

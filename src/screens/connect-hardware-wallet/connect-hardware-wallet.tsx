@@ -12,7 +12,7 @@ import { ledgerConfig } from '../../core/wallet/hw-wallet/ledger/config';
 import { Blockchain } from '../../core/blockchain/types';
 import { ListCard } from '../../components/list-card/list-card';
 import { INavigationProps } from '../../navigation/with-navigation-params';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
@@ -43,8 +43,8 @@ const navigationOptions = ({ navigation, theme }: any) => ({
         <TouchableOpacity onPress={navigation.state?.params?.resetAll}>
             <Text
                 style={{
-                    fontSize: normalize(17),
-                    lineHeight: normalize(22),
+                    fontSize: normalizeFontAndLineHeight(17),
+                    lineHeight: normalizeFontAndLineHeight(22),
                     color: themes[theme].colors.accent,
                     paddingRight: BASE_DIMENSION * 2
                 }}

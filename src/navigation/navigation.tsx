@@ -34,10 +34,11 @@ import { TransactionDetails } from '../screens/transaction-details/transaction-d
 import { StatisticsScreen } from '../screens/statistics/statistics';
 import { WatchScreen } from '../screens/watch/watch';
 import { ManageAccountScreen } from '../screens/manage-account/manage-account';
-import { BASE_DIMENSION, normalize } from '../styles/dimensions';
+import { BASE_DIMENSION, normalize, normalizeFontAndLineHeight } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
+import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -54,8 +55,8 @@ const mainTabbedNavigationOptions: any = {
     tabBarOptions: {
         showIcon: true,
         labelStyle: {
-            fontSize: normalize(12),
-            lineHeight: normalize(15),
+            fontSize: normalizeFontAndLineHeight(12),
+            lineHeight: normalizeFontAndLineHeight(15),
             fontWeight: '500',
             letterSpacing: 0.3
         },
@@ -132,6 +133,9 @@ export const WalletNavigation = createStackNavigator(
         },
         ConnectExtension: {
             screen: ConnectExtensionScreen
+        },
+        Validator: {
+            screen: ValidatorScreen
         },
 
         // wallet creation
@@ -266,7 +270,7 @@ export const navigationConfig = {
         screen: StatisticsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('performance-money-increase')
+            tabBarIcon: menuIcon('reinvest')
         })
     },
     Watch: {

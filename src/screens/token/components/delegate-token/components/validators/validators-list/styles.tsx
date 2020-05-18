@@ -1,19 +1,17 @@
 import { StyleSheet } from 'react-native';
-import { BASE_DIMENSION, normalize } from '../../../../../../styles/dimensions';
-import { ITheme } from '../../../../../../core/theme/itheme';
+import { ITheme } from '../../../../../../../core/theme/itheme';
+import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../../../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: theme.colors.appBackground,
-            paddingHorizontal: BASE_DIMENSION,
-            marginTop: BASE_DIMENSION * 3
+            backgroundColor: theme.colors.appBackground
         },
         text: {
             fontWeight: 'bold',
-            fontSize: normalize(22),
-            lineHeight: normalize(28),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             textAlign: 'center',
             letterSpacing: 0.35,
             color: theme.colors.text,

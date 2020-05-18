@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize, normalizeFontAndLineHeight } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -15,7 +15,7 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 4
         },
         moonletDisabled: {
-            fontSize: normalize(34),
+            fontSize: normalizeFontAndLineHeight(34),
             lineHeight: normalize(41),
             color: theme.colors.textSecondary,
             marginBottom: BASE_DIMENSION / 2,
@@ -23,6 +23,7 @@ export default (theme: ITheme) =>
             letterSpacing: 0.35
         },
         disabledDetails: {
+            fontSize: normalizeFontAndLineHeight(17),
             lineHeight: normalize(22),
             color: theme.colors.textSecondary,
             textAlign: 'center'

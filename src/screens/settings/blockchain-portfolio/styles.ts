@@ -4,7 +4,7 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
-    normalize
+    normalizeFontAndLineHeight
 } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -29,8 +29,8 @@ export default (theme: ITheme) =>
         },
         blockchainName: {
             fontWeight: '500',
-            fontSize: normalize(18),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
             letterSpacing: 0.38,
             color: theme.colors.text,
             textTransform: 'capitalize',

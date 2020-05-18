@@ -89,7 +89,7 @@ export const LegalComponent = (
                     <View style={props.styles.divider} />
 
                     <Button
-                        style={props.styles.bottomButton}
+                        wrapperStyle={props.styles.bottomButton}
                         primary
                         onPress={() => {
                             props.appSetAcceptedTcVersion(props.tcLatestVersion);

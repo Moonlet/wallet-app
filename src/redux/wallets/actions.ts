@@ -40,10 +40,6 @@ import { getChainId } from '../preferences/selectors';
 import { Client as NearClient } from '../../core/blockchain/near/client';
 import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
 import { formatAddress } from '../../core/utils/format-address';
-import { Notifications } from '../../core/messaging/notifications/notifications';
-import { formatNumber } from '../../core/utils/format-number';
-import BigNumber from 'bignumber.js';
-import { NotificationType } from '../../core/messaging/types';
 import { updateAddressMonitorTokens } from '../../core/address-monitor/index';
 import { Dialog } from '../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../ui/password-modal/actions';
@@ -60,6 +56,7 @@ import { toggleBiometricAuth } from '../preferences/actions';
 import { CLOSE_TX_REQUEST } from '../ui/transaction-request/actions';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
+import * as Sentry from '@sentry/react-native';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -227,6 +224,8 @@ export const createHWWallet = (
         // this might not be the best place
         if (e === translate('CreateHardwareWallet.notSupported')) {
             dispatch(featureNotSupported());
+        } else {
+            Sentry.captureException(new Error(JSON.stringify(e)));
         }
         throw new Error(e);
     }
@@ -292,12 +291,12 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
 
             updateAddressMonitorTokens(getState().wallets);
         });
-    } catch (e) {
-        // console.log(e);
+    } catch (err) {
+        Sentry.captureException(new Error(JSON.stringify(err)));
+
         // TODO best way to handle this?
         await LoadingModal.close();
     }
-    // TODO  - error handling
 };
 
 // will check balance for a coin or all coins if needed
@@ -387,7 +386,6 @@ export const updateTransactionFromBlockchain = (
     blockchain: Blockchain,
     chainId: ChainIdType,
     broadcastedOnBlock: number,
-    displayNotification: boolean,
     navigateToTransaction: boolean = false
 ) => async (dispatch, getState: () => IReduxState) => {
     const state = getState();
@@ -471,34 +469,6 @@ export const updateTransactionFromBlockchain = (
         // if (displayNotification && currentChainId === chainId) { - removed this for consistency with app closed notifications
 
         const tokenConfig = getTokenConfig(blockchain, transaction.token.symbol);
-
-        if (displayNotification) {
-            const amount = blockchainInstance.account.amountFromStd(
-                new BigNumber(blockchainInstance.transaction.getTransactionAmount(transaction)),
-                tokenConfig.decimals
-            );
-            const formattedAmount = formatNumber(amount, {
-                currency: transaction.token.symbol
-            });
-
-            Notifications.displayNotification(
-                transaction.status,
-                `Transaction of ${formattedAmount} from ${formatAddress(
-                    transaction.address,
-                    blockchain
-                )} to ${formatAddress(receivingAddress, blockchain)}`,
-                {
-                    type: NotificationType.TRANSACTION_UPDATE,
-                    data: {
-                        walletId: wallet.id,
-                        accountIndex: transactionAccount.index,
-                        token: generateAccountTokenState(tokenConfig),
-                        tokenLogo: tokenConfig.icon,
-                        blockchain
-                    }
-                }
-            );
-        }
 
         if (navigateToTransaction) {
             const navigationParams: NavigationParams = {

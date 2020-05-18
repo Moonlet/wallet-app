@@ -1,6 +1,10 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize, isIphoneXorAbove } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalizeFontAndLineHeight,
+    isIphoneXorAbove
+} from '../../styles/dimensions';
 
 const DEFAULT_BOTTOM_CONTAINER_PADDING = BASE_DIMENSION + BASE_DIMENSION / 2;
 
@@ -43,24 +47,24 @@ export default (theme: ITheme) =>
             paddingTop: BASE_DIMENSION / 4
         },
         bottomDefaultText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.text
         },
         bottomSendText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             marginRight: BASE_DIMENSION / 2
         },
         bottomToText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.text,
             marginRight: BASE_DIMENSION / 2
         },
         bottomAmountText: {
-            fontSize: normalize(11),
-            lineHeight: normalize(13),
+            fontSize: normalizeFontAndLineHeight(11),
+            lineHeight: normalizeFontAndLineHeight(13),
             color: theme.colors.textTertiary
         }
     });

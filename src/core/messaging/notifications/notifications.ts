@@ -47,13 +47,16 @@ export class NotificationService {
         // when app is opened or in background and a notification is received
         this.onNotificationListener = firebase.notifications().onNotification(notification => {
             notification.android.setChannelId('default').setSound('default');
-
             // if this is a transaction notification, handle it and update state and display another notification after that
             if (notification.data.type === NotificationType.TRANSACTION) {
                 notificationHandler((notification as any).data, false);
-            } else {
-                firebase.notifications().displayNotification(notification);
             }
+
+            this.displayNotification(
+                notification.title,
+                notification.body,
+                (notification as any).data
+            );
         });
 
         // called when app is opened or in background and a regular notification is displaed

@@ -4,7 +4,7 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
-    normalize
+    normalizeFontAndLineHeight
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -33,7 +33,7 @@ export default (theme: ITheme) =>
         },
         input: {
             flex: 1,
-            fontSize: normalize(15),
+            fontSize: normalizeFontAndLineHeight(15),
             color: theme.colors.text
         },
         bottomButtonContainer: {
@@ -84,20 +84,20 @@ export default (theme: ITheme) =>
             color: theme.colors.accent
         },
         address: {
-            fontSize: normalize(16),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(16),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary
         },
         tokenNameText: {
-            fontSize: normalize(18),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
             letterSpacing: 0.38,
             color: theme.colors.text,
             fontWeight: '500'
         },
         tokenAddressText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             letterSpacing: 0.38,
             color: theme.colors.textTertiary
         },
@@ -106,8 +106,8 @@ export default (theme: ITheme) =>
             marginTop: BASE_DIMENSION * 10
         },
         noMatchText: {
-            fontSize: normalize(22),
-            lineHeight: normalize(28),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             color: theme.colors.textTertiary,
             letterSpacing: 0.35,
             fontWeight: 'bold',
@@ -115,7 +115,7 @@ export default (theme: ITheme) =>
             textAlign: 'center'
         },
         noGiveUpText: {
-            lineHeight: normalize(22),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textTertiary,
             textAlign: 'center'
         }

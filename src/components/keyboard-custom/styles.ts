@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    normalize,
+    normalizeFontAndLineHeight
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -22,7 +27,7 @@ export default (theme: ITheme) =>
             borderWidth: 1
         },
         textButton: {
-            lineHeight: normalize(22),
+            lineHeight: normalizeFontAndLineHeight(22),
             textAlign: 'center'
         },
         keyboardLayout: {
@@ -40,18 +45,18 @@ export default (theme: ITheme) =>
         },
         footerText: {
             textAlign: 'center',
-            fontSize: normalize(14),
+            fontSize: normalizeFontAndLineHeight(14),
             color: theme.colors.text
         },
         pasteWordText: {
-            fontSize: normalize(14),
+            fontSize: normalizeFontAndLineHeight(14),
             textAlign: 'center',
             color: theme.colors.text
         },
         confirmWordText: {
             textAlign: 'center',
             color: theme.colors.accent,
-            fontSize: normalize(14)
+            fontSize: normalizeFontAndLineHeight(14)
         },
         rowContainer: {
             flex: 1,
@@ -71,8 +76,8 @@ export default (theme: ITheme) =>
         },
         keyText: {
             flex: 1,
-            fontSize: normalize(22),
-            lineHeight: normalize(26),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(26),
             textAlign: 'center',
             color: theme.colors.text
         },

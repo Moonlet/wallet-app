@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalizeFontAndLineHeight } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -23,11 +23,11 @@ export default (theme: ITheme) =>
             color: theme.colors.negative
         },
         text: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18)
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18)
         },
         convert: {
-            lineHeight: normalize(22),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.text
         }
     });

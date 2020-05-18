@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, ICON_CONTAINER_SIZE, normalize } from '../../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    ICON_CONTAINER_SIZE,
+    normalizeFontAndLineHeight
+} from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -21,8 +25,8 @@ export default (theme: ITheme) =>
         },
         name: {
             color: theme.colors.text,
-            fontSize: normalize(18),
-            lineHeight: normalize(23)
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(23)
         },
         selectedText: {
             color: theme.colors.accent

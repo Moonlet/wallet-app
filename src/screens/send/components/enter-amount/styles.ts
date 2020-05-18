@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    normalizeFontAndLineHeight
+} from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -12,7 +16,7 @@ export default (theme: ITheme) =>
             flex: 1,
             color: theme.colors.text,
             paddingRight: BASE_DIMENSION * 2,
-            fontSize: normalize(15)
+            fontSize: normalizeFontAndLineHeight(15)
         },
         inputBox: {
             height: BASE_DIMENSION * 5,
@@ -25,15 +29,15 @@ export default (theme: ITheme) =>
             flex: 1,
             paddingLeft: BASE_DIMENSION,
             color: theme.colors.error,
-            fontSize: normalize(15),
-            lineHeight: normalize(19)
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(19)
         },
         receipientWarning: {
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
             color: theme.colors.warning,
-            fontSize: normalize(15),
-            lineHeight: normalize(19)
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(19)
         },
         buttonRightOptions: {
             width: '100%',
@@ -43,14 +47,14 @@ export default (theme: ITheme) =>
             justifyContent: 'space-between'
         },
         textBalance: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             color: theme.colors.textSecondary,
             marginRight: BASE_DIMENSION / 2
         },
         allBalanceText: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             color: theme.colors.accent
         },
         addValueBox: {
@@ -62,8 +66,8 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION / 2
         },
         addValueText: {
-            fontSize: normalize(12),
-            lineHeight: normalize(16),
+            fontSize: normalizeFontAndLineHeight(12),
+            lineHeight: normalizeFontAndLineHeight(16),
             color: theme.colors.text,
             textAlign: 'center'
         },
@@ -72,8 +76,8 @@ export default (theme: ITheme) =>
             justifyContent: 'space-between'
         },
         receipientLabel: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             paddingLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         }

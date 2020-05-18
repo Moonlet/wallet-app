@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BORDER_RADIUS, BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BORDER_RADIUS, BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -16,7 +16,7 @@ export default (theme: ITheme) =>
             justifyContent: 'center'
         },
         text: {
-            lineHeight: normalize(22),
+            lineHeight: normalizeFontAndLineHeight(22),
             fontWeight: 'bold',
             textAlign: 'center',
             color: theme.colors.accent,
@@ -58,8 +58,8 @@ export default (theme: ITheme) =>
             alignSelf: 'center'
         },
         bottomLabel: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             color: theme.colors.text,
             marginTop: BASE_DIMENSION / 2,
             textAlign: 'center'

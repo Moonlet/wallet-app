@@ -4,7 +4,7 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
-    normalize
+    normalizeFontAndLineHeight
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -31,19 +31,19 @@ export default (theme: ITheme) =>
             alignSelf: 'center'
         },
         address: {
-            lineHeight: normalize(20),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary
         },
         firstAmount: {
-            fontSize: normalize(18),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
             letterSpacing: 0.38,
             color: theme.colors.text,
             fontWeight: '500'
         },
         secondAmount: {
-            fontSize: normalize(16),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(16),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary
         },
         tokenIcon: {

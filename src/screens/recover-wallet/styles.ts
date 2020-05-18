@@ -1,6 +1,12 @@
 import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize, SCREEN_HEIGHT } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    normalize,
+    SCREEN_HEIGHT,
+    normalizeFontAndLineHeight
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -35,9 +41,9 @@ export default (theme: ITheme) =>
         inputLabel: {
             textAlign: 'right',
             alignSelf: 'center',
-            fontSize: normalize(10),
+            fontSize: normalizeFontAndLineHeight(10),
             width: normalize(18),
-            lineHeight: normalize(30),
+            lineHeight: normalizeFontAndLineHeight(30),
             color: theme.colors.text,
             paddingTop: BASE_DIMENSION / 4
         },

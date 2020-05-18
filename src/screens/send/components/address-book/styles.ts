@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalize,
+    normalizeFontAndLineHeight
+} from '../../../../styles/dimensions';
 import { pw, ph } from '../../../../styles';
 
 export default (theme: ITheme) =>
@@ -28,8 +32,8 @@ export default (theme: ITheme) =>
         },
         emptyAddressText: {
             fontWeight: 'bold',
-            fontSize: normalize(22),
-            lineHeight: normalize(28),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             textAlign: 'center',
             letterSpacing: 0.35,
             opacity: 0.4,
@@ -37,8 +41,8 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION
         },
         addAddressBookText: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             textAlign: 'center',
             opacity: 0.3,
             paddingHorizontal: BASE_DIMENSION * 2,
@@ -57,8 +61,8 @@ export default (theme: ITheme) =>
         },
         name: {
             color: theme.colors.text,
-            fontSize: normalize(18),
-            lineHeight: normalize(23)
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(23)
         },
         divider: {
             width: '100%',
@@ -76,8 +80,8 @@ export default (theme: ITheme) =>
         },
         sectionTitle: {
             fontWeight: '600',
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.text,
             paddingTop: BASE_DIMENSION
         },
@@ -101,11 +105,11 @@ export default (theme: ITheme) =>
             color: theme.colors.error
         },
         textActionPositive: {
-            fontSize: normalize(10),
+            fontSize: normalizeFontAndLineHeight(10),
             color: theme.colors.accent
         },
         textActionNegative: {
-            fontSize: normalize(10),
+            fontSize: normalizeFontAndLineHeight(10),
             color: theme.colors.error
         }
     });

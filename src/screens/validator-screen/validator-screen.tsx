@@ -10,11 +10,12 @@ import { Blockchain } from '../../core/blockchain/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
 import { SmartImage } from '../../library/image/smart-image';
-import { IValidatorCard } from '../../core/blockchain/types/stats';
+import { IValidator } from '../../core/blockchain/types/stats';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { translate } from '../../core/i18n';
 
 export interface INavigationParams {
-    validator: IValidatorCard;
+    validator: IValidator;
     blockchain: Blockchain;
 }
 
@@ -29,7 +30,7 @@ const HeaderTitleComponent = (
             />
             <View style={{ flexDirection: 'column' }}>
                 <Text style={props.styles.labelName}>
-                    {props.navigation.state.params.validator.labelName}
+                    {props.navigation.state.params.validator.name}
                 </Text>
                 <Text style={props.styles.website}>
                     {props.navigation.state.params.validator.website}
@@ -56,7 +57,7 @@ export class ValidatorScreenComponent extends React.Component<
         const { styles, blockchain, validator } = this.props;
         const config = getBlockchain(blockchain).config;
 
-        const textTop = `${validator.totalLabel} (${validator.rank})`;
+        const textTop = `${translate(config.ui.validator.totalLabel)} (${validator.rank})`;
         const amount = validator.totalAmountStd;
         const token = getTokenConfig(blockchain, config.coin);
 

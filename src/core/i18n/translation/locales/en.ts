@@ -249,7 +249,10 @@ export const translation: ITranslations = {
             reviewTransaction: 'Review transaction on your hardware wallet',
             addAddress: 'Add\naddress',
             enterAmount: 'Enter\namount',
-            confirmTransaction: 'Confirm\ntransaction'
+            confirmTransaction: 'Confirm\ntransaction',
+            selectValidator: 'Select\nvalidator(s)',
+            confirmVote: 'Confirm\nvote(s)',
+            confirmStake: 'Confirm\nstake(s)'
         },
 
         AccountSettings: {
@@ -442,6 +445,12 @@ export const translation: ITranslations = {
             walletName: 'Wallet name',
             accountName: 'Account name',
             errorMessage: 'Transaction request is not valid anymore.'
+        },
+        Validator: {
+            totalStake: 'Total Stake',
+            totalDelegated: 'Total Delegated',
+            myStake: 'My Stake',
+            delegation: 'Delegation'
         }
     },
     plural: (n: number, ord?: boolean) => {

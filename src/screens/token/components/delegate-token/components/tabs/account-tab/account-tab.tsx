@@ -12,11 +12,13 @@ import { connect } from 'react-redux';
 import { StatsComponent } from '../../stats-component/stats-component';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../../../../../../redux/preferences/selectors';
-import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { Button } from '../../../../../../../library';
 import { translate } from '../../../../../../../core/i18n';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
+import { DelegationType } from '../../../../../../../core/blockchain/types/token';
+import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
 import { AccountStats } from '../../../../../../../core/blockchain/types/stats';
+import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 
 export interface IProps {
     accountIndex: number;
@@ -67,6 +69,18 @@ export class AccountTabComponent extends React.Component<
 
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const tokenUiConfig = blockchainInstance.config.ui.token;
+
+        const mainCta = tokenUiConfig.accountCTA.mainCta;
+        mainCta.navigateTo = {
+            screen: 'DelegateScreen',
+            params: {
+                accountIndex: this.props.account.index,
+                blockchain: this.props.blockchain,
+                delegationType: DelegationType.DEFAULT,
+                token: this.props.token,
+                validators: [moonletValidator]
+            }
+        };
 
         return (
             <View style={styles.container}>

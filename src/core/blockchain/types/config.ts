@@ -47,6 +47,10 @@ export interface IBlockchainConfig {
         };
     };
     ui: {
+        validator?: {
+            totalLabel: string;
+            amountCardLabel: string;
+        };
         token?: {
             labels: {
                 tabAccount?: string;

@@ -1,10 +1,4 @@
-import {
-    GenericStats,
-    IStatValueType,
-    AccountStats,
-    IValidatorCard,
-    CardActionType
-} from '../types/stats';
+import { GenericStats, IStatValueType, AccountStats, IValidator } from '../types/stats';
 import { Client } from './client';
 import { Blockchain } from '../types/blockchain';
 
@@ -138,16 +132,13 @@ export const topStatsValues = [
     }
 ];
 
-export const moonletValidator: IValidatorCard = {
+export const moonletValidator: IValidator = {
+    id: 'moonletID',
     icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
-    labelName: 'Moonlet',
+    name: 'Moonlet',
     rank: '10th',
     totalAmountStd: '290000',
-    totalLabel: 'Total Votes',
     website: 'http://moonlet.io',
-    rightTitle: 'My Votes',
-    rightSubtitle: '1,000.00 cGLD',
-    actionType: CardActionType.CHECKBOX,
     bottomStats: [
         {
             title: 'Validators',
@@ -184,16 +175,13 @@ export const moonletValidator: IValidatorCard = {
     ]
 };
 
-export const chainLayerValidator: IValidatorCard = {
+export const chainLayerValidator: IValidator = {
+    id: 'chainLayerID',
     icon: 'https://thecelo.com/logos/0x4fc4ea624db2e4a1d6195a03744d505cbcd9431b.jpg',
-    labelName: 'ChainLayer',
+    name: 'ChainLayer',
     rank: '10th',
-    totalLabel: 'Total Votes',
     totalAmountStd: '190000',
     website: 'http://chainlayer.io',
-    rightTitle: 'My Votes',
-    rightSubtitle: '2,000.00 cGLD',
-    actionType: CardActionType.CHECKBOX,
     bottomStats: [
         {
             title: 'Validators',

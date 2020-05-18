@@ -40,18 +40,26 @@ export abstract class GenericStats<Client = BlockchainGenericClient> {
 
 export enum CardActionType {
     CHECKBOX = 'CHECKBOX',
-    NAVIGATE = 'CHECKBOX'
+    NAVIGATE = 'NAVIGATE'
 }
 
 export interface IValidatorCard {
     icon: string;
-    labelName: string;
-    rank: string;
-    totalAmountStd: string;
-    totalLabel: string;
-    website: string;
+    leftLabel: string;
+    leftSmallLabel: string;
+    leftSubLabel: string;
     rightTitle: string;
     rightSubtitle: string;
     actionType: CardActionType;
+    cardStats: IStatValue[];
+}
+
+export interface IValidator {
+    id: string;
+    icon: string;
+    name: string;
+    rank: string;
+    website: string;
+    totalAmountStd: string;
     bottomStats: IStatValue[];
 }

@@ -39,6 +39,7 @@ import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connec
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
 import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
+import { DelegateScreen } from '../screens/delegate-screen/delegate-screen';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -136,6 +137,9 @@ export const WalletNavigation = createStackNavigator(
         },
         Validator: {
             screen: ValidatorScreen
+        },
+        DelegateScreen: {
+            screen: DelegateScreen
         },
 
         // wallet creation

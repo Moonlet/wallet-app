@@ -7,9 +7,11 @@ import { BASE_DIMENSION, normalize } from '../../../../../../../styles/dimension
 import { Icon } from '../../../../../../../components/icon';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
 import { Text } from '../../../../../../../library';
-import { IStatValue, IStatValueType } from '../../../../../../../core/blockchain/types/stats';
-import { NavigationService } from '../../../../../../../navigation/navigation-service';
-import { getValidator } from '../../../../../../../core/blockchain/celo/stats';
+import {
+    IStatValue,
+    IStatValueType,
+    CardActionType
+} from '../../../../../../../core/blockchain/types/stats';
 import { Blockchain } from '../../../../../../../core/blockchain/types/blockchain';
 import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
@@ -17,14 +19,15 @@ import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-f
 
 export interface IExternalProps {
     icon: string;
-    labelName: string;
-    rank: string;
-    website: string;
+    leftLabel: string;
+    leftSmallLabel: string;
+    leftSubLabel: string;
     rightTitle: string;
     rightSubtitle: string;
-    actionType: string;
+    actionType: CardActionType;
     bottomStats: IStatValue[];
     blockchain: Blockchain;
+    onSelect: () => void;
 }
 
 export function getValueString(stat: IStatValue) {
@@ -43,12 +46,7 @@ export const ValidatorCardComponent = (
 ) => {
     return (
         <TouchableHighlight
-            onPress={() => {
-                NavigationService.navigate('Validator', {
-                    blockchain: props.blockchain,
-                    validator: getValidator(props.blockchain)
-                });
-            }}
+            onPress={this.props.onSelect}
             underlayColor={props.theme.colors.appBackground}
         >
             <View style={props.styles.cardContainer}>
@@ -63,16 +61,18 @@ export const ValidatorCardComponent = (
                                         { paddingRight: BASE_DIMENSION / 2 }
                                     ]}
                                 >
-                                    {props.labelName}
+                                    {props.leftSmallLabel}
                                 </Text>
-                                <Text style={props.styles.tertiaryText}>{props.rank}</Text>
+                                <Text style={props.styles.tertiaryText}>
+                                    {props.leftSmallLabel}
+                                </Text>
                             </View>
 
                             <Text style={props.styles.primaryText}>{props.rightTitle}</Text>
                         </View>
 
                         <View style={props.styles.topRowSecondLine}>
-                            <Text style={props.styles.secondaryText}>{props.website}</Text>
+                            <Text style={props.styles.secondaryText}>{props.leftSubLabel}</Text>
                             <Text style={props.styles.amountText}>{props.rightSubtitle}</Text>
                         </View>
                     </View>

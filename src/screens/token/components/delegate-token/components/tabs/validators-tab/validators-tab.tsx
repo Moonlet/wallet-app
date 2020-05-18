@@ -11,11 +11,11 @@ import { ValidatorsList } from '../../validators/validators-list/validators-list
 import { SearchInput } from '../../../../../../../components/search-input/search-input';
 import { translate } from '../../../../../../../core/i18n';
 import { bind } from 'bind-decorator';
-import { IValidatorCard } from '../../../../../../../core/blockchain/types/stats';
-// import { DelegationCTA } from '../../../../../../../components/delegation-cta/delegation-cta';
+import { IValidator, CardActionType } from '../../../../../../../core/blockchain/types/stats';
 import { Blockchain } from '../../../../../../../core/blockchain/types';
 import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
+import { NavigationService } from '../../../../../../../navigation/navigation-service';
 
 const validators = [chainLayerValidator, moonletValidator];
 
@@ -24,7 +24,7 @@ export interface IProps {
 }
 
 interface IState {
-    validatorsList: IValidatorCard[];
+    validatorsList: IValidator[];
 }
 
 export class ValidatorsTabComponent extends React.Component<
@@ -42,7 +42,7 @@ export class ValidatorsTabComponent extends React.Component<
     @bind
     public onSearchInput(text: string) {
         const filteredList = validators.filter(
-            validator => validator.labelName.toLowerCase().includes(text.toLowerCase()) === true
+            validator => validator.name.toLowerCase().includes(text.toLowerCase()) === true
         );
         this.setState({ validatorsList: filteredList });
     }
@@ -50,6 +50,14 @@ export class ValidatorsTabComponent extends React.Component<
     @bind
     public onClose() {
         this.setState({ validatorsList: validators });
+    }
+
+    @bind
+    public onSelect(validator: IValidator) {
+        NavigationService.navigate('Validator', {
+            blockchain: this.props.blockchain,
+            validator
+        });
     }
 
     public render() {
@@ -68,6 +76,9 @@ export class ValidatorsTabComponent extends React.Component<
                     <ValidatorsList
                         validators={this.state.validatorsList}
                         blockchain={this.props.blockchain}
+                        totalDelegationAmount={''}
+                        onSelect={this.onSelect}
+                        actionType={CardActionType.NAVIGATE}
                     />
                 </View>
                 <View style={styles.bottomContainer}>

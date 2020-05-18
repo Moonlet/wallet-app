@@ -88,6 +88,10 @@ export const config: IBlockchainConfig = {
         }
     },
     ui: {
+        validator: {
+            totalLabel: 'Validator.totalStake',
+            amountCardLabel: 'Validator.myStake'
+        },
         token: {
             labels: {
                 tabAccount: 'App.labels.account',

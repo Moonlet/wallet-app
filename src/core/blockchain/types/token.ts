@@ -9,6 +9,11 @@ export enum TokenScreenComponentType {
     DELEGATE = 'DELEGATE'
 }
 
+export enum DelegationType {
+    DEFAULT = 'DEFAULT',
+    QUICK = 'QUICK'
+}
+
 export interface ITokenIcon {
     uri?: string;
     iconComponent?: React.ComponentType<any>;

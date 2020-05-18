@@ -96,6 +96,10 @@ export const config: IBlockchainConfig = {
         }
     },
     ui: {
+        validator: {
+            totalLabel: 'Validator.totalDelegated',
+            amountCardLabel: 'Validator.delegation'
+        },
         token: {
             labels: {
                 tabAccount: 'App.labels.account',

@@ -4,7 +4,7 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
-    normalize
+    normalizeFontAndLineHeight
 } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -15,8 +15,8 @@ export default (theme: ITheme) =>
             paddingTop: BASE_DIMENSION
         },
         receipientLabel: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             paddingLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         },
@@ -24,7 +24,7 @@ export default (theme: ITheme) =>
             flex: 1,
             color: theme.colors.text,
             paddingRight: BASE_DIMENSION * 2,
-            fontSize: normalize(15)
+            fontSize: normalizeFontAndLineHeight(15)
         },
         inputBox: {
             height: BASE_DIMENSION * 5,
@@ -50,25 +50,25 @@ export default (theme: ITheme) =>
         },
         textTranferButton: {
             color: theme.colors.accent,
-            lineHeight: normalize(19)
+            lineHeight: normalizeFontAndLineHeight(19)
         },
         addressNotInBookText: {
-            lineHeight: normalize(20),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.accent
         },
         displayError: {
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
             color: theme.colors.error,
-            fontSize: normalize(15),
-            lineHeight: normalize(19)
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(19)
         },
         receipientWarning: {
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,
             color: theme.colors.warning,
-            fontSize: normalize(15),
-            lineHeight: normalize(19)
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(19)
         },
         icon: {
             color: theme.colors.accent

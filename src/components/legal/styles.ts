@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalizeFontAndLineHeight,
+    ICON_CONTAINER_SIZE
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -44,13 +48,13 @@ export default (theme: ITheme) =>
             alignSelf: 'flex-end'
         },
         walletTc: {
-            lineHeight: normalize(22),
+            lineHeight: normalizeFontAndLineHeight(22),
             textAlign: 'center',
             color: theme.colors.textSecondary,
             marginTop: BASE_DIMENSION * 6
         },
         text: {
-            lineHeight: normalize(25),
+            lineHeight: normalizeFontAndLineHeight(25),
             color: theme.colors.text,
             letterSpacing: 0.38
         },

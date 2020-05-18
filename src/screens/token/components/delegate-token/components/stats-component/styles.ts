@@ -1,5 +1,10 @@
 import { StyleSheet } from 'react-native';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    normalize,
+    normalizeFontAndLineHeight
+} from '../../../../../../styles/dimensions';
 import { ITheme } from '../../../../../../core/theme/itheme';
 
 export default (theme: ITheme) =>
@@ -48,26 +53,26 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION
         },
         detailRowTitle: {
-            lineHeight: normalize(10),
+            lineHeight: normalizeFontAndLineHeight(10),
             flexDirection: 'column'
         },
         chartTextDetailsTitle: {
-            fontSize: normalize(14),
-            lineHeight: normalize(13)
+            fontSize: normalizeFontAndLineHeight(14),
+            lineHeight: normalizeFontAndLineHeight(13)
         },
         chartTextDetailsSubTitle: {
             letterSpacing: normalize(4),
-            fontSize: normalize(10),
-            lineHeight: normalize(10)
+            fontSize: normalizeFontAndLineHeight(10),
+            lineHeight: normalizeFontAndLineHeight(10)
         },
         chartTextDetails: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             color: theme.colors.text
         },
         chartTextSecondary: {
-            fontSize: normalize(11),
-            lineHeight: normalize(13),
+            fontSize: normalizeFontAndLineHeight(11),
+            lineHeight: normalizeFontAndLineHeight(13),
             color: theme.colors.text
         },
         statContainer: {
@@ -76,20 +81,20 @@ export default (theme: ITheme) =>
             alignItems: 'center'
         },
         statLabelText: {
-            fontSize: normalize(11),
-            lineHeight: normalize(13),
+            fontSize: normalizeFontAndLineHeight(11),
+            lineHeight: normalizeFontAndLineHeight(13),
             color: theme.colors.textSecondary,
             marginBottom: BASE_DIMENSION / 2
         },
         statValueText: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             fontWeight: '600',
             color: theme.colors.text
         },
         percentageText: {
-            fontSize: normalize(8),
-            lineHeight: normalize(12),
+            fontSize: normalizeFontAndLineHeight(8),
+            lineHeight: normalizeFontAndLineHeight(12),
             alignSelf: 'center'
         },
         percentageSquare: {

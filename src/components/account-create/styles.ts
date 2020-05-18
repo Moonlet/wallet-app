@@ -4,7 +4,7 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
-    normalize
+    normalizeFontAndLineHeight
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -16,8 +16,8 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2
         },
         createText: {
-            fontSize: normalize(22),
-            lineHeight: normalize(28),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             fontWeight: 'bold',
             letterSpacing: 0.35,
             color: theme.colors.text,
@@ -25,19 +25,19 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION
         },
         chooseUsernameText: {
-            lineHeight: normalize(22),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
             marginBottom: BASE_DIMENSION * 4
         },
         congratsText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.accent
         },
         invalidText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.error
         },
         createButton: {
@@ -60,7 +60,7 @@ export default (theme: ITheme) =>
         input: {
             flex: 1,
             color: theme.colors.text,
-            fontSize: normalize(15)
+            fontSize: normalizeFontAndLineHeight(15)
         },
         icon: {
             color: theme.colors.accent

@@ -3,7 +3,7 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
-    normalize
+    normalizeFontAndLineHeight
 } from '../../styles/dimensions';
 import { ITheme } from '../../core/theme/itheme';
 
@@ -24,8 +24,8 @@ export default (theme: ITheme) =>
             flex: 1
         },
         label: {
-            fontSize: normalize(18),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
             fontWeight: '500',
             letterSpacing: 0.38,
             color: theme.colors.text

@@ -1,7 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { ph, pw } from '../../styles';
-import { BASE_DIMENSION, SCREEN_HEIGHT, normalize } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    SCREEN_HEIGHT,
+    normalize,
+    normalizeFontAndLineHeight
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -43,11 +48,11 @@ export default (theme: ITheme) =>
             color: theme.colors.error
         },
         textActionPositive: {
-            fontSize: normalize(10),
+            fontSize: normalizeFontAndLineHeight(10),
             color: theme.colors.accent
         },
         textActionNegative: {
-            fontSize: normalize(10),
+            fontSize: normalizeFontAndLineHeight(10),
             color: theme.colors.error
         },
         emptyWalletsContainer: {
@@ -56,8 +61,8 @@ export default (theme: ITheme) =>
             justifyContent: 'center'
         },
         connectLedger: {
-            fontSize: normalize(22),
-            lineHeight: normalize(28),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             color: theme.colors.text,
             letterSpacing: 0.35,
             fontWeight: 'bold',
@@ -65,8 +70,8 @@ export default (theme: ITheme) =>
             textAlign: 'center'
         },
         quicklyConnectLedger: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
             paddingHorizontal: BASE_DIMENSION * 4

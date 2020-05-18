@@ -83,6 +83,8 @@ export const getBlockchainsPortfolio = createSelector(
             let blockchainObject: IBlockchainOptions;
             if (reduxObject === undefined) {
                 if (Platform.OS !== 'web') {
+                    // On web we receive only the active blockchains
+                    // if the blockchain does not exist in preferences, we should not add it automatically as active
                     blockchainObject = { order: config.defaultOrder, active: true };
                 }
             } else {

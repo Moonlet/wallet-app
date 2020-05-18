@@ -51,7 +51,7 @@ export const PasswordTermsComponent = (
                     </View>
                     <Button
                         testID="button-understand"
-                        style={props.styles.bottomButton}
+                        wrapperStyle={props.styles.bottomButton}
                         primary
                         disabled={!acknowledged}
                         onPress={() => props.onAcknowledged()}

@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js';
-import { TokenType } from './token';
+import { TokenType, IButtonCTA } from './token';
 import { ChainIdType } from '.';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 
@@ -53,6 +53,16 @@ export interface IBlockchainConfig {
                 tabDelegations?: string;
                 tabValidators?: string;
                 tabTransactions?: string;
+            };
+            accountCTA: {
+                mainCta: IButtonCTA;
+            };
+            delegationCTA: {
+                mainCta: IButtonCTA;
+            };
+            validatorCTA: {
+                mainCta: IButtonCTA;
+                otherCtas: IButtonCTA[];
             };
         };
         addressDisplay?: 'stripped';

@@ -19,18 +19,11 @@ export default (theme: ITheme) =>
             flexGrow: 1,
             paddingVertical: BASE_DIMENSION * 2
         },
-        bottomContainer: {
+        buttonContainer: {
             flexDirection: 'row',
             marginBottom: BASE_DIMENSION * 3
         },
-        buttonContainer: {
-            alignSelf: 'center',
-            flexDirection: 'row'
-        },
         bottomButton: {
-            flex: 1,
-            width: normalize(150),
-            flexBasis: 0,
             marginHorizontal: BASE_DIMENSION / 2
         },
         leftActionsContainer: {

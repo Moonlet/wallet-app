@@ -14,6 +14,7 @@ import { TextInput } from '../../components/text-input/text-input';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { MNEMONIC_LENGTH } from '../../core/constants/app';
+import * as Sentry from '@sentry/react-native';
 
 export interface IReduxProps {
     createHDWallet: typeof createHDWallet;
@@ -104,7 +105,8 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                 const newPassword = await PasswordModal.createPassword();
                 createWallet(newPassword);
             } catch (err) {
-                //
+                Sentry.captureException(new Error(JSON.stringify(err)));
+                return Promise.reject(err);
             }
         }
     };

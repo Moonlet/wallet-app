@@ -15,19 +15,12 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 4
         },
         buttonsContainer: {
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
             paddingHorizontal: BASE_DIMENSION * 4,
             marginBottom: BASE_DIMENSION * 7
         },
         topButtons: {
             flexDirection: 'row',
             marginBottom: BASE_DIMENSION * 2
-        },
-        button: {
-            flex: 1,
-            flexBasis: 0
         },
         leftButton: {
             marginRight: BASE_DIMENSION / 2
@@ -36,8 +29,7 @@ export default (theme: ITheme) =>
             marginLeft: BASE_DIMENSION / 2
         },
         bottomButton: {
-            marginBottom: BASE_DIMENSION * 2,
-            width: '100%'
+            marginBottom: BASE_DIMENSION * 2
         },
         logoImage: {
             width: pw(60),

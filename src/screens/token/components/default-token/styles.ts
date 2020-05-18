@@ -28,7 +28,6 @@ export default (theme: ITheme) =>
             flexDirection: 'row'
         },
         button: {
-            flex: 1,
             marginHorizontal: BASE_DIMENSION / 2
         },
         transactionsTitle: {

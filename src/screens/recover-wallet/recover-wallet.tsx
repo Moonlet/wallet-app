@@ -91,16 +91,18 @@ export class RecoverWalletScreenComponent extends React.Component<
     }
 
     public deleteMnemonicText() {
-        const mnemonic = this.state.mnemonic.slice();
+        if (this.state.indexForSuggestions >= 0) {
+            const mnemonic = this.state.mnemonic.slice();
 
-        const index = this.state.indexForSuggestions;
-        mnemonic[index] = mnemonic[index].slice(0, -1);
+            const index = this.state.indexForSuggestions;
+            mnemonic[index] = mnemonic[index].slice(0, -1);
 
-        this.setState({
-            mnemonic,
-            suggestions: this.getSuggestions(mnemonic[index]),
-            indexForSuggestions: index
-        });
+            this.setState({
+                mnemonic,
+                suggestions: this.getSuggestions(mnemonic[index]),
+                indexForSuggestions: index
+            });
+        }
     }
 
     public mnemonicsFilled = () => this.state.mnemonic.indexOf('') === -1;

@@ -26,14 +26,13 @@ export default (theme: ITheme) =>
             right: 0,
             flex: 1,
             backgroundColor: theme.colors.appBackground,
-            paddingHorizontal: BASE_DIMENSION * 2,
-            paddingTop: CONTAINER_TOP_PADDING,
-            paddingBottom: BASE_DIMENSION * 4
+            paddingTop: CONTAINER_TOP_PADDING
         },
         closeButtonContainer: {
             position: 'absolute',
-            top: CONTAINER_TOP_PADDING,
-            left: BASE_DIMENSION * 2
+            top: CONTAINER_TOP_PADDING - BASE_DIMENSION / 2,
+            left: BASE_DIMENSION + BASE_DIMENSION / 2,
+            padding: BASE_DIMENSION
         },
         closeButton: {
             color: theme.colors.accent,
@@ -50,6 +49,15 @@ export default (theme: ITheme) =>
         },
         content: {
             flex: 1
+        },
+        moonletTransferContainer: {
+            flex: 1,
+            paddingHorizontal: BASE_DIMENSION * 2
+        },
+        errorWrapper: {
+            flex: 1,
+            paddingHorizontal: BASE_DIMENSION * 2,
+            paddingBottom: BASE_DIMENSION * 4
         },
         inputContainer: {
             flexDirection: 'column',

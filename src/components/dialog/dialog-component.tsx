@@ -6,6 +6,7 @@ import { Deferred } from '../../core/utils/deferred';
 import RNDialog from 'react-native-dialog';
 import { translate } from '../../core/i18n';
 import bind from 'bind-decorator';
+import { setInstance, waitForInstance } from '../../core/utils/class-registry';
 
 export interface IAlertButton {
     text?: string;
@@ -42,13 +43,12 @@ export class DialogComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    private static refDeferred: Deferred<DialogComponent> = new Deferred();
     private dialogHideDeffered: Deferred;
     private resultDeferred: Deferred;
 
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
-        DialogComponent.refDeferred.resolve(this);
+        setInstance(DialogComponent, this);
 
         this.state = {
             visible: false,
@@ -76,8 +76,9 @@ export class DialogComponent extends React.Component<
         cancelButton: IAlertButton,
         confirmButton: IAlertButton
     ): Promise<boolean> {
-        const ref = await DialogComponent.refDeferred.promise;
-        return ref.showAlert(title, message, cancelButton, confirmButton);
+        return waitForInstance<DialogComponent>(DialogComponent).then(ref =>
+            ref.showAlert(title, message, cancelButton, confirmButton)
+        );
     }
 
     public static async prompt(
@@ -88,25 +89,28 @@ export class DialogComponent extends React.Component<
         defaultInputValue?: string,
         keyboardType?: KeyboardTypeOptions
     ): Promise<string> {
-        const ref = await DialogComponent.refDeferred.promise;
-        return ref.showPrompt(
-            title,
-            message,
-            cancelButtonText || translate('App.labels.cancel'),
-            confirmButtonText || translate('App.labels.save'),
-            defaultInputValue,
-            keyboardType
+        return waitForInstance<DialogComponent>(DialogComponent).then(ref =>
+            ref.showPrompt(
+                title,
+                message,
+                cancelButtonText || translate('App.labels.cancel'),
+                confirmButtonText || translate('App.labels.save'),
+                defaultInputValue,
+                keyboardType
+            )
         );
     }
 
     public static async confirm(title: string, message: string): Promise<boolean> {
-        const ref = await DialogComponent.refDeferred.promise;
-        return ref.showConfirm(title, message);
+        return waitForInstance<DialogComponent>(DialogComponent).then(ref =>
+            ref.showConfirm(title, message)
+        );
     }
 
     public static async info(title: string, message: string): Promise<boolean> {
-        const ref = await DialogComponent.refDeferred.promise;
-        return ref.showInfo(title, message);
+        return waitForInstance<DialogComponent>(DialogComponent).then(ref =>
+            ref.showInfo(title, message)
+        );
     }
 
     public async showAlert(

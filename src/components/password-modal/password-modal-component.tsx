@@ -35,6 +35,7 @@ import NetInfo from '@react-native-community/netinfo';
 import ntpClient from 'react-native-ntp-client';
 import CONFIG from '../../config';
 import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
+import { waitForInstance, setInstance } from '../../core/utils/class-registry';
 
 const BLOCK_UNTIL_WAIT_INTERNET_CONNECTION = 'BLOCK_UNTIL_WAIT_INTERNET_CONNECTION';
 
@@ -117,7 +118,7 @@ export class PasswordModalComponent extends React.Component<
 
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
-        PasswordModalComponent.refDeferred.resolve(this);
+        setInstance(PasswordModalComponent, this);
         this.state = {
             visible: false,
             title: undefined,
@@ -269,23 +270,27 @@ export class PasswordModalComponent extends React.Component<
         subtitle?: string,
         options?: { shouldCreatePassword?: boolean; showCloseButton?: boolean; sensitive?: boolean }
     ) {
-        const ref = await PasswordModalComponent.refDeferred.promise;
-        return ref.getPassword(title, subtitle, options);
+        return waitForInstance<PasswordModalComponent>(PasswordModalComponent).then(ref =>
+            ref.getPassword(title, subtitle, options)
+        );
     }
 
     public static async createPassword() {
-        const ref = await PasswordModalComponent.refDeferred.promise;
-        return ref.createPassword();
+        return waitForInstance<PasswordModalComponent>(PasswordModalComponent).then(ref =>
+            ref.createPassword()
+        );
     }
 
     public static async changePassword() {
-        const ref = await PasswordModalComponent.refDeferred.promise;
-        return ref.changePassword();
+        return waitForInstance<PasswordModalComponent>(PasswordModalComponent).then(ref =>
+            ref.changePassword()
+        );
     }
 
     public static async isVisible() {
-        const ref = await PasswordModalComponent.refDeferred.promise;
-        return ref.isVisible();
+        return waitForInstance<PasswordModalComponent>(PasswordModalComponent).then(ref =>
+            ref.isVisible()
+        );
     }
 
     public isVisible(): boolean {

@@ -15,8 +15,7 @@ export class NotificationService {
     public onNotificationOpenedListener = null;
 
     public async getToken() {
-        const fcmToken = await firebase.messaging().getToken();
-        return fcmToken;
+        return firebase.messaging().getToken();
     }
 
     public async checkPermission() {

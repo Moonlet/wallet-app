@@ -1,11 +1,13 @@
 import { browser } from 'webextension-polyfill-ts';
 import { KEY_PREFIX } from './consts';
+import * as Sentry from '@sentry/react-native';
 
 // TODO: encrypt this
 export const storeEncrypted = async (data: string, key: string, hash: string): Promise<void> => {
     try {
         await browser.storage.local.set({ [`${KEY_PREFIX}${key}`]: data });
     } catch (err) {
+        Sentry.captureException(new Error(JSON.stringify(err)));
         return Promise.reject(err);
     }
 };
@@ -21,6 +23,7 @@ export const readEncrypted = async (key: string, hash: string): Promise<string> 
             Promise.reject(`No data in storage for key ${KEY_PREFIX}${key}`);
         }
     } catch (err) {
+        Sentry.captureException(new Error(JSON.stringify(err)));
         return Promise.reject(err);
     }
 };
@@ -29,6 +32,7 @@ export const deleteFromStorage = async (key: string): Promise<void> => {
     try {
         await browser.storage.local.remove(`${KEY_PREFIX}${key}`);
     } catch (err) {
+        Sentry.captureException(new Error(JSON.stringify(err)));
         return Promise.reject(err);
     }
 };
@@ -37,6 +41,7 @@ export const storeItemToStorage = async (data: string, key: string): Promise<voi
     try {
         await browser.storage.local.set({ [`${KEY_PREFIX}${key}`]: data });
     } catch (err) {
+        Sentry.captureException(new Error(JSON.stringify(err)));
         return Promise.reject(err);
     }
 };
@@ -51,6 +56,7 @@ export const getItemFromStorage = async (key: string): Promise<string> => {
             Promise.reject(`No data in storage for key ${KEY_PREFIX}${key}`);
         }
     } catch (err) {
+        Sentry.captureException(new Error(JSON.stringify(err)));
         return Promise.reject(err);
     }
 };

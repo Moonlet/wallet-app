@@ -16,7 +16,6 @@ import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
-import bind from 'bind-decorator';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -47,19 +46,16 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         Platform.OS !== 'web' && this.bottomSheet.current.snapTo(1);
     }
 
-    @bind
     public transactionHistoryPress() {
         this.props.onClose();
         NavigationService.navigate('TransactonsHistory', {});
     }
 
-    @bind
     public manageAccount() {
         this.props.onClose();
         NavigationService.navigate('ManageAccount', {});
     }
 
-    @bind
     public connectExtension() {
         this.props.onClose();
         NavigationService.navigate('ConnectExtension', {});
@@ -105,7 +101,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         title: translate('DashboardMenu.transactionHistory'),
                         description: translate('DashboardMenu.checkTransactions'),
                         iconName: 'archive-locker',
-                        onPress: this.transactionHistoryPress
+                        onPress: () => this.transactionHistoryPress()
                     })}
                     {Platform.OS !== 'web' &&
                         getBlockchain(this.props.blockchain).config.ui.enableTokenManagement &&
@@ -113,14 +109,14 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             title: translate('DashboardMenu.manageAccount'),
                             description: translate('DashboardMenu.quicklyManage'),
                             iconName: 'pencil',
-                            onPress: this.manageAccount
+                            onPress: () => this.manageAccount()
                         })}
                     {Platform.OS !== 'web' &&
                         this.renderRow({
                             title: translate('DashboardMenu.connectExtension'),
                             description: translate('DashboardMenu.scanCode'),
                             iconName: 'qr-code-scan',
-                            onPress: this.connectExtension
+                            onPress: () => this.connectExtension()
                         })}
                 </ScrollView>
             </View>

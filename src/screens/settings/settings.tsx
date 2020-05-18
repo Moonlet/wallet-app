@@ -19,7 +19,7 @@ import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-
 import { DebugModal } from '../../components/debug-modal/debug-modal';
 import CONFIG from '../../config';
 import { setDisplayPasswordModal } from '../../redux/ui/password-modal/actions';
-import { setPinCode, clearPinCode } from '../../core/secure/keychain';
+import { setPinCode, clearPinCode } from '../../core/secure/keychain/keychain';
 import { delay } from '../../core/utils/time';
 import { normalize } from '../../styles/dimensions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';

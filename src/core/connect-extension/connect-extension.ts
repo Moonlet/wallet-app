@@ -1,6 +1,6 @@
 import { HttpClient } from '../utils/http-client';
 import CONFIG from '../../config';
-import { encrypt } from '../secure/encrypt.web';
+import { encrypt } from '../secure/encrypt/encrypt.web';
 import { extensionState } from './conn-ext-trim-state';
 import { store } from '../../redux/config';
 import { Notifications } from '../messaging/notifications/notifications';
@@ -14,7 +14,10 @@ export const ConnectExtension = (() => {
             const http = new HttpClient(CONFIG.extSync.updateStateUrl);
             const res = await http.post('', {
                 connectionId: connection.connectionId,
-                data: encrypt(JSON.stringify(extensionState(store.getState())), connection.encKey),
+                data: await encrypt(
+                    JSON.stringify(extensionState(store.getState())),
+                    connection.encKey
+                ),
                 authToken: sha256(connection.encKey),
                 fcmToken: await Notifications.getToken()
             });
@@ -48,7 +51,10 @@ export const ConnectExtension = (() => {
                 authToken: sha256(connection.encKey),
                 data: {
                     method: sendRequestPayload.method,
-                    params: encrypt(JSON.stringify(sendRequestPayload.params), connection.encKey),
+                    params: await encrypt(
+                        JSON.stringify(sendRequestPayload.params),
+                        connection.encKey
+                    ),
                     notification: sendRequestPayload.notification
                 }
             });
@@ -71,7 +77,7 @@ export const ConnectExtension = (() => {
                 data: {
                     result: sendResponsePayload.result && {
                         txHash: sendResponsePayload.result.txHash,
-                        tx: encrypt(
+                        tx: await encrypt(
                             JSON.stringify(sendResponsePayload.result.tx),
                             connection.encKey
                         )

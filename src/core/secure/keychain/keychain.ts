@@ -1,6 +1,6 @@
 import * as Keychain from 'react-native-keychain';
-import { generateRandomEncryptionKey, hash } from './encrypt';
-import { storeEncrypted, readEncrypted, deleteFromStorage } from './storage';
+import { generateRandomEncryptionKey, hash } from '../encrypt/encrypt';
+import { storeEncrypted, readEncrypted, deleteFromStorage } from '../storage/storage';
 import DeviceInfo from 'react-native-device-info';
 import uuidv4 from 'uuid/v4';
 import { Platform } from 'react-native';

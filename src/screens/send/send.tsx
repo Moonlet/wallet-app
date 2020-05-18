@@ -45,6 +45,8 @@ import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extens
 import { NavigationService } from '../../navigation/navigation-service';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import { BottomCta } from '../../components/bottom-cta/bottom-cta';
+import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
+import { AmountCtaField } from '../../components/bottom-cta/amount-cta-field/amount-cta-field';
 
 interface IHeaderStep {
     step: number;
@@ -399,35 +401,38 @@ export class SendScreenComponent extends React.Component<
 
         return (
             <BottomCta
-                options={{
-                    label: translate('App.labels.send'),
-                    action: translate('App.labels.to'),
-                    value: formatAddress(this.state.toAddress, this.props.account.blockchain),
-                    amountVisible: activeIndex === 1 || activeIndex === 2,
-                    tokenConfig,
-                    stdAmount: this.getInputAmountToStd(),
-                    account: this.props.account
-                }}
-                button={{
-                    label:
-                        activeIndex === this.state.headerSteps.length - 1
-                            ? translate('App.labels.confirm')
-                            : translate('App.labels.next'),
-                    onPress: () => {
-                        if (activeIndex === 2) {
-                            this.confirmPayment();
-                        } else {
-                            const steps = this.state.headerSteps;
+                label={
+                    activeIndex === this.state.headerSteps.length - 1
+                        ? translate('App.labels.confirm')
+                        : translate('App.labels.next')
+                }
+                disabled={disableButton}
+                onPress={() => {
+                    if (activeIndex === 2) {
+                        this.confirmPayment();
+                    } else {
+                        const steps = this.state.headerSteps;
 
-                            steps[activeIndex].active = false;
-                            steps[activeIndex + 1].active = true;
+                        steps[activeIndex].active = false;
+                        steps[activeIndex + 1].active = true;
 
-                            this.setState({ headerSteps: steps });
-                        }
-                    },
-                    disabled: disableButton
+                        this.setState({ headerSteps: steps });
+                    }
                 }}
-            />
+            >
+                <PrimaryCtaField
+                    label={translate('App.labels.send')}
+                    action={translate('App.labels.to')}
+                    value={formatAddress(this.state.toAddress, this.props.account.blockchain)}
+                />
+                {(activeIndex === 1 || activeIndex === 2) && (
+                    <AmountCtaField
+                        tokenConfig={tokenConfig}
+                        stdAmount={this.getInputAmountToStd()}
+                        account={this.props.account}
+                    />
+                )}
+            </BottomCta>
         );
     }
 

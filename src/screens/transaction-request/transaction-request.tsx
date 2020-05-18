@@ -23,6 +23,8 @@ import { ConnectExtension } from '../../core/connect-extension/connect-extension
 import { ResponsePayloadType } from '../../core/connect-extension/types';
 import { BottomCta } from '../../components/bottom-cta/bottom-cta';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
+import { AmountCtaField } from '../../components/bottom-cta/amount-cta-field/amount-cta-field';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -181,21 +183,21 @@ export class TransactionRequestScreenComponent extends React.Component<
                     </View>
 
                     <BottomCta
-                        options={{
-                            label: translate('App.labels.send'),
-                            action: translate('App.labels.to'),
-                            value: recipient,
-                            amountVisible: true,
-                            tokenConfig,
-                            stdAmount,
-                            account
-                        }}
-                        button={{
-                            label: translate('App.labels.confirm'),
-                            onPress: () => this.confirm(),
-                            disabled: this.state.moonletTransferPayload === undefined
-                        }}
-                    />
+                        label={translate('App.labels.confirm')}
+                        disabled={this.state.moonletTransferPayload === undefined}
+                        onPress={() => this.confirm()}
+                    >
+                        <PrimaryCtaField
+                            label={translate('App.labels.send')}
+                            action={translate('App.labels.to')}
+                            value={recipient}
+                        />
+                        <AmountCtaField
+                            tokenConfig={tokenConfig}
+                            stdAmount={stdAmount}
+                            account={account}
+                        />
+                    </BottomCta>
                 </View>
             );
         } else if (this.state.isError) {

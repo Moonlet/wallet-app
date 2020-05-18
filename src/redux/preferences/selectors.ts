@@ -1,3 +1,4 @@
+import { Platform } from 'react-native';
 import { IReduxState } from '../state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { getBlockchain, BLOCKCHAIN_LIST } from '../../core/blockchain/blockchain-factory';
@@ -81,7 +82,11 @@ export const getBlockchainsPortfolio = createSelector(
 
             let blockchainObject: IBlockchainOptions;
             if (reduxObject === undefined) {
-                blockchainObject = { order: config.defaultOrder, active: true };
+                if (Platform.OS !== 'web') {
+                    // On web we receive only the active blockchains
+                    // if the blockchain does not exist in preferences, we should not add it automatically as active
+                    blockchainObject = { order: config.defaultOrder, active: true };
+                }
             } else {
                 let option: IBlockchainOptions;
                 if (reduxObject.order === undefined) {
@@ -107,14 +112,16 @@ export const getBlockchainsPortfolio = createSelector(
                 if (isFeatureActive(RemoteFeature.CELO) === true) {
                     list[blockchain] = blockchainObject;
                 }
-            } else list[blockchain] = blockchainObject;
+            } else {
+                if (blockchainObject) {
+                    list[blockchain] = blockchainObject;
+                }
+            }
         });
 
         return Object.keys(list)
             .map(key => ({ key, value: list[key] }))
             .sort((a, b) => a.value.order - b.value.order);
-
-        // return list;
     }
 );
 

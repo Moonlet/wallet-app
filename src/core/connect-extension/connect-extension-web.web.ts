@@ -27,10 +27,12 @@ export const ConnectExtensionWeb = (() => {
         return realtimeDB.child(FirebaseRef.REQUESTS);
     };
 
-    const storeConnection = async (conn: IQRCodeConn) => {
+    const storeConnection = async (conn: IQRCodeConn): Promise<void> => {
         try {
             // store session
             await storeEncrypted(JSON.stringify(conn), CONN_EXTENSION, CONN_EXTENSION);
+
+            return Promise.resolve();
         } catch (err) {
             return Promise.reject(err);
         }
@@ -41,6 +43,8 @@ export const ConnectExtensionWeb = (() => {
         try {
             // delete the connection session
             await deleteFromStorage(CONN_EXTENSION);
+
+            return Promise.resolve();
         } catch (err) {
             return Promise.reject(err);
         }

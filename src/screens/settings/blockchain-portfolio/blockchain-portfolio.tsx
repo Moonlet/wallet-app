@@ -140,7 +140,7 @@ export class BlockchainPortfolioComponent extends React.Component<
                         this.renderBlockchain(item, drag, isActive)
                     }
                     keyExtractor={(item: { key: Blockchain; value: IBlockchainOptions }) =>
-                        `${item.value.order}`
+                        `${item.key}`
                     }
                     onDragEnd={({ data }) => {
                         this.props.setBlockchainOrder(

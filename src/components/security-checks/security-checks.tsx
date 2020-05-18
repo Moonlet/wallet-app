@@ -92,6 +92,8 @@ export class SecurityChecksComponent extends React.Component<
     public render() {
         const props = this.props;
 
+        if (Platform.OS === 'web') return null;
+
         return (
             <Modal
                 isVisible={this.state.modalVisible}

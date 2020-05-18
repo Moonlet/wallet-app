@@ -73,7 +73,7 @@ export const trimWallets = (wallets: IWalletsState) => {
     return trimmedWallets;
 };
 
-const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
+export const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
     const trimmedTokens: IExtStorage.IStorageTokens = {};
 
     Object.keys(tokens).map((blockchain: string) => {
@@ -107,7 +107,7 @@ const trimPrefBlockchains = (blockchains: IBlockchainsOptions) => {
         .sort((a, b) => blockchains[a].order - blockchains[b].order);
 };
 
-const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
+export const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
     return {
         currency: preferences.currency,
         testNet: preferences.testNet,
@@ -116,7 +116,7 @@ const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferenc
     };
 };
 
-const trimContacts = (contacts: IContactsState): IExtStorage.IStorageContact[] => {
+export const trimContacts = (contacts: IContactsState): IExtStorage.IStorageContact[] => {
     return Object.values(contacts);
 };
 

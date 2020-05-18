@@ -1,9 +1,8 @@
-import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt.web';
-import CryptoJS from 'crypto-js';
+import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt/encrypt.web';
 import { v4 as uuidv4 } from 'uuid';
 import { IQRCodeConn, FirebaseRef, IStorage } from './types';
 import { storage, database } from 'firebase';
-import { storeEncrypted, readEncrypted, deleteFromStorage } from '../../core/secure/storage.web';
+import { storeEncrypted, readEncrypted, deleteFromStorage } from '../secure/storage/storage.web';
 import { CONN_EXTENSION } from '../../core/constants/app';
 import Bowser from 'bowser';
 import { browser } from 'webextension-polyfill-ts';
@@ -15,6 +14,7 @@ import { IBlockchainTransaction } from '../blockchain/types';
 import { buildTransactions } from './conn-ext-build-state/build-transactions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import CONFIG from '../../config';
+import * as Sentry from '@sentry/browser';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -27,12 +27,14 @@ export const ConnectExtensionWeb = (() => {
         return realtimeDB.child(FirebaseRef.REQUESTS);
     };
 
-    const storeConnection = async (conn: IQRCodeConn) => {
+    const storeConnection = async (conn: IQRCodeConn): Promise<void> => {
         try {
             // store session
             await storeEncrypted(JSON.stringify(conn), CONN_EXTENSION, CONN_EXTENSION);
-        } catch {
-            Promise.reject();
+
+            return Promise.resolve();
+        } catch (err) {
+            return Promise.reject(err);
         }
     };
 
@@ -41,8 +43,10 @@ export const ConnectExtensionWeb = (() => {
         try {
             // delete the connection session
             await deleteFromStorage(CONN_EXTENSION);
-        } catch {
-            Promise.reject();
+
+            return Promise.resolve();
+        } catch (err) {
+            return Promise.reject(err);
         }
     };
 
@@ -55,7 +59,7 @@ export const ConnectExtensionWeb = (() => {
 
             return undefined;
         } catch (err) {
-            Promise.reject(err);
+            return Promise.reject(err);
         }
     };
 
@@ -101,7 +105,7 @@ export const ConnectExtensionWeb = (() => {
     const generateQRCodeUri = async (): Promise<{ uri: string; conn: IQRCodeConn }> => {
         const conn: IQRCodeConn = {
             connectionId: uuidv4(),
-            encKey: generateRandomEncryptionKey().toString(CryptoJS.enc.Base64),
+            encKey: await generateRandomEncryptionKey(),
             os: await getPlatformOS(),
             platform: Bowser.getParser(window.navigator.userAgent).getBrowserName()
         };
@@ -127,8 +131,9 @@ export const ConnectExtensionWeb = (() => {
 
             const http = await fetch(urlDowndload);
             return (await http.text()).toString();
-        } catch {
-            Promise.reject();
+        } catch (err) {
+            Sentry.captureException(new Error(JSON.stringify(err)));
+            return Promise.reject();
         }
     };
 
@@ -140,8 +145,8 @@ export const ConnectExtensionWeb = (() => {
             const extState = await buildState(decryptedState);
             store.dispatch(extensionReduxUpdateState(extState) as any);
             // extensionStateLoaded check if needed
-        } catch {
-            //
+        } catch (err) {
+            Sentry.captureException(new Error(JSON.stringify(err)));
         }
     };
 
@@ -162,7 +167,7 @@ export const ConnectExtensionWeb = (() => {
 
                             if (extState) {
                                 const decryptedState = JSON.parse(
-                                    decrypt(extState, connection.encKey).toString(CryptoJS.enc.Utf8)
+                                    await decrypt(extState, connection.encKey)
                                 );
 
                                 // Save state
@@ -171,8 +176,8 @@ export const ConnectExtensionWeb = (() => {
                                 // Build wallets transactions
                                 buildTransactions(decryptedState.state.wallets);
                             }
-                        } catch {
-                            //
+                        } catch (err) {
+                            Sentry.captureException(new Error(JSON.stringify(err)));
                         }
                     } else {
                         // Connection does not exist!
@@ -199,9 +204,7 @@ export const ConnectExtensionWeb = (() => {
                     const extState = await downloadFileStorage(conn.connectionId);
 
                     if (extState) {
-                        const decryptedState = JSON.parse(
-                            decrypt(extState, conn.encKey).toString(CryptoJS.enc.Utf8)
-                        );
+                        const decryptedState = JSON.parse(await decrypt(extState, conn.encKey));
 
                         // Save state
                         await storeState(decryptedState);
@@ -222,7 +225,8 @@ export const ConnectExtensionWeb = (() => {
                     await LoadingModal.close();
                 } catch (err) {
                     await LoadingModal.close();
-                    Promise.reject(err);
+                    Sentry.captureException(new Error(JSON.stringify(err)));
+                    return Promise.reject(err);
                 }
             } else {
                 // Connection does not exist! Waiting for connections...
@@ -258,9 +262,7 @@ export const ConnectExtensionWeb = (() => {
                             result.txHash = snap.result.txHash;
 
                             const tx: IBlockchainTransaction = JSON.parse(
-                                decrypt(snap.result.tx, connection.encKey).toString(
-                                    CryptoJS.enc.Utf8
-                                )
+                                await decrypt(snap.result.tx, connection.encKey)
                             );
 
                             result.tx = tx;

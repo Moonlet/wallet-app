@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 import { IReduxState } from '../state';
-import { IAppState } from '../app/state';
 import { IWalletsState } from '../wallets/state';
 import { IContactsState } from '../contacts/state';
 import { IPrefState } from '../preferences/state';
@@ -10,71 +9,100 @@ import { isEqual } from 'lodash';
 import { Platform } from 'react-native';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
-import { trimWallets } from '../../core/connect-extension/conn-ext-trim-state';
+import {
+    trimWallets,
+    trimTokens,
+    trimContacts,
+    trimPreferences
+} from '../../core/connect-extension/conn-ext-trim-state';
+import { hash } from '../../core/secure/encrypt/encrypt';
+import { getItemFromStorage, storeItemToStorage } from '../../core/secure/storage/storage';
+import { CONN_EXTENSION } from '../../core/constants/app';
 
 let lastSentState: any = {};
 
 const getStatePatch = createSelector(
-    (state: IReduxState) => state.app,
     (state: IReduxState) => state.wallets,
     (state: IReduxState) => state.contacts,
     (state: IReduxState) => state.preferences,
     (state: IReduxState) => state.tokens,
     (
-        app: IAppState,
         wallets: IWalletsState,
         contacts: IContactsState,
         preferences: IPrefState,
         tokens: ITokensConfigState
     ) => {
-        // TODO: here we should not trigger on get balances
-        const trimmedWallets = trimWallets(wallets);
         const statePatch: any = {};
 
-        if (!isEqual(app, lastSentState?.app)) {
-            statePatch.app = app;
-        }
+        const trimmedWallets = trimWallets(wallets);
         if (!isEqual(trimmedWallets, lastSentState?.trimmedWallets)) {
             statePatch.trimmedWallets = trimmedWallets;
         }
-        if (!isEqual(preferences, lastSentState?.preferences)) {
-            statePatch.preferences = preferences;
-        }
-        if (!isEqual(contacts, lastSentState?.contacts)) {
-            statePatch.contacts = contacts;
-        }
-        if (!isEqual(tokens, lastSentState?.tokens)) {
-            statePatch.tokens = tokens;
+
+        const trimmedContacts = trimContacts(contacts);
+        if (!isEqual(trimmedContacts, lastSentState?.trimmedContacts)) {
+            statePatch.trimmedContacts = trimmedContacts;
         }
 
-        if (!isEqual(tokens, lastSentState?.tokens)) {
-            statePatch.tokens = tokens;
+        const trimmedPreferences = trimPreferences(preferences);
+        if (!isEqual(trimmedPreferences, lastSentState?.trimmedPreferences)) {
+            statePatch.trimmedPreferences = trimmedPreferences;
+        }
+
+        const trimmedTokens = trimTokens(tokens);
+        if (!isEqual(trimmedTokens, lastSentState?.trimmedTokens)) {
+            statePatch.trimmedTokens = trimmedTokens;
         }
 
         if (statePatch) {
-            lastSentState = { ...lastSentState, ...statePatch };
+            lastSentState = {
+                ...lastSentState,
+                ...statePatch
+            };
         }
 
         return statePatch;
     }
 );
 
+let timer;
+const CONN_EXTENSION_STATE = `${CONN_EXTENSION}State`;
+
 export const connectExtensionMiddleware = store => next => async action => {
     next(action);
 
-    if (Platform.OS !== 'web' && (await ConnectExtensionWeb.isConnected())) {
-        const statePatch = getStatePatch(store.getState());
+    timer && clearTimeout(timer);
 
-        if (Object.keys(statePatch).length > 0) {
+    timer = setTimeout(async () => {
+        if (Platform.OS !== 'web' && (await ConnectExtensionWeb.isConnected())) {
+            const statePatch = getStatePatch(store.getState());
+
+            const currentStateHash = await hash(JSON.stringify(statePatch));
+
             try {
-                const connection = await ConnectExtensionWeb.getConnection();
+                const storageStateHash = await getItemFromStorage(CONN_EXTENSION_STATE);
 
-                if (connection) {
-                    await ConnectExtension.syncExtension(connection);
+                if (storageStateHash && storageStateHash !== currentStateHash) {
+                    // Sync Extension with the new state
+                    if (Object.keys(statePatch).length > 0) {
+                        try {
+                            const connection = await ConnectExtensionWeb.getConnection();
+
+                            if (connection) {
+                                await ConnectExtension.syncExtension(connection);
+                            }
+                        } catch {
+                            lastSentState = {};
+                        }
+                    }
+
+                    // Save State Hash to Async Storage
+                    await storeItemToStorage(currentStateHash, CONN_EXTENSION_STATE);
                 }
             } catch {
-                lastSentState = {};
+                // Save State Hash to Async Storage
+                await storeItemToStorage(currentStateHash, CONN_EXTENSION_STATE);
             }
         }
-    }
+    }, 200);
 };

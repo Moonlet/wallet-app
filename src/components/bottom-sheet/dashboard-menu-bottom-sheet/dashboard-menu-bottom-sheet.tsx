@@ -16,6 +16,7 @@ import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
+import bind from 'bind-decorator';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -46,23 +47,53 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         Platform.OS !== 'web' && this.bottomSheet.current.snapTo(1);
     }
 
+    @bind
     public transactionHistoryPress() {
         this.props.onClose();
         NavigationService.navigate('TransactonsHistory', {});
     }
 
+    @bind
     public manageAccount() {
         this.props.onClose();
         NavigationService.navigate('ManageAccount', {});
     }
 
+    @bind
     public connectExtension() {
         this.props.onClose();
         NavigationService.navigate('ConnectExtension', {});
     }
 
-    public renderBottomSheetContent() {
+    public renderRow(options: {
+        title: string;
+        description: string;
+        iconName: string;
+        onPress: () => void;
+    }) {
         const { styles, theme } = this.props;
+
+        return (
+            <TouchableHighlight
+                onPress={() => options.onPress()}
+                underlayColor={theme.colors.bottomSheetBackground}
+            >
+                <View style={styles.rowContainer}>
+                    <View style={styles.iconContainer}>
+                        <Icon name={options.iconName} size={ICON_SIZE} style={styles.icon} />
+                    </View>
+                    <View style={styles.textContainer}>
+                        <Text style={styles.title}>{options.title}</Text>
+                        <Text style={styles.description}>{options.description}</Text>
+                    </View>
+                    <Icon name="chevron-right" size={normalize(16)} style={styles.arrowRight} />
+                </View>
+            </TouchableHighlight>
+        );
+    }
+
+    public renderBottomSheetContent() {
+        const { styles } = this.props;
         return (
             <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
                 <ScrollView
@@ -70,80 +101,27 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     showsVerticalScrollIndicator={false}
                     alwaysBounceVertical={false}
                 >
-                    <TouchableHighlight
-                        onPress={() => this.transactionHistoryPress()}
-                        underlayColor={theme.colors.bottomSheetBackground}
-                    >
-                        <View style={styles.rowContainer}>
-                            <View style={styles.iconContainer}>
-                                <Icon name="archive-locker" size={ICON_SIZE} style={styles.icon} />
-                            </View>
-                            <View style={styles.textContainer}>
-                                <Text style={styles.title}>
-                                    {translate('DashboardMenu.transactionHistory')}
-                                </Text>
-                                <Text style={styles.description}>
-                                    {translate('DashboardMenu.checkTransactions')}
-                                </Text>
-                            </View>
-                            <Icon
-                                name="chevron-right"
-                                size={normalize(16)}
-                                style={styles.arrowRight}
-                            />
-                        </View>
-                    </TouchableHighlight>
-
-                    {getBlockchain(this.props.blockchain).config.ui.enableTokenManagement &&
-                        Platform.OS !== 'web' && (
-                            <TouchableHighlight
-                                onPress={() => this.manageAccount()}
-                                underlayColor={theme.colors.bottomSheetBackground}
-                            >
-                                <View style={styles.rowContainer}>
-                                    <View style={styles.iconContainer}>
-                                        <Icon name="pencil" size={ICON_SIZE} style={styles.icon} />
-                                    </View>
-                                    <View style={styles.textContainer}>
-                                        <Text style={styles.title}>
-                                            {translate('DashboardMenu.manageAccount')}
-                                        </Text>
-                                        <Text style={styles.description}>
-                                            {translate('DashboardMenu.quicklyManage')}
-                                        </Text>
-                                    </View>
-                                    <Icon
-                                        name="chevron-right"
-                                        size={normalize(16)}
-                                        style={styles.arrowRight}
-                                    />
-                                </View>
-                            </TouchableHighlight>
-                        )}
-
-                    <TouchableHighlight
-                        onPress={() => this.connectExtension()}
-                        underlayColor={theme.colors.bottomSheetBackground}
-                    >
-                        <View style={styles.rowContainer}>
-                            <View style={styles.iconContainer}>
-                                <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
-                            </View>
-                            <View style={styles.textContainer}>
-                                <Text style={styles.title}>
-                                    {translate('DashboardMenu.connectExtension')}
-                                </Text>
-                                <Text style={styles.description}>
-                                    {translate('DashboardMenu.scanCode')}
-                                </Text>
-                            </View>
-                            <Icon
-                                name="chevron-right"
-                                size={normalize(16)}
-                                style={styles.arrowRight}
-                            />
-                        </View>
-                    </TouchableHighlight>
+                    {this.renderRow({
+                        title: translate('DashboardMenu.transactionHistory'),
+                        description: translate('DashboardMenu.checkTransactions'),
+                        iconName: 'archive-locker',
+                        onPress: this.transactionHistoryPress
+                    })}
+                    {Platform.OS !== 'web' &&
+                        getBlockchain(this.props.blockchain).config.ui.enableTokenManagement &&
+                        this.renderRow({
+                            title: translate('DashboardMenu.manageAccount'),
+                            description: translate('DashboardMenu.quicklyManage'),
+                            iconName: 'pencil',
+                            onPress: this.manageAccount
+                        })}
+                    {Platform.OS !== 'web' &&
+                        this.renderRow({
+                            title: translate('DashboardMenu.connectExtension'),
+                            description: translate('DashboardMenu.scanCode'),
+                            iconName: 'qr-code-scan',
+                            onPress: this.connectExtension
+                        })}
                 </ScrollView>
             </View>
         );

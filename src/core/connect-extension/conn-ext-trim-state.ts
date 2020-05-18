@@ -108,13 +108,11 @@ const trimPrefBlockchains = (blockchains: IBlockchainsOptions) => {
 };
 
 const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
-    const blockchains = trimPrefBlockchains(preferences.blockchains);
-
     return {
         currency: preferences.currency,
         testNet: preferences.testNet,
         networks: cloneDeep(preferences.networks),
-        blockchains
+        blockchains: trimPrefBlockchains(preferences.blockchains)
     };
 };
 

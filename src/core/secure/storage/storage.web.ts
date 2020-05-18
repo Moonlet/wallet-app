@@ -1,6 +1,6 @@
 import { browser } from 'webextension-polyfill-ts';
 import { KEY_PREFIX } from './consts';
-import * as Sentry from '@sentry/react-native';
+import * as Sentry from '@sentry/browser';
 
 // TODO: encrypt this
 export const storeEncrypted = async (data: string, key: string, hash: string): Promise<void> => {

@@ -14,7 +14,7 @@ import { IBlockchainTransaction } from '../blockchain/types';
 import { buildTransactions } from './conn-ext-build-state/build-transactions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import CONFIG from '../../config';
-import * as Sentry from '@sentry/react-native';
+import * as Sentry from '@sentry/browser';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensions';
 import { pw, ph } from '../../styles';
 
 export default (theme: ITheme) =>
@@ -28,12 +28,12 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 6
         },
         title: {
-            fontSize: normalize(25),
-            lineHeight: normalize(30)
+            fontSize: normalizeFontAndLineHeight(25),
+            lineHeight: normalizeFontAndLineHeight(30)
         },
         message: {
-            fontSize: normalize(18),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
             marginTop: BASE_DIMENSION * 6
         },
         imageContainerStyle: {

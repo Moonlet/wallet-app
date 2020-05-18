@@ -3,7 +3,7 @@ import { ITheme } from '../../../../../../../core/theme/itheme';
 import {
     BORDER_RADIUS,
     BASE_DIMENSION,
-    normalize,
+    normalizeFontAndLineHeight,
     ICON_CONTAINER_SIZE
 } from '../../../../../../../styles/dimensions';
 
@@ -41,17 +41,17 @@ export default (theme: ITheme) =>
             alignItems: 'baseline'
         },
         primaryText: {
-            fontSize: normalize(16),
+            fontSize: normalizeFontAndLineHeight(16),
             fontWeight: '500',
             color: theme.colors.text
         },
         secondaryText: {
-            fontSize: normalize(11),
-            lineHeight: normalize(13),
+            fontSize: normalizeFontAndLineHeight(11),
+            lineHeight: normalizeFontAndLineHeight(13),
             color: theme.colors.textSecondary
         },
         tertiaryText: {
-            fontSize: normalize(10),
+            fontSize: normalizeFontAndLineHeight(10),
             color: theme.colors.textTertiary
         },
         imageStyle: {
@@ -62,7 +62,7 @@ export default (theme: ITheme) =>
             borderRadius: ICON_CONTAINER_SIZE
         },
         amountText: {
-            fontSize: normalize(11),
+            fontSize: normalizeFontAndLineHeight(11),
             color: theme.colors.text
         },
         chevronRight: {
@@ -74,15 +74,15 @@ export default (theme: ITheme) =>
             justifyContent: 'space-between'
         },
         bottomPrimaryText: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             fontWeight: '600',
             color: theme.colors.text,
             textAlign: 'center'
         },
         bottomSecondaryText: {
-            fontSize: normalize(11),
-            lineHeight: normalize(13),
+            fontSize: normalizeFontAndLineHeight(11),
+            lineHeight: normalizeFontAndLineHeight(13),
             color: theme.colors.textSecondary,
             textAlign: 'center'
         }

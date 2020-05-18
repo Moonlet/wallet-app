@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensions';
 import { pw, ph } from '../../styles';
 
 export default (theme: ITheme) =>
@@ -22,8 +22,8 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 10
         },
         quicklyConnectText: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
             marginHorizontal: BASE_DIMENSION * 2
@@ -51,8 +51,8 @@ export default (theme: ITheme) =>
             flexDirection: 'column'
         },
         connectionInfoText: {
-            fontSize: normalize(17),
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.text,
             paddingRight: BASE_DIMENSION
         },
@@ -65,8 +65,8 @@ export default (theme: ITheme) =>
             paddingTop: BASE_DIMENSION / 4
         },
         extraInfo: {
-            fontSize: normalize(11),
-            lineHeight: normalize(13),
+            fontSize: normalizeFontAndLineHeight(11),
+            lineHeight: normalizeFontAndLineHeight(13),
             color: theme.colors.textTertiary,
             marginRight: BASE_DIMENSION / 2
         }

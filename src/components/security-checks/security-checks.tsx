@@ -9,7 +9,6 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { SafeAreaView } from 'react-navigation';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import SpyImage from '../../assets/images/svg/spy.svg';
-
 import stylesProvider from './styles';
 import { SmartImage, ResizeMode } from '../../library/image/smart-image';
 
@@ -90,8 +89,9 @@ export class SecurityChecksComponent extends React.Component<
         );
     }
 
-    render() {
+    public render() {
         const props = this.props;
+
         return (
             <Modal
                 isVisible={this.state.modalVisible}
@@ -123,7 +123,6 @@ export class SecurityChecksComponent extends React.Component<
                                 testID="button-understand"
                                 style={props.styles.bottomButton}
                                 primary
-                                // disabled={!acknowledged}
                                 onPress={() => this.continue()}
                             >
                                 {translate('App.labels.continue')}

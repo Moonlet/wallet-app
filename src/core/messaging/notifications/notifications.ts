@@ -74,10 +74,12 @@ export class NotificationService {
     }
 
     public removeListeners() {
-        this.messageListener();
-        this.notificationDisplayedListener();
-        this.onNotificationListener();
-        this.onNotificationOpenedListener();
+        typeof this.messageListener === 'function' && this.messageListener();
+        typeof this.notificationDisplayedListener === 'function' &&
+            this.notificationDisplayedListener();
+        typeof this.onNotificationListener === 'function' && this.onNotificationListener();
+        typeof this.onNotificationOpenedListener === 'function' &&
+            this.onNotificationOpenedListener();
     }
 
     public async displayNotification(title: string, body: string, data: INotificationPayload) {

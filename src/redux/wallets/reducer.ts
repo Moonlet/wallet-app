@@ -130,7 +130,9 @@ export default (state: IWalletsState = intialState, action: IAction) => {
                             account.tokens[action.data.chainId][
                                 action.data.token
                             ].balance = newBalance(
-                                account.tokens[action.data.chainId][action.data.token].balance,
+                                ((account?.tokens || {})[action.data.chainId] || {})[
+                                    action.data.token
+                                ]?.balance,
                                 action
                             );
                         }

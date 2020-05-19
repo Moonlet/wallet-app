@@ -12,7 +12,7 @@ export const calculateBalance = (
     chainId: ChainIdType,
     exchangeRates: IExchangeRates
 ) => {
-    const tokenKeys = Object.keys(account.tokens[chainId]);
+    const tokenKeys = Object.keys((account?.tokens || {})[chainId] || {});
     let balance = new BigNumber(0);
 
     tokenKeys.map(key => {

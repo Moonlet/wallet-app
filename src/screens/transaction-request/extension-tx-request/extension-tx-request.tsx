@@ -20,7 +20,7 @@ export interface IExternalProps {
     callback: () => void;
 }
 
-export const MoonletTransferTxRequestComponent = (
+export const ExtensionTransferRequestComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     const renderField = (label: string, value: string) => {
@@ -95,7 +95,7 @@ export const MoonletTransferTxRequestComponent = (
     );
 };
 
-export const MoonletTransferTxRequest = smartConnect<IExternalProps>(
-    MoonletTransferTxRequestComponent,
+export const ExtensionTransferRequest = smartConnect<IExternalProps>(
+    ExtensionTransferRequestComponent,
     [withTheme(stylesProvider)]
 );

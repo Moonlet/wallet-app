@@ -42,5 +42,10 @@ export default (theme: ITheme) =>
             color: theme.colors.textSecondary,
             paddingRight: BASE_DIMENSION * 2,
             fontSize: normalizeFontAndLineHeight(15)
+        },
+        leftIcon: {
+            color: theme.colors.accent,
+            alignSelf: 'center',
+            paddingRight: BASE_DIMENSION
         }
     });

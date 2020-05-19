@@ -23,7 +23,11 @@ import { ChainIdType, IFeeOptions } from '../../../core/blockchain/types';
 import { IExchangeRates } from '../../../redux/market/state';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { FeeOptions } from '../../send/components/fee-options/fee-options';
-import { BASE_DIMENSION } from '../../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
+import { TouchableHighlight } from 'react-native-gesture-handler';
+import { BottomSheetType } from '../../../redux/ui/bottomSheet/state';
+import { openBottomSheet } from '../../../redux/ui/bottomSheet/actions';
+import { Icon } from '../../../components/icon';
 
 export interface IExternalProps {
     gitcoinTransferPayload: any;
@@ -35,6 +39,7 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
     chainId: ChainIdType;
     exchangeRates: IExchangeRates;
+    openBottomSheet: typeof openBottomSheet;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -48,12 +53,16 @@ const mapStateToProps = (state: IReduxState) => {
     };
 };
 
+const mapDispatchToProps = {
+    openBottomSheet
+};
+
 interface IState {
     amount: string;
     chainId: ChainIdType;
 }
 
-export class GitcoinTransferTxRequestComponent extends React.Component<
+export class QRCodeTransferRequestComponent extends React.Component<
     IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
@@ -83,7 +92,7 @@ export class GitcoinTransferTxRequestComponent extends React.Component<
     private renderField(
         label: string,
         value: string,
-        options?: { isAmount?: boolean; inputColor?: string }
+        options?: { isAmount?: boolean; inputColor?: string; leftIcon?: string }
     ) {
         const { styles, gitcoinTransferPayload, theme } = this.props;
 
@@ -131,6 +140,13 @@ export class GitcoinTransferTxRequestComponent extends React.Component<
                             {value}
                         </Text>
                     )}
+                    {options?.leftIcon && (
+                        <Icon
+                            name={options.leftIcon}
+                            size={normalize(16)}
+                            style={styles.leftIcon}
+                        />
+                    )}
                 </View>
             </View>
         );
@@ -167,7 +183,6 @@ export class GitcoinTransferTxRequestComponent extends React.Component<
         const account = gitcoinTransferPayload.account;
         const blockchain = account.blockchain;
 
-        const from = formatAddress(account.address, blockchain);
         const recipient = formatAddress(gitcoinTransferPayload.toAddress, blockchain);
 
         const tokenConfig = getTokenConfig(blockchain, gitcoinTransferPayload.token);
@@ -190,17 +205,27 @@ export class GitcoinTransferTxRequestComponent extends React.Component<
                         { inputColor: theme.colors.text }
                     )}
 
-                    {this.renderField(
-                        translate('TransactionRequest.accountName'),
-                        selectedAccount.name || `Account ${selectedAccount.index + 1}`,
-                        { inputColor: theme.colors.text }
-                    )}
+                    <TouchableHighlight
+                        onPress={() => {
+                            this.props.openBottomSheet(BottomSheetType.ACCOUNTS, { blockchain });
+                        }}
+                        underlayColor={theme.colors.appBackground}
+                    >
+                        {this.renderField(
+                            translate('TransactionRequest.accountName'),
+                            selectedAccount.name || `Account ${selectedAccount.index + 1}`,
+                            { inputColor: theme.colors.text, leftIcon: 'chevron-down' }
+                        )}
+                    </TouchableHighlight>
 
                     {this.renderField(translate('App.labels.balance'), undefined, {
                         isAmount: true
                     })}
 
-                    {this.renderField(translate('App.labels.from'), from)}
+                    {this.renderField(
+                        translate('App.labels.from'),
+                        formatAddress(this.props.selectedAccount.address, blockchain)
+                    )}
                     {this.renderField(translate('App.labels.recipient'), recipient)}
 
                     {this.renderInputField(translate('App.labels.amount'), this.state.amount)}
@@ -243,7 +268,7 @@ export class GitcoinTransferTxRequestComponent extends React.Component<
     }
 }
 
-export const GitcoinTransferTxRequest = smartConnect<IExternalProps>(
-    GitcoinTransferTxRequestComponent,
-    [connect(mapStateToProps, null), withTheme(stylesProvider)]
-);
+export const QRCodeTransferRequest = smartConnect<IExternalProps>(QRCodeTransferRequestComponent, [
+    connect(mapStateToProps, mapDispatchToProps),
+    withTheme(stylesProvider)
+]);

@@ -16,8 +16,8 @@ import { normalize } from '../../styles/dimensions';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { ResponsePayloadType } from '../../core/connect-extension/types';
-import { MoonletTransferTxRequest } from './moonlet-transfer/moonlet-transfer';
-import { GitcoinTransferTxRequest } from './gitcoint-transfer/gitcoint-transfer';
+import { ExtensionTransferRequest } from './extension-tx-request/extension-tx-request';
+import { QRCodeTransferRequest } from './qr-code-tx-request/qr-code-tx-request';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -191,14 +191,14 @@ export class TransactionRequestScreenComponent extends React.Component<
 
         if (moonletTransferPayload) {
             return (
-                <MoonletTransferTxRequest
+                <ExtensionTransferRequest
                     moonletTransferPayload={moonletTransferPayload}
                     callback={() => this.confirm()}
                 />
             );
         } else if (gitcoinTransferPayload) {
             return (
-                <GitcoinTransferTxRequest
+                <QRCodeTransferRequest
                     gitcoinTransferPayload={gitcoinTransferPayload}
                     callback={() => this.confirm()}
                 />

@@ -161,7 +161,7 @@ export const getWalletAndTransactionForHash = (
 ): { walletId: string; transaction: IBlockchainTransaction } => {
     let transaction: IBlockchainTransaction;
     const wallets = Object.values(state.wallets).filter(wallet => {
-        if (wallet.transactions[transactionHash] !== undefined) {
+        if ((wallet?.transactions || {})[transactionHash] !== undefined) {
             transaction = wallet.transactions[transactionHash];
             return wallet;
         }

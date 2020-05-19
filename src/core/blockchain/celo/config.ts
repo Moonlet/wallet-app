@@ -1,6 +1,6 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType } from '../types/token';
+import { TokenType, DelegationType } from '../types/token';
 import CeloIcon from '../../../assets/icons/blockchains/celo.svg';
 import {
     CELO_GOLD_NATIVE,
@@ -17,6 +17,7 @@ import {
 export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickVote',
+        delegationType: DelegationType.QUICK_DELEGATE,
         iconName: 'vote',
         navigateTo: { screen: undefined, params: undefined }
     }
@@ -25,22 +26,26 @@ export const accountCTA = {
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.vote',
+        delegationType: DelegationType.DELEGATE,
         iconName: 'vote',
         navigateTo: { screen: undefined, params: undefined }
     },
     otherCtas: [
         {
             title: 'App.labels.revote',
+            delegationType: DelegationType.REDELEGATE,
             iconName: 'revote',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.unvote',
+            delegationType: DelegationType.UNDELEGATE,
             iconName: 'unvote',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.unlock',
+            delegationType: DelegationType.CLAIM_REWARD,
             iconName: 'unlock',
             navigateTo: { screen: undefined, params: undefined }
         }

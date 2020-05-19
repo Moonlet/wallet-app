@@ -37,6 +37,7 @@ export const ValidatorsListComponent = (
                     })}
                     actionType={props.actionType}
                     bottomStats={validator.cardStats}
+                    actionTypeSelected={validator.actionTypeSelected || false}
                     blockchain={props.blockchain}
                     onSelect={() => props.onSelect(validator)}
                 />

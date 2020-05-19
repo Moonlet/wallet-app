@@ -13,11 +13,15 @@ import { SmartImage } from '../../library/image/smart-image';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { translate } from '../../core/i18n';
 import { StatsComponent } from '../token/components/delegate-token/components/stats-component/stats-component';
-import { IValidator } from '../../core/blockchain/types/stats';
+import { IValidator, CardActionType } from '../../core/blockchain/types/stats';
+import { DelegationType } from '../../core/blockchain/types/token';
+import { ITokenState } from '../../redux/wallets/state';
 
 export interface INavigationParams {
     validator: IValidator;
     blockchain: Blockchain;
+    accountIndex: number;
+    token: ITokenState;
 }
 
 const HeaderTitleComponent = (
@@ -62,6 +66,36 @@ export class ValidatorScreenComponent extends React.Component<
         const amount = validator.amountDelegated;
         const token = getTokenConfig(blockchain, config.coin);
 
+        validator.actionType = CardActionType.CHECKBOX;
+        validator.actionTypeSelected = true;
+
+        const mainCta = config.ui.token.validatorCTA.mainCta;
+        mainCta.navigateTo = {
+            screen: 'DelegateScreen',
+            params: {
+                accountIndex: this.props.accountIndex,
+                blockchain: this.props.blockchain,
+                delegationType: DelegationType.DELEGATE,
+                token: this.props.token,
+                validators: [validator],
+                title: mainCta.title
+            }
+        };
+
+        Object.values(config.ui.token.validatorCTA.otherCtas).map(cta => {
+            cta.navigateTo = {
+                screen: 'DelegateScreen',
+                params: {
+                    accountIndex: this.props.accountIndex,
+                    blockchain: this.props.blockchain,
+                    delegationType: cta.delegationType,
+                    token: this.props.token,
+                    validators: [validator],
+                    title: cta.title
+                }
+            };
+        });
+
         return (
             <View style={styles.container}>
                 <View style={styles.topContainer}>
@@ -94,7 +128,7 @@ export class ValidatorScreenComponent extends React.Component<
 
                 <View style={styles.bottomContainer}>
                     <CtaGroup
-                        mainCta={config.ui.token.validatorCTA.mainCta}
+                        mainCta={mainCta}
                         otherCtas={config.ui.token.validatorCTA.otherCtas}
                     />
                 </View>

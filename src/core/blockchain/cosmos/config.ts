@@ -1,6 +1,6 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenScreenComponentType } from '../types/token';
+import { TokenType, TokenScreenComponentType, DelegationType } from '../types/token';
 import CosmosIcon from '../../../assets/icons/blockchains/cosmos.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 
@@ -30,6 +30,7 @@ export const ATOM_NATIVE: ITokenConfigState = {
 export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickDelegate',
+        delegationType: DelegationType.QUICK_DELEGATE,
         iconName: 'vote',
         navigateTo: { screen: undefined, params: undefined }
     }
@@ -38,27 +39,32 @@ export const accountCTA = {
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.delegate',
+        delegationType: DelegationType.DELEGATE,
         iconName: 'vote',
         navigateTo: { screen: undefined, params: undefined }
     },
     otherCtas: [
         {
             title: 'App.labels.claimReward',
+            delegationType: DelegationType.CLAIM_REWARD,
             iconName: 'claim-reward',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.reinvest',
+            delegationType: DelegationType.REINVEST,
             iconName: 'reinvest',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.redelegate',
+            delegationType: DelegationType.REDELEGATE,
             iconName: 'revote',
             navigateTo: { screen: undefined, params: undefined }
         },
         {
             title: 'App.labels.undelegate',
+            delegationType: DelegationType.UNDELEGATE,
             iconName: 'unvote',
             navigateTo: { screen: undefined, params: undefined }
         }

@@ -63,4 +63,5 @@ export interface IValidator {
     chartStats: IStatValue[];
     secondaryStats: IStatValue[];
     actionType?: CardActionType;
+    actionTypeSelected?: boolean;
 }

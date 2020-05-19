@@ -10,8 +10,12 @@ export enum TokenScreenComponentType {
 }
 
 export enum DelegationType {
-    DEFAULT = 'DEFAULT',
-    QUICK = 'QUICK'
+    DELEGATE = 'DELEGATE', // stake or vote
+    QUICK_DELEGATE = 'QUICK_DELEGATE', // stake or vote
+    REDELEGATE = 'REDELEGATE', // restake or vote
+    UNDELEGATE = 'UNDELEGATE', // unstake or unvote
+    CLAIM_REWARD = 'CLAIM_REWARD', // unlock or withdraw
+    REINVEST = 'REINVEST'
 }
 
 export interface ITokenIcon {
@@ -27,5 +31,6 @@ export const GENERIC_TOKEN_ICON = {
 export interface IButtonCTA {
     title: string;
     iconName: string;
+    delegationType: DelegationType;
     navigateTo: { screen: string; params: any };
 }

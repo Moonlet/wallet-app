@@ -12,9 +12,12 @@ import { Blockchain, ChainIdType } from '../../../../../../../core/blockchain/ty
 import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
+import { ITokenState } from '../../../../../../../redux/wallets/state';
 
 export interface IProps {
+    accountIndex: number;
     blockchain: Blockchain;
+    token: ITokenState;
     chainId: ChainIdType;
 }
 
@@ -66,7 +69,9 @@ export class ValidatorsTabComponent extends React.Component<
     public onSelect(validator: IValidator) {
         NavigationService.navigate('Validator', {
             blockchain: this.props.blockchain,
-            validator
+            validator,
+            accountIndex: this.props.accountIndex,
+            token: this.props.token
         });
     }
 

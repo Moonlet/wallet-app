@@ -34,7 +34,8 @@ export class Stats extends GenericStats<Client> {
 
         // DUMMY DATA
         if (nrValidators === 1) return [moonletValidator];
-        else return [moonletValidator, chainLayerValidator];
+        if (nrValidators === 2) return [moonletValidator, chainLayerValidator];
+        else return [moonletValidator, chainLayerValidator, moonletValidator];
     }
 }
 

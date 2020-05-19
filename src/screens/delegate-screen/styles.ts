@@ -5,7 +5,8 @@ import {
     BORDER_RADIUS,
     SCREEN_HEIGHT,
     normalize,
-    isIphoneXorAbove
+    isIphoneXorAbove,
+    normalizeFontAndLineHeight
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -18,7 +19,7 @@ export default (theme: ITheme) =>
         },
         content: {
             flex: 1,
-            paddingTop: BASE_DIMENSION * 6,
+            paddingTop: BASE_DIMENSION * 2,
             paddingBottom: Platform.select({
                 default: BASE_DIMENSION * 10,
                 ios: isIphoneXorAbove() ? BASE_DIMENSION * 11 : BASE_DIMENSION * 10
@@ -29,8 +30,8 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION * 2
         },
         receipientLabel: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             paddingLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         },
@@ -46,6 +47,9 @@ export default (theme: ITheme) =>
         icon: {
             color: theme.colors.accent
         },
+        headerSteps: {
+            marginBottom: BASE_DIMENSION * 3
+        },
 
         //
         amountContainer: {
@@ -60,13 +64,12 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2
         },
         confirmTransactionText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary,
             alignSelf: 'center'
         },
         actionContainer: {
-            marginTop: BASE_DIMENSION * 3,
             width: normalize(170),
             flexDirection: 'row',
             borderRadius: BORDER_RADIUS / 2,
@@ -77,8 +80,8 @@ export default (theme: ITheme) =>
         },
         actionCounterText: {
             flex: 1,
-            fontSize: normalize(17),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(20),
             fontWeight: '600',
             color: theme.colors.text,
             textAlign: 'center',

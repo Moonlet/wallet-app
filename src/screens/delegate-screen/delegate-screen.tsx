@@ -23,7 +23,6 @@ import _ from 'lodash';
 import { Icon } from '../../components/icon';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
-import { IHeaderStep, BottomConfirm } from '../send/components/bottom-confirm/bottom-confirm';
 import { EnterAmount } from '../send/components/enter-amount/enter-amount';
 import { HeaderStepByStep } from '../send/components/header-step-by-step/header-step-by-step';
 import { getChainId } from '../../redux/preferences/selectors';
@@ -32,6 +31,15 @@ import { FeeOptions } from '../send/components/fee-options/fee-options';
 import { IValidator, CardActionType } from '../../core/blockchain/types/stats';
 import { ValidatorsList } from '../token/components/delegate-token/components/validators/validators-list/validators-list';
 import { bind } from 'bind-decorator';
+import { BottomCta } from '../../components/bottom-cta/bottom-cta';
+import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
+import { AmountCtaField } from '../../components/bottom-cta/amount-cta-field/amount-cta-field';
+
+interface IHeaderStep {
+    step: number;
+    title: string;
+    active: boolean;
+}
 
 export interface IReduxProps {
     account: IAccountState;
@@ -55,6 +63,7 @@ export interface INavigationParams {
     token: ITokenState;
     delegationType: DelegationType;
     validators: IValidator[];
+    title: string;
 }
 
 interface IState {
@@ -72,7 +81,7 @@ interface IState {
 
 export const navigationOptions = ({ navigation }: any) => ({
     headerLeft: <HeaderLeftClose navigation={navigation} />,
-    title: translate('App.labels.send')
+    title: translate(navigation.state.params.title || 'App.labels.send')
 });
 export class DelegateScreenComponent extends React.Component<
     INavigationProps<INavigationParams> &
@@ -198,18 +207,38 @@ export class DelegateScreenComponent extends React.Component<
 
     @bind
     public onSelect(validator: IValidator) {
-        //
+        let selected = true;
+        if (validator.actionTypeSelected) {
+            selected = !validator.actionTypeSelected;
+        }
+
+        const validators = this.state.validatorsList;
+        Object.values(validators).map(object => {
+            if (validator.id === object.id) object.actionTypeSelected = selected;
+        });
+        this.setState({ validatorsList: validators });
     }
 
     private renderValidatorList() {
         const { styles } = this.props;
+        const blockchainInstance = getBlockchain(this.props.blockchain);
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
                         if (this.state.nrValidators > 1) {
-                            this.setState({ nrValidators: this.state.nrValidators - 1 });
+                            const nrValidatorsNew = this.state.nrValidators - 1;
+                            blockchainInstance
+                                .getStats(this.props.chainId)
+                                .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
+                                .then(validators => {
+                                    this.setState({
+                                        nrValidators: nrValidatorsNew,
+                                        validatorsList: validators
+                                    });
+                                })
+                                .catch();
                         }
                         // decrease
                     }}
@@ -220,7 +249,17 @@ export class DelegateScreenComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
-                        this.setState({ nrValidators: this.state.nrValidators + 1 });
+                        const nrValidatorsNew = this.state.nrValidators + 1;
+                        blockchainInstance
+                            .getStats(this.props.chainId)
+                            .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
+                            .then(validators => {
+                                this.setState({
+                                    nrValidators: nrValidatorsNew,
+                                    validatorsList: validators
+                                });
+                            })
+                            .catch();
                     }}
                 >
                     <Icon name="plus" size={normalize(16)} style={styles.actionIcon} />
@@ -255,21 +294,66 @@ export class DelegateScreenComponent extends React.Component<
         const activeIndex = _.findIndex(this.state.headerSteps, ['active', true]);
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
+        let disableButton: boolean;
+        switch (activeIndex) {
+            case 0:
+                // Add address
+                if (this.state.toAddress === '') disableButton = true;
+                break;
+            case 1:
+                // Enter amount
+                if (
+                    this.state.amount === '' ||
+                    this.state.insufficientFunds ||
+                    this.state.insufficientFundsFees ||
+                    isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
+                    isNaN(Number(this.state.feeOptions?.gasPrice))
+                )
+                    disableButton = true;
+                break;
+            case 2:
+                // Confirm transaction
+                disableButton = false;
+                break;
+            default:
+                disableButton = true;
+                break;
+        }
+
         return (
-            <BottomConfirm
-                toAddress={this.state.toAddress}
-                activeIndex={activeIndex}
-                amount={this.state.amount}
-                account={this.props.account}
-                feeOptions={this.state.feeOptions}
-                insufficientFunds={this.state.insufficientFunds}
-                insufficientFundsFees={this.state.insufficientFundsFees}
-                headerSteps={this.state.headerSteps}
-                tokenConfig={tokenConfig}
-                stdAmount={this.getInputAmountToStd()}
-                confirmPayment={() => this.confirmPayment()}
-                setHeaderSetps={(steps: IHeaderStep[]) => this.setState({ headerSteps: steps })}
-            />
+            <BottomCta
+                label={
+                    activeIndex === this.state.headerSteps.length - 1
+                        ? translate('App.labels.confirm')
+                        : translate('App.labels.next')
+                }
+                disabled={disableButton}
+                onPress={() => {
+                    if (activeIndex === 2) {
+                        this.confirmPayment();
+                    } else {
+                        const steps = this.state.headerSteps;
+
+                        steps[activeIndex].active = false;
+                        steps[activeIndex + 1].active = true;
+
+                        this.setState({ headerSteps: steps });
+                    }
+                }}
+            >
+                <PrimaryCtaField
+                    label={translate('App.labels.send')}
+                    action={translate('App.labels.to')}
+                    value={formatAddress(this.state.toAddress, this.props.account.blockchain)}
+                />
+                {(activeIndex === 1 || activeIndex === 2) && (
+                    <AmountCtaField
+                        tokenConfig={tokenConfig}
+                        stdAmount={this.getInputAmountToStd()}
+                        account={this.props.account}
+                    />
+                )}
+            </BottomCta>
         );
     }
 
@@ -343,7 +427,7 @@ export class DelegateScreenComponent extends React.Component<
     }
 
     public render() {
-        const { styles } = this.props;
+        const { styles, delegationType } = this.props;
         const { headerSteps } = this.state;
 
         return (
@@ -356,20 +440,27 @@ export class DelegateScreenComponent extends React.Component<
                     alwaysBounceVertical={false}
                 >
                     <View style={styles.content}>
-                        <HeaderStepByStep
-                            steps={headerSteps}
-                            selectStep={selectedIdex => {
-                                const activeIndex = _.findIndex(headerSteps, ['active', true]);
+                        {delegationType === DelegationType.DELEGATE && (
+                            <View style={styles.headerSteps}>
+                                <HeaderStepByStep
+                                    steps={headerSteps}
+                                    selectStep={selectedIdex => {
+                                        const activeIndex = _.findIndex(headerSteps, [
+                                            'active',
+                                            true
+                                        ]);
 
-                                const steps = headerSteps;
-                                if (selectedIdex < activeIndex) {
-                                    steps[activeIndex].active = false;
-                                    steps[selectedIdex].active = true;
-                                }
+                                        const steps = headerSteps;
+                                        if (selectedIdex < activeIndex) {
+                                            steps[activeIndex].active = false;
+                                            steps[selectedIdex].active = true;
+                                        }
 
-                                this.setState({ headerSteps: steps });
-                            }}
-                        />
+                                        this.setState({ headerSteps: steps });
+                                    }}
+                                />
+                            </View>
+                        )}
 
                         {headerSteps.map((step, index) => {
                             if (step.active) {

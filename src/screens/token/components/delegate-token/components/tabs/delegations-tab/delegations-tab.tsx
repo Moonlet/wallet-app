@@ -13,9 +13,12 @@ import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
 import { ChainIdType } from '../../../../../../../core/blockchain/types';
+import { ITokenState } from '../../../../../../../redux/wallets/state';
 
 export interface IProps {
+    accountIndex: number;
     blockchain: Blockchain;
+    token: ITokenState;
     chainId: ChainIdType;
 }
 
@@ -64,7 +67,9 @@ export class DelegationsTabComponent extends React.Component<
     public onSelect(validator: IValidator) {
         NavigationService.navigate('Validator', {
             blockchain: this.props.blockchain,
-            validator
+            validator,
+            accountIndex: this.props.accountIndex,
+            token: this.props.token
         });
     }
 

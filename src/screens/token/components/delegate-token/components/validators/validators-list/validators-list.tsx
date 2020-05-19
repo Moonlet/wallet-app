@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { ScrollView } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { ValidatorCard } from '../validator-card/validator-card';
@@ -13,7 +13,6 @@ import BigNumber from 'bignumber.js';
 interface IExternalProps {
     validators: IValidator[];
     blockchain: Blockchain;
-    totalDelegationAmount: string;
     onSelect: (validator: IValidator) => void;
     actionType: CardActionType;
 }
@@ -22,11 +21,9 @@ export const ValidatorsListComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     const config = getBlockchain(props.blockchain).config;
-    const formattedAmount = formatNumber(new BigNumber(props.totalDelegationAmount), {
-        currency: config.coin
-    });
+
     return (
-        <View style={props.styles.container}>
+        <ScrollView contentContainerStyle={props.styles.container}>
             {props.validators.map((validator: IValidator, index: number) => (
                 <ValidatorCard
                     key={index}
@@ -35,14 +32,16 @@ export const ValidatorsListComponent = (
                     leftSmallLabel={validator.rank}
                     leftSubLabel={validator.website}
                     rightTitle={config.ui.validator.amountCardLabel}
-                    rightSubtitle={formattedAmount}
+                    rightSubtitle={formatNumber(new BigNumber(validator.amountDelegated), {
+                        currency: config.coin
+                    })}
                     actionType={props.actionType}
-                    bottomStats={validator.bottomStats}
+                    bottomStats={validator.cardStats}
                     blockchain={props.blockchain}
                     onSelect={() => props.onSelect(validator)}
                 />
             ))}
-        </View>
+        </ScrollView>
     );
 };
 

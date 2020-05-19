@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -14,12 +14,13 @@ import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain, IFeeOptions, ChainIdType } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import BigNumber from 'bignumber.js';
-import { BASE_DIMENSION } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TokenType, DelegationType } from '../../core/blockchain/types/token';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { Amount } from '../../components/amount/amount';
 import _ from 'lodash';
+import { Icon } from '../../components/icon';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { IHeaderStep, BottomConfirm } from '../send/components/bottom-confirm/bottom-confirm';
@@ -65,6 +66,8 @@ interface IState {
     memo: string;
     headerSteps: IHeaderStep[];
     insufficientFundsFees: boolean;
+    nrValidators: number;
+    validatorsList: IValidator[];
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -92,6 +95,7 @@ export class DelegateScreenComponent extends React.Component<
         const step3 = translate('Send.confirmVote');
 
         this.state = {
+            nrValidators: 1,
             toAddress: '',
             amount: '',
             insufficientFunds: false,
@@ -103,7 +107,8 @@ export class DelegateScreenComponent extends React.Component<
                 { step: 2, title: step2, active: false },
                 { step: 3, title: step3, active: false }
             ],
-            insufficientFundsFees: false
+            insufficientFundsFees: false,
+            validatorsList: props.validators
         };
     }
 
@@ -197,17 +202,39 @@ export class DelegateScreenComponent extends React.Component<
     }
 
     private renderValidatorList() {
-        return (
+        const { styles } = this.props;
+        return [
+            <View key={'increase-list'} style={styles.actionContainer}>
+                <TouchableOpacity
+                    style={styles.actionIconContainer}
+                    onPress={() => {
+                        if (this.state.nrValidators > 1) {
+                            this.setState({ nrValidators: this.state.nrValidators - 1 });
+                        }
+                        // decrease
+                    }}
+                >
+                    <Icon name="plus" size={normalize(16)} style={styles.actionIcon} />
+                </TouchableOpacity>
+                <Text style={styles.actionCounterText}>{this.state.nrValidators}</Text>
+                <TouchableOpacity
+                    style={styles.actionIconContainer}
+                    onPress={() => {
+                        this.setState({ nrValidators: this.state.nrValidators + 1 });
+                    }}
+                >
+                    <Icon name="plus" size={normalize(16)} style={styles.actionIcon} />
+                </TouchableOpacity>
+            </View>,
             <View key={'validator-list'} style={this.props.styles.listContainer}>
                 <ValidatorsList
-                    validators={this.props.validators}
+                    validators={this.state.validatorsList}
                     blockchain={this.props.blockchain}
-                    totalDelegationAmount={''}
                     onSelect={this.onSelect}
                     actionType={CardActionType.CHECKBOX}
                 />
             </View>
-        );
+        ];
     }
 
     private getInputAmountToStd(): BigNumber {

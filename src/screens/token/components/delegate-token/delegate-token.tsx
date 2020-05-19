@@ -91,9 +91,19 @@ export class DelegateTokenScreenComponent extends React.Component<
                     />
                 );
             case config.ui.token.labels.tabDelegations:
-                return <DelegationsTab blockchain={this.props.blockchain} />;
+                return (
+                    <DelegationsTab
+                        blockchain={this.props.blockchain}
+                        chainId={this.props.chainId}
+                    />
+                );
             case config.ui.token.labels.tabValidators:
-                return <ValidatorsTab blockchain={this.props.blockchain} />;
+                return (
+                    <ValidatorsTab
+                        blockchain={this.props.blockchain}
+                        chainId={this.props.chainId}
+                    />
+                );
             case config.ui.token.labels.tabTransactions:
                 return <TransactionsTab />;
         }

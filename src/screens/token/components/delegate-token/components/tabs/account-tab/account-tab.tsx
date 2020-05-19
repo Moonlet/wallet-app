@@ -76,7 +76,7 @@ export class AccountTabComponent extends React.Component<
             params: {
                 accountIndex: this.props.account.index,
                 blockchain: this.props.blockchain,
-                delegationType: DelegationType.DEFAULT,
+                delegationType: DelegationType.QUICK,
                 token: this.props.token,
                 validators: [moonletValidator]
             }

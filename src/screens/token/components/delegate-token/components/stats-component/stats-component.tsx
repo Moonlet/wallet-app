@@ -54,6 +54,7 @@ export class StatsComponentInternal extends React.Component<
 
     renderDetailStats() {
         const styles = this.props.styles;
+
         return this.props.accountStats.chartStats.map((stat: IStatValue, i: number) => (
             <View key={i + 'secondaryStats'} style={styles.chartDetailsRow}>
                 <View key={i + 'secondaryStats-title'} style={styles.detailRowTitle}>
@@ -92,12 +93,13 @@ export class StatsComponentInternal extends React.Component<
     renderChartStats() {
         const styles = this.props.styles;
 
-        const totalCount = this.props.accountStats.chartStats.reduce(
-            (sum, value) => sum + Number(value.data.value),
-            0
+        const chartStats = this.props.accountStats.chartStats.filter(
+            stat => stat.chartDisplay && stat.chartDisplay === true
         );
 
-        const pieData = this.props.accountStats.chartStats.map((item, index) => {
+        const totalCount = chartStats.reduce((sum, value) => sum + Number(value.data.value), 0);
+
+        const pieData = chartStats.map((item, index) => {
             const toRet = {
                 value: ((Number(item.data.value) * 100) / totalCount).toFixed(2),
                 title: `title-${index}`,
@@ -127,7 +129,7 @@ export class StatsComponentInternal extends React.Component<
 
         const percentageChart = (
             <FlatList
-                data={this.props.accountStats.chartStats}
+                data={chartStats}
                 keyExtractor={(_, index) => `${index}`}
                 renderItem={({ item }) => (
                     <View style={styles.percentageSquareContainer}>

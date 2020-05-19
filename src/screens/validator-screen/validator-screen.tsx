@@ -10,9 +10,10 @@ import { Blockchain } from '../../core/blockchain/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
 import { SmartImage } from '../../library/image/smart-image';
-import { IValidator } from '../../core/blockchain/types/stats';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { translate } from '../../core/i18n';
+import { StatsComponent } from '../token/components/delegate-token/components/stats-component/stats-component';
+import { IValidator } from '../../core/blockchain/types/stats';
 
 export interface INavigationParams {
     validator: IValidator;
@@ -58,7 +59,7 @@ export class ValidatorScreenComponent extends React.Component<
         const config = getBlockchain(blockchain).config;
 
         const textTop = `${translate(config.ui.validator.totalLabel)} (${validator.rank})`;
-        const amount = validator.totalAmountStd;
+        const amount = validator.amountDelegated;
         const token = getTokenConfig(blockchain, config.coin);
 
         return (
@@ -81,7 +82,15 @@ export class ValidatorScreenComponent extends React.Component<
                         convert
                     />
                 </View>
-                <View style={{ flex: 1 }}></View>
+                <View style={{ flex: 1 }}>
+                    <StatsComponent
+                        accountStats={{
+                            topStats: validator.topStats,
+                            chartStats: validator.chartStats,
+                            secondaryStats: validator.secondaryStats
+                        }}
+                    />
+                </View>
 
                 <View style={styles.bottomContainer}>
                     <CtaGroup

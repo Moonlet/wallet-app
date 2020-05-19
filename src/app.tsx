@@ -102,7 +102,7 @@ export default class App extends React.Component<{}, IState> {
                 this.state.appState === AppStateStatus.ACTIVE &&
                 Object.keys(store.getState().wallets).length >= 1
             ) {
-                this.showPasswordModal();
+                //     this.showPasswordModal();
             }
         });
 

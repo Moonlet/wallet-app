@@ -16,6 +16,7 @@ import { Blockchain } from '../../../../../../../core/blockchain/types/blockchai
 import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
+import { translate } from '../../../../../../../core/i18n';
 
 export interface IExternalProps {
     icon: string;
@@ -25,18 +26,19 @@ export interface IExternalProps {
     rightTitle: string;
     rightSubtitle: string;
     actionType: CardActionType;
+    actionTypeSelected?: boolean;
     bottomStats: IStatValue[];
     blockchain: Blockchain;
     onSelect: () => void;
 }
 
-export function getValueString(stat: IStatValue) {
+export function getValueString(stat: IStatValue, blockchain: Blockchain) {
     switch (stat.type) {
         case IStatValueType.STRING:
             return stat.data.value;
         case IStatValueType.AMOUNT:
             return formatNumber(new BigNumber(stat.data.value), {
-                currency: getBlockchain(this.props.blockchain).config.coin
+                currency: getBlockchain(blockchain).config.coin
             });
     }
 }
@@ -46,7 +48,7 @@ export const ValidatorCardComponent = (
 ) => {
     return (
         <TouchableHighlight
-            onPress={this.props.onSelect}
+            onPress={() => props.onSelect()}
             underlayColor={props.theme.colors.appBackground}
         >
             <View style={props.styles.cardContainer}>
@@ -68,7 +70,9 @@ export const ValidatorCardComponent = (
                                 </Text>
                             </View>
 
-                            <Text style={props.styles.primaryText}>{props.rightTitle}</Text>
+                            <Text style={props.styles.primaryText}>
+                                {translate(props.rightTitle)}
+                            </Text>
                         </View>
 
                         <View style={props.styles.topRowSecondLine}>
@@ -77,18 +81,26 @@ export const ValidatorCardComponent = (
                         </View>
                     </View>
 
-                    <Icon
-                        name={'chevron-right'}
-                        size={normalize(18)}
-                        style={props.styles.chevronRight}
-                    />
+                    {props.actionType === CardActionType.NAVIGATE ? (
+                        <Icon
+                            name={'chevron-right'}
+                            size={normalize(18)}
+                            style={props.styles.chevronRight}
+                        />
+                    ) : (
+                        <Icon
+                            name={props.actionTypeSelected === true ? 'check-2-thicked' : 'check-2'}
+                            size={normalize(18)}
+                            style={props.styles.chevronRight}
+                        />
+                    )}
                 </View>
                 <View style={props.styles.bottomContainer}>
                     {props.bottomStats.map((stat: IStatValue, i: number) => (
                         <View key={i}>
                             <Text style={props.styles.bottomSecondaryText}>{stat.title}</Text>
                             <Text style={[props.styles.bottomPrimaryText, { color: stat.color }]}>
-                                {getValueString(stat)}
+                                {getValueString(stat, props.blockchain)}
                             </Text>
                         </View>
                     ))}

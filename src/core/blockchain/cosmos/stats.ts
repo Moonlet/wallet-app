@@ -1,4 +1,10 @@
-import { GenericStats, IStatValueType, AccountStats, IValidator } from '../types/stats';
+import {
+    GenericStats,
+    IStatValueType,
+    AccountStats,
+    IValidator,
+    CardActionType
+} from '../types/stats';
 import { Client } from './client';
 import { Blockchain } from '../types/blockchain';
 
@@ -9,6 +15,11 @@ export class Stats extends GenericStats<Client> {
             chartStats: chartStatsValues,
             secondaryStats: secondaryStatsValues
         };
+    }
+    public async getValidatorList(actionType: CardActionType): Promise<IValidator[]> {
+        moonletValidator.actionType = actionType;
+        chainLayerValidator.actionType = actionType;
+        return [moonletValidator, chainLayerValidator];
     }
 }
 
@@ -52,6 +63,7 @@ export const chartStatsValues = [
         title: 'Available',
         color: '#FFFFFF',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
             value: '1000.00',
             tokenSymbol: 'ATOM',
@@ -62,6 +74,7 @@ export const chartStatsValues = [
         title: 'Delegated',
         color: '#00DAFF',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
             value: '10000.00',
             tokenSymbol: 'ATOM',
@@ -72,6 +85,7 @@ export const chartStatsValues = [
         title: 'Undelegated',
         color: '#AB7361',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
             value: '1500.00',
             tokenSymbol: 'ATOM',
@@ -82,6 +96,7 @@ export const chartStatsValues = [
         title: 'Reward',
         color: '#00E676',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
             value: '700.00',
             tokenSymbol: 'ATOM',
@@ -122,9 +137,12 @@ export const moonletValidator: IValidator = {
     icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
     name: 'Moonlet',
     rank: '10th',
-    totalAmountStd: '120000',
+    amountDelegated: '120000',
     website: 'http://moonlet.io',
-    bottomStats: [
+    topStats: topStatsValues,
+    secondaryStats: secondaryStatsValues,
+    chartStats: chartStatsValues,
+    cardStats: [
         {
             title: 'Voting Power',
             color: '#FFFFFF',
@@ -165,9 +183,12 @@ export const chainLayerValidator: IValidator = {
     icon: 'https://thecelo.com/logos/0x4fc4ea624db2e4a1d6195a03744d505cbcd9431b.jpg',
     name: 'ChainLayer',
     rank: '10th',
-    totalAmountStd: '220000',
+    amountDelegated: '220000',
     website: 'http://chainlayer.io',
-    bottomStats: [
+    topStats: topStatsValues,
+    secondaryStats: secondaryStatsValues,
+    chartStats: chartStatsValues,
+    cardStats: [
         {
             title: 'Voting Power',
             color: '#FFFFFF',

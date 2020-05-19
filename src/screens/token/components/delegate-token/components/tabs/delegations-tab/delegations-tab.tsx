@@ -3,10 +3,6 @@ import { View } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
-import {
-    moonletValidator,
-    chainLayerValidator
-} from '../../../../../../../core/blockchain/cosmos/stats';
 import { ValidatorsList } from '../../validators/validators-list/validators-list';
 import { SearchInput } from '../../../../../../../components/search-input/search-input';
 import { translate } from '../../../../../../../core/i18n';
@@ -16,15 +12,16 @@ import { Blockchain } from '../../../../../../../core/blockchain/types/blockchai
 import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
-
-const validators = [moonletValidator, chainLayerValidator, chainLayerValidator];
+import { ChainIdType } from '../../../../../../../core/blockchain/types';
 
 export interface IProps {
     blockchain: Blockchain;
+    chainId: ChainIdType;
 }
 
 interface IState {
-    validatorsList: IValidator[];
+    validatorsFilteredList: IValidator[];
+    unfilteredList: IValidator[];
 }
 
 export class DelegationsTabComponent extends React.Component<
@@ -35,21 +32,33 @@ export class DelegationsTabComponent extends React.Component<
         super(props);
 
         this.state = {
-            validatorsList: validators
+            validatorsFilteredList: [],
+            unfilteredList: []
         };
+    }
+
+    public componentDidMount() {
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+        blockchainInstance
+            .getStats(this.props.chainId)
+            .getValidatorList(CardActionType.NAVIGATE, -1)
+            .then(validators => {
+                this.setState({ validatorsFilteredList: validators, unfilteredList: validators });
+            })
+            .catch();
     }
 
     @bind
     public onSearchInput(text: string) {
-        const filteredList = validators.filter(
+        const filteredList = this.state.unfilteredList.filter(
             validator => validator.name.toLowerCase().includes(text.toLowerCase()) === true
         );
-        this.setState({ validatorsList: filteredList });
+        this.setState({ validatorsFilteredList: filteredList });
     }
 
     @bind
     public onClose() {
-        this.setState({ validatorsList: validators });
+        this.setState({ validatorsFilteredList: this.state.unfilteredList });
     }
     @bind
     public onSelect(validator: IValidator) {
@@ -73,9 +82,8 @@ export class DelegationsTabComponent extends React.Component<
                         />
                     </View>
                     <ValidatorsList
-                        validators={this.state.validatorsList}
+                        validators={this.state.validatorsFilteredList}
                         blockchain={this.props.blockchain}
-                        totalDelegationAmount={''}
                         onSelect={this.onSelect}
                         actionType={CardActionType.NAVIGATE}
                     />

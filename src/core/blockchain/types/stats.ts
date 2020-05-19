@@ -12,6 +12,7 @@ export interface IStatValue {
     subtitle?: string;
     color: string;
     type: IStatValueType;
+    chartDisplay?: boolean;
     data: {
         value: string;
         tokenSymbol?: string;
@@ -36,22 +37,18 @@ export abstract class GenericStats<Client = BlockchainGenericClient> {
     public async getAccountDelegateStats(): Promise<AccountStats> {
         throw new Error('Not Implemented');
     }
+
+    public async getValidatorList(
+        actionType: CardActionType,
+        numberValidators: number
+    ): Promise<IValidator[]> {
+        throw new Error('Not Implemented');
+    }
 }
 
 export enum CardActionType {
     CHECKBOX = 'CHECKBOX',
     NAVIGATE = 'NAVIGATE'
-}
-
-export interface IValidatorCard {
-    icon: string;
-    leftLabel: string;
-    leftSmallLabel: string;
-    leftSubLabel: string;
-    rightTitle: string;
-    rightSubtitle: string;
-    actionType: CardActionType;
-    cardStats: IStatValue[];
 }
 
 export interface IValidator {
@@ -60,6 +57,10 @@ export interface IValidator {
     name: string;
     rank: string;
     website: string;
-    totalAmountStd: string;
-    bottomStats: IStatValue[];
+    amountDelegated: string;
+    cardStats: IStatValue[];
+    topStats: IStatValue[];
+    chartStats: IStatValue[];
+    secondaryStats: IStatValue[];
+    actionType?: CardActionType;
 }

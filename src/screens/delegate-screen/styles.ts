@@ -25,7 +25,7 @@ export default (theme: ITheme) =>
             })
         },
         listContainer: {
-            marginTop: BASE_DIMENSION * 4,
+            marginTop: BASE_DIMENSION * 3,
             marginHorizontal: BASE_DIMENSION * 2
         },
         receipientLabel: {
@@ -63,6 +63,37 @@ export default (theme: ITheme) =>
             fontSize: normalize(15),
             lineHeight: normalize(20),
             color: theme.colors.textSecondary,
+            alignSelf: 'center'
+        },
+        actionContainer: {
+            marginTop: BASE_DIMENSION * 3,
+            width: normalize(170),
+            flexDirection: 'row',
+            borderRadius: BORDER_RADIUS / 2,
+            borderColor: theme.colors.accent,
+            borderWidth: 1,
+            justifyContent: 'center',
+            alignSelf: 'center'
+        },
+        actionCounterText: {
+            flex: 1,
+            fontSize: normalize(17),
+            lineHeight: normalize(20),
+            fontWeight: '600',
+            color: theme.colors.text,
+            textAlign: 'center',
+            alignSelf: 'center'
+        },
+        actionIconContainer: {
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            alignContent: 'center',
+            paddingVertical: BASE_DIMENSION / 2,
+            paddingHorizontal: BASE_DIMENSION / 2
+        },
+        actionIcon: {
+            color: theme.colors.accent,
             alignSelf: 'center'
         }
     });

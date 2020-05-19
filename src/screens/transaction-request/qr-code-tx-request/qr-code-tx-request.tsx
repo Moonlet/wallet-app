@@ -83,6 +83,8 @@ interface IState {
     amount: string;
     chainId: ChainIdType;
     tokenSymbol: string;
+    insufficientFunds: boolean;
+    insufficientFundsFees: boolean;
 }
 
 export class QRCodeTransferRequestComponent extends React.Component<
@@ -103,7 +105,9 @@ export class QRCodeTransferRequestComponent extends React.Component<
             tokenSymbol:
                 tokenSymbol !== undefined
                     ? tokenSymbol // ZRC-2
-                    : config.coin // Default Native Coin
+                    : config.coin, // Default Native Coin
+            insufficientFunds: false,
+            insufficientFundsFees: false
         };
     }
 
@@ -306,16 +310,22 @@ export class QRCodeTransferRequestComponent extends React.Component<
                         `${translate('App.labels.amount')} (${tokenSymbol})`
                     )}
 
+                    {this.state.insufficientFunds && (
+                        <Text style={styles.insufficientFunds}>
+                            {translate('TransactionRequest.insufficientFunds')}
+                        </Text>
+                    )}
+
                     <FeeOptions
                         token={token}
                         sendingToken={token} // TODO
                         account={this.props.selectedAccount}
                         toAddress={qrCodeTxPayload.address}
                         onFeesChanged={(feeOptions: IFeeOptions) => {
+                            // TODO
                             // this.onFeesChanged(feeOptions);
                         }}
-                        // insufficientFundsFees={this.state.insufficientFundsFees}
-                        insufficientFundsFees={false}
+                        insufficientFundsFees={this.state.insufficientFundsFees}
                         options={{
                             feeTotalBackgroundColor: theme.colors.inputBackground,
                             feeLabelLeftPadding: BASE_DIMENSION

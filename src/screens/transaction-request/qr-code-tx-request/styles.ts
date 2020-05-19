@@ -1,16 +1,21 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
 import {
     BASE_DIMENSION,
     normalizeFontAndLineHeight,
-    BORDER_RADIUS
+    BORDER_RADIUS,
+    isIphoneXorAbove
 } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flexGrow: 1,
-            paddingHorizontal: BASE_DIMENSION * 2
+            paddingHorizontal: BASE_DIMENSION * 2,
+            paddingBottom: Platform.select({
+                default: BASE_DIMENSION * 10,
+                ios: isIphoneXorAbove() ? BASE_DIMENSION * 11 : BASE_DIMENSION * 10
+            })
         },
         inputContainer: {
             flexDirection: 'column',
@@ -47,5 +52,11 @@ export default (theme: ITheme) =>
             color: theme.colors.accent,
             alignSelf: 'center',
             paddingRight: BASE_DIMENSION
+        },
+        insufficientFunds: {
+            fontSize: normalizeFontAndLineHeight(12),
+            lineHeight: normalizeFontAndLineHeight(16),
+            color: theme.colors.error,
+            marginBottom: BASE_DIMENSION
         }
     });

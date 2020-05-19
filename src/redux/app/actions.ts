@@ -1,6 +1,6 @@
 import { HintsComponent, HintsScreen } from './state';
 import { IReduxState } from '../state';
-import { clearPinCode } from '../../core/secure/keychain';
+import { clearPinCode } from '../../core/secure/keychain/keychain';
 import { Platform } from 'react-native';
 
 export const SET_ACCEPTED_TC_VERSION = 'SET_ACCEPTED_TC_VERSION';

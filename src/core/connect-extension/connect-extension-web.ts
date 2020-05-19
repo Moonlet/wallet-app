@@ -1,13 +1,12 @@
 import { IQRCodeConn, FirebaseRef } from './types';
-import { getBaseEncryptionKey } from '../secure/keychain';
-import { readEncrypted, deleteFromStorage, storeEncrypted } from '../secure/storage';
+import { getBaseEncryptionKey } from '../secure/keychain/keychain';
+import { readEncrypted, deleteFromStorage, storeEncrypted } from '../secure/storage/storage';
 import { CONN_EXTENSION } from '../constants/app';
 import { Dialog } from '../../components/dialog/dialog';
 import { translate } from '../i18n';
 import { ConnectExtension } from './connect-extension';
 import { database } from 'react-native-firebase';
-import { decrypt } from '../secure/encrypt.web';
-import CryptoJS from 'crypto-js';
+import { decrypt } from '../secure/encrypt/encrypt.web';
 import { IBlockchainTransaction } from '../blockchain/types';
 
 export const ConnectExtensionWeb = (() => {
@@ -112,9 +111,7 @@ export const ConnectExtensionWeb = (() => {
             const connection = await getConnection();
 
             if (connection) {
-                const decrypted = JSON.parse(
-                    decrypt(data, connection.encKey).toString(CryptoJS.enc.Utf8)
-                );
+                const decrypted = JSON.parse(await decrypt(data, connection.encKey));
 
                 return decrypted[0]; // transaction
             }

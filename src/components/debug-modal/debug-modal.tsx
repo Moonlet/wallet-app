@@ -7,9 +7,9 @@ import Modal from '../../library/modal/modal';
 import { Text, Button } from '../../library';
 import { Notifications } from '../../core/messaging/notifications/notifications';
 import { getApnsToken } from '../../core/messaging/silent/ios-voip-push-notification';
-import { readEncrypted } from '../../core/secure/storage';
+import { readEncrypted } from '../../core/secure/storage/storage';
 import { WC_CONNECTION } from '../../core/constants/app';
-import { getBaseEncryptionKey } from '../../core/secure/keychain';
+import { getBaseEncryptionKey } from '../../core/secure/keychain/keychain';
 
 export interface IExternalProps {
     obRef?: any;

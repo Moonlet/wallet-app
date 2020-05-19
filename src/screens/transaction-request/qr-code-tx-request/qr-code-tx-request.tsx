@@ -38,8 +38,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 export interface IQRCodeTxPayload {
     address: string;
     chainId: ChainIdType;
-    function: string; // ex: /Transfer /DoMagic
-    params: string;
+    fct: string; // ex: /Transfer /DoMagic
+    params: {
+        amount?: string;
+        gasPrice?: string;
+        gasLimit?: string;
+    };
 }
 
 export interface IExternalProps {
@@ -126,17 +130,19 @@ export class QRCodeTransferRequestComponent extends React.Component<
             this.props.setNetworkTestNetChainId(blockchain, this.props.chainId);
         }
 
-        const tokenConfig = getTokenConfig(
-            this.props.selectedAccount.blockchain,
-            this.state.tokenSymbol
-        );
+        if (this.props.qrCodeTxPayload?.params?.amount) {
+            const tokenConfig = getTokenConfig(
+                this.props.selectedAccount.blockchain,
+                this.state.tokenSymbol
+            );
 
-        const amountFromStd = getBlockchain(blockchain).account.amountFromStd(
-            new BigNumber('1e12'),
-            tokenConfig.decimals
-        );
+            const amountFromStd = getBlockchain(blockchain).account.amountFromStd(
+                new BigNumber(this.props.qrCodeTxPayload.params.amount),
+                tokenConfig.decimals
+            );
 
-        this.setState({ amount: amountFromStd.toString() });
+            this.setState({ amount: amountFromStd.toString() });
+        }
     }
 
     private renderField(

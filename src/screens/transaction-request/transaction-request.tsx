@@ -21,18 +21,23 @@ import { QRCodeTransferRequest, IQRCodeTxPayload } from './qr-code-tx-request/qr
 import { openURL } from '../../core/utils/linking-handler';
 import CONFIG from '../../config';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
+import { getUrlParams } from '../../core/connect-extension/utils';
+import { getSelectedBlockchain } from '../../redux/wallets/selectors';
+import { Blockchain } from '../../core/blockchain/types';
 
 export interface IReduxProps {
     isVisible: boolean;
     requestId: string;
     closeTransactionRequest: typeof closeTransactionRequest;
     sendTransferTransaction: typeof sendTransferTransaction;
+    blockchain: Blockchain;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
     return {
         isVisible: state.ui.transactionRequest.isVisible,
-        requestId: state.ui.transactionRequest.requestId
+        requestId: state.ui.transactionRequest.requestId,
+        blockchain: getSelectedBlockchain(state)
     };
 };
 
@@ -64,15 +69,7 @@ export class TransactionRequestScreenComponent extends React.Component<
                 tokenError: undefined
             },
             extensionTxPayload: undefined,
-            // qrCodeTxPayload: undefined
-            qrCodeTxPayload: {
-                address: 'zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8',
-                chainId: 333,
-                function: undefined, // /Transfer
-                params: `amount=1e12`
-                // params: amount=1e3&ByStr20-to=zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8
-                // params: amount=1e12&Uint128-amount=1e3&ByStr20-to=zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8
-            }
+            qrCodeTxPayload: undefined
         };
     }
 
@@ -80,6 +77,10 @@ export class TransactionRequestScreenComponent extends React.Component<
         if (this.props.requestId) {
             this.getExtensionTxPayload();
         }
+
+        const qrCode =
+            'zilliqa:zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8@333/?amount=1000000000000';
+        this.getQrCodeTxPayload(qrCode);
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
@@ -156,9 +157,61 @@ export class TransactionRequestScreenComponent extends React.Component<
         }
     }
 
-    // private getQrCodeTxPayload() {
-    //     //
-    // }
+    private getQrCodeTxPayload(code: string) {
+        const regex = new RegExp(
+            /^zilliqa:(\/\/)?([^/@?\n\ ]*)(@([^/?\n\ ]*))?([^?\n\ ]*)?(\?([^\n\ ]*)?)?$/
+        );
+
+        const qrCodeTxPayload: IQRCodeTxPayload = {
+            address: undefined,
+            chainId: undefined,
+            fct: undefined,
+            params: {
+                amount: undefined,
+                gasPrice: undefined,
+                gasLimit: undefined
+            }
+        };
+
+        const res = regex.exec(code);
+        // console.log('res: ', res);
+
+        if (res) {
+            const address = res[2];
+            // console.log('address: ', address);
+            if (address && address !== '') {
+                qrCodeTxPayload.address = address;
+            }
+
+            const chainId = res[4];
+            // console.log('chainId: ', chainId);
+            if (chainId && chainId !== '') {
+                qrCodeTxPayload.chainId =
+                    this.props.blockchain === Blockchain.ZILLIQA ? Number(chainId) : chainId;
+            }
+
+            const fct = res[5];
+            // console.log('fct: ', fct);
+            if (fct && fct !== '') {
+                qrCodeTxPayload.fct = fct;
+            }
+
+            const extraData: any = getUrlParams(res[6]);
+            // console.log('extraData: ', extraData);
+
+            if (extraData) {
+                const amount = extraData?.amount;
+                // console.log('amount: ', amount);
+
+                if (amount) {
+                    qrCodeTxPayload.params.amount = amount;
+                }
+            }
+
+            // console.log('qrCodeTxPayload: ', qrCodeTxPayload);
+            this.setState({ qrCodeTxPayload });
+        }
+    }
 
     private renderExtensionTx() {
         const { extensionTxPayload, qrCodeTxPayload } = this.state;
@@ -229,7 +282,7 @@ export class TransactionRequestScreenComponent extends React.Component<
                 <View style={styles.container}>
                     <Text style={styles.title}>{translate('TransactionRequest.title')}</Text>
 
-                    <TestnetBadge isVisible={this.state.qrCodeTxPayload.chainId !== undefined} />
+                    <TestnetBadge isVisible={this.state.qrCodeTxPayload?.chainId !== undefined} />
 
                     <View style={styles.content}>{this.renderExtensionTx()}</View>
 

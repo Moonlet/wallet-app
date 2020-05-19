@@ -14,7 +14,11 @@ import { IAction } from '../types';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import uuidv4 from 'uuid/v4';
-import { storeEncrypted, deleteFromStorage, readEncrypted } from '../../core/secure/storage';
+import {
+    storeEncrypted,
+    deleteFromStorage,
+    readEncrypted
+} from '../../core/secure/storage/storage';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../core/wallet/wallet-factory';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
@@ -50,7 +54,7 @@ import {
     generateEncryptionKey,
     clearEncryptionKey,
     clearPinCode
-} from '../../core/secure/keychain';
+} from '../../core/secure/keychain/keychain';
 import { delay } from '../../core/utils/time';
 import { toggleBiometricAuth } from '../preferences/actions';
 import { CLOSE_TX_REQUEST } from '../ui/transaction-request/actions';

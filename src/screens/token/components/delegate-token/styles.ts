@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    normalizeFontAndLineHeight
+} from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -26,8 +30,8 @@ export default (theme: ITheme) =>
             color: theme.colors.accent // this is for active
         },
         tabTextInactive: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             textAlign: 'center',
             color: theme.colors.textSecondary // this is for inactive
         }

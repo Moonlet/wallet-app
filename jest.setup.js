@@ -51,7 +51,9 @@ jest.mock('react-native-device-info', () => {
     return {
         getVersion: jest.fn(),
         getUniqueId: jest.fn(),
-        getBundleId: jest.fn()
+        getBundleId: jest.fn(),
+        getFontScaleSync: jest.fn(),
+        getReadableVersion: jest.fn()
     };
 });
 

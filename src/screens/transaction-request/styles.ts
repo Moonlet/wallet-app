@@ -2,7 +2,7 @@ import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import {
     BASE_DIMENSION,
-    normalize,
+    normalizeFontAndLineHeight,
     BORDER_RADIUS,
     isIphoneXorAbove
 } from '../../styles/dimensions';
@@ -26,22 +26,21 @@ export default (theme: ITheme) =>
             right: 0,
             flex: 1,
             backgroundColor: theme.colors.appBackground,
-            paddingHorizontal: BASE_DIMENSION * 2,
-            paddingTop: CONTAINER_TOP_PADDING,
-            paddingBottom: BASE_DIMENSION * 4
+            paddingTop: CONTAINER_TOP_PADDING
         },
         closeButtonContainer: {
             position: 'absolute',
-            top: CONTAINER_TOP_PADDING,
-            left: BASE_DIMENSION * 2
+            top: CONTAINER_TOP_PADDING - BASE_DIMENSION / 2,
+            left: BASE_DIMENSION + BASE_DIMENSION / 2,
+            padding: BASE_DIMENSION
         },
         closeButton: {
             color: theme.colors.accent,
             alignSelf: 'center'
         },
         title: {
-            fontSize: normalize(22),
-            lineHeight: normalize(28),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             color: theme.colors.text,
             letterSpacing: 0.38,
             textAlign: 'center',
@@ -51,13 +50,22 @@ export default (theme: ITheme) =>
         content: {
             flex: 1
         },
+        moonletTransferContainer: {
+            flex: 1,
+            paddingHorizontal: BASE_DIMENSION * 2
+        },
+        errorWrapper: {
+            flex: 1,
+            paddingHorizontal: BASE_DIMENSION * 2,
+            paddingBottom: BASE_DIMENSION * 4
+        },
         inputContainer: {
             flexDirection: 'column',
             marginBottom: BASE_DIMENSION
         },
         receipientLabel: {
-            fontSize: normalize(13),
-            lineHeight: normalize(18),
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(18),
             paddingLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         },
@@ -71,8 +79,8 @@ export default (theme: ITheme) =>
             alignItems: 'center'
         },
         confirmTransactionText: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary,
             alignSelf: 'center'
         },
@@ -89,8 +97,8 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION * 2
         },
         errorMessage: {
-            fontSize: normalize(19),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(19),
+            lineHeight: normalizeFontAndLineHeight(25),
             textAlign: 'center',
             color: theme.colors.textSecondary
         }

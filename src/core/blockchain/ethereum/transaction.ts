@@ -115,11 +115,11 @@ export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
     }
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {
-        const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);
-        if (tokenInfo.type === TokenType.ERC20) {
+        const tokenInfo = getTokenConfig(tx?.blockchain, tx?.token?.symbol);
+        if (tokenInfo?.type === TokenType.ERC20) {
             return tx?.data?.params[1];
         } else {
-            return tx.amount;
+            return tx?.amount;
         }
     }
 }

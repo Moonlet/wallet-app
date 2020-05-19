@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
+import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -22,16 +22,16 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION / 4
         },
         accountName: {
-            fontSize: normalize(18),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
             fontWeight: '500',
             letterSpacing: 0.38,
             color: theme.colors.text,
             marginRight: BASE_DIMENSION
         },
         accountAddress: {
-            fontSize: normalize(18),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
             fontWeight: '500',
             letterSpacing: 0.38,
             color: theme.colors.accent

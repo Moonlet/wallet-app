@@ -1,6 +1,10 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    normalizeFontAndLineHeight
+} from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -18,22 +22,22 @@ export default (theme: ITheme) =>
             borderColor: theme.colors.accentSecondary
         },
         fee: {
-            fontSize: normalize(16),
-            lineHeight: normalize(21),
+            fontSize: normalizeFontAndLineHeight(16),
+            lineHeight: normalizeFontAndLineHeight(21),
             color: theme.colors.textSecondary
         },
         feeConverted: {
             color: theme.colors.textSecondary,
-            fontSize: normalize(15),
-            lineHeight: normalize(20)
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20)
         },
         containerFeeConverted: {
             flexDirection: 'row',
             alignItems: 'baseline'
         },
         feeTitle: {
-            fontSize: normalize(16),
-            lineHeight: normalize(25),
+            fontSize: normalizeFontAndLineHeight(16),
+            lineHeight: normalizeFontAndLineHeight(25),
             color: theme.colors.textSecondary
         },
         textSelected: {

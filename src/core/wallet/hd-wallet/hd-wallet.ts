@@ -4,8 +4,8 @@ import { Blockchain, IBlockchainTransaction } from '../../blockchain/types';
 import { getBlockchain } from '../../blockchain/blockchain-factory';
 import { IAccountState } from '../../../redux/wallets/state';
 import { HDKeyFactory } from './hd-key/hdkey-factory';
-import { readEncrypted } from '../../../core/secure/storage';
-import { getEncryptionKey } from '../../secure/keychain';
+import { readEncrypted } from '../../secure/storage/storage';
+import { getEncryptionKey } from '../../secure/keychain/keychain';
 
 export class HDWallet implements IWallet {
     public static async loadFromStorage(walletId: string, pass: string): Promise<HDWallet> {

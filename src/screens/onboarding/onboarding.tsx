@@ -13,7 +13,7 @@ import { withTheme } from '../../core/theme/with-theme';
 import { createHDWallet } from '../../redux/wallets/actions';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { generateEncryptionKey } from '../../core/secure/keychain';
+import { generateEncryptionKey } from '../../core/secure/keychain/keychain';
 import { translate } from '../../core/i18n';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';

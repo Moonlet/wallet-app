@@ -1,4 +1,4 @@
-import * as Sentry from '@sentry/react-native';
+import * as Sentry from '@sentry/browser';
 // Sentry setup
 if (!__DEV__) {
     Sentry.init({

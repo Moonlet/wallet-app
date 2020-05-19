@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, normalize, ICON_CONTAINER_SIZE } from '../../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalize,
+    ICON_CONTAINER_SIZE,
+    normalizeFontAndLineHeight
+} from '../../../../styles/dimensions';
 import { ph, pw } from '../../../../styles';
 
 export default (theme: ITheme) =>
@@ -28,21 +33,22 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION * 8
         },
         title: {
-            fontSize: normalize(28),
-            lineHeight: normalize(34),
+            fontSize: normalizeFontAndLineHeight(28),
+            lineHeight: normalizeFontAndLineHeight(34),
             textAlign: 'center',
             marginBottom: BASE_DIMENSION,
             color: theme.colors.text
         },
         subTitle: {
-            lineHeight: normalize(22),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             textAlign: 'center',
             marginBottom: BASE_DIMENSION * 4,
             color: theme.colors.textSecondary
         },
         errorMessage: {
             marginTop: BASE_DIMENSION * 2,
-            lineHeight: normalize(21),
+            lineHeight: normalizeFontAndLineHeight(21),
             color: theme.colors.error,
             textAlign: 'center'
         },
@@ -61,8 +67,8 @@ export default (theme: ITheme) =>
             margin: BASE_DIMENSION / 4
         },
         keyText: {
-            fontSize: normalize(28),
-            lineHeight: normalize(34),
+            fontSize: normalizeFontAndLineHeight(28),
+            lineHeight: normalizeFontAndLineHeight(34),
             color: theme.colors.text,
             textAlign: 'center'
         },
@@ -106,7 +112,7 @@ export default (theme: ITheme) =>
             borderRadius: normalize(10)
         },
         reset: {
-            lineHeight: normalize(22),
+            lineHeight: normalizeFontAndLineHeight(22),
             fontWeight: '600',
             color: theme.colors.accent,
             textAlign: 'center'

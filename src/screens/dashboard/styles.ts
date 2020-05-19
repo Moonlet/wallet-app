@@ -1,13 +1,12 @@
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize, normalizeFontAndLineHeight } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: theme.colors.appBackground,
-            height: Platform.OS === 'web' ? 'calc(100vh - 122px)' : 'auto'
+            backgroundColor: theme.colors.appBackground
         },
         coinBalanceCard: {
             backgroundColor: theme.colors.appBackground,
@@ -50,7 +49,7 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.textTertiary
         },
         blockchainButtonTextActive: {
-            lineHeight: normalize(18),
+            lineHeight: normalizeFontAndLineHeight(18),
             color: theme.colors.accent
         },
         coinDashboard: {
@@ -81,14 +80,14 @@ export default (theme: ITheme) =>
             justifyContent: 'center'
         },
         account: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.text,
             marginRight: BASE_DIMENSION
         },
         address: {
-            fontSize: normalize(15),
-            lineHeight: normalize(20),
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.accent
         },
         mainText: {
@@ -98,7 +97,7 @@ export default (theme: ITheme) =>
             marginRight: BASE_DIMENSION * 2
         },
         secondaryText: {
-            fontSize: normalize(16),
+            fontSize: normalizeFontAndLineHeight(16),
             color: theme.colors.textSecondary
         },
         icon: {

@@ -2,10 +2,10 @@ import { IWalletsState, IWalletState, IAccountState } from '../../redux/wallets/
 import { IReduxState } from '../../redux/state';
 import { cloneDeep } from 'lodash';
 import * as IExtStorage from './types';
-import { IPrefState } from '../../redux/preferences/state';
+import { IPrefState, IBlockchainsOptions } from '../../redux/preferences/state';
 import { IContactsState } from '../../redux/contacts/state';
 import { ITokensConfigState, ITokenConfigState } from '../../redux/tokens/state';
-import { ChainIdType, IBlockchainTransaction } from '../blockchain/types';
+import { ChainIdType, IBlockchainTransaction, Blockchain } from '../blockchain/types';
 
 export const trimWallets = (wallets: IWalletsState) => {
     const trimmedWallets: IExtStorage.IStorageWallets = {};
@@ -73,7 +73,7 @@ export const trimWallets = (wallets: IWalletsState) => {
     return trimmedWallets;
 };
 
-const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
+export const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
     const trimmedTokens: IExtStorage.IStorageTokens = {};
 
     Object.keys(tokens).map((blockchain: string) => {
@@ -101,16 +101,22 @@ const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageTokens => {
     return trimmedTokens;
 };
 
-const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
+const trimPrefBlockchains = (blockchains: IBlockchainsOptions) => {
+    return Object.keys(blockchains)
+        .filter((blockchain: Blockchain) => blockchains[blockchain].active === true)
+        .sort((a, b) => blockchains[a].order - blockchains[b].order);
+};
+
+export const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
     return {
         currency: preferences.currency,
         testNet: preferences.testNet,
         networks: cloneDeep(preferences.networks),
-        blockchains: Object.keys(preferences.blockchains)
+        blockchains: trimPrefBlockchains(preferences.blockchains)
     };
 };
 
-const trimContacts = (contacts: IContactsState): IExtStorage.IStorageContact[] => {
+export const trimContacts = (contacts: IContactsState): IExtStorage.IStorageContact[] => {
     return Object.values(contacts);
 };
 

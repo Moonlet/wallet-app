@@ -2,24 +2,20 @@ import React from 'react';
 import { View } from 'react-native';
 import { Text } from '../../library';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
-import { ITheme } from '../../core/theme/itheme';
 import stylesProvider from './styles';
-import { withTheme } from '../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { formatAddress } from '../../core/utils/format-address';
 import { Amount } from '../amount/amount';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
-
-export interface IProps {
-    styles: ReturnType<typeof stylesProvider>;
-    theme: ITheme;
-}
 
 export interface IExternalProps {
     account: IAccountState;
     token: ITokenState;
 }
 
-export const AccountAddressComponent = (props: IProps & IExternalProps) => {
+export const AccountAddressComponent = (
+    props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+) => {
     const styles = props.styles;
 
     const tokenConfig = getTokenConfig(props.account.blockchain, props.token.symbol);

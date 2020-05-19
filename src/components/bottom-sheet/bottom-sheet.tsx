@@ -13,6 +13,7 @@ import { openBottomSheet, closeBottomSheet } from '../../redux/ui/bottomSheet/ac
 import { BlockchainNavigationBottomSheet } from './blockchain-navigation-bottom-sheet/blockchain-navigation-bottom-sheet';
 import { normalize } from '../../styles/dimensions';
 import { LedgerConnectBottomSheet } from './ledger-connect-bottom-sheet/ledger-connect-bottom-sheet';
+import { WalletsBottomSheet } from './wallets-bottom-sheet/wallets-bottom-sheet';
 
 interface IReduxProps {
     bottomSheet: IBottomSheet;
@@ -131,6 +132,27 @@ export class BottomSheetComponent extends React.Component<
                             snapPoints={{
                                 initialSnap: Platform.OS === 'web' ? normalize(400) : 0,
                                 bottomSheetHeight: normalize(400)
+                            }}
+                            onClose={() => this.handleClose()}
+                        />
+                    </View>
+                );
+
+            case BottomSheetType.WALLETS:
+                return (
+                    <View style={this.props.styles.container}>
+                        <TouchableOpacity
+                            onPress={() => this.handleClose()}
+                            style={this.props.styles.container}
+                            activeOpacity={1}
+                        />
+                        <WalletsBottomSheet
+                            snapPoints={{
+                                initialSnap:
+                                    Platform.OS === 'web'
+                                        ? (Dimensions.get('window').height * 3) / 4
+                                        : 0,
+                                bottomSheetHeight: (Dimensions.get('window').height * 3) / 4
                             }}
                             onClose={() => this.handleClose()}
                         />

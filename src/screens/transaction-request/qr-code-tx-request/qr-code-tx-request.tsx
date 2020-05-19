@@ -13,7 +13,12 @@ import { BottomCta } from '../../../components/bottom-cta/bottom-cta';
 import { PrimaryCtaField } from '../../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { AmountCtaField } from '../../../components/bottom-cta/amount-cta-field/amount-cta-field';
 import { Text } from '../../../library';
-import { IWalletState, IAccountState } from '../../../redux/wallets/state';
+import {
+    IWalletState,
+    IAccountState,
+    ITokenState,
+    IWalletsState
+} from '../../../redux/wallets/state';
 import { IReduxState } from '../../../redux/state';
 import { getSelectedWallet, getSelectedAccount } from '../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
@@ -35,6 +40,7 @@ export interface IExternalProps {
 }
 
 export interface IReduxProps {
+    wallets: IWalletsState;
     wallet: IWalletState;
     selectedAccount: IAccountState;
     chainId: ChainIdType;
@@ -46,6 +52,7 @@ const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
 
     return {
+        wallets: state.wallets,
         wallet: getSelectedWallet(state),
         selectedAccount,
         chainId: getChainId(state, selectedAccount.blockchain),
@@ -174,6 +181,26 @@ export class QRCodeTransferRequestComponent extends React.Component<
         );
     }
 
+    private getWalletsByToken(tokenSymbol: string): IWalletState[] {
+        const walletsByToken: IWalletState[] = [];
+
+        Object.values(this.props.wallets).map((wallet: IWalletState) => {
+            wallet.accounts.map((account: IAccountState) => {
+                Object.keys(account.tokens).map((chainId: ChainIdType) => {
+                    Object.keys(account.tokens[chainId]).map((symbol: string) => {
+                        const token: ITokenState = account.tokens[chainId][symbol];
+
+                        if (token.symbol === tokenSymbol) {
+                            walletsByToken.push(wallet);
+                        }
+                    });
+                });
+            });
+        });
+
+        return walletsByToken;
+    }
+
     public render() {
         const { qrCodeTxPayload, styles, theme, selectedAccount } = this.props;
 
@@ -193,14 +220,23 @@ export class QRCodeTransferRequestComponent extends React.Component<
         const token = this.props.selectedAccount.tokens[this.props.chainId][config.coin];
         // TODO: sendingToken
 
+        const wallets = this.getWalletsByToken('XSGD');
+
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.container}>
-                    {this.renderField(
-                        translate('TransactionRequest.walletName'),
-                        this.props.wallet.name,
-                        { inputColor: theme.colors.text }
-                    )}
+                    <TouchableHighlight
+                        onPress={() => {
+                            this.props.openBottomSheet(BottomSheetType.WALLETS, { wallets });
+                        }}
+                        underlayColor={theme.colors.appBackground}
+                    >
+                        {this.renderField(
+                            translate('TransactionRequest.walletName'),
+                            this.props.wallet.name,
+                            { inputColor: theme.colors.text, leftIcon: 'chevron-down' }
+                        )}
+                    </TouchableHighlight>
 
                     <TouchableHighlight
                         onPress={() => {

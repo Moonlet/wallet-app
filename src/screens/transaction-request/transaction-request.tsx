@@ -113,17 +113,17 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     public componentDidMount() {
         if (this.props.requestId) {
-            this.getTransferPayload();
+            this.getExtensionTxPayload();
         }
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.requestId !== prevProps.requestId && this.props.requestId !== null) {
-            this.getTransferPayload();
+            this.getExtensionTxPayload();
         }
     }
 
-    private async getTransferPayload() {
+    private async getExtensionTxPayload() {
         try {
             const payload = await ConnectExtensionWeb.getRequestIdParams(this.props.requestId);
 
@@ -185,7 +185,7 @@ export class TransactionRequestScreenComponent extends React.Component<
         }
     }
 
-    private renderMoonletTransferForm() {
+    private renderExtensionTx() {
         const { extensionTxPayload, qrCodeTxPayload } = this.state;
         const { styles } = this.props;
 
@@ -238,7 +238,7 @@ export class TransactionRequestScreenComponent extends React.Component<
                 <View style={styles.container}>
                     <Text style={styles.title}>{translate('TransactionRequest.title')}</Text>
 
-                    <View style={styles.content}>{this.renderMoonletTransferForm()}</View>
+                    <View style={styles.content}>{this.renderExtensionTx()}</View>
 
                     <TouchableOpacity
                         onPress={() => this.cancelTransactionRequest()}

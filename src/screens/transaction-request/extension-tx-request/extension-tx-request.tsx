@@ -16,7 +16,7 @@ import { AmountCtaField } from '../../../components/bottom-cta/amount-cta-field/
 import { Text } from '../../../library';
 
 export interface IExternalProps {
-    moonletTransferPayload: any;
+    extensionTxPayload: any;
     callback: () => void;
 }
 
@@ -36,22 +36,22 @@ export const ExtensionTransferRequestComponent = (
         );
     };
 
-    const { moonletTransferPayload } = props;
+    const { extensionTxPayload } = props;
 
-    const account = moonletTransferPayload.account;
+    const account = extensionTxPayload.account;
     const blockchain = account.blockchain;
 
     const from = formatAddress(account.address, blockchain);
-    const recipient = formatAddress(moonletTransferPayload.toAddress, blockchain);
+    const recipient = formatAddress(extensionTxPayload.toAddress, blockchain);
 
-    const formattedAmount = formatNumber(new BigNumber(moonletTransferPayload.amount), {
+    const formattedAmount = formatNumber(new BigNumber(extensionTxPayload.amount), {
         currency: getBlockchain(blockchain).config.coin
     });
 
-    const tokenConfig = getTokenConfig(blockchain, moonletTransferPayload.token);
+    const tokenConfig = getTokenConfig(blockchain, extensionTxPayload.token);
 
     const stdAmount = getBlockchain(blockchain).account.amountToStd(
-        new BigNumber(moonletTransferPayload.amount),
+        new BigNumber(extensionTxPayload.amount),
         tokenConfig.decimals
     );
 
@@ -60,7 +60,7 @@ export const ExtensionTransferRequestComponent = (
             <View style={props.styles.container}>
                 {renderField(
                     translate('TransactionRequest.walletName'),
-                    moonletTransferPayload.walletName
+                    extensionTxPayload.walletName
                 )}
                 {renderField(
                     translate('TransactionRequest.accountName'),
@@ -70,9 +70,9 @@ export const ExtensionTransferRequestComponent = (
                 {renderField(translate('App.labels.recipient'), recipient)}
                 {renderField(translate('App.labels.amount'), formattedAmount)}
                 <FeeTotal
-                    amount={moonletTransferPayload.feeOptions.feeTotal}
+                    amount={extensionTxPayload.feeOptions.feeTotal}
                     blockchain={blockchain}
-                    tokenSymbol={moonletTransferPayload.token}
+                    tokenSymbol={extensionTxPayload.token}
                     options={{
                         backgroundColor: props.theme.colors.inputBackground
                     }}
@@ -81,7 +81,7 @@ export const ExtensionTransferRequestComponent = (
 
             <BottomCta
                 label={translate('App.labels.confirm')}
-                disabled={moonletTransferPayload === undefined}
+                disabled={extensionTxPayload === undefined}
                 onPress={() => props.callback()}
             >
                 <PrimaryCtaField

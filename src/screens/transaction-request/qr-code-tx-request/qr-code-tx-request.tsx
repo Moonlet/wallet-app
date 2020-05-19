@@ -30,7 +30,7 @@ import { openBottomSheet } from '../../../redux/ui/bottomSheet/actions';
 import { Icon } from '../../../components/icon';
 
 export interface IExternalProps {
-    gitcoinTransferPayload: any;
+    qrCodeTxPayload: any;
     callback: () => void;
 }
 
@@ -77,13 +77,10 @@ export class QRCodeTransferRequestComponent extends React.Component<
     }
 
     public componentDidMount() {
-        if (this.props.gitcoinTransferPayload) {
-            const formattedAmount = formatNumber(
-                new BigNumber(this.props.gitcoinTransferPayload.amount),
-                {
-                    currency: getBlockchain(this.props.selectedAccount.blockchain).config.coin
-                }
-            );
+        if (this.props.qrCodeTxPayload) {
+            const formattedAmount = formatNumber(new BigNumber(this.props.qrCodeTxPayload.amount), {
+                currency: getBlockchain(this.props.selectedAccount.blockchain).config.coin
+            });
 
             this.setState({ amount: formattedAmount });
         }
@@ -94,7 +91,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
         value: string,
         options?: { isAmount?: boolean; inputColor?: string; leftIcon?: string }
     ) {
-        const { styles, gitcoinTransferPayload, theme } = this.props;
+        const { styles, qrCodeTxPayload, theme } = this.props;
 
         let allBalance;
         let tokenConfig;
@@ -103,7 +100,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
         if (options?.isAmount) {
             blockchain = this.props.selectedAccount.blockchain;
 
-            tokenConfig = getTokenConfig(blockchain, gitcoinTransferPayload.token);
+            tokenConfig = getTokenConfig(blockchain, qrCodeTxPayload.token);
 
             allBalance =
                 this.props.selectedAccount &&
@@ -178,18 +175,18 @@ export class QRCodeTransferRequestComponent extends React.Component<
     }
 
     public render() {
-        const { gitcoinTransferPayload, styles, theme, selectedAccount } = this.props;
+        const { qrCodeTxPayload, styles, theme, selectedAccount } = this.props;
 
-        const account = gitcoinTransferPayload.account;
+        const account = qrCodeTxPayload.account;
         const blockchain = account.blockchain;
 
-        const recipient = formatAddress(gitcoinTransferPayload.toAddress, blockchain);
+        const recipient = formatAddress(qrCodeTxPayload.toAddress, blockchain);
 
-        const tokenConfig = getTokenConfig(blockchain, gitcoinTransferPayload.token);
+        const tokenConfig = getTokenConfig(blockchain, qrCodeTxPayload.token);
         const config = getBlockchain(this.props.selectedAccount.blockchain).config;
 
         const stdAmount = getBlockchain(blockchain).account.amountToStd(
-            new BigNumber(gitcoinTransferPayload.amount),
+            new BigNumber(qrCodeTxPayload.amount),
             tokenConfig.decimals
         );
 
@@ -234,7 +231,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                         token={token}
                         sendingToken={token} // TODO
                         account={this.props.selectedAccount}
-                        toAddress={gitcoinTransferPayload.toAddress}
+                        toAddress={qrCodeTxPayload.toAddress}
                         onFeesChanged={(feeOptions: IFeeOptions) => {
                             // this.onFeesChanged(feeOptions);
                         }}
@@ -249,7 +246,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
                 <BottomCta
                     label={translate('App.labels.confirm')}
-                    disabled={gitcoinTransferPayload === undefined}
+                    disabled={qrCodeTxPayload === undefined}
                     onPress={() => this.props.callback()}
                 >
                     <PrimaryCtaField

@@ -39,8 +39,8 @@ const mapDispatchToProps = {
 };
 
 export interface IState {
-    moonletTransferPayload: any;
-    gitcoinTransferPayload: any;
+    extensionTxPayload: any;
+    qrCodeTxPayload: any;
     isError: boolean;
 }
 
@@ -51,9 +51,9 @@ export class TransactionRequestScreenComponent extends React.Component<
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.state = {
-            moonletTransferPayload: undefined,
+            extensionTxPayload: undefined,
             isError: false,
-            gitcoinTransferPayload: {
+            qrCodeTxPayload: {
                 account: {
                     index: 0,
                     selected: true,
@@ -128,16 +128,16 @@ export class TransactionRequestScreenComponent extends React.Component<
             const payload = await ConnectExtensionWeb.getRequestIdParams(this.props.requestId);
 
             if (payload) {
-                this.setState({ moonletTransferPayload: payload });
+                this.setState({ extensionTxPayload: payload });
             } else {
                 this.setState({
-                    moonletTransferPayload: undefined,
+                    extensionTxPayload: undefined,
                     isError: true
                 });
             }
         } catch {
             this.setState({
-                moonletTransferPayload: undefined,
+                extensionTxPayload: undefined,
                 isError: true
             });
         }
@@ -166,17 +166,17 @@ export class TransactionRequestScreenComponent extends React.Component<
                 { sensitive: true, showCloseButton: true }
             );
 
-            const { moonletTransferPayload } = this.state;
+            const { extensionTxPayload } = this.state;
 
             this.props.sendTransferTransaction(
-                moonletTransferPayload.account,
-                moonletTransferPayload.toAddress,
-                moonletTransferPayload.amount,
-                moonletTransferPayload.token,
-                moonletTransferPayload.feeOptions,
+                extensionTxPayload.account,
+                extensionTxPayload.toAddress,
+                extensionTxPayload.amount,
+                extensionTxPayload.token,
+                extensionTxPayload.feeOptions,
                 password,
                 undefined, // navigation - not needed
-                moonletTransferPayload.extraFields,
+                extensionTxPayload.extraFields,
                 false, // goBack
                 { requestId: this.props.requestId }
             );
@@ -186,20 +186,20 @@ export class TransactionRequestScreenComponent extends React.Component<
     }
 
     private renderMoonletTransferForm() {
-        const { moonletTransferPayload, gitcoinTransferPayload } = this.state;
+        const { extensionTxPayload, qrCodeTxPayload } = this.state;
         const { styles } = this.props;
 
-        if (moonletTransferPayload) {
+        if (extensionTxPayload) {
             return (
                 <ExtensionTransferRequest
-                    moonletTransferPayload={moonletTransferPayload}
+                    extensionTxPayload={extensionTxPayload}
                     callback={() => this.confirm()}
                 />
             );
-        } else if (gitcoinTransferPayload) {
+        } else if (qrCodeTxPayload) {
             return (
                 <QRCodeTransferRequest
-                    gitcoinTransferPayload={gitcoinTransferPayload}
+                    qrCodeTxPayload={qrCodeTxPayload}
                     callback={() => this.confirm()}
                 />
             );

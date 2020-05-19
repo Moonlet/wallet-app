@@ -26,6 +26,10 @@ export interface IExternalProps {
     toAddress: string;
     onFeesChanged: (feeOptions: IFeeOptions) => any;
     insufficientFundsFees: boolean;
+    options?: {
+        feeTotalBackgroundColor?: string;
+        feeLabelLeftPadding?: number;
+    };
 }
 
 interface IState {
@@ -64,24 +68,28 @@ export class FeeOptionsComponent extends React.Component<
     }
 
     public async getEstimatedFees() {
-        const blockchainInstance = getBlockchain(this.props.account.blockchain);
-        const tokenSendingToken = getTokenConfig(
-            this.props.account.blockchain,
-            this.props.sendingToken.symbol
-        );
-
-        const fees = await blockchainInstance
-            .getClient(this.props.chainId)
-            .calculateFees(
-                this.props.account.address,
-                this.props.toAddress,
-                1,
-                tokenSendingToken.contractAddress,
-                tokenSendingToken.type
+        try {
+            const blockchainInstance = getBlockchain(this.props.account.blockchain);
+            const tokenSendingToken = getTokenConfig(
+                this.props.account.blockchain,
+                this.props.sendingToken.symbol
             );
 
-        this.setState({ feeOptions: fees, isLoading: false });
-        this.props.onFeesChanged(fees);
+            const fees = await blockchainInstance
+                .getClient(this.props.chainId)
+                .calculateFees(
+                    this.props.account.address,
+                    this.props.toAddress,
+                    1,
+                    tokenSendingToken.contractAddress,
+                    tokenSendingToken.type
+                );
+
+            this.setState({ feeOptions: fees, isLoading: false });
+            this.props.onFeesChanged(fees);
+        } catch (err) {
+            //
+        }
     }
 
     @bind
@@ -135,6 +143,10 @@ export class FeeOptionsComponent extends React.Component<
                             amount={this.state.feeOptions.feeTotal}
                             blockchain={this.props.account.blockchain}
                             tokenSymbol={this.props.token.symbol}
+                            options={{
+                                backgroundColor: this.props.options?.feeTotalBackgroundColor,
+                                labelLeftPadding: this.props.options?.feeLabelLeftPadding
+                            }}
                         />
                     )
                 );
@@ -185,6 +197,10 @@ export class FeeOptionsComponent extends React.Component<
                         blockchain={this.props.account.blockchain}
                         onInputFees={this.onInputAdvancedFees}
                         token={this.props.token}
+                        options={{
+                            feeTotalBackgroundColor: this.props.options?.feeTotalBackgroundColor,
+                            feeLabelLeftPadding: this.props.options?.feeLabelLeftPadding
+                        }}
                     />
                 )
             );

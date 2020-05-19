@@ -13,18 +13,11 @@ import { sendTransferTransaction } from '../../redux/wallets/actions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import Icon from '../../components/icon';
 import { normalize } from '../../styles/dimensions';
-import { formatAddress } from '../../core/utils/format-address';
-import { FeeTotal } from '../send/components/fee-total/fee-total';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
-import { formatNumber } from '../../core/utils/format-number';
-import BigNumber from 'bignumber.js';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { ResponsePayloadType } from '../../core/connect-extension/types';
-import { BottomCta } from '../../components/bottom-cta/bottom-cta';
-import { getTokenConfig } from '../../redux/tokens/static-selectors';
-import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
-import { AmountCtaField } from '../../components/bottom-cta/amount-cta-field/amount-cta-field';
+import { MoonletTransferTxRequest } from './moonlet-transfer/moonlet-transfer';
+import { GitcoinTransferTxRequest } from './gitcoint-transfer/gitcoint-transfer';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -47,6 +40,7 @@ const mapDispatchToProps = {
 
 export interface IState {
     moonletTransferPayload: any;
+    gitcoinTransferPayload: any;
     isError: boolean;
 }
 
@@ -58,7 +52,62 @@ export class TransactionRequestScreenComponent extends React.Component<
         super(props);
         this.state = {
             moonletTransferPayload: undefined,
-            isError: false
+            isError: false,
+            gitcoinTransferPayload: {
+                account: {
+                    index: 0,
+                    selected: true,
+                    blockchain: 'ZILLIQA',
+                    address: 'zil14dsu2756fvn59f9ryhkdnemmtkn87e3672pfkr',
+                    publicKey: '0364108fe09586a87a446a5be6c38824db88d58d5aa487de02d37ab47a7b61e681',
+                    tokens: {
+                        '1': {
+                            ZIL: {
+                                symbol: 'ZIL',
+                                order: 0,
+                                active: true,
+                                balance: { value: '0', inProgress: false }
+                            }
+                        },
+                        '333': {
+                            ZIL: {
+                                symbol: 'ZIL',
+                                order: 0,
+                                active: true,
+                                balance: {
+                                    value: '631904500000000',
+                                    inProgress: false,
+                                    timestamp: '2020-05-18T15:06:52.680Z'
+                                }
+                            },
+                            XSGD: {
+                                symbol: 'XSGD',
+                                order: 1,
+                                active: true,
+                                balance: {
+                                    value: '0',
+                                    inProgress: false,
+                                    error: {
+                                        error: {
+                                            code: -5,
+                                            data: null,
+                                            message: 'Address not contract address'
+                                        },
+                                        id: 41,
+                                        jsonrpc: '2.0'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                toAddress: 'zil14dsu2756fvn59f9ryhkdnemmtkn87e3672pfkr',
+                amount: '0.1',
+                token: 'ZIL',
+                feeOptions: { gasPrice: '1000000000', gasLimit: '1', feeTotal: '1000000000' },
+                extraFields: { memo: '' },
+                walletName: 'Wallet 1'
+            }
         };
     }
 
@@ -137,68 +186,22 @@ export class TransactionRequestScreenComponent extends React.Component<
     }
 
     private renderMoonletTransferForm() {
-        const { moonletTransferPayload } = this.state;
+        const { moonletTransferPayload, gitcoinTransferPayload } = this.state;
         const { styles } = this.props;
 
         if (moonletTransferPayload) {
-            const account = moonletTransferPayload.account;
-            const blockchain = account.blockchain;
-
-            const from = formatAddress(account.address, blockchain);
-            const recipient = formatAddress(moonletTransferPayload.toAddress, blockchain);
-
-            const formattedAmount = formatNumber(new BigNumber(moonletTransferPayload.amount), {
-                currency: getBlockchain(blockchain).config.coin
-            });
-
-            const tokenConfig = getTokenConfig(blockchain, moonletTransferPayload.token);
-
-            const blockchainInstance = getBlockchain(blockchain);
-
-            const stdAmount = blockchainInstance.account.amountToStd(
-                new BigNumber(moonletTransferPayload.amount),
-                tokenConfig.decimals
-            );
-
             return (
-                <View style={{ flex: 1 }}>
-                    <View style={styles.moonletTransferContainer}>
-                        {this.renderField(
-                            translate('TransactionRequest.walletName'),
-                            moonletTransferPayload.walletName
-                        )}
-                        {this.renderField(
-                            translate('TransactionRequest.accountName'),
-                            account?.name || `Account ${account.index + 1}`
-                        )}
-                        {this.renderField(translate('App.labels.from'), from)}
-                        {this.renderField(translate('App.labels.recipient'), recipient)}
-                        {this.renderField(translate('App.labels.amount'), formattedAmount)}
-                        <FeeTotal
-                            amount={moonletTransferPayload.feeOptions.feeTotal}
-                            blockchain={blockchain}
-                            tokenSymbol={moonletTransferPayload.token}
-                            backgroundColor={this.props.theme.colors.inputBackground}
-                        />
-                    </View>
-
-                    <BottomCta
-                        label={translate('App.labels.confirm')}
-                        disabled={this.state.moonletTransferPayload === undefined}
-                        onPress={() => this.confirm()}
-                    >
-                        <PrimaryCtaField
-                            label={translate('App.labels.send')}
-                            action={translate('App.labels.to')}
-                            value={recipient}
-                        />
-                        <AmountCtaField
-                            tokenConfig={tokenConfig}
-                            stdAmount={stdAmount}
-                            account={account}
-                        />
-                    </BottomCta>
-                </View>
+                <MoonletTransferTxRequest
+                    moonletTransferPayload={moonletTransferPayload}
+                    callback={() => this.confirm()}
+                />
+            );
+        } else if (gitcoinTransferPayload) {
+            return (
+                <GitcoinTransferTxRequest
+                    gitcoinTransferPayload={gitcoinTransferPayload}
+                    callback={() => this.confirm()}
+                />
             );
         } else if (this.state.isError) {
             return (
@@ -225,19 +228,6 @@ export class TransactionRequestScreenComponent extends React.Component<
                 </View>
             );
         }
-    }
-
-    private renderField(label: string, value: string) {
-        const { styles } = this.props;
-
-        return (
-            <View style={styles.inputContainer}>
-                <Text style={styles.receipientLabel}>{label}</Text>
-                <View style={styles.inputBox}>
-                    <Text style={styles.confirmTransactionText}>{value}</Text>
-                </View>
-            </View>
-        );
     }
 
     public render() {

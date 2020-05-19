@@ -15,6 +15,7 @@ export const translation: ITranslations = {
                 all: 'All',
                 amount: 'Amount',
                 average: 'Average',
+                balance: 'Balance',
                 cancel: 'Cancel',
                 cheap: 'Cheap',
                 check: 'Check',

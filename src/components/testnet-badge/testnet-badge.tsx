@@ -28,10 +28,14 @@ const mapStateToProps = (state: IReduxState) => {
     };
 };
 
+export interface IExternalProps {
+    isVisible?: boolean;
+}
+
 export const TestnetBadgeComponent = (
-    props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    if (props.testNet) {
+    if (props?.isVisible || props.testNet) {
         return (
             <View style={props.styles.container}>
                 <Text style={props.styles.text}>
@@ -47,7 +51,7 @@ export const TestnetBadgeComponent = (
     }
 };
 
-export const TestnetBadge = smartConnect(TestnetBadgeComponent, [
+export const TestnetBadge = smartConnect<IExternalProps>(TestnetBadgeComponent, [
     connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

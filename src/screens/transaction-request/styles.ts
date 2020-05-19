@@ -45,10 +45,11 @@ export default (theme: ITheme) =>
             letterSpacing: 0.38,
             textAlign: 'center',
             fontWeight: 'bold',
-            marginBottom: BASE_DIMENSION * 4
+            marginBottom: BASE_DIMENSION
         },
         content: {
-            flex: 1
+            flex: 1,
+            paddingTop: BASE_DIMENSION * 4 // maybe remove this
         },
         moonletTransferContainer: {
             flex: 1,

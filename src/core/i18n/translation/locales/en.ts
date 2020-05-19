@@ -447,7 +447,9 @@ export const translation: ITranslations = {
             errorMsgToken:
                 'This transaction request is not supported. Please go to  Dashboard > Menu > Manage account and add {{token}} token.',
             errorMsgGeneral:
-                'This transaction request is not supported. Please create a ticket and let us know what you tried to do and what went wrong.'
+                'This transaction request is not supported. Please create a ticket and let us know what you tried to do and what went wrong.',
+            insufficientFunds:
+                'You don’t have enough founds for this transaction request. Either select a different wallet/account or add more founds to this account.'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -17,9 +17,10 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { ResponsePayloadType } from '../../core/connect-extension/types';
 import { ExtensionTransferRequest } from './extension-tx-request/extension-tx-request';
-import { QRCodeTransferRequest } from './qr-code-tx-request/qr-code-tx-request';
+import { QRCodeTransferRequest, IQRCodeTxPayload } from './qr-code-tx-request/qr-code-tx-request';
 import { openURL } from '../../core/utils/linking-handler';
 import CONFIG from '../../config';
+import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -42,7 +43,7 @@ const mapDispatchToProps = {
 
 export interface IState {
     extensionTxPayload: any;
-    qrCodeTxPayload: any;
+    qrCodeTxPayload: IQRCodeTxPayload;
     error: {
         extensionError: boolean;
         generalError: boolean;
@@ -63,62 +64,15 @@ export class TransactionRequestScreenComponent extends React.Component<
                 tokenError: undefined
             },
             extensionTxPayload: undefined,
-            qrCodeTxPayload: undefined
-            // qrCodeTxPayload: {
-            //     account: {
-            //         index: 0,
-            //         selected: true,
-            //         blockchain: 'ZILLIQA',
-            //         address: 'zil14dsu2756fvn59f9ryhkdnemmtkn87e3672pfkr',
-            //         publicKey: '0364108fe09586a87a446a5be6c38824db88d58d5aa487de02d37ab47a7b61e681',
-            //         tokens: {
-            //             '1': {
-            //                 ZIL: {
-            //                     symbol: 'ZIL',
-            //                     order: 0,
-            //                     active: true,
-            //                     balance: { value: '0', inProgress: false }
-            //                 }
-            //             },
-            //             '333': {
-            //                 ZIL: {
-            //                     symbol: 'ZIL',
-            //                     order: 0,
-            //                     active: true,
-            //                     balance: {
-            //                         value: '631904500000000',
-            //                         inProgress: false,
-            //                         timestamp: '2020-05-18T15:06:52.680Z'
-            //                     }
-            //                 },
-            //                 XSGD: {
-            //                     symbol: 'XSGD',
-            //                     order: 1,
-            //                     active: true,
-            //                     balance: {
-            //                         value: '0',
-            //                         inProgress: false,
-            //                         error: {
-            //                             error: {
-            //                                 code: -5,
-            //                                 data: null,
-            //                                 message: 'Address not contract address'
-            //                             },
-            //                             id: 41,
-            //                             jsonrpc: '2.0'
-            //                         }
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     },
-            //     toAddress: 'zil14dsu2756fvn59f9ryhkdnemmtkn87e3672pfkr',
-            //     amount: '0.1',
-            //     token: 'ZIL',
-            //     feeOptions: { gasPrice: '1000000000', gasLimit: '1', feeTotal: '1000000000' },
-            //     extraFields: { memo: '' },
-            //     walletName: 'Wallet 1'
-            // }
+            // qrCodeTxPayload: undefined
+            qrCodeTxPayload: {
+                address: 'zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8',
+                chainId: 333,
+                function: undefined, // /Transfer
+                params: `amount=1e12`
+                // params: amount=1e3&ByStr20-to=zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8
+                // params: amount=1e12&Uint128-amount=1e3&ByStr20-to=zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8
+            }
         };
     }
 
@@ -202,6 +156,10 @@ export class TransactionRequestScreenComponent extends React.Component<
         }
     }
 
+    // private getQrCodeTxPayload() {
+    //     //
+    // }
+
     private renderExtensionTx() {
         const { extensionTxPayload, qrCodeTxPayload } = this.state;
         const { styles } = this.props;
@@ -270,6 +228,8 @@ export class TransactionRequestScreenComponent extends React.Component<
             return (
                 <View style={styles.container}>
                     <Text style={styles.title}>{translate('TransactionRequest.title')}</Text>
+
+                    <TestnetBadge isVisible={this.state.qrCodeTxPayload.chainId !== undefined} />
 
                     <View style={styles.content}>{this.renderExtensionTx()}</View>
 

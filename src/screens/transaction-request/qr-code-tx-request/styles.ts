@@ -9,7 +9,7 @@ import {
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            flex: 1,
+            flexGrow: 1,
             paddingHorizontal: BASE_DIMENSION * 2
         },
         inputContainer: {

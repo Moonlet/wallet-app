@@ -31,6 +31,7 @@ export const translation: ITranslations = {
                 contractAddress: 'Contract address',
                 copy: 'Copy',
                 create: 'Create',
+                createTicket: 'Create a ticket',
                 date: 'Date',
                 dateAndTime: 'Date and time',
                 decimals: 'Decimals',
@@ -442,7 +443,11 @@ export const translation: ITranslations = {
             title: 'Transaction request',
             walletName: 'Wallet name',
             accountName: 'Account name',
-            errorMessage: 'Transaction request is not valid anymore.'
+            errorMsgExtension: 'Transaction request is not valid anymore.',
+            errorMsgToken:
+                'This transaction request is not supported. Please go to  Dashboard > Menu > Manage account and add {{token}} token.',
+            errorMsgGeneral:
+                'This transaction request is not supported. Please create a ticket and let us know what you tried to do and what went wrong.'
         }
     },
     plural: (n: number, ord?: boolean) => {

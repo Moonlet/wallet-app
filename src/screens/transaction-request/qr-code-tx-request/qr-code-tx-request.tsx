@@ -37,6 +37,7 @@ import { Icon } from '../../../components/icon';
 export interface IExternalProps {
     qrCodeTxPayload: any;
     callback: () => void;
+    errorToken: (tokenSymbol: string) => void;
 }
 
 export interface IReduxProps {
@@ -210,8 +211,8 @@ export class QRCodeTransferRequestComponent extends React.Component<
         const recipient = formatAddress(qrCodeTxPayload.toAddress, blockchain);
 
         const tokenConfig = getTokenConfig(blockchain, qrCodeTxPayload.token);
-        const config = getBlockchain(this.props.selectedAccount.blockchain).config;
 
+        const config = getBlockchain(blockchain).config;
         const stdAmount = getBlockchain(blockchain).account.amountToStd(
             new BigNumber(qrCodeTxPayload.amount),
             tokenConfig.decimals
@@ -220,14 +221,16 @@ export class QRCodeTransferRequestComponent extends React.Component<
         const token = this.props.selectedAccount.tokens[this.props.chainId][config.coin];
         // TODO: sendingToken
 
-        const wallets = this.getWalletsByToken('XSGD');
+        const tokenSymbol: string = 'XSGD';
 
         return (
             <View style={{ flex: 1 }}>
                 <View style={styles.container}>
                     <TouchableHighlight
                         onPress={() => {
-                            this.props.openBottomSheet(BottomSheetType.WALLETS, { wallets });
+                            this.props.openBottomSheet(BottomSheetType.WALLETS, {
+                                wallets: this.getWalletsByToken(tokenSymbol)
+                            });
                         }}
                         underlayColor={theme.colors.appBackground}
                     >

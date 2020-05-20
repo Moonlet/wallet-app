@@ -22,22 +22,18 @@ import { openURL } from '../../core/utils/linking-handler';
 import CONFIG from '../../config';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { getUrlParams } from '../../core/connect-extension/utils';
-import { getSelectedBlockchain } from '../../redux/wallets/selectors';
-import { Blockchain } from '../../core/blockchain/types';
 
 export interface IReduxProps {
     isVisible: boolean;
     requestId: string;
     closeTransactionRequest: typeof closeTransactionRequest;
     sendTransferTransaction: typeof sendTransferTransaction;
-    blockchain: Blockchain;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
     return {
         isVisible: state.ui.transactionRequest.isVisible,
-        requestId: state.ui.transactionRequest.requestId,
-        blockchain: getSelectedBlockchain(state)
+        requestId: state.ui.transactionRequest.requestId
     };
 };
 
@@ -65,7 +61,7 @@ export class TransactionRequestScreenComponent extends React.Component<
         this.state = {
             error: {
                 extensionError: false,
-                generalError: true,
+                generalError: false,
                 tokenError: undefined
             },
             extensionTxPayload: undefined,
@@ -78,8 +74,15 @@ export class TransactionRequestScreenComponent extends React.Component<
             this.getExtensionTxPayload();
         }
 
+        // const qrCode =
+        //     'zilliqa:zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8@333/?amount=1000000000000';
+
+        // const qrCode =
+        //     'zilliqa://zil148fy8yjxn6jf5w36kqc7x73qd3ufuu24a4u8t9/Transfer?Uint128-amount=1000&ByStr20-to=zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8';
+
         const qrCode =
-            'zilliqa:zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8@333/?amount=1000000000000';
+            'zilliqa://zil1n0006zrsdtl0zj5mwac2rkaa442f4d37hntkv7/proxyTransfer?Uint128-amount=1000&ByStr20-to=zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8';
+
         this.getQrCodeTxPayload(qrCode);
     }
 
@@ -174,37 +177,49 @@ export class TransactionRequestScreenComponent extends React.Component<
         };
 
         const res = regex.exec(code);
-        // console.log('res: ', res);
 
         if (res) {
+            // Address - bech32 address (ZIP-1 standard) | ZNS address
             const address = res[2];
-            // console.log('address: ', address);
             if (address && address !== '') {
                 qrCodeTxPayload.address = address;
             }
 
+            // ChainId
             const chainId = res[4];
-            // console.log('chainId: ', chainId);
             if (chainId && chainId !== '') {
-                qrCodeTxPayload.chainId =
-                    this.props.blockchain === Blockchain.ZILLIQA ? Number(chainId) : chainId;
+                // TODO: Number is used for Zilliqa
+                // But if we need String, refactor this
+                qrCodeTxPayload.chainId = Number(chainId);
             }
 
+            // Function
             const fct = res[5];
-            // console.log('fct: ', fct);
             if (fct && fct !== '') {
                 qrCodeTxPayload.fct = fct;
             }
 
             const extraData: any = getUrlParams(res[6]);
-            // console.log('extraData: ', extraData);
 
             if (extraData) {
-                const amount = extraData?.amount;
-                // console.log('amount: ', amount);
+                // Amount
+                if (extraData?.amoun) {
+                    qrCodeTxPayload.params.amount = extraData.amount;
+                }
 
-                if (amount) {
-                    qrCodeTxPayload.params.amount = amount;
+                // Gas Price
+                if (extraData?.gasPrice) {
+                    qrCodeTxPayload.params.gasPrice = extraData.gasPrice;
+                }
+
+                // Gas Limit
+                if (extraData?.gasLimit) {
+                    qrCodeTxPayload.params.gasLimit = extraData.gasLimit;
+                }
+
+                // ByStr20-to
+                if (extraData['ByStr20-to']) {
+                    qrCodeTxPayload.params.ByStr20To = extraData['ByStr20-to'];
                 }
             }
 
@@ -218,24 +233,7 @@ export class TransactionRequestScreenComponent extends React.Component<
         const { styles } = this.props;
         const { extensionError, generalError, tokenError } = this.state.error;
 
-        if (extensionTxPayload) {
-            return (
-                <ExtensionTransferRequest
-                    extensionTxPayload={extensionTxPayload}
-                    callback={() => this.confirm()}
-                />
-            );
-        } else if (qrCodeTxPayload) {
-            return (
-                <QRCodeTransferRequest
-                    qrCodeTxPayload={qrCodeTxPayload}
-                    callback={() => this.confirm()}
-                    errorToken={(tokenSymbol: string) =>
-                        this.setState({ error: { ...this.state.error, tokenError: tokenSymbol } })
-                    }
-                />
-            );
-        } else if (extensionError || generalError || tokenError) {
+        if (extensionError || generalError || tokenError) {
             const errorMessage = extensionError
                 ? translate('TransactionRequest.errorMsgExtension')
                 : tokenError
@@ -264,6 +262,23 @@ export class TransactionRequestScreenComponent extends React.Component<
                         </Button>
                     )}
                 </View>
+            );
+        } else if (extensionTxPayload) {
+            return (
+                <ExtensionTransferRequest
+                    extensionTxPayload={extensionTxPayload}
+                    callback={() => this.confirm()}
+                />
+            );
+        } else if (qrCodeTxPayload) {
+            return (
+                <QRCodeTransferRequest
+                    qrCodeTxPayload={qrCodeTxPayload}
+                    callback={() => this.confirm()}
+                    errorToken={(tokenSymbol: string) =>
+                        this.setState({ error: { ...this.state.error, tokenError: tokenSymbol } })
+                    }
+                />
             );
         } else {
             return (

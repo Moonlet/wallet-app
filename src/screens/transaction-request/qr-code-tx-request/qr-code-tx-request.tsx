@@ -34,15 +34,17 @@ import { openBottomSheet } from '../../../redux/ui/bottomSheet/actions';
 import { Icon } from '../../../components/icon';
 import { setNetworkTestNetChainId, toggleTestNet } from '../../../redux/preferences/actions';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { ITokensConfigState, ITokenConfigState } from '../../../redux/tokens/state';
 
 export interface IQRCodeTxPayload {
     address: string;
     chainId: ChainIdType;
-    fct: string; // ex: /Transfer /DoMagic
+    fct: string; // ex: /Transfer /DoMagic /proxyTransfer
     params: {
         amount?: string;
         gasPrice?: string;
         gasLimit?: string;
+        ByStr20To?: string;
     };
 }
 
@@ -62,6 +64,7 @@ export interface IReduxProps {
     setNetworkTestNetChainId: typeof setNetworkTestNetChainId;
     toggleTestNet: typeof toggleTestNet;
     isTestNet: boolean;
+    tokens: ITokensConfigState;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -73,7 +76,8 @@ const mapStateToProps = (state: IReduxState) => {
         selectedAccount,
         chainId: getChainId(state, selectedAccount.blockchain),
         exchangeRates: state.market.exchangeRates,
-        isTestNet: state.preferences.testNet
+        isTestNet: state.preferences.testNet,
+        tokens: state.tokens
     };
 };
 
@@ -100,16 +104,10 @@ export class QRCodeTransferRequestComponent extends React.Component<
     ) {
         super(props);
 
-        const tokenSymbol: string = undefined; // 'XSGD';
-        const config = getBlockchain(props.selectedAccount.blockchain).config;
-
         this.state = {
             amount: '0',
             chainId: props.qrCodeTxPayload?.chainId ? props.qrCodeTxPayload.chainId : props.chainId,
-            tokenSymbol:
-                tokenSymbol !== undefined
-                    ? tokenSymbol // ZRC-2
-                    : config.coin, // Default Native Coin
+            tokenSymbol: getBlockchain(props.selectedAccount.blockchain).config.coin, // Default Native Coin
             insufficientFunds: false,
             insufficientFundsFees: false
         };
@@ -117,6 +115,17 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
     public componentDidMount() {
         const { blockchain } = this.props.selectedAccount;
+        const { qrCodeTxPayload } = this.props;
+
+        if (qrCodeTxPayload?.fct === '/proxyTransfer') {
+            const tokenSymbol = this.searchContractAddressToken(qrCodeTxPayload.address);
+            if (tokenSymbol) {
+                // ZRC-2
+                this.setState({ tokenSymbol });
+            }
+
+            // this.props.errorToken(tokenSymbol)
+        }
 
         // TODO
         // Validate chainId
@@ -143,6 +152,23 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
             this.setState({ amount: amountFromStd.toString() });
         }
+    }
+
+    private searchContractAddressToken(contractAddress: string) {
+        const { tokens } = this.props;
+        let tokenSymbol;
+
+        Object.keys(tokens).map((blockchain: string) => {
+            Object.keys(tokens[blockchain]).map((chainId: ChainIdType) => {
+                Object.values(tokens[blockchain][chainId]).map((token: ITokenConfigState) => {
+                    if (token?.contractAddress === contractAddress) {
+                        tokenSymbol = token.symbol;
+                    }
+                });
+            });
+        });
+
+        return tokenSymbol;
     }
 
     private renderField(
@@ -249,7 +275,12 @@ export class QRCodeTransferRequestComponent extends React.Component<
         const { amount, chainId, tokenSymbol } = this.state;
         const { blockchain } = selectedAccount;
 
-        const recipient = formatAddress(qrCodeTxPayload.address, blockchain);
+        const recipient = formatAddress(
+            qrCodeTxPayload.params?.ByStr20To
+                ? qrCodeTxPayload.params.ByStr20To
+                : qrCodeTxPayload.address,
+            blockchain
+        );
 
         const config = getBlockchain(blockchain).config;
 

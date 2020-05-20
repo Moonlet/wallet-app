@@ -42,8 +42,9 @@ export interface IQRCodeTxPayload {
     fct: string; // ex: /Transfer /DoMagic /proxyTransfer
     params: {
         amount?: string;
-        gasPrice?: string;
-        gasLimit?: string;
+        amountUint128?: string;
+        gasPrice?: string; // TODO
+        gasLimit?: string; // TODO
         ByStr20To?: string;
     };
 }
@@ -51,14 +52,14 @@ export interface IQRCodeTxPayload {
 export interface IExternalProps {
     qrCodeTxPayload: IQRCodeTxPayload;
     callback: () => void;
-    errorToken: (tokenSymbol: string) => void;
+    showError: (options?: { tokenNotFound?: boolean }) => void;
 }
 
 export interface IReduxProps {
     wallets: IWalletsState;
     wallet: IWalletState;
     selectedAccount: IAccountState;
-    chainId: ChainIdType;
+    currentChainId: ChainIdType;
     exchangeRates: IExchangeRates;
     openBottomSheet: typeof openBottomSheet;
     setNetworkTestNetChainId: typeof setNetworkTestNetChainId;
@@ -74,7 +75,7 @@ const mapStateToProps = (state: IReduxState) => {
         wallets: state.wallets,
         wallet: getSelectedWallet(state),
         selectedAccount,
-        chainId: getChainId(state, selectedAccount.blockchain),
+        currentChainId: getChainId(state, selectedAccount.blockchain),
         exchangeRates: state.market.exchangeRates,
         isTestNet: state.preferences.testNet,
         tokens: state.tokens
@@ -106,47 +107,113 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
         this.state = {
             amount: '0',
-            chainId: props.qrCodeTxPayload?.chainId ? props.qrCodeTxPayload.chainId : props.chainId,
+            chainId: props.currentChainId,
             tokenSymbol: getBlockchain(props.selectedAccount.blockchain).config.coin, // Default Native Coin
             insufficientFunds: false,
             insufficientFundsFees: false
         };
     }
 
+    private isChainIdValid(chainId: ChainIdType): boolean {
+        // Make sure the ChainId is valid
+        const { blockchain } = this.props.selectedAccount;
+
+        const networksByChainId = getBlockchain(blockchain).networks.filter(
+            n => n.chainId === chainId
+        );
+
+        if (networksByChainId.length === 0) {
+            // Invalid ChainId
+            return false;
+        } else {
+            // Valid ChainId
+            return true;
+        }
+    }
+
     public componentDidMount() {
         const { blockchain } = this.props.selectedAccount;
         const { qrCodeTxPayload } = this.props;
 
+        // ZRC-2
         if (qrCodeTxPayload?.fct === '/proxyTransfer') {
-            const tokenSymbol = this.searchContractAddressToken(qrCodeTxPayload.address);
-            if (tokenSymbol) {
-                // ZRC-2
-                this.setState({ tokenSymbol });
-            }
+            if (qrCodeTxPayload?.chainId) {
+                // TestNet
+                if (this.isChainIdValid(qrCodeTxPayload.chainId)) {
+                    // Valid ChainId
 
-            // this.props.errorToken(tokenSymbol)
+                    const tokenSymbolOnChainId = this.searchTokenByContractAddressAndChainId(
+                        qrCodeTxPayload.address,
+                        qrCodeTxPayload.chainId
+                    );
+
+                    if (tokenSymbolOnChainId === undefined) {
+                        // Token is not in the requested ChainId
+                        this.props.showError({ tokenNotFound: true });
+                        return; // Show error, no need to continue anymore
+                    } else {
+                        this.setState({ tokenSymbol: tokenSymbolOnChainId });
+                    }
+                } else {
+                    // Invalid ChainId
+                    this.props.showError();
+                    return; // Show error, no need to continue anymore
+                }
+            } else {
+                // MainNet
+
+                const tokenSymbolOnChainId = this.searchTokenByContractAddressAndChainId(
+                    qrCodeTxPayload.address,
+                    this.props.currentChainId
+                );
+
+                if (tokenSymbolOnChainId === undefined) {
+                    // Token is not on MainNet
+                    this.props.showError({ tokenNotFound: true });
+                    return; // Show error, no need to continue anymore
+                } else {
+                    this.setState({ tokenSymbol: tokenSymbolOnChainId });
+                }
+            }
         }
 
-        // TODO
-        // Validate chainId
-        // ZRC-2: Make sure you have the token on that chainId
+        if (qrCodeTxPayload?.chainId) {
+            if (this.isChainIdValid(qrCodeTxPayload.chainId)) {
+                // Valid ChainId
+                // Set the ChainId of the user with the received one
+                this.props.setNetworkTestNetChainId(blockchain, qrCodeTxPayload.chainId);
 
-        if (this.props.chainId) {
-            if (this.props.isTestNet === false) {
-                // Activate TestNet
-                this.props.toggleTestNet();
+                // Activate testnet if disabled
+                if (qrCodeTxPayload?.chainId) {
+                    if (this.props.isTestNet === false) {
+                        // Activate TestNet
+                        this.props.toggleTestNet();
+                    }
+                }
+
+                this.setState({ chainId: qrCodeTxPayload.chainId });
+            } else {
+                // Invalid ChainId
+                this.props.showError();
+                return; // Show error, no need to continue anymore
             }
-            this.props.setNetworkTestNetChainId(blockchain, this.props.chainId);
         }
 
-        if (this.props.qrCodeTxPayload?.params?.amount) {
-            const tokenConfig = getTokenConfig(
-                this.props.selectedAccount.blockchain,
-                this.state.tokenSymbol
-            );
+        let amount: string;
+        if (qrCodeTxPayload?.params?.amount) {
+            amount = qrCodeTxPayload.params.amount;
+        }
+
+        // Amount Uint-128 is prioritary
+        if (qrCodeTxPayload?.params?.amountUint128) {
+            amount = qrCodeTxPayload.params.amountUint128;
+        }
+
+        if (amount) {
+            const tokenConfig = getTokenConfig(blockchain, this.state.tokenSymbol);
 
             const amountFromStd = getBlockchain(blockchain).account.amountFromStd(
-                new BigNumber(this.props.qrCodeTxPayload.params.amount),
+                new BigNumber(amount),
                 tokenConfig.decimals
             );
 
@@ -154,14 +221,20 @@ export class QRCodeTransferRequestComponent extends React.Component<
         }
     }
 
-    private searchContractAddressToken(contractAddress: string) {
+    private searchTokenByContractAddressAndChainId(
+        contractAddress: string,
+        searchChainId: ChainIdType
+    ) {
         const { tokens } = this.props;
         let tokenSymbol;
 
         Object.keys(tokens).map((blockchain: string) => {
             Object.keys(tokens[blockchain]).map((chainId: ChainIdType) => {
                 Object.values(tokens[blockchain][chainId]).map((token: ITokenConfigState) => {
-                    if (token?.contractAddress === contractAddress) {
+                    if (
+                        token?.contractAddress === contractAddress &&
+                        Number(chainId) === Number(searchChainId) // TODO
+                    ) {
                         tokenSymbol = token.symbol;
                     }
                 });
@@ -284,7 +357,8 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
         const config = getBlockchain(blockchain).config;
 
-        const token = selectedAccount.tokens[chainId][config.coin];
+        const token =
+            selectedAccount.tokens[chainId] && selectedAccount.tokens[chainId][config.coin];
         // TODO: sendingToken
 
         const tokenConfig = getTokenConfig(blockchain, tokenSymbol);

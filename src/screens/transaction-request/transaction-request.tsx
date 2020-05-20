@@ -48,7 +48,7 @@ export interface IState {
     error: {
         extensionError: boolean;
         generalError: boolean;
-        tokenError: string;
+        tokenError: boolean;
     };
 }
 
@@ -62,7 +62,7 @@ export class TransactionRequestScreenComponent extends React.Component<
             error: {
                 extensionError: false,
                 generalError: false,
-                tokenError: undefined
+                tokenError: false
             },
             extensionTxPayload: undefined,
             qrCodeTxPayload: undefined
@@ -81,7 +81,7 @@ export class TransactionRequestScreenComponent extends React.Component<
         //     'zilliqa://zil148fy8yjxn6jf5w36kqc7x73qd3ufuu24a4u8t9/Transfer?Uint128-amount=1000&ByStr20-to=zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8';
 
         const qrCode =
-            'zilliqa://zil1n0006zrsdtl0zj5mwac2rkaa442f4d37hntkv7/proxyTransfer?Uint128-amount=1000&ByStr20-to=zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8';
+            'zilliqa://zil1n0006zrsdtl0zj5mwac2rkaa442f4d37hntkv7@333/proxyTransfer?Uint128-amount=1e12&ByStr20-to=zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8';
 
         this.getQrCodeTxPayload(qrCode);
     }
@@ -160,6 +160,15 @@ export class TransactionRequestScreenComponent extends React.Component<
         }
     }
 
+    private setInvalidQrCodeUrl() {
+        this.setState({
+            error: {
+                ...this.state.error,
+                generalError: true
+            }
+        });
+    }
+
     private getQrCodeTxPayload(code: string) {
         const regex = new RegExp(
             /^zilliqa:(\/\/)?([^/@?\n\ ]*)(@([^/?\n\ ]*))?([^?\n\ ]*)?(\?([^\n\ ]*)?)?$/
@@ -183,6 +192,10 @@ export class TransactionRequestScreenComponent extends React.Component<
             const address = res[2];
             if (address && address !== '') {
                 qrCodeTxPayload.address = address;
+            } else {
+                // Invalid QR code because to_address is required
+                this.setInvalidQrCodeUrl();
+                return;
             }
 
             // ChainId
@@ -203,8 +216,22 @@ export class TransactionRequestScreenComponent extends React.Component<
 
             if (extraData) {
                 // Amount
-                if (extraData?.amoun) {
+                if (extraData?.amount) {
                     qrCodeTxPayload.params.amount = extraData.amount;
+                }
+
+                if (extraData['Uint128-amount']) {
+                    qrCodeTxPayload.params.amountUint128 = extraData['Uint128-amount'];
+                }
+
+                if (
+                    extraData?.amount &&
+                    extraData['Uint128-amount'] &&
+                    extraData.amount !== extraData['Uint128-amount']
+                ) {
+                    // Invalid URL
+                    this.setInvalidQrCodeUrl();
+                    return;
                 }
 
                 // Gas Price
@@ -223,7 +250,6 @@ export class TransactionRequestScreenComponent extends React.Component<
                 }
             }
 
-            // console.log('qrCodeTxPayload: ', qrCodeTxPayload);
             this.setState({ qrCodeTxPayload });
         }
     }
@@ -237,7 +263,7 @@ export class TransactionRequestScreenComponent extends React.Component<
             const errorMessage = extensionError
                 ? translate('TransactionRequest.errorMsgExtension')
                 : tokenError
-                ? translate('TransactionRequest.errorMsgToken', { token: tokenError })
+                ? translate('TransactionRequest.errorMsgToken')
                 : translate('TransactionRequest.errorMsgGeneral');
 
             return (
@@ -275,9 +301,23 @@ export class TransactionRequestScreenComponent extends React.Component<
                 <QRCodeTransferRequest
                     qrCodeTxPayload={qrCodeTxPayload}
                     callback={() => this.confirm()}
-                    errorToken={(tokenSymbol: string) =>
-                        this.setState({ error: { ...this.state.error, tokenError: tokenSymbol } })
-                    }
+                    showError={(options: { tokenNotFound?: boolean }) => {
+                        if (options?.tokenNotFound) {
+                            this.setState({
+                                error: {
+                                    ...this.state.error,
+                                    tokenError: true
+                                }
+                            });
+                        } else {
+                            this.setState({
+                                error: {
+                                    ...this.state.error,
+                                    generalError: true
+                                }
+                            });
+                        }
+                    }}
                 />
             );
         } else {
@@ -291,13 +331,20 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
+        const { extensionError, generalError, tokenError } = this.state.error;
+
+        const showTestnetBadge =
+            this.state.qrCodeTxPayload?.chainId !== undefined &&
+            !extensionError &&
+            !generalError &&
+            !tokenError;
 
         if (this.props.isVisible) {
             return (
                 <View style={styles.container}>
                     <Text style={styles.title}>{translate('TransactionRequest.title')}</Text>
 
-                    <TestnetBadge isVisible={this.state.qrCodeTxPayload?.chainId !== undefined} />
+                    {showTestnetBadge && <TestnetBadge />}
 
                     <View style={styles.content}>{this.renderExtensionTx()}</View>
 

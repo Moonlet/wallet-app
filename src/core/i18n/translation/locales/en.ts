@@ -445,7 +445,7 @@ export const translation: ITranslations = {
             accountName: 'Account name',
             errorMsgExtension: 'Transaction request is not valid anymore.',
             errorMsgToken:
-                'This transaction request is not supported. Please go to  Dashboard > Menu > Manage account and add {{token}} token.',
+                'This transaction request is not supported. Please go to  Dashboard > Menu > Manage account and add the requested token.',
             errorMsgGeneral:
                 'This transaction request is not supported. Please create a ticket and let us know what you tried to do and what went wrong.',
             insufficientFunds:

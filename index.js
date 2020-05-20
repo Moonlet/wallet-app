@@ -1,15 +1,17 @@
-import * as Sentry from '@sentry/react-native';
+import { init } from '@sentry/react-native';
 
 // tbd - ios swipe back fix - not sure - only on release it crashes
 import 'react-native-gesture-handler';
+import DeviceInfo from 'react-native-device-info';
 
 // Sentry setup
 if (!__DEV__) {
-    Sentry.init({
+    init({
         dsn: Platform.select({
             ios: 'https://5a8226a9b01743d3bc32e2d21209e688@sentry.io/5173960',
             android: 'https://afc2777059b34c159e948d6c5122c6fa@sentry.io/5173922'
-        })
+        }),
+        environment: DeviceInfo.getBundleId()
     });
 }
 

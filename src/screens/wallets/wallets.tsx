@@ -48,12 +48,12 @@ const mapStateToProps = (state: IReduxState) => {
     return {
         wallets: {
             // TODO reselect? https://github.com/reduxjs/reselect
-            [WalletType.HD]: Object.values(state.wallets).filter(
-                (wallet: IWalletState) => wallet.type === WalletType.HD
-            ),
-            [WalletType.HW]: Object.values(state.wallets).filter(
-                (wallet: IWalletState) => wallet.type === WalletType.HW
-            )
+            [WalletType.HD]: Object.values(state.wallets)
+                .filter((wallet: IWalletState) => wallet.type === WalletType.HD)
+                .sort((w1, w2) => (w1.name > w2.name ? 1 : -1)),
+            [WalletType.HW]: Object.values(state.wallets)
+                .filter((wallet: IWalletState) => wallet.type === WalletType.HW)
+                .sort((w1, w2) => (w1.name > w2.name ? 1 : -1))
         },
         walletsNr: Object.keys(state.wallets).length,
         selectedWallet: getSelectedWallet(state),
@@ -239,6 +239,8 @@ export class WalletsScreenComponent extends React.Component<
     public render() {
         const styles = this.props.styles;
         const { selectedTab } = this.state;
+
+        // console.log(this.props.wallets[WalletType.HD].map(w => w.name));
 
         return (
             <View style={styles.container}>

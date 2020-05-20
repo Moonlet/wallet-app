@@ -7,24 +7,56 @@ import { Notifications } from '../messaging/notifications/notifications';
 import { IQRCodeConn, ResponsePayload } from './types';
 import { sha256 } from 'js-sha256'; // maybe replace this with CryptoJS.SHA256
 import { ConnectExtensionWeb } from './connect-extension-web';
+import { CONN_EXTENSION } from '../constants/app';
+import {
+    getItemFromStorage,
+    storeItemToStorage,
+    deleteFromStorage
+} from '../secure/storage/storage';
+import { captureException } from '@sentry/browser';
+
+const getConnectionAppStateHashKey = connectionId => `${CONN_EXTENSION}StateHash-${connectionId}`;
 
 export const ConnectExtension = (() => {
     const syncExtension = async (connection: IQRCodeConn): Promise<any> => {
         try {
-            const http = new HttpClient(CONFIG.extSync.updateStateUrl);
-            const res = await http.post('', {
-                connectionId: connection.connectionId,
-                data: await encrypt(
-                    JSON.stringify(extensionState(store.getState())),
-                    connection.encKey
-                ),
-                authToken: sha256(connection.encKey),
-                fcmToken: await Notifications.getToken()
-            });
+            const appState = JSON.stringify(extensionState(store.getState()));
+            const appStateHash = sha256(appState);
+            let latestAppStateHash = null;
 
-            return res;
-        } catch {
-            //
+            try {
+                latestAppStateHash = await getItemFromStorage(
+                    getConnectionAppStateHashKey(connection.connectionId)
+                );
+            } catch {
+                // no problem, we will do an update and set this value
+            }
+
+            if (appStateHash !== latestAppStateHash) {
+                const http = new HttpClient(CONFIG.extSync.updateStateUrl);
+                const res = await http.post('', {
+                    connectionId: connection.connectionId,
+                    data: await encrypt(appState, connection.encKey),
+                    authToken: sha256(connection.encKey),
+                    fcmToken: await Notifications.getToken()
+                });
+
+                if (res.success) {
+                    await storeItemToStorage(
+                        appStateHash,
+                        getConnectionAppStateHashKey(connection.connectionId)
+                    );
+                }
+
+                return res;
+            } else {
+                return {
+                    success: true,
+                    code: 200
+                };
+            }
+        } catch (e) {
+            captureException(JSON.stringify(e));
         }
     };
 
@@ -35,6 +67,7 @@ export const ConnectExtension = (() => {
                 connectionId: connection.connectionId,
                 authToken: sha256(connection.encKey)
             });
+            await deleteFromStorage(getConnectionAppStateHashKey(connection.connectionId));
         } catch {
             //
         }

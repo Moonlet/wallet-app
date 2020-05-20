@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity, Text } from 'react-native';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { Text } from '../../library';
+// import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
@@ -427,13 +427,13 @@ export class DelegateScreenComponent extends React.Component<
     }
 
     public renderContent() {
-        const { styles, delegationType } = this.props;
+        const { styles, delegationType, theme } = this.props;
         const { headerSteps } = this.state;
         switch (delegationType) {
             case DelegationType.DELEGATE:
             case DelegationType.REDELEGATE:
                 return (
-                    <View style={styles.content}>
+                    <View>
                         <View style={styles.headerSteps}>
                             <HeaderStepByStep
                                 steps={headerSteps}
@@ -468,6 +468,47 @@ export class DelegateScreenComponent extends React.Component<
                 );
             case DelegationType.QUICK_DELEGATE:
                 return this.renderValidatorList();
+            case DelegationType.UNDELEGATE:
+            case DelegationType.REINVEST:
+            case DelegationType.CLAIM_REWARD:
+                return this.renderEnterAmount();
+            case DelegationType.UNLOCK:
+                const map = [
+                    {
+                        text: translate('Validator.unlockText1')
+                    },
+                    {
+                        text: translate('Validator.unlockText2'),
+                        style: { color: theme.colors.notVoting }
+                    },
+                    {
+                        text: translate('Validator.unlockText3')
+                    },
+                    {
+                        text: translate('Validator.unlockText4'),
+                        style: { color: theme.colors.unlocking }
+                    },
+                    {
+                        text: translate('Validator.unlockText5')
+                    }
+                ];
+                return (
+                    <View>
+                        <Text style={styles.unlockContainerText}>
+                            {map.map((value, index) => {
+                                return (
+                                    <Text
+                                        key={index}
+                                        style={[styles.unlockTextChildren, value?.style]}
+                                    >
+                                        {value.text + ' '}
+                                    </Text>
+                                );
+                            })}
+                        </Text>
+                        {this.renderEnterAmount()}
+                    </View>
+                );
         }
     }
 
@@ -483,7 +524,7 @@ export class DelegateScreenComponent extends React.Component<
                     showsVerticalScrollIndicator={false}
                     alwaysBounceVertical={false}
                 >
-                    {this.renderContent()}
+                    <View style={styles.content}>{this.renderContent()}</View>
                 </KeyboardAwareScrollView>
 
                 {this.renderBottomConfirm()}

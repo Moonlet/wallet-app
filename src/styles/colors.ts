@@ -17,5 +17,10 @@ export const COLORS = {
     HOT_GREEN: '#00E676',
     HOT_RED: '#E91E63',
     LIGHT_RED: '#FFAB91',
-    YELLOW: '#F2C94C'
+    YELLOW: '#F2C94C',
+
+    // Validators
+    PURPLE: '#E91E63',
+    ORANGE: '#AB7361',
+    GREEN: '#00E676'
 };

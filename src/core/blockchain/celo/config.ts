@@ -45,7 +45,7 @@ const validatorCTA = {
         },
         {
             title: 'App.labels.unlock',
-            delegationType: DelegationType.CLAIM_REWARD,
+            delegationType: DelegationType.UNLOCK,
             iconName: 'unlock',
             navigateTo: { screen: undefined, params: undefined }
         }

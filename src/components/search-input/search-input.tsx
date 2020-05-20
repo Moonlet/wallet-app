@@ -28,8 +28,8 @@ export const SearchInputComponent = (
                 selectionColor={props.theme.colors.accent}
                 value={fieldInput}
                 onChangeText={value => {
-                    setFieldInput(value);
                     props.onChangeText(value);
+                    setFieldInput(value);
                 }}
             />
             {fieldInput !== '' && fieldInput !== undefined && (

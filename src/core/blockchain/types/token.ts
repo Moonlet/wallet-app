@@ -14,7 +14,8 @@ export enum DelegationType {
     QUICK_DELEGATE = 'QUICK_DELEGATE', // stake or vote
     REDELEGATE = 'REDELEGATE', // restake or vote
     UNDELEGATE = 'UNDELEGATE', // unstake or unvote
-    CLAIM_REWARD = 'CLAIM_REWARD', // unlock or withdraw
+    CLAIM_REWARD = 'CLAIM_REWARD', //  withdraw
+    UNLOCK = 'UNLOCK',
     REINVEST = 'REINVEST'
 }
 

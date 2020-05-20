@@ -450,7 +450,12 @@ export const translation: ITranslations = {
             totalStake: 'Total Stake',
             totalDelegated: 'Total Delegated',
             myStake: 'My Stake',
-            delegation: 'Delegation'
+            delegation: 'Delegation',
+            unlockText1: 'You can only',
+            unlockText2: 'unlock',
+            unlockText3: 'the funds that are not voting.\n In order to unlock all funds, please',
+            unlockText4: 'unvote',
+            unlockText5: 'first.'
         }
     },
     plural: (n: number, ord?: boolean) => {

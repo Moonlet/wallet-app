@@ -54,20 +54,13 @@ export class DelegationsTabComponent extends React.Component<
 
     @bind
     public onSearchInput(text: string) {
-        if (text.length > 2) {
-            searchTimeoutTimer && clearTimeout(searchTimeoutTimer);
-            searchTimeoutTimer = setTimeout(async () => {
-                const filteredList = this.state.unfilteredList.filter(
-                    validator => validator.name.toLowerCase().includes(text.toLowerCase()) === true
-                );
-                this.setState({ validatorsFilteredList: filteredList });
-            }, 200);
-        } else {
-            // TODO - improvement to set state only when user deletes chars to set state once
-            this.setState({
-                validatorsFilteredList: this.state.unfilteredList
-            });
-        }
+        searchTimeoutTimer && clearTimeout(searchTimeoutTimer);
+        searchTimeoutTimer = setTimeout(async () => {
+            const filteredList = this.state.unfilteredList.filter(
+                validator => validator.name.toLowerCase().includes(text.toLowerCase()) === true
+            );
+            this.setState({ validatorsFilteredList: filteredList });
+        }, 200);
     }
 
     @bind

@@ -34,6 +34,10 @@ export const darkTheme: ITheme = {
         disabledButton: COLORS.DARK_GRAY,
 
         gradientLight: COLORS.COD_GRAY,
-        gradientDark: COLORS.BLACK
+        gradientDark: COLORS.BLACK,
+
+        notVoting: COLORS.PURPLE,
+        unlocking: COLORS.ORANGE,
+        reward: COLORS.GREEN
     }
 };

@@ -53,7 +53,6 @@ export default (theme: ITheme) =>
 
         //
         amountContainer: {
-            flex: 1,
             marginHorizontal: BASE_DIMENSION * 2
         },
 
@@ -95,6 +94,15 @@ export default (theme: ITheme) =>
             alignContent: 'center',
             paddingVertical: BASE_DIMENSION / 2,
             paddingHorizontal: BASE_DIMENSION / 2
+        },
+        unlockContainerText: {
+            textAlign: 'center'
+        },
+
+        unlockTextChildren: {
+            color: theme.colors.textSecondary,
+            fontSize: normalizeFontAndLineHeight(14),
+            lineHeight: normalizeFontAndLineHeight(18)
         },
         actionIcon: {
             color: theme.colors.accent,

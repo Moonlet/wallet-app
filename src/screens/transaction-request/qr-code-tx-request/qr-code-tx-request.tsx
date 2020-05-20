@@ -179,6 +179,11 @@ export class QRCodeTransferRequestComponent extends React.Component<
                 } else {
                     this.setState({ tokenSymbol: tokenSymbolOnChainId });
                 }
+
+                if (this.props.isTestNet === true) {
+                    // Activate MainNet
+                    this.props.toggleTestNet();
+                }
             }
         }
 

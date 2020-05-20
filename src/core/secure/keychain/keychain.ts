@@ -36,9 +36,8 @@ export const generateEncryptionKey = async (pinCode: string): Promise<string> =>
 };
 
 export const setBaseEncryptionKey = async () => {
-    const encryptionKey = await generateRandomEncryptionKey();
     try {
-        // @ts-ignore
+        const encryptionKey = await generateRandomEncryptionKey();
         await Keychain.setGenericPassword(defaultOptions.usernameEncryption, encryptionKey, {
             service: defaultOptions.serviceEncryption,
             storage: Keychain.STORAGE_TYPE.AES,
@@ -61,6 +60,10 @@ export const getBaseEncryptionKey = async () => {
         });
         if (credentials) {
             password = credentials.password;
+        } else {
+            throw new Error(
+                'getBaseEncryptionKey: Keychain.getGenericPassword returns falsy value'
+            );
         }
     } catch (err) {
         Sentry.captureException(new Error(JSON.stringify(err)));
@@ -80,9 +83,7 @@ export const clearEncryptionKey = async () => {
 
 export const getEncryptionKey = async (pinCode: string) => {
     let password = await getBaseEncryptionKey();
-    if (password !== null) {
-        password = await hash(password, pinCode);
-    }
+    password = await hash(password || '', pinCode);
     return password;
 };
 

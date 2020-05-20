@@ -14,7 +14,7 @@ export class ClientUtils implements IClientUtils {
     async getTransaction(hash: string): Promise<IBlockchainTransaction> {
         return this.client
             .call('GetTransaction', [hash])
-            .then(result => this.buildTransactionFromBlockchain(result));
+            .then(response => this.buildTransactionFromBlockchain(response.result));
     }
 
     async buildTransactionFromBlockchain(txData): Promise<IBlockchainTransaction> {

@@ -186,7 +186,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
             if (this.isChainIdValid(qrCodeTxPayload.chainId)) {
                 // Valid ChainId
                 // Set the ChainId of the user with the received one
-                this.props.setNetworkTestNetChainId(blockchain, qrCodeTxPayload.chainId);
+                this.props.setNetworkTestNetChainId(blockchain, Number(qrCodeTxPayload.chainId));
 
                 // Activate testnet if disabled
                 if (qrCodeTxPayload?.chainId) {

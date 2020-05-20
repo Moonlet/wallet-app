@@ -26,6 +26,7 @@ import { getUrlParams } from '../../core/connect-extension/utils';
 export interface IReduxProps {
     isVisible: boolean;
     requestId: string;
+    qrCode: string;
     closeTransactionRequest: typeof closeTransactionRequest;
     sendTransferTransaction: typeof sendTransferTransaction;
 }
@@ -33,7 +34,8 @@ export interface IReduxProps {
 export const mapStateToProps = (state: IReduxState) => {
     return {
         isVisible: state.ui.transactionRequest.isVisible,
-        requestId: state.ui.transactionRequest.requestId
+        requestId: state.ui.transactionRequest.data.requestId,
+        qrCode: state.ui.transactionRequest.data.qrCode
     };
 };
 
@@ -74,21 +76,18 @@ export class TransactionRequestScreenComponent extends React.Component<
             this.getExtensionTxPayload();
         }
 
-        // const qrCode =
-        //     'zilliqa:zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8@333/?amount=1000000000000';
-
-        // const qrCode =
-        //     'zilliqa://zil148fy8yjxn6jf5w36kqc7x73qd3ufuu24a4u8t9/Transfer?Uint128-amount=1000&ByStr20-to=zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8';
-
-        const qrCode =
-            'zilliqa://zil1n0006zrsdtl0zj5mwac2rkaa442f4d37hntkv7@333/proxyTransfer?Uint128-amount=1e12&ByStr20-to=zil102n74869xnvdwq3yh8p0k9jjgtejruft268tg8';
-
-        this.getQrCodeTxPayload(qrCode);
+        if (this.props.qrCode) {
+            this.getQrCodeTxPayload();
+        }
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.requestId !== prevProps.requestId && this.props.requestId !== null) {
             this.getExtensionTxPayload();
+        }
+
+        if (this.props.qrCode !== prevProps.qrCode && this.props.qrCode !== null) {
+            this.getQrCodeTxPayload();
         }
     }
 
@@ -169,7 +168,9 @@ export class TransactionRequestScreenComponent extends React.Component<
         });
     }
 
-    private getQrCodeTxPayload(code: string) {
+    private getQrCodeTxPayload() {
+        const code = this.props.qrCode;
+
         const regex = new RegExp(
             /^zilliqa:(\/\/)?([^/@?\n\ ]*)(@([^/?\n\ ]*))?([^?\n\ ]*)?(\?([^\n\ ]*)?)?$/
         );

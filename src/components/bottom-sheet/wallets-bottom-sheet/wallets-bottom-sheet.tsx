@@ -23,11 +23,9 @@ export interface IReduxProps {
     setSelectedWallet: typeof setSelectedWallet;
 }
 const mapStateToProps = (state: IReduxState) => {
-    const wallets = state.ui.bottomSheet.wallets.sort((w1, w2) => (w1.name > w2.name ? 1 : -1)); // Sort wallets alphabetically by name
-
     return {
         selectedWallet: getSelectedWallet(state),
-        wallets
+        wallets: state.ui.bottomSheet.wallets.sort((w1, w2) => (w1.name > w2.name ? 1 : -1)) // Sort wallets alphabetically by name
     };
 };
 const mapDispatchToProps = {

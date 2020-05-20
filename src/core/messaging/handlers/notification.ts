@@ -72,7 +72,7 @@ const handleNotification = (
             const requestId = JSON.parse(notification.data)?.requestId;
 
             if (requestId) {
-                store.dispatch(openTransactionRequest(requestId));
+                store.dispatch(openTransactionRequest({ requestId }));
             } else {
                 //
             }

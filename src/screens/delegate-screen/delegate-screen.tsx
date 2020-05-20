@@ -426,42 +426,30 @@ export class DelegateScreenComponent extends React.Component<
         );
     }
 
-    public render() {
+    public renderContent() {
         const { styles, delegationType } = this.props;
         const { headerSteps } = this.state;
-
-        return (
-            <View style={styles.container}>
-                <TestnetBadge />
-
-                <KeyboardAwareScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
-                    showsVerticalScrollIndicator={false}
-                    alwaysBounceVertical={false}
-                >
+        switch (delegationType) {
+            case DelegationType.DELEGATE:
+            case DelegationType.REDELEGATE:
+                return (
                     <View style={styles.content}>
-                        {delegationType === DelegationType.DELEGATE && (
-                            <View style={styles.headerSteps}>
-                                <HeaderStepByStep
-                                    steps={headerSteps}
-                                    selectStep={selectedIdex => {
-                                        const activeIndex = _.findIndex(headerSteps, [
-                                            'active',
-                                            true
-                                        ]);
+                        <View style={styles.headerSteps}>
+                            <HeaderStepByStep
+                                steps={headerSteps}
+                                selectStep={selectedIdex => {
+                                    const activeIndex = _.findIndex(headerSteps, ['active', true]);
 
-                                        const steps = headerSteps;
-                                        if (selectedIdex < activeIndex) {
-                                            steps[activeIndex].active = false;
-                                            steps[selectedIdex].active = true;
-                                        }
+                                    const steps = headerSteps;
+                                    if (selectedIdex < activeIndex) {
+                                        steps[activeIndex].active = false;
+                                        steps[selectedIdex].active = true;
+                                    }
 
-                                        this.setState({ headerSteps: steps });
-                                    }}
-                                />
-                            </View>
-                        )}
-
+                                    this.setState({ headerSteps: steps });
+                                }}
+                            />
+                        </View>
                         {headerSteps.map((step, index) => {
                             if (step.active) {
                                 switch (index) {
@@ -477,6 +465,25 @@ export class DelegateScreenComponent extends React.Component<
                             }
                         })}
                     </View>
+                );
+            case DelegationType.QUICK_DELEGATE:
+                return this.renderValidatorList();
+        }
+    }
+
+    public render() {
+        const { styles } = this.props;
+
+        return (
+            <View style={styles.container}>
+                <TestnetBadge />
+
+                <KeyboardAwareScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={false}
+                    alwaysBounceVertical={false}
+                >
+                    {this.renderContent()}
                 </KeyboardAwareScrollView>
 
                 {this.renderBottomConfirm()}

@@ -26,6 +26,7 @@ interface IState {
     validatorsFilteredList: IValidator[];
     unfilteredList: IValidator[];
 }
+let searchTimeoutTimer: any;
 
 export class DelegationsTabComponent extends React.Component<
     IProps & IThemeProps<ReturnType<typeof stylesProvider>>,
@@ -53,10 +54,20 @@ export class DelegationsTabComponent extends React.Component<
 
     @bind
     public onSearchInput(text: string) {
-        const filteredList = this.state.unfilteredList.filter(
-            validator => validator.name.toLowerCase().includes(text.toLowerCase()) === true
-        );
-        this.setState({ validatorsFilteredList: filteredList });
+        if (text.length > 2) {
+            searchTimeoutTimer && clearTimeout(searchTimeoutTimer);
+            searchTimeoutTimer = setTimeout(async () => {
+                const filteredList = this.state.unfilteredList.filter(
+                    validator => validator.name.toLowerCase().includes(text.toLowerCase()) === true
+                );
+                this.setState({ validatorsFilteredList: filteredList });
+            }, 200);
+        } else {
+            // TODO - improvement to set state only when user deletes chars to set state once
+            this.setState({
+                validatorsFilteredList: this.state.unfilteredList
+            });
+        }
     }
 
     @bind

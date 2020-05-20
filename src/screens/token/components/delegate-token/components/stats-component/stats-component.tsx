@@ -10,6 +10,7 @@ import {
     AccountStats
 } from '../../../../../../core/blockchain/types/stats';
 import Pie from '../../../../../../library/pie-chart/pie-chart';
+import BigNumber from 'bignumber.js';
 // TODO - fork and move ART library(will be removed in the future warning) to react-native-comunity OR add library within project
 
 export interface IProps {
@@ -97,11 +98,17 @@ export class StatsComponentInternal extends React.Component<
             stat => stat.chartDisplay && stat.chartDisplay === true
         );
 
-        const totalCount = chartStats.reduce((sum, value) => sum + Number(value.data.value), 0);
+        const totalCount = chartStats.reduce(
+            (sum, value) => new BigNumber(sum).plus(new BigNumber(value.data.value)),
+            new BigNumber(0)
+        );
 
         const pieData = chartStats.map((item, index) => {
             const toRet = {
-                value: ((Number(item.data.value) * 100) / totalCount).toFixed(2),
+                value: new BigNumber(item.data.value)
+                    .multipliedBy(100)
+                    .dividedBy(totalCount)
+                    .toFixed(2),
                 title: `title-${index}`,
                 color: item.color,
                 key: `pie-${index}`
@@ -135,7 +142,10 @@ export class StatsComponentInternal extends React.Component<
                     <View style={styles.percentageSquareContainer}>
                         <View style={[styles.percentageSquare, { backgroundColor: item.color }]} />
                         <Text style={styles.percentageText}>
-                            {((Number(item.data.value) * 100) / totalCount).toFixed(2) + '%'}
+                            {new BigNumber(item.data.value)
+                                .multipliedBy(100)
+                                .dividedBy(totalCount)
+                                .toFixed(2) + '%'}
                         </Text>
                     </View>
                 )}

@@ -48,7 +48,7 @@ export default (theme: ITheme) =>
             color: theme.colors.accent
         },
         headerSteps: {
-            marginBottom: BASE_DIMENSION * 3
+            marginBottom: BASE_DIMENSION
         },
 
         //
@@ -70,6 +70,7 @@ export default (theme: ITheme) =>
             alignSelf: 'center'
         },
         actionContainer: {
+            marginTop: BASE_DIMENSION * 2,
             width: normalize(170),
             flexDirection: 'row',
             borderRadius: BORDER_RADIUS / 2,

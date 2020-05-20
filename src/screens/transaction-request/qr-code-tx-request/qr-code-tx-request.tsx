@@ -35,6 +35,7 @@ import { Icon } from '../../../components/icon';
 import { setNetworkTestNetChainId, toggleTestNet } from '../../../redux/preferences/actions';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ITokensConfigState, ITokenConfigState } from '../../../redux/tokens/state';
+import { availableFunds } from '../../../core/utils/available-funds';
 
 export interface IQRCodeTxPayload {
     address: string;
@@ -94,6 +95,8 @@ interface IState {
     tokenSymbol: string;
     insufficientFunds: boolean;
     insufficientFundsFees: boolean;
+    feeOptions: IFeeOptions;
+    token: ITokenState;
 }
 
 export class QRCodeTransferRequestComponent extends React.Component<
@@ -110,7 +113,9 @@ export class QRCodeTransferRequestComponent extends React.Component<
             chainId: props.currentChainId,
             tokenSymbol: getBlockchain(props.selectedAccount.blockchain).config.coin, // Default Native Coin
             insufficientFunds: false,
-            insufficientFundsFees: false
+            insufficientFundsFees: false,
+            feeOptions: undefined,
+            token: undefined
         };
     }
 
@@ -219,6 +224,8 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
             this.setState({ amount: amountFromStd.toString() });
         }
+
+        this.getAccountTokenBySymbol(this.state.tokenSymbol);
     }
 
     private searchTokenByContractAddressAndChainId(
@@ -313,7 +320,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
                         value={this.state.amount}
-                        onChangeText={(text: any) => this.setState({ amount: text })}
+                        onChangeText={(text: any) => this.addAmount(text)}
                         keyboardType="decimal-pad"
                         returnKeyType="done"
                         // TODO: maxLength - max 8 decimals: 0.00000000
@@ -343,6 +350,53 @@ export class QRCodeTransferRequestComponent extends React.Component<
         return walletsByToken;
     }
 
+    private getAccountTokenBySymbol(tokenSymbol: string) {
+        const tokens = this.props.selectedAccount.tokens;
+        let foundToken: ITokenState;
+
+        Object.keys(tokens).map((chainId: ChainIdType) => {
+            Object.values(tokens[chainId]).map((token: ITokenState) => {
+                if (
+                    token.symbol === tokenSymbol &&
+                    Number(chainId) === Number(this.state.chainId) // TODO
+                ) {
+                    foundToken = token;
+                }
+            });
+        });
+
+        this.setState({ token: foundToken });
+    }
+
+    private onFeesChanged(feeOptions: IFeeOptions) {
+        this.setState({ feeOptions }, () => {
+            const { insufficientFunds, insufficientFundsFees } = availableFunds(
+                this.state.amount,
+                this.props.selectedAccount,
+                this.state.token,
+                this.state.chainId,
+                feeOptions
+            );
+
+            this.setState({ insufficientFunds, insufficientFundsFees });
+        });
+    }
+
+    private addAmount(value: string) {
+        const amount = value.replace(/,/g, '.');
+        this.setState({ amount }, () => {
+            const { insufficientFunds, insufficientFundsFees } = availableFunds(
+                amount,
+                this.props.selectedAccount,
+                this.state.token,
+                this.state.chainId,
+                this.state.feeOptions
+            );
+
+            this.setState({ insufficientFunds, insufficientFundsFees });
+        });
+    }
+
     public render() {
         const { qrCodeTxPayload, styles, theme, selectedAccount } = this.props;
         const { amount, chainId, tokenSymbol } = this.state;
@@ -359,7 +413,6 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
         const token =
             selectedAccount.tokens[chainId] && selectedAccount.tokens[chainId][config.coin];
-        // TODO: sendingToken
 
         const tokenConfig = getTokenConfig(blockchain, tokenSymbol);
 
@@ -432,10 +485,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                         sendingToken={token} // TODO
                         account={this.props.selectedAccount}
                         toAddress={qrCodeTxPayload.address}
-                        onFeesChanged={(feeOptions: IFeeOptions) => {
-                            // TODO
-                            // this.onFeesChanged(feeOptions);
-                        }}
+                        onFeesChanged={(feeOptions: IFeeOptions) => this.onFeesChanged(feeOptions)}
                         insufficientFundsFees={this.state.insufficientFundsFees}
                         options={{
                             feeTotalBackgroundColor: theme.colors.inputBackground,
@@ -446,7 +496,11 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
                 <BottomCta
                     label={translate('App.labels.confirm')}
-                    disabled={qrCodeTxPayload === undefined}
+                    disabled={
+                        qrCodeTxPayload === undefined ||
+                        this.state.insufficientFunds === true ||
+                        this.state.insufficientFundsFees === true
+                    }
                     onPress={() => this.props.callback()}
                 >
                     <PrimaryCtaField

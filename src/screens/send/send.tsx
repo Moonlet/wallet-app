@@ -47,6 +47,7 @@ import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import { BottomCta } from '../../components/bottom-cta/bottom-cta';
 import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { AmountCtaField } from '../../components/bottom-cta/amount-cta-field/amount-cta-field';
+import { getInputAmountToStd, availableFunds } from '../../core/utils/available-funds';
 
 interface IHeaderStep {
     step: number;
@@ -264,7 +265,17 @@ export class SendScreenComponent extends React.Component<
     }
 
     public onFeesChanged(feeOptions: IFeeOptions) {
-        this.setState({ feeOptions }, () => this.availableFunds());
+        this.setState({ feeOptions }, () => {
+            const { insufficientFunds, insufficientFundsFees } = availableFunds(
+                this.state.amount,
+                this.props.account,
+                this.props.token,
+                this.props.chainId,
+                feeOptions
+            );
+
+            this.setState({ insufficientFunds, insufficientFundsFees });
+        });
     }
 
     public onMemoInput(memo: string) {
@@ -273,7 +284,17 @@ export class SendScreenComponent extends React.Component<
 
     public addAmount(value: string) {
         const amount = value.replace(/,/g, '.');
-        this.setState({ amount }, () => this.availableFunds());
+        this.setState({ amount }, () => {
+            const { insufficientFunds, insufficientFundsFees } = availableFunds(
+                amount,
+                this.props.account,
+                this.props.token,
+                this.props.chainId,
+                this.state.feeOptions
+            );
+
+            this.setState({ insufficientFunds, insufficientFundsFees });
+        });
     }
 
     public availableAmount() {
@@ -296,47 +317,6 @@ export class SendScreenComponent extends React.Component<
         }
     }
 
-    public availableFunds() {
-        const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
-
-        // Amount check
-        const inputAmount = this.getInputAmountToStd();
-        const availableAmount = new BigNumber(this.props.token.balance?.value);
-
-        // amount > available amount
-        if (inputAmount.isGreaterThan(availableAmount)) {
-            this.setState({ insufficientFunds: true });
-            return;
-        } else {
-            this.setState({ insufficientFunds: false });
-        }
-
-        // Fees check
-        const feeTotal = new BigNumber(this.state.feeOptions?.feeTotal);
-
-        if (tokenConfig.type === TokenType.NATIVE) {
-            // feeTotal + amount > available amount
-            if (feeTotal.plus(inputAmount).isGreaterThan(availableAmount)) {
-                this.setState({ insufficientFundsFees: true });
-            } else {
-                this.setState({ insufficientFundsFees: false });
-            }
-        } else {
-            const nativeCoin = getBlockchain(this.props.account.blockchain).config.coin;
-            const nativeCoinBalance = this.props.account.tokens[this.props.chainId][nativeCoin]
-                .balance?.value;
-            const availableBalance = new BigNumber(nativeCoinBalance);
-
-            // ERC20 / ZRC2
-            // feeTotal > available amount
-            if (feeTotal.isGreaterThan(availableBalance)) {
-                this.setState({ insufficientFundsFees: true });
-            } else {
-                this.setState({ insufficientFundsFees: false });
-            }
-        }
-    }
-
     public renderExtraFields(value: string) {
         switch (value) {
             case 'Memo':
@@ -356,16 +336,6 @@ export class SendScreenComponent extends React.Component<
                 chainId={this.props.chainId}
                 onChange={(toAddress: string) => this.setState({ toAddress })}
             />
-        );
-    }
-
-    private getInputAmountToStd(): BigNumber {
-        const blockchainInstance = getBlockchain(this.props.account.blockchain);
-        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
-
-        return blockchainInstance.account.amountToStd(
-            new BigNumber(this.state.amount ? this.state.amount : 0),
-            tokenConfig.decimals
         );
     }
 
@@ -428,7 +398,11 @@ export class SendScreenComponent extends React.Component<
                 {(activeIndex === 1 || activeIndex === 2) && (
                     <AmountCtaField
                         tokenConfig={tokenConfig}
-                        stdAmount={this.getInputAmountToStd()}
+                        stdAmount={getInputAmountToStd(
+                            this.props.account,
+                            this.props.token,
+                            this.state.amount
+                        )}
                         account={this.props.account}
                     />
                 )}

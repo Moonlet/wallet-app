@@ -54,8 +54,8 @@ export default (theme: ITheme) =>
             paddingRight: BASE_DIMENSION
         },
         insufficientFunds: {
-            fontSize: normalizeFontAndLineHeight(12),
-            lineHeight: normalizeFontAndLineHeight(16),
+            fontSize: normalizeFontAndLineHeight(14),
+            lineHeight: normalizeFontAndLineHeight(19),
             color: theme.colors.error,
             marginBottom: BASE_DIMENSION
         }

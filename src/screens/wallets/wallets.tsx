@@ -240,8 +240,6 @@ export class WalletsScreenComponent extends React.Component<
         const styles = this.props.styles;
         const { selectedTab } = this.state;
 
-        // console.log(this.props.wallets[WalletType.HD].map(w => w.name));
-
         return (
             <View style={styles.container}>
                 <TabSelect

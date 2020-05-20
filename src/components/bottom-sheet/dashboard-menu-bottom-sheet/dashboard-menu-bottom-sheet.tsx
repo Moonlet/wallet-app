@@ -128,10 +128,10 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             onPress: () => this.connectExtension()
                         })}
                     {Platform.OS !== 'web' &&
-                        isFeatureActive(RemoteFeature.DEV_TOOLS) &&
+                    isFeatureActive(RemoteFeature.DEV_TOOLS) && // remove after the feature is done
                         this.renderRow({
-                            title: 'Smart Scan',
-                            description: 'Smart scan QR code',
+                            title: 'Smart Scan', // TODO
+                            description: 'Smart scan QR code', // TODO
                             iconName: 'qr-code-scan',
                             onPress: () => this.qrCodeScanner.open()
                         })}

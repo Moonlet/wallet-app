@@ -54,7 +54,6 @@ export interface IReduxProps {
 export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
-    extensionTransactionPayload: any; // TODO add typing
     token: ITokenState;
 }
 
@@ -72,7 +71,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
             ownProps.token
         ),
         wallet: getSelectedWallet(state),
-        extensionTransactionPayload: ownProps.extensionTransactionPayload,
         chainId: getChainId(state, ownProps.blockchain)
     };
 };
@@ -178,7 +176,6 @@ export class TokenScreenComponent extends React.Component<
                         accountIndex={this.props.accountIndex}
                         blockchain={this.props.blockchain}
                         token={this.props.token}
-                        extensionTransactionPayload={this.props.extensionTransactionPayload}
                         navigation={this.props.navigation}
                     />
                 );

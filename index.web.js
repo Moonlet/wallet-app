@@ -1,12 +1,15 @@
-import * as Sentry from '@sentry/browser';
+import { init } from '@sentry/browser';
+import DeviceInfo from 'react-native-device-info';
+
 // Sentry setup
 if (!__DEV__) {
-    Sentry.init({
-        dsn: 'https://2c951fc8d1834886877276fa9a7e89bb@sentry.io/5173962'
+    init({
+        dsn: 'https://2c951fc8d1834886877276fa9a7e89bb@sentry.io/5173962',
+        environment: DeviceInfo.getBundleId()
     });
 }
 
-import { AppRegistry, Platform } from 'react-native';
+import { AppRegistry } from 'react-native';
 import App from './src/app';
 import { name as appName } from './app.json';
 import firebase from 'firebase/app';

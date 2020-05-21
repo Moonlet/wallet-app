@@ -339,17 +339,25 @@ export class QRCodeTransferRequestComponent extends React.Component<
         const walletsByToken: IWalletState[] = [];
 
         Object.values(this.props.wallets).map((wallet: IWalletState) => {
-            wallet.accounts.map((account: IAccountState) => {
-                Object.keys(account.tokens).map((chainId: ChainIdType) => {
-                    Object.keys(account.tokens[chainId]).map((symbol: string) => {
-                        const token: ITokenState = account.tokens[chainId][symbol];
+            const accountsFilteredList = wallet.accounts.filter((account: IAccountState) => {
+                const symbolListFiltered = Object.keys(
+                    (account?.tokens || {})[this.state.chainId] || {}
+                ).filter((symbol: string) => {
+                    const token: ITokenState = account.tokens[this.state.chainId][symbol];
 
-                        if (token.symbol === tokenSymbol) {
-                            walletsByToken.push(wallet);
-                        }
-                    });
+                    if (token.symbol === tokenSymbol) {
+                        return symbol;
+                    }
                 });
+
+                if (symbolListFiltered.length > 0) {
+                    return account;
+                }
             });
+
+            if (accountsFilteredList.length > 0) {
+                walletsByToken.push(wallet);
+            }
         });
 
         return walletsByToken;

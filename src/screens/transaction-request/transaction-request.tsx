@@ -126,8 +126,6 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     private async cancelTransactionRequest() {
         try {
-            this.props.closeTransactionRequest();
-
             if (this.props.requestId) {
                 await ConnectExtension.sendResponse(this.props.requestId, {
                     result: undefined,
@@ -135,7 +133,7 @@ export class TransactionRequestScreenComponent extends React.Component<
                 });
             }
         } catch {
-            this.props.closeTransactionRequest();
+            //
         }
     }
 
@@ -313,7 +311,7 @@ export class TransactionRequestScreenComponent extends React.Component<
                     </View>
 
                     {extensionError === true && (
-                        <Button onPress={() => this.cancelTransactionRequest()}>
+                        <Button onPress={this.closeTxRequest}>
                             {translate('App.labels.cancel')}
                         </Button>
                     )}
@@ -369,6 +367,26 @@ export class TransactionRequestScreenComponent extends React.Component<
         }
     }
 
+    @bind
+    private closeTxRequest() {
+        this.props.closeTransactionRequest();
+
+        if (this.state.extensionTxPayload) {
+            this.cancelTransactionRequest();
+        }
+
+        this.setState({
+            error: {
+                extensionError: false,
+                generalError: false,
+                tokenError: false,
+                tokenErrorSymbol: undefined
+            },
+            extensionTxPayload: undefined,
+            qrCodeTxPayload: undefined
+        });
+    }
+
     public render() {
         const { styles } = this.props;
         const { extensionError, generalError, tokenError } = this.state.error;
@@ -389,7 +407,7 @@ export class TransactionRequestScreenComponent extends React.Component<
                     <View style={styles.content}>{this.renderExtensionTx()}</View>
 
                     <TouchableOpacity
-                        onPress={() => this.cancelTransactionRequest()}
+                        onPress={this.closeTxRequest}
                         style={styles.closeButtonContainer}
                     >
                         <Icon name={'close'} size={normalize(20)} style={styles.closeButton} />

@@ -105,23 +105,23 @@ export class TransactionRequestScreenComponent extends React.Component<
             if (payload) {
                 this.setState({ extensionTxPayload: payload });
             } else {
-                this.setState({
-                    extensionTxPayload: undefined,
-                    error: {
-                        ...this.state.error,
-                        extensionError: true
-                    }
-                });
+                this.setExtensionTxError();
             }
         } catch {
-            this.setState({
-                extensionTxPayload: undefined,
-                error: {
-                    ...this.state.error,
-                    extensionError: true
-                }
-            });
+            this.setExtensionTxError();
         }
+    }
+
+    private setExtensionTxError() {
+        this.setState({
+            extensionTxPayload: undefined,
+            error: {
+                extensionError: true,
+                generalError: false,
+                tokenError: false,
+                tokenErrorSymbol: undefined
+            }
+        });
     }
 
     private async cancelTransactionRequest() {
@@ -186,8 +186,10 @@ export class TransactionRequestScreenComponent extends React.Component<
     private setInvalidQrCodeUrl() {
         this.setState({
             error: {
-                ...this.state.error,
-                generalError: true
+                extensionError: false,
+                generalError: true,
+                tokenError: false,
+                tokenErrorSymbol: undefined
             }
         });
     }

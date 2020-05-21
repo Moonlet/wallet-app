@@ -1,4 +1,12 @@
-Fixed: We did a few changes here and there, fixed some bugs that were quite annoying, brought some new features into the light. The good stuff is the same but now there's more of it. Here's what's outstanding:
+Team’s log. Stardate 2005.22:
+Dear Moonleteers, we must unfortunately report that we had to squash some bugs which didn’t allow some of you to either create or recover a wallet. Those little ones reached as well the send page and blocked you to confirm a transaction. They were almost everywhere, even on the new extension. Therefore we had to take special measures, as follow:
+ 
+> Fixed all those unresponsive buttons
+> Improved extension synchronization
+> Formatted text notifications
+> Made some clean-up on our code
+ 
+Bugs must have gone now, but you need to continue to report them in case they’ll get back. Stay sharp and let us know if something else comes up.
 
-- It handshakes smoothly with browser extension
-- Both inbound and outbound notifications enabled
+Thank you,
+Moonlet Team

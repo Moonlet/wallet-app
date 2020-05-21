@@ -17,20 +17,13 @@ import { INavigationProps } from '../../../../navigation/with-navigation-params'
 import { AccountAddress } from '../../../../components/account-address/account-address';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../../../core/blockchain/types';
 import { TransactionsHistoryList } from '../../../transactions-history/list-transactions-history/list-transactions-history';
-import { formatNumber } from '../../../../core/utils/format-number';
-import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import BigNumber from 'bignumber.js';
-import { formatAddress } from '../../../../core/utils/format-address';
-import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { sendTransferTransaction } from '../../../../redux/wallets/actions';
-import { Dialog } from '../../../../components/dialog/dialog';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 
 export interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
-    extensionTransactionPayload: any; // TODO add typing
     token: ITokenState;
     navigation: NavigationScreenProp<NavigationState>;
 }
@@ -54,7 +47,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
             ownProps.token
         ),
         wallet: getSelectedWallet(state),
-        extensionTransactionPayload: ownProps.extensionTransactionPayload,
         chainId: getChainId(state, ownProps.blockchain),
         canSend: Platform.OS !== 'web' || state.ui.extension.stateLoaded
     };
@@ -67,71 +59,6 @@ const mapDispatchToProps = {
 export class DefaultTokenScreenComponent extends React.Component<
     INavigationProps & IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    constructor(
-        props: INavigationProps &
-            IProps &
-            IReduxProps &
-            IThemeProps<ReturnType<typeof stylesProvider>>
-    ) {
-        super(props);
-
-        if (this.props.extensionTransactionPayload) {
-            // stub
-            const {
-                account,
-                toAddress,
-                amount,
-                token,
-                feeOptions
-            } = this.props.extensionTransactionPayload.params[0];
-
-            const formattedAmount = formatNumber(new BigNumber(amount), {
-                currency: getBlockchain(account.blockchain).config.coin
-            });
-
-            Dialog.alert(
-                'Transaction.signTransaction',
-                translate('Transaction.signExtensionTransaction', {
-                    amount: formattedAmount,
-                    fromAccount: formatAddress(account.address, account.blockchain),
-                    toAccount: formatAddress(toAddress, account.blockchain)
-                }),
-
-                {
-                    text: translate('App.labels.cancel'),
-                    onPress: () => {
-                        this.props.navigation.navigate('Dashboard');
-                        // TODO: Transaction refused
-                    }
-                },
-                {
-                    text: translate('App.labels.sign'),
-                    onPress: () => {
-                        PasswordModal.getPassword()
-                            .then(password => {
-                                this.props.sendTransferTransaction(
-                                    account,
-                                    toAddress,
-                                    amount,
-                                    token.symbol,
-                                    feeOptions,
-                                    password,
-                                    this.props.navigation,
-                                    {},
-                                    false
-                                );
-                            })
-                            .catch(() => {
-                                // TODO
-                                // maybe retry here
-                                // TODO: 'Wrong password'
-                            });
-                    }
-                }
-            );
-        }
-    }
-
     public render() {
         const { styles, navigation, account, transactions, token } = this.props;
 

@@ -4,7 +4,6 @@ import { NavigationService } from '../../../navigation/navigation-service';
 import { store } from '../../../redux/config';
 import { setSelectedWallet, updateTransactionFromBlockchain } from '../../../redux/wallets/actions';
 import { takeOneAndSubscribeToStore } from '../../../redux/utils/helpers';
-import { signExtensionTransaction } from '../../connect-extension/utils';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
 
 export const notificationHandler = async (
@@ -62,10 +61,6 @@ const handleNotification = (
             store.dispatch(setSelectedWallet(notification.data.walletId));
 
             NavigationService.navigate('Token', navigationParams);
-            break;
-
-        case NotificationType.EXTENSION_TRANSACTION:
-            signExtensionTransaction(notification.data);
             break;
 
         case NotificationType.MOONLET_TRANSFER:

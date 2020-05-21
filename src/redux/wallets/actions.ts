@@ -587,14 +587,17 @@ export const sendTransferTransaction = (
             dispatch(closeTransactionRequest());
             goBack && navigation.goBack();
             return;
+        } else {
+            throw new Error('GENERIC_ERROR');
         }
     } catch (errorMessage) {
         await LoadingModal.close();
 
-        const message = translate('LoadingModal.' + errorMessage, {
-            app: account.blockchain,
-            address: formatAddress(toAddress, account.blockchain)
-        });
+        const message =
+            translate('LoadingModal.' + errorMessage, {
+                app: account.blockchain,
+                address: formatAddress(toAddress, account.blockchain)
+            }) || translate('LoadingModal.GENERIC_ERROR');
 
         Dialog.info(translate('LoadingModal.txFailed'), message);
     }

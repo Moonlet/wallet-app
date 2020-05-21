@@ -1,4 +1,3 @@
-import { Platform } from 'react-native';
 import { IReduxState } from '../state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { getBlockchain, BLOCKCHAIN_LIST } from '../../core/blockchain/blockchain-factory';
@@ -83,11 +82,7 @@ export const getBlockchainsPortfolio = createSelector(
 
             let blockchainObject: IBlockchainOptions;
             if (reduxObject === undefined) {
-                if (Platform.OS !== 'web') {
-                    // On web we receive only the active blockchains
-                    // if the blockchain does not exist in preferences, we should not add it automatically as active
-                    blockchainObject = { order: config.defaultOrder, active: true };
-                }
+                blockchainObject = { order: config.defaultOrder, active: true };
             } else {
                 let option: IBlockchainOptions;
                 if (reduxObject.order === undefined) {

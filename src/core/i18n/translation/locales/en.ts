@@ -349,7 +349,9 @@ export const translation: ITranslations = {
             manageAccount: 'Manage account',
             quicklyManage: 'Quickly edit, order or hide your accounts',
             connectExtension: 'Connect to extension',
-            scanCode: 'Scan the QR code on extension'
+            scanCode: 'Scan the QR code on extension',
+            scanPay: 'Scan to pay',
+            scanReceive: 'Scan and receive a transaction request'
         },
         BackupWallet: {
             title: 'Backup Wallet',

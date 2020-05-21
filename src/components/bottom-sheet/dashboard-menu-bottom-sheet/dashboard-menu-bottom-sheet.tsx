@@ -18,7 +18,6 @@ import { connect } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
 import { QrModalReader } from '../../qr-modal/qr-modal';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
-import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -128,10 +127,9 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             onPress: () => this.connectExtension()
                         })}
                     {Platform.OS !== 'web' &&
-                    isFeatureActive(RemoteFeature.DEV_TOOLS) && // remove after the feature is done
                         this.renderRow({
-                            title: 'Smart Scan', // TODO
-                            description: 'Smart scan QR code', // TODO
+                            title: translate('DashboardMenu.scanPay'),
+                            description: translate('DashboardMenu.scanReceive'),
                             iconName: 'qr-code-scan',
                             onPress: () => this.qrCodeScanner.open()
                         })}

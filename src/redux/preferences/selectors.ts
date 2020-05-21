@@ -1,4 +1,3 @@
-// import { Platform } from 'react-native';
 import { IReduxState } from '../state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { getBlockchain, BLOCKCHAIN_LIST } from '../../core/blockchain/blockchain-factory';

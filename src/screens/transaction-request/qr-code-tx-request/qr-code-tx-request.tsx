@@ -166,7 +166,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
             await this.proxyTransfer();
             if (this.getWalletsByToken(this.state.tokenSymbol).length === 0) {
                 // Token has not been found in any wallet
-                this.props.showError();
+                this.props.showError({ tokenNotFound: true, tokenSymbol: this.state.tokenSymbol });
                 return; // Show error, no need to continue anymore
             }
         } else {

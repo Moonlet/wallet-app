@@ -573,18 +573,12 @@ export const sendTransferTransaction = (
             });
 
             if (sendResponse) {
-                const res = await ConnectExtension.sendResponse(sendResponse.requestId, {
+                await ConnectExtension.sendResponse(sendResponse.requestId, {
                     result: {
                         txHash,
                         tx
                     }
                 });
-
-                if (res?.success === true) {
-                    //
-                } else {
-                    //
-                }
 
                 dispatch({ type: CLOSE_TX_REQUEST });
             }
@@ -592,17 +586,17 @@ export const sendTransferTransaction = (
             await LoadingModal.close();
             goBack && navigation.goBack();
             return;
+        } else {
+            throw new Error('GENERIC_ERROR');
         }
     } catch (errorMessage) {
         await LoadingModal.close();
 
-        // TODO: check here and find a solution to fix
-        // await delay(500);
-
-        const message = translate('LoadingModal.' + errorMessage, {
-            app: account.blockchain,
-            address: formatAddress(toAddress, account.blockchain)
-        });
+        const message =
+            translate('LoadingModal.' + errorMessage, {
+                app: account.blockchain,
+                address: formatAddress(toAddress, account.blockchain)
+            }) || translate('LoadingModal.GENERIC_ERROR');
 
         Dialog.info(translate('LoadingModal.txFailed'), message);
     }

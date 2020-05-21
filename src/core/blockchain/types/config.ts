@@ -58,6 +58,7 @@ export interface IBlockchainConfig {
                 tabValidators?: string;
                 tabTransactions?: string;
             };
+            sendStepLabels: string[];
             accountCTA: {
                 mainCta: IButtonCTA;
             };

@@ -32,6 +32,5 @@ export const GENERIC_TOKEN_ICON = {
 export interface IButtonCTA {
     title: string;
     iconName: string;
-    delegationType: DelegationType;
     navigateTo: { screen: string; params: any };
 }

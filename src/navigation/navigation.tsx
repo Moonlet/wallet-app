@@ -39,7 +39,8 @@ import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connec
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
 import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
-import { DelegateScreen } from '../screens/delegate-screen/delegate-screen';
+import { PosActionSelectValidator } from '../screens/pos-action-select-validator/pos-action-select-validator';
+import { PosActionQuickDelegate } from '../screens/pos-action-quick-delegate/pos-action-quick-delegate';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -99,6 +100,21 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
     )
 });
 
+// POS ACTIONS
+export const PosActions = createStackNavigator(
+    {
+        PosActionSelectValidator: {
+            screen: PosActionSelectValidator
+        }
+    },
+    {
+        initialRouteName: 'PosActionSelectValidator',
+        defaultNavigationOptions: null,
+        headerLayoutPreset: 'center',
+        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
+    }
+);
+
 // wallet navigation stack
 export const WalletNavigation = createStackNavigator(
     {
@@ -138,9 +154,19 @@ export const WalletNavigation = createStackNavigator(
         Validator: {
             screen: ValidatorScreen
         },
-        DelegateScreen: {
-            screen: DelegateScreen
+        // PosActions: {
+        //     screen: PosActions
+        // },
+        PosActionSelectValidator: {
+            screen: PosActionSelectValidator
         },
+        PosActionQuickDelegate: {
+            screen: PosActionQuickDelegate
+        },
+
+        // DelegateScreen: {
+        //     screen: DelegateScreen
+        // },
 
         // wallet creation
         CreateWalletMnemonic: {

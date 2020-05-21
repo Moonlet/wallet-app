@@ -100,7 +100,16 @@ export class ValidatorsTabComponent extends React.Component<
                     />
                 </View>
                 <View style={styles.bottomContainer}>
-                    <CtaGroup mainCta={tokenUiConfig.accountCTA.mainCta} />
+                    <CtaGroup
+                        mainCta={tokenUiConfig.accountCTA.mainCta}
+                        params={{
+                            accountIndex: this.props.accountIndex,
+                            blockchain: this.props.blockchain,
+                            token: this.props.token,
+                            validators: [],
+                            title: tokenUiConfig.accountCTA.mainCta.title
+                        }}
+                    />
                 </View>
             </View>
         );

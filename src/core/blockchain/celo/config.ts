@@ -17,37 +17,38 @@ import {
 export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickVote',
-        delegationType: DelegationType.QUICK_DELEGATE,
         iconName: 'vote',
-        navigateTo: { screen: undefined, params: undefined }
+        navigateTo: {
+            screen: 'PosActionQuickDelegate',
+            params: { delegationType: DelegationType.QUICK_DELEGATE }
+        }
     }
 };
 
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.vote',
-        delegationType: DelegationType.DELEGATE,
         iconName: 'vote',
-        navigateTo: { screen: undefined, params: undefined }
+        navigateTo: {
+            screen: 'PosActionSelectValidator',
+            params: { delegationType: DelegationType.DELEGATE, title: 'App.labels.vote' }
+        }
     },
     otherCtas: [
         {
             title: 'App.labels.revote',
-            delegationType: DelegationType.REDELEGATE,
             iconName: 'revote',
-            navigateTo: { screen: undefined, params: undefined }
+            navigateTo: { screen: undefined, params: { delegationType: DelegationType.REDELEGATE } }
         },
         {
             title: 'App.labels.unvote',
-            delegationType: DelegationType.UNDELEGATE,
             iconName: 'unvote',
-            navigateTo: { screen: undefined, params: undefined }
+            navigateTo: { screen: undefined, params: { delegationType: DelegationType.UNDELEGATE } }
         },
         {
             title: 'App.labels.unlock',
-            delegationType: DelegationType.UNLOCK,
             iconName: 'unlock',
-            navigateTo: { screen: undefined, params: undefined }
+            navigateTo: { screen: undefined, params: { delegationType: DelegationType.UNLOCK } }
         }
     ]
 };
@@ -104,6 +105,7 @@ export const config: IBlockchainConfig = {
                 tabValidators: 'App.labels.validators',
                 tabTransactions: 'App.labels.transactions'
             },
+            sendStepLabels: ['Send.selectValidator', 'Send.enterAmount', 'Send.confirmVote'],
             accountCTA,
             delegationCTA: {
                 mainCta: accountCTA.mainCta

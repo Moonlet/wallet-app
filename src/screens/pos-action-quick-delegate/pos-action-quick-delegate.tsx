@@ -1,18 +1,17 @@
 import React from 'react';
-import { View, TouchableOpacity, Text } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-// import { Text } from '../../library';
+import { Text } from '../../library';
 import { translate } from '../../core/i18n';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { getAccount } from '../../redux/wallets/selectors';
 import { formatAddress } from '../../core/utils/format-address';
 import { Blockchain, IFeeOptions, ChainIdType } from '../../core/blockchain/types';
-import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import BigNumber from 'bignumber.js';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TokenType, DelegationType } from '../../core/blockchain/types/token';
@@ -71,19 +70,18 @@ interface IState {
     amount: string;
     insufficientFunds: boolean;
     feeOptions: IFeeOptions;
-    showExtensionMessage: boolean;
     memo: string;
+    headerStepsVisible: boolean;
     headerSteps: IHeaderStep[];
     insufficientFundsFees: boolean;
     nrValidators: number;
     validatorsList: IValidator[];
 }
 
-export const navigationOptions = ({ navigation }: any) => ({
-    headerLeft: <HeaderLeftClose navigation={navigation} />,
+export const navigationOptions = ({ navigation, theme }: any) => ({
     title: translate(navigation.state.params.title || 'App.labels.send')
 });
-export class DelegateScreenComponent extends React.Component<
+export class PosActionQuickDelegateComponent extends React.Component<
     INavigationProps<INavigationParams> &
         IReduxProps &
         IThemeProps<ReturnType<typeof stylesProvider>>,
@@ -98,10 +96,23 @@ export class DelegateScreenComponent extends React.Component<
     ) {
         super(props);
 
-        // celo steps
-        const step1 = translate('Send.selectValidator');
-        const step2 = translate('Send.enterAmount');
-        const step3 = translate('Send.confirmVote');
+        const blockchainInstance = getBlockchain(props.account.blockchain);
+
+        let stepsVisible = false;
+        const stepList = [];
+        blockchainInstance.config.ui.token.sendStepLabels.map((step, index) => {
+            stepList.push({
+                step: index,
+                title: translate(step),
+                active: index === 0 ? true : false
+            });
+        });
+
+        if (
+            props.delegationType === DelegationType.DELEGATE ||
+            props.delegationType === DelegationType.REDELEGATE
+        )
+            stepsVisible = true;
 
         this.state = {
             nrValidators: 1,
@@ -109,15 +120,11 @@ export class DelegateScreenComponent extends React.Component<
             amount: '',
             insufficientFunds: false,
             feeOptions: undefined,
-            showExtensionMessage: false,
             memo: '',
-            headerSteps: [
-                { step: 1, title: step1, active: true },
-                { step: 2, title: step2, active: false },
-                { step: 3, title: step3, active: false }
-            ],
+            headerStepsVisible: stepsVisible,
+            headerSteps: stepList,
             insufficientFundsFees: false,
-            validatorsList: props.validators
+            validatorsList: props.validators || []
         };
     }
 
@@ -450,6 +457,7 @@ export class DelegateScreenComponent extends React.Component<
                                 }}
                             />
                         </View>
+
                         {headerSteps.map((step, index) => {
                             if (step.active) {
                                 switch (index) {
@@ -533,7 +541,7 @@ export class DelegateScreenComponent extends React.Component<
     }
 }
 
-export const DelegateScreen = smartConnect(DelegateScreenComponent, [
+export const PosActionQuickDelegate = smartConnect(PosActionQuickDelegateComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider),
     withNavigationParams()

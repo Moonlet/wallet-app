@@ -30,43 +30,40 @@ export const ATOM_NATIVE: ITokenConfigState = {
 export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickDelegate',
-        delegationType: DelegationType.QUICK_DELEGATE,
         iconName: 'vote',
-        navigateTo: { screen: undefined, params: undefined }
+        navigateTo: { screen: undefined, params: { delegationType: DelegationType.QUICK_DELEGATE } }
     }
 };
 
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.delegate',
-        delegationType: DelegationType.DELEGATE,
         iconName: 'vote',
-        navigateTo: { screen: undefined, params: undefined }
+        navigateTo: { screen: undefined, params: { delegationType: DelegationType.DELEGATE } }
     },
     otherCtas: [
         {
             title: 'App.labels.claimReward',
-            delegationType: DelegationType.CLAIM_REWARD,
             iconName: 'claim-reward',
-            navigateTo: { screen: undefined, params: undefined }
+            navigateTo: {
+                screen: undefined,
+                params: { delegationType: DelegationType.CLAIM_REWARD }
+            }
         },
         {
             title: 'App.labels.reinvest',
-            delegationType: DelegationType.REINVEST,
             iconName: 'reinvest',
-            navigateTo: { screen: undefined, params: undefined }
+            navigateTo: { screen: undefined, params: { delegationType: DelegationType.REINVEST } }
         },
         {
             title: 'App.labels.redelegate',
-            delegationType: DelegationType.REDELEGATE,
             iconName: 'revote',
-            navigateTo: { screen: undefined, params: undefined }
+            navigateTo: { screen: undefined, params: { delegationType: DelegationType.REDELEGATE } }
         },
         {
             title: 'App.labels.undelegate',
-            delegationType: DelegationType.UNDELEGATE,
             iconName: 'unvote',
-            navigateTo: { screen: undefined, params: undefined }
+            navigateTo: { screen: undefined, params: { delegationType: DelegationType.UNDELEGATE } }
         }
     ]
 };
@@ -113,6 +110,7 @@ export const config: IBlockchainConfig = {
                 tabValidators: 'App.labels.validators',
                 tabTransactions: 'App.labels.transactions'
             },
+            sendStepLabels: ['Send.selectValidator', 'Send.enterAmount', 'Send.confirmStake'],
             accountCTA,
             delegationCTA: {
                 mainCta: accountCTA.mainCta

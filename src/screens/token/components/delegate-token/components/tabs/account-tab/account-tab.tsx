@@ -15,7 +15,6 @@ import { getChainId } from '../../../../../../../redux/preferences/selectors';
 import { Button } from '../../../../../../../library';
 import { translate } from '../../../../../../../core/i18n';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
-import { DelegationType } from '../../../../../../../core/blockchain/types/token';
 import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
 import { AccountStats } from '../../../../../../../core/blockchain/types/stats';
 import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
@@ -70,19 +69,6 @@ export class AccountTabComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const tokenUiConfig = blockchainInstance.config.ui.token;
 
-        const mainCta = tokenUiConfig.accountCTA.mainCta;
-        mainCta.navigateTo = {
-            screen: 'DelegateScreen',
-            params: {
-                accountIndex: this.props.account.index,
-                blockchain: this.props.blockchain,
-                delegationType: DelegationType.QUICK_DELEGATE,
-                token: this.props.token,
-                validators: [moonletValidator],
-                title: mainCta.title
-            }
-        };
-
         return (
             <View style={styles.container}>
                 <View style={{ flex: 1 }}>
@@ -124,7 +110,16 @@ export class AccountTabComponent extends React.Component<
                             {translate('App.labels.receive')}
                         </Button>
                     </View>
-                    <CtaGroup mainCta={tokenUiConfig.accountCTA.mainCta} />
+                    <CtaGroup
+                        mainCta={tokenUiConfig.accountCTA.mainCta}
+                        params={{
+                            accountIndex: this.props.account.index,
+                            blockchain: this.props.account.blockchain,
+                            token: this.props.token,
+                            validators: [moonletValidator],
+                            title: tokenUiConfig.accountCTA.mainCta.title
+                        }}
+                    />
                 </View>
             </View>
         );

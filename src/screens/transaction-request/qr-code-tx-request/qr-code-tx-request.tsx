@@ -119,24 +119,32 @@ export class QRCodeTransferRequestComponent extends React.Component<
         };
     }
 
-    private isChainIdValid(chainId: ChainIdType): boolean {
-        // Make sure the ChainId is valid
-        const { blockchain } = this.props.selectedAccount;
+    public componentDidMount() {
+        this.parseQrCodeTxPayload();
+    }
 
-        const networksByChainId = getBlockchain(blockchain).networks.filter(
-            n => n.chainId === chainId
-        );
-
-        if (networksByChainId.length === 0) {
-            // Invalid ChainId
-            return false;
-        } else {
-            // Valid ChainId
-            return true;
+    public componentDidUpdate(prevProps: IReduxProps & IExternalProps) {
+        if (this.props.qrCodeTxPayload !== prevProps.qrCodeTxPayload) {
+            this.reinitState();
         }
     }
 
-    public componentDidMount() {
+    private reinitState() {
+        this.setState(
+            {
+                amount: '0',
+                chainId: this.props.currentChainId,
+                tokenSymbol: getBlockchain(this.props.selectedAccount.blockchain).config.coin, // Default Native Coin
+                insufficientFunds: false,
+                insufficientFundsFees: false,
+                feeOptions: undefined,
+                token: undefined
+            },
+            () => this.parseQrCodeTxPayload()
+        );
+    }
+
+    public parseQrCodeTxPayload() {
         const { blockchain } = this.props.selectedAccount;
         const { qrCodeTxPayload } = this.props;
 
@@ -200,6 +208,23 @@ export class QRCodeTransferRequestComponent extends React.Component<
         }
 
         this.getAccountTokenBySymbol(this.state.tokenSymbol);
+    }
+
+    private isChainIdValid(chainId: ChainIdType): boolean {
+        // Make sure the ChainId is valid
+        const { blockchain } = this.props.selectedAccount;
+
+        const networksByChainId = getBlockchain(blockchain).networks.filter(
+            n => n.chainId === chainId
+        );
+
+        if (networksByChainId.length === 0) {
+            // Invalid ChainId
+            return false;
+        } else {
+            // Valid ChainId
+            return true;
+        }
     }
 
     private proxyTransfer() {

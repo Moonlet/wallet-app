@@ -82,11 +82,11 @@ export class TransactionRequestScreenComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.requestId !== prevProps.requestId && this.props.requestId !== null) {
+        if (this.props.requestId !== prevProps.requestId && this.props.requestId !== undefined) {
             this.getExtensionTxPayload();
         }
 
-        if (this.props.qrCode !== prevProps.qrCode && this.props.qrCode !== null) {
+        if (this.props.qrCode !== prevProps.qrCode && this.props.qrCode !== undefined) {
             this.getQrCodeTxPayload();
         }
     }
@@ -252,6 +252,9 @@ export class TransactionRequestScreenComponent extends React.Component<
             }
 
             this.setState({ qrCodeTxPayload });
+        } else {
+            // Invalid QR Code URL
+            this.setInvalidQrCodeUrl();
         }
     }
 

@@ -202,7 +202,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                 tokenConfig.decimals
             );
 
-            this.setState({ amount: amountFromStd.toString() });
+            this.setState({ amount: amountFromStd.toFixed() });
         }
 
         const toAddress = qrCodeTxPayload.params?.ByStr20To

@@ -140,51 +140,20 @@ export class QRCodeTransferRequestComponent extends React.Component<
         const { blockchain } = this.props.selectedAccount;
         const { qrCodeTxPayload } = this.props;
 
-        // ZRC-2
-        if (qrCodeTxPayload?.fct === '/proxyTransfer') {
-            if (qrCodeTxPayload?.chainId) {
-                // TestNet
-                if (this.isChainIdValid(qrCodeTxPayload.chainId)) {
-                    // Valid ChainId
+        switch (qrCodeTxPayload?.fct) {
+            case '/proxyTransfer':
+                this.proxyTransfer();
+                break;
 
-                    const tokenSymbolOnChainId = this.searchTokenByContractAddressAndChainId(
-                        qrCodeTxPayload.address,
-                        qrCodeTxPayload.chainId
-                    );
+            case '/Transfer':
+                break;
 
-                    if (tokenSymbolOnChainId === undefined) {
-                        // Token is not in the requested ChainId
-                        this.props.showError({ tokenNotFound: true });
-                        return; // Show error, no need to continue anymore
-                    } else {
-                        this.setState({ tokenSymbol: tokenSymbolOnChainId });
-                    }
-                } else {
-                    // Invalid ChainId
-                    this.props.showError();
-                    return; // Show error, no need to continue anymore
-                }
-            } else {
-                // MainNet
+            case '/DoMagic':
+                // Smart contract call
+                break;
 
-                const tokenSymbolOnChainId = this.searchTokenByContractAddressAndChainId(
-                    qrCodeTxPayload.address,
-                    this.props.currentChainId
-                );
-
-                if (tokenSymbolOnChainId === undefined) {
-                    // Token is not on MainNet
-                    this.props.showError({ tokenNotFound: true });
-                    return; // Show error, no need to continue anymore
-                } else {
-                    this.setState({ tokenSymbol: tokenSymbolOnChainId });
-                }
-
-                if (this.props.isTestNet === true) {
-                    // Activate MainNet
-                    this.props.toggleTestNet();
-                }
-            }
+            default:
+                break;
         }
 
         if (qrCodeTxPayload?.chainId) {
@@ -231,6 +200,54 @@ export class QRCodeTransferRequestComponent extends React.Component<
         }
 
         this.getAccountTokenBySymbol(this.state.tokenSymbol);
+    }
+
+    private proxyTransfer() {
+        const { qrCodeTxPayload } = this.props;
+
+        if (qrCodeTxPayload?.chainId) {
+            // TestNet
+            if (this.isChainIdValid(qrCodeTxPayload.chainId)) {
+                // Valid ChainId
+
+                const tokenSymbolOnChainId = this.searchTokenByContractAddressAndChainId(
+                    qrCodeTxPayload.address,
+                    qrCodeTxPayload.chainId
+                );
+
+                if (tokenSymbolOnChainId === undefined) {
+                    // Token is not in the requested ChainId
+                    this.props.showError({ tokenNotFound: true });
+                    return; // Show error, no need to continue anymore
+                } else {
+                    this.setState({ tokenSymbol: tokenSymbolOnChainId });
+                }
+            } else {
+                // Invalid ChainId
+                this.props.showError();
+                return; // Show error, no need to continue anymore
+            }
+        } else {
+            // MainNet
+
+            const tokenSymbolOnChainId = this.searchTokenByContractAddressAndChainId(
+                qrCodeTxPayload.address,
+                this.props.currentChainId
+            );
+
+            if (tokenSymbolOnChainId === undefined) {
+                // Token is not on MainNet
+                this.props.showError({ tokenNotFound: true });
+                return; // Show error, no need to continue anymore
+            } else {
+                this.setState({ tokenSymbol: tokenSymbolOnChainId });
+            }
+
+            if (this.props.isTestNet === true) {
+                // Activate MainNet
+                this.props.toggleTestNet();
+            }
+        }
     }
 
     private searchTokenByContractAddressAndChainId(

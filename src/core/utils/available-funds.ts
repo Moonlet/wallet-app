@@ -35,10 +35,10 @@ export const availableFunds = (
 
     // Amount check
     const inputAmount = getInputAmountToStd(account, token, amount);
-    const availableAmount = new BigNumber(token.balance?.value);
+    const availableBalanceValue = new BigNumber(token.balance?.value);
 
     // Amount > available amount
-    result.insufficientFunds = inputAmount.isGreaterThan(availableAmount);
+    result.insufficientFunds = inputAmount.isGreaterThan(availableBalanceValue);
 
     if (result.insufficientFunds === true) {
         return result;
@@ -49,7 +49,9 @@ export const availableFunds = (
 
     if (tokenConfig.type === TokenType.NATIVE) {
         // feeTotal + amount > available amount
-        result.insufficientFundsFees = feeTotal.plus(inputAmount).isGreaterThan(availableAmount);
+        result.insufficientFundsFees = feeTotal
+            .plus(inputAmount)
+            .isGreaterThan(availableBalanceValue);
     } else {
         const nativeCoin = getBlockchain(account.blockchain).config.coin;
         const nativeCoinBalance = account.tokens[chainId][nativeCoin].balance?.value;
@@ -61,4 +63,30 @@ export const availableFunds = (
     }
 
     return result;
+};
+
+export const availableAmount = (
+    account: IAccountState,
+    token: ITokenState,
+    feeOptions?: IFeeOptions
+): string => {
+    const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
+
+    let balance: BigNumber = new BigNumber(token.balance?.value);
+    if (feeOptions) {
+        if (tokenConfig.type === TokenType.NATIVE) {
+            balance = balance.minus(feeOptions?.feeTotal);
+        }
+    }
+
+    if (balance.isGreaterThanOrEqualTo(0)) {
+        const blockchainInstance = getBlockchain(account.blockchain);
+        const amountFromStd = blockchainInstance.account.amountFromStd(
+            new BigNumber(balance),
+            tokenConfig.decimals
+        );
+        return amountFromStd.toString();
+    } else {
+        return new BigNumber(0).toString();
+    }
 };

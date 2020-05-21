@@ -25,7 +25,6 @@ import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { BASE_DIMENSION } from '../../styles/dimensions';
-import { TokenType } from '../../core/blockchain/types/token';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
@@ -47,7 +46,11 @@ import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import { BottomCta } from '../../components/bottom-cta/bottom-cta';
 import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { AmountCtaField } from '../../components/bottom-cta/amount-cta-field/amount-cta-field';
-import { getInputAmountToStd, availableFunds } from '../../core/utils/available-funds';
+import {
+    getInputAmountToStd,
+    availableFunds,
+    availableAmount
+} from '../../core/utils/available-funds';
 
 interface IHeaderStep {
     step: number;
@@ -297,26 +300,6 @@ export class SendScreenComponent extends React.Component<
         });
     }
 
-    public availableAmount() {
-        const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
-
-        let balance: BigNumber = new BigNumber(this.props.token.balance?.value);
-        if (tokenConfig.type === TokenType.NATIVE) {
-            balance = balance.minus(this.state.feeOptions?.feeTotal);
-        }
-
-        if (balance.isGreaterThanOrEqualTo(0)) {
-            const blockchainInstance = getBlockchain(this.props.account.blockchain);
-            const amountFromStd = blockchainInstance.account.amountFromStd(
-                new BigNumber(balance),
-                tokenConfig.decimals
-            );
-            return amountFromStd.toString();
-        } else {
-            return new BigNumber(0).toString();
-        }
-    }
-
     public renderExtraFields(value: string) {
         switch (value) {
             case 'Memo':
@@ -416,7 +399,11 @@ export class SendScreenComponent extends React.Component<
         return (
             <View key="enterAmount" style={this.props.styles.amountContainer}>
                 <EnterAmount
-                    availableAmount={this.availableAmount()}
+                    availableAmount={availableAmount(
+                        this.props.account,
+                        this.props.token,
+                        this.state.feeOptions
+                    )}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}
                     token={this.props.token}

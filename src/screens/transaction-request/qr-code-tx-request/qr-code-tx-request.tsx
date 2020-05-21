@@ -21,8 +21,6 @@ import {
 import { IReduxState } from '../../../redux/state';
 import { getSelectedWallet, getSelectedAccount } from '../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
-import { Amount } from '../../../components/amount/amount';
-import { calculateBalance } from '../../../core/utils/balance';
 import { ChainIdType, IFeeOptions } from '../../../core/blockchain/types';
 import { IExchangeRates } from '../../../redux/market/state';
 import { getChainId } from '../../../redux/preferences/selectors';
@@ -35,7 +33,7 @@ import { Icon } from '../../../components/icon';
 import { setNetworkTestNetChainId, toggleTestNet } from '../../../redux/preferences/actions';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ITokensConfigState, ITokenConfigState } from '../../../redux/tokens/state';
-import { availableFunds } from '../../../core/utils/available-funds';
+import { availableFunds, availableAmount } from '../../../core/utils/available-funds';
 
 export interface IQRCodeTxPayload {
     address: string;
@@ -158,20 +156,10 @@ export class QRCodeTransferRequestComponent extends React.Component<
         const { blockchain } = this.props.selectedAccount;
         const { qrCodeTxPayload } = this.props;
 
-        switch (qrCodeTxPayload?.fct) {
-            case '/proxyTransfer':
-                this.proxyTransfer();
-                break;
-
-            case '/Transfer':
-                break;
-
-            case '/DoMagic':
-                // Smart contract call
-                break;
-
-            default:
-                break;
+        if (qrCodeTxPayload?.fct === '/proxyTransfer') {
+            this.proxyTransfer();
+        } else {
+            this.getAccountTokenBySymbol(this.state.tokenSymbol);
         }
 
         if (qrCodeTxPayload?.chainId) {
@@ -222,8 +210,6 @@ export class QRCodeTransferRequestComponent extends React.Component<
             : qrCodeTxPayload.address;
 
         this.setState({ toAddress });
-
-        this.getAccountTokenBySymbol(this.state.tokenSymbol);
     }
 
     private isChainIdValid(chainId: ChainIdType): boolean {
@@ -262,6 +248,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                     return; // Show error, no need to continue anymore
                 } else {
                     this.setState({ tokenSymbol: tokenSymbolOnChainId });
+                    this.getAccountTokenBySymbol(tokenSymbolOnChainId);
                 }
             } else {
                 // Invalid ChainId
@@ -282,6 +269,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                 return; // Show error, no need to continue anymore
             } else {
                 this.setState({ tokenSymbol: tokenSymbolOnChainId });
+                this.getAccountTokenBySymbol(tokenSymbolOnChainId);
             }
 
             if (this.props.isTestNet === true) {
@@ -321,27 +309,14 @@ export class QRCodeTransferRequestComponent extends React.Component<
     ) {
         const { styles, theme } = this.props;
 
-        let tokenConfig;
-        let blockchain;
-
-        if (options?.amount) {
-            blockchain = this.props.selectedAccount.blockchain;
-
-            tokenConfig = getTokenConfig(blockchain, this.state.tokenSymbol);
-        }
-
         return (
             <View style={styles.inputContainer}>
                 <Text style={styles.receipientLabel}>{label}</Text>
                 <View style={styles.inputBox}>
                     {options?.amount ? (
-                        <Amount
-                            style={styles.confirmTransactionText}
-                            amount={options.amount}
-                            token={tokenConfig.symbol}
-                            tokenDecimals={tokenConfig.decimals}
-                            blockchain={blockchain}
-                        />
+                        <Text style={styles.confirmTransactionText}>
+                            {`${options.amount} ${this.state.tokenSymbol}`}
+                        </Text>
                     ) : (
                         <Text
                             style={[
@@ -522,13 +497,10 @@ export class QRCodeTransferRequestComponent extends React.Component<
                         )}
                     </TouchableHighlight>
 
-                    {this.renderField(translate('App.labels.balance'), undefined, {
-                        amount: calculateBalance(
-                            this.props.selectedAccount,
-                            this.state.chainId,
-                            this.props.exchangeRates
-                        )
-                    })}
+                    {this.state.token !== undefined &&
+                        this.renderField(translate('App.labels.balance'), undefined, {
+                            amount: availableAmount(selectedAccount, this.state.token)
+                        })}
 
                     {this.renderField(
                         translate('App.labels.from'),

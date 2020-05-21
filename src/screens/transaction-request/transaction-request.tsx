@@ -56,6 +56,7 @@ export interface IState {
         extensionError: boolean;
         generalError: boolean;
         tokenError: boolean;
+        tokenErrorSymbol: string;
     };
 }
 
@@ -69,7 +70,8 @@ export class TransactionRequestScreenComponent extends React.Component<
             error: {
                 extensionError: false,
                 generalError: false,
-                tokenError: false
+                tokenError: false,
+                tokenErrorSymbol: undefined
             },
             extensionTxPayload: undefined,
             qrCodeTxPayload: undefined
@@ -283,14 +285,20 @@ export class TransactionRequestScreenComponent extends React.Component<
     private renderExtensionTx() {
         const { extensionTxPayload, qrCodeTxPayload } = this.state;
         const { styles } = this.props;
-        const { extensionError, generalError, tokenError } = this.state.error;
+        const { extensionError, generalError, tokenError, tokenErrorSymbol } = this.state.error;
 
         if (extensionError || generalError || tokenError) {
-            const errorMessage = extensionError
-                ? translate('TransactionRequest.errorMsgExtension')
-                : tokenError
-                ? translate('TransactionRequest.errorMsgToken')
-                : translate('TransactionRequest.errorMsgGeneral');
+            const errorMessage =
+                extensionError === true
+                    ? translate('TransactionRequest.errorMsgExtension')
+                    : tokenError === true
+                    ? translate('TransactionRequest.errorMsgToken', {
+                          token:
+                              tokenErrorSymbol !== undefined
+                                  ? tokenErrorSymbol
+                                  : translate('App.labels.theRequested')
+                      })
+                    : translate('TransactionRequest.errorMsgGeneral');
 
             return (
                 <View style={styles.errorWrapper}>
@@ -302,13 +310,13 @@ export class TransactionRequestScreenComponent extends React.Component<
                         <Text style={styles.errorMessage}>{errorMessage}</Text>
                     </View>
 
-                    {extensionError && (
+                    {extensionError === true && (
                         <Button onPress={() => this.cancelTransactionRequest()}>
                             {translate('App.labels.cancel')}
                         </Button>
                     )}
 
-                    {generalError && (
+                    {generalError === true && (
                         <Button onPress={() => openURL(CONFIG.supportUrl)}>
                             {translate('App.labels.createTicket')}
                         </Button>
@@ -327,19 +335,23 @@ export class TransactionRequestScreenComponent extends React.Component<
                 <QRCodeTransferRequest
                     qrCodeTxPayload={qrCodeTxPayload}
                     callback={this.confirm}
-                    showError={(options: { tokenNotFound?: boolean }) => {
+                    showError={(options: { tokenNotFound?: boolean; tokenSymbol?: string }) => {
                         if (options?.tokenNotFound) {
                             this.setState({
                                 error: {
-                                    ...this.state.error,
-                                    tokenError: true
+                                    extensionError: false,
+                                    generalError: false,
+                                    tokenError: true,
+                                    tokenErrorSymbol: options?.tokenSymbol
                                 }
                             });
                         } else {
                             this.setState({
                                 error: {
-                                    ...this.state.error,
-                                    generalError: true
+                                    extensionError: false,
+                                    generalError: true,
+                                    tokenError: false,
+                                    tokenErrorSymbol: undefined
                                 }
                             });
                         }

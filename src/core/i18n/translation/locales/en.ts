@@ -95,6 +95,7 @@ export const translation: ITranslations = {
                 tc: 'Terms of Service',
                 to: 'To',
                 tools: 'Tools',
+                theRequested: 'the requested',
                 transactions: 'Transactions',
                 tryAgain: 'Try again',
                 typeHere: 'Type here',
@@ -447,7 +448,7 @@ export const translation: ITranslations = {
             accountName: 'Account name',
             errorMsgExtension: 'Transaction request is not valid anymore.',
             errorMsgToken:
-                'This transaction request is not supported. Please go to  Dashboard > Menu > Manage account and add the requested token.',
+                'This transaction request is not supported. Please go to  Dashboard > Menu > Manage account and add {{token}} token.',
             errorMsgGeneral:
                 'This transaction request is not supported. Please create a ticket and let us know what you tried to do and what went wrong.',
             insufficientFunds:

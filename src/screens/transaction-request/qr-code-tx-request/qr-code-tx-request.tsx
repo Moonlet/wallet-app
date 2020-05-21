@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput } from 'react-native';
+import { View, TextInput, TouchableHighlight } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import { translate } from '../../../core/i18n';
 import stylesProvider from './styles';
@@ -26,7 +26,6 @@ import { IExchangeRates } from '../../../redux/market/state';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { FeeOptions } from '../../send/components/fee-options/fee-options';
 import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
-import { TouchableHighlight } from 'react-native-gesture-handler';
 import { BottomSheetType } from '../../../redux/ui/bottomSheet/state';
 import { openBottomSheet } from '../../../redux/ui/bottomSheet/actions';
 import { Icon } from '../../../components/icon';
@@ -34,6 +33,8 @@ import { setNetworkTestNetChainId, toggleTestNet } from '../../../redux/preferen
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ITokensConfigState, ITokenConfigState } from '../../../redux/tokens/state';
 import { availableFunds, availableAmount } from '../../../core/utils/available-funds';
+import CONFIG from '../../../config';
+import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
 
 export interface IQRCodeTxPayload {
     address: string;
@@ -59,7 +60,7 @@ export interface IQRCodeTransferData {
 export interface IExternalProps {
     qrCodeTxPayload: IQRCodeTxPayload;
     callback: (options?: { qrCodeTransferData?: IQRCodeTransferData }) => void;
-    showError: (options?: { tokenNotFound?: boolean }) => void;
+    showError: (options?: { tokenNotFound?: boolean; tokenSymbol?: string }) => void;
 }
 
 export interface IReduxProps {
@@ -104,6 +105,7 @@ interface IState {
     insufficientFundsFees: boolean;
     feeOptions: IFeeOptions;
     token: ITokenState;
+    isLoading: boolean;
 }
 
 export class QRCodeTransferRequestComponent extends React.Component<
@@ -123,7 +125,8 @@ export class QRCodeTransferRequestComponent extends React.Component<
             insufficientFunds: false,
             insufficientFundsFees: false,
             feeOptions: undefined,
-            token: undefined
+            token: undefined,
+            isLoading: false
         };
     }
 
@@ -146,18 +149,26 @@ export class QRCodeTransferRequestComponent extends React.Component<
                 insufficientFunds: false,
                 insufficientFundsFees: false,
                 feeOptions: undefined,
-                token: undefined
+                token: undefined,
+                isLoading: false
             },
             () => this.parseQrCodeTxPayload()
         );
     }
 
-    public parseQrCodeTxPayload() {
+    public async parseQrCodeTxPayload() {
         const { blockchain } = this.props.selectedAccount;
         const { qrCodeTxPayload } = this.props;
 
+        this.setState({ isLoading: true });
+
         if (qrCodeTxPayload?.fct === '/proxyTransfer') {
-            this.proxyTransfer();
+            await this.proxyTransfer();
+            if (this.getWalletsByToken(this.state.tokenSymbol).length === 0) {
+                // Token has not been found in any wallet
+                this.props.showError();
+                return; // Show error, no need to continue anymore
+            }
         } else {
             this.getAccountTokenBySymbol(this.state.tokenSymbol);
         }
@@ -209,7 +220,10 @@ export class QRCodeTransferRequestComponent extends React.Component<
             ? qrCodeTxPayload.params.ByStr20To
             : qrCodeTxPayload.address;
 
-        this.setState({ toAddress });
+        this.setState({
+            toAddress,
+            isLoading: false
+        });
     }
 
     private isChainIdValid(chainId: ChainIdType): boolean {
@@ -229,7 +243,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
         }
     }
 
-    private proxyTransfer() {
+    private async proxyTransfer() {
         const { qrCodeTxPayload } = this.props;
 
         if (qrCodeTxPayload?.chainId) {
@@ -244,7 +258,10 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
                 if (tokenSymbolOnChainId === undefined) {
                     // Token is not in the requested ChainId
-                    this.props.showError({ tokenNotFound: true });
+                    const searchedToken = await this.fetchTokenByContractAddress(
+                        qrCodeTxPayload.address
+                    );
+                    this.props.showError({ tokenNotFound: true, tokenSymbol: searchedToken });
                     return; // Show error, no need to continue anymore
                 } else {
                     this.setState({ tokenSymbol: tokenSymbolOnChainId });
@@ -265,7 +282,10 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
             if (tokenSymbolOnChainId === undefined) {
                 // Token is not on MainNet
-                this.props.showError({ tokenNotFound: true });
+                const searchedToken = await this.fetchTokenByContractAddress(
+                    qrCodeTxPayload.address
+                );
+                this.props.showError({ tokenNotFound: true, tokenSymbol: searchedToken });
                 return; // Show error, no need to continue anymore
             } else {
                 this.setState({ tokenSymbol: tokenSymbolOnChainId });
@@ -277,6 +297,27 @@ export class QRCodeTransferRequestComponent extends React.Component<
                 this.props.toggleTestNet();
             }
         }
+    }
+
+    private async fetchTokenByContractAddress(address: string): Promise<string> {
+        let foundTokenSymbol: string;
+
+        try {
+            const token = await fetch(
+                CONFIG.tokensUrl +
+                    `${this.props.selectedAccount.blockchain.toLocaleLowerCase()}/${address.toLocaleLowerCase()}.json`
+            );
+
+            const tokenData = await token.json();
+
+            if (tokenData && tokenData?.symbol) {
+                foundTokenSymbol = tokenData?.symbol;
+            }
+        } catch {
+            //
+        }
+
+        return foundTokenSymbol;
     }
 
     private searchTokenByContractAddressAndChainId(
@@ -293,7 +334,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                         token?.contractAddress === contractAddress &&
                         Number(chainId) === Number(searchChainId) // TODO
                     ) {
-                        tokenSymbol = token.symbol;
+                        tokenSymbol = token?.symbol;
                     }
                 });
             });
@@ -416,30 +457,34 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
     private onFeesChanged(feeOptions: IFeeOptions) {
         this.setState({ feeOptions }, () => {
-            const { insufficientFunds, insufficientFundsFees } = availableFunds(
-                this.state.amount,
-                this.props.selectedAccount,
-                this.state.token,
-                this.state.chainId,
-                feeOptions
-            );
+            if (this.state.token) {
+                const { insufficientFunds, insufficientFundsFees } = availableFunds(
+                    this.state.amount,
+                    this.props.selectedAccount,
+                    this.state.token,
+                    this.state.chainId,
+                    feeOptions
+                );
 
-            this.setState({ insufficientFunds, insufficientFundsFees });
+                this.setState({ insufficientFunds, insufficientFundsFees });
+            }
         });
     }
 
     private addAmount(value: string) {
         const amount = value.replace(/,/g, '.');
         this.setState({ amount }, () => {
-            const { insufficientFunds, insufficientFundsFees } = availableFunds(
-                amount,
-                this.props.selectedAccount,
-                this.state.token,
-                this.state.chainId,
-                this.state.feeOptions
-            );
+            if (this.state.token) {
+                const { insufficientFunds, insufficientFundsFees } = availableFunds(
+                    amount,
+                    this.props.selectedAccount,
+                    this.state.token,
+                    this.state.chainId,
+                    this.state.feeOptions
+                );
 
-            this.setState({ insufficientFunds, insufficientFundsFees });
+                this.setState({ insufficientFunds, insufficientFundsFees });
+            }
         });
     }
 
@@ -447,6 +492,14 @@ export class QRCodeTransferRequestComponent extends React.Component<
         const { qrCodeTxPayload, styles, theme, selectedAccount } = this.props;
         const { amount, chainId, tokenSymbol } = this.state;
         const { blockchain } = selectedAccount;
+
+        if (this.state.isLoading) {
+            return (
+                <View style={{ flex: 1 }}>
+                    <LoadingIndicator />
+                </View>
+            );
+        }
 
         const recipient = formatAddress(this.state.toAddress, blockchain);
 

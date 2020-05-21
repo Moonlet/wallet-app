@@ -57,7 +57,7 @@ import {
 } from '../../core/secure/keychain/keychain';
 import { delay } from '../../core/utils/time';
 import { toggleBiometricAuth } from '../preferences/actions';
-import { CLOSE_TX_REQUEST } from '../ui/transaction-request/actions';
+import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../ui/transaction-request/actions';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import * as Sentry from '@sentry/react-native';
@@ -573,31 +573,23 @@ export const sendTransferTransaction = (
             });
 
             if (sendResponse) {
-                const res = await ConnectExtension.sendResponse(sendResponse.requestId, {
+                await ConnectExtension.sendResponse(sendResponse.requestId, {
                     result: {
                         txHash,
                         tx
                     }
                 });
 
-                if (res?.success === true) {
-                    //
-                } else {
-                    //
-                }
-
                 dispatch({ type: CLOSE_TX_REQUEST });
             }
 
             await LoadingModal.close();
+            dispatch(closeTransactionRequest());
             goBack && navigation.goBack();
             return;
         }
     } catch (errorMessage) {
         await LoadingModal.close();
-
-        // TODO: check here and find a solution to fix
-        // await delay(500);
 
         const message = translate('LoadingModal.' + errorMessage, {
             app: account.blockchain,

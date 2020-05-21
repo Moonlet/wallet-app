@@ -50,9 +50,17 @@ export interface IQRCodeTxPayload {
     };
 }
 
+export interface IQRCodeTransferData {
+    account: IAccountState;
+    toAddress: string;
+    amount: string;
+    token: string;
+    feeOptions: IFeeOptions;
+}
+
 export interface IExternalProps {
     qrCodeTxPayload: IQRCodeTxPayload;
-    callback: () => void;
+    callback: (options?: { qrCodeTransferData?: IQRCodeTransferData }) => void;
     showError: (options?: { tokenNotFound?: boolean }) => void;
 }
 
@@ -90,6 +98,7 @@ const mapDispatchToProps = {
 };
 
 interface IState {
+    toAddress: string;
     amount: string;
     chainId: ChainIdType;
     tokenSymbol: string;
@@ -109,6 +118,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
         super(props);
 
         this.state = {
+            toAddress: '',
             amount: '0',
             chainId: props.currentChainId,
             tokenSymbol: getBlockchain(props.selectedAccount.blockchain).config.coin, // Default Native Coin
@@ -206,6 +216,12 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
             this.setState({ amount: amountFromStd.toString() });
         }
+
+        const toAddress = qrCodeTxPayload.params?.ByStr20To
+            ? qrCodeTxPayload.params.ByStr20To
+            : qrCodeTxPayload.address;
+
+        this.setState({ toAddress });
 
         this.getAccountTokenBySymbol(this.state.tokenSymbol);
     }
@@ -457,12 +473,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
         const { amount, chainId, tokenSymbol } = this.state;
         const { blockchain } = selectedAccount;
 
-        const recipient = formatAddress(
-            qrCodeTxPayload.params?.ByStr20To
-                ? qrCodeTxPayload.params.ByStr20To
-                : qrCodeTxPayload.address,
-            blockchain
-        );
+        const recipient = formatAddress(this.state.toAddress, blockchain);
 
         const config = getBlockchain(blockchain).config;
 
@@ -556,7 +567,17 @@ export class QRCodeTransferRequestComponent extends React.Component<
                         this.state.insufficientFunds === true ||
                         this.state.insufficientFundsFees === true
                     }
-                    onPress={() => this.props.callback()}
+                    onPress={() => {
+                        this.props.callback({
+                            qrCodeTransferData: {
+                                account: this.props.selectedAccount,
+                                toAddress: this.state.toAddress,
+                                amount: this.state.amount,
+                                token: this.state.tokenSymbol,
+                                feeOptions: this.state.feeOptions
+                            }
+                        });
+                    }}
                 >
                     <PrimaryCtaField
                         label={translate('App.labels.send')}

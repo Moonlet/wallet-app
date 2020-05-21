@@ -17,11 +17,16 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { ResponsePayloadType } from '../../core/connect-extension/types';
 import { ExtensionTransferRequest } from './extension-tx-request/extension-tx-request';
-import { QRCodeTransferRequest, IQRCodeTxPayload } from './qr-code-tx-request/qr-code-tx-request';
+import {
+    QRCodeTransferRequest,
+    IQRCodeTxPayload,
+    IQRCodeTransferData
+} from './qr-code-tx-request/qr-code-tx-request';
 import { openURL } from '../../core/utils/linking-handler';
 import CONFIG from '../../config';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { getUrlParams } from '../../core/connect-extension/utils';
+import bind from 'bind-decorator';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -132,7 +137,8 @@ export class TransactionRequestScreenComponent extends React.Component<
         }
     }
 
-    private async confirm() {
+    @bind
+    private async confirm(options?: { qrCodeTransferData?: IQRCodeTransferData }) {
         try {
             const password = await PasswordModal.getPassword(
                 translate('Password.pinTitleUnlock'),
@@ -142,18 +148,34 @@ export class TransactionRequestScreenComponent extends React.Component<
 
             const { extensionTxPayload } = this.state;
 
-            this.props.sendTransferTransaction(
-                extensionTxPayload.account,
-                extensionTxPayload.toAddress,
-                extensionTxPayload.amount,
-                extensionTxPayload.token,
-                extensionTxPayload.feeOptions,
-                password,
-                undefined, // navigation - not needed
-                extensionTxPayload.extraFields,
-                false, // goBack
-                { requestId: this.props.requestId }
-            );
+            if (extensionTxPayload) {
+                this.props.sendTransferTransaction(
+                    extensionTxPayload.account,
+                    extensionTxPayload.toAddress,
+                    extensionTxPayload.amount,
+                    extensionTxPayload.token,
+                    extensionTxPayload.feeOptions,
+                    password,
+                    undefined, // navigation - not needed
+                    extensionTxPayload.extraFields,
+                    false, // goBack
+                    { requestId: this.props.requestId }
+                );
+            }
+
+            if (options?.qrCodeTransferData) {
+                this.props.sendTransferTransaction(
+                    options.qrCodeTransferData.account,
+                    options.qrCodeTransferData.toAddress,
+                    options.qrCodeTransferData.amount,
+                    options.qrCodeTransferData.token,
+                    options.qrCodeTransferData.feeOptions,
+                    password,
+                    undefined, // navigation - not needed
+                    undefined, // extraFields - TODO
+                    false // goBack
+                );
+            }
         } catch {
             //
         }
@@ -297,14 +319,14 @@ export class TransactionRequestScreenComponent extends React.Component<
             return (
                 <ExtensionTransferRequest
                     extensionTxPayload={extensionTxPayload}
-                    callback={() => this.confirm()}
+                    callback={this.confirm}
                 />
             );
         } else if (qrCodeTxPayload) {
             return (
                 <QRCodeTransferRequest
                     qrCodeTxPayload={qrCodeTxPayload}
-                    callback={() => this.confirm()}
+                    callback={this.confirm}
                     showError={(options: { tokenNotFound?: boolean }) => {
                         if (options?.tokenNotFound) {
                             this.setState({

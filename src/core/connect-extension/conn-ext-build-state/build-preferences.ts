@@ -1,5 +1,6 @@
 import * as IExtStorage from '../types';
 import { cloneDeep } from 'lodash';
+import { BLOCKCHAIN_LIST } from '../../blockchain/blockchain-factory';
 
 export const buildPreferences = (trimmedPreferences: IExtStorage.IStoragePreferences) => {
     const blockchains = {};
@@ -12,6 +13,14 @@ export const buildPreferences = (trimmedPreferences: IExtStorage.IStoragePrefere
                 active: true
             }
         });
+    });
+
+    // add inactive blockchains
+    BLOCKCHAIN_LIST.filter(b => !trimmedPreferences.blockchains.includes(b)).map(blockchain => {
+        blockchains[blockchain] = {
+            order: 999,
+            active: false
+        };
     });
 
     return {

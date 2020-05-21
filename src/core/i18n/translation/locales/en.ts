@@ -382,6 +382,8 @@ export const translation: ITranslations = {
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',
+            GENERIC_ERROR:
+                'Something went wrong while broadcasting your transaction. Please try again.',
             REVIEW_TRANSACTION: 'Review transaction on your hardware wallet',
             OPEN_APP: 'Please open {{app}} app on your Ledger',
             BROADCASTING: 'Broadcasting transaction',

@@ -16,6 +16,7 @@ export const buildPreferences = (trimmedPreferences: IExtStorage.IStoragePrefere
     });
 
     // add inactive blockchains
+    // to refactor this, send the entire pref blockchains state from mobile
     trimmedPreferences.blockchains.length > 0 &&
         BLOCKCHAIN_LIST.filter(b => !trimmedPreferences.blockchains.includes(b)).map(blockchain => {
             blockchains[blockchain] = {

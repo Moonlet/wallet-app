@@ -160,6 +160,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
     public async parseQrCodeTxPayload() {
         const { blockchain } = this.props.selectedAccount;
         const { qrCodeTxPayload } = this.props;
+        const blockchainInstance = getBlockchain(blockchain);
 
         this.setState({ isLoading: true });
 
@@ -208,7 +209,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
         if (amount) {
             const tokenConfig = getTokenConfig(blockchain, this.state.tokenSymbol);
 
-            const amountFromStd = getBlockchain(blockchain).account.amountFromStd(
+            const amountFromStd = blockchainInstance.account.amountFromStd(
                 new BigNumber(amount),
                 tokenConfig.decimals
             );
@@ -219,6 +220,16 @@ export class QRCodeTransferRequestComponent extends React.Component<
         const toAddress = qrCodeTxPayload.params?.ByStr20To
             ? qrCodeTxPayload.params.ByStr20To
             : qrCodeTxPayload.address;
+
+        try {
+            await blockchainInstance
+                .getClient(qrCodeTxPayload?.chainId || this.state.chainId)
+                .nameService.resolveText(toAddress);
+        } catch (err) {
+            // Invalid address
+            this.props.showError();
+            return; // Show error, no need to continue anymore
+        }
 
         this.setState({
             toAddress,

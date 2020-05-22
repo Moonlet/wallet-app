@@ -16,12 +16,13 @@ export const buildPreferences = (trimmedPreferences: IExtStorage.IStoragePrefere
     });
 
     // add inactive blockchains
-    BLOCKCHAIN_LIST.filter(b => !trimmedPreferences.blockchains.includes(b)).map(blockchain => {
-        blockchains[blockchain] = {
-            order: 999,
-            active: false
-        };
-    });
+    trimmedPreferences.blockchains.length > 0 &&
+        BLOCKCHAIN_LIST.filter(b => !trimmedPreferences.blockchains.includes(b)).map(blockchain => {
+            blockchains[blockchain] = {
+                order: 999,
+                active: false
+            };
+        });
 
     return {
         currency: trimmedPreferences.currency,

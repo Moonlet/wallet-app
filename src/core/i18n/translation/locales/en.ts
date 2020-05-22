@@ -223,7 +223,7 @@ export const translation: ITranslations = {
             }
         },
         Send: {
-            inputAddress: 'Search public addresses or domain names',
+            inputAddress: 'Paste your address here or scan the QR code',
             memo: 'Memo (optional)',
             amount: 'Amount',
             recipientLabel: 'Recipient',

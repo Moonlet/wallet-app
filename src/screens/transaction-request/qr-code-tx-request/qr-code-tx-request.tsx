@@ -43,11 +43,15 @@ export interface IQRCodeTxPayload {
     fct: string; // ex: /Transfer /DoMagic /proxyTransfer
     params: {
         amount?: string;
-        amountUint128?: string;
         gasPrice?: string; // TODO
         gasLimit?: string; // TODO
-        ByStr20To?: string;
+        toAddress?: string;
     };
+}
+
+export enum QRCodeExtraParams {
+    ByStr20TO = 'ByStr20-to',
+    Uint128Amount = 'Uint128-amount'
 }
 
 export interface IQRCodeTransferData {
@@ -196,8 +200,8 @@ export class QRCodeTransferRequestComponent extends React.Component<
             this.getAccountTokenBySymbol(this.state.tokenSymbol);
         }
 
-        const toAddress = qrCodeTxPayload.params?.ByStr20To
-            ? qrCodeTxPayload.params.ByStr20To
+        const toAddress = qrCodeTxPayload.params?.toAddress
+            ? qrCodeTxPayload.params.toAddress
             : qrCodeTxPayload.address;
 
         // Validate Address
@@ -216,11 +220,6 @@ export class QRCodeTransferRequestComponent extends React.Component<
         let amount: string;
         if (qrCodeTxPayload?.params?.amount) {
             amount = qrCodeTxPayload.params.amount;
-        }
-
-        // Amount Uint-128 is prioritary
-        if (qrCodeTxPayload?.params?.amountUint128) {
-            amount = qrCodeTxPayload.params.amountUint128;
         }
 
         if (amount) {

@@ -20,7 +20,8 @@ import { ExtensionTransferRequest } from './extension-tx-request/extension-tx-re
 import {
     QRCodeTransferRequest,
     IQRCodeTxPayload,
-    IQRCodeTransferData
+    IQRCodeTransferData,
+    QRCodeExtraParams
 } from './qr-code-tx-request/qr-code-tx-request';
 import { openURL } from '../../core/utils/linking-handler';
 import CONFIG from '../../config';
@@ -245,14 +246,14 @@ export class TransactionRequestScreenComponent extends React.Component<
                     qrCodeTxPayload.params.amount = extraData.amount;
                 }
 
-                if (extraData['Uint128-amount']) {
-                    qrCodeTxPayload.params.amountUint128 = extraData['Uint128-amount'];
+                if (extraData[QRCodeExtraParams.Uint128Amount]) {
+                    qrCodeTxPayload.params.amount = extraData[QRCodeExtraParams.Uint128Amount];
                 }
 
                 if (
                     extraData?.amount &&
-                    extraData['Uint128-amount'] &&
-                    extraData.amount !== extraData['Uint128-amount']
+                    extraData[QRCodeExtraParams.Uint128Amount] &&
+                    extraData.amount !== extraData[QRCodeExtraParams.Uint128Amount]
                 ) {
                     // Invalid URL
                     this.setInvalidQrCodeUrl();
@@ -269,9 +270,24 @@ export class TransactionRequestScreenComponent extends React.Component<
                     qrCodeTxPayload.params.gasLimit = extraData.gasLimit;
                 }
 
+                // To
+                if (extraData.to) {
+                    qrCodeTxPayload.params.toAddress = extraData.to;
+                }
+
                 // ByStr20-to
-                if (extraData['ByStr20-to']) {
-                    qrCodeTxPayload.params.ByStr20To = extraData['ByStr20-to'];
+                if (extraData[QRCodeExtraParams.ByStr20TO]) {
+                    qrCodeTxPayload.params.toAddress = extraData[QRCodeExtraParams.ByStr20TO];
+                }
+
+                if (
+                    extraData.to &&
+                    extraData[QRCodeExtraParams.ByStr20TO] &&
+                    extraData.to !== extraData[QRCodeExtraParams.ByStr20TO]
+                ) {
+                    // Invalid URL
+                    this.setInvalidQrCodeUrl();
+                    return;
                 }
             }
 

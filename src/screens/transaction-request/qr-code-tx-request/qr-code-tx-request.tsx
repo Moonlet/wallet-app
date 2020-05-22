@@ -196,6 +196,23 @@ export class QRCodeTransferRequestComponent extends React.Component<
             this.getAccountTokenBySymbol(this.state.tokenSymbol);
         }
 
+        const toAddress = qrCodeTxPayload.params?.ByStr20To
+            ? qrCodeTxPayload.params.ByStr20To
+            : qrCodeTxPayload.address;
+
+        // Validate Address
+        try {
+            await blockchainInstance
+                .getClient(qrCodeTxPayload?.chainId || this.state.chainId)
+                .nameService.resolveText(toAddress);
+        } catch (err) {
+            // Invalid address
+            this.props.showError();
+            return; // Show error, no need to continue anymore
+        }
+
+        this.setState({ toAddress });
+
         let amount: string;
         if (qrCodeTxPayload?.params?.amount) {
             amount = qrCodeTxPayload.params.amount;
@@ -217,24 +234,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
             this.setState({ amount: amountFromStd.toFixed() });
         }
 
-        const toAddress = qrCodeTxPayload.params?.ByStr20To
-            ? qrCodeTxPayload.params.ByStr20To
-            : qrCodeTxPayload.address;
-
-        try {
-            await blockchainInstance
-                .getClient(qrCodeTxPayload?.chainId || this.state.chainId)
-                .nameService.resolveText(toAddress);
-        } catch (err) {
-            // Invalid address
-            this.props.showError();
-            return; // Show error, no need to continue anymore
-        }
-
-        this.setState({
-            toAddress,
-            isLoading: false
-        });
+        this.setState({ isLoading: false });
     }
 
     private isChainIdValid(chainId: ChainIdType): boolean {

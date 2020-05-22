@@ -36,6 +36,7 @@ import { availableFunds, availableAmount } from '../../../core/utils/available-f
 import CONFIG from '../../../config';
 import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
 import bind from 'bind-decorator';
+import { setSelectedWallet } from '../../../redux/wallets/actions';
 
 export interface IQRCodeTxPayload {
     address: string;
@@ -76,7 +77,7 @@ export interface IExternalProps {
 
 export interface IReduxProps {
     wallets: IWalletsState;
-    wallet: IWalletState;
+    selectedWallet: IWalletState;
     selectedAccount: IAccountState;
     currentChainId: ChainIdType;
     exchangeRates: IExchangeRates;
@@ -85,6 +86,7 @@ export interface IReduxProps {
     toggleTestNet: typeof toggleTestNet;
     isTestNet: boolean;
     tokens: ITokensConfigState;
+    setSelectedWallet: typeof setSelectedWallet;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -92,7 +94,7 @@ const mapStateToProps = (state: IReduxState) => {
 
     return {
         wallets: state.wallets,
-        wallet: getSelectedWallet(state),
+        selectedWallet: getSelectedWallet(state),
         selectedAccount,
         currentChainId: getChainId(state, selectedAccount.blockchain),
         exchangeRates: state.market.exchangeRates,
@@ -104,7 +106,8 @@ const mapStateToProps = (state: IReduxState) => {
 const mapDispatchToProps = {
     openBottomSheet,
     setNetworkTestNetChainId,
-    toggleTestNet
+    toggleTestNet,
+    setSelectedWallet
 };
 
 interface IState {
@@ -200,10 +203,17 @@ export class QRCodeTransferRequestComponent extends React.Component<
         ) {
             await this.proxyTransfer();
 
-            if (this.getWalletsByToken(this.state.tokenSymbol).length === 0) {
+            const walletsByToken = this.getWalletsByToken(this.state.tokenSymbol);
+
+            if (walletsByToken.length === 0) {
                 // Token has not been found in any wallet
                 this.props.showError({ tokenNotFound: true, tokenSymbol: this.state.tokenSymbol });
                 return; // Show error, no need to continue anymore
+            } else {
+                if (walletsByToken.filter(w => w === this.props.selectedWallet).length === 0) {
+                    // Switch to the first wallet which contains the requested token
+                    this.props.setSelectedWallet(walletsByToken[0].id);
+                }
             }
         } else {
             this.getAccountTokenBySymbol(this.state.tokenSymbol);
@@ -515,7 +525,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                     >
                         {this.renderField(
                             translate('TransactionRequest.walletName'),
-                            this.props.wallet.name,
+                            this.props.selectedWallet.name,
                             { inputColor: theme.colors.text, leftIcon: 'chevron-down' }
                         )}
                     </TouchableHighlight>

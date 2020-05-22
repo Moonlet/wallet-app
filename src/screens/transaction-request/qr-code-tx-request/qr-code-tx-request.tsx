@@ -120,7 +120,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
         this.state = {
             toAddress: '',
-            amount: '0',
+            amount: '',
             chainId: props.currentChainId,
             tokenSymbol: getBlockchain(props.selectedAccount.blockchain).config.coin, // Default Native Coin
             insufficientFunds: false,
@@ -359,6 +359,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
     private renderInputAmountField(label: string) {
         const { theme, styles } = this.props;
+        const { amount } = this.state;
 
         return (
             <View style={styles.inputContainer}>
@@ -367,11 +368,10 @@ export class QRCodeTransferRequestComponent extends React.Component<
                     <TextInput
                         style={styles.inputText}
                         placeholderTextColor={theme.colors.textSecondary}
-                        placeholder={translate('Send.amount')}
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
-                        value={this.state.amount}
+                        value={amount === '' ? '0' : amount}
                         onChangeText={this.addAmount}
                         keyboardType="decimal-pad"
                         returnKeyType="done"
@@ -532,7 +532,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
                     {this.renderField(
                         translate('App.labels.from'),
-                        formatAddress(this.props.selectedAccount.address, blockchain)
+                        formatAddress(selectedAccount.address, blockchain)
                     )}
                     {this.renderField(translate('App.labels.recipient'), recipient)}
 
@@ -549,7 +549,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                     <FeeOptions
                         token={token}
                         sendingToken={token} // TODO
-                        account={this.props.selectedAccount}
+                        account={selectedAccount}
                         toAddress={qrCodeTxPayload.address}
                         onFeesChanged={this.onFeesChanged}
                         insufficientFundsFees={this.state.insufficientFundsFees}
@@ -572,7 +572,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                             qrCodeTransferData: {
                                 account: this.props.selectedAccount,
                                 toAddress: this.state.toAddress,
-                                amount: this.state.amount,
+                                amount: amount === '' ? '0' : amount,
                                 token: this.state.tokenSymbol,
                                 feeOptions: this.state.feeOptions
                             }

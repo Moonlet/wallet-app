@@ -54,6 +54,12 @@ export enum QRCodeExtraParams {
     Uint128Amount = 'Uint128-amount'
 }
 
+export enum QRCodeFctParam {
+    PROXY_TRANSFER = '/proxyTransfer',
+    TRANSFER = '/Transfer',
+    SMART_CONTRACT = '/DoMagic'
+}
+
 export interface IQRCodeTransferData {
     account: IAccountState;
     toAddress: string;
@@ -188,7 +194,10 @@ export class QRCodeTransferRequestComponent extends React.Component<
             }
         }
 
-        if (qrCodeTxPayload?.fct === '/proxyTransfer') {
+        if (
+            qrCodeTxPayload?.fct === QRCodeFctParam.PROXY_TRANSFER ||
+            qrCodeTxPayload?.fct === QRCodeFctParam.PROXY_TRANSFER + '/'
+        ) {
             await this.proxyTransfer();
 
             if (this.getWalletsByToken(this.state.tokenSymbol).length === 0) {

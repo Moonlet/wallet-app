@@ -32,7 +32,7 @@ import { Icon } from '../../../components/icon';
 import { setNetworkTestNetChainId, toggleTestNet } from '../../../redux/preferences/actions';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ITokensConfigState, ITokenConfigState } from '../../../redux/tokens/state';
-import { availableFunds, availableAmount } from '../../../core/utils/available-funds';
+import { availableFunds } from '../../../core/utils/available-funds';
 import CONFIG from '../../../config';
 import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
 import bind from 'bind-decorator';
@@ -494,19 +494,30 @@ export class QRCodeTransferRequestComponent extends React.Component<
             );
         }
 
+        const blockchainInstance = getBlockchain(blockchain);
+
         const recipient = formatAddress(this.state.toAddress, blockchain);
 
-        const config = getBlockchain(blockchain).config;
-
         const token =
-            selectedAccount.tokens[chainId] && selectedAccount.tokens[chainId][config.coin];
+            selectedAccount.tokens[chainId] &&
+            selectedAccount.tokens[chainId][blockchainInstance.config.coin];
 
         const tokenConfig = getTokenConfig(blockchain, tokenSymbol);
 
-        const stdAmount = getBlockchain(blockchain).account.amountToStd(
+        const stdAmount = blockchainInstance.account.amountToStd(
             new BigNumber(amount),
             tokenConfig.decimals
         );
+
+        const balance =
+            selectedAccount.tokens[chainId] && selectedAccount.tokens[chainId][tokenSymbol]
+                ? blockchainInstance.account.amountFromStd(
+                      new BigNumber(
+                          selectedAccount.tokens[chainId][tokenSymbol].balance?.value || '0'
+                      ),
+                      tokenConfig.decimals
+                  )
+                : '0';
 
         return (
             <View style={{ flex: 1 }}>
@@ -543,10 +554,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                         )}
                     </TouchableHighlight>
 
-                    {this.state.token !== undefined &&
-                        this.renderField(translate('App.labels.balance'), undefined, {
-                            amount: availableAmount(selectedAccount, this.state.token)
-                        })}
+                    {this.renderField(translate('App.labels.balance'), `${balance} ${tokenSymbol}`)}
 
                     {this.renderField(
                         translate('App.labels.from'),

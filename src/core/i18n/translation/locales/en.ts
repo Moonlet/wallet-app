@@ -47,6 +47,7 @@ export const translation: ITranslations = {
                 fee: 'Fee',
                 fees: 'Fees',
                 find: 'Find',
+                for: 'For',
                 from: 'From',
                 half: 'Half',
                 holdUnveil: 'Hold to unveil',

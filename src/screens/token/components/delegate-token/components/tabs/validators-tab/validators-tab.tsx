@@ -13,6 +13,7 @@ import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
 import { ITokenState } from '../../../../../../../redux/wallets/state';
+import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
 
 export interface IProps {
     accountIndex: number;
@@ -106,7 +107,7 @@ export class ValidatorsTabComponent extends React.Component<
                             accountIndex: this.props.accountIndex,
                             blockchain: this.props.blockchain,
                             token: this.props.token,
-                            validators: [],
+                            validators: [moonletValidator],
                             title: tokenUiConfig.accountCTA.mainCta.title
                         }}
                     />

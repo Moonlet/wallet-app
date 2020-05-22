@@ -39,8 +39,8 @@ import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connec
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
 import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
-import { PosActionSelectValidator } from '../screens/pos-action-select-validator/pos-action-select-validator';
-import { PosActionQuickDelegate } from '../screens/pos-action-quick-delegate/pos-action-quick-delegate';
+import { PosActionSelectValidator } from '../screens/pos-actions/pos-action-delegate-select-validator/pos-action-delegate-select-validator';
+import { PosActionQuickDelegate } from '../screens/pos-actions/pos-action-quick-delegate/pos-action-quick-delegate';
 
 interface IDefaultNavOptions {
     navigation: any;

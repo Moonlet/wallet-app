@@ -14,6 +14,7 @@ import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-f
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
 import { ChainIdType } from '../../../../../../../core/blockchain/types';
 import { ITokenState } from '../../../../../../../redux/wallets/state';
+import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
 
 export interface IProps {
     accountIndex: number;
@@ -104,7 +105,7 @@ export class DelegationsTabComponent extends React.Component<
                             accountIndex: this.props.accountIndex,
                             blockchain: this.props.blockchain,
                             token: this.props.token,
-                            validators: [],
+                            validators: [moonletValidator],
                             title: tokenUiConfig.accountCTA.mainCta.title
                         }}
                     />

@@ -1,11 +1,11 @@
 import React from 'react';
 import { View } from 'react-native';
 import stylesProvider from './styles';
-import { Text } from '../../../../library';
-import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
-import { SmartImage } from '../../../../library/image/smart-image';
-import { smartConnect } from '../../../../core/utils/smart-connect';
-import { IValidator } from '../../../../core/blockchain/types/stats';
+import { Text } from '../../../../../library';
+import { IThemeProps, withTheme } from '../../../../../core/theme/with-theme';
+import { SmartImage } from '../../../../../library/image/smart-image';
+import { smartConnect } from '../../../../../core/utils/smart-connect';
+import { IValidator } from '../../../../../core/blockchain/types/stats';
 
 export interface IExternalProps {
     validator: IValidator;

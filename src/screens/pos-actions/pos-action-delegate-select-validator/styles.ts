@@ -1,5 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
-import { ITheme } from '../../core/theme/itheme';
+import { ITheme } from '../../../core/theme/itheme';
 import {
     BASE_DIMENSION,
     BORDER_RADIUS,
@@ -7,7 +7,7 @@ import {
     normalize,
     isIphoneXorAbove,
     normalizeFontAndLineHeight
-} from '../../styles/dimensions';
+} from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -29,44 +29,8 @@ export default (theme: ITheme) =>
             marginTop: BASE_DIMENSION * 3,
             marginHorizontal: BASE_DIMENSION * 2
         },
-        receipientLabel: {
-            fontSize: normalizeFontAndLineHeight(13),
-            lineHeight: normalizeFontAndLineHeight(18),
-            paddingLeft: BASE_DIMENSION,
-            color: theme.colors.textSecondary
-        },
-        inputBox: {
-            height: BASE_DIMENSION * 5,
-            borderRadius: BORDER_RADIUS,
-            backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: BASE_DIMENSION,
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center'
-        },
-        icon: {
-            color: theme.colors.accent
-        },
         headerSteps: {
             marginBottom: BASE_DIMENSION
-        },
-
-        //
-        amountContainer: {
-            marginHorizontal: BASE_DIMENSION * 2
-        },
-
-        // step 3
-        confirmTransactionContainer: {
-            flex: 1,
-            paddingTop: BASE_DIMENSION * 3,
-            paddingHorizontal: BASE_DIMENSION * 2
-        },
-        confirmTransactionText: {
-            fontSize: normalizeFontAndLineHeight(15),
-            lineHeight: normalizeFontAndLineHeight(20),
-            color: theme.colors.textSecondary,
-            alignSelf: 'center'
         },
         actionContainer: {
             marginTop: BASE_DIMENSION * 2,
@@ -94,15 +58,6 @@ export default (theme: ITheme) =>
             alignContent: 'center',
             paddingVertical: BASE_DIMENSION / 2,
             paddingHorizontal: BASE_DIMENSION / 2
-        },
-        unlockContainerText: {
-            textAlign: 'center'
-        },
-
-        unlockTextChildren: {
-            color: theme.colors.textSecondary,
-            fontSize: normalizeFontAndLineHeight(14),
-            lineHeight: normalizeFontAndLineHeight(18)
         },
         actionIcon: {
             color: theme.colors.accent,

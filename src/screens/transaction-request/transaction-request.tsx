@@ -392,7 +392,7 @@ export class TransactionRequestScreenComponent extends React.Component<
         const { extensionError, generalError, tokenError } = this.state.error;
 
         const showTestnetBadge =
-            this.state.qrCodeTxPayload?.chainId !== undefined &&
+            this.state.extensionTxPayload === undefined &&
             !extensionError &&
             !generalError &&
             !tokenError;

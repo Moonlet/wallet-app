@@ -285,7 +285,7 @@ export const navigationConfig = {
         screen: SettingsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon(IconValues.COG)
+            tabBarIcon: menuIcon(IconValues.SETTINGS)
         })
     }
 };

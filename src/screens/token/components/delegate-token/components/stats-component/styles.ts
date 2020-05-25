@@ -3,7 +3,8 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     normalize,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    normalizeLetterSpacing
 } from '../../../../../../styles/dimensions';
 import { ITheme } from '../../../../../../core/theme/itheme';
 
@@ -61,7 +62,7 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(13)
         },
         chartTextDetailsSubTitle: {
-            letterSpacing: normalize(4),
+            letterSpacing: normalizeLetterSpacing(4),
             fontSize: normalizeFontAndLineHeight(10),
             lineHeight: normalizeFontAndLineHeight(10)
         },

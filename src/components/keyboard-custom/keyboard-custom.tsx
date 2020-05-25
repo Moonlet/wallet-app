@@ -67,7 +67,7 @@ export class KeyboardComponent extends React.Component<
                         onPress={() => this.setState({ isCapsLock: !this.state.isCapsLock })}
                     >
                         <Icon
-                            name={IconValues.KEYBOARD_SHIFT_1}
+                            name={IconValues.KEYBOARD_SHIFT}
                             size={normalize(16)}
                             style={styles.upperIcon}
                         />
@@ -97,7 +97,7 @@ export class KeyboardComponent extends React.Component<
                         onPress={this.props.handleDeleteKey}
                     >
                         <Icon
-                            name={IconValues.KEYBOARD_DELETE_1}
+                            name={IconValues.KEYBOARD_DELETE}
                             size={ICON_SIZE}
                             style={styles.deleteIcon}
                         />

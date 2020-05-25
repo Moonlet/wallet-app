@@ -53,7 +53,7 @@ export const LegalComponent = (
                         style={props.styles.iconContainer}
                     >
                         <Icon
-                            name={IconValues.ARROW_LEFT_1}
+                            name={IconValues.ARROW_LEFT}
                             size={ICON_SIZE}
                             style={props.styles.backIcon}
                         />

@@ -270,7 +270,7 @@ export class PasswordPinComponent extends React.Component<
                     }}
                 >
                     <Icon
-                        name={IconValues.KEYBOARD_DELETE_1}
+                        name={IconValues.KEYBOARD_DELETE}
                         size={normalize(40)}
                         style={styles.deleteIcon}
                     />

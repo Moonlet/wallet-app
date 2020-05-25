@@ -204,7 +204,7 @@ export class WalletsScreenComponent extends React.Component<
                         style={styles.action}
                     >
                         <Icon
-                            name={IconValues.VIEW_1}
+                            name={IconValues.VIEW}
                             size={normalize(32)}
                             style={styles.iconActionPositive}
                         />

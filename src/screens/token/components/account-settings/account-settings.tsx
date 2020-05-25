@@ -143,7 +143,7 @@ export class AccountSettingsModalComponent extends React.Component<
                                         style={styles.backButtonContainer}
                                     >
                                         <Icon
-                                            name={IconValues.ARROW_LEFT_1}
+                                            name={IconValues.ARROW_LEFT}
                                             size={ICON_SIZE}
                                             style={styles.icon}
                                         />

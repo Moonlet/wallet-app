@@ -87,7 +87,7 @@ export class ViewKeyComponent extends React.Component<
                             setTimeout(() => this.setState({ unveilMnemonic: false }), 250)
                         }
                     >
-                        <Icon name={IconValues.VIEW_1} size={ICON_SIZE} style={styles.icon} />
+                        <Icon name={IconValues.VIEW} size={ICON_SIZE} style={styles.icon} />
                         <Text style={styles.textRow}>{translate('App.labels.holdUnveil')}</Text>
                     </TouchableOpacity>
                 )}

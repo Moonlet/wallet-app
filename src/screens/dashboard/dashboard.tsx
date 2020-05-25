@@ -122,7 +122,7 @@ const navigationOptions = ({ navigation }: any) => ({
                 onPress={() => navigation.navigate('Wallets')}
             >
                 <Icon
-                    name={IconValues.MONEY_WALLET_1}
+                    name={IconValues.MONEY_WALLET}
                     size={ICON_SIZE}
                     style={{ color: themes.dark.colors.accent }}
                 />

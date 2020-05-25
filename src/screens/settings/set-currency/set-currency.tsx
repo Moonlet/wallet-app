@@ -50,7 +50,7 @@ export class SetCurrencyComponent extends React.Component<
                             <Text style={styles.textRow}>{currency}</Text>
                             {this.props.selectedCurrency === currency && (
                                 <Icon
-                                    name={IconValues.CHECK_1}
+                                    name={IconValues.CHECK}
                                     size={normalize(16)}
                                     style={styles.icon}
                                 />

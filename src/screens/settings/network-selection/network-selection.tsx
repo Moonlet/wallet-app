@@ -73,7 +73,7 @@ export class NetworkSelectionComponent extends React.Component<
                                             {appNetworks[blockchain].testNet ===
                                                 network.chainId && (
                                                 <Icon
-                                                    name={IconValues.CHECK_1}
+                                                    name={IconValues.CHECK}
                                                     size={normalize(16)}
                                                     style={styles.icon}
                                                 />

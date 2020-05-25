@@ -171,7 +171,7 @@ export class LedgerConnectBottomSheetComponent extends React.Component<
 
                     {this.state.ledgerDevice?.id === item.id && !this.state.loadingConnection && (
                         <Icon
-                            name={IconValues.CHECK_1}
+                            name={IconValues.CHECK}
                             size={normalize(16)}
                             style={this.props.styles.icon}
                         />

@@ -58,7 +58,7 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
                 <View key="loading" style={styles.loadingContainer}>
                     {this.props.data?.state === 'pending' && <LoadingIndicator />}
                     {this.props.data?.state === 'completed' && (
-                        <Icon name={IconValues.CHECK_1} size={ICON_SIZE} style={styles.icon} />
+                        <Icon name={IconValues.CHECK} size={ICON_SIZE} style={styles.icon} />
                     )}
                     {this.props.data?.state === 'rejected' && (
                         <Icon name={IconValues.WARNING} size={ICON_SIZE} style={styles.icon} />

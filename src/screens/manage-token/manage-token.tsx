@@ -281,7 +281,7 @@ export class ManageTokenComponent extends React.Component<
                             <View style={styles.iconContainer}>
                                 {this.state.isTokenSelected && (
                                     <Icon
-                                        name={IconValues.CHECK_1}
+                                        name={IconValues.CHECK}
                                         size={normalize(16)}
                                         style={styles.icon}
                                     />

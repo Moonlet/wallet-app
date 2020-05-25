@@ -38,7 +38,8 @@ import {
     BASE_DIMENSION,
     normalize,
     normalizeFontAndLineHeight,
-    LETTER_SPACING
+    LETTER_SPACING,
+    normalizeLetterSpacing
 } from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
@@ -63,7 +64,7 @@ const mainTabbedNavigationOptions: any = {
             fontSize: normalizeFontAndLineHeight(12),
             lineHeight: normalizeFontAndLineHeight(15),
             fontWeight: '500',
-            letterSpacing: LETTER_SPACING
+            letterSpacing: normalizeLetterSpacing(0.3)
         },
         style: {
             padding: BASE_DIMENSION,

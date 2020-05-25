@@ -48,24 +48,24 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         switch (tx.status) {
             case TransactionStatus.PENDING:
-                txIcon = 'pending';
+                txIcon = IconValues.PENDING;
                 txColor = theme.colors.warning;
                 break;
             case TransactionStatus.SUCCESS:
                 if (account.address.toLowerCase() === tx.address.toLowerCase()) {
-                    txIcon = 'outbound';
+                    txIcon = IconValues.OUTBOUND;
                     txColor = theme.colors.error;
                 } else if (account.address.toLowerCase() === tx.toAddress.toLowerCase()) {
-                    txIcon = 'inbound';
+                    txIcon = IconValues.INBOUND;
                     txColor = theme.colors.positive;
                 }
                 break;
             case TransactionStatus.DROPPED:
-                txIcon = 'delete-2';
+                txIcon = IconValues.FAILED;
                 txColor = theme.colors.disabledButton;
                 break;
             default:
-                txIcon = 'delete-2';
+                txIcon = IconValues.FAILED;
                 txColor = theme.colors.error;
                 break;
         }

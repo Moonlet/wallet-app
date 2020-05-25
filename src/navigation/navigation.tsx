@@ -264,28 +264,28 @@ export const navigationConfig = {
     Dashboard: {
         screen: WalletNavigation,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('dashboard')
+            tabBarIcon: menuIcon(IconValues.DASHBOARD)
         })
     },
     Statistics: {
         screen: StatisticsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('reinvest')
+            tabBarIcon: menuIcon(IconValues.REINVEST)
         })
     },
     Watch: {
         screen: WatchNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('view-1')
+            tabBarIcon: menuIcon(IconValues.VIEW)
         })
     },
     Settings: {
         screen: SettingsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('cog')
+            tabBarIcon: menuIcon(IconValues.COG)
         })
     }
 };

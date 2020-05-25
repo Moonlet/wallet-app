@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize, normalizeFontAndLineHeight } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalize,
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -92,7 +97,7 @@ export default (theme: ITheme) =>
         },
         mainText: {
             fontWeight: 'bold',
-            letterSpacing: 0.4,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.textSecondary,
             marginRight: BASE_DIMENSION * 2
         },

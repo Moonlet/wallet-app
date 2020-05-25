@@ -23,6 +23,7 @@ export const BORDER_RADIUS = normalize(8);
 export const BASE_DIMENSION = normalize(8);
 export const ICON_SIZE = normalize(24);
 export const ICON_CONTAINER_SIZE = normalize(44);
+export const LETTER_SPACING = Number((0.38 * scale).toFixed(2));
 
 export const SCREEN_HEIGHT =
     Platform.OS === 'web' ? Dimensions.get('window').height - 64 : Dimensions.get('window').height;

@@ -31,7 +31,11 @@ import { DelegateTokenScreen } from './components/delegate-token/delegate-token'
 import { AccountSettingsModal } from './components/account-settings/account-settings';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { SmartImage } from '../../library/image/smart-image';
-import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
+} from '../../styles/dimensions';
 import { TransactionStatus } from '../../core/wallet/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import bind from 'bind-decorator';
@@ -104,7 +108,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                         fontSize: normalizeFontAndLineHeight(22),
                         lineHeight: normalizeFontAndLineHeight(28),
                         color: themes[theme].colors.text,
-                        letterSpacing: 0.38,
+                        letterSpacing: LETTER_SPACING,
                         textAlign: 'center',
                         fontWeight: 'bold'
                     }}

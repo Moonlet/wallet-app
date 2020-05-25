@@ -31,7 +31,8 @@ import {
     normalize,
     SCREEN_WIDTH,
     SCREEN_HEIGHT,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
 } from '../../styles/dimensions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
@@ -100,7 +101,7 @@ const MyTitle = ({ text }) => (
             flex: 1,
             fontSize: normalizeFontAndLineHeight(20),
             lineHeight: normalizeFontAndLineHeight(25),
-            letterSpacing: 0.38,
+            letterSpacing: LETTER_SPACING,
             textAlign: 'center'
         }}
     >

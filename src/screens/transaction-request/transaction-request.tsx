@@ -25,6 +25,7 @@ import { BottomCta } from '../../components/bottom-cta/bottom-cta';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { AmountCtaField } from '../../components/bottom-cta/amount-cta-field/amount-cta-field';
+import { IconValues } from '../../components/icon/values';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -254,7 +255,11 @@ export class TransactionRequestScreenComponent extends React.Component<
                         onPress={() => this.cancelTransactionRequest()}
                         style={styles.closeButtonContainer}
                     >
-                        <Icon name={'close'} size={normalize(20)} style={styles.closeButton} />
+                        <Icon
+                            name={IconValues.CLOSE}
+                            size={normalize(20)}
+                            style={styles.closeButton}
+                        />
                     </TouchableOpacity>
                 </View>
             );

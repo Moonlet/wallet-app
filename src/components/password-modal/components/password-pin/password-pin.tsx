@@ -229,8 +229,8 @@ export class PasswordPinComponent extends React.Component<
                         <Icon
                             name={
                                 Platform.OS === 'ios' && this.state.biometryType === 'FaceID'
-                                    ? 'face-id'
-                                    : 'touch-id'
+                                    ? IconValues.FACE_ID
+                                    : IconValues.TOUCH_ID
                             }
                             size={normalize(40)}
                             style={styles.touchIdIcon}

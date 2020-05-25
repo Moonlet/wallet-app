@@ -225,7 +225,11 @@ export class ManageAccountComponent extends React.Component<
                         >
                             <Icon
                                 size={normalize(18)}
-                                name={item.value.active ? 'check-2-thicked' : 'check-2'}
+                                name={
+                                    item.value.active
+                                        ? IconValues.CHECK_BOX_THICKED
+                                        : IconValues.CHECK_BOX
+                                }
                                 style={[
                                     {
                                         color: item.value.active

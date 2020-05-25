@@ -164,7 +164,7 @@ export class AddressBookComponent extends React.Component<
                         </Text>
                     </View>
                     <Icon
-                        name={isSelected ? 'check-1' : 'add-circle'}
+                        name={isSelected ? IconValues.CHECK : IconValues.ADD_CIRCLE}
                         size={ICON_SIZE}
                         style={styles.icon}
                     />

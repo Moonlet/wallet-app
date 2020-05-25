@@ -14,6 +14,7 @@ import { Blockchain } from '../../../../../../../core/blockchain/types/blockchai
 import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
+import { IconValues } from '../../../../../../../components/icon/values';
 
 export interface IExternalProps {
     icon: string;
@@ -78,7 +79,7 @@ export const ValidatorCardComponent = (
                     </View>
 
                     <Icon
-                        name={'chevron-right'}
+                        name={IconValues.CHEVRON_RIGHT}
                         size={normalize(18)}
                         style={props.styles.chevronRight}
                     />

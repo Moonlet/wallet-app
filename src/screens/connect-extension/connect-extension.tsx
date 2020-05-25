@@ -199,7 +199,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                             onPress={() => this.qrCodeScanner.open()}
                             style={styles.scanButton}
                             disabled={this.state.isConnected}
-                            leftIcon="qr-code-scan"
+                            leftIcon={IconValues.QR_CODE_SCAN}
                         >
                             {translate('ConnectExtension.buttonScan')}
                         </Button>

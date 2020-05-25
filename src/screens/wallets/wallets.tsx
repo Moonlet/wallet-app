@@ -296,11 +296,11 @@ export class WalletsScreenComponent extends React.Component<
                                     >
                                         <ListCard
                                             onPress={() => this.onSelectWallet(wallet.id)}
-                                            leftIcon="saturn-icon"
+                                            leftIcon={IconValues.SATURN_ICON}
                                             label={wallet.name}
                                             rightIcon={
                                                 this.props.selectedWallet.id === wallet.id &&
-                                                'check-1'
+                                                IconValues.CHECK
                                             }
                                             selected={this.props.selectedWallet.id === wallet.id}
                                         />

@@ -19,6 +19,7 @@ import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { Capitalize } from '../../core/utils/format-string';
 import { delay } from '../../core/utils/time';
+import { IconValues } from '../../components/icon/values';
 
 export interface IReduxProps {
     openBottomSheet: typeof openBottomSheet;
@@ -194,8 +195,8 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             <ListCard
                                 key={`key-${this.state.blockchain}`}
                                 label={Capitalize(this.state.blockchain)}
-                                leftIcon="money-wallet-1"
-                                rightIcon={'check-1'}
+                                leftIcon={IconValues.MONEY_WALLET}
+                                rightIcon={IconValues.CHECK}
                                 selected={true}
                             />
                         )}
@@ -204,8 +205,8 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             <ListCard
                                 key={`key-${this.state.device}`}
                                 label={translate(`CreateHardwareWallet.${this.state.device}`)}
-                                leftIcon="ledger-logo"
-                                rightIcon={'check-1'}
+                                leftIcon={IconValues.LEDGER_LOOGO}
+                                rightIcon={IconValues.CHECK}
                                 selected={true}
                             />
                         )}
@@ -215,7 +216,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                 key={`key-${this.state.connection}`}
                                 label={translate(`CreateHardwareWallet.${this.state.connection}`)}
                                 leftIcon={this.state.connection.toString()}
-                                rightIcon={'check-1'}
+                                rightIcon={IconValues.CHECK}
                                 selected={true}
                             />
                         )}
@@ -234,8 +235,8 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                 })
                             }
                             label={Capitalize(key)}
-                            leftIcon="money-wallet-1"
-                            rightIcon={this.state.blockchain === key && 'check-1'}
+                            leftIcon={IconValues.MONEY_WALLET}
+                            rightIcon={this.state.blockchain === key && IconValues.CHECK}
                             selected={this.state.blockchain === key}
                         />
                     ))}
@@ -253,8 +254,8 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                     })
                                 }
                                 label={translate(`CreateHardwareWallet.${key}`)}
-                                leftIcon="ledger-logo"
-                                rightIcon={this.state.device === key && 'check-1'}
+                                leftIcon={IconValues.LEDGER_LOOGO}
+                                rightIcon={this.state.device === key && IconValues.CHECK}
                                 selected={this.state.device === key}
                             />
                         )
@@ -273,7 +274,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                 }
                                 label={translate(`CreateHardwareWallet.${connection}`)}
                                 leftIcon={connection.toString()} // TODO: replace this
-                                rightIcon={this.state.connection === connection && 'check-1'}
+                                rightIcon={this.state.connection === connection && IconValues.CHECK}
                                 selected={this.state.connection === connection}
                             />
                         )

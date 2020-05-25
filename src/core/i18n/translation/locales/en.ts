@@ -273,7 +273,7 @@ export const translation: ITranslations = {
             viewPhrase: 'Reveal secret phrase',
             secureWallet: 'Secure wallet',
             withoutPin:
-                'Without a PIN code, anyone who has access to your phone will be able to control the founds. It’s wise to setup a PIN code and secure your wallet',
+                'Without a PIN code, anyone who has access to your phone will be able to control the funds. It’s wise to setup a PIN code and secure your wallet',
             editTitle: 'Edit wallet name',
             editDescription: 'Use a relevant name or an alias for this wallet',
             addWalletTitle: 'Add Wallet',
@@ -454,7 +454,7 @@ export const translation: ITranslations = {
             errorMsgGeneral:
                 'This transaction request is not supported. Please create a ticket and let us know what you tried to do and what went wrong.',
             insufficientFunds:
-                'You don’t have enough founds for this transaction request. Either select a different wallet/account or add more founds to this account.'
+                'You don’t have enough funds for this transaction request. Either select a different wallet/account or add more funds to this account.'
         }
     },
     plural: (n: number, ord?: boolean) => {

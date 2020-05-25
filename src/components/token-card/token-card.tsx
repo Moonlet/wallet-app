@@ -11,6 +11,7 @@ import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { IconValues } from '../icon/values';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -60,7 +61,11 @@ export const TokenCardComponent = (
                             convert
                         />
                     </View>
-                    <Icon name="chevron-right" size={normalize(18)} style={styles.icon} />
+                    <Icon
+                        name={IconValues.CHEVRON_RIGHT}
+                        size={normalize(18)}
+                        style={styles.icon}
+                    />
                 </View>
             </TouchableHighlight>
         );

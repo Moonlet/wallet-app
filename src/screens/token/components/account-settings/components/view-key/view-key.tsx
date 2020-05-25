@@ -13,6 +13,7 @@ import {
 } from '../../../../../../navigation/with-navigation-params';
 import { allowScreenshots, forbidScreenshots } from '../../../../../../core/utils/screenshot';
 import { isFeatureActive, RemoteFeature } from '../../../../../../core/utils/remote-feature-config';
+import { IconValues } from '../../../../../../components/icon/values';
 
 export enum KeyType {
     private = 'private',
@@ -68,7 +69,7 @@ export class ViewKeyComponent extends React.Component<
 
                 {this.props.showSecurityWarning && (
                     <View style={styles.tipWrapper}>
-                        <Icon name="warning" size={ICON_SIZE} style={styles.alertIcon} />
+                        <Icon name={IconValues.WARNING} size={ICON_SIZE} style={styles.alertIcon} />
                         <Text style={styles.tipText}>
                             {translate('AccountSettings.securityTip')}
                         </Text>
@@ -86,7 +87,7 @@ export class ViewKeyComponent extends React.Component<
                             setTimeout(() => this.setState({ unveilMnemonic: false }), 250)
                         }
                     >
-                        <Icon name="view-1" size={ICON_SIZE} style={styles.icon} />
+                        <Icon name={IconValues.VIEW_1} size={ICON_SIZE} style={styles.icon} />
                         <Text style={styles.textRow}>{translate('App.labels.holdUnveil')}</Text>
                     </TouchableOpacity>
                 )}
@@ -100,7 +101,7 @@ export class ViewKeyComponent extends React.Component<
                             this.setState({ copied: true });
                         }}
                     >
-                        <Icon name="copy" size={ICON_SIZE} style={styles.icon} />
+                        <Icon name={IconValues.COPY} size={ICON_SIZE} style={styles.icon} />
                         <Text style={styles.textRow}>
                             {this.state.copied === false
                                 ? translate('App.buttons.clipboardBtn')

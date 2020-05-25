@@ -7,6 +7,7 @@ import { Text } from '../../library';
 import { Icon } from '../icon/icon';
 import { CustomKey } from './custom-key';
 import { ICON_SIZE, normalize } from '../../styles/dimensions';
+import { IconValues } from '../icon/values';
 
 const keyboardLayout = [
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 0],
@@ -66,7 +67,7 @@ export class KeyboardComponent extends React.Component<
                         onPress={() => this.setState({ isCapsLock: !this.state.isCapsLock })}
                     >
                         <Icon
-                            name="keyboard-shift-1"
+                            name={IconValues.KEYBOARD_SHIFT_1}
                             size={normalize(16)}
                             style={styles.upperIcon}
                         />
@@ -95,7 +96,11 @@ export class KeyboardComponent extends React.Component<
                         style={styles.deleteIconContainer}
                         onPress={this.props.handleDeleteKey}
                     >
-                        <Icon name="keyboard-delete-1" size={ICON_SIZE} style={styles.deleteIcon} />
+                        <Icon
+                            name={IconValues.KEYBOARD_DELETE_1}
+                            size={ICON_SIZE}
+                            style={styles.deleteIcon}
+                        />
                     </TouchableOpacity>
                 )}
             </View>

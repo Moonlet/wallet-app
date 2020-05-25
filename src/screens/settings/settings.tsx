@@ -26,6 +26,7 @@ import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extens
 import { resetAllData } from '../../redux/app/actions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import { openURL } from '../../core/utils/linking-handler';
+import { IconValues } from '../../components/icon/values';
 
 export interface IState {
     isTouchIDSupported: boolean;
@@ -104,7 +105,11 @@ export class SettingsScreenComponent extends React.Component<
                 <TouchableOpacity style={styles.rowContainer} onPress={() => callback()}>
                     <Text style={styles.textRow}>{label}</Text>
                     <View style={styles.rightContainer}>
-                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
+                        <Icon
+                            name={IconValues.CHEVRON_RIGHT}
+                            size={normalize(16)}
+                            style={styles.icon}
+                        />
                     </View>
                 </TouchableOpacity>
 
@@ -315,7 +320,7 @@ export class SettingsScreenComponent extends React.Component<
                             <Text style={styles.textRow}>Debug Info</Text>
                             <View style={styles.rightContainer}>
                                 <Icon
-                                    name="chevron-right"
+                                    name={IconValues.CHEVRON_RIGHT}
                                     size={normalize(16)}
                                     style={styles.icon}
                                 />

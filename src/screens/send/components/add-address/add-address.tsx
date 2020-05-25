@@ -26,6 +26,7 @@ import { QrModalReader } from '../../../../components/qr-modal/qr-modal';
 import { IReduxState } from '../../../../redux/state';
 import { getAccounts } from '../../../../redux/wallets/selectors';
 import { getContacts } from '../../../../redux/contacts/selectors';
+import { IconValues } from '../../../../components/icon/values';
 
 export interface IExternalProps {
     account: IAccountState;
@@ -274,7 +275,7 @@ export class AddAddressComponent extends React.Component<
                     onPress={() => this.onPressQrCodeIcon()}
                     style={styles.rightAddressButton}
                 >
-                    <Icon name="qr-code-scan" size={ICON_SIZE} style={styles.icon} />
+                    <Icon name={IconValues.QR_CODE_SCAN} size={ICON_SIZE} style={styles.icon} />
                 </TouchableOpacity>
             );
         } else {
@@ -284,7 +285,7 @@ export class AddAddressComponent extends React.Component<
                     onPress={() => this.onPressClearInput()}
                     style={styles.rightAddressButton}
                 >
-                    <Icon name="close" size={normalize(16)} style={styles.icon} />
+                    <Icon name={IconValues.CLOSE} size={normalize(16)} style={styles.icon} />
                 </TouchableOpacity>
             );
         }

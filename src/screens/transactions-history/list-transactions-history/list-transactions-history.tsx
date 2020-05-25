@@ -16,6 +16,7 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { IBlockchainTransaction } from '../../../core/blockchain/types';
 import { TransactionStatus } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { IconValues } from '../../../components/icon/values';
 
 export interface IExternalProps {
     transactions: IBlockchainTransaction[];
@@ -113,7 +114,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                     </Text>
                 </View>
                 <Icon
-                    name="chevron-right"
+                    name={IconValues.CHEVRON_RIGHT}
                     size={normalize(16)}
                     style={styles.transactionRightIcon}
                 />

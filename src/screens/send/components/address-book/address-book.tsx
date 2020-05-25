@@ -25,6 +25,7 @@ import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
 import { IHints, HintsScreen, HintsComponent } from '../../../../redux/app/state';
 import { updateDisplayedHint } from '../../../../redux/app/actions';
 import { DISPLAY_HINTS_TIMES } from '../../../../core/constants/app';
+import { IconValues } from '../../../../components/icon/values';
 
 export interface IReduxProps {
     contacts: ReadonlyArray<SectionListData<IContactState>>;
@@ -97,7 +98,11 @@ export class AddressBookComponent extends React.Component<
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
-                    <Icon name="bin" size={normalize(32)} style={styles.iconActionNegative} />
+                    <Icon
+                        name={IconValues.BIN}
+                        size={normalize(32)}
+                        style={styles.iconActionNegative}
+                    />
                     <Text style={styles.textActionNegative}>{translate('Send.deleteContact')}</Text>
                 </TouchableOpacity>
 
@@ -108,7 +113,11 @@ export class AddressBookComponent extends React.Component<
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
-                    <Icon name="pencil" size={normalize(28)} style={styles.iconActionPositive} />
+                    <Icon
+                        name={IconValues.PENCIL}
+                        size={normalize(28)}
+                        style={styles.iconActionPositive}
+                    />
                     <Text style={styles.textActionPositive}>
                         {translate('Send.editContactName')}
                     </Text>

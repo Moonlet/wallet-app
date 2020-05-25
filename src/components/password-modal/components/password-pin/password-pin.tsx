@@ -13,6 +13,7 @@ import { IReduxState } from '../../../../redux/state';
 import { normalize, ICON_SIZE } from '../../../../styles/dimensions';
 import { SafeAreaView } from 'react-navigation';
 import DeviceInfo from 'react-native-device-info';
+import { IconValues } from '../../../icon/values';
 
 const digitsLayout = [
     [1, 2, 3],
@@ -268,7 +269,11 @@ export class PasswordPinComponent extends React.Component<
                         this.props.clearErrorMessage();
                     }}
                 >
-                    <Icon name="keyboard-delete-1" size={normalize(40)} style={styles.deleteIcon} />
+                    <Icon
+                        name={IconValues.KEYBOARD_DELETE_1}
+                        size={normalize(40)}
+                        style={styles.deleteIcon}
+                    />
                 </TouchableOpacity>
             </View>
         );
@@ -288,7 +293,7 @@ export class PasswordPinComponent extends React.Component<
                         onPress={() => this.props.onBackButtonTap()}
                         style={styles.backIconContainer}
                     >
-                        <Icon name="close" size={ICON_SIZE} style={styles.backIcon} />
+                        <Icon name={IconValues.CLOSE} size={ICON_SIZE} style={styles.backIcon} />
                     </TouchableOpacity>
                 )}
                 <View style={styles.headerContainer}>

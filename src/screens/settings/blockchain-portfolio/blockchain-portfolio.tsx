@@ -22,6 +22,7 @@ import {
 import { Dialog } from '../../../components/dialog/dialog';
 import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
 import { SmartImage } from '../../../library/image/smart-image';
+import { IconValues } from '../../../components/icon/values';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainOptions }];
@@ -123,7 +124,11 @@ export class BlockchainPortfolioComponent extends React.Component<
                     />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconContainer} onLongPress={move}>
-                    <Icon size={normalize(18)} name="navigation-menu" style={styles.menuIcon} />
+                    <Icon
+                        size={normalize(18)}
+                        name={IconValues.NAVIGATION_MENU}
+                        style={styles.menuIcon}
+                    />
                 </TouchableOpacity>
             </View>
         );

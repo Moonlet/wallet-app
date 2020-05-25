@@ -21,6 +21,7 @@ import { getChainId } from '../../redux/preferences/selectors';
 import { normalize } from '../../styles/dimensions';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { openURL } from '../../core/utils/linking-handler';
+import { IconValues } from '../../components/icon/values';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -149,7 +150,11 @@ export class TransactionDetailsComponent extends React.Component<
                                 {translate('Transaction.transactionID')}
                             </Text>
                         </View>
-                        <Icon name="chevron-right" size={normalize(16)} style={styles.icon} />
+                        <Icon
+                            name={IconValues.CHEVRON_RIGHT}
+                            size={normalize(16)}
+                            style={styles.icon}
+                        />
                     </TouchableOpacity>
 
                     <View style={styles.rowContainer}>

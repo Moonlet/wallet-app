@@ -17,6 +17,7 @@ import { getUrlParams } from '../../core/connect-extension/utils';
 import { IQRCodeConn } from '../../core/connect-extension/types';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
+import { IconValues } from '../../components/icon/values';
 
 const qrCodeRegex = /^mooonletExtSync:([^\@]*)\@([^\/\?]*)([^\?]*)?\??(.*)/;
 
@@ -157,7 +158,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                             <View style={styles.connectionsContainer}>
                                 <View style={styles.connectionBox}>
                                     <Icon
-                                        name="monitor"
+                                        name={IconValues.MONITOR}
                                         size={normalize(32)}
                                         style={styles.computerIcon}
                                     />
@@ -174,7 +175,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                                     </View>
                                     <TouchableOpacity onPress={() => this.disconnectExtension()}>
                                         <Icon
-                                            name="flash-off"
+                                            name={IconValues.FLASH_OFF}
                                             size={normalize(32)}
                                             style={styles.flashIcon}
                                         />

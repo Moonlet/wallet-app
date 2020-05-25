@@ -9,6 +9,7 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { SafeAreaView } from 'react-navigation';
 import { ICON_SIZE } from '../../../../styles/dimensions';
 import { Icon } from '../../../icon/icon';
+import { IconValues } from '../../../icon/values';
 
 export interface IExternalProps {
     onAcknowledged: () => void;
@@ -28,7 +29,7 @@ export const PasswordTermsComponent = (
                     onPress={() => props.onBackButtonTap()}
                     style={props.styles.backIconContainer}
                 >
-                    <Icon name="close" size={ICON_SIZE} style={props.styles.backIcon} />
+                    <Icon name={IconValues.CLOSE} size={ICON_SIZE} style={props.styles.backIcon} />
                 </TouchableOpacity>
             )}
 

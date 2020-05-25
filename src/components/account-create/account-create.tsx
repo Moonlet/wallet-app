@@ -18,6 +18,7 @@ import { Client as NearClient } from '../../core/blockchain/near/client';
 import { Icon } from '../icon/icon';
 import { getChainId } from '../../redux/preferences/selectors';
 import { normalize } from '../../styles/dimensions';
+import { IconValues } from '../icon/values';
 
 export interface IReduxProps {
     createAccount: typeof createAccount;
@@ -155,7 +156,11 @@ export class AccountCreateComponent extends React.Component<
                                     onPress={this.onPressClearInput}
                                     style={[styles.rightAddressButton]}
                                 >
-                                    <Icon name="close" size={normalize(16)} style={styles.icon} />
+                                    <Icon
+                                        name={IconValues.CLOSE}
+                                        size={normalize(16)}
+                                        style={styles.icon}
+                                    />
                                 </TouchableOpacity>
                             )}
                         </View>

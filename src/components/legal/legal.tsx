@@ -14,6 +14,7 @@ import { TC } from './terms-conditions/terms-conditions';
 import { PrivacyPolicy } from './privacy-policy/privacy-policy';
 import { normalize, ICON_SIZE } from '../../styles/dimensions';
 import { SafeAreaView } from 'react-navigation';
+import { IconValues } from '../icon/values';
 
 interface IExternalProps {
     onAccept: () => void;
@@ -51,7 +52,11 @@ export const LegalComponent = (
                         onPress={() => props.onClose && props.onClose()}
                         style={props.styles.iconContainer}
                     >
-                        <Icon name="arrow-left-1" size={ICON_SIZE} style={props.styles.backIcon} />
+                        <Icon
+                            name={IconValues.ARROW_LEFT_1}
+                            size={ICON_SIZE}
+                            style={props.styles.backIcon}
+                        />
                     </TouchableOpacity>
                 )}
 
@@ -71,7 +76,11 @@ export const LegalComponent = (
                         <Text style={props.styles.text} large>
                             {translate('App.labels.tc')}
                         </Text>
-                        <Icon name="chevron-right" size={normalize(16)} style={props.styles.icon} />
+                        <Icon
+                            name={IconValues.CHEVRON_RIGHT}
+                            size={normalize(16)}
+                            style={props.styles.icon}
+                        />
                     </TouchableOpacity>
 
                     <View style={props.styles.divider} />
@@ -83,7 +92,11 @@ export const LegalComponent = (
                         <Text style={props.styles.text} large>
                             {translate('App.labels.privacyPolicy')}
                         </Text>
-                        <Icon name="chevron-right" size={normalize(16)} style={props.styles.icon} />
+                        <Icon
+                            name={IconValues.CHEVRON_RIGHT}
+                            size={normalize(16)}
+                            style={props.styles.icon}
+                        />
                     </TouchableOpacity>
 
                     <View style={props.styles.divider} />

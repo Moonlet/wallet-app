@@ -122,7 +122,7 @@ const navigationOptions = ({ navigation }: any) => ({
                 onPress={() => navigation.navigate('Wallets')}
             >
                 <Icon
-                    name="money-wallet-1"
+                    name={IconValues.MONEY_WALLET_1}
                     size={ICON_SIZE}
                     style={{ color: themes.dark.colors.accent }}
                 />
@@ -132,7 +132,7 @@ const navigationOptions = ({ navigation }: any) => ({
                 onPress={() => navigation.state.params.setDashboardMenuBottomSheet()}
             >
                 <Icon
-                    name="navigation-menu-vertical"
+                    name={IconValues.NAVIGATION_MENU_VERTICAL}
                     size={ICON_SIZE}
                     style={{ color: themes.dark.colors.accent }}
                 />
@@ -382,7 +382,11 @@ export class DashboardScreenComponent extends React.Component<
                             blockchain={blockchain}
                             isAnimated={true}
                         />
-                        <Icon name="chevron-down" size={normalize(18)} style={styles.icon} />
+                        <Icon
+                            name={IconValues.CHEVRON_DOWN}
+                            size={normalize(18)}
+                            style={styles.icon}
+                        />
                     </View>
                     <View style={styles.row}>
                         <Amount

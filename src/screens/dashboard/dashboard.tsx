@@ -455,20 +455,15 @@ export class DashboardScreenComponent extends React.Component<
             );
         }
 
+        const containerHeight =
+            Platform.OS === 'web'
+                ? blockchains.length === 1
+                    ? SCREEN_HEIGHT
+                    : 'calc(100vh - 122px)'
+                : 'auto';
+
         return (
-            <View
-                style={[
-                    styles.container,
-                    {
-                        height:
-                            Platform.OS === 'web'
-                                ? blockchains.length === 1
-                                    ? SCREEN_HEIGHT
-                                    : 'calc(100vh - 122px)'
-                                : 'auto'
-                    }
-                ]}
-            >
+            <View style={[styles.container, { height: containerHeight }]}>
                 <TestnetBadge />
 
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />

@@ -4,7 +4,7 @@ import { INavigationProps } from '../../../navigation/with-navigation-params';
 import { IReduxState } from '../../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
-import { Icon } from '../../../components/icon';
+import { Icon } from '../../../components/icon/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { IBlockchainNetwork, Blockchain } from '../../../core/blockchain/types';

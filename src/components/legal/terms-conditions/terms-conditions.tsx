@@ -3,7 +3,7 @@ import { View, TouchableOpacity } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
-import Icon from '../../icon';
+import Icon from '../../icon/icon';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
 import { WebView } from '../../../library/webview/webview';

@@ -11,7 +11,7 @@ import { IAccountState } from '../../redux/wallets/state';
 import { connect } from 'react-redux';
 import { IReduxState } from '../../redux/state';
 import { getSelectedAccount } from '../../redux/wallets/selectors';
-import { Icon } from '../../components/icon';
+import { Icon } from '../../components/icon/icon';
 import { formatAddress } from '../../core/utils/format-address';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';

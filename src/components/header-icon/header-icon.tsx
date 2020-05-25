@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
-import { Icon } from '../icon';
+import { Icon } from '../icon/icon';
 import { normalize } from '../../styles/dimensions';
 
 export interface IProps {

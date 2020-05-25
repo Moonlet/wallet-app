@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Platform } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
-import { Icon } from '../../../../components/icon';
+import { Icon } from '../../../../components/icon/icon';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';

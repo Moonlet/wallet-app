@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
-import Icon from '../../components/icon';
+import Icon from '../../components/icon/icon';
 import { normalize } from '../../styles/dimensions';
 import { formatAddress } from '../../core/utils/format-address';
 import { FeeTotal } from '../send/components/fee-total/fee-total';

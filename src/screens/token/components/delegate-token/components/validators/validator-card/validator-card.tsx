@@ -4,7 +4,7 @@ import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { SmartImage } from '../../../../../../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../../../../../../styles/dimensions';
-import { Icon } from '../../../../../../../components/icon';
+import { Icon } from '../../../../../../../components/icon/icon';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
 import { Text } from '../../../../../../../library';
 import { IStatValue, IStatValueType } from '../../../../../../../core/blockchain/types/stats';

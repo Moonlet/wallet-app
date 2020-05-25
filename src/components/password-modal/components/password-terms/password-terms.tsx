@@ -8,7 +8,7 @@ import { translate } from '../../../../core/i18n';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { SafeAreaView } from 'react-navigation';
 import { ICON_SIZE } from '../../../../styles/dimensions';
-import { Icon } from '../../../icon';
+import { Icon } from '../../../icon/icon';
 
 export interface IExternalProps {
     onAcknowledged: () => void;

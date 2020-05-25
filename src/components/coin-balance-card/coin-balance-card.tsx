@@ -7,7 +7,7 @@ import { withTheme } from '../../core/theme/with-theme';
 import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../core/blockchain/types';
 import { Amount } from '../amount/amount';
-import { Icon } from '../icon';
+import { Icon } from '../icon/icon';
 import { IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';

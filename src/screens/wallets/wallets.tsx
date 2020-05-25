@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { TabSelect, Text, Button } from '../../library';
 import { WalletType } from '../../core/wallet/types';
 import { IWalletState } from '../../redux/wallets/state';
-import Icon from '../../components/icon';
+import Icon from '../../components/icon/icon';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 
 import { translate } from '../../core/i18n';

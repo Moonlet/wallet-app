@@ -10,7 +10,7 @@ import {
 import stylesProvider from './styles';
 import { IReduxState } from '../../../../redux/state';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { Icon } from '../../../../components/icon';
+import { Icon } from '../../../../components/icon/icon';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Clipboard } from 'react-native';
 import { Text } from '../../library';
 import { Button } from '../../library/button/button';
-import { Icon } from '../../components/icon';
+import { Icon } from '../../components/icon/icon';
 
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';

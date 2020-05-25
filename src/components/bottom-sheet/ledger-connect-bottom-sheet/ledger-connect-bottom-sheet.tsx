@@ -9,7 +9,7 @@ import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { BottomSheetHeader } from '../header/header';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
-import { Icon } from '../../icon';
+import { Icon } from '../../icon/icon';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { Blockchain } from '../../../core/blockchain/types';

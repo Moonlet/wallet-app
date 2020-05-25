@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TextInput, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
-import { Icon } from '../../components/icon';
+import { Icon } from '../icon/icon';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { normalize } from '../../styles/dimensions';
 

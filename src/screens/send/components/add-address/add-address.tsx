@@ -10,7 +10,7 @@ import { IAccountState } from '../../../../redux/wallets/state';
 import { AddressBook } from '../address-book/address-book';
 import { IContactState, IContactsState } from '../../../../redux/contacts/state';
 import { formatAddress } from '../../../../core/utils/format-address';
-import { Icon } from '../../../../components/icon';
+import { Icon } from '../../../../components/icon/icon';
 import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import {

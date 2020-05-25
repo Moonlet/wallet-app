@@ -22,7 +22,7 @@ import {
     getSelectedBlockchainAccounts
 } from '../../redux/wallets/selectors';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
-import { Icon } from '../../components/icon';
+import { Icon } from '../../components/icon/icon';
 import { themes } from '../../navigation/navigation';
 import {
     ICON_SIZE,
@@ -46,6 +46,7 @@ import { Amount } from '../../components/amount/amount';
 import { WalletType } from '../../core/wallet/types';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { IconValues } from '../../components/icon/values';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -255,7 +256,7 @@ export class DashboardScreenComponent extends React.Component<
                                 style={styles.expandIconContainer}
                             >
                                 <Icon
-                                    name="expand"
+                                    name={IconValues.EXPAND}
                                     size={normalize(28)}
                                     style={styles.expandIcon}
                                 />

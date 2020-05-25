@@ -15,7 +15,7 @@ import { IReduxState } from '../../redux/state';
 import { LoadingIndicator } from '../loading-indicator/loading-indicator';
 import { PasswordModal } from '../password-modal/password-modal';
 import { Client as NearClient } from '../../core/blockchain/near/client';
-import { Icon } from '../../components/icon';
+import { Icon } from '../icon/icon';
 import { getChainId } from '../../redux/preferences/selectors';
 import { normalize } from '../../styles/dimensions';
 

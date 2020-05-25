@@ -4,7 +4,7 @@ import { Button } from '../../library/button/button';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { Text } from '../../library';
-import { Icon } from '../../components/icon';
+import { Icon } from '../icon/icon';
 import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';

@@ -6,7 +6,7 @@ import stylesProvider from './styles';
 import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { Icon } from '../../../icon';
+import { Icon } from '../../../icon/icon';
 import LinearGradient from 'react-native-linear-gradient';
 import { BiometryType, biometricAuth } from '../../../../core/biometric-auth/biometric-auth';
 import { IReduxState } from '../../../../redux/state';

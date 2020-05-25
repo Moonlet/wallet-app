@@ -4,7 +4,7 @@ import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { Icon } from '../../icon';
+import { Icon } from '../../icon/icon';
 import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { ICON_SIZE, normalize } from '../../../styles/dimensions';

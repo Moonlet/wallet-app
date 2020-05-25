@@ -8,7 +8,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import bind from 'bind-decorator';
 import { normalize } from '../../styles/dimensions';
-import { Icon } from '../../components/icon';
+import { Icon } from '../../components/icon/icon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DialogComponent } from '../../components/dialog/dialog-component';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';

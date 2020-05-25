@@ -4,7 +4,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { Text } from '../../library';
-import { Icon } from '../icon';
+import { Icon } from '../icon/icon';
 import { CustomKey } from './custom-key';
 import { ICON_SIZE, normalize } from '../../styles/dimensions';
 

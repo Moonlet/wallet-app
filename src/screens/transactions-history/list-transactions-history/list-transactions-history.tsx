@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
-import { Icon } from '../../../components/icon';
+import { Icon } from '../../../components/icon/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { Text } from '../../../library';
 import { IAccountState } from '../../../redux/wallets/state';

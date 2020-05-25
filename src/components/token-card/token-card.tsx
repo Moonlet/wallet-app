@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
-import { Icon } from '../icon';
+import { Icon } from '../icon/icon';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';

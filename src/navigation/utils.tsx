@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text } from 'react-native';
-import { Icon } from '../components/icon';
+import { Icon } from '../components/icon/icon';
 import { COLORS } from '../styles/colors';
 import { StackViewStyleInterpolator } from 'react-navigation-stack';
 import { normalize } from '../styles/dimensions';

@@ -6,7 +6,7 @@ exports[`Wallet screen renders correctly 1`] = `
   <View style={{...}}>
     <ScrollViewMock contentContainerStyle={{...}} showsVerticalScrollIndicator={false}>
       <Swipeable renderLeftActions={[Function: renderLeftActions]} onSwipeableWillOpen={[Function: onSwipeableWillOpen]} friction={1} overshootFriction={1} useNativeAnimations={true}>
-        <withTheme(ListCardComponent) onPress={[Function: onPress]} leftIcon=\\"saturn-icon\\" label=\\"some\\" rightIcon=\\"check-1\\" selected={true} />
+        <withTheme(ListCardComponent) onPress={[Function: onPress]} leftIcon=\\"saturn-icon\\" label=\\"some\\" rightIcon=\\"check\\" selected={true} />
       </Swipeable>
     </ScrollViewMock>
   </View>

@@ -22,7 +22,7 @@ import {
     getSelectedBlockchainAccounts
 } from '../../redux/wallets/selectors';
 import { HeaderIcon } from '../../components/header-icon/header-icon';
-import { Icon } from '../../components/icon';
+import { Icon } from '../../components/icon/icon';
 import { themes } from '../../navigation/navigation';
 import {
     ICON_SIZE,
@@ -46,6 +46,7 @@ import { Amount } from '../../components/amount/amount';
 import { WalletType } from '../../core/wallet/types';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { IconValues } from '../../components/icon/values';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -121,7 +122,7 @@ const navigationOptions = ({ navigation }: any) => ({
                 onPress={() => navigation.navigate('Wallets')}
             >
                 <Icon
-                    name="money-wallet-1"
+                    name={IconValues.MONEY_WALLET}
                     size={ICON_SIZE}
                     style={{ color: themes.dark.colors.accent }}
                 />
@@ -131,7 +132,7 @@ const navigationOptions = ({ navigation }: any) => ({
                 onPress={() => navigation.state.params.setDashboardMenuBottomSheet()}
             >
                 <Icon
-                    name="navigation-menu-vertical"
+                    name={IconValues.NAVIGATION_MENU_VERTICAL}
                     size={ICON_SIZE}
                     style={{ color: themes.dark.colors.accent }}
                 />
@@ -255,7 +256,7 @@ export class DashboardScreenComponent extends React.Component<
                                 style={styles.expandIconContainer}
                             >
                                 <Icon
-                                    name="expand"
+                                    name={IconValues.EXPAND}
                                     size={normalize(28)}
                                     style={styles.expandIcon}
                                 />
@@ -381,7 +382,11 @@ export class DashboardScreenComponent extends React.Component<
                             blockchain={blockchain}
                             isAnimated={true}
                         />
-                        <Icon name="chevron-down" size={normalize(18)} style={styles.icon} />
+                        <Icon
+                            name={IconValues.CHEVRON_DOWN}
+                            size={normalize(18)}
+                            style={styles.icon}
+                        />
                     </View>
                     <View style={styles.row}>
                         <Amount

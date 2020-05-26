@@ -4,7 +4,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { View, TouchableHighlight } from 'react-native';
-import Icon from '../icon';
+import Icon from '../icon/icon';
 import { ICON_SIZE, normalize } from '../../styles/dimensions';
 
 export interface IProps {

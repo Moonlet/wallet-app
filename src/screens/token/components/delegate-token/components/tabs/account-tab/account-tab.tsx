@@ -17,6 +17,7 @@ import { Button } from '../../../../../../../library';
 import { translate } from '../../../../../../../core/i18n';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
 import { AccountStats } from '../../../../../../../core/blockchain/types/stats';
+import { IconValues } from '../../../../../../../components/icon/values';
 
 export interface IProps {
     accountIndex: number;
@@ -82,7 +83,7 @@ export class AccountTabComponent extends React.Component<
                             key={`cta-send`}
                             style={styles.button}
                             wrapperStyle={{ flex: 1 }}
-                            leftIcon={'arrow-right'}
+                            leftIcon={IconValues.ARROW_RIGHT}
                             onPress={() =>
                                 NavigationService.navigate('Send', {
                                     accountIndex: this.props.account.index,
@@ -97,7 +98,7 @@ export class AccountTabComponent extends React.Component<
                             key={`cta-receive`}
                             style={styles.button}
                             wrapperStyle={{ flex: 1 }}
-                            leftIcon={'qr-code-scan'}
+                            leftIcon={IconValues.QR_CODE_SCAN}
                             onPress={() =>
                                 NavigationService.navigate('Receive', {
                                     accountIndex: this.props.account.index,

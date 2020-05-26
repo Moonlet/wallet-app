@@ -35,6 +35,7 @@ import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensi
 import { TransactionStatus } from '../../core/wallet/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import bind from 'bind-decorator';
+import { IconValues } from '../../components/icon/values';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -84,7 +85,7 @@ const mapDispatchToProps = {
 const navigationOptions = ({ navigation, theme }: any) => ({
     headerRight: () => (
         <HeaderRight
-            icon="navigation-menu-horizontal"
+            icon={IconValues.NAVIGATION_MENU_HORIZONTAL}
             onPress={navigation.state.params && navigation.state.params.openSettingsMenu}
         />
     ),

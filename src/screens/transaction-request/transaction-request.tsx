@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { sendTransferTransaction } from '../../redux/wallets/actions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
-import Icon from '../../components/icon';
+import Icon from '../../components/icon/icon';
 import { normalize } from '../../styles/dimensions';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
@@ -28,6 +28,7 @@ import CONFIG from '../../config';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { getUrlParams } from '../../core/connect-extension/utils';
 import bind from 'bind-decorator';
+import { IconValues } from '../../components/icon/values';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -426,7 +427,11 @@ export class TransactionRequestScreenComponent extends React.Component<
                         onPress={this.closeTxRequest}
                         style={styles.closeButtonContainer}
                     >
-                        <Icon name={'close'} size={normalize(20)} style={styles.closeButton} />
+                        <Icon
+                            name={IconValues.CLOSE}
+                            size={normalize(20)}
+                            style={styles.closeButton}
+                        />
                     </TouchableOpacity>
                 </View>
             );

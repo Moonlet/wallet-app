@@ -7,12 +7,13 @@ import { withTheme } from '../../core/theme/with-theme';
 import BigNumber from 'bignumber.js';
 import { Blockchain } from '../../core/blockchain/types';
 import { Amount } from '../amount/amount';
-import { Icon } from '../icon';
+import { Icon } from '../icon/icon';
 import { IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { normalize } from '../../styles/dimensions';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { IconValues } from '../icon/values';
 
 export interface IProps {
     onPress?: () => void;
@@ -48,7 +49,7 @@ export const CoinBalanceCardComponent = (props: IProps) => (
                 }
                 blockchain={props.blockchain}
             />
-            <Icon name="chevron-down" size={normalize(18)} style={props.styles.icon} />
+            <Icon name={IconValues.CHEVRON_DOWN} size={normalize(18)} style={props.styles.icon} />
         </View>
         <Amount
             style={[props.styles.secondaryText, !props.active && props.styles.darkerText]}

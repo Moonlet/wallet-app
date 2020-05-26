@@ -35,7 +35,7 @@ import { Memo } from './components/extra-fields/memo/memo';
 import { HeaderStepByStep } from './components/header-step-by-step/header-step-by-step';
 import { EnterAmount } from './components/enter-amount/enter-amount';
 import { Amount } from '../../components/amount/amount';
-import _ from 'lodash';
+import { findIndex } from 'lodash/findIndex';
 import { AddAddress } from './components/add-address/add-address';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
@@ -368,7 +368,7 @@ export class SendScreenComponent extends React.Component<
     }
 
     private renderBottomConfirm() {
-        const activeIndex = _.findIndex(this.state.headerSteps, ['active', true]);
+        const activeIndex = findIndex(this.state.headerSteps, ['active', true]);
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
         let disableButton: boolean;
@@ -520,7 +520,7 @@ export class SendScreenComponent extends React.Component<
                         <HeaderStepByStep
                             steps={headerSteps}
                             selectStep={selectedIdex => {
-                                const activeIndex = _.findIndex(headerSteps, ['active', true]);
+                                const activeIndex = findIndex(headerSteps, ['active', true]);
 
                                 const steps = headerSteps;
                                 if (selectedIdex < activeIndex) {

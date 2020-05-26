@@ -157,6 +157,7 @@
         "jest": "^24.9.0",
         "lint-staged": "^9.4.1",
         "metro-react-native-babel-preset": "^0.56.0",
+        "moment-locales-webpack-plugin": "^1.2.0",
         "node-fetch": "^2.6.0",
         "prettier": "^1.19.1",
         "react-dom": "^16.10.2",

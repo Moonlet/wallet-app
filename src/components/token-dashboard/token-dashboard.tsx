@@ -46,7 +46,7 @@ export const TokenDashboardComponent = (
             ]}
         >
             {props.account?.tokens &&
-                props.chainId !== '' &&
+                props.chainId &&
                 Object.values(props.account.tokens[props.chainId]).map(
                     (token: ITokenState, index: number) =>
                         token.active && (

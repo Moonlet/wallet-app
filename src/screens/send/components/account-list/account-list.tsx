@@ -2,12 +2,13 @@ import React from 'react';
 import { View, TouchableOpacity, ScrollView } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { Icon } from '../../../../components/icon';
+import { Icon } from '../../../../components/icon/icon';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { IAccountState } from '../../../../redux/wallets/state';
 import { formatAddress } from '../../../../core/utils/format-address';
 import { ICON_SIZE } from '../../../../styles/dimensions';
+import { IconValues } from '../../../../components/icon/values';
 
 export interface IExternalProps {
     accounts: IAccountState[];
@@ -45,7 +46,7 @@ export const AccountListComponent = (
                                     </Text>
                                 </View>
                                 <Icon
-                                    name={isSelected ? 'check-1' : 'add-circle'}
+                                    name={isSelected ? IconValues.CHECK : IconValues.ADD_CIRCLE}
                                     size={ICON_SIZE}
                                     style={styles.icon}
                                 />

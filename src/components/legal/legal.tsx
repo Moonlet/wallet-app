@@ -4,7 +4,7 @@ import { Button } from '../../library/button/button';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { Text } from '../../library';
-import { Icon } from '../../components/icon';
+import { Icon } from '../icon/icon';
 import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -14,6 +14,7 @@ import { TC } from './terms-conditions/terms-conditions';
 import { PrivacyPolicy } from './privacy-policy/privacy-policy';
 import { normalize, ICON_SIZE } from '../../styles/dimensions';
 import { SafeAreaView } from 'react-navigation';
+import { IconValues } from '../icon/values';
 
 interface IExternalProps {
     onAccept: () => void;
@@ -51,7 +52,11 @@ export const LegalComponent = (
                         onPress={() => props.onClose && props.onClose()}
                         style={props.styles.iconContainer}
                     >
-                        <Icon name="arrow-left-1" size={ICON_SIZE} style={props.styles.backIcon} />
+                        <Icon
+                            name={IconValues.ARROW_LEFT}
+                            size={ICON_SIZE}
+                            style={props.styles.backIcon}
+                        />
                     </TouchableOpacity>
                 )}
 
@@ -71,7 +76,11 @@ export const LegalComponent = (
                         <Text style={props.styles.text} large>
                             {translate('App.labels.tc')}
                         </Text>
-                        <Icon name="chevron-right" size={normalize(16)} style={props.styles.icon} />
+                        <Icon
+                            name={IconValues.CHEVRON_RIGHT}
+                            size={normalize(16)}
+                            style={props.styles.icon}
+                        />
                     </TouchableOpacity>
 
                     <View style={props.styles.divider} />
@@ -83,7 +92,11 @@ export const LegalComponent = (
                         <Text style={props.styles.text} large>
                             {translate('App.labels.privacyPolicy')}
                         </Text>
-                        <Icon name="chevron-right" size={normalize(16)} style={props.styles.icon} />
+                        <Icon
+                            name={IconValues.CHEVRON_RIGHT}
+                            size={normalize(16)}
+                            style={props.styles.icon}
+                        />
                     </TouchableOpacity>
 
                     <View style={props.styles.divider} />

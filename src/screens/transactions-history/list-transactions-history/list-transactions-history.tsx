@@ -2,7 +2,7 @@ import React from 'react';
 import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
-import { Icon } from '../../../components/icon';
+import { Icon } from '../../../components/icon/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { Text } from '../../../library';
 import { IAccountState } from '../../../redux/wallets/state';
@@ -16,6 +16,7 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { IBlockchainTransaction } from '../../../core/blockchain/types';
 import { TransactionStatus } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { IconValues } from '../../../components/icon/values';
 
 export interface IExternalProps {
     transactions: IBlockchainTransaction[];
@@ -47,24 +48,24 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         switch (tx.status) {
             case TransactionStatus.PENDING:
-                txIcon = 'pending';
+                txIcon = IconValues.PENDING;
                 txColor = theme.colors.warning;
                 break;
             case TransactionStatus.SUCCESS:
                 if (account.address.toLowerCase() === tx.address.toLowerCase()) {
-                    txIcon = 'outbound';
+                    txIcon = IconValues.OUTBOUND;
                     txColor = theme.colors.error;
                 } else if (account.address.toLowerCase() === tx.toAddress.toLowerCase()) {
-                    txIcon = 'inbound';
+                    txIcon = IconValues.INBOUND;
                     txColor = theme.colors.positive;
                 }
                 break;
             case TransactionStatus.DROPPED:
-                txIcon = 'delete-2';
+                txIcon = IconValues.FAILED;
                 txColor = theme.colors.disabledButton;
                 break;
             default:
-                txIcon = 'delete-2';
+                txIcon = IconValues.FAILED;
                 txColor = theme.colors.error;
                 break;
         }
@@ -113,7 +114,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                     </Text>
                 </View>
                 <Icon
-                    name="chevron-right"
+                    name={IconValues.CHEVRON_RIGHT}
                     size={normalize(16)}
                     style={styles.transactionRightIcon}
                 />

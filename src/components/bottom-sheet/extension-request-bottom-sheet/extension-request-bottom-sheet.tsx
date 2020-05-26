@@ -4,13 +4,14 @@ import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { Icon } from '../../icon';
+import { Icon } from '../../icon/icon';
 import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
 import { IBottomSheetExtensionRequestData } from '../../../redux/ui/bottomSheet/state';
+import { IconValues } from '../../icon/values';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -40,7 +41,11 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
             <View style={[styles.content, { height: this.props.snapPoints.bottomSheetHeight }]}>
                 <View style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
-                        <Icon name="arrow-right-dash" size={ICON_SIZE} style={styles.icon} />
+                        <Icon
+                            name={IconValues.ARROW_RIGHT_DASH}
+                            size={ICON_SIZE}
+                            style={styles.icon}
+                        />
                     </View>
                     <View style={styles.textContainer}>
                         <Text style={styles.title}>{this.props.data?.mainText}</Text>
@@ -53,10 +58,10 @@ export class ExtensionRequestBottomSheetComponent extends React.Component<
                 <View key="loading" style={styles.loadingContainer}>
                     {this.props.data?.state === 'pending' && <LoadingIndicator />}
                     {this.props.data?.state === 'completed' && (
-                        <Icon name="check-1" size={ICON_SIZE} style={styles.icon} />
+                        <Icon name={IconValues.CHECK} size={ICON_SIZE} style={styles.icon} />
                     )}
                     {this.props.data?.state === 'rejected' && (
-                        <Icon name="warning" size={ICON_SIZE} style={styles.icon} />
+                        <Icon name={IconValues.WARNING} size={ICON_SIZE} style={styles.icon} />
                     )}
                 </View>
             </View>

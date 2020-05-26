@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Clipboard } from 'react-native';
 import { Text } from '../../library';
 import { Button } from '../../library/button/button';
-import { Icon } from '../../components/icon';
+import { Icon } from '../../components/icon/icon';
 
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -16,6 +16,7 @@ import { ICON_SIZE } from '../../styles/dimensions';
 import { allowScreenshots, forbidScreenshots } from '../../core/utils/screenshot';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { IconValues } from '../../components/icon/values';
 
 export interface INavigationParams {
     wallet: IWalletState;
@@ -101,7 +102,11 @@ export class ViewWalletMnemonicScreenComponent extends React.Component<
                             </View>
 
                             <View style={styles.tipWrapper}>
-                                <Icon name="warning" size={ICON_SIZE} style={styles.alertIcon} />
+                                <Icon
+                                    name={IconValues.WARNING}
+                                    size={ICON_SIZE}
+                                    style={styles.alertIcon}
+                                />
                                 <Text style={styles.tipText}>
                                     {translate('AccountSettings.securityTip')}
                                 </Text>

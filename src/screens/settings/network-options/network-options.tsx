@@ -5,7 +5,7 @@ import { Text } from '../../../library';
 import { IReduxState } from '../../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
-import { Icon } from '../../../components/icon';
+import { Icon } from '../../../components/icon/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
@@ -16,6 +16,7 @@ import { ICON_SIZE } from '../../../styles/dimensions';
 import { Blockchain } from '../../../core/blockchain/types';
 import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 import { getNetworks } from '../../../redux/preferences/selectors';
+import { IconValues } from '../../../components/icon/values';
 
 export interface IReduxProps {
     testNet: boolean;
@@ -108,7 +109,7 @@ export class NetworkOptionsComponent extends React.Component<
                                                 : translate('NetworkOptions.mainnet')}
                                         </Text>
                                         <Icon
-                                            name="chevron-right"
+                                            name={IconValues.CHEVRON_RIGHT}
                                             size={ICON_SIZE / 2}
                                             style={{
                                                 color: testNet

@@ -1,5 +1,5 @@
 import { createIconSet } from 'react-native-vector-icons';
-import * as map from '../../resources/fonts/icons.json';
+import * as map from '../../../resources/fonts/icons.json';
 
 const glyphMap = {};
 Object.keys((map as any).default).map(key => {

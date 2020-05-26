@@ -4,7 +4,7 @@ import { Text, Button } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
-import Icon from '../icon';
+import Icon from '../icon/icon';
 import { translate } from '../../core/i18n';
 import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';

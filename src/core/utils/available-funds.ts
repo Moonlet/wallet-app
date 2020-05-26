@@ -13,10 +13,7 @@ export const getInputAmountToStd = (
     const blockchainInstance = getBlockchain(account.blockchain);
     const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
 
-    return blockchainInstance.account.amountToStd(
-        new BigNumber(amount ? amount : 0),
-        tokenConfig.decimals
-    );
+    return blockchainInstance.account.amountToStd(new BigNumber(amount || 0), tokenConfig.decimals);
 };
 
 export const availableFunds = (

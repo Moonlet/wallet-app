@@ -1,5 +1,5 @@
 import * as IExtStorage from '../types';
-import { cloneDeep } from 'lodash/cloneDeep';
+import cloneDeep from 'lodash/cloneDeep';
 import { BLOCKCHAIN_LIST } from '../../blockchain/blockchain-factory';
 
 export const buildPreferences = (trimmedPreferences: IExtStorage.IStoragePreferences) => {

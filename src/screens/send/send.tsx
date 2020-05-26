@@ -35,7 +35,7 @@ import { Memo } from './components/extra-fields/memo/memo';
 import { HeaderStepByStep } from './components/header-step-by-step/header-step-by-step';
 import { EnterAmount } from './components/enter-amount/enter-amount';
 import { Amount } from '../../components/amount/amount';
-import { findIndex } from 'lodash/findIndex';
+import findIndex from 'lodash/findIndex';
 import { AddAddress } from './components/add-address/add-address';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';

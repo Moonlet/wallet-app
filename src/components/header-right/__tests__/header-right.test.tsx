@@ -4,10 +4,11 @@ import { darkTheme } from '../../../styles/themes/dark-theme';
 import styleProvider from '../styles';
 
 import { shallow } from 'enzyme';
+import { IconValues } from '../../icon/values';
 
 const props: IProps = {
     styles: styleProvider(darkTheme),
-    icon: 'cog',
+    icon: IconValues.SETTINGS,
     text: 'text',
     onPress: jest.fn()
 };

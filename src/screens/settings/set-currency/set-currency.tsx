@@ -5,13 +5,14 @@ import { Text } from '../../../library';
 import { IReduxState } from '../../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
-import { Icon } from '../../../components/icon';
+import { Icon } from '../../../components/icon/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
 import { AVAILABLE_CURRENCIES } from '../../../core/constants/app';
 import { setCurrency } from '../../../redux/preferences/actions';
 import { normalize } from '../../../styles/dimensions';
+import { IconValues } from '../../../components/icon/values';
 
 export interface IReduxProps {
     selectedCurrency: string;
@@ -48,7 +49,11 @@ export class SetCurrencyComponent extends React.Component<
                         >
                             <Text style={styles.textRow}>{currency}</Text>
                             {this.props.selectedCurrency === currency && (
-                                <Icon name="check-1" size={normalize(16)} style={styles.icon} />
+                                <Icon
+                                    name={IconValues.CHECK}
+                                    size={normalize(16)}
+                                    style={styles.icon}
+                                />
                             )}
                         </TouchableOpacity>
                         <View style={styles.divider} />

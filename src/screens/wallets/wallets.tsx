@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { TabSelect, Text, Button } from '../../library';
 import { WalletType } from '../../core/wallet/types';
 import { IWalletState } from '../../redux/wallets/state';
-import Icon from '../../components/icon';
+import Icon from '../../components/icon/icon';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 
 import { translate } from '../../core/i18n';
@@ -25,6 +25,7 @@ import { normalize } from '../../styles/dimensions';
 import { updateDisplayedHint } from '../../redux/app/actions';
 import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
 import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
+import { IconValues } from '../../components/icon/values';
 
 export interface IReduxProps {
     wallets: {
@@ -185,7 +186,11 @@ export class WalletsScreenComponent extends React.Component<
         return (
             <View style={styles.leftActionsContainer}>
                 <TouchableOpacity style={styles.action} onPress={() => this.onPressDelete(wallet)}>
-                    <Icon name="bin" size={normalize(32)} style={styles.iconActionNegative} />
+                    <Icon
+                        name={IconValues.BIN}
+                        size={normalize(32)}
+                        style={styles.iconActionNegative}
+                    />
                     <Text style={styles.textActionNegative}>
                         {translate('Wallets.deleteWallet')}
                     </Text>
@@ -199,7 +204,7 @@ export class WalletsScreenComponent extends React.Component<
                         style={styles.action}
                     >
                         <Icon
-                            name="view-1"
+                            name={IconValues.VIEW}
                             size={normalize(32)}
                             style={styles.iconActionPositive}
                         />
@@ -213,7 +218,11 @@ export class WalletsScreenComponent extends React.Component<
                         this.onPressEdit(wallet);
                     }}
                 >
-                    <Icon name="pencil" size={normalize(28)} style={styles.iconActionPositive} />
+                    <Icon
+                        name={IconValues.PENCIL}
+                        size={normalize(28)}
+                        style={styles.iconActionPositive}
+                    />
                     <Text style={styles.textActionPositive}>{translate('Wallets.editName')}</Text>
                 </TouchableOpacity>
             </View>
@@ -287,11 +296,11 @@ export class WalletsScreenComponent extends React.Component<
                                     >
                                         <ListCard
                                             onPress={() => this.onSelectWallet(wallet.id)}
-                                            leftIcon="saturn-icon"
+                                            leftIcon={IconValues.SATURN_ICON}
                                             label={wallet.name}
                                             rightIcon={
                                                 this.props.selectedWallet.id === wallet.id &&
-                                                'check-1'
+                                                IconValues.CHECK
                                             }
                                             selected={this.props.selectedWallet.id === wallet.id}
                                         />

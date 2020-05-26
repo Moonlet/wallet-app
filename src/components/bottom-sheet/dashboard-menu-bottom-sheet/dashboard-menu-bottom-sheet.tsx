@@ -4,7 +4,7 @@ import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { Icon } from '../../icon';
+import { Icon } from '../../icon/icon';
 import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { ICON_SIZE, normalize } from '../../../styles/dimensions';
@@ -16,6 +16,7 @@ import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
+import { IconValues } from '../../icon/values';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -82,7 +83,11 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         <Text style={styles.title}>{options.title}</Text>
                         <Text style={styles.description}>{options.description}</Text>
                     </View>
-                    <Icon name="chevron-right" size={normalize(16)} style={styles.arrowRight} />
+                    <Icon
+                        name={IconValues.CHEVRON_RIGHT}
+                        size={normalize(16)}
+                        style={styles.arrowRight}
+                    />
                 </View>
             </TouchableHighlight>
         );

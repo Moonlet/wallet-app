@@ -8,7 +8,7 @@ export const XSGD_MAINNET: ITokenConfigState = {
     icon: {
         uri: 'https://fire.moonlet.io/static/tokens/icons/xsgd.png'
     },
-    contractAddress: 'zil1n0006zrsdtl0zj5mwac2rkaa442f4d37hntkv7',
+    contractAddress: 'zil1nhgpfnhjev6kthfnmzw64ladytcaptl6r7xcvn',
     removable: true,
     defaultOrder: 999,
     decimals: 12,

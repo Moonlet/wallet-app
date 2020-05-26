@@ -21,7 +21,7 @@ import {
 import { IReduxState } from '../../../redux/state';
 import { getSelectedWallet, getSelectedAccount } from '../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
-import { ChainIdType, IFeeOptions } from '../../../core/blockchain/types';
+import { ChainIdType, IFeeOptions, Blockchain } from '../../../core/blockchain/types';
 import { IExchangeRates } from '../../../redux/market/state';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { FeeOptions } from '../../send/components/fee-options/fee-options';
@@ -37,6 +37,7 @@ import CONFIG from '../../../config';
 import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
 import bind from 'bind-decorator';
 import { setSelectedWallet } from '../../../redux/wallets/actions';
+import { TokenType } from '../../../core/blockchain/types/token';
 
 export interface IQRCodeTxPayload {
     address: string;
@@ -291,18 +292,42 @@ export class QRCodeTransferRequestComponent extends React.Component<
     }
 
     private async fetchTokenByContractAddress(address: string): Promise<string> {
+        const { blockchain } = this.props.selectedAccount;
+
         let foundTokenSymbol: string;
 
         try {
+            // Fetch from firebase
             const token = await fetch(
                 CONFIG.tokensUrl +
-                    `${this.props.selectedAccount.blockchain.toLocaleLowerCase()}/${address.toLocaleLowerCase()}.json`
+                    `${blockchain.toLocaleLowerCase()}/${address.toLocaleLowerCase()}.json`
             );
 
             const tokenData = await token.json();
 
-            if (tokenData && tokenData?.symbol) {
+            if (tokenData?.symbol) {
                 foundTokenSymbol = tokenData?.symbol;
+            }
+        } catch {
+            //
+        }
+
+        try {
+            // Fetch from blockchain
+
+            const tokenType =
+                blockchain === Blockchain.ZILLIQA
+                    ? TokenType.ZRC2
+                    : Blockchain.ETHEREUM
+                    ? TokenType.ERC20
+                    : TokenType.NATIVE;
+
+            const blockchainToken = await getBlockchain(blockchain)
+                .getClient(this.state.chainId)
+                .tokens[tokenType].getTokenInfo(address);
+
+            if (blockchainToken?.symbol) {
+                foundTokenSymbol = blockchainToken.symbol;
             }
         } catch {
             //

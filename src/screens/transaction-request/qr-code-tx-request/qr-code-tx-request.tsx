@@ -179,18 +179,26 @@ export class QRCodeTransferRequestComponent extends React.Component<
         this.setState({ isLoading: true });
 
         if (qrCodeTxPayload?.chainId) {
-            if (this.isChainIdValid(qrCodeTxPayload.chainId)) {
+            const chainId = qrCodeTxPayload.chainId;
+
+            if (this.isChainIdValid(chainId)) {
                 // Valid ChainId
                 // Set the ChainId of the user with the received one
-                this.props.setNetworkTestNetChainId(blockchain, qrCodeTxPayload.chainId);
+                this.props.setNetworkTestNetChainId(blockchain, chainId);
 
-                // Activate testnet if disabled
-                if (this.props.isTestNet === false) {
-                    // Activate TestNet
-                    this.props.toggleTestNet();
+                if (this.isChainIdMainNet(chainId)) {
+                    if (this.props.isTestNet === true) {
+                        // Switch to MainNet
+                        this.props.toggleTestNet();
+                    }
+                } else {
+                    if (this.props.isTestNet === false) {
+                        // Switch to TestNet
+                        this.props.toggleTestNet();
+                    }
                 }
 
-                this.setState({ chainId: qrCodeTxPayload.chainId });
+                this.setState({ chainId });
             } else {
                 // Invalid ChainId
                 this.props.showError();
@@ -273,6 +281,16 @@ export class QRCodeTransferRequestComponent extends React.Component<
         }
     }
 
+    private isChainIdMainNet(chainId: ChainIdType): boolean {
+        const { blockchain } = this.props.selectedAccount;
+
+        const networksByChainId = getBlockchain(blockchain).networks.filter(
+            n => n.chainId === chainId
+        );
+
+        return networksByChainId[0].mainNet;
+    }
+
     private async proxyTransfer() {
         const { qrCodeTxPayload } = this.props;
 
@@ -314,7 +332,6 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
         try {
             // Fetch from blockchain
-
             const tokenType =
                 blockchain === Blockchain.ZILLIQA
                     ? TokenType.ZRC2

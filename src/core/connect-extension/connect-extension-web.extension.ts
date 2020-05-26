@@ -2,7 +2,11 @@ import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt/encrypt.
 import { v4 as uuidv4 } from 'uuid';
 import { IQRCodeConn, FirebaseRef, IStorage } from './types';
 import { storage, database } from 'firebase';
-import { storeEncrypted, readEncrypted, deleteFromStorage } from '../secure/storage/storage';
+import {
+    storeEncrypted,
+    readEncrypted,
+    deleteFromStorage
+} from '../secure/storage/storage.extension';
 import { CONN_EXTENSION } from '../constants/app';
 import Bowser from 'bowser';
 import { browser } from 'webextension-polyfill-ts';

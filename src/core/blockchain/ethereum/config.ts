@@ -3,6 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
 import EthIcon from '../../../assets/icons/blockchains/eth.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
+import { DAI_MAINNET } from './tokens/dai';
 
 export const ETH_NATIVE: ITokenConfigState = {
     name: 'Ethereum',
@@ -32,7 +33,11 @@ export const config: IBlockchainConfig = {
     defaultUnit: 'WEI',
     iconComponent: EthIcon,
     droppedTxBlocksThreshold: 50,
-    autoAddedTokensSymbols: {},
+    autoAddedTokensSymbols: {
+        '1': {
+            DAI: DAI_MAINNET
+        }
+    },
     tokens: {
         ETH: ETH_NATIVE
     },

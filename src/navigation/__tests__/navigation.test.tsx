@@ -1,5 +1,6 @@
 import { navigationConfig, defaultStackNavigationOptions } from '../navigation';
 import { menuIcon } from '../utils';
+import { IconValues } from '../../components/icon/values';
 
 jest.mock('../utils');
 
@@ -9,19 +10,19 @@ export default describe('Navigation', () => {
     describe('configuration', () => {
         test('config is ok', () => {
             navigationConfig.Dashboard.navigationOptions();
-            expect(menuIcon).toHaveBeenCalledWith('dashboard');
+            expect(menuIcon).toHaveBeenCalledWith(IconValues.DASHBOARD);
             (menuIcon as any).mockClear();
 
             navigationConfig.Watch.navigationOptions();
-            expect(menuIcon).toHaveBeenCalledWith('view-1');
+            expect(menuIcon).toHaveBeenCalledWith(IconValues.VIEW);
             (menuIcon as any).mockClear();
 
             navigationConfig.Statistics.navigationOptions();
-            expect(menuIcon).toHaveBeenCalledWith('reinvest');
+            expect(menuIcon).toHaveBeenCalledWith(IconValues.REINVEST);
             (menuIcon as any).mockClear();
 
             navigationConfig.Settings.navigationOptions();
-            expect(menuIcon).toHaveBeenCalledWith('cog');
+            expect(menuIcon).toHaveBeenCalledWith(IconValues.SETTINGS);
             (menuIcon as any).mockClear();
         });
 

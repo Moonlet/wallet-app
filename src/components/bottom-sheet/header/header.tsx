@@ -2,10 +2,11 @@ import React from 'react';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
-import { Icon } from '../../icon';
+import { Icon } from '../../icon/icon';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { Platform } from 'react-native';
+import { IconValues } from '../../icon/values';
 
 interface IExternalProps {
     obRef: any;
@@ -23,7 +24,7 @@ export const BottomSheetHeaderComponent = (
             }}
             style={props.styles.header}
         >
-            <Icon name="chevron-up" size={ICON_SIZE / 2} style={props.styles.icon} />
+            <Icon name={IconValues.CHEVRON_UP} size={ICON_SIZE / 2} style={props.styles.icon} />
         </TouchableWithoutFeedback>
     );
 };

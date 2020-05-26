@@ -5,10 +5,11 @@ import styleProvider from '../styles';
 
 import { shallow } from 'enzyme';
 import { loadTranslations } from '../../../core/i18n';
+import { IconValues } from '../../icon/values';
 
 const props: IProps = {
     styles: styleProvider(darkTheme),
-    icon: 'cog',
+    icon: IconValues.SETTINGS,
     text: 'text',
     onPress: jest.fn()
 };

@@ -11,7 +11,7 @@ import { IAccountState } from '../../redux/wallets/state';
 import { connect } from 'react-redux';
 import { IReduxState } from '../../redux/state';
 import { getSelectedAccount } from '../../redux/wallets/selectors';
-import { Icon } from '../../components/icon';
+import { Icon } from '../../components/icon/icon';
 import { formatAddress } from '../../core/utils/format-address';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
@@ -34,6 +34,7 @@ import { addToken } from '../../redux/tokens/actions';
 import { CONFIG } from '../../config';
 import { SearchInput } from '../../components/search-input/search-input';
 import { bind } from 'bind-decorator';
+import { IconValues } from '../../components/icon/values';
 
 export interface IReduxProps {
     selectedAccount: IAccountState;
@@ -279,7 +280,11 @@ export class ManageTokenComponent extends React.Component<
                             </View>
                             <View style={styles.iconContainer}>
                                 {this.state.isTokenSelected && (
-                                    <Icon name="check-1" size={normalize(16)} style={styles.icon} />
+                                    <Icon
+                                        name={IconValues.CHECK}
+                                        size={normalize(16)}
+                                        style={styles.icon}
+                                    />
                                 )}
                             </View>
                         </TouchableOpacity>

@@ -4,7 +4,7 @@ import { Text } from '../index';
 
 import stylesProvider from './styles';
 import { withTheme } from '../../core/theme/with-theme';
-import { Icon } from '../../components/icon';
+import { Icon } from '../../components/icon/icon';
 import { normalize, BASE_DIMENSION } from '../../styles/dimensions';
 
 /**

@@ -10,7 +10,7 @@ import {
 import stylesProvider from './styles';
 import { IReduxState } from '../../../../redux/state';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-import { Icon } from '../../../../components/icon';
+import { Icon } from '../../../../components/icon/icon';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
@@ -25,6 +25,7 @@ import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
 import { IHints, HintsScreen, HintsComponent } from '../../../../redux/app/state';
 import { updateDisplayedHint } from '../../../../redux/app/actions';
 import { DISPLAY_HINTS_TIMES } from '../../../../core/constants/app';
+import { IconValues } from '../../../../components/icon/values';
 
 export interface IReduxProps {
     contacts: ReadonlyArray<SectionListData<IContactState>>;
@@ -97,7 +98,11 @@ export class AddressBookComponent extends React.Component<
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
-                    <Icon name="bin" size={normalize(32)} style={styles.iconActionNegative} />
+                    <Icon
+                        name={IconValues.BIN}
+                        size={normalize(32)}
+                        style={styles.iconActionNegative}
+                    />
                     <Text style={styles.textActionNegative}>{translate('Send.deleteContact')}</Text>
                 </TouchableOpacity>
 
@@ -108,7 +113,11 @@ export class AddressBookComponent extends React.Component<
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
-                    <Icon name="pencil" size={normalize(28)} style={styles.iconActionPositive} />
+                    <Icon
+                        name={IconValues.PENCIL}
+                        size={normalize(28)}
+                        style={styles.iconActionPositive}
+                    />
                     <Text style={styles.textActionPositive}>
                         {translate('Send.editContactName')}
                     </Text>
@@ -155,7 +164,7 @@ export class AddressBookComponent extends React.Component<
                         </Text>
                     </View>
                     <Icon
-                        name={isSelected ? 'check-1' : 'add-circle'}
+                        name={isSelected ? IconValues.CHECK : IconValues.ADD_CIRCLE}
                         size={ICON_SIZE}
                         style={styles.icon}
                     />

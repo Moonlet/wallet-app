@@ -22,6 +22,7 @@ import { IExchangeRates } from '../../../redux/market/state';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { ChainIdType } from '../../../core/blockchain/types';
+import { IconValues } from '../../icon/values';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -145,7 +146,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                             <ListAccount
                                 key={index}
                                 leftIcon={blockchainConfig.iconComponent}
-                                rightIcon={selected ? 'check-1' : undefined}
+                                rightIcon={selected ? IconValues.CHECK : undefined}
                                 label={label}
                                 selected={selected}
                                 onPress={() => {

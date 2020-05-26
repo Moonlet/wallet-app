@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { IAccountState, ITokenState } from '../../redux/wallets/state';
-import { Icon } from '../icon';
+import { Icon } from '../icon/icon';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
@@ -11,6 +11,7 @@ import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { IconValues } from '../icon/values';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -60,7 +61,11 @@ export const TokenCardComponent = (
                             convert
                         />
                     </View>
-                    <Icon name="chevron-right" size={normalize(18)} style={styles.icon} />
+                    <Icon
+                        name={IconValues.CHEVRON_RIGHT}
+                        size={normalize(18)}
+                        style={styles.icon}
+                    />
                 </View>
             </TouchableHighlight>
         );

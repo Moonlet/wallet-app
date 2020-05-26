@@ -3,7 +3,8 @@ import { ITheme } from '../../../../core/theme/itheme';
 import {
     BASE_DIMENSION,
     normalize,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
 } from '../../../../styles/dimensions';
 import { pw, ph } from '../../../../styles';
 
@@ -35,7 +36,7 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(22),
             lineHeight: normalizeFontAndLineHeight(28),
             textAlign: 'center',
-            letterSpacing: 0.35,
+            letterSpacing: LETTER_SPACING,
             opacity: 0.4,
             color: theme.colors.text,
             marginBottom: BASE_DIMENSION

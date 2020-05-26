@@ -26,7 +26,7 @@ import BigNumber from 'bignumber.js';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 import { TokenType } from '../../core/blockchain/types/token';
-import { IAccountState, ITokenState } from '../../redux/wallets/state';
+import { IAccountState, ITokenState, IWalletState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
@@ -58,8 +58,7 @@ export interface IReduxProps {
     account: IAccountState;
     sendTransferTransaction: typeof sendTransferTransaction;
     openBottomSheet: typeof openBottomSheet;
-    selectedWalletId: string;
-    selectedWalletName: string;
+    selectedWallet: IWalletState;
     selectedAccount: IAccountState;
     chainId: ChainIdType;
     addPublishedTxToAccount: typeof addPublishedTxToAccount;
@@ -68,8 +67,7 @@ export interface IReduxProps {
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        selectedWalletId: getSelectedWallet(state).id,
-        selectedWalletName: getSelectedWallet(state).name,
+        selectedWallet: getSelectedWallet(state),
         selectedAccount: getSelectedAccount(state),
         chainId: getChainId(state, ownProps.blockchain)
     };
@@ -159,7 +157,7 @@ export class SendScreenComponent extends React.Component<
                 token: token.symbol,
                 feeOptions: this.state.feeOptions,
                 extraFields: { memo: this.state.memo },
-                walletName: this.props.selectedWalletName // extra data needed for Tx Request Screen
+                walletId: this.props.selectedWallet.id // extra data needed for Tx Request Screen
             };
 
             // add type to this
@@ -221,7 +219,7 @@ export class SendScreenComponent extends React.Component<
                                 this.props.addPublishedTxToAccount(
                                     res.result.txHash,
                                     res.result.tx,
-                                    this.props.selectedWalletId
+                                    this.props.selectedWallet.id
                                 );
 
                                 await LoadingModal.close();

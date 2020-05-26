@@ -4,6 +4,7 @@ import {
     BASE_DIMENSION,
     normalize,
     normalizeFontAndLineHeight,
+    LETTER_SPACING,
     SCREEN_HEIGHT
 } from '../../styles/dimensions';
 
@@ -98,7 +99,7 @@ export default (theme: ITheme) =>
         },
         mainText: {
             fontWeight: 'bold',
-            letterSpacing: 0.4,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.textSecondary,
             marginRight: BASE_DIMENSION * 2
         },

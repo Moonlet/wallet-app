@@ -5,7 +5,8 @@ import {
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
     normalize,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -32,7 +33,7 @@ export default (theme: ITheme) =>
             fontWeight: '500',
             fontSize: normalizeFontAndLineHeight(18),
             lineHeight: normalizeFontAndLineHeight(25),
-            letterSpacing: 0.38,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.text
         },
         secondAmount: {

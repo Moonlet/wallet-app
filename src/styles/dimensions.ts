@@ -15,7 +15,7 @@ export const normalizeFontAndLineHeight = (size: number) => {
     if (fontScale && Number(fontScale)) {
         return Math.round(PixelRatio.roundToNearestPixel(size / Number(fontScale)));
     } else {
-        return this.normalize(size);
+        return normalize(size);
     }
 };
 

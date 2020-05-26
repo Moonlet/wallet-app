@@ -34,7 +34,13 @@ import { TransactionDetails } from '../screens/transaction-details/transaction-d
 import { StatisticsScreen } from '../screens/statistics/statistics';
 import { WatchScreen } from '../screens/watch/watch';
 import { ManageAccountScreen } from '../screens/manage-account/manage-account';
-import { BASE_DIMENSION, normalize, normalizeFontAndLineHeight } from '../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalize,
+    normalizeFontAndLineHeight,
+    LETTER_SPACING,
+    normalizeLetterSpacing
+} from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
@@ -59,7 +65,7 @@ const mainTabbedNavigationOptions: any = {
             fontSize: normalizeFontAndLineHeight(12),
             lineHeight: normalizeFontAndLineHeight(15),
             fontWeight: '500',
-            letterSpacing: 0.3
+            letterSpacing: normalizeLetterSpacing(0.3)
         },
         style: {
             padding: BASE_DIMENSION,
@@ -90,7 +96,7 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         fontSize: normalize(22),
         lineHeight: normalize(28),
         color: themes[theme].colors.text,
-        letterSpacing: 0.38,
+        letterSpacing: LETTER_SPACING,
         textAlign: 'center',
         fontWeight: 'bold'
     },

@@ -4,7 +4,8 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -19,7 +20,7 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(22),
             lineHeight: normalizeFontAndLineHeight(28),
             fontWeight: 'bold',
-            letterSpacing: 0.35,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.text,
             textAlign: 'center',
             marginBottom: BASE_DIMENSION

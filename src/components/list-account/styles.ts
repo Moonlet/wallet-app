@@ -3,7 +3,8 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
 } from '../../styles/dimensions';
 import { ITheme } from '../../core/theme/itheme';
 
@@ -27,7 +28,7 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(18),
             lineHeight: normalizeFontAndLineHeight(25),
             fontWeight: '500',
-            letterSpacing: 0.38,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.text
         },
         selected: {

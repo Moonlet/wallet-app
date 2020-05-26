@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalizeFontAndLineHeight, SCREEN_HEIGHT } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalizeFontAndLineHeight,
+    SCREEN_HEIGHT,
+    LETTER_SPACING
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -33,7 +38,7 @@ export default (theme: ITheme) =>
             flex: 1,
             fontSize: normalizeFontAndLineHeight(17),
             lineHeight: normalizeFontAndLineHeight(21),
-            letterSpacing: 0.38,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.text
         },
         textRowMargin: {

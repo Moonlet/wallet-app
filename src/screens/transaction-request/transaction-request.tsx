@@ -9,7 +9,7 @@ import { closeTransactionRequest } from '../../redux/ui/transaction-request/acti
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { sendTransferTransaction } from '../../redux/wallets/actions';
+import { sendTransferTransaction, setSelectedWallet } from '../../redux/wallets/actions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import Icon from '../../components/icon/icon';
 import { normalize } from '../../styles/dimensions';
@@ -28,7 +28,9 @@ import CONFIG from '../../config';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { getUrlParams } from '../../core/connect-extension/utils';
 import bind from 'bind-decorator';
+import { IWalletState, IWalletsState } from '../../redux/wallets/state';
 import { IconValues } from '../../components/icon/values';
+import { getSelectedWallet } from '../../redux/wallets/selectors';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -36,19 +38,25 @@ export interface IReduxProps {
     qrCode: string;
     closeTransactionRequest: typeof closeTransactionRequest;
     sendTransferTransaction: typeof sendTransferTransaction;
+    selectedWallet: IWalletState;
+    setSelectedWallet: typeof setSelectedWallet;
+    wallets: IWalletsState;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
     return {
         isVisible: state.ui.transactionRequest.isVisible,
         requestId: state.ui.transactionRequest.data.requestId,
-        qrCode: state.ui.transactionRequest.data.qrCode
+        qrCode: state.ui.transactionRequest.data.qrCode,
+        selectedWallet: getSelectedWallet(state),
+        wallets: state.wallets
     };
 };
 
 const mapDispatchToProps = {
     closeTransactionRequest,
-    sendTransferTransaction
+    sendTransferTransaction,
+    setSelectedWallet
 };
 
 export interface IState {
@@ -105,7 +113,28 @@ export class TransactionRequestScreenComponent extends React.Component<
             const payload = await ConnectExtensionWeb.getRequestIdParams(this.props.requestId);
 
             if (payload) {
-                this.setState({ extensionTxPayload: payload });
+                const walletId = payload.walletId;
+                if (walletId !== this.props.selectedWallet.id) {
+                    if (
+                        Object.keys(this.props.wallets).filter(wId => wId === walletId).length === 1
+                    ) {
+                        // Switch the wallet
+                        this.props.setSelectedWallet(walletId);
+
+                        this.setState({ extensionTxPayload: payload });
+                    } else {
+                        // The wallet has been removed from the app
+                        // Maybe show a more relevant error message
+                        this.setState({
+                            error: {
+                                extensionError: true,
+                                generalError: false,
+                                tokenError: false,
+                                tokenErrorSymbol: undefined
+                            }
+                        });
+                    }
+                }
             } else {
                 this.setExtensionTxError();
             }

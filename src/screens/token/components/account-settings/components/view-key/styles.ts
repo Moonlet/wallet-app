@@ -3,7 +3,8 @@ import { ITheme } from '../../../../../../core/theme/itheme';
 import {
     BASE_DIMENSION,
     BORDER_RADIUS,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
 } from '../../../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -22,7 +23,7 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(20),
             lineHeight: normalizeFontAndLineHeight(25),
             textAlign: 'center',
-            letterSpacing: 0.38,
+            letterSpacing: LETTER_SPACING,
             flexWrap: 'wrap',
             flexShrink: 1
         },

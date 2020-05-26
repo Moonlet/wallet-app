@@ -4,7 +4,8 @@ import {
     BASE_DIMENSION,
     normalizeFontAndLineHeight,
     BORDER_RADIUS,
-    isIphoneXorAbove
+    isIphoneXorAbove,
+    LETTER_SPACING
 } from '../../styles/dimensions';
 import { pw, ph } from '../../styles';
 
@@ -42,7 +43,7 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(22),
             lineHeight: normalizeFontAndLineHeight(28),
             color: theme.colors.text,
-            letterSpacing: 0.38,
+            letterSpacing: LETTER_SPACING,
             textAlign: 'center',
             fontWeight: 'bold',
             marginBottom: BASE_DIMENSION

@@ -5,7 +5,8 @@ import {
     BASE_DIMENSION,
     SCREEN_HEIGHT,
     normalize,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -64,7 +65,7 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(22),
             lineHeight: normalizeFontAndLineHeight(28),
             color: theme.colors.text,
-            letterSpacing: 0.35,
+            letterSpacing: LETTER_SPACING,
             fontWeight: 'bold',
             marginBottom: BASE_DIMENSION,
             textAlign: 'center'

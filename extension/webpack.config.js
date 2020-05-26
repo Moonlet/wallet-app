@@ -93,7 +93,7 @@ module.exports = (env, argv) => ({
         // load any web API polyfills
         // path.resolve(appDirectory, 'polyfills-web.js'),
         // your web-specific entry file
-        'bundle.browser-action': path.resolve(appDirectory, 'index.web.js'),
+        'bundle.browser-action': path.resolve(appDirectory, 'index.extension.js'),
         'bundle.background': path.resolve(appDirectory, 'extension/background/background')
     },
 
@@ -156,7 +156,17 @@ module.exports = (env, argv) => ({
         // If you're working on a multi-platform React Native app, web-specific
         // module implementations should be written in files using the extension
         // `.web.js`.
-        extensions: ['.web.js', '.js', '.web.ts', '.ts', '.web.tsx', '.tsx']
+        extensions: [
+            '.extension.js',
+            '.web.js',
+            '.js',
+            '.extension.ts',
+            '.web.ts',
+            '.ts',
+            '.extension.tsx',
+            '.web.tsx',
+            '.tsx'
+        ]
     },
 
     devtool: 'inline-source-map',

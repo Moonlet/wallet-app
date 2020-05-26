@@ -23,7 +23,6 @@ export default (theme: ITheme) =>
         inputAddress: {
             flex: 1,
             color: theme.colors.text,
-            paddingRight: BASE_DIMENSION * 2,
             fontSize: normalizeFontAndLineHeight(15)
         },
         inputBox: {
@@ -31,7 +30,8 @@ export default (theme: ITheme) =>
             borderRadius: BORDER_RADIUS,
             alignSelf: 'stretch',
             backgroundColor: theme.colors.inputBackground,
-            paddingHorizontal: BASE_DIMENSION,
+            paddingLeft: BASE_DIMENSION + BASE_DIMENSION / 2,
+            paddingRight: BASE_DIMENSION,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'

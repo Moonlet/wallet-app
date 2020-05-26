@@ -28,7 +28,7 @@ import { FeeOptions } from '../../send/components/fee-options/fee-options';
 import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
 import { BottomSheetType } from '../../../redux/ui/bottomSheet/state';
 import { openBottomSheet } from '../../../redux/ui/bottomSheet/actions';
-import { Icon } from '../../../components/icon';
+import { Icon } from '../../../components/icon/icon';
 import { setNetworkTestNetChainId, toggleTestNet } from '../../../redux/preferences/actions';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { ITokensConfigState, ITokenConfigState } from '../../../redux/tokens/state';

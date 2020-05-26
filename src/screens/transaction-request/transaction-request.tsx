@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { sendTransferTransaction, setSelectedWallet } from '../../redux/wallets/actions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
-import Icon from '../../components/icon';
+import Icon from '../../components/icon/icon';
 import { normalize } from '../../styles/dimensions';
 import { formatAddress } from '../../core/utils/format-address';
 import { FeeTotal } from '../send/components/fee-total/fee-total';
@@ -27,6 +27,7 @@ import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/p
 import { AmountCtaField } from '../../components/bottom-cta/amount-cta-field/amount-cta-field';
 import { IWalletState, IWalletsState } from '../../redux/wallets/state';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
+import { IconValues } from '../../components/icon/values';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -276,7 +277,11 @@ export class TransactionRequestScreenComponent extends React.Component<
                         onPress={() => this.cancelTransactionRequest()}
                         style={styles.closeButtonContainer}
                     >
-                        <Icon name={'close'} size={normalize(20)} style={styles.closeButton} />
+                        <Icon
+                            name={IconValues.CLOSE}
+                            size={normalize(20)}
+                            style={styles.closeButton}
+                        />
                     </TouchableOpacity>
                 </View>
             );

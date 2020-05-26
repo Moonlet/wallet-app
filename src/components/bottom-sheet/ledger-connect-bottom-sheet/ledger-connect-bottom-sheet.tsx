@@ -9,7 +9,7 @@ import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { BottomSheetHeader } from '../header/header';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
-import { Icon } from '../../icon';
+import { Icon } from '../../icon/icon';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { Blockchain } from '../../../core/blockchain/types';
@@ -17,6 +17,7 @@ import { HWVendor, HWModel, HWConnection } from '../../../core/wallet/hw-wallet/
 import { delay } from '../../../core/utils/time';
 import { TransportFactory } from '../../../core/wallet/hw-wallet/ledger/transport-factory';
 import { normalize } from '../../../styles/dimensions';
+import { IconValues } from '../../icon/values';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -140,7 +141,7 @@ export class LedgerConnectBottomSheetComponent extends React.Component<
             >
                 <View key="icon-background" style={this.props.styles.deviceIconBackground}>
                     <Icon
-                        name="ledger-logo"
+                        name={IconValues.LEDGER_LOOGO}
                         size={normalize(24)}
                         style={[
                             this.props.styles.deviceIcon,
@@ -169,7 +170,11 @@ export class LedgerConnectBottomSheetComponent extends React.Component<
                     )}
 
                     {this.state.ledgerDevice?.id === item.id && !this.state.loadingConnection && (
-                        <Icon name="check-1" size={normalize(16)} style={this.props.styles.icon} />
+                        <Icon
+                            name={IconValues.CHECK}
+                            size={normalize(16)}
+                            style={this.props.styles.icon}
+                        />
                     )}
                 </View>
             </TouchableOpacity>

@@ -45,6 +45,7 @@ import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connec
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
 import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
+import { IconValues } from '../components/icon/values';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -100,7 +101,7 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         fontWeight: 'bold'
     },
     headerLeft: navigation.dangerouslyGetParent().state.index > 0 && (
-        <HeaderLeft icon="arrow-left-1" onPress={() => navigation.goBack(null)} />
+        <HeaderLeft icon={IconValues.ARROW_LEFT} onPress={() => navigation.goBack(null)} />
     )
 });
 
@@ -269,28 +270,28 @@ export const navigationConfig = {
     Dashboard: {
         screen: WalletNavigation,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('dashboard')
+            tabBarIcon: menuIcon(IconValues.DASHBOARD)
         })
     },
     Statistics: {
         screen: StatisticsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('reinvest')
+            tabBarIcon: menuIcon(IconValues.REINVEST)
         })
     },
     Watch: {
         screen: WatchNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('view-1')
+            tabBarIcon: menuIcon(IconValues.VIEW)
         })
     },
     Settings: {
         screen: SettingsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('cog')
+            tabBarIcon: menuIcon(IconValues.SETTINGS)
         })
     }
 };

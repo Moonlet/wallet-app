@@ -8,7 +8,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { QrModalReader } from '../../components/qr-modal/qr-modal';
 import bind from 'bind-decorator';
 import { normalize } from '../../styles/dimensions';
-import { Icon } from '../../components/icon';
+import { Icon } from '../../components/icon/icon';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { DialogComponent } from '../../components/dialog/dialog-component';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
@@ -17,6 +17,7 @@ import { getUrlParams } from '../../core/connect-extension/utils';
 import { IQRCodeConn } from '../../core/connect-extension/types';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
+import { IconValues } from '../../components/icon/values';
 
 const qrCodeRegex = /^mooonletExtSync:([^\@]*)\@([^\/\?]*)([^\?]*)?\??(.*)/;
 
@@ -157,7 +158,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                             <View style={styles.connectionsContainer}>
                                 <View style={styles.connectionBox}>
                                     <Icon
-                                        name="monitor"
+                                        name={IconValues.MONITOR}
                                         size={normalize(32)}
                                         style={styles.computerIcon}
                                     />
@@ -174,7 +175,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                                     </View>
                                     <TouchableOpacity onPress={() => this.disconnectExtension()}>
                                         <Icon
-                                            name="flash-off"
+                                            name={IconValues.FLASH_OFF}
                                             size={normalize(32)}
                                             style={styles.flashIcon}
                                         />
@@ -198,7 +199,7 @@ export class ConnectExtensionScreenComponent extends React.Component<
                             onPress={() => this.qrCodeScanner.open()}
                             style={styles.scanButton}
                             disabled={this.state.isConnected}
-                            leftIcon="qr-code-scan"
+                            leftIcon={IconValues.QR_CODE_SCAN}
                         >
                             {translate('ConnectExtension.buttonScan')}
                         </Button>

@@ -3,7 +3,7 @@
 exports[`Navigation configuration default stack configuration is ok 1`] = `
 Object {
   "headerLeft": <withTheme(HeaderLeftComponent)
-    icon="arrow-left-1"
+    icon="arrow-left"
     onPress={[Function]}
   />,
   "headerStyle": Object {

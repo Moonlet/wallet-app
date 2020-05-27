@@ -106,6 +106,8 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
                 token={this.props.token}
                 validators={this.props.validators}
                 actionText={this.props.actionText}
+                bottomColor={this.props.theme.colors.accent}
+                bottomActionText={'App.labels.for'}
                 showSteps={false}
                 onPressNext={this.onPressNext}
             />

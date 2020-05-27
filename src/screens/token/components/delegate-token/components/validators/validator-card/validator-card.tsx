@@ -27,7 +27,8 @@ export interface IExternalProps {
     rightTitle: string;
     rightSubtitle: string;
     actionType: CardActionType;
-    actionTypeSelected?: boolean;
+    actionTypeSelected: boolean;
+    borderColor: string;
     bottomStats: IStatValue[];
     blockchain: Blockchain;
     onSelect: () => void;
@@ -52,7 +53,14 @@ export const ValidatorCardComponent = (
             onPress={() => props.onSelect()}
             underlayColor={props.theme.colors.appBackground}
         >
-            <View style={props.styles.cardContainer}>
+            <View
+                style={[
+                    props.styles.cardContainer,
+                    props.actionTypeSelected
+                        ? { borderColor: props.borderColor, borderWidth: 1.5 }
+                        : null
+                ]}
+            >
                 <View style={props.styles.topContainer}>
                     <SmartImage source={{ uri: props.icon }} style={props.styles.imageStyle} />
                     <View style={props.styles.topRow}>
@@ -81,14 +89,14 @@ export const ValidatorCardComponent = (
                             <Text style={props.styles.amountText}>{props.rightSubtitle}</Text>
                         </View>
                     </View>
-
-                    {props.actionType === CardActionType.NAVIGATE ? (
+                    {props.actionType === CardActionType.NAVIGATE && (
                         <Icon
                             name={IconValues.CHEVRON_RIGHT}
                             size={normalize(18)}
                             style={props.styles.chevronRight}
                         />
-                    ) : (
+                    )}
+                    {props.actionType === CardActionType.CHECKBOX && (
                         <Icon
                             name={
                                 props.actionTypeSelected === true

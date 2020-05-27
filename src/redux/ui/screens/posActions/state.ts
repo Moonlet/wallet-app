@@ -17,6 +17,16 @@ export interface IPosActionsState {
         validators: IValidator[];
         actionText: string;
     };
+    redelegateEnterAmount: {
+        accountIndex: number;
+        blockchain: Blockchain;
+        token: ITokenState;
+        toValidators: IValidator[];
+        fromValidator: IValidator;
+        actionText: string;
+    };
+
+    //
     quickDelegateConfirm: {
         accountIndex: number;
         blockchain: Blockchain;
@@ -33,5 +43,14 @@ export interface IPosActionsState {
         actionText: string;
         amount: string;
         feeOptions: IFeeOptions;
+    };
+    redelegateConfirm: {
+        accountIndex: number;
+        blockchain: Blockchain;
+        token: ITokenState;
+        toValidators: IValidator[];
+        fromValidator: IValidator;
+        actionText: string;
+        amount: string;
     };
 }

@@ -108,7 +108,7 @@ export class PosActionUndelegateComponent extends React.Component<
             >
                 <PrimaryCtaField
                     label={translate(this.props.actionText)}
-                    labelColor={theme.colors.notVoting}
+                    labelColor={theme.colors.undelegate}
                     action={translate('App.labels.from').toLowerCase()}
                     value={this.props.validators[0].name}
                 />

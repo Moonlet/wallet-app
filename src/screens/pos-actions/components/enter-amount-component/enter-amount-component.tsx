@@ -40,7 +40,10 @@ export interface IProps {
     token: ITokenState;
     validators: IValidator[];
     actionText: string;
+    bottomColor: string;
+    bottomActionText: string;
     showSteps: boolean;
+    fromValidator?: IValidator;
     onPressNext(amount: string, feeOptions: IFeeOptions): void;
 }
 
@@ -66,7 +69,7 @@ export class EnterAmountComponentComponent extends React.Component<
                 stepList.push({
                     step: index,
                     title: translate(step),
-                    active: index === 2 ? true : false
+                    active: index === 1 ? true : false
                 });
             });
         }
@@ -103,7 +106,8 @@ export class EnterAmountComponentComponent extends React.Component<
             >
                 <PrimaryCtaField
                     label={translate(this.props.actionText)}
-                    action={translate('App.labels.for').toLowerCase()}
+                    labelColor={this.props.bottomColor}
+                    action={translate(this.props.bottomActionText).toLowerCase()}
                     value={valuePrimaryCtaField(this.props.validators)}
                 />
                 <AmountCtaField

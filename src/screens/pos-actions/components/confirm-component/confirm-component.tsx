@@ -39,6 +39,8 @@ export interface IProps {
     actionText: string;
     amount: string;
     showSteps: boolean;
+    bottomColor: string;
+    bottomActionText: string;
     feeOptions: IFeeOptions;
     onPressConfirm(): void;
 }
@@ -84,7 +86,8 @@ export class ConfirmComponentComponent extends React.Component<
             >
                 <PrimaryCtaField
                     label={translate(this.props.actionText)}
-                    action={translate('App.labels.for').toLowerCase()}
+                    labelColor={this.props.bottomColor}
+                    action={translate(this.props.bottomActionText).toLowerCase()}
                     value={valuePrimaryCtaField(this.props.validators)}
                 />
                 <AmountCtaField

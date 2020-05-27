@@ -109,7 +109,7 @@ export class PosActionUnlockComponent extends React.Component<
             >
                 <PrimaryCtaField
                     label={translate(this.props.actionText)}
-                    labelColor={theme.colors.unlocking}
+                    labelColor={theme.colors.redelegate}
                     action={translate('App.labels.from').toLowerCase()}
                     value={this.props.validators[0].name}
                 />
@@ -195,14 +195,14 @@ export class PosActionUnlockComponent extends React.Component<
             },
             {
                 text: translate('Validator.unlockText2'),
-                style: { color: theme.colors.unlocking }
+                style: { color: theme.colors.redelegate }
             },
             {
                 text: translate('Validator.unlockText3')
             },
             {
                 text: translate('Validator.unlockText4'),
-                style: { color: theme.colors.notVoting }
+                style: { color: theme.colors.undelegate }
             },
             {
                 text: translate('Validator.unlockText5')

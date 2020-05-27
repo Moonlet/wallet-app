@@ -32,17 +32,17 @@ export interface IReduxProps {
 }
 
 export const mapStateToProps = (state: IReduxState) => {
-    const accountIndex = state.ui.screens.posActions.quickDelegateConfirm.accountIndex;
-    const blockchain = state.ui.screens.posActions.quickDelegateConfirm.blockchain;
+    const accountIndex = state.ui.screens.posActions.delegateConfirm.accountIndex;
+    const blockchain = state.ui.screens.posActions.delegateConfirm.blockchain;
     return {
         account: getAccount(state, accountIndex, blockchain),
         chainId: getChainId(state, blockchain),
         accountIndex,
         blockchain,
-        token: state.ui.screens.posActions.quickDelegateConfirm.token,
-        validators: state.ui.screens.posActions.quickDelegateConfirm.validators,
-        actionText: state.ui.screens.posActions.quickDelegateConfirm.actionText,
-        amount: state.ui.screens.posActions.quickDelegateConfirm.amount
+        token: state.ui.screens.posActions.delegateConfirm.token,
+        validators: state.ui.screens.posActions.delegateConfirm.validators,
+        actionText: state.ui.screens.posActions.delegateConfirm.actionText,
+        amount: state.ui.screens.posActions.delegateConfirm.amount
     };
 };
 
@@ -61,7 +61,7 @@ export const navigationOptions = ({ navigation }: any) => ({
     title: navigation?.state?.params?.actionText && translate(navigation?.state?.params?.actionText)
 });
 
-export class QuickDelegateConfirmComponent extends React.Component<
+export class RedelegateConfirmComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
@@ -96,7 +96,7 @@ export class QuickDelegateConfirmComponent extends React.Component<
     }
 
     public onPressConfirm() {
-        // on press confirm
+        //
     }
 
     public render() {
@@ -108,9 +108,9 @@ export class QuickDelegateConfirmComponent extends React.Component<
                 validators={this.props.validators}
                 actionText={this.props.actionText}
                 amount={this.state.amount}
-                bottomColor={this.props.theme.colors.accent}
-                bottomActionText={'App.labels.for'}
-                showSteps={false}
+                bottomColor={this.props.theme.colors.redelegate}
+                bottomActionText={'App.labels.from'}
+                showSteps={true}
                 feeOptions={this.state.feeOptions}
                 onPressConfirm={() => this.onPressConfirm()}
             />
@@ -118,7 +118,7 @@ export class QuickDelegateConfirmComponent extends React.Component<
     }
 }
 
-export const QuickDelegateConfirm = smartConnect(QuickDelegateConfirmComponent, [
+export const RedelegateConfirm = smartConnect(RedelegateConfirmComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

@@ -12,6 +12,10 @@ import BigNumber from 'bignumber.js';
 
 interface IExternalProps {
     validators: IValidator[];
+    redelegate?: {
+        validator: IValidator;
+        color: string;
+    };
     blockchain: Blockchain;
     onSelect: (validator: IValidator) => void;
     actionType: CardActionType;
@@ -38,11 +42,23 @@ export const ValidatorsListComponent = (
                     rightSubtitle={formatNumber(new BigNumber(validator.amountDelegated), {
                         currency: config.coin
                     })}
-                    actionType={props.actionType}
+                    actionType={
+                        props.redelegate?.validator.id === validator.id
+                            ? CardActionType.DEFAULT
+                            : props.actionType
+                    }
                     bottomStats={validator.cardStats}
                     actionTypeSelected={validator.actionTypeSelected || false}
+                    borderColor={
+                        props.redelegate?.validator.id === validator.id
+                            ? props.theme.colors.redelegate
+                            : props.theme.colors.accent
+                    }
                     blockchain={props.blockchain}
-                    onSelect={() => props.onSelect(validator)}
+                    onSelect={() => {
+                        props.redelegate?.validator.id !== validator.id &&
+                            props.onSelect(validator);
+                    }}
                 />
             ))}
         </ScrollView>

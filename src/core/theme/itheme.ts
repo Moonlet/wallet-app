@@ -33,8 +33,8 @@ export interface ITheme {
         gradientLight: string;
         gradientDark: string;
 
-        notVoting: string;
-        unlocking: string;
+        undelegate: string;
+        redelegate: string;
         reward: string;
     };
 }

@@ -108,6 +108,8 @@ export class DelegateConfirmComponent extends React.Component<
                 validators={this.props.validators}
                 actionText={this.props.actionText}
                 amount={this.state.amount}
+                bottomColor={this.props.theme.colors.accent}
+                bottomActionText={'App.labels.for'}
                 showSteps={true}
                 feeOptions={this.state.feeOptions}
                 onPressConfirm={() => this.onPressConfirm()}

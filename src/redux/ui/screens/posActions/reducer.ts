@@ -4,14 +4,18 @@ import {
     QUICK_DELEGATE_ENTER_AMOUNT,
     DELEGATE_ENTER_AMOUNT,
     QUICK_DELEGATE_CONFIRMATION,
-    DELEGATE_CONFIRMATION
+    DELEGATE_CONFIRMATION,
+    REDELEGATE_ENTER_AMOUNT,
+    REDELEGATE_CONFIRMATION
 } from './actions';
 
 const intialState: IPosActionsState = {
     quickDelegateEnterAmount: undefined,
     delegateEnterAmount: undefined,
+    redelegateEnterAmount: undefined,
     quickDelegateConfirm: undefined,
-    delegateConfirm: undefined
+    delegateConfirm: undefined,
+    redelegateConfirm: undefined
 };
 
 export default (state: IPosActionsState = intialState, action: IAction): IPosActionsState => {
@@ -26,12 +30,22 @@ export default (state: IPosActionsState = intialState, action: IAction): IPosAct
                 ...state,
                 delegateEnterAmount: action.data
             };
+        case REDELEGATE_ENTER_AMOUNT:
+            return {
+                ...state,
+                delegateEnterAmount: action.data
+            };
         case QUICK_DELEGATE_CONFIRMATION:
             return {
                 ...state,
                 quickDelegateConfirm: action.data
             };
         case DELEGATE_CONFIRMATION:
+            return {
+                ...state,
+                delegateConfirm: action.data
+            };
+        case REDELEGATE_CONFIRMATION:
             return {
                 ...state,
                 delegateConfirm: action.data

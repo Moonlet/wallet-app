@@ -63,9 +63,7 @@ export default (theme: ITheme) =>
             color: theme.colors.accent,
             alignSelf: 'center'
         },
-        //
         amountContainer: {
-            //   flex: 1,
             marginHorizontal: BASE_DIMENSION * 2
         }
     });

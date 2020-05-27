@@ -202,7 +202,7 @@ export const moonletValidator: IValidator = {
     icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
     name: 'Moonlet',
     rank: '10th',
-    amountDelegated: '290000',
+    amountDelegated: '23',
     website: 'http://moonlet.io',
     topStats: moonletCardStats,
     secondaryStats: secondaryStatsValues,

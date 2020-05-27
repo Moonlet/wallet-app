@@ -62,5 +62,8 @@ export default (theme: ITheme) =>
         actionIcon: {
             color: theme.colors.accent,
             alignSelf: 'center'
+        },
+        amountContainer: {
+            marginHorizontal: BASE_DIMENSION * 2
         }
     });

@@ -405,7 +405,7 @@ export class SendScreenComponent extends React.Component<
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}
                     token={this.props.token}
-                    blockchain={this.props.account.blockchain}
+                    account={this.props.account}
                     onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions

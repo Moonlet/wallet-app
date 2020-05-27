@@ -2,9 +2,10 @@ import React from 'react';
 import { View, TextInput, TouchableOpacity } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
-import { Icon } from '../../components/icon';
+import { Icon } from '../icon/icon';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { normalize } from '../../styles/dimensions';
+import { IconValues } from '../icon/values';
 
 export interface IExternalProps {
     placeholderText: string;
@@ -18,7 +19,7 @@ export const SearchInputComponent = (
     const [fieldInput, setFieldInput] = React.useState<string>('');
     return (
         <View style={props.styles.inputBox}>
-            <Icon name="search" size={normalize(14)} style={props.styles.searchIcon} />
+            <Icon name={IconValues.SEARCH} size={normalize(14)} style={props.styles.searchIcon} />
             <TextInput
                 style={props.styles.input}
                 placeholderTextColor={props.theme.colors.textTertiary}
@@ -40,7 +41,11 @@ export const SearchInputComponent = (
                         props.onClose();
                     }}
                 >
-                    <Icon name="close" size={normalize(16)} style={props.styles.closeIcon} />
+                    <Icon
+                        name={IconValues.CLOSE}
+                        size={normalize(16)}
+                        style={props.styles.closeIcon}
+                    />
                 </TouchableOpacity>
             )}
         </View>

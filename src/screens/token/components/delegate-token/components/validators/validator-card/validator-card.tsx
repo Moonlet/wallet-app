@@ -4,7 +4,7 @@ import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { SmartImage } from '../../../../../../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../../../../../../styles/dimensions';
-import { Icon } from '../../../../../../../components/icon';
+import { Icon } from '../../../../../../../components/icon/icon';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
 import { Text } from '../../../../../../../library';
 import {
@@ -17,6 +17,7 @@ import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { translate } from '../../../../../../../core/i18n';
+import { IconValues } from '../../../../../../../components/icon/values';
 
 export interface IExternalProps {
     icon: string;
@@ -83,13 +84,17 @@ export const ValidatorCardComponent = (
 
                     {props.actionType === CardActionType.NAVIGATE ? (
                         <Icon
-                            name={'chevron-right'}
+                            name={IconValues.CHEVRON_RIGHT}
                             size={normalize(18)}
                             style={props.styles.chevronRight}
                         />
                     ) : (
                         <Icon
-                            name={props.actionTypeSelected === true ? 'check-2-thicked' : 'check-2'}
+                            name={
+                                props.actionTypeSelected === true
+                                    ? IconValues.CHECK_BOX_THICKED
+                                    : IconValues.CHECK_BOX
+                            }
                             size={normalize(18)}
                             style={props.styles.chevronRight}
                         />

@@ -4,7 +4,8 @@ import {
     BASE_DIMENSION,
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -91,14 +92,14 @@ export default (theme: ITheme) =>
         tokenNameText: {
             fontSize: normalizeFontAndLineHeight(18),
             lineHeight: normalizeFontAndLineHeight(25),
-            letterSpacing: 0.38,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.text,
             fontWeight: '500'
         },
         tokenAddressText: {
             fontSize: normalizeFontAndLineHeight(15),
             lineHeight: normalizeFontAndLineHeight(20),
-            letterSpacing: 0.38,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.textTertiary
         },
         errorWrapper: {
@@ -109,7 +110,7 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(22),
             lineHeight: normalizeFontAndLineHeight(28),
             color: theme.colors.textTertiary,
-            letterSpacing: 0.35,
+            letterSpacing: LETTER_SPACING,
             fontWeight: 'bold',
             marginBottom: BASE_DIMENSION,
             textAlign: 'center'

@@ -5,7 +5,7 @@ import { Text } from '../../library';
 import { IReduxState } from '../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { Icon } from '../../components/icon';
+import { Icon } from '../../components/icon/icon';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../core/i18n';
@@ -29,6 +29,7 @@ import { updateDisplayedHint } from '../../redux/app/actions';
 import { IHints, HintsScreen, HintsComponent } from '../../redux/app/state';
 import { ChainIdType } from '../../core/blockchain/types';
 import { getChainId } from '../../redux/preferences/selectors';
+import { IconValues } from '../../components/icon/values';
 
 export interface IReduxProps {
     toggleTokenActive: typeof toggleTokenActive;
@@ -75,7 +76,7 @@ export const navigationOptions = ({ navigation, theme }: any) => ({
         getBlockchain(navigation.state.params.blockchain).config.ui.enableTokenManagement && (
             <TouchableOpacity onPress={() => navigation.navigate('ManageToken')}>
                 <Icon
-                    name="add"
+                    name={IconValues.ADD}
                     size={ICON_SIZE}
                     style={{
                         color: themes[theme].colors.accent,
@@ -136,7 +137,11 @@ export class ManageAccountComponent extends React.Component<
                         this.closeCurrentOpenedSwipable();
                     }}
                 >
-                    <Icon name="bin" size={normalize(32)} style={styles.iconActionNegative} />
+                    <Icon
+                        name={IconValues.BIN}
+                        size={normalize(32)}
+                        style={styles.iconActionNegative}
+                    />
                     <Text style={styles.textActionNegative}>{translate('Token.deleteToken')}</Text>
                 </TouchableOpacity>
             </View>
@@ -220,7 +225,11 @@ export class ManageAccountComponent extends React.Component<
                         >
                             <Icon
                                 size={normalize(18)}
-                                name={item.value.active ? 'check-2-thicked' : 'check-2'}
+                                name={
+                                    item.value.active
+                                        ? IconValues.CHECK_BOX_THICKED
+                                        : IconValues.CHECK_BOX
+                                }
                                 style={[
                                     {
                                         color: item.value.active
@@ -232,7 +241,11 @@ export class ManageAccountComponent extends React.Component<
                         </TouchableOpacity>
                     )}
                     <TouchableOpacity style={styles.iconContainer} onLongPress={drag}>
-                        <Icon size={normalize(18)} name="navigation-menu" style={styles.menuIcon} />
+                        <Icon
+                            size={normalize(18)}
+                            name={IconValues.NAVIGATION_MENU}
+                            style={styles.menuIcon}
+                        />
                     </TouchableOpacity>
                 </View>
             </Swipeable>

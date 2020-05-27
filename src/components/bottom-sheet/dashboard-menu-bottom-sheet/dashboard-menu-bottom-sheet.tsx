@@ -4,7 +4,7 @@ import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import BottomSheet from 'reanimated-bottom-sheet';
-import { Icon } from '../../icon';
+import { Icon } from '../../icon/icon';
 import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { ICON_SIZE, normalize } from '../../../styles/dimensions';
@@ -16,6 +16,9 @@ import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
+import { QrModalReader } from '../../qr-modal/qr-modal';
+import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
+import { IconValues } from '../../icon/values';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -24,16 +27,22 @@ interface IExternalProps {
 
 export interface IReduxProps {
     blockchain: Blockchain;
+    openTransactionRequest: typeof openTransactionRequest;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
     blockchain: getSelectedBlockchain(state)
 });
 
+const mapDispatchToProps = {
+    openTransactionRequest
+};
+
 export class DashboardMenuBottomSheetComponent extends React.Component<
     IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public bottomSheet: any;
+    public qrCodeScanner: any;
 
     constructor(
         props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -82,7 +91,11 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         <Text style={styles.title}>{options.title}</Text>
                         <Text style={styles.description}>{options.description}</Text>
                     </View>
-                    <Icon name="chevron-right" size={normalize(16)} style={styles.arrowRight} />
+                    <Icon
+                        name={IconValues.CHEVRON_RIGHT}
+                        size={normalize(16)}
+                        style={styles.arrowRight}
+                    />
                 </View>
             </TouchableHighlight>
         );
@@ -118,7 +131,22 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             iconName: 'qr-code-scan',
                             onPress: () => this.connectExtension()
                         })}
+                    {Platform.OS !== 'web' &&
+                        this.renderRow({
+                            title: translate('DashboardMenu.scanPay'),
+                            description: translate('DashboardMenu.scanReceive'),
+                            iconName: 'qr-code-scan',
+                            onPress: () => this.qrCodeScanner.open()
+                        })}
                 </ScrollView>
+
+                <QrModalReader
+                    obRef={ref => (this.qrCodeScanner = ref)}
+                    onQrCodeScanned={value => {
+                        this.props.onClose();
+                        this.props.openTransactionRequest({ qrCode: value });
+                    }}
+                />
             </View>
         );
     }
@@ -149,5 +177,5 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
 
 export const DashboardMenuBottomSheet = smartConnect<IExternalProps>(
     DashboardMenuBottomSheetComponent,
-    [connect(mapStateToProps, null), withTheme(stylesProvider)]
+    [connect(mapStateToProps, mapDispatchToProps), withTheme(stylesProvider)]
 );

@@ -34,7 +34,13 @@ import { TransactionDetails } from '../screens/transaction-details/transaction-d
 import { StatisticsScreen } from '../screens/statistics/statistics';
 import { WatchScreen } from '../screens/watch/watch';
 import { ManageAccountScreen } from '../screens/manage-account/manage-account';
-import { BASE_DIMENSION, normalize, normalizeFontAndLineHeight } from '../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalize,
+    normalizeFontAndLineHeight,
+    LETTER_SPACING,
+    normalizeLetterSpacing
+} from '../styles/dimensions';
 import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connect-hardware-wallet';
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
@@ -46,6 +52,7 @@ import { PosActionUnlock } from '../screens/pos-actions/pos-action-unlock/pos-ac
 import { PosActionRedelegateSelectValidator } from '../screens/pos-actions/pos-action-redelegate-select-validator/pos-action-redelegate-select-validator';
 import { DelegateEnterAmount } from '../screens/pos-actions/pos-action-delegate/delegate-enter-amount/delegate-enter-amount';
 import { QuickDelegateEnterAmount } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-enter-amount/quick-delegate-enter-amount';
+import { IconValues } from '../components/icon/values';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -65,7 +72,7 @@ const mainTabbedNavigationOptions: any = {
             fontSize: normalizeFontAndLineHeight(12),
             lineHeight: normalizeFontAndLineHeight(15),
             fontWeight: '500',
-            letterSpacing: 0.3
+            letterSpacing: normalizeLetterSpacing(0.3)
         },
         style: {
             padding: BASE_DIMENSION,
@@ -96,12 +103,12 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         fontSize: normalize(22),
         lineHeight: normalize(28),
         color: themes[theme].colors.text,
-        letterSpacing: 0.38,
+        letterSpacing: LETTER_SPACING,
         textAlign: 'center',
         fontWeight: 'bold'
     },
     headerLeft: navigation.dangerouslyGetParent().state.index > 0 && (
-        <HeaderLeft icon="arrow-left-1" onPress={() => navigation.goBack(null)} />
+        <HeaderLeft icon={IconValues.ARROW_LEFT} onPress={() => navigation.goBack(null)} />
     )
 });
 
@@ -293,28 +300,28 @@ export const navigationConfig = {
     Dashboard: {
         screen: WalletNavigation,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('dashboard')
+            tabBarIcon: menuIcon(IconValues.DASHBOARD)
         })
     },
     Statistics: {
         screen: StatisticsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('reinvest')
+            tabBarIcon: menuIcon(IconValues.REINVEST)
         })
     },
     Watch: {
         screen: WatchNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('view-1')
+            tabBarIcon: menuIcon(IconValues.VIEW)
         })
     },
     Settings: {
         screen: SettingsNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon('cog')
+            tabBarIcon: menuIcon(IconValues.SETTINGS)
         })
     }
 };

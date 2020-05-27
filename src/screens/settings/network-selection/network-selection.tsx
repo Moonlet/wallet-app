@@ -4,7 +4,7 @@ import { INavigationProps } from '../../../navigation/with-navigation-params';
 import { IReduxState } from '../../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
-import { Icon } from '../../../components/icon';
+import { Icon } from '../../../components/icon/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { IBlockchainNetwork, Blockchain } from '../../../core/blockchain/types';
@@ -13,6 +13,7 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { INetworksOptions } from '../../../redux/preferences/state';
 import { getNetworks } from '../../../redux/preferences/selectors';
 import { normalize } from '../../../styles/dimensions';
+import { IconValues } from '../../../components/icon/values';
 
 export interface INavigationParams {
     blockchain: Blockchain;
@@ -72,7 +73,7 @@ export class NetworkSelectionComponent extends React.Component<
                                             {appNetworks[blockchain].testNet ===
                                                 network.chainId && (
                                                 <Icon
-                                                    name="check-1"
+                                                    name={IconValues.CHECK}
                                                     size={normalize(16)}
                                                     style={styles.icon}
                                                 />

@@ -5,7 +5,7 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { BASE_DIMENSION, SCREEN_WIDTH } from '../../../../styles/dimensions';
-import { findIndex } from 'lodash';
+import findIndex from 'lodash/findIndex';
 
 export interface IExternalProps {
     steps: { title: string; active?: boolean }[];

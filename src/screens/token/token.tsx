@@ -29,12 +29,16 @@ import { TokenScreenComponentType } from '../../core/blockchain/types/token';
 import { DefaultTokenScreen } from './components/default-token/default-token';
 import { DelegateTokenScreen } from './components/delegate-token/delegate-token';
 import { AccountSettingsModal } from './components/account-settings/account-settings';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { SmartImage } from '../../library/image/smart-image';
-import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
+} from '../../styles/dimensions';
 import { TransactionStatus } from '../../core/wallet/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import bind from 'bind-decorator';
+import { IconValues } from '../../components/icon/values';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -54,7 +58,6 @@ export interface IReduxProps {
 export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
-    extensionTransactionPayload: any; // TODO add typing
     token: ITokenState;
 }
 
@@ -72,7 +75,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
             ownProps.token
         ),
         wallet: getSelectedWallet(state),
-        extensionTransactionPayload: ownProps.extensionTransactionPayload,
         chainId: getChainId(state, ownProps.blockchain)
     };
 };
@@ -86,18 +88,25 @@ const mapDispatchToProps = {
 const navigationOptions = ({ navigation, theme }: any) => ({
     headerRight: () => (
         <HeaderRight
-            icon="navigation-menu-horizontal"
+            icon={IconValues.NAVIGATION_MENU_HORIZONTAL}
             onPress={navigation.state.params && navigation.state.params.openSettingsMenu}
         />
     ),
     headerTitle: () => {
-        const BlockchainIcon = getBlockchain(navigation.state.params.blockchain).config
-            .iconComponent;
+        const tokenIcon = getTokenConfig(
+            navigation.state.params.blockchain,
+            navigation.state.params.token.symbol
+        ).icon;
+
+        const TokenIconComponent = tokenIcon.iconComponent;
 
         return (
             <View style={{ flexDirection: 'row' }}>
                 <SmartImage
-                    source={{ iconComponent: BlockchainIcon }}
+                    source={{
+                        iconComponent: TokenIconComponent,
+                        uri: tokenIcon.uri
+                    }}
                     style={{ marginRight: BASE_DIMENSION }}
                     small
                 />
@@ -106,7 +115,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                         fontSize: normalizeFontAndLineHeight(22),
                         lineHeight: normalizeFontAndLineHeight(28),
                         color: themes[theme].colors.text,
-                        letterSpacing: 0.38,
+                        letterSpacing: LETTER_SPACING,
                         textAlign: 'center',
                         fontWeight: 'bold'
                     }}
@@ -178,7 +187,6 @@ export class TokenScreenComponent extends React.Component<
                         accountIndex={this.props.accountIndex}
                         blockchain={this.props.blockchain}
                         token={this.props.token}
-                        extensionTransactionPayload={this.props.extensionTransactionPayload}
                         navigation={this.props.navigation}
                     />
                 );

@@ -1,4 +1,7 @@
 export interface ITransactionRequestState {
     isVisible: boolean;
-    requestId: string;
+    data: {
+        requestId?: string;
+        qrCode?: string;
+    };
 }

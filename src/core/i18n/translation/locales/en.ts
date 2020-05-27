@@ -15,6 +15,7 @@ export const translation: ITranslations = {
                 all: 'All',
                 amount: 'Amount',
                 average: 'Average',
+                balance: 'Balance',
                 cancel: 'Cancel',
                 cheap: 'Cheap',
                 check: 'Check',
@@ -30,6 +31,7 @@ export const translation: ITranslations = {
                 contractAddress: 'Contract address',
                 copy: 'Copy',
                 create: 'Create',
+                createTicket: 'Create a ticket',
                 date: 'Date',
                 dateAndTime: 'Date and time',
                 decimals: 'Decimals',
@@ -94,6 +96,7 @@ export const translation: ITranslations = {
                 tc: 'Terms of Service',
                 to: 'To',
                 tools: 'Tools',
+                theRequested: 'the requested',
                 transactions: 'Transactions',
                 tryAgain: 'Try again',
                 typeHere: 'Type here',
@@ -224,7 +227,7 @@ export const translation: ITranslations = {
             }
         },
         Send: {
-            inputAddress: 'Search public addresses or domain names',
+            inputAddress: 'Paste your address here or scan the QR code',
             memo: 'Memo (optional)',
             amount: 'Amount',
             recipientLabel: 'Recipient',
@@ -274,7 +277,7 @@ export const translation: ITranslations = {
             viewPhrase: 'Reveal secret phrase',
             secureWallet: 'Secure wallet',
             withoutPin:
-                'Without a PIN code, anyone who has access to your phone will be able to control the founds. It’s wise to setup a PIN code and secure your wallet',
+                'Without a PIN code, anyone who has access to your phone will be able to control the funds. It’s wise to setup a PIN code and secure your wallet',
             editTitle: 'Edit wallet name',
             editDescription: 'Use a relevant name or an alias for this wallet',
             addWalletTitle: 'Add Wallet',
@@ -351,7 +354,9 @@ export const translation: ITranslations = {
             manageAccount: 'Manage account',
             quicklyManage: 'Quickly edit, order or hide your accounts',
             connectExtension: 'Connect to extension',
-            scanCode: 'Scan the QR code on extension'
+            scanCode: 'Scan the QR code on extension',
+            scanPay: 'Scan to pay',
+            scanReceive: 'Scan and receive a transaction request'
         },
         BackupWallet: {
             title: 'Backup Wallet',
@@ -386,6 +391,8 @@ export const translation: ITranslations = {
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',
+            GENERIC_ERROR:
+                'Something went wrong while broadcasting your transaction. Please try again.',
             REVIEW_TRANSACTION: 'Review transaction on your hardware wallet',
             OPEN_APP: 'Please open {{app}} app on your Ledger',
             BROADCASTING: 'Broadcasting transaction',
@@ -445,7 +452,14 @@ export const translation: ITranslations = {
             title: 'Transaction request',
             walletName: 'Wallet name',
             accountName: 'Account name',
-            errorMessage: 'Transaction request is not valid anymore.'
+            errorMessage: 'Transaction request is not valid anymore.',
+            errorMsgExtension: 'Transaction request is not valid anymore.',
+            errorMsgToken:
+                'This transaction request is not supported. Please go to  Dashboard > Menu > Manage account and add {{token}} token.',
+            errorMsgGeneral:
+                'This transaction request is not supported. Please create a ticket and let us know what you tried to do and what went wrong.',
+            insufficientFunds:
+                'You don’t have enough funds for this transaction request. Either select a different wallet/account or add more funds to this account.'
         },
         Validator: {
             totalStake: 'Total Stake',

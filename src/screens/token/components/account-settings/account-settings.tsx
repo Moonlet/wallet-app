@@ -3,7 +3,7 @@ import { View, TouchableOpacity, Platform } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { IAccountState, IWalletState } from '../../../../redux/wallets/state';
-import { Icon } from '../../../../components/icon';
+import { Icon } from '../../../../components/icon/icon';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
@@ -17,6 +17,7 @@ import { WalletType } from '../../../../core/wallet/types';
 import { ViewKey, KeyType } from './components/view-key/view-key';
 import CONFIG from '../../../../config';
 import { openURL } from '../../../../core/utils/linking-handler';
+import { IconValues } from '../../../../components/icon/values';
 
 export interface IExternalProps {
     onDonePressed: () => any;
@@ -142,7 +143,7 @@ export class AccountSettingsModalComponent extends React.Component<
                                         style={styles.backButtonContainer}
                                     >
                                         <Icon
-                                            name="arrow-left-1"
+                                            name={IconValues.ARROW_LEFT}
                                             size={ICON_SIZE}
                                             style={styles.icon}
                                         />
@@ -181,13 +182,17 @@ export class AccountSettingsModalComponent extends React.Component<
                                         style={styles.rowContainer}
                                         onPress={() => this.revealPrivateKey()}
                                     >
-                                        <Icon name="key" size={ICON_SIZE} style={styles.leftIcon} />
+                                        <Icon
+                                            name={IconValues.KEY}
+                                            size={ICON_SIZE}
+                                            style={styles.leftIcon}
+                                        />
                                         <View style={styles.rowChild}>
                                             <Text style={styles.textRow}>
                                                 {translate('AccountSettings.revealPrivate')}
                                             </Text>
                                             <Icon
-                                                name="chevron-right"
+                                                name={IconValues.CHEVRON_RIGHT}
                                                 size={normalize(16)}
                                                 style={styles.rightIcon}
                                             />
@@ -200,13 +205,17 @@ export class AccountSettingsModalComponent extends React.Component<
                                     style={styles.rowContainer}
                                     onPress={() => this.revealPublicKey()}
                                 >
-                                    <Icon name="eye" size={ICON_SIZE} style={styles.leftIcon} />
+                                    <Icon
+                                        name={IconValues.EYE}
+                                        size={ICON_SIZE}
+                                        style={styles.leftIcon}
+                                    />
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
                                             {translate('AccountSettings.revealPublic')}
                                         </Text>
                                         <Icon
-                                            name="chevron-right"
+                                            name={IconValues.CHEVRON_RIGHT}
                                             size={normalize(16)}
                                             style={styles.rightIcon}
                                         />
@@ -218,13 +227,17 @@ export class AccountSettingsModalComponent extends React.Component<
                                     style={styles.rowContainer}
                                     onPress={() => this.viewOn()}
                                 >
-                                    <Icon name="search" size={ICON_SIZE} style={styles.leftIcon} />
+                                    <Icon
+                                        name={IconValues.SEARCH}
+                                        size={ICON_SIZE}
+                                        style={styles.leftIcon}
+                                    />
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
                                             {translate('AccountSettings.viewOn') + viewOnName}
                                         </Text>
                                         <Icon
-                                            name="chevron-right"
+                                            name={IconValues.CHEVRON_RIGHT}
                                             size={normalize(16)}
                                             style={styles.rightIcon}
                                         />
@@ -236,13 +249,17 @@ export class AccountSettingsModalComponent extends React.Component<
                                     style={styles.rowContainer}
                                     onPress={() => this.reportIssue()}
                                 >
-                                    <Icon name="bug" size={ICON_SIZE} style={styles.leftIcon} />
+                                    <Icon
+                                        name={IconValues.BUG}
+                                        size={ICON_SIZE}
+                                        style={styles.leftIcon}
+                                    />
                                     <View style={styles.rowChild}>
                                         <Text style={styles.textRow}>
                                             {translate('AccountSettings.reportIssue')}
                                         </Text>
                                         <Icon
-                                            name="chevron-right"
+                                            name={IconValues.CHEVRON_RIGHT}
                                             size={normalize(16)}
                                             style={styles.rightIcon}
                                         />

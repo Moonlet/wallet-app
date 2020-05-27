@@ -4,7 +4,8 @@ import {
     SCREEN_HEIGHT,
     BASE_DIMENSION,
     normalize,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -29,7 +30,7 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(30),
             lineHeight: normalizeFontAndLineHeight(41),
             color: '#FFFFFF',
-            letterSpacing: 0.4,
+            letterSpacing: LETTER_SPACING,
             textAlign: 'center',
             marginVertical: BASE_DIMENSION
         },
@@ -60,7 +61,7 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(22),
             lineHeight: normalizeFontAndLineHeight(28),
             fontWeight: 'bold',
-            letterSpacing: 0.35,
+            letterSpacing: LETTER_SPACING,
             color: '#FFFFFF',
             textAlign: 'center'
         },

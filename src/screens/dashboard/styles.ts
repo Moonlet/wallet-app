@@ -1,12 +1,19 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalize, normalizeFontAndLineHeight } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalize,
+    normalizeFontAndLineHeight,
+    LETTER_SPACING,
+    SCREEN_HEIGHT
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.appBackground,
+            height: SCREEN_HEIGHT
         },
         coinBalanceCard: {
             backgroundColor: theme.colors.appBackground,
@@ -92,7 +99,7 @@ export default (theme: ITheme) =>
         },
         mainText: {
             fontWeight: 'bold',
-            letterSpacing: 0.4,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.textSecondary,
             marginRight: BASE_DIMENSION * 2
         },

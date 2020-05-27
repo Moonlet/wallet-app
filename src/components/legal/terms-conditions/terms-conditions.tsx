@@ -3,12 +3,13 @@ import { View, TouchableOpacity } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
-import Icon from '../../icon';
+import Icon from '../../icon/icon';
 import { ICON_SIZE } from '../../../styles/dimensions';
 import { LoadingIndicator } from '../../loading-indicator/loading-indicator';
 import { WebView } from '../../../library/webview/webview';
 import { SafeAreaView } from 'react-navigation';
 import CONFIG from '../../../config';
+import { IconValues } from '../../icon/values';
 
 interface IExternalProps {
     onClose?: () => void;
@@ -27,7 +28,11 @@ export const TCComponent = (
                         style={props.styles.button}
                     >
                         <View style={props.styles.iconContainer}>
-                            <Icon name="close" size={ICON_SIZE} style={props.styles.icon} />
+                            <Icon
+                                name={IconValues.CLOSE}
+                                size={ICON_SIZE}
+                                style={props.styles.icon}
+                            />
                         </View>
                     </TouchableOpacity>
                 )}

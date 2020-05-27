@@ -26,6 +26,7 @@ import { bind } from 'bind-decorator';
 import { BottomCta } from '../../../components/bottom-cta/bottom-cta';
 import { PrimaryCtaField } from '../../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { AmountCtaField } from '../../../components/bottom-cta/amount-cta-field/amount-cta-field';
+import { valuePrimaryCtaField } from '../../../core/utils/format-string';
 
 interface IHeaderStep {
     step: number;
@@ -176,13 +177,6 @@ export class PosActionRedelegateSelectValidatorComponent extends React.Component
         const selectedValidators = this.state.validatorsList.filter(
             validator => validator.actionTypeSelected === true
         );
-        let valuePrimaryCtaField = '';
-        if (selectedValidators.length > 1) {
-            valuePrimaryCtaField =
-                selectedValidators.length + ' ' + translate('App.labels.validators').toLowerCase();
-        } else if (selectedValidators.length === 1) {
-            valuePrimaryCtaField = selectedValidators[0].name;
-        }
 
         const disableButton: boolean = selectedValidators.length === 0;
 
@@ -197,7 +191,7 @@ export class PosActionRedelegateSelectValidatorComponent extends React.Component
                 <PrimaryCtaField
                     label={translate(this.props.actionText)}
                     action={translate('App.labels.for').toLowerCase()}
-                    value={valuePrimaryCtaField}
+                    value={valuePrimaryCtaField(this.state.validatorsList)}
                 />
                 <AmountCtaField
                     tokenConfig={tokenConfig}

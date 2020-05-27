@@ -6,61 +6,61 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../../core/i18n';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-
 import { getAccount } from '../../../../redux/wallets/selectors';
 import { Blockchain, ChainIdType, IFeeOptions } from '../../../../core/blockchain/types';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
-import { getChainId } from '../../../../redux/preferences/selectors';
 import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
-import {
-    DELEGATE_CONFIRMATION,
-    navigateToConfirmationStep
-} from '../../../../redux/ui/screens/posActions/actions';
-import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
-import bind from 'bind-decorator';
+import { ConfirmComponent } from '../../components/confirm-component/confirm-component';
+
+interface IHeaderStep {
+    step: number;
+    title: string;
+    active: boolean;
+}
 
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
-    navigateToConfirmationStep: typeof navigateToConfirmationStep;
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
     validators: IValidator[];
     actionText: string;
+    amount: string;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
-    const accountIndex = state.ui.screens.posActions.delegateEnterAmount.accountIndex;
-    const blockchain = state.ui.screens.posActions.delegateEnterAmount.blockchain;
+    const accountIndex = state.ui.screens.posActions.delegateConfirm.accountIndex;
+    const blockchain = state.ui.screens.posActions.delegateConfirm.blockchain;
     return {
         account: getAccount(state, accountIndex, blockchain),
         chainId: getChainId(state, blockchain),
         accountIndex,
         blockchain,
-        token: state.ui.screens.posActions.delegateEnterAmount.token,
-        validators: state.ui.screens.posActions.delegateEnterAmount.validators,
-        actionText: state.ui.screens.posActions.delegateEnterAmount.actionText
+        token: state.ui.screens.posActions.delegateConfirm.token,
+        validators: state.ui.screens.posActions.delegateConfirm.validators,
+        actionText: state.ui.screens.posActions.delegateConfirm.actionText,
+        amount: state.ui.screens.posActions.delegateConfirm.amount
     };
 };
 
 const mapDispatchToProps = {
-    navigateToConfirmationStep
+    //
 };
 
 interface IState {
+    headerSteps: IHeaderStep[];
+    validatorsList: IValidator[];
     amount: string;
-    insufficientFunds: boolean;
     feeOptions: IFeeOptions;
-    insufficientFundsFees: boolean;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
     title: navigation?.state?.params?.actionText && translate(navigation?.state?.params?.actionText)
 });
 
-export class DelegateEnterAmountComponent extends React.Component<
+export class DelegateConfirmComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
@@ -78,15 +78,15 @@ export class DelegateEnterAmountComponent extends React.Component<
             stepList.push({
                 step: index,
                 title: translate(step),
-                active: index === 1 ? true : false
+                active: index === 2 ? true : false
             });
         });
 
         this.state = {
-            amount: '',
-            insufficientFunds: false,
-            feeOptions: undefined,
-            insufficientFundsFees: false
+            headerSteps: stepList,
+            validatorsList: props.validators,
+            amount: props.amount,
+            feeOptions: undefined
         };
     }
 
@@ -94,36 +94,28 @@ export class DelegateEnterAmountComponent extends React.Component<
         this.props.navigation.setParams({ actionText: this.props.actionText });
     }
 
-    @bind
-    public onPressNext(amount: string, feeOptions: IFeeOptions) {
-        this.props.navigateToConfirmationStep(
-            this.props.accountIndex,
-            this.props.blockchain,
-            this.props.token,
-            this.props.validators,
-            this.props.actionText,
-            'DelegateConfirm',
-            DELEGATE_CONFIRMATION,
-            amount,
-            feeOptions
-        );
+    public onPressConfirm() {
+        //
     }
 
     public render() {
         return (
-            <EnterAmountComponent
+            <ConfirmComponent
                 account={this.props.account}
                 chainId={this.props.chainId}
                 token={this.props.token}
                 validators={this.props.validators}
                 actionText={this.props.actionText}
+                amount={this.state.amount}
                 showSteps={true}
-                onPressNext={this.onPressNext}
+                feeOptions={this.state.feeOptions}
+                onPressConfirm={() => this.onPressConfirm()}
             />
         );
     }
 }
-export const DelegateEnterAmount = smartConnect(DelegateEnterAmountComponent, [
+
+export const DelegateConfirm = smartConnect(DelegateConfirmComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

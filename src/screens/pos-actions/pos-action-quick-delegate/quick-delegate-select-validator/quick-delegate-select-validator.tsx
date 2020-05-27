@@ -28,15 +28,16 @@ import { BottomCta } from '../../../../components/bottom-cta/bottom-cta';
 import { PrimaryCtaField } from '../../../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { AmountCtaField } from '../../../../components/bottom-cta/amount-cta-field/amount-cta-field';
 import {
-    navigateToNextStep,
+    navigateToEnterAmountStep,
     QUICK_DELEGATE_ENTER_AMOUNT
 } from '../../../../redux/ui/screens/posActions/actions';
 import { Icon } from '../../../../components/icon/icon';
+import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
 
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
-    navigateToNextStep: typeof navigateToNextStep;
+    navigateToEnterAmountStep: typeof navigateToEnterAmountStep;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -47,7 +48,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 };
 
 const mapDispatchToProps = {
-    navigateToNextStep
+    navigateToEnterAmountStep
 };
 
 export interface INavigationParams {
@@ -164,13 +165,6 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
         const selectedValidators = this.state.validatorsList.filter(
             validator => validator.actionTypeSelected === true
         );
-        let valuePrimaryCtaField = '';
-        if (selectedValidators.length > 1) {
-            valuePrimaryCtaField =
-                selectedValidators.length + ' ' + translate('App.labels.validators').toLowerCase();
-        } else if (selectedValidators.length === 1) {
-            valuePrimaryCtaField = selectedValidators[0].name;
-        }
 
         const disableButton: boolean = selectedValidators.length === 0;
 
@@ -180,7 +174,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                 disabled={disableButton}
                 onPress={() => {
                     // navigate to next screen
-                    this.props.navigateToNextStep(
+                    this.props.navigateToEnterAmountStep(
                         this.props.accountIndex,
                         this.props.blockchain,
                         this.props.token,
@@ -194,7 +188,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                 <PrimaryCtaField
                     label={translate(this.props.actionText)}
                     action={translate('App.labels.for').toLowerCase()}
-                    value={valuePrimaryCtaField}
+                    value={valuePrimaryCtaField(this.state.validatorsList)}
                 />
                 <AmountCtaField
                     tokenConfig={tokenConfig}

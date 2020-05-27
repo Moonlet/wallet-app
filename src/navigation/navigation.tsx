@@ -53,6 +53,8 @@ import { PosActionRedelegateSelectValidator } from '../screens/pos-actions/pos-a
 import { DelegateEnterAmount } from '../screens/pos-actions/pos-action-delegate/delegate-enter-amount/delegate-enter-amount';
 import { QuickDelegateEnterAmount } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-enter-amount/quick-delegate-enter-amount';
 import { IconValues } from '../components/icon/values';
+import { DelegateConfirm } from '../screens/pos-actions/pos-action-delegate/delegate-confirm/delegate-confirm';
+import { QuickDelegateConfirm } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-confirm.tsx/quick-delegate-confirm';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -157,12 +159,18 @@ export const WalletNavigation = createStackNavigator(
         DelegateEnterAmount: {
             screen: DelegateEnterAmount
         },
+        DelegateConfirm: {
+            screen: DelegateConfirm
+        },
 
         QuickDelegateSelectValidator: {
             screen: QuickDelegateSelectValidator
         },
         QuickDelegateEnterAmount: {
             screen: QuickDelegateEnterAmount
+        },
+        QuickDelegateConfirm: {
+            screen: QuickDelegateConfirm
         },
 
         PosActionUndelegate: {

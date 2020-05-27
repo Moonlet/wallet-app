@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../../core/theme/itheme';
-import { BASE_DIMENSION, ICON_CONTAINER_SIZE, normalize } from '../../../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    ICON_CONTAINER_SIZE,
+    normalize,
+    normalizeFontAndLineHeight
+} from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -22,7 +27,7 @@ export default (theme: ITheme) =>
             marginBottom: BASE_DIMENSION / 2
         },
         labelName: {
-            fontSize: normalize(16),
+            fontSize: normalizeFontAndLineHeight(16),
             fontWeight: '500',
             letterSpacing: 0.39,
             color: theme.colors.text,
@@ -30,15 +35,15 @@ export default (theme: ITheme) =>
             marginRight: BASE_DIMENSION / 2
         },
         website: {
-            fontSize: normalize(11),
+            fontSize: normalizeFontAndLineHeight(11),
             color: theme.colors.textSecondary
         },
         rankText: {
-            fontSize: normalize(10),
+            fontSize: normalizeFontAndLineHeight(10),
             color: theme.colors.textTertiary
         },
         amount: {
-            fontSize: normalize(14),
+            fontSize: normalizeFontAndLineHeight(14),
             lineHeight: normalize(19),
             fontWeight: '500',
             letterSpacing: 0.38,

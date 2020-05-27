@@ -23,7 +23,10 @@ export const ValidatorsListComponent = (
     const config = getBlockchain(props.blockchain).config;
 
     return (
-        <ScrollView contentContainerStyle={props.styles.container}>
+        <ScrollView
+            contentContainerStyle={props.styles.container}
+            showsVerticalScrollIndicator={false}
+        >
             {props.validators.map((validator: IValidator, index: number) => (
                 <ValidatorCard
                     key={index}

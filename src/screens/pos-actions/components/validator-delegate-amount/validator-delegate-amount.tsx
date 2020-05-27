@@ -1,11 +1,13 @@
 import React from 'react';
 import { View } from 'react-native';
 import stylesProvider from './styles';
-import { Text } from '../../../../../library';
-import { IThemeProps, withTheme } from '../../../../../core/theme/with-theme';
-import { SmartImage } from '../../../../../library/image/smart-image';
-import { smartConnect } from '../../../../../core/utils/smart-connect';
-import { IValidator } from '../../../../../core/blockchain/types/stats';
+import { Text } from '../../../../library';
+import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
+import { SmartImage } from '../../../../library/image/smart-image';
+import { smartConnect } from '../../../../core/utils/smart-connect';
+import { IValidator } from '../../../../core/blockchain/types/stats';
+import { formatNumber } from '../../../../core/utils/format-number';
+import BigNumber from 'bignumber.js';
 
 export interface IExternalProps {
     validator: IValidator;
@@ -29,9 +31,12 @@ export const ValidatorDelegateAmountComponent = (
                 <Text style={styles.website}>{props.validator.website}</Text>
             </View>
             <Text style={styles.amount}>
-                {props.amount !== '0'
+                {props.amount === '0' || props.amount === undefined
                     ? `_.____ ${props.symbol}`
-                    : `${props.amount} ${props.symbol}`}
+                    : formatNumber(new BigNumber(props.amount), {
+                          currency: props.symbol,
+                          minimumFractionDigits: 2
+                      })}
             </Text>
         </View>
     );

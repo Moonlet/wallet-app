@@ -39,8 +39,13 @@ import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connec
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
 import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
-import { PosActionSelectValidator } from '../screens/pos-actions/pos-action-delegate-select-validator/pos-action-delegate-select-validator';
-import { PosActionQuickDelegate } from '../screens/pos-actions/pos-action-quick-delegate/pos-action-quick-delegate';
+import { DelegateSelectValidator } from '../screens/pos-actions/pos-action-delegate/delegate-select-validator/delegate-select-validator';
+import { QuickDelegateSelectValidator } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-select-validator/quick-delegate-select-validator';
+import { PosActionUndelegate } from '../screens/pos-actions/pos-action-undelegate/pos-action-undelegate';
+import { PosActionUnlock } from '../screens/pos-actions/pos-action-unlock/pos-action-unlock';
+import { PosActionRedelegateSelectValidator } from '../screens/pos-actions/pos-action-redelegate-select-validator/pos-action-redelegate-select-validator';
+import { DelegateEnterAmount } from '../screens/pos-actions/pos-action-delegate/delegate-enter-amount/delegate-enter-amount';
+import { QuickDelegateEnterAmount } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-enter-amount/quick-delegate-enter-amount';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -100,21 +105,6 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
     )
 });
 
-// POS ACTIONS
-export const PosActions = createStackNavigator(
-    {
-        PosActionSelectValidator: {
-            screen: PosActionSelectValidator
-        }
-    },
-    {
-        initialRouteName: 'PosActionSelectValidator',
-        defaultNavigationOptions: null,
-        headerLayoutPreset: 'center',
-        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
-    }
-);
-
 // wallet navigation stack
 export const WalletNavigation = createStackNavigator(
     {
@@ -154,19 +144,29 @@ export const WalletNavigation = createStackNavigator(
         Validator: {
             screen: ValidatorScreen
         },
-        // PosActions: {
-        //     screen: PosActions
-        // },
-        PosActionSelectValidator: {
-            screen: PosActionSelectValidator
+        DelegateSelectValidator: {
+            screen: DelegateSelectValidator
         },
-        PosActionQuickDelegate: {
-            screen: PosActionQuickDelegate
+        DelegateEnterAmount: {
+            screen: DelegateEnterAmount
         },
 
-        // DelegateScreen: {
-        //     screen: DelegateScreen
-        // },
+        QuickDelegateSelectValidator: {
+            screen: QuickDelegateSelectValidator
+        },
+        QuickDelegateEnterAmount: {
+            screen: QuickDelegateEnterAmount
+        },
+
+        PosActionUndelegate: {
+            screen: PosActionUndelegate
+        },
+        PosActionUnlock: {
+            screen: PosActionUnlock
+        },
+        PosActionRedelegateSelectValidator: {
+            screen: PosActionRedelegateSelectValidator
+        },
 
         // wallet creation
         CreateWalletMnemonic: {

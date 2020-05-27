@@ -1,6 +1,6 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, DelegationType } from '../types/token';
+import { TokenType } from '../types/token';
 import CeloIcon from '../../../assets/icons/blockchains/celo.svg';
 import {
     CELO_GOLD_NATIVE,
@@ -19,8 +19,8 @@ export const accountCTA = {
         title: 'App.labels.quickVote',
         iconName: 'vote',
         navigateTo: {
-            screen: 'PosActionQuickDelegate',
-            params: { delegationType: DelegationType.QUICK_DELEGATE }
+            screen: 'QuickDelegateSelectValidator',
+            params: { actionText: 'App.labels.quickVote' }
         }
     }
 };
@@ -30,25 +30,31 @@ const validatorCTA = {
         title: 'App.labels.vote',
         iconName: 'vote',
         navigateTo: {
-            screen: 'PosActionSelectValidator',
-            params: { delegationType: DelegationType.DELEGATE, title: 'App.labels.vote' }
+            screen: 'DelegateSelectValidator',
+            params: { actionText: 'App.labels.vote' }
         }
     },
     otherCtas: [
         {
             title: 'App.labels.revote',
             iconName: 'revote',
-            navigateTo: { screen: undefined, params: { delegationType: DelegationType.REDELEGATE } }
+            navigateTo: {
+                screen: 'RedelegateSelectValidator',
+                params: { actionText: 'App.labels.revote' }
+            }
         },
         {
             title: 'App.labels.unvote',
             iconName: 'unvote',
-            navigateTo: { screen: undefined, params: { delegationType: DelegationType.UNDELEGATE } }
+            navigateTo: {
+                screen: 'PosActionUndelegate',
+                params: { actionText: 'App.labels.unvote' }
+            }
         },
         {
             title: 'App.labels.unlock',
             iconName: 'unlock',
-            navigateTo: { screen: undefined, params: { delegationType: DelegationType.UNLOCK } }
+            navigateTo: { screen: 'PosActionUnlock', params: { actionText: 'App.labels.unlock' } }
         }
     ]
 };

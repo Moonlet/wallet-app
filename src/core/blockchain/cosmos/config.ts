@@ -1,6 +1,6 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenScreenComponentType, DelegationType } from '../types/token';
+import { TokenType, TokenScreenComponentType } from '../types/token';
 import CosmosIcon from '../../../assets/icons/blockchains/cosmos.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 
@@ -31,7 +31,10 @@ export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickDelegate',
         iconName: 'vote',
-        navigateTo: { screen: undefined, params: { delegationType: DelegationType.QUICK_DELEGATE } }
+        navigateTo: {
+            screen: 'QuickDelegateSelectValidator',
+            params: { actionText: 'App.labels.delegate' }
+        }
     }
 };
 
@@ -39,7 +42,10 @@ const validatorCTA = {
     mainCta: {
         title: 'App.labels.delegate',
         iconName: 'vote',
-        navigateTo: { screen: undefined, params: { delegationType: DelegationType.DELEGATE } }
+        navigateTo: {
+            screen: 'DelegateSelectValidator',
+            params: { actionText: 'App.labels.delegate' }
+        }
     },
     otherCtas: [
         {
@@ -47,23 +53,29 @@ const validatorCTA = {
             iconName: 'claim-reward',
             navigateTo: {
                 screen: undefined,
-                params: { delegationType: DelegationType.CLAIM_REWARD }
+                params: { title: 'App.labels.claimReward' }
             }
         },
         {
             title: 'App.labels.reinvest',
             iconName: 'reinvest',
-            navigateTo: { screen: undefined, params: { delegationType: DelegationType.REINVEST } }
+            navigateTo: { screen: undefined, params: { title: 'App.labels.reinvest' } }
         },
         {
             title: 'App.labels.redelegate',
             iconName: 'revote',
-            navigateTo: { screen: undefined, params: { delegationType: DelegationType.REDELEGATE } }
+            navigateTo: {
+                screen: 'RedelegateSelectValidator',
+                params: { actionText: 'App.labels.redelegate' }
+            }
         },
         {
             title: 'App.labels.undelegate',
             iconName: 'unvote',
-            navigateTo: { screen: undefined, params: { delegationType: DelegationType.UNDELEGATE } }
+            navigateTo: {
+                screen: 'PosActionUndelegate',
+                params: { actionText: 'App.labels.undelegate' }
+            }
         }
     ]
 };

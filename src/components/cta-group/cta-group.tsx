@@ -17,7 +17,6 @@ export interface INavParams {
     blockchain: Blockchain;
     token: ITokenState;
     validators: IValidator[];
-    title: string;
 }
 
 export interface IExternalProps {

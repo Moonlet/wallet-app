@@ -107,8 +107,7 @@ export class ValidatorsTabComponent extends React.Component<
                             accountIndex: this.props.accountIndex,
                             blockchain: this.props.blockchain,
                             token: this.props.token,
-                            validators: [moonletValidator],
-                            title: tokenUiConfig.accountCTA.mainCta.title
+                            validators: [moonletValidator]
                         }}
                     />
                 </View>

@@ -1,5 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
-import { ITheme } from '../../../core/theme/itheme';
+import { ITheme } from '../../../../core/theme/itheme';
 import {
     BASE_DIMENSION,
     BORDER_RADIUS,
@@ -7,7 +7,7 @@ import {
     normalize,
     isIphoneXorAbove,
     normalizeFontAndLineHeight
-} from '../../../styles/dimensions';
+} from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -28,6 +28,9 @@ export default (theme: ITheme) =>
         listContainer: {
             marginTop: BASE_DIMENSION * 3,
             marginHorizontal: BASE_DIMENSION * 2
+        },
+        headerSteps: {
+            marginBottom: BASE_DIMENSION
         },
         actionContainer: {
             marginTop: BASE_DIMENSION * 2,

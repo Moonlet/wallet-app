@@ -1,33 +1,38 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
-import { IReduxState } from '../../../redux/state';
+import { IReduxState } from '../../../../redux/state';
 import stylesProvider from './styles';
-import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
-import { smartConnect } from '../../../core/utils/smart-connect';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
+import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { Text } from '../../../library';
-import { translate } from '../../../core/i18n';
-import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
-import { withNavigationParams, INavigationProps } from '../../../navigation/with-navigation-params';
-import { getAccount } from '../../../redux/wallets/selectors';
-import { Blockchain, ChainIdType } from '../../../core/blockchain/types';
+import { Text } from '../../../../library';
+import { translate } from '../../../../core/i18n';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import {
+    withNavigationParams,
+    INavigationProps
+} from '../../../../navigation/with-navigation-params';
+import { getAccount } from '../../../../redux/wallets/selectors';
+import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
-import { normalize } from '../../../styles/dimensions';
-import { DelegationType } from '../../../core/blockchain/types/token';
-import { IAccountState, ITokenState } from '../../../redux/wallets/state';
-import { TestnetBadge } from '../../../components/testnet-badge/testnet-badge';
-import _ from 'lodash';
-import { Icon } from '../../../components/icon';
+import { normalize } from '../../../../styles/dimensions';
+import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
+import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge';
+import { Icon } from '../../../../components/icon';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { getTokenConfig } from '../../../redux/tokens/static-selectors';
-import { HeaderStepByStep } from '../../send/components/header-step-by-step/header-step-by-step';
-import { getChainId } from '../../../redux/preferences/selectors';
-import { IValidator, CardActionType } from '../../../core/blockchain/types/stats';
-import { ValidatorsList } from '../../token/components/delegate-token/components/validators/validators-list/validators-list';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
+import { HeaderStepByStep } from '../../../send/components/header-step-by-step/header-step-by-step';
+import { getChainId } from '../../../../redux/preferences/selectors';
+import { IValidator, CardActionType } from '../../../../core/blockchain/types/stats';
+import { ValidatorsList } from '../../../token/components/delegate-token/components/validators/validators-list/validators-list';
 import { bind } from 'bind-decorator';
-import { BottomCta } from '../../../components/bottom-cta/bottom-cta';
-import { PrimaryCtaField } from '../../../components/bottom-cta/primary-cta-field/primary-cta-field';
-import { AmountCtaField } from '../../../components/bottom-cta/amount-cta-field/amount-cta-field';
+import { BottomCta } from '../../../../components/bottom-cta/bottom-cta';
+import { PrimaryCtaField } from '../../../../components/bottom-cta/primary-cta-field/primary-cta-field';
+import { AmountCtaField } from '../../../../components/bottom-cta/amount-cta-field/amount-cta-field';
+import {
+    navigateToNextStep,
+    DELEGATE_ENTER_AMOUNT
+} from '../../../../redux/ui/screens/posActions/actions';
 
 interface IHeaderStep {
     step: number;
@@ -38,6 +43,7 @@ interface IHeaderStep {
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    navigateToNextStep: typeof navigateToNextStep;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -48,16 +54,15 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 };
 
 const mapDispatchToProps = {
-    //
+    navigateToNextStep
 };
 
 export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
-    delegationType: DelegationType;
     validators: IValidator[];
-    title: string;
+    actionText: string;
 }
 
 interface IState {
@@ -67,9 +72,9 @@ interface IState {
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
-    title: translate(navigation.state.params.title || 'App.labels.send')
+    title: translate(navigation.state.params.actionText || 'App.labels.send')
 });
-export class PosActionSelectValidatorComponent extends React.Component<
+export class DelegateSelectValidatorComponent extends React.Component<
     INavigationProps<INavigationParams> &
         IReduxProps &
         IThemeProps<ReturnType<typeof stylesProvider>>,
@@ -195,10 +200,19 @@ export class PosActionSelectValidatorComponent extends React.Component<
                 disabled={disableButton}
                 onPress={() => {
                     // navigate to next screen
+                    this.props.navigateToNextStep(
+                        this.props.accountIndex,
+                        this.props.blockchain,
+                        this.props.token,
+                        selectedValidators,
+                        this.props.actionText,
+                        'DelegateEnterAmount',
+                        DELEGATE_ENTER_AMOUNT
+                    );
                 }}
             >
                 <PrimaryCtaField
-                    label={translate(this.props.title)}
+                    label={translate(this.props.actionText)}
                     action={translate('App.labels.for').toLowerCase()}
                     value={valuePrimaryCtaField}
                 />
@@ -238,7 +252,7 @@ export class PosActionSelectValidatorComponent extends React.Component<
     }
 }
 
-export const PosActionSelectValidator = smartConnect(PosActionSelectValidatorComponent, [
+export const DelegateSelectValidator = smartConnect(DelegateSelectValidatorComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider),
     withNavigationParams()

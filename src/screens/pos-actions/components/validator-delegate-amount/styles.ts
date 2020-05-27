@@ -1,19 +1,20 @@
 import { StyleSheet } from 'react-native';
-import { ITheme } from '../../../../../core/theme/itheme';
-import { BASE_DIMENSION, ICON_CONTAINER_SIZE, normalize } from '../../../../../styles/dimensions';
+import { ITheme } from '../../../../core/theme/itheme';
+import { BASE_DIMENSION, ICON_CONTAINER_SIZE, normalize } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flexDirection: 'row',
-            padding: BASE_DIMENSION * 2
+            padding: BASE_DIMENSION + BASE_DIMENSION / 2,
+            paddingHorizontal: BASE_DIMENSION * 3
         },
         icon: {
             width: ICON_CONTAINER_SIZE,
             height: ICON_CONTAINER_SIZE,
             borderRadius: ICON_CONTAINER_SIZE,
             alignSelf: 'center',
-            marginRight: BASE_DIMENSION
+            marginRight: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         labelContainer: {
             flexDirection: 'row',

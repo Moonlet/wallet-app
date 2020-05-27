@@ -106,8 +106,7 @@ export class ValidatorScreenComponent extends React.Component<
                             accountIndex: this.props.accountIndex,
                             blockchain: this.props.blockchain,
                             token: this.props.token,
-                            validators: [validator],
-                            title: config.ui.token.validatorCTA.mainCta.title
+                            validators: [validator]
                         }}
                     />
                 </View>

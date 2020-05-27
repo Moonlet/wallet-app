@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
 import stylesProvider from './styles';
-import _ from 'lodash';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { translate } from '../../../../../core/i18n';
 import { IThemeProps, withTheme } from '../../../../../core/theme/with-theme';

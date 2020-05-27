@@ -36,8 +36,8 @@ export const darkTheme: ITheme = {
         gradientLight: COLORS.COD_GRAY,
         gradientDark: COLORS.BLACK,
 
-        notVoting: COLORS.PURPLE,
-        unlocking: COLORS.ORANGE,
+        notVoting: COLORS.ORANGE,
+        unlocking: COLORS.PURPLE,
         reward: COLORS.GREEN
     }
 };

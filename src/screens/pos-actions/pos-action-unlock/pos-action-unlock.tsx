@@ -5,6 +5,7 @@ import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
+import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { withNavigationParams, INavigationProps } from '../../../navigation/with-navigation-params';
@@ -48,7 +49,7 @@ export interface INavigationParams {
 export const navigationOptions = ({ navigation }: any) => ({
     title: translate(navigation.state.params.actionText || 'App.labels.send')
 });
-export class PosActionUndelegateComponent extends React.Component<
+export class PosActionUnlockComponent extends React.Component<
     INavigationProps<INavigationParams> &
         IReduxProps &
         IThemeProps<ReturnType<typeof stylesProvider>>
@@ -96,7 +97,7 @@ export class PosActionUndelegateComponent extends React.Component<
             >
                 <PrimaryCtaField
                     label={translate(this.props.actionText)}
-                    labelColor={theme.colors.notVoting}
+                    labelColor={theme.colors.unlocking}
                     action={translate('App.labels.from').toLowerCase()}
                     value={this.props.validators[0].name}
                 />
@@ -110,7 +111,26 @@ export class PosActionUndelegateComponent extends React.Component<
     }
 
     public render() {
-        const { styles } = this.props;
+        const { styles, theme } = this.props;
+        const map = [
+            {
+                text: translate('Validator.unlockText1')
+            },
+            {
+                text: translate('Validator.unlockText2'),
+                style: { color: theme.colors.unlocking }
+            },
+            {
+                text: translate('Validator.unlockText3')
+            },
+            {
+                text: translate('Validator.unlockText4'),
+                style: { color: theme.colors.notVoting }
+            },
+            {
+                text: translate('Validator.unlockText5')
+            }
+        ];
 
         return (
             <View style={styles.container}>
@@ -123,7 +143,21 @@ export class PosActionUndelegateComponent extends React.Component<
                 >
                     <View style={styles.content}>
                         <View>
-                            <View>{/* {this.renderEnterAmount()} */}</View>
+                            <View>
+                                <Text style={styles.unlockContainerText}>
+                                    {map.map((value, index) => {
+                                        return (
+                                            <Text
+                                                key={index}
+                                                style={[styles.unlockTextChildren, value?.style]}
+                                            >
+                                                {value.text + ' '}
+                                            </Text>
+                                        );
+                                    })}
+                                </Text>
+                                {/* {this.renderEnterAmount()} */}
+                            </View>
                         </View>
                     </View>
                 </KeyboardAwareScrollView>
@@ -133,7 +167,7 @@ export class PosActionUndelegateComponent extends React.Component<
     }
 }
 
-export const PosActionUndelegate = smartConnect(PosActionUndelegateComponent, [
+export const PosActionUnlock = smartConnect(PosActionUnlockComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider),
     withNavigationParams()

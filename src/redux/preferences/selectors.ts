@@ -18,8 +18,9 @@ export const getChainId = (state: IReduxState, blockchain: Blockchain): ChainIdT
 
     if (state.preferences.testNet === true) {
         return network.testNet;
+    } else {
+        return getBlockchain(blockchain).config.networks?.mainNet || '';
     }
-    return network.mainNet ? network.mainNet : '';
 };
 
 export const getNetworkName = (state: IReduxState, blockchain: Blockchain): string => {

@@ -1,6 +1,6 @@
 import { Blockchain } from '../../../core/blockchain/types';
-
 import { HWModel, HWConnection } from '../../../core/wallet/hw-wallet/types';
+import { IWalletState } from '../../wallets/state';
 
 export interface IBottomSheetState {
     type: BottomSheetType;
@@ -8,6 +8,7 @@ export interface IBottomSheetState {
     deviceModel: HWModel;
     connectionType: HWConnection;
     data: IBottomSheetExtensionRequestData;
+    wallets?: IWalletState[];
 }
 
 export enum BottomSheetType {
@@ -15,7 +16,8 @@ export enum BottomSheetType {
     DASHBOARD_MENU = 'DASHBOARD_MENU',
     LEDGER_CONNECT = 'LEDGER_CONNECT',
     EXTENSION_REQUEST = 'EXTENSION_REQUEST',
-    BLOCKCHAIN_NAVIGATION = 'BLOCKCHAIN_NAVIGATION'
+    BLOCKCHAIN_NAVIGATION = 'BLOCKCHAIN_NAVIGATION',
+    WALLETS = 'WALLETS'
 }
 export enum IExtensionRequestType {
     SIGN_TRANSACTION = 'SIGN_TRANSACTION'
@@ -34,4 +36,5 @@ export interface IBottomSheet {
     deviceModel?: HWModel;
     connectionType?: HWConnection;
     data?: IBottomSheetExtensionRequestData;
+    wallets?: IWalletState[];
 }

@@ -4,7 +4,10 @@ import { OPEN_TX_REQUEST, CLOSE_TX_REQUEST } from './actions';
 
 const intialState: ITransactionRequestState = {
     isVisible: false,
-    requestId: undefined
+    data: {
+        requestId: undefined,
+        qrCode: undefined
+    }
 };
 
 export default (
@@ -16,7 +19,10 @@ export default (
             return {
                 ...state,
                 isVisible: true,
-                requestId: action.data.requestId
+                data: {
+                    requestId: action.data?.requestId,
+                    qrCode: action.data?.qrCode
+                }
             };
 
         case CLOSE_TX_REQUEST:

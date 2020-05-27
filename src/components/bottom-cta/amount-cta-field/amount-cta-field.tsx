@@ -31,8 +31,9 @@ export const AmountCtaFieldComponent = (
                     style={styles.defaultText}
                     token={tokenConfig.symbol}
                     tokenDecimals={tokenConfig.decimals}
-                    amount={stdAmount.toString()}
+                    amount={stdAmount.toFixed()}
                     blockchain={account.blockchain}
+                    uiDecimals={tokenConfig.decimals}
                 />
             )}
 
@@ -41,9 +42,10 @@ export const AmountCtaFieldComponent = (
                     style={styles.amountText}
                     token={tokenConfig.symbol}
                     tokenDecimals={tokenConfig.decimals}
-                    amount={stdAmount.toString()}
+                    amount={stdAmount.toFixed()}
                     blockchain={account.blockchain}
                     convert
+                    uiDecimals={tokenConfig.decimals}
                 />
                 {extraAmountConvertedLabel && (
                     <Text style={[styles.amountText, { marginLeft: BASE_DIMENSION / 2 }]}>

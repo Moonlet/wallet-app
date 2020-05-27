@@ -29,7 +29,6 @@ import { TokenScreenComponentType } from '../../core/blockchain/types/token';
 import { DefaultTokenScreen } from './components/default-token/default-token';
 import { DelegateTokenScreen } from './components/delegate-token/delegate-token';
 import { AccountSettingsModal } from './components/account-settings/account-settings';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { SmartImage } from '../../library/image/smart-image';
 import {
     BASE_DIMENSION,
@@ -94,13 +93,20 @@ const navigationOptions = ({ navigation, theme }: any) => ({
         />
     ),
     headerTitle: () => {
-        const BlockchainIcon = getBlockchain(navigation.state.params.blockchain).config
-            .iconComponent;
+        const tokenIcon = getTokenConfig(
+            navigation.state.params.blockchain,
+            navigation.state.params.token.symbol
+        ).icon;
+
+        const TokenIconComponent = tokenIcon.iconComponent;
 
         return (
             <View style={{ flexDirection: 'row' }}>
                 <SmartImage
-                    source={{ iconComponent: BlockchainIcon }}
+                    source={{
+                        iconComponent: TokenIconComponent,
+                        uri: tokenIcon.uri
+                    }}
                     style={{ marginRight: BASE_DIMENSION }}
                     small
                 />

@@ -8,30 +8,45 @@ import { Blockchain } from '../../../../core/blockchain/types';
 import { translate } from '../../../../core/i18n';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { smartConnect } from '../../../../core/utils/smart-connect';
+import { BASE_DIMENSION } from '../../../../styles/dimensions';
 
 export interface IExternalProps {
     tokenSymbol: string;
     amount: string;
     blockchain: Blockchain;
-    backgroundColor?: string;
+    options?: {
+        backgroundColor?: string;
+        labelLeftPadding?: number;
+    };
 }
 
 export class FeeTotalComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public render() {
-        const styles = this.props.styles;
+        const { styles, options } = this.props;
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.tokenSymbol);
 
         return (
             <View style={styles.container}>
-                <Text style={styles.feeTitle}>{translate('App.labels.fees')}</Text>
+                <Text
+                    style={[
+                        styles.feeTitle,
+                        {
+                            paddingLeft: options?.labelLeftPadding
+                                ? options.labelLeftPadding
+                                : BASE_DIMENSION * 2
+                        }
+                    ]}
+                >
+                    {translate('App.labels.fees')}
+                </Text>
                 <View
                     style={[
                         styles.feeWrapper,
                         {
-                            backgroundColor: this.props.backgroundColor
-                                ? this.props.backgroundColor
+                            backgroundColor: options?.backgroundColor
+                                ? options.backgroundColor
                                 : this.props.theme.colors.cardBackground
                         }
                     ]}

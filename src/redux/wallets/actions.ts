@@ -57,7 +57,7 @@ import {
 } from '../../core/secure/keychain/keychain';
 import { delay } from '../../core/utils/time';
 import { toggleBiometricAuth } from '../preferences/actions';
-import { CLOSE_TX_REQUEST } from '../ui/transaction-request/actions';
+import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../ui/transaction-request/actions';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import * as Sentry from '@sentry/react-native';
@@ -584,6 +584,7 @@ export const sendTransferTransaction = (
             }
 
             await LoadingModal.close();
+            dispatch(closeTransactionRequest());
             goBack && navigation.goBack();
             return;
         } else {

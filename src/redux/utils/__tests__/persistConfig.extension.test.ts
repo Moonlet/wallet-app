@@ -1,4 +1,4 @@
-import { persistConfig } from '../persistConfig.web';
+import { persistConfig } from '../persistConfig.extension';
 
 test('should set the config', () => {
     expect(persistConfig).toMatchSnapshot();

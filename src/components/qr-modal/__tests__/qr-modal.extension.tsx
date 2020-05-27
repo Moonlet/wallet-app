@@ -1,5 +1,5 @@
 import React from 'react';
-import { QrModalReaderComponent } from '../qr-modal.web';
+import { QrModalReaderComponent } from '../qr-modal.extension';
 
 import { shallow } from 'enzyme';
 

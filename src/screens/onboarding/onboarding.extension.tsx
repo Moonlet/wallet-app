@@ -8,7 +8,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import QRCode from 'qrcode';
-import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web.web';
+import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web.extension';
 
 const navigationOptions = () => ({ header: null });
 

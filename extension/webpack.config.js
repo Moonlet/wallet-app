@@ -7,6 +7,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const WebpackExtensionManifestPlugin = require('webpack-extension-manifest-plugin');
+const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 const pkg = require('../package.json');
 const appDirectory = path.resolve(__dirname, '../');
@@ -119,7 +120,10 @@ module.exports = (env, argv) => ({
                 extend: { version: VERSION }
             }
         }),
-        new WriteFilePlugin()
+        new WriteFilePlugin(),
+        new MomentLocalesPlugin({
+            localesToKeep: ['en']
+        })
     ],
 
     // configures where the build ends up
@@ -169,7 +173,7 @@ module.exports = (env, argv) => ({
         ]
     },
 
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
     devServer: {
         hot: false
     }

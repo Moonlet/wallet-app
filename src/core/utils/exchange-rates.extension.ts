@@ -1,4 +1,5 @@
-import { database } from 'firebase';
+import { database } from 'firebase/app';
+import 'firebase/database';
 
 export const subscribeExchangeRates = (callback: any) => {
     const ref = database().ref('/exchange-rates');

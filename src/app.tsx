@@ -31,7 +31,7 @@ import { AppStateStatus } from './core/constants/app';
 import { TransactionRequestScreen } from './screens/transaction-request/transaction-request';
 import { LoadingModal } from './components/loading-modal/loading-modal';
 import * as Sentry from '@sentry/react-native';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -201,9 +201,9 @@ export default class App extends React.Component<{}, IState> {
                                 <ImageCanvas />
                             )}
                             <PasswordModal.Component />
+                            <TransactionRequestScreen />
                             <BottomSheet />
                             {Platform.OS !== 'web' && <Dialog.Component />}
-                            <TransactionRequestScreen />
                             <LoadingModal.Component />
                             <LegalModal navigationState={this.state.navigationState} />
                         </ThemeContext.Provider>

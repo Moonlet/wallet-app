@@ -19,6 +19,10 @@ export interface IExternalProps {
     gasLimit: string;
     blockchain: Blockchain;
     onInputFees: (gasPrice: string, gasLimit: string, feeTotal: string) => any;
+    options?: {
+        feeTotalBackgroundColor?: string;
+        feeLabelLeftPadding?: number;
+    };
 }
 interface IState {
     inputGasPrice: string;
@@ -97,7 +101,7 @@ export class GasFeeAvancedComponent extends React.Component<
     }
 
     public render() {
-        const { styles, theme } = this.props;
+        const { styles, theme, options } = this.props;
         const gasPrice = new BigNumber(this.props.gasPrice);
         const gasLimit = new BigNumber(this.props.gasLimit);
         const blockchainInstance = getBlockchain(this.props.blockchain);
@@ -106,7 +110,18 @@ export class GasFeeAvancedComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <View style={{ flexDirection: 'row' }}>
-                    <Text style={styles.priceLabel}>{translate('Fee.gasPrice')}</Text>
+                    <Text
+                        style={[
+                            styles.priceLabel,
+                            {
+                                paddingLeft: options?.feeLabelLeftPadding
+                                    ? options.feeLabelLeftPadding
+                                    : BASE_DIMENSION * 2
+                            }
+                        ]}
+                    >
+                        {translate('Fee.gasPrice')}
+                    </Text>
                     <Text style={styles.gasPriceUnit}>{`(${gasPriceUnit})`}</Text>
                 </View>
 
@@ -131,7 +146,18 @@ export class GasFeeAvancedComponent extends React.Component<
                 )}
 
                 <View style={{ flexDirection: 'row' }}>
-                    <Text style={styles.priceLabel}>{translate('Fee.gasLimit')}</Text>
+                    <Text
+                        style={[
+                            styles.priceLabel,
+                            {
+                                paddingLeft: options?.feeLabelLeftPadding
+                                    ? options.feeLabelLeftPadding
+                                    : BASE_DIMENSION * 2
+                            }
+                        ]}
+                    >
+                        {translate('Fee.gasLimit')}
+                    </Text>
                     <Text style={styles.gasPriceUnit}>{`(${gasPriceUnit})`}</Text>
                 </View>
 
@@ -160,6 +186,10 @@ export class GasFeeAvancedComponent extends React.Component<
                         amount={gasPrice.multipliedBy(gasLimit).toString()}
                         blockchain={this.props.blockchain}
                         tokenSymbol={this.props.token.symbol}
+                        options={{
+                            backgroundColor: this.props.options?.feeTotalBackgroundColor,
+                            labelLeftPadding: this.props.options?.feeLabelLeftPadding
+                        }}
                     />
                 </View>
             </View>

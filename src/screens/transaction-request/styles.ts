@@ -46,10 +46,11 @@ export default (theme: ITheme) =>
             letterSpacing: LETTER_SPACING,
             textAlign: 'center',
             fontWeight: 'bold',
-            marginBottom: BASE_DIMENSION * 4
+            marginBottom: BASE_DIMENSION
         },
         content: {
-            flex: 1
+            flex: 1,
+            paddingTop: BASE_DIMENSION * 4 // maybe remove this
         },
         moonletTransferContainer: {
             flex: 1,
@@ -57,8 +58,8 @@ export default (theme: ITheme) =>
         },
         errorWrapper: {
             flex: 1,
-            paddingHorizontal: BASE_DIMENSION * 2,
-            paddingBottom: BASE_DIMENSION * 4
+            paddingHorizontal: BASE_DIMENSION * 3,
+            paddingBottom: BASE_DIMENSION * 6
         },
         inputContainer: {
             flexDirection: 'column',
@@ -95,11 +96,11 @@ export default (theme: ITheme) =>
             width: pw(60),
             alignSelf: 'center',
             resizeMode: 'contain',
-            marginBottom: BASE_DIMENSION * 2
+            marginBottom: BASE_DIMENSION
         },
         errorMessage: {
-            fontSize: normalizeFontAndLineHeight(19),
-            lineHeight: normalizeFontAndLineHeight(25),
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             textAlign: 'center',
             color: theme.colors.textSecondary
         }

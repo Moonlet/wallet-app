@@ -13,25 +13,29 @@ import { sendTransferTransaction, setSelectedWallet } from '../../redux/wallets/
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import Icon from '../../components/icon/icon';
 import { normalize } from '../../styles/dimensions';
-import { formatAddress } from '../../core/utils/format-address';
-import { FeeTotal } from '../send/components/fee-total/fee-total';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
-import { formatNumber } from '../../core/utils/format-number';
-import BigNumber from 'bignumber.js';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ConnectExtension } from '../../core/connect-extension/connect-extension';
 import { ResponsePayloadType } from '../../core/connect-extension/types';
-import { BottomCta } from '../../components/bottom-cta/bottom-cta';
-import { getTokenConfig } from '../../redux/tokens/static-selectors';
-import { PrimaryCtaField } from '../../components/bottom-cta/primary-cta-field/primary-cta-field';
-import { AmountCtaField } from '../../components/bottom-cta/amount-cta-field/amount-cta-field';
+import { ExtensionTransferRequest } from './extension-tx-request/extension-tx-request';
+import {
+    QRCodeTransferRequest,
+    IQRCodeTxPayload,
+    IQRCodeTransferData,
+    QRCodeExtraParams
+} from './qr-code-tx-request/qr-code-tx-request';
+import { openURL } from '../../core/utils/linking-handler';
+import CONFIG from '../../config';
+import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
+import { getUrlParams } from '../../core/connect-extension/utils';
+import bind from 'bind-decorator';
 import { IWalletState, IWalletsState } from '../../redux/wallets/state';
-import { getSelectedWallet } from '../../redux/wallets/selectors';
 import { IconValues } from '../../components/icon/values';
+import { getSelectedWallet } from '../../redux/wallets/selectors';
 
 export interface IReduxProps {
     isVisible: boolean;
     requestId: string;
+    qrCode: string;
     closeTransactionRequest: typeof closeTransactionRequest;
     sendTransferTransaction: typeof sendTransferTransaction;
     selectedWallet: IWalletState;
@@ -42,7 +46,8 @@ export interface IReduxProps {
 export const mapStateToProps = (state: IReduxState) => {
     return {
         isVisible: state.ui.transactionRequest.isVisible,
-        requestId: state.ui.transactionRequest.requestId,
+        requestId: state.ui.transactionRequest.data.requestId,
+        qrCode: state.ui.transactionRequest.data.qrCode,
         selectedWallet: getSelectedWallet(state),
         wallets: state.wallets
     };
@@ -55,8 +60,14 @@ const mapDispatchToProps = {
 };
 
 export interface IState {
-    moonletTransferPayload: any;
-    isError: boolean;
+    extensionTxPayload: any;
+    qrCodeTxPayload: IQRCodeTxPayload;
+    error: {
+        extensionError: boolean;
+        generalError: boolean;
+        tokenError: boolean;
+        tokenErrorSymbol: string;
+    };
 }
 
 export class TransactionRequestScreenComponent extends React.Component<
@@ -66,24 +77,38 @@ export class TransactionRequestScreenComponent extends React.Component<
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.state = {
-            moonletTransferPayload: undefined,
-            isError: false
+            error: {
+                extensionError: false,
+                generalError: false,
+                tokenError: false,
+                tokenErrorSymbol: undefined
+            },
+            extensionTxPayload: undefined,
+            qrCodeTxPayload: undefined
         };
     }
 
     public componentDidMount() {
         if (this.props.requestId) {
-            this.getTransferPayload();
+            this.getExtensionTxPayload();
+        }
+
+        if (this.props.qrCode) {
+            this.getQrCodeTxPayload();
         }
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.requestId !== prevProps.requestId && this.props.requestId !== null) {
-            this.getTransferPayload();
+        if (this.props.requestId !== prevProps.requestId && this.props.requestId !== undefined) {
+            this.getExtensionTxPayload();
+        }
+
+        if (this.props.qrCode !== prevProps.qrCode && this.props.qrCode !== undefined) {
+            this.getQrCodeTxPayload();
         }
     }
 
-    private async getTransferPayload() {
+    private async getExtensionTxPayload() {
         try {
             const payload = await ConnectExtensionWeb.getRequestIdParams(this.props.requestId);
 
@@ -96,31 +121,42 @@ export class TransactionRequestScreenComponent extends React.Component<
                         // Switch the wallet
                         this.props.setSelectedWallet(walletId);
 
-                        this.setState({ moonletTransferPayload: payload });
+                        this.setState({ extensionTxPayload: payload });
                     } else {
                         // The wallet has been removed from the app
                         // Maybe show a more relevant error message
-                        this.setState({ isError: true });
+                        this.setState({
+                            error: {
+                                extensionError: true,
+                                generalError: false,
+                                tokenError: false,
+                                tokenErrorSymbol: undefined
+                            }
+                        });
                     }
                 }
             } else {
-                this.setState({
-                    moonletTransferPayload: undefined,
-                    isError: true
-                });
+                this.setExtensionTxError();
             }
         } catch {
-            this.setState({
-                moonletTransferPayload: undefined,
-                isError: true
-            });
+            this.setExtensionTxError();
         }
+    }
+
+    private setExtensionTxError() {
+        this.setState({
+            extensionTxPayload: undefined,
+            error: {
+                extensionError: true,
+                generalError: false,
+                tokenError: false,
+                tokenErrorSymbol: undefined
+            }
+        });
     }
 
     private async cancelTransactionRequest() {
         try {
-            this.props.closeTransactionRequest();
-
             if (this.props.requestId) {
                 await ConnectExtension.sendResponse(this.props.requestId, {
                     result: undefined,
@@ -128,11 +164,12 @@ export class TransactionRequestScreenComponent extends React.Component<
                 });
             }
         } catch {
-            this.props.closeTransactionRequest();
+            //
         }
     }
 
-    private async confirm() {
+    @bind
+    private async confirm(options?: { qrCodeTransferData?: IQRCodeTransferData }) {
         try {
             const password = await PasswordModal.getPassword(
                 translate('Password.pinTitleUnlock'),
@@ -140,90 +177,175 @@ export class TransactionRequestScreenComponent extends React.Component<
                 { sensitive: true, showCloseButton: true }
             );
 
-            const { moonletTransferPayload } = this.state;
+            const { extensionTxPayload } = this.state;
 
-            this.props.sendTransferTransaction(
-                moonletTransferPayload.account,
-                moonletTransferPayload.toAddress,
-                moonletTransferPayload.amount,
-                moonletTransferPayload.token,
-                moonletTransferPayload.feeOptions,
-                password,
-                undefined, // navigation - not needed
-                moonletTransferPayload.extraFields,
-                false, // goBack
-                { requestId: this.props.requestId }
-            );
+            if (extensionTxPayload) {
+                this.props.sendTransferTransaction(
+                    extensionTxPayload.account,
+                    extensionTxPayload.toAddress,
+                    extensionTxPayload.amount,
+                    extensionTxPayload.token,
+                    extensionTxPayload.feeOptions,
+                    password,
+                    undefined, // navigation - not needed
+                    extensionTxPayload.extraFields,
+                    false, // goBack
+                    { requestId: this.props.requestId }
+                );
+            }
+
+            if (options?.qrCodeTransferData) {
+                this.props.sendTransferTransaction(
+                    options.qrCodeTransferData.account,
+                    options.qrCodeTransferData.toAddress,
+                    options.qrCodeTransferData.amount,
+                    options.qrCodeTransferData.token,
+                    options.qrCodeTransferData.feeOptions,
+                    password,
+                    undefined, // navigation - not needed
+                    undefined, // extraFields - TODO
+                    false // goBack
+                );
+            }
         } catch {
             //
         }
     }
 
-    private renderMoonletTransferForm() {
-        const { moonletTransferPayload } = this.state;
+    private setInvalidQrCodeUrl() {
+        this.setState({
+            error: {
+                extensionError: false,
+                generalError: true,
+                tokenError: false,
+                tokenErrorSymbol: undefined
+            }
+        });
+    }
+
+    private getQrCodeTxPayload() {
+        const code = this.props.qrCode;
+
+        const regex = new RegExp(
+            /^zilliqa:(\/\/)?([^/@?\n\ ]*)(@([^/?\n\ ]*))?([^?\n\ ]*)?(\?([^\n\ ]*)?)?$/
+        );
+
+        const qrCodeTxPayload: IQRCodeTxPayload = {
+            address: undefined,
+            chainId: undefined,
+            fct: undefined,
+            params: {
+                amount: undefined,
+                gasPrice: undefined,
+                gasLimit: undefined
+            }
+        };
+
+        const res = regex.exec(code);
+
+        if (res) {
+            // Address - bech32 address (ZIP-1 standard) | ZNS address
+            const address = res[2];
+            if (address && address !== '') {
+                qrCodeTxPayload.address = address;
+            } else {
+                // Invalid QR code because to_address is required
+                this.setInvalidQrCodeUrl();
+                return;
+            }
+
+            // ChainId
+            const chainId = res[4];
+            if (chainId && chainId !== '') {
+                // TODO: Number is used for Zilliqa
+                // But if we need String, refactor this
+                qrCodeTxPayload.chainId = Number(chainId);
+            }
+
+            // Function
+            const fct = res[5];
+            if (fct && fct !== '') {
+                qrCodeTxPayload.fct = fct;
+            }
+
+            const extraData: any = getUrlParams(res[6]);
+
+            if (extraData) {
+                // Amount
+                if (extraData?.amount) {
+                    qrCodeTxPayload.params.amount = extraData.amount;
+                }
+
+                if (extraData[QRCodeExtraParams.Uint128Amount]) {
+                    qrCodeTxPayload.params.amount = extraData[QRCodeExtraParams.Uint128Amount];
+                }
+
+                if (
+                    extraData?.amount &&
+                    extraData[QRCodeExtraParams.Uint128Amount] &&
+                    extraData.amount !== extraData[QRCodeExtraParams.Uint128Amount]
+                ) {
+                    // Invalid URL
+                    this.setInvalidQrCodeUrl();
+                    return;
+                }
+
+                // Gas Price
+                if (extraData?.gasPrice) {
+                    qrCodeTxPayload.params.gasPrice = extraData.gasPrice;
+                }
+
+                // Gas Limit
+                if (extraData?.gasLimit) {
+                    qrCodeTxPayload.params.gasLimit = extraData.gasLimit;
+                }
+
+                // To
+                if (extraData.to) {
+                    qrCodeTxPayload.params.toAddress = extraData.to;
+                }
+
+                // ByStr20-to
+                if (extraData[QRCodeExtraParams.ByStr20TO]) {
+                    qrCodeTxPayload.params.toAddress = extraData[QRCodeExtraParams.ByStr20TO];
+                }
+
+                if (
+                    extraData.to &&
+                    extraData[QRCodeExtraParams.ByStr20TO] &&
+                    extraData.to !== extraData[QRCodeExtraParams.ByStr20TO]
+                ) {
+                    // Invalid URL
+                    this.setInvalidQrCodeUrl();
+                    return;
+                }
+            }
+
+            this.setState({ qrCodeTxPayload });
+        } else {
+            // Invalid QR Code URL
+            this.setInvalidQrCodeUrl();
+        }
+    }
+
+    private renderExtensionTx() {
+        const { extensionTxPayload, qrCodeTxPayload } = this.state;
         const { styles } = this.props;
+        const { extensionError, generalError, tokenError, tokenErrorSymbol } = this.state.error;
 
-        if (moonletTransferPayload) {
-            const account = moonletTransferPayload.account;
-            const blockchain = account.blockchain;
+        if (extensionError || generalError || tokenError) {
+            const errorMessage =
+                extensionError === true
+                    ? translate('TransactionRequest.errorMsgExtension')
+                    : tokenError === true
+                    ? translate('TransactionRequest.errorMsgToken', {
+                          token:
+                              tokenErrorSymbol !== undefined
+                                  ? tokenErrorSymbol
+                                  : translate('App.labels.theRequested')
+                      })
+                    : translate('TransactionRequest.errorMsgGeneral');
 
-            const from = formatAddress(account.address, blockchain);
-            const recipient = formatAddress(moonletTransferPayload.toAddress, blockchain);
-
-            const formattedAmount = formatNumber(new BigNumber(moonletTransferPayload.amount), {
-                currency: getBlockchain(blockchain).config.coin
-            });
-
-            const tokenConfig = getTokenConfig(blockchain, moonletTransferPayload.token);
-
-            const blockchainInstance = getBlockchain(blockchain);
-
-            const stdAmount = blockchainInstance.account.amountToStd(
-                new BigNumber(moonletTransferPayload.amount),
-                tokenConfig.decimals
-            );
-
-            return (
-                <View style={{ flex: 1 }}>
-                    <View style={styles.moonletTransferContainer}>
-                        {this.renderField(
-                            translate('TransactionRequest.walletName'),
-                            this.props.selectedWallet.name
-                        )}
-                        {this.renderField(
-                            translate('TransactionRequest.accountName'),
-                            account?.name || `Account ${account.index + 1}`
-                        )}
-                        {this.renderField(translate('App.labels.from'), from)}
-                        {this.renderField(translate('App.labels.recipient'), recipient)}
-                        {this.renderField(translate('App.labels.amount'), formattedAmount)}
-                        <FeeTotal
-                            amount={moonletTransferPayload.feeOptions.feeTotal}
-                            blockchain={blockchain}
-                            tokenSymbol={moonletTransferPayload.token}
-                            backgroundColor={this.props.theme.colors.inputBackground}
-                        />
-                    </View>
-
-                    <BottomCta
-                        label={translate('App.labels.confirm')}
-                        disabled={this.state.moonletTransferPayload === undefined}
-                        onPress={() => this.confirm()}
-                    >
-                        <PrimaryCtaField
-                            label={translate('App.labels.send')}
-                            action={translate('App.labels.to')}
-                            value={recipient}
-                        />
-                        <AmountCtaField
-                            tokenConfig={tokenConfig}
-                            stdAmount={stdAmount}
-                            account={account}
-                        />
-                    </BottomCta>
-                </View>
-            );
-        } else if (this.state.isError) {
             return (
                 <View style={styles.errorWrapper}>
                     <View style={styles.errorContainer}>
@@ -231,15 +353,56 @@ export class TransactionRequestScreenComponent extends React.Component<
                             style={styles.logoImage}
                             source={require('../../assets/images/png/moonlet_space_gray.png')}
                         />
-                        <Text style={styles.errorMessage}>
-                            {translate('TransactionRequest.errorMessage')}
-                        </Text>
+                        <Text style={styles.errorMessage}>{errorMessage}</Text>
                     </View>
 
-                    <Button onPress={() => this.cancelTransactionRequest()} primary>
-                        {translate('App.labels.cancel')}
-                    </Button>
+                    {extensionError === true && (
+                        <Button onPress={this.closeTxRequest}>
+                            {translate('App.labels.cancel')}
+                        </Button>
+                    )}
+
+                    {generalError === true && (
+                        <Button onPress={() => openURL(CONFIG.supportUrl)}>
+                            {translate('App.labels.createTicket')}
+                        </Button>
+                    )}
                 </View>
+            );
+        } else if (extensionTxPayload) {
+            return (
+                <ExtensionTransferRequest
+                    extensionTxPayload={extensionTxPayload}
+                    callback={this.confirm}
+                />
+            );
+        } else if (qrCodeTxPayload) {
+            return (
+                <QRCodeTransferRequest
+                    qrCodeTxPayload={qrCodeTxPayload}
+                    callback={this.confirm}
+                    showError={(options: { tokenNotFound?: boolean; tokenSymbol?: string }) => {
+                        if (options?.tokenNotFound) {
+                            this.setState({
+                                error: {
+                                    extensionError: false,
+                                    generalError: false,
+                                    tokenError: true,
+                                    tokenErrorSymbol: options?.tokenSymbol
+                                }
+                            });
+                        } else {
+                            this.setState({
+                                error: {
+                                    extensionError: false,
+                                    generalError: true,
+                                    tokenError: false,
+                                    tokenErrorSymbol: undefined
+                                }
+                            });
+                        }
+                    }}
+                />
             );
         } else {
             return (
@@ -250,31 +413,47 @@ export class TransactionRequestScreenComponent extends React.Component<
         }
     }
 
-    private renderField(label: string, value: string) {
-        const { styles } = this.props;
+    @bind
+    private closeTxRequest() {
+        this.props.closeTransactionRequest();
 
-        return (
-            <View style={styles.inputContainer}>
-                <Text style={styles.receipientLabel}>{label}</Text>
-                <View style={styles.inputBox}>
-                    <Text style={styles.confirmTransactionText}>{value}</Text>
-                </View>
-            </View>
-        );
+        if (this.state.extensionTxPayload) {
+            this.cancelTransactionRequest();
+        }
+
+        this.setState({
+            error: {
+                extensionError: false,
+                generalError: false,
+                tokenError: false,
+                tokenErrorSymbol: undefined
+            },
+            extensionTxPayload: undefined,
+            qrCodeTxPayload: undefined
+        });
     }
 
     public render() {
         const { styles } = this.props;
+        const { extensionError, generalError, tokenError } = this.state.error;
+
+        const showTestnetBadge =
+            this.state.extensionTxPayload === undefined &&
+            !extensionError &&
+            !generalError &&
+            !tokenError;
 
         if (this.props.isVisible) {
             return (
                 <View style={styles.container}>
                     <Text style={styles.title}>{translate('TransactionRequest.title')}</Text>
 
-                    <View style={styles.content}>{this.renderMoonletTransferForm()}</View>
+                    {showTestnetBadge && <TestnetBadge />}
+
+                    <View style={styles.content}>{this.renderExtensionTx()}</View>
 
                     <TouchableOpacity
-                        onPress={() => this.cancelTransactionRequest()}
+                        onPress={this.closeTxRequest}
                         style={styles.closeButtonContainer}
                     >
                         <Icon

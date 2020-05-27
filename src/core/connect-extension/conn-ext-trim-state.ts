@@ -1,6 +1,6 @@
 import { IWalletsState, IWalletState, IAccountState } from '../../redux/wallets/state';
 import { IReduxState } from '../../redux/state';
-import { cloneDeep } from 'lodash';
+import cloneDeep from 'lodash/cloneDeep';
 import * as IExtStorage from './types';
 import { IPrefState, IBlockchainsOptions } from '../../redux/preferences/state';
 import { IContactsState } from '../../redux/contacts/state';

@@ -5,7 +5,7 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { BASE_DIMENSION, SCREEN_WIDTH } from '../../../../styles/dimensions';
-import _ from 'lodash';
+import findIndex from 'lodash/findIndex';
 
 export interface IExternalProps {
     steps: { title: string; active?: boolean }[];
@@ -19,7 +19,7 @@ export const HeaderStepByStepComponent = (
     const [activeIndex, setActiveIndex] = React.useState<number>(undefined);
 
     React.useEffect(() => {
-        const _activeIndex = _.findIndex(steps, ['active', true]);
+        const _activeIndex = findIndex(steps, ['active', true]);
         setActiveIndex(_activeIndex);
     });
 

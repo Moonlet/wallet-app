@@ -9,6 +9,7 @@ import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { getAccount } from '../../../../redux/wallets/selectors';
 import { Blockchain, ChainIdType, IFeeOptions } from '../../../../core/blockchain/types';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
+import { getChainId } from '../../../../redux/preferences/selectors';
 import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { ConfirmComponent } from '../../components/confirm-component/confirm-component';

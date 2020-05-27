@@ -1,7 +1,9 @@
 import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt/encrypt.web';
 import { v4 as uuidv4 } from 'uuid';
 import { IQRCodeConn, FirebaseRef, IStorage } from './types';
-import { storage, database } from 'firebase';
+import { database, storage } from 'firebase/app';
+import 'firebase/database';
+import 'firebase/storage';
 import { storeEncrypted, readEncrypted, deleteFromStorage } from '../secure/storage/storage.web';
 import { CONN_EXTENSION } from '../../core/constants/app';
 import Bowser from 'bowser';

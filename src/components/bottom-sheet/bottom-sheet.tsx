@@ -13,6 +13,15 @@ import { openBottomSheet, closeBottomSheet } from '../../redux/ui/bottomSheet/ac
 import { BlockchainNavigationBottomSheet } from './blockchain-navigation-bottom-sheet/blockchain-navigation-bottom-sheet';
 import { normalize } from '../../styles/dimensions';
 import { LedgerConnectBottomSheet } from './ledger-connect-bottom-sheet/ledger-connect-bottom-sheet';
+import { WalletsBottomSheet } from './wallets-bottom-sheet/wallets-bottom-sheet';
+import bind from 'bind-decorator';
+
+const HEIGHT_1_ROW = normalize(132);
+// const HEIGHT_2_ROW = normalize(200);
+const HEIGHT_3_ROWS = normalize(280);
+const HEIGHT_4_ROWS = normalize(360);
+const HEIGHT_BLOCKCHAIN_NAVIGATION = normalize(400);
+const HEIGHT_THREE_QUARTERS_SCREEN = (Dimensions.get('window').height * 3) / 4;
 
 interface IReduxProps {
     bottomSheet: IBottomSheet;
@@ -34,6 +43,7 @@ const mapDispatchToProps = {
 export class BottomSheetComponent extends React.Component<
     IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
+    @bind
     private handleClose() {
         this.props.closeBottomSheet();
     }
@@ -44,19 +54,17 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <TouchableOpacity
-                            onPress={() => this.handleClose()}
+                            onPress={this.handleClose}
                             style={this.props.styles.container}
                             activeOpacity={1}
                         />
                         <AccountsBottomSheet
                             snapPoints={{
                                 initialSnap:
-                                    Platform.OS === 'web'
-                                        ? (Dimensions.get('window').height * 3) / 4
-                                        : 0,
-                                bottomSheetHeight: (Dimensions.get('window').height * 3) / 4
+                                    Platform.OS === 'web' ? HEIGHT_THREE_QUARTERS_SCREEN : 0,
+                                bottomSheetHeight: HEIGHT_THREE_QUARTERS_SCREEN
                             }}
-                            onClose={() => this.handleClose()}
+                            onClose={this.handleClose}
                         />
                     </View>
                 );
@@ -65,19 +73,19 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <TouchableOpacity
-                            onPress={() => this.handleClose()}
+                            onPress={this.handleClose}
                             style={this.props.styles.container}
                             activeOpacity={1}
                         />
                         <DashboardMenuBottomSheet
                             snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? normalize(132) : 0,
+                                initialSnap: Platform.OS === 'web' ? HEIGHT_1_ROW : 0,
                                 bottomSheetHeight: Platform.select({
-                                    web: normalize(132),
-                                    default: normalize(300)
+                                    web: HEIGHT_1_ROW,
+                                    default: HEIGHT_4_ROWS
                                 })
                             }}
-                            onClose={() => this.handleClose()}
+                            onClose={this.handleClose}
                         />
                     </View>
                 );
@@ -86,7 +94,7 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <TouchableOpacity
-                            onPress={() => this.handleClose()}
+                            onPress={this.handleClose}
                             style={this.props.styles.container}
                             activeOpacity={1}
                         />
@@ -95,7 +103,7 @@ export class BottomSheetComponent extends React.Component<
                             blockchain={this.props.bottomSheet?.blockchain}
                             deviceModel={this.props.bottomSheet?.deviceModel}
                             connectionType={this.props.bottomSheet?.connectionType}
-                            onClose={() => this.handleClose()}
+                            onClose={this.handleClose}
                         />
                     </View>
                 );
@@ -104,16 +112,16 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <TouchableOpacity
-                            onPress={() => this.handleClose()}
+                            onPress={this.handleClose}
                             style={this.props.styles.container}
                             activeOpacity={1}
                         />
                         <ExtensionRequestBottomSheet
                             snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? normalize(280) : 0,
-                                bottomSheetHeight: normalize(280)
+                                initialSnap: Platform.OS === 'web' ? HEIGHT_3_ROWS : 0,
+                                bottomSheetHeight: HEIGHT_3_ROWS
                             }}
-                            onClose={() => this.handleClose()}
+                            onClose={this.handleClose}
                             data={this.props.bottomSheet?.data}
                         />
                     </View>
@@ -123,16 +131,36 @@ export class BottomSheetComponent extends React.Component<
                 return (
                     <View style={this.props.styles.container}>
                         <TouchableOpacity
-                            onPress={() => this.handleClose()}
+                            onPress={this.handleClose}
                             style={this.props.styles.container}
                             activeOpacity={1}
                         />
                         <BlockchainNavigationBottomSheet
                             snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? normalize(400) : 0,
-                                bottomSheetHeight: normalize(400)
+                                initialSnap:
+                                    Platform.OS === 'web' ? HEIGHT_BLOCKCHAIN_NAVIGATION : 0,
+                                bottomSheetHeight: HEIGHT_BLOCKCHAIN_NAVIGATION
                             }}
-                            onClose={() => this.handleClose()}
+                            onClose={this.handleClose}
+                        />
+                    </View>
+                );
+
+            case BottomSheetType.WALLETS:
+                return (
+                    <View style={this.props.styles.container}>
+                        <TouchableOpacity
+                            onPress={this.handleClose}
+                            style={this.props.styles.container}
+                            activeOpacity={1}
+                        />
+                        <WalletsBottomSheet
+                            snapPoints={{
+                                initialSnap:
+                                    Platform.OS === 'web' ? HEIGHT_THREE_QUARTERS_SCREEN : 0,
+                                bottomSheetHeight: HEIGHT_THREE_QUARTERS_SCREEN
+                            }}
+                            onClose={this.handleClose}
                         />
                     </View>
                 );

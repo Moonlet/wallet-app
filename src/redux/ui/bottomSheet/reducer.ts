@@ -7,7 +7,8 @@ const intialState: IBottomSheetState = {
     blockchain: undefined,
     deviceModel: undefined,
     connectionType: undefined,
-    data: undefined
+    data: undefined,
+    wallets: undefined
 };
 
 export default (state: IBottomSheetState = intialState, action: IAction): IBottomSheetState => {
@@ -18,7 +19,8 @@ export default (state: IBottomSheetState = intialState, action: IAction): IBotto
                 blockchain: action.data.props?.blockchain,
                 deviceModel: action.data.props?.deviceModel,
                 connectionType: action.data.props?.connectionType,
-                data: action.data.props?.data
+                data: action.data.props?.data,
+                wallets: action.data.props?.wallets
             };
         case CLOSE_BOTTOM_SHEET:
             return intialState;

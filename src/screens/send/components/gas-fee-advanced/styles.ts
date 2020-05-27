@@ -28,7 +28,6 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(13),
             lineHeight: normalizeFontAndLineHeight(18),
             color: theme.colors.textSecondary,
-            paddingLeft: BASE_DIMENSION * 2,
             marginTop: BASE_DIMENSION
         },
         gasPriceUnit: {

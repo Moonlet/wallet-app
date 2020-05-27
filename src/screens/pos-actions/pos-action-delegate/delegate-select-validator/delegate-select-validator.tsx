@@ -18,7 +18,6 @@ import BigNumber from 'bignumber.js';
 import { normalize } from '../../../../styles/dimensions';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge';
-import { Icon } from '../../../../components/icon';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { HeaderStepByStep } from '../../../send/components/header-step-by-step/header-step-by-step';
@@ -33,6 +32,7 @@ import {
     navigateToNextStep,
     DELEGATE_ENTER_AMOUNT
 } from '../../../../redux/ui/screens/posActions/actions';
+import { Icon } from '../../../../components/icon/icon';
 
 interface IHeaderStep {
     step: number;

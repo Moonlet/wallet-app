@@ -1,4 +1,4 @@
-import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt/encrypt.extension';
+import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt/encrypt.web';
 import { v4 as uuidv4 } from 'uuid';
 import { IQRCodeConn, FirebaseRef, IStorage } from './types';
 import { database, storage } from 'firebase/app';

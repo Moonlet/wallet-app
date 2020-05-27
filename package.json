@@ -9,6 +9,8 @@
         "ios": "npm run ios:before-run && react-native run-ios --scheme Moonlet_beta",
         "ios:pod-install": "cd ios && pod install",
         "ios:before-run": "npm run generate-icons & npm run ios:pod-install",
+        "web-wallet": "TARGET=beta NODE_ENV=development webpack-dev-server --open --mode development --config ./web-wallet/webpack.config.js --watch --info-verbosity verbose",
+        "web-wallet:build": "node --max_old_space_size=6144 ./node_modules/.bin/webpack -p --config ./web-wallet/webpack.config.js",
         "ext": "TARGET=beta BROWSER=chrome NODE_ENV=development webpack --mode development --config ./extension/webpack.config.js --watch --info-verbosity verbose",
         "ext:build": "node --max_old_space_size=6144 ./node_modules/.bin/webpack -p --config ./extension/webpack.config.js",
         "ext:build:beta:chrome": "TARGET=beta BROWSER=chrome npm run ext:build",

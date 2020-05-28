@@ -162,7 +162,10 @@ export const getNrActiveBlockchains = createSelector(
 export const getBlockchains = createSelector(
     (state: IReduxState) => state.preferences,
     (state: IReduxState) => getBlockchainsPortfolio(state),
-    (preferences: IPrefState, portfolio: [{ key: Blockchain; value: IBlockchainOptions }]) => {
+    (
+        preferences: IPrefState,
+        portfolio: [{ key: Blockchain; value: IBlockchainOptions }]
+    ): Blockchain[] => {
         const blockchains: Blockchain[] = [];
 
         portfolio.map(object => {

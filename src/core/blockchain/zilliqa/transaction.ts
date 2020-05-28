@@ -101,10 +101,10 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
                     status: TransactionStatus.PENDING,
 
                     data: {
-                        method: TransactionType.TRANSFER,
+                        method: 'Transfer',
                         params: [tx.toAddress, tx.amount],
                         raw: JSON.stringify({
-                            _tag: TransactionType.TRANSFER,
+                            _tag: 'Transfer',
                             params: [
                                 {
                                     vname: 'to',

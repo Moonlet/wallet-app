@@ -112,7 +112,7 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
                                     value: fromBech32Address(tx.toAddress).toLowerCase()
                                 },
                                 {
-                                    vname: 'value',
+                                    vname: 'amount',
                                     type: 'Uint128',
                                     value: tx.amount
                                 }

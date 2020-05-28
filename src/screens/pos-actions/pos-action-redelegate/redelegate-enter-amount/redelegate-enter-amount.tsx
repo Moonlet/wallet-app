@@ -119,6 +119,7 @@ export class RedelegateEnterAmountComponent extends React.Component<
                 actionText={this.props.actionText}
                 bottomColor={this.props.theme.colors.redelegate}
                 bottomActionText={'App.labels.from'}
+                bottomButtonText={'App.labels.next'}
                 showSteps={true}
                 onPressNext={this.onPressNext}
             />

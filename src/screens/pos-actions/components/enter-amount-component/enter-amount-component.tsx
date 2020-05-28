@@ -42,6 +42,7 @@ export interface IProps {
     actionText: string;
     bottomColor: string;
     bottomActionText: string;
+    bottomButtonText: string;
     showSteps: boolean;
     fromValidator?: IValidator;
     onPressNext(amount: string, feeOptions: IFeeOptions): void;
@@ -98,7 +99,7 @@ export class EnterAmountComponentComponent extends React.Component<
 
         return (
             <BottomCta
-                label={translate('App.labels.next')}
+                label={translate(this.props.bottomButtonText)}
                 disabled={disableButton}
                 onPress={() => {
                     this.props.onPressNext(this.state.amount, this.state.feeOptions);

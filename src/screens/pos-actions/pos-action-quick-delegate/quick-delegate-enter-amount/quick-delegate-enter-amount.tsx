@@ -11,17 +11,14 @@ import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
-import {
-    navigateToConfirmationStep,
-    QUICK_DELEGATE_CONFIRMATION
-} from '../../../../redux/ui/screens/posActions/actions';
 import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
 import { bind } from 'bind-decorator';
+import { PasswordModal } from '../../../../components/password-modal/password-modal';
+import { NavigationService } from '../../../../navigation/navigation-service';
 
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
-    navigateToConfirmationStep: typeof navigateToConfirmationStep;
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
@@ -44,7 +41,7 @@ export const mapStateToProps = (state: IReduxState) => {
 };
 
 const mapDispatchToProps = {
-    navigateToConfirmationStep
+    //
 };
 
 interface IState {
@@ -84,18 +81,17 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
     }
 
     @bind
-    public onPressNext(amount: string, feeOptions: IFeeOptions) {
-        this.props.navigateToConfirmationStep(
-            this.props.accountIndex,
-            this.props.blockchain,
-            this.props.token,
-            this.props.validators,
-            this.props.actionText,
-            'QuickDelegateConfirm',
-            QUICK_DELEGATE_CONFIRMATION,
-            amount,
-            feeOptions
-        );
+    private async onPressConfirm(amount: string, feeOptions: IFeeOptions) {
+        try {
+            await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleSignTransaction'),
+                { sensitive: true, showCloseButton: true }
+            );
+            NavigationService.goBack('TokenScreen-key');
+        } catch {
+            //
+        }
     }
 
     public render() {
@@ -108,8 +104,9 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
                 actionText={this.props.actionText}
                 bottomColor={this.props.theme.colors.accent}
                 bottomActionText={'App.labels.for'}
+                bottomButtonText={'App.labels.confirm'}
                 showSteps={false}
-                onPressNext={this.onPressNext}
+                onPressNext={this.onPressConfirm}
             />
         );
     }

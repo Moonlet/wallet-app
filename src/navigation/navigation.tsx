@@ -52,7 +52,6 @@ import { DelegateEnterAmount } from '../screens/pos-actions/pos-action-delegate/
 import { QuickDelegateEnterAmount } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-enter-amount/quick-delegate-enter-amount';
 import { IconValues } from '../components/icon/values';
 import { DelegateConfirm } from '../screens/pos-actions/pos-action-delegate/delegate-confirm/delegate-confirm';
-import { QuickDelegateConfirm } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-confirm/quick-delegate-confirm';
 import { RedelegateSelectValidator } from '../screens/pos-actions/pos-action-redelegate/redelegate-select-validator/redelegate-select-validator';
 import { RedelegateEnterAmount } from '../screens/pos-actions/pos-action-redelegate/redelegate-enter-amount/redelegate-enter-amount';
 import { RedelegateConfirm } from '../screens/pos-actions/pos-action-redelegate/redelegate-confirm/redelegate-confirm';
@@ -169,9 +168,6 @@ export const WalletNavigation = createStackNavigator(
         },
         QuickDelegateEnterAmount: {
             screen: QuickDelegateEnterAmount
-        },
-        QuickDelegateConfirm: {
-            screen: QuickDelegateConfirm
         },
         PosRedelegate: {
             screen: RedelegateSelectValidator

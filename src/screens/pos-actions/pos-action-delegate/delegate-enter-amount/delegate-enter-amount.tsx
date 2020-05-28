@@ -118,6 +118,7 @@ export class DelegateEnterAmountComponent extends React.Component<
                 actionText={this.props.actionText}
                 bottomColor={this.props.theme.colors.accent}
                 bottomActionText={'App.labels.for'}
+                bottomButtonText={'App.labels.next'}
                 showSteps={true}
                 onPressNext={this.onPressNext}
             />

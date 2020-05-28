@@ -17,6 +17,7 @@ import { IBlockchainTransaction } from '../../../core/blockchain/types';
 import { TransactionStatus } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { IconValues } from '../../../components/icon/values';
+import { TokenType } from '../../../core/blockchain/types/token';
 
 export interface IExternalProps {
     transactions: IBlockchainTransaction[];
@@ -52,10 +53,18 @@ export class TransactionsHistoryListComponent extends React.Component<
                 txColor = theme.colors.warning;
                 break;
             case TransactionStatus.SUCCESS:
-                if (account.address.toLowerCase() === tx.address.toLowerCase()) {
+                const accountAddress = account.address.toLowerCase();
+                const address = tx.address.toLowerCase();
+                let toAddress = tx.toAddress.toLowerCase();
+
+                if (tx.token.type === TokenType.ZRC2) {
+                    toAddress = tx.data?.params && tx.data?.params[0];
+                }
+
+                if (accountAddress === address) {
                     txIcon = IconValues.OUTBOUND;
                     txColor = theme.colors.error;
-                } else if (account.address.toLowerCase() === tx.toAddress.toLowerCase()) {
+                } else if (accountAddress === toAddress) {
                     txIcon = IconValues.INBOUND;
                     txColor = theme.colors.positive;
                 }

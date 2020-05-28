@@ -2,10 +2,10 @@ import { IWalletsState, IWalletState, IAccountState } from '../../redux/wallets/
 import { IReduxState } from '../../redux/state';
 import cloneDeep from 'lodash/cloneDeep';
 import * as IExtStorage from './types';
-import { IPrefState, IBlockchainsOptions } from '../../redux/preferences/state';
 import { IContactsState } from '../../redux/contacts/state';
 import { ITokensConfigState, ITokenConfigState } from '../../redux/tokens/state';
-import { ChainIdType, IBlockchainTransaction, Blockchain } from '../blockchain/types';
+import { ChainIdType, IBlockchainTransaction } from '../blockchain/types';
+import { IPrefState } from '../../redux/preferences/state';
 
 export const trimWallets = (wallets: IWalletsState) => {
     const trimmedWallets: IExtStorage.IStorageWallets = {};
@@ -101,18 +101,12 @@ export const trimTokens = (tokens: ITokensConfigState): IExtStorage.IStorageToke
     return trimmedTokens;
 };
 
-const trimPrefBlockchains = (blockchains: IBlockchainsOptions) => {
-    return Object.keys(blockchains)
-        .filter((blockchain: Blockchain) => blockchains[blockchain].active === true)
-        .sort((a, b) => blockchains[a].order - blockchains[b].order);
-};
-
 export const trimPreferences = (preferences: IPrefState): IExtStorage.IStoragePreferences => {
     return {
         currency: preferences.currency,
         testNet: preferences.testNet,
         networks: cloneDeep(preferences.networks),
-        blockchains: trimPrefBlockchains(preferences.blockchains)
+        blockchains: cloneDeep(preferences.blockchains)
     };
 };
 

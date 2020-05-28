@@ -8,6 +8,8 @@ import { config } from './config';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { TransactionStatus } from '../../wallet/types';
 
+const ZRC2_TRANSFER_EVENTS_SUCCESS_LIST = ['Transfer', 'TransferSuccess', 'TransferFromSuccess'];
+
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
 
@@ -31,25 +33,26 @@ export class ClientUtils implements IClientUtils {
             const data: any = {};
 
             if (token.type === TokenType.ZRC2) {
-                const transferEvent = (txData.receipt?.event_logs || []).find(
-                    event =>
-                        ['Transfer', 'TransferSuccess', 'TransferFromSuccess'].indexOf(
-                            event._eventname
-                        ) >= 0
-                );
+                if (txData.receipt.success === true) {
+                    const transferEvent = (txData.receipt?.event_logs || []).find(
+                        event => ZRC2_TRANSFER_EVENTS_SUCCESS_LIST.indexOf(event._eventname) >= 0
+                    );
 
-                data.params = [
-                    toBech32Address(
+                    data.params = [
+                        toBech32Address(
+                            this.client.tokens[TokenType.ZRC2].extractEventParamsValue(
+                                transferEvent?.params,
+                                'recipient'
+                            )
+                        ),
                         this.client.tokens[TokenType.ZRC2].extractEventParamsValue(
-                            transferEvent.params,
-                            'recipient'
+                            transferEvent?.params,
+                            'amount'
                         )
-                    ),
-                    this.client.tokens[TokenType.ZRC2].extractEventParamsValue(
-                        transferEvent.params,
-                        'amount'
-                    )
-                ];
+                    ];
+                } else {
+                    data.params = JSON.parse(txData.data).params;
+                }
             }
 
             return {
@@ -107,15 +110,11 @@ export class ClientUtils implements IClientUtils {
         let status = TransactionStatus.PENDING;
 
         if (token.type === TokenType.ZRC2) {
-            const transferCallback = (txData.receipt?.event_logs || []).find(event =>
-                event._eventname.startsWith('transferCallBack')
+            const transferCallbackEvent = (txData.receipt?.event_logs || []).find(
+                event => ZRC2_TRANSFER_EVENTS_SUCCESS_LIST.indexOf(event._eventname) >= 0
             );
 
-            if (transferCallback._eventname === 'transferCallBack success') {
-                status = TransactionStatus.SUCCESS;
-            } else if (transferCallback._eventname === 'transferCallBack fail') {
-                status = TransactionStatus.FAILED;
-            }
+            status = transferCallbackEvent ? TransactionStatus.SUCCESS : TransactionStatus.FAILED;
         } else {
             status = txData.receipt.success ? TransactionStatus.SUCCESS : TransactionStatus.FAILED;
         }

@@ -42,7 +42,7 @@ import { TokenType } from '../../../core/blockchain/types/token';
 export interface IQRCodeTxPayload {
     address: string;
     chainId: ChainIdType;
-    fct: string; // ex: /Transfer /DoMagic /proxyTransfer
+    fct: string; // ex: /Transfer /DoMagic
     params: {
         amount?: string;
         gasPrice?: string; // TODO
@@ -57,7 +57,6 @@ export enum QRCodeExtraParams {
 }
 
 export enum QRCodeFctParam {
-    PROXY_TRANSFER = '/proxyTransfer',
     TRANSFER = '/Transfer',
     SMART_CONTRACT = '/DoMagic'
 }
@@ -199,8 +198,8 @@ export class QRCodeTransferRequestComponent extends React.Component<
         }
 
         if (
-            qrCodeTxPayload?.fct === QRCodeFctParam.PROXY_TRANSFER ||
-            qrCodeTxPayload?.fct === QRCodeFctParam.PROXY_TRANSFER + '/'
+            qrCodeTxPayload?.fct === QRCodeFctParam.TRANSFER ||
+            qrCodeTxPayload?.fct === QRCodeFctParam.TRANSFER + '/'
         ) {
             await this.proxyTransfer();
 

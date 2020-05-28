@@ -2,6 +2,7 @@ import { ChainIdType, Blockchain, IBlockchainTransaction } from '../blockchain/t
 import { HWConnection } from '../wallet/hw-wallet/types';
 import { WalletType } from '../wallet/types';
 import { TokenType } from '../blockchain/types/token';
+import { IBlockchainsOptions } from '../../redux/preferences/state';
 
 export interface IQRCodeConn {
     connectionId: string;
@@ -107,7 +108,7 @@ export interface IStoragePreferences {
     currency: string;
     testNet: boolean;
     networks: IStorageNetworks;
-    blockchains: string[];
+    blockchains: IBlockchainsOptions;
 }
 
 export interface IStorageNetworks {

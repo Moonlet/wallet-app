@@ -81,8 +81,8 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
-    const generateQRCodeUri = async () => {
-        //
+    const generateQRCodeUri = async (): Promise<{ uri: string; conn: IQRCodeConn }> => {
+        throw new Error('NOT_IMPLEMENTED');
     };
 
     const downloadFileStorage = async (connectionId: string) => {

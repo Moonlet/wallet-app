@@ -47,13 +47,12 @@ import { ConnectExtensionScreen } from '../screens/connect-extension/connect-ext
 import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
 import { DelegateSelectValidator } from '../screens/pos-actions/pos-action-delegate/delegate-select-validator/delegate-select-validator';
 import { QuickDelegateSelectValidator } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-select-validator/quick-delegate-select-validator';
-import { PosActionUndelegate } from '../screens/pos-actions/pos-action-undelegate/pos-action-undelegate';
-import { PosActionUnlock } from '../screens/pos-actions/pos-action-unlock/pos-action-unlock';
+import { PosBasicAction } from '../screens/pos-actions/pos-basic-action/pos-basic-action';
 import { DelegateEnterAmount } from '../screens/pos-actions/pos-action-delegate/delegate-enter-amount/delegate-enter-amount';
 import { QuickDelegateEnterAmount } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-enter-amount/quick-delegate-enter-amount';
 import { IconValues } from '../components/icon/values';
 import { DelegateConfirm } from '../screens/pos-actions/pos-action-delegate/delegate-confirm/delegate-confirm';
-import { QuickDelegateConfirm } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-confirm.tsx/quick-delegate-confirm';
+import { QuickDelegateConfirm } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-confirm/quick-delegate-confirm';
 import { RedelegateSelectValidator } from '../screens/pos-actions/pos-action-redelegate/redelegate-select-validator/redelegate-select-validator';
 import { RedelegateEnterAmount } from '../screens/pos-actions/pos-action-redelegate/redelegate-enter-amount/redelegate-enter-amount';
 import { RedelegateConfirm } from '../screens/pos-actions/pos-action-redelegate/redelegate-confirm/redelegate-confirm';
@@ -155,7 +154,7 @@ export const WalletNavigation = createStackNavigator(
         Validator: {
             screen: ValidatorScreen
         },
-        DelegateSelectValidator: {
+        Delegate: {
             screen: DelegateSelectValidator
         },
         DelegateEnterAmount: {
@@ -165,7 +164,7 @@ export const WalletNavigation = createStackNavigator(
             screen: DelegateConfirm
         },
 
-        QuickDelegateSelectValidator: {
+        QuickDelegate: {
             screen: QuickDelegateSelectValidator
         },
         QuickDelegateEnterAmount: {
@@ -174,14 +173,7 @@ export const WalletNavigation = createStackNavigator(
         QuickDelegateConfirm: {
             screen: QuickDelegateConfirm
         },
-
-        PosActionUndelegate: {
-            screen: PosActionUndelegate
-        },
-        PosActionUnlock: {
-            screen: PosActionUnlock
-        },
-        RedelegateSelectValidator: {
+        Redelegate: {
             screen: RedelegateSelectValidator
         },
         RedelegateEnterAmount: {
@@ -189,6 +181,9 @@ export const WalletNavigation = createStackNavigator(
         },
         RedelegateConfirm: {
             screen: RedelegateConfirm
+        },
+        PosBasicAction: {
+            screen: PosBasicAction
         },
 
         // wallet creation

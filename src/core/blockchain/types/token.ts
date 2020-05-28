@@ -24,3 +24,13 @@ export interface IButtonCTA {
     iconName: string;
     navigateTo: { screen: string; params: any };
 }
+
+export enum PosBasicActionType {
+    UNLOCK = 'UNLOCK',
+    UNDELEGATE = 'UNDELEGATE',
+    UNVOTE = 'UNVOTE',
+    UNSTAKE = 'UNSTAKE',
+    CLAIM_REWARD = 'CLAIM_REWARD',
+    WITHDRAW = 'WITHDRAW',
+    REINVEST = 'REINVEST'
+}

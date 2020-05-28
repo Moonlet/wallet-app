@@ -128,7 +128,7 @@ export class SendScreenComponent extends React.Component<
             memo: '',
             headerSteps: [
                 { step: 1, title: translate('Send.addAddress'), active: true },
-                { step: 2, title: translate('Send.enterAmount'), active: false },
+                { step: 2, title: translate('App.labels.enterAmount'), active: false },
                 { step: 3, title: translate('Send.confirmTransaction'), active: false }
             ],
             insufficientFundsFees: false

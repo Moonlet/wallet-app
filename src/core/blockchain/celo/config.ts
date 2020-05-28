@@ -1,6 +1,6 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType } from '../types/token';
+import { TokenType, PosBasicActionType } from '../types/token';
 import CeloIcon from '../../../assets/icons/blockchains/celo.svg';
 import {
     CELO_GOLD_NATIVE,
@@ -19,7 +19,7 @@ export const accountCTA = {
         title: 'App.labels.quickVote',
         iconName: 'vote',
         navigateTo: {
-            screen: 'QuickDelegateSelectValidator',
+            screen: 'QuickDelegate',
             params: { actionText: 'App.labels.quickVote' }
         }
     }
@@ -30,7 +30,7 @@ const validatorCTA = {
         title: 'App.labels.vote',
         iconName: 'vote',
         navigateTo: {
-            screen: 'DelegateSelectValidator',
+            screen: 'Delegate',
             params: { actionText: 'App.labels.vote' }
         }
     },
@@ -39,7 +39,7 @@ const validatorCTA = {
             title: 'App.labels.revote',
             iconName: 'revote',
             navigateTo: {
-                screen: 'RedelegateSelectValidator',
+                screen: 'Redelegate',
                 params: { actionText: 'App.labels.revote' }
             }
         },
@@ -47,14 +47,17 @@ const validatorCTA = {
             title: 'App.labels.unvote',
             iconName: 'unvote',
             navigateTo: {
-                screen: 'PosActionUndelegate',
-                params: { actionText: 'App.labels.unvote' }
+                screen: 'PosBasicAction',
+                params: { actionText: 'App.labels.unvote', basicAction: PosBasicActionType.UNVOTE }
             }
         },
         {
             title: 'App.labels.unlock',
             iconName: 'unlock',
-            navigateTo: { screen: 'PosActionUnlock', params: { actionText: 'App.labels.unlock' } }
+            navigateTo: {
+                screen: 'PosBasicAction',
+                params: { actionText: 'App.labels.unlock', basicAction: PosBasicActionType.UNLOCK }
+            }
         }
     ]
 };
@@ -111,7 +114,11 @@ export const config: IBlockchainConfig = {
                 tabValidators: 'App.labels.validators',
                 tabTransactions: 'App.labels.transactions'
             },
-            sendStepLabels: ['Send.selectValidator', 'Send.enterAmount', 'Send.confirmVote'],
+            sendStepLabels: [
+                'Validator.selectValidator',
+                'App.labels.enterAmount',
+                'Validator.confirmVote'
+            ],
             accountCTA,
             delegationCTA: {
                 mainCta: accountCTA.mainCta

@@ -1,7 +1,5 @@
 import React from 'react';
 import { IReduxState } from '../../../../redux/state';
-import stylesProvider from './styles';
-import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../../core/i18n';
@@ -15,6 +13,8 @@ import { INavigationProps } from '../../../../navigation/with-navigation-params'
 import { ConfirmComponent } from '../../components/confirm-component/confirm-component';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { NavigationService } from '../../../../navigation/navigation-service';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
+import stylesProvider from './styles';
 
 interface IHeaderStep {
     step: number;
@@ -104,7 +104,7 @@ export class DelegateConfirmComponent extends React.Component<
                 translate('Password.subtitleSignTransaction'),
                 { sensitive: true, showCloseButton: true }
             );
-            NavigationService.goBack('TokenScreen-key');
+            NavigationService.goBack('TokenScreen-1');
         } catch {
             //
         }

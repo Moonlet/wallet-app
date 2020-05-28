@@ -1,12 +1,11 @@
 import React from 'react';
 import { IReduxState } from '../../../../redux/state';
-import stylesProvider from './styles';
-import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../../core/i18n';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-
+import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
+import stylesProvider from './styles';
 import { getAccount } from '../../../../redux/wallets/selectors';
 import { Blockchain, ChainIdType, IFeeOptions } from '../../../../core/blockchain/types';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';

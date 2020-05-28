@@ -29,6 +29,7 @@ import { EnterAmount } from '../../send/components/enter-amount/enter-amount';
 import { FeeOptions } from '../../send/components/fee-options/fee-options';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
 import { NavigationService } from '../../../navigation/navigation-service';
+import { PosBasicActionType } from '../../../core/blockchain/types/token';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -52,6 +53,7 @@ export interface INavigationParams {
     token: ITokenState;
     validators: IValidator[];
     actionText: string;
+    basicAction: PosBasicActionType;
 }
 
 interface IState {
@@ -64,7 +66,7 @@ interface IState {
 export const navigationOptions = ({ navigation }: any) => ({
     title: translate(navigation.state.params.actionText || 'App.labels.send')
 });
-export class PosActionUnlockComponent extends React.Component<
+export class PosBasicActionComponent extends React.Component<
     INavigationProps<INavigationParams> &
         IReduxProps &
         IThemeProps<ReturnType<typeof stylesProvider>>,
@@ -104,6 +106,34 @@ export class PosActionUnlockComponent extends React.Component<
         const { theme } = this.props;
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
+        let labelColor: string;
+
+        switch (this.props.basicAction) {
+            case PosBasicActionType.UNLOCK:
+            case PosBasicActionType.WITHDRAW: {
+                labelColor = theme.colors.redelegate;
+                break;
+            }
+            case PosBasicActionType.UNVOTE:
+            case PosBasicActionType.UNDELEGATE:
+            case PosBasicActionType.UNSTAKE: {
+                labelColor = theme.colors.undelegate;
+                break;
+            }
+            case PosBasicActionType.CLAIM_REWARD: {
+                labelColor = theme.colors.reward;
+                break;
+            }
+            case PosBasicActionType.REINVEST: {
+                labelColor = theme.colors.accent;
+                break;
+            }
+            default: {
+                labelColor = theme.colors.reward;
+                break;
+            }
+        }
+
         let disableButton: boolean;
         if (
             this.state.amount === '' ||
@@ -124,7 +154,7 @@ export class PosActionUnlockComponent extends React.Component<
             >
                 <PrimaryCtaField
                     label={translate(this.props.actionText)}
-                    labelColor={theme.colors.redelegate}
+                    labelColor={labelColor}
                     action={translate('App.labels.from').toLowerCase()}
                     value={this.props.validators[0].name}
                 />
@@ -204,6 +234,7 @@ export class PosActionUnlockComponent extends React.Component<
 
     public render() {
         const { styles, theme } = this.props;
+
         const map = [
             {
                 text: translate('Validator.unlockText1')
@@ -260,7 +291,7 @@ export class PosActionUnlockComponent extends React.Component<
     }
 }
 
-export const PosActionUnlock = smartConnect(PosActionUnlockComponent, [
+export const PosBasicAction = smartConnect(PosBasicActionComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider),
     withNavigationParams()

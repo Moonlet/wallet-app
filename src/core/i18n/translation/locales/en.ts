@@ -40,6 +40,7 @@ export const translation: ITranslations = {
                 delete: 'Delete',
                 details: 'Details',
                 disconnect: 'Sign out',
+                enterAmount: 'Enter\namount',
                 editToken: 'Edit token',
                 error: 'Error',
                 extensionNotConnected: 'Connecting to phone',
@@ -252,11 +253,8 @@ export const translation: ITranslations = {
             editContactName: 'Edit name',
             reviewTransaction: 'Review transaction on your hardware wallet',
             addAddress: 'Add\naddress',
-            enterAmount: 'Enter\namount',
-            confirmTransaction: 'Confirm\ntransaction',
-            selectValidator: 'Select\nvalidator(s)',
-            confirmVote: 'Confirm\nvote(s)',
-            confirmStake: 'Confirm\nstake(s)'
+
+            confirmTransaction: 'Confirm\ntransaction'
         },
 
         AccountSettings: {
@@ -462,6 +460,9 @@ export const translation: ITranslations = {
                 'You don’t have enough funds for this transaction request. Either select a different wallet/account or add more funds to this account.'
         },
         Validator: {
+            selectValidator: 'Select\nvalidator(s)',
+            confirmVote: 'Confirm\nvote(s)',
+            confirmStake: 'Confirm\nstake(s)',
             totalStake: 'Total Stake',
             totalDelegated: 'Total Delegated',
             myStake: 'My Stake',

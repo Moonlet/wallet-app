@@ -154,7 +154,7 @@ export const WalletNavigation = createStackNavigator(
         Validator: {
             screen: ValidatorScreen
         },
-        Delegate: {
+        PosDelegate: {
             screen: DelegateSelectValidator
         },
         DelegateEnterAmount: {
@@ -164,7 +164,7 @@ export const WalletNavigation = createStackNavigator(
             screen: DelegateConfirm
         },
 
-        QuickDelegate: {
+        PosQuickDelegate: {
             screen: QuickDelegateSelectValidator
         },
         QuickDelegateEnterAmount: {
@@ -173,7 +173,7 @@ export const WalletNavigation = createStackNavigator(
         QuickDelegateConfirm: {
             screen: QuickDelegateConfirm
         },
-        Redelegate: {
+        PosRedelegate: {
             screen: RedelegateSelectValidator
         },
         RedelegateEnterAmount: {

@@ -19,7 +19,7 @@ export const accountCTA = {
         title: 'App.labels.quickVote',
         iconName: 'vote',
         navigateTo: {
-            screen: 'QuickDelegate',
+            screen: 'PosQuickDelegate',
             params: { actionText: 'App.labels.quickVote' }
         }
     }
@@ -30,7 +30,7 @@ const validatorCTA = {
         title: 'App.labels.vote',
         iconName: 'vote',
         navigateTo: {
-            screen: 'Delegate',
+            screen: 'PosDelegate',
             params: { actionText: 'App.labels.vote' }
         }
     },
@@ -39,7 +39,7 @@ const validatorCTA = {
             title: 'App.labels.revote',
             iconName: 'revote',
             navigateTo: {
-                screen: 'Redelegate',
+                screen: 'PosRedelegate',
                 params: { actionText: 'App.labels.revote' }
             }
         },

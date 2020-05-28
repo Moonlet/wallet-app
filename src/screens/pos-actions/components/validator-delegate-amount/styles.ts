@@ -4,7 +4,8 @@ import {
     BASE_DIMENSION,
     ICON_CONTAINER_SIZE,
     normalize,
-    normalizeFontAndLineHeight
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
 } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -29,7 +30,7 @@ export default (theme: ITheme) =>
         labelName: {
             fontSize: normalizeFontAndLineHeight(16),
             fontWeight: '500',
-            letterSpacing: 0.39,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.text,
             textAlign: 'center',
             marginRight: BASE_DIMENSION / 2
@@ -46,7 +47,7 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(14),
             lineHeight: normalize(19),
             fontWeight: '500',
-            letterSpacing: 0.38,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.textSecondary,
             alignSelf: 'center'
         }

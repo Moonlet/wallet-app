@@ -33,6 +33,7 @@ import {
 } from '../../../../redux/ui/screens/posActions/actions';
 import { Icon } from '../../../../components/icon/icon';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
+import { IconValues } from '../../../../components/icon/values';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -126,7 +127,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                         // decrease
                     }}
                 >
-                    <Icon name="plus" size={normalize(16)} style={styles.actionIcon} />
+                    <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
                 </TouchableOpacity>
                 <Text style={styles.actionCounterText}>{this.state.nrValidators}</Text>
                 <TouchableOpacity
@@ -145,7 +146,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                             .catch();
                     }}
                 >
-                    <Icon name="plus" size={normalize(16)} style={styles.actionIcon} />
+                    <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
                 </TouchableOpacity>
             </View>,
             <View key={'validator-list'} style={this.props.styles.listContainer}>

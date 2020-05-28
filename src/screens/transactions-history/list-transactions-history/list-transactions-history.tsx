@@ -33,7 +33,13 @@ export class TransactionsHistoryListComponent extends React.Component<
             tx.address === account.address
                 ? translate('App.labels.to').toLowerCase()
                 : translate('App.labels.from').toLowerCase();
-        return ` ${formattedAmount} ${formatAddress(tx.toAddress, account.blockchain)}`;
+
+        const toAddress =
+            tx.token.type === TokenType.ZRC2
+                ? formatAddress(tx.data.params[0], account.blockchain)
+                : formatAddress(tx.toAddress, account.blockchain);
+
+        return ` ${formattedAmount} ${toAddress}`;
     }
 
     private transactionItem(tx: IBlockchainTransaction) {

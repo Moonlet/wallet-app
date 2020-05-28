@@ -13,6 +13,8 @@ import { getChainId } from '../../../../redux/preferences/selectors';
 import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { ConfirmComponent } from '../../components/confirm-component/confirm-component';
+import { PasswordModal } from '../../../../components/password-modal/password-modal';
+import { NavigationService } from '../../../../navigation/navigation-service';
 
 interface IHeaderStep {
     step: number;
@@ -95,8 +97,17 @@ export class QuickDelegateConfirmComponent extends React.Component<
         this.props.navigation.setParams({ actionText: this.props.actionText });
     }
 
-    public onPressConfirm() {
-        // on press confirm
+    private async onPressConfirm() {
+        try {
+            await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleSignTransaction'),
+                { sensitive: true, showCloseButton: true }
+            );
+            NavigationService.goBack('TokenScreen-key');
+        } catch {
+            //
+        }
     }
 
     public render() {

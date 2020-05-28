@@ -27,6 +27,8 @@ import {
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { EnterAmount } from '../../send/components/enter-amount/enter-amount';
 import { FeeOptions } from '../../send/components/fee-options/fee-options';
+import { PasswordModal } from '../../../components/password-modal/password-modal';
+import { NavigationService } from '../../../navigation/navigation-service';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -85,6 +87,19 @@ export class PosActionUnlockComponent extends React.Component<
         };
     }
 
+    private async onPressConfirm() {
+        try {
+            await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleSignTransaction'),
+                { sensitive: true, showCloseButton: true }
+            );
+            NavigationService.goBack();
+        } catch {
+            //
+        }
+    }
+
     private renderBottomConfirm() {
         const { theme } = this.props;
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
@@ -104,7 +119,7 @@ export class PosActionUnlockComponent extends React.Component<
                 label={translate('App.labels.confirm')}
                 disabled={disableButton}
                 onPress={() => {
-                    // navigate to next screen
+                    this.onPressConfirm();
                 }}
             >
                 <PrimaryCtaField

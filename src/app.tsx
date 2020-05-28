@@ -200,7 +200,7 @@ export default class App extends React.Component<{}, IState> {
                             {Platform.OS !== 'android' && !this.state.displayApplication && (
                                 <ImageCanvas />
                             )}
-                            {/* <PasswordModal.Component /> */}
+                            <PasswordModal.Component />
                             <TransactionRequestScreen />
                             <BottomSheet />
                             {Platform.OS !== 'web' && <Dialog.Component />}

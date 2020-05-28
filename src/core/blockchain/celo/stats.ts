@@ -32,8 +32,11 @@ export class Stats extends GenericStats<Client> {
                 chainLayerValidator
             ];
 
+        // used for redelegate
+        if (nrValidators === 7) return [chainLayerValidator];
+
         // DUMMY DATA
-        if (nrValidators === 1) return [moonletValidator];
+        if (nrValidators === 1) return [moonletValidator2];
         if (nrValidators === 2) return [moonletValidator, chainLayerValidator];
         else return [moonletValidator, chainLayerValidator, moonletValidator];
     }
@@ -197,6 +200,18 @@ const moonletCardStats = [
     }
 ];
 
+export const moonletValidator2: IValidator = {
+    id: 'moonletID2',
+    icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
+    name: 'Moonlet',
+    rank: '10th',
+    amountDelegated: '23',
+    website: 'http://moonlet.io',
+    topStats: moonletCardStats,
+    secondaryStats: secondaryStatsValues,
+    chartStats: chartStatsValues,
+    cardStats: moonletCardStats
+};
 export const moonletValidator: IValidator = {
     id: 'moonletID',
     icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',

@@ -70,6 +70,7 @@ interface IState {
     headerSteps: IHeaderStep[];
     nrValidators: number;
     validatorsList: IValidator[];
+    redelegateFromValidator: IValidator;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -104,7 +105,8 @@ export class RedelegateSelectValidatorComponent extends React.Component<
         this.state = {
             nrValidators: 1,
             headerSteps: stepList,
-            validatorsList: props.validators
+            validatorsList: [],
+            redelegateFromValidator: props.validators.length ? props.validators[0] : undefined
         };
     }
 
@@ -122,9 +124,24 @@ export class RedelegateSelectValidatorComponent extends React.Component<
         this.setState({ validatorsList: validators });
     }
 
+    public componentDidMount() {
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+        blockchainInstance
+            .getStats(this.props.chainId)
+            .getValidatorList(CardActionType.NAVIGATE, 7)
+            .then(validators => {
+                this.setState({ validatorsList: validators });
+            })
+            .catch();
+    }
+
     private renderValidatorList() {
         const { styles } = this.props;
         const blockchainInstance = getBlockchain(this.props.blockchain);
+
+        const validatorList = { ...this.state.validatorsList };
+        validatorList.splice(0, 0, this.state.redelegateFromValidator);
+
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
                 <TouchableOpacity
@@ -170,7 +187,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
             </View>,
             <View key={'validator-list'} style={this.props.styles.listContainer}>
                 <ValidatorsList
-                    validators={this.state.validatorsList}
+                    validators={validatorList}
                     blockchain={this.props.blockchain}
                     redelegate={{
                         validator: this.props.validators[0],

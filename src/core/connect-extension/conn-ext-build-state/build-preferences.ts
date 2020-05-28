@@ -2,7 +2,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { BLOCKCHAIN_LIST } from '../../blockchain/blockchain-factory';
 
 export const buildPreferences = (trimmedPreferences: any) => {
-    let blockchains;
+    let blockchains = {};
 
     if (Array.isArray(trimmedPreferences.blockchains)) {
         // Array of active Blockchains - older versions

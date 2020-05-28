@@ -27,7 +27,7 @@ export const buildPreferences = (trimmedPreferences: any) => {
                 }
             );
     } else {
-        // IBlockchainsOptions type
+        // typeof IBlockchainsOptions
         blockchains = cloneDeep(trimmedPreferences.blockchains);
     }
 

@@ -101,10 +101,10 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
                     status: TransactionStatus.PENDING,
 
                     data: {
-                        method: 'proxyTransfer',
+                        method: 'Transfer',
                         params: [tx.toAddress, tx.amount],
                         raw: JSON.stringify({
-                            _tag: 'proxyTransfer',
+                            _tag: 'Transfer',
                             params: [
                                 {
                                     vname: 'to',
@@ -112,7 +112,7 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
                                     value: fromBech32Address(tx.toAddress).toLowerCase()
                                 },
                                 {
-                                    vname: 'value',
+                                    vname: 'amount',
                                     type: 'Uint128',
                                     value: tx.amount
                                 }

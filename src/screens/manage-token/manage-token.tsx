@@ -35,6 +35,8 @@ import { CONFIG } from '../../config';
 import { SearchInput } from '../../components/search-input/search-input';
 import { bind } from 'bind-decorator';
 import { IconValues } from '../../components/icon/values';
+import { XSGD_MAINNET } from '../../core/blockchain/zilliqa/tokens/xsgd';
+import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 
 export interface IReduxProps {
     selectedAccount: IAccountState;
@@ -123,14 +125,22 @@ export class ManageTokenComponent extends React.Component<
         if (blockchainToken) {
             if (blockchainToken.name === '') blockchainToken = undefined;
         }
+
         const symbol = blockchainToken ? blockchainToken.symbol : staticToken.symbol;
         const decimals = blockchainToken ? blockchainToken.decimals : staticToken.decimals;
         const contractAddress = staticToken ? staticToken.contractAddress : this.state.fieldInput;
+
+        let icon: any = staticToken ? { uri: staticToken.logo } : GENERIC_TOKEN_ICON;
+
+        if (String(symbol).toUpperCase() === XSGD_MAINNET.symbol) {
+            icon = XSGD_MAINNET.icon;
+        }
+
         this.setState({
             token: {
                 name: blockchainToken ? blockchainToken.name : staticToken.name,
                 symbol: String(symbol).toUpperCase(),
-                icon: staticToken ? { uri: staticToken.logo } : GENERIC_TOKEN_ICON,
+                icon,
                 type: this.getTokenType(this.props.selectedAccount.blockchain),
                 removable: true,
                 contractAddress,
@@ -249,68 +259,74 @@ export class ManageTokenComponent extends React.Component<
         const { styles } = this.props;
 
         return (
-            <View style={styles.container}>
-                <View style={styles.inputContainer}>
-                    <SearchInput
-                        placeholderText={translate('Token.searchToken')}
-                        onChangeText={this.onSearchInput}
-                        onClose={this.onClose}
-                    />
-                    {this.state.isLoading && <LoadingIndicator />}
+            <View style={{ flex: 1 }}>
+                <TestnetBadge />
 
-                    {this.state.token && this.state.token?.symbol && (
-                        <TouchableOpacity
-                            style={[
-                                styles.tokenCardContainer,
-                                this.state.isTokenSelected && styles.tokenSelectedContainer
-                            ]}
-                            onPress={() => this.setState({ isTokenSelected: true })}
-                        >
-                            <SmartImage source={this.state.token?.icon} />
-                            <View style={styles.accountInfoContainer}>
-                                <Text
-                                    style={styles.tokenNameText}
-                                >{`${this.state.token.name} (${this.state.token.symbol})`}</Text>
-                                <Text style={styles.tokenAddressText}>
-                                    {`${translate('App.labels.contract')}: ${formatAddress(
-                                        this.state.token.contractAddress,
-                                        this.props.selectedAccount.blockchain
-                                    )}`}
+                <View style={styles.container}>
+                    <View style={styles.inputContainer}>
+                        <SearchInput
+                            placeholderText={translate('Token.searchToken')}
+                            onChangeText={this.onSearchInput}
+                            onClose={this.onClose}
+                        />
+                        {this.state.isLoading && <LoadingIndicator />}
+
+                        {this.state.token && this.state.token?.symbol && (
+                            <TouchableOpacity
+                                style={[
+                                    styles.tokenCardContainer,
+                                    this.state.isTokenSelected && styles.tokenSelectedContainer
+                                ]}
+                                onPress={() => this.setState({ isTokenSelected: true })}
+                            >
+                                <SmartImage source={this.state.token?.icon} />
+                                <View style={styles.accountInfoContainer}>
+                                    <Text
+                                        style={styles.tokenNameText}
+                                    >{`${this.state.token.name} (${this.state.token.symbol})`}</Text>
+                                    <Text style={styles.tokenAddressText}>
+                                        {`${translate('App.labels.contract')}: ${formatAddress(
+                                            this.state.token.contractAddress,
+                                            this.props.selectedAccount.blockchain
+                                        )}`}
+                                    </Text>
+                                </View>
+                                <View style={styles.iconContainer}>
+                                    {this.state.isTokenSelected && (
+                                        <Icon
+                                            name={IconValues.CHECK}
+                                            size={normalize(16)}
+                                            style={styles.icon}
+                                        />
+                                    )}
+                                </View>
+                            </TouchableOpacity>
+                        )}
+
+                        {this.state.showError && (
+                            <View style={styles.errorWrapper}>
+                                <Text style={styles.noMatchText}>{translate('Token.noMatch')}</Text>
+                                <Text style={styles.noGiveUpText}>
+                                    {translate('Token.noGiveUp')}
                                 </Text>
                             </View>
-                            <View style={styles.iconContainer}>
-                                {this.state.isTokenSelected && (
-                                    <Icon
-                                        name={IconValues.CHECK}
-                                        size={normalize(16)}
-                                        style={styles.icon}
-                                    />
-                                )}
-                            </View>
-                        </TouchableOpacity>
-                    )}
+                        )}
+                    </View>
 
-                    {this.state.showError && (
-                        <View style={styles.errorWrapper}>
-                            <Text style={styles.noMatchText}>{translate('Token.noMatch')}</Text>
-                            <Text style={styles.noGiveUpText}>{translate('Token.noGiveUp')}</Text>
-                        </View>
-                    )}
-                </View>
-
-                <View style={styles.bottomButtonContainer}>
-                    <Button
-                        onPress={() =>
-                            this.state.isTokenSelected ? this.saveToken() : this.findToken()
-                        }
-                        disabledSecondary={
-                            this.state.fieldInput === '' || this.state.fieldInput === undefined
-                        }
-                    >
-                        {this.state.isTokenSelected
-                            ? translate('App.labels.save')
-                            : translate('App.labels.find')}
-                    </Button>
+                    <View style={styles.bottomButtonContainer}>
+                        <Button
+                            onPress={() =>
+                                this.state.isTokenSelected ? this.saveToken() : this.findToken()
+                            }
+                            disabledSecondary={
+                                this.state.fieldInput === '' || this.state.fieldInput === undefined
+                            }
+                        >
+                            {this.state.isTokenSelected
+                                ? translate('App.labels.save')
+                                : translate('App.labels.find')}
+                        </Button>
+                    </View>
                 </View>
             </View>
         );

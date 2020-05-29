@@ -33,7 +33,6 @@ import {
     DELEGATE_ENTER_AMOUNT
 } from '../../../../redux/ui/screens/posActions/actions';
 import { Icon } from '../../../../components/icon/icon';
-import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
 import { IconValues } from '../../../../components/icon/values';
 
 interface IHeaderStep {
@@ -141,7 +140,8 @@ export class RedelegateSelectValidatorComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.blockchain);
 
         const validatorList = { ...this.state.validatorsList };
-        validatorList.splice(0, 0, this.state.redelegateFromValidator);
+        if (this.state.redelegateFromValidator)
+            validatorList.splice(0, 0, this.state.redelegateFromValidator);
 
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
@@ -231,7 +231,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     label={translate(this.props.actionText)}
                     labelColor={this.props.theme.colors.redelegate}
                     action={translate('App.labels.from').toLowerCase()}
-                    value={valuePrimaryCtaField(this.state.validatorsList)}
+                    value={this.state.redelegateFromValidator.name}
                 />
                 <AmountCtaField
                     tokenConfig={tokenConfig}

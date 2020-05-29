@@ -56,7 +56,11 @@ const validatorCTA = {
             iconName: 'unlock',
             navigateTo: {
                 screen: 'PosBasicAction',
-                params: { actionText: 'App.labels.unlock', basicAction: PosBasicActionType.UNLOCK }
+                params: {
+                    actionText: 'App.labels.unlock',
+                    basicAction: PosBasicActionType.UNLOCK,
+                    unlockDays: 3
+                }
             }
         }
     ]

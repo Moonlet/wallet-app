@@ -54,6 +54,7 @@ export interface INavigationParams {
     validators: IValidator[];
     actionText: string;
     basicAction: PosBasicActionType;
+    unlockDays?: number;
 }
 
 interface IState {
@@ -232,9 +233,8 @@ export class PosBasicActionComponent extends React.Component<
         );
     }
 
-    public render() {
+    public renderUnlockTopText() {
         const { styles, theme } = this.props;
-
         const map = [
             {
                 text: translate('Validator.unlockText1')
@@ -256,6 +256,22 @@ export class PosBasicActionComponent extends React.Component<
         ];
 
         return (
+            <Text style={styles.unlockContainerText}>
+                {map.map((value, index) => {
+                    return (
+                        <Text key={index} style={[styles.unlockTextChildren, value?.style]}>
+                            {value.text + ' '}
+                        </Text>
+                    );
+                })}
+            </Text>
+        );
+    }
+
+    public render() {
+        const { styles } = this.props;
+
+        return (
             <View style={styles.container}>
                 <TestnetBadge />
 
@@ -265,27 +281,29 @@ export class PosBasicActionComponent extends React.Component<
                     alwaysBounceVertical={false}
                 >
                     <View style={styles.content}>
-                        <View>
-                            <View>
-                                <Text style={styles.unlockContainerText}>
-                                    {map.map((value, index) => {
-                                        return (
-                                            <Text
-                                                key={index}
-                                                style={[styles.unlockTextChildren, value?.style]}
-                                            >
-                                                {value.text + ' '}
-                                            </Text>
-                                        );
-                                    })}
-                                </Text>
-
-                                {this.renderEnterAmount()}
-                            </View>
-                        </View>
+                        {this.props.basicAction === PosBasicActionType.UNLOCK &&
+                            this.renderUnlockTopText()}
+                        <View>{this.renderEnterAmount()}</View>
                     </View>
                 </KeyboardAwareScrollView>
-                {this.renderBottomConfirm()}
+
+                <View style={{ flex: 1 }}>
+                    {this.props.basicAction ===
+                        (PosBasicActionType.UNDELEGATE || PosBasicActionType.UNLOCK) && (
+                        <Text style={styles.bottomText}>
+                            {translate('Validator.unlockBottomText', {
+                                days: this.props.unlockDays || 3
+                            })}
+                        </Text>
+                    )}
+                    {this.props.basicAction === PosBasicActionType.CLAIM_REWARD && (
+                        <Text style={styles.bottomText}>
+                            {translate('Validator.claimRewardBottomText')}
+                        </Text>
+                    )}
+
+                    {this.renderBottomConfirm()}
+                </View>
             </View>
         );
     }

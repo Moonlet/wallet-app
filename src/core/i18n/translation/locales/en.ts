@@ -471,7 +471,11 @@ export const translation: ITranslations = {
             unlockText2: 'unlock',
             unlockText3: 'the funds that are not voting.\n In order to unlock all funds, please',
             unlockText4: 'unvote',
-            unlockText5: 'first.'
+            unlockText5: 'first.',
+            unlockBottomText:
+                'It takes {{days}} days in order to unlock the amount and will be automatically withdrawn then deposited into your available balance.',
+            claimRewardBottomText:
+                'The claimed reward you receive may be equal to or grater than what it displayed nou since rewards are accumulated each block.'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -178,7 +178,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
         this.setState({ isLoading: true });
 
         if (qrCodeTxPayload?.chainId) {
-            const chainId = qrCodeTxPayload.chainId;
+            const chainId = Number(qrCodeTxPayload.chainId); // TODO: replace Number when refactor ChainId
 
             if (this.isChainIdValid(chainId)) {
                 // Valid ChainId

@@ -20,6 +20,7 @@ import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { Capitalize } from '../../core/utils/format-string';
 import { delay } from '../../core/utils/time';
 import { IconValues } from '../../components/icon/values';
+import bind from 'bind-decorator';
 
 export interface IReduxProps {
     openBottomSheet: typeof openBottomSheet;
@@ -75,7 +76,8 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
         };
     }
 
-    public resetAll = () =>
+    @bind
+    public resetAll() {
         this.setState({
             device: undefined,
             blockchain: undefined,
@@ -84,6 +86,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
             ledgerTypeActive: false,
             connectionActive: false
         });
+    }
 
     public componentDidMount() {
         this.props.navigation.setParams({ resetAll: this.resetAll });
@@ -126,7 +129,9 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                 ? styles.numberSelected
                                 : null
                         ]}
-                    >{`2`}</Text>
+                    >
+                        {`2`}
+                    </Text>
                 </View>
 
                 <View
@@ -156,7 +161,9 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                 ? styles.numberSelected
                                 : null
                         ]}
-                    >{`3`}</Text>
+                    >
+                        {`3`}
+                    </Text>
                 </View>
             </View>,
             <View key="view-description" style={styles.headerDescription}>
@@ -215,7 +222,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             <ListCard
                                 key={`key-${this.state.connection}`}
                                 label={translate(`CreateHardwareWallet.${this.state.connection}`)}
-                                leftIcon={this.state.connection.toString()}
+                                leftIcon={String(this.state.connection).toLowerCase()}
                                 rightIcon={IconValues.CHECK}
                                 selected={true}
                             />
@@ -273,7 +280,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                     })
                                 }
                                 label={translate(`CreateHardwareWallet.${connection}`)}
-                                leftIcon={connection.toString()} // TODO: replace this
+                                leftIcon={String(connection).toLowerCase()}
                                 rightIcon={this.state.connection === connection && IconValues.CHECK}
                                 selected={this.state.connection === connection}
                             />
@@ -309,21 +316,22 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
     }
 
     public render() {
-        const props = this.props;
+        const { styles } = this.props;
+        const { blockchain, connection, device } = this.state;
+
         return (
-            <View style={props.styles.container}>
+            <View style={styles.container}>
                 {this.renderConfig(ledgerConfig)}
-                {(this.state.device && this.state.connection && this.state.blockchain) !==
-                    undefined && (
-                    <View style={props.styles.bottomContainer}>
-                        <Text style={props.styles.textIndicator}>
+                {(device && connection && blockchain) !== undefined && (
+                    <View style={styles.bottomContainer}>
+                        <Text style={styles.textIndicator}>
                             {translate('CreateHardwareWallet.app', {
-                                app: this.state.blockchain
+                                app: blockchain
                             })}
                         </Text>
                         <Button
                             testID="button-next"
-                            style={props.styles.bottomButton}
+                            wrapperStyle={styles.bottomButton}
                             onPress={() => this.connect()}
                         >
                             {translate('App.labels.connect')}

@@ -243,7 +243,6 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
         if (amount) {
             const tokenConfig = getTokenConfig(blockchain, this.state.tokenSymbol);
-
             const amountFromStd = blockchainInstance.account.amountFromStd(
                 new BigNumber(amount),
                 tokenConfig.decimals
@@ -535,6 +534,9 @@ export class QRCodeTransferRequestComponent extends React.Component<
             selectedAccount.tokens[chainId] &&
             selectedAccount.tokens[chainId][blockchainInstance.config.coin];
 
+        const sendingToken =
+            selectedAccount.tokens[chainId] && selectedAccount.tokens[chainId][tokenSymbol];
+
         const tokenConfig = getTokenConfig(blockchain, tokenSymbol);
 
         const stdAmount = blockchainInstance.account.amountToStd(
@@ -607,7 +609,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
                     <FeeOptions
                         token={token}
-                        sendingToken={token} // TODO
+                        sendingToken={sendingToken}
                         account={selectedAccount}
                         toAddress={qrCodeTxPayload.address}
                         onFeesChanged={this.onFeesChanged}

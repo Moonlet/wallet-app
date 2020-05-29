@@ -5,7 +5,6 @@ import { translate } from '../../../core/i18n';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { formatAddress } from '../../../core/utils/format-address';
-import { formatNumber } from '../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
@@ -14,14 +13,27 @@ import { BottomCta } from '../../../components/bottom-cta/bottom-cta';
 import { PrimaryCtaField } from '../../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { AmountCtaField } from '../../../components/bottom-cta/amount-cta-field/amount-cta-field';
 import { Text } from '../../../library';
+import { getSelectedWallet } from '../../../redux/wallets/selectors';
+import { IReduxState } from '../../../redux/state';
+import { connect } from 'react-redux';
 
 export interface IExternalProps {
     extensionTxPayload: any;
     callback: () => void;
 }
 
+export interface IReduxProps {
+    walletName: string;
+}
+
+const mapStateToProps = (state: IReduxState) => {
+    return {
+        walletName: getSelectedWallet(state).name
+    };
+};
+
 export const ExtensionTransferRequestComponent = (
-    props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    props: IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     const renderField = (label: string, value: string) => {
         const { styles } = props;
@@ -36,43 +48,34 @@ export const ExtensionTransferRequestComponent = (
         );
     };
 
-    const { extensionTxPayload } = props;
-
-    const account = extensionTxPayload.account;
-    const blockchain = account.blockchain;
+    const { account, amount, token, feeOptions, toAddress } = props.extensionTxPayload;
+    const { blockchain } = account;
 
     const from = formatAddress(account.address, blockchain);
-    const recipient = formatAddress(extensionTxPayload.toAddress, blockchain);
+    const recipient = formatAddress(toAddress, blockchain);
 
-    const formattedAmount = formatNumber(new BigNumber(extensionTxPayload.amount), {
-        currency: getBlockchain(blockchain).config.coin
-    });
-
-    const tokenConfig = getTokenConfig(blockchain, extensionTxPayload.token);
+    const tokenConfig = getTokenConfig(blockchain, token);
 
     const stdAmount = getBlockchain(blockchain).account.amountToStd(
-        new BigNumber(extensionTxPayload.amount),
+        new BigNumber(amount),
         tokenConfig.decimals
     );
 
     return (
         <View style={{ flex: 1 }}>
             <View style={props.styles.container}>
-                {renderField(
-                    translate('TransactionRequest.walletName'),
-                    extensionTxPayload.walletName
-                )}
+                {renderField(translate('TransactionRequest.walletName'), props.walletName)}
                 {renderField(
                     translate('TransactionRequest.accountName'),
                     account?.name || `Account ${account.index + 1}`
                 )}
                 {renderField(translate('App.labels.from'), from)}
                 {renderField(translate('App.labels.recipient'), recipient)}
-                {renderField(translate('App.labels.amount'), formattedAmount)}
+                {renderField(translate('App.labels.amount'), `${amount} ${token}`)}
                 <FeeTotal
-                    amount={extensionTxPayload.feeOptions.feeTotal}
+                    amount={feeOptions.feeTotal}
                     blockchain={blockchain}
-                    tokenSymbol={extensionTxPayload.token}
+                    tokenSymbol={getBlockchain(blockchain).config.coin}
                     options={{
                         backgroundColor: props.theme.colors.inputBackground
                     }}
@@ -81,7 +84,7 @@ export const ExtensionTransferRequestComponent = (
 
             <BottomCta
                 label={translate('App.labels.confirm')}
-                disabled={extensionTxPayload === undefined}
+                disabled={props.extensionTxPayload === undefined}
                 onPress={() => props.callback()}
             >
                 <PrimaryCtaField
@@ -97,5 +100,5 @@ export const ExtensionTransferRequestComponent = (
 
 export const ExtensionTransferRequest = smartConnect<IExternalProps>(
     ExtensionTransferRequestComponent,
-    [withTheme(stylesProvider)]
+    [connect(mapStateToProps), withTheme(stylesProvider)]
 );

@@ -34,6 +34,8 @@ import {
 } from '../../../../redux/ui/screens/posActions/actions';
 import { Icon } from '../../../../components/icon/icon';
 import { IconValues } from '../../../../components/icon/values';
+import { ValidatorCard } from '../../../token/components/delegate-token/components/validators/validator-card/validator-card';
+import { formatNumber } from '../../../../core/utils/format-number';
 
 interface IHeaderStep {
     step: number;
@@ -138,10 +140,8 @@ export class RedelegateSelectValidatorComponent extends React.Component<
     private renderValidatorList() {
         const { styles } = this.props;
         const blockchainInstance = getBlockchain(this.props.blockchain);
-
-        const validatorList = { ...this.state.validatorsList };
-        if (this.state.redelegateFromValidator)
-            validatorList.splice(0, 0, this.state.redelegateFromValidator);
+        const config = blockchainInstance.config;
+        const validator = this.state.redelegateFromValidator;
 
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
@@ -186,9 +186,30 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
                 </TouchableOpacity>
             </View>,
+            <View key={'redelegate-validator-view'} style={this.props.styles.listContainer}>
+                <ValidatorCard
+                    key={'redelegate-validator'}
+                    icon={validator.icon}
+                    leftLabel={validator.name}
+                    leftSmallLabel={validator.rank}
+                    leftSubLabel={validator.website}
+                    rightTitle={config.ui.validator.amountCardLabel}
+                    rightSubtitle={formatNumber(new BigNumber(validator.amountDelegated), {
+                        currency: config.coin
+                    })}
+                    actionType={CardActionType.DEFAULT}
+                    bottomStats={validator.cardStats}
+                    actionTypeSelected={validator.actionTypeSelected || false}
+                    borderColor={this.props.theme.colors.redelegate}
+                    blockchain={this.props.blockchain}
+                    onSelect={() => {
+                        //
+                    }}
+                />
+            </View>,
             <View key={'validator-list'} style={this.props.styles.listContainer}>
                 <ValidatorsList
-                    validators={validatorList}
+                    validators={this.state.validatorsList}
                     blockchain={this.props.blockchain}
                     redelegate={{
                         validator: this.props.validators[0],

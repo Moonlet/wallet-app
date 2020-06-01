@@ -39,6 +39,7 @@ import { TransactionStatus } from '../../core/wallet/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import bind from 'bind-decorator';
 import { IconValues } from '../../components/icon/values';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -171,6 +172,20 @@ export class TokenScreenComponent extends React.Component<
     private renderComponent() {
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
 
+        // TODO - this is only for Ziliqa to be able to test staking screen
+        if (
+            isFeatureActive(RemoteFeature.DEV_TOOLS) &&
+            this.props.blockchain === Blockchain.ZILLIQA
+        ) {
+            return (
+                <DelegateTokenScreen
+                    accountIndex={this.props.accountIndex}
+                    blockchain={this.props.blockchain}
+                    token={this.props.token}
+                    navigation={this.props.navigation}
+                />
+            );
+        }
         switch (tokenConfig.ui.tokenScreenComponent) {
             case TokenScreenComponentType.DELEGATE:
                 return (

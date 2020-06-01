@@ -25,8 +25,8 @@ export default (theme: ITheme) =>
                 ios: isIphoneXorAbove() ? BASE_DIMENSION * 11 : BASE_DIMENSION * 10
             })
         },
+
         listContainer: {
-            marginTop: BASE_DIMENSION * 3,
             marginHorizontal: BASE_DIMENSION * 2
         },
         headerSteps: {
@@ -34,6 +34,7 @@ export default (theme: ITheme) =>
         },
         actionContainer: {
             marginTop: BASE_DIMENSION * 2,
+            marginBottom: BASE_DIMENSION * 3,
             width: normalize(170),
             flexDirection: 'row',
             borderRadius: BORDER_RADIUS / 2,

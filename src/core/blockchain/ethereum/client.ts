@@ -100,7 +100,6 @@ export class Client extends BlockchainGenericClient {
             const results = contractAddress
                 ? await this.estimateFees(from, to, amount, contractAddress)
                 : await this.estimateFees(from, to);
-
             let presets: {
                 cheap: BigNumber;
                 standard: BigNumber;
@@ -179,9 +178,11 @@ export class Client extends BlockchainGenericClient {
                     }
                 ])
                 .then(res => {
-                    res.result =
-                        '0x' + new BigNumber(res.result, 16).multipliedBy(1.3).toString(16);
-                    return res;
+                    if (res.result) {
+                        res.result =
+                            '0x' + new BigNumber(res.result, 16).multipliedBy(1.3).toString(16);
+                        return res;
+                    }
                 });
         } else {
             gasEstimatePromise = this.http.jsonRpc('eth_estimateGas', [{ from, to }]);

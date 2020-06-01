@@ -20,7 +20,9 @@
         "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore",
         "postinstall": "jetify && ./scripts/ts-nockeck-files.sh",
         "detox:build:ios:debug": "detox build -c ios.debug",
-        "detox:test:ios:debug": "detox test -c ios.debug"
+        "detox:test:ios:debug": "detox test -c ios.debug",
+        "detox:build:ios:release": "detox build -c ios.release",
+        "detox:test:ios:release": "detox test -c ios.release"
     },
     "dependencies": {
         "@ledgerhq/hw-app-eth": "^4.78.0",

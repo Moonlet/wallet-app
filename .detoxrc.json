@@ -8,6 +8,14 @@
             "device": {
                 "type": "iPhone 11"
             }
+        },
+        "ios.release": {
+            "binaryPath": "ios/build/Build/Products/Release-iphonesimulator/Moonlet.app",
+            "build": "export RCT_NO_LAUNCH_PACKAGER=true && xcodebuild -workspace ios/Moonlet.xcworkspace -scheme Moonlet -configuration Release -sdk iphonesimulator -derivedDataPath ios/build",
+            "type": "ios.simulator",
+            "device": {
+                "type": "iPhone 11"
+            }
         }
     }
 }

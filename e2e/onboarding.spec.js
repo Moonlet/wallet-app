@@ -24,5 +24,14 @@ describe('Onboarding', () => {
         await element(by.id('recover-button')).tap();
 
         // Legal has been already accepted
+        // await expect(element(by.id('legal-modal'))).toBeVisible();
+        // await expect(element(by.id('legal-accept-button'))).toBeVisible();
+        // await element(by.id('legal-accept-button')).tap();
+
+        // Recover Screen
+        await expect(element(by.id('confirm'))).toBeVisible();
+
+        await expect(element(by.id('next-word'))).toBeVisible();
+        await element(by.id('next-word')).tap(); // multiTap(12);
     });
 });

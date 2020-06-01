@@ -190,18 +190,5 @@
     "lint-staged": {
         "*.{ts,tsx,scss,json,js}": ["npm run prettier", "git add"],
         "*.{ts,tsx}": ["npm run lint", "git add"]
-    },
-    "detox": {
-        "test-runner": "jest",
-        "configurations": {
-            "ios.debug": {
-                "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/Moonlet_beta.app",
-                "build": "xcodebuild -workspace ios/Moonlet.xcworkspace -scheme Moonlet_beta -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
-                "type": "ios.simulator",
-                "device": {
-                    "type": "iPhone 11"
-                }
-            }
-        }
     }
 }

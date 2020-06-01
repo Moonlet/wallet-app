@@ -23,9 +23,6 @@ describe('Onboarding', () => {
         await expect(element(by.id('recover-button'))).toBeVisible();
         await element(by.id('recover-button')).tap();
 
-        // Legal
-        await expect(element(by.id('legal-modal'))).toBeVisible();
-        await expect(element(by.id('legal-accept-button'))).toBeVisible();
-        await element(by.id('legal-accept-button')).tap();
+        // Legal has been already accepted
     });
 });

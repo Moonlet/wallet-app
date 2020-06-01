@@ -166,17 +166,23 @@ export class Client extends BlockchainGenericClient {
     ): Promise<any> {
         let gasEstimatePromise;
         if (contractAddress) {
-            gasEstimatePromise = this.http.jsonRpc('eth_estimateGas', [
-                {
-                    from,
-                    to: contractAddress,
-                    data:
-                        '0x' +
-                        abi
-                            .simpleEncode('transfer(address,uint256)', to, amount.toString())
-                            .toString('hex')
-                }
-            ]);
+            gasEstimatePromise = this.http
+                .jsonRpc('eth_estimateGas', [
+                    {
+                        from,
+                        to: contractAddress,
+                        data:
+                            '0x' +
+                            abi
+                                .simpleEncode('transfer(address,uint256)', to, amount.toString())
+                                .toString('hex')
+                    }
+                ])
+                .then(res => {
+                    res.result =
+                        '0x' + new BigNumber(res.result, 16).multipliedBy(1.3).toString(16);
+                    return res;
+                });
         } else {
             gasEstimatePromise = this.http.jsonRpc('eth_estimateGas', [{ from, to }]);
         }

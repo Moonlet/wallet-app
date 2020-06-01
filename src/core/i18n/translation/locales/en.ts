@@ -227,6 +227,7 @@ export const translation: ITranslations = {
         },
         Send: {
             inputAddress: 'Paste your address here or scan the QR code',
+            inputAddressExt: 'Paste your address here',
             memo: 'Memo (optional)',
             amount: 'Amount',
             recipientLabel: 'Recipient',

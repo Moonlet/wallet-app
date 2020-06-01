@@ -18,7 +18,9 @@
         "test": "jest",
         "lint": "tslint --fix '{src,extension}/**/*.{ts,tsx}'",
         "prettier": "prettier --write \"**/*.{js,ts,tsx,scss,json}\" --ignore-path .gitignore",
-        "postinstall": "jetify && ./scripts/ts-nockeck-files.sh"
+        "postinstall": "jetify && ./scripts/ts-nockeck-files.sh",
+        "detox:build:ios:debug": "detox build -c ios.debug",
+        "detox:test:ios:debug": "detox test -c ios.debug"
     },
     "dependencies": {
         "@ledgerhq/hw-app-eth": "^4.78.0",
@@ -152,12 +154,14 @@
         "babel-plugin-react-native-web": "^0.11.7",
         "babel-preset-react-native": "^4.0.1",
         "copy-webpack-plugin": "^5.0.4",
+        "detox": "^16.7.1",
         "html-webpack-plugin": "^3.2.0",
         "husky": "^3.0.8",
         "icon-font-generator": "^2.1.10",
         "jest": "^24.9.0",
         "lint-staged": "^9.4.1",
         "metro-react-native-babel-preset": "^0.56.0",
+        "mocha": "^7.2.0",
         "moment-locales-webpack-plugin": "^1.2.0",
         "node-fetch": "^2.6.0",
         "prettier": "^1.19.1",
@@ -186,5 +190,18 @@
     "lint-staged": {
         "*.{ts,tsx,scss,json,js}": ["npm run prettier", "git add"],
         "*.{ts,tsx}": ["npm run lint", "git add"]
+    },
+    "detox": {
+        "test-runner": "jest",
+        "configurations": {
+            "ios.debug": {
+                "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/Moonlet_beta.app",
+                "build": "xcodebuild -workspace ios/Moonlet.xcworkspace -scheme Moonlet_beta -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
+                "type": "ios.simulator",
+                "device": {
+                    "type": "iPhone 11"
+                }
+            }
+        }
     }
 }

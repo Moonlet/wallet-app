@@ -469,7 +469,7 @@ export class DashboardScreenComponent extends React.Component<
                 : 'auto';
 
         return (
-            <View style={[styles.container, { height: containerHeight }]}>
+            <View testID="DashboardScreen" style={[styles.container, { height: containerHeight }]}>
                 <TestnetBadge />
 
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />

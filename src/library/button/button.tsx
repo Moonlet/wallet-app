@@ -27,11 +27,14 @@ export interface IButtonProps {
     onPressIn?: any;
     onPressOut?: any;
     bottomLabel?: string;
+    testIDWrapper?: string;
+    testIDButton?: string;
 }
 
 export const ButtonComponent = (props: IButtonProps) => (
-    <View style={[props.styles.container, props.wrapperStyle]}>
+    <View testID={props?.testIDWrapper} style={[props.styles.container, props.wrapperStyle]}>
         <TouchableOpacity
+            testID={props?.testIDButton}
             disabled={props.disabled || props.disabledSecondary}
             onPress={props.onPress}
             onPressIn={props.onPressIn}

@@ -7,6 +7,7 @@
         "emulator": "cd ~/Library/Android/sdk/tools/; emulator -avd `emulator -list-avds | awk '{print $1}'`",
         "android": "npm run generate-icons && react-native run-android --variant=betaDebug --appIdSuffix=beta",
         "ios": "npm run ios:before-run && react-native run-ios --scheme Moonlet_beta",
+        "ios:live": "npm run ios:before-run && react-native run-ios --scheme Moonlet",
         "ios:pod-install": "cd ios && pod install",
         "ios:before-run": "npm run generate-icons & npm run ios:pod-install",
         "ext": "TARGET=beta BROWSER=chrome NODE_ENV=development webpack --mode development --config ./extension/webpack.config.js --watch --info-verbosity verbose",
@@ -21,8 +22,8 @@
         "postinstall": "jetify && ./scripts/ts-nockeck-files.sh",
         "detox:build:ios:debug": "detox build -c ios.debug",
         "detox:test:ios:debug": "detox test -c ios.debug",
-        "detox:build:ios:release": "detox build -c ios.release",
-        "detox:test:ios:release": "detox test -c ios.release"
+        "detox:build:android:emu:debug": "detox build -c android.emu.debug",
+        "detox:test:android:emu:debug": "detox test -c android.emu.debug"
     },
     "dependencies": {
         "@ledgerhq/hw-app-eth": "^4.78.0",

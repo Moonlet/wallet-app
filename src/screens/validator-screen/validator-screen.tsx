@@ -10,12 +10,17 @@ import { Blockchain } from '../../core/blockchain/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { INavigationProps, withNavigationParams } from '../../navigation/with-navigation-params';
 import { SmartImage } from '../../library/image/smart-image';
-import { IValidatorCard } from '../../core/blockchain/types/stats';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { translate } from '../../core/i18n';
+import { StatsComponent } from '../token/components/delegate-token/components/stats-component/stats-component';
+import { IValidator, CardActionType } from '../../core/blockchain/types/stats';
+import { ITokenState } from '../../redux/wallets/state';
 
 export interface INavigationParams {
-    validator: IValidatorCard;
+    validator: IValidator;
     blockchain: Blockchain;
+    accountIndex: number;
+    token: ITokenState;
 }
 
 const HeaderTitleComponent = (
@@ -29,7 +34,7 @@ const HeaderTitleComponent = (
             />
             <View style={{ flexDirection: 'column' }}>
                 <Text style={props.styles.labelName}>
-                    {props.navigation.state.params.validator.labelName}
+                    {props.navigation.state.params.validator.name}
                 </Text>
                 <Text style={props.styles.website}>
                     {props.navigation.state.params.validator.website}
@@ -56,9 +61,12 @@ export class ValidatorScreenComponent extends React.Component<
         const { styles, blockchain, validator } = this.props;
         const config = getBlockchain(blockchain).config;
 
-        const textTop = `${validator.totalLabel} (${validator.rank})`;
-        const amount = validator.totalAmountStd;
+        const textTop = `${translate(config.ui.validator.totalLabel)} (${validator.rank})`;
+        const amount = validator.amountDelegated;
         const token = getTokenConfig(blockchain, config.coin);
+
+        validator.actionType = CardActionType.CHECKBOX;
+        validator.actionTypeSelected = true;
 
         return (
             <View style={styles.container}>
@@ -80,12 +88,26 @@ export class ValidatorScreenComponent extends React.Component<
                         convert
                     />
                 </View>
-                <View style={{ flex: 1 }}></View>
+                <View style={{ flex: 1 }}>
+                    <StatsComponent
+                        accountStats={{
+                            topStats: validator.topStats,
+                            chartStats: validator.chartStats,
+                            secondaryStats: validator.secondaryStats
+                        }}
+                    />
+                </View>
 
                 <View style={styles.bottomContainer}>
                     <CtaGroup
                         mainCta={config.ui.token.validatorCTA.mainCta}
                         otherCtas={config.ui.token.validatorCTA.otherCtas}
+                        params={{
+                            accountIndex: this.props.accountIndex,
+                            blockchain: this.props.blockchain,
+                            token: this.props.token,
+                            validators: [validator]
+                        }}
                     />
                 </View>
             </View>

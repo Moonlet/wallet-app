@@ -32,5 +32,9 @@ export interface ITheme {
 
         gradientLight: string;
         gradientDark: string;
+
+        labelUndelegate: string;
+        labelRedelegate: string;
+        labelReward: string;
     };
 }

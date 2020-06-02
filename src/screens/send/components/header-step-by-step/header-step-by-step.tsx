@@ -9,7 +9,7 @@ import findIndex from 'lodash/findIndex';
 
 export interface IExternalProps {
     steps: { title: string; active?: boolean }[];
-    selectStep: (index: number) => void;
+    selectStep?: (index: number) => void;
 }
 
 export const HeaderStepByStepComponent = (

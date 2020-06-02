@@ -12,6 +12,7 @@ import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { TouchableHighlight } from 'react-native-gesture-handler';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { IconValues } from '../icon/values';
+import { NavigationService } from '../../navigation/navigation-service';
 
 export interface IProps {
     blockchain: Blockchain;
@@ -35,11 +36,15 @@ export const TokenCardComponent = (
                 style={{ marginTop: props.index === 0 ? 0 : BASE_DIMENSION }}
                 underlayColor={props.theme.colors.appBackground}
                 onPress={() => {
-                    props.navigation.navigate('Token', {
-                        accountIndex: props.account.index,
-                        blockchain: props.account.blockchain,
-                        token: props.token
-                    });
+                    NavigationService.navigate(
+                        'Token',
+                        {
+                            accountIndex: props.account.index,
+                            blockchain: props.account.blockchain,
+                            token: props.token
+                        },
+                        'TokenScreen-key'
+                    );
                 }}
             >
                 <View style={props.styles.container}>

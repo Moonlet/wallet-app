@@ -47,6 +47,10 @@ export interface IBlockchainConfig {
         };
     };
     ui: {
+        validator?: {
+            totalLabel: string;
+            amountCardLabel: string;
+        };
         token?: {
             labels: {
                 tabAccount?: string;
@@ -54,6 +58,7 @@ export interface IBlockchainConfig {
                 tabValidators?: string;
                 tabTransactions?: string;
             };
+            sendStepLabels: string[];
             accountCTA: {
                 mainCta: IButtonCTA;
             };

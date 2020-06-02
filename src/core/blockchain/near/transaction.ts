@@ -2,7 +2,8 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    IBlockchainTransactionUtils
+    IBlockchainTransactionUtils,
+    IPosTransaction
 } from '../types';
 import { INearTransactionAdditionalInfoType, NearTransactionActionType, Near } from './';
 import { TransactionStatus } from '../../wallet/types';
@@ -94,6 +95,10 @@ export class NearTransactionUtils implements IBlockchainTransactionUtils {
                 ]
             }
         };
+    }
+
+    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
+        throw new Error('Not Implemented');
     }
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {

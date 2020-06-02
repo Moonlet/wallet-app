@@ -2,7 +2,8 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    IBlockchainTransactionUtils
+    IBlockchainTransactionUtils,
+    IPosTransaction
 } from '../types';
 import { Transaction } from 'ethereumjs-tx';
 import abi from 'ethereumjs-abi';
@@ -31,6 +32,10 @@ export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
         transaction.sign(Buffer.from(privateKey, 'hex'));
 
         return '0x' + transaction.serialize().toString('hex');
+    }
+
+    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
+        throw new Error('Not Implemented');
     }
 
     public getTransactionStatusByCode(status: any): TransactionStatus {

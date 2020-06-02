@@ -9,6 +9,7 @@ export interface IBlockchainTransactionUtils {
     buildTransferTransaction(tx: ITransferTransaction): Promise<IBlockchainTransaction>;
     getTransactionAmount(tx: IBlockchainTransaction): string;
     getTransactionStatusByCode(status: any): TransactionStatus;
+    buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]>;
 }
 
 // tslint:disable-next-line:no-shadowed-variable
@@ -57,6 +58,20 @@ export interface IFeeOptions {
         low?: BigNumber;
         average?: BigNumber;
     };
+}
+
+export interface IPosTransaction {
+    account: IAccountState;
+    chainId: ChainIdType; // needed???
+    toAddress: string;
+    amount: string;
+    token: string;
+
+    //  nonce: number;
+    feeOptions: IFeeOptions;
+    //  currentBlockHash: string;
+    //  currentBlockNumber: number;
+    extraFields?: ITransferTransactionExtraFields;
 }
 
 export interface ITransferTransaction {

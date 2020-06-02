@@ -293,6 +293,10 @@ export class AddAddressComponent extends React.Component<
 
     public render() {
         const { styles, theme } = this.props;
+        const inputPlaceholder =
+            Platform.OS === 'web'
+                ? translate('Send.inputAddressExt')
+                : translate('Send.inputAddress');
 
         return (
             <View style={styles.container}>
@@ -304,7 +308,7 @@ export class AddAddressComponent extends React.Component<
                         testID="input-address"
                         style={styles.inputAddress}
                         placeholderTextColor={theme.colors.textSecondary}
-                        placeholder={translate('Send.inputAddress')}
+                        placeholder={inputPlaceholder}
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         editable={!this.state.isValidText}

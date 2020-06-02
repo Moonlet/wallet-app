@@ -125,15 +125,10 @@ export class TransactionRequestScreenComponent extends React.Component<
                     } else {
                         // The wallet has been removed from the app
                         // Maybe show a more relevant error message
-                        this.setState({
-                            error: {
-                                extensionError: true,
-                                generalError: false,
-                                tokenError: false,
-                                tokenErrorSymbol: undefined
-                            }
-                        });
+                        this.setExtensionTxError();
                     }
+                } else {
+                    this.setState({ extensionTxPayload: payload });
                 }
             } else {
                 this.setExtensionTxError();

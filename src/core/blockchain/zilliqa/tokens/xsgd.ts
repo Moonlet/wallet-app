@@ -1,6 +1,5 @@
 import { ITokenConfigState } from '../../../../redux/tokens/state';
 import { TokenScreenComponentType, TokenType } from '../../types/token';
-import BigNumber from 'bignumber.js';
 
 export const XSGD_MAINNET: ITokenConfigState = {
     name: 'Xsgd',
@@ -11,15 +10,10 @@ export const XSGD_MAINNET: ITokenConfigState = {
     contractAddress: 'zil1nhgpfnhjev6kthfnmzw64ladytcaptl6r7xcvn',
     removable: true,
     defaultOrder: 999,
-    decimals: 12,
+    decimals: 6,
     ui: {
         decimals: 3,
         tokenScreenComponent: TokenScreenComponentType.DEFAULT
     },
-    type: TokenType.ZRC2,
-    units: {
-        QA: new BigNumber(1),
-        LI: new BigNumber(Math.pow(10, 6)),
-        ZIL: new BigNumber(Math.pow(10, 12))
-    }
+    type: TokenType.ZRC2
 };

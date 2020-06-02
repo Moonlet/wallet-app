@@ -6,7 +6,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { translate } from '../i18n';
 import { ConnectExtension } from './connect-extension';
 import { database } from 'react-native-firebase';
-import { decrypt } from '../secure/encrypt/encrypt.web';
+import { decrypt } from '../secure/encrypt/encrypt.extension';
 import { IBlockchainTransaction } from '../blockchain/types';
 
 export const ConnectExtensionWeb = (() => {

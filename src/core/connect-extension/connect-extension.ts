@@ -1,6 +1,6 @@
 import { HttpClient } from '../utils/http-client';
 import CONFIG from '../../config';
-import { encrypt } from '../secure/encrypt/encrypt.web';
+import { encrypt } from '../secure/encrypt/encrypt.extension';
 import { extensionState } from './conn-ext-trim-state';
 import { store } from '../../redux/config';
 import { Notifications } from '../messaging/notifications/notifications';

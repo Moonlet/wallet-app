@@ -1,7 +1,7 @@
 {
     "test-runner": "jest",
     "configurations": {
-        "ios.debug": {
+        "ios.beta": {
             "binaryPath": "ios/build/Build/Products/Debug-iphonesimulator/Moonlet_beta.app",
             "build": "xcodebuild -workspace ios/Moonlet.xcworkspace -scheme Moonlet_beta -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build",
             "type": "ios.simulator",
@@ -9,7 +9,7 @@
                 "type": "iPhone 11"
             }
         },
-        "android.emu.debug": {
+        "android.emu.beta": {
             "binaryPath": "android/app/build/outputs/apk/beta/debug/app-beta-debug.apk",
             "build": "cd android && ./gradlew assembleBetaDebug assembleBetaDebugAndroidTest -DtestBuildType=debug && cd ..",
             "type": "android.emulator",

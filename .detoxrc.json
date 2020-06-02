@@ -13,7 +13,9 @@
             "binaryPath": "android/app/build/outputs/apk/beta/debug/app-beta-debug.apk",
             "build": "cd android && ./gradlew assembleBetaDebug assembleBetaDebugAndroidTest -DtestBuildType=debug && cd ..",
             "type": "android.emulator",
-            "name": "Pixel_2_API_29"
+            "device": {
+                "avdName": "Pixel_2_API_29"
+            }
         }
     }
 }

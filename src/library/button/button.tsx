@@ -32,9 +32,12 @@ export interface IButtonProps {
 }
 
 export const ButtonComponent = (props: IButtonProps) => (
-    <View testID={props?.testIDWrapper} style={[props.styles.container, props.wrapperStyle]}>
+    <View
+        testID={props?.testIDWrapper || 'buttonWrapper'}
+        style={[props.styles.container, props.wrapperStyle]}
+    >
         <TouchableOpacity
-            testID={props?.testIDButton}
+            testID={props?.testIDButton || 'button'}
             disabled={props.disabled || props.disabledSecondary}
             onPress={props.onPress}
             onPressIn={props.onPressIn}

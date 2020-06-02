@@ -51,7 +51,7 @@ export const ValidatorsListComponent = (
                     actionTypeSelected={validator.actionTypeSelected || false}
                     borderColor={
                         props.redelegate?.validator.id === validator.id
-                            ? props.theme.colors.redelegate
+                            ? props.theme.colors.labelRedelegate
                             : props.theme.colors.accent
                     }
                     blockchain={props.blockchain}

@@ -55,7 +55,7 @@ const validatorCTA = {
                 params: {
                     actionText: 'App.labels.claimReward',
                     basicAction: PosBasicActionType.CLAIM_REWARD,
-                    unlockDays: 3
+                    unlockDays: '3 days'
                 }
             }
         },

@@ -200,7 +200,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     actionType={CardActionType.DEFAULT}
                     bottomStats={validator.cardStats}
                     actionTypeSelected={validator.actionTypeSelected || false}
-                    borderColor={this.props.theme.colors.redelegate}
+                    borderColor={this.props.theme.colors.labelRedelegate}
                     blockchain={this.props.blockchain}
                     onSelect={() => {
                         //
@@ -213,7 +213,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     blockchain={this.props.blockchain}
                     redelegate={{
                         validator: this.props.validators[0],
-                        color: this.props.theme.colors.redelegate
+                        color: this.props.theme.colors.labelRedelegate
                     }}
                     onSelect={this.onSelect}
                     actionType={CardActionType.CHECKBOX}
@@ -250,7 +250,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
             >
                 <PrimaryCtaField
                     label={translate(this.props.actionText)}
-                    labelColor={this.props.theme.colors.redelegate}
+                    labelColor={this.props.theme.colors.labelRedelegate}
                     action={translate('App.labels.from').toLowerCase()}
                     value={this.state.redelegateFromValidator.name}
                 />

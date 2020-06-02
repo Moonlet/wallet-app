@@ -33,8 +33,8 @@ export interface ITheme {
         gradientLight: string;
         gradientDark: string;
 
-        undelegate: string;
-        redelegate: string;
-        reward: string;
+        labelUndelegate: string;
+        labelRedelegate: string;
+        labelReward: string;
     };
 }

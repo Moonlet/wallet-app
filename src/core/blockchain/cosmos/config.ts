@@ -86,7 +86,7 @@ const validatorCTA = {
                 params: {
                     actionText: 'App.labels.undelegate',
                     basicAction: PosBasicActionType.UNDELEGATE,
-                    unlockDays: 21
+                    unlockDays: '21 days'
                 }
             }
         }

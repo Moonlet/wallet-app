@@ -108,7 +108,7 @@ export class RedelegateConfirmComponent extends React.Component<
                 validators={this.props.validators}
                 actionText={this.props.actionText}
                 amount={this.state.amount}
-                bottomColor={this.props.theme.colors.redelegate}
+                bottomColor={this.props.theme.colors.labelRedelegate}
                 bottomActionText={'App.labels.from'}
                 showSteps={true}
                 feeOptions={this.state.feeOptions}

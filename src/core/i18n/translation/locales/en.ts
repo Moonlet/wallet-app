@@ -478,7 +478,7 @@ export const translation: ITranslations = {
             unlockText4: 'unvote',
             unlockText5: 'first.',
             unlockBottomText:
-                'It takes {{days}} days in order to unlock the amount and will be automatically withdrawn then deposited into your available balance.',
+                'It takes {{duration}} in order to unlock the amount and will be automatically withdrawn then deposited into your available balance.',
             claimRewardBottomText:
                 'The claimed reward you receive may be equal to or grater than what it displayed nou since rewards are accumulated each block.'
         }

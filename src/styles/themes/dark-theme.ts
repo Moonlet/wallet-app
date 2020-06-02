@@ -36,8 +36,8 @@ export const darkTheme: ITheme = {
         gradientLight: COLORS.COD_GRAY,
         gradientDark: COLORS.BLACK,
 
-        undelegate: COLORS.ORANGE,
-        redelegate: COLORS.HOT_RED,
-        reward: COLORS.GREEN
+        labelUndelegate: COLORS.ORANGE,
+        labelRedelegate: COLORS.HOT_RED,
+        labelReward: COLORS.GREEN
     }
 };

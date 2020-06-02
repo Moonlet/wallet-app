@@ -54,7 +54,7 @@ export interface INavigationParams {
     validators: IValidator[];
     actionText: string;
     basicAction: PosBasicActionType;
-    unlockDays?: number;
+    unlockDuration?: string;
 }
 
 interface IState {
@@ -112,17 +112,17 @@ export class PosBasicActionComponent extends React.Component<
         switch (this.props.basicAction) {
             case PosBasicActionType.UNLOCK:
             case PosBasicActionType.WITHDRAW: {
-                labelColor = theme.colors.redelegate;
+                labelColor = theme.colors.labelRedelegate;
                 break;
             }
             case PosBasicActionType.UNVOTE:
             case PosBasicActionType.UNDELEGATE:
             case PosBasicActionType.UNSTAKE: {
-                labelColor = theme.colors.undelegate;
+                labelColor = theme.colors.labelUndelegate;
                 break;
             }
             case PosBasicActionType.CLAIM_REWARD: {
-                labelColor = theme.colors.reward;
+                labelColor = theme.colors.labelReward;
                 break;
             }
             case PosBasicActionType.REINVEST: {
@@ -130,7 +130,7 @@ export class PosBasicActionComponent extends React.Component<
                 break;
             }
             default: {
-                labelColor = theme.colors.reward;
+                labelColor = theme.colors.labelReward;
                 break;
             }
         }
@@ -241,14 +241,14 @@ export class PosBasicActionComponent extends React.Component<
             },
             {
                 text: translate('Validator.unlockText2'),
-                style: { color: theme.colors.redelegate }
+                style: { color: theme.colors.labelRedelegate }
             },
             {
                 text: translate('Validator.unlockText3')
             },
             {
                 text: translate('Validator.unlockText4'),
-                style: { color: theme.colors.undelegate }
+                style: { color: theme.colors.labelUndelegate }
             },
             {
                 text: translate('Validator.unlockText5')
@@ -292,7 +292,7 @@ export class PosBasicActionComponent extends React.Component<
                         (PosBasicActionType.UNDELEGATE || PosBasicActionType.UNLOCK) && (
                         <Text style={styles.bottomText}>
                             {translate('Validator.unlockBottomText', {
-                                days: this.props.unlockDays || 3
+                                duration: this.props.unlockDuration || '3 days'
                             })}
                         </Text>
                     )}

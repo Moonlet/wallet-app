@@ -59,7 +59,7 @@ const validatorCTA = {
                 params: {
                     actionText: 'App.labels.unlock',
                     basicAction: PosBasicActionType.UNLOCK,
-                    unlockDays: 3
+                    unlockDays: '3 days'
                 }
             }
         }

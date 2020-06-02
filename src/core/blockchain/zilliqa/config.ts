@@ -1,6 +1,6 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenScreenComponentType } from '../types/token';
+import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import ZilIcon from '../../../assets/icons/blockchains/zil.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { XSGD_MAINNET } from './tokens/xsgd';
@@ -24,6 +24,61 @@ export const ZIL_NATIVE: ITokenConfigState = {
         LI: new BigNumber(Math.pow(10, 6)),
         ZIL: new BigNumber(Math.pow(10, 12))
     }
+};
+
+export const accountCTA = {
+    mainCta: {
+        title: 'App.labels.quickStake',
+        iconName: 'vote',
+        navigateTo: {
+            screen: 'PosQuickDelegate',
+            params: { actionText: 'App.labels.quickStake' }
+        }
+    }
+};
+
+const validatorCTA = {
+    mainCta: {
+        title: 'App.labels.stake',
+        iconName: 'vote',
+        navigateTo: {
+            screen: 'PosDelegate',
+            params: { actionText: 'App.labels.stake' }
+        }
+    },
+    otherCtas: [
+        {
+            title: 'App.labels.claimReward',
+            iconName: 'claim-reward',
+            navigateTo: {
+                screen: 'PosBasicAction',
+                params: {
+                    actionText: 'App.labels.claimReward',
+                    basicAction: PosBasicActionType.CLAIM_REWARD,
+                    unlockDays: '3 days'
+                }
+            }
+        },
+        {
+            title: 'App.labels.restake',
+            iconName: 'revote',
+            navigateTo: {
+                screen: 'PosRedelegate',
+                params: { actionText: 'App.labels.restake' }
+            }
+        },
+        {
+            title: 'App.labels.unstake',
+            iconName: 'unvote',
+            navigateTo: {
+                screen: 'PosBasicAction',
+                params: {
+                    actionText: 'App.labels.unstake',
+                    basicAction: PosBasicActionType.UNSTAKE
+                }
+            }
+        }
+    ]
 };
 
 export const config: IBlockchainConfig = {
@@ -58,6 +113,28 @@ export const config: IBlockchainConfig = {
         }
     },
     ui: {
+        validator: {
+            totalLabel: 'Validator.totalStake',
+            amountCardLabel: 'Validator.myStake'
+        },
+        token: {
+            labels: {
+                tabAccount: 'App.labels.account',
+                tabDelegations: 'App.labels.myStakes',
+                tabValidators: 'App.labels.validators',
+                tabTransactions: 'App.labels.transactions'
+            },
+            sendStepLabels: [
+                'Validator.selectValidator',
+                'App.labels.enterAmount',
+                'Validator.confirmStake'
+            ],
+            accountCTA,
+            delegationCTA: {
+                mainCta: accountCTA.mainCta
+            },
+            validatorCTA
+        },
         addressDisplay: 'stripped',
         enableTokenManagement: true,
         enableAccountCreation: false,

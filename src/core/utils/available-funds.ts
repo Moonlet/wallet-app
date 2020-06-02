@@ -21,7 +21,8 @@ export const availableFunds = (
     account: IAccountState,
     token: ITokenState,
     chainId: ChainIdType,
-    feeOptions: IFeeOptions
+    feeOptions: IFeeOptions,
+    balanceAvailable?: string
 ): { insufficientFunds: boolean; insufficientFundsFees: boolean } => {
     const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
 
@@ -32,7 +33,9 @@ export const availableFunds = (
 
     // Amount check
     const inputAmount = getInputAmountToStd(account, token, amount);
-    const availableBalanceValue = new BigNumber(token.balance?.value);
+    const availableBalanceValue = balanceAvailable
+        ? getInputAmountToStd(account, token, balanceAvailable)
+        : new BigNumber(token.balance?.value);
 
     // Amount > available amount
     result.insufficientFunds = inputAmount.isGreaterThan(availableBalanceValue);
@@ -65,11 +68,14 @@ export const availableFunds = (
 export const availableAmount = (
     account: IAccountState,
     token: ITokenState,
-    feeOptions?: IFeeOptions
+    feeOptions?: IFeeOptions,
+    balanceAvailable?: string
 ): string => {
     const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
 
-    let balance: BigNumber = new BigNumber(token.balance?.value);
+    let balance: BigNumber = balanceAvailable
+        ? getInputAmountToStd(account, token, balanceAvailable)
+        : new BigNumber(token.balance?.value);
     if (feeOptions) {
         if (tokenConfig.type === TokenType.NATIVE) {
             balance = balance.minus(feeOptions?.feeTotal);

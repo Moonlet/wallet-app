@@ -3,28 +3,31 @@ import { View } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
-import {
-    moonletValidator,
-    chainLayerValidator
-} from '../../../../../../../core/blockchain/cosmos/stats';
 import { ValidatorsList } from '../../validators/validators-list/validators-list';
 import { SearchInput } from '../../../../../../../components/search-input/search-input';
 import { translate } from '../../../../../../../core/i18n';
 import { bind } from 'bind-decorator';
-import { IValidatorCard } from '../../../../../../../core/blockchain/types/stats';
+import { IValidator, CardActionType } from '../../../../../../../core/blockchain/types/stats';
 import { Blockchain } from '../../../../../../../core/blockchain/types/blockchain';
 import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
-
-const validators = [moonletValidator, chainLayerValidator, chainLayerValidator];
+import { NavigationService } from '../../../../../../../navigation/navigation-service';
+import { ChainIdType } from '../../../../../../../core/blockchain/types';
+import { ITokenState } from '../../../../../../../redux/wallets/state';
+import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
 
 export interface IProps {
+    accountIndex: number;
     blockchain: Blockchain;
+    token: ITokenState;
+    chainId: ChainIdType;
 }
 
 interface IState {
-    validatorsList: IValidatorCard[];
+    validatorsFilteredList: IValidator[];
+    unfilteredList: IValidator[];
 }
+let searchTimeoutTimer: any;
 
 export class DelegationsTabComponent extends React.Component<
     IProps & IThemeProps<ReturnType<typeof stylesProvider>>,
@@ -34,21 +37,45 @@ export class DelegationsTabComponent extends React.Component<
         super(props);
 
         this.state = {
-            validatorsList: validators
+            validatorsFilteredList: [],
+            unfilteredList: []
         };
+    }
+
+    public componentDidMount() {
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+        blockchainInstance
+            .getStats(this.props.chainId)
+            .getValidatorList(CardActionType.NAVIGATE, -1)
+            .then(validators => {
+                this.setState({ validatorsFilteredList: validators, unfilteredList: validators });
+            })
+            .catch();
     }
 
     @bind
     public onSearchInput(text: string) {
-        const filteredList = validators.filter(
-            validator => validator.labelName.toLowerCase().includes(text.toLowerCase()) === true
-        );
-        this.setState({ validatorsList: filteredList });
+        searchTimeoutTimer && clearTimeout(searchTimeoutTimer);
+        searchTimeoutTimer = setTimeout(async () => {
+            const filteredList = this.state.unfilteredList.filter(
+                validator => validator.name.toLowerCase().includes(text.toLowerCase()) === true
+            );
+            this.setState({ validatorsFilteredList: filteredList });
+        }, 200);
     }
 
     @bind
     public onClose() {
-        this.setState({ validatorsList: validators });
+        this.setState({ validatorsFilteredList: this.state.unfilteredList });
+    }
+    @bind
+    public onSelect(validator: IValidator) {
+        NavigationService.navigate('Validator', {
+            blockchain: this.props.blockchain,
+            validator,
+            accountIndex: this.props.accountIndex,
+            token: this.props.token
+        });
     }
 
     public render() {
@@ -65,12 +92,22 @@ export class DelegationsTabComponent extends React.Component<
                         />
                     </View>
                     <ValidatorsList
-                        validators={this.state.validatorsList}
+                        validators={this.state.validatorsFilteredList}
                         blockchain={this.props.blockchain}
+                        onSelect={this.onSelect}
+                        actionType={CardActionType.NAVIGATE}
                     />
                 </View>
                 <View style={styles.bottomContainer}>
-                    <CtaGroup mainCta={tokenUiConfig.accountCTA.mainCta} />
+                    <CtaGroup
+                        mainCta={tokenUiConfig.accountCTA.mainCta}
+                        params={{
+                            accountIndex: this.props.accountIndex,
+                            blockchain: this.props.blockchain,
+                            token: this.props.token,
+                            validators: [moonletValidator]
+                        }}
+                    />
                 </View>
             </View>
         );

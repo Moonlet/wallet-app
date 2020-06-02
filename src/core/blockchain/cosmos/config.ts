@@ -1,6 +1,6 @@
 import { IBlockchainConfig, DerivationType } from '../types';
 import { BigNumber } from 'bignumber.js';
-import { TokenType, TokenScreenComponentType } from '../types/token';
+import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import CosmosIcon from '../../../assets/icons/blockchains/cosmos.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 
@@ -31,7 +31,10 @@ export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickDelegate',
         iconName: 'vote',
-        navigateTo: { screen: undefined, params: undefined }
+        navigateTo: {
+            screen: 'PosQuickDelegate',
+            params: { actionText: 'App.labels.delegate' }
+        }
     }
 };
 
@@ -39,28 +42,53 @@ const validatorCTA = {
     mainCta: {
         title: 'App.labels.delegate',
         iconName: 'vote',
-        navigateTo: { screen: undefined, params: undefined }
+        navigateTo: {
+            screen: 'PosDelegate',
+            params: { actionText: 'App.labels.delegate' }
+        }
     },
     otherCtas: [
         {
             title: 'App.labels.claimReward',
             iconName: 'claim-reward',
-            navigateTo: { screen: undefined, params: undefined }
+            navigateTo: {
+                screen: 'PosBasicAction',
+                params: {
+                    actionText: 'App.labels.claimReward',
+                    basicAction: PosBasicActionType.CLAIM_REWARD
+                }
+            }
         },
         {
             title: 'App.labels.reinvest',
             iconName: 'reinvest',
-            navigateTo: { screen: undefined, params: undefined }
+            navigateTo: {
+                screen: 'PosBasicAction',
+                params: {
+                    actionText: 'App.labels.reinvest',
+                    basicAction: PosBasicActionType.REINVEST
+                }
+            }
         },
         {
             title: 'App.labels.redelegate',
             iconName: 'revote',
-            navigateTo: { screen: undefined, params: undefined }
+            navigateTo: {
+                screen: 'PosRedelegate',
+                params: { actionText: 'App.labels.redelegate' }
+            }
         },
         {
             title: 'App.labels.undelegate',
             iconName: 'unvote',
-            navigateTo: { screen: undefined, params: undefined }
+            navigateTo: {
+                screen: 'PosBasicAction',
+                params: {
+                    actionText: 'App.labels.undelegate',
+                    basicAction: PosBasicActionType.UNDELEGATE,
+                    unlockDays: '21 days'
+                }
+            }
         }
     ]
 };
@@ -96,6 +124,10 @@ export const config: IBlockchainConfig = {
         }
     },
     ui: {
+        validator: {
+            totalLabel: 'Validator.totalDelegated',
+            amountCardLabel: 'Validator.delegation'
+        },
         token: {
             labels: {
                 tabAccount: 'App.labels.account',
@@ -103,6 +135,11 @@ export const config: IBlockchainConfig = {
                 tabValidators: 'App.labels.validators',
                 tabTransactions: 'App.labels.transactions'
             },
+            sendStepLabels: [
+                'Validator.selectValidator',
+                'App.labels.enterAmount',
+                'Validator.confirmStake'
+            ],
             accountCTA,
             delegationCTA: {
                 mainCta: accountCTA.mainCta

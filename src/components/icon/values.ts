@@ -42,6 +42,7 @@ export enum IconValues {
     OUTBOUND = 'outbound',
     PENCIL = 'pencil',
     PENDING = 'pending',
+    PLUS = 'plus',
     QR_CODE_SCAN = 'qr-code-scan',
     REINVEST = 'reinvest',
     REVOTE = 'revote',

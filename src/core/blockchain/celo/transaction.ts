@@ -1,5 +1,10 @@
 import { EthereumTransactionUtils } from '../ethereum/transaction';
-import { ITransferTransaction, IBlockchainTransaction, TransactionType } from '../types';
+import {
+    ITransferTransaction,
+    IBlockchainTransaction,
+    TransactionType,
+    IPosTransaction
+} from '../types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { Celo } from '.';
 import { TokenType } from '../types/token';
@@ -57,6 +62,10 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
         const rawTx = txData.slice(0, 9).concat([signature.v, signature.r, signature.s]);
 
         return encode(rawTx);
+    }
+
+    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
+        throw new Error('Not Implemented');
     }
 
     public async buildTransferTransaction(

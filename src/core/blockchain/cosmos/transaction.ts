@@ -2,7 +2,8 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    IBlockchainTransactionUtils
+    IBlockchainTransactionUtils,
+    IPosTransaction
 } from '../types';
 import secp256k1 from 'secp256k1/elliptic';
 import { createHash } from 'crypto';
@@ -45,6 +46,10 @@ export class CosmosTransactionUtils implements IBlockchainTransactionUtils {
             mode: 'sync'
         };
         return signedTx;
+    }
+
+    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
+        throw new Error('Not Implemented');
     }
 
     public async buildTransferTransaction(

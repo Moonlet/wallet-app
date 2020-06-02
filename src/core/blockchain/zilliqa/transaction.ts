@@ -2,7 +2,8 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    IBlockchainTransactionUtils
+    IBlockchainTransactionUtils,
+    IPosTransaction
 } from '../types';
 
 import * as ZilliqaJsAccountUtil from '@zilliqa-js/account/dist/util';
@@ -65,6 +66,10 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
         transaction.toAddr = toChecksumAddress(transaction.toAddr).replace('0x', '');
 
         return transaction;
+    }
+
+    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
+        return;
     }
 
     public async buildTransferTransaction(
@@ -146,6 +151,8 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
                     status: TransactionStatus.PENDING
                 };
         }
+
+        // return enrichtransaction(finaltransaction);
     }
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {

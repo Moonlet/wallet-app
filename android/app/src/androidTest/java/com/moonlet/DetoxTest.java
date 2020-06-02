@@ -15,8 +15,6 @@ import androidx.test.rule.ActivityTestRule;
 public class DetoxTest {
 
     @Rule
-    // Replace 'MainActivity' with the value of android:name entry in
-    // <activity> in AndroidManifest.xml
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class, false, false);
 
     @Test

@@ -40,6 +40,7 @@ export const translation: ITranslations = {
                 delete: 'Delete',
                 details: 'Details',
                 disconnect: 'Sign out',
+                enterAmount: 'Enter\namount',
                 editToken: 'Edit token',
                 error: 'Error',
                 extensionNotConnected: 'Connecting to phone',
@@ -49,6 +50,7 @@ export const translation: ITranslations = {
                 fee: 'Fee',
                 fees: 'Fees',
                 find: 'Find',
+                for: 'For',
                 from: 'From',
                 half: 'Half',
                 holdUnveil: 'Hold to unveil',
@@ -56,8 +58,9 @@ export const translation: ITranslations = {
                 legal: 'Legal',
                 low: 'Low',
                 maybeLater: 'Maybe later',
-                myVotes: 'My Votes',
                 mnemonicNotValid: 'Your mnemonic is not valid!',
+                myVotes: 'My Votes',
+                myStakes: 'My Stakes',
                 network: 'Network',
                 next: 'Next',
                 nextWord: 'Next word',
@@ -66,6 +69,7 @@ export const translation: ITranslations = {
                 privacyPolicy: 'Privacy policy',
                 quickDelegate: 'Quick Delegate',
                 quickVote: 'Quick Vote',
+                quickStake: 'Quick Stake',
                 receive: 'Receive',
                 recipient: 'Recipient',
                 recover: 'Recover',
@@ -73,6 +77,7 @@ export const translation: ITranslations = {
                 reinvest: 'Reinvest',
                 reset: 'Reset',
                 resetAll: 'Reset all',
+                restake: 'Restake',
                 revote: 'Revote',
                 rewards: 'Rewards',
                 save: 'Save',
@@ -86,6 +91,7 @@ export const translation: ITranslations = {
                 simple: 'Simple',
                 simpleSetup: 'Simple setup',
                 standard: 'Standard',
+                stake: 'Stake',
                 startConnect: 'Start connect',
                 statistics: 'Statistics',
                 status: 'Status',
@@ -103,6 +109,7 @@ export const translation: ITranslations = {
                 undelegate: 'Undelegate',
                 unvote: 'Unvote',
                 unlock: 'Unlock',
+                unstake: 'Unstake',
                 validators: 'Validators',
                 vote: 'Vote',
                 wallets: 'Wallets',
@@ -252,7 +259,7 @@ export const translation: ITranslations = {
             editContactName: 'Edit name',
             reviewTransaction: 'Review transaction on your hardware wallet',
             addAddress: 'Add\naddress',
-            enterAmount: 'Enter\namount',
+
             confirmTransaction: 'Confirm\ntransaction'
         },
 
@@ -449,6 +456,7 @@ export const translation: ITranslations = {
             title: 'Transaction request',
             walletName: 'Wallet name',
             accountName: 'Account name',
+            errorMessage: 'Transaction request is not valid anymore.',
             errorMsgExtension: 'Transaction request is not valid anymore.',
             errorMsgToken:
                 'This transaction request is not supported. Please go to  Dashboard > Menu > Manage account and add {{token}} token.',
@@ -456,6 +464,24 @@ export const translation: ITranslations = {
                 'This transaction request is not supported. Please create a ticket and let us know what you tried to do and what went wrong.',
             insufficientFunds:
                 'You don’t have enough funds for this transaction request. Either select a different wallet/account or add more funds to this account.'
+        },
+        Validator: {
+            selectValidator: 'Select\nvalidator(s)',
+            confirmVote: 'Confirm\nvote(s)',
+            confirmStake: 'Confirm\nstake(s)',
+            totalStake: 'Total Stake',
+            totalDelegated: 'Total Delegated',
+            myStake: 'My Stake',
+            delegation: 'Delegation',
+            unlockText1: 'You can only',
+            unlockText2: 'unlock',
+            unlockText3: 'the funds that are not voting.\n In order to unlock all funds, please',
+            unlockText4: 'unvote',
+            unlockText5: 'first.',
+            unlockBottomText:
+                'It takes {{duration}} in order to unlock the amount and will be automatically withdrawn then deposited into your available balance.',
+            claimRewardBottomText:
+                'The claimed reward you receive may be equal to or grater than what it displayed nou since rewards are accumulated each block.'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -7,11 +7,13 @@ export const NavigationService = (() => {
         navigator = navigatorRef;
     };
 
-    const navigate = (routeName: string, params: NavigationParams) => {
+    const navigate = (routeName: string, params: NavigationParams, key?: string) => {
         navigator?.dispatch(
             NavigationActions.navigate({
                 routeName,
-                params
+                params,
+                action: undefined,
+                key
             })
         );
     };
@@ -29,8 +31,8 @@ export const NavigationService = (() => {
         navigator?.dispatch(StackActions.popToTop());
     };
 
-    const goBack = () => {
-        navigator?.dispatch(NavigationActions.back());
+    const goBack = (key?: string) => {
+        navigator?.dispatch(NavigationActions.back({ key }));
     };
 
     const getRecursiveRoute = routeState => {

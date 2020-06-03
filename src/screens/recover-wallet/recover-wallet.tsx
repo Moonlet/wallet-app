@@ -200,16 +200,15 @@ export class RecoverWalletScreenComponent extends React.Component<
                         keyboardShouldPersistTaps={'handled'}
                     >
                         {this.state.suggestions.map((word, i) => (
-                            <View key={i}>
-                                <Button
-                                    testID={`button-suggestion-${i}`}
-                                    secondary
-                                    style={styles.suggestionButton}
-                                    onPress={() => this.fillMnemonicText(word)}
-                                >
-                                    {word}
-                                </Button>
-                            </View>
+                            <Button
+                                key={i}
+                                testID={`button-suggestion-${i}`}
+                                secondary
+                                wrapperStyle={styles.suggestionButton}
+                                onPress={() => this.fillMnemonicText(word)}
+                            >
+                                {word}
+                            </Button>
                         ))}
                     </ScrollView>
                 </View>

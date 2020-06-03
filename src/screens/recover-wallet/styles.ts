@@ -48,9 +48,7 @@ export default (theme: ITheme) =>
             paddingTop: BASE_DIMENSION / 4
         },
         suggestionButton: {
-            paddingVertical: normalize(6),
-            marginHorizontal: BASE_DIMENSION / 2,
-            borderWidth: 1
+            marginRight: BASE_DIMENSION
         },
         bottomButton: {
             flex: 1,

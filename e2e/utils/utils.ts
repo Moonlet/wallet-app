@@ -15,19 +15,20 @@ export const typeWord = async (word: string) => {
     }
 
     // Focus next input
-    await nextWord();
+    await nextWordTap();
 };
 
 export const typeMnemonic = async (mnemonic: string) => {
     const arr = mnemonic.split(' ');
 
+    // @ts-ignore
     for (let i = 0; i < arr.length; i++) {
         await typeWord(arr[i]);
     }
 };
 
-export const nextWord = async () => elementTap('next-word');
+export const nextWordTap = async () => elementTap('next-word');
 
-export const confirm = async () => elementTap('confirm');
+export const confirmTap = async () => elementTap('confirm');
 
 export const getText = async (key: string) => ((await getProps(element(by.id(key)))) as any).text;

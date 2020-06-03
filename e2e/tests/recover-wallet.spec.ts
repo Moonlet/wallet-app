@@ -1,4 +1,4 @@
-import { nextWord, confirm, elementTap, elementVisible, typeMnemonic } from '../utils/utils';
+import { nextWordTap, confirmTap, elementTap, elementVisible, typeMnemonic } from '../utils/utils';
 
 describe('Recover Wallet', () => {
     beforeEach(async () => {
@@ -21,7 +21,7 @@ describe('Recover Wallet', () => {
         await elementVisible('recover-wallet-screen');
 
         // Focus first word
-        await nextWord();
+        await nextWordTap();
 
         // TODO: store it as secret
         const mnemonic12 =
@@ -30,6 +30,6 @@ describe('Recover Wallet', () => {
         await typeMnemonic(mnemonic12);
 
         // Confirm
-        await confirm();
+        await confirmTap();
     });
 });

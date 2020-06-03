@@ -21,7 +21,6 @@ export const typeWord = async (word: string) => {
 export const typeMnemonic = async (mnemonic: string) => {
     const arr = mnemonic.split(' ');
 
-    // @ts-ignore
     for (let i = 0; i < arr.length; i++) {
         await typeWord(arr[i]);
     }

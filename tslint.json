@@ -12,7 +12,8 @@
                 "allowTernary": true,
                 "allowTaggedTemplates": true
             }
-        ]
+        ],
+        "prefer-for-of": false
     },
     "rulesDirectory": ["node_modules/tslint-microsoft-contrib"]
 }

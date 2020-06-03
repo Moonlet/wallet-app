@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`creat wallet terms screen component renders correctly 1`] = `
-"<View style={{...}}>
+"<View testID=\\"create-wallet-mnemonic-1\\" style={{...}}>
   <withTheme(TextComponent) style={{...}}>
     Here’s your recovery phrase. Please write all 12 words down and keep them safe.
   </withTheme(TextComponent)>
@@ -26,13 +26,13 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
     </withTheme(ButtonComponent)>
   </View>
   <View style={{...}}>
-    <withTheme(CheckboxComponent) onPress={[Function: onPress]} checked={false} text=\\"The recovery phrase is the only way to restore your Moonlet wallet in case you lose your phone or forget your password. Don’t lose it!\\" textStyle={{...}} />
+    <withTheme(CheckboxComponent) testID=\\"checkbox\\" onPress={[Function: onPress]} checked={false} text=\\"The recovery phrase is the only way to restore your Moonlet wallet in case you lose your phone or forget your password. Don’t lose it!\\" textStyle={{...}} />
   </View>
   <View style={{...}}>
     <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]}>
       Copy entire mnemonic
     </withTheme(ButtonComponent)>
-    <withTheme(ButtonComponent) testID=\\"button-next\\" primary={true} onPress={[Function: onPress]} disabled={true}>
+    <withTheme(ButtonComponent) testID=\\"button-next\\" testIDButton=\\"next-button-1\\" primary={true} onPress={[Function: onPress]} disabled={true}>
       Next
     </withTheme(ButtonComponent)>
   </View>

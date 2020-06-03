@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`library checkbox renders correctly 1`] = `
-"<TouchableOpacity disabled={[undefined]} onPress={[undefined]} style={{...}} activeOpacity={0.2}>
+"<TouchableOpacity testID=\\"checkbox\\" disabled={[undefined]} onPress={[undefined]} style={{...}} activeOpacity={0.2}>
   <Icon name=\\"check-box\\" size={33} style={{...}} allowFontScaling={false} />
   <withTheme(TextComponent) style={{...}}>
     agree

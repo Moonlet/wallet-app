@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`creat wallet terms screen component renders correctly 1`] = `
-"<View style={{...}}>
+"<View testID=\\"onboarding-screen\\" style={{...}}>
   <View style={{...}}>
     <Image style={{...}} source={{...}} />
     <View style={{...}}>
@@ -15,14 +15,14 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
   </View>
   <View style={{...}}>
     <View style={{...}}>
-      <withTheme(ButtonComponent) style={{...}} wrapperStyle={{...}} onPress={[Function: onPress]} testID=\\"button-recover\\">
+      <withTheme(ButtonComponent) testIDButton=\\"recover-button\\" style={{...}} wrapperStyle={{...}} onPress={[Function: onPress]} testID=\\"button-recover\\">
         Recover
       </withTheme(ButtonComponent)>
       <withTheme(ButtonComponent) style={{...}} wrapperStyle={{...}} onPress={[Function: onPress]}>
         Connect
       </withTheme(ButtonComponent)>
     </View>
-    <withTheme(ButtonComponent) testID=\\"button-create\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+    <withTheme(ButtonComponent) testIDButton=\\"create-button\\" testID=\\"button-create\\" style={{...}} primary={true} onPress={[Function: onPress]}>
       Create
     </withTheme(ButtonComponent)>
     <withTheme(ButtonComponent) testID=\\"button-generate\\" style={{...}} primary={true} onPress={[Function: onPress]}>

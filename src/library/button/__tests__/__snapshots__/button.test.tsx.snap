@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`library button renders correctly 1`] = `
-"<View style={{...}}>
-  <TouchableOpacity disabled={[undefined]} onPress={[undefined]} onPressIn={[undefined]} onPressOut={[undefined]} style={{...}} activeOpacity={0.2}>
+"<View testID=\\"buttonWrapper\\" style={{...}}>
+  <TouchableOpacity testID=\\"button\\" disabled={[undefined]} onPress={[undefined]} onPressIn={[undefined]} onPressOut={[undefined]} style={{...}} activeOpacity={0.2}>
     <withTheme(TextComponent) style={{...}}>
       dummy
     </withTheme(TextComponent)>

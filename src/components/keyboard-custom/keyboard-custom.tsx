@@ -112,6 +112,7 @@ export class KeyboardComponent extends React.Component<
 
         return this.props.buttons?.map((button: IKeyboardButton, index: any) => (
             <TouchableOpacity
+                testID={button.label.replace(/ /g, '-').toLowerCase()}
                 key={index}
                 onPress={button.onPress}
                 onPressIn={button?.onPressIn}

@@ -60,5 +60,17 @@ describe('Create Wallet', () => {
 
         // Confirm
         await confirmTap();
+
+        // Password Terms Screen
+        await elementVisible('password-terms-screen');
+        await elementTap('pass-terms-checkbox');
+        await elementTap('understand-button');
+
+        // Password Pin Screen
+        await elementVisible('password-pin-screen');
+        await typeWord('123456'); // set pin code
+        await typeWord('123456'); // verify pin code
+
+        await elementVisible('dashboard-screen');
     });
 });

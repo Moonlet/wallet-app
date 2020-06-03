@@ -175,6 +175,7 @@ export class PasswordPinComponent extends React.Component<
                 {rowValues.map((digit: string, index: any) => {
                     return [
                         <TouchableOpacity
+                            testID={`key-${digit}`}
                             key={index}
                             style={styles.keyContainer}
                             onPress={() => this.fillPassword(digit)}
@@ -283,7 +284,11 @@ export class PasswordPinComponent extends React.Component<
         const { styles } = this.props;
 
         return (
-            <SafeAreaView forceInset={{ bottom: 'never' }} style={styles.container}>
+            <SafeAreaView
+                testID="password-pin-screen"
+                forceInset={{ bottom: 'never' }}
+                style={styles.container}
+            >
                 <Image
                     style={styles.logoImage}
                     source={require('../../../../assets/images/png/moonlet_space_gray.png')}

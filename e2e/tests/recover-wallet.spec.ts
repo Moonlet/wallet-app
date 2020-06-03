@@ -1,4 +1,11 @@
-import { nextWordTap, confirmTap, elementTap, elementVisible, typeMnemonic } from '../utils/utils';
+import {
+    nextWordTap,
+    confirmTap,
+    elementTap,
+    elementVisible,
+    typeMnemonic,
+    typeWord
+} from '../utils/utils';
 
 describe('Recover Wallet', () => {
     beforeEach(async () => {
@@ -31,5 +38,17 @@ describe('Recover Wallet', () => {
 
         // Confirm
         await confirmTap();
+
+        // Password Terms Screen
+        await elementVisible('password-terms-screen');
+        await elementTap('pass-terms-checkbox');
+        await elementTap('understand-button');
+
+        // Password Pin Screen
+        await elementVisible('password-pin-screen');
+        await typeWord('112266'); // set pin code
+        await typeWord('112266'); // verify pin code
+
+        await elementVisible('dashboard-screen');
     });
 });

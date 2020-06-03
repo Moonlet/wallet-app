@@ -137,8 +137,7 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
                     )}
 
                     <Button
-                        testID="button-next"
-                        testIDButton={`next-button-${step}`}
+                        testID={`next-button-${step}`}
                         primary
                         onPress={() => {
                             if (this.props.step === MNEMONIC_LENGTH / NR_MNEMONICS_SCREEN) {

@@ -114,11 +114,10 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
                 <View style={styles.buttonsContainer}>
                     <View style={styles.topButtons}>
                         <Button
-                            testIDButton="recover-button"
+                            testID="recover-button"
                             style={[styles.leftButton]}
                             wrapperStyle={{ flex: 1 }}
                             onPress={() => this.onPressRecover()}
-                            testID="button-recover"
                         >
                             {translate('App.labels.recover')}
                         </Button>
@@ -132,8 +131,7 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
                     </View>
 
                     <Button
-                        testIDButton="create-button"
-                        testID="button-create"
+                        testID="create-button"
                         style={styles.bottomButton}
                         primary
                         onPress={() => this.onPressCreate()}

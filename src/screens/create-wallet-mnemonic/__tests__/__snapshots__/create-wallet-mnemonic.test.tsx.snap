@@ -32,7 +32,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
     <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]}>
       Copy entire mnemonic
     </withTheme(ButtonComponent)>
-    <withTheme(ButtonComponent) testID=\\"button-next\\" testIDButton=\\"next-button-1\\" primary={true} onPress={[Function: onPress]} disabled={true}>
+    <withTheme(ButtonComponent) testID=\\"next-button-1\\" primary={true} onPress={[Function: onPress]} disabled={true}>
       Next
     </withTheme(ButtonComponent)>
   </View>

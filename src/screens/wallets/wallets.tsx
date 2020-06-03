@@ -316,7 +316,7 @@ export class WalletsScreenComponent extends React.Component<
                         [WalletType.HD]: Platform.OS !== 'web' && (
                             <View style={styles.buttonContainer}>
                                 <Button
-                                    testIDButton="create-button"
+                                    testID="create-button"
                                     style={styles.bottomButton}
                                     wrapperStyle={{ flex: 1 }}
                                     onPress={() => this.onPressCreate()}
@@ -324,7 +324,7 @@ export class WalletsScreenComponent extends React.Component<
                                     {translate('App.labels.create')}
                                 </Button>
                                 <Button
-                                    testIDButton="recover-button"
+                                    testID="recover-button"
                                     style={styles.bottomButton}
                                     wrapperStyle={{ flex: 1 }}
                                     onPress={() => this.onPressRecover()}

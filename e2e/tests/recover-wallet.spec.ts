@@ -1,54 +1,49 @@
-import {
-    nextWordTap,
-    confirmTap,
-    elementTap,
-    elementVisible,
-    typeMnemonic,
-    typeWord
-} from '../utils/utils';
+import * as utils from '../utils/utils';
+import * as customKeyboard from '../utils/custom-keyboard';
 
 describe('Recover Wallet', () => {
     beforeEach(async () => {
-        await device.reloadReactNative();
+        // await device.reloadReactNative(); // use only if needed
     });
 
-    it('Recover Flow', async () => {
-        await elementVisible('onboarding-screen');
+    it('Fresh install', async () => {
+        // Onboarding Screen
+        await utils.expectElementVisible('onboarding-screen');
 
         // Recover Button
-        await elementVisible('recover-button');
-        await elementTap('recover-button');
+        await utils.expectElementVisible('recover-button');
+        await utils.elementTap('recover-button');
 
         // Legal
-        await elementVisible('legal-modal');
-        await elementVisible('legal-accept-button');
-        await elementTap('legal-accept-button');
+        await utils.expectElementVisible('legal-modal');
+        await utils.expectElementVisible('legal-accept-button');
+        await utils.elementTap('legal-accept-button');
 
         // Recover Screen
-        await elementVisible('recover-wallet-screen');
+        await utils.expectElementVisible('recover-wallet-screen');
 
         // Focus first word
-        await nextWordTap();
+        await customKeyboard.nextWordTap();
 
-        // TODO: store it as secret
+        // TODO: store it as secret - decide later on
         const mnemonic12 =
             'author tumble model pretty exile little shoulder frost bridge mistake devote mixed';
 
-        await typeMnemonic(mnemonic12);
+        await customKeyboard.typeMnemonic(mnemonic12);
 
         // Confirm
-        await confirmTap();
+        await customKeyboard.confirmTap();
 
         // Password Terms Screen
-        await elementVisible('password-terms-screen');
-        await elementTap('pass-terms-checkbox');
-        await elementTap('understand-button');
+        await utils.expectElementVisible('password-terms-screen');
+        await utils.elementTap('pass-terms-checkbox');
+        await utils.elementTap('understand-button');
 
         // Password Pin Screen
-        await elementVisible('password-pin-screen');
-        await typeWord('112266'); // set pin code
-        await typeWord('112266'); // verify pin code
+        await utils.expectElementVisible('password-pin-screen');
+        await customKeyboard.typeWord('112266'); // set pin code
+        await customKeyboard.typeWord('112266'); // verify pin code
 
-        await elementVisible('dashboard-screen');
+        await utils.expectElementVisible('dashboard-screen');
     });
 });

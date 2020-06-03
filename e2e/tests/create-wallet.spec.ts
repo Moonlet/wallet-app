@@ -1,76 +1,71 @@
-import {
-    typeWord,
-    nextWordTap,
-    confirmTap,
-    getText,
-    elementTap,
-    elementVisible
-} from '../utils/utils';
+import * as utils from '../utils/utils';
+import * as customKeyboard from '../utils/custom-keyboard';
 
 describe('Create Wallet', () => {
     beforeEach(async () => {
-        await device.reloadReactNative();
+        // await device.reloadReactNative(); // use only if needed
     });
 
-    it('Create Flow', async () => {
-        await elementVisible('onboarding-screen');
+    it('Fresh install', async () => {
+        // Onboarding Screen
+        await utils.expectElementVisible('onboarding-screen');
 
         // Create Button
-        await elementVisible('create-button');
-        await element(by.id('create-button')).tap();
+        await utils.expectElementVisible('create-button');
+        await utils.elementTap('create-button');
 
         // Legal
-        await elementVisible('legal-modal');
-        await elementVisible('legal-accept-button');
-        await element(by.id('legal-accept-button')).tap();
+        await utils.expectElementVisible('legal-modal');
+        await utils.expectElementVisible('legal-accept-button');
+        await utils.elementTap('legal-accept-button');
 
         // Create Wallet Mnemonic Screen
 
         // Step 1
-        await elementVisible('create-wallet-mnemonic-1');
+        await utils.expectElementVisible('create-wallet-mnemonic-1');
 
-        await elementTap('checkbox');
-        await elementTap('next-button-1');
+        await utils.elementTap('checkbox');
+        await utils.elementTap('next-button-1');
 
         // Step 2
-        await elementVisible('create-wallet-mnemonic-2');
-        await elementTap('next-button-2');
+        await utils.expectElementVisible('create-wallet-mnemonic-2');
+        await utils.elementTap('next-button-2');
 
         // Step 3
-        await elementVisible('create-wallet-mnemonic-3');
-        await elementTap('next-button-3');
+        await utils.expectElementVisible('create-wallet-mnemonic-3');
+        await utils.elementTap('next-button-3');
 
         // Create Wallet Confirm Mnemonic Screen
-        await elementVisible('create-wallet-confirm-mnemonic');
+        await utils.expectElementVisible('create-wallet-confirm-mnemonic');
 
         // Focus first input
-        await nextWordTap();
+        await customKeyboard.nextWordTap();
 
         // Mnmonic Word 1
-        await elementVisible('mnemonic-0');
-        await typeWord(await getText('mnemonic-0'));
+        await utils.expectElementVisible('mnemonic-0');
+        await customKeyboard.typeWord(await utils.getText('mnemonic-0'));
 
         // Mnmonic Word 2
-        await elementVisible('mnemonic-1');
-        await typeWord(await getText('mnemonic-1'));
+        await utils.expectElementVisible('mnemonic-1');
+        await customKeyboard.typeWord(await utils.getText('mnemonic-1'));
 
         // Mnmonic Word 3
-        await elementVisible('mnemonic-2');
-        await typeWord(await getText('mnemonic-2'));
+        await utils.expectElementVisible('mnemonic-2');
+        await customKeyboard.typeWord(await utils.getText('mnemonic-2'));
 
         // Confirm
-        await confirmTap();
+        await customKeyboard.confirmTap();
 
         // Password Terms Screen
-        await elementVisible('password-terms-screen');
-        await elementTap('pass-terms-checkbox');
-        await elementTap('understand-button');
+        await utils.expectElementVisible('password-terms-screen');
+        await utils.elementTap('pass-terms-checkbox');
+        await utils.elementTap('understand-button');
 
         // Password Pin Screen
-        await elementVisible('password-pin-screen');
-        await typeWord('123456'); // set pin code
-        await typeWord('123456'); // verify pin code
+        await utils.expectElementVisible('password-pin-screen');
+        await customKeyboard.typeWord('123456'); // set pin code
+        await customKeyboard.typeWord('123456'); // verify pin code
 
-        await elementVisible('dashboard-screen');
+        await utils.expectElementVisible('dashboard-screen');
     });
 });

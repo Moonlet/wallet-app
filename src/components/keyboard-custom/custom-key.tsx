@@ -33,12 +33,8 @@ export class CustomKeyComponent extends React.Component<
 
         if (Platform.OS === 'android') {
             return (
-                <PanGestureHandler
-                    testID={this.props?.testID}
-                    {...this.props}
-                    onHandlerStateChange={this.onHandlerStateChange}
-                >
-                    <View style={styles.keyContainer}>
+                <PanGestureHandler {...this.props} onHandlerStateChange={this.onHandlerStateChange}>
+                    <View testID={`key-${this.props?.testID}`} style={styles.keyContainer}>
                         <Text style={styles.keyText}>{this.props.currentWord}</Text>
                     </View>
                 </PanGestureHandler>

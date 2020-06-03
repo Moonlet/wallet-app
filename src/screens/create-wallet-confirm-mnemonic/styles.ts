@@ -44,6 +44,8 @@ export default (theme: ITheme) =>
             marginVertical: BASE_DIMENSION * 2
         },
         testWords: {
+            flexDirection: 'row',
+            justifyContent: 'center',
             textAlign: 'center'
         },
         label: {

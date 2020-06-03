@@ -167,7 +167,7 @@ export class RecoverWalletScreenComponent extends React.Component<
         ];
 
         return (
-            <View style={styles.container}>
+            <View testID="recover-wallet-screen" style={styles.container}>
                 <TabSelect
                     options={{
                         24: { title: '24' },

@@ -68,12 +68,12 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
     }
 
     public render() {
-        const { styles, navigation } = this.props;
-        const indexFrom = this.props.step * NR_MNEMONICS_SCREEN - NR_MNEMONICS_SCREEN;
-        const indexTo = this.props.step * NR_MNEMONICS_SCREEN;
+        const { styles, navigation, step } = this.props;
+        const indexFrom = step * NR_MNEMONICS_SCREEN - NR_MNEMONICS_SCREEN;
+        const indexTo = step * NR_MNEMONICS_SCREEN;
 
         return (
-            <View style={styles.container}>
+            <View testID={`create-wallet-mnemonic-${step}`} style={styles.container}>
                 <Text style={styles.title}>
                     {translate('CreateWalletMnemonic.title', { mnemonicLength: MNEMONIC_LENGTH })}
                 </Text>
@@ -110,6 +110,7 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
                 {this.props.step === 1 && (
                     <View style={styles.checkboxContainer}>
                         <Checkbox
+                            testID="checkbox"
                             onPress={() => this.setState({ accepted: !this.state.accepted })}
                             checked={this.state.accepted}
                             text={translate('CreateWalletMnemonic.terms')}
@@ -137,6 +138,7 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
 
                     <Button
                         testID="button-next"
+                        testIDButton={`next-button-${step}`}
                         primary
                         onPress={() => {
                             if (this.props.step === MNEMONIC_LENGTH / NR_MNEMONICS_SCREEN) {

@@ -17,10 +17,12 @@ export interface ICheckboxProps {
     onPress?: any;
     styles: ReturnType<typeof stylesProvider>;
     textStyle?: any;
+    testID?: string;
 }
 
 export const CheckboxComponent = (props: ICheckboxProps) => (
     <TouchableOpacity
+        testID={props?.testID || 'checkbox'}
         disabled={props.disabled}
         onPress={props.onPress}
         style={[props.styles.container, props.style]}

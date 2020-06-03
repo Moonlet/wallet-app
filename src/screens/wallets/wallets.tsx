@@ -250,7 +250,7 @@ export class WalletsScreenComponent extends React.Component<
         const { selectedTab } = this.state;
 
         return (
-            <View style={styles.container}>
+            <View testID="wallets-screen" style={styles.container}>
                 <TabSelect
                     options={{
                         [WalletType.HD]: { title: 'Moonlet' },
@@ -316,6 +316,7 @@ export class WalletsScreenComponent extends React.Component<
                         [WalletType.HD]: Platform.OS !== 'web' && (
                             <View style={styles.buttonContainer}>
                                 <Button
+                                    testIDButton="create-button"
                                     style={styles.bottomButton}
                                     wrapperStyle={{ flex: 1 }}
                                     onPress={() => this.onPressCreate()}
@@ -323,6 +324,7 @@ export class WalletsScreenComponent extends React.Component<
                                     {translate('App.labels.create')}
                                 </Button>
                                 <Button
+                                    testIDButton="recover-button"
                                     style={styles.bottomButton}
                                     wrapperStyle={{ flex: 1 }}
                                     onPress={() => this.onPressRecover()}

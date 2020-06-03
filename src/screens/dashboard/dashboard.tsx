@@ -119,6 +119,7 @@ const navigationOptions = ({ navigation }: any) => ({
     headerRight: (
         <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
+                testID="wallets-icon"
                 style={{ width: ICON_CONTAINER_SIZE }}
                 onPress={() => navigation.navigate('Wallets')}
             >

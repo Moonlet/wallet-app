@@ -1,6 +1,20 @@
 import * as utils from '../utils/utils';
 import * as customKeyboard from '../utils/custom-keyboard';
 
+const enterMnemonic = async () => {
+    // Focus first word
+    await customKeyboard.nextWordTap();
+
+    // TODO: store it as secret - decide later on
+    const mnemonic12 =
+        'author tumble model pretty exile little shoulder frost bridge mistake devote mixed';
+
+    await customKeyboard.typeMnemonic(mnemonic12);
+
+    // Confirm
+    await customKeyboard.confirmTap();
+};
+
 describe('Recover Wallet', () => {
     beforeEach(async () => {
         // await device.reloadReactNative(); // use only if needed
@@ -21,18 +35,7 @@ describe('Recover Wallet', () => {
 
         // Recover Screen
         await utils.expectElementVisible('recover-wallet-screen');
-
-        // Focus first word
-        await customKeyboard.nextWordTap();
-
-        // TODO: store it as secret - decide later on
-        const mnemonic12 =
-            'author tumble model pretty exile little shoulder frost bridge mistake devote mixed';
-
-        await customKeyboard.typeMnemonic(mnemonic12);
-
-        // Confirm
-        await customKeyboard.confirmTap();
+        await enterMnemonic();
 
         // Password Terms Screen
         await utils.expectElementVisible('password-terms-screen');
@@ -43,6 +46,32 @@ describe('Recover Wallet', () => {
         await utils.expectElementVisible('password-pin-screen');
         await customKeyboard.typeWord('112266'); // set pin code
         await customKeyboard.typeWord('112266'); // verify pin code
+
+        await utils.expectElementVisible('dashboard-screen');
+    });
+
+    it('Recover another wallet', async () => {
+        await device.reloadReactNative();
+
+        // Password Pin Screen
+        await utils.expectElementVisible('password-pin-screen');
+        await customKeyboard.typeWord('112266'); // enter pin code
+
+        // Dashboard Screen
+        await utils.expectElementVisible('dashboard-screen');
+        await utils.elementTap('wallets-icon');
+
+        // Wallets Screen
+        await utils.expectElementVisible('wallets-screen');
+        await utils.elementTap('recover-button');
+
+        // Recover Screen
+        await utils.expectElementVisible('recover-wallet-screen');
+        await enterMnemonic();
+
+        // Password Pin Screen
+        await utils.expectElementVisible('password-pin-screen');
+        await customKeyboard.typeWord('112266'); // enter pin code
 
         await utils.expectElementVisible('dashboard-screen');
     });

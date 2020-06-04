@@ -1,5 +1,5 @@
 import * as utils from '../../utils/utils';
-import { sendToken, addToken } from '../common';
+import { sendToken, addToken } from './common';
 
 /**
  * ZIL Native

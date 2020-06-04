@@ -1,4 +1,4 @@
-import { generateWallet, activateTestNet } from '../common';
+import { generateWallet, activateTestNet } from './common';
 import { sendEthNative, sendERC2DAI } from './eth';
 import { sendZilNative, sendZRC2XSGD } from './zil';
 

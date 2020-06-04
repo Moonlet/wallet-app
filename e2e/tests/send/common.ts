@@ -1,5 +1,5 @@
-import * as utils from '../utils/utils';
-import * as customKeyboard from '../utils/custom-keyboard';
+import * as utils from '../../utils/utils';
+import * as customKeyboard from '../../utils/custom-keyboard';
 
 /**
  * Generate Wallet

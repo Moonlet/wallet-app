@@ -38,7 +38,7 @@ const sendToken = async (amount: string) => {
     await customKeyboard.typeWord('000000'); // enter pin code
 };
 
-describe('Tests', () => {
+describe('Send', () => {
     it('Generate wallet and activate testnet', async () => {
         await generateWallet();
 

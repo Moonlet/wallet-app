@@ -103,7 +103,7 @@ export const chartStatsValues = [
     },
     {
         title: 'Unstaking',
-        color: '#AB7361',
+        color: '#FFAB91',
         chartDisplay: true,
         type: IStatValueType.AMOUNT,
         data: {

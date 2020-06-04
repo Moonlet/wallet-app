@@ -51,14 +51,9 @@ describe('Recover Wallet', () => {
     });
 
     it('Recover another wallet', async () => {
-        await device.reloadReactNative();
-
-        // Password Pin Screen
-        await utils.expectElementVisible('password-pin-screen');
-        await customKeyboard.typeWord('112266'); // enter pin code
+        await utils.realoadRNAndEnterPin('112266');
 
         // Dashboard Screen
-        await utils.expectElementVisible('dashboard-screen');
         await utils.elementByIdTap('wallets-icon');
 
         // Wallets Screen

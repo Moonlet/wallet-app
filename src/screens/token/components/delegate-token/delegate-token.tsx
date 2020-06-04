@@ -205,7 +205,7 @@ export class DelegateTokenScreenComponent extends React.Component<
     public render() {
         const { styles } = this.props;
         return (
-            <View style={styles.container}>
+            <View testID="delegate-token-screen" style={styles.container}>
                 {this.renderTabButtons()}
                 {this.renderTabs()}
             </View>

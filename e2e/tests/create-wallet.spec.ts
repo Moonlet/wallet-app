@@ -77,14 +77,9 @@ describe('Create Wallet', () => {
     });
 
     it('Create another wallet', async () => {
-        await device.reloadReactNative();
-
-        // Password Pin Screen
-        await utils.expectElementVisible('password-pin-screen');
-        await customKeyboard.typeWord('123456'); // enter pin code
+        await utils.realoadRNAndEnterPin('123456');
 
         // Dashboard Screen
-        await utils.expectElementVisible('dashboard-screen');
         await utils.elementByIdTap('wallets-icon');
 
         // Wallets Screen

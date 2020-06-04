@@ -1,4 +1,5 @@
 import { getProps } from 'detox-getprops';
+import * as customKeyboard from './custom-keyboard';
 
 export const elementByIdTap = async (key: string) => element(by.id(key)).tap();
 
@@ -13,3 +14,14 @@ export const goBack = async () => element(by.id('go-back')).tap();
 
 export const elementTypeText = async (key: string, value: string) =>
     element(by.id(key)).typeText(value);
+
+export const realoadRNAndEnterPin = async (pin: string) => {
+    await device.reloadReactNative();
+
+    // Password Pin Screen
+    await expectElementVisible('password-pin-screen');
+    await customKeyboard.typeWord(pin); // enter pin code
+
+    // Dashboard Screen
+    await expectElementVisible('dashboard-screen');
+};

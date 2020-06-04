@@ -83,7 +83,7 @@ export const chartStatsValues = [
     },
     {
         title: 'Undelegated',
-        color: '#AB7361',
+        color: '#FFAB91',
         type: IStatValueType.AMOUNT,
         chartDisplay: true,
         data: {

@@ -10,7 +10,7 @@ export const sendZilNative = async () => {
     await utils.realoadRNAndEnterPin('000000');
 
     // Dashboard Screen
-    await utils.expectElementVisible('dashboard-screen');
+    await utils.expectDashboardScreenVisible();
     await utils.elementByLabelTap('ZIL');
     await utils.elementByIdTap('token-card-zil');
 
@@ -38,7 +38,7 @@ export const sendZRC2XSGD = async () => {
     await addToken('zil1nnwugt0e5cvf2welmyq93q6p6t7zfdjzz7s05u');
 
     // Dashboard Screen
-    await utils.expectElementVisible('dashboard-screen');
+    await utils.expectDashboardScreenVisible();
     await utils.elementByIdTap('token-card-xsgd');
 
     // Delegate Token Screen

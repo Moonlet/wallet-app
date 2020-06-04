@@ -23,5 +23,7 @@ export const realoadRNAndEnterPin = async (pin: string) => {
     await customKeyboard.typeWord(pin); // enter pin code
 
     // Dashboard Screen
-    await expectElementVisible('dashboard-screen');
+    await expectDashboardScreenVisible();
 };
+
+export const expectDashboardScreenVisible = async () => expectElementVisible('dashboard-screen');

@@ -36,7 +36,7 @@ export const createWalletFreshInstall = async () => {
     await customKeyboard.typeWord('123456'); // verify pin code
 
     // Dashboard Screen
-    await utils.expectElementVisible('dashboard-screen');
+    await utils.expectDashboardScreenVisible();
 };
 
 /**
@@ -64,5 +64,5 @@ export const createAnotherWallet = async () => {
     await customKeyboard.typeWord('123456'); // enter pin code
 
     // Dashboard Screen
-    await utils.expectElementVisible('dashboard-screen');
+    await utils.expectDashboardScreenVisible();
 };

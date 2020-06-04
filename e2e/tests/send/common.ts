@@ -15,7 +15,7 @@ export const generateWallet = async () => {
     await utils.elementByIdTap('legal-accept-button');
 
     // Dashboard Screen
-    await utils.expectElementVisible('dashboard-screen');
+    await utils.expectDashboardScreenVisible();
 };
 
 /**

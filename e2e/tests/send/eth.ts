@@ -8,7 +8,7 @@ import { sendToken, addToken } from './common';
  */
 export const sendEthNative = async () => {
     // Dashboard Screen
-    await utils.expectElementVisible('dashboard-screen');
+    await utils.expectDashboardScreenVisible();
     await utils.elementByLabelTap('ETH');
     await utils.elementByIdTap('token-card-eth');
 
@@ -37,7 +37,7 @@ export const sendERC2DAI = async () => {
     await addToken('0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea');
 
     // Dashboard Screen
-    await utils.expectElementVisible('dashboard-screen');
+    await utils.expectDashboardScreenVisible();
     await utils.elementByIdTap('token-card-dai');
 
     // Default Token Screen

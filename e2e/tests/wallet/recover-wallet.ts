@@ -32,7 +32,7 @@ export const recoverWalletFreshInstall = async () => {
     await customKeyboard.typeWord('112266'); // set pin code
     await customKeyboard.typeWord('112266'); // verify pin code
 
-    await utils.expectElementVisible('dashboard-screen');
+    await utils.expectDashboardScreenVisible();
 };
 
 /**
@@ -56,5 +56,5 @@ export const recoverAnotherWallet = async () => {
     await utils.expectElementVisible('password-pin-screen');
     await customKeyboard.typeWord('112266'); // enter pin code
 
-    await utils.expectElementVisible('dashboard-screen');
+    await utils.expectDashboardScreenVisible();
 };

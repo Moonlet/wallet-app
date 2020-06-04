@@ -62,6 +62,27 @@ describe('Tests', () => {
             // Default Token Screen
             await utils.expectElementVisible('default-token-screen');
         });
+
+        it('ERC2 - DAI', async () => {
+            await utils.realoadRNAndEnterPin('000000');
+
+            // Add DAI - testnet
+            await addToken('0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea');
+
+            // Dashboard Screen
+            await utils.expectElementVisible('dashboard-screen');
+            await utils.elementByIdTap('token-card-dai');
+
+            // Default Token Screen
+            await utils.expectElementVisible('default-token-screen');
+            await utils.elementByIdTap('send-button');
+
+            // Send
+            await sendToken('0.001');
+
+            // Default Token Screen
+            await utils.expectElementVisible('default-token-screen');
+        });
     });
 
     describe('Send ZIL', () => {

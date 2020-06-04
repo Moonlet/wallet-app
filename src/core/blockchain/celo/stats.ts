@@ -116,11 +116,11 @@ export const chartStatsValues = [
     },
     {
         title: 'Unlocking',
-        color: '#AB7361',
+        color: '#FFAB91',
         type: IStatValueType.AMOUNT,
         chartDisplay: true,
         data: {
-            value: '1500.00',
+            value: '15000.00',
             tokenSymbol: 'cGLD',
             blockchain: Blockchain.CELO
         }

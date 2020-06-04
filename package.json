@@ -23,7 +23,8 @@
         "detox:build:ios": "detox build -c ios.beta",
         "detox:test:ios": "detox test -c ios.beta",
         "detox:build:android": "detox build -c android.emu.beta",
-        "detox:test:android": "detox test -c android.emu.beta"
+        "detox:test:android": "detox test -c android.emu.beta",
+        "detox:test:android:device": "detox test --configuration android.device.beta"
     },
     "dependencies": {
         "@ledgerhq/hw-app-eth": "^4.78.0",

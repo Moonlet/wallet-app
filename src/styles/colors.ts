@@ -20,6 +20,5 @@ export const COLORS = {
     YELLOW: '#F2C94C',
 
     // Validators
-    ORANGE: '#AB7361',
     GREEN: '#00E676'
 };

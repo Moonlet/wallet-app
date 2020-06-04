@@ -250,6 +250,7 @@ export class PasswordPinComponent extends React.Component<
                 />
 
                 <TouchableOpacity
+                    testID="key-0"
                     style={styles.keyContainer}
                     onPress={() => this.fillPassword(String(ZERO))}
                 >

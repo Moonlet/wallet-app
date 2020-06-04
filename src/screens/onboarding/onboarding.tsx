@@ -141,7 +141,7 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
 
                     {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
                         <Button
-                            testID="button-generate"
+                            testID="generate-button"
                             style={styles.bottomButton}
                             primary
                             onPress={() => this.onPressGenerateWallet()}

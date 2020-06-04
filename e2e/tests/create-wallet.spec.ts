@@ -5,16 +5,16 @@ const mnemonicSteps = async () => {
     // Step 1
     await utils.expectElementVisible('create-wallet-mnemonic-1');
 
-    await utils.elementTap('checkbox');
-    await utils.elementTap('next-button-1');
+    await utils.elementByIdTap('checkbox');
+    await utils.elementByIdTap('next-button-1');
 
     // Step 2
     await utils.expectElementVisible('create-wallet-mnemonic-2');
-    await utils.elementTap('next-button-2');
+    await utils.elementByIdTap('next-button-2');
 
     // Step 3
     await utils.expectElementVisible('create-wallet-mnemonic-3');
-    await utils.elementTap('next-button-3');
+    await utils.elementByIdTap('next-button-3');
 };
 
 const mnemonicConfirm = async () => {
@@ -48,12 +48,12 @@ describe('Create Wallet', () => {
 
         // Create Button
         await utils.expectElementVisible('create-button');
-        await utils.elementTap('create-button');
+        await utils.elementByIdTap('create-button');
 
         // Legal
         await utils.expectElementVisible('legal-modal');
         await utils.expectElementVisible('legal-accept-button');
-        await utils.elementTap('legal-accept-button');
+        await utils.elementByIdTap('legal-accept-button');
 
         // Create Wallet Mnemonic Screen
         await mnemonicSteps();
@@ -64,8 +64,8 @@ describe('Create Wallet', () => {
 
         // Password Terms Screen
         await utils.expectElementVisible('password-terms-screen');
-        await utils.elementTap('pass-terms-checkbox');
-        await utils.elementTap('understand-button');
+        await utils.elementByIdTap('pass-terms-checkbox');
+        await utils.elementByIdTap('understand-button');
 
         // Password Pin Screen
         await utils.expectElementVisible('password-pin-screen');
@@ -85,11 +85,11 @@ describe('Create Wallet', () => {
 
         // Dashboard Screen
         await utils.expectElementVisible('dashboard-screen');
-        await utils.elementTap('wallets-icon');
+        await utils.elementByIdTap('wallets-icon');
 
         // Wallets Screen
         await utils.expectElementVisible('wallets-screen');
-        await utils.elementTap('create-button');
+        await utils.elementByIdTap('create-button');
 
         // Create Wallet Mnemonic Screen
         await mnemonicSteps();

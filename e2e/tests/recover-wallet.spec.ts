@@ -26,12 +26,12 @@ describe('Recover Wallet', () => {
 
         // Recover Button
         await utils.expectElementVisible('recover-button');
-        await utils.elementTap('recover-button');
+        await utils.elementByIdTap('recover-button');
 
         // Legal
         await utils.expectElementVisible('legal-modal');
         await utils.expectElementVisible('legal-accept-button');
-        await utils.elementTap('legal-accept-button');
+        await utils.elementByIdTap('legal-accept-button');
 
         // Recover Screen
         await utils.expectElementVisible('recover-wallet-screen');
@@ -39,8 +39,8 @@ describe('Recover Wallet', () => {
 
         // Password Terms Screen
         await utils.expectElementVisible('password-terms-screen');
-        await utils.elementTap('pass-terms-checkbox');
-        await utils.elementTap('understand-button');
+        await utils.elementByIdTap('pass-terms-checkbox');
+        await utils.elementByIdTap('understand-button');
 
         // Password Pin Screen
         await utils.expectElementVisible('password-pin-screen');
@@ -59,11 +59,11 @@ describe('Recover Wallet', () => {
 
         // Dashboard Screen
         await utils.expectElementVisible('dashboard-screen');
-        await utils.elementTap('wallets-icon');
+        await utils.elementByIdTap('wallets-icon');
 
         // Wallets Screen
         await utils.expectElementVisible('wallets-screen');
-        await utils.elementTap('recover-button');
+        await utils.elementByIdTap('recover-button');
 
         // Recover Screen
         await utils.expectElementVisible('recover-wallet-screen');

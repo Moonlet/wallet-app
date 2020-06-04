@@ -51,6 +51,7 @@ export class NetworkOptionsComponent extends React.Component<
                     <Text style={styles.textRow}>{translate('NetworkOptions.testnet')}</Text>
                     <View style={styles.switch}>
                         <Switch
+                            testID="toggle-testnet"
                             onValueChange={() => this.props.toggleTestNet()}
                             value={testNet}
                             trackColor={{

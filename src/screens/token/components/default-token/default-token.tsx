@@ -63,7 +63,7 @@ export class DefaultTokenScreenComponent extends React.Component<
         const { styles, navigation, account, transactions, token } = this.props;
 
         return (
-            <View style={styles.container}>
+            <View testID="default-token-screen" style={styles.container}>
                 <ScrollView
                     contentContainerStyle={styles.scrollContainer}
                     showsVerticalScrollIndicator={false}
@@ -71,7 +71,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                     <AccountAddress account={account} token={token} />
                     <View style={styles.buttonsContainer}>
                         <Button
-                            testID="button-send"
+                            testID="send-button"
                             style={styles.button}
                             wrapperStyle={{ flex: 1 }}
                             // disabled={!this.props.canSend} // TODO
@@ -86,7 +86,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                             {translate('App.labels.send')}
                         </Button>
                         <Button
-                            testID="button-receive"
+                            testID="receive-button"
                             style={styles.button}
                             wrapperStyle={{ flex: 1 }}
                             onPress={() => {

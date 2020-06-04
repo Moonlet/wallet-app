@@ -33,7 +33,7 @@ export const TestnetBadgeComponent = (
 ) => {
     if (props.testNet) {
         return (
-            <View style={props.styles.container}>
+            <View testID="testnet-badge" style={props.styles.container}>
                 <Text style={props.styles.text}>
                     {translate('App.labels.youAreOn', {
                         blockchain: props.blockchain ? Capitalize(props.blockchain) : '',

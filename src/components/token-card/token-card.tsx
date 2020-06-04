@@ -33,6 +33,7 @@ export const TokenCardComponent = (
     if (tokenConfig) {
         return (
             <TouchableHighlight
+                testID={`token-card-${props.token.symbol.toLocaleLowerCase()}`}
                 style={{ marginTop: props.index === 0 ? 0 : BASE_DIMENSION }}
                 underlayColor={props.theme.colors.appBackground}
                 onPress={() => {

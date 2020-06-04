@@ -8,6 +8,7 @@ import { Icon } from '../icon/icon';
 import { ICON_SIZE } from '../../styles/dimensions';
 
 export interface IProps {
+    testID?: string;
     onPress?: any;
     icon?: string;
     text?: string;
@@ -15,7 +16,11 @@ export interface IProps {
 }
 
 export const HeaderLeftComponent = (props: IProps) => (
-    <TouchableOpacity onPress={props.onPress} style={props.styles.button}>
+    <TouchableOpacity
+        testID={props?.testID || 'header-left'}
+        onPress={props.onPress}
+        style={props.styles.button}
+    >
         {props.icon && (
             <View style={props.styles.iconContainer}>
                 <Icon name={props.icon} size={ICON_SIZE} style={props.styles.icon} />

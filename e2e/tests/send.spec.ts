@@ -61,6 +61,7 @@ describe('Send', () => {
 
             // Default Token Screen
             await utils.expectElementVisible('default-token-screen');
+            await utils.expectElementVisible('transaction-0');
         });
 
         it('ERC2 - DAI', async () => {
@@ -82,6 +83,7 @@ describe('Send', () => {
 
             // Default Token Screen
             await utils.expectElementVisible('default-token-screen');
+            await utils.expectElementVisible('transaction-0');
         });
     });
 
@@ -103,6 +105,7 @@ describe('Send', () => {
 
             // Delegate Token Screen
             await utils.expectElementVisible('delegate-token-screen');
+            await utils.expectElementVisible('transaction-0');
         });
 
         it('ZRC2 - XSGD', async () => {
@@ -124,6 +127,7 @@ describe('Send', () => {
 
             // Delegate Token Screen
             await utils.expectElementVisible('delegate-token-screen');
+            await utils.expectElementVisible('transaction-0');
         });
     });
 });

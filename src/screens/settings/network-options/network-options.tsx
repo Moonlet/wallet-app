@@ -89,6 +89,7 @@ export class NetworkOptionsComponent extends React.Component<
                         return (
                             <View key={index}>
                                 <TouchableOpacity
+                                    testID={blockchain.toLocaleLowerCase()}
                                     style={styles.rowContainer}
                                     disabled={!testNet}
                                     onPress={() =>

@@ -1,42 +1,5 @@
 import * as utils from '../utils/utils';
-import * as customKeyboard from '../utils/custom-keyboard';
-import { generateWallet, activateTestNet } from './common';
-
-const addToken = async (contractAddress: string) => {
-    await utils.elementByIdTap('dashboard-menu-icon');
-
-    // Manage Account Screen
-    await utils.elementByIdTap('manage-account');
-    await utils.elementByIdTap('add-icon');
-
-    // Manage Token Screen
-    await utils.elementTypeText('search-input', contractAddress);
-    await utils.elementByLabelTap('Find');
-    await utils.elementByIdTap('found-token');
-    await utils.elementByLabelTap('Save');
-
-    await utils.goBack();
-};
-
-const sendToken = async (amount: string) => {
-    // Send Screen
-
-    // Select address
-    await utils.elementByIdTap('transfer-between-accounts');
-    await utils.elementByIdTap('account-2');
-    await utils.elementByIdTap('next');
-
-    // Enter amount
-    await utils.elementTypeText('enter-amount', amount);
-    await utils.elementByIdTap('next');
-
-    // Confirm Transaction
-    await utils.elementByIdTap('confirm');
-
-    // Password Pin Screen
-    await utils.expectElementVisible('password-pin-screen');
-    await customKeyboard.typeWord('000000'); // enter pin code
-};
+import { generateWallet, activateTestNet, sendToken, addToken } from './common';
 
 describe('Send', () => {
     it('Generate wallet and activate testnet', async () => {

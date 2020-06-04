@@ -130,6 +130,7 @@ const navigationOptions = ({ navigation }: any) => ({
                 />
             </TouchableOpacity>
             <TouchableOpacity
+                testID="dashboard-menu-icon"
                 style={{ width: ICON_CONTAINER_SIZE }}
                 onPress={() => navigation.state.params.setDashboardMenuBottomSheet()}
             >

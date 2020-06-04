@@ -2,6 +2,42 @@ import * as utils from '../utils/utils';
 import * as customKeyboard from '../utils/custom-keyboard';
 import { generateWallet, activateTestNet } from './common';
 
+const addToken = async (contractAddress: string) => {
+    await utils.elementByIdTap('dashboard-menu-icon');
+
+    // Manage Account Screen
+    await utils.elementByIdTap('manage-account');
+    await utils.elementByIdTap('add-icon');
+
+    // Manage Token Screen
+    await utils.elementTypeText('search-input', contractAddress);
+    await utils.elementByLabelTap('Find');
+    await utils.elementByIdTap('found-token');
+    await utils.elementByLabelTap('Save');
+
+    await utils.goBack();
+};
+
+const sendToken = async (amount: string) => {
+    // Send Screen
+
+    // Select address
+    await utils.elementByIdTap('transfer-between-accounts');
+    await utils.elementByIdTap('account-2');
+    await utils.elementByIdTap('next');
+
+    // Enter amount
+    await utils.elementTypeText('enter-amount', amount);
+    await utils.elementByIdTap('next');
+
+    // Confirm Transaction
+    await utils.elementByIdTap('confirm');
+
+    // Password Pin Screen
+    await utils.expectElementVisible('password-pin-screen');
+    await customKeyboard.typeWord('000000'); // enter pin code
+};
+
 describe('Tests', () => {
     it('Generate wallet and activate testnet', async () => {
         await generateWallet();
@@ -20,23 +56,8 @@ describe('Tests', () => {
             await utils.expectElementVisible('default-token-screen');
             await utils.elementByIdTap('send-button');
 
-            /// === Send Screen === ///
-
-            // Select address
-            await utils.elementByIdTap('transfer-between-accounts');
-            await utils.elementByIdTap('account-2');
-            await utils.elementByIdTap('next');
-
-            // Enter amount
-            await utils.elementTypeText('enter-amount', '0.001');
-            await utils.elementByIdTap('next');
-
-            // Confirm Transaction
-            await utils.elementByIdTap('confirm');
-
-            // Password Pin Screen
-            await utils.expectElementVisible('password-pin-screen');
-            await customKeyboard.typeWord('000000'); // enter pin code
+            // Send
+            await sendToken('0.001');
 
             // Default Token Screen
             await utils.expectElementVisible('default-token-screen');
@@ -56,23 +77,29 @@ describe('Tests', () => {
             await utils.expectElementVisible('delegate-token-screen');
             await utils.elementByLabelTap('Send');
 
-            /// === Send Screen === ///
+            // Send
+            await sendToken('0.001');
 
-            // Select address
-            await utils.elementByIdTap('transfer-between-accounts');
-            await utils.elementByIdTap('account-2');
-            await utils.elementByIdTap('next');
+            // Delegate Token Screen
+            await utils.expectElementVisible('delegate-token-screen');
+        });
 
-            // Enter amount
-            await utils.elementTypeText('enter-amount', '0.001');
-            await utils.elementByIdTap('next');
+        it('ZRC2 - XSGD', async () => {
+            await utils.realoadRNAndEnterPin('000000');
 
-            // Confirm Transaction
-            await utils.elementByIdTap('confirm');
+            // Add XSGD - testnet
+            await addToken('zil1nnwugt0e5cvf2welmyq93q6p6t7zfdjzz7s05u');
 
-            // Password Pin Screen
-            await utils.expectElementVisible('password-pin-screen');
-            await customKeyboard.typeWord('000000'); // enter pin code
+            // Dashboard Screen
+            await utils.expectElementVisible('dashboard-screen');
+            await utils.elementByIdTap('token-card-xsgd');
+
+            // Delegate Token Screen
+            await utils.expectElementVisible('delegate-token-screen');
+            await utils.elementByLabelTap('Send');
+
+            // Send
+            await sendToken('0.001');
 
             // Delegate Token Screen
             await utils.expectElementVisible('delegate-token-screen');

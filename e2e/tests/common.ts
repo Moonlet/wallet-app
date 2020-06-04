@@ -1,6 +1,9 @@
 import * as utils from '../utils/utils';
 import * as customKeyboard from '../utils/custom-keyboard';
 
+/**
+ * Generate Wallet
+ */
 export const generateWallet = async () => {
     // Onboarding Screen
     await utils.expectElementVisible('onboarding-screen');
@@ -15,6 +18,9 @@ export const generateWallet = async () => {
     await utils.expectElementVisible('dashboard-screen');
 };
 
+/**
+ * Activate Test Net
+ */
 export const activateTestNet = async () => {
     await utils.elementByLabelTap('Settings');
 
@@ -33,6 +39,10 @@ export const activateTestNet = async () => {
     await utils.expectElementVisible('testnet-badge');
 };
 
+/**
+ * Add Token
+ * @param contractAddress
+ */
 export const addToken = async (contractAddress: string) => {
     await utils.elementByIdTap('dashboard-menu-icon');
 
@@ -49,6 +59,10 @@ export const addToken = async (contractAddress: string) => {
     await utils.goBack();
 };
 
+/**
+ * Send Token
+ * @param amount
+ */
 export const sendToken = async (amount: string) => {
     // Send Screen
 

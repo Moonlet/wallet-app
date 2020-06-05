@@ -19,7 +19,7 @@ export const mnemonicSteps = async () => {
 
 export const mnemonicConfirm = async () => {
     // Focus first input
-    await customKeyboard.nextWordTap();
+    await customKeyboard.nextWordButtonTap();
 
     // Mnmonic Word 1
     await utils.expectElementVisible('mnemonic-0');
@@ -34,12 +34,12 @@ export const mnemonicConfirm = async () => {
     await customKeyboard.typeWord(await utils.getText('mnemonic-2'));
 
     // Confirm
-    await customKeyboard.confirmTap();
+    await customKeyboard.confirmButtonTap();
 };
 
 export const enterMnemonic = async () => {
     // Focus first word
-    await customKeyboard.nextWordTap();
+    await customKeyboard.nextWordButtonTap();
 
     // TODO: store it as secret - decide later on
     const mnemonic12 =
@@ -48,5 +48,5 @@ export const enterMnemonic = async () => {
     await customKeyboard.typeMnemonic(mnemonic12);
 
     // Confirm
-    await customKeyboard.confirmTap();
+    await customKeyboard.confirmButtonTap();
 };

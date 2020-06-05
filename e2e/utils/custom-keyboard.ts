@@ -1,3 +1,7 @@
+/**
+ * Tap on element by id
+ * @param key
+ */
 export const elementTap = async (key: string) => {
     try {
         await element(by.id(key)).tap();
@@ -6,6 +10,12 @@ export const elementTap = async (key: string) => {
     }
 };
 
+/**
+ * Type a word
+ * - by using element tap of each letter
+ * - when finished focus the next word // maybe this should be optional
+ * @param word
+ */
 export const typeWord = async (word: string) => {
     const arr = word.split('');
 
@@ -14,9 +24,13 @@ export const typeWord = async (word: string) => {
     }
 
     // Focus next input
-    await nextWordTap();
+    await nextWordButtonTap();
 };
 
+/**
+ * Type mnemonic
+ * @param mnemonic
+ */
 export const typeMnemonic = async (mnemonic: string) => {
     const arr = mnemonic.split(' ');
 
@@ -25,6 +39,12 @@ export const typeMnemonic = async (mnemonic: string) => {
     }
 };
 
-export const nextWordTap = async () => elementTap('next-word');
+/**
+ * Tap on the <Button /> with id next-word
+ */
+export const nextWordButtonTap = async () => elementTap('next-word');
 
-export const confirmTap = async () => elementTap('confirm');
+/**
+ * Tap on the <Button /> with id confirm
+ */
+export const confirmButtonTap = async () => elementTap('confirm');

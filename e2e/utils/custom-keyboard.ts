@@ -1,6 +1,7 @@
 /**
  * Tap on element by id
  * @param key
+ * - we need try catch because our custom keyboard crashes sometimes
  */
 export const elementTap = async (key: string) => {
     try {

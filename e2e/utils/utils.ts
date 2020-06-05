@@ -38,16 +38,18 @@ export const expectElementByLabelVisible = async (key: string) =>
 /**
  * Expect Element By id to have text
  * @param key
+ * @param text
  */
-export const expectElementByIdToHaveText = async (key: string) =>
-    (expect(element(by.label(key))) as any).toHaveText();
+export const expectElementByIdToHaveText = async (key: string, text: string) =>
+    (expect(element(by.label(key))) as any).toHaveText(text);
 
 /**
  * Expect Element By id to have label
  * @param key
+ * @param label
  */
-export const expectElementByIdToHaveLabel = async (key: string) =>
-    (expect(element(by.label(key))) as any).toHaveLabel();
+export const expectElementByIdToHaveLabel = async (key: string, label: string) =>
+    (expect(element(by.label(key))) as any).toHaveLabel(label);
 
 /**
  * Get text of a component <Text />

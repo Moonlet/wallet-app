@@ -10,7 +10,7 @@ const deleteWallet = async (walletKey: string) => {
     await delay(500);
 
     // walletKey
-    await utils.elementByIdSwipe(walletKey, 'right');
+    await utils.swipeElementById(walletKey, 'right');
     await utils.tapElementById(`delete-${walletKey}`);
     await utils.tapElementByLabel('OK');
     await customKeyboard.typeWord(utils.PIN_CODE_GENERATE_WALLET);
@@ -20,13 +20,13 @@ const deleteWallet = async (walletKey: string) => {
  * Wallet edit name
  */
 const walletEditName = async (walletKey: string) => {
-    await utils.elementByIdSwipe(walletKey, 'right');
+    await utils.swipeElementById(walletKey, 'right');
     await utils.tapElementById(`edit-name-${walletKey}`);
     await utils.tapElementByLabel('Edit name');
 
     // TODO: this is not working
     // testID is not working on RNDialog.Input
-    await utils.elementTypeText('dialog-input', 'Moonlet Wallet');
+    await utils.typeTextElementById('dialog-input', 'Moonlet Wallet');
     await utils.tapElementByLabel('Save');
 };
 
@@ -36,7 +36,7 @@ const createAnotherWallet = async () => {
     await utils.tapBackButton();
     await utils.tapElementById('recover-button');
     await utils.tapElementById('paste-button');
-    await customKeyboard.confirmButtonTap();
+    await customKeyboard.tapConfirmButton();
     await customKeyboard.typeWord(utils.PIN_CODE_GENERATE_WALLET);
 };
 

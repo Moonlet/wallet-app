@@ -88,7 +88,7 @@ export const deviceGoBack = async (currentScreen: string) => {
  * @param key
  * @param value the value that is received by <TextInput />
  */
-export const elementTypeText = async (key: string, value: string) =>
+export const typeTextElementById = async (key: string, value: string) =>
     element(by.id(key)).typeText(value);
 
 /**
@@ -96,7 +96,7 @@ export const elementTypeText = async (key: string, value: string) =>
  * @param key
  * @param value the value that is received by <TextInput />
  */
-export const elementReplaceText = async (key: string, value: string) =>
+export const replaceTextElementById = async (key: string, value: string) =>
     element(by.id(key)).replaceText(value);
 
 /**
@@ -132,7 +132,7 @@ export const PIN_CODE_GENERATE_WALLET = '000000';
  * @param speed - fast/slow - default is fast
  * @param percentage - (optional) screen percentage to swipe; valid input: [0.0, 1.0]
  */
-export const elementByIdSwipe = async (
+export const swipeElementById = async (
     key: string,
     direction: 'left' | 'right' | 'top' | 'bottom' | 'up' | 'down',
     speed?: 'fast' | 'slow',
@@ -146,7 +146,7 @@ export const elementByIdSwipe = async (
  * @param speed - fast/slow - default is fast
  * @param percentage - (optional) screen percentage to swipe; valid input: [0.0, 1.0]
  */
-export const elementByLabelSwipe = async (
+export const swipeElementByLabel = async (
     key: string,
     direction: 'left' | 'right' | 'top' | 'bottom' | 'up' | 'down',
     speed?: 'fast' | 'slow',

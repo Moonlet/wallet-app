@@ -3,7 +3,7 @@
  * @param key
  * - we need try catch because our custom keyboard crashes sometimes
  */
-export const elementTap = async (key: string) => {
+export const tapElementById = async (key: string) => {
     try {
         await element(by.id(key)).tap();
     } catch {
@@ -21,11 +21,11 @@ export const typeWord = async (word: string) => {
     const arr = word.split('');
 
     for (const w of arr) {
-        await elementTap(`key-${w}`);
+        await tapElementById(`key-${w}`);
     }
 
     // Focus next input
-    await nextWordButtonTap();
+    await tapNextWordButton();
 };
 
 /**
@@ -43,9 +43,9 @@ export const typeMnemonic = async (mnemonic: string) => {
 /**
  * Tap on the <Button /> with id next-word
  */
-export const nextWordButtonTap = async () => elementTap('next-word');
+export const tapNextWordButton = async () => tapElementById('next-word');
 
 /**
  * Tap on the <Button /> with id confirm
  */
-export const confirmButtonTap = async () => elementTap('confirm');
+export const tapConfirmButton = async () => tapElementById('confirm');

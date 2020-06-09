@@ -55,7 +55,7 @@ export const addToken = async (contractAddress: string) => {
     await utils.tapElementById('add-icon');
 
     // Manage Token Screen
-    await utils.elementTypeText('search-input', contractAddress);
+    await utils.typeTextElementById('search-input', contractAddress);
     await utils.tapElementByLabel('Find');
     await utils.tapElementById('found-token');
     await utils.tapElementByLabel('Save');
@@ -76,7 +76,7 @@ export const sendToken = async (amount: string) => {
     await utils.tapElementById('next');
 
     // Enter amount
-    await utils.elementTypeText('enter-amount', amount);
+    await utils.typeTextElementById('enter-amount', amount);
     await utils.tapElementById('next');
 
     // Confirm Transaction

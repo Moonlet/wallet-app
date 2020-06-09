@@ -83,12 +83,20 @@ export const pressBack = async (currentScreen: string) => {
 };
 
 /**
- * Element by id Type Text - applied on <TextInput /> component
+ * Type Text / element by id Type Text - applied on <TextInput /> component
  * @param key
  * @param value the value that is received by <TextInput />
  */
 export const elementTypeText = async (key: string, value: string) =>
     element(by.id(key)).typeText(value);
+
+/**
+ * Replace text / element by id Type Text - applied on <TextInput /> component
+ * @param key
+ * @param value the value that is received by <TextInput />
+ */
+export const elementReplaceText = async (key: string, value: string) =>
+    element(by.id(key)).replaceText(value);
 
 /**
  * Reload React Native App, Enter Pin Code, Dashboard is displayed
@@ -115,3 +123,31 @@ export const expectDashboardScreenVisible = async () => expectElementVisible('da
  * Maybe consider this later to be stored in secrets
  */
 export const PIN_CODE_GENERATE_WALLET = '000000';
+
+/**
+ * Swipe element by id
+ * @param key
+ * @param direction
+ * @param speed - fast/slow - default is fast
+ * @param percentage - (optional) screen percentage to swipe; valid input: [0.0, 1.0]
+ */
+export const elementByIdSwipe = async (
+    key: string,
+    direction: 'left' | 'right' | 'top' | 'bottom' | 'up' | 'down',
+    speed?: 'fast' | 'slow',
+    percentage?: number
+) => element(by.id(key)).swipe(direction, speed, percentage);
+
+/**
+ * Swipe element by label
+ * @param key
+ * @param direction
+ * @param speed - fast/slow - default is fast
+ * @param percentage - (optional) screen percentage to swipe; valid input: [0.0, 1.0]
+ */
+export const elementByLabelSwipe = async (
+    key: string,
+    direction: 'left' | 'right' | 'top' | 'bottom' | 'up' | 'down',
+    speed?: 'fast' | 'slow',
+    percentage?: number
+) => element(by.label(key)).swipe(direction, speed, percentage);

@@ -122,6 +122,7 @@ export class CreateWalletMnemonicScreenComponent extends React.Component<
                 <View style={styles.bottomContainer}>
                     {isFeatureActive(RemoteFeature.DEV_TOOLS) && this.props.step === 1 && (
                         <Button
+                            testID="copy-mnemonic"
                             style={styles.copyButton}
                             onPress={() => {
                                 Clipboard.setString(

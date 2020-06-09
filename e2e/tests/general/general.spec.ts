@@ -1,18 +1,20 @@
-import { generateWallet } from '../send/common';
-import { networkSwitch } from './network-switch';
+import { generateWalletTest } from '../send/common';
+import { networkSwitchTest } from './network-switch';
+import { walletManagementTest } from './wallet-manage';
 
 describe('General', () => {
     /**
      * Generate wallet
      */
-    it('Generate wallet', async () => {
-        await generateWallet();
-    });
+    generateWalletTest();
 
     /**
      * Network Switch
      */
-    it('Network Switch', async () => {
-        await networkSwitch();
-    });
+    networkSwitchTest();
+
+    /**
+     * Wallet management
+     */
+    walletManagementTest();
 });

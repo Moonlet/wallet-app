@@ -3,35 +3,43 @@ import * as utils from '../../utils/utils';
 /**
  * Network Switch
  */
-export const networkSwitch = async () => {
-    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
+export const networkSwitchTest = () => {
+    describe('Network Switch', () => {
+        beforeEach(async () => {
+            await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
+        });
 
-    // Dashboard Screen
-    // Zilliqa Mainnet active
-    await utils.expectElementNotVisible('testnet-badge');
+        it('network switch', async () => {
+            // Dashboard Screen
+            // Zilliqa Mainnet active
+            await utils.expectElementNotVisible('testnet-badge');
+        });
 
-    // Zilliqa Dev Testnet
-    await zilDevTestnet();
+        it('it works on zilliqa dev testnet', async () => {
+            // Zilliqa Dev Testnet
+            await zilDevTestnet();
+        });
 
-    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
+        it('it works on zilliqa kaya local testnet', async () => {
+            // Zilliqa Kaya Local Testnet
+            await zilKayaLocalTestnet();
+        });
 
-    // Zilliqa Kaya Local Testnet
-    await zilKayaLocalTestnet();
+        it('it works on ethereum rinkeby testnet', async () => {
+            // Ethereum Rinkeby Testnet
+            await ethRinkebyTestnet();
+        });
 
-    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
+        it('it works on ethereum ropsten testnet', async () => {
+            // Ethereum Ropsten Testnet
+            await ethRopstenTestnet();
+        });
 
-    // Ethereum Rinkeby Testnet
-    await ethRinkebyTestnet();
-
-    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
-
-    // Ethereum Ropsten Testnet
-    await ethRopstenTestnet();
-
-    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
-
-    // Ethereum Mainnet
-    await ethMainnet();
+        it('it works on ethereum mainnet', async () => {
+            // Ethereum Mainnet
+            await ethMainnet();
+        });
+    });
 };
 
 /**

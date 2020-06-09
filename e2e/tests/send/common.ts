@@ -4,18 +4,22 @@ import * as customKeyboard from '../../utils/custom-keyboard';
 /**
  * Generate Wallet
  */
-export const generateWallet = async () => {
-    // Onboarding Screen
-    await utils.expectElementVisible('onboarding-screen');
-    await utils.elementByIdTap('generate-button');
+export const generateWalletTest = () => {
+    describe('Generate wallet ', () => {
+        it('generate', async () => {
+            // Onboarding Screen
+            await utils.expectElementVisible('onboarding-screen');
+            await utils.elementByIdTap('generate-button');
 
-    // Legal
-    await utils.expectElementVisible('legal-modal');
-    await utils.expectElementVisible('legal-accept-button');
-    await utils.elementByIdTap('legal-accept-button');
+            // Legal
+            await utils.expectElementVisible('legal-modal');
+            await utils.expectElementVisible('legal-accept-button');
+            await utils.elementByIdTap('legal-accept-button');
 
-    // Dashboard Screen
-    await utils.expectDashboardScreenVisible();
+            // Dashboard Screen
+            await utils.expectDashboardScreenVisible();
+        });
+    });
 };
 
 /**

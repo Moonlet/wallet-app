@@ -214,7 +214,11 @@ export class RecoverWalletScreenComponent extends React.Component<
                 </View>
 
                 {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
-                    <Button onPress={() => this.pasteFromClipboard()} style={styles.pasteButton}>
+                    <Button
+                        testID="paste-button"
+                        onPress={() => this.pasteFromClipboard()}
+                        style={styles.pasteButton}
+                    >
                         {translate('App.labels.paste')}
                     </Button>
                 )}

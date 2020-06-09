@@ -237,6 +237,10 @@ export const ConnectExtensionWeb = (() => {
             await LoadingModal.close();
             Sentry.captureException(new Error(JSON.stringify(err)));
 
+            Sentry.addBreadcrumb({
+                message: JSON.stringify({ 'attempts: ': syncConnAttempts })
+            });
+
             syncConnAttempts += 1;
 
             // Retry
@@ -260,6 +264,10 @@ export const ConnectExtensionWeb = (() => {
             },
             (error: any) => {
                 Sentry.captureException(new Error(JSON.stringify(error)));
+
+                Sentry.addBreadcrumb({
+                    message: JSON.stringify({ 'attempts: ': syncConnAttempts })
+                });
 
                 syncConnAttempts += 1;
 

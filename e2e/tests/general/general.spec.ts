@@ -10,7 +10,7 @@ describe('General', () => {
     });
 
     /**
-     * Netword Switch
+     * Network Switch
      */
     it('Network Switch', async () => {
         await networkSwitch();

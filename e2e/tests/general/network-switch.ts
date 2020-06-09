@@ -4,7 +4,7 @@ import * as utils from '../../utils/utils';
  * Network Switch
  */
 export const networkSwitch = async () => {
-    await utils.realoadRNAndEnterPin('000000');
+    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
 
     // Dashboard Screen
     // Zilliqa Mainnet active
@@ -13,22 +13,22 @@ export const networkSwitch = async () => {
     // Zilliqa Dev Testnet
     await zilDevTestnet();
 
-    await utils.realoadRNAndEnterPin('000000');
+    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
 
     // Zilliqa Kaya Local Testnet
     await zilKayaLocalTestnet();
 
-    await utils.realoadRNAndEnterPin('000000');
+    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
 
     // Ethereum Rinkeby Testnet
     await ethRinkebyTestnet();
 
-    await utils.realoadRNAndEnterPin('000000');
+    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
 
     // Ethereum Ropsten Testnet
     await ethRopstenTestnet();
 
-    await utils.realoadRNAndEnterPin('000000');
+    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
 
     // Ethereum Mainnet
     await ethMainnet();

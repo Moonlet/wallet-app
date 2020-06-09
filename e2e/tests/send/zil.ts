@@ -7,7 +7,7 @@ import { sendToken, addToken } from './common';
  *
  */
 export const sendZilNative = async () => {
-    await utils.realoadRNAndEnterPin('000000');
+    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
 
     // Dashboard Screen
     await utils.expectDashboardScreenVisible();
@@ -32,7 +32,7 @@ export const sendZilNative = async () => {
  *
  */
 export const sendZRC2XSGD = async () => {
-    await utils.realoadRNAndEnterPin('000000');
+    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
 
     // Add XSGD - testnet
     await addToken('zil1nnwugt0e5cvf2welmyq93q6p6t7zfdjzz7s05u');

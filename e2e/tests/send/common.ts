@@ -80,5 +80,5 @@ export const sendToken = async (amount: string) => {
 
     // Password Pin Screen
     await utils.expectElementVisible('password-pin-screen');
-    await customKeyboard.typeWord('000000'); // enter pin code
+    await customKeyboard.typeWord(utils.PIN_CODE_GENERATE_WALLET); // enter pin code
 };

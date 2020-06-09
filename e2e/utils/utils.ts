@@ -109,3 +109,9 @@ export const realoadRNAndEnterPin = async (pin: string) => {
  * Expect Dashboard Screen to be visible
  */
 export const expectDashboardScreenVisible = async () => expectElementVisible('dashboard-screen');
+
+/**
+ * Pin Code for the Generate Wallet
+ * Maybe consider this later to be stored in secrets
+ */
+export const PIN_CODE_GENERATE_WALLET = '000000';

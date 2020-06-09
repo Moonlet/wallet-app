@@ -31,7 +31,7 @@ export const sendEthNative = async () => {
  *
  */
 export const sendERC2DAI = async () => {
-    await utils.realoadRNAndEnterPin('000000');
+    await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
 
     // Add DAI - testnet
     await addToken('0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea');

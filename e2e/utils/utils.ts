@@ -5,13 +5,13 @@ import * as customKeyboard from './custom-keyboard';
  * Tap element by id
  * @param key
  */
-export const elementByIdTap = async (key: string) => element(by.id(key)).tap();
+export const tapElementById = async (key: string) => element(by.id(key)).tap();
 
 /**
  * Tap element by label
  * @param key
  */
-export const elementByLabelTap = async (key: string) => element(by.label(key)).tap();
+export const tapElementByLabel = async (key: string) => element(by.label(key)).tap();
 
 /**
  * Expect Element By id to have label
@@ -55,12 +55,13 @@ export const expectElementByIdToHaveLabel = async (key: string, label: string) =
  * Get text of a component <Text />
  * @param key
  */
-export const getText = async (key: string) => ((await getProps(element(by.id(key)))) as any).text;
+export const getElementTextById = async (key: string) =>
+    ((await getProps(element(by.id(key)))) as any).text;
 
 /**
  * Go back to the previous screen by pressing the left-arrow button
  */
-export const goBack = async () => element(by.id('go-back')).tap();
+export const tapBackButton = async () => element(by.id('go-back')).tap();
 
 /**
  * Go back to the previous screen
@@ -70,7 +71,7 @@ export const goBack = async () => element(by.id('go-back')).tap();
  *
  * Experimental, need to be tested better
  */
-export const pressBack = async (currentScreen: string) => {
+export const deviceGoBack = async (currentScreen: string) => {
     try {
         if (device.getPlatform() === 'android') {
             await device.pressBack(); // Android only
@@ -78,7 +79,7 @@ export const pressBack = async (currentScreen: string) => {
             await element(by.id(currentScreen)).swipe('right', 'fast', 0.1);
         }
     } catch {
-        await goBack();
+        await tapBackButton();
     }
 };
 

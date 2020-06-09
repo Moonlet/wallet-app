@@ -9,12 +9,12 @@ export const generateWalletTest = () => {
         it('generate', async () => {
             // Onboarding Screen
             await utils.expectElementVisible('onboarding-screen');
-            await utils.elementByIdTap('generate-button');
+            await utils.tapElementById('generate-button');
 
             // Legal
             await utils.expectElementVisible('legal-modal');
             await utils.expectElementVisible('legal-accept-button');
-            await utils.elementByIdTap('legal-accept-button');
+            await utils.tapElementById('legal-accept-button');
 
             // Dashboard Screen
             await utils.expectDashboardScreenVisible();
@@ -26,19 +26,19 @@ export const generateWalletTest = () => {
  * Activate Test Net
  */
 export const activateTestNet = async () => {
-    await utils.elementByLabelTap('Settings');
+    await utils.tapElementByLabel('Settings');
 
     // Settings Screen
-    await utils.elementByIdTap('Mainnet/Testnet');
+    await utils.tapElementById('Mainnet/Testnet');
 
     // Network Options Screen
-    await utils.elementByIdTap('toggle-testnet');
+    await utils.tapElementById('toggle-testnet');
 
     // Go back => Settings Screen
-    await utils.goBack();
+    await utils.tapBackButton();
 
     // Dashboard Screen
-    await utils.elementByLabelTap('Dashboard');
+    await utils.tapElementByLabel('Dashboard');
 
     await utils.expectElementVisible('testnet-badge');
 };
@@ -48,19 +48,19 @@ export const activateTestNet = async () => {
  * @param contractAddress
  */
 export const addToken = async (contractAddress: string) => {
-    await utils.elementByIdTap('dashboard-menu-icon');
+    await utils.tapElementById('dashboard-menu-icon');
 
     // Manage Account Screen
-    await utils.elementByIdTap('manage-account');
-    await utils.elementByIdTap('add-icon');
+    await utils.tapElementById('manage-account');
+    await utils.tapElementById('add-icon');
 
     // Manage Token Screen
     await utils.elementTypeText('search-input', contractAddress);
-    await utils.elementByLabelTap('Find');
-    await utils.elementByIdTap('found-token');
-    await utils.elementByLabelTap('Save');
+    await utils.tapElementByLabel('Find');
+    await utils.tapElementById('found-token');
+    await utils.tapElementByLabel('Save');
 
-    await utils.goBack();
+    await utils.tapBackButton();
 };
 
 /**
@@ -71,16 +71,16 @@ export const sendToken = async (amount: string) => {
     // Send Screen
 
     // Select address
-    await utils.elementByIdTap('transfer-between-accounts');
-    await utils.elementByIdTap('account-2');
-    await utils.elementByIdTap('next');
+    await utils.tapElementById('transfer-between-accounts');
+    await utils.tapElementById('account-2');
+    await utils.tapElementById('next');
 
     // Enter amount
     await utils.elementTypeText('enter-amount', amount);
-    await utils.elementByIdTap('next');
+    await utils.tapElementById('next');
 
     // Confirm Transaction
-    await utils.elementByIdTap('confirm');
+    await utils.tapElementById('confirm');
 
     // Password Pin Screen
     await utils.expectElementVisible('password-pin-screen');

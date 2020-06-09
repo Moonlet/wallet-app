@@ -50,7 +50,7 @@ const zilDevTestnet = async () => {
     await navToNetworkOptionsScreen();
 
     // Network Options Screen
-    await utils.elementByIdTap('toggle-testnet');
+    await utils.tapElementById('toggle-testnet');
 
     // Dashboard
     await navBackToDashboard();
@@ -66,11 +66,11 @@ const zilKayaLocalTestnet = async () => {
     await navToNetworkOptionsScreen();
 
     // Network Options Screen
-    await utils.elementByIdTap('zilliqa');
+    await utils.tapElementById('zilliqa');
 
     // Zilliqa Screen
-    await utils.elementByLabelTap('Kaya Local');
-    await utils.pressBack('network-selection-screen'); // TODO: experimental
+    await utils.tapElementByLabel('Kaya Local');
+    await utils.deviceGoBack('network-selection-screen'); // experimental
 
     // Dashboard
     await navBackToDashboard();
@@ -82,7 +82,7 @@ const zilKayaLocalTestnet = async () => {
  * Ethereum Rinbeky Testnet
  */
 const ethRinkebyTestnet = async () => {
-    await utils.elementByLabelTap('ETH');
+    await utils.tapElementByLabel('ETH');
 
     await utils.expectElementByLabelVisible('You are on Ethereum Rinkeby Testnet');
 };
@@ -95,11 +95,11 @@ const ethRopstenTestnet = async () => {
     await navToNetworkOptionsScreen();
 
     // Network Options Screen
-    await utils.elementByIdTap('ethereum');
+    await utils.tapElementById('ethereum');
 
     // Ethereum Screen
-    await utils.elementByLabelTap('Ropsten');
-    await utils.pressBack('network-selection-screen'); // TODO: experimental
+    await utils.tapElementByLabel('Ropsten');
+    await utils.deviceGoBack('network-selection-screen'); // experimental
 
     // Dashboard
     await navBackToDashboard();
@@ -115,7 +115,7 @@ const ethMainnet = async () => {
     await navToNetworkOptionsScreen();
 
     // Network Options Screen
-    await utils.elementByIdTap('toggle-testnet');
+    await utils.tapElementById('toggle-testnet');
 
     // Dashboard
     await navBackToDashboard();
@@ -130,10 +130,10 @@ const navToNetworkOptionsScreen = async () => {
     await utils.expectDashboardScreenVisible();
 
     // Dashboard Screen
-    await utils.elementByLabelTap('Settings');
+    await utils.tapElementByLabel('Settings');
 
     // Settings Screen
-    await utils.elementByIdTap('Mainnet/Testnet');
+    await utils.tapElementById('Mainnet/Testnet');
 };
 
 /**
@@ -141,10 +141,10 @@ const navToNetworkOptionsScreen = async () => {
  */
 const navBackToDashboard = async () => {
     // Go back => Settings Screen
-    await utils.goBack();
+    await utils.tapBackButton();
 
     // Dashboard Screen
-    await utils.elementByLabelTap('Dashboard');
+    await utils.tapElementByLabel('Dashboard');
 
     await utils.expectDashboardScreenVisible();
 };

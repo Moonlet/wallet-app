@@ -11,8 +11,8 @@ const deleteWallet = async (walletKey: string) => {
 
     // walletKey
     await utils.elementByIdSwipe(walletKey, 'right');
-    await utils.elementByIdTap(`delete-${walletKey}`);
-    await utils.elementByLabelTap('OK');
+    await utils.tapElementById(`delete-${walletKey}`);
+    await utils.tapElementByLabel('OK');
     await customKeyboard.typeWord(utils.PIN_CODE_GENERATE_WALLET);
 };
 
@@ -21,21 +21,21 @@ const deleteWallet = async (walletKey: string) => {
  */
 const walletEditName = async (walletKey: string) => {
     await utils.elementByIdSwipe(walletKey, 'right');
-    await utils.elementByIdTap(`edit-name-${walletKey}`);
-    await utils.elementByLabelTap('Edit name');
+    await utils.tapElementById(`edit-name-${walletKey}`);
+    await utils.tapElementByLabel('Edit name');
 
     // TODO: this is not working
     // testID is not working on RNDialog.Input
     await utils.elementTypeText('dialog-input', 'Moonlet Wallet');
-    await utils.elementByLabelTap('Save');
+    await utils.tapElementByLabel('Save');
 };
 
 const createAnotherWallet = async () => {
-    await utils.elementByIdTap('create-button');
-    await utils.elementByIdTap('copy-mnemonic');
-    await utils.goBack();
-    await utils.elementByIdTap('recover-button');
-    await utils.elementByIdTap('paste-button');
+    await utils.tapElementById('create-button');
+    await utils.tapElementById('copy-mnemonic');
+    await utils.tapBackButton();
+    await utils.tapElementById('recover-button');
+    await utils.tapElementById('paste-button');
     await customKeyboard.confirmButtonTap();
     await customKeyboard.typeWord(utils.PIN_CODE_GENERATE_WALLET);
 };
@@ -48,7 +48,7 @@ export const walletManagementTest = () => {
         it('wallet management', async () => {
             // Dashboard Screen
             await utils.expectElementByLabelVisible('Wallet 1');
-            await utils.elementByIdTap('wallets-icon');
+            await utils.tapElementById('wallets-icon');
 
             // Wallets Screen
             await utils.expectElementVisible('wallets-screen');
@@ -59,7 +59,7 @@ export const walletManagementTest = () => {
             // Dashboard Screen
             await utils.expectDashboardScreenVisible();
             await utils.expectElementByLabelVisible('Wallet 2');
-            await utils.elementByIdTap('wallets-icon');
+            await utils.tapElementById('wallets-icon');
 
             // Wallets Screen
             await utils.expectElementVisible('wallets-screen');

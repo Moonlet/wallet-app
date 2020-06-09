@@ -3,13 +3,17 @@ import { Blockchain, ChainIdType } from '.';
 import { TransactionStatus } from '../../wallet/types';
 import BigNumber from 'bignumber.js';
 import { ITokenConfigState } from '../../../redux/tokens/state';
+import { PosBasicActionType } from './token';
 
 export interface IBlockchainTransactionUtils {
     sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string>;
     buildTransferTransaction(tx: ITransferTransaction): Promise<IBlockchainTransaction>;
     getTransactionAmount(tx: IBlockchainTransaction): string;
     getTransactionStatusByCode(status: any): TransactionStatus;
-    buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]>;
+    buildPosTransaction(
+        tx: IPosTransaction,
+        transactionType: PosBasicActionType
+    ): Promise<IBlockchainTransaction[]>;
 }
 
 // tslint:disable-next-line:no-shadowed-variable
@@ -63,7 +67,6 @@ export interface IFeeOptions {
 export interface IPosTransaction {
     account: IAccountState;
     chainId: ChainIdType; // needed???
-    toAddress: string;
     amount: string;
     token: string;
 

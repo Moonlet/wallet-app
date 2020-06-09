@@ -14,6 +14,7 @@ import { Cosmos } from '.';
 import { BigNumber } from 'bignumber.js';
 import { sortObject } from '../../utils/sort-object';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { PosBasicActionType } from '../types/token';
 
 export class CosmosTransactionUtils implements IBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
@@ -48,7 +49,10 @@ export class CosmosTransactionUtils implements IBlockchainTransactionUtils {
         return signedTx;
     }
 
-    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
+    public async buildPosTransaction(
+        tx: IPosTransaction,
+        transactionType: PosBasicActionType
+    ): Promise<IBlockchainTransaction[]> {
         throw new Error('Not Implemented');
     }
 

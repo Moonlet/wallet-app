@@ -8,7 +8,7 @@ import {
 import { Transaction } from 'ethereumjs-tx';
 import abi from 'ethereumjs-abi';
 import BigNumber from 'bignumber.js';
-import { TokenType } from '../types/token';
+import { TokenType, PosBasicActionType } from '../types/token';
 import { TransactionStatus } from '../../wallet/types';
 import { Ethereum } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
@@ -34,7 +34,10 @@ export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
         return '0x' + transaction.serialize().toString('hex');
     }
 
-    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
+    public async buildPosTransaction(
+        tx: IPosTransaction,
+        transactionType: PosBasicActionType
+    ): Promise<IBlockchainTransaction[]> {
         throw new Error('Not Implemented');
     }
 

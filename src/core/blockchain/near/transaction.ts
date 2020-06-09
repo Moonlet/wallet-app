@@ -14,6 +14,7 @@ import { base_decode } from 'nearlib/src.ts/utils/serialize';
 import BN from 'bn.js';
 import sha256 from 'js-sha256';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { PosBasicActionType } from '../types/token';
 
 export class NearTransactionUtils implements IBlockchainTransactionUtils {
     public async sign(
@@ -97,7 +98,10 @@ export class NearTransactionUtils implements IBlockchainTransactionUtils {
         };
     }
 
-    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
+    public async buildPosTransaction(
+        tx: IPosTransaction,
+        transactionType: PosBasicActionType
+    ): Promise<IBlockchainTransaction[]> {
         throw new Error('Not Implemented');
     }
 

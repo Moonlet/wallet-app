@@ -201,10 +201,10 @@ const moonletCardStats = [
 ];
 
 export const moonletValidator2: IValidator = {
-    id: 'moonletID2',
+    id: '0xDD1F519F63423045F526b8c83edC0eB4BA6434a4',
     icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
-    name: 'Moonlet',
-    rank: '10th',
+    name: 'Moonlet CLabs',
+    rank: '1th',
     amountDelegated: '23',
     website: 'http://moonlet.io',
     topStats: moonletCardStats,
@@ -213,10 +213,10 @@ export const moonletValidator2: IValidator = {
     cardStats: moonletCardStats
 };
 export const moonletValidator: IValidator = {
-    id: 'moonletID',
+    id: '0xCda518F6b5a797C3EC45D37c65b83e0b0748eDca',
     icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
-    name: 'Moonlet',
-    rank: '10th',
+    name: 'Moonlet CLabs',
+    rank: '3th',
     amountDelegated: '23',
     website: 'http://moonlet.io',
     topStats: moonletCardStats,
@@ -262,10 +262,10 @@ const chainLayerCardStats = [
 ];
 
 export const chainLayerValidator: IValidator = {
-    id: 'chainLayerID',
+    id: '0xb4e92c94A2712e98c020A81868264bdE52C188Cb',
     icon: 'https://thecelo.com/logos/0x4fc4ea624db2e4a1d6195a03744d505cbcd9431b.jpg',
-    name: 'ChainLayer',
-    rank: '10th',
+    name: 'ChainLayer CLabs',
+    rank: '4th',
     amountDelegated: '190000',
     website: 'http://chainlayer.io',
     topStats: chainLayerCardStats,

@@ -234,11 +234,11 @@ export const ConnectExtensionWeb = (() => {
             // Reset sync conn attempts
             syncConnAttempts = 0;
         } catch (err) {
-            Sentry.captureException(new Error(JSON.stringify(err)));
-
             Sentry.addBreadcrumb({
                 message: JSON.stringify({ 'attempts: ': syncConnAttempts })
             });
+
+            Sentry.captureException(new Error(JSON.stringify(err)));
 
             syncConnAttempts += 1;
 
@@ -269,11 +269,11 @@ export const ConnectExtensionWeb = (() => {
                 }
             },
             (error: any) => {
-                Sentry.captureException(new Error(JSON.stringify(error)));
-
                 Sentry.addBreadcrumb({
                     message: JSON.stringify({ 'attempts: ': syncConnAttempts })
                 });
+
+                Sentry.captureException(new Error(JSON.stringify(error)));
 
                 syncConnAttempts += 1;
 

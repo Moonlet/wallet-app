@@ -1,40 +1,17 @@
-import { generateWallet, activateTestNet } from './common';
-import { sendEthNative, sendERC2DAI } from './eth';
-import { sendZilNative, sendZRC2XSGD } from './zil';
+import { generateWalletTest, activateTestNetTest } from './common';
+import { sendEthTest } from './eth';
+import { sendZilTest } from './zil';
 
 describe('Send', () => {
-    /**
-     * Generate wallet and activate TestNet
-     */
-    it('Generate wallet and activate testnet', async () => {
-        await generateWallet();
+    // Generate wallet
+    generateWalletTest();
 
-        await activateTestNet();
-    });
+    // Activate TestNet
+    activateTestNetTest;
 
-    /**
-     * Send Ethereum
-     */
-    describe('Send ETH', () => {
-        it('Native', async () => {
-            await sendEthNative();
-        });
+    // Send Ethereum
+    sendEthTest();
 
-        it('ERC2 - DAI', async () => {
-            await sendERC2DAI();
-        });
-    });
-
-    /**
-     * Send Zilliqa
-     */
-    describe('Send ZIL', () => {
-        it('Native', async () => {
-            await sendZilNative();
-        });
-
-        it('ZRC2 - XSGD', async () => {
-            await sendZRC2XSGD();
-        });
-    });
+    // Send Zilliqa
+    sendZilTest();
 });

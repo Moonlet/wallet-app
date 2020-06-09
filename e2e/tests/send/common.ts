@@ -25,22 +25,26 @@ export const generateWalletTest = () => {
 /**
  * Activate Test Net
  */
-export const activateTestNet = async () => {
-    await utils.tapElementByLabel('Settings');
+export const activateTestNetTest = () => {
+    describe('Activate Test Net', () => {
+        it('activate testnet', async () => {
+            await utils.tapElementByLabel('Settings');
 
-    // Settings Screen
-    await utils.tapElementById('Mainnet/Testnet');
+            // Settings Screen
+            await utils.tapElementById('Mainnet/Testnet');
 
-    // Network Options Screen
-    await utils.tapElementById('toggle-testnet');
+            // Network Options Screen
+            await utils.tapElementById('toggle-testnet');
 
-    // Go back => Settings Screen
-    await utils.tapBackButton();
+            // Go back => Settings Screen
+            await utils.tapBackButton();
 
-    // Dashboard Screen
-    await utils.tapElementByLabel('Dashboard');
+            // Dashboard Screen
+            await utils.tapElementByLabel('Dashboard');
 
-    await utils.expectElementVisible('testnet-badge');
+            await utils.expectElementVisible('testnet-badge');
+        });
+    });
 };
 
 /**

@@ -9,12 +9,12 @@ import { sendToken, addToken } from './common';
 export const sendEthNative = async () => {
     // Dashboard Screen
     await utils.expectDashboardScreenVisible();
-    await utils.elementByLabelTap('ETH');
-    await utils.elementByIdTap('token-card-eth');
+    await utils.tapElementByLabel('ETH');
+    await utils.tapElementById('token-card-eth');
 
     // Default Token Screen
     await utils.expectElementVisible('default-token-screen');
-    await utils.elementByIdTap('send-button');
+    await utils.tapElementById('send-button');
 
     // Send
     await sendToken('0.001');
@@ -33,16 +33,19 @@ export const sendEthNative = async () => {
 export const sendERC2DAI = async () => {
     await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
 
+    // Dashboard Screen
+    await utils.expectDashboardScreenVisible();
+
     // Add DAI - testnet
     await addToken('0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea');
 
     // Dashboard Screen
     await utils.expectDashboardScreenVisible();
-    await utils.elementByIdTap('token-card-dai');
+    await utils.tapElementById('token-card-dai');
 
     // Default Token Screen
     await utils.expectElementVisible('default-token-screen');
-    await utils.elementByIdTap('send-button');
+    await utils.tapElementById('send-button');
 
     // Send
     await sendToken('0.001');

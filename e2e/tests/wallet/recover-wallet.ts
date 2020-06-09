@@ -11,12 +11,12 @@ export const recoverWalletFreshInstall = async () => {
 
     // Recover Button
     await utils.expectElementVisible('recover-button');
-    await utils.elementByIdTap('recover-button');
+    await utils.tapElementById('recover-button');
 
     // Legal
     await utils.expectElementVisible('legal-modal');
     await utils.expectElementVisible('legal-accept-button');
-    await utils.elementByIdTap('legal-accept-button');
+    await utils.tapElementById('legal-accept-button');
 
     // Recover Screen
     await utils.expectElementVisible('recover-wallet-screen');
@@ -24,8 +24,8 @@ export const recoverWalletFreshInstall = async () => {
 
     // Password Terms Screen
     await utils.expectElementVisible('password-terms-screen');
-    await utils.elementByIdTap('pass-terms-checkbox');
-    await utils.elementByIdTap('understand-button');
+    await utils.tapElementById('pass-terms-checkbox');
+    await utils.tapElementById('understand-button');
 
     // Password Pin Screen
     await utils.expectElementVisible('password-pin-screen');
@@ -42,11 +42,12 @@ export const recoverAnotherWallet = async () => {
     await utils.realoadRNAndEnterPin('112266');
 
     // Dashboard Screen
-    await utils.elementByIdTap('wallets-icon');
+    await utils.expectDashboardScreenVisible();
+    await utils.tapElementById('wallets-icon');
 
     // Wallets Screen
     await utils.expectElementVisible('wallets-screen');
-    await utils.elementByIdTap('recover-button');
+    await utils.tapElementById('recover-button');
 
     // Recover Screen
     await utils.expectElementVisible('recover-wallet-screen');

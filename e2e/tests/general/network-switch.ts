@@ -7,6 +7,9 @@ export const networkSwitchTest = () => {
     describe('Network Switch', () => {
         beforeEach(async () => {
             await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
+
+            // Dashboard Screen
+            await utils.expectDashboardScreenVisible();
         });
 
         it('network switch', async () => {

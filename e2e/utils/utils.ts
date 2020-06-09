@@ -107,11 +107,7 @@ export const realoadRNAndEnterPin = async (pin: string) => {
     await device.reloadReactNative();
 
     // Password Pin Screen
-    await expectElementVisible('password-pin-screen');
     await customKeyboard.typeWord(pin); // enter pin code
-
-    // Dashboard Screen
-    await expectDashboardScreenVisible();
 };
 
 /**

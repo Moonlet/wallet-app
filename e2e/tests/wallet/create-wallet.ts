@@ -11,12 +11,12 @@ export const createWalletFreshInstall = async () => {
 
     // Create Button
     await utils.expectElementVisible('create-button');
-    await utils.elementByIdTap('create-button');
+    await utils.tapElementById('create-button');
 
     // Legal
     await utils.expectElementVisible('legal-modal');
     await utils.expectElementVisible('legal-accept-button');
-    await utils.elementByIdTap('legal-accept-button');
+    await utils.tapElementById('legal-accept-button');
 
     // Create Wallet Mnemonic Screen
     await mnemonicSteps();
@@ -27,8 +27,8 @@ export const createWalletFreshInstall = async () => {
 
     // Password Terms Screen
     await utils.expectElementVisible('password-terms-screen');
-    await utils.elementByIdTap('pass-terms-checkbox');
-    await utils.elementByIdTap('understand-button');
+    await utils.tapElementById('pass-terms-checkbox');
+    await utils.tapElementById('understand-button');
 
     // Password Pin Screen
     await utils.expectElementVisible('password-pin-screen');
@@ -46,11 +46,12 @@ export const createAnotherWallet = async () => {
     await utils.realoadRNAndEnterPin('123456');
 
     // Dashboard Screen
-    await utils.elementByIdTap('wallets-icon');
+    await utils.expectDashboardScreenVisible();
+    await utils.tapElementById('wallets-icon');
 
     // Wallets Screen
     await utils.expectElementVisible('wallets-screen');
-    await utils.elementByIdTap('create-button');
+    await utils.tapElementById('create-button');
 
     // Create Wallet Mnemonic Screen
     await mnemonicSteps();

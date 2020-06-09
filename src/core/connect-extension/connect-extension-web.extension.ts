@@ -234,7 +234,6 @@ export const ConnectExtensionWeb = (() => {
             // Reset sync conn attempts
             syncConnAttempts = 0;
         } catch (err) {
-            await LoadingModal.close();
             Sentry.captureException(new Error(JSON.stringify(err)));
 
             Sentry.addBreadcrumb({
@@ -243,8 +242,15 @@ export const ConnectExtensionWeb = (() => {
 
             syncConnAttempts += 1;
 
-            // Retry
-            syncConnect(conn, connectionsRef);
+            if (syncConnAttempts <= CONN_EXT_RETRY_ATTEMPTS) {
+                // Retry
+                syncConnect(conn, connectionsRef);
+            } else {
+                await LoadingModal.close();
+
+                // Reset sync conn attempts
+                syncConnAttempts = 0;
+            }
         }
     };
 

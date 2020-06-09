@@ -7,7 +7,7 @@ describe('Send', () => {
     generateWalletTest();
 
     // Activate TestNet
-    activateTestNetTest;
+    activateTestNetTest();
 
     // Send Ethereum
     sendEthTest();

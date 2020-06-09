@@ -18,27 +18,27 @@ export const networkSwitchTest = () => {
             await utils.expectElementNotVisible('testnet-badge');
         });
 
-        it('it works on zilliqa dev testnet', async () => {
+        it('zilliqa dev testnet', async () => {
             // Zilliqa Dev Testnet
             await zilDevTestnet();
         });
 
-        it('it works on zilliqa kaya local testnet', async () => {
+        it('zilliqa kaya local testnet', async () => {
             // Zilliqa Kaya Local Testnet
             await zilKayaLocalTestnet();
         });
 
-        it('it works on ethereum rinkeby testnet', async () => {
+        it('ethereum rinkeby testnet', async () => {
             // Ethereum Rinkeby Testnet
             await ethRinkebyTestnet();
         });
 
-        it('it works on ethereum ropsten testnet', async () => {
+        it('ethereum ropsten testnet', async () => {
             // Ethereum Ropsten Testnet
             await ethRopstenTestnet();
         });
 
-        it('it works on ethereum mainnet', async () => {
+        it('ethereum mainnet', async () => {
             // Ethereum Mainnet
             await ethMainnet();
         });

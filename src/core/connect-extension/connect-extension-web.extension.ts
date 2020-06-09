@@ -9,7 +9,7 @@ import {
     readEncrypted,
     deleteFromStorage
 } from '../secure/storage/storage.extension';
-import { CONN_EXTENSION, SYNC_EXT_RETRY_ATTEMPTS } from '../../core/constants/app';
+import { CONN_EXTENSION, CONN_EXT_RETRY_ATTEMPTS } from '../../core/constants/app';
 import Bowser from 'bowser';
 import { browser } from 'webextension-polyfill-ts';
 import { buildState } from './conn-ext-build-state/conn-ext-build-state';
@@ -222,7 +222,7 @@ export const ConnectExtensionWeb = (() => {
 
                 buildTransactions(decryptedState.state.wallets);
             } else {
-                if (syncConnAttempts <= SYNC_EXT_RETRY_ATTEMPTS) {
+                if (syncConnAttempts <= CONN_EXT_RETRY_ATTEMPTS) {
                     // Retry
                     syncConnect(conn, connectionsRef);
                 }

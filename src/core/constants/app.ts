@@ -23,4 +23,4 @@ export enum AppStateStatus {
     INACTIVE = 'inactive'
 }
 
-export const SYNC_EXT_RETRY_ATTEMPTS = 3;
+export const CONN_EXT_RETRY_ATTEMPTS = 3;

@@ -22,3 +22,5 @@ export enum AppStateStatus {
     BACKGROUND = 'background',
     INACTIVE = 'inactive'
 }
+
+export const SYNC_EXT_RETRY_ATTEMPTS = 3;

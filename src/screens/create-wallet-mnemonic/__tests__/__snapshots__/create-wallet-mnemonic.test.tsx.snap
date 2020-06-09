@@ -29,7 +29,7 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
     <withTheme(CheckboxComponent) testID=\\"checkbox\\" onPress={[Function: onPress]} checked={false} text=\\"The recovery phrase is the only way to restore your Moonlet wallet in case you lose your phone or forget your password. Don’t lose it!\\" textStyle={{...}} />
   </View>
   <View style={{...}}>
-    <withTheme(ButtonComponent) style={{...}} onPress={[Function: onPress]}>
+    <withTheme(ButtonComponent) testID=\\"copy-mnemonic\\" style={{...}} onPress={[Function: onPress]}>
       Copy entire mnemonic
     </withTheme(ButtonComponent)>
     <withTheme(ButtonComponent) testID=\\"next-button-1\\" primary={true} onPress={[Function: onPress]} disabled={true}>

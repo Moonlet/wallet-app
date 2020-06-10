@@ -35,29 +35,29 @@ describe('Recover Wallet', () => {
 
         await utils.expectDashboardScreenVisible();
     });
-});
 
-/**
- * Recover another wallet
- */
-it('Recover another wallet', async () => {
-    await utils.realoadRNAndEnterPin('112266');
+    /**
+     * Recover another wallet
+     */
+    it('Recover another wallet', async () => {
+        await utils.realoadRNAndEnterPin('112266');
 
-    // Dashboard Screen
-    await utils.expectDashboardScreenVisible();
-    await utils.tapElementById('wallets-icon');
+        // Dashboard Screen
+        await utils.expectDashboardScreenVisible();
+        await utils.tapElementById('wallets-icon');
 
-    // Wallets Screen
-    await utils.expectElementVisible('wallets-screen');
-    await utils.tapElementById('recover-button');
+        // Wallets Screen
+        await utils.expectElementVisible('wallets-screen');
+        await utils.tapElementById('recover-button');
 
-    // Recover Screen
-    await utils.expectElementVisible('recover-wallet-screen');
-    await enterMnemonic();
+        // Recover Screen
+        await utils.expectElementVisible('recover-wallet-screen');
+        await enterMnemonic();
 
-    // Password Pin Screen
-    await utils.expectElementVisible('password-pin-screen');
-    await customKeyboard.typeWord('112266'); // enter pin code
+        // Password Pin Screen
+        await utils.expectElementVisible('password-pin-screen');
+        await customKeyboard.typeWord('112266'); // enter pin code
 
-    await utils.expectDashboardScreenVisible();
+        await utils.expectDashboardScreenVisible();
+    });
 });

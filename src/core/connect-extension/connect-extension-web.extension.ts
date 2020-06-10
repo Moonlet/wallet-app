@@ -22,8 +22,6 @@ import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import CONFIG from '../../config';
 import * as Sentry from '@sentry/browser';
 
-let syncConnAttempts = 0;
-
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
         const realtimeDB = database().ref(FirebaseRef.EXTENSION_SYNC);
@@ -197,59 +195,60 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
-    const syncConnect = async (conn: IQRCodeConn, connectionsRef: any) => {
-        // show loading untill data is fetch and state is build
-        await LoadingModal.open();
-
+    const syncConnect = async (
+        conn: IQRCodeConn,
+        connectionsRef: any,
+        syncConnAttempts: number = CONN_EXT_RETRY_ATTEMPTS
+    ) => {
         try {
-            // Extension the state from Firebase Storage
-            const extState = await downloadFileStorage(conn.connectionId);
+            if (syncConnAttempts > 0) {
+                // show loading until data is fetch and state is build
+                await LoadingModal.open();
 
-            if (extState) {
-                const decryptedState = JSON.parse(await decrypt(extState, conn.encKey));
+                // Extension the state from Firebase Storage
+                const extState = await downloadFileStorage(conn.connectionId);
 
-                // Save state
-                await storeState(decryptedState);
+                if (extState) {
+                    const decryptedState = JSON.parse(await decrypt(extState, conn.encKey));
 
-                // Store connection
-                await storeConnection(conn);
+                    // Save state
+                    await storeState(decryptedState);
 
-                // remove listener for connectionId
-                connectionsRef.child(conn.connectionId).off('value');
+                    // Store connection
+                    await storeConnection(conn);
 
-                // navigate to Dashboard
-                NavigationService.navigate('MainNavigation', {});
+                    // remove listener for connectionId
+                    connectionsRef.child(conn.connectionId).off('value');
 
-                buildTransactions(decryptedState.state.wallets);
-            } else {
-                if (syncConnAttempts <= CONN_EXT_RETRY_ATTEMPTS) {
+                    // navigate to Dashboard
+                    NavigationService.navigate('MainNavigation', {});
+
+                    buildTransactions(decryptedState.state.wallets);
+                } else {
                     // Retry
-                    syncConnect(conn, connectionsRef);
+                    syncConnect(conn, connectionsRef, syncConnAttempts - 1);
                 }
+
+                // close loading modal
+                await LoadingModal.close();
+            } else {
+                // Error
+                // Maybe display a warning message to the user
+
+                Sentry.captureException('The connection has failed multiple times.');
             }
-
-            // close loading modal
-            await LoadingModal.close();
-
-            // Reset sync conn attempts
-            syncConnAttempts = 0;
         } catch (err) {
             Sentry.addBreadcrumb({
-                message: JSON.stringify({ 'attempts: ': syncConnAttempts })
+                message: JSON.stringify({ 'attempts left: ': syncConnAttempts })
             });
 
             Sentry.captureException(new Error(JSON.stringify(err)));
 
-            syncConnAttempts += 1;
-
-            if (syncConnAttempts <= CONN_EXT_RETRY_ATTEMPTS) {
+            if (syncConnAttempts > 0) {
                 // Retry
-                syncConnect(conn, connectionsRef);
+                syncConnect(conn, connectionsRef, syncConnAttempts - 1);
             } else {
                 await LoadingModal.close();
-
-                // Reset sync conn attempts
-                syncConnAttempts = 0;
             }
         }
     };
@@ -269,13 +268,7 @@ export const ConnectExtensionWeb = (() => {
                 }
             },
             (error: any) => {
-                Sentry.addBreadcrumb({
-                    message: JSON.stringify({ 'attempts: ': syncConnAttempts })
-                });
-
                 Sentry.captureException(new Error(JSON.stringify(error)));
-
-                syncConnAttempts += 1;
 
                 // Error, try again
                 connectionsRef

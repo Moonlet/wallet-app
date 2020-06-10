@@ -2,8 +2,7 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    IBlockchainTransactionUtils,
-    IPosTransaction
+    AbstractBlockchainTransactionUtils
 } from '../types';
 import { INearTransactionAdditionalInfoType, NearTransactionActionType, Near } from './';
 import { TransactionStatus } from '../../wallet/types';
@@ -15,7 +14,7 @@ import BN from 'bn.js';
 import sha256 from 'js-sha256';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
-export class NearTransactionUtils implements IBlockchainTransactionUtils {
+export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(
         tx: IBlockchainTransaction<INearTransactionAdditionalInfoType>,
         privateKey: string
@@ -95,10 +94,6 @@ export class NearTransactionUtils implements IBlockchainTransactionUtils {
                 ]
             }
         };
-    }
-
-    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
-        throw new Error('Not Implemented');
     }
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {

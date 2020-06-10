@@ -14,7 +14,7 @@ import { INavigationProps } from '../../../../navigation/with-navigation-params'
 import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
 import { bind } from 'bind-decorator';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
-import { NavigationService } from '../../../../navigation/navigation-service';
+import { quickDelegate } from '../../../../redux/wallets/actions';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -24,6 +24,7 @@ export interface IReduxProps {
     token: ITokenState;
     validators: IValidator[];
     actionText: string;
+    quickDelegate: typeof quickDelegate;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
@@ -41,24 +42,15 @@ export const mapStateToProps = (state: IReduxState) => {
 };
 
 const mapDispatchToProps = {
-    //
+    quickDelegate
 };
-
-interface IState {
-    validatorsList: IValidator[];
-    amount: string;
-    insufficientFunds: boolean;
-    feeOptions: IFeeOptions;
-    insufficientFundsFees: boolean;
-}
 
 export const navigationOptions = ({ navigation }: any) => ({
     title: navigation?.state?.params?.actionText && translate(navigation?.state?.params?.actionText)
 });
 
 export class QuickDelegateEnterAmountComponent extends React.Component<
-    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
 
@@ -66,14 +58,6 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
         props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
         super(props);
-
-        this.state = {
-            validatorsList: props.validators,
-            amount: '',
-            insufficientFunds: false,
-            feeOptions: undefined,
-            insufficientFundsFees: false
-        };
     }
 
     public componentDidMount() {
@@ -83,12 +67,21 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
     @bind
     private async onPressConfirm(amount: string, feeOptions: IFeeOptions) {
         try {
-            await PasswordModal.getPassword(
+            const password = await PasswordModal.getPassword(
                 translate('Password.pinTitleUnlock'),
                 translate('Password.subtitleSignTransaction'),
                 { sensitive: true, showCloseButton: true }
             );
-            NavigationService.goBack('TokenScreen-key');
+            this.props.quickDelegate(
+                this.props.account,
+                amount,
+                this.props.validators,
+                this.props.token.symbol,
+                feeOptions,
+                password,
+                this.props.navigation,
+                undefined
+            );
         } catch {
             //
         }

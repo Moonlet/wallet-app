@@ -17,6 +17,7 @@ export abstract class BlockchainGenericClient {
     public http: HttpClient;
     public readonly chainId: ChainIdType;
     public utils: IClientUtils;
+    public contracts: { [type: string]: any } = {};
 
     constructor(chainId: ChainIdType, networks: IBlockchainNetwork[]) {
         let url = networks[0].url;

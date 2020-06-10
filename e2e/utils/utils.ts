@@ -29,11 +29,18 @@ export const expectElementNotVisible = async (key: string) =>
     (expect(element(by.id(key))) as any).toBeNotVisible();
 
 /**
- * Expect Element By llabel to be visible
+ * Expect Element By label to be visible
  * @param key
  */
 export const expectElementByLabelVisible = async (key: string) =>
     (expect(element(by.label(key))) as any).toBeVisible();
+
+/**
+ * Expect Element By label to NOT be visible
+ * @param key
+ */
+export const expectElementByLabelNotVisible = async (key: string) =>
+    (expect(element(by.label(key))) as any).toBeNotVisible();
 
 /**
  * Expect Element By id to have text

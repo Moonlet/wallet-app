@@ -3,10 +3,10 @@ import {
     IBlockchainNetwork,
     IBlockchainAccountUtils,
     BlockchainGenericClient,
-    IBlockchainTransactionUtils,
     ChainIdType
 } from './';
 import { GenericStats } from './stats';
+import { AbstractBlockchainTransactionUtils } from './transaction';
 
 export enum Blockchain {
     ETHEREUM = 'ETHEREUM',
@@ -19,7 +19,7 @@ export enum Blockchain {
 export interface IBlockchain {
     config: IBlockchainConfig;
     networks: IBlockchainNetwork[];
-    transaction: IBlockchainTransactionUtils;
+    transaction: AbstractBlockchainTransactionUtils;
     account: IBlockchainAccountUtils;
     Client: new (chainId) => BlockchainGenericClient;
     getStats: (chainId: ChainIdType) => GenericStats;

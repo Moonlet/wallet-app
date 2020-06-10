@@ -1,4 +1,4 @@
-import { HDWallet } from '../../core/wallet/hd-wallet/hd-wallet';
+import { HDWallet } from '../../../core/wallet/hd-wallet/hd-wallet';
 import {
     Blockchain,
     IFeeOptions,
@@ -7,59 +7,58 @@ import {
     ITransferTransactionExtraFields,
     ChainIdType,
     IBlockchainTransaction
-} from '../../core/blockchain/types';
-import { WalletType, IWallet, TransactionStatus } from '../../core/wallet/types';
-import { IWalletState, IAccountState } from './state';
-import { IAction } from '../types';
+} from '../../../core/blockchain/types';
+import { WalletType, IWallet, TransactionStatus } from '../../../core/wallet/types';
+import { IWalletState, IAccountState, ITokenState } from '../state';
+import { IAction } from '../../types';
 import { Dispatch } from 'react';
-import { IReduxState } from '../state';
+import { IReduxState } from '../../state';
 import uuidv4 from 'uuid/v4';
 import {
     storeEncrypted,
     deleteFromStorage,
     readEncrypted
-} from '../../core/secure/storage/storage';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { WalletFactory } from '../../core/wallet/wallet-factory';
-import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
+} from '../../../core/secure/storage/storage';
+import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
+import { WalletFactory } from '../../../core/wallet/wallet-factory';
+import { HWVendor, HWModel, HWConnection } from '../../../core/wallet/hw-wallet/types';
 import {
     verifyAddressOnDevice,
     featureNotSupported,
     toInitialState
-} from '../ui/screens/connectHardwareWallet/actions';
-import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
+} from '../../ui/screens/connectHardwareWallet/actions';
+import { HWWalletFactory } from '../../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
-import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
-import { translate } from '../../core/i18n';
-import { TokenType } from '../../core/blockchain/types/token';
-import { NavigationService } from '../../navigation/navigation-service';
+import { LedgerWallet } from '../../../core/wallet/hw-wallet/ledger/ledger-wallet';
+import { translate } from '../../../core/i18n';
+import { TokenType } from '../../../core/blockchain/types/token';
+import { NavigationService } from '../../../navigation/navigation-service';
 import {
     getSelectedWallet,
     getAccounts,
     getSelectedAccount,
     getWalletWithAddress,
     getWalletAndTransactionForHash
-} from './selectors';
-import { getChainId } from '../preferences/selectors';
-import { Client as NearClient } from '../../core/blockchain/near/client';
-import { enableCreateAccount, disableCreateAccount } from '../ui/screens/dashboard/actions';
-import { formatAddress } from '../../core/utils/format-address';
-import { updateAddressMonitorTokens } from '../../core/address-monitor/index';
-import { Dialog } from '../../components/dialog/dialog';
-import { setDisplayPasswordModal } from '../ui/password-modal/actions';
-import { getTokenConfig, generateAccountTokenState } from '../tokens/static-selectors';
-import { ITokenState } from '../wallets/state';
+} from '../selectors';
+import { getChainId } from '../../preferences/selectors';
+import { Client as NearClient } from '../../../core/blockchain/near/client';
+import { enableCreateAccount, disableCreateAccount } from '../../ui/screens/dashboard/actions';
+import { formatAddress } from '../../../core/utils/format-address';
+import { updateAddressMonitorTokens } from '../../../core/address-monitor/index';
+import { Dialog } from '../../../components/dialog/dialog';
+import { setDisplayPasswordModal } from '../../ui/password-modal/actions';
+import { getTokenConfig, generateAccountTokenState } from '../../tokens/static-selectors';
 import {
     getEncryptionKey,
     generateEncryptionKey,
     clearEncryptionKey,
     clearPinCode
-} from '../../core/secure/keychain/keychain';
-import { delay } from '../../core/utils/time';
-import { toggleBiometricAuth } from '../preferences/actions';
-import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../ui/transaction-request/actions';
-import { ConnectExtension } from '../../core/connect-extension/connect-extension';
-import { LoadingModal } from '../../components/loading-modal/loading-modal';
+} from '../../../core/secure/keychain/keychain';
+import { delay } from '../../../core/utils/time';
+import { toggleBiometricAuth } from '../../preferences/actions';
+import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../../ui/transaction-request/actions';
+import { ConnectExtension } from '../../../core/connect-extension/connect-extension';
+import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import * as Sentry from '@sentry/react-native';
 
 // actions consts

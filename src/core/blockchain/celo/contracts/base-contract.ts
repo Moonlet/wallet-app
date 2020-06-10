@@ -11,19 +11,29 @@ let contracts = {
     }
 };
 
-export const getCeloContracts = async () => {
+export const fetchContracts = async (chainId: ChainIdType) => {
+    // TODO - fetch from blockchain
     return contracts;
 };
 
-export const getContractFor = async (
+export const getCeloContracts = async (chainId: ChainIdType) => {
+    if (!contracts[chainId]) {
+        contracts[chainId] = await fetchContracts(chainId);
+    }
+    return contracts[chainId];
+};
+
+export const getContract = async (
     chainId: ChainIdType,
     contractType: Contracts
 ): Promise<string> => {
+    return contracts[contractType];
+
     if (contracts[chainId] && contracts[chainId][contractType])
         return contracts[chainId][contractType];
     else {
-        contracts = await getCeloContracts();
-        return contracts[chainId][contractType];
+        contracts = await getCeloContracts(chainId);
+        return contracts[contractType];
     }
 };
 

@@ -2,14 +2,14 @@ import { Client } from '../client';
 import BigNumber from 'bignumber.js';
 import { IPosTransaction, IBlockchainTransaction } from '../../types';
 import abi from 'ethereumjs-abi';
-import { getContractFor, buildBaseTransaction } from './base-contract';
+import { getContract, buildBaseTransaction } from './base-contract';
 import { Contracts } from '../config';
 
 export class LockedGold {
     constructor(private client: Client) {}
 
     public async getAccountTotalLockedGold(accountAddress: string): Promise<BigNumber> {
-        const contractAddress = await getContractFor(this.client.chainId, Contracts.LOCKED_GOLD);
+        const contractAddress = await getContract(this.client.chainId, Contracts.LOCKED_GOLD);
 
         return this.client
             .callContract(contractAddress, 'getAccountTotalLockedGold(address):(uint256)', [
@@ -20,9 +20,9 @@ export class LockedGold {
             });
     }
 
-    public async buildTransactionForLock(tx: IPosTransaction): Promise<IBlockchainTransaction> {
+    public async lock(tx: IPosTransaction): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
-        const contractAddress = await getContractFor(this.client.chainId, Contracts.LOCKED_GOLD);
+        const contractAddress = await getContract(this.client.chainId, Contracts.LOCKED_GOLD);
 
         transaction.toAddress = contractAddress;
         transaction.data = {

@@ -5,15 +5,27 @@ import BigNumber from 'bignumber.js';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { PosBasicActionType } from './token';
 
-export interface IBlockchainTransactionUtils {
-    sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string>;
-    buildTransferTransaction(tx: ITransferTransaction): Promise<IBlockchainTransaction>;
-    getTransactionAmount(tx: IBlockchainTransaction): string;
-    getTransactionStatusByCode(status: any): TransactionStatus;
-    buildPosTransaction(
+export abstract class AbstractBlockchainTransactionUtils {
+    public async sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string> {
+        throw new Error('Not Implemented');
+    }
+    public async buildTransferTransaction(
+        tx: ITransferTransaction
+    ): Promise<IBlockchainTransaction> {
+        throw new Error('Not Implemented');
+    }
+    public getTransactionAmount(tx: IBlockchainTransaction): string {
+        throw new Error('Not Implemented');
+    }
+    public getTransactionStatusByCode(status: any): TransactionStatus {
+        throw new Error('Not Implemented');
+    }
+    public async buildPosTransaction(
         tx: IPosTransaction,
         transactionType: PosBasicActionType
-    ): Promise<IBlockchainTransaction[]>;
+    ): Promise<IBlockchainTransaction[]> {
+        throw new Error('Not Implemented');
+    }
 }
 
 // tslint:disable-next-line:no-shadowed-variable

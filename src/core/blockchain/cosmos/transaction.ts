@@ -2,8 +2,8 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    IBlockchainTransactionUtils,
-    IPosTransaction
+    IPosTransaction,
+    AbstractBlockchainTransactionUtils
 } from '../types';
 import secp256k1 from 'secp256k1/elliptic';
 import { createHash } from 'crypto';
@@ -16,7 +16,7 @@ import { sortObject } from '../../utils/sort-object';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { PosBasicActionType } from '../types/token';
 
-export class CosmosTransactionUtils implements IBlockchainTransactionUtils {
+export class CosmosTransactionUtils implements AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const hash = createHash('sha256')
             .update(JSON.stringify(sortObject(tx.additionalInfo.stdSignMsg)))

@@ -123,7 +123,7 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                     address: tx.account.address,
                     publicKey: tx.account.publicKey,
                     toAddress: tokenConfig.contractAddress,
-                    amount: tx.amount,
+                    amount: '0',
                     feeOptions: tx.feeOptions,
                     broadcastedOnBlock: blockInfo?.number,
                     nonce,

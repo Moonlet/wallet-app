@@ -4,10 +4,10 @@ import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { Celo } from '..';
 import { TransactionStatus } from '../../../wallet/types';
 
-let contracts = {
+const contracts = {
     '44786': {
         [Contracts.LOCKED_GOLD]: '0x94c3e6675015d8479b648657e7ddfcd938489d0d',
-        [Contracts.ELECTION]: ''
+        [Contracts.ELECTION]: '0x11fE523F93CAc185d12cB39CC3bd279D2de524F8'
     }
 };
 
@@ -27,14 +27,7 @@ export const getContract = async (
     chainId: ChainIdType,
     contractType: Contracts
 ): Promise<string> => {
-    return contracts[contractType];
-
-    if (contracts[chainId] && contracts[chainId][contractType])
-        return contracts[chainId][contractType];
-    else {
-        contracts = await getCeloContracts(chainId);
-        return contracts[contractType];
-    }
+    return getCeloContracts(chainId).then(celoContracts => celoContracts[contractType]);
 };
 
 export const buildBaseTransaction = async (

@@ -81,11 +81,7 @@ export interface IPosTransaction {
     chainId: ChainIdType; // needed???
     amount: string;
     token: string;
-
-    //  nonce: number;
     feeOptions: IFeeOptions;
-    //  currentBlockHash: string;
-    //  currentBlockNumber: number;
     extraFields?: ITransferTransactionExtraFields;
 }
 

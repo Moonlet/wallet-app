@@ -236,19 +236,10 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
         this.setState({ toAddress });
 
-        let amount: string;
         if (qrCodeTxPayload?.params?.amount) {
-            amount = qrCodeTxPayload.params.amount;
-        }
-
-        if (amount) {
-            const tokenConfig = getTokenConfig(blockchain, this.state.tokenSymbol);
-            const amountFromStd = blockchainInstance.account.amountFromStd(
-                new BigNumber(amount),
-                tokenConfig.decimals
-            );
-
-            this.setState({ amount: amountFromStd.toFixed() });
+            this.setState({
+                amount: qrCodeTxPayload.params.amount
+            });
         }
 
         this.setState({ isLoading: false });

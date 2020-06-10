@@ -1,6 +1,6 @@
 import * as utils from '../../utils/utils';
 import * as customKeyboard from '../../utils/custom-keyboard';
-import { enterMnemonic } from './common';
+import { enterMnemonic } from './utils';
 
 describe('Recover Wallet', () => {
     /**

@@ -1,6 +1,6 @@
 import * as utils from '../../utils/utils';
 import * as customKeyboard from '../../utils/custom-keyboard';
-import { mnemonicSteps, mnemonicConfirm } from './common';
+import { mnemonicSteps, mnemonicConfirm } from './utils';
 
 describe('Create Wallet', () => {
     /**

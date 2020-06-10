@@ -7,13 +7,14 @@ import {
 } from '../types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { Celo } from '.';
-import { TokenType } from '../types/token';
+import { TokenType, PosBasicActionType } from '../types/token';
 import { TransactionStatus } from '../../wallet/types';
 import abi from 'ethereumjs-abi';
 import BigNumber from 'bignumber.js';
 import { keccak256 } from './library/hash';
 import { encode } from './library/rlp';
 import elliptic from 'elliptic';
+import { Contracts } from './config';
 
 const toHex = value => {
     if (value && value !== '0x') {
@@ -38,7 +39,7 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
             '0x', // gatewayFeeRecipient
             '0x', // gatewayFee
             (tx.toAddress || '0x').toLowerCase(),
-            '0x',
+            toHex(tx.amount),
             (tx.data.raw || '0x').toLowerCase(),
             toHex(tx.chainId || 1)
         ];
@@ -64,8 +65,37 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
         return encode(rawTx);
     }
 
-    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
-        throw new Error('Not Implemented');
+    public async buildPosTransaction(
+        tx: IPosTransaction,
+        transactionType: PosBasicActionType
+    ): Promise<IBlockchainTransaction[]> {
+        const client = Celo.getClient(tx.chainId);
+
+        const transactions: IBlockchainTransaction[] = [];
+
+        switch (transactionType) {
+            case PosBasicActionType.DELEGATE: {
+                const amountLocked = await client.contracts[
+                    Contracts.LOCKED_GOLD
+                ].getAccountTotalLockedGold(tx.account.address);
+
+                if (amountLocked.isGreaterThanOrEqualTo(new BigNumber(tx.amount))) {
+                    // add election.vote transaction
+
+                    // for testing purposes
+                    transactions.push(
+                        await client.contracts[Contracts.LOCKED_GOLD].buildTransactionForLock(tx)
+                    );
+                } else {
+                    transactions.push(
+                        await client.contracts[Contracts.LOCKED_GOLD].buildTransactionForLock(tx)
+                    );
+                    // add election.vote transaction as well
+                }
+            }
+        }
+
+        return transactions;
     }
 
     public async buildTransferTransaction(

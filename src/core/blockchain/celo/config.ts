@@ -141,3 +141,9 @@ export const config: IBlockchainConfig = {
     },
     defaultOrder: 1
 };
+
+export enum Contracts {
+    LOCKED_GOLD = 'LOCKED_GOLD',
+    ELECTION = 'ELECTION',
+    ACCOUNT = 'ACCOUNT'
+}

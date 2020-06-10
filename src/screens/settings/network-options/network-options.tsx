@@ -51,6 +51,7 @@ export class NetworkOptionsComponent extends React.Component<
                     <Text style={styles.textRow}>{translate('NetworkOptions.testnet')}</Text>
                     <View style={styles.switch}>
                         <Switch
+                            testID="toggle-testnet"
                             onValueChange={() => this.props.toggleTestNet()}
                             value={testNet}
                             trackColor={{
@@ -88,6 +89,7 @@ export class NetworkOptionsComponent extends React.Component<
                         return (
                             <View key={index}>
                                 <TouchableOpacity
+                                    testID={blockchain.toLocaleLowerCase()}
                                     style={styles.rowContainer}
                                     disabled={!testNet}
                                     onPress={() =>

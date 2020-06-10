@@ -102,7 +102,11 @@ export class SettingsScreenComponent extends React.Component<
 
         return (
             <View>
-                <TouchableOpacity style={styles.rowContainer} onPress={() => callback()}>
+                <TouchableOpacity
+                    testID={label}
+                    style={styles.rowContainer}
+                    onPress={() => callback()}
+                >
                     <Text style={styles.textRow}>{label}</Text>
                     <View style={styles.rightContainer}>
                         <Icon

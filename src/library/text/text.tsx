@@ -16,6 +16,7 @@ export interface IExternalProps {
     numberOfLines?: number;
     ellipsizeMode?: 'head' | 'middle' | 'tail' | 'clip';
     isAnimated?: boolean;
+    testID?: string;
 }
 
 export interface ITextProps {
@@ -57,6 +58,7 @@ export const TextComponent = (props: IExternalProps & ITextProps) => {
     if (props?.isAnimated) {
         return (
             <ReactNative.Animated.Text
+                testID={props?.testID || 'text'}
                 style={getStyle(props)}
                 numberOfLines={props.numberOfLines}
                 ellipsizeMode={props.ellipsizeMode}
@@ -67,6 +69,7 @@ export const TextComponent = (props: IExternalProps & ITextProps) => {
     } else {
         return (
             <ReactNative.Text
+                testID={props?.testID || 'text'}
                 style={getStyle(props)}
                 numberOfLines={props.numberOfLines}
                 ellipsizeMode={props.ellipsizeMode}

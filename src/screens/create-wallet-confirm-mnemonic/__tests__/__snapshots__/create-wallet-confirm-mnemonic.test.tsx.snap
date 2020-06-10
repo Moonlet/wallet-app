@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`creat wallet terms screen component renders correctly 1`] = `
-"<View style={{...}}>
+"<View testID=\\"create-wallet-confirm-mnemonic\\" style={{...}}>
   <withTheme(TextComponent) darker={true} style={{...}}>
     To make sure you have written down all of your recovery words, please enter the following:
   </withTheme(TextComponent)>
@@ -10,25 +10,31 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
       <withTheme(TextComponent) style={{...}}>
          
       </withTheme(TextComponent)>
-      <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #1\\" showBorderBottom={false} />
+      <withTheme(TextInputComponent) testID=\\"textinput-0\\" obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #1\\" showBorderBottom={false} />
     </View>
     <View>
       <withTheme(TextComponent) style={{...}}>
          
       </withTheme(TextComponent)>
-      <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #2\\" showBorderBottom={false} />
+      <withTheme(TextInputComponent) testID=\\"textinput-1\\" obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #2\\" showBorderBottom={false} />
     </View>
     <View>
       <withTheme(TextComponent) style={{...}}>
          
       </withTheme(TextComponent)>
-      <withTheme(TextInputComponent) obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #3\\" showBorderBottom={false} />
+      <withTheme(TextInputComponent) testID=\\"textinput-2\\" obRef={[Function: obRef]} style={{...}} styleInputText={{...}} word=\\"\\" onFocus={[Function: onFocus]} isFocus={false} placeholder=\\"Word #3\\" showBorderBottom={false} />
     </View>
-    <withTheme(TextComponent) darker={true} small={true} style={{...}}>
-      panic 
-      club 
-      above 
-    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <withTheme(TextComponent) darker={true} small={true} testID=\\"mnemonic-0\\">
+        panic 
+      </withTheme(TextComponent)>
+      <withTheme(TextComponent) darker={true} small={true} testID=\\"mnemonic-1\\">
+        club 
+      </withTheme(TextComponent)>
+      <withTheme(TextComponent) darker={true} small={true} testID=\\"mnemonic-2\\">
+        above 
+      </withTheme(TextComponent)>
+    </View>
   </View>
   <withTheme(KeyboardComponent) handleTextUpdate={[Function: handleTextUpdate]} handleDeleteKey={[Function: handleDeleteKey]} buttons={{...}} disableSpace={true} />
 </View>"

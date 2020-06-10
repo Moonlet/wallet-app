@@ -42,7 +42,7 @@ export class TransactionsHistoryListComponent extends React.Component<
         return ` ${formattedAmount} ${toAddress}`;
     }
 
-    private transactionItem(tx: IBlockchainTransaction) {
+    private transactionItem(tx: IBlockchainTransaction, index: number) {
         const { account, styles, theme } = this.props;
 
         const blockchainInstance = getBlockchain(account.blockchain);
@@ -91,6 +91,7 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         return (
             <TouchableOpacity
+                testID={`transaction-${index}`}
                 key={tx.id}
                 style={[
                     styles.transactionListItem,
@@ -161,7 +162,9 @@ export class TransactionsHistoryListComponent extends React.Component<
                         contentContainerStyle={{ flexGrow: 1 }}
                         showsVerticalScrollIndicator={false}
                     >
-                        {transactions.map((tx: IBlockchainTransaction) => this.transactionItem(tx))}
+                        {transactions.map((tx: IBlockchainTransaction, index: number) =>
+                            this.transactionItem(tx, index)
+                        )}
                     </ScrollView>
                 )}
             </View>

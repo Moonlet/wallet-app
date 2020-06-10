@@ -28,6 +28,9 @@ export const ListCardComponent = (
 
     return (
         <TouchableHighlight
+            testID={String(props.label)
+                .replace(/ /g, '-')
+                .toLowerCase()}
             onPress={props.onPress}
             underlayColor={props.theme.colors.appBackground}
         >

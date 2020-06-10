@@ -29,6 +29,7 @@ export const BottomCtaComponent = (
                 </View>
                 <View style={styles.buttonContainer}>
                     <Button
+                        testID={props.label.toLocaleLowerCase()}
                         style={{ width: normalize(140) }}
                         primary
                         disabled={props.disabled}

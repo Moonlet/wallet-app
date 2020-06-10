@@ -15,17 +15,17 @@ exports[`creat wallet terms screen component renders correctly 1`] = `
   </View>
   <View style={{...}}>
     <View style={{...}}>
-      <withTheme(ButtonComponent) testIDButton=\\"recover-button\\" style={{...}} wrapperStyle={{...}} onPress={[Function: onPress]} testID=\\"button-recover\\">
+      <withTheme(ButtonComponent) testID=\\"recover-button\\" style={{...}} wrapperStyle={{...}} onPress={[Function: onPress]}>
         Recover
       </withTheme(ButtonComponent)>
       <withTheme(ButtonComponent) style={{...}} wrapperStyle={{...}} onPress={[Function: onPress]}>
         Connect
       </withTheme(ButtonComponent)>
     </View>
-    <withTheme(ButtonComponent) testIDButton=\\"create-button\\" testID=\\"button-create\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+    <withTheme(ButtonComponent) testID=\\"create-button\\" style={{...}} primary={true} onPress={[Function: onPress]}>
       Create
     </withTheme(ButtonComponent)>
-    <withTheme(ButtonComponent) testID=\\"button-generate\\" style={{...}} primary={true} onPress={[Function: onPress]}>
+    <withTheme(ButtonComponent) testID=\\"generate-button\\" style={{...}} primary={true} onPress={[Function: onPress]}>
       Generate wallet
     </withTheme(ButtonComponent)>
   </View>

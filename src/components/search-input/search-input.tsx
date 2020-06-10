@@ -21,6 +21,7 @@ export const SearchInputComponent = (
         <View style={props.styles.inputBox}>
             <Icon name={IconValues.SEARCH} size={normalize(14)} style={props.styles.searchIcon} />
             <TextInput
+                testID="search-input"
                 style={props.styles.input}
                 placeholderTextColor={props.theme.colors.textTertiary}
                 placeholder={props.placeholderText}

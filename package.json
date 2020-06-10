@@ -23,7 +23,8 @@
         "detox:build:ios": "detox build -c ios.beta",
         "detox:test:ios": "detox test -c ios.beta",
         "detox:build:android": "detox build -c android.emu.beta",
-        "detox:test:android": "detox test -c android.emu.beta"
+        "detox:test:android": "detox test -c android.emu.beta",
+        "detox:test:android:device": "detox test --configuration android.device.beta"
     },
     "dependencies": {
         "@ledgerhq/hw-app-eth": "^4.78.0",
@@ -51,6 +52,8 @@
         "bowser": "^2.9.0",
         "bs58": "^4.0.1",
         "crypto-js": "^4.0.0",
+        "detox": "^16.7.2",
+        "detox-getprops": "^0.1.2",
         "dotenv": "^8.2.0",
         "elliptic": "^6.5.2",
         "enzyme": "^3.10.0",
@@ -157,7 +160,6 @@
         "babel-plugin-react-native-web": "^0.11.7",
         "babel-preset-react-native": "^4.0.1",
         "copy-webpack-plugin": "^5.0.4",
-        "detox": "^16.7.1",
         "html-webpack-plugin": "^3.2.0",
         "husky": "^3.0.8",
         "icon-font-generator": "^2.1.10",

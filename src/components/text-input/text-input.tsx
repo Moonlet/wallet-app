@@ -15,6 +15,7 @@ export interface IExternalProps {
     isValid?: boolean;
     placeholder?: string;
     showBorderBottom: boolean;
+    testID?: string;
 }
 
 interface IState {
@@ -95,6 +96,7 @@ export class TextInputComponent extends React.Component<
                 }}
             >
                 <Text
+                    testID={this.props?.testID || 'textinput'}
                     numberOfLines={1}
                     ellipsizeMode="head"
                     style={[

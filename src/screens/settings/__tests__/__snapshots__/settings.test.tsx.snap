@@ -8,7 +8,7 @@ exports[`Wallet screen renders correctly 1`] = `
         SECURITY
       </withTheme(TextComponent)>
       <View>
-        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"Manage wallet\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
           <withTheme(TextComponent) style={{...}}>
             Manage wallet
           </withTheme(TextComponent)>
@@ -19,7 +19,7 @@ exports[`Wallet screen renders correctly 1`] = `
         <View style={{...}} />
       </View>
       <View>
-        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"Backup wallet\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
           <withTheme(TextComponent) style={{...}}>
             Backup wallet
           </withTheme(TextComponent)>
@@ -30,7 +30,7 @@ exports[`Wallet screen renders correctly 1`] = `
         <View style={{...}} />
       </View>
       <View>
-        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"Change PIN\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
           <withTheme(TextComponent) style={{...}}>
             Change PIN
           </withTheme(TextComponent)>
@@ -46,7 +46,7 @@ exports[`Wallet screen renders correctly 1`] = `
         SETUP
       </withTheme(TextComponent)>
       <View>
-        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"Default currency\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
           <withTheme(TextComponent) style={{...}}>
             Default currency
           </withTheme(TextComponent)>
@@ -57,7 +57,7 @@ exports[`Wallet screen renders correctly 1`] = `
         <View style={{...}} />
       </View>
       <View>
-        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"Blockchain portfolio\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
           <withTheme(TextComponent) style={{...}}>
             Blockchain portfolio
           </withTheme(TextComponent)>
@@ -73,7 +73,7 @@ exports[`Wallet screen renders correctly 1`] = `
         SUPPORT
       </withTheme(TextComponent)>
       <View>
-        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"Report issue\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
           <withTheme(TextComponent) style={{...}}>
             Report issue
           </withTheme(TextComponent)>
@@ -89,7 +89,7 @@ exports[`Wallet screen renders correctly 1`] = `
         TOOLS
       </withTheme(TextComponent)>
       <View>
-        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"Mainnet/Testnet\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
           <withTheme(TextComponent) style={{...}}>
             Mainnet/Testnet
           </withTheme(TextComponent)>
@@ -105,7 +105,7 @@ exports[`Wallet screen renders correctly 1`] = `
         ABOUT
       </withTheme(TextComponent)>
       <View>
-        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"Terms of Service\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
           <withTheme(TextComponent) style={{...}}>
             Terms of Service
           </withTheme(TextComponent)>
@@ -116,7 +116,7 @@ exports[`Wallet screen renders correctly 1`] = `
         <View style={{...}} />
       </View>
       <View>
-        <TouchableOpacity style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
+        <TouchableOpacity testID=\\"Privacy policy\\" style={{...}} onPress={[Function: onPress]} activeOpacity={0.2}>
           <withTheme(TextComponent) style={{...}}>
             Privacy policy
           </withTheme(TextComponent)>

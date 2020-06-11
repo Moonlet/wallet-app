@@ -41,7 +41,7 @@ describe('creat wallet terms screen component', () => {
 
     it('navigates to CreateWalletConfirmMnemonic screen', () => {
         const wrapper = shallow(<CreateWalletMnemonicScreenComponent {...props} />);
-        wrapper.find('[testID="button-next"]').simulate('Press');
+        wrapper.find('[testID="next-button-1"]').simulate('Press');
         expect(props.navigation.dispatch).toHaveBeenCalledTimes(1);
     });
 });

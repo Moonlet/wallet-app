@@ -181,11 +181,16 @@ export class WalletsScreenComponent extends React.Component<
         this.props.navigation.goBack(null);
     }
 
-    public renderLeftActions(wallet: IWalletState) {
-        const styles = this.props.styles;
+    public renderLeftActions(wallet: IWalletState, index: number) {
+        const { styles } = this.props;
+
         return (
             <View style={styles.leftActionsContainer}>
-                <TouchableOpacity style={styles.action} onPress={() => this.onPressDelete(wallet)}>
+                <TouchableOpacity
+                    testID={`delete-wallet-${index + 1}`}
+                    style={styles.action}
+                    onPress={() => this.onPressDelete(wallet)}
+                >
                     <Icon
                         name={IconValues.BIN}
                         size={normalize(32)}
@@ -195,6 +200,7 @@ export class WalletsScreenComponent extends React.Component<
                         {translate('Wallets.deleteWallet')}
                     </Text>
                 </TouchableOpacity>
+
                 {wallet.type !== WalletType.HW && (
                     <TouchableOpacity
                         onPress={() => {
@@ -211,7 +217,9 @@ export class WalletsScreenComponent extends React.Component<
                         <Text style={styles.textActionPositive}>{translate('Wallets.unveil')}</Text>
                     </TouchableOpacity>
                 )}
+
                 <TouchableOpacity
+                    testID={`edit-name-wallet-${index + 1}`}
                     style={styles.action}
                     onPress={() => {
                         this.closeCurrentOpenedSwipable();
@@ -250,7 +258,7 @@ export class WalletsScreenComponent extends React.Component<
         const { selectedTab } = this.state;
 
         return (
-            <View style={styles.container}>
+            <View testID="wallets-screen" style={styles.container}>
                 <TabSelect
                     options={{
                         [WalletType.HD]: { title: 'Moonlet' },
@@ -282,7 +290,7 @@ export class WalletsScreenComponent extends React.Component<
                                 </Text>
                             </View>
                         ) : (
-                            this.props.wallets[selectedTab].map(wallet => {
+                            this.props.wallets[selectedTab].map((wallet, i: number) => {
                                 const index = wallet.id;
 
                                 return (
@@ -290,7 +298,8 @@ export class WalletsScreenComponent extends React.Component<
                                         key={index}
                                         ref={ref => (this.walletSwipeableRef[index] = ref)}
                                         renderLeftActions={() =>
-                                            Platform.OS !== 'web' && this.renderLeftActions(wallet)
+                                            Platform.OS !== 'web' &&
+                                            this.renderLeftActions(wallet, i)
                                         }
                                         onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
                                     >
@@ -316,6 +325,7 @@ export class WalletsScreenComponent extends React.Component<
                         [WalletType.HD]: Platform.OS !== 'web' && (
                             <View style={styles.buttonContainer}>
                                 <Button
+                                    testID="create-button"
                                     style={styles.bottomButton}
                                     wrapperStyle={{ flex: 1 }}
                                     onPress={() => this.onPressCreate()}
@@ -323,6 +333,7 @@ export class WalletsScreenComponent extends React.Component<
                                     {translate('App.labels.create')}
                                 </Button>
                                 <Button
+                                    testID="recover-button"
                                     style={styles.bottomButton}
                                     wrapperStyle={{ flex: 1 }}
                                     onPress={() => this.onPressRecover()}

@@ -5,43 +5,47 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { Text } from '../../library';
 import { PanGestureHandler, State } from 'react-native-gesture-handler';
+import bind from 'bind-decorator';
 
-export interface IProps {
+export interface IExternalProps {
     currentWord: any;
     addKey: (key: string) => void;
+    testID?: string;
 }
 
 export class CustomKeyComponent extends React.Component<
-    IProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    constructor(props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
-        super(props);
-    }
-
-    public onHandlerStateChange = (event: any) => {
+    @bind
+    private onHandlerStateChange(event: any) {
         if (event.nativeEvent.state === State.END) {
             this.addKey();
         }
-    };
+    }
 
-    public addKey = () => {
+    @bind
+    private addKey() {
         this.props.addKey(this.props.currentWord);
-    };
+    }
 
     public render() {
-        const styles = this.props.styles;
+        const { styles } = this.props;
 
         if (Platform.OS === 'android') {
             return (
                 <PanGestureHandler {...this.props} onHandlerStateChange={this.onHandlerStateChange}>
-                    <View style={styles.keyContainer}>
+                    <View testID={`key-${this.props?.testID}`} style={styles.keyContainer}>
                         <Text style={styles.keyText}>{this.props.currentWord}</Text>
                     </View>
                 </PanGestureHandler>
             );
         } else {
             return (
-                <TouchableOpacity onPressIn={this.addKey} style={styles.keyContainer}>
+                <TouchableOpacity
+                    testID={`key-${this.props?.testID}`}
+                    onPressIn={this.addKey}
+                    style={styles.keyContainer}
+                >
                     <Text style={styles.keyText}>{this.props.currentWord}</Text>
                 </TouchableOpacity>
             );
@@ -49,4 +53,6 @@ export class CustomKeyComponent extends React.Component<
     }
 }
 
-export const CustomKey = smartConnect<IProps>(CustomKeyComponent, [withTheme(stylesProvider)]);
+export const CustomKey = smartConnect<IExternalProps>(CustomKeyComponent, [
+    withTheme(stylesProvider)
+]);

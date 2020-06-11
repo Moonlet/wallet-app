@@ -2,7 +2,7 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    IBlockchainTransactionUtils,
+    AbstractBlockchainTransactionUtils,
     IPosTransaction
 } from '../types';
 
@@ -16,7 +16,7 @@ import { TokenType } from '../types/token';
 import { Zilliqa } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
-export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
+export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public schnorrSign(msg: Buffer, privateKey: string): string {
         const pubKey = Zilliqa.account.privateToPublic(privateKey);
 

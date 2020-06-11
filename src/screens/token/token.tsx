@@ -18,11 +18,7 @@ import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
 import { themes } from '../../navigation/navigation';
-import {
-    sendTransferTransaction,
-    getBalance,
-    updateTransactionFromBlockchain
-} from '../../redux/wallets/actions';
+import { getBalance, updateTransactionFromBlockchain } from '../../redux/wallets/actions';
 import { getChainId } from '../../redux/preferences/selectors';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { TokenScreenComponentType } from '../../core/blockchain/types/token';
@@ -50,7 +46,6 @@ export interface IReduxProps {
     account: IAccountState;
     transactions: IBlockchainTransaction[];
     wallet: IWalletState;
-    sendTransferTransaction: typeof sendTransferTransaction;
     chainId: ChainIdType;
     getBalance: typeof getBalance;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
@@ -81,7 +76,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 };
 
 const mapDispatchToProps = {
-    sendTransferTransaction,
     getBalance,
     updateTransactionFromBlockchain
 };

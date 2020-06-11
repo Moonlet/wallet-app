@@ -106,7 +106,7 @@ export const LegalComponent = (
                     <View style={props.styles.divider} />
 
                     <Button
-                        testIDButton="legal-accept-button"
+                        testID="legal-accept-button"
                         wrapperStyle={props.styles.bottomButton}
                         primary
                         onPress={() => {

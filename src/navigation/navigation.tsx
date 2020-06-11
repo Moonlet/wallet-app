@@ -110,7 +110,11 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         fontWeight: 'bold'
     },
     headerLeft: navigation.dangerouslyGetParent().state.index > 0 && (
-        <HeaderLeft icon={IconValues.ARROW_LEFT} onPress={() => navigation.goBack(null)} />
+        <HeaderLeft
+            testID="go-back"
+            icon={IconValues.ARROW_LEFT}
+            onPress={() => navigation.goBack(null)}
+        />
     )
 });
 

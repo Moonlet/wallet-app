@@ -7,8 +7,9 @@ import { networks } from './networks';
 import { HttpClient } from '../../utils/http-client';
 import { NameService } from './name-service';
 import BigNumber from 'bignumber.js';
-import { config } from './config';
+import { config, Contracts } from './config';
 import abi from 'ethereumjs-abi';
+import { LockedGold } from './contracts/lockedgold';
 
 export class Client extends EthereumClient {
     constructor(chainId: ChainIdType) {
@@ -16,6 +17,7 @@ export class Client extends EthereumClient {
         this.tokens[TokenType.ERC20] = new Erc20Client(this);
         this.nameService = new NameService();
         this.utils = new ClientUtils(this);
+        this.contracts[Contracts.LOCKED_GOLD] = new LockedGold(this);
 
         let url = networks[0].url;
         const network = networks.filter(n => n.chainId === chainId)[0];

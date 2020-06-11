@@ -80,6 +80,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
 
         return (
             <TouchableHighlight
+                testID={options.title.replace(/ /g, '-').toLowerCase()}
                 onPress={() => options.onPress()}
                 underlayColor={theme.colors.bottomSheetBackground}
             >

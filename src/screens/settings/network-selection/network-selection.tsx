@@ -46,7 +46,7 @@ export class NetworkSelectionComponent extends React.Component<
         const networks = getBlockchain(blockchain)?.networks;
 
         return (
-            <View style={styles.container}>
+            <View testID="network-selection-screen" style={styles.container}>
                 {networks &&
                     networks.map(
                         (network: IBlockchainNetwork, index: number) =>

@@ -23,7 +23,11 @@ export const PasswordTermsComponent = (
     const [acknowledged, setAcknowledged] = useState(false);
 
     return (
-        <SafeAreaView forceInset={{ bottom: 'never' }} style={props.styles.container}>
+        <SafeAreaView
+            testID="password-terms-screen"
+            forceInset={{ bottom: 'never' }}
+            style={props.styles.container}
+        >
             {props.allowBackButton && (
                 <TouchableOpacity
                     onPress={() => props.onBackButtonTap()}
@@ -45,13 +49,14 @@ export const PasswordTermsComponent = (
                 <View>
                     <View style={props.styles.confirmTextContainer}>
                         <Checkbox
+                            testID="pass-terms-checkbox"
                             onPress={() => setAcknowledged(!acknowledged)}
                             checked={acknowledged}
                             text={translate('Password.termsCheckboxLabel')}
                         />
                     </View>
                     <Button
-                        testID="button-understand"
+                        testID="understand-button"
                         wrapperStyle={props.styles.bottomButton}
                         primary
                         disabled={!acknowledged}

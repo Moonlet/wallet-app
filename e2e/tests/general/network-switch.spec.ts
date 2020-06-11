@@ -6,103 +6,105 @@ import { generateWalletTest } from '../send/common';
  */
 
 describe('Network Switch', () => {
-    beforeEach(async () => {
-        await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
-
-        // Dashboard Screen
-        await utils.expectDashboardScreenVisible();
-    });
-
     /**
      * Generate wallet
      */
     generateWalletTest();
 
-    it('Network switch', async () => {
-        // Dashboard Screen
-        // Zilliqa Mainnet active
-        await utils.expectElementNotVisible('testnet-badge');
-    });
+    describe('', () => {
+        beforeEach(async () => {
+            await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
 
-    /**
-     * Zilliqa Dev Testnet
-     */
-    it('Zilliqa Dev Testnet', async () => {
-        // Network Options Screen
-        await navToNetworkOptionsScreen();
+            // Dashboard Screen
+            await utils.expectDashboardScreenVisible();
+        });
 
-        // Network Options Screen
-        await utils.tapElementById('toggle-testnet');
+        it('Network switch', async () => {
+            // Dashboard Screen
+            // Zilliqa Mainnet active
+            await utils.expectElementNotVisible('testnet-badge');
+        });
 
-        // Dashboard
-        await navBackToDashboard();
+        /**
+         * Zilliqa Dev Testnet
+         */
+        it('Zilliqa Dev Testnet', async () => {
+            // Network Options Screen
+            await navToNetworkOptionsScreen();
 
-        await utils.expectElementByLabelVisible('You are on Zilliqa Dev Testnet');
-    });
+            // Network Options Screen
+            await utils.tapElementById('toggle-testnet');
 
-    /**
-     * Zilliqa Kaya Local Testnet
-     */
-    it('Zilliqa Kaya Local Testnet', async () => {
-        // Network Options Screen
-        await navToNetworkOptionsScreen();
+            // Dashboard
+            await navBackToDashboard();
 
-        // Network Options Screen
-        await utils.tapElementById('zilliqa');
+            await utils.expectElementByLabelVisible('You are on Zilliqa Dev Testnet');
+        });
 
-        // Zilliqa Screen
-        await utils.tapElementByLabel('Kaya Local');
-        await utils.deviceGoBack('network-selection-screen'); // experimental
+        /**
+         * Zilliqa Kaya Local Testnet
+         */
+        it('Zilliqa Kaya Local Testnet', async () => {
+            // Network Options Screen
+            await navToNetworkOptionsScreen();
 
-        // Dashboard
-        await navBackToDashboard();
+            // Network Options Screen
+            await utils.tapElementById('zilliqa');
 
-        await utils.expectElementByLabelVisible('You are on Zilliqa Kaya Local Testnet');
-    });
+            // Zilliqa Screen
+            await utils.tapElementByLabel('Kaya Local');
+            await utils.deviceGoBack('network-selection-screen'); // experimental
 
-    /**
-     * Ethereum Rinbeky Testnet
-     */
-    it('Ethereum Rinbeky Testnet', async () => {
-        await utils.tapElementByLabel('ETH');
+            // Dashboard
+            await navBackToDashboard();
 
-        await utils.expectElementByLabelVisible('You are on Ethereum Rinkeby Testnet');
-    });
+            await utils.expectElementByLabelVisible('You are on Zilliqa Kaya Local Testnet');
+        });
 
-    /**
-     * Ethereum Ropsten Testnet
-     */
-    it('Ethereum Ropsten Testnet', async () => {
-        // Network Options Screen
-        await navToNetworkOptionsScreen();
+        /**
+         * Ethereum Rinbeky Testnet
+         */
+        it('Ethereum Rinbeky Testnet', async () => {
+            await utils.tapElementByLabel('ETH');
 
-        // Network Options Screen
-        await utils.tapElementById('ethereum');
+            await utils.expectElementByLabelVisible('You are on Ethereum Rinkeby Testnet');
+        });
 
-        // Ethereum Screen
-        await utils.tapElementByLabel('Ropsten');
-        await utils.deviceGoBack('network-selection-screen'); // experimental
+        /**
+         * Ethereum Ropsten Testnet
+         */
+        it('Ethereum Ropsten Testnet', async () => {
+            // Network Options Screen
+            await navToNetworkOptionsScreen();
 
-        // Dashboard
-        await navBackToDashboard();
+            // Network Options Screen
+            await utils.tapElementById('ethereum');
 
-        await utils.expectElementByLabelVisible('You are on Ethereum Ropsten Testnet');
-    });
+            // Ethereum Screen
+            await utils.tapElementByLabel('Ropsten');
+            await utils.deviceGoBack('network-selection-screen'); // experimental
 
-    /**
-     * Ethereum Mainnet
-     */
-    it('Ethereum Mainnet', async () => {
-        // Network Options Screen
-        await navToNetworkOptionsScreen();
+            // Dashboard
+            await navBackToDashboard();
 
-        // Network Options Screen
-        await utils.tapElementById('toggle-testnet');
+            await utils.expectElementByLabelVisible('You are on Ethereum Ropsten Testnet');
+        });
 
-        // Dashboard
-        await navBackToDashboard();
+        /**
+         * Ethereum Mainnet
+         */
+        it('Ethereum Mainnet', async () => {
+            // Network Options Screen
+            await navToNetworkOptionsScreen();
 
-        await utils.expectElementNotVisible('testnet-badge');
+            // Network Options Screen
+            await utils.tapElementById('toggle-testnet');
+
+            // Dashboard
+            await navBackToDashboard();
+
+            await utils.expectElementNotVisible('testnet-badge');
+        });
     });
 });
 

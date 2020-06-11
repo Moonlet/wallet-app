@@ -9,7 +9,7 @@ import {
     readEncrypted,
     deleteFromStorage
 } from '../secure/storage/storage.extension';
-import { CONN_EXTENSION } from '../../core/constants/app';
+import { CONN_EXTENSION, CONN_EXT_RETRY_ATTEMPTS } from '../../core/constants/app';
 import Bowser from 'bowser';
 import { browser } from 'webextension-polyfill-ts';
 import { buildState } from './conn-ext-build-state/conn-ext-build-state';
@@ -195,49 +195,87 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
+    const syncConnect = async (
+        conn: IQRCodeConn,
+        connectionsRef: any,
+        syncConnAttempts: number = CONN_EXT_RETRY_ATTEMPTS
+    ) => {
+        try {
+            if (syncConnAttempts > 0) {
+                // show loading until data is fetch and state is build
+                await LoadingModal.open();
+
+                // Extension the state from Firebase Storage
+                const extState = await downloadFileStorage(conn.connectionId);
+
+                if (extState) {
+                    const decryptedState = JSON.parse(await decrypt(extState, conn.encKey));
+
+                    // Save state
+                    await storeState(decryptedState);
+
+                    // Store connection
+                    await storeConnection(conn);
+
+                    // remove listener for connectionId
+                    connectionsRef.child(conn.connectionId).off('value');
+
+                    // navigate to Dashboard
+                    NavigationService.navigate('MainNavigation', {});
+
+                    buildTransactions(decryptedState.state.wallets);
+                } else {
+                    // Retry
+                    syncConnect(conn, connectionsRef, syncConnAttempts - 1);
+                }
+
+                // close loading modal
+                await LoadingModal.close();
+            } else {
+                // Error
+                // Maybe display a warning message to the user
+
+                Sentry.captureException('The connection has failed multiple times.');
+            }
+        } catch (err) {
+            Sentry.addBreadcrumb({
+                message: JSON.stringify({ 'attempts left: ': syncConnAttempts })
+            });
+
+            Sentry.captureException(new Error(JSON.stringify(err)));
+
+            if (syncConnAttempts > 0) {
+                // Retry
+                syncConnect(conn, connectionsRef, syncConnAttempts - 1);
+            } else {
+                await LoadingModal.close();
+            }
+        }
+    };
+
     const listenLastSyncForConnect = (conn: IQRCodeConn) => {
         const connectionsRef = getRealtimeDBConnectionsRef();
 
-        connectionsRef.child(conn.connectionId).on('value', async (snapshot: any) => {
-            const snap = snapshot.val();
+        connectionsRef.child(conn.connectionId).on(
+            'value',
+            async (snapshot: any) => {
+                const snap = snapshot.val();
 
-            if (snap?.lastSynced && snap?.authToken) {
-                // show loading untill data is fetch and state is build
-                await LoadingModal.open();
-
-                try {
-                    // Extension the state from Firebase Storage
-                    const extState = await downloadFileStorage(conn.connectionId);
-
-                    if (extState) {
-                        const decryptedState = JSON.parse(await decrypt(extState, conn.encKey));
-
-                        // Save state
-                        await storeState(decryptedState);
-
-                        // Store connection
-                        await storeConnection(conn);
-
-                        // remove listener for connectionId
-                        connectionsRef.child(conn.connectionId).off('value');
-
-                        // navigate to Dashboard
-                        NavigationService.navigate('MainNavigation', {});
-
-                        buildTransactions(decryptedState.state.wallets);
-                    }
-
-                    // close loading modal
-                    await LoadingModal.close();
-                } catch (err) {
-                    await LoadingModal.close();
-                    Sentry.captureException(new Error(JSON.stringify(err)));
-                    return Promise.reject(err);
+                if (snap?.lastSynced && snap?.authToken) {
+                    syncConnect(conn, connectionsRef);
+                } else {
+                    // Connection does not exist! Waiting for connections...
                 }
-            } else {
-                // Connection does not exist! Waiting for connections...
+            },
+            (error: any) => {
+                Sentry.captureException(new Error(JSON.stringify(error)));
+
+                // Error, try again
+                connectionsRef
+                    .child(conn.connectionId)
+                    .off('value', () => listenLastSyncForConnect(conn));
             }
-        });
+        );
     };
 
     const getRequestIdParams = async (requestId: string): Promise<any> => {

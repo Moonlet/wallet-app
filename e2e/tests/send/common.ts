@@ -45,3 +45,28 @@ export const activateTestNetTest = () => {
         });
     });
 };
+
+/**
+ * Activate Main Net
+ */
+export const activateMainNetTest = () => {
+    describe('Activate Main Net', () => {
+        it('activate mainnet', async () => {
+            await utils.tapElementByLabel('Settings');
+
+            // Settings Screen
+            await utils.tapElementById('Mainnet/Testnet');
+
+            // Network Options Screen
+            await utils.tapElementById('toggle-testnet');
+
+            // Go back => Settings Screen
+            await utils.tapBackButton();
+
+            // Dashboard Screen
+            await utils.tapElementByLabel('Dashboard');
+
+            await utils.expectElementNotVisible('testnet-badge');
+        });
+    });
+};

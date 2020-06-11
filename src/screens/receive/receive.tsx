@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Clipboard } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { Button } from '../../library/button/button';
+import { Text, Button } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { translate } from '../../core/i18n';
 import QRCode from 'react-native-qrcode-svg';
@@ -54,6 +54,8 @@ export const ReceiveScreenComponent = (
                         size={SCREEN_WIDTH - BASE_DIMENSION * 10}
                     />
                 </View>
+
+                <Text style={props.styles.fullAddress}>{props.account.address}</Text>
             </View>
 
             <Button

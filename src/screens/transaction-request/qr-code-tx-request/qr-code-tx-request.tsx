@@ -133,7 +133,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
         this.state = {
             toAddress: '',
-            amount: '',
+            amount: '0',
             chainId: props.currentChainId,
             tokenSymbol: getBlockchain(props.selectedAccount.blockchain).config.coin, // Default Native Coin
             insufficientFunds: false,
@@ -403,7 +403,6 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
     private renderInputAmountField(label: string) {
         const { theme, styles } = this.props;
-        const { amount } = this.state;
 
         return (
             <View style={styles.inputContainer}>
@@ -415,7 +414,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
-                        value={amount === '' ? '0' : amount}
+                        value={this.state.amount}
                         onChangeText={this.addAmount}
                         keyboardType="decimal-pad"
                         returnKeyType="done"

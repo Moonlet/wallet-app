@@ -41,6 +41,7 @@ export const EnterAmountComponent = (
 
             <View style={styles.inputBox}>
                 <TextInput
+                    testID="enter-amount"
                     style={styles.inputText}
                     placeholderTextColor={theme.colors.textSecondary}
                     placeholder={translate('Send.amount')}

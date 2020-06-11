@@ -119,6 +119,7 @@ const navigationOptions = ({ navigation }: any) => ({
     headerRight: (
         <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
+                testID="wallets-icon"
                 style={{ width: ICON_CONTAINER_SIZE }}
                 onPress={() => navigation.navigate('Wallets')}
             >
@@ -129,6 +130,7 @@ const navigationOptions = ({ navigation }: any) => ({
                 />
             </TouchableOpacity>
             <TouchableOpacity
+                testID="dashboard-menu-icon"
                 style={{ width: ICON_CONTAINER_SIZE }}
                 onPress={() => navigation.state.params.setDashboardMenuBottomSheet()}
             >
@@ -469,7 +471,7 @@ export class DashboardScreenComponent extends React.Component<
                 : 'auto';
 
         return (
-            <View style={[styles.container, { height: containerHeight }]}>
+            <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
                 <TestnetBadge />
 
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />

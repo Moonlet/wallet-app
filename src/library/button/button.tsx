@@ -14,6 +14,8 @@ import { normalize, BASE_DIMENSION } from '../../styles/dimensions';
  */
 
 export interface IButtonProps {
+    testID?: string;
+    testIDWrapper?: string;
     children?: any;
     wrapperStyle?: any;
     style?: any;
@@ -27,8 +29,6 @@ export interface IButtonProps {
     onPressIn?: any;
     onPressOut?: any;
     bottomLabel?: string;
-    testIDWrapper?: string;
-    testIDButton?: string;
 }
 
 export const ButtonComponent = (props: IButtonProps) => (
@@ -37,7 +37,7 @@ export const ButtonComponent = (props: IButtonProps) => (
         style={[props.styles.container, props.wrapperStyle]}
     >
         <TouchableOpacity
-            testID={props?.testIDButton || 'button'}
+            testID={props?.testID || 'button'}
             disabled={props.disabled || props.disabledSecondary}
             onPress={props.onPress}
             onPressIn={props.onPressIn}

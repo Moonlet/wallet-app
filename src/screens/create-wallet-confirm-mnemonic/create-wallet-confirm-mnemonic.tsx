@@ -112,7 +112,7 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
     };
 
     return (
-        <View style={props.styles.container}>
+        <View testID="create-wallet-confirm-mnemonic" style={props.styles.container}>
             <Text darker style={{ textAlign: 'center' }}>
                 {translate('CreateWalletMnemonicConfirm.body')}
             </Text>
@@ -126,6 +126,7 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                                 : ' '}
                         </Text>
                         <TextInput
+                            testID={`textinput-${index}`}
                             obRef={(input: any) => {
                                 inputView[index] = input;
                                 setInputView(inputView);
@@ -148,10 +149,15 @@ export const CreateWalletConfirmMnemonicScreenComponent = (
                         {translate('CreateWalletMnemonicConfirm.errors.tryAgain')}
                     </Text>
                 )}
+
                 {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
-                    <Text darker small style={props.styles.testWords}>
-                        {testWords.map(n => mnemonic[n] + ' ')}
-                    </Text>
+                    <View style={props.styles.testWords}>
+                        {testWords.map((n, index) => (
+                            <Text darker small key={index} testID={`mnemonic-${index}`}>
+                                {mnemonic[n] + ' '}
+                            </Text>
+                        ))}
+                    </View>
                 )}
             </View>
 

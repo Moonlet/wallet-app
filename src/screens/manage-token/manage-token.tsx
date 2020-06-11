@@ -273,6 +273,7 @@ export class ManageTokenComponent extends React.Component<
 
                         {this.state.token && this.state.token?.symbol && (
                             <TouchableOpacity
+                                testID="found-token"
                                 style={[
                                     styles.tokenCardContainer,
                                     this.state.isTokenSelected && styles.tokenSelectedContainer

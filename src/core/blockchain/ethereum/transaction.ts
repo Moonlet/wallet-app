@@ -2,8 +2,7 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    IBlockchainTransactionUtils,
-    IPosTransaction
+    AbstractBlockchainTransactionUtils
 } from '../types';
 import { Transaction } from 'ethereumjs-tx';
 import abi from 'ethereumjs-abi';
@@ -13,7 +12,7 @@ import { TransactionStatus } from '../../wallet/types';
 import { Ethereum } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
-export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
+export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<string> {
         const transaction = new Transaction(
             {
@@ -32,10 +31,6 @@ export class EthereumTransactionUtils implements IBlockchainTransactionUtils {
         transaction.sign(Buffer.from(privateKey, 'hex'));
 
         return '0x' + transaction.serialize().toString('hex');
-    }
-
-    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
-        throw new Error('Not Implemented');
     }
 
     public getTransactionStatusByCode(status: any): TransactionStatus {

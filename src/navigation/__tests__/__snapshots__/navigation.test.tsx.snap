@@ -5,6 +5,7 @@ Object {
   "headerLeft": <withTheme(HeaderLeftComponent)
     icon="arrow-left"
     onPress={[Function]}
+    testID="go-back"
   />,
   "headerStyle": Object {
     "backgroundColor": "#121212",

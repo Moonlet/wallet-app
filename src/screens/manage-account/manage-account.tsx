@@ -74,7 +74,7 @@ export const navigationOptions = ({ navigation, theme }: any) => ({
 
     headerRight: navigation.state.params?.blockchain &&
         getBlockchain(navigation.state.params.blockchain).config.ui.enableTokenManagement && (
-            <TouchableOpacity onPress={() => navigation.navigate('ManageToken')}>
+            <TouchableOpacity testID="add-icon" onPress={() => navigation.navigate('ManageToken')}>
                 <Icon
                     name={IconValues.ADD}
                     size={ICON_SIZE}

@@ -84,6 +84,7 @@ export class KeyboardComponent extends React.Component<
 
                     return (
                         <CustomKey
+                            testID={currentWord}
                             key={index}
                             currentWord={currentWord}
                             addKey={() => this.props.handleTextUpdate(currentWord)}

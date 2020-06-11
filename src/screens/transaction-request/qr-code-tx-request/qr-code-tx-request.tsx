@@ -237,9 +237,12 @@ export class QRCodeTransferRequestComponent extends React.Component<
         this.setState({ toAddress });
 
         if (qrCodeTxPayload?.params?.amount) {
-            this.setState({
-                amount: qrCodeTxPayload.params.amount
-            });
+            const amount = qrCodeTxPayload.params.amount;
+            const amountBN = new BigNumber(amount);
+
+            if (!isNaN(amountBN.toNumber())) {
+                this.setState({ amount });
+            }
         }
 
         this.setState({ isLoading: false });

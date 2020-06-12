@@ -1,5 +1,6 @@
 import * as utils from '../../utils/utils';
 import { sendToken, addToken } from './utils';
+import { DAI_TESTNET_CONTRACT_ADDRESS } from '../../utils/config';
 
 export const sendEthTest = () => {
     describe('Send Ethereum', () => {
@@ -37,7 +38,7 @@ export const sendEthTest = () => {
             await utils.expectDashboardScreenVisible();
 
             // Add DAI - testnet
-            await addToken('0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea');
+            await addToken(DAI_TESTNET_CONTRACT_ADDRESS);
 
             // Dashboard Screen
             await utils.expectDashboardScreenVisible();

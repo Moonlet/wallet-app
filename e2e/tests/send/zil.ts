@@ -1,5 +1,6 @@
 import * as utils from '../../utils/utils';
 import { sendToken, addToken } from './utils';
+import { XSGD_TESTNET_CONTRACT_ADDRESS } from '../../utils/config';
 
 export const sendZilTest = () => {
     describe('Send Zilliqa', () => {
@@ -38,7 +39,7 @@ export const sendZilTest = () => {
             await utils.expectDashboardScreenVisible();
 
             // Add XSGD - testnet
-            await addToken('zil1nnwugt0e5cvf2welmyq93q6p6t7zfdjzz7s05u');
+            await addToken(XSGD_TESTNET_CONTRACT_ADDRESS);
 
             // Dashboard Screen
             await utils.expectDashboardScreenVisible();

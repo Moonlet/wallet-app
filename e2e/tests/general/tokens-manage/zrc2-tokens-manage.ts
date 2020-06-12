@@ -2,6 +2,7 @@ import * as utils from '../../../utils/utils';
 import { activateTestNetTest } from '../../send/common';
 import { deleteTokenManageScreen } from '../utils';
 import { addToken } from '../../send/utils';
+import { XSGD_TESTNET_CONTRACT_ADDRESS } from '../../../utils/config';
 
 /**
  * ZRC2 Tokens Management
@@ -40,7 +41,7 @@ export const zrc2TokensManagementTest = () => {
             await utils.expectElementNotVisible('token-card-xsgd');
 
             // Add XSGD - testnet
-            await addToken('zil1nnwugt0e5cvf2welmyq93q6p6t7zfdjzz7s05u');
+            await addToken(XSGD_TESTNET_CONTRACT_ADDRESS);
 
             // Dashboard Screen
             await utils.expectDashboardScreenVisible();

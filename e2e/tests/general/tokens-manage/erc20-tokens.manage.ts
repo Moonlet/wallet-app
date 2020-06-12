@@ -2,6 +2,7 @@ import * as utils from '../../../utils/utils';
 import { activateTestNetTest } from '../../send/common';
 import { deleteTokenManageScreen } from '../utils';
 import { addToken } from '../../send/utils';
+import { DAI_TESTNET_CONTRACT_ADDRESS } from '../../../utils/config';
 
 /**
  * ERC20 Tokens Management
@@ -41,7 +42,7 @@ export const erc20TokensManagementTest = () => {
             await utils.expectElementNotVisible('token-card-dai');
 
             // Add DAI - testnet
-            await addToken('0x5592ec0cfb4dbc12d3ab100b257153436a1f0fea');
+            await addToken(DAI_TESTNET_CONTRACT_ADDRESS);
 
             // Dashboard Screen
             await utils.expectDashboardScreenVisible();

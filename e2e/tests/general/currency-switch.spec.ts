@@ -57,6 +57,10 @@ describe('Currency Switch', () => {
     });
 });
 
+/**
+ * Change currency test
+ * @param currency
+ */
 const changeCurrencyTest = async (currency: string) => {
     // Dashboard Screen
     await navToDefaultCurrencyScreen();

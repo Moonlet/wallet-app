@@ -393,6 +393,7 @@ export class DashboardScreenComponent extends React.Component<
                     </View>
                     <View style={styles.row}>
                         <Amount
+                            testID={this.props.userCurrency}
                             style={[
                                 styles.secondaryText,
                                 { fontSize: animateConvertedAmountFontSize }

@@ -4,14 +4,13 @@ import { generateWalletTest } from '../common/tests';
 /**
  * Network Switch
  */
-
 describe('Network Switch', () => {
     /**
      * Generate wallet
      */
     generateWalletTest();
 
-    describe('', () => {
+    describe('Network Switch', () => {
         beforeEach(async () => {
             await utils.realoadRNAndEnterPin(utils.PIN_CODE_GENERATE_WALLET);
 
@@ -29,7 +28,7 @@ describe('Network Switch', () => {
          * Zilliqa Dev Testnet
          */
         it('Zilliqa Dev Testnet', async () => {
-            // Network Options Screen
+            // Dashboard Screen
             await navToNetworkOptionsScreen();
 
             // Network Options Screen
@@ -45,7 +44,7 @@ describe('Network Switch', () => {
          * Zilliqa Kaya Local Testnet
          */
         it('Zilliqa Kaya Local Testnet', async () => {
-            // Network Options Screen
+            // Dashboard Screen
             await navToNetworkOptionsScreen();
 
             // Network Options Screen
@@ -74,7 +73,7 @@ describe('Network Switch', () => {
          * Ethereum Ropsten Testnet
          */
         it('Ethereum Ropsten Testnet', async () => {
-            // Network Options Screen
+            // Dashboard Screen
             await navToNetworkOptionsScreen();
 
             // Network Options Screen
@@ -94,7 +93,7 @@ describe('Network Switch', () => {
          * Ethereum Mainnet
          */
         it('Ethereum Mainnet', async () => {
-            // Network Options Screen
+            // Dashboard Screen
             await navToNetworkOptionsScreen();
 
             // Network Options Screen

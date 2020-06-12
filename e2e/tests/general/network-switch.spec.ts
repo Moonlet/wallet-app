@@ -1,5 +1,5 @@
-import * as utils from '../../utils/utils';
-import { generateWalletTest } from '../send/common';
+import * as utils from '../../utils/detox-utils';
+import { generateWalletTest } from '../common/tests';
 
 /**
  * Network Switch

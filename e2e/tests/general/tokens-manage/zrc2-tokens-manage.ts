@@ -1,8 +1,8 @@
-import * as utils from '../../../utils/utils';
-import { activateTestNetTest } from '../../send/common';
+import * as utils from '../../../utils/detox-utils';
 import { deleteTokenManageScreen } from '../utils';
-import { addToken } from '../../send/utils';
-import { XSGD_TESTNET_CONTRACT_ADDRESS } from '../../../utils/config';
+import { activateTestNetTest } from '../../common/tests';
+import { addToken } from '../../common/functions';
+import { XSGD_TESTNET_CONTRACT_ADDRESS } from '../../../utils/values';
 
 /**
  * ZRC2 Tokens Management

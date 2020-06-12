@@ -1,8 +1,8 @@
-import * as utils from '../../../utils/utils';
-import { activateTestNetTest } from '../../send/common';
+import * as utils from '../../../utils/detox-utils';
 import { deleteTokenManageScreen } from '../utils';
-import { addToken } from '../../send/utils';
-import { DAI_TESTNET_CONTRACT_ADDRESS } from '../../../utils/config';
+import { activateTestNetTest } from '../../common/tests';
+import { addToken } from '../../common/functions';
+import { DAI_TESTNET_CONTRACT_ADDRESS } from '../../../utils/values';
 
 /**
  * ERC20 Tokens Management

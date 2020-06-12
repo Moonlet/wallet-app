@@ -1,6 +1,7 @@
-import * as utils from '../../utils/utils';
-import { sendToken, addToken } from './utils';
-import { DAI_TESTNET_CONTRACT_ADDRESS } from '../../utils/config';
+import * as utils from '../../../utils/detox-utils';
+import { sendToken } from '../utils';
+import { DAI_TESTNET_CONTRACT_ADDRESS } from '../../../utils/values';
+import { addToken } from '../../common/functions';
 
 export const sendEthTest = () => {
     describe('Send Ethereum', () => {

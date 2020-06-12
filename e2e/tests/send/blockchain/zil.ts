@@ -1,6 +1,7 @@
-import * as utils from '../../utils/utils';
-import { sendToken, addToken } from './utils';
-import { XSGD_TESTNET_CONTRACT_ADDRESS } from '../../utils/config';
+import * as utils from '../../../utils/detox-utils';
+import { sendToken } from '../utils';
+import { XSGD_TESTNET_CONTRACT_ADDRESS } from '../../../utils/values';
+import { addToken } from '../../common/functions';
 
 export const sendZilTest = () => {
     describe('Send Zilliqa', () => {

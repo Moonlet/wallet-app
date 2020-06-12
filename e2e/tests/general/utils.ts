@@ -1,4 +1,4 @@
-import * as utils from '../../utils/utils';
+import * as utils from '../../utils/detox-utils';
 
 /**
  * Delete Token From Token Manage Screen

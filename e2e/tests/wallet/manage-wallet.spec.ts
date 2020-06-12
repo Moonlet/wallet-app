@@ -1,7 +1,7 @@
-import * as utils from '../../utils/utils';
+import * as utils from '../../utils/detox-utils';
 import * as customKeyboard from '../../utils/custom-keyboard';
 import { delay } from '../../../src/core/utils/time';
-import { generateWalletTest } from '../send/common';
+import { generateWalletTest } from '../common/tests';
 
 describe('Wallet management', () => {
     /**

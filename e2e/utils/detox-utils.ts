@@ -24,7 +24,6 @@ export const expectElementVisible = async (key: string) =>
  * Expect Element Not to be visible
  * @param key
  */
-
 export const expectElementNotVisible = async (key: string) =>
     (expect(element(by.id(key))) as any).toBeNotVisible();
 

@@ -1,4 +1,4 @@
-import { generateWalletTest, activateMainNetTest } from '../../send/common';
+import { generateWalletTest, activateMainNetTest } from '../../common/tests';
 import { zrc2TokensManagementTest } from './zrc2-tokens-manage';
 import { erc20TokensManagementTest } from './erc20-tokens.manage';
 

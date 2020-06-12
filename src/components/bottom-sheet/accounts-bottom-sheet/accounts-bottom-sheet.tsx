@@ -144,6 +144,8 @@ export class AccountsBottomSheetComponent extends React.Component<
 
                         return (
                             <ListAccount
+                                testID={`card-${blockchain.toLocaleLowerCase()}-account-${account.index +
+                                    1}`}
                                 key={index}
                                 leftIcon={blockchainConfig.iconComponent}
                                 rightIcon={selected ? IconValues.CHECK : undefined}

@@ -10,6 +10,7 @@ import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export interface IProps {
+    testID?: string;
     label: string | JSX.Element;
     leftIcon?: React.ComponentType<any>;
     rightIcon?: string;
@@ -33,6 +34,7 @@ export const ListAccountComponent = (
 
     return (
         <TouchableHighlight
+            testID={props.testID}
             onPress={props.onPress}
             underlayColor={props.theme.colors.bottomSheetBackground}
         >

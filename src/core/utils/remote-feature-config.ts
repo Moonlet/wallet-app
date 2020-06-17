@@ -9,7 +9,7 @@ export enum RemoteFeature {
     CELO = 'feature_celo',
     DEV_TOOLS = 'dev_tools',
     TC_VERSION = 'tcVersion',
-    NOTIF_CENTER = 'feature_notification_center'
+    NOTIF_CENTER = 'feature_notifications_center'
 }
 
 let featuresConfig = {};

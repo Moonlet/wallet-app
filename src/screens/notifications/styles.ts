@@ -7,12 +7,14 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            paddingHorizontal: BASE_DIMENSION * 3,
-            paddingVertical: BASE_DIMENSION * 4,
-            marginBottom: BASE_DIMENSION * 2,
             backgroundColor: theme.colors.appBackground,
             flexDirection: 'column',
             height: SCREEN_HEIGHT
+        },
+        scrollContainer: {
+            flexGrow: 1,
+            paddingHorizontal: BASE_DIMENSION * 3,
+            paddingVertical: BASE_DIMENSION * 4
         },
         rowContainer: {
             flexDirection: 'row',

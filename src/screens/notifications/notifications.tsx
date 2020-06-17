@@ -8,7 +8,7 @@ import { translate } from '../../core/i18n';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import Icon from '../../components/icon/icon';
 import { IconValues } from '../../components/icon/values';
-import { normalize } from '../../styles/dimensions';
+import { normalize, BASE_DIMENSION } from '../../styles/dimensions';
 import { INotificationType, INotificationsState } from '../../redux/notifications/state';
 import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
 import { IReduxState } from '../../redux/state';
@@ -82,28 +82,30 @@ export class NotificationsComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                {notifsBySelectedBlockchain ? (
-                    <ScrollView
-                        contentContainerStyle={{ flexGrow: 1 }}
-                        showsVerticalScrollIndicator={false}
-                    >
-                        {Object.values(
+                <ScrollView
+                    contentContainerStyle={styles.scrollContainer}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {notifsBySelectedBlockchain ? (
+                        Object.values(
                             notifsBySelectedBlockchain
                         ).map((notif: INotificationType, index: number) =>
                             this.renderRow(notif, index)
-                        )}
+                        )
+                    ) : (
+                        // Empty State
+                        <View style={styles.emptyContainer}>
+                            <Image
+                                style={styles.logoImage}
+                                source={require('../../assets/images/png/moonlet_space_gray.png')}
+                            />
+                        </View>
+                    )}
+                </ScrollView>
 
-                        <BottomBlockchainNavigation />
-                    </ScrollView>
-                ) : (
-                    // Empty State
-                    <View style={styles.emptyContainer}>
-                        <Image
-                            style={styles.logoImage}
-                            source={require('../../assets/images/png/moonlet_space_gray.png')}
-                        />
-                    </View>
-                )}
+                <BottomBlockchainNavigation
+                    style={{ paddingBottom: BASE_DIMENSION + BASE_DIMENSION / 2 }}
+                />
             </View>
         );
     }

@@ -20,6 +20,10 @@ import { getBlockchains } from '../../redux/preferences/selectors';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { setSelectedBlockchain } from '../../redux/wallets/actions';
 
+export interface IExternalProps {
+    style?: any;
+}
+
 export interface IReduxProps {
     blockchains: Blockchain[];
     selectedBlockchain: Blockchain;
@@ -46,10 +50,12 @@ interface IState {
 }
 
 export class BottomBlockchainNavigationComponent extends React.Component<
-    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(
+        props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
         this.state = {
             extraSelectedBlockchain: undefined
@@ -105,7 +111,7 @@ export class BottomBlockchainNavigationComponent extends React.Component<
                 <LinearGradient
                     colors={this.props.theme.shadowGradient}
                     locations={[0, 0.5]}
-                    style={styles.selectorGradientContainer}
+                    style={[styles.selectorGradientContainer, this.props.style]}
                 >
                     <View style={styles.blockchainSelectorContainer} testID="blockchain-selector">
                         <View style={styles.bottomBlockchainContainer}>
@@ -142,7 +148,7 @@ export class BottomBlockchainNavigationComponent extends React.Component<
     }
 }
 
-export const BottomBlockchainNavigation = smartConnect(BottomBlockchainNavigationComponent, [
-    connect(mapStateToProps, mapDispatchToProps),
-    withTheme(stylesProvider)
-]);
+export const BottomBlockchainNavigation = smartConnect<IExternalProps>(
+    BottomBlockchainNavigationComponent,
+    [connect(mapStateToProps, mapDispatchToProps), withTheme(stylesProvider)]
+);

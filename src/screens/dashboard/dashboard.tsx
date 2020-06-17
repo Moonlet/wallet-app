@@ -5,14 +5,14 @@ import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TokenDashboard } from '../../components/token-dashboard/token-dashboard';
 import { AccountCreate } from '../../components/account-create/account-create';
 import { IReduxState } from '../../redux/state';
-import { IWalletState, IAccountState } from '../../redux/wallets/state';
+import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { getBalance, setSelectedBlockchain } from '../../redux/wallets/actions';
+import { getBalance } from '../../redux/wallets/actions';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import {
     getSelectedWallet,
@@ -42,7 +42,6 @@ import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { IExchangeRates } from '../../redux/market/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { Amount } from '../../components/amount/amount';
-import { WalletType } from '../../core/wallet/types';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { IconValues } from '../../components/icon/values';
@@ -52,7 +51,6 @@ const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
 
 export interface IReduxProps {
-    wallet: IWalletState;
     walletsNr: number;
     getBalance: typeof getBalance;
     blockchains: Blockchain[];
@@ -60,7 +58,6 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
     selectedBlockchain: Blockchain;
     exchangeRates: IExchangeRates;
-    setSelectedBlockchain: typeof setSelectedBlockchain;
     isCreateAccount: boolean;
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
@@ -71,7 +68,6 @@ const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
 
     return {
-        wallet: getSelectedWallet(state),
         walletsNr: Object.keys(state.wallets).length,
         blockchains: getBlockchains(state),
         selectedBlockchain: getSelectedBlockchain(state),
@@ -86,12 +82,10 @@ const mapStateToProps = (state: IReduxState) => {
 
 const mapDispatchToProps = {
     getBalance,
-    openBottomSheet,
-    setSelectedBlockchain
+    openBottomSheet
 };
 
 interface IState {
-    extraSelectedBlockchain: Blockchain;
     isLoading: boolean;
 }
 
@@ -155,7 +149,6 @@ export class DashboardScreenComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            extraSelectedBlockchain: undefined,
             isLoading: false
         };
     }
@@ -184,15 +177,6 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.selectedBlockchain !== prevProps.selectedBlockchain) {
-            const blockchainNotFound =
-                this.props.blockchains.slice(0, 4).indexOf(this.props.selectedBlockchain) === -1;
-
-            if (blockchainNotFound) {
-                this.setState({ extraSelectedBlockchain: this.props.selectedBlockchain });
-            }
-        }
-
         if (this.props.selectedAccount !== prevProps.selectedAccount && Platform.OS === 'web') {
             // Used on web to get balances when selectedAccount is changed
             // NavigationEvents is not enough for the web in order to get balances
@@ -378,15 +362,10 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public render() {
-        const { blockchains, styles } = this.props;
-        const blockchain: Blockchain = this.props.selectedBlockchain;
+        const { styles, selectedBlockchain } = this.props;
+
         const showCreateAccount =
             this.props.isCreateAccount && this.props.selectedBlockchainAccounts?.length === 0;
-
-        /* Hardware wallets can have only one blockchain active */
-        let renderBottomNav = false;
-        const isHWWallet = this.props.wallet ? this.props.wallet.type === WalletType.HW : false;
-        if (blockchains.length > 1 && !isHWWallet) renderBottomNav = true;
 
         if (Platform.OS === 'web' && this.state.isLoading) {
             return (
@@ -398,7 +377,7 @@ export class DashboardScreenComponent extends React.Component<
 
         const containerHeight =
             Platform.OS === 'web'
-                ? blockchains.length === 1
+                ? this.props.blockchains.length === 1
                     ? SCREEN_HEIGHT
                     : 'calc(100vh - 122px)'
                 : 'auto';
@@ -410,19 +389,15 @@ export class DashboardScreenComponent extends React.Component<
                 <NavigationEvents onWillFocus={payload => this.onFocus()} />
 
                 {showCreateAccount && (
-                    <AccountCreate blockchain={blockchain} navigation={this.props.navigation} />
+                    <AccountCreate
+                        blockchain={selectedBlockchain}
+                        navigation={this.props.navigation}
+                    />
                 )}
 
                 {!showCreateAccount && this.renderTokenDashboard()}
 
-                {renderBottomNav && (
-                    <BottomBlockchainNavigation
-                        blockchains={blockchains}
-                        selectedBlockchain={blockchain}
-                        extraSelectedBlockchain={this.state.extraSelectedBlockchain}
-                        onSelectBlockchain={(b: Blockchain) => this.props.setSelectedBlockchain(b)}
-                    />
-                )}
+                <BottomBlockchainNavigation />
             </View>
         );
     }

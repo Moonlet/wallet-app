@@ -9,87 +9,140 @@ import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { IconValues } from '../icon/values';
 import Icon from '../icon/icon';
 import { Blockchain } from '../../core/blockchain/types';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { Text } from '../../library';
 import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { connect } from 'react-redux';
-
-export interface IExternalProps {
-    blockchains: Blockchain[];
-    selectedBlockchain: Blockchain;
-    extraSelectedBlockchain?: Blockchain;
-    onSelectBlockchain: (Blockchain: Blockchain) => void;
-}
+import { WalletType } from '../../core/wallet/types';
+import { getSelectedWallet, getSelectedBlockchain } from '../../redux/wallets/selectors';
+import { IReduxState } from '../../redux/state';
+import { IWalletState } from '../../redux/wallets/state';
+import { getBlockchains } from '../../redux/preferences/selectors';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { setSelectedBlockchain } from '../../redux/wallets/actions';
 
 export interface IReduxProps {
+    blockchains: Blockchain[];
+    selectedBlockchain: Blockchain;
+    wallet: IWalletState;
     openBottomSheet: typeof openBottomSheet;
+    setSelectedBlockchain: typeof setSelectedBlockchain;
 }
 
-const mapDispatchToProps = {
-    openBottomSheet
+const mapStateToProps = (state: IReduxState) => {
+    return {
+        blockchains: getBlockchains(state),
+        selectedBlockchain: getSelectedBlockchain(state),
+        wallet: getSelectedWallet(state)
+    };
 };
 
-export const BottomBlockchainNavigationComponent = (
-    props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
-) => {
-    const { styles } = props;
+const mapDispatchToProps = {
+    openBottomSheet,
+    setSelectedBlockchain
+};
 
-    const renderBlockchain = (blockchain: Blockchain) => {
+interface IState {
+    extraSelectedBlockchain: Blockchain;
+}
+
+export class BottomBlockchainNavigationComponent extends React.Component<
+    IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
+    constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+        super(props);
+        this.state = {
+            extraSelectedBlockchain: undefined
+        };
+    }
+
+    public componentDidUpdate(prevProps: IReduxProps) {
+        if (this.props.selectedBlockchain !== prevProps.selectedBlockchain) {
+            const blockchainNotFound =
+                this.props.blockchains.slice(0, 4).indexOf(this.props.selectedBlockchain) === -1;
+
+            if (blockchainNotFound) {
+                this.setState({ extraSelectedBlockchain: this.props.selectedBlockchain });
+            }
+        }
+    }
+
+    private renderBlockchain(blockchain: Blockchain) {
+        const { styles } = this.props;
+
         return (
             <TouchableOpacity
                 key={blockchain}
                 style={[
                     styles.blockchainButton,
-                    props.selectedBlockchain === blockchain && styles.blockchainButtonActive,
-                    { width: props.blockchains.length > 4 ? SCREEN_WIDTH / 4 : 0 }
+                    this.props.selectedBlockchain === blockchain && styles.blockchainButtonActive,
+                    { width: this.props.blockchains.length > 4 ? SCREEN_WIDTH / 4 : 0 }
                 ]}
-                onPress={() => props.onSelectBlockchain(blockchain)}
+                onPress={() => this.props.setSelectedBlockchain(blockchain)}
             >
                 <Text
                     style={
-                        props.selectedBlockchain === blockchain && styles.blockchainButtonTextActive
+                        this.props.selectedBlockchain === blockchain &&
+                        styles.blockchainButtonTextActive
                     }
                 >
                     {blockchain && getBlockchain(blockchain).config.ui.displayName}
                 </Text>
             </TouchableOpacity>
         );
-    };
+    }
 
-    return (
-        <LinearGradient
-            colors={props.theme.shadowGradient}
-            locations={[0, 0.5]}
-            style={styles.selectorGradientContainer}
-        >
-            <View style={styles.blockchainSelectorContainer} testID="blockchain-selector">
-                <View style={styles.bottomBlockchainContainer}>
-                    {props.blockchains.slice(0, 4).map(blockchain => renderBlockchain(blockchain))}
+    public render() {
+        const { styles } = this.props;
 
-                    {props?.extraSelectedBlockchain &&
-                        renderBlockchain(props.extraSelectedBlockchain)}
+        /* Hardware wallets can have only one blockchain active */
+        let renderBottomNav = false;
+        const isHWWallet = this.props.wallet ? this.props.wallet.type === WalletType.HW : false;
+        if (this.props.blockchains.length > 1 && !isHWWallet) renderBottomNav = true;
 
-                    {props.blockchains.length > 4 && (
-                        <TouchableOpacity
-                            onPress={() =>
-                                props.openBottomSheet(BottomSheetType.BLOCKCHAIN_NAVIGATION)
-                            }
-                            style={styles.expandIconContainer}
-                        >
-                            <Icon
-                                name={IconValues.EXPAND}
-                                size={normalize(28)}
-                                style={styles.expandIcon}
-                            />
-                        </TouchableOpacity>
-                    )}
-                </View>
-            </View>
-        </LinearGradient>
-    );
-};
+        if (renderBottomNav) {
+            return (
+                <LinearGradient
+                    colors={this.props.theme.shadowGradient}
+                    locations={[0, 0.5]}
+                    style={styles.selectorGradientContainer}
+                >
+                    <View style={styles.blockchainSelectorContainer} testID="blockchain-selector">
+                        <View style={styles.bottomBlockchainContainer}>
+                            {this.props.blockchains
+                                .slice(0, 4)
+                                .map(blockchain => this.renderBlockchain(blockchain))}
 
-export const BottomBlockchainNavigation = smartConnect<IExternalProps>(
-    BottomBlockchainNavigationComponent,
-    [connect(null, mapDispatchToProps), withTheme(stylesProvider)]
-);
+                            {this.state.extraSelectedBlockchain &&
+                                this.renderBlockchain(this.state.extraSelectedBlockchain)}
+
+                            {this.props.blockchains.length > 4 && (
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        this.props.openBottomSheet(
+                                            BottomSheetType.BLOCKCHAIN_NAVIGATION
+                                        )
+                                    }
+                                    style={styles.expandIconContainer}
+                                >
+                                    <Icon
+                                        name={IconValues.EXPAND}
+                                        size={normalize(28)}
+                                        style={styles.expandIcon}
+                                    />
+                                </TouchableOpacity>
+                            )}
+                        </View>
+                    </View>
+                </LinearGradient>
+            );
+        } else {
+            return null;
+        }
+    }
+}
+
+export const BottomBlockchainNavigation = smartConnect(BottomBlockchainNavigationComponent, [
+    connect(mapStateToProps, mapDispatchToProps),
+    withTheme(stylesProvider)
+]);

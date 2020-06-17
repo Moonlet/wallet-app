@@ -57,6 +57,7 @@ export class NotificationsComponent extends React.Component<
 
         return (
             <View style={styles.container}>
+                {/* TODO: empty state */}
                 {this.renderRow({
                     title: 'Claim your reward now',
                     subtitle: 'You have 500.00 ZIL available to be claimed',

@@ -1,6 +1,6 @@
-Team’s log. Stardate 2005.29:
+Team’s log. Stardate 2006.12:
 
-Howdy! We made some fixes here and there. As well, we are happy to push live the first ZRC-2 token on Zilliqa blockchain, namely XSGD - the Singapore Dollar Stablecoin. And since this is a stablecoin milestone for us, we added DAI into Ethereum dashboard. Oh, we almost forgot! We added a new section in the menu, namely "Scan to pay". Shhh! It's a secret for now. More to come on the next releases. ;)
+This time we pushed live some techie stuff that will allow us to deliver more in less time. As well we smashed some bugs, again. Now there are not. Therefore please carry on.
 
 Thank you,
 Moonlet Team

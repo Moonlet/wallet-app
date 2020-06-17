@@ -9,13 +9,7 @@ import { INavigationProps } from '../../navigation/with-navigation-params';
 import Icon from '../../components/icon/icon';
 import { IconValues } from '../../components/icon/values';
 import { normalize } from '../../styles/dimensions';
-
-interface INotificationType {
-    title: string;
-    subtitle: string;
-    // cta: any;
-    read: boolean;
-}
+import { INotificationType } from '../../redux/notifications/state';
 
 export const navigationOptions = () => ({
     title: translate('App.labels.notifications')
@@ -30,6 +24,7 @@ export class NotificationsComponent extends React.Component<
         const { styles } = this.props;
 
         return (
+            // TODO: Swipeable - delete notification
             <TouchableHighlight
                 underlayColor={this.props.theme.colors.appBackground}
                 onPress={() => {

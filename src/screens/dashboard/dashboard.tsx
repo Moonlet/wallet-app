@@ -46,6 +46,7 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { IconValues } from '../../components/icon/values';
 import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -114,10 +115,18 @@ const navigationOptions = ({ navigation }: any) => ({
             <TouchableOpacity
                 testID="notifications-icon"
                 style={{ width: ICON_CONTAINER_SIZE }}
-                onPress={() => navigation.navigate('Notifications')}
+                onPress={() =>
+                    isFeatureActive(RemoteFeature.NOTIF_CENTER)
+                        ? navigation.navigate('Notifications')
+                        : navigation.navigate('Wallets')
+                }
             >
                 <Icon
-                    name={IconValues.ALARM_BELL}
+                    name={
+                        isFeatureActive(RemoteFeature.NOTIF_CENTER)
+                            ? IconValues.ALARM_BELL
+                            : IconValues.MONEY_WALLET
+                    }
                     size={ICON_SIZE}
                     style={{ color: themes.dark.colors.accent }}
                 />

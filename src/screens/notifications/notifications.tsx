@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableHighlight } from 'react-native';
+import { View, TouchableHighlight, ScrollView } from 'react-native';
 import { Text } from '../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -9,23 +9,41 @@ import { INavigationProps } from '../../navigation/with-navigation-params';
 import Icon from '../../components/icon/icon';
 import { IconValues } from '../../components/icon/values';
 import { normalize } from '../../styles/dimensions';
-import { INotificationType } from '../../redux/notifications/state';
+import { INotificationType, INotificationsState } from '../../redux/notifications/state';
+import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
+import { IReduxState } from '../../redux/state';
+import { connect } from 'react-redux';
+import { Blockchain } from '../../core/blockchain/types';
+import { getSelectedBlockchain } from '../../redux/wallets/selectors';
+
+export interface IReduxProps {
+    notifications: INotificationsState;
+    selectedBlockchain: Blockchain;
+}
+
+const mapStateToProps = (state: IReduxState) => {
+    return {
+        notifications: state.notifications,
+        selectedBlockchain: getSelectedBlockchain(state)
+    };
+};
 
 export const navigationOptions = () => ({
     title: translate('App.labels.notifications')
 });
 
 export class NotificationsComponent extends React.Component<
-    INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IReduxProps & INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
 
-    private renderRow(notification: INotificationType) {
+    private renderRow(notification: INotificationType, index: number) {
         const { styles } = this.props;
 
         return (
-            // TODO: Swipeable - delete notification
+            // Swipeable - maybe delete notification?
             <TouchableHighlight
+                key={`notification-${index}`}
                 underlayColor={this.props.theme.colors.appBackground}
                 onPress={() => {
                     // TODO
@@ -53,32 +71,36 @@ export class NotificationsComponent extends React.Component<
     }
 
     public render() {
-        const { styles } = this.props;
+        const { styles, notifications } = this.props;
+
+        let notifsBySelectedBlockchain;
+        Object.keys(notifications).filter((blockchain: Blockchain) => {
+            if (blockchain === this.props.selectedBlockchain) {
+                notifsBySelectedBlockchain = notifications[blockchain];
+            }
+        });
 
         return (
             <View style={styles.container}>
-                {/* TODO: empty state */}
-                {this.renderRow({
-                    title: 'Claim your reward now',
-                    subtitle: 'You have 500.00 ZIL available to be claimed',
-                    read: false
-                })}
-                {this.renderRow({
-                    title: 'Transaction failed',
-                    subtitle:
-                        '10.0000 ZIL failed to be sent to the following address: zil1f...lsd7t',
-                    read: false
-                })}
-                {this.renderRow({
-                    title: 'Transaction sent',
-                    subtitle: '10.0000 ZIL sent to the following address: zil1f...lsd7t',
-                    read: true
-                })}
+                <ScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={false}
+                >
+                    {/* TODO: empty state */}
+                    {Object.values(
+                        notifsBySelectedBlockchain
+                    ).map((notif: INotificationType, index: number) =>
+                        this.renderRow(notif, index)
+                    )}
+                </ScrollView>
+
+                <BottomBlockchainNavigation />
             </View>
         );
     }
 }
 
 export const NotificationsScreen = smartConnect(NotificationsComponent, [
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

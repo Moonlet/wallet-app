@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
 import { BASE_DIMENSION, normalizeFontAndLineHeight, SCREEN_HEIGHT } from '../../styles/dimensions';
+import { ph, pw } from '../../styles';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -46,5 +47,17 @@ export default (theme: ITheme) =>
         rightIcon: {
             alignSelf: 'center',
             color: theme.colors.accent
+        },
+        emptyContainer: {
+            flex: 1,
+            alignSelf: 'center',
+            justifyContent: 'center'
+        },
+        logoImage: {
+            height: ph(30),
+            width: pw(60),
+            alignSelf: 'center',
+            resizeMode: 'contain',
+            marginBottom: BASE_DIMENSION * 6
         }
     });

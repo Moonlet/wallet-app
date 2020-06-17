@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableHighlight, ScrollView } from 'react-native';
+import { View, TouchableHighlight, ScrollView, Image } from 'react-native';
 import { Text } from '../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -82,19 +82,28 @@ export class NotificationsComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <ScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
-                    showsVerticalScrollIndicator={false}
-                >
-                    {/* TODO: empty state */}
-                    {Object.values(
-                        notifsBySelectedBlockchain
-                    ).map((notif: INotificationType, index: number) =>
-                        this.renderRow(notif, index)
-                    )}
-                </ScrollView>
+                {notifsBySelectedBlockchain ? (
+                    <ScrollView
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        {Object.values(
+                            notifsBySelectedBlockchain
+                        ).map((notif: INotificationType, index: number) =>
+                            this.renderRow(notif, index)
+                        )}
 
-                <BottomBlockchainNavigation />
+                        <BottomBlockchainNavigation />
+                    </ScrollView>
+                ) : (
+                    // Empty State
+                    <View style={styles.emptyContainer}>
+                        <Image
+                            style={styles.logoImage}
+                            source={require('../../assets/images/png/moonlet_space_gray.png')}
+                        />
+                    </View>
+                )}
             </View>
         );
     }

@@ -12,9 +12,9 @@ import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { ConfirmComponent } from '../../components/confirm-component/confirm-component';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
-import { NavigationService } from '../../../../navigation/navigation-service';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
+import { delegate } from '../../../../redux/wallets/actions';
 
 interface IHeaderStep {
     step: number;
@@ -31,6 +31,7 @@ export interface IReduxProps {
     validators: IValidator[];
     actionText: string;
     amount: string;
+    delegate: typeof delegate;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
@@ -104,7 +105,6 @@ export class DelegateConfirmComponent extends React.Component<
                 translate('Password.subtitleSignTransaction'),
                 { sensitive: true, showCloseButton: true }
             );
-            NavigationService.goBack('TokenScreen-1');
         } catch {
             //
         }

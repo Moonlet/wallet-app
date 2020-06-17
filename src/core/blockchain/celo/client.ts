@@ -10,6 +10,7 @@ import BigNumber from 'bignumber.js';
 import { config, Contracts } from './config';
 import abi from 'ethereumjs-abi';
 import { LockedGold } from './contracts/lockedgold';
+import { Election } from './contracts/election';
 
 export class Client extends EthereumClient {
     constructor(chainId: ChainIdType) {
@@ -18,6 +19,7 @@ export class Client extends EthereumClient {
         this.nameService = new NameService();
         this.utils = new ClientUtils(this);
         this.contracts[Contracts.LOCKED_GOLD] = new LockedGold(this);
+        this.contracts[Contracts.ELECTION] = new Election(this);
 
         let url = networks[0].url;
         const network = networks.filter(n => n.chainId === chainId)[0];

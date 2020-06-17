@@ -18,7 +18,6 @@ import { NavigationService } from '../../../../../../../navigation/navigation-se
 import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
 import { AccountStats } from '../../../../../../../core/blockchain/types/stats';
 import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
-import { IconValues } from '../../../../../../../components/icon/values';
 
 export interface IProps {
     accountIndex: number;
@@ -74,17 +73,11 @@ export class AccountTabComponent extends React.Component<
             <View style={styles.container}>
                 <View style={{ flex: 1 }}>
                     <AccountAddress account={this.props.account} token={this.props.token} />
-                    {this.state.accountStats && (
-                        <StatsComponent accountStats={this.state.accountStats} />
-                    )}
-                </View>
-                <View style={styles.bottomContainer}>
                     <View style={styles.buttonsRowContainer}>
                         <Button
                             key={`cta-send`}
                             style={styles.button}
                             wrapperStyle={{ flex: 1 }}
-                            leftIcon={IconValues.ARROW_RIGHT}
                             onPress={() =>
                                 NavigationService.navigate('Send', {
                                     accountIndex: this.props.account.index,
@@ -99,7 +92,6 @@ export class AccountTabComponent extends React.Component<
                             key={`cta-receive`}
                             style={styles.button}
                             wrapperStyle={{ flex: 1 }}
-                            leftIcon={IconValues.QR_CODE_SCAN}
                             onPress={() =>
                                 NavigationService.navigate('Receive', {
                                     accountIndex: this.props.account.index,
@@ -111,6 +103,11 @@ export class AccountTabComponent extends React.Component<
                             {translate('App.labels.receive')}
                         </Button>
                     </View>
+                    {this.state.accountStats && (
+                        <StatsComponent accountStats={this.state.accountStats} />
+                    )}
+                </View>
+                <View style={styles.bottomContainer}>
                     <CtaGroup
                         mainCta={tokenUiConfig.accountCTA.mainCta}
                         params={{

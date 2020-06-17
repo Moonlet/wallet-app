@@ -8,6 +8,7 @@ import { TokenType } from '../types/token';
 import { NameService } from './name-service';
 import { ClientUtils } from './client-utils';
 import { Ethereum } from '.';
+import { fixEthAddress } from '../../utils/format-address';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -18,16 +19,14 @@ export class Client extends BlockchainGenericClient {
     }
 
     public getBalance(address: string): Promise<BigNumber> {
-        return this.http
-            .jsonRpc('eth_getBalance', [this.fixAddress(address), 'latest'])
-            .then(res => {
-                return new BigNumber(res.result, 16);
-            });
+        return this.http.jsonRpc('eth_getBalance', [fixEthAddress(address), 'latest']).then(res => {
+            return new BigNumber(res.result, 16);
+        });
     }
 
     public getNonce(address: string): Promise<number> {
         return this.http
-            .jsonRpc('eth_getTransactionCount', [this.fixAddress(address), 'latest'])
+            .jsonRpc('eth_getTransactionCount', [fixEthAddress(address), 'latest'])
             .then(res => {
                 return new BigNumber(res.result, 16).toNumber();
             });
@@ -193,12 +192,5 @@ export class Client extends BlockchainGenericClient {
             // TODO: extract url in a constant, also create a firebase function to be sure that this service is up
             fetch('https://ethgasstation.info/json/ethgasAPI.json')
         ]);
-    }
-
-    private fixAddress(address: string): string {
-        if (address.indexOf('0x') < 0) {
-            address = '0x' + address;
-        }
-        return address;
     }
 }

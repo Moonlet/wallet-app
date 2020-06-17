@@ -470,6 +470,7 @@ export const translation: ITranslations = {
             confirmVote: 'Confirm\nvote(s)',
             confirmStake: 'Confirm\nstake(s)',
             totalStake: 'Total Stake',
+            totalVotes: 'Total Stakes',
             totalDelegated: 'Total Delegated',
             myStake: 'My Stake',
             delegation: 'Delegation',

@@ -13,11 +13,12 @@ import {
     CELO_USD_TESTNET_ALFAJORES,
     CELO_USD_TESTNET_BAKLAVA
 } from './tokens/cUSD';
+import { IconValues } from '../../../components/icon/values';
 
 export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickVote',
-        iconName: 'vote',
+        iconName: IconValues.VOTE,
         navigateTo: {
             screen: 'PosQuickDelegate',
             params: { actionText: 'App.labels.quickVote' }
@@ -28,7 +29,7 @@ export const accountCTA = {
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.vote',
-        iconName: 'vote',
+        iconName: IconValues.VOTE,
         navigateTo: {
             screen: 'PosDelegate',
             params: { actionText: 'App.labels.vote' }
@@ -37,7 +38,7 @@ const validatorCTA = {
     otherCtas: [
         {
             title: 'App.labels.revote',
-            iconName: 'revote',
+            iconName: IconValues.REVOTE,
             navigateTo: {
                 screen: 'PosRedelegate',
                 params: { actionText: 'App.labels.revote' }
@@ -45,7 +46,7 @@ const validatorCTA = {
         },
         {
             title: 'App.labels.unvote',
-            iconName: 'unvote',
+            iconName: IconValues.UNVOTE,
             navigateTo: {
                 screen: 'PosBasicAction',
                 params: { actionText: 'App.labels.unvote', basicAction: PosBasicActionType.UNVOTE }
@@ -53,7 +54,7 @@ const validatorCTA = {
         },
         {
             title: 'App.labels.unlock',
-            iconName: 'unlock',
+            iconName: IconValues.UNLOCK,
             navigateTo: {
                 screen: 'PosBasicAction',
                 params: {
@@ -95,7 +96,7 @@ export const config: IBlockchainConfig = {
         defaults: {
             gasPrice: new BigNumber(5000000000),
             gasLimit: {
-                [TokenType.ERC20]: new BigNumber(100000)
+                [TokenType.ERC20]: new BigNumber(400000)
             }
         },
         ui: {
@@ -108,8 +109,8 @@ export const config: IBlockchainConfig = {
     },
     ui: {
         validator: {
-            totalLabel: 'Validator.totalStake',
-            amountCardLabel: 'Validator.myStake'
+            totalLabel: 'Validator.totalVotes',
+            amountCardLabel: 'App.labels.myVotes'
         },
         token: {
             labels: {

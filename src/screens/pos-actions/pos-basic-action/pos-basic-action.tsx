@@ -30,10 +30,13 @@ import { FeeOptions } from '../../send/components/fee-options/fee-options';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
+import { unlock, unvote } from '../../../redux/wallets/actions/pos-actions';
 
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    unlock: typeof unlock;
+    unvote: typeof unvote;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -44,7 +47,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 };
 
 const mapDispatchToProps = {
-    //
+    unlock,
+    unvote
 };
 
 export interface INavigationParams {
@@ -92,11 +96,40 @@ export class PosBasicActionComponent extends React.Component<
 
     private async onPressConfirm() {
         try {
-            await PasswordModal.getPassword(
+            const password = await PasswordModal.getPassword(
                 translate('Password.pinTitleUnlock'),
                 translate('Password.subtitleSignTransaction'),
                 { sensitive: true, showCloseButton: true }
             );
+
+            switch (this.props.basicAction) {
+                case PosBasicActionType.UNLOCK: {
+                    this.props.unlock(
+                        this.props.account,
+                        this.state.amount,
+                        this.props.token.symbol,
+                        this.state.feeOptions,
+                        password,
+                        this.props.navigation,
+                        undefined
+                    );
+                    break;
+                }
+                case PosBasicActionType.UNVOTE: {
+                    this.props.unvote(
+                        this.props.account,
+                        this.state.amount,
+                        this.props.validators,
+                        this.props.token.symbol,
+                        this.state.feeOptions,
+                        password,
+                        this.props.navigation,
+                        undefined
+                    );
+                    break;
+                }
+            }
+
             NavigationService.goBack();
         } catch {
             //

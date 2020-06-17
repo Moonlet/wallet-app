@@ -94,7 +94,7 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
         const styles = this.props.styles;
 
         return (
-            <View style={styles.container}>
+            <View testID="onboarding-screen" style={styles.container}>
                 <View style={styles.topContainer}>
                     <Image
                         style={styles.logoImage}
@@ -114,10 +114,10 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
                 <View style={styles.buttonsContainer}>
                     <View style={styles.topButtons}>
                         <Button
+                            testID="recover-button"
                             style={[styles.leftButton]}
                             wrapperStyle={{ flex: 1 }}
                             onPress={() => this.onPressRecover()}
-                            testID="button-recover"
                         >
                             {translate('App.labels.recover')}
                         </Button>
@@ -131,7 +131,7 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
                     </View>
 
                     <Button
-                        testID="button-create"
+                        testID="create-button"
                         style={styles.bottomButton}
                         primary
                         onPress={() => this.onPressCreate()}
@@ -141,7 +141,7 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
 
                     {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
                         <Button
-                            testID="button-generate"
+                            testID="generate-button"
                             style={styles.bottomButton}
                             primary
                             onPress={() => this.onPressGenerateWallet()}

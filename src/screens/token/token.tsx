@@ -18,11 +18,7 @@ import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
 import { themes } from '../../navigation/navigation';
-import {
-    sendTransferTransaction,
-    getBalance,
-    updateTransactionFromBlockchain
-} from '../../redux/wallets/actions';
+import { getBalance, updateTransactionFromBlockchain } from '../../redux/wallets/actions';
 import { getChainId } from '../../redux/preferences/selectors';
 import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { TokenScreenComponentType } from '../../core/blockchain/types/token';
@@ -39,6 +35,7 @@ import { TransactionStatus } from '../../core/wallet/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import bind from 'bind-decorator';
 import { IconValues } from '../../components/icon/values';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface IProps {
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
@@ -49,7 +46,6 @@ export interface IReduxProps {
     account: IAccountState;
     transactions: IBlockchainTransaction[];
     wallet: IWalletState;
-    sendTransferTransaction: typeof sendTransferTransaction;
     chainId: ChainIdType;
     getBalance: typeof getBalance;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
@@ -80,7 +76,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 };
 
 const mapDispatchToProps = {
-    sendTransferTransaction,
     getBalance,
     updateTransactionFromBlockchain
 };
@@ -171,6 +166,20 @@ export class TokenScreenComponent extends React.Component<
     private renderComponent() {
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
 
+        // TODO - this is only for Ziliqa to be able to test staking screen
+        if (
+            isFeatureActive(RemoteFeature.DEV_TOOLS) &&
+            this.props.blockchain === Blockchain.ZILLIQA
+        ) {
+            return (
+                <DelegateTokenScreen
+                    accountIndex={this.props.accountIndex}
+                    blockchain={this.props.blockchain}
+                    token={this.props.token}
+                    navigation={this.props.navigation}
+                />
+            );
+        }
         switch (tokenConfig.ui.tokenScreenComponent) {
             case TokenScreenComponentType.DELEGATE:
                 return (

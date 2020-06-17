@@ -278,6 +278,7 @@ export class DialogComponent extends React.Component<
                 </RNDialog.Description>
                 {this.state.dialogType === DialogType.PROMPT && (
                     <RNDialog.Input
+                        testID="dialog-input"
                         style={Platform.select({
                             ios: styles.textInputIOS,
                             default: styles.textInputDefault

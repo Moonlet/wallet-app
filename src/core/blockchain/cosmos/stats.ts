@@ -2,7 +2,7 @@ import {
     GenericStats,
     IStatValueType,
     AccountStats,
-    IValidatorCard,
+    IValidator,
     CardActionType
 } from '../types/stats';
 import { Client } from './client';
@@ -15,6 +15,11 @@ export class Stats extends GenericStats<Client> {
             chartStats: chartStatsValues,
             secondaryStats: secondaryStatsValues
         };
+    }
+    public async getValidatorList(actionType: CardActionType): Promise<IValidator[]> {
+        moonletValidator.actionType = actionType;
+        chainLayerValidator.actionType = actionType;
+        return [moonletValidator, chainLayerValidator];
     }
 }
 
@@ -58,6 +63,7 @@ export const chartStatsValues = [
         title: 'Available',
         color: '#FFFFFF',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
             value: '1000.00',
             tokenSymbol: 'ATOM',
@@ -68,6 +74,7 @@ export const chartStatsValues = [
         title: 'Delegated',
         color: '#00DAFF',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
             value: '10000.00',
             tokenSymbol: 'ATOM',
@@ -76,8 +83,9 @@ export const chartStatsValues = [
     },
     {
         title: 'Undelegated',
-        color: '#AB7361',
+        color: '#FFAB91',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
             value: '1500.00',
             tokenSymbol: 'ATOM',
@@ -88,6 +96,7 @@ export const chartStatsValues = [
         title: 'Reward',
         color: '#00E676',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
             value: '700.00',
             tokenSymbol: 'ATOM',
@@ -123,17 +132,17 @@ export const topStatsValues = [
     }
 ];
 
-export const moonletValidator: IValidatorCard = {
+export const moonletValidator: IValidator = {
+    id: 'moonletID',
     icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
-    labelName: 'Moonlet',
+    name: 'Moonlet',
     rank: '10th',
-    totalLabel: 'Total Delegated',
-    totalAmountStd: '120000',
+    amountDelegated: '120000',
     website: 'http://moonlet.io',
-    rightTitle: 'Delegation',
-    rightSubtitle: '1,000.00 ATOM',
-    actionType: CardActionType.NAVIGATE,
-    bottomStats: [
+    topStats: topStatsValues,
+    secondaryStats: secondaryStatsValues,
+    chartStats: chartStatsValues,
+    cardStats: [
         {
             title: 'Voting Power',
             color: '#FFFFFF',
@@ -169,17 +178,17 @@ export const moonletValidator: IValidatorCard = {
     ]
 };
 
-export const chainLayerValidator: IValidatorCard = {
+export const chainLayerValidator: IValidator = {
+    id: 'chainLayerId',
     icon: 'https://thecelo.com/logos/0x4fc4ea624db2e4a1d6195a03744d505cbcd9431b.jpg',
-    labelName: 'ChainLayer',
+    name: 'ChainLayer',
     rank: '10th',
-    totalLabel: 'Total Delegated',
+    amountDelegated: '220000',
     website: 'http://chainlayer.io',
-    totalAmountStd: '220000',
-    rightTitle: 'Delegation',
-    rightSubtitle: '2,000.00 ATOM',
-    actionType: CardActionType.NAVIGATE,
-    bottomStats: [
+    topStats: topStatsValues,
+    secondaryStats: secondaryStatsValues,
+    chartStats: chartStatsValues,
+    cardStats: [
         {
             title: 'Voting Power',
             color: '#FFFFFF',

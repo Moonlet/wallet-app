@@ -2,13 +2,11 @@ import {
     GenericStats,
     IStatValueType,
     AccountStats,
-    IValidatorCard,
+    IValidator,
     CardActionType
 } from '../types/stats';
 import { Client } from './client';
 import { Blockchain } from '../types/blockchain';
-
-import { chainLayerValidator as cosmosChainLayerValidator } from '../cosmos/stats';
 
 export class Stats extends GenericStats<Client> {
     public async getAccountDelegateStats(): Promise<AccountStats> {
@@ -17,6 +15,30 @@ export class Stats extends GenericStats<Client> {
             chartStats: chartStatsValues,
             secondaryStats: secondaryStatsValues
         };
+    }
+    public async getValidatorList(
+        actionType: CardActionType,
+        nrValidators: number
+    ): Promise<IValidator[]> {
+        moonletValidator.actionType = actionType;
+        chainLayerValidator.actionType = actionType;
+
+        if (nrValidators === -1)
+            return [
+                moonletValidator,
+                chainLayerValidator,
+                moonletValidator,
+                moonletValidator,
+                chainLayerValidator
+            ];
+
+        // used for redelegate
+        if (nrValidators === 7) return [chainLayerValidator];
+
+        // DUMMY DATA
+        if (nrValidators === 1) return [moonletValidator2];
+        if (nrValidators === 2) return [moonletValidator, chainLayerValidator];
+        else return [moonletValidator, chainLayerValidator, moonletValidator];
     }
 }
 
@@ -60,6 +82,7 @@ export const chartStatsValues = [
         title: 'Available',
         color: '#FFFFFF',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
             value: '1000.00',
             tokenSymbol: 'cGLD',
@@ -72,8 +95,9 @@ export const chartStatsValues = [
         subtitle: 'locked',
         color: '#00DAFF',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
-            value: '10000.00',
+            value: '20000.00',
             tokenSymbol: 'cGLD',
             blockchain: Blockchain.CELO
         }
@@ -82,6 +106,7 @@ export const chartStatsValues = [
         title: 'Not-Voting',
         subtitle: 'locked',
         color: '#E91E63',
+        chartDisplay: false,
         type: IStatValueType.AMOUNT,
         data: {
             value: '10000.00',
@@ -91,10 +116,11 @@ export const chartStatsValues = [
     },
     {
         title: 'Unlocking',
-        color: '#AB7361',
+        color: '#FFAB91',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
-            value: '1500.00',
+            value: '15000.00',
             tokenSymbol: 'cGLD',
             blockchain: Blockchain.CELO
         }
@@ -103,6 +129,7 @@ export const chartStatsValues = [
         title: 'Reward',
         color: '#00E676',
         type: IStatValueType.AMOUNT,
+        chartDisplay: true,
         data: {
             value: '700.00',
             tokenSymbol: 'cGLD',
@@ -138,99 +165,111 @@ export const topStatsValues = [
     }
 ];
 
-export const moonletValidator: IValidatorCard = {
+const moonletCardStats = [
+    {
+        title: 'Validators',
+        color: '#FFFFFF',
+        type: IStatValueType.STRING,
+        data: {
+            value: '2/2'
+        }
+    },
+    {
+        title: 'Voting Power',
+        color: '#FFFFFF',
+        type: IStatValueType.STRING,
+        data: {
+            value: '0.64%'
+        }
+    },
+    {
+        title: 'Uptime',
+        color: '#FFFFFF',
+        type: IStatValueType.STRING,
+        data: {
+            value: '99.99%'
+        }
+    },
+    {
+        title: 'Reward',
+        color: '#00E676',
+        type: IStatValueType.STRING,
+        data: {
+            value: '8.64%'
+        }
+    }
+];
+
+export const moonletValidator2: IValidator = {
+    id: '0xDD1F519F63423045F526b8c83edC0eB4BA6434a4',
     icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
-    labelName: 'Moonlet',
-    rank: '10th',
-    totalAmountStd: '290000',
-    totalLabel: 'Total Votes',
+    name: 'Moonlet CLabs',
+    rank: '1th',
+    amountDelegated: '23',
     website: 'http://moonlet.io',
-    rightTitle: 'My Votes',
-    rightSubtitle: '1,000.00 cGLD',
-    actionType: CardActionType.CHECKBOX,
-    bottomStats: [
-        {
-            title: 'Validators',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '2/2'
-            }
-        },
-        {
-            title: 'Voting Power',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '0.64%'
-            }
-        },
-        {
-            title: 'Uptime',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '99.99%'
-            }
-        },
-        {
-            title: 'Reward',
-            color: '#00E676',
-            type: IStatValueType.STRING,
-            data: {
-                value: '8.64%'
-            }
-        }
-    ]
+    topStats: moonletCardStats,
+    secondaryStats: secondaryStatsValues,
+    chartStats: chartStatsValues,
+    cardStats: moonletCardStats
+};
+export const moonletValidator: IValidator = {
+    id: '0xCda518F6b5a797C3EC45D37c65b83e0b0748eDca',
+    icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
+    name: 'Moonlet CLabs',
+    rank: '3th',
+    amountDelegated: '23',
+    website: 'http://moonlet.io',
+    topStats: moonletCardStats,
+    secondaryStats: secondaryStatsValues,
+    chartStats: chartStatsValues,
+    cardStats: moonletCardStats
 };
 
-export const chainLayerValidator: IValidatorCard = {
+const chainLayerCardStats = [
+    {
+        title: 'Validators',
+        color: '#FFFFFF',
+        type: IStatValueType.STRING,
+
+        data: {
+            value: '3/3'
+        }
+    },
+    {
+        title: 'Voting Power',
+        color: '#FFFFFF',
+        type: IStatValueType.STRING,
+        data: {
+            value: '0.64%'
+        }
+    },
+    {
+        title: 'Uptime',
+        color: '#FFFFFF',
+        type: IStatValueType.STRING,
+        data: {
+            value: '99.99%'
+        }
+    },
+    {
+        title: 'Reward',
+        color: '#00E676',
+        type: IStatValueType.STRING,
+        data: {
+            value: '8.64%'
+        }
+    }
+];
+
+export const chainLayerValidator: IValidator = {
+    id: '0xb4e92c94A2712e98c020A81868264bdE52C188Cb',
     icon: 'https://thecelo.com/logos/0x4fc4ea624db2e4a1d6195a03744d505cbcd9431b.jpg',
-    labelName: 'ChainLayer',
-    rank: '10th',
-    totalLabel: 'Total Votes',
-    totalAmountStd: '190000',
+    name: 'ChainLayer CLabs',
+    rank: '4th',
+    amountDelegated: '190000',
     website: 'http://chainlayer.io',
-    rightTitle: 'My Votes',
-    rightSubtitle: '2,000.00 cGLD',
-    actionType: CardActionType.CHECKBOX,
-    bottomStats: [
-        {
-            title: 'Validators',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '3/3'
-            }
-        },
-        {
-            title: 'Voting Power',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '0.64%'
-            }
-        },
-        {
-            title: 'Uptime',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '99.99%'
-            }
-        },
-        {
-            title: 'Reward',
-            color: '#00E676',
-            type: IStatValueType.STRING,
-            data: {
-                value: '8.64%'
-            }
-        }
-    ]
-};
-
-export const getValidator = (blockchain: Blockchain) => {
-    if (blockchain === Blockchain.CELO) return moonletValidator;
-    else cosmosChainLayerValidator;
+    topStats: chainLayerCardStats,
+    chartStats: chartStatsValues,
+    secondaryStats: secondaryStatsValues,
+    cardStats: chainLayerCardStats
 };

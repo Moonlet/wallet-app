@@ -46,7 +46,11 @@ export const LegalComponent = (
         return <PrivacyPolicy showClose onClose={() => setShowPrivacyPolicy(false)} />;
     } else
         return (
-            <SafeAreaView forceInset={{ bottom: 'never' }} style={props.styles.container}>
+            <SafeAreaView
+                testID="legal-modal"
+                forceInset={{ bottom: 'never' }}
+                style={props.styles.container}
+            >
                 {props.showClose && (
                     <TouchableOpacity
                         onPress={() => props.onClose && props.onClose()}
@@ -102,6 +106,7 @@ export const LegalComponent = (
                     <View style={props.styles.divider} />
 
                     <Button
+                        testID="legal-accept-button"
                         wrapperStyle={props.styles.bottomButton}
                         primary
                         onPress={() => {

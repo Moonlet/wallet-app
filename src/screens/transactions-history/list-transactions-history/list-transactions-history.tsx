@@ -35,14 +35,14 @@ export class TransactionsHistoryListComponent extends React.Component<
                 : translate('App.labels.from').toLowerCase();
 
         const toAddress =
-            tx.token.type === TokenType.ZRC2
+            tx.token.type === TokenType.ZRC2 || tx.token.type === TokenType.ERC20
                 ? formatAddress(tx.data.params[0], account.blockchain)
                 : formatAddress(tx.toAddress, account.blockchain);
 
         return ` ${formattedAmount} ${toAddress}`;
     }
 
-    private transactionItem(tx: IBlockchainTransaction) {
+    private transactionItem(tx: IBlockchainTransaction, index: number) {
         const { account, styles, theme } = this.props;
 
         const blockchainInstance = getBlockchain(account.blockchain);
@@ -63,7 +63,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 const address = tx.address.toLowerCase();
                 let toAddress = tx.toAddress.toLowerCase();
 
-                if (tx.token.type === TokenType.ZRC2) {
+                if (tx.token.type === TokenType.ZRC2 || tx.token.type === TokenType.ERC20) {
                     toAddress = tx.data?.params && tx.data?.params[0];
                 }
 
@@ -91,6 +91,7 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         return (
             <TouchableOpacity
+                testID={`transaction-${index}`}
                 key={tx.id}
                 style={[
                     styles.transactionListItem,
@@ -161,7 +162,9 @@ export class TransactionsHistoryListComponent extends React.Component<
                         contentContainerStyle={{ flexGrow: 1 }}
                         showsVerticalScrollIndicator={false}
                     >
-                        {transactions.map((tx: IBlockchainTransaction) => this.transactionItem(tx))}
+                        {transactions.map((tx: IBlockchainTransaction, index: number) =>
+                            this.transactionItem(tx, index)
+                        )}
                     </ScrollView>
                 )}
             </View>

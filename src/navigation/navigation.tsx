@@ -45,7 +45,16 @@ import { ConnectHardwareWallet } from '../screens/connect-hardware-wallet/connec
 import { ManageTokenScreen } from '../screens/manage-token/manage-token';
 import { ConnectExtensionScreen } from '../screens/connect-extension/connect-extension';
 import { ValidatorScreen } from '../screens/validator-screen/validator-screen';
+import { DelegateSelectValidator } from '../screens/pos-actions/pos-action-delegate/delegate-select-validator/delegate-select-validator';
+import { QuickDelegateSelectValidator } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-select-validator/quick-delegate-select-validator';
+import { PosBasicAction } from '../screens/pos-actions/pos-basic-action/pos-basic-action';
+import { DelegateEnterAmount } from '../screens/pos-actions/pos-action-delegate/delegate-enter-amount/delegate-enter-amount';
+import { QuickDelegateEnterAmount } from '../screens/pos-actions/pos-action-quick-delegate/quick-delegate-enter-amount/quick-delegate-enter-amount';
 import { IconValues } from '../components/icon/values';
+import { DelegateConfirm } from '../screens/pos-actions/pos-action-delegate/delegate-confirm/delegate-confirm';
+import { RedelegateSelectValidator } from '../screens/pos-actions/pos-action-redelegate/redelegate-select-validator/redelegate-select-validator';
+import { RedelegateEnterAmount } from '../screens/pos-actions/pos-action-redelegate/redelegate-enter-amount/redelegate-enter-amount';
+import { RedelegateConfirm } from '../screens/pos-actions/pos-action-redelegate/redelegate-confirm/redelegate-confirm';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -101,7 +110,11 @@ export const defaultStackNavigationOptions: any = ({ navigation, theme }: IDefau
         fontWeight: 'bold'
     },
     headerLeft: navigation.dangerouslyGetParent().state.index > 0 && (
-        <HeaderLeft icon={IconValues.ARROW_LEFT} onPress={() => navigation.goBack(null)} />
+        <HeaderLeft
+            testID="go-back"
+            icon={IconValues.ARROW_LEFT}
+            onPress={() => navigation.goBack(null)}
+        />
     )
 });
 
@@ -143,6 +156,34 @@ export const WalletNavigation = createStackNavigator(
         },
         Validator: {
             screen: ValidatorScreen
+        },
+        PosDelegate: {
+            screen: DelegateSelectValidator
+        },
+        DelegateEnterAmount: {
+            screen: DelegateEnterAmount
+        },
+        DelegateConfirm: {
+            screen: DelegateConfirm
+        },
+
+        PosQuickDelegate: {
+            screen: QuickDelegateSelectValidator
+        },
+        QuickDelegateEnterAmount: {
+            screen: QuickDelegateEnterAmount
+        },
+        PosRedelegate: {
+            screen: RedelegateSelectValidator
+        },
+        RedelegateEnterAmount: {
+            screen: RedelegateEnterAmount
+        },
+        RedelegateConfirm: {
+            screen: RedelegateConfirm
+        },
+        PosBasicAction: {
+            screen: PosBasicAction
         },
 
         // wallet creation

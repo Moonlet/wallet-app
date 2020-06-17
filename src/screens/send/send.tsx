@@ -128,7 +128,7 @@ export class SendScreenComponent extends React.Component<
             memo: '',
             headerSteps: [
                 { step: 1, title: translate('Send.addAddress'), active: true },
-                { step: 2, title: translate('Send.enterAmount'), active: false },
+                { step: 2, title: translate('App.labels.enterAmount'), active: false },
                 { step: 3, title: translate('Send.confirmTransaction'), active: false }
             ],
             insufficientFundsFees: false
@@ -405,7 +405,7 @@ export class SendScreenComponent extends React.Component<
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}
                     token={this.props.token}
-                    blockchain={this.props.account.blockchain}
+                    account={this.props.account}
                     onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions

@@ -6,14 +6,14 @@ import { Text } from '../../../../library';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { translate } from '../../../../core/i18n';
 import { Amount } from '../../../../components/amount/amount';
-import { Blockchain } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
-import { ITokenState } from '../../../../redux/wallets/state';
+import { ITokenState, IAccountState } from '../../../../redux/wallets/state';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
+import { getInputAmountToStd } from '../../../../core/utils/available-funds';
 
 export interface IExternalProps {
     availableAmount: string;
-    blockchain: Blockchain;
+    account: IAccountState;
     token: ITokenState;
     value: string;
     onChange: (value: string) => any;
@@ -41,6 +41,7 @@ export const EnterAmountComponent = (
 
             <View style={styles.inputBox}>
                 <TextInput
+                    testID="enter-amount"
                     style={styles.inputText}
                     placeholderTextColor={theme.colors.textSecondary}
                     placeholder={translate('Send.amount')}
@@ -66,10 +67,14 @@ export const EnterAmountComponent = (
                         style={styles.allBalanceText}
                         token={props.token.symbol}
                         tokenDecimals={
-                            getTokenConfig(props.blockchain, props.token.symbol).decimals
+                            getTokenConfig(props.account.blockchain, props.token.symbol).decimals
                         }
-                        amount={props.token.balance?.value}
-                        blockchain={props.blockchain}
+                        amount={getInputAmountToStd(
+                            props.account,
+                            props.token,
+                            availableAmount
+                        ).toString()}
+                        blockchain={props.account.blockchain}
                     />
                 </View>
             </View>

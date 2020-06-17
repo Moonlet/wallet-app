@@ -31,6 +31,7 @@ export const AccountListComponent = (
                     return (
                         <View key={index}>
                             <TouchableOpacity
+                                testID={`account-${index + 1}`}
                                 key={index}
                                 style={styles.rowContainer}
                                 onPress={() => props.onAccountSelection(account)}

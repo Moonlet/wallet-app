@@ -21,6 +21,7 @@ export const SearchInputComponent = (
         <View style={props.styles.inputBox}>
             <Icon name={IconValues.SEARCH} size={normalize(14)} style={props.styles.searchIcon} />
             <TextInput
+                testID="search-input"
                 style={props.styles.input}
                 placeholderTextColor={props.theme.colors.textTertiary}
                 placeholder={props.placeholderText}
@@ -29,8 +30,8 @@ export const SearchInputComponent = (
                 selectionColor={props.theme.colors.accent}
                 value={fieldInput}
                 onChangeText={value => {
-                    setFieldInput(value);
                     props.onChangeText(value);
+                    setFieldInput(value);
                 }}
             />
             {fieldInput !== '' && fieldInput !== undefined && (

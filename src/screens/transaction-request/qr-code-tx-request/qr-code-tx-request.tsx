@@ -133,7 +133,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
         this.state = {
             toAddress: '',
-            amount: '',
+            amount: '0',
             chainId: props.currentChainId,
             tokenSymbol: getBlockchain(props.selectedAccount.blockchain).config.coin, // Default Native Coin
             insufficientFunds: false,
@@ -236,19 +236,16 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
         this.setState({ toAddress });
 
-        let amount: string;
         if (qrCodeTxPayload?.params?.amount) {
-            amount = qrCodeTxPayload.params.amount;
-        }
-
-        if (amount) {
-            const tokenConfig = getTokenConfig(blockchain, this.state.tokenSymbol);
-            const amountFromStd = blockchainInstance.account.amountFromStd(
-                new BigNumber(amount),
-                tokenConfig.decimals
+            const amount = qrCodeTxPayload.params.amount;
+            const amountBN = new BigNumber(amount).toFixed(
+                getTokenConfig(blockchain, this.state.tokenSymbol).decimals,
+                BigNumber.ROUND_DOWN
             );
 
-            this.setState({ amount: amountFromStd.toFixed() });
+            if (!isNaN(Number(amountBN))) {
+                this.setState({ amount: amountBN });
+            }
         }
 
         this.setState({ isLoading: false });
@@ -409,7 +406,6 @@ export class QRCodeTransferRequestComponent extends React.Component<
 
     private renderInputAmountField(label: string) {
         const { theme, styles } = this.props;
-        const { amount } = this.state;
 
         return (
             <View style={styles.inputContainer}>
@@ -421,7 +417,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                         autoCapitalize={'none'}
                         autoCorrect={false}
                         selectionColor={theme.colors.accent}
-                        value={amount === '' ? '0' : amount}
+                        value={this.state.amount}
                         onChangeText={this.addAmount}
                         keyboardType="decimal-pad"
                         returnKeyType="done"

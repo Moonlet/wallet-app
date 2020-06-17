@@ -149,6 +149,8 @@ android {
         versionCode project.versionCode as Integer
         versionName project.versionName
         multiDexEnabled true
+        testBuildType System.getProperty('testBuildType', 'debug') // This will later be used to control the test apk build type
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     splits {
         abi {
@@ -176,6 +178,8 @@ android {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            // Detox-specific additions to pro-guard
+            proguardFile "${rootProject.projectDir}/../node_modules/detox/android/detox/proguard-rules-app.pro"
         }
     }
         // Specifies one flavor dimension.
@@ -231,6 +235,10 @@ dependencies {
     implementation "com.google.firebase:firebase-database:19.2.1"
 	implementation 'me.leolin:ShortcutBadger:1.1.21@aar'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+    androidTestImplementation('com.wix:detox:+') { transitive = true }
+    androidTestImplementation 'junit:junit:4.12'
+    implementation "androidx.annotation:annotation:1.1.0"
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermes-engine/android/"

@@ -7,34 +7,40 @@ import { BASE_DIMENSION, normalize } from '../../../../../../../styles/dimension
 import { Icon } from '../../../../../../../components/icon/icon';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
 import { Text } from '../../../../../../../library';
-import { IStatValue, IStatValueType } from '../../../../../../../core/blockchain/types/stats';
-import { NavigationService } from '../../../../../../../navigation/navigation-service';
-import { getValidator } from '../../../../../../../core/blockchain/celo/stats';
+import {
+    IStatValue,
+    IStatValueType,
+    CardActionType
+} from '../../../../../../../core/blockchain/types/stats';
 import { Blockchain } from '../../../../../../../core/blockchain/types/blockchain';
 import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
+import { translate } from '../../../../../../../core/i18n';
 import { IconValues } from '../../../../../../../components/icon/values';
 
 export interface IExternalProps {
     icon: string;
-    labelName: string;
-    rank: string;
-    website: string;
+    leftLabel: string;
+    leftSmallLabel: string;
+    leftSubLabel: string;
     rightTitle: string;
     rightSubtitle: string;
-    actionType: string;
+    actionType: CardActionType;
+    actionTypeSelected: boolean;
+    borderColor: string;
     bottomStats: IStatValue[];
     blockchain: Blockchain;
+    onSelect: () => void;
 }
 
-export function getValueString(stat: IStatValue) {
+export function getValueString(stat: IStatValue, blockchain: Blockchain) {
     switch (stat.type) {
         case IStatValueType.STRING:
             return stat.data.value;
         case IStatValueType.AMOUNT:
             return formatNumber(new BigNumber(stat.data.value), {
-                currency: getBlockchain(this.props.blockchain).config.coin
+                currency: getBlockchain(blockchain).config.coin
             });
     }
 }
@@ -44,15 +50,17 @@ export const ValidatorCardComponent = (
 ) => {
     return (
         <TouchableHighlight
-            onPress={() => {
-                NavigationService.navigate('Validator', {
-                    blockchain: props.blockchain,
-                    validator: getValidator(props.blockchain)
-                });
-            }}
+            onPress={() => props.onSelect()}
             underlayColor={props.theme.colors.appBackground}
         >
-            <View style={props.styles.cardContainer}>
+            <View
+                style={[
+                    props.styles.cardContainer,
+                    props.actionTypeSelected
+                        ? { borderColor: props.borderColor, borderWidth: 1.5 }
+                        : null
+                ]}
+            >
                 <View style={props.styles.topContainer}>
                     <SmartImage source={{ uri: props.icon }} style={props.styles.imageStyle} />
                     <View style={props.styles.topRow}>
@@ -64,32 +72,48 @@ export const ValidatorCardComponent = (
                                         { paddingRight: BASE_DIMENSION / 2 }
                                     ]}
                                 >
-                                    {props.labelName}
+                                    {props.leftSmallLabel}
                                 </Text>
-                                <Text style={props.styles.tertiaryText}>{props.rank}</Text>
+                                <Text style={props.styles.tertiaryText}>
+                                    {props.leftSmallLabel}
+                                </Text>
                             </View>
 
-                            <Text style={props.styles.primaryText}>{props.rightTitle}</Text>
+                            <Text style={props.styles.primaryText}>
+                                {translate(props.rightTitle)}
+                            </Text>
                         </View>
 
                         <View style={props.styles.topRowSecondLine}>
-                            <Text style={props.styles.secondaryText}>{props.website}</Text>
+                            <Text style={props.styles.secondaryText}>{props.leftSubLabel}</Text>
                             <Text style={props.styles.amountText}>{props.rightSubtitle}</Text>
                         </View>
                     </View>
-
-                    <Icon
-                        name={IconValues.CHEVRON_RIGHT}
-                        size={normalize(18)}
-                        style={props.styles.chevronRight}
-                    />
+                    {props.actionType === CardActionType.NAVIGATE && (
+                        <Icon
+                            name={IconValues.CHEVRON_RIGHT}
+                            size={normalize(18)}
+                            style={props.styles.chevronRight}
+                        />
+                    )}
+                    {props.actionType === CardActionType.CHECKBOX && (
+                        <Icon
+                            name={
+                                props.actionTypeSelected === true
+                                    ? IconValues.CHECK_BOX_THICKED
+                                    : IconValues.CHECK_BOX
+                            }
+                            size={normalize(18)}
+                            style={props.styles.chevronRight}
+                        />
+                    )}
                 </View>
                 <View style={props.styles.bottomContainer}>
                     {props.bottomStats.map((stat: IStatValue, i: number) => (
                         <View key={i}>
                             <Text style={props.styles.bottomSecondaryText}>{stat.title}</Text>
                             <Text style={[props.styles.bottomPrimaryText, { color: stat.color }]}>
-                                {getValueString(stat)}
+                                {getValueString(stat, props.blockchain)}
                             </Text>
                         </View>
                     ))}

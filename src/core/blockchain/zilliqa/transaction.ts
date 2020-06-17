@@ -2,7 +2,8 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    IBlockchainTransactionUtils
+    AbstractBlockchainTransactionUtils,
+    IPosTransaction
 } from '../types';
 
 import * as ZilliqaJsAccountUtil from '@zilliqa-js/account/dist/util';
@@ -15,7 +16,7 @@ import { TokenType } from '../types/token';
 import { Zilliqa } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
-export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
+export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public schnorrSign(msg: Buffer, privateKey: string): string {
         const pubKey = Zilliqa.account.privateToPublic(privateKey);
 
@@ -65,6 +66,10 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
         transaction.toAddr = toChecksumAddress(transaction.toAddr).replace('0x', '');
 
         return transaction;
+    }
+
+    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
+        return;
     }
 
     public async buildTransferTransaction(
@@ -146,6 +151,8 @@ export class ZilliqaTransactionUtils implements IBlockchainTransactionUtils {
                     status: TransactionStatus.PENDING
                 };
         }
+
+        // return enrichtransaction(finaltransaction);
     }
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {

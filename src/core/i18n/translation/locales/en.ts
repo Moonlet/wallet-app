@@ -64,6 +64,7 @@ export const translation: ITranslations = {
                 network: 'Network',
                 next: 'Next',
                 nextWord: 'Next word',
+                notifications: 'Notifications',
                 ok: 'OK',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
@@ -360,7 +361,8 @@ export const translation: ITranslations = {
             connectExtension: 'Connect to extension',
             scanCode: 'Scan the QR code on extension',
             scanPay: 'Scan to pay',
-            scanReceive: 'Scan and receive a transaction request'
+            scanReceive: 'Scan and receive a transaction request',
+            switchWallets: 'Switch between the wallets anytime'
         },
         BackupWallet: {
             title: 'Backup Wallet',

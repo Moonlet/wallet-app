@@ -119,12 +119,12 @@ const navigationOptions = ({ navigation }: any) => ({
     headerRight: (
         <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
-                testID="wallets-icon"
+                testID="notifications-icon"
                 style={{ width: ICON_CONTAINER_SIZE }}
-                onPress={() => navigation.navigate('Wallets')}
+                onPress={() => navigation.navigate('Notifications')}
             >
                 <Icon
-                    name={IconValues.MONEY_WALLET}
+                    name={IconValues.ALARM_BELL}
                     size={ICON_SIZE}
                     style={{ color: themes.dark.colors.accent }}
                 />

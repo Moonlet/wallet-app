@@ -44,7 +44,8 @@ describe('Recover Wallet', () => {
 
         // Dashboard Screen
         await utils.expectDashboardScreenVisible();
-        await utils.tapElementById('wallets-icon');
+        await utils.tapElementById('dashboard-menu-icon');
+        await utils.tapElementById('manage-wallets');
 
         // Wallets Screen
         await utils.expectElementVisible('wallets-screen');

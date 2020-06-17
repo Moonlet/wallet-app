@@ -1,7 +1,8 @@
 export enum IconValues {
     // please try to add keys in alphabetic order
-    ADD_CIRCLE = 'add-circle',
     ADD = 'add',
+    ADD_CIRCLE = 'add-circle',
+    ALARM_BELL = 'alarm-bell',
     ARCHIVE_LOCKER = 'archive-locker',
     ARROW_BUTTON_DOWN = 'arrow-button-down',
     ARROW_DOWN = 'arrow-down',

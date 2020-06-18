@@ -51,7 +51,7 @@ jobs:
       run: npm run generate-icons
 
     - name: Detox Build iOS
-      run: npm run ios
+      run: npm run detox:build:ios
       env:
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}

@@ -1,6 +1,11 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, normalizeFontAndLineHeight, SCREEN_HEIGHT } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    normalizeFontAndLineHeight,
+    SCREEN_HEIGHT,
+    LETTER_SPACING
+} from '../../styles/dimensions';
 import { ph, pw } from '../../styles';
 
 export default (theme: ITheme) =>
@@ -52,14 +57,29 @@ export default (theme: ITheme) =>
         },
         emptyContainer: {
             flex: 1,
-            alignSelf: 'center',
-            justifyContent: 'center'
+            marginTop: BASE_DIMENSION * 3
         },
         logoImage: {
             height: ph(30),
             width: pw(60),
             alignSelf: 'center',
             resizeMode: 'contain',
-            marginBottom: BASE_DIMENSION * 6
+            marginBottom: BASE_DIMENSION * 3
+        },
+        emptyNotifTitle: {
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
+            color: theme.colors.textTertiary,
+            fontWeight: 'bold',
+            letterSpacing: LETTER_SPACING,
+            marginBottom: BASE_DIMENSION,
+            textAlign: 'center'
+        },
+        emptyNotifSubtitle: {
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
+            color: theme.colors.textTertiary,
+            textAlign: 'center',
+            paddingHorizontal: BASE_DIMENSION
         }
     });

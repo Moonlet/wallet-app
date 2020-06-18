@@ -99,6 +99,12 @@ export class NotificationsComponent extends React.Component<
                                 style={styles.logoImage}
                                 source={require('../../assets/images/png/moonlet_space_gray.png')}
                             />
+                            <Text style={styles.emptyNotifTitle}>
+                                {translate('Notifications.notificationsCenter.emptyNotifTitle')}
+                            </Text>
+                            <Text style={styles.emptyNotifSubtitle}>
+                                {translate('Notifications.notificationsCenter.emptyNotifSubtitle')}
+                            </Text>
                         </View>
                     )}
                 </ScrollView>

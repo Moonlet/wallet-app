@@ -452,6 +452,11 @@ export const translation: ITranslations = {
                 title: 'Confirm transaction',
                 body:
                     'Open Moonlet to confirm the following transaction: send {{formattedAmount}} to {{formattedAddress}}'
+            },
+            notificationsCenter: {
+                emptyNotifTitle: 'No notifications available',
+                emptyNotifSubtitle:
+                    'Notifications will appear here once you start to make transactions'
             }
         },
         TransactionRequest: {

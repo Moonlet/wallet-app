@@ -185,6 +185,17 @@ export default class App extends React.Component<{}, IState> {
                                 onNavigationStateChange={(_, newState) => {
                                     if (!isEqual(this.state.navigationState, newState)) {
                                         this.setState({ navigationState: newState });
+
+                                        const currentRoute = NavigationService.getCurrentRouteWithParams();
+
+                                        // Sentry Breadcrumbs
+                                        currentRoute &&
+                                            currentRoute?.routeName &&
+                                            Sentry.addBreadcrumb({
+                                                message: JSON.stringify({
+                                                    route: currentRoute.routeName
+                                                })
+                                            });
                                     }
                                 }}
                             />

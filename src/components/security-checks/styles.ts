@@ -16,7 +16,8 @@ export default (theme: ITheme) =>
             paddingTop: BASE_DIMENSION * 2
         },
         bottomButton: {
-            width: '100%'
+            width: '100%',
+            marginBottom: BASE_DIMENSION * 2
         },
         confirmTextContainer: {
             flexDirection: 'row',
@@ -25,16 +26,22 @@ export default (theme: ITheme) =>
         textStyle: {
             color: theme.colors.text,
             textAlign: 'center',
-            paddingHorizontal: BASE_DIMENSION * 6
+            paddingHorizontal: BASE_DIMENSION * 2
         },
         title: {
             fontSize: normalizeFontAndLineHeight(25),
-            lineHeight: normalizeFontAndLineHeight(30)
+            lineHeight: normalizeFontAndLineHeight(30),
+            marginBottom: BASE_DIMENSION * 6
         },
         message: {
             fontSize: normalizeFontAndLineHeight(18),
             lineHeight: normalizeFontAndLineHeight(25),
-            marginTop: BASE_DIMENSION * 6
+            marginBottom: BASE_DIMENSION * 4
+        },
+        warning: {
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
+            fontWeight: 'bold'
         },
         imageContainerStyle: {
             flex: 1,

@@ -90,7 +90,7 @@ export class SecurityChecksComponent extends React.Component<
     }
 
     public render() {
-        const props = this.props;
+        const { styles } = this.props;
 
         if (Platform.OS === 'web') return null;
 
@@ -101,35 +101,36 @@ export class SecurityChecksComponent extends React.Component<
                 animationOutTiming={5}
                 onModalHide={() => this.modalOnHideDeffered?.resolve()}
             >
-                <SafeAreaView forceInset={{ bottom: 'never' }} style={props.styles.container}>
-                    <View style={props.styles.content}>
-                        <Text style={[props.styles.textStyle, props.styles.title]}>
+                <SafeAreaView forceInset={{ bottom: 'never' }} style={styles.container}>
+                    <View style={styles.content}>
+                        <Text style={[styles.textStyle, styles.title]}>
                             {translate('SecurityChecks.title')}
                         </Text>
 
-                        <View style={props.styles.imageContainerStyle}>
+                        <View style={styles.imageContainerStyle}>
                             <SmartImage
                                 resizeMode={ResizeMode.contain}
                                 source={{ iconComponent: SpyImage }}
-                                style={props.styles.imageStyle}
+                                style={styles.imageStyle}
                             />
-                            <Text style={[props.styles.textStyle, props.styles.message]}>
+                            <Text style={[styles.textStyle, styles.message]}>
                                 {translate(
                                     `SecurityChecks.${Platform.OS}.${this.state.warningType}`
                                 )}
                             </Text>
+                            <Text style={[styles.textStyle, styles.warning]}>
+                                {translate('SecurityChecks.ownRisk')}
+                            </Text>
                         </View>
 
-                        <View>
-                            <Button
-                                testID="button-understand"
-                                style={props.styles.bottomButton}
-                                primary
-                                onPress={() => this.continue()}
-                            >
-                                {translate('App.labels.continue')}
-                            </Button>
-                        </View>
+                        <Button
+                            testID="button-understand"
+                            wrapperStyle={styles.bottomButton}
+                            primary
+                            onPress={() => this.continue()}
+                        >
+                            {'Continue'}
+                        </Button>
                     </View>
                 </SafeAreaView>
             </Modal>

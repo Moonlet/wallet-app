@@ -30,7 +30,7 @@ export class Election {
                     .simpleEncode(
                         'vote(address,uint256,address,address)',
                         address,
-                        tx.amount,
+                        new BigNumber(tx.amount).toFixed(),
                         lesser,
                         greater
                     )

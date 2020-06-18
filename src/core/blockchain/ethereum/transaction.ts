@@ -83,11 +83,7 @@ export class EthereumTransactionUtils extends AbstractBlockchainTransactionUtils
                         raw:
                             '0x' +
                             abi
-                                .simpleEncode(
-                                    'transfer(address,uint256)',
-                                    tx.toAddress,
-                                    tx.amount.toString()
-                                )
+                                .simpleEncode('transfer(address,uint256)', tx.toAddress, tx.amount)
                                 .toString('hex')
                     }
                 };

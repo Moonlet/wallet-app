@@ -1,4 +1,4 @@
-import { BlockchainGenericClient, ChainIdType, IBlockInfo } from '../types';
+import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionType } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { config } from './config';
@@ -80,11 +80,15 @@ export class Client extends BlockchainGenericClient {
         });
     }
 
-    public async calculateFees(
-        from: string,
-        to: string,
-        amount?,
-        contractAddress?,
+    public async getFees(
+        transactionType: TransactionType,
+        data: {
+            from?: string;
+            to?: string;
+            amount?: string;
+            contractAddress?: string;
+            raw?: string;
+        },
         tokenType: TokenType = TokenType.NATIVE
     ) {
         const gasPrice =

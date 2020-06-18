@@ -6,7 +6,7 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { translate } from '../../../../core/i18n';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 
-import { ChainIdType, IFeeOptions } from '../../../../core/blockchain/types';
+import { ChainIdType, IFeeOptions, TransactionType } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge';
@@ -185,6 +185,7 @@ export class EnterAmountComponentComponent extends React.Component<
                     onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions
+                    transactionType={TransactionType.CONTRACT_CALL}
                     token={this.props.account.tokens[this.props.chainId][config.coin]}
                     sendingToken={this.props.token}
                     account={this.props.account}

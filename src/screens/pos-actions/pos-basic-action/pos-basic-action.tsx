@@ -9,7 +9,12 @@ import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../../navigation/with-navigation-params';
 import { getAccount } from '../../../redux/wallets/selectors';
-import { Blockchain, ChainIdType, IFeeOptions } from '../../../core/blockchain/types';
+import {
+    Blockchain,
+    ChainIdType,
+    IFeeOptions,
+    TransactionType
+} from '../../../core/blockchain/types';
 import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 import { TestnetBadge } from '../../../components/testnet-badge/testnet-badge';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -255,6 +260,7 @@ export class PosBasicActionComponent extends React.Component<
                     onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions
+                    transactionType={TransactionType.CONTRACT_CALL}
                     token={this.props.account.tokens[this.props.chainId][config.coin]}
                     sendingToken={this.props.token}
                     account={this.props.account}

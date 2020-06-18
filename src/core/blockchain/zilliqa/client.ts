@@ -1,4 +1,10 @@
-import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionMessageText } from '../types';
+import {
+    BlockchainGenericClient,
+    ChainIdType,
+    IBlockInfo,
+    TransactionMessageText,
+    TransactionType
+} from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
@@ -90,11 +96,15 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public async calculateFees(
-        from: string,
-        to: string,
-        amount?,
-        contractAddress?,
+    public async getFees(
+        transactionType: TransactionType,
+        data: {
+            from?: string;
+            to?: string;
+            amount?: string;
+            contractAddress?: string;
+            raw?: string;
+        },
         tokenType: TokenType = TokenType.NATIVE
     ) {
         const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];

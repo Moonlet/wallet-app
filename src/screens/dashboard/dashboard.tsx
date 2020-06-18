@@ -107,30 +107,48 @@ const MyConnectedTitle = connect((state: IReduxState) => ({
     text: (getSelectedWallet(state) || {}).name
 }))(MyTitle);
 
-const navigationOptions = ({ navigation }: any) => ({
+const UnreadNotifCircle = () => (
+    <View
+        style={{
+            position: 'absolute',
+            top: 0,
+            left: BASE_DIMENSION + BASE_DIMENSION / 2,
+            width: normalize(14),
+            height: normalize(14),
+            borderRadius: normalize(14),
+            backgroundColor: themes.dark.colors.negative
+        }}
+    />
+);
+
+const navigationOptions = ({ navigation, theme }: any) => ({
     headerTitle: () => <MyConnectedTitle />,
     headerLeft: <HeaderIcon />,
     headerRight: (
         <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity
-                testID="notifications-icon"
-                style={{ width: ICON_CONTAINER_SIZE }}
-                onPress={() =>
-                    isFeatureActive(RemoteFeature.NOTIF_CENTER)
-                        ? navigation.navigate('Notifications')
-                        : navigation.navigate('Wallets')
-                }
-            >
-                <Icon
-                    name={
+            <View>
+                <TouchableOpacity
+                    testID="notifications-icon"
+                    style={{ width: ICON_CONTAINER_SIZE }}
+                    onPress={() =>
                         isFeatureActive(RemoteFeature.NOTIF_CENTER)
-                            ? IconValues.ALARM_BELL
-                            : IconValues.MONEY_WALLET
+                            ? navigation.navigate('Notifications')
+                            : navigation.navigate('Wallets')
                     }
-                    size={ICON_SIZE}
-                    style={{ color: themes.dark.colors.accent }}
-                />
-            </TouchableOpacity>
+                >
+                    <Icon
+                        name={
+                            isFeatureActive(RemoteFeature.NOTIF_CENTER)
+                                ? IconValues.ALARM_BELL
+                                : IconValues.MONEY_WALLET
+                        }
+                        size={ICON_SIZE}
+                        style={{ color: themes[theme].colors.accent }}
+                    />
+                    {/* TODO: link this to redux */}
+                    <UnreadNotifCircle />
+                </TouchableOpacity>
+            </View>
             <TouchableOpacity
                 testID="dashboard-menu-icon"
                 style={{ width: ICON_CONTAINER_SIZE }}
@@ -139,7 +157,7 @@ const navigationOptions = ({ navigation }: any) => ({
                 <Icon
                     name={IconValues.NAVIGATION_MENU_VERTICAL}
                     size={ICON_SIZE}
-                    style={{ color: themes.dark.colors.accent }}
+                    style={{ color: themes[theme].colors.accent }}
                 />
             </TouchableOpacity>
         </View>

@@ -47,7 +47,7 @@ jobs:
     - name: Install applesimutils
       run: brew install applesimutils
 
-    - name: Generate Icon
+    - name: Generate Icons
       run: npm run generate-icons
 
     - name: Detox Build iOS

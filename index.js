@@ -8,8 +8,8 @@ import DeviceInfo from 'react-native-device-info';
 if (!__DEV__) {
     init({
         dsn: Platform.select({
-            ios: 'https://5a8226a9b01743d3bc32e2d21209e688@sentry.io/5173960',
-            android: 'https://afc2777059b34c159e948d6c5122c6fa@sentry.io/5173922'
+            ios: 'https://118a06794f1543259239c453f2fc8f05@o308222.ingest.sentry.io/5282231',
+            android: 'https://5a0742a051904564abcf8449f9865ffa@o308222.ingest.sentry.io/5282230'
         }),
         environment: DeviceInfo.getBundleId()
     });

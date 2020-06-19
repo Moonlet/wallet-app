@@ -30,7 +30,9 @@ import { SecurityChecks } from './components/security-checks/security-checks';
 import { AppStateStatus } from './core/constants/app';
 import { TransactionRequestScreen } from './screens/transaction-request/transaction-request';
 import { LoadingModal } from './components/loading-modal/loading-modal';
-import { isEqual } from 'lodash';
+import * as Sentry from '@sentry/react-native';
+import isEqual from 'lodash/isEqual';
+import { sanitizeObject } from './core/utils/object-sanitise';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -193,7 +195,10 @@ export default class App extends React.Component<{}, IState> {
                                             currentRoute?.routeName &&
                                             Sentry.addBreadcrumb({
                                                 message: JSON.stringify({
-                                                    route: currentRoute.routeName
+                                                    route: currentRoute.routeName,
+                                                    params:
+                                                        currentRoute?.params &&
+                                                        sanitizeObject(currentRoute.params)
                                                 })
                                             });
                                     }

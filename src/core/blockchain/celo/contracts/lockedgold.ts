@@ -1,6 +1,6 @@
 import { Client } from '../client';
 import BigNumber from 'bignumber.js';
-import { IPosTransaction, IBlockchainTransaction } from '../../types';
+import { IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
 import abi from 'ethereumjs-abi';
 import { getContract, buildBaseTransaction } from './base-contract';
 import { Contracts } from '../config';
@@ -47,12 +47,23 @@ export class LockedGold {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.LOCKED_GOLD);
 
+        const raw = '0x' + abi.simpleEncode('withdraw(uint256)', index).toString('hex');
+
+        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
+            from: tx.account.address,
+            to: '',
+            amount: tx.amount,
+            contractAddress,
+            raw
+        });
+        transaction.feeOptions = fees;
+
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
         transaction.data = {
             method: 'withdraw',
             params: [index.toString()],
-            raw: '0x' + abi.simpleEncode('withdraw(uint256)', index).toString('hex')
+            raw
         };
 
         return transaction;
@@ -62,11 +73,22 @@ export class LockedGold {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.LOCKED_GOLD);
 
+        const raw = '0x' + abi.simpleEncode('lock()').toString('hex');
+
+        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
+            from: tx.account.address,
+            to: '',
+            amount: tx.amount,
+            contractAddress,
+            raw
+        });
+        transaction.feeOptions = fees;
+
         transaction.toAddress = contractAddress;
         transaction.data = {
             method: 'lock',
             params: [tx.amount],
-            raw: '0x' + abi.simpleEncode('lock()').toString('hex')
+            raw
         };
 
         return transaction;
@@ -76,12 +98,23 @@ export class LockedGold {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.LOCKED_GOLD);
 
+        const raw = '0x' + abi.simpleEncode('unlock(uint256)', tx.amount).toString('hex');
+
+        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
+            from: tx.account.address,
+            to: '',
+            amount: tx.amount,
+            contractAddress,
+            raw
+        });
+        transaction.feeOptions = fees;
+
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
         transaction.data = {
             method: 'unlock',
             params: [tx.amount],
-            raw: '0x' + abi.simpleEncode('unlock(uint256)', tx.amount).toString('hex')
+            raw
         };
 
         return transaction;

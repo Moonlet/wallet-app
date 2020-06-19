@@ -1,5 +1,5 @@
 import { Client } from '../client';
-import { IPosTransaction, IBlockchainTransaction } from '../../types';
+import { IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
 import abi from 'ethereumjs-abi';
 import { getContract, buildBaseTransaction } from './base-contract';
 import { Contracts } from '../config';
@@ -21,20 +21,31 @@ export class Election {
         transaction.amount = '0';
         transaction.toAddress = contractAddress;
 
+        const raw =
+            '0x' +
+            abi
+                .simpleEncode(
+                    'vote(address,uint256,address,address)',
+                    address,
+                    new BigNumber(tx.amount).toFixed(),
+                    lesser,
+                    greater
+                )
+                .toString('hex');
+
+        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
+            from: tx.account.address,
+            to: address,
+            amount: tx.amount,
+            contractAddress,
+            raw
+        });
+        transaction.feeOptions = fees;
+
         transaction.data = {
             method: 'vote',
             params: [address, tx.amount],
-            raw:
-                '0x' +
-                abi
-                    .simpleEncode(
-                        'vote(address,uint256,address,address)',
-                        address,
-                        new BigNumber(tx.amount).toFixed(),
-                        lesser,
-                        greater
-                    )
-                    .toString('hex')
+            raw
         };
 
         return transaction;
@@ -55,23 +66,34 @@ export class Election {
             new BigNumber(tx.amount).times(-1)
         );
 
+        const raw =
+            '0x' +
+            abi
+                .simpleEncode(
+                    'revokeActive(address,uint256,address,address,uint256)',
+                    groupAddress,
+                    new BigNumber(tx.amount).toFixed(),
+                    lesser,
+                    greater,
+                    indexForGroup
+                )
+                .toString('hex');
+
+        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
+            from: tx.account.address,
+            to: groupAddress,
+            amount: tx.amount,
+            contractAddress,
+            raw
+        });
+        transaction.feeOptions = fees;
+
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
         transaction.data = {
             method: 'revokeActive',
             params: [groupAddress, tx.amount],
-            raw:
-                '0x' +
-                abi
-                    .simpleEncode(
-                        'revokeActive(address,uint256,address,address,uint256)',
-                        groupAddress,
-                        new BigNumber(tx.amount).toFixed(),
-                        lesser,
-                        greater,
-                        indexForGroup
-                    )
-                    .toString('hex')
+            raw
         };
 
         return transaction;
@@ -92,23 +114,34 @@ export class Election {
             new BigNumber(tx.amount).times(-1)
         );
 
+        const raw =
+            '0x' +
+            abi
+                .simpleEncode(
+                    'revokePending(address,uint256,address,address,uint256)',
+                    groupAddress,
+                    new BigNumber(tx.amount).toFixed(),
+                    lesser,
+                    greater,
+                    indexForGroup
+                )
+                .toString('hex');
+
+        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
+            from: tx.account.address,
+            to: groupAddress,
+            amount: tx.amount,
+            contractAddress,
+            raw
+        });
+        transaction.feeOptions = fees;
+
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
         transaction.data = {
             method: 'revokeActive',
             params: [groupAddress, tx.amount],
-            raw:
-                '0x' +
-                abi
-                    .simpleEncode(
-                        'revokePending(address,uint256,address,address,uint256)',
-                        groupAddress,
-                        new BigNumber(tx.amount).toFixed(),
-                        lesser,
-                        greater,
-                        indexForGroup
-                    )
-                    .toString('hex')
+            raw
         };
 
         return transaction;
@@ -118,12 +151,23 @@ export class Election {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.ELECTION);
 
+        const raw = '0x' + abi.simpleEncode('activate(address)', address).toString('hex');
+
+        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
+            from: tx.account.address,
+            to: address,
+            amount: tx.amount,
+            contractAddress,
+            raw
+        });
+        transaction.feeOptions = fees;
+
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
         transaction.data = {
             method: 'activate',
             params: [address],
-            raw: '0x' + abi.simpleEncode('activate(address)', address).toString('hex')
+            raw
         };
 
         return transaction;
@@ -134,7 +178,6 @@ export class Election {
         groupAddress: string
     ): Promise<any> {
         const contractAddress = await getContract(this.client.chainId, Contracts.ELECTION);
-
         const pendingVotes = await this.client.callContract(
             contractAddress,
             'getPendingVotesForGroupByAccount(address,address):(uint256)',

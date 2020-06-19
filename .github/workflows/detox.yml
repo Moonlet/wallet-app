@@ -29,6 +29,12 @@ jobs:
     - name: NPM install
       run: npm i
 
+    - name: Install Detox
+      run: npm install -g detox-cli
+
+    - name: Rebuild detox
+      run: detox clean-framework-cache && detox build-framework-cache
+
     - name: Cache Pods
       uses: actions/cache@v1
       id: podcache

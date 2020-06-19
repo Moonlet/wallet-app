@@ -22,6 +22,7 @@
         "postinstall": "jetify && ./scripts/ts-nockeck-files.sh",
         "detox:build:ios": "detox build -c ios.beta",
         "detox:test:ios": "detox test -c ios.beta",
+        "detox:test:ios:github": "detox test e2e --configuration ios.beta --cleanup --debug-synchronization 200",
         "detox:build:android": "detox build -c android.emu.beta",
         "detox:test:android": "detox test -c android.emu.beta",
         "detox:test:android:device": "detox test --configuration android.device.beta"

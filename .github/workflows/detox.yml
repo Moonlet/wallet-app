@@ -60,4 +60,4 @@ jobs:
         NODE_ENV: production
 
     - name: Detox Test iOS
-      run: detox test e2e --configuration ios.beta --cleanup --debug-synchronization 200
+      run: npm run detox:test:ios:github

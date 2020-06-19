@@ -1,6 +1,9 @@
 name: Detox iOS
 
-on: [push]
+on:
+  push:
+    branches:
+      - detox-github-action
 
 jobs:
   build:

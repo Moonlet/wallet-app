@@ -129,7 +129,7 @@ export class SecurityChecksComponent extends React.Component<
                             primary
                             onPress={() => this.continue()}
                         >
-                            {'Continue'}
+                            <Text>{translate('App.labels.continue')}</Text>
                         </Button>
                     </View>
                 </SafeAreaView>

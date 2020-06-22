@@ -4,7 +4,7 @@ import { NativeModules, Text, View, Platform } from 'react-native';
 import Modal from '../../library/modal/modal';
 import { Deferred } from '../../core/utils/deferred';
 import { Button } from '../../library';
-import { translate } from '../../core/i18n';
+import { translate, Translate } from '../../core/i18n';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { SafeAreaView } from 'react-navigation';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -90,7 +90,7 @@ export class SecurityChecksComponent extends React.Component<
     }
 
     public render() {
-        const { styles } = this.props;
+        const { styles, theme } = this.props;
 
         if (Platform.OS === 'web') return null;
 
@@ -129,7 +129,10 @@ export class SecurityChecksComponent extends React.Component<
                             primary
                             onPress={() => this.continue()}
                         >
-                            <Text>{translate('App.labels.continue')}</Text>
+                            <Translate
+                                text="App.labels.continue"
+                                style={{ color: theme.colors.appBackground }}
+                            />
                         </Button>
                     </View>
                 </SafeAreaView>

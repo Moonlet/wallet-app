@@ -58,7 +58,7 @@ jobs:
           BUILD=$(git rev-list --count $GITHUB_SHA)
           VERSION=$(node -e "p=require('./package.json');console.log(p.version)")
 
-          npx sentry-cli releases new "com.moonlet.beta@$VERSION+$BUILD" -p wallet-app-android -p wallet-app-ios -p wallet-extension
+          npx sentry-cli releases new "com.moonlet.beta@$VERSION+$BUILD" -p wallet-app-android -p wallet-app-ios -p wallet-extension -p beta-app-android -p beta-app-ios -p beta-extension
           npx sentry-cli releases set-commits "com.moonlet.beta@$VERSION+$BUILD" --auto
   beta-android:
     name: Android app

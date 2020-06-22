@@ -102,6 +102,15 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 );
                 break;
             }
+            case PosBasicActionType.ACTIVATE: {
+                const groupAddress = tx.validators[0].id.toLowerCase();
+                const transaction = await client.contracts[Contracts.ELECTION].ACTIVATE(
+                    tx,
+                    groupAddress
+                );
+                if (transaction) transactions.push(transaction);
+                break;
+            }
             case PosBasicActionType.UNLOCK: {
                 const transaction = await client.contracts[Contracts.LOCKED_GOLD].unlock(tx);
                 if (transaction) transactions.push(transaction);
@@ -147,20 +156,11 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 break;
             }
             case PosBasicActionType.WITHDRAW: {
-                const pendingWithdrawals = await client.contracts[
-                    Contracts.LOCKED_GOLD
-                ].getPendingWithdrawals(tx.account.address);
-                await Promise.all(
-                    pendingWithdrawals.map(async (pendingWithdrawal, index) => {
-                        if (pendingWithdrawal.time < new Date()) {
-                            const transaction = await client.contracts[
-                                Contracts.LOCKED_GOLD
-                            ].withdraw(tx, index);
-                            if (transaction) transactions.push(transaction);
-                        }
-                    })
+                const transaction = await client.contracts[Contracts.LOCKED_GOLD].withdraw(
+                    tx,
+                    tx.extraFields.witdrawIndex
                 );
-
+                if (transaction) transactions.push(transaction);
                 break;
             }
         }

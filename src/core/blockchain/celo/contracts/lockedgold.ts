@@ -38,7 +38,9 @@ export class LockedGold {
                             time: new Date(timestamps[index] * 1000)
                         });
                     });
-                    return pendingWithdrawals as [];
+                    return pendingWithdrawals.sort((a, b) =>
+                        new Date(a.time * 1000) < new Date(b.time * 1000) ? 1 : -1
+                    ) as [];
                 }
             });
     }

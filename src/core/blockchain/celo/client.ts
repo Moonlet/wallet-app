@@ -102,20 +102,20 @@ export class Client extends EthereumClient {
                 : config.feeOptions.defaults.gasLimit[tokenType];
 
             return {
-                gasPrice: gasPrice.toString(),
-                gasLimit: gasLimit.toString(),
+                gasPrice: gasPrice.toFixed(),
+                gasLimit: gasLimit.toFixed(),
                 presets: {},
-                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+                feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
             };
         } catch {
             const gasPrice = config.feeOptions.defaults.gasPrice;
             const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
 
             return {
-                gasPrice: gasPrice.toString(),
-                gasLimit: gasLimit.toString(),
+                gasPrice: gasPrice.toFixed(),
+                gasLimit: gasLimit.toFixed(),
                 presets: {},
-                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+                feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
             };
         }
     }

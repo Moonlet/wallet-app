@@ -9,6 +9,7 @@ export const translation: ITranslations = {
                 accept: 'Accept',
                 account: 'Account',
                 accounts: 'Accounts',
+                activate: 'Activate',
                 addToken: 'Add token',
                 advanced: 'Advanced',
                 advancedSetup: 'Advanced setup',
@@ -20,6 +21,7 @@ export const translation: ITranslations = {
                 cheap: 'Cheap',
                 check: 'Check',
                 close: 'Close',
+                claim: 'Claim',
                 claimReward: 'Claim reward',
                 comingSoon: 'Coming soon!',
                 confirm: 'Confirm',
@@ -115,6 +117,7 @@ export const translation: ITranslations = {
                 wallets: 'Wallets',
                 warning: 'Warning',
                 watch: 'Watch mode',
+                withdraw: 'Withdraw',
                 youAreOn: 'You are on {{blockchain}} {{networkName}} Testnet'
                 // please try to add keys in alphabetic order
             },
@@ -483,6 +486,12 @@ export const translation: ITranslations = {
                 'It takes {{duration}} in order to unlock the amount and will be automatically withdrawn then deposited into your available balance.',
             claimRewardBottomText:
                 'The claimed reward you receive may be equal to or grater than what it displayed nou since rewards are accumulated each block.'
+        },
+        Widget: {
+            activateVotesTitle: 'Activate your votes now',
+            nextEpochText: 'until next epoch',
+            claimText: 'Claim your rewards now',
+            withdrawText: 'Withdraw your {{coin}} now'
         }
     },
     plural: (n: number, ord?: boolean) => {

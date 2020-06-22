@@ -1,6 +1,7 @@
 import { IBlockchainConfig } from './config';
 import { BlockchainGenericClient } from './client';
 import { Blockchain } from './blockchain';
+import { PosBasicActionType } from './token';
 
 export enum IStatValueType {
     STRING = 'STRING',
@@ -65,4 +66,10 @@ export interface IValidator {
     secondaryStats: IStatValue[];
     actionType?: CardActionType;
     actionTypeSelected?: boolean;
+}
+
+export interface IPosWidget {
+    type: PosBasicActionType;
+    value: string;
+    timestamp: string;
 }

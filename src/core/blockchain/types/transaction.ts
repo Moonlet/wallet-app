@@ -84,7 +84,7 @@ export interface IPosTransaction {
     amount: string;
     token: string;
     feeOptions: IFeeOptions;
-    extraFields?: ITransferTransactionExtraFields;
+    extraFields?: ITransactionExtraFields;
 }
 
 export interface ITransferTransaction {
@@ -97,11 +97,12 @@ export interface ITransferTransaction {
     feeOptions: IFeeOptions;
     //  currentBlockHash: string;
     //  currentBlockNumber: number;
-    extraFields?: ITransferTransactionExtraFields;
+    extraFields?: ITransactionExtraFields;
 }
 
-export interface ITransferTransactionExtraFields {
+export interface ITransactionExtraFields {
     memo?: string;
+    witdrawIndex?: number;
     //
 }
 

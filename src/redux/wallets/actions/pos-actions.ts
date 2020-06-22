@@ -1,7 +1,7 @@
 import { IAccountState } from '../state';
 import {
     IFeeOptions,
-    ITransferTransactionExtraFields,
+    ITransactionExtraFields,
     TransactionMessageType,
     TransactionMessageText
 } from '../../../core/blockchain/types';
@@ -33,7 +33,7 @@ export const delegate = (
     feeOptions: IFeeOptions,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
-    extraFields: ITransferTransactionExtraFields,
+    extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
@@ -59,7 +59,7 @@ export const unlock = (
     feeOptions: IFeeOptions,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
-    extraFields: ITransferTransactionExtraFields,
+    extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
@@ -78,26 +78,50 @@ export const unlock = (
     )(dispatch, getState);
 };
 
-export const withdraw = (
+export const activate = (
     account: IAccountState,
-    amount: string,
     token: string,
     feeOptions: IFeeOptions,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
-    extraFields: ITransferTransactionExtraFields,
+    extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    // TODO - activation can be done after api si completed
     posAction(
         account,
-        amount,
+        undefined,
         undefined,
         token,
         feeOptions,
         password,
         navigation,
         extraFields,
+        goBack,
+        PosBasicActionType.ACTIVATE,
+        sendResponse
+    )(dispatch, getState);
+};
+
+export const withdraw = (
+    account: IAccountState,
+    index: number,
+    token: string,
+    password: string,
+    navigation: NavigationScreenProp<NavigationState>,
+    goBack: boolean = true,
+    sendResponse?: { requestId: string }
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    posAction(
+        account,
+        undefined,
+        undefined,
+        token,
+        undefined,
+        password,
+        navigation,
+        { witdrawIndex: index },
         goBack,
         PosBasicActionType.WITHDRAW,
         sendResponse
@@ -112,7 +136,7 @@ export const unvote = (
     feeOptions: IFeeOptions,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
-    extraFields: ITransferTransactionExtraFields,
+    extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
@@ -139,7 +163,7 @@ export const posAction = (
     feeOptions: IFeeOptions,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
-    extraFields: ITransferTransactionExtraFields,
+    extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     type: PosBasicActionType,
     sendResponse?: { requestId: string }
@@ -173,9 +197,10 @@ export const posAction = (
                 chainId,
                 account,
                 validators,
-                amount: blockchainInstance.account
-                    .amountToStd(amount, tokenConfig.decimals)
-                    .toFixed(),
+                amount:
+                    blockchainInstance.account
+                        .amountToStd(amount, tokenConfig.decimals)
+                        .toFixed() || '0',
                 token,
                 feeOptions: {
                     gasPrice: feeOptions.gasPrice.toString(),

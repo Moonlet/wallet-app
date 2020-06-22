@@ -35,7 +35,7 @@ import { FeeOptions } from '../../send/components/fee-options/fee-options';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
-import { unlock, unvote } from '../../../redux/wallets/actions/pos-actions';
+import { unlock, unvote } from '../../../redux/wallets/actions';
 
 export interface IReduxProps {
     account: IAccountState;

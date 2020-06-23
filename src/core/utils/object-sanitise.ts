@@ -17,10 +17,13 @@ export const sanitizeSentryBreadcrumb = breadcrumb => {
     try {
         breadcrumb.message = JSON.stringify(breadcrumb.message);
     } catch {
-        // do nething
+        // do nothing
     }
     breadcrumb = sanitizeObject(breadcrumb);
     breadcrumb.message = JSON.stringify(breadcrumb.message);
+
+    console.log('breadcrumb: ', breadcrumb);
+
     return breadcrumb;
 };
 

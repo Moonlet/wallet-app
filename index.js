@@ -1,9 +1,29 @@
+// tbd - ios swipe back fix - not sure - only on release it crashes
+import 'react-native-gesture-handler';
+
+import DeviceInfo from 'react-native-device-info';
 import { init } from '@sentry/react-native';
 import { sanitizeObject } from './src/core/utils/object-sanitise';
 
-// tbd - ios swipe back fix - not sure - only on release it crashes
-import 'react-native-gesture-handler';
-import DeviceInfo from 'react-native-device-info';
+const filterSentryBreadcrumb = breadcrumb => {
+    try {
+        if (breadcrumb.data) {
+            breadcrumb.data = sanitizeObject(breadcrumb.data);
+        }
+
+        const message = JSON.parse(breadcrumb.message);
+        if (message && message.params) {
+            return JSON.stringify({
+                route: message.route,
+                params: sanitizeObject(message.params)
+            });
+        }
+    } catch {
+        //
+    }
+
+    return breadcrumb;
+};
 
 // Sentry setup
 if (!__DEV__) {
@@ -16,15 +36,7 @@ if (!__DEV__) {
             }),
             environment: DeviceInfo.getBundleId(),
             beforeBreadcrumb(breadcrumb) {
-                const message = JSON.parse(breadcrumb.message);
-                if (message && message.params) {
-                    return JSON.stringify({
-                        route: message.route,
-                        params: sanitizeObject(message.params)
-                    });
-                }
-
-                return breadcrumb;
+                return filterSentryBreadcrumb(breadcrumb);
             }
         });
     } else {
@@ -36,15 +48,7 @@ if (!__DEV__) {
             }),
             environment: DeviceInfo.getBundleId(),
             beforeBreadcrumb(breadcrumb) {
-                const message = JSON.parse(breadcrumb.message);
-                if (message && message.params) {
-                    return JSON.stringify({
-                        route: message.route,
-                        params: sanitizeObject(message.params)
-                    });
-                }
-
-                return breadcrumb;
+                return filterSentryBreadcrumb(breadcrumb);
             }
         });
     }

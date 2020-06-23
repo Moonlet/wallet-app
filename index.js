@@ -1,4 +1,5 @@
 import { init } from '@sentry/react-native';
+import { sanitizeObject } from './src/core/utils/object-sanitise';
 
 // tbd - ios swipe back fix - not sure - only on release it crashes
 import 'react-native-gesture-handler';
@@ -13,7 +14,18 @@ if (!__DEV__) {
                 ios: 'https://ace08885fd314c4fa8b57cd6996e8c56@o308222.ingest.sentry.io/5285151',
                 android: 'https://5c7b33ecb802428689eeeb35b20c8a64@o308222.ingest.sentry.io/5285148'
             }),
-            environment: DeviceInfo.getBundleId()
+            environment: DeviceInfo.getBundleId(),
+            beforeBreadcrumb(breadcrumb) {
+                const message = JSON.parse(breadcrumb.message);
+                if (message && message.params) {
+                    return JSON.stringify({
+                        route: message.route,
+                        params: sanitizeObject(message.params)
+                    });
+                }
+
+                return breadcrumb;
+            }
         });
     } else {
         // production app
@@ -22,7 +34,18 @@ if (!__DEV__) {
                 ios: 'https://118a06794f1543259239c453f2fc8f05@o308222.ingest.sentry.io/5282231',
                 android: 'https://5a0742a051904564abcf8449f9865ffa@o308222.ingest.sentry.io/5282230'
             }),
-            environment: DeviceInfo.getBundleId()
+            environment: DeviceInfo.getBundleId(),
+            beforeBreadcrumb(breadcrumb) {
+                const message = JSON.parse(breadcrumb.message);
+                if (message && message.params) {
+                    return JSON.stringify({
+                        route: message.route,
+                        params: sanitizeObject(message.params)
+                    });
+                }
+
+                return breadcrumb;
+            }
         });
     }
 }

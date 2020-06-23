@@ -4,7 +4,7 @@ import { storeEncrypted, readEncrypted, deleteFromStorage } from '../storage/sto
 import DeviceInfo from 'react-native-device-info';
 import uuidv4 from 'uuid/v4';
 import { Platform } from 'react-native';
-import * as Sentry from '@sentry/react-native';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 const defaultOptions = {
     serviceEncryption: 'com.moonlet.encryption',
@@ -46,7 +46,7 @@ export const setBaseEncryptionKey = async () => {
             rules: Keychain.SECURITY_RULES.AUTOMATIC_UPGRADE
         });
     } catch (err) {
-        Sentry.captureException(new Error(JSON.stringify(err)));
+        SentryCaptureException(new Error(JSON.stringify(err)));
     }
 };
 
@@ -66,7 +66,7 @@ export const getBaseEncryptionKey = async () => {
             );
         }
     } catch (err) {
-        Sentry.captureException(new Error(JSON.stringify(err)));
+        SentryCaptureException(new Error(JSON.stringify(err)));
     }
 
     return password;
@@ -77,7 +77,7 @@ export const clearEncryptionKey = async () => {
         deleteFromStorage(KEY_PIN_SAMPLE);
         await Keychain.resetGenericPassword({ service: defaultOptions.serviceEncryption });
     } catch (err) {
-        Sentry.captureException(new Error(JSON.stringify(err)));
+        SentryCaptureException(new Error(JSON.stringify(err)));
     }
 };
 
@@ -110,7 +110,7 @@ export const setPinCode = async (pinCode: string) => {
             rules: Keychain.SECURITY_RULES.AUTOMATIC_UPGRADE
         });
     } catch (err) {
-        Sentry.captureException(new Error(JSON.stringify(err)));
+        SentryCaptureException(new Error(JSON.stringify(err)));
     }
 };
 
@@ -140,7 +140,7 @@ export const getPinCode = async () => {
         } else if (error.message.indexOf('Too many attempts') >= 0) {
             return Promise.reject('TOO_MANY_ATTEMPTS');
         } else {
-            Sentry.captureException(new Error(JSON.stringify(error)));
+            SentryCaptureException(new Error(JSON.stringify(error)));
             return Promise.reject(error.message);
         }
     }
@@ -152,6 +152,6 @@ export const clearPinCode = async () => {
     try {
         await Keychain.resetGenericPassword({ service: defaultOptions.servicePin });
     } catch (err) {
-        Sentry.captureException(new Error(JSON.stringify(err)));
+        SentryCaptureException(new Error(JSON.stringify(err)));
     }
 };

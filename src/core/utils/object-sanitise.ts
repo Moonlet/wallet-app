@@ -13,6 +13,17 @@ export function sanitizeObject(originalObj) {
     return result;
 }
 
+export const sanitizeSentryBreadcrumb = breadcrumb => {
+    try {
+        breadcrumb.message = JSON.stringify(breadcrumb.message);
+    } catch {
+        // do nething
+    }
+    breadcrumb = sanitizeObject(breadcrumb);
+    breadcrumb.message = JSON.stringify(breadcrumb.message);
+    return breadcrumb;
+};
+
 export function filterObjectProps(originalObj, propsList) {
     const obj = JSON.parse(JSON.stringify(originalObj));
     return filterProps(obj, parseProps(propsList));

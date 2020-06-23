@@ -30,7 +30,9 @@ import { SecurityChecks } from './components/security-checks/security-checks';
 import { AppStateStatus } from './core/constants/app';
 import { TransactionRequestScreen } from './screens/transaction-request/transaction-request';
 import { LoadingModal } from './components/loading-modal/loading-modal';
+import { addBreadcrumb } from '@sentry/react-native';
 import { isEqual } from 'lodash';
+import { filterObjectProps } from './core/utils/object-sanitise';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -185,6 +187,29 @@ export default class App extends React.Component<{}, IState> {
                                 onNavigationStateChange={(_, newState) => {
                                     if (!isEqual(this.state.navigationState, newState)) {
                                         this.setState({ navigationState: newState });
+
+                                        const currentRoute = NavigationService.getCurrentRouteWithParams();
+
+                                        // Sentry Breadcrumbs
+                                        currentRoute &&
+                                            currentRoute?.routeName &&
+                                            addBreadcrumb({
+                                                message: JSON.stringify({
+                                                    route: currentRoute.routeName,
+                                                    params:
+                                                        currentRoute?.params &&
+                                                        filterObjectProps(currentRoute.params, [
+                                                            'blockchain',
+                                                            'accountIndex',
+                                                            'step',
+                                                            'appNetworks',
+                                                            'transaction',
+                                                            'wallet.selectedBlockchain',
+                                                            'wallet.type',
+                                                            'wallet.hwOptions'
+                                                        ])
+                                                })
+                                            });
                                     }
                                 }}
                             />

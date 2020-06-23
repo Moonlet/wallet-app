@@ -107,7 +107,6 @@ export class AccountTabComponent extends React.Component<
                 this.props.activate(
                     this.props.account,
                     this.props.token.symbol,
-                    undefined,
                     password,
                     this.props.navigation,
                     undefined

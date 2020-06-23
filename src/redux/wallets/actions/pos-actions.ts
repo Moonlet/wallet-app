@@ -81,7 +81,6 @@ export const unlock = (
 export const activate = (
     account: IAccountState,
     token: string,
-    feeOptions: IFeeOptions,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
@@ -94,7 +93,7 @@ export const activate = (
         undefined,
         undefined,
         token,
-        feeOptions,
+        undefined,
         password,
         navigation,
         extraFields,

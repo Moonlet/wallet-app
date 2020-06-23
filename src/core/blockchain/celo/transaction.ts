@@ -103,11 +103,15 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 break;
             }
             case PosBasicActionType.ACTIVATE: {
-                const groupAddress = tx.validators[0].id.toLowerCase();
-                const transaction = await client.contracts[Contracts.ELECTION].ACTIVATE(
-                    tx,
-                    groupAddress
-                );
+                // TODO - can use this once we have the groups that account has pending votes
+                // const groups = await this.contract.methods.getGroupsVotedForByAccount(account).call()
+                // const isActivatable = await Promise.all(
+                //   groups.map((g) => this.contract.methods.hasActivatablePendingVotes(account, g).call())
+                // )
+                // const groupsActivatable = groups.filter((_, i) => isActivatable[i])
+                // return groupsActivatable.map((g) => this._activate(g))
+
+                const transaction = await client.contracts[Contracts.ELECTION].ACTIVATE(tx, '');
                 if (transaction) transactions.push(transaction);
                 break;
             }

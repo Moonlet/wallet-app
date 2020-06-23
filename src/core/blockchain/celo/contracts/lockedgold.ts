@@ -8,43 +8,6 @@ import { Contracts } from '../config';
 export class LockedGold {
     constructor(private client: Client) {}
 
-    public async getAccountNonvotingLockedGold(accountAddress: string): Promise<BigNumber> {
-        const contractAddress = await getContract(this.client.chainId, Contracts.LOCKED_GOLD);
-
-        return this.client
-            .callContract(contractAddress, 'getAccountNonvotingLockedGold(address):(uint256)', [
-                accountAddress
-            ])
-            .then(v => {
-                return new BigNumber(v as string);
-            });
-    }
-
-    public async getPendingWithdrawals(accountAddress: string): Promise<[]> {
-        const contractAddress = await getContract(this.client.chainId, Contracts.LOCKED_GOLD);
-
-        return this.client
-            .callContract(contractAddress, 'getPendingWithdrawals(address):(uint256[],uint256[])', [
-                accountAddress
-            ])
-            .then(res => {
-                if (res && res.length > 1) {
-                    const values: [] = res[0].split(',');
-                    const timestamps: [] = res[1].split(',');
-                    const pendingWithdrawals = [];
-                    values.map((value: string, index: number) => {
-                        pendingWithdrawals.push({
-                            value,
-                            time: new Date(timestamps[index] * 1000)
-                        });
-                    });
-                    return pendingWithdrawals.sort((a, b) =>
-                        new Date(a.time * 1000) < new Date(b.time * 1000) ? 1 : -1
-                    ) as [];
-                }
-            });
-    }
-
     public async withdraw(tx: IPosTransaction, index: number): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.LOCKED_GOLD);
@@ -120,5 +83,42 @@ export class LockedGold {
         };
 
         return transaction;
+    }
+
+    public async getAccountNonvotingLockedGold(accountAddress: string): Promise<BigNumber> {
+        const contractAddress = await getContract(this.client.chainId, Contracts.LOCKED_GOLD);
+
+        return this.client
+            .callContract(contractAddress, 'getAccountNonvotingLockedGold(address):(uint256)', [
+                accountAddress
+            ])
+            .then(v => {
+                return new BigNumber(v as string);
+            });
+    }
+
+    public async getPendingWithdrawals(accountAddress: string): Promise<[]> {
+        const contractAddress = await getContract(this.client.chainId, Contracts.LOCKED_GOLD);
+
+        return this.client
+            .callContract(contractAddress, 'getPendingWithdrawals(address):(uint256[],uint256[])', [
+                accountAddress
+            ])
+            .then(res => {
+                if (res && res.length > 1) {
+                    const values: [] = res[0].split(',');
+                    const timestamps: [] = res[1].split(',');
+                    const pendingWithdrawals = [];
+                    values.map((value: string, index: number) => {
+                        pendingWithdrawals.push({
+                            value,
+                            time: new Date(timestamps[index] * 1000)
+                        });
+                    });
+                    return pendingWithdrawals.sort((a, b) =>
+                        new Date(a.time * 1000) < new Date(b.time * 1000) ? 1 : -1
+                    ) as [];
+                }
+            });
     }
 }

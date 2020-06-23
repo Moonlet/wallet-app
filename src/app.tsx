@@ -32,7 +32,7 @@ import { TransactionRequestScreen } from './screens/transaction-request/transact
 import { LoadingModal } from './components/loading-modal/loading-modal';
 import { addBreadcrumb } from '@sentry/react-native';
 import { isEqual } from 'lodash';
-import { sanitizeObject } from './core/utils/object-sanitise';
+import { filterObjectProps } from './core/utils/object-sanitise';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -198,7 +198,16 @@ export default class App extends React.Component<{}, IState> {
                                                     route: currentRoute.routeName,
                                                     params:
                                                         currentRoute?.params &&
-                                                        sanitizeObject(currentRoute.params)
+                                                        filterObjectProps(currentRoute.params, [
+                                                            'blockchain',
+                                                            'accountIndex',
+                                                            'step',
+                                                            'appNetworks',
+                                                            'transaction',
+                                                            'wallet.selectedBlockchain',
+                                                            'wallet.type',
+                                                            'wallet.hwOptions'
+                                                        ])
                                                 })
                                             });
                                     }

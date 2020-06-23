@@ -22,8 +22,6 @@ export const sanitizeSentryBreadcrumb = breadcrumb => {
     breadcrumb = sanitizeObject(breadcrumb);
     breadcrumb.message = JSON.stringify(breadcrumb.message);
 
-    console.log('breadcrumb: ', breadcrumb);
-
     return breadcrumb;
 };
 

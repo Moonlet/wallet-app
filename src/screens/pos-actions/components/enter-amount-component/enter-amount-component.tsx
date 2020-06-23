@@ -5,7 +5,6 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { translate } from '../../../../core/i18n';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-
 import { ChainIdType, IFeeOptions, TransactionType } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';

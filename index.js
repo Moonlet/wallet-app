@@ -16,14 +16,11 @@ if (!__DEV__) {
             }),
             environment: DeviceInfo.getBundleId(),
             beforeBreadcrumb(breadcrumb) {
-                const message = JSON.parse(breadcrumb.message);
-                if (message && message.params) {
-                    return JSON.stringify({
-                        route: message.route,
-                        params: sanitizeObject(message.params)
-                    });
-                }
-
+                try {
+                    breadcrumb.message = JSON.stringify(breadcrumb.message);
+                } catch {}
+                breadcrumb = sanitizeObject(breadcrumb);
+                breadcrumb.message = JSON.stringify(breadcrumb.message);
                 return breadcrumb;
             }
         });
@@ -36,14 +33,11 @@ if (!__DEV__) {
             }),
             environment: DeviceInfo.getBundleId(),
             beforeBreadcrumb(breadcrumb) {
-                const message = JSON.parse(breadcrumb.message);
-                if (message && message.params) {
-                    return JSON.stringify({
-                        route: message.route,
-                        params: sanitizeObject(message.params)
-                    });
-                }
-
+                try {
+                    breadcrumb.message = JSON.stringify(breadcrumb.message);
+                } catch {}
+                breadcrumb = sanitizeObject(breadcrumb);
+                breadcrumb.message = JSON.stringify(breadcrumb.message);
                 return breadcrumb;
             }
         });

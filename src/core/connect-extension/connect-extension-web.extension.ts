@@ -20,7 +20,10 @@ import { IBlockchainTransaction } from '../blockchain/types';
 import { buildTransactions } from './conn-ext-build-state/build-transactions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import CONFIG from '../../config';
-import * as Sentry from '@sentry/browser';
+import {
+    captureException as SentryCaptureException,
+    addBreadcrumb as SentryAddBreadcrumb
+} from '@sentry/browser';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -138,7 +141,7 @@ export const ConnectExtensionWeb = (() => {
             const http = await fetch(urlDowndload);
             return (await http.text()).toString();
         } catch (err) {
-            Sentry.captureException(new Error(JSON.stringify(err)));
+            SentryCaptureException(new Error(JSON.stringify(err)));
             return Promise.reject();
         }
     };
@@ -152,7 +155,7 @@ export const ConnectExtensionWeb = (() => {
             store.dispatch(extensionReduxUpdateState(extState) as any);
             // extensionStateLoaded check if needed
         } catch (err) {
-            Sentry.captureException(new Error(JSON.stringify(err)));
+            SentryCaptureException(new Error(JSON.stringify(err)));
         }
     };
 
@@ -183,7 +186,7 @@ export const ConnectExtensionWeb = (() => {
                                 buildTransactions(decryptedState.state.wallets);
                             }
                         } catch (err) {
-                            Sentry.captureException(new Error(JSON.stringify(err)));
+                            SentryCaptureException(new Error(JSON.stringify(err)));
                         }
                     } else {
                         // Connection does not exist!
@@ -235,14 +238,14 @@ export const ConnectExtensionWeb = (() => {
                 // Error
                 // Maybe display a warning message to the user
 
-                Sentry.captureException('The connection has failed multiple times.');
+                SentryCaptureException('The connection has failed multiple times.');
             }
         } catch (err) {
-            Sentry.addBreadcrumb({
+            SentryAddBreadcrumb({
                 message: JSON.stringify({ 'attempts left: ': syncConnAttempts })
             });
 
-            Sentry.captureException(new Error(JSON.stringify(err)));
+            SentryCaptureException(new Error(JSON.stringify(err)));
 
             if (syncConnAttempts > 0) {
                 // Retry
@@ -268,7 +271,7 @@ export const ConnectExtensionWeb = (() => {
                 }
             },
             (error: any) => {
-                Sentry.captureException(new Error(JSON.stringify(error)));
+                SentryCaptureException(new Error(JSON.stringify(error)));
 
                 // Error, try again
                 connectionsRef

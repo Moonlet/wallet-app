@@ -3,10 +3,19 @@ import DeviceInfo from 'react-native-device-info';
 
 // Sentry setup
 if (!__DEV__) {
-    init({
-        dsn: 'https://2c951fc8d1834886877276fa9a7e89bb@sentry.io/5173962',
-        environment: DeviceInfo.getBundleId()
-    });
+    if (DeviceInfo.getBundleId() === 'com.moonlet.beta') {
+        // beta extension
+        init({
+            dsn: 'https://4c0fec8b0d754dad842c82467e675d38@o308222.ingest.sentry.io/5285152',
+            environment: DeviceInfo.getBundleId()
+        });
+    } else {
+        // release extension
+        init({
+            dsn: 'https://2c951fc8d1834886877276fa9a7e89bb@o308222.ingest.sentry.io/5173962',
+            environment: DeviceInfo.getBundleId()
+        });
+    }
 }
 
 import { AppRegistry } from 'react-native';

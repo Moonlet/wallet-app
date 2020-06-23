@@ -1,4 +1,4 @@
-Team’s log. Stardate 2006.23:
+Team's log. Stardate 2006.23:
 
 This is another release with focus on tech side, increasing our efficiency. Hopefully will be making our engineers live easier and the customers happier in the end.
 

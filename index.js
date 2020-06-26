@@ -1,18 +1,34 @@
-import { init } from '@sentry/react-native';
-
 // tbd - ios swipe back fix - not sure - only on release it crashes
 import 'react-native-gesture-handler';
 import DeviceInfo from 'react-native-device-info';
 
+import DeviceInfo from 'react-native-device-info';
+import { init } from '@sentry/react-native';
+import { sanitizeSentryBreadcrumb } from './src/core/utils/object-sanitise';
+
 // Sentry setup
 if (!__DEV__) {
-    init({
-        dsn: Platform.select({
-            ios: 'https://5a8226a9b01743d3bc32e2d21209e688@sentry.io/5173960',
-            android: 'https://afc2777059b34c159e948d6c5122c6fa@sentry.io/5173922'
-        }),
-        environment: DeviceInfo.getBundleId()
-    });
+    if (DeviceInfo.getBundleId() === 'com.moonlet.beta') {
+        // beta app
+        init({
+            dsn: Platform.select({
+                ios: 'https://ace08885fd314c4fa8b57cd6996e8c56@o308222.ingest.sentry.io/5285151',
+                android: 'https://5c7b33ecb802428689eeeb35b20c8a64@o308222.ingest.sentry.io/5285148'
+            }),
+            environment: DeviceInfo.getBundleId(),
+            beforeBreadcrumb: sanitizeSentryBreadcrumb
+        });
+    } else {
+        // production app
+        init({
+            dsn: Platform.select({
+                ios: 'https://118a06794f1543259239c453f2fc8f05@o308222.ingest.sentry.io/5282231',
+                android: 'https://5a0742a051904564abcf8449f9865ffa@o308222.ingest.sentry.io/5282230'
+            }),
+            environment: DeviceInfo.getBundleId(),
+            beforeBreadcrumb: sanitizeSentryBreadcrumb
+        });
+    }
 }
 
 import 'node-libs-react-native/globals';

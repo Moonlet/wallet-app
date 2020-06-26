@@ -59,7 +59,7 @@ import { toggleBiometricAuth } from '../../preferences/actions';
 import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../../ui/transaction-request/actions';
 import { ConnectExtension } from '../../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
-import * as Sentry from '@sentry/react-native';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -228,7 +228,7 @@ export const createHWWallet = (
         if (e === translate('CreateHardwareWallet.notSupported')) {
             dispatch(featureNotSupported());
         } else {
-            Sentry.captureException(new Error(JSON.stringify(e)));
+            SentryCaptureException(new Error(JSON.stringify(e)));
         }
         throw new Error(e);
     }
@@ -295,7 +295,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             updateAddressMonitorTokens(getState().wallets);
         });
     } catch (err) {
-        Sentry.captureException(new Error(JSON.stringify(err)));
+        SentryCaptureException(new Error(JSON.stringify(err)));
 
         // TODO best way to handle this?
         await LoadingModal.close();

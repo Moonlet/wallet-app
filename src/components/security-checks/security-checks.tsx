@@ -4,7 +4,7 @@ import { NativeModules, Text, View, Platform } from 'react-native';
 import Modal from '../../library/modal/modal';
 import { Deferred } from '../../core/utils/deferred';
 import { Button } from '../../library';
-import { translate } from '../../core/i18n';
+import { translate, Translate } from '../../core/i18n';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { SafeAreaView } from 'react-navigation';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -90,7 +90,7 @@ export class SecurityChecksComponent extends React.Component<
     }
 
     public render() {
-        const props = this.props;
+        const { styles, theme } = this.props;
 
         if (Platform.OS === 'web') return null;
 
@@ -101,35 +101,39 @@ export class SecurityChecksComponent extends React.Component<
                 animationOutTiming={5}
                 onModalHide={() => this.modalOnHideDeffered?.resolve()}
             >
-                <SafeAreaView forceInset={{ bottom: 'never' }} style={props.styles.container}>
-                    <View style={props.styles.content}>
-                        <Text style={[props.styles.textStyle, props.styles.title]}>
+                <SafeAreaView forceInset={{ bottom: 'never' }} style={styles.container}>
+                    <View style={styles.content}>
+                        <Text style={[styles.textStyle, styles.title]}>
                             {translate('SecurityChecks.title')}
                         </Text>
 
-                        <View style={props.styles.imageContainerStyle}>
+                        <View style={styles.imageContainerStyle}>
                             <SmartImage
                                 resizeMode={ResizeMode.contain}
                                 source={{ iconComponent: SpyImage }}
-                                style={props.styles.imageStyle}
+                                style={styles.imageStyle}
                             />
-                            <Text style={[props.styles.textStyle, props.styles.message]}>
+                            <Text style={[styles.textStyle, styles.message]}>
                                 {translate(
                                     `SecurityChecks.${Platform.OS}.${this.state.warningType}`
                                 )}
                             </Text>
+                            <Text style={[styles.textStyle, styles.warning]}>
+                                {translate('SecurityChecks.ownRisk')}
+                            </Text>
                         </View>
 
-                        <View>
-                            <Button
-                                testID="button-understand"
-                                style={props.styles.bottomButton}
-                                primary
-                                onPress={() => this.continue()}
-                            >
-                                {translate('App.labels.continue')}
-                            </Button>
-                        </View>
+                        <Button
+                            testID="button-understand"
+                            wrapperStyle={styles.bottomButton}
+                            primary
+                            onPress={() => this.continue()}
+                        >
+                            <Translate
+                                text="App.labels.continue"
+                                style={{ color: theme.colors.appBackground }}
+                            />
+                        </Button>
                     </View>
                 </SafeAreaView>
             </Modal>

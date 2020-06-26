@@ -1,4 +1,4 @@
-import * as utils from '../../utils/utils';
+import * as utils from '../../utils/detox-utils';
 import * as customKeyboard from '../../utils/custom-keyboard';
 import { mnemonicSteps, mnemonicConfirm } from './utils';
 

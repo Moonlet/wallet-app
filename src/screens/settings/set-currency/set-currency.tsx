@@ -44,6 +44,7 @@ export class SetCurrencyComponent extends React.Component<
                 {Object.values(AVAILABLE_CURRENCIES).map((currency: string, index: number) => (
                     <View key={index}>
                         <TouchableOpacity
+                            testID={currency}
                             style={styles.rowContainer}
                             onPress={() => this.props.setCurrency(currency)}
                         >

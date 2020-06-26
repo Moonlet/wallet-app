@@ -146,7 +146,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                         style={{ color: themes[theme].colors.accent }}
                     />
                     {/* TODO: link this to redux */}
-                    <UnreadNotifCircle />
+                    {isFeatureActive(RemoteFeature.NOTIF_CENTER) && <UnreadNotifCircle />}
                 </TouchableOpacity>
             </View>
             <TouchableOpacity

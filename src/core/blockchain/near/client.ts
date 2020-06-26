@@ -1,4 +1,10 @@
-import { BlockchainGenericClient, IFeeOptions, ChainIdType, IBlockInfo } from '../types';
+import {
+    BlockchainGenericClient,
+    IFeeOptions,
+    ChainIdType,
+    IBlockInfo,
+    TransactionType
+} from '../types';
 import { networks } from './networks';
 import {
     createAccount,
@@ -56,11 +62,33 @@ export class Client extends BlockchainGenericClient {
         return res?.result?.transaction?.hash;
     }
 
-    public async calculateFees(
+    public async getFees(
+        transactionType: TransactionType,
+        data: {
+            from?: string;
+            to?: string;
+            amount?: string;
+            contractAddress?: string;
+            raw?: string;
+        },
+        tokenType: TokenType = TokenType.NATIVE
+    ) {
+        const gasPrice = config.feeOptions.defaults.gasPrice.toFixed();
+        const gasLimit = config.feeOptions.defaults.gasLimit[tokenType].toFixed();
+        const feeTotal = new BigNumber(gasPrice).multipliedBy(new BigNumber(gasLimit)).toFixed();
+
+        return {
+            gasPrice,
+            gasLimit,
+            feeTotal
+        };
+    }
+
+    public async getFeesForPosTransaction(
         from: string,
         to: string,
-        amount?,
-        contractAddress?,
+        amount: string,
+        data: string,
         tokenType: TokenType = TokenType.NATIVE
     ): Promise<IFeeOptions> {
         const gasPrice = config.feeOptions.defaults.gasPrice.toFixed();

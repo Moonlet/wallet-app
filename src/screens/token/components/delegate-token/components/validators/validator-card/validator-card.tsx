@@ -72,7 +72,7 @@ export const ValidatorCardComponent = (
                                         { paddingRight: BASE_DIMENSION / 2 }
                                     ]}
                                 >
-                                    {props.leftSmallLabel}
+                                    {props.leftLabel}
                                 </Text>
                                 <Text style={props.styles.tertiaryText}>
                                     {props.leftSmallLabel}

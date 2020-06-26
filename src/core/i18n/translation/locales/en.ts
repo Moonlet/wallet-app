@@ -66,6 +66,7 @@ export const translation: ITranslations = {
                 network: 'Network',
                 next: 'Next',
                 nextWord: 'Next word',
+                notifications: 'Notifications',
                 ok: 'OK',
                 paste: 'Paste',
                 privacyPolicy: 'Privacy policy',
@@ -363,7 +364,8 @@ export const translation: ITranslations = {
             connectExtension: 'Connect to extension',
             scanCode: 'Scan the QR code on extension',
             scanPay: 'Scan to pay',
-            scanReceive: 'Scan and receive a transaction request'
+            scanReceive: 'Scan and receive a transaction request',
+            switchWallets: 'Switch between the wallets anytime'
         },
         BackupWallet: {
             title: 'Backup Wallet',
@@ -417,25 +419,26 @@ export const translation: ITranslations = {
         },
         SecurityChecks: {
             title: 'Security Warning!',
+            ownRisk: 'Use Moonlet on your own risk!',
             ios: {
                 emulator:
-                    'You are running the application in iOS simulator, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                    'You are running the application in iOS simulator, therefore we cannot guarantee the safety of the data.',
                 jailBreak:
-                    'Your device might be jail broken, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                    'Your device might be jail broken, therefore we cannot guarantee the safety of the data.',
                 debugged:
-                    "We've detected a debugger proccess connected to Moonlet, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.",
+                    "We've detected a debugger proccess connected to Moonlet, therefore we cannot guarantee the safety of the data.",
                 hookDetected:
-                    "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk."
+                    "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data."
             },
             android: {
                 emulator:
-                    'You are running the application in emulator, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                    'You are running the application in emulator, therefore we cannot guarantee the safety of the data.',
                 jailBreak:
-                    'Your device might be rooted, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                    'Your device might be rooted, therefore we cannot guarantee the safety of the data.',
                 debugged:
-                    "We've detected a debugger proccess connected to Moonlet, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.",
+                    "We've detected a debugger proccess connected to Moonlet, therefore we cannot guarantee the safety of the data.",
                 hookDetected:
-                    "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk."
+                    "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data."
             }
         },
         ConnectExtension: {
@@ -453,6 +456,11 @@ export const translation: ITranslations = {
                 title: 'Confirm transaction',
                 body:
                     'Open Moonlet to confirm the following transaction: send {{formattedAmount}} to {{formattedAddress}}'
+            },
+            notificationsCenter: {
+                emptyNotifTitle: 'No notifications available',
+                emptyNotifSubtitle:
+                    'Notifications will appear here once you start to make transactions'
             }
         },
         TransactionRequest: {

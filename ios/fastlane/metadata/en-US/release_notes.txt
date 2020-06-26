@@ -1,4 +1,4 @@
-Team’s log. Stardate 2006.12:
+Team's log. Stardate 2006.23:
 
 This time we pushed live some techie stuff that will allow us to deliver more in less time. As well we smashed some bugs, again. Now there are not. Therefore please carry on.
 

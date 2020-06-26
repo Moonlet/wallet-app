@@ -1,6 +1,6 @@
 Team's log. Stardate 2006.23:
 
-This time we pushed live some techie stuff that will allow us to deliver more in less time. As well we smashed some bugs, again. Now there are not. Therefore please carry on.
+This is another release with focus on tech side, increasing our efficiency. Hopefully will be making our engineers live easier and the customers happier in the end.
 
 Thank you,
 Moonlet Team

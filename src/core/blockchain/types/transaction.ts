@@ -4,6 +4,7 @@ import { TransactionStatus } from '../../wallet/types';
 import BigNumber from 'bignumber.js';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { PosBasicActionType } from './token';
+import { IValidator } from './stats';
 
 export abstract class AbstractBlockchainTransactionUtils {
     public async sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string> {
@@ -79,10 +80,11 @@ export interface IFeeOptions {
 export interface IPosTransaction {
     account: IAccountState;
     chainId: ChainIdType; // needed???
+    validators: IValidator[];
     amount: string;
     token: string;
     feeOptions: IFeeOptions;
-    extraFields?: ITransferTransactionExtraFields;
+    extraFields?: ITransactionExtraFields;
 }
 
 export interface ITransferTransaction {
@@ -95,11 +97,12 @@ export interface ITransferTransaction {
     feeOptions: IFeeOptions;
     //  currentBlockHash: string;
     //  currentBlockNumber: number;
-    extraFields?: ITransferTransactionExtraFields;
+    extraFields?: ITransactionExtraFields;
 }
 
-export interface ITransferTransactionExtraFields {
+export interface ITransactionExtraFields {
     memo?: string;
+    witdrawIndex?: number;
     //
 }
 

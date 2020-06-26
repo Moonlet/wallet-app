@@ -4,7 +4,7 @@ import {
     IFeeOptions,
     TransactionMessageText,
     TransactionMessageType,
-    ITransferTransactionExtraFields,
+    ITransactionExtraFields,
     ChainIdType,
     IBlockchainTransaction
 } from '../../../core/blockchain/types';
@@ -495,7 +495,7 @@ export const sendTransferTransaction = (
     feeOptions: IFeeOptions,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
-    extraFields: ITransferTransactionExtraFields,
+    extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {

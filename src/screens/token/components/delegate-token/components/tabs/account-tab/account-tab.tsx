@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
@@ -9,6 +9,7 @@ import { IAccountState, ITokenState } from '../../../../../../../redux/wallets/s
 import { IReduxState } from '../../../../../../../redux/state';
 import { getAccount } from '../../../../../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
+import { bind } from 'bind-decorator';
 import { StatsComponent } from '../../stats-component/stats-component';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { getChainId } from '../../../../../../../redux/preferences/selectors';
@@ -16,19 +17,29 @@ import { Button } from '../../../../../../../library';
 import { translate } from '../../../../../../../core/i18n';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
 import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
-import { AccountStats } from '../../../../../../../core/blockchain/types/stats';
+import { AccountStats, IPosWidget } from '../../../../../../../core/blockchain/types/stats';
 import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
-import { IconValues } from '../../../../../../../components/icon/values';
+import { PosWidget } from '../../../../../../../components/pos-widget/pos-widget';
+import { PosBasicActionType } from '../../../../../../../core/blockchain/types/token';
+import { formatNumber } from '../../../../../../../core/utils/format-number';
+import BigNumber from 'bignumber.js';
+import { getTokenConfig } from '../../../../../../../redux/tokens/static-selectors';
+import { withdraw, activate } from '../../../../../../../redux/wallets/actions';
+import { PasswordModal } from '../../../../../../../components/password-modal/password-modal';
+import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 
 export interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
+    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    withdraw: typeof withdraw;
+    activate: typeof activate;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
@@ -38,8 +49,14 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
     };
 };
 
+const mapDispatchToProps = {
+    withdraw,
+    activate
+};
+
 interface IState {
     accountStats: AccountStats;
+    widgets: IPosWidget[];
 }
 
 export class AccountTabComponent extends React.Component<
@@ -50,7 +67,8 @@ export class AccountTabComponent extends React.Component<
         super(props);
 
         this.state = {
-            accountStats: undefined
+            accountStats: undefined,
+            widgets: []
         };
     }
     public componentDidMount() {
@@ -62,6 +80,99 @@ export class AccountTabComponent extends React.Component<
                 this.setState({ accountStats: accStats });
             })
             .catch();
+
+        blockchainInstance
+            .getClient(this.props.chainId)
+            .utils.getWidgets(this.props.account)
+            .then(widgets => {
+                if (widgets.length) {
+                    this.setState({
+                        widgets
+                    });
+                }
+            })
+            .catch();
+    }
+
+    @bind
+    public async onPress(widget: IPosWidget, index: number) {
+        const password = await PasswordModal.getPassword(
+            translate('Password.pinTitleUnlock'),
+            translate('Password.subtitleSignTransaction'),
+            { sensitive: true, showCloseButton: true }
+        );
+
+        switch (widget.type) {
+            case PosBasicActionType.ACTIVATE: {
+                this.props.activate(
+                    this.props.account,
+                    this.props.token.symbol,
+                    password,
+                    this.props.navigation,
+                    undefined
+                );
+            }
+            case PosBasicActionType.WITHDRAW: {
+                this.props.withdraw(
+                    this.props.account,
+                    index,
+                    this.props.token.symbol,
+                    password,
+                    this.props.navigation,
+                    undefined
+                );
+            }
+        }
+    }
+
+    public renderWidgets() {
+        return this.state.widgets.map((widget, index) => {
+            const isActive = Number(widget.timestamp) < Date.now() ? true : false;
+            const blockchainInstance = getBlockchain(this.props.blockchain);
+            const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+            const amountFromStd = blockchainInstance.account.amountFromStd(
+                new BigNumber(widget.value),
+                tokenConfig.decimals
+            );
+            switch (widget.type) {
+                case PosBasicActionType.ACTIVATE: {
+                    return (
+                        <PosWidget
+                            key={`widget-${index}`}
+                            title={translate('Widget.activateVotesTitle')}
+                            middleTitle={formatNumber(new BigNumber(amountFromStd), {
+                                currency: this.props.token.symbol,
+                                minimumFractionDigits: 2
+                            })}
+                            buttonText={translate('App.labels.activate')}
+                            buttonColor={this.props.theme.colors.labelReward}
+                            buttonDisabled={!isActive}
+                            onPress={() => this.onPress(widget, -1)}
+                        />
+                    );
+                }
+                case PosBasicActionType.WITHDRAW: {
+                    return (
+                        <PosWidget
+                            key={`widget-${index}`}
+                            title={translate('Widget.withdrawText', {
+                                coin: this.props.token.symbol
+                            })}
+                            middleTitle={formatNumber(new BigNumber(amountFromStd), {
+                                currency: this.props.token.symbol,
+                                minimumFractionDigits: 2
+                            })}
+                            buttonText={translate('App.labels.withdraw')}
+                            buttonColor={this.props.theme.colors.labelReward}
+                            onPress={() => this.onPress(widget, index)}
+                        />
+                    );
+                }
+                default: {
+                    return null;
+                }
+            }
+        });
     }
 
     public render() {
@@ -73,44 +184,49 @@ export class AccountTabComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <View style={{ flex: 1 }}>
-                    <AccountAddress account={this.props.account} token={this.props.token} />
-                    {this.state.accountStats && (
-                        <StatsComponent accountStats={this.state.accountStats} />
-                    )}
+                    <ScrollView
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <AccountAddress account={this.props.account} token={this.props.token} />
+
+                        <View style={styles.buttonsRowContainer}>
+                            <Button
+                                key={`cta-send`}
+                                style={styles.button}
+                                wrapperStyle={{ flex: 1 }}
+                                onPress={() =>
+                                    NavigationService.navigate('Send', {
+                                        accountIndex: this.props.account.index,
+                                        blockchain: this.props.account.blockchain,
+                                        token: this.props.token
+                                    })
+                                }
+                            >
+                                {translate('App.labels.send')}
+                            </Button>
+                            <Button
+                                key={`cta-receive`}
+                                style={styles.button}
+                                wrapperStyle={{ flex: 1 }}
+                                onPress={() =>
+                                    NavigationService.navigate('Receive', {
+                                        accountIndex: this.props.account.index,
+                                        blockchain: this.props.account.blockchain,
+                                        token: this.props.token
+                                    })
+                                }
+                            >
+                                {translate('App.labels.receive')}
+                            </Button>
+                        </View>
+                        {this.renderWidgets()}
+                        {this.state.accountStats && (
+                            <StatsComponent accountStats={this.state.accountStats} />
+                        )}
+                    </ScrollView>
                 </View>
                 <View style={styles.bottomContainer}>
-                    <View style={styles.buttonsRowContainer}>
-                        <Button
-                            key={`cta-send`}
-                            style={styles.button}
-                            wrapperStyle={{ flex: 1 }}
-                            leftIcon={IconValues.ARROW_RIGHT}
-                            onPress={() =>
-                                NavigationService.navigate('Send', {
-                                    accountIndex: this.props.account.index,
-                                    blockchain: this.props.account.blockchain,
-                                    token: this.props.token
-                                })
-                            }
-                        >
-                            {translate('App.labels.send')}
-                        </Button>
-                        <Button
-                            key={`cta-receive`}
-                            style={styles.button}
-                            wrapperStyle={{ flex: 1 }}
-                            leftIcon={IconValues.QR_CODE_SCAN}
-                            onPress={() =>
-                                NavigationService.navigate('Receive', {
-                                    accountIndex: this.props.account.index,
-                                    blockchain: this.props.account.blockchain,
-                                    token: this.props.token
-                                })
-                            }
-                        >
-                            {translate('App.labels.receive')}
-                        </Button>
-                    </View>
                     <CtaGroup
                         mainCta={tokenUiConfig.accountCTA.mainCta}
                         params={{
@@ -127,6 +243,6 @@ export class AccountTabComponent extends React.Component<
 }
 
 export const AccountTab = smartConnect<IProps>(AccountTabComponent, [
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

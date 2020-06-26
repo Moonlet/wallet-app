@@ -15,6 +15,7 @@ import { keccak256 } from './library/hash';
 import { encode } from './library/rlp';
 import elliptic from 'elliptic';
 import { Contracts } from './config';
+import { fixEthAddress } from '../../utils/format-address';
 
 const toHex = value => {
     if (value && value !== '0x') {
@@ -39,7 +40,7 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
             '0x', // gatewayFeeRecipient
             '0x', // gatewayFee
             (tx.toAddress || '0x').toLowerCase(),
-            toHex(tx.amount),
+            tx.amount === '0' ? '0x' : toHex(tx.amount),
             (tx.data.raw || '0x').toLowerCase(),
             toHex(tx.chainId || 1)
         ];
@@ -75,23 +76,96 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
 
         switch (transactionType) {
             case PosBasicActionType.DELEGATE: {
-                const amountLocked = await client.contracts[
+                const amountLocked: BigNumber = await client.contracts[
                     Contracts.LOCKED_GOLD
-                ].getAccountTotalLockedGold(tx.account.address);
+                ].getAccountNonvotingLockedGold(tx.account.address);
 
-                if (amountLocked.isGreaterThanOrEqualTo(new BigNumber(tx.amount))) {
-                    // add election.vote transaction
-
-                    // for testing purposes
-                    transactions.push(
-                        await client.contracts[Contracts.LOCKED_GOLD].buildTransactionForLock(tx)
-                    );
-                } else {
-                    transactions.push(
-                        await client.contracts[Contracts.LOCKED_GOLD].buildTransactionForLock(tx)
-                    );
-                    // add election.vote transaction as well
+                if (!amountLocked.isGreaterThan(new BigNumber(tx.amount))) {
+                    const txLock: IPosTransaction = { ...tx };
+                    txLock.amount = new BigNumber(tx.amount).minus(amountLocked).toString();
+                    transactions.push(await client.contracts[Contracts.LOCKED_GOLD].lock(txLock));
                 }
+
+                const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
+
+                await Promise.all(
+                    tx.validators.map(async validator => {
+                        const txVote: IPosTransaction = { ...tx };
+                        txVote.amount = splitAmount.toString();
+                        transactions.push(
+                            await client.contracts[Contracts.ELECTION].vote(
+                                tx,
+                                validator.id.toLowerCase()
+                            )
+                        );
+                    })
+                );
+                break;
+            }
+            case PosBasicActionType.ACTIVATE: {
+                // TODO - can use this once we have the groups that account has pending votes
+                // const groups = await this.contract.methods.getGroupsVotedForByAccount(account).call()
+                // const isActivatable = await Promise.all(
+                //   groups.map((g) => this.contract.methods.hasActivatablePendingVotes(account, g).call())
+                // )
+                // const groupsActivatable = groups.filter((_, i) => isActivatable[i])
+                // return groupsActivatable.map((g) => this._activate(g))
+
+                const transaction = await client.contracts[Contracts.ELECTION].ACTIVATE(tx, '');
+                if (transaction) transactions.push(transaction);
+                break;
+            }
+            case PosBasicActionType.UNLOCK: {
+                const transaction = await client.contracts[Contracts.LOCKED_GOLD].unlock(tx);
+                if (transaction) transactions.push(transaction);
+                break;
+            }
+            case PosBasicActionType.UNVOTE: {
+                const groupAddress = tx.validators[0].id.toLowerCase();
+                const amount = new BigNumber(tx.amount);
+
+                const groups = await client.contracts[
+                    Contracts.ELECTION
+                ].getGroupsVotedForByAccount(tx.account.address);
+                const indexForGroup = groups.findIndex(
+                    group => fixEthAddress(group) === groupAddress
+                );
+
+                const { pending } = await client.contracts[
+                    Contracts.ELECTION
+                ].getVotesForGroupByAccount(tx.account.address, groupAddress);
+
+                const pendingValue = BigNumber.minimum(pending, amount);
+                if (!pendingValue.isZero()) {
+                    const txRevokePending: IPosTransaction = { ...tx };
+                    txRevokePending.amount = pendingValue.toFixed();
+                    const transaction = await client.contracts[Contracts.ELECTION].revokePending(
+                        txRevokePending,
+                        indexForGroup
+                    );
+                    if (transaction) transactions.push(transaction);
+                }
+
+                if (pendingValue.lt(amount)) {
+                    const activeValue = amount.minus(pendingValue);
+                    const txRevoke: IPosTransaction = { ...tx };
+                    txRevoke.amount = activeValue.toFixed();
+                    const transaction = await client.contracts[Contracts.ELECTION].revokeActive(
+                        txRevoke,
+                        indexForGroup
+                    );
+                    if (transaction) transactions.push(transaction);
+                }
+
+                break;
+            }
+            case PosBasicActionType.WITHDRAW: {
+                const transaction = await client.contracts[Contracts.LOCKED_GOLD].withdraw(
+                    tx,
+                    tx.extraFields.witdrawIndex
+                );
+                if (transaction) transactions.push(transaction);
+                break;
             }
         }
 

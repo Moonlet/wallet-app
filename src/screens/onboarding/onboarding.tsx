@@ -1,15 +1,9 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, TouchableOpacity, Clipboard } from 'react-native';
 import { Text, Button } from '../../library';
-import {
-    NavigationParams,
-    NavigationScreenProp,
-    NavigationState,
-    NavigationActions,
-    StackActions
-} from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import stylesProvider from './styles';
-import { withTheme } from '../../core/theme/with-theme';
+import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { createHDWallet } from '../../redux/wallets/actions';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
@@ -17,24 +11,44 @@ import { generateEncryptionKey } from '../../core/secure/keychain/keychain';
 import { translate } from '../../core/i18n';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
+import { IReduxState } from '../../redux/state';
+import { INavigationProps } from '../../navigation/with-navigation-params';
 
-export interface IProps {
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
-    styles: ReturnType<typeof stylesProvider>;
-}
+const COPY_DEVICE_ID_ATTEMPTS = 10;
 
 export interface IReduxProps {
+    deviceId: string;
     createHDWallet: typeof createHDWallet;
 }
+
+const mapStateToProps = (state: IReduxState) => ({
+    deviceId: state.preferences.deviceId
+});
 
 const mapDispatchToProps = {
     createHDWallet
 };
 
+interface IState {
+    copyDeviceIdLeft: number;
+}
+
 const navigationOptions = () => ({ header: null });
 
-export class OnboardingScreenComponent extends React.Component<IProps & IReduxProps> {
+export class OnboardingScreenComponent extends React.Component<
+    INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps,
+    IState
+> {
     public static navigationOptions = navigationOptions;
+
+    constructor(
+        props: INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps
+    ) {
+        super(props);
+        this.state = {
+            copyDeviceIdLeft: COPY_DEVICE_ID_ATTEMPTS
+        };
+    }
 
     public mnemonic = [
         'pigeon',
@@ -91,15 +105,28 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
     }
 
     public render() {
-        const styles = this.props.styles;
+        const { styles } = this.props;
+        const { copyDeviceIdLeft } = this.state;
 
         return (
             <View testID="onboarding-screen" style={styles.container}>
                 <View style={styles.topContainer}>
-                    <Image
-                        style={styles.logoImage}
-                        source={require('../../assets/images/png/moonlet_space.png')}
-                    />
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPress={() =>
+                            this.setState({ copyDeviceIdLeft: copyDeviceIdLeft - 1 }, () => {
+                                if (copyDeviceIdLeft === 0) {
+                                    Clipboard.setString(this.props.deviceId);
+                                    this.setState({ copyDeviceIdLeft: COPY_DEVICE_ID_ATTEMPTS });
+                                }
+                            })
+                        }
+                    >
+                        <Image
+                            style={styles.logoImage}
+                            source={require('../../assets/images/png/moonlet_space.png')}
+                        />
+                    </TouchableOpacity>
 
                     <View style={styles.textContainer}>
                         <Text style={styles.welcomeTitle}>
@@ -156,6 +183,6 @@ export class OnboardingScreenComponent extends React.Component<IProps & IReduxPr
 }
 
 export const OnboardingScreen = smartConnect(OnboardingScreenComponent, [
-    connect(null, mapDispatchToProps),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

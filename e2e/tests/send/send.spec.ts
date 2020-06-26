@@ -1,6 +1,6 @@
-import { generateWalletTest, activateTestNetTest } from './common';
-import { sendEthTest } from './eth';
-import { sendZilTest } from './zil';
+import { generateWalletTest, activateTestNetTest } from '../common/tests';
+import { sendEthTest } from './blockchain/eth';
+import { sendZilTest } from './blockchain/zil';
 
 describe('Send', () => {
     // Generate wallet

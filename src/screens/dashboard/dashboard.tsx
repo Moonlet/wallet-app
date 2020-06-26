@@ -283,11 +283,14 @@ export class DashboardScreenComponent extends React.Component<
 
         const tokenConfig = getTokenConfig(blockchain, config.coin);
 
+        const defaultAccountName = selectedAccount && `Account ${selectedAccount.index + 1}`;
+
         return (
             <Animated.View
                 style={[styles.coinBalanceCard, { height: animateCoinBalanceCardHeight }]}
             >
                 <TouchableOpacity
+                    testID="coin-balance-card"
                     onPress={() =>
                         this.props.openBottomSheet(BottomSheetType.ACCOUNTS, { blockchain })
                     }
@@ -305,8 +308,15 @@ export class DashboardScreenComponent extends React.Component<
                                 }
                             ]}
                         >
-                            <Text style={styles.account}>
-                                {selectedAccount.name || `Account ${selectedAccount.index + 1}`}
+                            <Text
+                                testID={
+                                    blockchain.toLocaleLowerCase() +
+                                    '-' +
+                                    defaultAccountName.replace(/ /g, '-').toLowerCase()
+                                }
+                                style={styles.account}
+                            >
+                                {selectedAccount.name || defaultAccountName}
                             </Text>
                             <Text style={styles.address}>
                                 {formatAddress(selectedAccount.address, blockchain)}
@@ -337,6 +347,7 @@ export class DashboardScreenComponent extends React.Component<
                     </View>
                     <View style={styles.row}>
                         <Amount
+                            testID={this.props.userCurrency}
                             style={[
                                 styles.secondaryText,
                                 { fontSize: animateConvertedAmountFontSize }

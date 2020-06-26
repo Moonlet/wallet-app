@@ -1,8 +1,6 @@
 // tbd - ios swipe back fix - not sure - only on release it crashes
 import 'react-native-gesture-handler';
 import DeviceInfo from 'react-native-device-info';
-
-import DeviceInfo from 'react-native-device-info';
 import { init } from '@sentry/react-native';
 import { sanitizeSentryBreadcrumb } from './src/core/utils/object-sanitise';
 

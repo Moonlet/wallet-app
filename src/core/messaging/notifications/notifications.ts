@@ -69,9 +69,25 @@ export class NotificationService {
         this.onNotificationOpenedListener = firebase
             .notifications()
             .onNotificationOpened(notificationOpen => {
-                notificationHandler((notificationOpen.notification as any).data, false);
+                const notifData = (notificationOpen.notification as any).data;
+                notificationHandler(notifData, false);
+
+                // TODO: notif mark seen
+                // console.log('notifData: ', notifData);
+                // this.markSeenNotification(notifData);
             });
     }
+
+    // private async markSeenNotification(notifData: any) {
+    //     try {
+    //         const http = new HttpClient(CONFIG.notificationCenter.markSeenUrl);
+    //         await http.post('', {
+    //             notifIds: ['5ef9f01d43dfb24f8a019abe', '5ef9f01d43dfb24f8a019abf'] // this.props.walletId
+    //         });
+    //     } catch {
+    //         //
+    //     }
+    // }
 
     public removeListeners() {
         typeof this.messageListener === 'function' && this.messageListener();

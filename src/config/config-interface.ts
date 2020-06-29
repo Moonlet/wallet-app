@@ -17,4 +17,12 @@ export interface IAppConfig {
         deleteRequestUrl: string;
     };
     firebaseWebConfig: any;
+    notificationCenter: {
+        getNotificationsUrl: string;
+        markSeenUrl: string;
+        getRegisteredAddresses: string;
+        sendPushNotifications: string;
+        addPushNotifTokens: string;
+        hasUnseenNotifs: string;
+    };
 }

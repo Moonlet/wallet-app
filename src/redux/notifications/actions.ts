@@ -1,3 +1,9 @@
 // actions consts
-export const READ_NOTIFICATION = 'READ_NOTIFICATION';
-// export const DELETE_NOTIFICATION = 'DELETE_NOTIFICATION';
+export const SET_HAS_UNSEEN_NOTIFICATIONS = 'SET_HAS_UNSEEN_NOTIFICATIONS';
+
+export const setHasUnseenNotifications = (hasUnseenNotifications: boolean) => {
+    return {
+        type: SET_HAS_UNSEEN_NOTIFICATIONS,
+        data: { hasUnseenNotifications }
+    };
+};

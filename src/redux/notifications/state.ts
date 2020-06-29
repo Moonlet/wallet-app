@@ -6,7 +6,10 @@ export interface INotificationType {
 }
 
 export interface INotificationsState {
-    [blockchain: string]: {
-        [notifId: string]: INotificationType;
+    hasUnseenNotifications: boolean;
+    notifications: {
+        [blockchain: string]: {
+            [notifId: string]: INotificationType;
+        };
     };
 }

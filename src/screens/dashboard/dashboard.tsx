@@ -47,11 +47,15 @@ import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { IconValues } from '../../components/icon/values';
 import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { HttpClient } from '../../core/utils/http-client';
+import CONFIG from '../../config';
+import { setHasUnseenNotifications } from '../../redux/notifications/actions';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
 
 export interface IReduxProps {
+    walletId: string;
     walletsNr: number;
     getBalance: typeof getBalance;
     blockchains: Blockchain[];
@@ -63,12 +67,15 @@ export interface IReduxProps {
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
     chainId: ChainIdType;
+    hasUnseenNotifications: boolean;
+    setHasUnseenNotifications: typeof setHasUnseenNotifications;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
 
     return {
+        walletId: getSelectedWallet(state).id,
         walletsNr: Object.keys(state.wallets).length,
         blockchains: getBlockchains(state),
         selectedBlockchain: getSelectedBlockchain(state),
@@ -77,13 +84,15 @@ const mapStateToProps = (state: IReduxState) => {
         isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
         selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
         userCurrency: state.preferences.currency,
-        chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : ''
+        chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
+        hasUnseenNotifications: state.notifications.hasUnseenNotifications
     };
 };
 
 const mapDispatchToProps = {
     getBalance,
-    openBottomSheet
+    openBottomSheet,
+    setHasUnseenNotifications
 };
 
 interface IState {
@@ -145,8 +154,8 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                         size={ICON_SIZE}
                         style={{ color: themes[theme].colors.accent }}
                     />
-                    {/* TODO: link this to redux */}
-                    {isFeatureActive(RemoteFeature.NOTIF_CENTER) && <UnreadNotifCircle />}
+                    {isFeatureActive(RemoteFeature.NOTIF_CENTER) &&
+                        navigation.state.params?.hasUnseenNotifications && <UnreadNotifCircle />}
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -201,6 +210,8 @@ export class DashboardScreenComponent extends React.Component<
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
+
+        this.hasUnseenNotifications();
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
@@ -209,6 +220,31 @@ export class DashboardScreenComponent extends React.Component<
             // NavigationEvents is not enough for the web in order to get balances
             this.onFocus();
         }
+
+        if (this.props.walletId !== prevProps.walletId) {
+            this.hasUnseenNotifications();
+        }
+    }
+
+    private async hasUnseenNotifications() {
+        try {
+            const http = new HttpClient(CONFIG.notificationCenter.hasUnseenNotifs);
+            const res = await http.post('', {
+                walletId: 'a119cd1c-73c7-4dae-b8a6-e2b280e4143b' // this.props.walletId
+            });
+
+            if (res?.result?.hasUnseenNotifications) {
+                this.props.setHasUnseenNotifications(res.result.hasUnseenNotifications);
+            } else {
+                this.props.setHasUnseenNotifications(false);
+            }
+        } catch {
+            this.props.setHasUnseenNotifications(false);
+        }
+
+        this.props.navigation.setParams({
+            hasUnseenNotifications: this.props.hasUnseenNotifications
+        });
     }
 
     public setDashboardMenuBottomSheet = () => {

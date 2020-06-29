@@ -213,9 +213,11 @@ export class DashboardScreenComponent extends React.Component<
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
 
-        this.hasUnseenNotifications();
+        if (isFeatureActive(RemoteFeature.NOTIF_CENTER)) {
+            this.hasUnseenNotifications();
 
-        this.fetchNotifications();
+            this.fetchNotifications();
+        }
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
@@ -225,7 +227,10 @@ export class DashboardScreenComponent extends React.Component<
             this.onFocus();
         }
 
-        if (this.props.walletId !== prevProps.walletId) {
+        if (
+            this.props.walletId !== prevProps.walletId &&
+            isFeatureActive(RemoteFeature.NOTIF_CENTER)
+        ) {
             this.hasUnseenNotifications();
         }
     }

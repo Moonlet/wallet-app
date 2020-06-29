@@ -22,7 +22,7 @@ export interface IAppConfig {
         markSeenUrl: string;
         getRegisteredAddresses: string;
         sendPushNotifications: string;
-        addPushNotifTokens: string;
+        addPushNotifToken: string;
         hasUnseenNotifs: string;
     };
 }

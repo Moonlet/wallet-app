@@ -29,7 +29,7 @@ export const CONFIG_BETA: IAppConfig = {
         markSeenUrl: walletApiBaseUrl + '/notifications-markseen',
         getRegisteredAddresses: walletApiBaseUrl + '/get-registered-addresses',
         sendPushNotifications: walletApiBaseUrl + '/send-push-notifications',
-        addPushNotifTokens: walletApiBaseUrl + '/push-notifications-tokens/add',
+        addPushNotifToken: walletApiBaseUrl + '/push-notifications-tokens/add',
         hasUnseenNotifs: walletApiBaseUrl + '/has-unseen-notifications'
     }
 };

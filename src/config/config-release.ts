@@ -25,8 +25,8 @@ export const CONFIG_RELEASE: IAppConfig = {
     },
     firebaseWebConfig: firebaseConfig,
     notificationCenter: {
-        getNotificationsUrl: walletApiBaseUrl + 'notifications',
-        markSeenUrl: walletApiBaseUrl + 'notifications-markseen',
+        getNotificationsUrl: walletApiBaseUrl + '/notifications',
+        markSeenUrl: walletApiBaseUrl + '/notifications-markseen',
         getRegisteredAddresses: walletApiBaseUrl + '/get-registered-addresses',
         sendPushNotifications: walletApiBaseUrl + '/send-push-notifications',
         addPushNotifTokens: walletApiBaseUrl + '/push-notifications-tokens/add',

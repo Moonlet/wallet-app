@@ -23,7 +23,7 @@ export interface IReduxProps {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        notifications: state.notifications,
+        notifications: state.notifications.notifications,
         selectedBlockchain: getSelectedBlockchain(state)
     };
 };
@@ -51,13 +51,13 @@ export class NotificationsComponent extends React.Component<
             >
                 <View style={styles.rowContainer}>
                     <View style={styles.rowTextContainer}>
-                        <Text style={notification.read ? styles.titleRead : styles.titleUnread}>
+                        <Text style={notification.seen ? styles.titleRead : styles.titleUnread}>
                             {notification.title}
                         </Text>
                         <Text
-                            style={notification.read ? styles.subtitleRead : styles.subtitleUnread}
+                            style={notification.seen ? styles.subtitleRead : styles.subtitleUnread}
                         >
-                            {notification.subtitle}
+                            {notification.body}
                         </Text>
                     </View>
                     <Icon

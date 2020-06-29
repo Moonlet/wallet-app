@@ -49,7 +49,7 @@ import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-n
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import { HttpClient } from '../../core/utils/http-client';
 import CONFIG from '../../config';
-import { setHasUnseenNotifications } from '../../redux/notifications/actions';
+import { setHasUnseenNotifications, setNotifications } from '../../redux/notifications/actions';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -69,13 +69,14 @@ export interface IReduxProps {
     chainId: ChainIdType;
     hasUnseenNotifications: boolean;
     setHasUnseenNotifications: typeof setHasUnseenNotifications;
+    setNotifications: typeof setNotifications;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
 
     return {
-        walletId: getSelectedWallet(state).id,
+        walletId: getSelectedWallet(state)?.id,
         walletsNr: Object.keys(state.wallets).length,
         blockchains: getBlockchains(state),
         selectedBlockchain: getSelectedBlockchain(state),
@@ -92,7 +93,8 @@ const mapStateToProps = (state: IReduxState) => {
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
-    setHasUnseenNotifications
+    setHasUnseenNotifications,
+    setNotifications
 };
 
 interface IState {
@@ -212,6 +214,8 @@ export class DashboardScreenComponent extends React.Component<
         });
 
         this.hasUnseenNotifications();
+
+        this.fetchNotifications();
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
@@ -245,6 +249,21 @@ export class DashboardScreenComponent extends React.Component<
         this.props.navigation.setParams({
             hasUnseenNotifications: this.props.hasUnseenNotifications
         });
+    }
+
+    private async fetchNotifications() {
+        try {
+            const http = new HttpClient(CONFIG.notificationCenter.getNotificationsUrl + '/1');
+            const res = await http.post('', {
+                walletId: 'a119cd1c-73c7-4dae-b8a6-e2b280e4143b' // this.props.walletId
+            });
+
+            if (res?.result?.notifications) {
+                this.props.setNotifications(res.result.notifications);
+            }
+        } catch {
+            //
+        }
     }
 
     public setDashboardMenuBottomSheet = () => {

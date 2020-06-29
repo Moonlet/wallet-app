@@ -1,8 +1,13 @@
 export interface INotificationType {
+    walletId: string;
     title: string;
-    subtitle: string;
-    // cta: any;
-    read: boolean;
+    body: string;
+    seen: boolean;
+    data: {
+        action: string;
+        blockchain: string;
+        // other data
+    };
 }
 
 export interface INotificationsState {

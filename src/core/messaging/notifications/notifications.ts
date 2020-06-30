@@ -5,6 +5,8 @@ import { notificationHandler } from '../handlers/notification';
 import { store } from '../../../redux/config';
 import { updateAddressMonitorTokens } from '../../address-monitor';
 import { themes } from '../../../navigation/navigation';
+import { HttpClient } from '../../utils/http-client';
+import CONFIG from '../../../config';
 
 // this file is in this format for testing purposes
 export class NotificationService {
@@ -72,22 +74,26 @@ export class NotificationService {
                 const notifData = (notificationOpen.notification as any).data;
                 notificationHandler(notifData, false);
 
-                // TODO: notif mark seen
-                // console.log('notifData: ', notifData);
-                // this.markSeenNotification(notifData);
+                // TODO: check this
+                // Also trigger when app is closed and the notif is opened
+                this.markSeenNotification(notifData);
             });
     }
 
-    // private async markSeenNotification(notifData: any) {
-    //     try {
-    //         const http = new HttpClient(CONFIG.notificationCenter.markSeenUrl);
-    //         await http.post('', {
-    //             notifIds: ['5ef9f01d43dfb24f8a019abe', '5ef9f01d43dfb24f8a019abf'] // this.props.walletId
-    //         });
-    //     } catch {
-    //         //
-    //     }
-    // }
+    private async markSeenNotification(notifData: any) {
+        try {
+            const parsedData = JSON.parse(notifData.data);
+
+            if (parsedData?.notification?._id) {
+                const http = new HttpClient(CONFIG.notificationCenter.markSeenUrl);
+                await http.post('', {
+                    notifIds: [parsedData.notification._id]
+                });
+            }
+        } catch {
+            //
+        }
+    }
 
     public removeListeners() {
         typeof this.messageListener === 'function' && this.messageListener();

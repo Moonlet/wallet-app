@@ -14,15 +14,20 @@ import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-n
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
 import { Blockchain } from '../../core/blockchain/types';
-import { getSelectedBlockchain } from '../../redux/wallets/selectors';
+import { getSelectedBlockchain, getSelectedWallet } from '../../redux/wallets/selectors';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
+import { HttpClient } from '../../core/utils/http-client';
+import CONFIG from '../../config';
 
 export interface IReduxProps {
+    walletId: string;
     notifications: INotificationsState;
     selectedBlockchain: Blockchain;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     return {
+        walletId: getSelectedWallet(state)?.id,
         notifications: state.notifications.notifications,
         selectedBlockchain: getSelectedBlockchain(state)
     };
@@ -32,10 +37,29 @@ export const navigationOptions = () => ({
     title: translate('App.labels.notifications')
 });
 
+interface IState {
+    notifications: INotificationsState;
+    showLoading: boolean;
+    page: number;
+}
+
 export class NotificationsComponent extends React.Component<
-    IReduxProps & INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IReduxProps & INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
     public static navigationOptions = navigationOptions;
+    private scrollView: any;
+
+    constructor(
+        props: IReduxProps & INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
+        super(props);
+        this.state = {
+            notifications: props.notifications,
+            showLoading: false,
+            page: 1
+        };
+    }
 
     private renderRow(notification: INotificationType, index: number) {
         const { styles } = this.props;
@@ -70,8 +94,61 @@ export class NotificationsComponent extends React.Component<
         );
     }
 
+    private async fetchNotifications() {
+        const { page, notifications } = this.state;
+
+        try {
+            this.scrollView.scrollToEnd({ animated: true });
+
+            // Fetch next page
+            const http = new HttpClient(
+                CONFIG.notificationCenter.getNotificationsUrl + `/${page + 1}`
+            );
+            const res = await http.post('', {
+                walletId: this.props.walletId
+            });
+
+            if (res?.result?.notifications && res.result.notifications.length > 0) {
+                let finalNotifications = notifications;
+
+                for (const notif of res.result.notifications) {
+                    const notifData = {
+                        walletId: notif.walletId,
+                        title: notif.title,
+                        body: notif.body,
+                        seen: notif.seen,
+                        data: notif.data
+                    };
+
+                    finalNotifications = {
+                        ...finalNotifications,
+                        [notif.data.blockchain]: {
+                            ...finalNotifications[notif.data.blockchain],
+                            [notif._id]: notifData
+                        }
+                    };
+                }
+
+                this.setState({
+                    notifications: finalNotifications,
+                    page: page + 1
+                });
+            }
+        } catch {
+            //
+        }
+
+        this.setState({ showLoading: false });
+    }
+
+    private isCloseToBottom({ layoutMeasurement, contentOffset, contentSize }) {
+        const paddingToBottom = BASE_DIMENSION * 2;
+        return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
+    }
+
     public render() {
-        const { styles, notifications } = this.props;
+        const { styles } = this.props;
+        const { notifications } = this.state;
 
         let notifsBySelectedBlockchain;
         Object.keys(notifications).filter((blockchain: Blockchain) => {
@@ -83,8 +160,24 @@ export class NotificationsComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <ScrollView
+                    ref={ref => (this.scrollView = ref)}
                     contentContainerStyle={styles.scrollContainer}
                     showsVerticalScrollIndicator={false}
+                    onMomentumScrollEnd={({ nativeEvent }) => {
+                        if (this.isCloseToBottom(nativeEvent)) {
+                            if (!this.state.showLoading) {
+                                this.setState({ showLoading: true }, async () => {
+                                    await this.fetchNotifications();
+                                });
+                            }
+                        }
+                    }}
+                    // TODO: find a way to fix this / or user another solution
+                    // onContentSizeChange={() => {
+                    //     if (this.state.showLoading) {
+                    //         this.scrollView.scrollToEnd({ animated: true });
+                    //     }
+                    // }}
                 >
                     {notifsBySelectedBlockchain ? (
                         Object.values(
@@ -105,6 +198,11 @@ export class NotificationsComponent extends React.Component<
                             <Text style={styles.emptyNotifSubtitle}>
                                 {translate('Notifications.notificationsCenter.emptyNotifSubtitle')}
                             </Text>
+                        </View>
+                    )}
+                    {this.state.showLoading && (
+                        <View style={styles.loadingContainer}>
+                            <LoadingIndicator />
                         </View>
                     )}
                 </ScrollView>

@@ -19,9 +19,7 @@ export default (
             };
 
         case SET_NOTIFICATIONS: {
-            let notifications = {
-                ...state.notifications
-            };
+            let notifications = {};
 
             action.data.notifications.map((notif: any) => {
                 const notifData = {

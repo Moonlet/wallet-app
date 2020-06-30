@@ -22,6 +22,7 @@ import { markSeenNotification } from '../../redux/notifications/actions';
 import { NotificationType } from '../../core/messaging/types';
 import { updateTransactionFromBlockchain } from '../../redux/wallets/actions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
+import { openTransactionRequest } from '../../redux/ui/transaction-request/actions';
 
 export interface IReduxProps {
     walletId: string;
@@ -29,6 +30,7 @@ export interface IReduxProps {
     selectedBlockchain: Blockchain;
     markSeenNotification: typeof markSeenNotification;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
+    openTransactionRequest: typeof openTransactionRequest;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -45,7 +47,8 @@ export const navigationOptions = () => ({
 
 const mapDispatchToProps = {
     markSeenNotification,
-    updateTransactionFromBlockchain
+    updateTransactionFromBlockchain,
+    openTransactionRequest
 };
 
 interface IState {
@@ -73,6 +76,8 @@ export class NotificationsComponent extends React.Component<
     }
 
     private async handleNotificationTap(notification: INotificationType, key: string) {
+        await LoadingModal.open();
+
         switch (notification.data.action) {
             case NotificationType.TRANSACTION:
                 this.props.updateTransactionFromBlockchain(
@@ -83,7 +88,16 @@ export class NotificationsComponent extends React.Component<
                     true
                 );
                 break;
+
+            case NotificationType.EXTENSION_SIGN_TX:
+                this.props.openTransactionRequest({
+                    requestId: notification.data.requestId
+                });
+                await LoadingModal.close();
+                break;
+
             default:
+                await LoadingModal.close();
                 break;
         }
 
@@ -98,10 +112,7 @@ export class NotificationsComponent extends React.Component<
             <TouchableHighlight
                 key={`notification-${index}`}
                 underlayColor={this.props.theme.colors.appBackground}
-                onPress={async () => {
-                    await LoadingModal.open();
-                    await this.handleNotificationTap(notification, key);
-                }}
+                onPress={() => this.handleNotificationTap(notification, key)}
             >
                 <View style={styles.rowContainer}>
                     <View style={styles.rowTextContainer}>

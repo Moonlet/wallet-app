@@ -1,0 +1,3 @@
+// actions consts
+export const READ_NOTIFICATION = 'READ_NOTIFICATION';
+// export const DELETE_NOTIFICATION = 'DELETE_NOTIFICATION';

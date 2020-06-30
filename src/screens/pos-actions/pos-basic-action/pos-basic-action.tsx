@@ -9,7 +9,12 @@ import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../../navigation/with-navigation-params';
 import { getAccount } from '../../../redux/wallets/selectors';
-import { Blockchain, ChainIdType, IFeeOptions } from '../../../core/blockchain/types';
+import {
+    Blockchain,
+    ChainIdType,
+    IFeeOptions,
+    TransactionType
+} from '../../../core/blockchain/types';
 import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 import { TestnetBadge } from '../../../components/testnet-badge/testnet-badge';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -30,10 +35,13 @@ import { FeeOptions } from '../../send/components/fee-options/fee-options';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
+import { unlock, unvote } from '../../../redux/wallets/actions';
 
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    unlock: typeof unlock;
+    unvote: typeof unvote;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -44,7 +52,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 };
 
 const mapDispatchToProps = {
-    //
+    unlock,
+    unvote
 };
 
 export interface INavigationParams {
@@ -92,11 +101,40 @@ export class PosBasicActionComponent extends React.Component<
 
     private async onPressConfirm() {
         try {
-            await PasswordModal.getPassword(
+            const password = await PasswordModal.getPassword(
                 translate('Password.pinTitleUnlock'),
                 translate('Password.subtitleSignTransaction'),
                 { sensitive: true, showCloseButton: true }
             );
+
+            switch (this.props.basicAction) {
+                case PosBasicActionType.UNLOCK: {
+                    this.props.unlock(
+                        this.props.account,
+                        this.state.amount,
+                        this.props.token.symbol,
+                        this.state.feeOptions,
+                        password,
+                        this.props.navigation,
+                        undefined
+                    );
+                    break;
+                }
+                case PosBasicActionType.UNVOTE: {
+                    this.props.unvote(
+                        this.props.account,
+                        this.state.amount,
+                        this.props.validators,
+                        this.props.token.symbol,
+                        this.state.feeOptions,
+                        password,
+                        this.props.navigation,
+                        undefined
+                    );
+                    break;
+                }
+            }
+
             NavigationService.goBack();
         } catch {
             //
@@ -222,6 +260,7 @@ export class PosBasicActionComponent extends React.Component<
                     onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions
+                    transactionType={TransactionType.CONTRACT_CALL}
                     token={this.props.account.tokens[this.props.chainId][config.coin]}
                     sendingToken={this.props.token}
                     account={this.props.account}

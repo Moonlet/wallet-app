@@ -88,6 +88,7 @@ export class DelegateTokenScreenComponent extends React.Component<
                         accountIndex={this.props.accountIndex}
                         blockchain={this.props.blockchain}
                         token={this.props.token}
+                        navigation={this.props.navigation}
                     />
                 );
             case config.ui.token.labels.tabDelegations:

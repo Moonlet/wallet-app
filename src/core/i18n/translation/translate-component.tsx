@@ -9,14 +9,8 @@ interface IProps {
     count?: number;
 }
 
-export class TranslateComponent extends React.Component<IProps & ITextProps> {
-    public render() {
-        return (
-            <Text {...this.props}>
-                {translate(this.props.text, this.props.params, this.props.count)}
-            </Text>
-        );
-    }
-}
+export const TranslateComponent = (props: IProps & ITextProps) => {
+    return <Text {...props}>{translate(props.text, props.params, props.count)}</Text>;
+};
 
 export const Translate = withTheme(() => ({}))(TranslateComponent);

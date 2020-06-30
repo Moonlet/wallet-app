@@ -16,3 +16,10 @@ export const formatAddress = (text: string, blockchain: Blockchain) => {
             return text;
     }
 };
+
+export const fixEthAddress = (address: string): string => {
+    if (address.indexOf('0x') < 0) {
+        address = '0x' + address;
+    }
+    return address;
+};

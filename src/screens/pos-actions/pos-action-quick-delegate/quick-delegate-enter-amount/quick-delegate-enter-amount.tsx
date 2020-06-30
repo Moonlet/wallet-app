@@ -14,7 +14,7 @@ import { INavigationProps } from '../../../../navigation/with-navigation-params'
 import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
 import { bind } from 'bind-decorator';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
-import { quickDelegate } from '../../../../redux/wallets/actions';
+import { delegate } from '../../../../redux/wallets/actions';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -24,7 +24,7 @@ export interface IReduxProps {
     token: ITokenState;
     validators: IValidator[];
     actionText: string;
-    quickDelegate: typeof quickDelegate;
+    delegate: typeof delegate;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
@@ -42,7 +42,7 @@ export const mapStateToProps = (state: IReduxState) => {
 };
 
 const mapDispatchToProps = {
-    quickDelegate
+    delegate
 };
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -72,7 +72,7 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
                 translate('Password.subtitleSignTransaction'),
                 { sensitive: true, showCloseButton: true }
             );
-            this.props.quickDelegate(
+            this.props.delegate(
                 this.props.account,
                 amount,
                 this.props.validators,

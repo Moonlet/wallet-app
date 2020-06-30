@@ -18,7 +18,8 @@ import {
     ChainIdType,
     TransactionMessageText,
     TransactionMessageType,
-    IBlockchainTransaction
+    IBlockchainTransaction,
+    TransactionType
 } from '../../core/blockchain/types';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
@@ -409,6 +410,7 @@ export class SendScreenComponent extends React.Component<
                     onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions
+                    transactionType={TransactionType.TRANSFER}
                     token={this.props.account.tokens[this.props.chainId][config.coin]}
                     sendingToken={this.props.token}
                     account={this.props.account}

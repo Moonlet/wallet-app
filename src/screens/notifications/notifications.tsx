@@ -83,7 +83,7 @@ export class NotificationsComponent extends React.Component<
                 this.props.updateTransactionFromBlockchain(
                     notification.data.transactionHash,
                     notification.data.blockchain as Blockchain,
-                    Number(notification.data.chainId), // TODO: check if String is neede
+                    Number(notification.data.chainId), // TODO: maybe String is needed
                     Number(notification.data.broadcastedOnBlock),
                     true
                 );

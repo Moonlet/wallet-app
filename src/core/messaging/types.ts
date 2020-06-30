@@ -1,3 +1,4 @@
+// TODO: refactor this, too many types
 export enum NotificationType {
     EXTENSION_TRANSACTION = 'EXTENSION_TRANSACTION',
     TRANSACTION_UPDATE = 'TRANSACTION_UPDATE',

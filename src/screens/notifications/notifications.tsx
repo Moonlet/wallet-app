@@ -18,11 +18,13 @@ import { getSelectedBlockchain, getSelectedWallet } from '../../redux/wallets/se
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { HttpClient } from '../../core/utils/http-client';
 import CONFIG from '../../config';
+import { markSeenNotification } from '../../redux/notifications/actions';
 
 export interface IReduxProps {
     walletId: string;
     notifications: INotificationsState;
     selectedBlockchain: Blockchain;
+    markSeenNotification: typeof markSeenNotification;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -36,6 +38,10 @@ const mapStateToProps = (state: IReduxState) => {
 export const navigationOptions = () => ({
     title: translate('App.labels.notifications')
 });
+
+const mapDispatchToProps = {
+    markSeenNotification
+};
 
 interface IState {
     notifications: INotificationsState;
@@ -61,7 +67,7 @@ export class NotificationsComponent extends React.Component<
         };
     }
 
-    private renderRow(notification: INotificationType, index: number) {
+    private renderRow(notification: INotificationType, key: string, index: number) {
         const { styles } = this.props;
 
         return (
@@ -69,8 +75,9 @@ export class NotificationsComponent extends React.Component<
             <TouchableHighlight
                 key={`notification-${index}`}
                 underlayColor={this.props.theme.colors.appBackground}
-                onPress={() => {
+                onPress={async () => {
                     // TODO
+                    await this.markSeen(notification.data.blockchain, key);
                 }}
             >
                 <View style={styles.rowContainer}>
@@ -92,6 +99,25 @@ export class NotificationsComponent extends React.Component<
                 </View>
             </TouchableHighlight>
         );
+    }
+
+    private async markSeen(blockchain: string, id: string) {
+        try {
+            const http = new HttpClient(CONFIG.notificationCenter.markSeenUrl);
+            const res = await http.post('', {
+                notifIds: [id]
+            });
+
+            if (res?.result?.notifications && res.result.notifications) {
+                this.props.markSeenNotification(blockchain, id);
+
+                const { notifications } = this.state;
+                notifications[blockchain][id].seen = true;
+                this.setState({ notifications });
+            }
+        } catch {
+            //
+        }
     }
 
     private async fetchNotifications() {
@@ -180,10 +206,8 @@ export class NotificationsComponent extends React.Component<
                     // }}
                 >
                     {notifsBySelectedBlockchain ? (
-                        Object.values(
-                            notifsBySelectedBlockchain
-                        ).map((notif: INotificationType, index: number) =>
-                            this.renderRow(notif, index)
+                        Object.keys(notifsBySelectedBlockchain).map((key: string, index: number) =>
+                            this.renderRow(notifsBySelectedBlockchain[key], key, index)
                         )
                     ) : (
                         // Empty State
@@ -216,6 +240,6 @@ export class NotificationsComponent extends React.Component<
 }
 
 export const NotificationsScreen = smartConnect(NotificationsComponent, [
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

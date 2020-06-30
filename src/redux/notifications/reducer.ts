@@ -1,6 +1,6 @@
 import { INotificationsState } from './state';
 import { IAction } from '../types';
-import { SET_HAS_UNSEEN_NOTIFICATIONS, SET_NOTIFICATIONS } from './actions';
+import { SET_HAS_UNSEEN_NOTIFICATIONS, SET_NOTIFICATIONS, MARK_SEEN } from './actions';
 
 const initialState: INotificationsState = {
     hasUnseenNotifications: false,
@@ -44,6 +44,21 @@ export default (
                 notifications
             };
         }
+
+        case MARK_SEEN:
+            return {
+                ...state,
+                notifications: {
+                    ...state.notifications,
+                    [action.data.blockchain]: {
+                        ...state.notifications[action.data.blockchain],
+                        [action.data.notifId]: {
+                            ...state.notifications[action.data.blockchain][action.data.notifId],
+                            seen: true
+                        }
+                    }
+                }
+            };
 
         default:
             break;

@@ -55,6 +55,7 @@ interface IState {
     notifications: INotificationsState;
     showLoading: boolean;
     page: number;
+    hideBottomNav: boolean;
 }
 
 export class NotificationsComponent extends React.Component<
@@ -62,7 +63,7 @@ export class NotificationsComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    private scrollView: any;
+    private scrollOffset: number = 0;
 
     constructor(
         props: IReduxProps & INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -71,7 +72,8 @@ export class NotificationsComponent extends React.Component<
         this.state = {
             notifications: props.notifications,
             showLoading: false,
-            page: 1
+            page: 1,
+            hideBottomNav: false
         };
     }
 
@@ -158,8 +160,6 @@ export class NotificationsComponent extends React.Component<
         const { page, notifications } = this.state;
 
         try {
-            this.scrollView.scrollToEnd({ animated: true });
-
             // Fetch next page
             const http = new HttpClient(
                 CONFIG.notificationCenter.getNotificationsUrl + `/${page + 1}`
@@ -220,7 +220,6 @@ export class NotificationsComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <ScrollView
-                    ref={ref => (this.scrollView = ref)}
                     contentContainerStyle={styles.scrollContainer}
                     showsVerticalScrollIndicator={false}
                     onMomentumScrollEnd={({ nativeEvent }) => {
@@ -232,12 +231,17 @@ export class NotificationsComponent extends React.Component<
                             }
                         }
                     }}
-                    // TODO: find a way to fix this / or user another solution
-                    // onContentSizeChange={() => {
-                    //     if (this.state.showLoading) {
-                    //         this.scrollView.scrollToEnd({ animated: true });
-                    //     }
-                    // }}
+                    onScroll={(event: any) => {
+                        const currentOffset = event.nativeEvent.contentOffset.y;
+                        currentOffset >= this.scrollOffset
+                            ? this.setState({ hideBottomNav: true }) // scroll down
+                            : this.setState({ hideBottomNav: false }); // scroll up
+                        this.scrollOffset = currentOffset;
+
+                        if (currentOffset === 0) {
+                            this.setState({ hideBottomNav: false }); // scroll on top
+                        }
+                    }}
                 >
                     {notifsBySelectedBlockchain ? (
                         Object.keys(notifsBySelectedBlockchain).map((key: string, index: number) =>
@@ -265,9 +269,11 @@ export class NotificationsComponent extends React.Component<
                     )}
                 </ScrollView>
 
-                <BottomBlockchainNavigation
-                    style={{ paddingBottom: BASE_DIMENSION + BASE_DIMENSION / 2 }}
-                />
+                {!this.state.hideBottomNav && (
+                    <BottomBlockchainNavigation
+                        style={{ paddingBottom: BASE_DIMENSION + BASE_DIMENSION / 2 }}
+                    />
+                )}
             </View>
         );
     }

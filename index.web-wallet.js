@@ -1,11 +1,13 @@
 import { init } from '@sentry/browser';
+import { sanitizeSentryBreadcrumb } from './src/core/utils/object-sanitise';
 import DeviceInfo from 'react-native-device-info';
 
 // Sentry setup
 if (!__DEV__) {
     init({
         dsn: 'https://fec608091c734de5a9731c5f2fa860cb@o308222.ingest.sentry.io/5255215',
-        environment: DeviceInfo.getBundleId()
+        environment: DeviceInfo.getBundleId(),
+        beforeBreadcrumb: sanitizeSentryBreadcrumb
     });
 }
 

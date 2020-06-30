@@ -5,6 +5,8 @@ import { store } from '../../../redux/config';
 import { setSelectedWallet, updateTransactionFromBlockchain } from '../../../redux/wallets/actions';
 import { takeOneAndSubscribeToStore } from '../../../redux/utils/helpers';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
+import { HttpClient } from '../../utils/http-client';
+import { CONFIG } from '../../../config';
 
 export const notificationHandler = async (
     notification: INotificationPayload,
@@ -20,6 +22,23 @@ export const notificationHandler = async (
         });
     } else {
         handleNotification(notification, openedByNotification);
+    }
+
+    markSeenNotification(notification);
+};
+
+const markSeenNotification = async (notifData: INotificationPayload) => {
+    try {
+        const parsedData = JSON.parse(notifData.data);
+
+        if (parsedData?.notification?._id) {
+            const http = new HttpClient(CONFIG.notificationCenter.markSeenUrl);
+            await http.post('', {
+                notifIds: [parsedData.notification._id]
+            });
+        }
+    } catch {
+        //
     }
 };
 

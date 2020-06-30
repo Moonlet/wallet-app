@@ -19,12 +19,16 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { HttpClient } from '../../core/utils/http-client';
 import CONFIG from '../../config';
 import { markSeenNotification } from '../../redux/notifications/actions';
+import { NotificationType } from '../../core/messaging/types';
+import { updateTransactionFromBlockchain } from '../../redux/wallets/actions';
+import { LoadingModal } from '../../components/loading-modal/loading-modal';
 
 export interface IReduxProps {
     walletId: string;
     notifications: INotificationsState;
     selectedBlockchain: Blockchain;
     markSeenNotification: typeof markSeenNotification;
+    updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -40,7 +44,8 @@ export const navigationOptions = () => ({
 });
 
 const mapDispatchToProps = {
-    markSeenNotification
+    markSeenNotification,
+    updateTransactionFromBlockchain
 };
 
 interface IState {
@@ -67,6 +72,24 @@ export class NotificationsComponent extends React.Component<
         };
     }
 
+    private async handleNotificationTap(notification: INotificationType, key: string) {
+        switch (notification.data.action) {
+            case NotificationType.TRANSACTION:
+                this.props.updateTransactionFromBlockchain(
+                    notification.data.transactionHash,
+                    notification.data.blockchain as Blockchain,
+                    Number(notification.data.chainId), // TODO: check if String is neede
+                    Number(notification.data.broadcastedOnBlock),
+                    true
+                );
+                break;
+            default:
+                break;
+        }
+
+        await this.markSeen(notification.data.blockchain, key);
+    }
+
     private renderRow(notification: INotificationType, key: string, index: number) {
         const { styles } = this.props;
 
@@ -76,8 +99,8 @@ export class NotificationsComponent extends React.Component<
                 key={`notification-${index}`}
                 underlayColor={this.props.theme.colors.appBackground}
                 onPress={async () => {
-                    // TODO
-                    await this.markSeen(notification.data.blockchain, key);
+                    await LoadingModal.open();
+                    await this.handleNotificationTap(notification, key);
                 }}
             >
                 <View style={styles.rowContainer}>

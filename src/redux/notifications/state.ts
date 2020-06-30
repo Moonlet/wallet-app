@@ -7,6 +7,19 @@ export interface INotificationType {
         action: string;
         blockchain: string;
         // other data
+
+        address?: string;
+
+        // TRANSACTION extra data
+        transactionHash?: string;
+        chainId?: string;
+        broadcastedOnBlock?: string;
+
+        // EXTENSION_SIGN_TX extra data
+        requestId?: string;
+
+        // OPEN_URL extra data
+        url?: string;
     };
 }
 

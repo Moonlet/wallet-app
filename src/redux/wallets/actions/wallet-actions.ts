@@ -485,6 +485,8 @@ export const updateTransactionFromBlockchain = (
             NavigationService.navigate('Token', navigationParams);
         }
     }
+
+    await LoadingModal.close();
 };
 
 export const sendTransferTransaction = (

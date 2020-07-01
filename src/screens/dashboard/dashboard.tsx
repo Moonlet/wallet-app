@@ -122,14 +122,22 @@ const UnreadNotifCircle = () => (
     <View
         style={{
             position: 'absolute',
-            top: 0,
+            top: -BASE_DIMENSION / 2,
             left: BASE_DIMENSION + BASE_DIMENSION / 2,
-            width: normalize(14),
-            height: normalize(14),
-            borderRadius: normalize(14),
-            backgroundColor: themes.dark.colors.negative
+            backgroundColor: themes.dark.colors.appBackground,
+            padding: BASE_DIMENSION / 4
         }}
-    />
+    >
+        <View
+            style={{
+                flex: 1,
+                width: normalize(14),
+                height: normalize(14),
+                borderRadius: normalize(14),
+                backgroundColor: themes.dark.colors.negative
+            }}
+        />
+    </View>
 );
 
 const navigationOptions = ({ navigation, theme }: any) => ({

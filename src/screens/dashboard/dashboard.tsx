@@ -50,6 +50,7 @@ import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-
 import { HttpClient } from '../../core/utils/http-client';
 import CONFIG from '../../config';
 import { setHasUnseenNotifications, setNotifications } from '../../redux/notifications/actions';
+import { Notifications } from '../../core/messaging/notifications/notifications';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -70,6 +71,7 @@ export interface IReduxProps {
     hasUnseenNotifications: boolean;
     setHasUnseenNotifications: typeof setHasUnseenNotifications;
     setNotifications: typeof setNotifications;
+    deviceId: string;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -86,7 +88,8 @@ const mapStateToProps = (state: IReduxState) => {
         selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
         userCurrency: state.preferences.currency,
         chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
-        hasUnseenNotifications: state.notifications.hasUnseenNotifications
+        hasUnseenNotifications: state.notifications.hasUnseenNotifications,
+        deviceId: state.preferences.deviceId
     };
 };
 
@@ -225,6 +228,8 @@ export class DashboardScreenComponent extends React.Component<
             this.hasUnseenNotifications();
 
             this.fetchNotifications();
+
+            this.registerPushNotifToken();
         }
     }
 
@@ -274,6 +279,34 @@ export class DashboardScreenComponent extends React.Component<
             if (res?.result?.notifications) {
                 this.props.setNotifications(res.result.notifications);
             }
+        } catch {
+            //
+        }
+    }
+
+    // TODO: this is section is work in progress
+    private async registerPushNotifToken() {
+        try {
+            const http = new HttpClient(CONFIG.notificationCenter.addPushNotifToken);
+            await http.post('', {
+                walletPublicKey: this.props.walletId, // TODO: this needs to be updated
+                token: {
+                    deviceId: this.props.deviceId,
+                    type: 'fcm', // PushNotifTokenType.FCM,
+                    token: await Notifications.getToken()
+                },
+                // This is work in progress
+                accounts: [
+                    {
+                        walletId: this.props.walletId,
+                        address: 'address',
+                        tokens: [
+                            { contract: 'native_token_address' },
+                            { contract: 'zrc2_token_address' }
+                        ]
+                    }
+                ]
+            });
         } catch {
             //
         }

@@ -247,7 +247,7 @@ export class DashboardScreenComponent extends React.Component<
         try {
             const http = new HttpClient(CONFIG.notificationCenter.hasUnseenNotifs);
             const res = await http.post('', {
-                walletId: this.props.walletId
+                walletPublicKey: this.props.walletId
             });
 
             if (res?.result?.hasUnseenNotifications) {
@@ -266,9 +266,9 @@ export class DashboardScreenComponent extends React.Component<
 
     private async fetchNotifications() {
         try {
-            const http = new HttpClient(CONFIG.notificationCenter.getNotificationsUrl + '/1');
+            const http = new HttpClient(CONFIG.notificationCenter.getNotificationsUrl);
             const res = await http.post('', {
-                walletId: this.props.walletId
+                walletPublicKey: this.props.walletId
             });
 
             if (res?.result?.notifications) {

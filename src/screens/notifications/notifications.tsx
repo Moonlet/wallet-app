@@ -165,7 +165,7 @@ export class NotificationsComponent extends React.Component<
                 CONFIG.notificationCenter.getNotificationsUrl + `/${page + 1}`
             );
             const res = await http.post('', {
-                walletId: this.props.walletId
+                walletPublicKey: this.props.walletId
             });
 
             if (res?.result?.notifications && res.result.notifications.length > 0) {

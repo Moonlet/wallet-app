@@ -53,8 +53,8 @@ const fetchToken = async (
         //
     }
 
-    if (blockchainToken) {
-        if (blockchainToken.name === '') blockchainToken = undefined;
+    if (blockchainToken && blockchainToken.name === '') {
+        blockchainToken = undefined;
     }
 
     if (staticToken || blockchainToken) {

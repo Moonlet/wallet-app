@@ -49,7 +49,7 @@ const fetchToken = async (
             staticToken = await getTokenInfo[0].json();
         }
         blockchainToken = getTokenInfo[1];
-    } catch (err) {
+    } catch {
         //
     }
 

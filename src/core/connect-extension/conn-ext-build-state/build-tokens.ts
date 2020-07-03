@@ -10,9 +10,6 @@ const convertTokenToState = (
     staticToken: any,
     blockchainToken: any
 ): ITokenConfigState => {
-    if (blockchainToken) {
-        if (blockchainToken.name === '') blockchainToken = undefined;
-    }
     const decimals = blockchainToken ? blockchainToken.decimals : staticToken.decimals;
 
     return {
@@ -39,19 +36,25 @@ const fetchToken = async (
     let blockchainToken;
 
     try {
-        const fetchResponse = await fetch(
-            CONFIG.tokensUrl +
-                `${blockchain.toLocaleLowerCase()}/${tk.symbol.toLocaleLowerCase()}.json`
-        );
-
-        if (fetchResponse.status === 200) {
-            staticToken = await fetchResponse.json();
-            blockchainToken = await getBlockchain(blockchain)
+        const getTokenInfo = await Promise.all([
+            fetch(
+                CONFIG.tokensUrl +
+                    `${blockchain.toLocaleLowerCase()}/${tk.symbol.toLocaleLowerCase()}.json`
+            ),
+            getBlockchain(blockchain)
                 .getClient(chainId)
-                .tokens[tk.type].getTokenInfo(tk.contractAddress);
+                .tokens[tk.type].getTokenInfo(tk.contractAddress)
+        ]);
+        if (getTokenInfo[0].status === 200) {
+            staticToken = await getTokenInfo[0].json();
         }
-    } catch {
+        blockchainToken = getTokenInfo[1];
+    } catch (err) {
         //
+    }
+
+    if (blockchainToken) {
+        if (blockchainToken.name === '') blockchainToken = undefined;
     }
 
     if (staticToken || blockchainToken) {

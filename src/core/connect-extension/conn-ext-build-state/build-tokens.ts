@@ -4,6 +4,7 @@ import { ITokensConfigState, ITokenConfigState } from '../../../redux/tokens/sta
 import CONFIG from '../../../config';
 import { getBlockchain } from '../../blockchain/blockchain-factory';
 import { TokenScreenComponentType, GENERIC_TOKEN_ICON } from '../../blockchain/types/token';
+import { captureException as SentryCaptureException } from '@sentry/browser';
 
 const convertTokenToState = (
     tk: IExtStorage.IStorageToken,
@@ -49,8 +50,8 @@ const fetchToken = async (
             staticToken = await getTokenInfo[0].json();
         }
         blockchainToken = getTokenInfo[1];
-    } catch {
-        //
+    } catch (err) {
+        SentryCaptureException(new Error(JSON.stringify(err)));
     }
 
     if (blockchainToken && blockchainToken.name === '') {

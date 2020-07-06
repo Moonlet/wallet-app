@@ -39,15 +39,14 @@ export const getHasUnseenNotifications = () => async (
 
         if (res?.result?.hasUnseenNotifications) {
             setHasUnseenNotifications(res.result.hasUnseenNotifications);
-            return Promise.resolve(res.result.hasUnseenNotifications);
+            return res.result.hasUnseenNotifications;
         } else {
             setHasUnseenNotifications(false);
-            return Promise.resolve(false);
+            return false;
         }
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));
         setHasUnseenNotifications(false);
-        return Promise.resolve(false);
     }
 };
 

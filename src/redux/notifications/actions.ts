@@ -51,6 +51,9 @@ export const getHasUnseenNotifications = () => async (
     }
 };
 
+// TODO: When fetching multiple pages of notifications,
+//       maybe we should find a way to cache those notifications
+//       in order to minimise the calls to our api
 export const fetchNotifications = (page: number = 1) => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState

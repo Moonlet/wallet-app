@@ -47,10 +47,12 @@ import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { IconValues } from '../../components/icon/values';
 import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
-import { HttpClient } from '../../core/utils/http-client';
-import CONFIG from '../../config';
-import { setHasUnseenNotifications, setNotifications } from '../../redux/notifications/actions';
-import { Notifications } from '../../core/messaging/notifications/notifications';
+import {
+    setNotifications,
+    fetchNotifications,
+    registerPushNotifToken,
+    getHasUnseenNotifications
+} from '../../redux/notifications/actions';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -68,10 +70,11 @@ export interface IReduxProps {
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
     chainId: ChainIdType;
-    hasUnseenNotifications: boolean;
-    setHasUnseenNotifications: typeof setHasUnseenNotifications;
     setNotifications: typeof setNotifications;
     deviceId: string;
+    fetchNotifications: (page?: number) => Promise<any>;
+    registerPushNotifToken: () => Promise<any>;
+    getHasUnseenNotifications: () => Promise<boolean>;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -88,7 +91,6 @@ const mapStateToProps = (state: IReduxState) => {
         selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
         userCurrency: state.preferences.currency,
         chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
-        hasUnseenNotifications: state.notifications.hasUnseenNotifications,
         deviceId: state.preferences.deviceId
     };
 };
@@ -96,8 +98,10 @@ const mapStateToProps = (state: IReduxState) => {
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
-    setHasUnseenNotifications,
-    setNotifications
+    setNotifications,
+    fetchNotifications,
+    registerPushNotifToken,
+    getHasUnseenNotifications
 };
 
 interface IState {
@@ -225,11 +229,18 @@ export class DashboardScreenComponent extends React.Component<
         });
 
         if (isFeatureActive(RemoteFeature.NOTIF_CENTER)) {
-            this.hasUnseenNotifications();
+            try {
+                this.hasUnseenNotifications();
+                this.props.registerPushNotifToken();
 
-            this.fetchNotifications();
+                const notifications = await this.props.fetchNotifications();
 
-            this.registerPushNotifToken();
+                if (notifications) {
+                    this.props.setNotifications(notifications);
+                }
+            } catch (err) {
+                // already handled this in redux actions
+            }
         }
     }
 
@@ -249,67 +260,9 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     private async hasUnseenNotifications() {
-        try {
-            const http = new HttpClient(CONFIG.notificationCenter.hasUnseenNotifs);
-            const res = await http.post('', {
-                walletPublicKey: this.props.walletId
-            });
+        const hasUnseenNotifications = await this.props.getHasUnseenNotifications();
 
-            if (res?.result?.hasUnseenNotifications) {
-                this.props.setHasUnseenNotifications(res.result.hasUnseenNotifications);
-            } else {
-                this.props.setHasUnseenNotifications(false);
-            }
-        } catch {
-            this.props.setHasUnseenNotifications(false);
-        }
-
-        this.props.navigation.setParams({
-            hasUnseenNotifications: this.props.hasUnseenNotifications
-        });
-    }
-
-    private async fetchNotifications() {
-        try {
-            const http = new HttpClient(CONFIG.notificationCenter.getNotificationsUrl);
-            const res = await http.post('', {
-                walletPublicKey: this.props.walletId
-            });
-
-            if (res?.result?.notifications) {
-                this.props.setNotifications(res.result.notifications);
-            }
-        } catch {
-            //
-        }
-    }
-
-    // TODO: this is section is work in progress
-    private async registerPushNotifToken() {
-        try {
-            const http = new HttpClient(CONFIG.notificationCenter.addPushNotifToken);
-            await http.post('', {
-                walletPublicKey: this.props.walletId, // TODO: this needs to be updated
-                token: {
-                    deviceId: this.props.deviceId,
-                    type: 'fcm', // PushNotifTokenType.FCM,
-                    token: await Notifications.getToken()
-                },
-                // This is work in progress
-                accounts: [
-                    {
-                        walletId: this.props.walletId,
-                        address: 'address',
-                        tokens: [
-                            { contract: 'native_token_address' },
-                            { contract: 'zrc2_token_address' }
-                        ]
-                    }
-                ]
-            });
-        } catch {
-            //
-        }
+        this.props.navigation.setParams({ hasUnseenNotifications });
     }
 
     public setDashboardMenuBottomSheet = () => {
@@ -525,7 +478,7 @@ export class DashboardScreenComponent extends React.Component<
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
                 <TestnetBadge />
 
-                <NavigationEvents onWillFocus={payload => this.onFocus()} />
+                <NavigationEvents onWillFocus={() => this.onFocus()} />
 
                 {showCreateAccount && (
                     <AccountCreate

@@ -16,9 +16,7 @@ import { connect } from 'react-redux';
 import { Blockchain } from '../../core/blockchain/types';
 import { getSelectedBlockchain, getSelectedWallet } from '../../redux/wallets/selectors';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
-import { HttpClient } from '../../core/utils/http-client';
-import CONFIG from '../../config';
-import { markSeenNotification } from '../../redux/notifications/actions';
+import { markSeenNotification, fetchNotifications } from '../../redux/notifications/actions';
 import { NotificationType } from '../../core/messaging/types';
 import { updateTransactionFromBlockchain } from '../../redux/wallets/actions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
@@ -28,9 +26,10 @@ export interface IReduxProps {
     walletId: string;
     notifications: INotificationsState;
     selectedBlockchain: Blockchain;
-    markSeenNotification: typeof markSeenNotification;
+    markSeenNotification: (notificationId: string, blockchain?: string) => Promise<any>;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
     openTransactionRequest: typeof openTransactionRequest;
+    fetchNotifications: typeof fetchNotifications;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -48,7 +47,8 @@ export const navigationOptions = () => ({
 const mapDispatchToProps = {
     markSeenNotification,
     updateTransactionFromBlockchain,
-    openTransactionRequest
+    openTransactionRequest,
+    fetchNotifications
 };
 
 interface IState {
@@ -77,14 +77,16 @@ export class NotificationsComponent extends React.Component<
         };
     }
 
-    private async handleNotificationTap(notification: INotificationType, key: string) {
+    private async handleNotificationTap(notification: INotificationType, notificationId: string) {
+        const blockchain = notification.data.blockchain as Blockchain;
+
         await LoadingModal.open();
 
         switch (notification.data.action) {
             case NotificationType.TRANSACTION:
                 this.props.updateTransactionFromBlockchain(
                     notification.data.transactionHash,
-                    notification.data.blockchain as Blockchain,
+                    blockchain,
                     Number(notification.data.chainId), // TODO: maybe String is needed
                     Number(notification.data.broadcastedOnBlock),
                     true
@@ -103,10 +105,19 @@ export class NotificationsComponent extends React.Component<
                 break;
         }
 
-        await this.markSeen(notification.data.blockchain, key);
+        try {
+            const res = await this.props.markSeenNotification(notificationId, blockchain);
+            if (res) {
+                const { notifications } = this.state;
+                notifications[blockchain][notificationId].seen = true;
+                this.setState({ notifications });
+            }
+        } catch {
+            // already handled this in redux actions
+        }
     }
 
-    private renderRow(notification: INotificationType, key: string, index: number) {
+    private renderRow(notification: INotificationType, notificationId: string, index: number) {
         const { styles } = this.props;
 
         return (
@@ -114,7 +125,7 @@ export class NotificationsComponent extends React.Component<
             <TouchableHighlight
                 key={`notification-${index}`}
                 underlayColor={this.props.theme.colors.appBackground}
-                onPress={() => this.handleNotificationTap(notification, key)}
+                onPress={() => this.handleNotificationTap(notification, notificationId)}
             >
                 <View style={styles.rowContainer}>
                     <View style={styles.rowTextContainer}>
@@ -137,41 +148,16 @@ export class NotificationsComponent extends React.Component<
         );
     }
 
-    private async markSeen(blockchain: string, id: string) {
-        try {
-            const http = new HttpClient(CONFIG.notificationCenter.markSeenUrl);
-            const res = await http.post('', {
-                notifIds: [id]
-            });
-
-            if (res?.result?.notifications && res.result.notifications) {
-                this.props.markSeenNotification(blockchain, id);
-
-                const { notifications } = this.state;
-                notifications[blockchain][id].seen = true;
-                this.setState({ notifications });
-            }
-        } catch {
-            //
-        }
-    }
-
     private async fetchNotifications() {
-        const { page, notifications } = this.state;
+        const { page } = this.state;
 
         try {
             // Fetch next page
-            const http = new HttpClient(
-                CONFIG.notificationCenter.getNotificationsUrl + `/${page + 1}`
-            );
-            const res = await http.post('', {
-                walletPublicKey: this.props.walletId
-            });
+            const notifications: any = this.props.fetchNotifications(page + 1);
 
-            if (res?.result?.notifications && res.result.notifications.length > 0) {
-                let finalNotifications = notifications;
-
-                for (const notif of res.result.notifications) {
+            if (notifications && notifications.length > 0) {
+                let finalNotifications = this.state.notifications;
+                for (const notif of notifications) {
                     const notifData = {
                         walletId: notif.walletId,
                         title: notif.title,
@@ -195,7 +181,7 @@ export class NotificationsComponent extends React.Component<
                 });
             }
         } catch {
-            //
+            // already handled this in redux actions
         }
 
         this.setState({ showLoading: false });
@@ -244,8 +230,14 @@ export class NotificationsComponent extends React.Component<
                     }}
                 >
                     {notifsBySelectedBlockchain ? (
-                        Object.keys(notifsBySelectedBlockchain).map((key: string, index: number) =>
-                            this.renderRow(notifsBySelectedBlockchain[key], key, index)
+                        Object.keys(
+                            notifsBySelectedBlockchain
+                        ).map((notificationId: string, index: number) =>
+                            this.renderRow(
+                                notifsBySelectedBlockchain[notificationId],
+                                notificationId,
+                                index
+                            )
                         )
                     ) : (
                         // Empty State

@@ -2,8 +2,6 @@ import { IAppConfig } from './config-interface';
 import { firebaseConfig } from './firebase-web-release';
 
 const extSyncBaseUrl = 'https://fire.moonlet.io/functions/extensionSync';
-const walletApiBaseUrl = 'http://127.0.0.1:8080'; // TODO: update this after deploy
-const walletApiNotificationsUrl = walletApiBaseUrl + '/notifications';
 
 export const CONFIG_RELEASE: IAppConfig = {
     supportUrl: 'https://moonlet.uvdesk.com/en/customer/create-ticket',
@@ -25,12 +23,5 @@ export const CONFIG_RELEASE: IAppConfig = {
         deleteRequestUrl: extSyncBaseUrl + '/deleteRequest'
     },
     firebaseWebConfig: firebaseConfig,
-    notificationCenter: {
-        getNotificationsUrl: walletApiNotificationsUrl + '/',
-        markSeenUrl: walletApiNotificationsUrl + '/markseen',
-        getRegisteredAddresses: walletApiNotificationsUrl + '/get-registered-addresses',
-        sendPushNotifications: walletApiNotificationsUrl + '/send',
-        addPushNotifToken: walletApiNotificationsUrl + '/register',
-        hasUnseenNotifs: walletApiNotificationsUrl + '/unseen'
-    }
+    walletApiBaseUrl: 'http://127.0.0.1:8080' // TODO: update this after deploy
 };

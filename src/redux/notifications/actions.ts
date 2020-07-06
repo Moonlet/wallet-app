@@ -51,7 +51,7 @@ export const getHasUnseenNotifications = () => async (
     }
 };
 
-export const fetchNotifications = (page?: number) => async (
+export const fetchNotifications = (page: number = 1) => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
@@ -59,11 +59,7 @@ export const fetchNotifications = (page?: number) => async (
         const state = getState();
         const walletId = getSelectedWallet(state)?.id;
 
-        const url = page
-            ? CONFIG.walletApiBaseUrl + `/notifications/${page}`
-            : CONFIG.walletApiBaseUrl + '/notifications/';
-
-        const http = new HttpClient(url);
+        const http = new HttpClient(CONFIG.walletApiBaseUrl + `/notifications/${page}`);
         const response = await http.post('', {
             walletPublicKey: walletId
         });

@@ -39,6 +39,7 @@ const babelLoaderConfiguration = {
     include: [
         // path.resolve(appDirectory, 'index.web.js'),
         // path.resolve(appDirectory, 'src'),
+        path.resolve(appDirectory, 'node_modules/react-native'),
         path.resolve(appDirectory, 'node_modules/@react-navigation'),
         path.resolve(appDirectory, 'node_modules/react-native-dialog'),
         path.resolve(appDirectory, 'node_modules/react-native-animatable'),
@@ -58,7 +59,10 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/react-native-draggable-flatlist'),
         path.resolve(appDirectory, 'node_modules/react-native-fast-image'),
         path.resolve(appDirectory, 'node_modules/react-native-fab-pie'),
-        path.resolve(appDirectory, 'node_modules/react-native-keyboard-aware-scroll-view')
+        path.resolve(appDirectory, 'node_modules/react-native-keyboard-aware-scroll-view'),
+        path.resolve(appDirectory, 'node_modules/react-native-firebase'),
+        path.resolve(appDirectory, 'node_modules/react-native-ble-plx'),
+        path.resolve(appDirectory, 'node_modules/@ledgerhq')
         // path.resolve(appDirectory, 'node_modules/react-native-uncompiled')
     ],
     use: {
@@ -125,7 +129,10 @@ module.exports = (env, argv) => ({
                 test: /\.tsx?$/,
                 loader: 'ts-loader',
                 options: {
-                    allowTsInNodeModules: true
+                    allowTsInNodeModules: true,
+                    logInfoToStdOut: true,
+                    logLevel: 'info',
+                    onlyCompileBundledFiles: true
                 }
             }
         ]

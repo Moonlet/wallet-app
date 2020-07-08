@@ -5,6 +5,10 @@ import { captureException as SentryCaptureException } from '@sentry/react-native
 import { getSelectedWallet } from '../wallets/selectors';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
+import { PushNotifTokenType } from '../../core/messaging/types';
+import { IWalletState, IAccountState } from '../wallets/state';
+import { ChainIdType } from '../../core/blockchain/types';
+import { getTokenConfig } from '../tokens/static-selectors';
 
 export const SET_HAS_UNSEEN_NOTIFICATIONS = 'SET_HAS_UNSEEN_NOTIFICATIONS';
 export const SET_NOTIFICATIONS = 'SET_NOTIFICATIONS';
@@ -53,7 +57,7 @@ export const getHasUnseenNotifications = () => async (
 // TODO: When fetching multiple pages of notifications,
 //       maybe we should find a way to cache those notifications
 //       in order to minimise the calls to our api
-export const fetchNotifications = (page: number = 1) => async (
+export const fetchNotifications = (page?: number) => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
@@ -61,8 +65,10 @@ export const fetchNotifications = (page: number = 1) => async (
         const state = getState();
         const walletId = getSelectedWallet(state)?.id;
 
-        const http = new HttpClient(CONFIG.walletApiBaseUrl + `/notifications/${page}`);
-        const response = await http.post('', {
+        const http = new HttpClient(CONFIG.walletApiBaseUrl);
+        const url = page ? `/notifications/${page}` : '/notifications';
+
+        const response = await http.post(url, {
             walletPublicKey: walletId
         });
 
@@ -74,8 +80,31 @@ export const fetchNotifications = (page: number = 1) => async (
     }
 };
 
-// TODO: this is section is work in progress
 export const registerPushNotifToken = () => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    try {
+        const state = getState();
+
+        const http = new HttpClient(CONFIG.walletApiBaseUrl);
+        const response = await http.post('/notifications/register-push-notification-token', {
+            deviceId: state.preferences.deviceId,
+            token: {
+                type: PushNotifTokenType.FCM,
+                token: await Notifications.getToken()
+            }
+        });
+
+        if (response?.result?.pushNotifToken) {
+            return response.result.pushNotifToken;
+        }
+    } catch (err) {
+        SentryCaptureException(new Error(JSON.stringify(err)));
+    }
+};
+
+export const registerNotificationSettings = () => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
@@ -83,30 +112,43 @@ export const registerPushNotifToken = () => async (
         const state = getState();
         const walletId = getSelectedWallet(state)?.id;
 
-        const http = new HttpClient(CONFIG.walletApiBaseUrl + '/notifications/register');
-        const response = await http.post('', {
-            walletPublicKey: walletId, // TODO: this needs to be updated
-            token: {
-                deviceId: state.preferences.deviceId,
-                type: 'fcm', // PushNotifTokenType.FCM,
-                token: await Notifications.getToken()
-            },
-            // This is work in progress
-            accounts: [
-                {
-                    walletId,
-                    address: 'address',
-                    tokens: [
-                        { contract: 'native_token_address' },
-                        { contract: 'zrc2_token_address' }
-                    ]
-                }
-            ]
-        });
+        const myAccounts = [];
 
-        if (response?.result?.pushNotifToken) {
-            return response.result.pushNotifToken;
-        }
+        await Promise.all(
+            Object.values(state.wallets).map((wallet: IWalletState) => {
+                wallet.accounts.map(async (account: IAccountState) => {
+                    const myTokens = [];
+
+                    await Promise.all(
+                        Object.keys(account.tokens).map((chainId: ChainIdType) => {
+                            // Chain Id layer
+                            Object.keys(account.tokens[chainId]).map((symbol: string) => {
+                                // Symbol layer
+                                const tokenConfig = getTokenConfig(account.blockchain, symbol);
+
+                                myTokens.push({
+                                    symbol,
+                                    contract: tokenConfig?.contractAddress
+                                });
+                            });
+                        })
+                    );
+
+                    myAccounts.push({
+                        walletId: wallet.id,
+                        address: account.address,
+                        tokens: myTokens
+                    });
+                });
+            })
+        );
+
+        const http = new HttpClient(CONFIG.walletApiBaseUrl);
+        await http.post('/notifications/register-notification-settings', {
+            walletPublicKey: walletId,
+            deviceId: state.preferences.deviceId,
+            accounts: myAccounts
+        });
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));
     }

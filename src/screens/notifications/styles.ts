@@ -38,9 +38,9 @@ export default (theme: ITheme) =>
             fontWeight: '600'
         },
         titleRead: {
-            fontSize: normalizeFontAndLineHeight(17),
-            lineHeight: normalizeFontAndLineHeight(22),
-            color: theme.colors.textSecondary
+            fontSize: normalizeFontAndLineHeight(16),
+            lineHeight: normalizeFontAndLineHeight(21),
+            color: theme.colors.textTertiary
         },
         subtitleUnread: {
             fontSize: normalizeFontAndLineHeight(13),

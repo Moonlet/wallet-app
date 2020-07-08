@@ -26,3 +26,8 @@ export interface ISilentMessage {
     type: SilentMessageType;
     data: any;
 }
+
+export enum PushNotifTokenType {
+    FCM = 'fcm',
+    APN = 'apn'
+}

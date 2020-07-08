@@ -51,7 +51,8 @@ import {
     setNotifications,
     fetchNotifications,
     registerPushNotifToken,
-    getHasUnseenNotifications
+    getHasUnseenNotifications,
+    registerNotificationSettings
 } from '../../redux/notifications/actions';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
@@ -74,6 +75,7 @@ export interface IReduxProps {
     deviceId: string;
     fetchNotifications: (page?: number) => Promise<any>;
     registerPushNotifToken: () => Promise<any>;
+    registerNotificationSettings: () => Promise<any>;
     getHasUnseenNotifications: () => Promise<boolean>;
 }
 
@@ -101,7 +103,8 @@ const mapDispatchToProps = {
     setNotifications,
     fetchNotifications,
     registerPushNotifToken,
-    getHasUnseenNotifications
+    getHasUnseenNotifications,
+    registerNotificationSettings
 };
 
 interface IState {
@@ -232,6 +235,7 @@ export class DashboardScreenComponent extends React.Component<
             try {
                 this.hasUnseenNotifications();
                 this.props.registerPushNotifToken();
+                this.props.registerNotificationSettings();
 
                 const notifications = await this.props.fetchNotifications();
 

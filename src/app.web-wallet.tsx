@@ -9,8 +9,8 @@ import { getRemoteConfigFeatures } from './core/utils/remote-feature-config';
 import { subscribeExchangeRates } from './core/utils/exchange-rates';
 import { updateExchangeRates } from './redux/market/actions';
 import { IExchangeRates } from './redux/market/state';
-import DeviceInfo from 'react-native-device-info';
-import { setDeviceId } from './redux/preferences/actions';
+// import DeviceInfo from 'react-native-device-info';
+// import { setDeviceId } from './redux/preferences/actions';
 import { WebWalletNavigation } from './navigation/navigation.web-wallet';
 import { createAppContainer } from 'react-navigation';
 
@@ -58,7 +58,7 @@ export default class App extends React.Component<{}, IState> {
     };
 
     public componentDidMount() {
-        store.dispatch(setDeviceId(DeviceInfo.getUniqueId()));
+        // store.dispatch(setDeviceId(DeviceInfo.getUniqueId()));
 
         setTimeout(
             () => this.setState({ splashAnimationDone: true }, () => this.updateAppReady()),

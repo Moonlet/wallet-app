@@ -4,17 +4,12 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require('copy-webpack-plugin');
-const WriteFilePlugin = require('write-file-webpack-plugin');
-const WebpackExtensionManifestPlugin = require('webpack-extension-manifest-plugin');
 const MomentLocalesPlugin = require('moment-locales-webpack-plugin');
 
 const pkg = require('../package.json');
 const appDirectory = path.resolve(__dirname, '../');
-const manifest = require('./manifest');
 
 const BUILD = process.env.BUILD || 0;
-const BROWSER = process.env.BROWSER || 'chrome';
 const TARGET = process.env.TARGET || 'release';
 const VERSION = `${pkg.version}.${BUILD}`;
 
@@ -44,6 +39,7 @@ const babelLoaderConfiguration = {
     include: [
         // path.resolve(appDirectory, 'index.web.js'),
         // path.resolve(appDirectory, 'src'),
+        path.resolve(appDirectory, 'node_modules/react-native'),
         path.resolve(appDirectory, 'node_modules/@react-navigation'),
         path.resolve(appDirectory, 'node_modules/react-native-dialog'),
         path.resolve(appDirectory, 'node_modules/react-native-animatable'),
@@ -63,7 +59,10 @@ const babelLoaderConfiguration = {
         path.resolve(appDirectory, 'node_modules/react-native-draggable-flatlist'),
         path.resolve(appDirectory, 'node_modules/react-native-fast-image'),
         path.resolve(appDirectory, 'node_modules/react-native-fab-pie'),
-        path.resolve(appDirectory, 'node_modules/react-native-keyboard-aware-scroll-view')
+        path.resolve(appDirectory, 'node_modules/react-native-keyboard-aware-scroll-view'),
+        path.resolve(appDirectory, 'node_modules/react-native-firebase'),
+        path.resolve(appDirectory, 'node_modules/react-native-ble-plx'),
+        path.resolve(appDirectory, 'node_modules/@ledgerhq')
         // path.resolve(appDirectory, 'node_modules/react-native-uncompiled')
     ],
     use: {
@@ -94,14 +93,13 @@ module.exports = (env, argv) => ({
         // load any web API polyfills
         // path.resolve(appDirectory, 'polyfills-web.js'),
         // your web-specific entry file
-        'bundle.browser-action': path.resolve(appDirectory, 'index.extension.js'),
-        'bundle.background': path.resolve(appDirectory, 'extension/background/background')
+        'bundle.app': path.resolve(appDirectory, 'index.web-wallet.js')
     },
 
     plugins: [
         new HtmlWebpackPlugin({
-            chunks: ['bundle.browser-action'],
-            template: './extension/browser-action/index.html',
+            chunks: ['bundle.app'],
+            template: './web-wallet/index.html',
             filename: 'index.html'
         }),
         new webpack.DefinePlugin({
@@ -110,17 +108,6 @@ module.exports = (env, argv) => ({
             'process.env.TARGET': `"${TARGET}"`,
             'process.env.VERSION': `"${VERSION}"`
         }),
-        new CopyPlugin([
-            { from: './resources', to: './resources' },
-            { from: './extension/icons', to: './icons' }
-        ]),
-        new WebpackExtensionManifestPlugin({
-            config: {
-                base: manifest[TARGET][BROWSER],
-                extend: { version: VERSION }
-            }
-        }),
-        new WriteFilePlugin(),
         new MomentLocalesPlugin({
             localesToKeep: ['en']
         })
@@ -129,7 +116,7 @@ module.exports = (env, argv) => ({
     // configures where the build ends up
     output: {
         filename: '[name].js',
-        path: path.resolve(appDirectory, `extension/build/${TARGET}/${BROWSER}`)
+        path: path.resolve(appDirectory, `web-wallet/build/${TARGET}`)
     },
 
     // ...the rest of your config
@@ -140,7 +127,13 @@ module.exports = (env, argv) => ({
             imageLoaderConfiguration,
             {
                 test: /\.tsx?$/,
-                loader: 'ts-loader'
+                loader: 'ts-loader',
+                options: {
+                    allowTsInNodeModules: true,
+                    logInfoToStdOut: true,
+                    logLevel: 'info',
+                    onlyCompileBundledFiles: true
+                }
             }
         ]
     },
@@ -161,13 +154,13 @@ module.exports = (env, argv) => ({
         // module implementations should be written in files using the extension
         // `.web.js`.
         extensions: [
-            '.extension.js',
+            '.web-wallet.js',
             '.web.js',
             '.js',
-            '.extension.ts',
+            '.web-wallet.ts',
             '.web.ts',
             '.ts',
-            '.extension.tsx',
+            '.web-wallet.tsx',
             '.web.tsx',
             '.tsx'
         ]
@@ -175,6 +168,6 @@ module.exports = (env, argv) => ({
 
     devtool: 'source-map',
     devServer: {
-        hot: false
+        hot: true
     }
 });

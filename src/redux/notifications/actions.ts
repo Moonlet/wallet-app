@@ -36,8 +36,8 @@ export const getHasUnseenNotifications = () => async (
         const state = getState();
         const walletId = getSelectedWallet(state)?.id;
 
-        const http = new HttpClient(CONFIG.walletApiBaseUrl + '/notifications/unseen');
-        const res = await http.post('', {
+        const http = new HttpClient(CONFIG.walletApiBaseUrl);
+        const res = await http.post('/notifications/unseen', {
             walletPublicKey: walletId
         });
 
@@ -159,8 +159,8 @@ export const markSeenNotification = (notificationId: string, blockchain?: string
     getState: () => IReduxState
 ) => {
     try {
-        const http = new HttpClient(CONFIG.walletApiBaseUrl + '/notifications/markseen');
-        const response = await http.post('', {
+        const http = new HttpClient(CONFIG.walletApiBaseUrl);
+        const response = await http.post('/notifications/mark-seen', {
             notifIds: [notificationId]
         });
 

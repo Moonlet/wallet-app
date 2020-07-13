@@ -1,9 +1,9 @@
 import { INotificationsState } from './state';
 import { IAction } from '../types';
-import { SET_HAS_UNSEEN_NOTIFICATIONS, SET_NOTIFICATIONS, MARK_SEEN } from './actions';
+import { SET_UNSEEN_NOTIFICATIONS, SET_NOTIFICATIONS, MARK_SEEN } from './actions';
 
 const initialState: INotificationsState = {
-    hasUnseenNotifications: false,
+    unseenNotifications: 0,
     notifications: {}
 };
 
@@ -12,10 +12,10 @@ export default (
     action: IAction
 ): INotificationsState => {
     switch (action.type) {
-        case SET_HAS_UNSEEN_NOTIFICATIONS:
+        case SET_UNSEEN_NOTIFICATIONS:
             return {
                 ...state,
-                hasUnseenNotifications: action.data.hasUnseenNotifications
+                unseenNotifications: action.data.unseenNotifications
             };
 
         case SET_NOTIFICATIONS: {

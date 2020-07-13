@@ -28,6 +28,6 @@ export interface ISilentMessage {
 }
 
 export enum PushNotifTokenType {
-    FCM = 'fcm',
-    APN = 'apn'
+    FCM = 'FCM',
+    APN = 'APN'
 }

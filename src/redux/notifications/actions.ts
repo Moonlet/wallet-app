@@ -10,14 +10,14 @@ import { IWalletState, IAccountState } from '../wallets/state';
 import { ChainIdType } from '../../core/blockchain/types';
 import { getTokenConfig } from '../tokens/static-selectors';
 
-export const SET_HAS_UNSEEN_NOTIFICATIONS = 'SET_HAS_UNSEEN_NOTIFICATIONS';
+export const SET_UNSEEN_NOTIFICATIONS = 'SET_UNSEEN_NOTIFICATIONS';
 export const SET_NOTIFICATIONS = 'SET_NOTIFICATIONS';
 export const MARK_SEEN = 'MARK_SEEN';
 
-const setHasUnseenNotifications = (hasUnseenNotifications: boolean) => {
+const setUnseenNotifications = (unseenNotifications: number) => {
     return {
-        type: SET_HAS_UNSEEN_NOTIFICATIONS,
-        data: { hasUnseenNotifications }
+        type: SET_UNSEEN_NOTIFICATIONS,
+        data: { unseenNotifications }
     };
 };
 
@@ -28,10 +28,10 @@ export const setNotifications = (notifications: any) => {
     };
 };
 
-export const getHasUnseenNotifications = () => async (
+export const getUnseenNotifications = () => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
-) => {
+): Promise<number> => {
     try {
         const state = getState();
         const walletId = getSelectedWallet(state)?.id;
@@ -41,16 +41,16 @@ export const getHasUnseenNotifications = () => async (
             walletPublicKey: walletId
         });
 
-        if (res?.result?.hasUnseenNotifications) {
-            setHasUnseenNotifications(res.result.hasUnseenNotifications);
-            return res.result.hasUnseenNotifications;
+        if (res?.result?.unseenNotifications) {
+            setUnseenNotifications(res.result.unseenNotifications);
+            return res.result.unseenNotifications;
         } else {
-            setHasUnseenNotifications(false);
-            return false;
+            setUnseenNotifications(0);
+            return 0;
         }
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));
-        setHasUnseenNotifications(false);
+        setUnseenNotifications(0);
     }
 };
 
@@ -128,14 +128,14 @@ export const registerNotificationSettings = () => async (
 
                                 myTokens.push({
                                     symbol,
-                                    contract: tokenConfig?.contractAddress
+                                    contractAddress: tokenConfig?.contractAddress
                                 });
                             });
                         })
                     );
 
                     myAccounts.push({
-                        walletId: wallet.id,
+                        blockchain: account.blockchain,
                         address: account.address,
                         tokens: myTokens
                     });

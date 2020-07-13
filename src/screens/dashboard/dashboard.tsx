@@ -51,7 +51,7 @@ import {
     setNotifications,
     fetchNotifications,
     registerPushNotifToken,
-    getHasUnseenNotifications,
+    getUnseenNotifications,
     registerNotificationSettings
 } from '../../redux/notifications/actions';
 
@@ -76,7 +76,7 @@ export interface IReduxProps {
     fetchNotifications: (page?: number) => Promise<any>;
     registerPushNotifToken: () => Promise<any>;
     registerNotificationSettings: () => Promise<any>;
-    getHasUnseenNotifications: () => Promise<boolean>;
+    getUnseenNotifications: () => Promise<number>;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -103,7 +103,7 @@ const mapDispatchToProps = {
     setNotifications,
     fetchNotifications,
     registerPushNotifToken,
-    getHasUnseenNotifications,
+    getUnseenNotifications,
     registerNotificationSettings
 };
 
@@ -175,7 +175,7 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                         style={{ color: themes[theme].colors.accent }}
                     />
                     {isFeatureActive(RemoteFeature.NOTIF_CENTER) &&
-                        navigation.state.params?.hasUnseenNotifications && <UnreadNotifCircle />}
+                        navigation.state.params?.unseenNotifications > 0 && <UnreadNotifCircle />}
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -233,7 +233,7 @@ export class DashboardScreenComponent extends React.Component<
 
         if (isFeatureActive(RemoteFeature.NOTIF_CENTER)) {
             try {
-                this.hasUnseenNotifications();
+                this.getUnseenNotifications();
                 this.props.registerPushNotifToken();
                 this.props.registerNotificationSettings();
 
@@ -259,14 +259,14 @@ export class DashboardScreenComponent extends React.Component<
             this.props.walletId !== prevProps.walletId &&
             isFeatureActive(RemoteFeature.NOTIF_CENTER)
         ) {
-            this.hasUnseenNotifications();
+            this.getUnseenNotifications();
         }
     }
 
-    private async hasUnseenNotifications() {
-        const hasUnseenNotifications = await this.props.getHasUnseenNotifications();
+    private async getUnseenNotifications() {
+        const unseenNotifications = await this.props.getUnseenNotifications();
 
-        this.props.navigation.setParams({ hasUnseenNotifications });
+        this.props.navigation.setParams({ unseenNotifications });
     }
 
     public setDashboardMenuBottomSheet = () => {

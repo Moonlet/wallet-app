@@ -24,7 +24,7 @@ export interface INotificationType {
 }
 
 export interface INotificationsState {
-    hasUnseenNotifications: boolean;
+    unseenNotifications: number;
     notifications: {
         [blockchain: string]: {
             [notifId: string]: INotificationType;

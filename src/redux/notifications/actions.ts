@@ -38,7 +38,7 @@ export const getUnseenNotifications = () => async (
 
         const http = new HttpClient(CONFIG.walletApiBaseUrl);
         const res = await http.post('/notifications/unseen', {
-            walletPublicKey: walletId
+            walletPublicKeys: [walletId]
         });
 
         if (res?.result?.unseenNotifications) {

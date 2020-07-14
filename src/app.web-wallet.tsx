@@ -12,9 +12,6 @@ import { IExchangeRates } from './redux/market/state';
 // import DeviceInfo from 'react-native-device-info';
 // import { setDeviceId } from './redux/preferences/actions';
 import { WebWalletNavigation } from './navigation/navigation.web-wallet';
-import { createAppContainer } from 'react-navigation';
-
-const AppContainer = createAppContainer(WebWalletNavigation);
 
 interface IState {
     appReady: boolean;
@@ -77,7 +74,7 @@ export default class App extends React.Component<{}, IState> {
             return (
                 <Provider store={store}>
                     <ThemeContext.Provider value={darkTheme}>
-                        <AppContainer theme="dark" />
+                        <WebWalletNavigation theme={darkTheme} />
                     </ThemeContext.Provider>
                 </Provider>
             );

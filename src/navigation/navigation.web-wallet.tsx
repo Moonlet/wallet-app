@@ -1,6 +1,8 @@
-import { createStackNavigator } from 'react-navigation-stack';
-
+import React from 'react';
 import { DashboardScreen } from '../screens/dashboard/dashboard.web-wallet';
+import { ConnectWebWalletScreen } from '../screens/connect-web/connect-web-wallet';
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 import { ITheme } from '../core/theme/itheme';
 import { darkTheme } from '../styles/themes/dark-theme';
 import { lightTheme } from '../styles/themes/light-theme';
@@ -11,15 +13,26 @@ export const themes: { dark: ITheme; light: ITheme } = {
     [Theme.light]: lightTheme
 };
 
+const defaultNavigationOptions = () => ({
+    gestureEnabled: false,
+    headerShown: false
+});
+
+const Stack = createStackNavigator();
 // Web Wallet navigation stack
-export const WebWalletNavigation = createStackNavigator(
-    {
-        Dashboard: {
-            screen: DashboardScreen
-        }
-    },
-    {
-        initialRouteName: 'Dashboard',
-        headerMode: 'none'
-    }
+export const WebWalletNavigation = ({ theme }) => (
+    <NavigationContainer theme={theme}>
+        <Stack.Navigator initialRouteName={'ConnectWebWalletScreen'}>
+            <Stack.Screen
+                options={defaultNavigationOptions}
+                component={DashboardScreen}
+                name={'DashboardScreen'}
+            />
+            <Stack.Screen
+                options={defaultNavigationOptions}
+                component={ConnectWebWalletScreen}
+                name={'ConnectWebWalletScreen'}
+            />
+        </Stack.Navigator>
+    </NavigationContainer>
 );

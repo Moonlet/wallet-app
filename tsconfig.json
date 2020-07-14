@@ -15,7 +15,7 @@
         "resolveJsonModule": true,
         "noUnusedLocals": true,
         "typeRoots": ["node_modules/@types"],
-        "types": ["jest"],
+        "types": ["jest", "node"],
         "skipLibCheck": true,
         "noImplicitAny": false
     },

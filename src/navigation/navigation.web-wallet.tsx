@@ -1,7 +1,7 @@
 import React from 'react';
-import { DashboardScreen } from '../screens/dashboard/dashboard.web-wallet';
 import { ConnectWebWalletScreen } from '../screens/connect-web/connect-web-wallet';
 import { createStackNavigator } from '@react-navigation/stack';
+import { DashboardScreen } from '../screens/dashboard/dashboard.web-wallet';
 import { NavigationContainer } from '@react-navigation/native';
 import { ITheme } from '../core/theme/itheme';
 import { darkTheme } from '../styles/themes/dark-theme';

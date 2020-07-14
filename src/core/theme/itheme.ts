@@ -36,5 +36,11 @@ export interface ITheme {
         labelUndelegate: string;
         labelRedelegate: string;
         labelReward: string;
+
+        webAppBackground: string;
+        rankCard: string;
+        separator: string;
+        webGradientOuter: string;
+        webGradientInner: string;
     };
 }

@@ -38,6 +38,12 @@ export const darkTheme: ITheme = {
 
         labelUndelegate: COLORS.LIGHT_RED,
         labelRedelegate: COLORS.HOT_RED,
-        labelReward: COLORS.GREEN
+        labelReward: COLORS.GREEN,
+
+        webAppBackground: COLORS.BLACK_RUSSIAN,
+        rankCard: COLORS.SHARK_GRAY,
+        separator: COLORS.FIREFLY,
+        webGradientOuter: COLORS.BLUE_CHARCOAL,
+        webGradientInner: COLORS.DAINTREE
     }
 };

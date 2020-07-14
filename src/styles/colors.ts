@@ -20,5 +20,12 @@ export const COLORS = {
     YELLOW: '#F2C94C',
 
     // Validators
-    GREEN: '#00E676'
+    GREEN: '#00E676',
+
+    // Web
+    BLACK_RUSSIAN: '#212122',
+    BLACK_PEARL: '#141618',
+    FIREFLY: '#0B1E2F',
+    BLUE_CHARCOAL: '#011425',
+    DAINTREE: '#02253D'
 };

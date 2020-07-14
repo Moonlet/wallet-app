@@ -136,7 +136,7 @@ export const registerNotificationSettings = () => async (
 
                     myAccounts.push({
                         blockchain: account.blockchain,
-                        address: account.address,
+                        address: account.address.toLocaleLowerCase(),
                         tokens: myTokens
                     });
                 });

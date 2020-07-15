@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableHighlight, ScrollView, Image } from 'react-native';
+import { View, TouchableHighlight, ScrollView, Image, RefreshControl } from 'react-native';
 import { Text } from '../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -29,7 +29,7 @@ export interface IReduxProps {
     markSeenNotification: (notificationId: string, blockchain?: string) => Promise<any>;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
     openTransactionRequest: typeof openTransactionRequest;
-    fetchNotifications: typeof fetchNotifications;
+    fetchNotifications: (page?: number) => Promise<any>;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -56,6 +56,7 @@ interface IState {
     showLoading: boolean;
     page: number;
     hideBottomNav: boolean;
+    isRefreshing: boolean;
 }
 
 export class NotificationsComponent extends React.Component<
@@ -73,7 +74,8 @@ export class NotificationsComponent extends React.Component<
             notifications: props.notifications,
             showLoading: false,
             page: 1,
-            hideBottomNav: false
+            hideBottomNav: false,
+            isRefreshing: false
         };
     }
 
@@ -153,7 +155,7 @@ export class NotificationsComponent extends React.Component<
 
         try {
             // Fetch next page
-            const notifications: any = this.props.fetchNotifications(page + 1);
+            const notifications: any = await this.props.fetchNotifications(page + 1);
 
             if (notifications && notifications.length > 0) {
                 let finalNotifications = this.state.notifications;
@@ -192,6 +194,38 @@ export class NotificationsComponent extends React.Component<
         return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
     }
 
+    private async onRefresh() {
+        this.setState({ isRefreshing: true });
+
+        const notifications = await this.props.fetchNotifications();
+
+        if (notifications) {
+            const finalNotifications = {};
+
+            for (const notif of notifications) {
+                const notifData = {
+                    walletId: notif.walletId,
+                    title: notif.title,
+                    body: notif.body,
+                    seen: notif.seen,
+                    data: notif.data
+                };
+
+                Object.assign(finalNotifications, {
+                    ...finalNotifications,
+                    [notif.data.blockchain]: {
+                        ...(finalNotifications && finalNotifications[notif.data.blockchain]),
+                        [notif._id]: notifData
+                    }
+                });
+            }
+
+            this.setState({ notifications: finalNotifications as INotificationsState });
+        }
+
+        this.setState({ isRefreshing: false });
+    }
+
     public render() {
         const { styles } = this.props;
         const { notifications } = this.state;
@@ -228,6 +262,12 @@ export class NotificationsComponent extends React.Component<
                             this.setState({ hideBottomNav: false }); // scroll on top
                         }
                     }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={this.state.isRefreshing}
+                            onRefresh={() => this.onRefresh()}
+                        />
+                    }
                 >
                     {notifsBySelectedBlockchain ? (
                         Object.keys(

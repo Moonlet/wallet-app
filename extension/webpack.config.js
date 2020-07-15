@@ -95,7 +95,8 @@ module.exports = (env, argv) => ({
         // path.resolve(appDirectory, 'polyfills-web.js'),
         // your web-specific entry file
         'bundle.browser-action': path.resolve(appDirectory, 'index.extension.js'),
-        'bundle.background': path.resolve(appDirectory, 'extension/background/background')
+        'bundle.background': path.resolve(appDirectory, 'extension/background/background'),
+        'bundle.providers.cs': path.resolve(appDirectory, 'extension/content-scripts/providers')
     },
 
     plugins: [

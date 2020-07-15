@@ -13,6 +13,14 @@ module.exports = {
     background: {
         scripts: ['bundle.background.js']
     },
+    content_scripts: [
+        {
+            matches: ['https://api.moonlet.io/*'],
+            run_at: 'document_start',
+            js: ['bundle.providers.cs.js'],
+            all_frames: true
+        }
+    ],
     content_security_policy: "script-src 'self'; object-src 'self'",
     icons: {
         16: 'icons/moonlet-16px.png',

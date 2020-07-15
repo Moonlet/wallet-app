@@ -119,6 +119,7 @@
         "react-native-web": "^0.11.7",
         "react-native-web-linear-gradient": "^1.0.5",
         "react-native-web-lottie": "^1.2.0",
+        "react-native-web-svg-charts": "0.0.9",
         "react-native-webview": "^9.1.3",
         "react-navigation": "^4.0.10",
         "react-navigation-stack": "^1.9.3",

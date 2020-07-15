@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import Icon from '../../../components/icon/icon';
-import { IconValues } from '../../../components/icon/values';
+import Icon from '../../icon/icon';
+import { IconValues } from '../../icon/values';
 import { normalize } from '../../../styles/dimensions';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../core/theme/with-theme';
+
 export const TopBarComponent = (props: IThemeProps<ReturnType<typeof stylesProvider>>) => {
     const styles = props.styles;
     return (
@@ -25,7 +26,10 @@ export const TopBarComponent = (props: IThemeProps<ReturnType<typeof stylesProvi
                 <Text style={styles.logoText}>ONLET</Text>
             </View>
             <View style={styles.headerCenter}>
-                <Icon name={IconValues.BI23_LABS} size={normalize(6)} style={styles.icon} />
+                <Image
+                    style={styles.validatorIcon}
+                    source={require('../../../assets/images/png/bi23.png')}
+                />
                 <Text style={styles.headerCenterText}>Bi23 Labs</Text>
             </View>
             <View style={styles.headerRight}>

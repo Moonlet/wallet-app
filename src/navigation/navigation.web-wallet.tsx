@@ -2,6 +2,7 @@ import React from 'react';
 import { ConnectWebWalletScreen } from '../screens/connect-web/connect-web-wallet';
 import { createStackNavigator } from '@react-navigation/stack';
 import { DashboardScreen } from '../screens/dashboard/dashboard.web-wallet';
+import { ChartDataWebScreen } from '../screens/chart-data-web/chart-data-web';
 import { NavigationContainer } from '@react-navigation/native';
 import { ITheme } from '../core/theme/itheme';
 import { darkTheme } from '../styles/themes/dark-theme';
@@ -32,6 +33,11 @@ export const WebWalletNavigation = ({ theme }) => (
                 options={defaultNavigationOptions}
                 component={ConnectWebWalletScreen}
                 name={'ConnectWebWalletScreen'}
+            />
+            <Stack.Screen
+                options={defaultNavigationOptions}
+                component={ChartDataWebScreen}
+                name={'ChartDataWebScreen'}
             />
         </Stack.Navigator>
     </NavigationContainer>

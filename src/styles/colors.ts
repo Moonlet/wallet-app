@@ -27,5 +27,6 @@ export const COLORS = {
     BLACK_PEARL: '#141618',
     FIREFLY: '#0B1E2F',
     BLUE_CHARCOAL: '#011425',
-    DAINTREE: '#02253D'
+    DAINTREE: '#02253D',
+    MISCKHA: '#E6E4EA'
 };

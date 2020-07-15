@@ -38,9 +38,10 @@ export interface ITheme {
         labelReward: string;
 
         webAppBackground: string;
-        rankCard: string;
+        topStatsCard: string;
         separator: string;
         webGradientOuter: string;
         webGradientInner: string;
+        loadingText: string;
     };
 }

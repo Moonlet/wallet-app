@@ -1,10 +1,9 @@
 import { StyleSheet } from 'react-native';
 import {
-    // SCREEN_HEIGHT,
-    // BASE_DIMENSION,
-    // normalize,
     normalizeFontAndLineHeight,
-    LETTER_SPACING
+    LETTER_SPACING,
+    MARGIN_DIMENSION,
+    BASE_DIMENSION
 } from '../../styles/dimensions';
 import { ITheme } from '../../core/theme/itheme';
 
@@ -16,7 +15,7 @@ export default (theme: ITheme) =>
         },
         topContainer: {
             flexDirection: 'column',
-            marginTop: 20
+            marginTop: BASE_DIMENSION * 0.7
         },
         topText: {
             fontSize: normalizeFontAndLineHeight(15),
@@ -38,12 +37,12 @@ export default (theme: ITheme) =>
             textAlign: 'center'
         },
         connectLedgerContainer: {
-            marginTop: 14,
-            marginLeft: '16.84%',
-            marginRight: '16.84%',
-            marginBottom: 25,
+            marginTop: BASE_DIMENSION * 0.5,
+            marginLeft: MARGIN_DIMENSION,
+            marginRight: MARGIN_DIMENSION,
+            marginBottom: BASE_DIMENSION,
             backgroundColor: theme.colors.appBackground,
-            borderRadius: 6,
+            borderRadius: BASE_DIMENSION * 0.2,
             alignItems: 'center',
             justifyContent: 'center',
             flex: 1
@@ -53,16 +52,25 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             justifyContent: 'center',
             backgroundColor: theme.colors.accent,
-            borderRadius: 8,
-            height: 50,
-            marginHorizontal: '27.175%'
+            borderRadius: BASE_DIMENSION * 0.2,
+            height: BASE_DIMENSION * 2,
+            marginHorizontal: MARGIN_DIMENSION
         },
         connectLedgerText: {
-            fontStyle: 'normal',
             fontWeight: 'bold',
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             color: theme.colors.appBackground,
             marginLeft: 6
+        },
+        loadingText: {
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
+            letterSpacing: -0.41,
+            color: theme.colors.loadingText,
+            opacity: 0.67
+        },
+        touchableConnect: {
+            width: '100%'
         }
     });

@@ -1,16 +1,17 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
+import { BASE_DIMENSION, MARGIN_DIMENSION } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: theme.colors.rankCard,
-            marginRight: '16.84%',
-            marginLeft: '16.84%',
-            marginTop: 37,
-            height: 67,
+            backgroundColor: theme.colors.topStatsCard,
+            marginRight: MARGIN_DIMENSION,
+            marginLeft: MARGIN_DIMENSION,
+            marginTop: BASE_DIMENSION * 1.5,
+            height: BASE_DIMENSION * 2.5,
             flexDirection: 'row',
-            borderRadius: 6
+            borderRadius: BASE_DIMENSION * 0.2
         },
         column: {
             flex: 1,
@@ -19,15 +20,12 @@ export default (theme: ITheme) =>
         },
         title: {
             fontSize: 16,
-            fontWeight: 'normal',
-            fontStyle: 'normal',
             lineHeight: 21,
             color: theme.colors.textSecondary
         },
         value: {
             fontSize: 22,
             fontWeight: 'bold',
-            fontStyle: 'normal',
             lineHeight: 28,
             color: theme.colors.text
         },

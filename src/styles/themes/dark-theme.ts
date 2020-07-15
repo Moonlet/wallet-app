@@ -41,9 +41,10 @@ export const darkTheme: ITheme = {
         labelReward: COLORS.GREEN,
 
         webAppBackground: COLORS.BLACK_RUSSIAN,
-        rankCard: COLORS.SHARK_GRAY,
+        topStatsCard: COLORS.SHARK_GRAY,
         separator: COLORS.FIREFLY,
         webGradientOuter: COLORS.BLUE_CHARCOAL,
-        webGradientInner: COLORS.DAINTREE
+        webGradientInner: COLORS.DAINTREE,
+        loadingText: COLORS.MISCKHA
     }
 };

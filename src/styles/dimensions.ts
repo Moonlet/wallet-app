@@ -23,6 +23,7 @@ export const normalizeLetterSpacing = (size: number) => Number((size * scale).to
 
 export const BORDER_RADIUS = normalize(8);
 export const BASE_DIMENSION = normalize(8);
+export const MARGIN_DIMENSION = '16.84%';
 export const ICON_SIZE = normalize(24);
 export const ICON_CONTAINER_SIZE = normalize(44);
 export const LETTER_SPACING = normalizeLetterSpacing(0.38);

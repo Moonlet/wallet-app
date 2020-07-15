@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { normalizeFontAndLineHeight } from '../../../styles/dimensions';
+import { normalizeFontAndLineHeight, BASE_DIMENSION } from '../../../styles/dimensions';
 import { ITheme } from '../../../core/theme/itheme';
 
 export default (theme: ITheme) =>
@@ -9,14 +9,14 @@ export default (theme: ITheme) =>
         },
         headerContainer: {
             flexDirection: 'row',
-            height: 50
+            height: BASE_DIMENSION * 2
         },
         headerLeft: {
             flexDirection: 'row',
             flex: 1,
             alignItems: 'center',
             justifyContent: 'flex-start',
-            paddingLeft: 20
+            paddingLeft: BASE_DIMENSION
         },
         headerCenter: {
             flexDirection: 'row',
@@ -29,17 +29,17 @@ export default (theme: ITheme) =>
             flex: 1,
             alignItems: 'center',
             justifyContent: 'flex-end',
-            paddingRight: 20
+            paddingRight: BASE_DIMENSION
         },
         icon: {
             color: theme.colors.accent
         },
         socialIcon: {
             color: theme.colors.text,
-            paddingHorizontal: 8
+            paddingHorizontal: BASE_DIMENSION * 0.4
         },
         separator: {
-            paddingLeft: 20
+            paddingLeft: BASE_DIMENSION
         },
         logoText: {
             color: theme.colors.accent
@@ -54,10 +54,14 @@ export default (theme: ITheme) =>
         },
         socialContainer: {
             borderLeftColor: theme.colors.separator,
-            borderLeftWidth: 2,
-            display: 'flex',
+            borderLeftWidth: BASE_DIMENSION * 0.1,
+            height: '100%',
             flexDirection: 'row',
-            paddingTop: 12,
-            height: '100%'
+            paddingTop: BASE_DIMENSION * 0.5
+        },
+        validatorIcon: {
+            width: BASE_DIMENSION * 0.5,
+            height: BASE_DIMENSION * 0.5,
+            borderRadius: BASE_DIMENSION * 0.5
         }
     });

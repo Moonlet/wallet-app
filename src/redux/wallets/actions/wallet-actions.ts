@@ -62,7 +62,6 @@ import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../../ui/transaction-
 import { ConnectExtension } from '../../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
-import { store } from '../../config';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -788,11 +787,14 @@ export const addPublishedTxToAccount = (
     });
 };
 
-export const setWalletPublicKey = (walletId: string, walletPublicKey: string) => {
-    return {
+export const setWalletPublicKey = (walletId: string, walletPublicKey: string) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    dispatch({
         type: SET_WALLET_PUBLIC_KEY,
         data: { walletId, walletPublicKey }
-    };
+    });
 };
 
 export const setWalletsCredentials = (password: string) => async (
@@ -809,7 +811,7 @@ export const setWalletsCredentials = (password: string) => async (
             const walletCredentials = storageWallet.getWalletCredentials();
 
             if (walletCredentials) {
-                store.dispatch(setWalletPublicKey(walletId, walletCredentials.publicKey));
+                setWalletPublicKey(walletId, walletCredentials.publicKey)(dispatch, getState);
 
                 const keychainWalletCredentials = await getWalletCredentialsKey(
                     walletCredentials.publicKey

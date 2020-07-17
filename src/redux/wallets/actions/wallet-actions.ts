@@ -52,7 +52,9 @@ import {
     getEncryptionKey,
     generateEncryptionKey,
     clearEncryptionKey,
-    clearPinCode
+    clearPinCode,
+    getWalletCredentialsKey,
+    setWalletCredentialsKey
 } from '../../../core/secure/keychain/keychain';
 import { delay } from '../../../core/utils/time';
 import { toggleBiometricAuth } from '../../preferences/actions';
@@ -60,6 +62,7 @@ import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../../ui/transaction-
 import { ConnectExtension } from '../../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { store } from '../../config';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -77,6 +80,7 @@ export const ADD_TOKEN_TO_ACCOUNT = 'ADD_TOKEN_TO_ACCOUNT';
 export const WALLET_SELECT_ACCOUNT = 'WALLET_SELECT_ACCOUNT';
 export const WALLET_SELECT_BLOCKCHAIN = 'WALLET_SELECT_BLOCKCHAIN';
 export const SELECT_WALLET = 'SELECT_WALLET';
+export const SET_WALLET_PUBLIC_KEY = 'SET_WALLET_PUBLIC_KEY';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -779,4 +783,46 @@ export const addPublishedTxToAccount = (
             walletId
         }
     });
+};
+
+export const setWalletPublicKey = (walletId: string, walletPublicKey: string) => {
+    return {
+        type: SET_WALLET_PUBLIC_KEY,
+        data: { walletId, walletPublicKey }
+    };
+};
+
+export const setWalletsCredentials = (password: string) => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+
+    for (const wallet of Object.values(state.wallets)) {
+        try {
+            const walletId = (wallet as IWalletState).id;
+
+            const storageWallet = await HDWallet.loadFromStorage(walletId, password);
+            const walletCredentials = storageWallet.getWalletCredentials();
+
+            if (walletCredentials) {
+                store.dispatch(setWalletPublicKey(walletId, walletCredentials.publicKey));
+
+                const keychainWalletCredentials = await getWalletCredentialsKey(
+                    walletCredentials.publicKey
+                );
+
+                if (keychainWalletCredentials) {
+                    // already set
+                } else {
+                    await setWalletCredentialsKey(
+                        walletCredentials.publicKey,
+                        walletCredentials.privateKey
+                    );
+                }
+            }
+        } catch (err) {
+            SentryCaptureException(new Error(JSON.stringify(err)));
+        }
+    }
 };

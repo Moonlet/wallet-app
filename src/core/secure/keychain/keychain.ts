@@ -155,3 +155,40 @@ export const clearPinCode = async () => {
         SentryCaptureException(new Error(JSON.stringify(err)));
     }
 };
+
+export const setWalletCredentialsKey = async (walletPublicKey: string, privateKey: string) => {
+    try {
+        await Keychain.setGenericPassword(`${walletPublicKey}-username`, privateKey, {
+            service: walletPublicKey,
+            storage: Keychain.STORAGE_TYPE.AES,
+            accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+            securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
+            rules: Keychain.SECURITY_RULES.AUTOMATIC_UPGRADE
+        });
+    } catch (err) {
+        SentryCaptureException(new Error(JSON.stringify(err)));
+    }
+};
+
+export const getWalletCredentialsKey = async (walletPublicKey: string) => {
+    await iosClearKeychainOnInstall();
+    let password = null;
+    try {
+        // Retrieve the credentials
+        const credentials = await Keychain.getGenericPassword({
+            service: walletPublicKey
+        });
+
+        if (credentials) {
+            password = credentials.password;
+        } else {
+            throw new Error(
+                'getWalletCredentialsKey: Keychain.getGenericPassword returns falsy value'
+            );
+        }
+    } catch (err) {
+        SentryCaptureException(new Error(JSON.stringify(err)));
+    }
+
+    return password;
+};

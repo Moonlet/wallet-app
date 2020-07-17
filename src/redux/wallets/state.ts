@@ -8,6 +8,7 @@ export interface IWalletsState {
 
 export interface IWalletState {
     id: string;
+    walletPublicKey?: string;
     name: string;
     deviceId?: string;
     selected: boolean;

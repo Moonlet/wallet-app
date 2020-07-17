@@ -6,9 +6,11 @@ import { getSelectedWallet } from '../wallets/selectors';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { PushNotifTokenType } from '../../core/messaging/types';
-import { IWalletState, IAccountState } from '../wallets/state';
-import { ChainIdType } from '../../core/blockchain/types';
+import { IAccountState } from '../wallets/state';
 import { getTokenConfig } from '../tokens/static-selectors';
+import { getWalletCredentialsKey } from '../../core/secure/keychain/keychain';
+import * as schnorr from '@zilliqa-js/crypto/dist/schnorr';
+import moment from 'moment';
 
 export const SET_UNSEEN_NOTIFICATIONS = 'SET_UNSEEN_NOTIFICATIONS';
 export const SET_NOTIFICATIONS = 'SET_NOTIFICATIONS';
@@ -28,25 +30,58 @@ export const setNotifications = (notifications: any) => {
     };
 };
 
+const getTimestamp = () => {
+    return moment().unix() * 1000;
+};
+
+const getDomain = () => {
+    return new URL(CONFIG.walletApiBaseUrl).host;
+};
+
+const getSignature = (data: any, walletPrivateKey: string, walletPublicKey: string): string => {
+    const sig = schnorr.sign(
+        Buffer.from(JSON.stringify(data), 'hex'),
+        Buffer.from(walletPrivateKey, 'hex'),
+        Buffer.from(walletPublicKey, 'hex')
+    );
+
+    return sig.r.toString('hex') + sig.s.toString('hex');
+};
+
 export const getUnseenNotifications = () => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ): Promise<number> => {
     try {
         const state = getState();
-        const walletId = getSelectedWallet(state)?.id;
+        const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
-        const http = new HttpClient(CONFIG.walletApiBaseUrl);
-        const res = await http.post('/notifications/unseen', {
-            walletPublicKeys: [walletId]
-        });
+        if (walletPublicKey) {
+            const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
 
-        if (res?.result?.unseenNotifications) {
-            setUnseenNotifications(res.result.unseenNotifications);
-            return res.result.unseenNotifications;
-        } else {
-            setUnseenNotifications(0);
-            return 0;
+            const data: any = {
+                timestamp: getTimestamp(),
+                domain: getDomain()
+            };
+
+            const signature = getSignature(data, walletPrivateKey, walletPublicKey);
+            data.walletPublicKeys = [
+                {
+                    walletPublicKey,
+                    signature
+                }
+            ];
+
+            const http = new HttpClient(CONFIG.walletApiBaseUrl);
+            const res = await http.post('/notifications/unseen', data);
+
+            if (res?.result?.unseenNotifications) {
+                setUnseenNotifications(res.result.unseenNotifications);
+                return res.result.unseenNotifications;
+            } else {
+                setUnseenNotifications(0);
+                return 0;
+            }
         }
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));
@@ -63,17 +98,28 @@ export const fetchNotifications = (page?: number) => async (
 ) => {
     try {
         const state = getState();
-        const walletId = getSelectedWallet(state)?.id;
+        const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
-        const http = new HttpClient(CONFIG.walletApiBaseUrl);
-        const url = page ? `/notifications/${page}` : '/notifications';
+        if (walletPublicKey) {
+            const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
+            if (walletPrivateKey) {
+                const data: any = {
+                    walletPublicKey,
+                    timestamp: getTimestamp(),
+                    domain: getDomain()
+                };
 
-        const response = await http.post(url, {
-            walletPublicKey: walletId
-        });
+                const signature = getSignature(data, walletPrivateKey, walletPublicKey);
+                data.signature = signature;
 
-        if (response?.result?.notifications) {
-            return response.result.notifications;
+                const http = new HttpClient(CONFIG.walletApiBaseUrl);
+                const url = page ? `/notifications/${page}` : '/notifications';
+                const response = await http.post(url, data);
+
+                if (response?.result?.notifications) {
+                    return response.result.notifications;
+                }
+            }
         }
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));
@@ -86,18 +132,36 @@ export const registerPushNotifToken = () => async (
 ) => {
     try {
         const state = getState();
+        const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
-        const http = new HttpClient(CONFIG.walletApiBaseUrl);
-        const response = await http.post('/notifications/register-push-notification-token', {
-            deviceId: state.preferences.deviceId,
-            token: {
-                type: PushNotifTokenType.FCM,
-                token: await Notifications.getToken()
+        if (walletPublicKey) {
+            const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
+            if (walletPrivateKey) {
+                const data: any = {
+                    walletPublicKey,
+                    timestamp: getTimestamp(),
+                    domain: getDomain(),
+
+                    deviceId: state.preferences.deviceId,
+                    token: {
+                        type: PushNotifTokenType.FCM,
+                        token: await Notifications.getToken()
+                    }
+                };
+
+                const signature = getSignature(data, walletPrivateKey, walletPublicKey);
+                data.signature = signature;
+
+                const http = new HttpClient(CONFIG.walletApiBaseUrl);
+                const response = await http.post(
+                    '/notifications/register-push-notification-token',
+                    data
+                );
+
+                if (response?.result?.pushNotifToken) {
+                    return response.result.pushNotifToken;
+                }
             }
-        });
-
-        if (response?.result?.pushNotifToken) {
-            return response.result.pushNotifToken;
         }
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));
@@ -110,45 +174,51 @@ export const registerNotificationSettings = () => async (
 ) => {
     try {
         const state = getState();
-        const walletId = getSelectedWallet(state)?.id;
-
+        const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
         const myAccounts = [];
 
-        await Promise.all(
-            Object.values(state.wallets).map((wallet: IWalletState) => {
-                wallet.accounts.map(async (account: IAccountState) => {
-                    const myTokens = [];
+        if (walletPublicKey) {
+            const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
+            if (walletPrivateKey) {
+                for (const wallet of Object.values(state.wallets)) {
+                    wallet.accounts.map(async (account: IAccountState) => {
+                        const myTokens = [];
 
-                    await Promise.all(
-                        Object.keys(account.tokens).map((chainId: ChainIdType) => {
-                            // Chain Id layer
-                            Object.keys(account.tokens[chainId]).map((symbol: string) => {
-                                // Symbol layer
+                        for (const chainId of Object.keys(account.tokens)) {
+                            for (const symbol of Object.keys(account.tokens[chainId])) {
                                 const tokenConfig = getTokenConfig(account.blockchain, symbol);
 
                                 myTokens.push({
                                     symbol,
                                     contractAddress: tokenConfig?.contractAddress
                                 });
-                            });
-                        })
-                    );
+                            }
+                        }
 
-                    myAccounts.push({
-                        blockchain: account.blockchain,
-                        address: account.address.toLocaleLowerCase(),
-                        tokens: myTokens
+                        myAccounts.push({
+                            blockchain: account.blockchain,
+                            address: account.address.toLocaleLowerCase(),
+                            tokens: myTokens
+                        });
                     });
-                });
-            })
-        );
+                }
 
-        const http = new HttpClient(CONFIG.walletApiBaseUrl);
-        await http.post('/notifications/register-notification-settings', {
-            walletPublicKey: walletId,
-            deviceId: state.preferences.deviceId,
-            accounts: myAccounts
-        });
+                const data: any = {
+                    walletPublicKey,
+                    timestamp: getTimestamp(),
+                    domain: getDomain(),
+
+                    deviceId: state.preferences.deviceId,
+                    accounts: myAccounts
+                };
+
+                const signature = getSignature(data, walletPrivateKey, walletPublicKey);
+                data.signature = signature;
+
+                const http = new HttpClient(CONFIG.walletApiBaseUrl);
+                await http.post('/notifications/register-notification-settings', data);
+            }
+        }
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));
     }
@@ -159,20 +229,37 @@ export const markSeenNotification = (notificationId: string, blockchain?: string
     getState: () => IReduxState
 ) => {
     try {
-        const http = new HttpClient(CONFIG.walletApiBaseUrl);
-        const response = await http.post('/notifications/mark-seen', {
-            notifIds: [notificationId]
-        });
+        const state = getState();
+        const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
-        if (response?.result?.notifications) {
-            if (blockchain) {
-                dispatch({
-                    type: MARK_SEEN,
-                    data: { blockchain, notificationId }
-                });
+        if (walletPublicKey) {
+            const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
+            if (walletPrivateKey) {
+                const data: any = {
+                    walletPublicKey,
+                    timestamp: getTimestamp(),
+                    domain: getDomain(),
+
+                    notifIds: [notificationId]
+                };
+
+                const signature = getSignature(data, walletPrivateKey, walletPublicKey);
+                data.signature = signature;
+
+                const http = new HttpClient(CONFIG.walletApiBaseUrl);
+                const response = await http.post('/notifications/mark-seen', data);
+
+                if (response?.result?.notifications) {
+                    if (blockchain) {
+                        dispatch({
+                            type: MARK_SEEN,
+                            data: { blockchain, notificationId }
+                        });
+                    }
+
+                    return response.result.notifications;
+                }
             }
-
-            return response.result.notifications;
         }
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));

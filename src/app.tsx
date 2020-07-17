@@ -30,9 +30,10 @@ import { SecurityChecks } from './components/security-checks/security-checks';
 import { AppStateStatus } from './core/constants/app';
 import { TransactionRequestScreen } from './screens/transaction-request/transaction-request';
 import { LoadingModal } from './components/loading-modal/loading-modal';
-import { addBreadcrumb } from '@sentry/react-native';
+import { addBreadcrumb, captureException as SentryCaptureException } from '@sentry/react-native';
 import { isEqual } from 'lodash';
 import { filterObjectProps } from './core/utils/object-sanitise';
+import { setWalletsCredentials } from './redux/wallets/actions/wallet-actions';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -152,9 +153,10 @@ export default class App extends React.Component<{}, IState> {
         }
 
         try {
-            await PasswordModal.getPassword();
+            const password = await PasswordModal.getPassword();
+            store.dispatch(setWalletsCredentials(password) as any);
         } catch (err) {
-            //
+            SentryCaptureException(new Error(JSON.stringify(err)));
         }
 
         this.setState({

@@ -33,3 +33,11 @@ export const getPinCode = async () => {
 export const setPinCode = async (pinCode: string) => {
     //
 };
+
+export const setWalletCredentialsKey = async (privateKey: string) => {
+    //
+};
+
+export const getWalletCredentialsKey = async () => {
+    //
+};

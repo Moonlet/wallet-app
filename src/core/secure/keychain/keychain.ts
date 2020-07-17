@@ -156,7 +156,10 @@ export const clearPinCode = async () => {
     }
 };
 
-export const setWalletCredentialsKey = async (walletPublicKey: string, privateKey: string) => {
+export const setWalletCredentialsKey = async (
+    walletPublicKey: string,
+    privateKey: string
+): Promise<void> => {
     try {
         await Keychain.setGenericPassword(`${walletPublicKey}-username`, privateKey, {
             service: walletPublicKey,
@@ -170,7 +173,7 @@ export const setWalletCredentialsKey = async (walletPublicKey: string, privateKe
     }
 };
 
-export const getWalletCredentialsKey = async (walletPublicKey: string) => {
+export const getWalletCredentialsKey = async (walletPublicKey: string): Promise<string> => {
     await iosClearKeychainOnInstall();
     let password = null;
     try {

@@ -34,10 +34,13 @@ export const setPinCode = async (pinCode: string) => {
     //
 };
 
-export const setWalletCredentialsKey = async (walletPublicKey: string, privateKey: string) => {
+export const setWalletCredentialsKey = async (
+    walletPublicKey: string,
+    privateKey: string
+): Promise<void> => {
     //
 };
 
-export const getWalletCredentialsKey = async (walletPublicKey: string) => {
-    //
+export const getWalletCredentialsKey = async (walletPublicKey: string): Promise<string> => {
+    return Promise.resolve('');
 };

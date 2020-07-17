@@ -34,10 +34,10 @@ export const setPinCode = async (pinCode: string) => {
     //
 };
 
-export const setWalletCredentialsKey = async (privateKey: string) => {
+export const setWalletCredentialsKey = async (walletPublicKey: string, privateKey: string) => {
     //
 };
 
-export const getWalletCredentialsKey = async () => {
+export const getWalletCredentialsKey = async (walletPublicKey: string) => {
     //
 };

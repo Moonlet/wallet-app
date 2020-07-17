@@ -293,6 +293,9 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             await storeEncrypted(mnemonic, walletId, encryptionKey);
 
             dispatch(setSelectedWallet(walletId));
+
+            dispatch(setWalletsCredentials(password) as any);
+
             callback && callback();
             await LoadingModal.close();
 

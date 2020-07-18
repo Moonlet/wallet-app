@@ -73,7 +73,7 @@
         "js-sha256": "^0.9.0",
         "klona": "^1.1.1",
         "ledger-cosmos-js": "^2.1.7",
-        "lodash": "^4.17.16",
+        "lodash": "^4.17.19",
         "lottie-react-native": "^3.3.2",
         "metro-config": "^0.58.0",
         "modal-enhanced-react-native-web": "^0.2.0",

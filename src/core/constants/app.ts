@@ -24,3 +24,4 @@ export enum AppStateStatus {
 }
 
 export const CONN_EXT_RETRY_ATTEMPTS = 3;
+export const FETCH_UNSEEN_NOTIFS_INTERVAL = 15000; // 15 sec

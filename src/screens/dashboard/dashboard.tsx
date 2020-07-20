@@ -49,7 +49,8 @@ import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-n
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import {
     startNotificationsHandlers,
-    getUnseenNotifications
+    getUnseenNotifications,
+    clearUnseenNotificationsInterval
 } from '../../redux/notifications/actions';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
@@ -72,6 +73,7 @@ export interface IReduxProps {
     startNotificationsHandlers: typeof startNotificationsHandlers;
     unseenNotifications: number;
     getUnseenNotifications: typeof getUnseenNotifications;
+    clearUnseenNotificationsInterval: typeof clearUnseenNotificationsInterval;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -97,7 +99,8 @@ const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
     startNotificationsHandlers,
-    getUnseenNotifications
+    getUnseenNotifications,
+    clearUnseenNotificationsInterval
 };
 
 interface IState {
@@ -226,11 +229,11 @@ export class DashboardScreenComponent extends React.Component<
 
         if (isFeatureActive(RemoteFeature.NOTIF_CENTER)) {
             this.props.startNotificationsHandlers();
-
-            this.props.navigation.setParams({
-                unseenNotifications: this.props.unseenNotifications
-            });
         }
+
+        this.props.navigation.setParams({
+            unseenNotifications: this.props.unseenNotifications
+        });
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
@@ -252,6 +255,10 @@ export class DashboardScreenComponent extends React.Component<
                 unseenNotifications: this.props.unseenNotifications
             });
         }
+    }
+
+    public componentWillUnmount() {
+        this.props.clearUnseenNotificationsInterval();
     }
 
     public setDashboardMenuBottomSheet = () => {

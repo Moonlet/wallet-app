@@ -1,6 +1,6 @@
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { getWalletCredentialsKey } from '../../secure/keychain/keychain';
-import { getTimestamp, getWalletApiDomain, getSignature } from './utils';
+import { getCurrentTimestampNTP, getWalletApiDomain, getSignature } from './utils';
 import { HttpClient } from '../http-client';
 import CONFIG from '../../../config';
 import { PushNotifTokenType } from '../../messaging/types';
@@ -21,7 +21,7 @@ export const fetchNotifications = async (walletPublicKey: string, page?: number)
         if (walletPrivateKey) {
             const data: any = {
                 walletPublicKey,
-                timestamp: getTimestamp(),
+                timestamp: await getCurrentTimestampNTP(),
                 domain: getWalletApiDomain()
             };
 
@@ -52,7 +52,7 @@ export const registerPushNotifToken = async (walletPublicKey: string, deviceId: 
         if (walletPrivateKey) {
             const data: any = {
                 walletPublicKey,
-                timestamp: getTimestamp(),
+                timestamp: await getCurrentTimestampNTP(),
                 domain: getWalletApiDomain(),
 
                 deviceId,
@@ -121,7 +121,7 @@ export const registerNotificationSettings = async (
 
             const data: any = {
                 walletPublicKey,
-                timestamp: getTimestamp(),
+                timestamp: await getCurrentTimestampNTP(),
                 domain: getWalletApiDomain(),
 
                 deviceId,
@@ -150,7 +150,7 @@ export const markSeenNotification = async (walletPublicKey: string, notification
         if (walletPrivateKey) {
             const data: any = {
                 walletPublicKey,
-                timestamp: getTimestamp(),
+                timestamp: await getCurrentTimestampNTP(),
                 domain: getWalletApiDomain(),
 
                 notifIds: [notificationId]
@@ -180,7 +180,7 @@ export const getUnseenNotifications = async (walletPublicKey: string): Promise<n
         const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
 
         const data: any = {
-            timestamp: getTimestamp(),
+            timestamp: await getCurrentTimestampNTP(),
             domain: getWalletApiDomain()
         };
 

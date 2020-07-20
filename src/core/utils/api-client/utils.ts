@@ -1,17 +1,8 @@
 import CONFIG from '../../../config';
 import * as schnorr from '@zilliqa-js/crypto/dist/schnorr';
-import ntpClient from 'react-native-ntp-client';
 
-export const getCurrentTimestampNTP = async () => {
-    return new Promise((resolve, reject) => {
-        ntpClient.getNetworkTime(CONFIG.ntpServer, CONFIG.ntpPort, (error: any, date: any) => {
-            if (error) {
-                return reject(error);
-            }
-
-            resolve(new Date(date).getTime());
-        });
-    });
+export const getCurrentTimestamp = () => {
+    return new Date().getTime();
 };
 
 export const getWalletApiDomain = () => {

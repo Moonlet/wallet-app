@@ -15,12 +15,14 @@ import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
 import { Blockchain } from '../../core/blockchain/types';
 import { getSelectedBlockchain, getSelectedWallet } from '../../redux/wallets/selectors';
-import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { markSeenNotification, fetchNotifications } from '../../redux/notifications/actions';
 import { NotificationType } from '../../core/messaging/types';
 import { updateTransactionFromBlockchain } from '../../redux/wallets/actions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import { openTransactionRequest } from '../../redux/ui/transaction-request/actions';
+import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
+import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
+import { updateDisplayedHint } from '../../redux/app/actions';
 
 export interface IReduxProps {
     walletId: string;
@@ -30,13 +32,16 @@ export interface IReduxProps {
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
     openTransactionRequest: typeof openTransactionRequest;
     fetchNotifications: (page?: number) => Promise<any>;
+    hints: IHints;
+    updateDisplayedHint: typeof updateDisplayedHint;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     return {
         walletId: getSelectedWallet(state)?.id,
         notifications: state.notifications.notifications,
-        selectedBlockchain: getSelectedBlockchain(state)
+        selectedBlockchain: getSelectedBlockchain(state),
+        hints: state.app.hints
     };
 };
 
@@ -48,7 +53,8 @@ const mapDispatchToProps = {
     markSeenNotification,
     updateTransactionFromBlockchain,
     openTransactionRequest,
-    fetchNotifications
+    fetchNotifications,
+    updateDisplayedHint
 };
 
 interface IState {
@@ -77,6 +83,17 @@ export class NotificationsComponent extends React.Component<
             hideBottomNav: false,
             isRefreshing: false
         };
+    }
+
+    public componentDidMount() {
+        if (
+            Object.keys(this.props.notifications).length > 0 &&
+            this.props.hints.WALLETS_SCREEN.WALLETS_LIST < DISPLAY_HINTS_TIMES
+        ) {
+            this.props.updateDisplayedHint(HintsScreen.WALLETS_SCREEN, HintsComponent.WALLETS_LIST);
+
+            this.onRefresh({ showHint: true });
+        }
     }
 
     private async handleNotificationTap(notification: INotificationType, notificationId: string) {
@@ -194,7 +211,7 @@ export class NotificationsComponent extends React.Component<
         return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
     }
 
-    private async onRefresh() {
+    private async onRefresh(options?: { showHint?: boolean }) {
         this.setState({ isRefreshing: true });
 
         const notifications = await this.props.fetchNotifications();
@@ -223,7 +240,11 @@ export class NotificationsComponent extends React.Component<
             this.setState({ notifications: finalNotifications as INotificationsState });
         }
 
-        this.setState({ isRefreshing: false });
+        if (options?.showHint) {
+            setTimeout(() => this.setState({ isRefreshing: false }), 1000);
+        } else {
+            this.setState({ isRefreshing: false });
+        }
     }
 
     public render() {
@@ -262,10 +283,12 @@ export class NotificationsComponent extends React.Component<
                             this.setState({ hideBottomNav: false }); // scroll on top
                         }
                     }}
+                    // scrollEventThrottle={16} // TODO: this should be set - find the best value
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.isRefreshing}
                             onRefresh={() => this.onRefresh()}
+                            tintColor={this.props.theme.colors.accent}
                         />
                     }
                 >
@@ -294,11 +317,12 @@ export class NotificationsComponent extends React.Component<
                             </Text>
                         </View>
                     )}
-                    {this.state.showLoading && (
+                    {/* TODO: this needs improvements because on pullToRefresh this is also called */}
+                    {/* {this.state.showLoading && (
                         <View style={styles.loadingContainer}>
                             <LoadingIndicator />
                         </View>
-                    )}
+                    )} */}
                 </ScrollView>
 
                 {!this.state.hideBottomNav && (

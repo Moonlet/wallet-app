@@ -226,6 +226,10 @@ export class DashboardScreenComponent extends React.Component<
 
         if (isFeatureActive(RemoteFeature.NOTIF_CENTER)) {
             this.props.startNotificationsHandlers();
+
+            this.props.navigation.setParams({
+                unseenNotifications: this.props.unseenNotifications
+            });
         }
     }
 

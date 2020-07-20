@@ -78,6 +78,7 @@ export const translation: ITranslations = {
                 recover: 'Recover',
                 redelegate: 'Redelegate',
                 reinvest: 'Reinvest',
+                refreshing: 'Refreshing',
                 reset: 'Reset',
                 resetAll: 'Reset all',
                 restake: 'Restake',

@@ -75,13 +75,25 @@ const handleNotification = (
             break;
 
         case NotificationType.MOONLET_TRANSFER:
-            const requestId = JSON.parse(notification.data)?.requestId;
+            try {
+                const requestId = JSON.parse(notification.data)?.requestId;
 
-            if (requestId) {
-                store.dispatch(openTransactionRequest({ requestId }));
-            } else {
-                // maybe find a way to handle this
-                // show a message to the user or something
+                if (requestId) {
+                    store.dispatch(openTransactionRequest({ requestId }));
+                } else {
+                    // maybe find a way to handle this
+                    // show a message to the user or something
+                    SentryCaptureException(
+                        new Error(
+                            JSON.stringify({
+                                requestId,
+                                notificationType: NotificationType.MOONLET_TRANSFER
+                            })
+                        )
+                    );
+                }
+            } catch (err) {
+                SentryCaptureException(new Error(JSON.stringify(err)));
             }
 
             break;

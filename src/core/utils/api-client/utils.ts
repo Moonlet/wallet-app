@@ -7,8 +7,8 @@ export const getTimestamp = () => {
     return moment().unix() * 1000;
 };
 
-export const getDomain = () => {
-    return new URL(CONFIG.walletApiBaseUrl).host;
+export const getWalletApiDomain = () => {
+    return CONFIG.walletApiBaseUrl.replace(/^http(s?):\/\//i, '');
 };
 
 export const getSignature = (

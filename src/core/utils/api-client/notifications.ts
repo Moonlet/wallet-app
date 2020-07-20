@@ -1,6 +1,6 @@
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { getWalletCredentialsKey } from '../../secure/keychain/keychain';
-import { getTimestamp, getDomain, getSignature } from './utils';
+import { getTimestamp, getWalletApiDomain, getSignature } from './utils';
 import { HttpClient } from '../http-client';
 import CONFIG from '../../../config';
 import { PushNotifTokenType } from '../../messaging/types';
@@ -22,7 +22,7 @@ export const fetchNotifications = async (walletPublicKey: string, page?: number)
             const data: any = {
                 walletPublicKey,
                 timestamp: getTimestamp(),
-                domain: getDomain()
+                domain: getWalletApiDomain()
             };
 
             const signature = getSignature(data, walletPrivateKey, walletPublicKey);
@@ -53,7 +53,7 @@ export const registerPushNotifToken = async (walletPublicKey: string, deviceId: 
             const data: any = {
                 walletPublicKey,
                 timestamp: getTimestamp(),
-                domain: getDomain(),
+                domain: getWalletApiDomain(),
 
                 deviceId,
                 token: {
@@ -122,7 +122,7 @@ export const registerNotificationSettings = async (
             const data: any = {
                 walletPublicKey,
                 timestamp: getTimestamp(),
-                domain: getDomain(),
+                domain: getWalletApiDomain(),
 
                 deviceId,
                 accounts: myAccounts
@@ -151,7 +151,7 @@ export const markSeenNotification = async (walletPublicKey: string, notification
             const data: any = {
                 walletPublicKey,
                 timestamp: getTimestamp(),
-                domain: getDomain(),
+                domain: getWalletApiDomain(),
 
                 notifIds: [notificationId]
             };
@@ -181,7 +181,7 @@ export const getUnseenNotifications = async (walletPublicKey: string): Promise<n
 
         const data: any = {
             timestamp: getTimestamp(),
-            domain: getDomain()
+            domain: getWalletApiDomain()
         };
 
         const signature = getSignature(data, walletPrivateKey, walletPublicKey);

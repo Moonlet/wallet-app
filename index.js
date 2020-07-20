@@ -39,12 +39,6 @@ import androidBgMessagingHandler from './src/core/messaging/silent/android-backg
 // TODO remove this when fixed
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['RCTRootView cancelTouches', 'Require cycle']);
-
-// see https://github.com/facebook/react-native/issues/16434
-import { URL, URLSearchParams } from 'whatwg-url';
-global.URL = URL;
-global.URLSearchParams = URLSearchParams;
-
 // console.disableYellowBox = true;
 
 if (Platform.OS === 'android') {

@@ -7,18 +7,28 @@ export const SET_UNSEEN_NOTIFICATIONS = 'SET_UNSEEN_NOTIFICATIONS';
 export const SET_NOTIFICATIONS = 'SET_NOTIFICATIONS';
 export const MARK_SEEN = 'MARK_SEEN';
 
-const setUnseenNotifications = (unseenNotifications: number) => {
-    return {
-        type: SET_UNSEEN_NOTIFICATIONS,
-        data: { unseenNotifications }
-    };
-};
-
-export const setNotifications = (notifications: any) => {
-    return {
+export const setNotifications = (notifications: any) => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    dispatch({
         type: SET_NOTIFICATIONS,
         data: { notifications }
-    };
+    });
+};
+
+export const startNotificationsHandlers = () => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    registerPushNotifToken()(dispatch, getState);
+    registerNotificationSettings()(dispatch, getState);
+    getUnseenNotifications()(dispatch, getState);
+
+    const notifications = await fetchNotifications()(dispatch, getState);
+    if (notifications) {
+        setNotifications(notifications)(dispatch, getState);
+    }
 };
 
 export const getUnseenNotifications = () => async (
@@ -30,8 +40,12 @@ export const getUnseenNotifications = () => async (
 
     if (walletPublicKey) {
         const apiClient = new ApiClient();
-        const unseenNotifsNr = await apiClient.getUnseenNotifications(walletPublicKey);
-        setUnseenNotifications(unseenNotifsNr);
+        const unseenNotifications = await apiClient.getUnseenNotifications(walletPublicKey);
+
+        dispatch({
+            type: SET_UNSEEN_NOTIFICATIONS,
+            data: { unseenNotifications }
+        });
     }
 };
 

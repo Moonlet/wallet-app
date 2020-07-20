@@ -48,11 +48,8 @@ import { IconValues } from '../../components/icon/values';
 import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import {
-    setNotifications,
-    fetchNotifications,
-    registerPushNotifToken,
-    getUnseenNotifications,
-    registerNotificationSettings
+    startNotificationsHandlers,
+    getUnseenNotifications
 } from '../../redux/notifications/actions';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
@@ -71,12 +68,10 @@ export interface IReduxProps {
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
     chainId: ChainIdType;
-    setNotifications: typeof setNotifications;
     deviceId: string;
-    fetchNotifications: (page?: number) => Promise<any>;
-    registerPushNotifToken: () => Promise<any>;
-    registerNotificationSettings: () => Promise<any>;
-    getUnseenNotifications: () => Promise<number>;
+    startNotificationsHandlers: typeof startNotificationsHandlers;
+    unseenNotifications: number;
+    getUnseenNotifications: typeof getUnseenNotifications;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -87,24 +82,22 @@ const mapStateToProps = (state: IReduxState) => {
         walletsNr: Object.keys(state.wallets).length,
         blockchains: getBlockchains(state),
         selectedBlockchain: getSelectedBlockchain(state),
-        selectedAccount: getSelectedAccount(state),
+        selectedAccount,
         exchangeRates: state.market.exchangeRates,
         isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
         selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
         userCurrency: state.preferences.currency,
         chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
-        deviceId: state.preferences.deviceId
+        deviceId: state.preferences.deviceId,
+        unseenNotifications: state.notifications.unseenNotifications
     };
 };
 
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
-    setNotifications,
-    fetchNotifications,
-    registerPushNotifToken,
-    getUnseenNotifications,
-    registerNotificationSettings
+    startNotificationsHandlers,
+    getUnseenNotifications
 };
 
 interface IState {
@@ -232,19 +225,7 @@ export class DashboardScreenComponent extends React.Component<
         });
 
         if (isFeatureActive(RemoteFeature.NOTIF_CENTER)) {
-            try {
-                this.getUnseenNotifications();
-                this.props.registerPushNotifToken();
-                this.props.registerNotificationSettings();
-
-                const notifications = await this.props.fetchNotifications();
-
-                if (notifications) {
-                    this.props.setNotifications(notifications);
-                }
-            } catch (err) {
-                // already handled this in redux actions
-            }
+            this.props.startNotificationsHandlers();
         }
     }
 
@@ -259,14 +240,14 @@ export class DashboardScreenComponent extends React.Component<
             this.props.walletId !== prevProps.walletId &&
             isFeatureActive(RemoteFeature.NOTIF_CENTER)
         ) {
-            this.getUnseenNotifications();
+            this.props.getUnseenNotifications();
         }
-    }
 
-    private async getUnseenNotifications() {
-        const unseenNotifications = await this.props.getUnseenNotifications();
-
-        this.props.navigation.setParams({ unseenNotifications });
+        if (this.props.unseenNotifications !== prevProps.unseenNotifications) {
+            this.props.navigation.setParams({
+                unseenNotifications: this.props.unseenNotifications
+            });
+        }
     }
 
     public setDashboardMenuBottomSheet = () => {

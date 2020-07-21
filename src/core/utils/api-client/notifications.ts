@@ -27,15 +27,15 @@ export const fetchNotifications = async (walletPublicKey: string, page?: number)
             const data: any = {
                 walletPublicKey,
                 timestamp: getCurrentTimestamp(),
-                domain: getWalletApiDomain()
+                domain: getWalletApiDomain(),
+                page: page || 1
             };
 
             const signature = getSignature(data, walletPrivateKey, walletPublicKey);
             data.signature = signature;
 
             const http = new HttpClient(CONFIG.walletApiBaseUrl);
-            const url = page ? `/notifications/${page}` : '/notifications';
-            const response = await http.post(url, data);
+            const response = await http.post('/notifications', data);
 
             if (response?.result?.notifications) {
                 return response.result.notifications;

@@ -9,7 +9,7 @@ import { INavigationProps } from '../../navigation/with-navigation-params';
 import Icon from '../../components/icon/icon';
 import { IconValues } from '../../components/icon/values';
 import { normalize, BASE_DIMENSION } from '../../styles/dimensions';
-import { INotificationType, INotificationsState } from '../../redux/notifications/state';
+import { INotificationType, INotificationState } from '../../redux/notifications/state';
 import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
@@ -26,7 +26,7 @@ import { updateDisplayedHint } from '../../redux/app/actions';
 
 export interface IReduxProps {
     walletId: string;
-    notifications: INotificationsState;
+    notifications: INotificationState;
     selectedBlockchain: Blockchain;
     markSeenNotification: (notificationId: string, blockchain?: string) => Promise<any>;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
@@ -58,7 +58,7 @@ const mapDispatchToProps = {
 };
 
 interface IState {
-    notifications: INotificationsState;
+    notifications: INotificationState;
     showLoading: boolean;
     page: number;
     hideBottomNav: boolean;
@@ -77,7 +77,7 @@ export class NotificationsComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            notifications: props.notifications,
+            notifications: undefined,
             showLoading: false,
             page: 1,
             hideBottomNav: false,
@@ -85,14 +85,19 @@ export class NotificationsComponent extends React.Component<
         };
     }
 
-    public componentDidMount() {
+    public async componentDidMount() {
+        await this.fetchNotifications();
+
         if (
-            Object.keys(this.props.notifications).length > 0 &&
+            this.state.notifications &&
+            Object.keys(this.state.notifications).length > 0 &&
             this.props.hints.WALLETS_SCREEN.WALLETS_LIST < DISPLAY_HINTS_TIMES
         ) {
             this.props.updateDisplayedHint(HintsScreen.WALLETS_SCREEN, HintsComponent.WALLETS_LIST);
 
-            this.onRefresh({ showHint: true });
+            this.setState({ isRefreshing: true }, () => {
+                setTimeout(() => this.setState({ isRefreshing: false }), 1000);
+            });
         }
     }
 
@@ -167,32 +172,41 @@ export class NotificationsComponent extends React.Component<
         );
     }
 
+    private parseNotifications(notifications: any): INotificationState {
+        const finalNotifications: INotificationState = this.state.notifications
+            ? this.state.notifications
+            : {};
+
+        for (const notif of notifications) {
+            const notifData = {
+                walletId: notif.walletId,
+                title: notif.title,
+                body: notif.body,
+                seen: notif.seen,
+                data: notif.data
+            };
+
+            Object.assign(finalNotifications, {
+                ...finalNotifications,
+                [notif.data.blockchain]: {
+                    ...(finalNotifications && finalNotifications[notif.data.blockchain]),
+                    [notif._id]: notifData
+                }
+            });
+        }
+
+        return finalNotifications;
+    }
+
     private async fetchNotifications() {
         const { page } = this.state;
 
         try {
             // Fetch next page
-            const notifications: any = await this.props.fetchNotifications(page + 1);
+            const notifications: any = await this.props.fetchNotifications(page);
 
             if (notifications && notifications.length > 0) {
-                let finalNotifications = this.state.notifications;
-                for (const notif of notifications) {
-                    const notifData = {
-                        walletId: notif.walletId,
-                        title: notif.title,
-                        body: notif.body,
-                        seen: notif.seen,
-                        data: notif.data
-                    };
-
-                    finalNotifications = {
-                        ...finalNotifications,
-                        [notif.data.blockchain]: {
-                            ...finalNotifications[notif.data.blockchain],
-                            [notif._id]: notifData
-                        }
-                    };
-                }
+                const finalNotifications = this.parseNotifications(notifications);
 
                 this.setState({
                     notifications: finalNotifications,
@@ -211,39 +225,13 @@ export class NotificationsComponent extends React.Component<
         return layoutMeasurement.height + contentOffset.y >= contentSize.height - paddingToBottom;
     }
 
-    private async onRefresh(options?: { showHint?: boolean }) {
+    private async onRefresh() {
         this.setState({ isRefreshing: true });
 
         const notifications = await this.props.fetchNotifications();
-
         if (notifications) {
-            const finalNotifications = {};
-
-            for (const notif of notifications) {
-                const notifData = {
-                    walletId: notif.walletId,
-                    title: notif.title,
-                    body: notif.body,
-                    seen: notif.seen,
-                    data: notif.data
-                };
-
-                Object.assign(finalNotifications, {
-                    ...finalNotifications,
-                    [notif.data.blockchain]: {
-                        ...(finalNotifications && finalNotifications[notif.data.blockchain]),
-                        [notif._id]: notifData
-                    }
-                });
-            }
-
-            this.setState({ notifications: finalNotifications as INotificationsState });
-        }
-
-        if (options?.showHint) {
-            setTimeout(() => this.setState({ isRefreshing: false }), 1000);
-        } else {
-            this.setState({ isRefreshing: false });
+            const finalNotifications = this.parseNotifications(notifications);
+            this.setState({ notifications: finalNotifications });
         }
     }
 
@@ -252,11 +240,12 @@ export class NotificationsComponent extends React.Component<
         const { notifications } = this.state;
 
         let notifsBySelectedBlockchain;
-        Object.keys(notifications).filter((blockchain: Blockchain) => {
-            if (blockchain === this.props.selectedBlockchain) {
-                notifsBySelectedBlockchain = notifications[blockchain];
-            }
-        });
+        notifications &&
+            Object.keys(notifications).filter((blockchain: Blockchain) => {
+                if (blockchain === this.props.selectedBlockchain) {
+                    notifsBySelectedBlockchain = notifications[blockchain];
+                }
+            });
 
         return (
             <View style={styles.container}>

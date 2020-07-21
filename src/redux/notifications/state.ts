@@ -23,11 +23,13 @@ export interface INotificationType {
     };
 }
 
+export interface INotificationState {
+    [blockchain: string]: {
+        [notifId: string]: INotificationType;
+    };
+}
+
 export interface INotificationsState {
     unseenNotifications: number;
-    notifications: {
-        [blockchain: string]: {
-            [notifId: string]: INotificationType;
-        };
-    };
+    notifications: INotificationState;
 }

@@ -62,6 +62,7 @@ import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../../ui/transaction-
 import { ConnectExtension } from '../../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { startNotificationsHandlers } from '../../notifications/actions';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -201,6 +202,7 @@ export const createHWWallet = (
         accounts[0].selected = true;
         const walletData: IWalletState = {
             id: walletId,
+            walletPublicKey: null,
             selected: false,
             selectedBlockchain: blockchain,
             hwOptions: {
@@ -280,6 +282,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             dispatch(
                 addWallet({
                     id: walletId,
+                    walletPublicKey: wallet.getWalletCredentials().publicKey,
                     selected: false,
                     selectedBlockchain: Blockchain.ZILLIQA, // by default the first blockchain is selected
                     name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
@@ -292,13 +295,11 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             await storeEncrypted(mnemonic, walletId, encryptionKey);
 
             dispatch(setSelectedWallet(walletId));
-
-            dispatch(setWalletsCredentials(password) as any);
-
             callback && callback();
             await LoadingModal.close();
 
             updateAddressMonitorTokens(getState().wallets);
+            startNotificationsHandlers()(dispatch, getState);
         });
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));

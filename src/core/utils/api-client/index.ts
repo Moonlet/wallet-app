@@ -5,7 +5,7 @@ import {
     fetchNotifications,
     getUnseenNotifications
 } from './notifications';
-import { IWalletsState } from '../../../redux/wallets/state';
+import { IWalletState } from '../../../redux/wallets/state';
 
 export class ApiClient {
     public async registerPushNotifToken(walletPublicKey: string, deviceId: string): Promise<void> {
@@ -13,11 +13,10 @@ export class ApiClient {
     }
 
     public async registerNotificationSettings(
-        walletPublicKey: string,
-        wallets: IWalletsState,
+        wallet: IWalletState,
         deviceId: string
     ): Promise<void> {
-        return registerNotificationSettings(walletPublicKey, wallets, deviceId);
+        return registerNotificationSettings(wallet, deviceId);
     }
 
     public async markSeenNotification(

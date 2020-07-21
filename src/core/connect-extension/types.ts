@@ -47,6 +47,7 @@ export interface IStorageWallets {
 
 export interface IStorageWallet {
     name: string;
+    walletPublicKey: string;
     selected: boolean;
     selectedBlockchain: Blockchain;
     type: WalletType;

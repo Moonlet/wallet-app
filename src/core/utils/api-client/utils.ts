@@ -22,3 +22,6 @@ export const getSignature = (
 
     return sig.r.toString('hex') + sig.s.toString('hex');
 };
+
+export const removeDuplicateObjectsFromArray = (arr: any[]) =>
+    arr.filter((v, i, a) => a.findIndex(t => JSON.stringify(t) === JSON.stringify(v)) === i);

@@ -91,15 +91,11 @@ export const registerNotificationSettings = () => async (
     getState: () => IReduxState
 ) => {
     const state = getState();
-    const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
-    if (walletPublicKey) {
-        const apiClient = new ApiClient();
-        await apiClient.registerNotificationSettings(
-            walletPublicKey,
-            state.wallets,
-            state.preferences.deviceId
-        );
+    const apiClient = new ApiClient();
+
+    for (const wallet of Object.values(state.wallets)) {
+        await apiClient.registerNotificationSettings(wallet, state.preferences.deviceId);
     }
 };
 

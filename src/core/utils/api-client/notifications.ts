@@ -1,11 +1,16 @@
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { getWalletCredentialsKey } from '../../secure/keychain/keychain';
-import { getCurrentTimestamp, getWalletApiDomain, getSignature } from './utils';
+import {
+    getCurrentTimestamp,
+    getWalletApiDomain,
+    getSignature,
+    removeDuplicateObjectsFromArray
+} from './utils';
 import { HttpClient } from '../http-client';
 import CONFIG from '../../../config';
 import { PushNotifTokenType } from '../../messaging/types';
 import { Notifications } from '../../messaging/notifications/notifications';
-import { IWalletsState, IAccountState } from '../../../redux/wallets/state';
+import { IAccountState, IWalletState } from '../../../redux/wallets/state';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 /**
@@ -83,41 +88,37 @@ export const registerPushNotifToken = async (walletPublicKey: string, deviceId: 
 /**
  * Register Notification Settings
  * @param walletPublicKey
- * @param wallets
+ * @param wallet
  * @param deviceId
  */
-export const registerNotificationSettings = async (
-    walletPublicKey: string,
-    wallets: IWalletsState,
-    deviceId: string
-) => {
+export const registerNotificationSettings = async (wallet: IWalletState, deviceId: string) => {
     try {
-        const myAccounts = [];
-
+        const walletPublicKey = wallet.walletPublicKey;
         const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
+
         if (walletPrivateKey) {
-            for (const wallet of Object.values(wallets)) {
-                wallet.accounts.map(async (account: IAccountState) => {
-                    const myTokens = [];
+            const myAccounts = [];
 
-                    for (const chainId of Object.keys(account.tokens)) {
-                        for (const symbol of Object.keys(account.tokens[chainId])) {
-                            const tokenConfig = getTokenConfig(account.blockchain, symbol);
+            wallet.accounts.map(async (account: IAccountState) => {
+                const myTokens = [];
 
-                            myTokens.push({
-                                symbol,
-                                contractAddress: tokenConfig?.contractAddress
-                            });
-                        }
+                for (const chainId of Object.keys(account.tokens)) {
+                    for (const symbol of Object.keys(account.tokens[chainId])) {
+                        const tokenConfig = getTokenConfig(account.blockchain, symbol);
+
+                        myTokens.push({
+                            symbol,
+                            contractAddress: tokenConfig?.contractAddress
+                        });
                     }
+                }
 
-                    myAccounts.push({
-                        blockchain: account.blockchain,
-                        address: account.address.toLocaleLowerCase(),
-                        tokens: myTokens
-                    });
+                myAccounts.push({
+                    blockchain: account.blockchain,
+                    address: account.address.toLocaleLowerCase(),
+                    tokens: removeDuplicateObjectsFromArray(myTokens)
                 });
-            }
+            });
 
             const data: any = {
                 walletPublicKey,

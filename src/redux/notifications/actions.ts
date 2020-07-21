@@ -2,13 +2,10 @@ import { getSelectedWallet } from '../wallets/selectors';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { ApiClient } from '../../core/utils/api-client';
-import { FETCH_UNSEEN_NOTIFS_INTERVAL } from '../../core/constants/app';
 
 export const SET_UNSEEN_NOTIFICATIONS = 'SET_UNSEEN_NOTIFICATIONS';
 export const SET_NOTIFICATIONS = 'SET_NOTIFICATIONS';
 export const MARK_SEEN = 'MARK_SEEN';
-
-let unseenNotificationsInterval;
 
 export const setNotifications = (notifications: any) => async (
     dispatch: Dispatch<any>,
@@ -20,10 +17,6 @@ export const setNotifications = (notifications: any) => async (
     });
 };
 
-export const clearUnseenNotificationsInterval = () => {
-    clearInterval(unseenNotificationsInterval);
-};
-
 export const startNotificationsHandlers = () => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
@@ -31,15 +24,6 @@ export const startNotificationsHandlers = () => async (
     registerPushNotifToken()(dispatch, getState);
     registerNotificationSettings()(dispatch, getState);
     getUnseenNotifications()(dispatch, getState);
-
-    unseenNotificationsInterval = setInterval(() => {
-        getUnseenNotifications()(dispatch, getState);
-    }, FETCH_UNSEEN_NOTIFS_INTERVAL);
-
-    const notifications = await fetchNotifications()(dispatch, getState);
-    if (notifications) {
-        setNotifications(notifications)(dispatch, getState);
-    }
 };
 
 export const getUnseenNotifications = () => async (

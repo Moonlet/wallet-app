@@ -49,8 +49,7 @@ import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-n
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import {
     startNotificationsHandlers,
-    getUnseenNotifications,
-    clearUnseenNotificationsInterval
+    getUnseenNotifications
 } from '../../redux/notifications/actions';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
@@ -73,7 +72,6 @@ export interface IReduxProps {
     startNotificationsHandlers: typeof startNotificationsHandlers;
     unseenNotifications: number;
     getUnseenNotifications: typeof getUnseenNotifications;
-    clearUnseenNotificationsInterval: typeof clearUnseenNotificationsInterval;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -99,8 +97,7 @@ const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
     startNotificationsHandlers,
-    getUnseenNotifications,
-    clearUnseenNotificationsInterval
+    getUnseenNotifications
 };
 
 interface IState {
@@ -255,10 +252,6 @@ export class DashboardScreenComponent extends React.Component<
                 unseenNotifications: this.props.unseenNotifications
             });
         }
-    }
-
-    public componentWillUnmount() {
-        this.props.clearUnseenNotificationsInterval();
     }
 
     public setDashboardMenuBottomSheet = () => {

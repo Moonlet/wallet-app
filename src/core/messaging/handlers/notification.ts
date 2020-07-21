@@ -5,7 +5,7 @@ import { store } from '../../../redux/config';
 import { setSelectedWallet, updateTransactionFromBlockchain } from '../../../redux/wallets/actions';
 import { takeOneAndSubscribeToStore } from '../../../redux/utils/helpers';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
-import { markSeenNotification } from '../../../redux/notifications/actions';
+import { markSeenNotification, getUnseenNotifications } from '../../../redux/notifications/actions';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export const notificationHandler = async (
@@ -39,6 +39,8 @@ const handleNotification = (
     notification: INotificationPayload,
     openedByNotification: boolean = false
 ) => {
+    store.dispatch(getUnseenNotifications() as any);
+
     switch (notification.type) {
         case NotificationType.TRANSACTION:
             const data = JSON.parse(notification.data);

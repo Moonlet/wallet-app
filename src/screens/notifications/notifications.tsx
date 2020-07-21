@@ -86,7 +86,9 @@ export class NotificationsComponent extends React.Component<
     }
 
     public async componentDidMount() {
+        await LoadingModal.open();
         await this.fetchNotifications();
+        await LoadingModal.close();
 
         if (
             this.state.notifications &&

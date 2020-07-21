@@ -175,6 +175,7 @@ export const setWalletCredentialsKey = async (
 
 export const getWalletCredentialsKey = async (walletPublicKey: string): Promise<string> => {
     await iosClearKeychainOnInstall();
+    await clearWalletCredentialsKey(walletPublicKey);
     let password = null;
     try {
         // Retrieve the credentials
@@ -194,4 +195,12 @@ export const getWalletCredentialsKey = async (walletPublicKey: string): Promise<
     }
 
     return password;
+};
+
+export const clearWalletCredentialsKey = async (walletPublicKey: string) => {
+    try {
+        await Keychain.resetGenericPassword({ service: walletPublicKey });
+    } catch (err) {
+        SentryCaptureException(new Error(JSON.stringify(err)));
+    }
 };

@@ -1,7 +1,7 @@
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { getWalletCredentialsKey } from '../../secure/keychain/keychain';
 import {
-    getCurrentTimestamp,
+    getCurrentTimestampNTP,
     getWalletApiDomain,
     getSignature,
     removeDuplicateObjectsFromArray
@@ -26,7 +26,7 @@ export const fetchNotifications = async (walletPublicKey: string, page?: number)
         if (walletPrivateKey) {
             const data: any = {
                 walletPublicKey,
-                timestamp: getCurrentTimestamp(),
+                timestamp: await getCurrentTimestampNTP(),
                 domain: getWalletApiDomain(),
                 page: page || 1
             };
@@ -57,7 +57,7 @@ export const registerPushNotifToken = async (walletPublicKey: string, deviceId: 
         if (walletPrivateKey) {
             const data: any = {
                 walletPublicKey,
-                timestamp: getCurrentTimestamp(),
+                timestamp: await getCurrentTimestampNTP(),
                 domain: getWalletApiDomain(),
 
                 deviceId,
@@ -122,7 +122,7 @@ export const registerNotificationSettings = async (wallet: IWalletState, deviceI
 
             const data: any = {
                 walletPublicKey,
-                timestamp: getCurrentTimestamp(),
+                timestamp: await getCurrentTimestampNTP(),
                 domain: getWalletApiDomain(),
 
                 deviceId,
@@ -151,7 +151,7 @@ export const markSeenNotification = async (walletPublicKey: string, notification
         if (walletPrivateKey) {
             const data: any = {
                 walletPublicKey,
-                timestamp: getCurrentTimestamp(),
+                timestamp: await getCurrentTimestampNTP(),
                 domain: getWalletApiDomain(),
 
                 notifIds: [notificationId]
@@ -181,7 +181,7 @@ export const getUnseenNotifications = async (walletPublicKey: string): Promise<n
         const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
 
         const data: any = {
-            timestamp: getCurrentTimestamp(),
+            timestamp: await getCurrentTimestampNTP(),
             domain: getWalletApiDomain()
         };
 

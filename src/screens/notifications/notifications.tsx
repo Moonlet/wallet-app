@@ -233,6 +233,8 @@ export class NotificationsComponent extends React.Component<
             const finalNotifications = this.parseNotifications(notifications);
             this.setState({ notifications: finalNotifications });
         }
+
+        this.setState({ isRefreshing: false });
     }
 
     public render() {

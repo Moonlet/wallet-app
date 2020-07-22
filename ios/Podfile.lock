@@ -393,9 +393,9 @@ PODS:
   - SDWebImageWebPCoder (0.2.5):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.0)
-  - Sentry (5.1.5):
-    - Sentry/Core (= 5.1.5)
-  - Sentry/Core (5.1.5)
+  - Sentry (5.1.6):
+    - Sentry/Core (= 5.1.6)
+  - Sentry/Core (5.1.6)
   - TouchID (4.4.1):
     - React
   - Yoga (1.14.0)
@@ -664,7 +664,7 @@ SPEC CHECKSUMS:
   RNVoipPushNotification: 27ff53396bfd396bef52bf30a31353c1897b8e3a
   SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987
-  Sentry: e73af5462d1e7978c571aa2fdb861053938d7efd
+  Sentry: e5796ec31a481474d2f94553213278470f9e302d
   TouchID: ba4c656d849cceabc2e4eef722dea5e55959ecf4
   Yoga: d8c572ddec8d05b7dba08e4e5f1924004a177078
 

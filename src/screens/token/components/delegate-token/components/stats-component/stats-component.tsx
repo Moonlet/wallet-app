@@ -11,10 +11,17 @@ import {
 } from '../../../../../../core/blockchain/types/stats';
 import Pie from '../../../../../../library/pie-chart/pie-chart';
 import BigNumber from 'bignumber.js';
+import { Blockchain } from '../../../../../../core/blockchain/types';
+import { getBlockchain } from '../../../../../../core/blockchain/blockchain-factory';
+import { ITokenState } from '../../../../../../redux/wallets/state';
+import { getTokenConfig } from '../../../../../../redux/tokens/static-selectors';
+import { formatNumber } from '../../../../../../core/utils/format-number';
 // TODO - fork and move ART library(will be removed in the future warning) to react-native-comunity OR add library within project
 
 export interface IProps {
     accountStats: AccountStats;
+    blockchain: Blockchain;
+    token: ITokenState;
 }
 
 export class StatsComponentInternal extends React.Component<
@@ -29,8 +36,18 @@ export class StatsComponentInternal extends React.Component<
         switch (stat.type) {
             case IStatValueType.STRING:
                 return stat.data.value;
-            case IStatValueType.AMOUNT:
-                return stat.data.value + ' ' + stat.data.tokenSymbol; // TODO format text based on blockchain
+            case IStatValueType.AMOUNT: {
+                const tokenConfig = getTokenConfig(this.props.blockchain, stat.data.tokenSymbol);
+                const blockchainInstance = getBlockchain(this.props.blockchain);
+                const amountFromStd = blockchainInstance.account.amountFromStd(
+                    new BigNumber(stat.data.value),
+                    tokenConfig.decimals
+                );
+                return formatNumber(new BigNumber(amountFromStd), {
+                    currency: blockchainInstance.config.coin,
+                    minimumFractionDigits: tokenConfig.ui.decimals
+                });
+            }
         }
     }
     getValue(stat: IStatValue) {

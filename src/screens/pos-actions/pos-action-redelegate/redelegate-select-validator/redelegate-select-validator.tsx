@@ -36,6 +36,7 @@ import { Icon } from '../../../../components/icon/icon';
 import { IconValues } from '../../../../components/icon/values';
 import { ValidatorCard } from '../../../token/components/delegate-token/components/validators/validator-card/validator-card';
 import { formatNumber } from '../../../../core/utils/format-number';
+import { getValidators } from '../../../../redux/ui/validators/selectors';
 
 interface IHeaderStep {
     step: number;
@@ -46,13 +47,16 @@ interface IHeaderStep {
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    validators: IValidator[];
     navigateToEnterAmountStep: typeof navigateToEnterAmountStep;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    const chainId = getChainId(state, ownProps.blockchain);
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        chainId: getChainId(state, ownProps.blockchain)
+        chainId,
+        validators: getValidators(state, ownProps.blockchain, chainId, true)
     };
 };
 
@@ -126,17 +130,6 @@ export class RedelegateSelectValidatorComponent extends React.Component<
         this.setState({ validatorsList: validators });
     }
 
-    public componentDidMount() {
-        const blockchainInstance = getBlockchain(this.props.blockchain);
-        blockchainInstance
-            .getStats(this.props.chainId)
-            .getValidatorList(CardActionType.NAVIGATE, 7)
-            .then(validators => {
-                this.setState({ validatorsList: validators });
-            })
-            .catch();
-    }
-
     private renderValidatorList() {
         const { styles } = this.props;
         const blockchainInstance = getBlockchain(this.props.blockchain);
@@ -149,38 +142,18 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     style={styles.actionIconContainer}
                     onPress={() => {
                         if (this.state.nrValidators > 1) {
-                            const nrValidatorsNew = this.state.nrValidators - 1;
-                            blockchainInstance
-                                .getStats(this.props.chainId)
-                                .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                                .then(validators => {
-                                    this.setState({
-                                        nrValidators: nrValidatorsNew,
-                                        validatorsList: validators
-                                    });
-                                })
-                                .catch();
+                            // const nrValidatorsNew = this.state.nrValidators - 1;
                         }
                         // decrease
                     }}
                 >
-                    <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
+                    <Icon name={IconValues.MINUS} size={normalize(16)} style={styles.actionIcon} />
                 </TouchableOpacity>
                 <Text style={styles.actionCounterText}>{this.state.nrValidators}</Text>
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
-                        const nrValidatorsNew = this.state.nrValidators + 1;
-                        blockchainInstance
-                            .getStats(this.props.chainId)
-                            .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                            .then(validators => {
-                                this.setState({
-                                    nrValidators: nrValidatorsNew,
-                                    validatorsList: validators
-                                });
-                            })
-                            .catch();
+                        // const nrValidatorsNew = this.state.nrValidators + 1;
                     }}
                 >
                     <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
@@ -198,7 +171,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                         currency: config.coin
                     })}
                     actionType={CardActionType.DEFAULT}
-                    bottomStats={validator.cardStats}
+                    bottomStats={validator.topStats}
                     actionTypeSelected={validator.actionTypeSelected || false}
                     borderColor={this.props.theme.colors.labelRedelegate}
                     blockchain={this.props.blockchain}

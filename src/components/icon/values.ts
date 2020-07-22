@@ -37,6 +37,7 @@ export enum IconValues {
     LEDGER_LOOGO = 'ledger-logo',
     MONEY_WALLET = 'money-wallet',
     MONITOR = 'monitor',
+    MINUS = 'minus',
     NAVIGATION_MENU_HORIZONTAL = 'navigation-menu-horizontal',
     NAVIGATION_MENU_VERTICAL = 'navigation-menu-vertical',
     NAVIGATION_MENU = 'navigation-menu',

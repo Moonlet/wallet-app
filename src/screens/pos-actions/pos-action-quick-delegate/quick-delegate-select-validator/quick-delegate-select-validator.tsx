@@ -7,7 +7,6 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
-import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import {
     withNavigationParams,
     INavigationProps
@@ -34,17 +33,28 @@ import {
 import { Icon } from '../../../../components/icon/icon';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
 import { IconValues } from '../../../../components/icon/values';
+import { getValidators } from '../../../../redux/ui/validators/selectors';
+import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    validators: IValidator[];
     navigateToEnterAmountStep: typeof navigateToEnterAmountStep;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    const chainId = getChainId(state, ownProps.blockchain);
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        chainId: getChainId(state, ownProps.blockchain)
+        chainId,
+        validators: getValidators(
+            state,
+            ownProps.blockchain,
+            chainId,
+            false,
+            PosBasicActionType.DELEGATE
+        )
     };
 };
 
@@ -84,7 +94,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
         super(props);
 
         this.state = {
-            nrValidators: 1,
+            nrValidators: 6,
             validatorsList: props.validators
         };
     }
@@ -105,45 +115,24 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
 
     private renderValidatorList() {
         const { styles } = this.props;
-        const blockchainInstance = getBlockchain(this.props.blockchain);
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
                         if (this.state.nrValidators > 1) {
-                            const nrValidatorsNew = this.state.nrValidators - 1;
-                            blockchainInstance
-                                .getStats(this.props.chainId)
-                                .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                                .then(validators => {
-                                    this.setState({
-                                        nrValidators: nrValidatorsNew,
-                                        validatorsList: validators
-                                    });
-                                })
-                                .catch();
+                            // const nrValidatorsNew = this.state.nrValidators - 1;
                         }
                         // decrease
                     }}
                 >
-                    <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
+                    <Icon name={IconValues.MINUS} size={normalize(16)} style={styles.actionIcon} />
                 </TouchableOpacity>
                 <Text style={styles.actionCounterText}>{this.state.nrValidators}</Text>
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
-                        const nrValidatorsNew = this.state.nrValidators + 1;
-                        blockchainInstance
-                            .getStats(this.props.chainId)
-                            .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                            .then(validators => {
-                                this.setState({
-                                    nrValidators: nrValidatorsNew,
-                                    validatorsList: validators
-                                });
-                            })
-                            .catch();
+                        // const nrValidatorsNew = this.state.nrValidators + 1;
                     }}
                 >
                     <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />

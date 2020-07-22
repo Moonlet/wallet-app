@@ -15,6 +15,7 @@ import { translate } from '../../core/i18n';
 import { StatsComponent } from '../token/components/delegate-token/components/stats-component/stats-component';
 import { IValidator, CardActionType } from '../../core/blockchain/types/stats';
 import { ITokenState } from '../../redux/wallets/state';
+import BigNumber from 'bignumber.js';
 
 export interface INavigationParams {
     validator: IValidator;
@@ -93,8 +94,12 @@ export class ValidatorScreenComponent extends React.Component<
                         accountStats={{
                             topStats: validator.topStats,
                             chartStats: validator.chartStats,
-                            secondaryStats: validator.secondaryStats
+                            secondaryStats: validator.secondaryStats,
+                            totalAmount: new BigNumber(0),
+                            widgets: []
                         }}
+                        blockchain={this.props.blockchain}
+                        token={this.props.token}
                     />
                 </View>
 

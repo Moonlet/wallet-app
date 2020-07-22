@@ -103,7 +103,7 @@ export class DelegateSelectValidatorComponent extends React.Component<
         });
 
         this.state = {
-            nrValidators: 1,
+            nrValidators: 5,
             headerSteps: stepList,
             validatorsList: props.validators
         };
@@ -125,45 +125,24 @@ export class DelegateSelectValidatorComponent extends React.Component<
 
     private renderValidatorList() {
         const { styles } = this.props;
-        const blockchainInstance = getBlockchain(this.props.blockchain);
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
                         if (this.state.nrValidators > 1) {
-                            const nrValidatorsNew = this.state.nrValidators - 1;
-                            blockchainInstance
-                                .getStats(this.props.chainId)
-                                .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                                .then(validators => {
-                                    this.setState({
-                                        nrValidators: nrValidatorsNew,
-                                        validatorsList: validators
-                                    });
-                                })
-                                .catch();
+                            // const nrValidatorsNew = this.state.nrValidators - 1;
                         }
                         // decrease
                     }}
                 >
-                    <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
+                    <Icon name={IconValues.MINUS} size={normalize(16)} style={styles.actionIcon} />
                 </TouchableOpacity>
                 <Text style={styles.actionCounterText}>{this.state.nrValidators}</Text>
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
-                        const nrValidatorsNew = this.state.nrValidators + 1;
-                        blockchainInstance
-                            .getStats(this.props.chainId)
-                            .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                            .then(validators => {
-                                this.setState({
-                                    nrValidators: nrValidatorsNew,
-                                    validatorsList: validators
-                                });
-                            })
-                            .catch();
+                        // const nrValidatorsNew = this.state.nrValidators + 1;
                     }}
                 >
                     <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />

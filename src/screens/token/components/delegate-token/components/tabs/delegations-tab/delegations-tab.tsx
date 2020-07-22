@@ -13,8 +13,12 @@ import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
 import { ChainIdType } from '../../../../../../../core/blockchain/types';
-import { ITokenState } from '../../../../../../../redux/wallets/state';
-import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
+import { ITokenState, IAccountState } from '../../../../../../../redux/wallets/state';
+import { getValidators } from '../../../../../../../redux/ui/validators/selectors';
+import { IReduxState } from '../../../../../../../redux/state';
+import { connect } from 'react-redux';
+import { getAccount } from '../../../../../../../redux/wallets/selectors';
+import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 
 export interface IProps {
     accountIndex: number;
@@ -23,32 +27,55 @@ export interface IProps {
     chainId: ChainIdType;
 }
 
+export interface IReduxProps {
+    validators: IValidator[];
+    account: IAccountState;
+}
+
+export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
+    return {
+        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
+        validators: getValidators(state, ownProps.blockchain, ownProps.chainId, true)
+    };
+};
+
 interface IState {
     validatorsFilteredList: IValidator[];
     unfilteredList: IValidator[];
+    myValidatorsLoaded: boolean;
 }
 let searchTimeoutTimer: any;
 
 export class DelegationsTabComponent extends React.Component<
-    IProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    constructor(props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
         this.state = {
             validatorsFilteredList: [],
-            unfilteredList: []
+            unfilteredList: [],
+            myValidatorsLoaded: false
         };
     }
 
     public componentDidMount() {
         const blockchainInstance = getBlockchain(this.props.blockchain);
+
         blockchainInstance
             .getStats(this.props.chainId)
-            .getValidatorList(CardActionType.NAVIGATE, -1)
-            .then(validators => {
-                this.setState({ validatorsFilteredList: validators, unfilteredList: validators });
+            .getValidatorsAddressVotedByAccount(this.props.account)
+            .then(validatorsAddress => {
+                const myListOfValidators = this.props.validators.filter(validator =>
+                    validatorsAddress.includes(validator.id)
+                );
+
+                this.setState({
+                    myValidatorsLoaded: true,
+                    unfilteredList: myListOfValidators,
+                    validatorsFilteredList: myListOfValidators
+                });
             })
             .catch();
     }
@@ -91,12 +118,16 @@ export class DelegationsTabComponent extends React.Component<
                             onClose={this.onClose}
                         />
                     </View>
-                    <ValidatorsList
-                        validators={this.state.validatorsFilteredList}
-                        blockchain={this.props.blockchain}
-                        onSelect={this.onSelect}
-                        actionType={CardActionType.NAVIGATE}
-                    />
+                    {!this.state.myValidatorsLoaded ? (
+                        <LoadingIndicator />
+                    ) : (
+                        <ValidatorsList
+                            validators={this.state.validatorsFilteredList}
+                            blockchain={this.props.blockchain}
+                            onSelect={this.onSelect}
+                            actionType={CardActionType.NAVIGATE}
+                        />
+                    )}
                 </View>
                 <View style={styles.bottomContainer}>
                     <CtaGroup
@@ -105,7 +136,7 @@ export class DelegationsTabComponent extends React.Component<
                             accountIndex: this.props.accountIndex,
                             blockchain: this.props.blockchain,
                             token: this.props.token,
-                            validators: [moonletValidator]
+                            validators: []
                         }}
                     />
                 </View>
@@ -115,5 +146,6 @@ export class DelegationsTabComponent extends React.Component<
 }
 
 export const DelegationsTab = smartConnect<IProps>(DelegationsTabComponent, [
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

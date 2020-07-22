@@ -1,6 +1,5 @@
 import { ITokenConfigState } from '../../../../redux/tokens/state';
 import { TokenScreenComponentType, TokenType } from '../../types/token';
-import BigNumber from 'bignumber.js';
 
 export const CELO_USD_TESTNET_ALFAJORES: ITokenConfigState = {
     name: 'Celo USD',
@@ -16,12 +15,7 @@ export const CELO_USD_TESTNET_ALFAJORES: ITokenConfigState = {
         decimals: 4,
         tokenScreenComponent: TokenScreenComponentType.DEFAULT
     },
-    type: TokenType.ERC20,
-    units: {
-        WEI: new BigNumber(1),
-        GWEI: new BigNumber(Math.pow(10, 9)),
-        cGLD: new BigNumber(Math.pow(10, 18))
-    }
+    type: TokenType.ERC20
 };
 
 export const CELO_USD_CONTRACT_ADDRESS = (contractAddress: string): ITokenConfigState => {

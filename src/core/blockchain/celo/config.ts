@@ -7,7 +7,7 @@ import {
     CELO_GOLD_MAINNET,
     CELO_GOLD_TESTNET_ALFAJORES,
     CELO_GOLD_TESTNET_BAKLAVA
-} from './tokens/cGLD';
+} from './tokens/celo';
 import {
     CELO_USD_MAINNET,
     CELO_USD_TESTNET_ALFAJORES,
@@ -70,29 +70,29 @@ const validatorCTA = {
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/52752'/0'/0`,
     derivationType: DerivationType.HD_KEY,
-    coin: 'cGLD',
+    coin: 'CELO',
     defaultUnit: 'WEI',
     iconComponent: CeloIcon,
     droppedTxBlocksThreshold: 50,
     autoAddedTokensSymbols: {
         42220: {
-            cGLD: CELO_GOLD_MAINNET,
+            CELO: CELO_GOLD_MAINNET,
             cUSD: CELO_USD_MAINNET
         },
         44786: {
-            cGLD: CELO_GOLD_TESTNET_ALFAJORES,
+            CELO: CELO_GOLD_TESTNET_ALFAJORES,
             cUSD: CELO_USD_TESTNET_ALFAJORES
         },
         40120: {
-            cGLD: CELO_GOLD_TESTNET_BAKLAVA,
+            CELO: CELO_GOLD_TESTNET_BAKLAVA,
             cUSD: CELO_USD_TESTNET_BAKLAVA
         }
     },
     tokens: {
-        cGLD: CELO_GOLD_NATIVE
+        CELO: CELO_GOLD_NATIVE
     },
     feeOptions: {
-        gasPriceToken: 'cGLD',
+        gasPriceToken: 'CELO',
         defaults: {
             gasPrice: new BigNumber(5000000000),
             gasLimit: {

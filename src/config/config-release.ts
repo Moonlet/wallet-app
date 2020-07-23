@@ -22,5 +22,6 @@ export const CONFIG_RELEASE: IAppConfig = {
         sendResponseUrl: extSyncBaseUrl + '/sendResponse',
         deleteRequestUrl: extSyncBaseUrl + '/deleteRequest'
     },
-    firebaseWebConfig: firebaseConfig
+    firebaseWebConfig: firebaseConfig,
+    walletApiBaseUrl: 'http://127.0.0.1:8080' // TODO: update this after deploy
 };

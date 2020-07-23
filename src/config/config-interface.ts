@@ -17,4 +17,5 @@ export interface IAppConfig {
         deleteRequestUrl: string;
     };
     firebaseWebConfig: any;
+    walletApiBaseUrl: string;
 }

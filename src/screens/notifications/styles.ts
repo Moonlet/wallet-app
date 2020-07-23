@@ -19,7 +19,8 @@ export default (theme: ITheme) =>
         scrollContainer: {
             flexGrow: 1,
             paddingHorizontal: BASE_DIMENSION * 3,
-            paddingVertical: BASE_DIMENSION * 4
+            paddingTop: BASE_DIMENSION * 4,
+            paddingBottom: BASE_DIMENSION * 8
         },
         rowContainer: {
             flexDirection: 'row',
@@ -37,9 +38,9 @@ export default (theme: ITheme) =>
             fontWeight: '600'
         },
         titleRead: {
-            fontSize: normalizeFontAndLineHeight(17),
-            lineHeight: normalizeFontAndLineHeight(22),
-            color: theme.colors.textSecondary
+            fontSize: normalizeFontAndLineHeight(16),
+            lineHeight: normalizeFontAndLineHeight(21),
+            color: theme.colors.textTertiary
         },
         subtitleUnread: {
             fontSize: normalizeFontAndLineHeight(13),
@@ -81,5 +82,9 @@ export default (theme: ITheme) =>
             color: theme.colors.textTertiary,
             textAlign: 'center',
             paddingHorizontal: BASE_DIMENSION
+        },
+        loadingContainer: {
+            paddingTop: BASE_DIMENSION,
+            paddingBottom: BASE_DIMENSION * 6
         }
     });

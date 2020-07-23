@@ -823,6 +823,7 @@ export const setWalletsCredentials = (password: string) => async (
                         publicKey: wallet.walletPublicKey
                     };
                 } else {
+                    // Generate wallet credentials
                     const walletHW = await HWWalletFactory.get(
                         wallet.hwOptions.deviceVendor,
                         wallet.hwOptions.deviceModel,
@@ -842,13 +843,24 @@ export const setWalletsCredentials = (password: string) => async (
                 );
 
                 if (keychainWalletCredentials) {
-                    // already set
+                    // Already set
                 } else {
                     await setWalletCredentialsKey(
                         walletCredentials.publicKey,
                         walletCredentials.privateKey
                     );
                 }
+            } else {
+                SentryCaptureException(
+                    new Error(
+                        JSON.stringify({
+                            walletPublicKey: wallet?.walletPublicKey,
+                            walletType: wallet.type,
+                            walletHwOptions: wallet?.hwOptions,
+                            errorMessage: 'Undefined walletCredentials'
+                        })
+                    )
+                );
             }
         } catch (err) {
             SentryCaptureException(new Error(JSON.stringify(err)));

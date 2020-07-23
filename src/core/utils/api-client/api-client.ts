@@ -4,12 +4,12 @@ import { NotificationsApiClient } from './notifications';
 import { ValidatorsApiClient } from './validators';
 
 export class ApiClient {
-    public httpClient: HttpClient;
+    public http: HttpClient;
     public notifications: NotificationsApiClient;
     public validators: ValidatorsApiClient;
 
     constructor() {
-        this.httpClient = new HttpClient(CONFIG.walletApiBaseUrl);
+        this.http = new HttpClient(CONFIG.walletApiBaseUrl);
         this.notifications = new NotificationsApiClient(this);
         this.validators = new ValidatorsApiClient(this);
     }

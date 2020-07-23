@@ -36,7 +36,7 @@ export class NotificationsApiClient {
                 const signature = getSignature(data, walletPrivateKey, walletPublicKey);
                 data.signature = signature;
 
-                const response = await this.apiClient.httpClient.post('/notifications', data);
+                const response = await this.apiClient.http.post('/notifications', data);
 
                 if (response?.result?.notifications) {
                     return response.result.notifications;
@@ -71,7 +71,7 @@ export class NotificationsApiClient {
                 const signature = getSignature(data, walletPrivateKey, walletPublicKey);
                 data.signature = signature;
 
-                const response = await this.apiClient.httpClient.post(
+                const response = await this.apiClient.http.post(
                     '/notifications/register-push-notification-token',
                     data
                 );
@@ -132,7 +132,7 @@ export class NotificationsApiClient {
                 const signature = getSignature(data, walletPrivateKey, walletPublicKey);
                 data.signature = signature;
 
-                await this.apiClient.httpClient.post(
+                await this.apiClient.http.post(
                     '/notifications/register-notification-settings',
                     data
                 );
@@ -162,10 +162,7 @@ export class NotificationsApiClient {
                 const signature = getSignature(data, walletPrivateKey, walletPublicKey);
                 data.signature = signature;
 
-                const response = await this.apiClient.httpClient.post(
-                    '/notifications/mark-seen',
-                    data
-                );
+                const response = await this.apiClient.http.post('/notifications/mark-seen', data);
 
                 if (response?.result?.notifications) {
                     return response.result.notifications;
@@ -197,7 +194,7 @@ export class NotificationsApiClient {
                 }
             ];
 
-            const response = await this.apiClient.httpClient.post('/notifications/unseen', data);
+            const response = await this.apiClient.http.post('/notifications/unseen', data);
 
             if (response?.result?.unseenNotifications) {
                 return response.result.unseenNotifications;

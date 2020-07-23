@@ -1,7 +1,7 @@
 import { getSelectedWallet } from '../wallets/selectors';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
-import { ApiClient } from '../../core/utils/api-client';
+import { ApiClient } from '../../core/utils/api-client/api-client';
 
 export const SET_UNSEEN_NOTIFICATIONS = 'SET_UNSEEN_NOTIFICATIONS';
 export const SET_NOTIFICATIONS = 'SET_NOTIFICATIONS';
@@ -34,8 +34,9 @@ export const getUnseenNotifications = () => async (
     const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
     if (walletPublicKey) {
-        const apiClient = new ApiClient();
-        const unseenNotifications = await apiClient.getUnseenNotifications(walletPublicKey);
+        const unseenNotifications = await new ApiClient().notifications.getUnseenNotifications(
+            walletPublicKey
+        );
 
         dispatch({
             type: SET_UNSEEN_NOTIFICATIONS,
@@ -52,8 +53,7 @@ export const fetchNotifications = (page?: number) => async (
     const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
     if (walletPublicKey) {
-        const apiClient = new ApiClient();
-        return apiClient.fetchNotifications(walletPublicKey, page);
+        return new ApiClient().notifications.fetchNotifications(walletPublicKey, page);
     }
 };
 
@@ -65,8 +65,10 @@ export const registerPushNotifToken = () => async (
     const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
     if (walletPublicKey) {
-        const apiClient = new ApiClient();
-        await apiClient.registerPushNotifToken(walletPublicKey, state.preferences.deviceId);
+        await new ApiClient().notifications.registerPushNotifToken(
+            walletPublicKey,
+            state.preferences.deviceId
+        );
     }
 };
 
@@ -79,7 +81,10 @@ export const registerNotificationSettings = () => async (
     const apiClient = new ApiClient();
 
     for (const wallet of Object.values(state.wallets)) {
-        await apiClient.registerNotificationSettings(wallet, state.preferences.deviceId);
+        await apiClient.notifications.registerNotificationSettings(
+            wallet,
+            state.preferences.deviceId
+        );
     }
 };
 
@@ -98,7 +103,6 @@ export const markSeenNotification = (notificationId: string, blockchain?: string
             });
         }
 
-        const apiClient = new ApiClient();
-        await apiClient.markSeenNotification(walletPublicKey, notificationId);
+        await new ApiClient().notifications.markSeenNotification(walletPublicKey, notificationId);
     }
 };

@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const defaultHeaders = {
     Accept: 'application/json',
     'Content-Type': 'application/json'
@@ -10,28 +8,33 @@ export class HttpClient {
     constructor(private url: string) {}
 
     public async get(path: string): Promise<any> {
-        const response = await axios.get(this.url + path);
-        return response;
+        return fetch(this.url + path).then(async res => {
+            const response = await res.json();
+            return response;
+        });
     }
 
     public async post(path: string, body: {}): Promise<any> {
-        const response = await axios.post(this.url + path, body, {
-            headers: defaultHeaders
+        return fetch(this.url + path, {
+            method: 'POST',
+            headers: defaultHeaders,
+            body: JSON.stringify(body)
+        }).then(response => {
+            return response.json();
         });
-        return response.data;
     }
 
     public async jsonRpc(method: string, params: any[] = []): Promise<any> {
-        if (this.lastId >= 100000) this.lastId = 0;
-
+        const id = this.lastId++;
         const body = {
             jsonrpc: '2.0',
-            id: this.lastId++,
+            id,
             method,
             params: Array.isArray(params) ? params : [params]
         };
 
-        const response = await this.post('', body);
-        return response;
+        return this.post('', body).then(async res => {
+            return res;
+        });
     }
 }

@@ -44,6 +44,7 @@
         "@zilliqa-js/account": "^0.8.4",
         "@zilliqa-js/crypto": "^0.8.1-alpha.0",
         "@zilliqa-js/util": "^0.8.3",
+        "axios": "^0.19.2",
         "babel-plugin-inline-dotenv": "^1.5.0",
         "bech32": "^1.1.3",
         "bignumber.js": "^9.0.0",

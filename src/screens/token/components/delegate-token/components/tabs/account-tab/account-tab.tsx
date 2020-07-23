@@ -74,7 +74,7 @@ export class AccountTabComponent extends React.Component<
             widgets: []
         };
     }
-    public componentDidMount() {
+    public async componentDidMount() {
         const blockchainInstance = getBlockchain(this.props.blockchain);
         blockchainInstance
             .getStats(this.props.chainId)

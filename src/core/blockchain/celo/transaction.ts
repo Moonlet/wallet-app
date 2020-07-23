@@ -80,6 +80,10 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                     Contracts.LOCKED_GOLD
                 ].getAccountNonvotingLockedGold(tx.account.address);
 
+                // const isRegisteredAccount = await client.contracts[
+                //     Contracts.ACCOUNTS
+                // ].isRegisteredAccount(tx.account.address);
+
                 if (!amountLocked.isGreaterThan(new BigNumber(tx.amount))) {
                     const txLock: IPosTransaction = { ...tx };
                     txLock.amount = new BigNumber(tx.amount).minus(amountLocked).toString();

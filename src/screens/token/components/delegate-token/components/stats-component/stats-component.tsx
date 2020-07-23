@@ -39,13 +39,13 @@ export class StatsComponentInternal extends React.Component<
             case IStatValueType.AMOUNT: {
                 const tokenConfig = getTokenConfig(this.props.blockchain, stat.data.tokenSymbol);
                 const blockchainInstance = getBlockchain(this.props.blockchain);
+
                 const amountFromStd = blockchainInstance.account.amountFromStd(
                     new BigNumber(stat.data.value),
                     tokenConfig.decimals
                 );
                 return formatNumber(new BigNumber(amountFromStd), {
-                    currency: blockchainInstance.config.coin,
-                    minimumFractionDigits: tokenConfig.ui.decimals
+                    currency: blockchainInstance.config.coin
                 });
             }
         }

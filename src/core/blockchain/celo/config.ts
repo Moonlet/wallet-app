@@ -146,5 +146,5 @@ export const config: IBlockchainConfig = {
 export enum Contracts {
     LOCKED_GOLD = 'LOCKED_GOLD',
     ELECTION = 'ELECTION',
-    ACCOUNT = 'ACCOUNT'
+    ACCOUNTS = 'ACCOUNTS'
 }

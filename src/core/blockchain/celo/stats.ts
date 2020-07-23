@@ -20,6 +20,7 @@ export class Stats extends GenericStats<Client> {
             })
         });
         const response = await result.json();
+
         return response.result.data;
     }
 

@@ -200,9 +200,12 @@ export const createHWWallet = (
         dispatch(verifyAddressOnDevice(true));
         const accounts: IAccountState[] = await wallet.getAccounts(blockchain, 0);
         accounts[0].selected = true;
+
+        const walletCredentials = await (wallet as LedgerWallet).getWalletCredentials();
+
         const walletData: IWalletState = {
             id: walletId,
-            walletPublicKey: null,
+            walletPublicKey: walletCredentials.publicKey,
             selected: false,
             selectedBlockchain: blockchain,
             hwOptions: {
@@ -226,6 +229,7 @@ export const createHWWallet = (
 
         dispatch(toInitialState());
         dispatch(setDisplayPasswordModal(true));
+        startNotificationsHandlers()(dispatch, getState);
     } catch (e) {
         dispatch(setDisplayPasswordModal(true));
 
@@ -808,8 +812,27 @@ export const setWalletsCredentials = (password: string) => async (
         try {
             const walletId = (wallet as IWalletState).id;
 
-            const storageWallet = await HDWallet.loadFromStorage(walletId, password);
-            const walletCredentials = storageWallet.getWalletCredentials();
+            let walletCredentials: { publicKey: string; privateKey?: string };
+
+            if (wallet.type === WalletType.HD) {
+                const storageHDWallet = await HDWallet.loadFromStorage(walletId, password);
+                walletCredentials = storageHDWallet.getWalletCredentials();
+            } else {
+                if (wallet.walletPublicKey) {
+                    walletCredentials = {
+                        publicKey: wallet.walletPublicKey
+                    };
+                } else {
+                    const walletHW = await HWWalletFactory.get(
+                        wallet.hwOptions.deviceVendor,
+                        wallet.hwOptions.deviceModel,
+                        wallet.hwOptions.deviceId,
+                        wallet.hwOptions.connectionType
+                    );
+
+                    walletCredentials = await (walletHW as LedgerWallet).getWalletCredentials();
+                }
+            }
 
             if (walletCredentials) {
                 setWalletPublicKey(walletId, walletCredentials.publicKey)(dispatch, getState);

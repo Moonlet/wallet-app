@@ -1,6 +1,6 @@
 import { IWallet } from '../types';
 import { Mnemonic } from './mnemonic';
-import { Blockchain, IBlockchainTransaction } from '../../blockchain/types';
+import { Blockchain, IBlockchainTransaction, DerivationType } from '../../blockchain/types';
 import { getBlockchain } from '../../blockchain/blockchain-factory';
 import { IAccountState } from '../../../redux/wallets/state';
 import { HDKeyFactory } from './hd-key/hdkey-factory';
@@ -110,5 +110,23 @@ export class HDWallet implements IWallet {
 
     public getMnemonic() {
         return this.mnemonic;
+    }
+
+    public getWalletCredentials(): { publicKey: string; privateKey: string } {
+        const key = HDKeyFactory.get(DerivationType.HD_KEY, this.seed).derive(
+            `m/${'moonlet'
+                .split('')
+                .map(l => l.charCodeAt(0))
+                .join('/')}`
+        );
+
+        const blockchainInstance = getBlockchain(Blockchain.ZILLIQA);
+        const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(key);
+        const publicKey = blockchainInstance.account.privateToPublic(privateKey);
+
+        return {
+            publicKey,
+            privateKey
+        };
     }
 }

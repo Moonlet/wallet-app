@@ -47,11 +47,16 @@ import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { IconValues } from '../../components/icon/values';
 import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import {
+    startNotificationsHandlers,
+    getUnseenNotifications
+} from '../../redux/notifications/actions';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
 
 export interface IReduxProps {
+    walletId: string;
     walletsNr: number;
     getBalance: typeof getBalance;
     blockchains: Blockchain[];
@@ -63,27 +68,36 @@ export interface IReduxProps {
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
     chainId: ChainIdType;
+    deviceId: string;
+    startNotificationsHandlers: typeof startNotificationsHandlers;
+    unseenNotifications: number;
+    getUnseenNotifications: typeof getUnseenNotifications;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
 
     return {
+        walletId: getSelectedWallet(state)?.id,
         walletsNr: Object.keys(state.wallets).length,
         blockchains: getBlockchains(state),
         selectedBlockchain: getSelectedBlockchain(state),
-        selectedAccount: getSelectedAccount(state),
+        selectedAccount,
         exchangeRates: state.market.exchangeRates,
         isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
         selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
         userCurrency: state.preferences.currency,
-        chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : ''
+        chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
+        deviceId: state.preferences.deviceId,
+        unseenNotifications: state.notifications.unseenNotifications
     };
 };
 
 const mapDispatchToProps = {
     getBalance,
-    openBottomSheet
+    openBottomSheet,
+    startNotificationsHandlers,
+    getUnseenNotifications
 };
 
 interface IState {
@@ -111,14 +125,22 @@ const UnreadNotifCircle = () => (
     <View
         style={{
             position: 'absolute',
-            top: 0,
+            top: -BASE_DIMENSION / 2,
             left: BASE_DIMENSION + BASE_DIMENSION / 2,
-            width: normalize(14),
-            height: normalize(14),
-            borderRadius: normalize(14),
-            backgroundColor: themes.dark.colors.negative
+            backgroundColor: themes.dark.colors.appBackground,
+            padding: BASE_DIMENSION / 4
         }}
-    />
+    >
+        <View
+            style={{
+                flex: 1,
+                width: normalize(14),
+                height: normalize(14),
+                borderRadius: normalize(14),
+                backgroundColor: themes.dark.colors.negative
+            }}
+        />
+    </View>
 );
 
 const navigationOptions = ({ navigation, theme }: any) => ({
@@ -145,8 +167,8 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                         size={ICON_SIZE}
                         style={{ color: themes[theme].colors.accent }}
                     />
-                    {/* TODO: link this to redux */}
-                    {isFeatureActive(RemoteFeature.NOTIF_CENTER) && <UnreadNotifCircle />}
+                    {isFeatureActive(RemoteFeature.NOTIF_CENTER) &&
+                        navigation.state.params?.unseenNotifications > 0 && <UnreadNotifCircle />}
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -201,6 +223,14 @@ export class DashboardScreenComponent extends React.Component<
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
+
+        if (isFeatureActive(RemoteFeature.NOTIF_CENTER)) {
+            this.props.startNotificationsHandlers();
+        }
+
+        this.props.navigation.setParams({
+            unseenNotifications: this.props.unseenNotifications
+        });
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
@@ -208,6 +238,19 @@ export class DashboardScreenComponent extends React.Component<
             // Used on web to get balances when selectedAccount is changed
             // NavigationEvents is not enough for the web in order to get balances
             this.onFocus();
+        }
+
+        if (
+            this.props.walletId !== prevProps.walletId &&
+            isFeatureActive(RemoteFeature.NOTIF_CENTER)
+        ) {
+            this.props.getUnseenNotifications();
+        }
+
+        if (this.props.unseenNotifications !== prevProps.unseenNotifications) {
+            this.props.navigation.setParams({
+                unseenNotifications: this.props.unseenNotifications
+            });
         }
     }
 
@@ -424,7 +467,7 @@ export class DashboardScreenComponent extends React.Component<
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
                 <TestnetBadge />
 
-                <NavigationEvents onWillFocus={payload => this.onFocus()} />
+                <NavigationEvents onWillFocus={() => this.onFocus()} />
 
                 {showCreateAccount && (
                     <AccountCreate

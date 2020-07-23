@@ -15,7 +15,8 @@ import {
     WALLET_SELECT_ACCOUNT,
     WALLET_SELECT_BLOCKCHAIN,
     SELECT_WALLET,
-    TRANSACTION_UPSERT
+    TRANSACTION_UPSERT,
+    SET_WALLET_PUBLIC_KEY
 } from './actions';
 import { REHYDRATE } from 'redux-persist';
 import BigNumber from 'bignumber.js';
@@ -357,6 +358,15 @@ export default (state: IWalletsState = intialState, action: IAction) => {
 
             return firebaseWallets;
         }
+
+        case SET_WALLET_PUBLIC_KEY:
+            return {
+                ...state,
+                [action.data.walletId]: {
+                    ...state[action.data.walletId],
+                    walletPublicKey: action.data.walletPublicKey
+                }
+            };
 
         default:
             break;

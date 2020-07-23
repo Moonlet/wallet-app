@@ -817,7 +817,7 @@ export const setWalletsCredentials = (password: string) => async (
             if (wallet.type === WalletType.HD) {
                 const storageHDWallet = await HDWallet.loadFromStorage(walletId, password);
                 walletCredentials = storageHDWallet.getWalletCredentials();
-            } else {
+            } else if (wallet.type === WalletType.HW) {
                 if (wallet.walletPublicKey) {
                     walletCredentials = {
                         publicKey: wallet.walletPublicKey

@@ -188,7 +188,7 @@ export const createHWWallet = (
         dispatch(toInitialState());
         dispatch(setDisplayPasswordModal(false));
 
-        const wallet = await HWWalletFactory.get(
+        const wallet: IWallet = await HWWalletFactory.get(
             deviceVendor,
             deviceModel,
             deviceId,
@@ -201,11 +201,11 @@ export const createHWWallet = (
         const accounts: IAccountState[] = await wallet.getAccounts(blockchain, 0);
         accounts[0].selected = true;
 
-        const walletCredentials = await (wallet as LedgerWallet).getWalletCredentials();
+        const walletCredentials = await wallet.getWalletCredentials();
 
         const walletData: IWalletState = {
             id: walletId,
-            walletPublicKey: walletCredentials.publicKey,
+            walletPublicKey: walletCredentials?.publicKey,
             selected: false,
             selectedBlockchain: blockchain,
             hwOptions: {
@@ -286,7 +286,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             dispatch(
                 addWallet({
                     id: walletId,
-                    walletPublicKey: wallet.getWalletCredentials().publicKey,
+                    walletPublicKey: (await wallet.getWalletCredentials())?.publicKey,
                     selected: false,
                     selectedBlockchain: Blockchain.ZILLIQA, // by default the first blockchain is selected
                     name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
@@ -817,7 +817,7 @@ export const setWalletsCredentials = (password: string) => async (
 
             if (wallet.type === WalletType.HD) {
                 const storageHDWallet = await HDWallet.loadFromStorage(walletId, password);
-                walletCredentials = storageHDWallet.getWalletCredentials();
+                walletCredentials = await storageHDWallet.getWalletCredentials();
             } else if (wallet.type === WalletType.HW) {
                 if (wallet.walletPublicKey) {
                     walletCredentials = {
@@ -825,27 +825,25 @@ export const setWalletsCredentials = (password: string) => async (
                     };
                 } else {
                     // Generate wallet credentials
-                    const walletHW = await HWWalletFactory.get(
+                    const walletHW: IWallet = await HWWalletFactory.get(
                         wallet.hwOptions.deviceVendor,
                         wallet.hwOptions.deviceModel,
                         wallet.hwOptions.deviceId,
                         wallet.hwOptions.connectionType
                     );
 
-                    walletCredentials = await (walletHW as LedgerWallet).getWalletCredentials();
+                    walletCredentials = await walletHW.getWalletCredentials();
                 }
             }
 
-            if (walletCredentials) {
+            if (walletCredentials?.publicKey) {
                 setWalletPublicKey(walletId, walletCredentials.publicKey)(dispatch, getState);
 
                 const keychainWalletCredentials = await getWalletCredentialsKey(
                     walletCredentials.publicKey
                 );
 
-                if (keychainWalletCredentials) {
-                    // Already set
-                } else {
+                if (!keychainWalletCredentials) {
                     await setWalletCredentialsKey(
                         walletCredentials.publicKey,
                         walletCredentials.privateKey

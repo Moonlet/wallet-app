@@ -9,6 +9,7 @@ import { generateTokensConfig } from '../../../../redux/tokens/static-selectors'
 import { HDKeyFactory } from '../../hd-wallet/hd-key/hdkey-factory';
 import { getBlockchain } from '../../../blockchain/blockchain-factory';
 import { Mnemonic } from '../../hd-wallet/mnemonic';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export class LedgerWallet implements IWallet {
     private deviceId: string;
@@ -96,22 +97,26 @@ export class LedgerWallet implements IWallet {
     }
 
     public async getWalletCredentials(): Promise<{ publicKey: string; privateKey: string }> {
-        const mnemonic = await Mnemonic.generate(12);
+        try {
+            const mnemonic = await Mnemonic.generate(12);
 
-        const key = HDKeyFactory.get(DerivationType.HD_KEY, Buffer.from(mnemonic)).derive(
-            `m/${'moonlet'
-                .split('')
-                .map(l => l.charCodeAt(0))
-                .join('/')}`
-        );
+            const key = HDKeyFactory.get(DerivationType.HD_KEY, Buffer.from(mnemonic)).derive(
+                `m/${'moonlet'
+                    .split('')
+                    .map(l => l.charCodeAt(0))
+                    .join('/')}`
+            );
 
-        const blockchainInstance = getBlockchain(Blockchain.ZILLIQA);
-        const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(key);
-        const publicKey = blockchainInstance.account.privateToPublic(privateKey);
+            const blockchainInstance = getBlockchain(Blockchain.ZILLIQA);
+            const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(key);
+            const publicKey = blockchainInstance.account.privateToPublic(privateKey);
 
-        return {
-            publicKey,
-            privateKey
-        };
+            return {
+                publicKey,
+                privateKey
+            };
+        } catch (err) {
+            SentryCaptureException(new Error(JSON.stringify(err)));
+        }
     }
 }

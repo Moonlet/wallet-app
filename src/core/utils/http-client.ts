@@ -10,13 +10,11 @@ export class HttpClient {
     public async get(path: string): Promise<any> {
         return fetch(this.url + path).then(async res => {
             const response = await res.json();
-            // console.log('GET', 'response', response);
             return response;
         });
     }
 
     public async post(path: string, body: {}): Promise<any> {
-        // console.log('RPC client', 'request', request);
         return fetch(this.url + path, {
             method: 'POST',
             headers: defaultHeaders,
@@ -36,7 +34,6 @@ export class HttpClient {
         };
 
         return this.post('', body).then(async res => {
-            //            console.log('response', res, this.url);
             return res;
         });
     }

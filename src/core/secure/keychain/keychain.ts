@@ -15,10 +15,13 @@ const defaultOptions = {
 
 export const KEY_PIN_SAMPLE = 'moonletPinSample';
 
-export const iosClearKeychainOnInstall = async () => {
+export const iosClearKeychainOnInstall = async (options?: { walletPublicKey?: string }) => {
     if (Platform.OS === 'ios') {
         const Settings = require('react-native').Settings;
         if (!Settings.get('appIsInstalled')) {
+            if (options?.walletPublicKey) {
+                await clearWalletCredentialsKey(options.walletPublicKey);
+            }
             clearPinCode();
             await clearEncryptionKey();
             Settings.set({
@@ -174,8 +177,7 @@ export const setWalletCredentialsKey = async (
 };
 
 export const getWalletCredentialsKey = async (walletPublicKey: string): Promise<string> => {
-    await iosClearKeychainOnInstall();
-    await clearWalletCredentialsKey(walletPublicKey);
+    await iosClearKeychainOnInstall({ walletPublicKey });
     let password = null;
     try {
         // Retrieve the credentials

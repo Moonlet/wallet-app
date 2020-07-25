@@ -485,7 +485,8 @@ export const updateTransactionFromBlockchain = (
                 blockchain,
                 accountIndex: transactionAccount.index,
                 token: generateAccountTokenState(tokenConfig),
-                tokenLogo: tokenConfig.icon
+                tokenLogo: tokenConfig.icon,
+                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
             };
 
             dispatch(setSelectedWallet(wallet.id));

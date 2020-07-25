@@ -87,6 +87,11 @@ export class NotificationsComponent extends React.Component<
 
     public async componentDidMount() {
         await LoadingModal.open();
+
+        setTimeout(async () => {
+            await LoadingModal.close();
+        }, 2500); // drop loading in 2.5 seconds if api call takes too long
+
         await this.fetchNotifications();
         await LoadingModal.close();
 

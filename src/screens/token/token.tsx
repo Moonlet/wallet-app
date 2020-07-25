@@ -55,6 +55,7 @@ export interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
+    activeTab?: string;
 }
 
 interface IState {
@@ -177,6 +178,7 @@ export class TokenScreenComponent extends React.Component<
                     blockchain={this.props.blockchain}
                     token={this.props.token}
                     navigation={this.props.navigation}
+                    activeTab={this.props.activeTab}
                 />
             );
         }
@@ -188,6 +190,7 @@ export class TokenScreenComponent extends React.Component<
                         blockchain={this.props.blockchain}
                         token={this.props.token}
                         navigation={this.props.navigation}
+                        activeTab={this.props.activeTab}
                     />
                 );
             default:

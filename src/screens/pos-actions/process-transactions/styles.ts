@@ -2,21 +2,32 @@ import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
 import {
     BASE_DIMENSION,
-    SCREEN_HEIGHT,
     normalizeFontAndLineHeight,
-    BORDER_RADIUS
+    BORDER_RADIUS,
+    LETTER_SPACING
 } from '../../../styles/dimensions';
+import { CONTAINER_TOP_PADDING } from '../../transaction-request/styles';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
             flex: 1,
-            paddingHorizontal: BASE_DIMENSION * 2,
-            paddingTop: BASE_DIMENSION * 4,
-            paddingBottom: BASE_DIMENSION * 5,
-            flexDirection: 'column',
             backgroundColor: theme.colors.appBackground,
-            height: SCREEN_HEIGHT // used for web
+            paddingTop: CONTAINER_TOP_PADDING
+        },
+        screenTitle: {
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
+            color: theme.colors.text,
+            letterSpacing: LETTER_SPACING,
+            textAlign: 'center',
+            fontWeight: 'bold',
+            marginBottom: BASE_DIMENSION * 4
         },
         title: {
             fontSize: normalizeFontAndLineHeight(17),
@@ -34,9 +45,10 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
-            marginBottom: BASE_DIMENSION,
-            paddingVertical: BASE_DIMENSION * 2,
-            paddingHorizontal: BASE_DIMENSION * 2
+            marginBottom: BASE_DIMENSION * 2,
+            marginHorizontal: BASE_DIMENSION * 2,
+            paddingVertical: BASE_DIMENSION,
+            paddingHorizontal: BASE_DIMENSION
         },
         cardLeftIcon: {
             alignSelf: 'center',
@@ -64,7 +76,8 @@ export default (theme: ITheme) =>
             color: theme.colors.textTertiary
         },
         continueButton: {
-            marginHorizontal: BASE_DIMENSION * 2
+            marginHorizontal: BASE_DIMENSION * 2,
+            marginBottom: BASE_DIMENSION * 5
         },
         failedText: {
             fontSize: normalizeFontAndLineHeight(15),

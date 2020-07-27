@@ -33,6 +33,7 @@ export class Client extends EthereumClient {
 
     public sendTransaction(transaction): Promise<string> {
         return this.http.jsonRpc('eth_sendRawTransaction', [transaction]).then(res => {
+            //   console.log('res', res);
             if (res.result) {
                 return res.result;
             }

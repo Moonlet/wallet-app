@@ -16,6 +16,7 @@ import { StatsComponent } from '../token/components/delegate-token/components/st
 import { IValidator, CardActionType } from '../../core/blockchain/types/stats';
 import { ITokenState } from '../../redux/wallets/state';
 import BigNumber from 'bignumber.js';
+import { formatValidatorName } from '../../core/utils/format-string';
 
 export interface INavigationParams {
     validator: IValidator;
@@ -35,7 +36,7 @@ const HeaderTitleComponent = (
             />
             <View style={{ flexDirection: 'column' }}>
                 <Text style={props.styles.labelName}>
-                    {props.navigation.state.params.validator.name}
+                    {formatValidatorName(props.navigation.state.params.validator.name, 15)}
                 </Text>
                 <Text style={props.styles.website}>
                     {props.navigation.state.params.validator.website}

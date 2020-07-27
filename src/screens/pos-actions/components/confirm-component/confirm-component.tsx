@@ -21,7 +21,7 @@ import { getInputAmountToStd } from '../../../../core/utils/available-funds';
 import { BASE_DIMENSION } from '../../../../styles/dimensions';
 import { Amount } from '../../../../components/amount/amount';
 import { formatAddress } from '../../../../core/utils/format-address';
-import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
+import { valuePrimaryCtaField, formatValidatorName } from '../../../../core/utils/format-string';
 import { formatNumber } from '../../../../core/utils/format-number';
 import { BigNumber } from 'bignumber.js';
 
@@ -42,7 +42,7 @@ export interface IProps {
     bottomColor: string;
     bottomActionText: string;
     feeOptions: IFeeOptions;
-    onPressConfirm(): void;
+    onPressConfirm(amount: string, feeOptions: IFeeOptions): void;
 }
 
 interface IState {
@@ -81,7 +81,7 @@ export class ConfirmComponentComponent extends React.Component<
                 label={translate('App.labels.confirm')}
                 disabled={false}
                 onPress={() => {
-                    this.props.onPressConfirm();
+                    this.props.onPressConfirm(this.props.amount, this.props.feeOptions);
                 }}
             >
                 <PrimaryCtaField
@@ -118,7 +118,9 @@ export class ConfirmComponentComponent extends React.Component<
 
         this.props.validators.map((validator, index) => {
             receipientText +=
-                ' ' + validator.name + (index !== this.props.validators.length - 1 ? ',' : '');
+                ' ' +
+                formatValidatorName(validator.name, 15) +
+                (index !== this.props.validators.length - 1 ? ',' : '');
         });
 
         const formatAmount = formatNumber(new BigNumber(this.props.amount), {

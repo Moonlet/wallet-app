@@ -37,6 +37,7 @@ import { IconValues } from '../../../../components/icon/values';
 import { ValidatorCard } from '../../../token/components/delegate-token/components/validators/validator-card/validator-card';
 import { formatNumber } from '../../../../core/utils/format-number';
 import { getValidators } from '../../../../redux/ui/validators/selectors';
+import { formatValidatorName } from '../../../../core/utils/format-string';
 
 interface IHeaderStep {
     step: number;
@@ -225,7 +226,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     label={translate(this.props.actionText)}
                     labelColor={this.props.theme.colors.labelRedelegate}
                     action={translate('App.labels.from').toLowerCase()}
-                    value={this.state.redelegateFromValidator.name}
+                    value={formatValidatorName(this.state.redelegateFromValidator.name, 15)}
                 />
                 <AmountCtaField
                     tokenConfig={tokenConfig}

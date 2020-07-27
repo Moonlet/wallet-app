@@ -13,7 +13,11 @@ export const valuePrimaryCtaField = (validators: IValidator[]): string => {
     if (selectedValidators.length > 1) {
         return selectedValidators.length + ' ' + translate('App.labels.validators').toLowerCase();
     } else if (selectedValidators.length === 1) {
-        return selectedValidators[0].name;
+        return formatValidatorName(selectedValidators[0].name, 15);
     }
     return '';
+};
+
+export const formatValidatorName = (str: string, length: number): string => {
+    return str.length > length ? str.slice(0, length) + '...' : str;
 };

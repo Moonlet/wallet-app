@@ -69,6 +69,7 @@ export const translation: ITranslations = {
                 notifications: 'Notifications',
                 ok: 'OK',
                 paste: 'Paste',
+                processing: 'Processing',
                 privacyPolicy: 'Privacy policy',
                 quickDelegate: 'Quick Delegate',
                 quickVote: 'Quick Vote',
@@ -310,7 +311,10 @@ export const translation: ITranslations = {
             signTransaction: 'Sign transaction',
             signExtensionTransaction:
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
-            signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}'
+            signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
+            processTitleText: 'Please wait while each transaction is being processed!',
+            processTitleTextLedger:
+                'Please sign each transaction from your Ledger and wait while is being processed!'
         },
         Statistics: {
             launchingSoon: 'Launching soon!',

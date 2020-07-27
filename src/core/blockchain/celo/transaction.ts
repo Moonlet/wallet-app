@@ -80,30 +80,35 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                     Contracts.LOCKED_GOLD
                 ].getAccountNonvotingLockedGold(tx.account.address);
 
-                // const isRegisteredAccount = await client.contracts[
-                //     Contracts.ACCOUNTS
-                // ].isRegisteredAccount(tx.account.address);
+                const isRegisteredAccount = await client.contracts[
+                    Contracts.ACCOUNTS
+                ].isRegisteredAccount(tx.account.address);
 
-                if (!amountLocked.isGreaterThan(new BigNumber(tx.amount))) {
+                if (!isRegisteredAccount) {
+                    const txRegister: IPosTransaction = { ...tx };
+                    transactions.push(
+                        await client.contracts[Contracts.ACCOUNTS].register(txRegister)
+                    );
+                }
+
+                if (!amountLocked.isGreaterThanOrEqualTo(new BigNumber(tx.amount))) {
                     const txLock: IPosTransaction = { ...tx };
+
                     txLock.amount = new BigNumber(tx.amount).minus(amountLocked).toString();
+
                     transactions.push(await client.contracts[Contracts.LOCKED_GOLD].lock(txLock));
                 }
 
                 const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
 
-                await Promise.all(
-                    tx.validators.map(async validator => {
-                        const txVote: IPosTransaction = { ...tx };
-                        txVote.amount = splitAmount.toString();
-                        transactions.push(
-                            await client.contracts[Contracts.ELECTION].vote(
-                                tx,
-                                validator.id.toLowerCase()
-                            )
-                        );
-                    })
-                );
+                for (const validator of tx.validators) {
+                    const txVote: IPosTransaction = { ...tx };
+                    txVote.amount = splitAmount.toString();
+                    transactions.push(
+                        await client.contracts[Contracts.ELECTION].vote(txVote, validator)
+                    );
+                }
+
                 break;
             }
             case PosBasicActionType.ACTIVATE: {

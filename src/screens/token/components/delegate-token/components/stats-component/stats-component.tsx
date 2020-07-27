@@ -37,7 +37,7 @@ export class StatsComponentInternal extends React.Component<
             case IStatValueType.STRING:
                 return stat.data.value;
             case IStatValueType.AMOUNT: {
-                const tokenConfig = getTokenConfig(this.props.blockchain, stat.data.tokenSymbol);
+                const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
                 const blockchainInstance = getBlockchain(this.props.blockchain);
 
                 const amountFromStd = blockchainInstance.account.amountFromStd(

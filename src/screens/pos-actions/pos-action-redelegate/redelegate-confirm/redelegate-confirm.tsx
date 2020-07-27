@@ -13,12 +13,9 @@ import { getChainId } from '../../../../redux/preferences/selectors';
 import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { ConfirmComponent } from '../../components/confirm-component/confirm-component';
-
-interface IHeaderStep {
-    step: number;
-    title: string;
-    active: boolean;
-}
+import { delegate } from '../../../../redux/wallets/actions';
+import { bind } from 'bind-decorator';
+import { PasswordModal } from '../../../../components/password-modal/password-modal';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -29,6 +26,8 @@ export interface IReduxProps {
     validators: IValidator[];
     actionText: string;
     amount: string;
+    feeOptions: IFeeOptions;
+    delegate: typeof delegate;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
@@ -42,28 +41,21 @@ export const mapStateToProps = (state: IReduxState) => {
         token: state.ui.screens.posActions.delegateConfirm.token,
         validators: state.ui.screens.posActions.delegateConfirm.validators,
         actionText: state.ui.screens.posActions.delegateConfirm.actionText,
-        amount: state.ui.screens.posActions.delegateConfirm.amount
+        amount: state.ui.screens.posActions.delegateConfirm.amount,
+        feeOptions: state.ui.screens.posActions.delegateConfirm.feeOptions
     };
 };
 
 const mapDispatchToProps = {
-    //
+    delegate
 };
-
-interface IState {
-    headerSteps: IHeaderStep[];
-    validatorsList: IValidator[];
-    amount: string;
-    feeOptions: IFeeOptions;
-}
 
 export const navigationOptions = ({ navigation }: any) => ({
     title: navigation?.state?.params?.actionText && translate(navigation?.state?.params?.actionText)
 });
 
 export class RedelegateConfirmComponent extends React.Component<
-    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public static navigationOptions = navigationOptions;
 
@@ -82,21 +74,33 @@ export class RedelegateConfirmComponent extends React.Component<
                 active: index === 2 ? true : false
             });
         });
-
-        this.state = {
-            headerSteps: stepList,
-            validatorsList: props.validators,
-            amount: props.amount,
-            feeOptions: undefined
-        };
     }
 
     public componentDidMount() {
         this.props.navigation.setParams({ actionText: this.props.actionText });
     }
 
-    public onPressConfirm() {
-        //
+    @bind
+    private async onPressConfirm(amount: string, feeOptions: IFeeOptions) {
+        try {
+            const password = await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleSignTransaction'),
+                { sensitive: true, showCloseButton: true }
+            );
+            this.props.delegate(
+                this.props.account,
+                amount,
+                this.props.validators,
+                this.props.token.symbol,
+                feeOptions,
+                password,
+                this.props.navigation,
+                undefined
+            );
+        } catch {
+            //
+        }
     }
 
     public render() {
@@ -107,12 +111,12 @@ export class RedelegateConfirmComponent extends React.Component<
                 token={this.props.token}
                 validators={this.props.validators}
                 actionText={this.props.actionText}
-                amount={this.state.amount}
+                amount={this.props.amount}
                 bottomColor={this.props.theme.colors.labelRedelegate}
                 bottomActionText={'App.labels.from'}
                 showSteps={true}
-                feeOptions={this.state.feeOptions}
-                onPressConfirm={() => this.onPressConfirm()}
+                feeOptions={this.props.feeOptions}
+                onPressConfirm={this.onPressConfirm}
             />
         );
     }

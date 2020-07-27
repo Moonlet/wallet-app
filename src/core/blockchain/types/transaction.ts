@@ -103,6 +103,8 @@ export interface ITransferTransaction {
 export interface ITransactionExtraFields {
     memo?: string;
     witdrawIndex?: number;
+    posAction?: PosBasicActionType;
+    validatorName?: string;
     //
 }
 

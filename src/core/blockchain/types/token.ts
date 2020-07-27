@@ -35,5 +35,6 @@ export enum PosBasicActionType {
     CLAIM_REWARD = 'CLAIM_REWARD',
     WITHDRAW = 'WITHDRAW',
     REINVEST = 'REINVEST',
-    LOCK = 'LOCK'
+    LOCK = 'LOCK',
+    REGISTER = 'REGISTER'
 }

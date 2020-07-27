@@ -4,6 +4,7 @@ import { IExtensionState } from './extension/state';
 import { IPasswordModalState } from './password-modal/state';
 import { ITransactionRequestState } from './transaction-request/state';
 import { IValidatorsState } from './validators/state';
+import { IProcessTransactionsState } from './process-transactions/state';
 
 export interface IUiState {
     screens: IScreensState;
@@ -11,5 +12,6 @@ export interface IUiState {
     extension: IExtensionState;
     passwordModal: IPasswordModalState;
     transactionRequest: ITransactionRequestState;
+    processTransactions: IProcessTransactionsState;
     validators: IValidatorsState;
 }

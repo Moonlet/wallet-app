@@ -5,16 +5,18 @@ import { getContract, buildBaseTransaction } from './base-contract';
 import { Contracts } from '../config';
 import BigNumber from 'bignumber.js';
 import { fixEthAddress } from '../../../utils/format-address';
+import { PosBasicActionType, TokenType } from '../../types/token';
+import { IValidator } from '../../types/stats';
 
 export class Election {
     constructor(private client: Client) {}
 
-    public async vote(tx: IPosTransaction, address: string): Promise<IBlockchainTransaction> {
+    public async vote(tx: IPosTransaction, validator: IValidator): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.ELECTION);
 
         const { lesser, greater } = await this.findLesserAndGreaterAfterVote(
-            address,
+            validator.id,
             new BigNumber(tx.amount)
         );
 
@@ -26,27 +28,34 @@ export class Election {
             abi
                 .simpleEncode(
                     'vote(address,uint256,address,address)',
-                    address,
+                    validator.id,
                     new BigNumber(tx.amount).toFixed(),
                     lesser,
                     greater
                 )
                 .toString('hex');
 
-        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
-            from: tx.account.address,
-            to: address,
-            amount: tx.amount,
-            contractAddress,
-            raw
-        });
+        const fees = await this.client.getFees(
+            TransactionType.CONTRACT_CALL,
+            {
+                from: tx.account.address,
+                to: validator.id,
+                amount: tx.amount,
+                contractAddress,
+                raw
+            },
+            TokenType.ERC20
+        );
         transaction.feeOptions = fees;
 
         transaction.data = {
             method: 'vote',
-            params: [address, tx.amount],
+            params: [validator.id, tx.amount],
             raw
         };
+
+        transaction.additionalInfo.posAction = PosBasicActionType.DELEGATE;
+        transaction.additionalInfo.validatorName = validator.name;
 
         return transaction;
     }
@@ -79,13 +88,17 @@ export class Election {
                 )
                 .toString('hex');
 
-        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
-            from: tx.account.address,
-            to: groupAddress,
-            amount: tx.amount,
-            contractAddress,
-            raw
-        });
+        const fees = await this.client.getFees(
+            TransactionType.CONTRACT_CALL,
+            {
+                from: tx.account.address,
+                to: groupAddress,
+                amount: tx.amount,
+                contractAddress,
+                raw
+            },
+            TokenType.ERC20
+        );
         transaction.feeOptions = fees;
 
         transaction.toAddress = contractAddress;
@@ -95,6 +108,8 @@ export class Election {
             params: [groupAddress, tx.amount],
             raw
         };
+
+        transaction.additionalInfo.posAction = PosBasicActionType.UNVOTE;
 
         return transaction;
     }
@@ -127,13 +142,17 @@ export class Election {
                 )
                 .toString('hex');
 
-        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
-            from: tx.account.address,
-            to: groupAddress,
-            amount: tx.amount,
-            contractAddress,
-            raw
-        });
+        const fees = await this.client.getFees(
+            TransactionType.CONTRACT_CALL,
+            {
+                from: tx.account.address,
+                to: groupAddress,
+                amount: tx.amount,
+                contractAddress,
+                raw
+            },
+            TokenType.ERC20
+        );
         transaction.feeOptions = fees;
 
         transaction.toAddress = contractAddress;
@@ -144,6 +163,8 @@ export class Election {
             raw
         };
 
+        transaction.additionalInfo.posAction = PosBasicActionType.UNVOTE;
+
         return transaction;
     }
 
@@ -153,22 +174,28 @@ export class Election {
 
         const raw = '0x' + abi.simpleEncode('activate(address)', address).toString('hex');
 
-        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
-            from: tx.account.address,
-            to: address,
-            amount: tx.amount,
-            contractAddress,
-            raw
-        });
+        const fees = await this.client.getFees(
+            TransactionType.CONTRACT_CALL,
+            {
+                from: tx.account.address,
+                to: address,
+                amount: tx.amount,
+                contractAddress,
+                raw
+            },
+            TokenType.ERC20
+        );
         transaction.feeOptions = fees;
 
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
         transaction.data = {
             method: 'activate',
-            params: [address],
+            params: [address, tx.amount],
             raw
         };
+
+        transaction.additionalInfo.posAction = PosBasicActionType.ACTIVATE;
 
         return transaction;
     }

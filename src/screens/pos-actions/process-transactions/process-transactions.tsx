@@ -10,43 +10,102 @@ import Icon from '../../../components/icon/icon';
 import { IconValues } from '../../../components/icon/values';
 import { normalize } from '../../../styles/dimensions';
 import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
+import { closeProcessTransactions } from '../../../redux/ui/process-transactions/actions';
+import { IReduxState } from '../../../redux/state';
+import { connect } from 'react-redux';
+import { IBlockchainTransaction } from '../../../core/blockchain/types';
+import { TransactionStatus, WalletType } from '../../../core/wallet/types';
+import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
+import BigNumber from 'bignumber.js';
+import { formatNumber } from '../../../core/utils/format-number';
+import { getSelectedWallet } from '../../../redux/wallets/selectors';
 
-const navigationOptions = () => ({ title: 'Processing' });
+export interface IReduxProps {
+    isVisible: boolean;
+    transactions: IBlockchainTransaction[];
+    closeProcessTransactions: typeof closeProcessTransactions;
+    walletType: WalletType;
+}
 
-export class ProcessingScreenComponent extends React.Component<
-    INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
+export const mapStateToProps = (state: IReduxState) => {
+    return {
+        isVisible: state.ui.processTransactions.isVisible,
+        transactions: state.ui.processTransactions.data.txs,
+        walletType: getSelectedWallet(state)?.type
+    };
+};
+
+const mapDispatchToProps = {
+    closeProcessTransactions
+};
+
+export class ProcessTransactionsComponent extends React.Component<
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    public static navigationOptions = navigationOptions;
-
-    private renderCard(topText: string, middleText: string, bottomText: string, status: string) {
+    private renderCard(tx: IBlockchainTransaction, index: number) {
         const { styles, theme } = this.props;
+        const status = tx.status;
+        const tokenConfig = getTokenConfig(tx.blockchain, tx.token.symbol);
+        const blockchainInstance = getBlockchain(tx.blockchain);
+        const fees = blockchainInstance.account.amountFromStd(
+            new BigNumber(tx.feeOptions.feeTotal),
+            tokenConfig.decimals
+        );
+        let amountString = tx.amount;
+
+        if (amountString === '0') {
+            amountString = tx.data.params.length > 1 ? tx.data.params[1] : tx.data.params[0];
+        }
+
+        const amount = blockchainInstance.account.amountFromStd(
+            new BigNumber(amountString),
+            tokenConfig.decimals
+        );
 
         return (
-            <View style={styles.cardContainer}>
+            <View key={index + '-view-key'} style={styles.cardContainer}>
                 <Icon
-                    name={status === 'success' ? IconValues.VOTE : IconValues.PENDING}
+                    name={
+                        status === TransactionStatus.SUCCESS ? IconValues.VOTE : IconValues.PENDING
+                    }
                     size={normalize(30)}
                     style={[
                         styles.cardLeftIcon,
-                        { color: status === 'success' ? theme.colors.accent : theme.colors.warning }
+                        {
+                            color:
+                                status === TransactionStatus.SUCCESS
+                                    ? theme.colors.accent
+                                    : theme.colors.warning
+                        }
                     ]}
                 />
 
                 <View style={styles.cardTextContainer}>
-                    <Text style={styles.topText}>{topText}</Text>
-                    <Text style={styles.middleText}>{middleText}</Text>
-                    <Text style={styles.bottomText}>{bottomText}</Text>
+                    <Text style={styles.topText}>
+                        {formatNumber(new BigNumber(amount), {
+                            currency: blockchainInstance.config.coin
+                        })}
+                    </Text>
+                    <Text style={styles.middleText}>{'middleText'}</Text>
+                    <Text style={styles.bottomText}>
+                        {translate('App.labels.fees') +
+                            ': ' +
+                            formatNumber(new BigNumber(fees), {
+                                currency: blockchainInstance.config.coin
+                            })}
+                    </Text>
                 </View>
 
-                {status === 'pending' && (
+                {status === TransactionStatus.PENDING && (
                     <View>
                         <LoadingIndicator />
                     </View>
                 )}
-                {status === 'failed' && (
+                {status === TransactionStatus.FAILED && (
                     <Text style={styles.failedText}>{translate('App.labels.failed')}</Text>
                 )}
-                {status === 'success' && (
+                {status === TransactionStatus.SUCCESS && (
                     <Icon name={IconValues.CHECK} size={normalize(16)} style={styles.successIcon} />
                 )}
             </View>
@@ -56,34 +115,51 @@ export class ProcessingScreenComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>
-                    {`Please wait while each transaction is being processed!`}
-                </Text>
-                {/* TODO */}
-                {/* 'Please sign each transaction from your Ledger and wait while is being processed!'  */}
-                <View style={styles.content}>
-                    {this.renderCard('37,500.00 ZIL', 'to Moonlet', 'Fees: 10.00 ZIL', 'pending')}
-                    {this.renderCard('37,500.00 ZIL', 'to Moonlet', 'Fees: 10.00 ZIL', 'failed')}
-                    {this.renderCard('37,500.00 ZIL', 'to Moonlet', 'Fees: 10.00 ZIL', 'failed')}
-                    {this.renderCard('37,500.00 ZIL', 'to Moonlet', 'Fees: 10.00 ZIL', 'success')}
+        const disableButton =
+            this.props.transactions.filter(tx => tx.status === TransactionStatus.PENDING).length >
+            0;
+
+        const title =
+            this.props.walletType === WalletType.HW
+                ? translate('Transaction.processTitleTextLedger')
+                : translate('Transaction.processTitleText');
+
+        if (this.props.isVisible) {
+            return (
+                <View style={styles.container}>
+                    <Text style={styles.screenTitle}>{translate('App.labels.processing')}</Text>
+
+                    <Text style={styles.title}>{title}</Text>
+
+                    {this.props.transactions.length ? (
+                        <View style={styles.content}>
+                            {this.props.transactions.map((tx, index) => {
+                                return this.renderCard(tx, index);
+                            })}
+                        </View>
+                    ) : (
+                        <LoadingIndicator />
+                    )}
+
+                    <Button
+                        primary
+                        onPress={() => {
+                            this.props.closeProcessTransactions();
+                        }}
+                        wrapperStyle={styles.continueButton}
+                        disabled={!disableButton} // TODO  - remove !
+                    >
+                        {translate('App.labels.continue')}
+                    </Button>
                 </View>
-                <Button
-                    primary
-                    onPress={() => {
-                        //
-                    }}
-                    wrapperStyle={styles.continueButton}
-                    // disabled={true}
-                >
-                    {translate('App.labels.continue')}
-                </Button>
-            </View>
-        );
+            );
+        } else {
+            return null;
+        }
     }
 }
 
-export const ProcessingScreen = smartConnect(ProcessingScreenComponent, [
+export const ProcessTransactions = smartConnect(ProcessTransactionsComponent, [
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

@@ -1,11 +1,15 @@
 import { IWallet } from '../../types';
-import { Blockchain, IBlockchainTransaction } from '../../../blockchain/types';
+import { Blockchain, IBlockchainTransaction, DerivationType } from '../../../blockchain/types';
 import { IAccountState } from '../../../../redux/wallets/state';
 import { HWModel, HWConnection } from '../types';
 import { AppFactory } from './apps-factory';
 import { TransportFactory } from './transport-factory';
 import { delay } from '../../../utils/time';
 import { generateTokensConfig } from '../../../../redux/tokens/static-selectors';
+import { HDKeyFactory } from '../../hd-wallet/hd-key/hdkey-factory';
+import { getBlockchain } from '../../../blockchain/blockchain-factory';
+import { Mnemonic } from '../../hd-wallet/mnemonic';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export class LedgerWallet implements IWallet {
     private deviceId: string;
@@ -90,5 +94,29 @@ export class LedgerWallet implements IWallet {
 
     public getPrivateKey(blockchain: Blockchain, accountIndex: number): string {
         return 'Method not implemented.';
+    }
+
+    public async getWalletCredentials(): Promise<{ publicKey: string; privateKey: string }> {
+        try {
+            const mnemonic = await Mnemonic.generate(12);
+
+            const key = HDKeyFactory.get(DerivationType.HD_KEY, Buffer.from(mnemonic)).derive(
+                `m/${'moonlet'
+                    .split('')
+                    .map(l => l.charCodeAt(0))
+                    .join('/')}`
+            );
+
+            const blockchainInstance = getBlockchain(Blockchain.ZILLIQA);
+            const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(key);
+            const publicKey = blockchainInstance.account.privateToPublic(privateKey);
+
+            return {
+                publicKey,
+                privateKey
+            };
+        } catch (err) {
+            SentryCaptureException(new Error(JSON.stringify(err)));
+        }
     }
 }

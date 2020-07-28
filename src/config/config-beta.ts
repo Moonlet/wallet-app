@@ -4,6 +4,7 @@ import { firebaseConfig } from './firebase-web-beta';
 const extSyncBaseUrl = 'https://fire.moonlet.dev/functions/extensionSync';
 
 export const CONFIG_BETA: IAppConfig = {
+    walletApiBaseUrl: 'https://api.moonlet.dev',
     supportUrl: 'https://moonlet.uvdesk.com/en/customer/create-ticket',
     env: process.env.MOONLET_SOME_KEY,
     tokensUrl: 'https://fire.moonlet.dev/static/tokens/',
@@ -22,6 +23,5 @@ export const CONFIG_BETA: IAppConfig = {
         sendResponseUrl: extSyncBaseUrl + '/sendResponse',
         deleteRequestUrl: extSyncBaseUrl + '/deleteRequest'
     },
-    firebaseWebConfig: firebaseConfig,
-    walletApiBaseUrl: 'http://127.0.0.1:8080' // TODO: update this after deploy,
+    firebaseWebConfig: firebaseConfig
 };

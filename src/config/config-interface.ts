@@ -1,4 +1,5 @@
 export interface IAppConfig {
+    walletApiBaseUrl: string;
     supportUrl: string;
     env: string;
     tokensUrl: string;
@@ -17,5 +18,4 @@ export interface IAppConfig {
         deleteRequestUrl: string;
     };
     firebaseWebConfig: any;
-    walletApiBaseUrl: string;
 }

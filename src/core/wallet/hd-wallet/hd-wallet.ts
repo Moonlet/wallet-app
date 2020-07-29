@@ -6,6 +6,7 @@ import { IAccountState } from '../../../redux/wallets/state';
 import { HDKeyFactory } from './hd-key/hdkey-factory';
 import { readEncrypted } from '../../secure/storage/storage';
 import { getEncryptionKey } from '../../secure/keychain/keychain';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export class HDWallet implements IWallet {
     public static async loadFromStorage(walletId: string, pass: string): Promise<HDWallet> {
@@ -112,21 +113,27 @@ export class HDWallet implements IWallet {
         return this.mnemonic;
     }
 
-    public getWalletCredentials(): { publicKey: string; privateKey: string } {
-        const key = HDKeyFactory.get(DerivationType.HD_KEY, this.seed).derive(
-            `m/${'moonlet'
-                .split('')
-                .map(l => l.charCodeAt(0))
-                .join('/')}`
-        );
+    public getWalletCredentials(): Promise<{ publicKey: string; privateKey: string }> {
+        return new Promise((resolve, reject) => {
+            try {
+                const key = HDKeyFactory.get(DerivationType.HD_KEY, this.seed).derive(
+                    `m/${'moonlet'
+                        .split('')
+                        .map(l => l.charCodeAt(0))
+                        .join('/')}`
+                );
 
-        const blockchainInstance = getBlockchain(Blockchain.ZILLIQA);
-        const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(key);
-        const publicKey = blockchainInstance.account.privateToPublic(privateKey);
+                const blockchainInstance = getBlockchain(Blockchain.ZILLIQA);
+                const privateKey = blockchainInstance.account.getPrivateKeyFromDerived(key);
+                const publicKey = blockchainInstance.account.privateToPublic(privateKey);
 
-        return {
-            publicKey,
-            privateKey
-        };
+                resolve({
+                    publicKey,
+                    privateKey
+                });
+            } catch (err) {
+                SentryCaptureException(new Error(JSON.stringify(err)));
+            }
+        });
     }
 }

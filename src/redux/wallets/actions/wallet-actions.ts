@@ -188,7 +188,7 @@ export const createHWWallet = (
         dispatch(toInitialState());
         dispatch(setDisplayPasswordModal(false));
 
-        const wallet = await HWWalletFactory.get(
+        const wallet: IWallet = await HWWalletFactory.get(
             deviceVendor,
             deviceModel,
             deviceId,
@@ -200,9 +200,12 @@ export const createHWWallet = (
         dispatch(verifyAddressOnDevice(true));
         const accounts: IAccountState[] = await wallet.getAccounts(blockchain, 0);
         accounts[0].selected = true;
+
+        const walletCredentials = await wallet.getWalletCredentials();
+
         const walletData: IWalletState = {
             id: walletId,
-            walletPublicKey: null,
+            walletPublicKey: walletCredentials?.publicKey,
             selected: false,
             selectedBlockchain: blockchain,
             hwOptions: {
@@ -226,6 +229,7 @@ export const createHWWallet = (
 
         dispatch(toInitialState());
         dispatch(setDisplayPasswordModal(true));
+        startNotificationsHandlers()(dispatch, getState);
     } catch (e) {
         dispatch(setDisplayPasswordModal(true));
 
@@ -282,7 +286,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             dispatch(
                 addWallet({
                     id: walletId,
-                    walletPublicKey: wallet.getWalletCredentials().publicKey,
+                    walletPublicKey: (await wallet.getWalletCredentials())?.publicKey,
                     selected: false,
                     selectedBlockchain: Blockchain.ZILLIQA, // by default the first blockchain is selected
                     name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
@@ -809,24 +813,53 @@ export const setWalletsCredentials = (password: string) => async (
         try {
             const walletId = (wallet as IWalletState).id;
 
-            const storageWallet = await HDWallet.loadFromStorage(walletId, password);
-            const walletCredentials = storageWallet.getWalletCredentials();
+            let walletCredentials: { publicKey: string; privateKey?: string };
 
-            if (walletCredentials) {
+            if (wallet.type === WalletType.HD) {
+                const storageHDWallet = await HDWallet.loadFromStorage(walletId, password);
+                walletCredentials = await storageHDWallet.getWalletCredentials();
+            } else if (wallet.type === WalletType.HW) {
+                if (wallet.walletPublicKey) {
+                    walletCredentials = {
+                        publicKey: wallet.walletPublicKey
+                    };
+                } else {
+                    // Generate wallet credentials
+                    const walletHW: IWallet = await HWWalletFactory.get(
+                        wallet.hwOptions.deviceVendor,
+                        wallet.hwOptions.deviceModel,
+                        wallet.hwOptions.deviceId,
+                        wallet.hwOptions.connectionType
+                    );
+
+                    walletCredentials = await walletHW.getWalletCredentials();
+                }
+            }
+
+            if (walletCredentials?.publicKey) {
                 setWalletPublicKey(walletId, walletCredentials.publicKey)(dispatch, getState);
 
                 const keychainWalletCredentials = await getWalletCredentialsKey(
                     walletCredentials.publicKey
                 );
 
-                if (keychainWalletCredentials) {
-                    // already set
-                } else {
+                if (!keychainWalletCredentials) {
                     await setWalletCredentialsKey(
                         walletCredentials.publicKey,
                         walletCredentials.privateKey
                     );
                 }
+            } else {
+                SentryCaptureException(
+                    new Error(
+                        JSON.stringify({
+                            walletPublicKey: wallet?.walletPublicKey,
+                            walletType: wallet.type,
+                            walletHwOptions: wallet?.hwOptions,
+                            errorMessage: 'Undefined walletCredentials'
+                        })
+                    )
+                );
             }
         } catch (err) {
             SentryCaptureException(new Error(JSON.stringify(err)));

@@ -5,7 +5,7 @@ import { Celo } from '..';
 import { TransactionStatus } from '../../../wallet/types';
 
 const contracts = {
-    '44786': {
+    '44787': {
         [Contracts.LOCKED_GOLD]: '0x6a4CC5693DC5BFA3799C699F3B941bA2Cb00c341',
         [Contracts.ELECTION]: '0x1c3eDf937CFc2F6F51784D20DEB1af1F9a8655fA',
         [Contracts.ACCOUNTS]: '0xed7f51A34B4e71fbE69B3091FcF879cD14bD73A9'

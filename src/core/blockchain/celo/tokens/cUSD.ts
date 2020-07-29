@@ -8,7 +8,7 @@ export const CELO_USD_TESTNET_ALFAJORES: ITokenConfigState = {
         uri: 'https://fire.moonlet.io/static/tokens/icons/celo/cusd.png'
     },
     removable: true,
-    contractAddress: '0xa561131a1C8aC25925FB848bCa45A74aF61e5A38',
+    contractAddress: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
     defaultOrder: 999,
     decimals: 18,
     ui: {

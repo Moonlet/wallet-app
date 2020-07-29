@@ -3,7 +3,7 @@ import { IBlockchainNetwork } from '../types';
 export const networks: IBlockchainNetwork[] = [
     {
         name: 'Alfajores',
-        chainId: 44786,
+        chainId: 44787,
         mainNet: false,
         url: 'https://alfajores-forno.celo-testnet.org/',
         explorer: {

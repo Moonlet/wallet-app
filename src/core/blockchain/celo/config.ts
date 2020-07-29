@@ -79,7 +79,7 @@ export const config: IBlockchainConfig = {
             CELO: CELO_GOLD_MAINNET,
             cUSD: CELO_USD_MAINNET
         },
-        44786: {
+        44787: {
             CELO: CELO_GOLD_TESTNET_ALFAJORES,
             cUSD: CELO_USD_TESTNET_ALFAJORES
         },
@@ -137,7 +137,7 @@ export const config: IBlockchainConfig = {
         displayName: 'CELO'
     },
     networks: {
-        testNet: 44786,
+        testNet: 44787,
         mainNet: 42220
     },
     defaultOrder: 1

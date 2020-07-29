@@ -189,7 +189,6 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
         const client = Celo.getClient(tx.chainId);
         const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
         const blockInfo = await client.getCurrentBlock();
-
         switch (tokenConfig.type) {
             case TokenType.ERC20:
                 return {

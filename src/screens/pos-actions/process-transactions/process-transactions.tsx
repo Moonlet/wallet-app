@@ -87,7 +87,7 @@ export class ProcessTransactionsComponent extends React.Component<
                             currency: blockchainInstance.config.coin
                         })}
                     </Text>
-                    <Text style={styles.middleText}>{'middleText'}</Text>
+                    <Text style={styles.middleText}>{tx.additionalInfo.posAction}</Text>
                     <Text style={styles.bottomText}>
                         {translate('App.labels.fees') +
                             ': ' +
@@ -115,9 +115,15 @@ export class ProcessTransactionsComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
-        const disableButton =
+        let disableButton =
             this.props.transactions.filter(tx => tx.status === TransactionStatus.PENDING).length >
-            0;
+                0 || this.props.transactions.length === 0;
+
+        disableButton =
+            this.props.transactions.filter(tx => tx.status === TransactionStatus.FAILED).length ===
+            0
+                ? false
+                : true;
 
         const title =
             this.props.walletType === WalletType.HW
@@ -147,7 +153,7 @@ export class ProcessTransactionsComponent extends React.Component<
                             this.props.closeProcessTransactions();
                         }}
                         wrapperStyle={styles.continueButton}
-                        disabled={!disableButton} // TODO  - remove !
+                        disabled={disableButton}
                     >
                         {translate('App.labels.continue')}
                     </Button>

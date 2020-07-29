@@ -54,13 +54,12 @@ export class ClientUtils implements IClientUtils {
         ];
 
         const res = await Promise.all(rpcCalls);
+
         if (!res[0].result) {
             throw new Error(res[0].error.message || `Error getting transaction info for ${hash}`);
         }
         if (!res[1].result) {
-            throw new Error(
-                res[1].error.message || `Error getting transaction receipt for ${hash}`
-            );
+            throw new Error(`Error getting transaction receipt for ${hash}`);
         }
         return this.buildTransactionFromBlockchain(res[0].result, res[1].result);
     }
@@ -69,25 +68,26 @@ export class ClientUtils implements IClientUtils {
         const token = await this.getToken(txInfo.to);
         const data: any = {};
 
-        if (token.type === TokenType.ERC20) {
-            try {
-                const transferInputParameteres = this.decodeInputData(
-                    'transfer(address,uint256)',
-                    txInfo.input
-                );
-                if (transferInputParameteres[0] && transferInputParameteres[1]) {
-                    data.params = [
-                        '0x' + transferInputParameteres[0],
-                        transferInputParameteres[1].toString(10)
-                    ];
-                } else {
-                    throw new Error('Cannot decode input data');
-                }
-            } catch (e) {
-                // probably not a transaction
-                return null;
-            }
-        }
+        // TODO - find how to get the data since its a contract call not simple transfer call
+        // if (token.type === TokenType.ERC20) {
+        //     try {
+        //         const transferInputParameteres = this.decodeInputData(
+        //             'transfer(address,uint256)',
+        //             txInfo.input
+        //         );
+        //         if (transferInputParameteres[0] && transferInputParameteres[1]) {
+        //             data.params = [
+        //                 '0x' + transferInputParameteres[0],
+        //                 transferInputParameteres[1].toString(10)
+        //             ];
+        //         } else {
+        //             throw new Error('Cannot decode input data');
+        //         }
+        //     } catch (e) {
+        //         // probably not a transaction
+        //         return null;
+        //     }
+        // }
 
         return {
             id: txInfo.hash,

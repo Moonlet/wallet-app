@@ -86,9 +86,12 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
 
                 if (!isRegisteredAccount) {
                     const txRegister: IPosTransaction = { ...tx };
-                    transactions.push(
-                        await client.contracts[Contracts.ACCOUNTS].register(txRegister)
-                    );
+
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.ACCOUNTS
+                    ].register(txRegister);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
                 }
 
                 if (!amountLocked.isGreaterThanOrEqualTo(new BigNumber(tx.amount))) {
@@ -96,7 +99,12 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
 
                     txLock.amount = new BigNumber(tx.amount).minus(amountLocked).toString();
 
-                    transactions.push(await client.contracts[Contracts.LOCKED_GOLD].lock(txLock));
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.LOCKED_GOLD
+                    ].lock(txLock);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+
+                    transactions.push(transaction);
                 }
 
                 const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
@@ -104,9 +112,11 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 for (const validator of tx.validators) {
                     const txVote: IPosTransaction = { ...tx };
                     txVote.amount = splitAmount.toString();
-                    transactions.push(
-                        await client.contracts[Contracts.ELECTION].vote(txVote, validator)
-                    );
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.ELECTION
+                    ].vote(txVote, validator);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
                 }
 
                 break;
@@ -163,7 +173,11 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                         txRevoke,
                         indexForGroup
                     );
-                    if (transaction) transactions.push(transaction);
+
+                    if (transaction) {
+                        transaction.nonce = transaction.nonce + transactions.length;
+                        transactions.push(transaction);
+                    }
                 }
 
                 break;

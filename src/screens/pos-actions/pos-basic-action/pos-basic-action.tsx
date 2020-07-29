@@ -36,6 +36,7 @@ import { PasswordModal } from '../../../components/password-modal/password-modal
 import { NavigationService } from '../../../navigation/navigation-service';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { unlock, unvote } from '../../../redux/wallets/actions';
+import { valuePrimaryCtaField } from '../../../core/utils/format-string';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -195,7 +196,7 @@ export class PosBasicActionComponent extends React.Component<
                     label={translate(this.props.actionText)}
                     labelColor={labelColor}
                     action={translate('App.labels.from').toLowerCase()}
-                    value={this.props.validators[0].name}
+                    value={valuePrimaryCtaField(this.props.validators)}
                 />
                 <AmountCtaField
                     tokenConfig={tokenConfig}

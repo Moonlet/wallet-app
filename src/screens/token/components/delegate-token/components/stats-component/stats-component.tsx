@@ -45,7 +45,8 @@ export class StatsComponentInternal extends React.Component<
                     tokenConfig.decimals
                 );
                 return formatNumber(new BigNumber(amountFromStd), {
-                    currency: blockchainInstance.config.coin
+                    currency: blockchainInstance.config.coin,
+                    maximumFractionDigits: 4
                 });
             }
         }

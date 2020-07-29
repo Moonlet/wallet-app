@@ -25,8 +25,12 @@ import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { IValidator } from '../../../core/blockchain/types/stats';
 import {
     openProcessTransactions,
-    setProcessTransactions
+    setProcessTransactions,
+    updateProcessTransactionIdForIndex,
+    updateProcessTransactionStatusForIndex
 } from '../../ui/process-transactions/actions';
+import { TRANSACTION_PUBLISHED } from './wallet-actions';
+import { TransactionStatus } from '../../../core/wallet/types';
 
 export const delegate = (
     account: IAccountState,
@@ -219,52 +223,54 @@ export const posAction = (
             type
         );
 
-        dispatch(setProcessTransactions({ txs }));
+        dispatch(setProcessTransactions(txs));
 
         let index = 0;
-        // const publishedIndex = 0;
-
-        //  console.log('transaction', txs.length);
+        let transactionPublished = false;
+        let txHash = '';
 
         const interval = setInterval(async () => {
             if (txs.length > index) {
-                // console.log(txs[index]);
-
-                const transaction = await wallet.sign(
-                    account.blockchain,
-                    account.index,
-                    txs[index]
-                );
-
                 const client = getBlockchain(account.blockchain).getClient(chainId);
 
-                // try {
-                const txHash = await client.sendTransaction(transaction);
-                // console.log('tx', txHash, txs[index].nonce);
-
-                //     if (txHash) {
-                //         dispatch({
-                //             type: TRANSACTION_PUBLISHED,
-                //             data: {
-                //                 hash: txHash,
-                //                 tx: txs[0],
-                //                 walletId: appWallet.id
-                //             }
-                //         });
-                //     }
-                // } catch (e) {
-                //     console.log('dddd', e);
-                // }
-
-                await client.utils.getTransaction(txHash);
-
-                index++;
-                //  console.log('index', index);
-                if (index === txs.length - 1) clearInterval(interval);
-            }
-        }, 1000);
+                if (transactionPublished === false) {
+                    const transaction = await wallet.sign(
+                        account.blockchain,
+                        account.index,
+                        txs[index]
+                    );
+                    txHash = await client.sendTransaction(transaction);
+                    if (txHash) {
+                        dispatch(updateProcessTransactionIdForIndex(index, txHash));
+                        dispatch({
+                            type: TRANSACTION_PUBLISHED,
+                            data: {
+                                hash: txHash,
+                                tx: txs[index],
+                                walletId: appWallet.id
+                            }
+                        });
+                        transactionPublished = true;
+                    } else {
+                        dispatch(
+                            updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
+                        );
+                        clearInterval(interval);
+                    }
+                } else {
+                    try {
+                        const transaction = await client.utils.getTransaction(txHash);
+                        dispatch(updateProcessTransactionStatusForIndex(index, transaction.status));
+                        index++;
+                        transactionPublished = false;
+                        if (index === txs.length) clearInterval(interval);
+                    } catch (e) {
+                        // transaction not yet published - do nothing
+                    }
+                }
+            } else clearInterval(interval);
+        }, 2000);
     } catch (errorMessage) {
-        //  console.log('error', errorMessage);
         await LoadingModal.close();
         Dialog.info(translate('LoadingModal.txFailed'), translate('LoadingModal.GENERIC_ERROR'));
     }

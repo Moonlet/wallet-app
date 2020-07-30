@@ -40,9 +40,40 @@ const mapDispatchToProps = {
     closeProcessTransactions
 };
 
+interface IState {
+    disabledButton: boolean;
+}
+
 export class ProcessTransactionsComponent extends React.Component<
-    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
+    constructor(
+        props: INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps
+    ) {
+        super(props);
+
+        this.state = {
+            disabledButton: true
+        };
+    }
+
+    public componentDidUpdate(prevProps: IReduxProps) {
+        if (this.props.transactions !== prevProps.transactions) {
+            let hasPending = false;
+            let disabledButton = true;
+            for (const tx of this.props.transactions) {
+                if (
+                    tx.status === TransactionStatus.FAILED ||
+                    tx.status === TransactionStatus.DROPPED
+                )
+                    disabledButton = false;
+                if (tx.status === TransactionStatus.PENDING) hasPending = true;
+            }
+            if (!hasPending) disabledButton = false;
+            this.setState({ disabledButton });
+        }
+    }
     private renderCard(tx: IBlockchainTransaction, index: number) {
         const { styles, theme } = this.props;
         const status = tx.status;
@@ -144,16 +175,6 @@ export class ProcessTransactionsComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
-        // let disableButton =
-        //     this.props.transactions.filter(tx => tx.status === TransactionStatus.PENDING).length >
-        //         0 || this.props.transactions.length === 0;
-
-        // disableButton =
-        //     this.props.transactions.filter(tx => tx.status === TransactionStatus.FAILED).length ===
-        //     0
-        //         ? false
-        //         : true;
-
         const title =
             this.props.walletType === WalletType.HW
                 ? translate('Transaction.processTitleTextLedger')
@@ -182,7 +203,7 @@ export class ProcessTransactionsComponent extends React.Component<
                             this.props.closeProcessTransactions();
                         }}
                         wrapperStyle={styles.continueButton}
-                        disabled={false} // TODO - based on transaction statuses
+                        disabled={this.state.disabledButton}
                     >
                         {translate('App.labels.continue')}
                     </Button>

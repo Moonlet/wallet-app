@@ -16,6 +16,7 @@ import { encode } from './library/rlp';
 import elliptic from 'elliptic';
 import { Contracts } from './config';
 import { fixEthAddress } from '../../utils/format-address';
+import cloneDeep from 'lodash/cloneDeep';
 
 const toHex = value => {
     if (value && value !== '0x') {
@@ -93,7 +94,7 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 }
 
                 if (!amountLocked.isGreaterThanOrEqualTo(new BigNumber(tx.amount))) {
-                    const txLock: IPosTransaction = { ...tx };
+                    const txLock: IPosTransaction = cloneDeep(tx);
 
                     txLock.amount = new BigNumber(tx.amount).minus(amountLocked).toString();
 
@@ -108,7 +109,7 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
 
                 for (const validator of tx.validators) {
-                    const txVote: IPosTransaction = { ...tx };
+                    const txVote: IPosTransaction = cloneDeep(tx);
                     txVote.amount = splitAmount.toString();
                     const transaction: IBlockchainTransaction = await client.contracts[
                         Contracts.ELECTION

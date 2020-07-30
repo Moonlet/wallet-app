@@ -28,7 +28,7 @@ export interface IReduxProps {
     walletId: string;
     notifications: INotificationState;
     selectedBlockchain: Blockchain;
-    markSeenNotification: (notificationId: string, blockchain?: string) => Promise<any>;
+    markSeenNotification: typeof markSeenNotification;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
     openTransactionRequest: typeof openTransactionRequest;
     fetchNotifications: (page?: number) => Promise<any>;
@@ -136,16 +136,11 @@ export class NotificationsComponent extends React.Component<
                 break;
         }
 
-        try {
-            const res = await this.props.markSeenNotification(notificationId, blockchain);
-            if (res) {
-                const { notifications } = this.state;
-                notifications[blockchain][notificationId].seen = true;
-                this.setState({ notifications });
-            }
-        } catch {
-            // already handled this in redux actions
-        }
+        const { notifications } = this.state;
+        notifications[blockchain][notificationId].seen = true;
+        this.setState({ notifications });
+
+        this.props.markSeenNotification(notificationId, blockchain);
     }
 
     private renderRow(notification: INotificationType, notificationId: string, index: number) {

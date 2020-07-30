@@ -19,7 +19,6 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { QrModalReader } from '../../qr-modal/qr-modal';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
 import { IconValues } from '../../icon/values';
-import { isFeatureActive, RemoteFeature } from '../../../core/utils/remote-feature-config';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -149,13 +148,12 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             onPress: () => this.qrCodeScanner.open()
                         })}
 
-                    {isFeatureActive(RemoteFeature.NOTIF_CENTER) &&
-                        this.renderRow({
-                            title: translate('Wallets.manageWallets'),
-                            description: translate('DashboardMenu.switchWallets'),
-                            iconName: IconValues.MONEY_WALLET,
-                            onPress: () => this.manageWallets()
-                        })}
+                    {this.renderRow({
+                        title: translate('Wallets.manageWallets'),
+                        description: translate('DashboardMenu.switchWallets'),
+                        iconName: IconValues.MONEY_WALLET,
+                        onPress: () => this.manageWallets()
+                    })}
                 </ScrollView>
 
                 <QrModalReader

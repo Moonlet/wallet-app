@@ -51,9 +51,11 @@ export default (
                 notifications: {
                     ...state.notifications,
                     [action.data.blockchain]: {
-                        ...state.notifications[action.data.blockchain],
+                        ...(state.notifications && state.notifications[action.data.blockchain]),
                         [action.data.notifId]: {
-                            ...state.notifications[action.data.blockchain][action.data.notifId],
+                            ...(state.notifications &&
+                                state.notifications[action.data.blockchain] &&
+                                state.notifications[action.data.blockchain][action.data.notifId]),
                             seen: true
                         }
                     }

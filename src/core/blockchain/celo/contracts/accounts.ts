@@ -22,7 +22,7 @@ export class Accounts {
             });
     }
 
-    public async register(tx: IPosTransaction): Promise<IBlockchainTransaction> {
+    public async createAccount(tx: IPosTransaction): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.ACCOUNTS);
 

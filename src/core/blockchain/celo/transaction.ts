@@ -87,11 +87,9 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 if (!isRegisteredAccount) {
                     const txRegister: IPosTransaction = { ...tx };
 
-                    const transaction: IBlockchainTransaction = await client.contracts[
-                        Contracts.ACCOUNTS
-                    ].register(txRegister);
-                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
-                    transactions.push(transaction);
+                    transactions.push(
+                        await client.contracts[Contracts.ACCOUNTS].createAccount(txRegister)
+                    );
                 }
 
                 if (!amountLocked.isGreaterThanOrEqualTo(new BigNumber(tx.amount))) {

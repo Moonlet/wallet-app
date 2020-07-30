@@ -22,17 +22,17 @@ export class Accounts {
             });
     }
 
-    public async register(tx: IPosTransaction, address: string): Promise<IBlockchainTransaction> {
+    public async register(tx: IPosTransaction): Promise<IBlockchainTransaction> {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.ACCOUNTS);
 
-        const raw = '0x' + abi.simpleEncode('register(address)', address).toString('hex');
+        const raw = '0x' + abi.simpleEncode('createAccount()').toString('hex');
 
         const fees = await this.client.getFees(
             TransactionType.CONTRACT_CALL,
             {
                 from: tx.account.address,
-                to: address,
+                to: tx.account.address,
                 amount: tx.amount,
                 contractAddress,
                 raw
@@ -45,7 +45,7 @@ export class Accounts {
         transaction.amount = '0';
         transaction.data = {
             method: 'register',
-            params: [address],
+            params: [tx.account.address],
             raw
         };
 

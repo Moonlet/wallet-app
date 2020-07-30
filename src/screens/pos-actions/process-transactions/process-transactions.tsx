@@ -63,20 +63,49 @@ export class ProcessTransactionsComponent extends React.Component<
             tokenConfig.decimals
         );
 
+        let leftIcon = '';
+        let rightText = '';
+        let iconColor = '';
+
+        switch (status) {
+            case TransactionStatus.FAILED: {
+                leftIcon = IconValues.FAILED;
+                rightText = translate('App.labels.failed');
+                iconColor = theme.colors.disabledButton;
+                break;
+            }
+            case TransactionStatus.SUCCESS: {
+                leftIcon = IconValues.VOTE;
+                iconColor = theme.colors.accent;
+                break;
+            }
+            case TransactionStatus.DROPPED: {
+                leftIcon = IconValues.FAILED;
+                rightText = translate('App.labels.canceled');
+                iconColor = theme.colors.disabledButton;
+                break;
+            }
+            case TransactionStatus.PENDING: {
+                leftIcon = IconValues.PENDING;
+                iconColor = theme.colors.warning;
+                break;
+            }
+            default: {
+                leftIcon = IconValues.PENDING;
+                rightText = '';
+                iconColor = theme.colors.warning;
+            }
+        }
+
         return (
             <View key={index + '-view-key'} style={styles.cardContainer}>
                 <Icon
-                    name={
-                        status === TransactionStatus.SUCCESS ? IconValues.VOTE : IconValues.PENDING
-                    }
+                    name={leftIcon}
                     size={normalize(30)}
                     style={[
                         styles.cardLeftIcon,
                         {
-                            color:
-                                status === TransactionStatus.SUCCESS
-                                    ? theme.colors.accent
-                                    : theme.colors.warning
+                            color: iconColor
                         }
                     ]}
                 />
@@ -102,11 +131,11 @@ export class ProcessTransactionsComponent extends React.Component<
                         <LoadingIndicator />
                     </View>
                 )}
-                {status === TransactionStatus.FAILED && (
-                    <Text style={styles.failedText}>{translate('App.labels.failed')}</Text>
-                )}
-                {status === TransactionStatus.SUCCESS && (
+
+                {status === TransactionStatus.SUCCESS ? (
                     <Icon name={IconValues.CHECK} size={normalize(16)} style={styles.successIcon} />
+                ) : (
+                    <Text style={styles.failedText}>{rightText}</Text>
                 )}
             </View>
         );
@@ -115,15 +144,15 @@ export class ProcessTransactionsComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
-        let disableButton =
-            this.props.transactions.filter(tx => tx.status === TransactionStatus.PENDING).length >
-                0 || this.props.transactions.length === 0;
+        // let disableButton =
+        //     this.props.transactions.filter(tx => tx.status === TransactionStatus.PENDING).length >
+        //         0 || this.props.transactions.length === 0;
 
-        disableButton =
-            this.props.transactions.filter(tx => tx.status === TransactionStatus.FAILED).length ===
-            0
-                ? false
-                : true;
+        // disableButton =
+        //     this.props.transactions.filter(tx => tx.status === TransactionStatus.FAILED).length ===
+        //     0
+        //         ? false
+        //         : true;
 
         const title =
             this.props.walletType === WalletType.HW
@@ -153,7 +182,7 @@ export class ProcessTransactionsComponent extends React.Component<
                             this.props.closeProcessTransactions();
                         }}
                         wrapperStyle={styles.continueButton}
-                        disabled={disableButton}
+                        disabled={false} // TODO - based on transaction statuses
                     >
                         {translate('App.labels.continue')}
                     </Button>

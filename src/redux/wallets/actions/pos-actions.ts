@@ -226,14 +226,14 @@ export const posAction = (
         dispatch(setProcessTransactions(txs));
 
         let index = 0;
-        let transactionPublished = false;
+        let processNextTransaction = true;
         let txHash = '';
 
         const interval = setInterval(async () => {
             if (txs.length > index) {
                 const client = getBlockchain(account.blockchain).getClient(chainId);
 
-                if (transactionPublished === false) {
+                if (processNextTransaction === true) {
                     const transaction = await wallet.sign(
                         account.blockchain,
                         account.index,
@@ -250,11 +250,17 @@ export const posAction = (
                                 walletId: appWallet.id
                             }
                         });
-                        transactionPublished = true;
+                        processNextTransaction = false;
                     } else {
                         dispatch(
                             updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
                         );
+                        for (let i = index + 1; i < txs.length; i++) {
+                            dispatch(
+                                updateProcessTransactionStatusForIndex(i, TransactionStatus.DROPPED)
+                            );
+                        }
+
                         clearInterval(interval);
                     }
                 } else {
@@ -262,7 +268,7 @@ export const posAction = (
                         const transaction = await client.utils.getTransaction(txHash);
                         dispatch(updateProcessTransactionStatusForIndex(index, transaction.status));
                         index++;
-                        transactionPublished = false;
+                        processNextTransaction = true;
                         if (index === txs.length) clearInterval(interval);
                     } catch (e) {
                         // transaction not yet published - do nothing

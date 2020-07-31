@@ -20,6 +20,8 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../../core/utils/format-number';
 import { getSelectedWallet } from '../../../redux/wallets/selectors';
+import { PosBasicActionType } from '../../../core/blockchain/types/token';
+import { formatValidatorName } from '../../../core/utils/format-string';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -74,25 +76,44 @@ export class ProcessTransactionsComponent extends React.Component<
             this.setState({ disabledButton });
         }
     }
-    private renderCard(tx: IBlockchainTransaction, index: number) {
-        const { styles, theme } = this.props;
-        const status = tx.status;
+
+    private formatTopAndBottomText(
+        tx: IBlockchainTransaction
+    ): { topText: string; bottomText: string } {
         const tokenConfig = getTokenConfig(tx.blockchain, tx.token.symbol);
         const blockchainInstance = getBlockchain(tx.blockchain);
-        const fees = blockchainInstance.account.amountFromStd(
+        const feesNumber = blockchainInstance.account.amountFromStd(
             new BigNumber(tx.feeOptions.feeTotal),
             tokenConfig.decimals
         );
-        let amountString = tx.amount;
 
-        if (amountString === '0') {
-            amountString = tx.data.params.length > 1 ? tx.data.params[1] : tx.data.params[0];
+        const fees = formatNumber(new BigNumber(feesNumber), {
+            currency: blockchainInstance.config.coin
+        });
+
+        if (tx.additionalInfo?.posAction === PosBasicActionType.CREATE_ACCOUNT)
+            return { topText: translate('Transaction.registerAccount'), bottomText: fees };
+
+        if (tx.amount === '0') {
+            tx.amount = tx.data.params.length > 1 ? tx.data.params[1] : tx.data.params[0];
         }
-
-        const amount = blockchainInstance.account.amountFromStd(
-            new BigNumber(amountString),
+        const amountNumber = blockchainInstance.account.amountFromStd(
+            new BigNumber(tx.amount),
             tokenConfig.decimals
         );
+
+        const amount = formatNumber(new BigNumber(amountNumber), {
+            currency: blockchainInstance.config.coin
+        });
+
+        return { topText: amount, bottomText: fees };
+    }
+
+    private renderCard(tx: IBlockchainTransaction, index: number) {
+        const { styles, theme } = this.props;
+        const status = tx.status;
+
+        const { topText, bottomText } = this.formatTopAndBottomText(tx);
 
         let leftIcon = '';
         let rightText = '';
@@ -128,6 +149,25 @@ export class ProcessTransactionsComponent extends React.Component<
             }
         }
 
+        let middleText = '';
+        switch (tx.additionalInfo?.posAction) {
+            case PosBasicActionType.CREATE_ACCOUNT: {
+                middleText = '';
+                break;
+            }
+            case PosBasicActionType.LOCK: {
+                middleText = 'Locking Gold';
+                break;
+            }
+            case PosBasicActionType.DELEGATE: {
+                middleText = 'To ' + formatValidatorName(tx.additionalInfo?.validatorName, 20);
+                break;
+            }
+            default: {
+                middleText = '';
+            }
+        }
+
         return (
             <View key={index + '-view-key'} style={styles.cardContainer}>
                 <Icon
@@ -142,18 +182,10 @@ export class ProcessTransactionsComponent extends React.Component<
                 />
 
                 <View style={styles.cardTextContainer}>
-                    <Text style={styles.topText}>
-                        {formatNumber(new BigNumber(amount), {
-                            currency: blockchainInstance.config.coin
-                        })}
-                    </Text>
-                    <Text style={styles.middleText}>{tx.additionalInfo.posAction}</Text>
+                    <Text style={styles.topText}>{topText}</Text>
+                    <Text style={styles.middleText}>{middleText}</Text>
                     <Text style={styles.bottomText}>
-                        {translate('App.labels.fees') +
-                            ': ' +
-                            formatNumber(new BigNumber(fees), {
-                                currency: blockchainInstance.config.coin
-                            })}
+                        {translate('App.labels.fees') + ': ' + bottomText}
                     </Text>
                 </View>
 

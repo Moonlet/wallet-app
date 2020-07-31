@@ -50,6 +50,7 @@ export interface IBlockchainConfig {
         validator?: {
             totalLabel: string;
             amountCardLabel: string;
+            maximumNumberOfValidators: number;
         };
         token?: {
             labels: {

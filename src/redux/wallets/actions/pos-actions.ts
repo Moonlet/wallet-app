@@ -225,6 +225,8 @@ export const posAction = (
 
         dispatch(setProcessTransactions(txs));
 
+        return;
+
         let index = 0;
         let processNextTransaction = true;
         let txHash = '';

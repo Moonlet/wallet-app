@@ -49,7 +49,7 @@ export class Accounts {
             raw
         };
 
-        transaction.additionalInfo.posAction = PosBasicActionType.REGISTER;
+        transaction.additionalInfo.posAction = PosBasicActionType.CREATE_ACCOUNT;
 
         return transaction;
     }

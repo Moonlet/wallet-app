@@ -316,7 +316,8 @@ export const translation: ITranslations = {
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
             processTitleText: 'Please wait while each transaction is being processed!',
             processTitleTextLedger:
-                'Please sign each transaction from your Ledger and wait while is being processed!'
+                'Please sign each transaction from your Ledger and wait while is being processed!',
+            registerAccount: 'Registering account'
         },
         Statistics: {
             launchingSoon: 'Launching soon!',

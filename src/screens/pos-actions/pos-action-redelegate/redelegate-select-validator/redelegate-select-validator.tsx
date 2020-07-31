@@ -48,16 +48,19 @@ interface IHeaderStep {
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
-    validators: IValidator[];
+    allValidators: IValidator[];
     navigateToEnterAmountStep: typeof navigateToEnterAmountStep;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     const chainId = getChainId(state, ownProps.blockchain);
+
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         chainId,
-        validators: getValidators(state, ownProps.blockchain, chainId, true)
+        allValidators: getValidators(state, ownProps.blockchain, chainId, true).filter(
+            el => el.id !== ownProps.validators[0].id
+        )
     };
 };
 
@@ -112,7 +115,10 @@ export class RedelegateSelectValidatorComponent extends React.Component<
         this.state = {
             nrValidators: 1,
             headerSteps: stepList,
-            validatorsList: [],
+            validatorsList:
+                props.allValidators.length > 0
+                    ? props.allValidators.slice(0, 1)
+                    : props.allValidators,
             redelegateFromValidator: props.validators.length ? props.validators[0] : undefined
         };
     }
@@ -136,6 +142,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const config = blockchainInstance.config;
         const validator = this.state.redelegateFromValidator;
+        const maximumNumberOfValidators = config.ui.validator.maximumNumberOfValidators;
 
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
@@ -143,7 +150,12 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     style={styles.actionIconContainer}
                     onPress={() => {
                         if (this.state.nrValidators > 1) {
-                            // const nrValidatorsNew = this.state.nrValidators - 1;
+                            const nrValidatorsNew = this.state.nrValidators - 1;
+
+                            this.setState({
+                                nrValidators: nrValidatorsNew,
+                                validatorsList: this.props.allValidators.slice(0, nrValidatorsNew)
+                            });
                         }
                         // decrease
                     }}
@@ -154,7 +166,18 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
-                        // const nrValidatorsNew = this.state.nrValidators + 1;
+                        if (
+                            this.props.allValidators.length > this.state.nrValidators + 1 &&
+                            this.state.nrValidators < maximumNumberOfValidators
+                        ) {
+                            const nrValidatorsNew = this.state.nrValidators + 1;
+
+                            this.setState({
+                                nrValidators: nrValidatorsNew,
+                                validatorsList: this.props.allValidators.slice(0, nrValidatorsNew)
+                            });
+                        }
+                        // increase
                     }}
                 >
                     <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />

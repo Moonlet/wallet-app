@@ -110,7 +110,8 @@ export const config: IBlockchainConfig = {
     ui: {
         validator: {
             totalLabel: 'Validator.totalVotes',
-            amountCardLabel: 'App.labels.myVotes'
+            amountCardLabel: 'App.labels.myVotes',
+            maximumNumberOfValidators: 5
         },
         token: {
             labels: {

@@ -103,5 +103,6 @@ export const markSeenNotification = (notificationId: string, blockchain?: string
         }
 
         await new ApiClient().notifications.markSeenNotification(walletPublicKey, notificationId);
+        getUnseenNotifications()(dispatch, getState);
     }
 };

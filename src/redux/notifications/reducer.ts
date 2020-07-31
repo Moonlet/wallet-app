@@ -32,10 +32,7 @@ export default (
 
                 notifications = {
                     ...notifications,
-                    [notif.data.blockchain]: {
-                        ...notifications[notif.data.blockchain],
-                        [notif._id]: notifData
-                    }
+                    [notif._id]: notifData
                 };
             });
 
@@ -50,14 +47,9 @@ export default (
                 ...state,
                 notifications: {
                     ...state.notifications,
-                    [action.data.blockchain]: {
-                        ...(state.notifications && state.notifications[action.data.blockchain]),
-                        [action.data.notifId]: {
-                            ...(state.notifications &&
-                                state.notifications[action.data.blockchain] &&
-                                state.notifications[action.data.blockchain][action.data.notifId]),
-                            seen: true
-                        }
+                    [action.data.notificationId]: {
+                        ...(state.notifications && state.notifications[action.data.notificationId]),
+                        seen: true
                     }
                 }
             };

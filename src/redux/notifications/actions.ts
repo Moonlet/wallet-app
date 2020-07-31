@@ -51,6 +51,9 @@ export const fetchNotifications = (page?: number) => async (
     const state = getState();
     const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
+    // TODO: fetch for all wallets
+    // walletPublicKeys
+
     if (walletPublicKey) {
         return new ApiClient().notifications.fetchNotifications(walletPublicKey, page);
     }
@@ -87,7 +90,7 @@ export const registerNotificationSettings = () => async (
     }
 };
 
-export const markSeenNotification = (notificationId: string, blockchain?: string) => async (
+export const markSeenNotification = (notificationId: string) => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
@@ -95,12 +98,10 @@ export const markSeenNotification = (notificationId: string, blockchain?: string
     const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
     if (walletPublicKey) {
-        if (blockchain) {
-            dispatch({
-                type: MARK_SEEN,
-                data: { blockchain, notificationId }
-            });
-        }
+        dispatch({
+            type: MARK_SEEN,
+            data: { notificationId }
+        });
 
         await new ApiClient().notifications.markSeenNotification(walletPublicKey, notificationId);
         getUnseenNotifications()(dispatch, getState);

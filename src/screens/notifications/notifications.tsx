@@ -10,11 +10,9 @@ import Icon from '../../components/icon/icon';
 import { IconValues } from '../../components/icon/values';
 import { normalize, BASE_DIMENSION } from '../../styles/dimensions';
 import { INotificationType, INotificationState } from '../../redux/notifications/state';
-import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
 import { Blockchain } from '../../core/blockchain/types';
-import { getSelectedBlockchain, getSelectedWallet } from '../../redux/wallets/selectors';
 import { markSeenNotification, fetchNotifications } from '../../redux/notifications/actions';
 import { NotificationType } from '../../core/messaging/types';
 import { updateTransactionFromBlockchain } from '../../redux/wallets/actions';
@@ -23,11 +21,10 @@ import { openTransactionRequest } from '../../redux/ui/transaction-request/actio
 import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
 import { updateDisplayedHint } from '../../redux/app/actions';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 
 export interface IReduxProps {
-    walletId: string;
     notifications: INotificationState;
-    selectedBlockchain: Blockchain;
     markSeenNotification: typeof markSeenNotification;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
     openTransactionRequest: typeof openTransactionRequest;
@@ -38,9 +35,7 @@ export interface IReduxProps {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        walletId: getSelectedWallet(state)?.id,
         notifications: state.notifications.notifications,
-        selectedBlockchain: getSelectedBlockchain(state),
         hints: state.app.hints
     };
 };
@@ -61,7 +56,6 @@ interface IState {
     notifications: INotificationState;
     showLoading: boolean;
     page: number;
-    hideBottomNav: boolean;
     isRefreshing: boolean;
 }
 
@@ -70,7 +64,6 @@ export class NotificationsComponent extends React.Component<
     IState
 > {
     public static navigationOptions = navigationOptions;
-    private scrollOffset: number = 0;
 
     constructor(
         props: IReduxProps & INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -80,7 +73,6 @@ export class NotificationsComponent extends React.Component<
             notifications: undefined,
             showLoading: false,
             page: 1,
-            hideBottomNav: false,
             isRefreshing: false
         };
     }
@@ -109,15 +101,13 @@ export class NotificationsComponent extends React.Component<
     }
 
     private async handleNotificationTap(notification: INotificationType, notificationId: string) {
-        const blockchain = notification.data.blockchain as Blockchain;
-
         await LoadingModal.open();
 
         switch (notification.data.action) {
             case NotificationType.TRANSACTION:
                 this.props.updateTransactionFromBlockchain(
                     notification.data.transactionHash,
-                    blockchain,
+                    notification.data.blockchain as Blockchain,
                     Number(notification.data.chainId), // TODO: maybe String is needed
                     Number(notification.data.broadcastedOnBlock),
                     true
@@ -137,10 +127,10 @@ export class NotificationsComponent extends React.Component<
         }
 
         const { notifications } = this.state;
-        notifications[blockchain][notificationId].seen = true;
+        notifications[notificationId].seen = true;
         this.setState({ notifications });
 
-        this.props.markSeenNotification(notificationId, blockchain);
+        this.props.markSeenNotification(notificationId);
     }
 
     private renderRow(notification: INotificationType, notificationId: string, index: number) {
@@ -185,15 +175,13 @@ export class NotificationsComponent extends React.Component<
                 title: notif.title,
                 body: notif.body,
                 seen: notif.seen,
-                data: notif.data
+                data: notif.data,
+                timestamp: undefined
             };
 
             Object.assign(finalNotifications, {
                 ...finalNotifications,
-                [notif.data.blockchain]: {
-                    ...(finalNotifications && finalNotifications[notif.data.blockchain]),
-                    [notif._id]: notifData
-                }
+                [notif._id]: notifData
             });
         }
 
@@ -243,14 +231,6 @@ export class NotificationsComponent extends React.Component<
         const { styles } = this.props;
         const { notifications } = this.state;
 
-        let notifsBySelectedBlockchain;
-        notifications &&
-            Object.keys(notifications).filter((blockchain: Blockchain) => {
-                if (blockchain === this.props.selectedBlockchain) {
-                    notifsBySelectedBlockchain = notifications[blockchain];
-                }
-            });
-
         return (
             <View style={styles.container}>
                 <ScrollView
@@ -265,18 +245,6 @@ export class NotificationsComponent extends React.Component<
                             }
                         }
                     }}
-                    onScroll={(event: any) => {
-                        const currentOffset = event.nativeEvent.contentOffset.y;
-                        currentOffset >= this.scrollOffset
-                            ? this.setState({ hideBottomNav: true }) // scroll down
-                            : this.setState({ hideBottomNav: false }); // scroll up
-                        this.scrollOffset = currentOffset;
-
-                        if (currentOffset === 0) {
-                            this.setState({ hideBottomNav: false }); // scroll on top
-                        }
-                    }}
-                    // scrollEventThrottle={16} // TODO: this should be set - find the best value
                     refreshControl={
                         <RefreshControl
                             refreshing={this.state.isRefreshing}
@@ -285,15 +253,9 @@ export class NotificationsComponent extends React.Component<
                         />
                     }
                 >
-                    {notifsBySelectedBlockchain ? (
-                        Object.keys(
-                            notifsBySelectedBlockchain
-                        ).map((notificationId: string, index: number) =>
-                            this.renderRow(
-                                notifsBySelectedBlockchain[notificationId],
-                                notificationId,
-                                index
-                            )
+                    {notifications ? (
+                        Object.keys(notifications).map((notificationId: string, index: number) =>
+                            this.renderRow(notifications[notificationId], notificationId, index)
                         )
                     ) : (
                         // Empty State
@@ -310,19 +272,15 @@ export class NotificationsComponent extends React.Component<
                             </Text>
                         </View>
                     )}
-                    {/* TODO: this needs improvements because on pullToRefresh this is also called */}
-                    {/* {this.state.showLoading && (
-                        <View style={styles.loadingContainer}>
-                            <LoadingIndicator />
-                        </View>
-                    )} */}
-                </ScrollView>
 
-                {!this.state.hideBottomNav && (
-                    <BottomBlockchainNavigation
-                        style={{ paddingBottom: BASE_DIMENSION + BASE_DIMENSION / 2 }}
-                    />
-                )}
+                    {notifications &&
+                        Object.keys(notifications).length !== 0 &&
+                        this.state.showLoading && (
+                            <View style={styles.loadingContainer}>
+                                <LoadingIndicator />
+                            </View>
+                        )}
+                </ScrollView>
             </View>
         );
     }

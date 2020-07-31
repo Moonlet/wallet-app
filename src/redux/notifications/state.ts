@@ -3,6 +3,7 @@ export interface INotificationType {
     title: string;
     body: string;
     seen: boolean;
+    timestamp: number;
     data: {
         action: string;
         blockchain: string;
@@ -24,9 +25,7 @@ export interface INotificationType {
 }
 
 export interface INotificationState {
-    [blockchain: string]: {
-        [notifId: string]: INotificationType;
-    };
+    [notifId: string]: INotificationType;
 }
 
 export interface INotificationsState {

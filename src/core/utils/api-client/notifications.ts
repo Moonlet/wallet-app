@@ -175,24 +175,29 @@ export class NotificationsApiClient {
 
     /**
      * Get Unseen Notifications
-     * @param walletPublicKey
+     * @param walletPublicKeys
      */
-    public async getUnseenNotifications(walletPublicKey: string): Promise<number> {
+    public async getUnseenNotifications(walletPublicKeys: string[]): Promise<number> {
         try {
-            const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
-
             const data: any = {
                 timestamp: await getCurrentTimestampNTP(),
                 domain: getWalletApiDomain()
             };
 
-            const signature = getSignature(data, walletPrivateKey, walletPublicKey);
-            data.walletPublicKeys = [
-                {
+            const dataWalletPublicKeys = [];
+
+            for (const walletPublicKey of walletPublicKeys) {
+                const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
+
+                const signature = getSignature(data, walletPrivateKey, walletPublicKey);
+
+                dataWalletPublicKeys.push({
                     walletPublicKey,
                     signature
-                }
-            ];
+                });
+            }
+
+            data.walletPublicKeys = dataWalletPublicKeys;
 
             const response = await this.apiClient.http.post('/notifications/unseen', data);
 

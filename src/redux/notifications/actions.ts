@@ -31,18 +31,17 @@ export const getUnseenNotifications = () => async (
     getState: () => IReduxState
 ) => {
     const state = getState();
-    const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
-    if (walletPublicKey) {
-        const unseenNotifications = await new ApiClient().notifications.getUnseenNotifications(
-            walletPublicKey
-        );
+    const walletPublicKeys: string[] = Object.values(state.wallets).map(w => w?.walletPublicKey);
 
-        dispatch({
-            type: SET_UNSEEN_NOTIFICATIONS,
-            data: { unseenNotifications }
-        });
-    }
+    const unseenNotifications = await new ApiClient().notifications.getUnseenNotifications(
+        walletPublicKeys
+    );
+
+    dispatch({
+        type: SET_UNSEEN_NOTIFICATIONS,
+        data: { unseenNotifications }
+    });
 };
 
 export const fetchNotifications = (page?: number) => async (

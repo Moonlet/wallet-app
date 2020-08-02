@@ -22,25 +22,33 @@ export class NotificationsApiClient {
      * TODO: When fetching multiple pages of notifications, maybe we should find a way to cache those notifications
      *       in order to minimise the calls to our api
      */
-    public async fetchNotifications(walletPublicKey: string, page?: number) {
+    public async fetchNotifications(walletPublicKeys: string[], page?: number) {
         try {
-            const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
-            if (walletPrivateKey) {
-                const data: any = {
-                    walletPublicKey,
-                    timestamp: await getCurrentTimestampNTP(),
-                    domain: getWalletApiDomain(),
-                    page: page || 1
-                };
+            const data: any = {
+                timestamp: await getCurrentTimestampNTP(),
+                domain: getWalletApiDomain(),
+                page: page || 1
+            };
+
+            const dataWalletPublicKeys = [];
+
+            for (const walletPublicKey of walletPublicKeys) {
+                const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
 
                 const signature = getSignature(data, walletPrivateKey, walletPublicKey);
-                data.signature = signature;
 
-                const response = await this.apiClient.http.post('/notifications', data);
+                dataWalletPublicKeys.push({
+                    walletPublicKey,
+                    signature
+                });
+            }
 
-                if (response?.result?.notifications) {
-                    return response.result.notifications;
-                }
+            data.walletPublicKeys = dataWalletPublicKeys;
+
+            const response = await this.apiClient.http.post('/notifications', data);
+
+            if (response?.result?.notifications) {
+                return response.result.notifications;
             }
         } catch (err) {
             SentryCaptureException(new Error(JSON.stringify(err)));

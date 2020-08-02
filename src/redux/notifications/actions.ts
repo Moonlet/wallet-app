@@ -49,14 +49,10 @@ export const fetchNotifications = (page?: number) => async (
     getState: () => IReduxState
 ) => {
     const state = getState();
-    const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
-    // TODO: fetch for all wallets
-    // walletPublicKeys
+    const walletPublicKeys: string[] = Object.values(state.wallets).map(w => w?.walletPublicKey);
 
-    if (walletPublicKey) {
-        return new ApiClient().notifications.fetchNotifications(walletPublicKey, page);
-    }
+    return new ApiClient().notifications.fetchNotifications(walletPublicKeys, page);
 };
 
 export const registerPushNotifToken = () => async (

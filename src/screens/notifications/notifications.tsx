@@ -15,13 +15,20 @@ import { connect } from 'react-redux';
 import { Blockchain } from '../../core/blockchain/types';
 import { markSeenNotification, fetchNotifications } from '../../redux/notifications/actions';
 import { NotificationType } from '../../core/messaging/types';
-import { updateTransactionFromBlockchain } from '../../redux/wallets/actions';
+import {
+    updateTransactionFromBlockchain,
+    getWalletAndAccountNameByAddress
+} from '../../redux/wallets/actions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import { openTransactionRequest } from '../../redux/ui/transaction-request/actions';
 import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
 import { updateDisplayedHint } from '../../redux/app/actions';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { SmartImage } from '../../library/image/smart-image';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { ITokenConfigState } from '../../redux/tokens/state';
 
 export interface IReduxProps {
     notifications: INotificationState;
@@ -31,6 +38,10 @@ export interface IReduxProps {
     fetchNotifications: (page?: number) => Promise<any>;
     hints: IHints;
     updateDisplayedHint: typeof updateDisplayedHint;
+
+    getWalletAndAccountNameByAddress: (
+        address: string
+    ) => { walletName: string; accountName: string };
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -49,7 +60,8 @@ const mapDispatchToProps = {
     updateTransactionFromBlockchain,
     openTransactionRequest,
     fetchNotifications,
-    updateDisplayedHint
+    updateDisplayedHint,
+    getWalletAndAccountNameByAddress
 };
 
 interface IState {
@@ -136,23 +148,49 @@ export class NotificationsComponent extends React.Component<
     private renderRow(notification: INotificationType, notificationId: string, index: number) {
         const { styles } = this.props;
 
+        const blockchain = notification.data.blockchain as Blockchain;
+        let tokenConfig: ITokenConfigState;
+        if (notification.data?.tokenSymbol) {
+            tokenConfig = getTokenConfig(blockchain, notification.data.tokenSymbol);
+        }
+        const blockchainConfig = getBlockchain(blockchain).config;
+        const BlockchainIcon = blockchainConfig.iconComponent;
+
+        const walletAccountName = this.props.getWalletAndAccountNameByAddress(
+            notification.data.address
+        );
+
+        const title =
+            notification.data.action === NotificationType.TRANSACTION
+                ? notification.title.slice(0, -1) // used to remove emoji
+                : notification.title;
+
         return (
             // Swipeable - maybe delete notification?
             <TouchableHighlight
                 key={`notification-${index}`}
                 underlayColor={this.props.theme.colors.appBackground}
                 onPress={() => this.handleNotificationTap(notification, notificationId)}
+                style={{ opacity: notification.seen ? 0.5 : 1 }}
             >
                 <View style={styles.rowContainer}>
                     <View style={styles.rowTextContainer}>
-                        <Text style={notification.seen ? styles.titleRead : styles.titleUnread}>
-                            {notification.title}
-                        </Text>
-                        <Text
-                            style={notification.seen ? styles.subtitleRead : styles.subtitleUnread}
-                        >
-                            {notification.body}
-                        </Text>
+                        <View style={{ flexDirection: 'row', marginBottom: BASE_DIMENSION / 2 }}>
+                            <SmartImage
+                                style={styles.notifIcon}
+                                source={tokenConfig?.icon || { iconComponent: BlockchainIcon }}
+                            />
+
+                            <Text style={styles.title}>{title}</Text>
+                        </View>
+
+                        <Text style={styles.subtitle}>{notification.body}</Text>
+
+                        {walletAccountName && (
+                            <Text style={styles.subtitle}>
+                                {`on ${walletAccountName.walletName}, ${walletAccountName.accountName}`}
+                            </Text>
+                        )}
                     </View>
                     <Icon
                         name={IconValues.CHEVRON_RIGHT}

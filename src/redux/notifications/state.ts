@@ -15,6 +15,7 @@ export interface INotificationType {
         transactionHash?: string;
         chainId?: string;
         broadcastedOnBlock?: string;
+        tokenSymbol?: string;
 
         // EXTENSION_SIGN_TX extra data
         requestId?: string;

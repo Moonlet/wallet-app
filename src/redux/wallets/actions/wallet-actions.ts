@@ -866,3 +866,21 @@ export const setWalletsCredentials = (password: string) => async (
         }
     }
 };
+
+export const getWalletAndAccountNameByAddress = (address: string) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+): { walletName: string; accountName: string } => {
+    const state = getState();
+
+    for (const wallet of Object.values(state.wallets)) {
+        for (const account of wallet.accounts) {
+            if (account.address.toLocaleLowerCase() === address.toLocaleLowerCase()) {
+                return {
+                    walletName: wallet.name,
+                    accountName: account.name || `Account ${account.index + 1}`
+                };
+            }
+        }
+    }
+};

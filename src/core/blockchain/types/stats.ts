@@ -3,7 +3,7 @@ import { BlockchainGenericClient } from './client';
 import { Blockchain } from './blockchain';
 import { PosBasicActionType } from './token';
 import BigNumber from 'bignumber.js';
-import { IAccountState } from '../../../redux/wallets/state';
+import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 
 export enum IStatValueType {
     STRING = 'STRING',
@@ -39,7 +39,10 @@ export abstract class GenericStats<Client = BlockchainGenericClient> {
         this.config = config;
     }
 
-    public async getAccountDelegateStats(account: IAccountState): Promise<AccountStats> {
+    public async getAccountDelegateStats(
+        account: IAccountState,
+        token: ITokenState
+    ): Promise<AccountStats> {
         throw new Error('Not Implemented');
     }
 

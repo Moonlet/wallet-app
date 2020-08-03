@@ -127,8 +127,7 @@ export const config: IBlockchainConfig = {
     ui: {
         validator: {
             totalLabel: 'Validator.totalDelegated',
-            amountCardLabel: 'Validator.delegation',
-            maximumNumberOfValidators: 5
+            amountCardLabel: 'Validator.delegation'
         },
         token: {
             labels: {

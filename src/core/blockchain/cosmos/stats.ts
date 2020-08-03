@@ -2,9 +2,13 @@ import { GenericStats, IStatValueType, AccountStats, IValidator } from '../types
 import { Client } from './client';
 import { Blockchain } from '../types/blockchain';
 import BigNumber from 'bignumber.js';
+import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 
 export class Stats extends GenericStats<Client> {
-    public async getAccountDelegateStats(): Promise<AccountStats> {
+    public async getAccountDelegateStats(
+        account: IAccountState,
+        token: ITokenState
+    ): Promise<AccountStats> {
         return {
             topStats: topStatsValues,
             chartStats: chartStatsValues,

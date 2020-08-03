@@ -34,7 +34,15 @@ export class ValidatorsApiClient {
                 address: account.address,
                 chainId
             });
-            return response?.result?.data;
+
+            if (response.result) {
+                return response.result.data;
+            } else {
+                SentryCaptureException(
+                    new Error(JSON.stringify(response || 'Get delegate stats failed'))
+                );
+                return undefined;
+            }
         } catch (err) {
             SentryCaptureException(new Error(JSON.stringify(err)));
         }

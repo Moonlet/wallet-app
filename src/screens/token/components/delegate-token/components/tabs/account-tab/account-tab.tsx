@@ -78,7 +78,7 @@ export class AccountTabComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.blockchain);
         blockchainInstance
             .getStats(this.props.chainId)
-            .getAccountDelegateStats(this.props.account)
+            .getAccountDelegateStats(this.props.account, this.props.token)
             .then(accStats => {
                 this.setState({ accountStats: accStats });
             })

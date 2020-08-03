@@ -142,7 +142,10 @@ export class RedelegateSelectValidatorComponent extends React.Component<
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const config = blockchainInstance.config;
         const validator = this.state.redelegateFromValidator;
-        const maximumNumberOfValidators = config.ui.validator.maximumNumberOfValidators;
+        const maximumNumberOfValidatorsReached =
+            blockchainInstance.config.ui.validator.maximumNumberOfValidators &&
+            blockchainInstance.config.ui.validator.maximumNumberOfValidators <=
+                this.state.nrValidators;
 
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
@@ -168,7 +171,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     onPress={() => {
                         if (
                             this.props.allValidators.length > this.state.nrValidators + 1 &&
-                            this.state.nrValidators < maximumNumberOfValidators
+                            !maximumNumberOfValidatorsReached
                         ) {
                             const nrValidatorsNew = this.state.nrValidators + 1;
 

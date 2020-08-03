@@ -122,8 +122,10 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
     private renderValidatorList() {
         const { styles } = this.props;
         const blockchainInstance = getBlockchain(this.props.blockchain);
-        const maximumNumberOfValidators =
-            blockchainInstance.config.ui.validator.maximumNumberOfValidators;
+        const maximumNumberOfValidatorsReached =
+            blockchainInstance.config.ui.validator.maximumNumberOfValidators &&
+            blockchainInstance.config.ui.validator.maximumNumberOfValidators <=
+                this.state.nrValidators;
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
                 <TouchableOpacity
@@ -148,7 +150,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                     onPress={() => {
                         if (
                             this.props.validators.length > this.state.nrValidators + 1 &&
-                            this.state.nrValidators < maximumNumberOfValidators
+                            !maximumNumberOfValidatorsReached
                         ) {
                             const nrValidatorsNew = this.state.nrValidators + 1;
 

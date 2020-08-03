@@ -191,7 +191,9 @@ export class StatsComponentInternal extends React.Component<
 
         return (
             <View style={styles.container}>
-                <View style={styles.topStatsContainer}>{this.renderTopStats()}</View>
+                {this.props.accountStats.topStats.length > 0 && (
+                    <View style={styles.topStatsContainer}>{this.renderTopStats()}</View>
+                )}
                 <View style={styles.chartRowContainer}>{this.renderChartStats()}</View>
             </View>
         );

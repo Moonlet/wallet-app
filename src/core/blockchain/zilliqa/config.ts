@@ -117,7 +117,7 @@ export const config: IBlockchainConfig = {
         validator: {
             totalLabel: 'Validator.totalStakes',
             amountCardLabel: 'Validator.myStake',
-            maximumNumberOfValidators: 5
+            maximumNumberOfValidators: 5 // TBD
         },
         token: {
             labels: {

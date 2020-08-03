@@ -158,7 +158,7 @@ export class Election {
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
         transaction.data = {
-            method: 'revokeActive',
+            method: 'revokePending',
             params: [groupAddress, tx.amount],
             raw
         };

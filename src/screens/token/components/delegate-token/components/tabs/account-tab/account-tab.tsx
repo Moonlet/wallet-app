@@ -59,7 +59,6 @@ const mapDispatchToProps = {
 
 interface IState {
     accountStats: AccountStats;
-    widgets: IPosWidget[];
 }
 
 export class AccountTabComponent extends React.Component<
@@ -70,8 +69,7 @@ export class AccountTabComponent extends React.Component<
         super(props);
 
         this.state = {
-            accountStats: undefined,
-            widgets: []
+            accountStats: undefined
         };
     }
     public async componentDidMount() {
@@ -119,7 +117,7 @@ export class AccountTabComponent extends React.Component<
     }
 
     public renderWidgets() {
-        return this.state.widgets.map((widget, index) => {
+        return this.state.accountStats.widgets.map((widget, index) => {
             const isActive = Number(widget.timestamp) < Date.now() ? true : false;
             const blockchainInstance = getBlockchain(this.props.blockchain);
             const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
@@ -213,7 +211,7 @@ export class AccountTabComponent extends React.Component<
                                 {translate('App.labels.receive')}
                             </Button>
                         </View>
-                        {this.renderWidgets()}
+                        {this.state.accountStats && this.renderWidgets()}
                         {this.state.accountStats === undefined ? (
                             <LoadingIndicator />
                         ) : (

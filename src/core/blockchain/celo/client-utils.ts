@@ -69,25 +69,25 @@ export class ClientUtils implements IClientUtils {
         const data: any = {};
 
         // TODO - find how to get the data since its a contract call not simple transfer call
-        // if (token.type === TokenType.ERC20) {
-        //     try {
-        //         const transferInputParameteres = this.decodeInputData(
-        //             'transfer(address,uint256)',
-        //             txInfo.input
-        //         );
-        //         if (transferInputParameteres[0] && transferInputParameteres[1]) {
-        //             data.params = [
-        //                 '0x' + transferInputParameteres[0],
-        //                 transferInputParameteres[1].toString(10)
-        //             ];
-        //         } else {
-        //             throw new Error('Cannot decode input data');
-        //         }
-        //     } catch (e) {
-        //         // probably not a transaction
-        //         return null;
-        //     }
-        // }
+        if (token && token.type === TokenType.ERC20) {
+            try {
+                const transferInputParameteres = this.decodeInputData(
+                    'transfer(address,uint256)',
+                    txInfo.input
+                );
+                if (transferInputParameteres[0] && transferInputParameteres[1]) {
+                    data.params = [
+                        '0x' + transferInputParameteres[0],
+                        transferInputParameteres[1].toString(10)
+                    ];
+                } else {
+                    throw new Error('Cannot decode input data');
+                }
+            } catch (e) {
+                // probably not a transaction
+                return null;
+            }
+        }
 
         return {
             id: txInfo.hash,

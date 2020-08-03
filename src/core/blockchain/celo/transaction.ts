@@ -134,7 +134,8 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 break;
             }
             case PosBasicActionType.UNLOCK: {
-                const transaction = await client.contracts[Contracts.LOCKED_GOLD].unlock(tx);
+                const txUnlock = cloneDeep(tx);
+                const transaction = await client.contracts[Contracts.LOCKED_GOLD].unlock(txUnlock);
                 if (transaction) transactions.push(transaction);
                 break;
             }
@@ -155,18 +156,17 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
 
                 const pendingValue = BigNumber.minimum(pending, amount);
                 if (!pendingValue.isZero()) {
-                    const txRevokePending: IPosTransaction = { ...tx };
+                    const txRevokePending: IPosTransaction = cloneDeep(tx);
                     txRevokePending.amount = pendingValue.toFixed();
-                    const transaction = await client.contracts[Contracts.ELECTION].revokePending(
-                        txRevokePending,
-                        indexForGroup
-                    );
-                    if (transaction) transactions.push(transaction);
+                    const transactionPending = await client.contracts[
+                        Contracts.ELECTION
+                    ].revokePending(txRevokePending, indexForGroup);
+                    if (transactionPending) transactions.push(transactionPending);
                 }
 
                 if (pendingValue.lt(amount)) {
                     const activeValue = amount.minus(pendingValue);
-                    const txRevoke: IPosTransaction = { ...tx };
+                    const txRevoke: IPosTransaction = cloneDeep(tx);
                     txRevoke.amount = activeValue.toFixed();
                     const transaction = await client.contracts[Contracts.ELECTION].revokeActive(
                         txRevoke,
@@ -182,9 +182,10 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 break;
             }
             case PosBasicActionType.WITHDRAW: {
+                const txWithdraw = cloneDeep(tx);
                 const transaction = await client.contracts[Contracts.LOCKED_GOLD].withdraw(
-                    tx,
-                    tx.extraFields.witdrawIndex
+                    txWithdraw,
+                    txWithdraw.extraFields.witdrawIndex
                 );
                 if (transaction) transactions.push(transaction);
                 break;

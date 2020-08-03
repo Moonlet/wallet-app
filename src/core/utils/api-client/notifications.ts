@@ -24,26 +24,25 @@ export class NotificationsApiClient {
      */
     public async fetchNotifications(walletPublicKeys: string[], page?: number) {
         try {
-            const data: any = {
-                timestamp: await getCurrentTimestampNTP(),
-                domain: getWalletApiDomain(),
+            const data = {
+                walletPublicKeys: [],
                 page: page || 1
             };
-
-            const dataWalletPublicKeys = [];
 
             for (const walletPublicKey of walletPublicKeys) {
                 const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
 
-                const signature = getSignature(data, walletPrivateKey, walletPublicKey);
-
-                dataWalletPublicKeys.push({
+                const walletData: any = {
                     walletPublicKey,
-                    signature
-                });
-            }
+                    timestamp: await getCurrentTimestampNTP(),
+                    domain: getWalletApiDomain()
+                };
 
-            data.walletPublicKeys = dataWalletPublicKeys;
+                const signature = getSignature(data, walletPrivateKey, walletPublicKey);
+                walletData.signature = signature;
+
+                data.walletPublicKeys.push(walletData);
+            }
 
             const response = await this.apiClient.http.post('/notifications', data);
 
@@ -180,25 +179,24 @@ export class NotificationsApiClient {
      */
     public async getUnseenNotifications(walletPublicKeys: string[]): Promise<number> {
         try {
-            const data: any = {
-                timestamp: await getCurrentTimestampNTP(),
-                domain: getWalletApiDomain()
+            const data = {
+                walletPublicKeys: []
             };
-
-            const dataWalletPublicKeys = [];
 
             for (const walletPublicKey of walletPublicKeys) {
                 const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
 
-                const signature = getSignature(data, walletPrivateKey, walletPublicKey);
-
-                dataWalletPublicKeys.push({
+                const walletData: any = {
                     walletPublicKey,
-                    signature
-                });
-            }
+                    timestamp: await getCurrentTimestampNTP(),
+                    domain: getWalletApiDomain()
+                };
 
-            data.walletPublicKeys = dataWalletPublicKeys;
+                const signature = getSignature(data, walletPrivateKey, walletPublicKey);
+                walletData.signature = signature;
+
+                data.walletPublicKeys.push(walletData);
+            }
 
             const response = await this.apiClient.http.post('/notifications/unseen', data);
 

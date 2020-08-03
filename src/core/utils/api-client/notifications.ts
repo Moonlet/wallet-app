@@ -80,7 +80,7 @@ export class NotificationsApiClient {
                 data.signature = signature;
 
                 const response = await this.apiClient.http.post(
-                    '/notifications/register-push-notification-token',
+                    '/notifications/registerToken',
                     data
                 );
 
@@ -140,10 +140,7 @@ export class NotificationsApiClient {
                 const signature = getSignature(data, walletPrivateKey, walletPublicKey);
                 data.signature = signature;
 
-                await this.apiClient.http.post(
-                    '/notifications/register-notification-settings',
-                    data
-                );
+                await this.apiClient.http.post('/notifications/registerSettings', data);
             }
         } catch (err) {
             SentryCaptureException(new Error(JSON.stringify(err)));
@@ -170,7 +167,7 @@ export class NotificationsApiClient {
                 const signature = getSignature(data, walletPrivateKey, walletPublicKey);
                 data.signature = signature;
 
-                await this.apiClient.http.post('/notifications/mark-seen', data);
+                await this.apiClient.http.post('/notifications/markSeen', data);
             }
         } catch (err) {
             SentryCaptureException(new Error(JSON.stringify(err)));

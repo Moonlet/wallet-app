@@ -875,7 +875,7 @@ export const getWalletAndAccountNameByAddress = (address: string) => (
 
     for (const wallet of Object.values(state.wallets)) {
         for (const account of wallet.accounts) {
-            if (account.address.toLocaleLowerCase() === address.toLocaleLowerCase()) {
+            if (account.address?.toLocaleLowerCase() === address?.toLocaleLowerCase()) {
                 return {
                     walletName: wallet.name,
                     accountName: account.name || `Account ${account.index + 1}`

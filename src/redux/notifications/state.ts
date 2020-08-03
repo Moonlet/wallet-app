@@ -3,7 +3,6 @@ export interface INotificationType {
     title: string;
     body: string;
     seen: boolean;
-    timestamp: number;
     data: {
         action: string;
         blockchain: string;
@@ -23,6 +22,9 @@ export interface INotificationType {
         // OPEN_URL extra data
         url?: string;
     };
+
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface INotificationState {

@@ -94,7 +94,7 @@ export class NotificationsComponent extends React.Component<
 
         setTimeout(async () => {
             await LoadingModal.close();
-        }, 2500); // drop loading in 2.5 seconds if api call takes too long
+        }, 2500); // drop loading in 2.5 seconds if api call takes too long or crashes
 
         await this.fetchNotifications();
         await LoadingModal.close();
@@ -114,6 +114,10 @@ export class NotificationsComponent extends React.Component<
 
     private async handleNotificationTap(notification: INotificationType, notificationId: string) {
         await LoadingModal.open();
+
+        setTimeout(async () => {
+            await LoadingModal.close();
+        }, 3000); // drop loading in 3 seconds if api call takes too long or crashes
 
         switch (notification.data.action) {
             case NotificationType.TRANSACTION:
@@ -160,11 +164,6 @@ export class NotificationsComponent extends React.Component<
             notification.data.address
         );
 
-        const title =
-            notification.data.action === NotificationType.TRANSACTION
-                ? notification.title.slice(0, -1) // used to remove emoji
-                : notification.title;
-
         return (
             // Swipeable - maybe delete notification?
             <TouchableHighlight
@@ -181,7 +180,7 @@ export class NotificationsComponent extends React.Component<
                                 source={tokenConfig?.icon || { iconComponent: BlockchainIcon }}
                             />
 
-                            <Text style={styles.title}>{title}</Text>
+                            <Text style={styles.title}>{notification.title}</Text>
                         </View>
 
                         <Text style={styles.subtitle}>{notification.body}</Text>
@@ -208,20 +207,13 @@ export class NotificationsComponent extends React.Component<
             : {};
 
         for (const notif of notifications) {
-            const notifData = {
-                walletId: notif.walletId,
-                title: notif.title,
-                body: notif.body,
-                seen: notif.seen,
-                data: notif.data,
-                timestamp: undefined
-            };
-
             Object.assign(finalNotifications, {
                 ...finalNotifications,
-                [notif._id]: notifData
+                [notif._id]: notif
             });
         }
+
+        // TODO: filter by createdAt
 
         return finalNotifications;
     }

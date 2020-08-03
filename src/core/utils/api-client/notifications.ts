@@ -170,11 +170,7 @@ export class NotificationsApiClient {
                 const signature = getSignature(data, walletPrivateKey, walletPublicKey);
                 data.signature = signature;
 
-                const response = await this.apiClient.http.post('/notifications/mark-seen', data);
-
-                if (response?.result?.notifications) {
-                    return response.result.notifications;
-                }
+                await this.apiClient.http.post('/notifications/mark-seen', data);
             }
         } catch (err) {
             SentryCaptureException(new Error(JSON.stringify(err)));

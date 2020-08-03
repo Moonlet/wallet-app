@@ -86,7 +86,7 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 ].isRegisteredAccount(tx.account.address);
 
                 if (!isRegisteredAccount) {
-                    const txRegister: IPosTransaction = { ...tx };
+                    const txRegister: IPosTransaction = cloneDeep(tx);
 
                     transactions.push(
                         await client.contracts[Contracts.ACCOUNTS].createAccount(txRegister)

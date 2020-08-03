@@ -31,6 +31,7 @@ import {
 } from '../../ui/process-transactions/actions';
 import { TRANSACTION_PUBLISHED } from './wallet-actions';
 import { TransactionStatus } from '../../../core/wallet/types';
+import { cloneDeep } from 'lodash';
 
 export const delegate = (
     account: IAccountState,
@@ -223,9 +224,7 @@ export const posAction = (
             type
         );
 
-        dispatch(setProcessTransactions(txs));
-
-        return;
+        dispatch(setProcessTransactions(cloneDeep(txs)));
 
         let index = 0;
         let processNextTransaction = true;

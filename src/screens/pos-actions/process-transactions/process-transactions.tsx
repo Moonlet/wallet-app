@@ -77,9 +77,9 @@ export class ProcessTransactionsComponent extends React.Component<
         }
     }
 
-    private formatTopAndBottomText(
+    private formatTopMiddleAndBottomText(
         tx: IBlockchainTransaction
-    ): { topText: string; bottomText: string } {
+    ): { topText: string; middleText: string; bottomText: string } {
         const tokenConfig = getTokenConfig(tx.blockchain, tx.token.symbol);
         const blockchainInstance = getBlockchain(tx.blockchain);
         const feesNumber = blockchainInstance.account.amountFromStd(
@@ -90,9 +90,6 @@ export class ProcessTransactionsComponent extends React.Component<
         const fees = formatNumber(new BigNumber(feesNumber), {
             currency: blockchainInstance.config.coin
         });
-
-        if (tx.additionalInfo?.posAction === PosBasicActionType.CREATE_ACCOUNT)
-            return { topText: translate('Transaction.registerAccount'), bottomText: fees };
 
         if (tx.amount === '0') {
             tx.amount = tx.data.params.length > 1 ? tx.data.params[1] : tx.data.params[0];
@@ -106,14 +103,50 @@ export class ProcessTransactionsComponent extends React.Component<
             currency: blockchainInstance.config.coin
         });
 
-        return { topText: amount, bottomText: fees };
+        let middleText = '';
+        let topText = '';
+        switch (tx.additionalInfo?.posAction) {
+            case PosBasicActionType.CREATE_ACCOUNT: {
+                topText = translate('Transaction.registerAccount');
+                break;
+            }
+            case PosBasicActionType.LOCK: {
+                topText = translate('App.labels.locking') + ' ' + amount;
+                break;
+            }
+            case PosBasicActionType.DELEGATE: {
+                middleText =
+                    translate('App.labels.to').toLowerCase() +
+                    ' ' +
+                    formatValidatorName(tx.additionalInfo?.validatorName, 20);
+                topText = translate('App.labels.voting') + ' ' + amount;
+                break;
+            }
+            case PosBasicActionType.UNLOCK: {
+                topText = translate('App.labels.unlocking') + ' ' + amount;
+                break;
+            }
+            case PosBasicActionType.UNVOTE: {
+                middleText =
+                    translate('App.labels.from').toLowerCase() +
+                    formatValidatorName(tx.additionalInfo?.validatorName, 20);
+                topText = translate('App.labels.unvoting') + ' ' + amount;
+                break;
+            }
+            default: {
+                middleText = '';
+                topText = amount;
+            }
+        }
+
+        return { topText, middleText, bottomText: fees };
     }
 
     private renderCard(tx: IBlockchainTransaction, index: number) {
         const { styles, theme } = this.props;
         const status = tx.status;
 
-        const { topText, bottomText } = this.formatTopAndBottomText(tx);
+        const { topText, middleText, bottomText } = this.formatTopMiddleAndBottomText(tx);
 
         let leftIcon = '';
         let rightText = '';
@@ -146,25 +179,6 @@ export class ProcessTransactionsComponent extends React.Component<
                 leftIcon = IconValues.PENDING;
                 rightText = '';
                 iconColor = theme.colors.warning;
-            }
-        }
-
-        let middleText = '';
-        switch (tx.additionalInfo?.posAction) {
-            case PosBasicActionType.CREATE_ACCOUNT: {
-                middleText = '';
-                break;
-            }
-            case PosBasicActionType.LOCK: {
-                middleText = 'Locking Gold';
-                break;
-            }
-            case PosBasicActionType.DELEGATE: {
-                middleText = 'To ' + formatValidatorName(tx.additionalInfo?.validatorName, 20);
-                break;
-            }
-            default: {
-                middleText = '';
             }
         }
 

@@ -213,7 +213,8 @@ export class NotificationsComponent extends React.Component<
             });
         }
 
-        // TODO: filter by createdAt
+        // TODO: sort by createdAt
+        //       filter by network
 
         return finalNotifications;
     }

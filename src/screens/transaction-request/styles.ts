@@ -10,7 +10,7 @@ import {
 import { pw, ph } from '../../styles';
 
 // TODO: check this or find a better way
-const CONTAINER_TOP_PADDING =
+export const CONTAINER_TOP_PADDING =
     Platform.OS === 'ios'
         ? isIphoneXorAbove()
             ? BASE_DIMENSION * 8

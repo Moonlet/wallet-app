@@ -18,6 +18,7 @@ export const translation: ITranslations = {
                 average: 'Average',
                 balance: 'Balance',
                 cancel: 'Cancel',
+                canceled: 'Canceled',
                 cheap: 'Cheap',
                 check: 'Check',
                 close: 'Close',
@@ -42,6 +43,7 @@ export const translation: ITranslations = {
                 delete: 'Delete',
                 details: 'Details',
                 disconnect: 'Sign out',
+                dropped: 'Dropped',
                 enterAmount: 'Enter\namount',
                 editToken: 'Edit token',
                 error: 'Error',
@@ -58,6 +60,7 @@ export const translation: ITranslations = {
                 holdUnveil: 'Hold to unveil',
                 ledgerType: 'Ledger type',
                 legal: 'Legal',
+                locking: 'Locking',
                 low: 'Low',
                 maybeLater: 'Maybe later',
                 mnemonicNotValid: 'Your mnemonic is not valid!',
@@ -69,6 +72,7 @@ export const translation: ITranslations = {
                 notifications: 'Notifications',
                 ok: 'OK',
                 paste: 'Paste',
+                processing: 'Processing',
                 privacyPolicy: 'Privacy policy',
                 quickDelegate: 'Quick Delegate',
                 quickVote: 'Quick Vote',
@@ -113,9 +117,12 @@ export const translation: ITranslations = {
                 undelegate: 'Undelegate',
                 unvote: 'Unvote',
                 unlock: 'Unlock',
+                unlocking: 'Unlocking',
+                unvoting: 'Unvoting',
                 unstake: 'Unstake',
                 validators: 'Validators',
                 vote: 'Vote',
+                voting: 'Voting',
                 wallets: 'Wallets',
                 warning: 'Warning',
                 watch: 'Watch mode',
@@ -310,7 +317,11 @@ export const translation: ITranslations = {
             signTransaction: 'Sign transaction',
             signExtensionTransaction:
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
-            signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}'
+            signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
+            processTitleText: 'Please wait while each transaction is being processed!',
+            processTitleTextLedger:
+                'Please sign each transaction from your Ledger and wait while is being processed!',
+            registerAccount: 'Registering account'
         },
         Statistics: {
             launchingSoon: 'Launching soon!',

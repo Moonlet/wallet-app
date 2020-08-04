@@ -15,6 +15,8 @@ import { translate } from '../../core/i18n';
 import { StatsComponent } from '../token/components/delegate-token/components/stats-component/stats-component';
 import { IValidator, CardActionType } from '../../core/blockchain/types/stats';
 import { ITokenState } from '../../redux/wallets/state';
+import BigNumber from 'bignumber.js';
+import { formatValidatorName } from '../../core/utils/format-string';
 
 export interface INavigationParams {
     validator: IValidator;
@@ -34,7 +36,7 @@ const HeaderTitleComponent = (
             />
             <View style={{ flexDirection: 'column' }}>
                 <Text style={props.styles.labelName}>
-                    {props.navigation.state.params.validator.name}
+                    {formatValidatorName(props.navigation.state.params.validator.name, 15)}
                 </Text>
                 <Text style={props.styles.website}>
                     {props.navigation.state.params.validator.website}
@@ -93,8 +95,12 @@ export class ValidatorScreenComponent extends React.Component<
                         accountStats={{
                             topStats: validator.topStats,
                             chartStats: validator.chartStats,
-                            secondaryStats: validator.secondaryStats
+                            secondaryStats: validator.secondaryStats,
+                            totalAmount: new BigNumber(0),
+                            widgets: []
                         }}
+                        blockchain={this.props.blockchain}
+                        token={this.props.token}
                     />
                 </View>
 

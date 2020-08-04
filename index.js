@@ -39,6 +39,10 @@ import androidBgMessagingHandler from './src/core/messaging/silent/android-backg
 // TODO remove this when fixed
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['RCTRootView cancelTouches', 'Require cycle']);
+YellowBox.ignoreWarnings([
+    'VirtualizedLists should never be nested' // TODO: Remove when fixed
+]);
+
 // console.disableYellowBox = true;
 
 if (Platform.OS === 'android') {

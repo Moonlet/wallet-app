@@ -35,13 +35,16 @@ export class NotificationsApiClient {
                 page: page || 1
             };
 
+            const timestamp = await getCurrentTimestampNTP();
+            const domain = getWalletApiDomain();
+
             for (const walletPublicKey of walletPublicKeys) {
                 const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
 
                 const walletData: any = {
                     walletPublicKey,
-                    timestamp: await getCurrentTimestampNTP(),
-                    domain: getWalletApiDomain()
+                    timestamp,
+                    domain
                 };
 
                 const signature = getSignature(walletData, walletPrivateKey, walletPublicKey);
@@ -189,13 +192,16 @@ export class NotificationsApiClient {
                 walletPublicKeys: []
             };
 
+            const timestamp = await getCurrentTimestampNTP();
+            const domain = getWalletApiDomain();
+
             for (const walletPublicKey of walletPublicKeys) {
                 const walletPrivateKey = await getWalletCredentialsKey(walletPublicKey);
 
                 const walletData: any = {
                     walletPublicKey,
-                    timestamp: await getCurrentTimestampNTP(),
-                    domain: getWalletApiDomain()
+                    timestamp,
+                    domain
                 };
 
                 const signature = getSignature(walletData, walletPrivateKey, walletPublicKey);

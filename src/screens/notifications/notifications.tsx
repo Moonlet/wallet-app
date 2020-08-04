@@ -206,12 +206,7 @@ export class NotificationsComponent extends React.Component<
             []
         );
 
-        return (this.state.isRefreshing ? [] : this.state.notifications)
-            .concat(parsedNotifs)
-            .sort(
-                (notif1, notif2) =>
-                    new Date(notif2.createdAt).getTime() - new Date(notif1.createdAt).getTime()
-            );
+        return (this.state.isRefreshing ? [] : this.state.notifications).concat(parsedNotifs);
     }
 
     private async fetchNotifications() {

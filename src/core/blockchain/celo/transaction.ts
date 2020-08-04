@@ -16,6 +16,7 @@ import { encode } from './library/rlp';
 import elliptic from 'elliptic';
 import { Contracts } from './config';
 import { fixEthAddress } from '../../utils/format-address';
+import cloneDeep from 'lodash/cloneDeep';
 
 const toHex = value => {
     if (value && value !== '0x') {
@@ -80,26 +81,43 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                     Contracts.LOCKED_GOLD
                 ].getAccountNonvotingLockedGold(tx.account.address);
 
-                if (!amountLocked.isGreaterThan(new BigNumber(tx.amount))) {
-                    const txLock: IPosTransaction = { ...tx };
+                const isRegisteredAccount = await client.contracts[
+                    Contracts.ACCOUNTS
+                ].isRegisteredAccount(tx.account.address);
+
+                if (!isRegisteredAccount) {
+                    const txRegister: IPosTransaction = cloneDeep(tx);
+
+                    transactions.push(
+                        await client.contracts[Contracts.ACCOUNTS].createAccount(txRegister)
+                    );
+                }
+
+                if (!amountLocked.isGreaterThanOrEqualTo(new BigNumber(tx.amount))) {
+                    const txLock: IPosTransaction = cloneDeep(tx);
+
                     txLock.amount = new BigNumber(tx.amount).minus(amountLocked).toString();
-                    transactions.push(await client.contracts[Contracts.LOCKED_GOLD].lock(txLock));
+
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.LOCKED_GOLD
+                    ].lock(txLock);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+
+                    transactions.push(transaction);
                 }
 
                 const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
 
-                await Promise.all(
-                    tx.validators.map(async validator => {
-                        const txVote: IPosTransaction = { ...tx };
-                        txVote.amount = splitAmount.toString();
-                        transactions.push(
-                            await client.contracts[Contracts.ELECTION].vote(
-                                tx,
-                                validator.id.toLowerCase()
-                            )
-                        );
-                    })
-                );
+                for (const validator of tx.validators) {
+                    const txVote: IPosTransaction = cloneDeep(tx);
+                    txVote.amount = splitAmount.toString();
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.ELECTION
+                    ].vote(txVote, validator);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
+                }
+
                 break;
             }
             case PosBasicActionType.ACTIVATE: {
@@ -116,7 +134,8 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 break;
             }
             case PosBasicActionType.UNLOCK: {
-                const transaction = await client.contracts[Contracts.LOCKED_GOLD].unlock(tx);
+                const txUnlock = cloneDeep(tx);
+                const transaction = await client.contracts[Contracts.LOCKED_GOLD].unlock(txUnlock);
                 if (transaction) transactions.push(transaction);
                 break;
             }
@@ -137,32 +156,36 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
 
                 const pendingValue = BigNumber.minimum(pending, amount);
                 if (!pendingValue.isZero()) {
-                    const txRevokePending: IPosTransaction = { ...tx };
+                    const txRevokePending: IPosTransaction = cloneDeep(tx);
                     txRevokePending.amount = pendingValue.toFixed();
-                    const transaction = await client.contracts[Contracts.ELECTION].revokePending(
-                        txRevokePending,
-                        indexForGroup
-                    );
-                    if (transaction) transactions.push(transaction);
+                    const transactionPending = await client.contracts[
+                        Contracts.ELECTION
+                    ].revokePending(txRevokePending, indexForGroup);
+                    if (transactionPending) transactions.push(transactionPending);
                 }
 
                 if (pendingValue.lt(amount)) {
                     const activeValue = amount.minus(pendingValue);
-                    const txRevoke: IPosTransaction = { ...tx };
+                    const txRevoke: IPosTransaction = cloneDeep(tx);
                     txRevoke.amount = activeValue.toFixed();
                     const transaction = await client.contracts[Contracts.ELECTION].revokeActive(
                         txRevoke,
                         indexForGroup
                     );
-                    if (transaction) transactions.push(transaction);
+
+                    if (transaction) {
+                        transaction.nonce = transaction.nonce + transactions.length;
+                        transactions.push(transaction);
+                    }
                 }
 
                 break;
             }
             case PosBasicActionType.WITHDRAW: {
+                const txWithdraw = cloneDeep(tx);
                 const transaction = await client.contracts[Contracts.LOCKED_GOLD].withdraw(
-                    tx,
-                    tx.extraFields.witdrawIndex
+                    txWithdraw,
+                    txWithdraw.extraFields.witdrawIndex
                 );
                 if (transaction) transactions.push(transaction);
                 break;
@@ -180,7 +203,6 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
         const client = Celo.getClient(tx.chainId);
         const nonce = await client.getNonce(tx.account.address, tx.account.publicKey);
         const blockInfo = await client.getCurrentBlock();
-
         switch (tokenConfig.type) {
             case TokenType.ERC20:
                 return {

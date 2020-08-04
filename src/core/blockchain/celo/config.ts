@@ -7,7 +7,7 @@ import {
     CELO_GOLD_MAINNET,
     CELO_GOLD_TESTNET_ALFAJORES,
     CELO_GOLD_TESTNET_BAKLAVA
-} from './tokens/cGLD';
+} from './tokens/celo';
 import {
     CELO_USD_MAINNET,
     CELO_USD_TESTNET_ALFAJORES,
@@ -70,29 +70,29 @@ const validatorCTA = {
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/52752'/0'/0`,
     derivationType: DerivationType.HD_KEY,
-    coin: 'cGLD',
+    coin: 'CELO',
     defaultUnit: 'WEI',
     iconComponent: CeloIcon,
     droppedTxBlocksThreshold: 50,
     autoAddedTokensSymbols: {
         42220: {
-            cGLD: CELO_GOLD_MAINNET,
+            CELO: CELO_GOLD_MAINNET,
             cUSD: CELO_USD_MAINNET
         },
-        44786: {
-            cGLD: CELO_GOLD_TESTNET_ALFAJORES,
+        44787: {
+            CELO: CELO_GOLD_TESTNET_ALFAJORES,
             cUSD: CELO_USD_TESTNET_ALFAJORES
         },
-        40120: {
-            cGLD: CELO_GOLD_TESTNET_BAKLAVA,
+        40121: {
+            CELO: CELO_GOLD_TESTNET_BAKLAVA,
             cUSD: CELO_USD_TESTNET_BAKLAVA
         }
     },
     tokens: {
-        cGLD: CELO_GOLD_NATIVE
+        CELO: CELO_GOLD_NATIVE
     },
     feeOptions: {
-        gasPriceToken: 'cGLD',
+        gasPriceToken: 'CELO',
         defaults: {
             gasPrice: new BigNumber(5000000000),
             gasLimit: {
@@ -110,7 +110,8 @@ export const config: IBlockchainConfig = {
     ui: {
         validator: {
             totalLabel: 'Validator.totalVotes',
-            amountCardLabel: 'App.labels.myVotes'
+            amountCardLabel: 'App.labels.myVotes',
+            maximumNumberOfValidators: 5
         },
         token: {
             labels: {
@@ -137,7 +138,7 @@ export const config: IBlockchainConfig = {
         displayName: 'CELO'
     },
     networks: {
-        testNet: 44786,
+        testNet: 44787,
         mainNet: 42220
     },
     defaultOrder: 1
@@ -146,5 +147,5 @@ export const config: IBlockchainConfig = {
 export enum Contracts {
     LOCKED_GOLD = 'LOCKED_GOLD',
     ELECTION = 'ELECTION',
-    ACCOUNT = 'ACCOUNT'
+    ACCOUNTS = 'ACCOUNTS'
 }

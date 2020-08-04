@@ -10,7 +10,7 @@ const scale = SCREEN_WIDTH / 414;
 export const normalize = (size: number) => Math.round(PixelRatio.roundToNearestPixel(size * scale));
 
 export const normalizeFontAndLineHeight = (size: number) => {
-    const fontScale = DeviceInfo.getFontScaleSync();
+    const fontScale = __DEV__ ? 1 : DeviceInfo.getFontScaleSync();
 
     if (fontScale && Number(fontScale)) {
         return Math.round(PixelRatio.roundToNearestPixel(size / Number(fontScale)));

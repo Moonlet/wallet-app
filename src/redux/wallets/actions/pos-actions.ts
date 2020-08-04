@@ -1,9 +1,10 @@
 import { IAccountState } from '../state';
 import {
     IFeeOptions,
-    ITransactionExtraFields,
-    TransactionMessageType,
-    TransactionMessageText
+    ITransactionExtraFields
+    // TransactionMessageType,
+    // TransactionMessageText,
+    // IBlockchainTransaction
 } from '../../../core/blockchain/types';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { Dispatch } from 'react';
@@ -12,18 +13,25 @@ import { IReduxState } from '../../state';
 import { getChainId } from '../../preferences/selectors';
 import { getSelectedWallet } from '../selectors';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
-import { WalletType } from '../../../core/wallet/types';
+// import { WalletType } from '../../../core/wallet/types';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { getTokenConfig } from '../../tokens/static-selectors';
-import { LedgerWallet } from '../../../core/wallet/hw-wallet/ledger/ledger-wallet';
-import { TRANSACTION_PUBLISHED } from '../actions';
-import { ConnectExtension } from '../../../core/connect-extension/connect-extension';
-import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../../ui/transaction-request/actions';
+// import { LedgerWallet } from '../../../core/wallet/hw-wallet/ledger/ledger-wallet';
+// import { TRANSACTION_PUBLISHED } from '../actions';
 import { translate } from '../../../core/i18n';
 import { Dialog } from '../../../components/dialog/dialog';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { IValidator } from '../../../core/blockchain/types/stats';
+import {
+    openProcessTransactions,
+    setProcessTransactions,
+    updateProcessTransactionIdForIndex,
+    updateProcessTransactionStatusForIndex
+} from '../../ui/process-transactions/actions';
+import { TRANSACTION_PUBLISHED } from './wallet-actions';
+import { TransactionStatus } from '../../../core/wallet/types';
+import { cloneDeep } from 'lodash';
 
 export const delegate = (
     account: IAccountState,
@@ -87,7 +95,6 @@ export const activate = (
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    // TODO - activation can be done after api si completed
     posAction(
         account,
         undefined,
@@ -173,13 +180,18 @@ export const posAction = (
     const appWallet = getSelectedWallet(state);
 
     try {
-        await LoadingModal.open({
-            type: TransactionMessageType.INFO,
-            text:
-                appWallet.type === WalletType.HW
-                    ? TransactionMessageText.CONNECTING_LEDGER
-                    : TransactionMessageText.SIGNING
-        });
+        // await LoadingModal.open({
+        //     type: TransactionMessageType.INFO,
+        //     text:
+        //         appWallet.type === WalletType.HW
+        //             ? TransactionMessageText.CONNECTING_LEDGER
+        //             : TransactionMessageText.SIGNING
+        // });
+
+        const extra: ITransactionExtraFields = {
+            ...extraFields,
+            posAction: type
+        };
 
         const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
             pass: password,
@@ -190,6 +202,8 @@ export const posAction = (
         }); // encrypted string: pass)
         const blockchainInstance = getBlockchain(account.blockchain);
         const tokenConfig = getTokenConfig(account.blockchain, token);
+
+        dispatch(openProcessTransactions());
 
         const txs = await blockchainInstance.transaction.buildPosTransaction(
             {
@@ -205,68 +219,64 @@ export const posAction = (
                     gasPrice: feeOptions.gasPrice.toString(),
                     gasLimit: feeOptions.gasLimit.toString()
                 },
-                extraFields
+                extraFields: extra
             },
             type
         );
 
-        txs.forEach(async tx => {
-            if (appWallet.type === WalletType.HW) {
-                await LoadingModal.showMessage({
-                    text: TransactionMessageText.OPEN_APP,
-                    type: TransactionMessageType.INFO
-                });
+        dispatch(setProcessTransactions(cloneDeep(txs)));
 
-                await (wallet as LedgerWallet).onAppOpened(account.blockchain);
+        let index = 0;
+        let processNextTransaction = true;
+        let txHash = '';
 
-                await LoadingModal.showMessage({
-                    text: TransactionMessageText.REVIEW_TRANSACTION,
-                    type: TransactionMessageType.INFO
-                });
-            }
+        const interval = setInterval(async () => {
+            if (txs.length > index) {
+                const client = getBlockchain(account.blockchain).getClient(chainId);
 
-            const transaction = await wallet.sign(account.blockchain, account.index, tx);
-
-            await LoadingModal.showMessage({
-                text: TransactionMessageText.BROADCASTING,
-                type: TransactionMessageType.INFO
-            });
-
-            const txHash = await getBlockchain(account.blockchain)
-                .getClient(chainId)
-                .sendTransaction(transaction);
-
-            // TODO - implement wait for transaction to be posted on blockchain
-
-            if (txHash) {
-                dispatch({
-                    type: TRANSACTION_PUBLISHED,
-                    data: {
-                        hash: txHash,
-                        tx: txs[0],
-                        walletId: appWallet.id
-                    }
-                });
-
-                if (sendResponse) {
-                    await ConnectExtension.sendResponse(sendResponse.requestId, {
-                        result: {
-                            txHash,
-                            tx: txs[0]
+                if (processNextTransaction === true) {
+                    const transaction = await wallet.sign(
+                        account.blockchain,
+                        account.index,
+                        txs[index]
+                    );
+                    txHash = await client.sendTransaction(transaction);
+                    if (txHash) {
+                        dispatch(updateProcessTransactionIdForIndex(index, txHash));
+                        dispatch({
+                            type: TRANSACTION_PUBLISHED,
+                            data: {
+                                hash: txHash,
+                                tx: txs[index],
+                                walletId: appWallet.id
+                            }
+                        });
+                        processNextTransaction = false;
+                    } else {
+                        dispatch(
+                            updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
+                        );
+                        for (let i = index + 1; i < txs.length; i++) {
+                            dispatch(
+                                updateProcessTransactionStatusForIndex(i, TransactionStatus.DROPPED)
+                            );
                         }
-                    });
 
-                    dispatch({ type: CLOSE_TX_REQUEST });
+                        clearInterval(interval);
+                    }
+                } else {
+                    try {
+                        const transaction = await client.utils.getTransaction(txHash);
+                        dispatch(updateProcessTransactionStatusForIndex(index, transaction.status));
+                        index++;
+                        processNextTransaction = true;
+                        if (index === txs.length) clearInterval(interval);
+                    } catch (e) {
+                        // transaction not yet published - do nothing
+                    }
                 }
-
-                await LoadingModal.close();
-                dispatch(closeTransactionRequest());
-                goBack && navigation.goBack();
-                return;
-            } else {
-                throw new Error('GENERIC_ERROR');
-            }
-        });
+            } else clearInterval(interval);
+        }, 2000);
     } catch (errorMessage) {
         await LoadingModal.close();
         Dialog.info(translate('LoadingModal.txFailed'), translate('LoadingModal.GENERIC_ERROR'));

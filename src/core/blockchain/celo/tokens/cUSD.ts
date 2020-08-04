@@ -1,6 +1,5 @@
 import { ITokenConfigState } from '../../../../redux/tokens/state';
 import { TokenScreenComponentType, TokenType } from '../../types/token';
-import BigNumber from 'bignumber.js';
 
 export const CELO_USD_TESTNET_ALFAJORES: ITokenConfigState = {
     name: 'Celo USD',
@@ -9,19 +8,14 @@ export const CELO_USD_TESTNET_ALFAJORES: ITokenConfigState = {
         uri: 'https://fire.moonlet.io/static/tokens/icons/celo/cusd.png'
     },
     removable: true,
-    contractAddress: '0xa561131a1C8aC25925FB848bCa45A74aF61e5A38',
+    contractAddress: '0x874069fa1eb16d44d622f2e0ca25eea172369bc1',
     defaultOrder: 999,
     decimals: 18,
     ui: {
         decimals: 4,
         tokenScreenComponent: TokenScreenComponentType.DEFAULT
     },
-    type: TokenType.ERC20,
-    units: {
-        WEI: new BigNumber(1),
-        GWEI: new BigNumber(Math.pow(10, 9)),
-        cGLD: new BigNumber(Math.pow(10, 18))
-    }
+    type: TokenType.ERC20
 };
 
 export const CELO_USD_CONTRACT_ADDRESS = (contractAddress: string): ITokenConfigState => {

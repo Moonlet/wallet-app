@@ -34,6 +34,7 @@ import { addBreadcrumb, captureException as SentryCaptureException } from '@sent
 import { isEqual } from 'lodash';
 import { filterObjectProps } from './core/utils/object-sanitise';
 import { setWalletsCredentials } from './redux/wallets/actions/wallet-actions';
+import { ProcessTransactions } from './screens/pos-actions/process-transactions/process-transactions';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -219,6 +220,7 @@ export default class App extends React.Component<{}, IState> {
                                 <ImageCanvas />
                             )}
                             <PasswordModal.Component />
+                            <ProcessTransactions />
                             <TransactionRequestScreen />
                             <BottomSheet />
                             {Platform.OS !== 'web' && <Dialog.Component />}

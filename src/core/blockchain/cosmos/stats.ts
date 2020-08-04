@@ -1,25 +1,21 @@
-import {
-    GenericStats,
-    IStatValueType,
-    AccountStats,
-    IValidator,
-    CardActionType
-} from '../types/stats';
+import { GenericStats, IStatValueType, AccountStats, IValidator } from '../types/stats';
 import { Client } from './client';
 import { Blockchain } from '../types/blockchain';
+import BigNumber from 'bignumber.js';
+import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 
 export class Stats extends GenericStats<Client> {
-    public async getAccountDelegateStats(): Promise<AccountStats> {
+    public async getAccountDelegateStats(
+        account: IAccountState,
+        token: ITokenState
+    ): Promise<AccountStats> {
         return {
             topStats: topStatsValues,
             chartStats: chartStatsValues,
-            secondaryStats: secondaryStatsValues
+            secondaryStats: secondaryStatsValues,
+            totalAmount: new BigNumber(0),
+            widgets: []
         };
-    }
-    public async getValidatorList(actionType: CardActionType): Promise<IValidator[]> {
-        moonletValidator.actionType = actionType;
-        chainLayerValidator.actionType = actionType;
-        return [moonletValidator, chainLayerValidator];
     }
 }
 
@@ -141,41 +137,7 @@ export const moonletValidator: IValidator = {
     website: 'http://moonlet.io',
     topStats: topStatsValues,
     secondaryStats: secondaryStatsValues,
-    chartStats: chartStatsValues,
-    cardStats: [
-        {
-            title: 'Voting Power',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '0.41%'
-            }
-        },
-        {
-            title: 'Self Delegate',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '0.64%'
-            }
-        },
-        {
-            title: 'Commission',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '11.00%'
-            }
-        },
-        {
-            title: 'Reward',
-            color: '#00E676',
-            type: IStatValueType.STRING,
-            data: {
-                value: '8.64%'
-            }
-        }
-    ]
+    chartStats: chartStatsValues
 };
 
 export const chainLayerValidator: IValidator = {
@@ -187,39 +149,5 @@ export const chainLayerValidator: IValidator = {
     website: 'http://chainlayer.io',
     topStats: topStatsValues,
     secondaryStats: secondaryStatsValues,
-    chartStats: chartStatsValues,
-    cardStats: [
-        {
-            title: 'Voting Power',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '6.41%'
-            }
-        },
-        {
-            title: 'Self Delegate',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '0.64%'
-            }
-        },
-        {
-            title: 'Commission',
-            color: '#FFFFFF',
-            type: IStatValueType.STRING,
-            data: {
-                value: '10.99%'
-            }
-        },
-        {
-            title: 'Reward',
-            color: '#00E676',
-            type: IStatValueType.STRING,
-            data: {
-                value: '8.64%'
-            }
-        }
-    ]
+    chartStats: chartStatsValues
 };

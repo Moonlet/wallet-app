@@ -16,7 +16,6 @@ import { getChainId } from '../../../../../../../redux/preferences/selectors';
 import { Button } from '../../../../../../../library';
 import { translate } from '../../../../../../../core/i18n';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
-import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
 import { AccountStats, IPosWidget } from '../../../../../../../core/blockchain/types/stats';
 import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { PosWidget } from '../../../../../../../components/pos-widget/pos-widget';
@@ -27,6 +26,8 @@ import { getTokenConfig } from '../../../../../../../redux/tokens/static-selecto
 import { withdraw, activate } from '../../../../../../../redux/wallets/actions';
 import { PasswordModal } from '../../../../../../../components/password-modal/password-modal';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
+import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
+import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 
 export interface IProps {
     accountIndex: number;
@@ -40,6 +41,7 @@ export interface IReduxProps {
     chainId: ChainIdType;
     withdraw: typeof withdraw;
     activate: typeof activate;
+    fetchValidators: typeof fetchValidators;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
@@ -51,12 +53,12 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
 
 const mapDispatchToProps = {
     withdraw,
-    activate
+    activate,
+    fetchValidators
 };
 
 interface IState {
     accountStats: AccountStats;
-    widgets: IPosWidget[];
 }
 
 export class AccountTabComponent extends React.Component<
@@ -67,31 +69,20 @@ export class AccountTabComponent extends React.Component<
         super(props);
 
         this.state = {
-            accountStats: undefined,
-            widgets: []
+            accountStats: undefined
         };
     }
-    public componentDidMount() {
+    public async componentDidMount() {
         const blockchainInstance = getBlockchain(this.props.blockchain);
         blockchainInstance
             .getStats(this.props.chainId)
-            .getAccountDelegateStats()
+            .getAccountDelegateStats(this.props.account, this.props.token)
             .then(accStats => {
                 this.setState({ accountStats: accStats });
             })
             .catch();
 
-        blockchainInstance
-            .getClient(this.props.chainId)
-            .utils.getWidgets(this.props.account)
-            .then(widgets => {
-                if (widgets.length) {
-                    this.setState({
-                        widgets
-                    });
-                }
-            })
-            .catch();
+        this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
     }
 
     @bind
@@ -126,7 +117,7 @@ export class AccountTabComponent extends React.Component<
     }
 
     public renderWidgets() {
-        return this.state.widgets.map((widget, index) => {
+        return this.state.accountStats.widgets.map((widget, index) => {
             const isActive = Number(widget.timestamp) < Date.now() ? true : false;
             const blockchainInstance = getBlockchain(this.props.blockchain);
             const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
@@ -220,9 +211,15 @@ export class AccountTabComponent extends React.Component<
                                 {translate('App.labels.receive')}
                             </Button>
                         </View>
-                        {this.renderWidgets()}
-                        {this.state.accountStats && (
-                            <StatsComponent accountStats={this.state.accountStats} />
+                        {this.state.accountStats && this.renderWidgets()}
+                        {this.state.accountStats === undefined ? (
+                            <LoadingIndicator />
+                        ) : (
+                            <StatsComponent
+                                accountStats={this.state.accountStats}
+                                blockchain={this.props.blockchain}
+                                token={this.props.token}
+                            />
                         )}
                     </ScrollView>
                 </View>
@@ -233,7 +230,7 @@ export class AccountTabComponent extends React.Component<
                             accountIndex: this.props.account.index,
                             blockchain: this.props.account.blockchain,
                             token: this.props.token,
-                            validators: [moonletValidator]
+                            validators: []
                         }}
                     />
                 </View>

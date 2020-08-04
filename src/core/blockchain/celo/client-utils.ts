@@ -54,13 +54,12 @@ export class ClientUtils implements IClientUtils {
         ];
 
         const res = await Promise.all(rpcCalls);
+
         if (!res[0].result) {
             throw new Error(res[0].error.message || `Error getting transaction info for ${hash}`);
         }
         if (!res[1].result) {
-            throw new Error(
-                res[1].error.message || `Error getting transaction receipt for ${hash}`
-            );
+            throw new Error(`Error getting transaction receipt for ${hash}`);
         }
         return this.buildTransactionFromBlockchain(res[0].result, res[1].result);
     }
@@ -69,7 +68,8 @@ export class ClientUtils implements IClientUtils {
         const token = await this.getToken(txInfo.to);
         const data: any = {};
 
-        if (token.type === TokenType.ERC20) {
+        // TODO - find how to get the data since its a contract call not simple transfer call
+        if (token && token.type === TokenType.ERC20) {
             try {
                 const transferInputParameteres = this.decodeInputData(
                     'transfer(address,uint256)',

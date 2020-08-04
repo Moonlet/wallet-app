@@ -883,4 +883,6 @@ export const getWalletAndAccountNameByAddress = (address: string) => (
             }
         }
     }
+
+    return undefined;
 };

@@ -2,6 +2,8 @@ import { getSelectedWallet } from '../wallets/selectors';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { ApiClient } from '../../core/utils/api-client/api-client';
+import { getChainId } from '../preferences/selectors';
+import { Blockchain } from '../../core/blockchain/types';
 
 export const SET_UNSEEN_NOTIFICATIONS = 'SET_UNSEEN_NOTIFICATIONS';
 export const SET_NOTIFICATIONS = 'SET_NOTIFICATIONS';
@@ -50,9 +52,22 @@ export const fetchNotifications = (page?: number) => async (
 ) => {
     const state = getState();
 
+    const blockchainNetworks = [];
+
+    for (const blockchain of Object.values(Blockchain)) {
+        const chainId = getChainId(state, blockchain);
+        if (chainId && chainId !== '') {
+            blockchainNetworks.push({ chainId: String(chainId), blockchain });
+        }
+    }
+
     const walletPublicKeys: string[] = Object.values(state.wallets).map(w => w?.walletPublicKey);
 
-    return new ApiClient().notifications.fetchNotifications(walletPublicKeys, page);
+    return new ApiClient().notifications.fetchNotifications(
+        walletPublicKeys,
+        blockchainNetworks,
+        page
+    );
 };
 
 export const registerPushNotifToken = () => async (

@@ -11,6 +11,7 @@ import { Notifications } from '../../messaging/notifications/notifications';
 import { IAccountState, IWalletState } from '../../../redux/wallets/state';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { ApiClient } from './api-client';
+import { Blockchain } from '../../blockchain/types';
 
 export class NotificationsApiClient {
     constructor(private apiClient: ApiClient) {}
@@ -22,10 +23,15 @@ export class NotificationsApiClient {
      * TODO: When fetching multiple pages of notifications, maybe we should find a way to cache those notifications
      *       in order to minimise the calls to our api
      */
-    public async fetchNotifications(walletPublicKeys: string[], page?: number) {
+    public async fetchNotifications(
+        walletPublicKeys: string[],
+        blockchainNetworks: { blockchain: Blockchain; chainId: string }[],
+        page?: number
+    ) {
         try {
             const data = {
                 walletPublicKeys: [],
+                blockchainNetworks,
                 page: page || 1
             };
 

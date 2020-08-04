@@ -21,14 +21,14 @@ import {
 } from '../../redux/wallets/actions';
 import { LoadingModal } from '../../components/loading-modal/loading-modal';
 import { openTransactionRequest } from '../../redux/ui/transaction-request/actions';
-import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
-import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
 import { updateDisplayedHint } from '../../redux/app/actions';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { SmartImage } from '../../library/image/smart-image';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { ITokenConfigState } from '../../redux/tokens/state';
+import moment from 'moment';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 export interface IReduxProps {
     notifications: INotificationState;
@@ -36,7 +36,6 @@ export interface IReduxProps {
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
     openTransactionRequest: typeof openTransactionRequest;
     fetchNotifications: (page?: number) => Promise<any>;
-    hints: IHints;
     updateDisplayedHint: typeof updateDisplayedHint;
 
     getWalletAndAccountNameByAddress: (
@@ -46,8 +45,7 @@ export interface IReduxProps {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        notifications: state.notifications.notifications,
-        hints: state.app.hints
+        notifications: state.notifications.notifications
     };
 };
 
@@ -65,7 +63,7 @@ const mapDispatchToProps = {
 };
 
 interface IState {
-    notifications: INotificationState;
+    notifications: INotificationType[];
     showLoading: boolean;
     page: number;
     isRefreshing: boolean;
@@ -82,7 +80,7 @@ export class NotificationsComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            notifications: undefined,
+            notifications: [],
             showLoading: false,
             page: 1,
             isRefreshing: false
@@ -98,18 +96,6 @@ export class NotificationsComponent extends React.Component<
 
         await this.fetchNotifications();
         await LoadingModal.close();
-
-        if (
-            this.state.notifications &&
-            Object.keys(this.state.notifications).length > 0 &&
-            this.props.hints.WALLETS_SCREEN.WALLETS_LIST < DISPLAY_HINTS_TIMES
-        ) {
-            this.props.updateDisplayedHint(HintsScreen.WALLETS_SCREEN, HintsComponent.WALLETS_LIST);
-
-            this.setState({ isRefreshing: true }, () => {
-                setTimeout(() => this.setState({ isRefreshing: false }), 1000);
-            });
-        }
     }
 
     private async handleNotificationTap(notification: INotificationType, notificationId: string) {
@@ -149,7 +135,7 @@ export class NotificationsComponent extends React.Component<
         this.props.markSeenNotification(notificationId);
     }
 
-    private renderRow(notification: INotificationType, notificationId: string, index: number) {
+    private renderRow(notification: INotificationType, index: number) {
         const { styles } = this.props;
 
         const blockchain = notification.data.blockchain as Blockchain;
@@ -169,7 +155,7 @@ export class NotificationsComponent extends React.Component<
             <TouchableHighlight
                 key={`notification-${index}`}
                 underlayColor={this.props.theme.colors.appBackground}
-                onPress={() => this.handleNotificationTap(notification, notificationId)}
+                onPress={() => this.handleNotificationTap(notification, notification.id)}
                 style={{ opacity: notification.seen ? 0.5 : 1 }}
             >
                 <View style={styles.rowContainer}>
@@ -190,6 +176,13 @@ export class NotificationsComponent extends React.Component<
                                 {`on ${walletAccountName.walletName}, ${walletAccountName.accountName}`}
                             </Text>
                         )}
+
+                        {/* Used only for DEV_TOOLS in order to easier test that the pagination works properly*/}
+                        {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
+                            <Text style={styles.subtitle}>
+                                {moment(new Date(notification.createdAt)).format('llll')}
+                            </Text>
+                        )}
                     </View>
                     <Icon
                         name={IconValues.CHEVRON_RIGHT}
@@ -201,22 +194,24 @@ export class NotificationsComponent extends React.Component<
         );
     }
 
-    private parseNotifications(notifications: any): INotificationState {
-        const finalNotifications: INotificationState = this.state.notifications
-            ? this.state.notifications
-            : {};
+    private parseNotifications(notifications: any): INotificationType[] {
+        const parsedNotifs: any = Object.values(notifications).reduce(
+            (out: any, notification: any) => {
+                out.push({
+                    ...notification,
+                    id: notification._id
+                });
+                return out;
+            },
+            []
+        );
 
-        for (const notif of notifications) {
-            Object.assign(finalNotifications, {
-                ...finalNotifications,
-                [notif._id]: notif
-            });
-        }
-
-        // TODO: sort by createdAt
-        //       filter by network
-
-        return finalNotifications;
+        return (this.state.isRefreshing ? [] : this.state.notifications)
+            .concat(parsedNotifs)
+            .sort(
+                (notif1, notif2) =>
+                    new Date(notif2.createdAt).getTime() - new Date(notif1.createdAt).getTime()
+            );
     }
 
     private async fetchNotifications() {
@@ -284,9 +279,9 @@ export class NotificationsComponent extends React.Component<
                         />
                     }
                 >
-                    {notifications ? (
-                        Object.keys(notifications).map((notificationId: string, index: number) =>
-                            this.renderRow(notifications[notificationId], notificationId, index)
+                    {notifications.length !== 0 ? (
+                        notifications.map((notification: INotificationType, index: number) =>
+                            this.renderRow(notification, index)
                         )
                     ) : (
                         // Empty State

@@ -1,4 +1,5 @@
 export interface INotificationType {
+    id: string;
     walletId: string;
     title: string;
     body: string;

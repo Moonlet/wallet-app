@@ -44,7 +44,7 @@ export class NotificationsApiClient {
                     domain: getWalletApiDomain()
                 };
 
-                const signature = getSignature(data, walletPrivateKey, walletPublicKey);
+                const signature = getSignature(walletData, walletPrivateKey, walletPublicKey);
                 walletData.signature = signature;
 
                 data.walletPublicKeys.push(walletData);
@@ -198,7 +198,7 @@ export class NotificationsApiClient {
                     domain: getWalletApiDomain()
                 };
 
-                const signature = getSignature(data, walletPrivateKey, walletPublicKey);
+                const signature = getSignature(walletData, walletPrivateKey, walletPublicKey);
                 walletData.signature = signature;
 
                 data.walletPublicKeys.push(walletData);

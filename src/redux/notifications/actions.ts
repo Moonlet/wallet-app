@@ -2,6 +2,8 @@ import { getSelectedWallet } from '../wallets/selectors';
 import { Dispatch } from 'react';
 import { IReduxState } from '../state';
 import { ApiClient } from '../../core/utils/api-client/api-client';
+import { getChainId } from '../preferences/selectors';
+import { Blockchain } from '../../core/blockchain/types';
 
 export const SET_UNSEEN_NOTIFICATIONS = 'SET_UNSEEN_NOTIFICATIONS';
 export const SET_NOTIFICATIONS = 'SET_NOTIFICATIONS';
@@ -31,18 +33,17 @@ export const getUnseenNotifications = () => async (
     getState: () => IReduxState
 ) => {
     const state = getState();
-    const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
-    if (walletPublicKey) {
-        const unseenNotifications = await new ApiClient().notifications.getUnseenNotifications(
-            walletPublicKey
-        );
+    const walletPublicKeys: string[] = Object.values(state.wallets).map(w => w?.walletPublicKey);
 
-        dispatch({
-            type: SET_UNSEEN_NOTIFICATIONS,
-            data: { unseenNotifications }
-        });
-    }
+    const unseenNotifications = await new ApiClient().notifications.getUnseenNotifications(
+        walletPublicKeys
+    );
+
+    dispatch({
+        type: SET_UNSEEN_NOTIFICATIONS,
+        data: { unseenNotifications }
+    });
 };
 
 export const fetchNotifications = (page?: number) => async (
@@ -50,11 +51,23 @@ export const fetchNotifications = (page?: number) => async (
     getState: () => IReduxState
 ) => {
     const state = getState();
-    const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
-    if (walletPublicKey) {
-        return new ApiClient().notifications.fetchNotifications(walletPublicKey, page);
+    const blockchainNetworks = [];
+
+    for (const blockchain of Object.values(Blockchain)) {
+        const chainId = getChainId(state, blockchain);
+        if (chainId && chainId !== '') {
+            blockchainNetworks.push({ chainId: String(chainId), blockchain });
+        }
     }
+
+    const walletPublicKeys: string[] = Object.values(state.wallets).map(w => w?.walletPublicKey);
+
+    return new ApiClient().notifications.fetchNotifications(
+        walletPublicKeys,
+        blockchainNetworks,
+        page
+    );
 };
 
 export const registerPushNotifToken = () => async (
@@ -88,7 +101,7 @@ export const registerNotificationSettings = () => async (
     }
 };
 
-export const markSeenNotification = (notificationId: string, blockchain?: string) => async (
+export const markSeenNotification = (notificationId: string) => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
@@ -96,13 +109,12 @@ export const markSeenNotification = (notificationId: string, blockchain?: string
     const walletPublicKey = getSelectedWallet(state)?.walletPublicKey;
 
     if (walletPublicKey) {
-        if (blockchain) {
-            dispatch({
-                type: MARK_SEEN,
-                data: { blockchain, notificationId }
-            });
-        }
+        dispatch({
+            type: MARK_SEEN,
+            data: { notificationId }
+        });
 
         await new ApiClient().notifications.markSeenNotification(walletPublicKey, notificationId);
+        getUnseenNotifications()(dispatch, getState);
     }
 };

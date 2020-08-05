@@ -7,6 +7,7 @@ import { takeOneAndSubscribeToStore } from '../../../redux/utils/helpers';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
 import { markSeenNotification, getUnseenNotifications } from '../../../redux/notifications/actions';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { Blockchain } from '../../blockchain/types';
 
 export const notificationHandler = async (
     notification: INotificationPayload,
@@ -45,6 +46,22 @@ const handleNotification = (
         case NotificationType.TRANSACTION:
             const data = JSON.parse(notification.data);
 
+            let chainId = data.chainId;
+
+            // TODO: remove this on chainId refactor
+            switch (data.blockchain) {
+                case Blockchain.COSMOS:
+                case Blockchain.NEAR:
+                    chainId = String(chainId);
+
+                default:
+                    // Zilliqa
+                    // Ethereum
+                    // Celo
+                    chainId = Number(chainId);
+                    break;
+            }
+
             /**
              * if the app was already opened, no notification was displayed, update the transaction and display a notification
              *
@@ -56,7 +73,7 @@ const handleNotification = (
                 updateTransactionFromBlockchain(
                     data.transactionHash,
                     data.blockchain,
-                    data.chainId,
+                    chainId,
                     data.broadcastedOnBlock,
                     openedByNotification
                 ) as any

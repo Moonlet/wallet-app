@@ -98,6 +98,8 @@ export class NotificationsComponent extends React.Component<
     }
 
     private async handleNotificationTap(notification: INotificationType, notificationId: string) {
+        const { notifications } = this.state;
+
         await LoadingModal.open();
 
         // drop loading in 2.5 seconds if api call takes too long or crashes
@@ -126,9 +128,11 @@ export class NotificationsComponent extends React.Component<
                 break;
         }
 
-        const { notifications } = this.state;
-        notifications[notificationId].seen = true;
-        this.setState({ notifications });
+        const notifIndex = notifications.findIndex(notif => notif.id === notificationId);
+        if (notifIndex !== -1 && notifications[notifIndex]) {
+            notifications[notifIndex].seen = true;
+            this.setState({ notifications });
+        }
 
         this.props.markSeenNotification(notificationId);
     }

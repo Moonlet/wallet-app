@@ -90,9 +90,8 @@ export class NotificationsComponent extends React.Component<
     public async componentDidMount() {
         await LoadingModal.open();
 
-        setTimeout(async () => {
-            await LoadingModal.close();
-        }, 2500); // drop loading in 2.5 seconds if api call takes too long or crashes
+        // drop loading in 2.5 seconds if api call takes too long or crashes
+        setTimeout(async () => LoadingModal.close(), 2500);
 
         await this.fetchNotifications();
         await LoadingModal.close();
@@ -101,9 +100,8 @@ export class NotificationsComponent extends React.Component<
     private async handleNotificationTap(notification: INotificationType, notificationId: string) {
         await LoadingModal.open();
 
-        setTimeout(async () => {
-            await LoadingModal.close();
-        }, 3000); // drop loading in 3 seconds if api call takes too long or crashes
+        // drop loading in 2.5 seconds if api call takes too long or crashes
+        setTimeout(async () => LoadingModal.close(), 2500);
 
         switch (notification.data.action) {
             case NotificationType.TRANSACTION:
@@ -211,6 +209,9 @@ export class NotificationsComponent extends React.Component<
 
     private async fetchNotifications() {
         const { page } = this.state;
+
+        // drop loading indicator in 2.5 seconds if api call takes too long or crashes
+        setTimeout(async () => this.setState({ showLoading: false }), 2500);
 
         try {
             // Fetch next page

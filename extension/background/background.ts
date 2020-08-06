@@ -1,26 +1,24 @@
+process.env.BG_SCRIPT = '1';
+
 import { browser, Runtime } from 'webextension-polyfill-ts';
 import {
     IExtensionResponse,
     ConnectionPort,
     IExtensionMessage
 } from '../../src/core/communication/extension';
+import firebase from 'firebase/app';
 import { Controllers } from './controllers';
-import { store } from '../../src/redux/config';
-import { ConnectExtensionWeb } from '../../src/core/connect-extension/connect-extension-web';
+import CONFIG from '../../src/config';
 
 // initialize store
-store.dispatch({
-    type: 'dummy'
-});
-ConnectExtensionWeb.isConnected().then(res => {
-    if (res) {
-        ConnectExtensionWeb.listenLastSync();
-    }
-});
+firebase.initializeApp(CONFIG.firebaseWebConfig);
 
 // init controllers
 Controllers.init();
 const controllers = Controllers.get();
+
+// trigger firebase sync
+controllers.WalletSyncController.extensionConnected();
 
 const generateResponse = (message: IExtensionMessage, response: IExtensionResponse) => {
     return { ...message, type: 'RESPONSE', response };

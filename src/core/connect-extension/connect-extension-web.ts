@@ -89,7 +89,7 @@ export const ConnectExtensionWeb = (() => {
         //
     };
 
-    const listenLastSync = async () => {
+    const listenLastSync = async disableBuildTransactions => {
         //
     };
 

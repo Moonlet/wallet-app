@@ -13,7 +13,7 @@ export interface IAccessSettings {
 }
 
 const STORAGE_KEY = 'accounts_access_settings';
-let accessSettings;
+let accessSettings: IAccessSettings;
 
 const loadFromStorage = async (): Promise<IAccessSettings> => {
     if (!accessSettings) {

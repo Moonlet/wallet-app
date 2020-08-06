@@ -20,7 +20,7 @@ export interface IExtensionResponse {
 
 export interface IExtensionRequest {
     controller: string;
-    blockchain: Blockchain;
+    blockchain?: Blockchain;
     method: string;
     params: any[];
 }

@@ -29,12 +29,23 @@ export const rootReducer = combineReducers({
     notifications: notificationsReducer
 });
 
-const configureStore = () => {
+const configureStore = (pConfigExtend = {}) => {
     return createStore(
-        persistReducer(persistConfig, rootReducer),
+        persistReducer({ ...persistConfig, ...pConfigExtend }, rootReducer),
         {},
         composeEnhancers(applyMiddleware(thunk, connectExtensionMiddleware)) // logger: for debugging
     );
 };
 
-export const store = configureStore();
+export let persisConfigOverwrite;
+if (process.env.BG_SCRIPT) {
+    persisConfigOverwrite = {
+        storage: {
+            setItem: () => Promise.resolve(),
+            getItem: () => Promise.resolve(),
+            removeItem: () => Promise.resolve()
+        }
+    };
+}
+
+export const store = configureStore(persisConfigOverwrite);

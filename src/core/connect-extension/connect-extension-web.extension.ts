@@ -1,5 +1,5 @@
 import { generateRandomEncryptionKey, decrypt } from '../secure/encrypt/encrypt.extension';
-import { v4 as uuidv4 } from 'uuid';
+import uuidv4 from 'uuid/v4';
 import { IQRCodeConn, FirebaseRef, IStorage } from './types';
 import { database, storage } from 'firebase/app';
 import 'firebase/database';
@@ -24,6 +24,7 @@ import {
     captureException as SentryCaptureException,
     addBreadcrumb as SentryAddBreadcrumb
 } from '@sentry/browser';
+import { ConnectionPort, IExtensionMessage } from '../communication/extension';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -53,6 +54,18 @@ export const ConnectExtensionWeb = (() => {
             // delete the connection session
             await deleteFromStorage(CONN_EXTENSION);
 
+            // send message to background script
+            const port = browser.runtime.connect('', { name: ConnectionPort.BACKGROUND });
+            const message: IExtensionMessage = {
+                id: uuidv4(),
+                type: 'REQUEST',
+                request: {
+                    controller: 'WalletSyncController',
+                    method: 'extensionDisconnected',
+                    params: []
+                }
+            };
+            port.postMessage(message);
             return Promise.resolve();
         } catch (err) {
             return Promise.reject(err);
@@ -159,7 +172,7 @@ export const ConnectExtensionWeb = (() => {
         }
     };
 
-    const listenLastSync = async () => {
+    const listenLastSync = async (disableBuildTransactions = false) => {
         try {
             const connection = await getConnection();
 
@@ -183,7 +196,8 @@ export const ConnectExtensionWeb = (() => {
                                 storeState(decryptedState);
 
                                 // Build wallets transactions
-                                buildTransactions(decryptedState.state.wallets);
+                                !disableBuildTransactions &&
+                                    buildTransactions(decryptedState.state.wallets);
                             }
                         } catch (err) {
                             SentryCaptureException(new Error(JSON.stringify(err)));
@@ -193,7 +207,7 @@ export const ConnectExtensionWeb = (() => {
                     }
                 });
             }
-        } catch {
+        } catch (e) {
             //
         }
     };
@@ -227,6 +241,20 @@ export const ConnectExtensionWeb = (() => {
                     NavigationService.navigate('MainNavigation', {});
 
                     buildTransactions(decryptedState.state.wallets);
+
+                    // send message to background script
+                    // send message to background script
+                    const port = browser.runtime.connect('', { name: ConnectionPort.BACKGROUND });
+                    const message: IExtensionMessage = {
+                        id: uuidv4(),
+                        type: 'REQUEST',
+                        request: {
+                            controller: 'WalletSyncController',
+                            method: 'extensionConnected',
+                            params: []
+                        }
+                    };
+                    port.postMessage(message);
                 } else {
                     // Retry
                     syncConnect(conn, connectionsRef, syncConnAttempts - 1);

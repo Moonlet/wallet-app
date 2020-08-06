@@ -35,7 +35,7 @@ export interface IReduxProps {
     markSeenNotification: typeof markSeenNotification;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
     openTransactionRequest: typeof openTransactionRequest;
-    fetchNotifications: (page?: number) => Promise<any>;
+    fetchNotifications: (options?: { page?: number; showLoading?: boolean }) => Promise<any>;
     updateDisplayedHint: typeof updateDisplayedHint;
 
     getWalletAndAccountNameByAddress: (
@@ -87,14 +87,8 @@ export class NotificationsComponent extends React.Component<
         };
     }
 
-    public async componentDidMount() {
-        await LoadingModal.open();
-
-        // drop loading in 2.5 seconds if api call takes too long or crashes
-        setTimeout(async () => LoadingModal.close(), 2500);
-
-        await this.fetchNotifications();
-        await LoadingModal.close();
+    public componentDidMount() {
+        this.fetchNotifications({ showLoading: true });
     }
 
     private async handleNotificationTap(notification: INotificationType, notificationId: string) {
@@ -214,7 +208,7 @@ export class NotificationsComponent extends React.Component<
         return (this.state.isRefreshing ? [] : this.state.notifications).concat(parsedNotifs);
     }
 
-    private async fetchNotifications() {
+    private async fetchNotifications(options: { showLoading: boolean }) {
         const { page } = this.state;
 
         // drop loading indicator in 2.5 seconds if api call takes too long or crashes
@@ -222,7 +216,10 @@ export class NotificationsComponent extends React.Component<
 
         try {
             // Fetch next page
-            const notifications: any = await this.props.fetchNotifications(page);
+            const notifications: any = await this.props.fetchNotifications({
+                showLoading: options.showLoading,
+                page
+            });
 
             if (notifications && notifications.length > 0) {
                 const finalNotifications = this.parseNotifications(notifications);
@@ -247,6 +244,9 @@ export class NotificationsComponent extends React.Component<
     private async onRefresh() {
         this.setState({ isRefreshing: true });
 
+        // drop loading indicator in 3 seconds if api call takes too long or crashes
+        setTimeout(async () => this.setState({ isRefreshing: false }), 3000);
+
         const notifications = await this.props.fetchNotifications();
         if (notifications) {
             const finalNotifications = this.parseNotifications(notifications);
@@ -269,7 +269,7 @@ export class NotificationsComponent extends React.Component<
                         if (this.isCloseToBottom(nativeEvent)) {
                             if (!this.state.showLoading) {
                                 this.setState({ showLoading: true }, async () => {
-                                    await this.fetchNotifications();
+                                    await this.fetchNotifications({ showLoading: false });
                                 });
                             }
                         }

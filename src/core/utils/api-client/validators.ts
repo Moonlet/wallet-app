@@ -14,7 +14,7 @@ export class ValidatorsApiClient {
         posAction: PosBasicActionType
     ) {
         try {
-            const response = await this.apiClient.http.post('/wallet-ui/validators/list', {
+            const response = await this.apiClient.http.post('/walletUi/validators/list', {
                 blockchain,
                 chainId,
                 address,
@@ -29,7 +29,7 @@ export class ValidatorsApiClient {
 
     public async getAccountDelegateStats(account: IAccountState, chainId: string) {
         try {
-            const response = await this.apiClient.http.post('/wallet-ui/token-screen', {
+            const response = await this.apiClient.http.post('/walletUi/tokenScreen', {
                 blockchain: Blockchain.CELO,
                 address: account.address,
                 chainId

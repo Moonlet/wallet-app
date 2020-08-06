@@ -8,8 +8,7 @@ export enum RemoteFeature {
     COSMOS = 'feature_cosmos',
     CELO = 'feature_celo',
     DEV_TOOLS = 'dev_tools',
-    TC_VERSION = 'tcVersion',
-    NOTIF_CENTER = 'feature_notifications_center'
+    TC_VERSION = 'tcVersion'
 }
 
 let featuresConfig = {};
@@ -31,8 +30,7 @@ export const getRemoteConfigFeatures = async () => {
                 RemoteFeature.COSMOS,
                 RemoteFeature.CELO,
                 RemoteFeature.DEV_TOOLS,
-                RemoteFeature.TC_VERSION,
-                RemoteFeature.NOTIF_CENTER
+                RemoteFeature.TC_VERSION
             ]);
 
         // Retrieve values
@@ -46,8 +44,7 @@ export const getRemoteConfigFeatures = async () => {
             [RemoteFeature.DEV_TOOLS]: JSON.stringify([]),
             [RemoteFeature.COSMOS]: JSON.stringify([]),
             [RemoteFeature.CELO]: JSON.stringify([]),
-            [RemoteFeature.TC_VERSION]: '0',
-            [RemoteFeature.NOTIF_CENTER]: JSON.stringify([])
+            [RemoteFeature.TC_VERSION]: '0'
         };
     }
 
@@ -71,8 +68,7 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
         (feature === RemoteFeature.NEAR ||
             feature === RemoteFeature.COSMOS ||
             feature === RemoteFeature.CELO ||
-            feature === RemoteFeature.DEV_TOOLS ||
-            feature === RemoteFeature.NOTIF_CENTER) &&
+            feature === RemoteFeature.DEV_TOOLS) &&
         featuresConfig
     ) {
         const values = featuresConfig[feature] || [];

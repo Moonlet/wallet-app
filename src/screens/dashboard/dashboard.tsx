@@ -46,7 +46,6 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { IconValues } from '../../components/icon/values';
 import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
-import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 import {
     startNotificationsHandlers,
     getUnseenNotifications
@@ -152,23 +151,14 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                 <TouchableOpacity
                     testID="notifications-icon"
                     style={{ width: ICON_CONTAINER_SIZE }}
-                    onPress={() =>
-                        isFeatureActive(RemoteFeature.NOTIF_CENTER)
-                            ? navigation.navigate('Notifications')
-                            : navigation.navigate('Wallets')
-                    }
+                    onPress={() => navigation.navigate('Notifications')}
                 >
                     <Icon
-                        name={
-                            isFeatureActive(RemoteFeature.NOTIF_CENTER)
-                                ? IconValues.ALARM_BELL
-                                : IconValues.MONEY_WALLET
-                        }
+                        name={IconValues.ALARM_BELL}
                         size={ICON_SIZE}
                         style={{ color: themes[theme].colors.accent }}
                     />
-                    {isFeatureActive(RemoteFeature.NOTIF_CENTER) &&
-                        navigation.state.params?.unseenNotifications > 0 && <UnreadNotifCircle />}
+                    {navigation.state.params?.unseenNotifications > 0 && <UnreadNotifCircle />}
                 </TouchableOpacity>
             </View>
             <TouchableOpacity
@@ -224,9 +214,7 @@ export class DashboardScreenComponent extends React.Component<
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
 
-        if (isFeatureActive(RemoteFeature.NOTIF_CENTER)) {
-            this.props.startNotificationsHandlers();
-        }
+        this.props.startNotificationsHandlers();
 
         this.props.navigation.setParams({
             unseenNotifications: this.props.unseenNotifications
@@ -240,10 +228,7 @@ export class DashboardScreenComponent extends React.Component<
             this.onFocus();
         }
 
-        if (
-            this.props.walletId !== prevProps.walletId &&
-            isFeatureActive(RemoteFeature.NOTIF_CENTER)
-        ) {
+        if (this.props.walletId !== prevProps.walletId) {
             this.props.getUnseenNotifications();
         }
 

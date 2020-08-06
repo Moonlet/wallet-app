@@ -86,7 +86,7 @@ export class DelegateEnterAmountComponent extends React.Component<
         };
     }
 
-    public async componentDidMount() {
+    public componentDidMount() {
         this.props.navigation.setParams({ actionText: this.props.actionText });
 
         const blockchainInstance = getBlockchain(this.props.blockchain);

@@ -46,7 +46,7 @@ export abstract class GenericStats<Client = BlockchainGenericClient> {
         throw new Error('Not Implemented');
     }
 
-    public async getValidatorsAddressVotedByAccount(account: IAccountState): Promise<string[]> {
+    public async getAvailableBalanceForDelegate(account: IAccountState): Promise<string> {
         throw new Error('Not Implemented');
     }
 }

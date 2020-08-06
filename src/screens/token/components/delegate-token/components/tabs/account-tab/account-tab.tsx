@@ -28,6 +28,7 @@ import { PasswordModal } from '../../../../../../../components/password-modal/pa
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
+import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
 
 export interface IProps {
     accountIndex: number;
@@ -42,6 +43,7 @@ export interface IReduxProps {
     withdraw: typeof withdraw;
     activate: typeof activate;
     fetchValidators: typeof fetchValidators;
+    fetchDelegatedValidators: typeof fetchDelegatedValidators;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
@@ -54,7 +56,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
 const mapDispatchToProps = {
     withdraw,
     activate,
-    fetchValidators
+    fetchValidators,
+    fetchDelegatedValidators
 };
 
 interface IState {
@@ -83,6 +86,7 @@ export class AccountTabComponent extends React.Component<
             .catch();
 
         this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
+        this.props.fetchDelegatedValidators(this.props.account);
     }
 
     @bind

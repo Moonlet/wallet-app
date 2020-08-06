@@ -9,6 +9,8 @@ import { Blockchain } from '../../../../../../../core/blockchain/types';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
+import { ITokenState } from '../../../../../../../redux/wallets/state';
+import { getTokenConfig } from '../../../../../../../redux/tokens/static-selectors';
 
 interface IExternalProps {
     validators: IValidator[];
@@ -16,6 +18,7 @@ interface IExternalProps {
         validator: IValidator;
         color: string;
     };
+    token: ITokenState;
     blockchain: Blockchain;
     onSelect: (validator: IValidator) => void;
     actionType: CardActionType;
@@ -24,7 +27,9 @@ interface IExternalProps {
 export const ValidatorsListComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    const config = getBlockchain(props.blockchain).config;
+    const blockchainInstance = getBlockchain(props.blockchain);
+
+    const tokenConfig = getTokenConfig(props.blockchain, props.token.symbol);
 
     return (
         <FlatList
@@ -36,10 +41,16 @@ export const ValidatorsListComponent = (
                     leftLabel={item.name}
                     leftSmallLabel={item.rank}
                     leftSubLabel={item.website}
-                    rightTitle={config.ui.validator.amountCardLabel}
-                    rightSubtitle={formatNumber(new BigNumber(item.amountDelegated), {
-                        currency: config.coin
-                    })}
+                    rightTitle={blockchainInstance.config.ui.validator.amountCardLabel}
+                    rightSubtitle={formatNumber(
+                        blockchainInstance.account.amountFromStd(
+                            new BigNumber(item.amountDelegated),
+                            tokenConfig.decimals
+                        ),
+                        {
+                            currency: blockchainInstance.config.coin
+                        }
+                    )}
                     actionType={
                         props.redelegate?.validator.id === item.id
                             ? CardActionType.DEFAULT

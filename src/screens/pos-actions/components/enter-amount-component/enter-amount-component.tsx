@@ -44,6 +44,7 @@ export interface IProps {
     bottomButtonText: string;
     showSteps: boolean;
     fromValidator?: IValidator;
+    balanceForDelegate: string;
     onPressNext(amount: string, feeOptions: IFeeOptions): void;
 }
 
@@ -175,7 +176,8 @@ export class EnterAmountComponentComponent extends React.Component<
                     availableAmount={availableAmount(
                         this.props.account,
                         this.props.token,
-                        this.state.feeOptions
+                        this.state.feeOptions,
+                        this.props.balanceForDelegate
                     )}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}

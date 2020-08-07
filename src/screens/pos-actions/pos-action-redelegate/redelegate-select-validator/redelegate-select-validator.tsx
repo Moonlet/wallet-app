@@ -36,6 +36,8 @@ import { Icon } from '../../../../components/icon/icon';
 import { IconValues } from '../../../../components/icon/values';
 import { ValidatorCard } from '../../../token/components/delegate-token/components/validators/validator-card/validator-card';
 import { formatNumber } from '../../../../core/utils/format-number';
+import { getValidators } from '../../../../redux/ui/validators/selectors';
+import { formatValidatorName } from '../../../../core/utils/format-string';
 
 interface IHeaderStep {
     step: number;
@@ -46,13 +48,19 @@ interface IHeaderStep {
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    allValidators: IValidator[];
     navigateToEnterAmountStep: typeof navigateToEnterAmountStep;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    const chainId = getChainId(state, ownProps.blockchain);
+
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        chainId: getChainId(state, ownProps.blockchain)
+        chainId,
+        allValidators: getValidators(state, ownProps.blockchain, chainId, true).filter(
+            el => el.id !== ownProps.validators[0].id
+        )
     };
 };
 
@@ -107,7 +115,10 @@ export class RedelegateSelectValidatorComponent extends React.Component<
         this.state = {
             nrValidators: 1,
             headerSteps: stepList,
-            validatorsList: [],
+            validatorsList:
+                props.allValidators.length > 0
+                    ? props.allValidators.slice(0, 1)
+                    : props.allValidators,
             redelegateFromValidator: props.validators.length ? props.validators[0] : undefined
         };
     }
@@ -126,22 +137,15 @@ export class RedelegateSelectValidatorComponent extends React.Component<
         this.setState({ validatorsList: validators });
     }
 
-    public componentDidMount() {
-        const blockchainInstance = getBlockchain(this.props.blockchain);
-        blockchainInstance
-            .getStats(this.props.chainId)
-            .getValidatorList(CardActionType.NAVIGATE, 7)
-            .then(validators => {
-                this.setState({ validatorsList: validators });
-            })
-            .catch();
-    }
-
     private renderValidatorList() {
         const { styles } = this.props;
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const config = blockchainInstance.config;
         const validator = this.state.redelegateFromValidator;
+        const maximumNumberOfValidatorsReached =
+            blockchainInstance.config.ui.validator.maximumNumberOfValidators &&
+            blockchainInstance.config.ui.validator.maximumNumberOfValidators <=
+                this.state.nrValidators;
 
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
@@ -150,37 +154,33 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     onPress={() => {
                         if (this.state.nrValidators > 1) {
                             const nrValidatorsNew = this.state.nrValidators - 1;
-                            blockchainInstance
-                                .getStats(this.props.chainId)
-                                .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                                .then(validators => {
-                                    this.setState({
-                                        nrValidators: nrValidatorsNew,
-                                        validatorsList: validators
-                                    });
-                                })
-                                .catch();
+
+                            this.setState({
+                                nrValidators: nrValidatorsNew,
+                                validatorsList: this.props.allValidators.slice(0, nrValidatorsNew)
+                            });
                         }
                         // decrease
                     }}
                 >
-                    <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
+                    <Icon name={IconValues.MINUS} size={normalize(16)} style={styles.actionIcon} />
                 </TouchableOpacity>
                 <Text style={styles.actionCounterText}>{this.state.nrValidators}</Text>
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
-                        const nrValidatorsNew = this.state.nrValidators + 1;
-                        blockchainInstance
-                            .getStats(this.props.chainId)
-                            .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                            .then(validators => {
-                                this.setState({
-                                    nrValidators: nrValidatorsNew,
-                                    validatorsList: validators
-                                });
-                            })
-                            .catch();
+                        if (
+                            this.props.allValidators.length > this.state.nrValidators + 1 &&
+                            !maximumNumberOfValidatorsReached
+                        ) {
+                            const nrValidatorsNew = this.state.nrValidators + 1;
+
+                            this.setState({
+                                nrValidators: nrValidatorsNew,
+                                validatorsList: this.props.allValidators.slice(0, nrValidatorsNew)
+                            });
+                        }
+                        // increase
                     }}
                 >
                     <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
@@ -198,7 +198,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                         currency: config.coin
                     })}
                     actionType={CardActionType.DEFAULT}
-                    bottomStats={validator.cardStats}
+                    bottomStats={validator.topStats}
                     actionTypeSelected={validator.actionTypeSelected || false}
                     borderColor={this.props.theme.colors.labelRedelegate}
                     blockchain={this.props.blockchain}
@@ -252,7 +252,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     label={translate(this.props.actionText)}
                     labelColor={this.props.theme.colors.labelRedelegate}
                     action={translate('App.labels.from').toLowerCase()}
-                    value={this.state.redelegateFromValidator.name}
+                    value={formatValidatorName(this.state.redelegateFromValidator.name, 15)}
                 />
                 <AmountCtaField
                     tokenConfig={tokenConfig}

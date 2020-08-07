@@ -4,6 +4,7 @@ import { IPosTransaction, IBlockchainTransaction, TransactionType } from '../../
 import abi from 'ethereumjs-abi';
 import { getContract, buildBaseTransaction } from './base-contract';
 import { Contracts } from '../config';
+import { PosBasicActionType, TokenType } from '../../types/token';
 
 export class LockedGold {
     constructor(private client: Client) {}
@@ -14,13 +15,17 @@ export class LockedGold {
 
         const raw = '0x' + abi.simpleEncode('withdraw(uint256)', index).toString('hex');
 
-        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
-            from: tx.account.address,
-            to: '',
-            amount: tx.amount,
-            contractAddress,
-            raw
-        });
+        const fees = await this.client.getFees(
+            TransactionType.CONTRACT_CALL,
+            {
+                from: tx.account.address,
+                to: '',
+                amount: tx.amount,
+                contractAddress,
+                raw
+            },
+            TokenType.ERC20
+        );
         transaction.feeOptions = fees;
 
         transaction.toAddress = contractAddress;
@@ -40,13 +45,17 @@ export class LockedGold {
 
         const raw = '0x' + abi.simpleEncode('lock()').toString('hex');
 
-        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
-            from: tx.account.address,
-            to: '',
-            amount: tx.amount,
-            contractAddress,
-            raw
-        });
+        const fees = await this.client.getFees(
+            TransactionType.CONTRACT_CALL,
+            {
+                from: tx.account.address.toLowerCase(),
+                to: '',
+                amount: tx.amount,
+                contractAddress,
+                raw
+            },
+            TokenType.ERC20
+        );
         transaction.feeOptions = fees;
 
         transaction.toAddress = contractAddress;
@@ -56,6 +65,7 @@ export class LockedGold {
             raw
         };
 
+        transaction.additionalInfo.posAction = PosBasicActionType.LOCK;
         return transaction;
     }
 
@@ -65,13 +75,17 @@ export class LockedGold {
 
         const raw = '0x' + abi.simpleEncode('unlock(uint256)', tx.amount).toString('hex');
 
-        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
-            from: tx.account.address,
-            to: '',
-            amount: tx.amount,
-            contractAddress,
-            raw
-        });
+        const fees = await this.client.getFees(
+            TransactionType.CONTRACT_CALL,
+            {
+                from: tx.account.address,
+                to: '',
+                amount: tx.amount,
+                contractAddress,
+                raw
+            },
+            TokenType.ERC20
+        );
         transaction.feeOptions = fees;
 
         transaction.toAddress = contractAddress;
@@ -81,6 +95,8 @@ export class LockedGold {
             params: [tx.amount],
             raw
         };
+
+        transaction.additionalInfo.posAction = PosBasicActionType.UNLOCK;
 
         return transaction;
     }

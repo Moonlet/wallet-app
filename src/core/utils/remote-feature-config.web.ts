@@ -3,8 +3,7 @@ export enum RemoteFeature {
     NEAR = 'feature_near',
     CELO = 'feature_celo',
     DEV_TOOLS = 'dev_tools',
-    TC_VERSION = 'tcVersion',
-    NOTIF_CENTER = 'feature_notifications_center'
+    TC_VERSION = 'tcVersion'
 }
 
 export const getRemoteConfigFeatures = () => {

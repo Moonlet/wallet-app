@@ -52,7 +52,9 @@ import {
     getEncryptionKey,
     generateEncryptionKey,
     clearEncryptionKey,
-    clearPinCode
+    clearPinCode,
+    getWalletCredentialsKey,
+    setWalletCredentialsKey
 } from '../../../core/secure/keychain/keychain';
 import { delay } from '../../../core/utils/time';
 import { toggleBiometricAuth } from '../../preferences/actions';
@@ -60,6 +62,7 @@ import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../../ui/transaction-
 import { ConnectExtension } from '../../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { startNotificationsHandlers } from '../../notifications/actions';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -77,6 +80,7 @@ export const ADD_TOKEN_TO_ACCOUNT = 'ADD_TOKEN_TO_ACCOUNT';
 export const WALLET_SELECT_ACCOUNT = 'WALLET_SELECT_ACCOUNT';
 export const WALLET_SELECT_BLOCKCHAIN = 'WALLET_SELECT_BLOCKCHAIN';
 export const SELECT_WALLET = 'SELECT_WALLET';
+export const SET_WALLET_PUBLIC_KEY = 'SET_WALLET_PUBLIC_KEY';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -184,7 +188,7 @@ export const createHWWallet = (
         dispatch(toInitialState());
         dispatch(setDisplayPasswordModal(false));
 
-        const wallet = await HWWalletFactory.get(
+        const wallet: IWallet = await HWWalletFactory.get(
             deviceVendor,
             deviceModel,
             deviceId,
@@ -196,8 +200,12 @@ export const createHWWallet = (
         dispatch(verifyAddressOnDevice(true));
         const accounts: IAccountState[] = await wallet.getAccounts(blockchain, 0);
         accounts[0].selected = true;
+
+        const walletCredentials = await wallet.getWalletCredentials();
+
         const walletData: IWalletState = {
             id: walletId,
+            walletPublicKey: walletCredentials?.publicKey,
             selected: false,
             selectedBlockchain: blockchain,
             hwOptions: {
@@ -221,6 +229,7 @@ export const createHWWallet = (
 
         dispatch(toInitialState());
         dispatch(setDisplayPasswordModal(true));
+        startNotificationsHandlers()(dispatch, getState);
     } catch (e) {
         dispatch(setDisplayPasswordModal(true));
 
@@ -277,6 +286,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             dispatch(
                 addWallet({
                     id: walletId,
+                    walletPublicKey: (await wallet.getWalletCredentials())?.publicKey,
                     selected: false,
                     selectedBlockchain: Blockchain.ZILLIQA, // by default the first blockchain is selected
                     name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
@@ -293,6 +303,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             await LoadingModal.close();
 
             updateAddressMonitorTokens(getState().wallets);
+            startNotificationsHandlers()(dispatch, getState);
         });
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));
@@ -478,13 +489,16 @@ export const updateTransactionFromBlockchain = (
                 blockchain,
                 accountIndex: transactionAccount.index,
                 token: generateAccountTokenState(tokenConfig),
-                tokenLogo: tokenConfig.icon
+                tokenLogo: tokenConfig.icon,
+                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
             };
 
             dispatch(setSelectedWallet(wallet.id));
             NavigationService.navigate('Token', navigationParams);
         }
     }
+
+    await LoadingModal.close();
 };
 
 export const sendTransferTransaction = (
@@ -777,4 +791,98 @@ export const addPublishedTxToAccount = (
             walletId
         }
     });
+};
+
+export const setWalletPublicKey = (walletId: string, walletPublicKey: string) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    dispatch({
+        type: SET_WALLET_PUBLIC_KEY,
+        data: { walletId, walletPublicKey }
+    });
+};
+
+export const setWalletsCredentials = (password: string) => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+
+    for (const wallet of Object.values(state.wallets)) {
+        try {
+            const walletId = (wallet as IWalletState).id;
+
+            let walletCredentials: { publicKey: string; privateKey?: string };
+
+            if (wallet.type === WalletType.HD) {
+                const storageHDWallet = await HDWallet.loadFromStorage(walletId, password);
+                walletCredentials = await storageHDWallet.getWalletCredentials();
+            } else if (wallet.type === WalletType.HW) {
+                if (wallet.walletPublicKey) {
+                    walletCredentials = {
+                        publicKey: wallet.walletPublicKey
+                    };
+                } else {
+                    // Generate wallet credentials
+                    const walletHW: IWallet = await HWWalletFactory.get(
+                        wallet.hwOptions.deviceVendor,
+                        wallet.hwOptions.deviceModel,
+                        wallet.hwOptions.deviceId,
+                        wallet.hwOptions.connectionType
+                    );
+
+                    walletCredentials = await walletHW.getWalletCredentials();
+                }
+            }
+
+            if (walletCredentials?.publicKey) {
+                setWalletPublicKey(walletId, walletCredentials.publicKey)(dispatch, getState);
+
+                const keychainWalletCredentials = await getWalletCredentialsKey(
+                    walletCredentials.publicKey
+                );
+
+                if (!keychainWalletCredentials) {
+                    await setWalletCredentialsKey(
+                        walletCredentials.publicKey,
+                        walletCredentials.privateKey
+                    );
+                }
+            } else {
+                SentryCaptureException(
+                    new Error(
+                        JSON.stringify({
+                            walletPublicKey: wallet?.walletPublicKey,
+                            walletType: wallet.type,
+                            walletHwOptions: wallet?.hwOptions,
+                            errorMessage: 'Undefined walletCredentials'
+                        })
+                    )
+                );
+            }
+        } catch (err) {
+            SentryCaptureException(new Error(JSON.stringify(err)));
+        }
+    }
+};
+
+export const getWalletAndAccountNameByAddress = (address: string) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+): { walletName: string; accountName: string } => {
+    const state = getState();
+
+    for (const wallet of Object.values(state.wallets)) {
+        for (const account of wallet.accounts) {
+            if (account.address?.toLocaleLowerCase() === address?.toLocaleLowerCase()) {
+                return {
+                    walletName: wallet.name,
+                    accountName: account.name || `Account ${account.index + 1}`
+                };
+            }
+        }
+    }
+
+    return undefined;
 };

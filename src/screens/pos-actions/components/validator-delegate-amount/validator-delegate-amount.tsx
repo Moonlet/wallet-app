@@ -8,6 +8,7 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { IValidator } from '../../../../core/blockchain/types/stats';
 import { formatNumber } from '../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
+import { formatValidatorName } from '../../../../core/utils/format-string';
 
 export interface IExternalProps {
     validator: IValidator;
@@ -25,7 +26,9 @@ export const ValidatorDelegateAmountComponent = (
             <SmartImage source={{ uri: props.validator.icon }} style={styles.icon} />
             <View style={{ flex: 1, flexDirection: 'column' }}>
                 <View style={styles.labelContainer}>
-                    <Text style={styles.labelName}>{props.validator.name}</Text>
+                    <Text style={styles.labelName}>
+                        {formatValidatorName(props.validator.name, 15)}
+                    </Text>
                     <Text style={styles.rankText}>{props.validator.rank}</Text>
                 </View>
                 <Text style={styles.website}>{props.validator.website}</Text>

@@ -4,7 +4,8 @@ import {
     BASE_DIMENSION,
     normalizeFontAndLineHeight,
     SCREEN_HEIGHT,
-    LETTER_SPACING
+    LETTER_SPACING,
+    normalize
 } from '../../styles/dimensions';
 import { ph, pw } from '../../styles';
 
@@ -19,7 +20,8 @@ export default (theme: ITheme) =>
         scrollContainer: {
             flexGrow: 1,
             paddingHorizontal: BASE_DIMENSION * 3,
-            paddingVertical: BASE_DIMENSION * 4
+            paddingTop: BASE_DIMENSION * 4,
+            paddingBottom: BASE_DIMENSION * 8
         },
         rowContainer: {
             flexDirection: 'row',
@@ -30,26 +32,17 @@ export default (theme: ITheme) =>
             flex: 1,
             flexDirection: 'column'
         },
-        titleUnread: {
+        title: {
             fontSize: normalizeFontAndLineHeight(17),
             lineHeight: normalizeFontAndLineHeight(22),
             color: '#FFFFFF',
-            fontWeight: '600'
+            fontWeight: '600',
+            alignSelf: 'center'
         },
-        titleRead: {
-            fontSize: normalizeFontAndLineHeight(17),
-            lineHeight: normalizeFontAndLineHeight(22),
-            color: theme.colors.textSecondary
-        },
-        subtitleUnread: {
+        subtitle: {
             fontSize: normalizeFontAndLineHeight(13),
             lineHeight: normalizeFontAndLineHeight(18),
             color: theme.colors.text
-        },
-        subtitleRead: {
-            fontSize: normalizeFontAndLineHeight(13),
-            lineHeight: normalizeFontAndLineHeight(18),
-            color: theme.colors.textTertiary
         },
         rightIcon: {
             alignSelf: 'center',
@@ -81,5 +74,14 @@ export default (theme: ITheme) =>
             color: theme.colors.textTertiary,
             textAlign: 'center',
             paddingHorizontal: BASE_DIMENSION
+        },
+        loadingContainer: {
+            paddingTop: BASE_DIMENSION,
+            paddingBottom: BASE_DIMENSION * 6
+        },
+        notifIcon: {
+            width: normalize(18),
+            height: normalize(18),
+            marginRight: BASE_DIMENSION
         }
     });

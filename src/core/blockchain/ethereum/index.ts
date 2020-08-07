@@ -19,6 +19,7 @@ export const Ethereum: IBlockchain = {
     Client,
     getStats: (chainId: ChainIdType) => new Stats(new Client(chainId), config),
     getClient: (chainId: ChainIdType) => {
+        chainId = Number(chainId);
         if (!clients[chainId]) {
             clients[chainId] = new Client(chainId);
         }

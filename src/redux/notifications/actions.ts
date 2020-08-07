@@ -4,6 +4,7 @@ import { IReduxState } from '../state';
 import { ApiClient } from '../../core/utils/api-client/api-client';
 import { getChainId } from '../preferences/selectors';
 import { Blockchain } from '../../core/blockchain/types';
+import { LoadingModal } from '../../components/loading-modal/loading-modal';
 
 export const SET_UNSEEN_NOTIFICATIONS = 'SET_UNSEEN_NOTIFICATIONS';
 export const SET_NOTIFICATIONS = 'SET_NOTIFICATIONS';
@@ -46,11 +47,18 @@ export const getUnseenNotifications = () => async (
     });
 };
 
-export const fetchNotifications = (page?: number) => async (
+export const fetchNotifications = (options?: { page?: number; showLoading?: boolean }) => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
     const state = getState();
+
+    if (options?.showLoading) {
+        await LoadingModal.open();
+
+        // drop loading in 2.5 seconds if api call takes too long or crashes
+        setTimeout(async () => LoadingModal.close(), 2500);
+    }
 
     const blockchainNetworks = [];
 
@@ -63,11 +71,17 @@ export const fetchNotifications = (page?: number) => async (
 
     const walletPublicKeys: string[] = Object.values(state.wallets).map(w => w?.walletPublicKey);
 
-    return new ApiClient().notifications.fetchNotifications(
+    const notifications = await new ApiClient().notifications.fetchNotifications(
         walletPublicKeys,
         blockchainNetworks,
-        page
+        options?.page
     );
+
+    if (options?.showLoading) {
+        await LoadingModal.close();
+    }
+
+    return notifications;
 };
 
 export const registerPushNotifToken = () => async (

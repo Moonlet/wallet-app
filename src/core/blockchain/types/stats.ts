@@ -63,7 +63,11 @@ export interface IValidator {
     name: string;
     rank: string;
     website: string;
-    amountDelegated: string;
+    totalVotes: string;
+    amountDelegated: {
+        pending: string;
+        active: string;
+    };
     topStats: IStatValue[];
     chartStats: IStatValue[];
     secondaryStats: IStatValue[];

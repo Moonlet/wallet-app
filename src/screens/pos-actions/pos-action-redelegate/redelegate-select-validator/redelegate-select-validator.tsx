@@ -194,7 +194,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     leftSmallLabel={validator.rank}
                     leftSubLabel={validator.website}
                     rightTitle={config.ui.validator.amountCardLabel}
-                    rightSubtitle={formatNumber(new BigNumber(validator.amountDelegated), {
+                    rightSubtitle={formatNumber(new BigNumber(validator.totalVotes), {
                         currency: config.coin
                     })}
                     actionType={CardActionType.DEFAULT}

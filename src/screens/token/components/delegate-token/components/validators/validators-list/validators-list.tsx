@@ -44,7 +44,7 @@ export const ValidatorsListComponent = (
                     rightTitle={blockchainInstance.config.ui.validator.amountCardLabel}
                     rightSubtitle={formatNumber(
                         blockchainInstance.account.amountFromStd(
-                            new BigNumber(item.amountDelegated),
+                            new BigNumber(item.amountDelegated.active),
                             tokenConfig.decimals
                         ),
                         {

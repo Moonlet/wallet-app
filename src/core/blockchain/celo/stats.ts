@@ -25,6 +25,7 @@ export class Stats extends GenericStats<Client> {
 
         return new BigNumber(data.balance.available)
             .plus(new BigNumber(data.balance.nonVotingLockedGold))
+            .minus(new BigNumber(data.balance.pendingActivationGold))
             .toFixed();
     }
 }

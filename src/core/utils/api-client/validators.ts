@@ -48,7 +48,7 @@ export class ValidatorsApiClient {
         }
     }
 
-    public async getValidatorsVotedForByAccount(account: IAccountState, chainId: string) {
+    public async fetchDelegatedValidators(account: IAccountState, chainId: string) {
         try {
             const response = await this.apiClient.http.post('/wallet-ui/tokenScreen/accountVotes', {
                 blockchain: Blockchain.CELO,

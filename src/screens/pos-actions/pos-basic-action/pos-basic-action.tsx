@@ -219,7 +219,7 @@ export class PosBasicActionComponent extends React.Component<
                 this.props.token,
                 this.props.chainId,
                 feeOptions,
-                this.props.validators[0].amountDelegated
+                this.props.validators[0].totalVotes
             );
 
             this.setState({ insufficientFunds, insufficientFundsFees });
@@ -235,7 +235,7 @@ export class PosBasicActionComponent extends React.Component<
                 this.props.token,
                 this.props.chainId,
                 this.state.feeOptions,
-                this.props.validators[0].amountDelegated
+                this.props.validators[0].totalVotes
             );
 
             this.setState({ insufficientFunds, insufficientFundsFees });
@@ -252,7 +252,7 @@ export class PosBasicActionComponent extends React.Component<
                         this.props.account,
                         this.props.token,
                         this.state.feeOptions,
-                        this.props.validators[0].amountDelegated
+                        this.props.validators[0].totalVotes
                     )}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}

@@ -162,7 +162,7 @@ export class Client extends BlockchainGenericClient {
         const tx = createTransaction(
             SENDER_ACCOUNT_ID,
             keyPair.getPublicKey(),
-            newAccountId, // `${newAccountId}.testnet`,
+            newAccountId,
             ++nonce,
             actions,
             serialize.base_decode(status.result.sync_info.latest_block_hash)

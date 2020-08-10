@@ -744,7 +744,7 @@ export const createAccount = (
     const tx = await client.createAccount(newAccountId, publicKey, chainId);
 
     if (tx?.status) {
-        if (tx.status?.SuccessValue) {
+        if (tx.status?.SuccessValue === '') {
             account.address = newAccountId;
 
             account.tokens[chainId][blockchainInstance.config.coin].balance = {

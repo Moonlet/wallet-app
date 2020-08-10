@@ -431,7 +431,7 @@ export class DashboardScreenComponent extends React.Component<
         const { styles, selectedBlockchain } = this.props;
 
         const showCreateAccount =
-            this.props.isCreateAccount && this.props.selectedBlockchainAccounts?.length === 0;
+            this.props.isCreateAccount && this.props.selectedBlockchainAccounts.length !== 0; // Update this
 
         if (Platform.OS === 'web' && this.state.isLoading) {
             return (

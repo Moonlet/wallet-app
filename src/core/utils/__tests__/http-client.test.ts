@@ -46,7 +46,7 @@ describe('RPC Client', () => {
                     Accept: 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: '{"jsonrpc":"2.0","id":0,"method":"METHOD","params":[]}'
+                body: '{"jsonrpc":"2.0","id":0,"method":"METHOD","params":[null]}'
             });
         });
 

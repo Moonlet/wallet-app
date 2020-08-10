@@ -43,7 +43,14 @@ export default (theme: ITheme) =>
         },
         createButton: {
             width: '80%',
-            alignSelf: 'center'
+            alignSelf: 'center',
+            marginBottom: BASE_DIMENSION + BASE_DIMENSION / 2
+        },
+        recoverAccount: {
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
+            textAlign: 'center',
+            color: theme.colors.accent
         },
         inputContainer: {
             marginBottom: BASE_DIMENSION * 4

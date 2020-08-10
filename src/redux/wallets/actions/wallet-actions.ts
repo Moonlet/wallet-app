@@ -43,7 +43,11 @@ import {
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
 import { Client as NearClient } from '../../../core/blockchain/near/client';
-import { enableCreateAccount, disableCreateAccount } from '../../ui/screens/dashboard/actions';
+import {
+    enableCreateAccount,
+    disableCreateAccount,
+    disableRecoverAccount
+} from '../../ui/screens/dashboard/actions';
 import { formatAddress } from '../../../core/utils/format-address';
 import { updateAddressMonitorTokens } from '../../../core/address-monitor/index';
 import { Dialog } from '../../../components/dialog/dialog';
@@ -120,9 +124,11 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
             dispatch(enableCreateAccount());
         } else {
             dispatch(disableCreateAccount());
+            dispatch(disableRecoverAccount());
         }
     } else {
         dispatch(disableCreateAccount());
+        dispatch(disableRecoverAccount());
     }
     const selectedAccount = getSelectedAccount(getState());
     if (selectedAccount) {
@@ -741,12 +747,11 @@ export const createAccount = (
 
     const accounts = await hdWallet.getAccounts(blockchain, numberOfAccounts);
     const account = accounts[0];
-    const publicKey = account.publicKey;
 
     const blockchainInstance = getBlockchain(blockchain);
     const client = blockchainInstance.getClient(chainId) as NearClient;
 
-    const tx = await client.createAccount(newAccountId, publicKey, chainId);
+    const tx = await client.createAccount(newAccountId, account.publicKey, chainId);
 
     if (tx?.status) {
         if (tx.status?.SuccessValue === '') {
@@ -775,6 +780,7 @@ export const createAccount = (
     }
 
     dispatch(disableCreateAccount());
+    dispatch(disableRecoverAccount());
 };
 
 export const changePIN = (newPassword: string, oldPassword: string) => async (

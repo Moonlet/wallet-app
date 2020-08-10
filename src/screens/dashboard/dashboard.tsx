@@ -50,6 +50,8 @@ import {
     startNotificationsHandlers,
     getUnseenNotifications
 } from '../../redux/notifications/actions';
+import { enableCreateAccount } from '../../redux/ui/screens/dashboard/actions';
+import { AccountRecover } from '../../components/account-recover/account-recover';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -64,6 +66,7 @@ export interface IReduxProps {
     selectedBlockchain: Blockchain;
     exchangeRates: IExchangeRates;
     isCreateAccount: boolean;
+    isRecoverAccount: boolean;
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
     chainId: ChainIdType;
@@ -71,6 +74,7 @@ export interface IReduxProps {
     startNotificationsHandlers: typeof startNotificationsHandlers;
     unseenNotifications: number;
     getUnseenNotifications: typeof getUnseenNotifications;
+    enableCreateAccount: typeof enableCreateAccount;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -84,6 +88,7 @@ const mapStateToProps = (state: IReduxState) => {
         selectedAccount,
         exchangeRates: state.market.exchangeRates,
         isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
+        isRecoverAccount: state.ui.screens.dashboard.isRecoverAccount,
         selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
         userCurrency: state.preferences.currency,
         chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
@@ -96,7 +101,8 @@ const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
     startNotificationsHandlers,
-    getUnseenNotifications
+    getUnseenNotifications,
+    enableCreateAccount
 };
 
 interface IState {
@@ -219,6 +225,10 @@ export class DashboardScreenComponent extends React.Component<
         this.props.navigation.setParams({
             unseenNotifications: this.props.unseenNotifications
         });
+
+        if (this.props.selectedBlockchainAccounts.length === 0) {
+            this.props.enableCreateAccount();
+        }
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
@@ -430,8 +440,8 @@ export class DashboardScreenComponent extends React.Component<
     public render() {
         const { styles, selectedBlockchain } = this.props;
 
-        const showCreateAccount =
-            this.props.isCreateAccount && this.props.selectedBlockchainAccounts.length !== 0; // Update this
+        const showCreateAccount = this.props.isCreateAccount;
+        const showRecoverAccount = this.props.isRecoverAccount;
 
         if (Platform.OS === 'web' && this.state.isLoading) {
             return (
@@ -461,7 +471,14 @@ export class DashboardScreenComponent extends React.Component<
                     />
                 )}
 
-                {!showCreateAccount && this.renderTokenDashboard()}
+                {showRecoverAccount && (
+                    <AccountRecover
+                        blockchain={selectedBlockchain}
+                        navigation={this.props.navigation}
+                    />
+                )}
+
+                {!showCreateAccount && !showRecoverAccount && this.renderTokenDashboard()}
 
                 <BottomBlockchainNavigation />
             </View>

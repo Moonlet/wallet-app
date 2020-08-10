@@ -10,7 +10,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { createAccount } from '../../redux/wallets/actions';
+import { createAccount, addAccount } from '../../redux/wallets/actions';
 import { IReduxState } from '../../redux/state';
 import { LoadingIndicator } from '../loading-indicator/loading-indicator';
 import { PasswordModal } from '../password-modal/password-modal';
@@ -19,10 +19,18 @@ import { Icon } from '../icon/icon';
 import { getChainId } from '../../redux/preferences/selectors';
 import { normalize } from '../../styles/dimensions';
 import { IconValues } from '../icon/values';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    disableCreateAccount,
+    enableRecoverAccount
+} from '../../redux/ui/screens/dashboard/actions';
 
 export interface IReduxProps {
     createAccount: typeof createAccount;
     chainId: ChainIdType;
+    addAccount: typeof addAccount;
+    disableCreateAccount: typeof disableCreateAccount;
+    enableRecoverAccount: typeof enableRecoverAccount;
 }
 
 export interface IExternalProps {
@@ -46,7 +54,10 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 };
 
 const mapDispatchToProps = {
-    createAccount
+    createAccount,
+    addAccount,
+    disableCreateAccount,
+    enableRecoverAccount
 };
 
 export class AccountCreateComponent extends React.Component<
@@ -102,11 +113,15 @@ export class AccountCreateComponent extends React.Component<
         }
     };
 
-    public createAccount = async () => {
-        const password = await PasswordModal.getPassword();
-        this.setState({ isLoading: true });
-        this.props.createAccount(this.props.blockchain, this.state.inputAccout, password);
-    };
+    private async createAccount() {
+        try {
+            const password = await PasswordModal.getPassword();
+            this.setState({ isLoading: true });
+            this.props.createAccount(this.props.blockchain, this.state.inputAccout, password);
+        } catch (err) {
+            SentryCaptureException(new Error(JSON.stringify(err)));
+        }
+    }
 
     public onPressClearInput = () =>
         this.setState({
@@ -204,6 +219,17 @@ export class AccountCreateComponent extends React.Component<
                             ? translate('App.labels.create')
                             : translate('App.labels.check')}
                     </Button>
+
+                    <TouchableOpacity
+                        onPress={() => {
+                            this.props.disableCreateAccount();
+                            this.props.enableRecoverAccount();
+                        }}
+                    >
+                        <Text style={styles.recoverAccount}>
+                            {translate('CreateAccount.recoverAccount')}
+                        </Text>
+                    </TouchableOpacity>
                 </View>
             );
         }

@@ -408,7 +408,25 @@ export const translation: ITranslations = {
             eg: 'e.g. johndoe',
             errorMessage: 'Username is {{message}}. Try something else.',
             taken: 'taken',
-            invalid: 'invalid'
+            invalid: 'invalid',
+            recoverAccount: 'Already have an account name? Recover it here'
+        },
+        RecoverAccount: {
+            title: 'Recover NEAR account name!',
+            recoverNear: 'Recover NEAR account!',
+            chooseUsername: 'Enter your account username.',
+            invalidUsername: 'Username has not been found. Try something else.',
+            congrats: 'Congrats! This account is valid.',
+            recoverPublicKey:
+                'This account has been created using another wallet. Click here to recover!',
+            recoverPKTitle: 'Click here to give Moonlet\naccess to you NEAR account.',
+            copyLink: 'Copy link',
+            confirmRecover: 'Recover your old user name',
+            invalidUserPublicKey: 'Please try again adding the access key!',
+            publicKey: 'Public Key',
+            pkText: 'use the public key to recover account name',
+            userName: 'User Name',
+            userNameText: 'check if account name was registered'
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',

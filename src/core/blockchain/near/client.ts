@@ -184,4 +184,15 @@ export class Client extends BlockchainGenericClient {
 
         return res.result;
     }
+
+    public async recoverAccount(accountId: string, publicKey: string): Promise<any> {
+        const res = await this.http.jsonRpc('query', {
+            request_type: 'view_access_key',
+            finality: 'final',
+            account_id: accountId,
+            public_key: publicKey
+        });
+
+        return res.result;
+    }
 }

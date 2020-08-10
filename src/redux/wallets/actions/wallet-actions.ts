@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { HDWallet } from '../../../core/wallet/hd-wallet/hd-wallet';
 import {
     Blockchain,
@@ -727,7 +728,7 @@ export const createAccount = (
     const hdWallet: IWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
         pass: password
     });
-    blockchain = Blockchain.NEAR;
+    blockchain = Blockchain.NEAR; // TODO: fix this
     const chainId = getChainId(state, blockchain);
 
     const numberOfAccounts = selectedWallet.accounts.filter(acc => acc.blockchain === blockchain)
@@ -740,24 +741,35 @@ export const createAccount = (
     const blockchainInstance = getBlockchain(blockchain);
     const client = blockchainInstance.getClient(chainId) as NearClient;
 
-    const txId = await client.createAccount(newAccountId, publicKey, chainId);
+    const tx = await client.createAccount(newAccountId, publicKey, chainId);
 
-    if (txId) {
-        account.address = newAccountId;
+    if (tx?.status) {
+        if (tx.status?.SuccessValue) {
+            account.address = newAccountId;
 
-        account.tokens[chainId][blockchainInstance.config.coin].balance = {
-            value: '0',
-            inProgress: false,
-            timestamp: undefined,
-            error: undefined
-        };
+            account.tokens[chainId][blockchainInstance.config.coin].balance = {
+                value: '0',
+                inProgress: false,
+                timestamp: undefined,
+                error: undefined
+            };
 
-        dispatch(addAccount(selectedWallet.id, blockchain, account));
-        dispatch(setSelectedAccount(account));
-        dispatch(disableCreateAccount());
+            dispatch(addAccount(selectedWallet.id, blockchain, account));
+            dispatch(setSelectedAccount(account));
+        } else if (tx.status?.Failure) {
+            Alert.alert('Failed', 'Create account has failed!');
+            // console.log('error:', tx.status.Failure.ActionError.kind);
+        } else {
+            // map this
+            Alert.alert('Invalid Status', 'Create account has failed!');
+            // console.log('tx: ', tx.status);
+        }
     } else {
-        // TODO - if client.createAccount crashes, dashboard (near create account section) will be stuck on loading indicator
+        // TODO
+        Alert.alert('No Status', 'Create account has failed!');
     }
+
+    dispatch(disableCreateAccount());
 };
 
 export const changePIN = (newPassword: string, oldPassword: string) => async (

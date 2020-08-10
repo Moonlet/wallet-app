@@ -7,8 +7,8 @@ import {
     fullAccessKey,
     createTransaction,
     signTransaction
-} from 'nearlib/src.ts/transaction';
-import { PublicKey, KeyPair, serialize } from 'nearlib/src.ts/utils';
+} from 'near-api-js/src/transaction';
+import { PublicKey, KeyPair, serialize } from 'near-api-js/src/utils';
 import BN from 'bn.js';
 import BigNumber from 'bignumber.js';
 import sha256 from 'js-sha256';
@@ -35,10 +35,15 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public async getNonce(address: string, publicKey?: string): Promise<number> {
-        const res = await this.http.jsonRpc('query', [`access_key/${address}/${publicKey}`, '']);
+    public async getNonce(address: string, publicKey: string): Promise<number> {
+        const res = await this.http.jsonRpc('query', {
+            request_type: 'view_access_key',
+            finality: 'final',
+            account_id: address,
+            public_key: publicKey
+        });
 
-        return res.result.nonce + 1;
+        return res?.result?.nonce + 1 || 1;
     }
 
     public async getCurrentBlock(): Promise<IBlockInfo> {
@@ -80,7 +85,11 @@ export class Client extends BlockchainGenericClient {
 
     public async getAccount(accountId: string): Promise<INearAccount> {
         try {
-            const res = await this.http.jsonRpc('query', [`account/${accountId}`, '']);
+            const res = await this.http.jsonRpc('query', {
+                request_type: 'view_account',
+                finality: 'final',
+                account_id: accountId
+            });
 
             if (res?.result) {
                 // Account exists
@@ -115,6 +124,8 @@ export class Client extends BlockchainGenericClient {
                         exists: false,
                         valid: false
                     };
+                } else {
+                    // handle this
                 }
             }
         } catch (err) {
@@ -127,12 +138,12 @@ export class Client extends BlockchainGenericClient {
         publicKey: string,
         chainId: ChainIdType
     ): Promise<any> {
-        const SENDER_ACCOUNT_ID = 'tibi';
+        const SENDER_ACCOUNT_ID = 'novi.testnet';
         const SENDER_PRIVATE_KEY =
-            'ed25519:47XC2WW9NWmnvpAE48Jjy8qdgrEjHaovXFDGUrFhKnvvD1mv8PAtSav97wroJx5E8fd3Z2zQGZwRA7e3krzQAm49';
+            'ed25519:624p536bCLjGmAWVZeMFYM8wezmf25pDtyK47Vn7wiX2TSRJgZCsdVjc3TTHuDWuH3yDP1N7kbgXTwBgt7yD2Xee';
 
         const status = await this.http.jsonRpc('status');
-        const amount = new BN('10000000000000000000000');
+        const amount = new BN('1000000000000000000000000'); // 1 NEAR
 
         // transaction actions
         const actions = [
@@ -145,12 +156,13 @@ export class Client extends BlockchainGenericClient {
         const keyPair = KeyPair.fromString(SENDER_PRIVATE_KEY);
 
         let nonce = await this.getNonce(SENDER_ACCOUNT_ID, keyPair.getPublicKey().toString());
+        // TODO: check for nonce not to be NaN
 
         // create transaction
         const tx = createTransaction(
             SENDER_ACCOUNT_ID,
             keyPair.getPublicKey(),
-            newAccountId,
+            newAccountId, // `${newAccountId}.testnet`,
             ++nonce,
             actions,
             serialize.base_decode(status.result.sync_info.latest_block_hash)

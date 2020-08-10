@@ -6,9 +6,9 @@ import {
 } from '../types';
 import { INearTransactionAdditionalInfoType, NearTransactionActionType, Near } from './';
 import { TransactionStatus } from '../../wallet/types';
-import { transfer, createTransaction, signTransaction } from 'near-api-js/src/transaction';
-import { KeyPair, PublicKey } from 'near-api-js/src/utils/key_pair';
-import { base_decode } from 'near-api-js/src/utils/serialize';
+import { transfer, createTransaction, signTransaction } from 'near-api-js/lib/transaction';
+import { KeyPair, PublicKey } from 'near-api-js/lib/utils/key_pair';
+import { base_decode } from 'near-api-js/lib/utils/serialize';
 import BN from 'bn.js';
 import sha256 from 'js-sha256';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';

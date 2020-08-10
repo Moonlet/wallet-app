@@ -7,8 +7,8 @@ import {
     fullAccessKey,
     createTransaction,
     signTransaction
-} from 'near-api-js/src/transaction';
-import { PublicKey, KeyPair, serialize } from 'near-api-js/src/utils';
+} from 'near-api-js/lib/transaction';
+import { PublicKey, KeyPair, serialize } from 'near-api-js/lib/utils';
 import BN from 'bn.js';
 import BigNumber from 'bignumber.js';
 import sha256 from 'js-sha256';

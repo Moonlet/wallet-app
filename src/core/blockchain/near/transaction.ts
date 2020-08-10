@@ -100,15 +100,14 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     }
 
     public getTransactionStatusByCode(status: any): TransactionStatus {
-        switch (parseInt(status, 16)) {
-            case 0:
-                return TransactionStatus.FAILED;
-            case 1:
-                return TransactionStatus.SUCCESS;
-            case 2:
-                return TransactionStatus.PENDING;
-            default:
-                return TransactionStatus.FAILED;
+        // check for Pending ?
+
+        if (status.SuccessValue === '') {
+            return TransactionStatus.SUCCESS;
+        } else if (status?.Failure) {
+            return TransactionStatus.FAILED;
+        } else {
+            return TransactionStatus.FAILED;
         }
     }
 }

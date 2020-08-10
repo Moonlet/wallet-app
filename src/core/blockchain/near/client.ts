@@ -23,7 +23,7 @@ export class Client extends BlockchainGenericClient {
         super(chainId, networks);
 
         this.nameService = new NameService(this);
-        this.utils = new ClientUtils();
+        this.utils = new ClientUtils(this);
     }
 
     public async getBalance(address: string): Promise<BigNumber> {

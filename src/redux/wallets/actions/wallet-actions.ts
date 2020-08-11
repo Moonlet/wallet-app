@@ -749,23 +749,23 @@ export const createAccount = (
     const accounts = await hdWallet.getAccounts(blockchain, numberOfAccounts);
     const account = accounts[0];
 
-    const tx = await new ApiClient().near.createAccount(
+    const res = await new ApiClient().near.createAccount(
         newAccountId,
         account.publicKey,
         String(chainId)
     );
 
-    if (tx?.status) {
+    if (res?.result?.data?.status) {
+        const tx = res.result.data;
+
         if (tx.status?.SuccessValue === '') {
             account.address = newAccountId;
-
             account.tokens[chainId][getBlockchain(blockchain).config.coin].balance = {
                 value: '0',
                 inProgress: false,
                 timestamp: undefined,
                 error: undefined
             };
-
             dispatch(addAccount(selectedWallet.id, blockchain, account));
             dispatch(setSelectedAccount(account));
         } else if (tx.status?.Failure) {
@@ -774,7 +774,7 @@ export const createAccount = (
             Alert.alert('Invalid Status', 'Create account has failed!');
         }
     } else {
-        Alert.alert('No Status', 'Create account has failed!');
+        Alert.alert('Create account has failed!', res?.message || res?.errorMessage || '');
     }
 
     dispatch(disableCreateAccount());

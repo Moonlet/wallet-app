@@ -6,16 +6,15 @@ export class NearApiClient {
 
     public async createAccount(accountId: string, publicKey: string, chainId: string) {
         try {
-            const response = await this.apiClient.http.post('/near/createAccount', {
+            return this.apiClient.http.post('/near/createAccount', {
                 accountId,
                 publicKey,
                 chainId,
                 timestamp: new Date().getTime()
             });
-
-            return response?.result?.data;
         } catch (err) {
             SentryCaptureException(new Error(JSON.stringify(err)));
+            return err;
         }
     }
 }

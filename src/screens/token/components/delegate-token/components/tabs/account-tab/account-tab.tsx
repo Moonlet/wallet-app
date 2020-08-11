@@ -91,7 +91,7 @@ export class AccountTabComponent extends React.Component<
     }
 
     @bind
-    public async onPress(widget: IPosWidget, index: number) {
+    public async onPress(widget: IPosWidget) {
         const password = await PasswordModal.getPassword(
             translate('Password.pinTitleUnlock'),
             translate('Password.subtitleSignTransaction'),
@@ -112,7 +112,7 @@ export class AccountTabComponent extends React.Component<
             case PosBasicActionType.WITHDRAW: {
                 this.props.withdraw(
                     this.props.account,
-                    index,
+                    widget.index,
                     this.props.token.symbol,
                     password,
                     this.props.navigation,
@@ -134,8 +134,12 @@ export class AccountTabComponent extends React.Component<
                 tokenConfig.decimals
             );
 
-            const timeLeft = moment(moment(new Date(widgetTimestamp)).diff(moment()));
-            const timeString = isActive ? '00h 00m' : `${timeLeft.hours()}h ${timeLeft.minutes()}m`;
+            const hours = moment(new Date(widgetTimestamp)).diff(moment(new Date()), 'hours');
+            const minutes =
+                moment(new Date(widgetTimestamp)).diff(moment(new Date()), 'minute') / (hours * 60);
+            const timeString = isActive
+                ? '00h 00m'
+                : `${Math.round(hours)}h ${Math.round(minutes)}m`;
 
             switch (widget.type) {
                 case PosBasicActionType.ACTIVATE: {
@@ -153,7 +157,7 @@ export class AccountTabComponent extends React.Component<
                             buttonText={translate('App.labels.activate')}
                             buttonColor={this.props.theme.colors.labelReward}
                             buttonDisabled={!isActive}
-                            onPress={() => this.onPress(widget, -1)}
+                            onPress={() => this.onPress(widget)}
                         />
                     );
                 }
@@ -174,7 +178,7 @@ export class AccountTabComponent extends React.Component<
                             buttonText={translate('App.labels.withdraw')}
                             buttonDisabled={!isActive}
                             buttonColor={this.props.theme.colors.labelReward}
-                            onPress={() => this.onPress(widget, index)}
+                            onPress={() => this.onPress(widget)}
                         />
                     );
                 }

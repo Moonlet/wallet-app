@@ -42,7 +42,6 @@ import {
     getWalletAndTransactionForHash
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
-import { Client as NearClient } from '../../../core/blockchain/near/client';
 import {
     enableCreateAccount,
     disableCreateAccount,
@@ -68,6 +67,7 @@ import { ConnectExtension } from '../../../core/connect-extension/connect-extens
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { startNotificationsHandlers } from '../../notifications/actions';
+import { ApiClient } from '../../../core/utils/api-client/api-client';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -740,6 +740,7 @@ export const createAccount = (
         pass: password
     });
     blockchain = Blockchain.NEAR; // TODO: fix this
+
     const chainId = getChainId(state, blockchain);
 
     const numberOfAccounts = selectedWallet.accounts.filter(acc => acc.blockchain === blockchain)
@@ -748,16 +749,17 @@ export const createAccount = (
     const accounts = await hdWallet.getAccounts(blockchain, numberOfAccounts);
     const account = accounts[0];
 
-    const blockchainInstance = getBlockchain(blockchain);
-    const client = blockchainInstance.getClient(chainId) as NearClient;
-
-    const tx = await client.createAccount(newAccountId, account.publicKey, chainId);
+    const tx = await new ApiClient().near.createAccount(
+        newAccountId,
+        account.publicKey,
+        String(chainId)
+    );
 
     if (tx?.status) {
         if (tx.status?.SuccessValue === '') {
             account.address = newAccountId;
 
-            account.tokens[chainId][blockchainInstance.config.coin].balance = {
+            account.tokens[chainId][getBlockchain(blockchain).config.coin].balance = {
                 value: '0',
                 inProgress: false,
                 timestamp: undefined,
@@ -768,14 +770,10 @@ export const createAccount = (
             dispatch(setSelectedAccount(account));
         } else if (tx.status?.Failure) {
             Alert.alert('Failed', 'Create account has failed!');
-            // console.log('error:', tx.status.Failure.ActionError.kind);
         } else {
-            // map this
             Alert.alert('Invalid Status', 'Create account has failed!');
-            // console.log('tx: ', tx.status);
         }
     } else {
-        // TODO
         Alert.alert('No Status', 'Create account has failed!');
     }
 

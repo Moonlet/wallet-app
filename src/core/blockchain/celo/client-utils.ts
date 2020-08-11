@@ -89,7 +89,7 @@ export class ClientUtils implements IClientUtils {
         });
 
         if (!(token && token.name && token.symbol)) {
-            return config.tokens.cGLD;
+            return config.tokens.CELO;
         }
 
         token.type = TokenType.ERC20;

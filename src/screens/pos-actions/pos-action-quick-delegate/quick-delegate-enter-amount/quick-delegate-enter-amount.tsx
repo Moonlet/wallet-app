@@ -112,6 +112,7 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
                 this.props.navigation,
                 undefined
             );
+            this.props.navigation.navigate('Token');
         } catch {
             //
         }

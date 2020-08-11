@@ -210,15 +210,16 @@ export const posAction = (
                 chainId,
                 account,
                 validators,
-                amount:
-                    blockchainInstance.account
-                        .amountToStd(amount, tokenConfig.decimals)
-                        .toFixed() || '0',
+                amount: blockchainInstance.account
+                    .amountToStd(amount, tokenConfig.decimals)
+                    .toFixed(),
                 token,
-                feeOptions: {
-                    gasPrice: feeOptions.gasPrice.toString(),
-                    gasLimit: feeOptions.gasLimit.toString()
-                },
+                feeOptions: feeOptions
+                    ? {
+                          gasPrice: feeOptions.gasPrice.toString(),
+                          gasLimit: feeOptions.gasLimit.toString()
+                      }
+                    : undefined,
                 extraFields: extra
             },
             type

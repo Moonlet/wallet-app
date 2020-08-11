@@ -37,6 +37,7 @@ import { NavigationService } from '../../../navigation/navigation-service';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { unlock, unvote } from '../../../redux/wallets/actions';
 import { valuePrimaryCtaField } from '../../../core/utils/format-string';
+import BigNumber from 'bignumber.js';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -243,7 +244,22 @@ export class PosBasicActionComponent extends React.Component<
     }
 
     private renderEnterAmount() {
-        const config = getBlockchain(this.props.account.blockchain).config;
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+
+        const activeBalance = blockchainInstance.account
+            .amountFromStd(
+                new BigNumber(this.props.validators[0].amountDelegated.active),
+                tokenConfig.decimals
+            )
+            .toFixed();
+        // const pendingBalance = blockchainInstance.account
+        //     .amountFromStd(
+        //         new BigNumber(this.props.validators[0].amountDelegated.pending),
+        //         tokenConfig.decimals
+        //     )
+        //     .toFixed();
 
         return (
             <View key="enterAmount" style={this.props.styles.amountContainer}>
@@ -252,7 +268,7 @@ export class PosBasicActionComponent extends React.Component<
                         this.props.account,
                         this.props.token,
                         this.state.feeOptions,
-                        this.props.validators[0].totalVotes
+                        activeBalance
                     )}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}
@@ -262,7 +278,11 @@ export class PosBasicActionComponent extends React.Component<
                 />
                 <FeeOptions
                     transactionType={TransactionType.CONTRACT_CALL}
-                    token={this.props.account.tokens[this.props.chainId][config.coin]}
+                    token={
+                        this.props.account.tokens[this.props.chainId][
+                            blockchainInstance.config.coin
+                        ]
+                    }
                     sendingToken={this.props.token}
                     account={this.props.account}
                     toAddress={''}

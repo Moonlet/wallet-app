@@ -29,6 +29,7 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
+import moment from 'moment';
 
 export interface IProps {
     accountIndex: number;
@@ -106,6 +107,7 @@ export class AccountTabComponent extends React.Component<
                     this.props.navigation,
                     undefined
                 );
+                break;
             }
             case PosBasicActionType.WITHDRAW: {
                 this.props.withdraw(
@@ -116,19 +118,25 @@ export class AccountTabComponent extends React.Component<
                     this.props.navigation,
                     undefined
                 );
+                break;
             }
         }
     }
 
     public renderWidgets() {
         return this.state.accountStats.widgets.map((widget, index) => {
-            const isActive = Number(widget.timestamp) < Date.now() ? true : false;
+            const widgetTimestamp = Number(widget.timestamp) * 1000;
+            const isActive = widgetTimestamp < Date.now() || widget.timestamp === '' ? true : false;
             const blockchainInstance = getBlockchain(this.props.blockchain);
             const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
             const amountFromStd = blockchainInstance.account.amountFromStd(
                 new BigNumber(widget.value),
                 tokenConfig.decimals
             );
+
+            const timeLeft = moment(moment(new Date(widgetTimestamp)).diff(moment()));
+            const timeString = isActive ? '00h 00m' : `${timeLeft.hours()}h ${timeLeft.minutes()}m`;
+
             switch (widget.type) {
                 case PosBasicActionType.ACTIVATE: {
                     return (
@@ -138,6 +146,9 @@ export class AccountTabComponent extends React.Component<
                             middleTitle={formatNumber(new BigNumber(amountFromStd), {
                                 currency: this.props.token.symbol,
                                 minimumFractionDigits: 2
+                            })}
+                            bottomTitle={translate('Widget.waitTimeActivate', {
+                                timeFormat: timeString
                             })}
                             buttonText={translate('App.labels.activate')}
                             buttonColor={this.props.theme.colors.labelReward}
@@ -157,7 +168,11 @@ export class AccountTabComponent extends React.Component<
                                 currency: this.props.token.symbol,
                                 minimumFractionDigits: 2
                             })}
+                            bottomTitle={translate('Widget.waitTimeWithdraw', {
+                                timeFormat: timeString
+                            })}
                             buttonText={translate('App.labels.withdraw')}
+                            buttonDisabled={!isActive}
                             buttonColor={this.props.theme.colors.labelReward}
                             onPress={() => this.onPress(widget, index)}
                         />

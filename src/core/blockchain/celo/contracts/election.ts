@@ -64,7 +64,7 @@ export class Election {
         tx: IPosTransaction,
         indexForGroup: number
     ): Promise<IBlockchainTransaction> {
-        const groupAddress = tx.validators[0].id.toLowerCase();
+        const groupAddress = tx.validators[0].id;
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.ELECTION);
 
@@ -80,14 +80,13 @@ export class Election {
             abi
                 .simpleEncode(
                     'revokeActive(address,uint256,address,address,uint256)',
-                    groupAddress,
+                    fixEthAddress(groupAddress),
                     new BigNumber(tx.amount).toFixed(),
                     lesser,
                     greater,
                     indexForGroup
                 )
                 .toString('hex');
-
         const fees = await this.client.getFees(
             TransactionType.CONTRACT_CALL,
             {
@@ -134,7 +133,7 @@ export class Election {
             abi
                 .simpleEncode(
                     'revokePending(address,uint256,address,address,uint256)',
-                    groupAddress,
+                    fixEthAddress(groupAddress),
                     new BigNumber(tx.amount).toFixed(),
                     lesser,
                     greater,
@@ -172,7 +171,8 @@ export class Election {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.ELECTION);
 
-        const raw = '0x' + abi.simpleEncode('activate(address)', address).toString('hex');
+        const raw =
+            '0x' + abi.simpleEncode('activate(address)', fixEthAddress(address)).toString('hex');
 
         const fees = await this.client.getFees(
             TransactionType.CONTRACT_CALL,
@@ -252,6 +252,22 @@ export class Election {
         };
     }
 
+    public async hasActivatablePendingVotes(
+        accountAddress: string,
+        group: string
+    ): Promise<boolean> {
+        const contractAddress = await getContract(this.client.chainId, Contracts.ELECTION);
+
+        const response = await this.client.callContract(
+            contractAddress,
+            'hasActivatablePendingVotes(address,address):(bool)',
+            [accountAddress, fixEthAddress(group)]
+        );
+
+        if (response === 'false') return false;
+        return true;
+    }
+
     public async getGroupsVotedForByAccount(accountAddress: string): Promise<string[]> {
         const contractAddress = await getContract(this.client.chainId, Contracts.ELECTION);
         return this.client
@@ -260,7 +276,7 @@ export class Election {
             ])
             .then(res => {
                 if (res && typeof res === 'string') {
-                    return [res];
+                    return res.split(',');
                 } else {
                     return res as string[];
                 }

@@ -1,6 +1,5 @@
 import { IBlockchainNetwork } from '../types';
 
-// TODO: update this...
 export const networks: IBlockchainNetwork[] = [
     // {
     //     name: 'Mainnet',
@@ -22,6 +21,10 @@ export const networks: IBlockchainNetwork[] = [
             name: 'Explorer',
             getAccountUrl: account => `https://explorer.testnet.near.org/accounts/${account}`,
             getTransactionUrl: txn => `https://explorer.testnet.near.org/transactions/${txn}`
+        },
+        links: {
+            getWalletLoginUrl: (publicKey: string) =>
+                `https://wallet.testnet.near.org/login/?title=Moonlet&public_key=${publicKey}`
         }
     }
     // {

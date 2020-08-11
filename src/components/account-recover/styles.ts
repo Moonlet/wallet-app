@@ -1,6 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, BORDER_RADIUS, ICON_CONTAINER_SIZE } from '../../styles/dimensions';
+import {
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    ICON_CONTAINER_SIZE,
+    normalize,
+    normalizeFontAndLineHeight,
+    LETTER_SPACING
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -11,29 +18,29 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2
         },
         createText: {
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             fontWeight: 'bold',
-            letterSpacing: 0.35,
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.text,
             textAlign: 'center',
             marginBottom: BASE_DIMENSION
         },
         chooseUsernameText: {
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.textSecondary,
             textAlign: 'center',
             marginBottom: BASE_DIMENSION * 4
         },
         congratsText: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.accent
         },
         invalidText: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.error
         },
         createButton: {
@@ -50,7 +57,7 @@ export default (theme: ITheme) =>
             borderColor: 'gray',
             alignSelf: 'stretch',
             backgroundColor: theme.colors.cardBackground,
-            paddingHorizontal: 12,
+            paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2,
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center'
@@ -70,8 +77,8 @@ export default (theme: ITheme) =>
             flexDirection: 'row'
         },
         recoverAccount: {
-            fontSize: 15,
-            lineHeight: 20,
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(20),
             textAlign: 'center',
             color: theme.colors.accent
         },
@@ -86,16 +93,16 @@ export default (theme: ITheme) =>
             marginHorizontal: BASE_DIMENSION / 2
         },
         circle: {
-            height: 50,
-            width: 50,
-            borderRadius: 25,
+            height: normalize(50),
+            width: normalize(50),
+            borderRadius: normalize(25),
             padding: BASE_DIMENSION,
             backgroundColor: theme.colors.accentSecondary,
             marginRight: BASE_DIMENSION * 2
         },
         number: {
-            fontSize: 28,
-            lineHeight: 34,
+            fontSize: normalizeFontAndLineHeight(28),
+            lineHeight: normalizeFontAndLineHeight(34),
             textAlign: 'center',
             color: theme.colors.accent
         },
@@ -105,8 +112,8 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2
         },
         infoText: {
-            fontSize: 17,
-            lineHeight: 22,
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
             color: theme.colors.text,
             alignSelf: 'center'
         },
@@ -128,20 +135,20 @@ export default (theme: ITheme) =>
             marginLeft: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         firstTCardText: {
-            fontSize: 18,
-            lineHeight: 25,
-            letterSpacing: 0.38,
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
+            letterSpacing: LETTER_SPACING,
             color: theme.colors.text,
             fontWeight: '500'
         },
         secondCardText: {
-            fontSize: 16,
-            lineHeight: 20,
+            fontSize: normalizeFontAndLineHeight(16),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary
         },
         title: {
-            fontSize: 22,
-            lineHeight: 28,
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             color: theme.colors.text,
             textAlign: 'center',
             fontWeight: 'bold',

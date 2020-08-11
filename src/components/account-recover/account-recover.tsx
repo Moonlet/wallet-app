@@ -267,8 +267,6 @@ export class AccountRecoverComponent extends React.Component<
     private renderRecoverPublicKey() {
         const { styles } = this.props;
 
-        // TODO: refactor this
-
         return (
             <View style={styles.container}>
                 <TouchableOpacity

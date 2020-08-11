@@ -9,7 +9,8 @@ export class NearApiClient {
             const response = await this.apiClient.http.post('/near/createAccount', {
                 accountId,
                 publicKey,
-                chainId
+                chainId,
+                timestamp: new Date().getTime()
             });
 
             return response?.result?.data;

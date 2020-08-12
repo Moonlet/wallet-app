@@ -133,7 +133,11 @@ export const moonletValidator: IValidator = {
     icon: 'https://thecelo.com/logos/0x8851f4852ce427191dc8d9065d720619889e3260.jpg',
     name: 'Moonlet',
     rank: '10th',
-    amountDelegated: '120000',
+    totalVotes: '120000',
+    amountDelegated: {
+        pending: '0',
+        active: '0'
+    },
     website: 'http://moonlet.io',
     topStats: topStatsValues,
     secondaryStats: secondaryStatsValues,
@@ -145,7 +149,11 @@ export const chainLayerValidator: IValidator = {
     icon: 'https://thecelo.com/logos/0x4fc4ea624db2e4a1d6195a03744d505cbcd9431b.jpg',
     name: 'ChainLayer',
     rank: '10th',
-    amountDelegated: '220000',
+    totalVotes: '220000',
+    amountDelegated: {
+        pending: '0',
+        active: '0'
+    },
     website: 'http://chainlayer.io',
     topStats: topStatsValues,
     secondaryStats: secondaryStatsValues,

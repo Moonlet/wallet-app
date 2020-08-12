@@ -1,13 +1,11 @@
-import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { IValidator } from '../../../core/blockchain/types/stats';
 import { IReduxState } from '../../state';
 import { Blockchain, ChainIdType } from '../../../core/blockchain/types';
 
-export const getValidators = (
+export const getDelegatedValidators = (
     state: IReduxState,
     blockchain: Blockchain,
-    chainId: ChainIdType,
-    posAction?: PosBasicActionType
+    chainId: ChainIdType
 ): IValidator[] => {
-    return state.ui.validators[blockchain][chainId as string];
+    return state.ui.delegatedValidators[blockchain][chainId as string];
 };

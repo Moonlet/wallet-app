@@ -46,7 +46,7 @@ export abstract class GenericStats<Client = BlockchainGenericClient> {
         throw new Error('Not Implemented');
     }
 
-    public async getValidatorsAddressVotedByAccount(account: IAccountState): Promise<string[]> {
+    public async getAvailableBalanceForDelegate(account: IAccountState): Promise<string> {
         throw new Error('Not Implemented');
     }
 }
@@ -63,7 +63,11 @@ export interface IValidator {
     name: string;
     rank: string;
     website: string;
-    amountDelegated: string;
+    totalVotes: string;
+    amountDelegated: {
+        pending: string;
+        active: string;
+    };
     topStats: IStatValue[];
     chartStats: IStatValue[];
     secondaryStats: IStatValue[];

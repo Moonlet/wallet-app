@@ -19,6 +19,9 @@ import {
 } from '../../../../redux/ui/screens/posActions/actions';
 import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
 import bind from 'bind-decorator';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
+import BigNumber from 'bignumber.js';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -51,9 +54,6 @@ const mapDispatchToProps = {
 
 interface IState {
     amount: string;
-    insufficientFunds: boolean;
-    feeOptions: IFeeOptions;
-    insufficientFundsFees: boolean;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -83,15 +83,28 @@ export class RedelegateEnterAmountComponent extends React.Component<
         });
 
         this.state = {
-            amount: '',
-            insufficientFunds: false,
-            feeOptions: undefined,
-            insufficientFundsFees: false
+            amount: undefined
         };
     }
 
-    public componentDidMount() {
+    public async componentDidMount() {
         this.props.navigation.setParams({ actionText: this.props.actionText });
+
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+        try {
+            const data = await blockchainInstance
+                .getStats(this.props.chainId)
+                .getAvailableBalanceForDelegate(this.props.account);
+            this.setState({
+                amount: blockchainInstance.account
+                    .amountFromStd(new BigNumber(data), tokenConfig.decimals)
+                    .toFixed()
+            });
+        } catch (err) {
+            this.setState({ amount: this.props.token.balance.value }); // set balance to the available balance at least
+            SentryCaptureException(new Error(JSON.stringify(err)));
+        }
     }
 
     @bind
@@ -115,6 +128,7 @@ export class RedelegateEnterAmountComponent extends React.Component<
                 account={this.props.account}
                 chainId={this.props.chainId}
                 token={this.props.token}
+                balanceForDelegate={this.state.amount}
                 validators={this.props.validators}
                 actionText={this.props.actionText}
                 bottomColor={this.props.theme.colors.labelRedelegate}

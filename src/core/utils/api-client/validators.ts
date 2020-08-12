@@ -47,4 +47,46 @@ export class ValidatorsApiClient {
             SentryCaptureException(new Error(JSON.stringify(err)));
         }
     }
+
+    public async fetchDelegatedValidators(account: IAccountState, chainId: string) {
+        try {
+            const response = await this.apiClient.http.post('/walletUi/tokenScreen/accountVotes', {
+                blockchain: Blockchain.CELO,
+                address: account.address,
+                chainId
+            });
+
+            if (response.result) {
+                return response.result.data;
+            } else {
+                SentryCaptureException(
+                    new Error(JSON.stringify(response || 'Get validators voted failed'))
+                );
+                return undefined;
+            }
+        } catch (err) {
+            SentryCaptureException(new Error(JSON.stringify(err)));
+        }
+    }
+
+    public async getBalance(account: IAccountState, chainId: string) {
+        try {
+            const response = await this.apiClient.http.post('/walletUi/account/balance', {
+                blockchain: Blockchain.CELO,
+                address: account.address,
+                chainId
+            });
+
+            if (response.result) {
+                return response.result.data;
+            } else {
+                SentryCaptureException(
+                    new Error(JSON.stringify(response || 'Get validators voted failed'))
+                );
+                return undefined;
+            }
+        } catch (err) {
+            SentryCaptureException(new Error(JSON.stringify(err)));
+        }
+    }
 }

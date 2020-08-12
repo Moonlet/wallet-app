@@ -58,7 +58,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         chainId,
-        allValidators: getValidators(state, ownProps.blockchain, chainId, true).filter(
+        allValidators: getValidators(state, ownProps.blockchain, chainId).filter(
             el => el.id !== ownProps.validators[0].id
         )
     };
@@ -194,7 +194,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     leftSmallLabel={validator.rank}
                     leftSubLabel={validator.website}
                     rightTitle={config.ui.validator.amountCardLabel}
-                    rightSubtitle={formatNumber(new BigNumber(validator.amountDelegated), {
+                    rightSubtitle={formatNumber(new BigNumber(validator.totalVotes), {
                         currency: config.coin
                     })}
                     actionType={CardActionType.DEFAULT}
@@ -211,6 +211,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                 <ValidatorsList
                     validators={this.state.validatorsList}
                     blockchain={this.props.blockchain}
+                    token={this.props.token}
                     redelegate={{
                         validator: this.props.validators[0],
                         color: this.props.theme.colors.labelRedelegate

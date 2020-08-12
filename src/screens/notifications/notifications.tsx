@@ -35,7 +35,7 @@ export interface IReduxProps {
     markSeenNotification: typeof markSeenNotification;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
     openTransactionRequest: typeof openTransactionRequest;
-    fetchNotifications: (page?: number) => Promise<any>;
+    fetchNotifications: (options?: { page?: number; showLoading?: boolean }) => Promise<any>;
     updateDisplayedHint: typeof updateDisplayedHint;
 
     getWalletAndAccountNameByAddress: (
@@ -87,23 +87,15 @@ export class NotificationsComponent extends React.Component<
         };
     }
 
-    public async componentDidMount() {
-        await LoadingModal.open();
-
-        setTimeout(async () => {
-            await LoadingModal.close();
-        }, 2500); // drop loading in 2.5 seconds if api call takes too long or crashes
-
-        await this.fetchNotifications();
-        await LoadingModal.close();
+    public componentDidMount() {
+        this.fetchNotifications({ showLoading: true });
     }
 
     private async handleNotificationTap(notification: INotificationType, notificationId: string) {
         await LoadingModal.open();
 
-        setTimeout(async () => {
-            await LoadingModal.close();
-        }, 3000); // drop loading in 3 seconds if api call takes too long or crashes
+        // drop loading in 2.5 seconds if api call takes too long or crashes
+        setTimeout(async () => LoadingModal.close(), 2500);
 
         switch (notification.data.action) {
             case NotificationType.TRANSACTION:
@@ -128,9 +120,16 @@ export class NotificationsComponent extends React.Component<
                 break;
         }
 
-        const { notifications } = this.state;
-        notifications[notificationId].seen = true;
-        this.setState({ notifications });
+        this.setState({
+            notifications: this.state.notifications.map(notif =>
+                notif.id === notificationId
+                    ? {
+                          ...notif,
+                          seen: true
+                      }
+                    : notif
+            )
+        });
 
         this.props.markSeenNotification(notificationId);
     }
@@ -209,12 +208,18 @@ export class NotificationsComponent extends React.Component<
         return (this.state.isRefreshing ? [] : this.state.notifications).concat(parsedNotifs);
     }
 
-    private async fetchNotifications() {
+    private async fetchNotifications(options: { showLoading: boolean }) {
         const { page } = this.state;
+
+        // drop loading indicator in 2.5 seconds if api call takes too long or crashes
+        setTimeout(async () => this.setState({ showLoading: false }), 2500);
 
         try {
             // Fetch next page
-            const notifications: any = await this.props.fetchNotifications(page);
+            const notifications: any = await this.props.fetchNotifications({
+                showLoading: options.showLoading,
+                page
+            });
 
             if (notifications && notifications.length > 0) {
                 const finalNotifications = this.parseNotifications(notifications);
@@ -239,6 +244,9 @@ export class NotificationsComponent extends React.Component<
     private async onRefresh() {
         this.setState({ isRefreshing: true });
 
+        // drop loading indicator in 3 seconds if api call takes too long or crashes
+        setTimeout(async () => this.setState({ isRefreshing: false }), 3000);
+
         const notifications = await this.props.fetchNotifications();
         if (notifications) {
             const finalNotifications = this.parseNotifications(notifications);
@@ -261,7 +269,7 @@ export class NotificationsComponent extends React.Component<
                         if (this.isCloseToBottom(nativeEvent)) {
                             if (!this.state.showLoading) {
                                 this.setState({ showLoading: true }, async () => {
-                                    await this.fetchNotifications();
+                                    await this.fetchNotifications({ showLoading: false });
                                 });
                             }
                         }

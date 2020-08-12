@@ -1,13 +1,9 @@
 // create communication port with bg script
-
 import { browser } from 'webextension-polyfill-ts';
-import {
-    ConnectionPort,
-    IExtensionMessage,
-    IExtensionRequest
-} from '../../src/core/communication/extension';
+import { IExtensionMessage, IExtensionRequest } from '../../src/core/communication/extension';
+import { bgPortRequest } from '../../src/core/communication/bg-port';
 
-const bgPort = browser.runtime.connect({ name: ConnectionPort.BACKGROUND } as any);
+browser.runtime.sendMessage('TEST');
 
 const methodsWhitelist: RegExp[] = [
     // /^Controller\.(?!method2$|method$)/gi // example of negation, all methods from Controller beside method2 and method are allowed
@@ -17,7 +13,7 @@ const methodsWhitelist: RegExp[] = [
 const isRequestAllowed = (request: IExtensionRequest) => {
     const method = `${request.controller}.${request.method}`;
     for (const rule of methodsWhitelist) {
-        if (rule.test(method)) {
+        if (method?.match(rule)) {
             return true;
         }
     }
@@ -40,14 +36,13 @@ const sendMessage = (message: IExtensionMessage, target: string) => {
     }
 };
 
-window.onmessage = (event: MessageEvent) => {
+window.onmessage = async (event: MessageEvent) => {
     const message = event?.data as IExtensionMessage;
-
     // listen for messages from top frame (we are in an iframe, bridge iframe)
     // listen only for messages with target MOONLET_EXTENSION and type REQUEST
     // other messages are ignored
     if (
-        event.source === window.top.window &&
+        event.source === window.parent &&
         message.target === 'MOONLET_EXTENSION' &&
         message.type === 'REQUEST'
     ) {
@@ -56,19 +51,18 @@ window.onmessage = (event: MessageEvent) => {
 
         if (message.id && message?.request?.controller && message?.request?.method) {
             if (isRequestAllowed(message.request)) {
-                const onBgPortMessage = (responseMessage: IExtensionMessage) => {
-                    if (
-                        responseMessage.type === 'RESPONSE' &&
-                        responseMessage.id === message.id &&
-                        responseMessage.response
-                    ) {
-                        // send response
-                        sendMessage(responseMessage, event.origin);
-                        bgPort.onMessage.removeListener(onBgPortMessage);
-                    }
-                };
-                bgPort.onMessage.addListener(onBgPortMessage);
-                bgPort.postMessage(message);
+                const responseMessage = await bgPortRequest({
+                    ...message.request,
+                    origin: event.origin
+                });
+                sendMessage(
+                    {
+                        ...message,
+                        type: 'RESPONSE',
+                        response: responseMessage
+                    },
+                    event.origin
+                );
             } else {
                 const responseMessage: IExtensionMessage = {
                     ...message,

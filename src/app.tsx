@@ -35,6 +35,7 @@ import { isEqual } from 'lodash';
 import { filterObjectProps } from './core/utils/object-sanitise';
 import { setWalletsCredentials } from './redux/wallets/actions/wallet-actions';
 import { ProcessTransactions } from './screens/pos-actions/process-transactions/process-transactions';
+import { ExtensionBackgroundRequest } from './screens/extension-background-request/extension-background-request';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -180,42 +181,46 @@ export default class App extends React.Component<{}, IState> {
 
     public render() {
         if (this.state.appReady) {
+            const bgRequest = !!document.location.hash;
             return (
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>
                         <ThemeContext.Provider value={darkTheme}>
-                            <AppContainer
-                                ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
-                                theme="dark"
-                                onNavigationStateChange={(_, newState) => {
-                                    if (!isEqual(this.state.navigationState, newState)) {
-                                        this.setState({ navigationState: newState });
+                            {bgRequest && <ExtensionBackgroundRequest />}
+                            {!bgRequest && (
+                                <AppContainer
+                                    ref={(nav: any) => NavigationService.setTopLevelNavigator(nav)}
+                                    theme="dark"
+                                    onNavigationStateChange={(_, newState) => {
+                                        if (!isEqual(this.state.navigationState, newState)) {
+                                            this.setState({ navigationState: newState });
 
-                                        const currentRoute = NavigationService.getCurrentRouteWithParams();
+                                            const currentRoute = NavigationService.getCurrentRouteWithParams();
 
-                                        // Sentry Breadcrumbs
-                                        currentRoute &&
-                                            currentRoute?.routeName &&
-                                            addBreadcrumb({
-                                                message: JSON.stringify({
-                                                    route: currentRoute.routeName,
-                                                    params:
-                                                        currentRoute?.params &&
-                                                        filterObjectProps(currentRoute.params, [
-                                                            'blockchain',
-                                                            'accountIndex',
-                                                            'step',
-                                                            'appNetworks',
-                                                            'transaction',
-                                                            'wallet.selectedBlockchain',
-                                                            'wallet.type',
-                                                            'wallet.hwOptions'
-                                                        ])
-                                                })
-                                            });
-                                    }
-                                }}
-                            />
+                                            // Sentry Breadcrumbs
+                                            currentRoute &&
+                                                currentRoute?.routeName &&
+                                                addBreadcrumb({
+                                                    message: JSON.stringify({
+                                                        route: currentRoute.routeName,
+                                                        params:
+                                                            currentRoute?.params &&
+                                                            filterObjectProps(currentRoute.params, [
+                                                                'blockchain',
+                                                                'accountIndex',
+                                                                'step',
+                                                                'appNetworks',
+                                                                'transaction',
+                                                                'wallet.selectedBlockchain',
+                                                                'wallet.type',
+                                                                'wallet.hwOptions'
+                                                            ])
+                                                    })
+                                                });
+                                        }
+                                    }}
+                                />
+                            )}
                             {Platform.OS !== 'android' && !this.state.displayApplication && (
                                 <ImageCanvas />
                             )}

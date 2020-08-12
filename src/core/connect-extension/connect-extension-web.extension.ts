@@ -24,7 +24,8 @@ import {
     captureException as SentryCaptureException,
     addBreadcrumb as SentryAddBreadcrumb
 } from '@sentry/browser';
-import { ConnectionPort, IExtensionMessage } from '../communication/extension';
+import { IExtensionMessage } from '../communication/extension';
+import { getBgPort } from '../communication/bg-port';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -55,17 +56,17 @@ export const ConnectExtensionWeb = (() => {
             await deleteFromStorage(CONN_EXTENSION);
 
             // send message to background script
-            const port = browser.runtime.connect('', { name: ConnectionPort.BACKGROUND });
             const message: IExtensionMessage = {
                 id: uuidv4(),
                 type: 'REQUEST',
                 request: {
+                    origin: document.location.href,
                     controller: 'WalletSyncController',
                     method: 'extensionDisconnected',
                     params: []
                 }
             };
-            port.postMessage(message);
+            getBgPort().postMessage(message);
             return Promise.resolve();
         } catch (err) {
             return Promise.reject(err);
@@ -243,18 +244,17 @@ export const ConnectExtensionWeb = (() => {
                     buildTransactions(decryptedState.state.wallets);
 
                     // send message to background script
-                    // send message to background script
-                    const port = browser.runtime.connect('', { name: ConnectionPort.BACKGROUND });
                     const message: IExtensionMessage = {
                         id: uuidv4(),
                         type: 'REQUEST',
                         request: {
+                            origin: document.location.href,
                             controller: 'WalletSyncController',
                             method: 'extensionConnected',
                             params: []
                         }
                     };
-                    port.postMessage(message);
+                    getBgPort().postMessage(message);
                 } else {
                     // Retry
                     syncConnect(conn, connectionsRef, syncConnAttempts - 1);

@@ -29,6 +29,7 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 import moment from 'moment';
 
 export interface IProps {
@@ -84,7 +85,9 @@ export class AccountTabComponent extends React.Component<
             .then(accStats => {
                 this.setState({ accountStats: accStats });
             })
-            .catch();
+            .catch(e => {
+                SentryCaptureException(new Error(JSON.stringify(e)));
+            });
 
         this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
         this.props.fetchDelegatedValidators(this.props.account);

@@ -86,25 +86,25 @@ export class DelegateEnterAmountComponent extends React.Component<
         };
     }
 
-    public componentDidMount() {
+    public async componentDidMount() {
         this.props.navigation.setParams({ actionText: this.props.actionText });
 
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
-        blockchainInstance
-            .getStats(this.props.chainId)
-            .getAvailableBalanceForDelegate(this.props.account)
-            .then(data => {
-                this.setState({
-                    amount: blockchainInstance.account
-                        .amountFromStd(new BigNumber(data), tokenConfig.decimals)
-                        .toFixed()
-                });
-            })
-            .catch(err => {
-                this.setState({ amount: this.props.token.balance.value }); // set balance to the available balance at least
-                SentryCaptureException(new Error(JSON.stringify(err)));
+
+        try {
+            const data = await blockchainInstance
+                .getStats(this.props.chainId)
+                .getAvailableBalanceForDelegate(this.props.account);
+            this.setState({
+                amount: blockchainInstance.account
+                    .amountFromStd(new BigNumber(data), tokenConfig.decimals)
+                    .toFixed()
             });
+        } catch (err) {
+            this.setState({ amount: this.props.token.balance.value }); // set balance to the available balance at least
+            SentryCaptureException(new Error(JSON.stringify(err)));
+        }
     }
 
     @bind

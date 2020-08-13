@@ -19,8 +19,6 @@ import {
 } from '../../../../redux/ui/screens/posActions/actions';
 import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
 import bind from 'bind-decorator';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
-import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import BigNumber from 'bignumber.js';
 
 export interface IReduxProps {
@@ -31,20 +29,22 @@ export interface IReduxProps {
     blockchain: Blockchain;
     token: ITokenState;
     validators: IValidator[];
+    fromValidator: IValidator;
     actionText: string;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
-    const accountIndex = state.ui.screens.posActions.delegateEnterAmount.accountIndex;
-    const blockchain = state.ui.screens.posActions.delegateEnterAmount.blockchain;
+    const accountIndex = state.ui.screens.posActions.redelegateEnterAmount.accountIndex;
+    const blockchain = state.ui.screens.posActions.redelegateEnterAmount.blockchain;
     return {
         account: getAccount(state, accountIndex, blockchain),
         chainId: getChainId(state, blockchain),
         accountIndex,
         blockchain,
-        token: state.ui.screens.posActions.delegateEnterAmount.token,
-        validators: state.ui.screens.posActions.delegateEnterAmount.validators,
-        actionText: state.ui.screens.posActions.delegateEnterAmount.actionText
+        token: state.ui.screens.posActions.redelegateEnterAmount.token,
+        validators: state.ui.screens.posActions.redelegateEnterAmount.validators,
+        actionText: state.ui.screens.posActions.redelegateEnterAmount.actionText,
+        fromValidator: state.ui.screens.posActions.redelegateEnterAmount.fromValidator
     };
 };
 
@@ -82,29 +82,19 @@ export class RedelegateEnterAmountComponent extends React.Component<
             });
         });
 
+        const amountFromValidator = props.fromValidator
+            ? new BigNumber(props.fromValidator.amountDelegated.active)
+                  .plus(props.fromValidator.amountDelegated.pending)
+                  .toFixed()
+            : '0';
+
         this.state = {
-            amount: undefined
+            amount: amountFromValidator
         };
     }
 
     public async componentDidMount() {
         this.props.navigation.setParams({ actionText: this.props.actionText });
-
-        const blockchainInstance = getBlockchain(this.props.blockchain);
-        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
-        try {
-            const data = await blockchainInstance
-                .getStats(this.props.chainId)
-                .getAvailableBalanceForDelegate(this.props.account);
-            this.setState({
-                amount: blockchainInstance.account
-                    .amountFromStd(new BigNumber(data), tokenConfig.decimals)
-                    .toFixed()
-            });
-        } catch (err) {
-            this.setState({ amount: this.props.token.balance.value }); // set balance to the available balance at least
-            SentryCaptureException(new Error(JSON.stringify(err)));
-        }
     }
 
     @bind
@@ -130,6 +120,7 @@ export class RedelegateEnterAmountComponent extends React.Component<
                 token={this.props.token}
                 balanceForDelegate={this.state.amount}
                 validators={this.props.validators}
+                fromValidator={this.props.fromValidator}
                 actionText={this.props.actionText}
                 bottomColor={this.props.theme.colors.labelRedelegate}
                 bottomActionText={'App.labels.from'}

@@ -21,7 +21,7 @@ export interface IPosActionsState {
         accountIndex: number;
         blockchain: Blockchain;
         token: ITokenState;
-        toValidators: IValidator[];
+        validators: IValidator[];
         fromValidator: IValidator;
         actionText: string;
     };
@@ -48,7 +48,7 @@ export interface IPosActionsState {
         accountIndex: number;
         blockchain: Blockchain;
         token: ITokenState;
-        toValidators: IValidator[];
+        validators: IValidator[];
         fromValidator: IValidator;
         actionText: string;
         amount: string;

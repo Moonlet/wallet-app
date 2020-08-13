@@ -97,6 +97,10 @@ export class EnterAmountComponentComponent extends React.Component<
         )
             disableButton = true;
 
+        const textPrimaryCtaField = this.props.fromValidator
+            ? valuePrimaryCtaField([this.props.fromValidator])
+            : valuePrimaryCtaField(this.props.validators);
+
         return (
             <BottomCta
                 label={translate(this.props.bottomButtonText)}
@@ -109,7 +113,7 @@ export class EnterAmountComponentComponent extends React.Component<
                     label={translate(this.props.actionText)}
                     labelColor={this.props.bottomColor}
                     action={translate(this.props.bottomActionText).toLowerCase()}
-                    value={valuePrimaryCtaField(this.props.validators)}
+                    value={textPrimaryCtaField}
                 />
                 <AmountCtaField
                     tokenConfig={tokenConfig}
@@ -168,7 +172,13 @@ export class EnterAmountComponentComponent extends React.Component<
     }
 
     private renderEnterAmount() {
-        const config = getBlockchain(this.props.account.blockchain).config;
+        const blockchainInstance = getBlockchain(this.props.account.blockchain);
+
+        const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
+
+        const balance = blockchainInstance.account
+            .amountFromStd(new BigNumber(this.props.balanceForDelegate), tokenConfig.decimals)
+            .toFixed();
 
         return (
             <View key="enterAmount" style={this.props.styles.amountContainer}>
@@ -177,7 +187,7 @@ export class EnterAmountComponentComponent extends React.Component<
                         this.props.account,
                         this.props.token,
                         this.state.feeOptions,
-                        this.props.balanceForDelegate
+                        balance
                     )}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}
@@ -187,7 +197,11 @@ export class EnterAmountComponentComponent extends React.Component<
                 />
                 <FeeOptions
                     transactionType={TransactionType.CONTRACT_CALL}
-                    token={this.props.account.tokens[this.props.chainId][config.coin]}
+                    token={
+                        this.props.account.tokens[this.props.chainId][
+                            blockchainInstance.config.coin
+                        ]
+                    }
                     sendingToken={this.props.token}
                     account={this.props.account}
                     toAddress={''}

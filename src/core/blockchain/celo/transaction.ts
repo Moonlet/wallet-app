@@ -94,35 +94,73 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
         const transactions: IBlockchainTransaction[] = [];
 
         switch (transactionType) {
-            case PosBasicActionType.DELEGATE: {
-                const amountLocked: BigNumber = await client.contracts[
-                    Contracts.LOCKED_GOLD
-                ].getAccountNonvotingLockedGold(tx.account.address);
-
+            case PosBasicActionType.CREATE_ACCOUNT: {
                 const isRegisteredAccount = await client.contracts[
                     Contracts.ACCOUNTS
                 ].isRegisteredAccount(tx.account.address);
 
                 if (!isRegisteredAccount) {
-                    const txRegister: IPosTransaction = cloneDeep(tx);
-
-                    transactions.push(
-                        await client.contracts[Contracts.ACCOUNTS].createAccount(txRegister)
+                    const transaction = await client.contracts[Contracts.ACCOUNTS].createAccount(
+                        tx
                     );
-                }
-
-                if (!amountLocked.isGreaterThanOrEqualTo(new BigNumber(tx.amount))) {
-                    const txLock: IPosTransaction = cloneDeep(tx);
-
-                    txLock.amount = new BigNumber(tx.amount).minus(amountLocked).toString();
-
-                    const transaction: IBlockchainTransaction = await client.contracts[
-                        Contracts.LOCKED_GOLD
-                    ].lock(txLock);
-                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
-
+                    transaction.nonce = transaction.nonce + transactions.length;
                     transactions.push(transaction);
                 }
+                break;
+            }
+            case PosBasicActionType.LOCK: {
+                const amountLocked: BigNumber = await client.contracts[
+                    Contracts.LOCKED_GOLD
+                ].getAccountNonvotingLockedGold(tx.account.address);
+                if (!amountLocked.isGreaterThanOrEqualTo(new BigNumber(tx.amount))) {
+                    tx.amount = new BigNumber(tx.amount).minus(amountLocked).toString();
+
+                    const transaction = await client.contracts[Contracts.LOCKED_GOLD].lock(tx);
+                    transaction.nonce = transaction.nonce + transactions.length;
+                    transactions.push(transaction);
+                }
+                break;
+            }
+            case PosBasicActionType.DELEGATE: {
+                const transactionRegister = await this.buildPosTransaction(
+                    cloneDeep(tx),
+                    PosBasicActionType.CREATE_ACCOUNT
+                );
+                if (transactionRegister) {
+                    transactions.push(...transactionRegister);
+                }
+
+                const transactionLock = await this.buildPosTransaction(
+                    cloneDeep(tx),
+                    PosBasicActionType.LOCK
+                );
+                if (transactionLock) {
+                    transactions.push(...transactionLock);
+                }
+
+                const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
+
+                for (const validator of tx.validators) {
+                    const txVote: IPosTransaction = cloneDeep(tx);
+                    txVote.amount = splitAmount.toString();
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.ELECTION
+                    ].vote(txVote, validator);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
+                }
+
+                break;
+            }
+            case PosBasicActionType.REDELEGATE: {
+                const txUnvote = cloneDeep(tx);
+                txUnvote.validators = [tx.extraFields.fromValidator];
+                const unvoteTransactions = await this.buildPosTransaction(
+                    txUnvote,
+                    PosBasicActionType.UNVOTE
+                );
+
+                transactions.push(...unvoteTransactions);
 
                 const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
 

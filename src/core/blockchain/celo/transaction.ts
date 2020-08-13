@@ -94,48 +94,29 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
         const transactions: IBlockchainTransaction[] = [];
 
         switch (transactionType) {
-            case PosBasicActionType.CREATE_ACCOUNT: {
+            case PosBasicActionType.DELEGATE: {
                 const isRegisteredAccount = await client.contracts[
                     Contracts.ACCOUNTS
                 ].isRegisteredAccount(tx.account.address);
 
                 if (!isRegisteredAccount) {
+                    const txRegister: IPosTransaction = cloneDeep(tx);
                     const transaction = await client.contracts[Contracts.ACCOUNTS].createAccount(
-                        tx
+                        txRegister
                     );
                     transaction.nonce = transaction.nonce + transactions.length;
                     transactions.push(transaction);
                 }
-                break;
-            }
-            case PosBasicActionType.LOCK: {
                 const amountLocked: BigNumber = await client.contracts[
                     Contracts.LOCKED_GOLD
                 ].getAccountNonvotingLockedGold(tx.account.address);
                 if (!amountLocked.isGreaterThanOrEqualTo(new BigNumber(tx.amount))) {
-                    tx.amount = new BigNumber(tx.amount).minus(amountLocked).toString();
+                    const txLock: IPosTransaction = cloneDeep(tx);
+                    txLock.amount = new BigNumber(tx.amount).minus(amountLocked).toString();
 
-                    const transaction = await client.contracts[Contracts.LOCKED_GOLD].lock(tx);
+                    const transaction = await client.contracts[Contracts.LOCKED_GOLD].lock(txLock);
                     transaction.nonce = transaction.nonce + transactions.length;
                     transactions.push(transaction);
-                }
-                break;
-            }
-            case PosBasicActionType.DELEGATE: {
-                const transactionRegister = await this.buildPosTransaction(
-                    cloneDeep(tx),
-                    PosBasicActionType.CREATE_ACCOUNT
-                );
-                if (transactionRegister) {
-                    transactions.push(...transactionRegister);
-                }
-
-                const transactionLock = await this.buildPosTransaction(
-                    cloneDeep(tx),
-                    PosBasicActionType.LOCK
-                );
-                if (transactionLock) {
-                    transactions.push(...transactionLock);
                 }
 
                 const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);

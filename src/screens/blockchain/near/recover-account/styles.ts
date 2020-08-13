@@ -76,6 +76,9 @@ export default (theme: ITheme) =>
         congratsText: {
             color: theme.colors.accent
         },
+        createHereText: {
+            color: theme.colors.accent
+        },
         authProgressContainer: {
             flex: 1,
             justifyContent: 'center',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, TextInput, Clipboard, Linking } from 'react-native';
+import { Image, View, TextInput, Clipboard, Linking, TouchableOpacity } from 'react-native';
 import { Text, Button } from '../../../../library';
 import stylesProvider from './styles';
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
@@ -220,6 +220,8 @@ export class RecoverNearAccountComponent extends React.Component<
             this.state.isUsernameNotAvailable && !this.state.isInputValid;
         const isAuthorizing = this.state.isAuthorizing && this.state.isInputValid;
 
+        const isCreateAccountActive = !isChecking && isUsernameNotRegistered;
+
         return (
             <View style={styles.container}>
                 <View style={{ flex: 1 }}>
@@ -252,31 +254,48 @@ export class RecoverNearAccountComponent extends React.Component<
                         </View>
 
                         {!isAuthorizing && (
-                            <Text
-                                style={[
-                                    styles.infoText,
-                                    (isUsernameNotRegistered ||
-                                        isInvalidUsername ||
-                                        isUsernameNotAvailable) &&
-                                        styles.errorText,
-                                    isChecking && styles.checkingText,
-                                    this.state.isInputValid && styles.congratsText
-                                ]}
+                            <TouchableOpacity
+                                onPress={() =>
+                                    NavigationService.navigate('CreateNearAccount', {
+                                        accountId: this.state.inputAccout
+                                    })
+                                }
+                                disabled={!isCreateAccountActive}
                             >
-                                {isChecking
-                                    ? translate('RecoverNearAccount.checking')
-                                    : isUsernameNotRegistered
-                                    ? translate('RecoverNearAccount.notRegistered')
-                                    : isInvalidUsername
-                                    ? translate('RecoverNearAccount.invalid')
-                                    : isUsernameNotAvailable
-                                    ? translate('RecoverNearAccount.notAvailable')
-                                    : this.state.isInputValid
-                                    ? translate('RecoverNearAccount.congrats', {
-                                          name: `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`
-                                      })
-                                    : ''}
-                            </Text>
+                                <Text>
+                                    <Text
+                                        style={[
+                                            styles.infoText,
+                                            (isUsernameNotRegistered ||
+                                                isInvalidUsername ||
+                                                isUsernameNotAvailable) &&
+                                                styles.errorText,
+                                            isChecking && styles.checkingText,
+                                            this.state.isInputValid && styles.congratsText
+                                        ]}
+                                    >
+                                        {isChecking
+                                            ? translate('RecoverNearAccount.checking')
+                                            : isUsernameNotRegistered
+                                            ? translate('RecoverNearAccount.notRegistered')
+                                            : isInvalidUsername
+                                            ? translate('RecoverNearAccount.invalid')
+                                            : isUsernameNotAvailable
+                                            ? translate('RecoverNearAccount.notAvailable')
+                                            : this.state.isInputValid
+                                            ? translate('RecoverNearAccount.congrats', {
+                                                  name: `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`
+                                              })
+                                            : ''}
+                                    </Text>
+
+                                    <Text style={[styles.infoText, styles.createHereText]}>
+                                        {isCreateAccountActive
+                                            ? ` ${translate('RecoverNearAccount.createHere')}`
+                                            : ''}
+                                    </Text>
+                                </Text>
+                            </TouchableOpacity>
                         )}
                     </View>
 

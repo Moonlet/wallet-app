@@ -14,8 +14,15 @@ import { PasswordModal } from '../../../../components/password-modal/password-mo
 import { Client as NearClient } from '../../../../core/blockchain/near/client';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
-import { INavigationProps } from '../../../../navigation/with-navigation-params';
+import {
+    INavigationProps,
+    withNavigationParams
+} from '../../../../navigation/with-navigation-params';
 import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../../core/constants/app';
+
+interface INavigationParams {
+    accountId?: string;
+}
 
 interface IReduxProps {
     createNearAccount: typeof createNearAccount;
@@ -45,22 +52,32 @@ const mapDispatchToProps = {
 const navigationOptions = () => ({ title: translate('CreateNearAccount.title') });
 
 export class CreateNearAccountComponent extends React.Component<
-    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    INavigationProps<INavigationParams> &
+        IReduxProps &
+        IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
     public static navigationOptions = navigationOptions;
 
     constructor(
-        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+        props: INavigationProps<INavigationParams> &
+            IReduxProps &
+            IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
         super(props);
         this.state = {
-            inputAccout: '',
+            inputAccout: props.accountId || '',
             isInputValid: false,
             isChecking: false,
             isUsernameNotAvailable: false,
             isInvalidUsername: false
         };
+    }
+
+    public componentDidMount() {
+        if (this.state.inputAccout !== '') {
+            this.checkAccountId(this.state.inputAccout);
+        }
     }
 
     private async checkAccountId(accountId: string) {
@@ -199,5 +216,6 @@ export class CreateNearAccountComponent extends React.Component<
 
 export const CreateNearAccountScreen = smartConnect(CreateNearAccountComponent, [
     connect(mapStateToProps, mapDispatchToProps),
-    withTheme(stylesProvider)
+    withTheme(stylesProvider),
+    withNavigationParams()
 ]);

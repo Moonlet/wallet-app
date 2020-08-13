@@ -752,17 +752,18 @@ export const deleteAccount = (
     await client.deleteAccount(accountId, 'novi.testnet', privateKey);
 };
 
-export const createAccount = (
-    blockchain: Blockchain,
-    newAccountId: string,
-    password: string
-) => async (dispatch: Dispatch<any>, getState: () => IReduxState) => {
+export const createNearAccount = (newAccountId: string, password: string) => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    await LoadingModal.open();
+
     const state = getState();
     const selectedWallet: IWalletState = getSelectedWallet(state);
     const hdWallet: IWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
         pass: password
     });
-    blockchain = Blockchain.NEAR; // TODO: fix this
+    const blockchain = Blockchain.NEAR;
 
     const chainId = getChainId(state, blockchain);
 
@@ -791,7 +792,10 @@ export const createAccount = (
             };
             dispatch(addAccount(selectedWallet.id, blockchain, account));
             dispatch(setSelectedAccount(account));
+
+            NavigationService.navigate('Dashboard', {});
         } else if (tx.status?.Failure) {
+            // TODO
             Alert.alert('Failed', 'Create account has failed!');
         } else {
             Alert.alert('Invalid Status', 'Create account has failed!');
@@ -800,8 +804,11 @@ export const createAccount = (
         Alert.alert('Create account has failed!', res?.message || res?.errorMessage || '');
     }
 
+    // remove this
     dispatch(disableCreateAccount());
     dispatch(disableRecoverAccount());
+
+    await LoadingModal.close();
 };
 
 export const changePIN = (newPassword: string, oldPassword: string) => async (

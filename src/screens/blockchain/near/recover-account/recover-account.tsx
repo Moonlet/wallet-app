@@ -6,11 +6,10 @@ import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-n
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
 import { translate } from '../../../../core/i18n';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { createAccount, addAccount, setSelectedAccount } from '../../../../redux/wallets/actions';
+import { addAccount, setSelectedAccount } from '../../../../redux/wallets/actions';
 import { IReduxState } from '../../../../redux/state';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
@@ -28,7 +27,6 @@ import { IconValues } from '../../../../components/icon/values';
 import { normalize, BASE_DIMENSION } from '../../../../styles/dimensions';
 
 export interface IReduxProps {
-    createAccount: typeof createAccount;
     chainId: ChainIdType;
     selectedWallet: IWalletState;
     addAccount: typeof addAccount;
@@ -61,7 +59,6 @@ const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
 };
 
 const mapDispatchToProps = {
-    createAccount,
     addAccount,
     setSelectedAccount,
     disableRecoverAccount

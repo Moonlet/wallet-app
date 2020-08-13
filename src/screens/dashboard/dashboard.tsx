@@ -454,7 +454,7 @@ export class DashboardScreenComponent extends React.Component<
                 : 'auto';
 
         // TODO
-        const isNearAddAccount = true;
+        const isNearAddAccount = false;
 
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>

@@ -429,7 +429,8 @@ export const translation: ITranslations = {
             notRegistered:
                 'Username not registered. If you want to use it, you need first to create it.',
             createHere: 'Create one here!',
-            invalid: 'Username CANNOT contain characters "@" or "."'
+            invalid: 'Username CANNOT contain characters "@" or "."',
+            notAvailable: 'Username not available. Try something else.'
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',

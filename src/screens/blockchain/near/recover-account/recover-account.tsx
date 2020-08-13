@@ -40,6 +40,7 @@ interface IState {
     isInputValid: boolean;
     isChecking: boolean;
     isUsernameNotRegistered: boolean;
+    isUsernameNotAvailable: boolean;
     isInvalidUsername: boolean;
     isAuthorizing: boolean;
     recoveredAccount: IAccountState;
@@ -76,6 +77,7 @@ export class RecoverNearAccountComponent extends React.Component<
             isInputValid: false,
             isChecking: false,
             isUsernameNotRegistered: false,
+            isUsernameNotAvailable: false,
             isInvalidUsername: false,
             isAuthorizing: false,
             recoveredAccount: undefined
@@ -99,6 +101,7 @@ export class RecoverNearAccountComponent extends React.Component<
                 isInputValid: false,
                 isInvalidUsername: true,
                 isUsernameNotRegistered: false,
+                isUsernameNotAvailable: false,
                 isChecking: false
             });
             return;
@@ -115,13 +118,23 @@ export class RecoverNearAccountComponent extends React.Component<
                     isInputValid: true,
                     isInvalidUsername: false,
                     isUsernameNotRegistered: false,
+                    isUsernameNotAvailable: false,
+                    isChecking: false
+                });
+            } else if (account.exists === false && account.valid === true) {
+                this.setState({
+                    isInputValid: false,
+                    isInvalidUsername: false,
+                    isUsernameNotRegistered: true,
+                    isUsernameNotAvailable: false,
                     isChecking: false
                 });
             } else {
                 this.setState({
                     isInputValid: false,
                     isInvalidUsername: false,
-                    isUsernameNotRegistered: true,
+                    isUsernameNotRegistered: false,
+                    isUsernameNotAvailable: true,
                     isChecking: false
                 });
             }
@@ -129,9 +142,12 @@ export class RecoverNearAccountComponent extends React.Component<
             this.setState({
                 isInputValid: false,
                 isInvalidUsername: false,
-                isUsernameNotRegistered: true,
+                isUsernameNotRegistered: false,
+                isUsernameNotAvailable: true,
                 isChecking: false
             });
+
+            SentryCaptureException(new Error(JSON.stringify(error)));
         }
     }
 
@@ -200,6 +216,8 @@ export class RecoverNearAccountComponent extends React.Component<
         const isUsernameNotRegistered =
             this.state.isUsernameNotRegistered && !this.state.isInputValid;
         const isInvalidUsername = this.state.isInvalidUsername && !this.state.isInputValid;
+        const isUsernameNotAvailable =
+            this.state.isUsernameNotAvailable && !this.state.isInputValid;
         const isAuthorizing = this.state.isAuthorizing && this.state.isInputValid;
 
         return (
@@ -237,8 +255,10 @@ export class RecoverNearAccountComponent extends React.Component<
                             <Text
                                 style={[
                                     styles.infoText,
-                                    isUsernameNotRegistered && styles.errorText,
-                                    isInvalidUsername && styles.errorText,
+                                    (isUsernameNotRegistered ||
+                                        isInvalidUsername ||
+                                        isUsernameNotAvailable) &&
+                                        styles.errorText,
                                     isChecking && styles.checkingText,
                                     this.state.isInputValid && styles.congratsText
                                 ]}
@@ -249,6 +269,8 @@ export class RecoverNearAccountComponent extends React.Component<
                                     ? translate('RecoverNearAccount.notRegistered')
                                     : isInvalidUsername
                                     ? translate('RecoverNearAccount.invalid')
+                                    : isUsernameNotAvailable
+                                    ? translate('RecoverNearAccount.notAvailable')
                                     : this.state.isInputValid
                                     ? translate('RecoverNearAccount.congrats', {
                                           name: `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`

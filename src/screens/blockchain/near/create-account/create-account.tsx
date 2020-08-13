@@ -1,124 +1,105 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity } from 'react-native';
+import { Image, View, TextInput } from 'react-native';
 import { Text, Button } from '../../../../library';
 import stylesProvider from './styles';
-import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
 import { translate } from '../../../../core/i18n';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+// import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { createAccount, addAccount } from '../../../../redux/wallets/actions';
 import { IReduxState } from '../../../../redux/state';
-import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
-import { Client as NearClient } from '../../../../core/blockchain/near/client';
-import { Icon } from '../../../../components/icon/icon';
+// import { Client as NearClient } from '../../../../core/blockchain/near/client';
 import { getChainId } from '../../../../redux/preferences/selectors';
-import { normalize } from '../../../../styles/dimensions';
-import { IconValues } from '../../../../components/icon/values';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
-import {
-    disableCreateAccount,
-    enableRecoverAccount
-} from '../../../../redux/ui/screens/dashboard/actions';
+import { INavigationProps } from '../../../../navigation/with-navigation-params';
 
 export interface IReduxProps {
     createAccount: typeof createAccount;
     chainId: ChainIdType;
     addAccount: typeof addAccount;
-    disableCreateAccount: typeof disableCreateAccount;
-    enableRecoverAccount: typeof enableRecoverAccount;
-}
-
-export interface IExternalProps {
-    blockchain: Blockchain;
-    navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
 export interface IState {
     inputAccout: string;
     isInputValid: boolean;
-    showInputInfo: boolean;
-    isCreate: boolean;
-    isLoading: boolean;
-    errorMessage: string;
+    isChecking: boolean;
+    isUsernameNotAvailable: boolean;
+    isInvalidUsername: boolean;
 }
 
-const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+const mapStateToProps = (state: IReduxState) => {
     return {
-        chainId: getChainId(state, ownProps.blockchain)
+        chainId: getChainId(state, Blockchain.NEAR)
     };
 };
 
 const mapDispatchToProps = {
     createAccount,
-    addAccount,
-    disableCreateAccount,
-    enableRecoverAccount
+    addAccount
 };
 
+export const navigationOptions = () => ({ title: translate('CreateNearAccount.title') });
+
 export class CreateNearAccountComponent extends React.Component<
-    IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
+    public static navigationOptions = navigationOptions;
+
     constructor(
-        props: IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
         super(props);
         this.state = {
             inputAccout: '',
             isInputValid: false,
-            showInputInfo: false,
-            isCreate: false,
-            isLoading: false,
-            errorMessage: undefined
+            isChecking: false,
+            isUsernameNotAvailable: false,
+            isInvalidUsername: false
         };
     }
 
-    public checkAccountIdValid = async () => {
-        if (this.props.blockchain === Blockchain.NEAR) {
-            const blockchainInstance = getBlockchain(this.props.blockchain);
-            const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
+    public async checkAccountIdValid() {
+        // TODO
 
-            try {
-                const account = await client.getAccount(this.state.inputAccout);
+        // const blockchainInstance = getBlockchain(Blockchain.NEAR);
+        // const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
 
-                if (account.exists === true && account.valid === true) {
-                    this.setState({
-                        isCreate: false,
-                        isInputValid: false,
-                        showInputInfo: true,
-                        errorMessage: translate('CreateAccount.taken')
-                    });
-                } else if (account.exists === false && account.valid === false) {
-                    this.setState({
-                        isCreate: false,
-                        isInputValid: false,
-                        showInputInfo: true,
-                        errorMessage: translate('CreateAccount.invalid')
-                    });
-                } else {
-                    this.setState({
-                        isCreate: true,
-                        isInputValid: true,
-                        showInputInfo: true
-                    });
-                }
-            } catch (error) {
-                this.setState({ isInputValid: false, showInputInfo: true });
-            }
+        try {
+            // const account = await client.getAccount(this.state.inputAccout);
+            // if (account.exists === true && account.valid === true) {
+            //     this.setState({
+            //         isInputValid: false,
+            //         showInputInfo: true,
+            //         errorMessage: translate('CreateNearAccount.taken')
+            //     });
+            // } else if (account.exists === false && account.valid === false) {
+            //     this.setState({
+            //         isInputValid: false,
+            //         showInputInfo: true,
+            //         errorMessage: translate('CreateNearAccount.invalid')
+            //     });
+            // } else {
+            //     this.setState({
+            //         isInputValid: true,
+            //         showInputInfo: true
+            //     });
+            // }
+        } catch (error) {
+            // this.setState({ isInputValid: false, showInputInfo: true });
         }
-    };
+    }
 
     private async createAccount() {
         try {
             const password = await PasswordModal.getPassword();
-            this.setState({ isLoading: true });
+            // start loading
+            // this.setState({ isLoading: true });
             this.props.createAccount(
-                this.props.blockchain,
+                Blockchain.NEAR,
                 `${this.state.inputAccout}.novi.testnet`,
                 password
             );
@@ -127,120 +108,85 @@ export class CreateNearAccountComponent extends React.Component<
         }
     }
 
-    public onPressClearInput = () =>
-        this.setState({
-            inputAccout: '',
-            isInputValid: false,
-            showInputInfo: false,
-            isCreate: false,
-            isLoading: false
-        });
-
     public render() {
         const { styles, theme } = this.props;
-        const isSuccess = this.state.isInputValid && this.state.showInputInfo;
-        const isErrorMessage = !this.state.isInputValid && this.state.showInputInfo;
 
-        if (this.state.isLoading) {
-            return <LoadingIndicator />;
-        } else {
-            return (
-                <View style={styles.container}>
-                    <Text style={styles.createText}>{translate('CreateAccount.createNear')}</Text>
+        const isChecking = this.state.isChecking && !this.state.isInputValid;
+        const isUsernameNotAvailable =
+            this.state.isUsernameNotAvailable && !this.state.isInputValid;
+        const isInvalidUsername = this.state.isInvalidUsername && !this.state.isInputValid;
+
+        return (
+            <View style={styles.container}>
+                <View style={{ flex: 1 }}>
+                    <Image
+                        source={require('../../../../assets/images/png/moonlet_space_gray.png')}
+                        style={styles.moonletImage}
+                    />
+
                     <Text style={styles.chooseUsernameText}>
-                        {translate('CreateAccount.chooseUsername')}
+                        {translate('CreateNearAccount.chooseUsername')}
                     </Text>
 
                     <View style={styles.inputContainer}>
                         <View style={styles.inputBox}>
                             <TextInput
-                                style={styles.input}
+                                style={styles.inputText}
                                 placeholderTextColor={theme.colors.textTertiary}
-                                placeholder={translate('CreateAccount.eg')}
+                                placeholder={translate('CreateNearAccount.eg')}
                                 autoCapitalize={'none'}
                                 autoCorrect={false}
                                 selectionColor={theme.colors.accent}
+                                returnKeyType="done"
                                 value={this.state.inputAccout}
                                 onChangeText={inputAccout =>
                                     this.setState({
-                                        inputAccout,
-                                        showInputInfo: false,
-                                        isCreate: false
+                                        inputAccout
                                     })
                                 }
                             />
-                            {this.state.inputAccout.length !== 0 && (
-                                <TouchableOpacity
-                                    testID="clear-address"
-                                    onPress={this.onPressClearInput}
-                                    style={[styles.rightAddressButton]}
-                                >
-                                    <Icon
-                                        name={IconValues.CLOSE}
-                                        size={normalize(16)}
-                                        style={styles.icon}
-                                    />
-                                </TouchableOpacity>
-                            )}
+
+                            <Text style={styles.domain}>{'.novi.testnet'}</Text>
                         </View>
 
                         <Text
                             style={[
-                                isSuccess && styles.congratsText,
-                                isErrorMessage && styles.invalidText
+                                styles.infoText,
+                                isChecking && styles.checkingText,
+                                isUsernameNotAvailable && styles.errorText,
+                                isInvalidUsername && styles.errorText,
+                                this.state.isInputValid && styles.congratsText
                             ]}
                         >
-                            {isSuccess
-                                ? translate('CreateAccount.congrats')
-                                : isErrorMessage
-                                ? translate('CreateAccount.errorMessage', {
-                                      message: this.state.errorMessage
+                            {isChecking
+                                ? translate('CreateNearAccount.checking')
+                                : isUsernameNotAvailable
+                                ? translate('CreateNearAccount.notAvailable')
+                                : isInvalidUsername
+                                ? translate('CreateNearAccount.invalid')
+                                : this.state.isInputValid
+                                ? translate('CreateNearAccount.congrats', {
+                                      name: this.state.inputAccout
                                   })
                                 : ''}
                         </Text>
                     </View>
-
-                    <Button
-                        style={styles.createButton}
-                        primary
-                        disabled={
-                            this.state.inputAccout.length === 0 ||
-                            (this.state.isCreate &&
-                                this.state.isInputValid === false &&
-                                this.state.showInputInfo)
-                        }
-                        onPress={() => {
-                            if (this.state.isCreate) {
-                                // create account
-                                this.createAccount();
-                            } else {
-                                // check is account name is valid (not already taken)
-                                this.checkAccountIdValid();
-                            }
-                        }}
-                    >
-                        {this.state.isCreate
-                            ? translate('App.labels.create')
-                            : translate('App.labels.check')}
-                    </Button>
-
-                    <TouchableOpacity
-                        onPress={() => {
-                            this.props.disableCreateAccount();
-                            this.props.enableRecoverAccount();
-                        }}
-                    >
-                        <Text style={styles.recoverAccount}>
-                            {translate('CreateAccount.recoverAccount')}
-                        </Text>
-                    </TouchableOpacity>
                 </View>
-            );
-        }
+
+                <Button
+                    wrapperStyle={styles.createButton}
+                    primary
+                    disabled={!this.state.isInputValid}
+                    onPress={() => this.createAccount()}
+                >
+                    {translate('CreateNearAccount.title')}
+                </Button>
+            </View>
+        );
     }
 }
 
-export const CreateNearAccountScreen = smartConnect<IExternalProps>(CreateNearAccountComponent, [
+export const CreateNearAccountScreen = smartConnect(CreateNearAccountComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

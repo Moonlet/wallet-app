@@ -58,6 +58,7 @@ import { RedelegateConfirm } from '../screens/pos-actions/pos-action-redelegate/
 import { NotificationsScreen } from '../screens/notifications/notifications';
 import { CreateNearAccountScreen } from '../screens/blockchain/near/create-account/create-account';
 import { RecoverNearAccountScreen } from '../screens/blockchain/near/recover-account/recover-account';
+import { AddNearAccountScreen } from '../screens/blockchain/near/add-account/add-account';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -171,6 +172,9 @@ export const WalletNavigation = createStackNavigator(
         },
         Notifications: {
             screen: NotificationsScreen
+        },
+        AddNearAccount: {
+            screen: AddNearAccountScreen
         },
         CreateNearAccount: {
             screen: CreateNearAccountScreen

@@ -399,19 +399,16 @@ export const translation: ITranslations = {
             noGiveUp: `But don't give up – check the search string you entered and give it one more try`,
             searchValidators: 'Search for validators'
         },
-        CreateAccount: {
-            createAccount: 'Create new account!',
-            chooseUsr: 'Just choose a username',
-            createNear: 'Create NEAR account!',
-            chooseUsername: 'Just choose a username and you’re all set.',
-            congrats: 'Congrats! This name is available.',
+        CreateNearAccount: {
+            title: 'Create username',
+            chooseUsername: 'Choose a username and you’re all set.',
             eg: 'e.g. johndoe',
-            errorMessage: 'Username is {{message}}. Try something else.',
-            taken: 'taken',
-            invalid: 'invalid',
-            recoverAccount: 'Already have an account name? Recover it here'
+            checking: 'Checking availability ...',
+            notAvailable: 'Username not available. Try something else.',
+            invalid: 'Username CANNOT contain characters "@" or "."',
+            congrats: 'Congrats! {{name}} is available.'
         },
-        RecoverAccount: {
+        RecoverNearAccount: {
             title: 'Recover NEAR account name!',
             recoverNear: 'Recover NEAR account!',
             chooseUsername: 'Enter your account username.',

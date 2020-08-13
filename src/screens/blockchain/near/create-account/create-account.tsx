@@ -1,29 +1,29 @@
 import React from 'react';
 import { View, TextInput, TouchableOpacity } from 'react-native';
-import { Text, Button } from '../../library';
+import { Text, Button } from '../../../../library';
 import stylesProvider from './styles';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
-import { Blockchain, ChainIdType } from '../../core/blockchain/types';
-import { translate } from '../../core/i18n';
-import { withTheme, IThemeProps } from '../../core/theme/with-theme';
+import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
+import { translate } from '../../../../core/i18n';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 
-import { smartConnect } from '../../core/utils/smart-connect';
+import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { createAccount, addAccount } from '../../redux/wallets/actions';
-import { IReduxState } from '../../redux/state';
-import { LoadingIndicator } from '../loading-indicator/loading-indicator';
-import { PasswordModal } from '../password-modal/password-modal';
-import { Client as NearClient } from '../../core/blockchain/near/client';
-import { Icon } from '../icon/icon';
-import { getChainId } from '../../redux/preferences/selectors';
-import { normalize } from '../../styles/dimensions';
-import { IconValues } from '../icon/values';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { createAccount, addAccount } from '../../../../redux/wallets/actions';
+import { IReduxState } from '../../../../redux/state';
+import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
+import { PasswordModal } from '../../../../components/password-modal/password-modal';
+import { Client as NearClient } from '../../../../core/blockchain/near/client';
+import { Icon } from '../../../../components/icon/icon';
+import { getChainId } from '../../../../redux/preferences/selectors';
+import { normalize } from '../../../../styles/dimensions';
+import { IconValues } from '../../../../components/icon/values';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import {
     disableCreateAccount,
     enableRecoverAccount
-} from '../../redux/ui/screens/dashboard/actions';
+} from '../../../../redux/ui/screens/dashboard/actions';
 
 export interface IReduxProps {
     createAccount: typeof createAccount;
@@ -60,7 +60,7 @@ const mapDispatchToProps = {
     enableRecoverAccount
 };
 
-export class AccountCreateComponent extends React.Component<
+export class CreateNearAccountComponent extends React.Component<
     IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
@@ -117,7 +117,11 @@ export class AccountCreateComponent extends React.Component<
         try {
             const password = await PasswordModal.getPassword();
             this.setState({ isLoading: true });
-            this.props.createAccount(this.props.blockchain, this.state.inputAccout, password);
+            this.props.createAccount(
+                this.props.blockchain,
+                `${this.state.inputAccout}.novi.testnet`,
+                password
+            );
         } catch (err) {
             SentryCaptureException(new Error(JSON.stringify(err)));
         }
@@ -236,7 +240,7 @@ export class AccountCreateComponent extends React.Component<
     }
 }
 
-export const AccountCreate = smartConnect<IExternalProps>(AccountCreateComponent, [
+export const CreateNearAccountScreen = smartConnect<IExternalProps>(CreateNearAccountComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

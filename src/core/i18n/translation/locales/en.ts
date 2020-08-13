@@ -530,6 +530,11 @@ export const translation: ITranslations = {
             nextEpochText: 'until next epoch',
             claimText: 'Claim your rewards now',
             withdrawText: 'Withdraw your {{coin}} now'
+        },
+        AddNearAccount: {
+            title: 'Create or recover a NEAR username!',
+            recoverUsername: 'Recover existing username',
+            createUsername: 'Create a new username'
         }
     },
     plural: (n: number, ord?: boolean) => {

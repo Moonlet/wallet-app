@@ -68,6 +68,7 @@ import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { startNotificationsHandlers } from '../../notifications/actions';
 import { ApiClient } from '../../../core/utils/api-client/api-client';
+import { Client as NearClient } from '../../../core/blockchain/near/client';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -727,6 +728,28 @@ export const addTokenToAccount = (
         data: { walletId: selectedWallet.id, account, token, chainId: chainIdValue }
     });
     getBalance(account.blockchain, account.address, undefined, true)(dispatch, getState);
+};
+
+export const deleteAccount = (
+    blockchain: Blockchain,
+    accountId: string,
+    accountIndex: number,
+    password: string
+) => async (dispatch: Dispatch<any>, getState: () => IReduxState) => {
+    const state = getState();
+    const selectedWallet: IWalletState = getSelectedWallet(state);
+
+    const hdWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
+        pass: password
+    });
+
+    const privateKey = hdWallet.getPrivateKey(blockchain, accountIndex);
+
+    const chainId = getChainId(state, blockchain);
+    const client = getBlockchain(blockchain).getClient(chainId) as NearClient;
+
+    // TODO: update beneficiaryId account
+    await client.deleteAccount(accountId, 'novi.testnet', privateKey);
 };
 
 export const createAccount = (

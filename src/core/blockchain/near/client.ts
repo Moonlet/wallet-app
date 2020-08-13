@@ -6,6 +6,9 @@ import { NameService } from './name-service';
 import { INearAccount } from '.';
 import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
+import { createTransaction, signTransaction, deleteAccount } from 'near-api-js/lib/transaction';
+import { KeyPair, serialize } from 'near-api-js/lib/utils';
+import sha256 from 'js-sha256';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -72,6 +75,10 @@ export class Client extends BlockchainGenericClient {
         };
     }
 
+    /**
+     * Get Account
+     * @param accountId
+     */
     public async getAccount(accountId: string): Promise<INearAccount> {
         try {
             const res = await this.http.jsonRpc('query', {
@@ -122,6 +129,11 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
+    /**
+     * Recover Account
+     * @param accountId
+     * @param publicKey
+     */
     public async recoverAccount(accountId: string, publicKey: string): Promise<any> {
         const res = await this.http.jsonRpc('query', {
             request_type: 'view_access_key',
@@ -131,5 +143,49 @@ export class Client extends BlockchainGenericClient {
         });
 
         return res.result;
+    }
+
+    /**
+     * Delete Account
+     * @param accountId
+     * @param beneficiaryId
+     * @param senderPrivateKey
+     */
+    public async deleteAccount(accountId: string, beneficiaryId: string, senderPrivateKey: string) {
+        const status = await this.http.jsonRpc('status');
+
+        // transaction actions
+        const actions = [deleteAccount(beneficiaryId)];
+
+        // setup KeyPair
+        const keyPair = KeyPair.fromString(senderPrivateKey);
+
+        let nonce = await this.getNonce(accountId, keyPair.getPublicKey().toString());
+
+        // create transaction
+        const tx = createTransaction(
+            accountId,
+            keyPair.getPublicKey(),
+            accountId,
+            ++nonce,
+            actions,
+            serialize.base_decode(status.result.sync_info.latest_block_hash)
+        );
+
+        // sign transaction
+        const signer: any = {
+            async signMessage(message) {
+                const hash = new Uint8Array(sha256.sha256.array(message));
+                return keyPair.sign(hash);
+            }
+        };
+        const signedTx = await signTransaction(tx, signer, accountId, this.chainId.toString());
+
+        // send transaction
+        const res = await this.http.jsonRpc('broadcast_tx_commit', [
+            Buffer.from(signedTx[1].encode()).toString('base64')
+        ]);
+
+        return res?.result || res?.error;
     }
 }

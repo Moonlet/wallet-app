@@ -1,31 +1,31 @@
 import React from 'react';
 import { View, TextInput, TouchableOpacity, Clipboard, Linking } from 'react-native';
-import { Text, Button } from '../../library';
+import { Text, Button } from '../../../../library';
 import stylesProvider from './styles';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
-import { Blockchain, ChainIdType } from '../../core/blockchain/types';
-import { translate } from '../../core/i18n';
-import { withTheme, IThemeProps } from '../../core/theme/with-theme';
+import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
+import { translate } from '../../../../core/i18n';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 
-import { smartConnect } from '../../core/utils/smart-connect';
+import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { createAccount, addAccount, setSelectedAccount } from '../../redux/wallets/actions';
-import { IReduxState } from '../../redux/state';
-import { LoadingIndicator } from '../loading-indicator/loading-indicator';
-import { PasswordModal } from '../password-modal/password-modal';
-import { Client as NearClient } from '../../core/blockchain/near/client';
-import { getChainId } from '../../redux/preferences/selectors';
-import { WalletFactory } from '../../core/wallet/wallet-factory';
-import { getSelectedWallet } from '../../redux/wallets/selectors';
-import { IWalletState } from '../../redux/wallets/state';
-import { IWallet } from '../../core/wallet/types';
-import { disableRecoverAccount } from '../../redux/ui/screens/dashboard/actions';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { createAccount, addAccount, setSelectedAccount } from '../../../../redux/wallets/actions';
+import { IReduxState } from '../../../../redux/state';
+import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
+import { PasswordModal } from '../../../../components/password-modal/password-modal';
+import { Client as NearClient } from '../../../../core/blockchain/near/client';
+import { getChainId } from '../../../../redux/preferences/selectors';
+import { WalletFactory } from '../../../../core/wallet/wallet-factory';
+import { getSelectedWallet } from '../../../../redux/wallets/selectors';
+import { IWalletState } from '../../../../redux/wallets/state';
+import { IWallet } from '../../../../core/wallet/types';
+import { disableRecoverAccount } from '../../../../redux/ui/screens/dashboard/actions';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import bind from 'bind-decorator';
-import Icon from '../icon/icon';
-import { IconValues } from '../icon/values';
-import { normalize, BASE_DIMENSION } from '../../styles/dimensions';
+import Icon from '../../../../components/icon/icon';
+import { IconValues } from '../../../../components/icon/values';
+import { normalize, BASE_DIMENSION } from '../../../../styles/dimensions';
 
 export interface IReduxProps {
     createAccount: typeof createAccount;
@@ -67,7 +67,7 @@ const mapDispatchToProps = {
     disableRecoverAccount
 };
 
-export class AccountRecoverComponent extends React.Component<
+export class RecoverNearAccountComponent extends React.Component<
     IReduxProps & IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
@@ -438,7 +438,7 @@ export class AccountRecoverComponent extends React.Component<
     }
 }
 
-export const AccountRecover = smartConnect<IExternalProps>(AccountRecoverComponent, [
+export const RecoverNearAccountScreen = smartConnect<IExternalProps>(RecoverNearAccountComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

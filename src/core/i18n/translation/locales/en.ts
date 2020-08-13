@@ -84,6 +84,8 @@ export const translation: ITranslations = {
                 redelegate: 'Redelegate',
                 reinvest: 'Reinvest',
                 refreshing: 'Refreshing',
+                remove: 'Remove',
+                removeAccount: 'Remove account',
                 reset: 'Reset',
                 resetAll: 'Reset all',
                 restake: 'Restake',
@@ -402,7 +404,8 @@ export const translation: ITranslations = {
         },
         AddAccount: {
             title: 'Add account',
-            addNearAccount: 'Add a new NEAR account'
+            addNearAccount: 'Add a new NEAR account',
+            removeAccountConfirm: 'You’re about to remove {{name}} from Moonlet'
         },
         CreateNearAccount: {
             title: 'Create username',

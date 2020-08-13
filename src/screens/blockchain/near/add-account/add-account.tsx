@@ -1,19 +1,25 @@
 import React from 'react';
-// import { View, Image } from 'react-native';
-// import stylesProvider from './styles';
-// import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
-// import { Button, Text } from '../../../../library';
+import { View } from 'react-native';
+import stylesProvider from './styles';
+import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { AddNearAccount } from '../../../../components/blockchain/near/add-account/add-account';
+import { translate } from '../../../../core/i18n';
 
-export const AddNearAccountComponent = () =>
-    // props: IThemeProps<ReturnType<typeof stylesProvider>>
-    {
-        // const { styles } = props;
+const navigationOptions = () => ({ title: translate('AddAccount.title') });
 
-        return <AddNearAccount />;
-    };
+export const AddNearAccountComponent = (props: IThemeProps<ReturnType<typeof stylesProvider>>) => {
+    const { styles } = props;
+
+    return (
+        <View style={styles.container}>
+            <AddNearAccount />
+        </View>
+    );
+};
+
+AddNearAccountComponent.navigationOptions = navigationOptions;
 
 export const AddNearAccountScreen = smartConnect(AddNearAccountComponent, [
-    // withTheme(stylesProvider)
+    withTheme(stylesProvider)
 ]);

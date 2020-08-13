@@ -42,6 +42,9 @@ export default (theme: ITheme) =>
             alignItems: 'center',
             alignSelf: 'center'
         },
+        inputContainer: {
+            marginBottom: BASE_DIMENSION * 4
+        },
         inputBox: {
             height: BASE_DIMENSION * 5 + BASE_DIMENSION / 2,
             borderRadius: BORDER_RADIUS,
@@ -67,36 +70,6 @@ export default (theme: ITheme) =>
             color: theme.colors.negative
         },
         congratsText: {
-            color: theme.colors.accent
-        },
-
-        // TODO
-
-        invalidText: {
-            fontSize: normalizeFontAndLineHeight(15),
-            lineHeight: normalizeFontAndLineHeight(20),
-            color: theme.colors.error
-        },
-
-        inputContainer: {
-            marginBottom: BASE_DIMENSION * 4
-        },
-        // inputBox: {
-        //     height: BASE_DIMENSION * 5,
-        //     borderRadius: BORDER_RADIUS,
-        //     alignSelf: 'stretch',
-        //     backgroundColor: theme.colors.cardBackground,
-        //     paddingHorizontal: BASE_DIMENSION + BASE_DIMENSION / 2,
-        //     flexDirection: 'row',
-        //     justifyContent: 'space-between',
-        //     alignItems: 'center'
-        // },
-        // input: {
-        //     flex: 1,
-        //     color: theme.colors.text,
-        //     fontSize: normalizeFontAndLineHeight(15)
-        // },
-        icon: {
             color: theme.colors.accent
         }
     });

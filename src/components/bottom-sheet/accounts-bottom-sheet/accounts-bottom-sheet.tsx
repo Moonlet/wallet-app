@@ -6,23 +6,27 @@ import { smartConnect } from '../../../core/utils/smart-connect';
 import BottomSheet from 'reanimated-bottom-sheet';
 import { Text } from '../../../library';
 import { BottomSheetHeader } from '../header/header';
-import { IAccountState } from '../../../redux/wallets/state';
-import { setSelectedAccount, getBalance } from '../../../redux/wallets/actions';
+import { IAccountState, IWalletState } from '../../../redux/wallets/state';
+import { setSelectedAccount, getBalance, removeAccount } from '../../../redux/wallets/actions';
 import { IReduxState } from '../../../redux/state';
-import { getSelectedAccount, getAccounts } from '../../../redux/wallets/selectors';
+import {
+    getSelectedAccount,
+    getAccounts,
+    getSelectedWallet
+} from '../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
 import { formatAddress } from '../../../core/utils/format-address';
 import { Amount } from '../../amount/amount';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { calculateBalance } from '../../../core/utils/balance';
 import { translate } from '../../../core/i18n';
-import { enableCreateAccount } from '../../../redux/ui/screens/dashboard/actions';
 import { ListAccount } from '../../list-account/list-account';
 import { IExchangeRates } from '../../../redux/market/state';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { ChainIdType } from '../../../core/blockchain/types';
 import { IconValues } from '../../icon/values';
+import { NavigationService } from '../../../navigation/navigation-service';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -31,11 +35,12 @@ interface IExternalProps {
 export interface IReduxProps {
     setSelectedAccount: typeof setSelectedAccount;
     selectedAccount: IAccountState;
+    selectedWallet: IWalletState;
     getBalance: typeof getBalance;
     exchangeRates: IExchangeRates;
     accounts: IAccountState[];
     chainId: ChainIdType;
-    enableCreateAccount: typeof enableCreateAccount;
+    removeAccount: typeof removeAccount;
 }
 const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
@@ -43,13 +48,14 @@ const mapStateToProps = (state: IReduxState) => {
         selectedAccount,
         exchangeRates: state.market.exchangeRates,
         accounts: selectedAccount ? getAccounts(state, selectedAccount.blockchain) : [],
-        chainId: getChainId(state, selectedAccount.blockchain)
+        chainId: getChainId(state, selectedAccount.blockchain),
+        selectedWallet: getSelectedWallet(state)
     };
 };
 const mapDispatchToProps = {
     setSelectedAccount,
     getBalance,
-    enableCreateAccount
+    removeAccount
 };
 
 export class AccountsBottomSheetComponent extends React.Component<
@@ -72,21 +78,6 @@ export class AccountsBottomSheetComponent extends React.Component<
     }
 
     public renderBottomSheetContent() {
-        const createAccountLabel = (
-            <View>
-                <View style={this.props.styles.firstRow}>
-                    <Text style={this.props.styles.accountName}>
-                        {translate('CreateAccount.createAccount')}
-                    </Text>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'baseline' }}>
-                    <Text style={this.props.styles.fistAmountText}>
-                        {translate('CreateAccount.chooseUsr')}
-                    </Text>
-                </View>
-            </View>
-        );
-
         const blockchainConfig = getBlockchain(this.props.selectedAccount.blockchain).config;
 
         return (
@@ -158,6 +149,11 @@ export class AccountsBottomSheetComponent extends React.Component<
                                 onPress={() => {
                                     this.props.onClose();
                                     this.props.setSelectedAccount(account);
+                                    // this.props.removeAccount(
+                                    //     this.props.selectedWallet.id,
+                                    //     blockchain,
+                                    //     account
+                                    // );
                                 }}
                             />
                         );
@@ -168,10 +164,16 @@ export class AccountsBottomSheetComponent extends React.Component<
                             <ListAccount
                                 leftIcon={blockchainConfig.iconComponent}
                                 isCreate
-                                label={createAccountLabel}
+                                label={
+                                    <View style={this.props.styles.firstRow}>
+                                        <Text style={this.props.styles.accountName}>
+                                            {translate('AddAccount.addNearAccount')}
+                                        </Text>
+                                    </View>
+                                }
                                 onPress={() => {
                                     this.props.onClose();
-                                    this.props.enableCreateAccount();
+                                    NavigationService.navigate('AddNearAccount', {});
                                 }}
                             />
                         )}

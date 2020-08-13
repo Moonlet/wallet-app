@@ -453,8 +453,9 @@ export class DashboardScreenComponent extends React.Component<
                     : 'calc(100vh - 122px)'
                 : 'auto';
 
-        // TODO
-        const isNearAddAccount = false;
+        const isNearAddAccount =
+            this.props.selectedBlockchain === Blockchain.NEAR &&
+            this.props.selectedBlockchainAccounts.length === 0;
 
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>

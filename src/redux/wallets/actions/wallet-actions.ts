@@ -69,6 +69,7 @@ import { captureException as SentryCaptureException } from '@sentry/react-native
 import { startNotificationsHandlers } from '../../notifications/actions';
 import { ApiClient } from '../../../core/utils/api-client/api-client';
 import { Client as NearClient } from '../../../core/blockchain/near/client';
+import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../core/constants/app';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -748,8 +749,7 @@ export const deleteAccount = (
     const chainId = getChainId(state, blockchain);
     const client = getBlockchain(blockchain).getClient(chainId) as NearClient;
 
-    // TODO: update beneficiaryId account
-    await client.deleteAccount(accountId, 'novi.testnet', privateKey);
+    await client.deleteNearAccount(accountId, NEAR_TESTNET_MASTER_ACCOUNT, privateKey);
 };
 
 export const createNearAccount = (newAccountId: string, password: string) => async (

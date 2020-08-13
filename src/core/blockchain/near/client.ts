@@ -134,7 +134,7 @@ export class Client extends BlockchainGenericClient {
      * @param accountId
      * @param publicKey
      */
-    public async recoverAccount(accountId: string, publicKey: string): Promise<any> {
+    public async viewAccountAccessKey(accountId: string, publicKey: string): Promise<any> {
         const res = await this.http.jsonRpc('query', {
             request_type: 'view_access_key',
             finality: 'final',
@@ -151,7 +151,11 @@ export class Client extends BlockchainGenericClient {
      * @param beneficiaryId
      * @param senderPrivateKey
      */
-    public async deleteAccount(accountId: string, beneficiaryId: string, senderPrivateKey: string) {
+    public async deleteNearAccount(
+        accountId: string,
+        beneficiaryId: string,
+        senderPrivateKey: string
+    ) {
         const status = await this.http.jsonRpc('status');
 
         // transaction actions

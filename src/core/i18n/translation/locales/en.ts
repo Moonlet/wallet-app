@@ -10,6 +10,7 @@ export const translation: ITranslations = {
                 account: 'Account',
                 accounts: 'Accounts',
                 activate: 'Activate',
+                add: 'Add',
                 addToken: 'Add token',
                 advanced: 'Advanced',
                 advancedSetup: 'Advanced setup',
@@ -399,6 +400,10 @@ export const translation: ITranslations = {
             noGiveUp: `But don't give up – check the search string you entered and give it one more try`,
             searchValidators: 'Search for validators'
         },
+        AddAccount: {
+            title: 'Add account',
+            addNearAccount: 'Add a new NEAR account'
+        },
         CreateNearAccount: {
             title: 'Create username',
             chooseUsername: 'Choose a username and you’re all set.',
@@ -409,21 +414,19 @@ export const translation: ITranslations = {
             congrats: 'Congrats! {{name}} is available.'
         },
         RecoverNearAccount: {
-            title: 'Recover NEAR account name!',
-            recoverNear: 'Recover NEAR account!',
-            chooseUsername: 'Enter your account username.',
-            invalidUsername: 'Username has not been found. Try something else.',
-            congrats: 'Congrats! This account is valid.',
-            recoverPublicKey:
-                'This account has been created using another wallet. Click here to recover!',
-            recoverPKTitle: 'Click here to give Moonlet\naccess to you NEAR account.',
-            copyLink: 'Copy link',
-            confirmRecover: 'Recover your old user name',
-            invalidUserPublicKey: 'Please try again adding the access key!',
-            publicKey: 'Public Key',
-            pkText: 'use the public key to recover account name',
-            userName: 'User Name',
-            userNameText: 'check if account name was registered'
+            title: 'Recover username',
+            authMoonletUserAccount:
+                'Authorize Moonlet to use your existing username for this account',
+            eg: 'e.g. johndoe',
+            copyAuthLink: 'Copy authorization link',
+            authMoonlet: 'Authorize Moonlet',
+            congrats: 'Congrats! {{name}} is registered. Please authorize Moonlet to use it.',
+            authProgress: 'Authorization in progress ...',
+            checking: 'Checking availability ...',
+            notRegistered:
+                'Username not registered. If you want to use it, you need first to create it.',
+            createHere: 'Create one here!',
+            invalid: 'Username CANNOT contain characters "@" or "."'
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',

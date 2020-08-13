@@ -15,16 +15,15 @@ import { Client as NearClient } from '../../../../core/blockchain/near/client';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
+import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../../core/constants/app';
 
-const MASTER_ACCOUNT = 'novi.testnet';
-
-export interface IReduxProps {
+interface IReduxProps {
     createNearAccount: typeof createNearAccount;
     chainId: ChainIdType;
     addAccount: typeof addAccount;
 }
 
-export interface IState {
+interface IState {
     inputAccout: string;
     isInputValid: boolean;
     isChecking: boolean;
@@ -43,7 +42,7 @@ const mapDispatchToProps = {
     addAccount
 };
 
-export const navigationOptions = () => ({ title: translate('CreateNearAccount.title') });
+const navigationOptions = () => ({ title: translate('CreateNearAccount.title') });
 
 export class CreateNearAccountComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
@@ -74,6 +73,7 @@ export class CreateNearAccountComponent extends React.Component<
             this.setState({
                 isInputValid: false,
                 isInvalidUsername: true,
+                isUsernameNotAvailable: false,
                 isChecking: false
             });
             return;
@@ -83,16 +83,19 @@ export class CreateNearAccountComponent extends React.Component<
             const blockchainInstance = getBlockchain(Blockchain.NEAR);
             const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
 
-            const account = await client.getAccount(`${accountId}.${MASTER_ACCOUNT}`);
+            const account = await client.getAccount(`${accountId}.${NEAR_TESTNET_MASTER_ACCOUNT}`);
 
             if (account.exists === false && account.valid === true) {
                 this.setState({
                     isInputValid: true,
+                    isInvalidUsername: false,
+                    isUsernameNotAvailable: false,
                     isChecking: false
                 });
             } else {
                 this.setState({
                     isInputValid: false,
+                    isInvalidUsername: false,
                     isUsernameNotAvailable: true,
                     isChecking: false
                 });
@@ -100,6 +103,7 @@ export class CreateNearAccountComponent extends React.Component<
         } catch (error) {
             this.setState({
                 isInputValid: false,
+                isInvalidUsername: false,
                 isUsernameNotAvailable: true,
                 isChecking: false
             });
@@ -109,7 +113,10 @@ export class CreateNearAccountComponent extends React.Component<
     private async createAccount() {
         try {
             const password = await PasswordModal.getPassword();
-            this.props.createNearAccount(`${this.state.inputAccout}.${MASTER_ACCOUNT}`, password);
+            this.props.createNearAccount(
+                `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`,
+                password
+            );
         } catch (err) {
             SentryCaptureException(new Error(JSON.stringify(err)));
         }
@@ -149,7 +156,7 @@ export class CreateNearAccountComponent extends React.Component<
                                 onChangeText={inputAccout => this.checkAccountId(inputAccout)}
                             />
 
-                            <Text style={styles.domain}>{`.${MASTER_ACCOUNT}`}</Text>
+                            <Text style={styles.domain}>{`.${NEAR_TESTNET_MASTER_ACCOUNT}`}</Text>
                         </View>
 
                         <Text
@@ -170,7 +177,7 @@ export class CreateNearAccountComponent extends React.Component<
                                 ? translate('CreateNearAccount.invalid')
                                 : this.state.isInputValid
                                 ? translate('CreateNearAccount.congrats', {
-                                      name: `${this.state.inputAccout}.${MASTER_ACCOUNT}`
+                                      name: `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`
                                   })
                                 : ''}
                         </Text>

@@ -39,7 +39,7 @@ export const ListAccountComponent = (
             underlayColor={props.theme.colors.bottomSheetBackground}
         >
             <View style={[props.styles.card, props.selected && props.styles.selected, props.style]}>
-                {props.leftIcon && (
+                {props.leftIcon && !props.isCreate && (
                     <SmartImage
                         source={{ iconComponent: BlockchainIcon }}
                         style={{
@@ -55,7 +55,14 @@ export const ListAccountComponent = (
                     />
                 )}
 
-                <View style={props.styles.labelContainer}>{label}</View>
+                <View
+                    style={[
+                        props.styles.labelContainer,
+                        { alignItems: props.isCreate ? 'center' : 'flex-start' }
+                    ]}
+                >
+                    {label}
+                </View>
 
                 {props.rightIcon && !props.isCreate && (
                     <View style={props.styles.iconRightContainer}>
@@ -68,9 +75,11 @@ export const ListAccountComponent = (
                 )}
 
                 {props.isCreate && (
-                    <Button style={props.styles.createButton} disabled>
-                        {translate('App.labels.create')}
-                    </Button>
+                    <View>
+                        <Button style={props.styles.addButton} disabled>
+                            {translate('App.labels.add')}
+                        </Button>
+                    </View>
                 )}
             </View>
         </TouchableHighlight>

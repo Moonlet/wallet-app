@@ -83,7 +83,7 @@ export const config: IBlockchainConfig = {
             CELO: CELO_GOLD_TESTNET_ALFAJORES,
             cUSD: CELO_USD_TESTNET_ALFAJORES
         },
-        40121: {
+        62320: {
             CELO: CELO_GOLD_TESTNET_BAKLAVA,
             cUSD: CELO_USD_TESTNET_BAKLAVA
         }

@@ -14,7 +14,7 @@ export const networks: IBlockchainNetwork[] = [
     },
     {
         name: 'Baklava',
-        chainId: 40121,
+        chainId: 62320,
         mainNet: false,
         url: 'https://baklava-forno.celo-testnet.org/',
         explorer: {

@@ -6,8 +6,6 @@ import { TokenType, TokenScreenComponentType } from '../types/token';
 import { config } from './config';
 import abi from 'ethereumjs-abi';
 import { Ethereum } from '.';
-import { IAccountState } from '../../../redux/wallets/state';
-import { IPosWidget } from '../types/stats';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -31,10 +29,6 @@ export class ClientUtils implements IClientUtils {
 
             return this.buildTransactionFromBlockchain(res[0].result, res[1].result);
         });
-    }
-
-    getWidgets(account: IAccountState): Promise<IPosWidget[]> {
-        throw new Error('Method not implemented.');
     }
 
     async buildTransactionFromBlockchain(txInfo, txReceipt) {

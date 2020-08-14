@@ -64,7 +64,25 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
 
         const rawTx = txData.slice(0, 9).concat([signature.v, signature.r, signature.s]);
 
+        rawTx[9] = this.makeEven(this.trimLeadingZero(rawTx[9]));
+        rawTx[10] = this.makeEven(this.trimLeadingZero(rawTx[10]));
+        rawTx[11] = this.makeEven(this.trimLeadingZero(rawTx[11]));
+
         return encode(rawTx);
+    }
+
+    trimLeadingZero(hex: string) {
+        while (hex && hex.startsWith('0x0')) {
+            hex = '0x' + hex.slice(3);
+        }
+        return hex;
+    }
+
+    makeEven(hex: string) {
+        if (hex.length % 2 === 1) {
+            hex = hex.replace('0x', '0x0');
+        }
+        return hex;
     }
 
     public async buildPosTransaction(
@@ -77,32 +95,27 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
 
         switch (transactionType) {
             case PosBasicActionType.DELEGATE: {
-                const amountLocked: BigNumber = await client.contracts[
-                    Contracts.LOCKED_GOLD
-                ].getAccountNonvotingLockedGold(tx.account.address);
-
                 const isRegisteredAccount = await client.contracts[
                     Contracts.ACCOUNTS
                 ].isRegisteredAccount(tx.account.address);
 
                 if (!isRegisteredAccount) {
                     const txRegister: IPosTransaction = cloneDeep(tx);
-
-                    transactions.push(
-                        await client.contracts[Contracts.ACCOUNTS].createAccount(txRegister)
+                    const transaction = await client.contracts[Contracts.ACCOUNTS].createAccount(
+                        txRegister
                     );
+                    transaction.nonce = transaction.nonce + transactions.length;
+                    transactions.push(transaction);
                 }
-
+                const amountLocked: BigNumber = await client.contracts[
+                    Contracts.LOCKED_GOLD
+                ].getAccountNonvotingLockedGold(tx.account.address);
                 if (!amountLocked.isGreaterThanOrEqualTo(new BigNumber(tx.amount))) {
                     const txLock: IPosTransaction = cloneDeep(tx);
-
                     txLock.amount = new BigNumber(tx.amount).minus(amountLocked).toString();
 
-                    const transaction: IBlockchainTransaction = await client.contracts[
-                        Contracts.LOCKED_GOLD
-                    ].lock(txLock);
-                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
-
+                    const transaction = await client.contracts[Contracts.LOCKED_GOLD].lock(txLock);
+                    transaction.nonce = transaction.nonce + transactions.length;
                     transactions.push(transaction);
                 }
 
@@ -120,17 +133,60 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
 
                 break;
             }
-            case PosBasicActionType.ACTIVATE: {
-                // TODO - can use this once we have the groups that account has pending votes
-                // const groups = await this.contract.methods.getGroupsVotedForByAccount(account).call()
-                // const isActivatable = await Promise.all(
-                //   groups.map((g) => this.contract.methods.hasActivatablePendingVotes(account, g).call())
-                // )
-                // const groupsActivatable = groups.filter((_, i) => isActivatable[i])
-                // return groupsActivatable.map((g) => this._activate(g))
+            case PosBasicActionType.REDELEGATE: {
+                const txUnvote = cloneDeep(tx);
+                txUnvote.validators = [tx.extraFields.fromValidator];
+                const unvoteTransactions = await this.buildPosTransaction(
+                    txUnvote,
+                    PosBasicActionType.UNVOTE
+                );
 
-                const transaction = await client.contracts[Contracts.ELECTION].ACTIVATE(tx, '');
-                if (transaction) transactions.push(transaction);
+                transactions.push(...unvoteTransactions);
+
+                const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
+
+                for (const validator of tx.validators) {
+                    const txVote: IPosTransaction = cloneDeep(tx);
+                    txVote.amount = splitAmount.toString();
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.ELECTION
+                    ].vote(txVote, validator);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
+                }
+
+                break;
+            }
+            case PosBasicActionType.ACTIVATE: {
+                const groups = await client.contracts[
+                    Contracts.ELECTION
+                ].getGroupsVotedForByAccount(tx.account.address);
+
+                const promises = [];
+                for (const group of groups) {
+                    promises.push(
+                        client.contracts[Contracts.ELECTION].hasActivatablePendingVotes(
+                            tx.account.address,
+                            group
+                        )
+                    );
+                }
+
+                const res = await Promise.all(promises);
+
+                const txActivate: IPosTransaction = cloneDeep(tx);
+
+                for (let i = 0; i < res.length; i++) {
+                    if (res[i] === true) {
+                        const transaction = await client.contracts[Contracts.ELECTION].activate(
+                            txActivate,
+                            groups[i]
+                        );
+                        transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                        transactions.push(transaction);
+                    }
+                }
+
                 break;
             }
             case PosBasicActionType.UNLOCK: {
@@ -140,7 +196,8 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                 break;
             }
             case PosBasicActionType.UNVOTE: {
-                const groupAddress = tx.validators[0].id.toLowerCase();
+                const validator = tx.validators[0];
+                const groupAddress = validator.id.toLowerCase();
                 const amount = new BigNumber(tx.amount);
 
                 const groups = await client.contracts[
@@ -161,7 +218,11 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                     const transactionPending = await client.contracts[
                         Contracts.ELECTION
                     ].revokePending(txRevokePending, indexForGroup);
-                    if (transactionPending) transactions.push(transactionPending);
+
+                    if (transactionPending) {
+                        transactionPending.additionalInfo.validatorName = validator.name;
+                        transactions.push(transactionPending);
+                    }
                 }
 
                 if (pendingValue.lt(amount)) {
@@ -174,6 +235,7 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                     );
 
                     if (transaction) {
+                        transaction.additionalInfo.validatorName = validator.name;
                         transaction.nonce = transaction.nonce + transactions.length;
                         transactions.push(transaction);
                     }
@@ -188,6 +250,7 @@ export class CeloTransactionUtils extends EthereumTransactionUtils {
                     txWithdraw.extraFields.witdrawIndex
                 );
                 if (transaction) transactions.push(transaction);
+
                 break;
             }
         }

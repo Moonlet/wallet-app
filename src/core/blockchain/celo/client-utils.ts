@@ -2,50 +2,13 @@ import { IClientUtils } from '../types/client-utils';
 import { Client } from './client';
 import { IBlockchainTransaction, Blockchain, TransactionType } from '../types';
 import { ITokenConfigState } from '../../../redux/tokens/state';
-import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
-import { config, Contracts } from './config';
+import { TokenType, TokenScreenComponentType } from '../types/token';
+import { config } from './config';
 import abi from 'ethereumjs-abi';
 import { Celo } from '.';
-import { IAccountState } from '../../../redux/wallets/state';
-import { IPosWidget } from '../types/stats';
-import BigNumber from 'bignumber.js';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
-
-    async getWidgets(account: IAccountState): Promise<IPosWidget[]> {
-        const widgets: IPosWidget[] = [];
-
-        // TODO - call api for after is completed
-
-        const nonVotingAmount: BigNumber = await this.client.contracts[
-            Contracts.LOCKED_GOLD
-        ].getAccountNonvotingLockedGold(account.address);
-
-        if (nonVotingAmount.isGreaterThan(new BigNumber(0))) {
-            const widget: IPosWidget = {
-                type: PosBasicActionType.ACTIVATE,
-                value: nonVotingAmount.toString(),
-                timestamp: '1592652996' // TODO - get time until next epoch
-            };
-            widgets.push(widget);
-        }
-
-        const pendingWithdrawals = await this.client.contracts[
-            Contracts.LOCKED_GOLD
-        ].getPendingWithdrawals(account.address);
-
-        pendingWithdrawals.map(async (pendingWithdrawal, index) => {
-            const widget: IPosWidget = {
-                type: PosBasicActionType.WITHDRAW,
-                value: pendingWithdrawal.value.toString(),
-                timestamp: pendingWithdrawal.time
-            };
-            widgets.push(widget);
-        });
-
-        return widgets;
-    }
 
     async getTransaction(hash: string): Promise<IBlockchainTransaction> {
         const rpcCalls = [
@@ -126,7 +89,7 @@ export class ClientUtils implements IClientUtils {
         });
 
         if (!(token && token.name && token.symbol)) {
-            return config.tokens.cGLD;
+            return config.tokens.CELO;
         }
 
         token.type = TokenType.ERC20;

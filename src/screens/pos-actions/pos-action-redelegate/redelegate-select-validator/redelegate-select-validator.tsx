@@ -30,7 +30,7 @@ import { PrimaryCtaField } from '../../../../components/bottom-cta/primary-cta-f
 import { AmountCtaField } from '../../../../components/bottom-cta/amount-cta-field/amount-cta-field';
 import {
     navigateToEnterAmountStep,
-    DELEGATE_ENTER_AMOUNT
+    REDELEGATE_ENTER_AMOUNT
 } from '../../../../redux/ui/screens/posActions/actions';
 import { Icon } from '../../../../components/icon/icon';
 import { IconValues } from '../../../../components/icon/values';
@@ -58,7 +58,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         chainId,
-        allValidators: getValidators(state, ownProps.blockchain, chainId, true).filter(
+        allValidators: getValidators(state, ownProps.blockchain, chainId).filter(
             el => el.id !== ownProps.validators[0].id
         )
     };
@@ -80,7 +80,7 @@ interface IState {
     headerSteps: IHeaderStep[];
     nrValidators: number;
     validatorsList: IValidator[];
-    redelegateFromValidator: IValidator;
+    fromValidator: IValidator;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -119,7 +119,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                 props.allValidators.length > 0
                     ? props.allValidators.slice(0, 1)
                     : props.allValidators,
-            redelegateFromValidator: props.validators.length ? props.validators[0] : undefined
+            fromValidator: props.validators.length ? props.validators[0] : undefined
         };
     }
 
@@ -138,14 +138,15 @@ export class RedelegateSelectValidatorComponent extends React.Component<
     }
 
     private renderValidatorList() {
-        const { styles } = this.props;
-        const blockchainInstance = getBlockchain(this.props.blockchain);
+        const { styles, blockchain, token } = this.props;
+        const blockchainInstance = getBlockchain(blockchain);
         const config = blockchainInstance.config;
-        const validator = this.state.redelegateFromValidator;
+        const validator = this.state.fromValidator;
         const maximumNumberOfValidatorsReached =
             blockchainInstance.config.ui.validator.maximumNumberOfValidators &&
             blockchainInstance.config.ui.validator.maximumNumberOfValidators <=
                 this.state.nrValidators;
+        const tokenConfig = getTokenConfig(blockchain, token.symbol);
 
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
@@ -194,9 +195,15 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     leftSmallLabel={validator.rank}
                     leftSubLabel={validator.website}
                     rightTitle={config.ui.validator.amountCardLabel}
-                    rightSubtitle={formatNumber(new BigNumber(validator.amountDelegated), {
-                        currency: config.coin
-                    })}
+                    rightSubtitle={formatNumber(
+                        blockchainInstance.account.amountFromStd(
+                            new BigNumber(validator.amountDelegated.active),
+                            tokenConfig.decimals
+                        ),
+                        {
+                            currency: blockchainInstance.config.coin
+                        }
+                    )}
                     actionType={CardActionType.DEFAULT}
                     bottomStats={validator.topStats}
                     actionTypeSelected={validator.actionTypeSelected || false}
@@ -211,6 +218,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                 <ValidatorsList
                     validators={this.state.validatorsList}
                     blockchain={this.props.blockchain}
+                    token={this.props.token}
                     redelegate={{
                         validator: this.props.validators[0],
                         color: this.props.theme.colors.labelRedelegate
@@ -244,7 +252,8 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                         selectedValidators,
                         this.props.actionText,
                         'RedelegateEnterAmount',
-                        DELEGATE_ENTER_AMOUNT
+                        REDELEGATE_ENTER_AMOUNT,
+                        this.state.fromValidator
                     );
                 }}
             >
@@ -252,7 +261,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     label={translate(this.props.actionText)}
                     labelColor={this.props.theme.colors.labelRedelegate}
                     action={translate('App.labels.from').toLowerCase()}
-                    value={formatValidatorName(this.state.redelegateFromValidator.name, 15)}
+                    value={formatValidatorName(this.state.fromValidator.name, 15)}
                 />
                 <AmountCtaField
                     tokenConfig={tokenConfig}

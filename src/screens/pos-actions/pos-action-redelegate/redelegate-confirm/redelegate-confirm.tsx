@@ -13,7 +13,7 @@ import { getChainId } from '../../../../redux/preferences/selectors';
 import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { ConfirmComponent } from '../../components/confirm-component/confirm-component';
-import { delegate } from '../../../../redux/wallets/actions';
+import { redelegate } from '../../../../redux/wallets/actions';
 import { bind } from 'bind-decorator';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 
@@ -27,7 +27,8 @@ export interface IReduxProps {
     actionText: string;
     amount: string;
     feeOptions: IFeeOptions;
-    delegate: typeof delegate;
+    fromValidator: IValidator;
+    redelegate: typeof redelegate;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
@@ -42,12 +43,13 @@ export const mapStateToProps = (state: IReduxState) => {
         validators: state.ui.screens.posActions.delegateConfirm.validators,
         actionText: state.ui.screens.posActions.delegateConfirm.actionText,
         amount: state.ui.screens.posActions.delegateConfirm.amount,
-        feeOptions: state.ui.screens.posActions.delegateConfirm.feeOptions
+        feeOptions: state.ui.screens.posActions.delegateConfirm.feeOptions,
+        fromValidator: state.ui.screens.posActions.redelegateEnterAmount.fromValidator
     };
 };
 
 const mapDispatchToProps = {
-    delegate
+    redelegate
 };
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -88,7 +90,7 @@ export class RedelegateConfirmComponent extends React.Component<
                 translate('Password.subtitleSignTransaction'),
                 { sensitive: true, showCloseButton: true }
             );
-            this.props.delegate(
+            this.props.redelegate(
                 this.props.account,
                 amount,
                 this.props.validators,
@@ -96,8 +98,9 @@ export class RedelegateConfirmComponent extends React.Component<
                 feeOptions,
                 password,
                 this.props.navigation,
-                undefined
+                { fromValidator: this.props.fromValidator }
             );
+            this.props.navigation.navigate('Token');
         } catch {
             //
         }
@@ -110,6 +113,7 @@ export class RedelegateConfirmComponent extends React.Component<
                 chainId={this.props.chainId}
                 token={this.props.token}
                 validators={this.props.validators}
+                fromValidator={this.props.fromValidator}
                 actionText={this.props.actionText}
                 amount={this.props.amount}
                 bottomColor={this.props.theme.colors.labelRedelegate}

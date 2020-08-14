@@ -28,6 +28,9 @@ import { PasswordModal } from '../../../../../../../components/password-modal/pa
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
+import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
+import moment from 'moment';
 
 export interface IProps {
     accountIndex: number;
@@ -42,6 +45,7 @@ export interface IReduxProps {
     withdraw: typeof withdraw;
     activate: typeof activate;
     fetchValidators: typeof fetchValidators;
+    fetchDelegatedValidators: typeof fetchDelegatedValidators;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
@@ -54,7 +58,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
 const mapDispatchToProps = {
     withdraw,
     activate,
-    fetchValidators
+    fetchValidators,
+    fetchDelegatedValidators
 };
 
 interface IState {
@@ -72,7 +77,7 @@ export class AccountTabComponent extends React.Component<
             accountStats: undefined
         };
     }
-    public async componentDidMount() {
+    public componentDidMount() {
         const blockchainInstance = getBlockchain(this.props.blockchain);
         blockchainInstance
             .getStats(this.props.chainId)
@@ -80,13 +85,16 @@ export class AccountTabComponent extends React.Component<
             .then(accStats => {
                 this.setState({ accountStats: accStats });
             })
-            .catch();
+            .catch(e => {
+                SentryCaptureException(new Error(JSON.stringify(e)));
+            });
 
         this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
+        this.props.fetchDelegatedValidators(this.props.account);
     }
 
     @bind
-    public async onPress(widget: IPosWidget, index: number) {
+    public async onPress(widget: IPosWidget) {
         const password = await PasswordModal.getPassword(
             translate('Password.pinTitleUnlock'),
             translate('Password.subtitleSignTransaction'),
@@ -102,29 +110,40 @@ export class AccountTabComponent extends React.Component<
                     this.props.navigation,
                     undefined
                 );
+                break;
             }
             case PosBasicActionType.WITHDRAW: {
                 this.props.withdraw(
                     this.props.account,
-                    index,
+                    widget.index,
                     this.props.token.symbol,
                     password,
                     this.props.navigation,
                     undefined
                 );
+                break;
             }
         }
     }
 
     public renderWidgets() {
         return this.state.accountStats.widgets.map((widget, index) => {
-            const isActive = Number(widget.timestamp) < Date.now() ? true : false;
+            const widgetTimestamp = Number(widget.timestamp) * 1000;
+            const isActive = widgetTimestamp < Date.now() || widget.timestamp === '' ? true : false;
             const blockchainInstance = getBlockchain(this.props.blockchain);
             const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
             const amountFromStd = blockchainInstance.account.amountFromStd(
                 new BigNumber(widget.value),
                 tokenConfig.decimals
             );
+
+            const hours = moment(new Date(widgetTimestamp)).diff(moment(new Date()), 'hours');
+            const minutes =
+                moment(new Date(widgetTimestamp)).diff(moment(new Date()), 'minute') / (hours * 60);
+            const timeString = isActive
+                ? '00h 00m'
+                : `${Math.round(hours)}h ${Math.round(minutes)}m`;
+
             switch (widget.type) {
                 case PosBasicActionType.ACTIVATE: {
                     return (
@@ -135,10 +154,13 @@ export class AccountTabComponent extends React.Component<
                                 currency: this.props.token.symbol,
                                 minimumFractionDigits: 2
                             })}
+                            bottomTitle={translate('Widget.waitTimeActivate', {
+                                timeFormat: timeString
+                            })}
                             buttonText={translate('App.labels.activate')}
                             buttonColor={this.props.theme.colors.labelReward}
                             buttonDisabled={!isActive}
-                            onPress={() => this.onPress(widget, -1)}
+                            onPress={() => this.onPress(widget)}
                         />
                     );
                 }
@@ -153,9 +175,13 @@ export class AccountTabComponent extends React.Component<
                                 currency: this.props.token.symbol,
                                 minimumFractionDigits: 2
                             })}
+                            bottomTitle={translate('Widget.waitTimeWithdraw', {
+                                timeFormat: timeString
+                            })}
                             buttonText={translate('App.labels.withdraw')}
+                            buttonDisabled={!isActive}
                             buttonColor={this.props.theme.colors.labelReward}
-                            onPress={() => this.onPress(widget, index)}
+                            onPress={() => this.onPress(widget)}
                         />
                     );
                 }

@@ -1,6 +1,4 @@
 import { IClientUtils } from '../types/client-utils';
-import { IAccountState } from '../../../redux/wallets/state';
-import { IPosWidget } from '../types/stats';
 import { Client } from './client';
 import { Blockchain, TransactionType, IBlockchainTransaction } from '../types';
 import { Near } from '.';
@@ -17,10 +15,6 @@ export class ClientUtils implements IClientUtils {
             res.result.status,
             res.result.transaction_outcome
         );
-    }
-
-    getWidgets(account: IAccountState): Promise<IPosWidget[]> {
-        throw new Error('Method not implemented.');
     }
 
     async buildTransactionFromBlockchain(

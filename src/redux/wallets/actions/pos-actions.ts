@@ -33,6 +33,33 @@ import { TRANSACTION_PUBLISHED } from './wallet-actions';
 import { TransactionStatus } from '../../../core/wallet/types';
 import { cloneDeep } from 'lodash';
 
+export const redelegate = (
+    account: IAccountState,
+    amount: string,
+    validators: IValidator[],
+    token: string,
+    feeOptions: IFeeOptions,
+    password: string,
+    navigation: NavigationScreenProp<NavigationState>,
+    extraFields: ITransactionExtraFields,
+    goBack: boolean = true,
+    sendResponse?: { requestId: string }
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    posAction(
+        account,
+        amount,
+        validators,
+        token,
+        feeOptions,
+        password,
+        navigation,
+        extraFields,
+        goBack,
+        PosBasicActionType.REDELEGATE,
+        sendResponse
+    )(dispatch, getState);
+};
+
 export const delegate = (
     account: IAccountState,
     amount: string,
@@ -210,15 +237,16 @@ export const posAction = (
                 chainId,
                 account,
                 validators,
-                amount:
-                    blockchainInstance.account
-                        .amountToStd(amount, tokenConfig.decimals)
-                        .toFixed() || '0',
+                amount: blockchainInstance.account
+                    .amountToStd(amount, tokenConfig.decimals)
+                    .toFixed(),
                 token,
-                feeOptions: {
-                    gasPrice: feeOptions.gasPrice.toString(),
-                    gasLimit: feeOptions.gasLimit.toString()
-                },
+                feeOptions: feeOptions
+                    ? {
+                          gasPrice: feeOptions.gasPrice.toString(),
+                          gasLimit: feeOptions.gasLimit.toString()
+                      }
+                    : undefined,
                 extraFields: extra
             },
             type

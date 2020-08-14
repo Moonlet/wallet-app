@@ -36,12 +36,30 @@ export class ZilliqaProvider extends BaseProvider {
                 if (windowId === window.id) {
                     // console.log(id, 'window closed');
                     browser.windows.onRemoved.removeListener(onWindowClose);
-                    resolve({
-                        error: 'CANCELED'
-                    });
+                    const errorResponse: any = {
+                        jsonrpc: '2.0',
+                        error: {
+                            code: -1,
+                            message: 'CANCELED_BY_USER: Operation authorization cancelled by user'
+                        }
+                    };
+                    if (request.params[0]?.id) {
+                        errorResponse.id = id;
+                    }
+                    resolve(errorResponse);
                 }
             };
             browser.windows.onRemoved.addListener(onWindowClose);
+        }).then((response: any) => {
+            const chainId = getChainId(store.getState(), Blockchain.ZILLIQA);
+            const network = networks.find(n => n.chainId === chainId);
+            return {
+                ...response,
+                req: {
+                    url: network.url,
+                    payload: request.params[0]
+                }
+            };
         });
     }
 
@@ -64,7 +82,15 @@ export class ZilliqaProvider extends BaseProvider {
                 const network = networks.find(n => n.chainId === chainId);
 
                 const httpClient = new HttpClient(network.url);
-                return httpClient.jsonRpc(request.method, request.params);
+                return httpClient.jsonRpc(request.method, request.params).then(response => {
+                    return {
+                        ...response,
+                        req: {
+                            url: network.url,
+                            payload: request.params[0]
+                        }
+                    };
+                });
         }
     }
 }

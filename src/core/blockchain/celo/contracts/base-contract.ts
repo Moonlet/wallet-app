@@ -9,6 +9,11 @@ const contracts = {
         [Contracts.LOCKED_GOLD]: '0x6a4CC5693DC5BFA3799C699F3B941bA2Cb00c341',
         [Contracts.ELECTION]: '0x1c3eDf937CFc2F6F51784D20DEB1af1F9a8655fA',
         [Contracts.ACCOUNTS]: '0xed7f51A34B4e71fbE69B3091FcF879cD14bD73A9'
+    },
+    '62320': {
+        [Contracts.LOCKED_GOLD]: '0xF07406D8040fBD831e9983CA9cC278fBfFeB56bF',
+        [Contracts.ELECTION]: '0x7eb2b2f696C60A48Afd7632f280c7De91c8E5aa5',
+        [Contracts.ACCOUNTS]: '0x64FF4e6F7e08119d877Fd2E26F4C20B537819080'
     }
 };
 

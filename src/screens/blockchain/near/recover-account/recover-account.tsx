@@ -17,7 +17,6 @@ import { WalletFactory } from '../../../../core/wallet/wallet-factory';
 import { getSelectedWallet } from '../../../../redux/wallets/selectors';
 import { IWalletState, IAccountState } from '../../../../redux/wallets/state';
 import { IWallet } from '../../../../core/wallet/types';
-import { disableRecoverAccount } from '../../../../redux/ui/screens/dashboard/actions';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
@@ -32,7 +31,6 @@ interface IReduxProps {
     selectedWallet: IWalletState;
     addAccount: typeof addAccount;
     setSelectedAccount: typeof setSelectedAccount;
-    disableRecoverAccount: typeof disableRecoverAccount;
 }
 
 interface IState {
@@ -55,8 +53,7 @@ const mapStateToProps = (state: IReduxState) => {
 
 const mapDispatchToProps = {
     addAccount,
-    setSelectedAccount,
-    disableRecoverAccount
+    setSelectedAccount
 };
 
 const navigationOptions = () => ({ title: translate('RecoverNearAccount.title') });

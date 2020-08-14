@@ -48,7 +48,6 @@ import {
     startNotificationsHandlers,
     getUnseenNotifications
 } from '../../redux/notifications/actions';
-import { enableCreateAccount } from '../../redux/ui/screens/dashboard/actions';
 import { AddNearAccount } from '../../components/blockchain/near/add-account/add-account';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
@@ -63,8 +62,6 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
     selectedBlockchain: Blockchain;
     exchangeRates: IExchangeRates;
-    isCreateAccount: boolean;
-    isRecoverAccount: boolean;
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
     chainId: ChainIdType;
@@ -72,7 +69,6 @@ export interface IReduxProps {
     startNotificationsHandlers: typeof startNotificationsHandlers;
     unseenNotifications: number;
     getUnseenNotifications: typeof getUnseenNotifications;
-    enableCreateAccount: typeof enableCreateAccount;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -85,8 +81,6 @@ const mapStateToProps = (state: IReduxState) => {
         selectedBlockchain: getSelectedBlockchain(state),
         selectedAccount,
         exchangeRates: state.market.exchangeRates,
-        isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
-        isRecoverAccount: state.ui.screens.dashboard.isRecoverAccount,
         selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
         userCurrency: state.preferences.currency,
         chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
@@ -99,8 +93,7 @@ const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
     startNotificationsHandlers,
-    getUnseenNotifications,
-    enableCreateAccount
+    getUnseenNotifications
 };
 
 interface IState {
@@ -223,10 +216,6 @@ export class DashboardScreenComponent extends React.Component<
         this.props.navigation.setParams({
             unseenNotifications: this.props.unseenNotifications
         });
-
-        if (this.props.selectedBlockchainAccounts.length === 0) {
-            this.props.enableCreateAccount();
-        }
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {

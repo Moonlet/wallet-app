@@ -42,11 +42,6 @@ import {
     getWalletAndTransactionForHash
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
-import {
-    enableCreateAccount,
-    disableCreateAccount,
-    disableRecoverAccount
-} from '../../ui/screens/dashboard/actions';
 import { formatAddress } from '../../../core/utils/format-address';
 import { updateAddressMonitorTokens } from '../../../core/address-monitor/index';
 import { Dialog } from '../../../components/dialog/dialog';
@@ -121,17 +116,6 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
         }
     });
 
-    if (blockchain === Blockchain.NEAR) {
-        if (getAccounts(state, blockchain).length === 0) {
-            dispatch(enableCreateAccount());
-        } else {
-            dispatch(disableCreateAccount());
-            dispatch(disableRecoverAccount());
-        }
-    } else {
-        dispatch(disableCreateAccount());
-        dispatch(disableRecoverAccount());
-    }
     const selectedAccount = getSelectedAccount(getState());
     if (selectedAccount) {
         getBalance(
@@ -803,10 +787,6 @@ export const createNearAccount = (newAccountId: string, password: string) => asy
     } else {
         Alert.alert('Create account has failed!', res?.message || res?.errorMessage || '');
     }
-
-    // remove this
-    dispatch(disableCreateAccount());
-    dispatch(disableRecoverAccount());
 
     await LoadingModal.close();
 };

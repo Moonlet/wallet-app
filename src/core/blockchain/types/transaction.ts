@@ -105,6 +105,7 @@ export interface ITransactionExtraFields {
     witdrawIndex?: number;
     posAction?: PosBasicActionType;
     validatorName?: string;
+    fromValidator?: IValidator;
     //
 }
 

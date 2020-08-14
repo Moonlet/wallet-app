@@ -39,6 +39,7 @@ export interface IProps {
     actionText: string;
     amount: string;
     showSteps: boolean;
+    fromValidator?: IValidator;
     bottomColor: string;
     bottomActionText: string;
     feeOptions: IFeeOptions;
@@ -76,6 +77,9 @@ export class ConfirmComponentComponent extends React.Component<
     private renderBottomConfirm() {
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
+        const textPrimaryCtaField = this.props.fromValidator
+            ? valuePrimaryCtaField([this.props.fromValidator])
+            : valuePrimaryCtaField(this.props.validators);
         return (
             <BottomCta
                 label={translate('App.labels.confirm')}
@@ -88,7 +92,7 @@ export class ConfirmComponentComponent extends React.Component<
                     label={translate(this.props.actionText)}
                     labelColor={this.props.bottomColor}
                     action={translate(this.props.bottomActionText).toLowerCase()}
-                    value={valuePrimaryCtaField(this.props.validators)}
+                    value={textPrimaryCtaField}
                 />
                 <AmountCtaField
                     tokenConfig={tokenConfig}

@@ -121,11 +121,11 @@ export class Client extends BlockchainGenericClient {
                         valid: false
                     };
                 } else {
-                    // handle this
+                    return Promise.reject(res.error);
                 }
             }
         } catch (err) {
-            Promise.reject(err);
+            return Promise.reject(err);
         }
     }
 

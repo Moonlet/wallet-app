@@ -40,7 +40,7 @@ export class ZilliqaProvider extends BaseProvider {
                         jsonrpc: '2.0',
                         error: {
                             code: -1,
-                            message: 'CANCELED_BY_USER: Operation authorization cancelled by user'
+                            message: 'CANCELED_BY_USER: Operation cancelled by user'
                         }
                     };
                     if (request.params[0]?.id) {

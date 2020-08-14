@@ -156,7 +156,7 @@ export class CreateNearAccountComponent extends React.Component<
                     />
 
                     <Text style={styles.chooseUsernameText}>
-                        {translate('CreateNearAccount.chooseUsername')}
+                        {translate('CreateNearAccount.chooseAccountName')}
                     </Text>
 
                     <View style={styles.inputContainer}>
@@ -164,7 +164,7 @@ export class CreateNearAccountComponent extends React.Component<
                             <TextInput
                                 style={styles.inputText}
                                 placeholderTextColor={theme.colors.textTertiary}
-                                placeholder={translate('CreateNearAccount.eg')}
+                                placeholder={translate('AddAccount.eg')}
                                 autoCapitalize={'none'}
                                 autoCorrect={false}
                                 selectionColor={theme.colors.accent}
@@ -187,11 +187,11 @@ export class CreateNearAccountComponent extends React.Component<
                             ]}
                         >
                             {isChecking
-                                ? translate('CreateNearAccount.checking')
+                                ? translate('AddAccount.checking')
                                 : isUsernameNotAvailable
-                                ? translate('CreateNearAccount.notAvailable')
+                                ? translate('AddAccount.notAvailable')
                                 : isInvalidUsername
-                                ? translate('CreateNearAccount.invalid')
+                                ? translate('AddAccount.invalid')
                                 : this.state.isInputValid
                                 ? translate('CreateNearAccount.congrats', {
                                       name: `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`

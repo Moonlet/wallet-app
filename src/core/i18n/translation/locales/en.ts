@@ -404,33 +404,28 @@ export const translation: ITranslations = {
         },
         AddAccount: {
             title: 'Add account',
+            eg: 'e.g. johndoe',
             addNearAccount: 'Add a new NEAR account',
-            removeAccountConfirm: 'You’re about to remove {{name}} from Moonlet'
+            checking: 'Checking availability ...',
+            removeAccountConfirm: 'You’re about to remove {{name}} from Moonlet',
+            invalid: 'Account name CANNOT contain characters "@" or "."',
+            notAvailable: 'Account name not available. Try something else.'
         },
         CreateNearAccount: {
-            title: 'Create username',
-            chooseUsername: 'Choose a username and you’re all set.',
-            eg: 'e.g. johndoe',
-            checking: 'Checking availability ...',
-            notAvailable: 'Username not available. Try something else.',
-            invalid: 'Username CANNOT contain characters "@" or "."',
+            title: 'Create account name',
+            chooseAccountName: 'Choose an account name and you’re all set.',
             congrats: 'Congrats! {{name}} is available.'
         },
         RecoverNearAccount: {
-            title: 'Recover username',
-            authMoonletUserAccount:
-                'Authorize Moonlet to use your existing username for this account',
-            eg: 'e.g. johndoe',
+            title: 'Recover account name',
+            authMoonletUserAccount: 'Authorize Moonlet to use your existing account name',
             copyAuthLink: 'Copy authorization link',
             authMoonlet: 'Authorize Moonlet',
             congrats: 'Congrats! {{name}} is registered. Please authorize Moonlet to use it.',
             authProgress: 'Authorization in progress ...',
-            checking: 'Checking availability ...',
             notRegistered:
-                'Username not registered. If you want to use it, you need first to create it.',
-            createHere: 'Create one here!',
-            invalid: 'Username CANNOT contain characters "@" or "."',
-            notAvailable: 'Username not available. Try something else.'
+                'Account name not registered. If you want to use it, you need first to create it.',
+            createHere: 'Create one here!'
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',
@@ -536,9 +531,9 @@ export const translation: ITranslations = {
             withdrawText: 'Withdraw your {{coin}} now'
         },
         AddNearAccount: {
-            title: 'Create or recover a NEAR username!',
-            recoverUsername: 'Recover existing username',
-            createUsername: 'Create a new username'
+            title: 'Create or recover\nan account name!',
+            recoverAccount: 'Recover an existing account name',
+            createAccount: 'Create a new account name'
         }
     },
     plural: (n: number, ord?: boolean) => {

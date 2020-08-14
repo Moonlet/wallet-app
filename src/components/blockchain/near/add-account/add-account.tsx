@@ -23,11 +23,11 @@ export const AddNearAccountComponent = (props: IThemeProps<ReturnType<typeof sty
                 onPress={() => NavigationService.navigate('RecoverNearAccount', {})}
                 wrapperStyle={styles.recoverButton}
             >
-                {translate('AddNearAccount.recoverUsername')}
+                {translate('AddNearAccount.recoverAccount')}
             </Button>
 
             <Button primary onPress={() => NavigationService.navigate('CreateNearAccount', {})}>
-                {translate('AddNearAccount.createUsername')}
+                {translate('AddNearAccount.createAccount')}
             </Button>
         </View>
     );

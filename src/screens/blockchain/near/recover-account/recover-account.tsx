@@ -239,7 +239,7 @@ export class RecoverNearAccountComponent extends React.Component<
                             <TextInput
                                 style={styles.inputText}
                                 placeholderTextColor={theme.colors.textTertiary}
-                                placeholder={translate('RecoverNearAccount.eg')}
+                                placeholder={translate('AddAccount.eg')}
                                 autoCapitalize={'none'}
                                 autoCorrect={false}
                                 selectionColor={theme.colors.accent}
@@ -275,13 +275,13 @@ export class RecoverNearAccountComponent extends React.Component<
                                         ]}
                                     >
                                         {isChecking
-                                            ? translate('RecoverNearAccount.checking')
+                                            ? translate('AddAccount.checking')
                                             : isUsernameNotRegistered
                                             ? translate('RecoverNearAccount.notRegistered')
                                             : isInvalidUsername
-                                            ? translate('RecoverNearAccount.invalid')
+                                            ? translate('AddAccount.invalid')
                                             : isUsernameNotAvailable
-                                            ? translate('RecoverNearAccount.notAvailable')
+                                            ? translate('AddAccount.notAvailable')
                                             : this.state.isInputValid
                                             ? translate('RecoverNearAccount.congrats', {
                                                   name: `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`

@@ -32,6 +32,10 @@ import {
 import { TRANSACTION_PUBLISHED } from './wallet-actions';
 import { TransactionStatus } from '../../../core/wallet/types';
 import { cloneDeep } from 'lodash';
+import {
+    captureException as SentryCaptureException,
+    addBreadcrumb as SentryAddBreadcrumb
+} from '@sentry/react-native';
 
 export const redelegate = (
     account: IAccountState,
@@ -281,6 +285,10 @@ export const posAction = (
                         });
                         processNextTransaction = false;
                     } else {
+                        SentryAddBreadcrumb({
+                            message: JSON.stringify({ transactions: txs[index] })
+                        });
+
                         dispatch(
                             updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
                         );
@@ -306,6 +314,7 @@ export const posAction = (
             } else clearInterval(interval);
         }, 2000);
     } catch (errorMessage) {
+        SentryCaptureException(new Error(JSON.stringify(errorMessage)));
         await LoadingModal.close();
         Dialog.info(translate('LoadingModal.txFailed'), translate('LoadingModal.GENERIC_ERROR'));
     }

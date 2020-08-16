@@ -37,12 +37,7 @@ export class Client extends EthereumClient {
             if (res.result) {
                 return res.result;
             } else {
-                const errorTransaction = {
-                    transaction,
-                    res: res || 'no result from rpc'
-                };
-
-                SentryCaptureException(new Error(JSON.stringify(errorTransaction)));
+                SentryCaptureException(new Error(JSON.stringify(res || 'no result from rpc')));
             }
 
             const errorMessage: string = res.error.message;

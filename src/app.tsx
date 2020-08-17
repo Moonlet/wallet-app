@@ -181,7 +181,7 @@ export default class App extends React.Component<{}, IState> {
 
     public render() {
         if (this.state.appReady) {
-            const bgRequest = !!document.location.hash;
+            const bgRequest = Platform.OS === 'web' && !!document.location.hash;
             return (
                 <Provider store={store}>
                     <PersistGate loading={null} persistor={persistor}>

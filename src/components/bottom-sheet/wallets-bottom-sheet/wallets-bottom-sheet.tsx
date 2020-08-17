@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { ListCard } from '../../list-card/list-card';
 import { IWalletState } from '../../../redux/wallets/state';
 import { WalletType } from '../../../core/wallet/types';
+import { IconValues } from '../../icon/values';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -70,7 +71,11 @@ export class WalletsBottomSheetComponent extends React.Component<
                                 this.props.onClose();
                                 this.props.setSelectedWallet(wallet.id);
                             }}
-                            leftIcon={wallet.type === WalletType.HW ? 'ledger-logo' : 'saturn-icon'}
+                            leftIcon={
+                                wallet.type === WalletType.HW
+                                    ? IconValues.LEDGER_LOOGO
+                                    : IconValues.SATURN_ICON
+                            }
                             label={wallet.name}
                             rightIcon={this.props.selectedWallet.id === wallet.id && 'check-1'}
                             selected={this.props.selectedWallet.id === wallet.id}

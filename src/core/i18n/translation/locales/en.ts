@@ -14,6 +14,7 @@ export const translation: ITranslations = {
                 advanced: 'Advanced',
                 advancedSetup: 'Advanced setup',
                 all: 'All',
+                allow: 'Allow',
                 amount: 'Amount',
                 average: 'Average',
                 balance: 'Balance',
@@ -58,6 +59,7 @@ export const translation: ITranslations = {
                 from: 'From',
                 half: 'Half',
                 holdUnveil: 'Hold to unveil',
+                learnMore: 'Learn more',
                 ledgerType: 'Ledger type',
                 legal: 'Legal',
                 locking: 'Locking',
@@ -515,7 +517,9 @@ export const translation: ITranslations = {
         },
         ExtensionBackgroundRequest: {
             waiting:
-                'Waiting for confirmation from your mobile. If you changed your mind click on cancel below.'
+                'Waiting for confirmation from your mobile. If you changed your mind click on cancel below.',
+            viewAddress: 'to view the addresses of your follwing accounts:',
+            makeSure: 'Make sure you connect with websites you trust'
         }
     },
     plural: (n: number, ord?: boolean) => {

@@ -222,7 +222,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                             <ListCard
                                 key={`key-${this.state.connection}`}
                                 label={translate(`CreateHardwareWallet.${this.state.connection}`)}
-                                leftIcon={String(this.state.connection).toLowerCase()}
+                                leftIcon={String(this.state.connection).toLowerCase() as IconValues}
                                 rightIcon={IconValues.CHECK}
                                 selected={true}
                             />
@@ -280,7 +280,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                     })
                                 }
                                 label={translate(`CreateHardwareWallet.${connection}`)}
-                                leftIcon={String(connection).toLowerCase()}
+                                leftIcon={String(connection).toLowerCase() as IconValues}
                                 rightIcon={this.state.connection === connection && IconValues.CHECK}
                                 selected={this.state.connection === connection}
                             />

@@ -48,7 +48,7 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
     }
 
     @bind
-    onResponse(response) {
+    private onResponse(response) {
         bgPortRequest({
             origin: document.location.href,
             controller: 'ScreenController',
@@ -58,7 +58,7 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
         window.close();
     }
 
-    renderLoading() {
+    private renderLoading() {
         const { styles } = this.props;
 
         return (
@@ -90,7 +90,7 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
         );
     }
 
-    renderScreen() {
+    private renderScreen() {
         switch (this.state?.request?.params[0]?.method) {
             case 'GetAccounts':
                 return <AccountConnectComponent onResponse={this.onResponse} />;
@@ -108,7 +108,7 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
         }
     }
 
-    render() {
+    public render() {
         // console.log(JSON.stringify(this.state, null, 4));
 
         return <View style={this.props.styles.container}>{this.renderScreen()}</View>;

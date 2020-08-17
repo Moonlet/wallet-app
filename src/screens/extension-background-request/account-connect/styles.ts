@@ -32,7 +32,7 @@ export default (theme: ITheme) =>
         },
         bottomButtonsContainer: {
             flexDirection: 'row',
-            marginTop: BASE_DIMENSION * 3
+            marginTop: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         bottomText: {
             fontSize: normalize(12),

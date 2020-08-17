@@ -1,17 +1,25 @@
 import React from 'react';
+import { View, Text, Image } from 'react-native';
+import stylesProvider from './styles';
 import { bgPortRequest } from '../../core/communication/bg-port';
 import { IExtensionResponse, IExtensionRequest } from '../../core/communication/extension';
-import { View, Text } from 'react-native';
 import { AccountConnectComponent } from './account-connect/account-connect';
 import bind from 'bind-decorator';
 import { NativeForwardComponent } from './native-forward/native-forward';
+import { IThemeProps, withTheme } from '../../core/theme/with-theme';
+import { smartConnect } from '../../core/utils/smart-connect';
+import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
+import { Button } from '../../library';
 
 interface IState {
     requestId: string;
     request: IExtensionRequest;
 }
 
-export class ExtensionBackgroundRequest extends React.Component<any, IState> {
+export class ExtensionBackgroundRequestComponent extends React.Component<
+    IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
     constructor(props) {
         super(props);
 
@@ -49,6 +57,38 @@ export class ExtensionBackgroundRequest extends React.Component<any, IState> {
         window.close();
     }
 
+    renderLoading() {
+        const { styles } = this.props;
+
+        return (
+            <View style={styles.loadingWrapper}>
+                <View style={styles.loadingHeaderContainer}>
+                    <Image
+                        source={require('../../assets/images/png/moonlet_logo.png')}
+                        style={styles.moonletLogo}
+                    />
+                    <Text style={styles.headerTitle}>{`Moonlet`}</Text>
+                </View>
+                <View style={styles.loadingContainer}>
+                    <View>
+                        <LoadingIndicator />
+                    </View>
+                    <Text style={styles.loadingText}>
+                        {`Waiting for confirmation from your mobile. If you changed your mind click on cancel below.`}
+                    </Text>
+                </View>
+                <Button
+                    onPress={() => {
+                        // TODO: maybe add here anything else which is necessary
+                        window.close();
+                    }}
+                >
+                    {`Cancel`}
+                </Button>
+            </View>
+        );
+    }
+
     renderScreen() {
         switch (this.state?.request?.params[0]?.method) {
             case 'GetAccounts':
@@ -63,17 +103,17 @@ export class ExtensionBackgroundRequest extends React.Component<any, IState> {
                     />
                 );
             default:
-                // should display a loader
-                return <Text>Loading...</Text>;
+                return this.renderLoading();
         }
     }
 
     render() {
-        return (
-            <View>
-                <pre style={{ color: 'white' }}>{JSON.stringify(this.state, null, 4)}</pre>
-                {this.renderScreen()}
-            </View>
-        );
+        // console.log(JSON.stringify(this.state, null, 4));
+
+        return <View style={this.props.styles.container}>{this.renderScreen()}</View>;
     }
 }
+
+export const ExtensionBackgroundRequest = smartConnect(ExtensionBackgroundRequestComponent, [
+    withTheme(stylesProvider)
+]);

@@ -51,13 +51,7 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         chainId,
-        validators: getValidators(
-            state,
-            ownProps.blockchain,
-            chainId,
-            false,
-            PosBasicActionType.DELEGATE
-        )
+        validators: getValidators(state, ownProps.blockchain, chainId, PosBasicActionType.DELEGATE)
     };
 };
 
@@ -169,6 +163,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                 <ValidatorsList
                     validators={this.state.validatorsList}
                     blockchain={this.props.blockchain}
+                    token={this.props.token}
                     onSelect={this.onSelect}
                     actionType={CardActionType.CHECKBOX}
                 />

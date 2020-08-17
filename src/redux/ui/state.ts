@@ -14,4 +14,5 @@ export interface IUiState {
     transactionRequest: ITransactionRequestState;
     processTransactions: IProcessTransactionsState;
     validators: IValidatorsState;
+    delegatedValidators: IValidatorsState;
 }

@@ -129,8 +129,13 @@ export class ProcessTransactionsComponent extends React.Component<
             case PosBasicActionType.UNVOTE: {
                 middleText =
                     translate('App.labels.from').toLowerCase() +
+                    ' ' +
                     formatValidatorName(tx.additionalInfo?.validatorName, 20);
                 topText = translate('App.labels.unvoting') + ' ' + amount;
+                break;
+            }
+            case PosBasicActionType.ACTIVATE: {
+                topText = translate('Validator.activatingVotes');
                 break;
             }
             default: {

@@ -14,11 +14,11 @@ import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-f
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
 import { ChainIdType } from '../../../../../../../core/blockchain/types';
 import { ITokenState, IAccountState } from '../../../../../../../redux/wallets/state';
-import { getValidators } from '../../../../../../../redux/ui/validators/selectors';
 import { IReduxState } from '../../../../../../../redux/state';
 import { connect } from 'react-redux';
 import { getAccount } from '../../../../../../../redux/wallets/selectors';
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
+import { getDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/selectors';
 
 export interface IProps {
     accountIndex: number;
@@ -35,7 +35,7 @@ export interface IReduxProps {
 export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        validators: getValidators(state, ownProps.blockchain, ownProps.chainId, true)
+        validators: getDelegatedValidators(state, ownProps.blockchain, ownProps.chainId)
     };
 };
 
@@ -54,30 +54,10 @@ export class DelegationsTabComponent extends React.Component<
         super(props);
 
         this.state = {
-            validatorsFilteredList: [],
-            unfilteredList: [],
-            myValidatorsLoaded: false
+            validatorsFilteredList: this.props.validators || [],
+            unfilteredList: this.props.validators || [],
+            myValidatorsLoaded: true
         };
-    }
-
-    public componentDidMount() {
-        const blockchainInstance = getBlockchain(this.props.blockchain);
-
-        blockchainInstance
-            .getStats(this.props.chainId)
-            .getValidatorsAddressVotedByAccount(this.props.account)
-            .then(validatorsAddress => {
-                const myListOfValidators = this.props.validators.filter(validator =>
-                    validatorsAddress.includes(validator.id)
-                );
-
-                this.setState({
-                    myValidatorsLoaded: true,
-                    unfilteredList: myListOfValidators,
-                    validatorsFilteredList: myListOfValidators
-                });
-            })
-            .catch();
     }
 
     @bind
@@ -124,6 +104,7 @@ export class DelegationsTabComponent extends React.Component<
                         <ValidatorsList
                             validators={this.state.validatorsFilteredList}
                             blockchain={this.props.blockchain}
+                            token={this.props.token}
                             onSelect={this.onSelect}
                             actionType={CardActionType.NAVIGATE}
                         />

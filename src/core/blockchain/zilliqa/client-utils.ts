@@ -7,8 +7,6 @@ import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { config } from './config';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { TransactionStatus } from '../../wallet/types';
-import { IAccountState } from '../../../redux/wallets/state';
-import { IPosWidget } from '../types/stats';
 
 const ZRC2_TRANSFER_EVENTS_SUCCESS_LIST = ['Transfer', 'TransferSuccess', 'TransferFromSuccess'];
 
@@ -19,10 +17,6 @@ export class ClientUtils implements IClientUtils {
         return this.client
             .call('GetTransaction', [hash])
             .then(response => this.buildTransactionFromBlockchain(response.result));
-    }
-
-    async getWidgets(account: IAccountState): Promise<IPosWidget[]> {
-        throw new Error('Method not implemented.');
     }
 
     async buildTransactionFromBlockchain(txData): Promise<IBlockchainTransaction> {

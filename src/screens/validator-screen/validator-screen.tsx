@@ -64,7 +64,7 @@ export class ValidatorScreenComponent extends React.Component<
         const config = getBlockchain(blockchain).config;
 
         const textTop = `${translate(config.ui.validator.totalLabel)} (${validator.rank})`;
-        const amount = validator.amountDelegated;
+        const amount = validator.totalVotes;
         const token = getTokenConfig(blockchain, config.coin);
 
         validator.actionType = CardActionType.CHECKBOX;

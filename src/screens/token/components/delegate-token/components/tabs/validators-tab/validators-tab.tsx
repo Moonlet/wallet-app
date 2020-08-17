@@ -30,7 +30,7 @@ export interface IReduxProps {
 
 export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
     return {
-        validators: getValidators(state, ownProps.blockchain, ownProps.chainId, true)
+        validators: getValidators(state, ownProps.blockchain, ownProps.chainId)
     };
 };
 
@@ -97,6 +97,7 @@ export class ValidatorsTabComponent extends React.Component<
                     <ValidatorsList
                         validators={this.state.validatorsFilteredList}
                         blockchain={this.props.blockchain}
+                        token={this.props.token}
                         onSelect={this.onSelect}
                         actionType={CardActionType.NAVIGATE}
                     />

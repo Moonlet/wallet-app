@@ -12,6 +12,7 @@ import { LockedGold } from './contracts/lockedgold';
 import { Election } from './contracts/election';
 import { Accounts } from './contracts/accounts';
 import abi from 'ethereumjs-abi';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export class Client extends EthereumClient {
     constructor(chainId: ChainIdType) {
@@ -35,6 +36,8 @@ export class Client extends EthereumClient {
         return this.http.jsonRpc('eth_sendRawTransaction', [transaction]).then(res => {
             if (res.result) {
                 return res.result;
+            } else {
+                SentryCaptureException(new Error(JSON.stringify(res || 'no result from rpc')));
             }
 
             const errorMessage: string = res.error.message;
@@ -104,8 +107,8 @@ export class Client extends EthereumClient {
                 : config.feeOptions.defaults.gasLimit[tokenType];
 
             return {
-                gasPrice: gasPrice.toFixed(),
-                gasLimit: gasLimit.toFixed(),
+                gasPrice: gasPrice.toFixed(0),
+                gasLimit: gasLimit.toFixed(0),
                 presets: {},
                 feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
             };

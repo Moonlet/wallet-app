@@ -496,6 +496,7 @@ export const translation: ITranslations = {
             confirmStake: 'Confirm\nstake(s)',
             totalStakes: 'Total Stakes',
             totalVotes: 'Total Votes',
+            activatingVotes: 'Activating votes',
             totalDelegated: 'Total Delegated',
             myStake: 'My Stake',
             delegation: 'Delegation',
@@ -511,7 +512,8 @@ export const translation: ITranslations = {
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',
-            nextEpochText: 'until next epoch',
+            waitTimeActivate: 'Wait {{timeFormat}} until next epoch',
+            waitTimeWithdraw: 'Wait {{timeFormat}} to withdraw',
             claimText: 'Claim your rewards now',
             withdrawText: 'Withdraw your {{coin}} now'
         },

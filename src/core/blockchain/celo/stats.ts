@@ -1,8 +1,8 @@
 import { GenericStats, AccountStats } from '../types/stats';
 import { Client } from './client';
-import { Contracts } from './config';
 import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 import { ApiClient } from '../../utils/api-client/api-client';
+import { BigNumber } from 'bignumber.js';
 
 export class Stats extends GenericStats<Client> {
     public async getAccountDelegateStats(
@@ -17,9 +17,15 @@ export class Stats extends GenericStats<Client> {
         return data;
     }
 
-    public async getValidatorsAddressVotedByAccount(account: IAccountState): Promise<string[]> {
-        return this.client.contracts[Contracts.ELECTION].getGroupsVotedForByAccount(
-            account.address
+    public async getAvailableBalanceForDelegate(account: IAccountState): Promise<string> {
+        const data = await new ApiClient().validators.getBalance(
+            account,
+            this.client.chainId.toString()
         );
+
+        return new BigNumber(data.balance.available)
+            .plus(new BigNumber(data.balance.nonVotingLockedGold))
+            .minus(new BigNumber(data.balance.pendingActivationGold))
+            .toFixed();
     }
 }

@@ -5,6 +5,7 @@ import bottomSheetReducer from './bottomSheet/reducer';
 import passwordModalReducer from './password-modal/reducer';
 import transactionRequestReducer from './transaction-request/reducer';
 import validatorsReducer from './validators/reducer';
+import delegatedValidatorsReducer from './delegated-validators/reducer';
 import processTransactionsReducer from './process-transactions/reducer';
 
 export const uiReducer = combineReducers({
@@ -14,5 +15,6 @@ export const uiReducer = combineReducers({
     passwordModal: passwordModalReducer,
     transactionRequest: transactionRequestReducer,
     processTransactions: processTransactionsReducer,
-    validators: validatorsReducer
+    validators: validatorsReducer,
+    delegatedValidators: delegatedValidatorsReducer
 });

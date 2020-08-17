@@ -10,6 +10,7 @@ import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { Button } from '../../library';
+import { translate } from '../../core/i18n';
 
 interface IState {
     requestId: string;
@@ -74,7 +75,7 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
                         <LoadingIndicator />
                     </View>
                     <Text style={styles.loadingText}>
-                        {`Waiting for confirmation from your mobile. If you changed your mind click on cancel below.`}
+                        {translate('ExtensionBackgroundRequest.waiting')}
                     </Text>
                 </View>
                 <Button
@@ -83,7 +84,7 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
                         window.close();
                     }}
                 >
-                    {`Cancel`}
+                    {translate('App.labels.cancel')}
                 </Button>
             </View>
         );

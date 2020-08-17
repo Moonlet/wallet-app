@@ -512,6 +512,10 @@ export const translation: ITranslations = {
             nextEpochText: 'until next epoch',
             claimText: 'Claim your rewards now',
             withdrawText: 'Withdraw your {{coin}} now'
+        },
+        ExtensionBackgroundRequest: {
+            waiting:
+                'Waiting for confirmation from your mobile. If you changed your mind click on cancel below.'
         }
     },
     plural: (n: number, ord?: boolean) => {

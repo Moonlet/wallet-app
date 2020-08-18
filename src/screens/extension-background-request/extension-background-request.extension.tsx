@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { View } from 'react-native';
 import stylesProvider from './styles';
 import { bgPortRequest } from '../../core/communication/bg-port';
 import { IExtensionResponse, IExtensionRequest } from '../../core/communication/extension';
@@ -8,9 +8,6 @@ import bind from 'bind-decorator';
 import { NativeForwardComponent } from './native-forward/native-forward';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
-import { Button } from '../../library';
-import { translate } from '../../core/i18n';
 
 interface IState {
     requestId: string;
@@ -21,10 +18,11 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    constructor(props) {
+    constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
         const requestId = document.location.hash.substring(1);
+
         this.state = {
             requestId,
             request: undefined
@@ -43,7 +41,7 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
                 });
             })
             .catch(error => {
-                // set error in state and dispplay an error message...
+                // TODO: set error in state and dispplay an error message...
             });
     }
 
@@ -56,38 +54,6 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
             params: [this.state.requestId, { data: response }]
         });
         window.close();
-    }
-
-    private renderLoading() {
-        const { styles } = this.props;
-
-        return (
-            <View style={styles.loadingWrapper}>
-                <View style={styles.loadingHeaderContainer}>
-                    <Image
-                        source={require('../../assets/images/png/moonlet_logo.png')}
-                        style={styles.moonletLogo}
-                    />
-                    <Text style={styles.headerTitle}>{`Moonlet`}</Text>
-                </View>
-                <View style={styles.loadingContainer}>
-                    <View>
-                        <LoadingIndicator />
-                    </View>
-                    <Text style={styles.loadingText}>
-                        {translate('ExtensionBackgroundRequest.waiting')}
-                    </Text>
-                </View>
-                <Button
-                    onPress={() => {
-                        // TODO: maybe add here anything else which is necessary
-                        window.close();
-                    }}
-                >
-                    {translate('App.labels.cancel')}
-                </Button>
-            </View>
-        );
     }
 
     private renderScreen() {
@@ -104,13 +70,12 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
                     />
                 );
             default:
-                return this.renderLoading();
+                // what design should be here?
+                return null;
         }
     }
 
     public render() {
-        // console.log(JSON.stringify(this.state, null, 4));
-
         return <View style={this.props.styles.container}>{this.renderScreen()}</View>;
     }
 }

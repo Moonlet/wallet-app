@@ -24,7 +24,6 @@ export class NativeForwardComp extends React.Component<
         // console.log('method: ', this.props.request.params[0].method);
         // console.log('requestId: ', this.props.requestId);
 
-        // TODO: refactor notification messages
         const sendRequestPayload = {
             method: this.props.request.params[0].method,
             params: [this.props.requestId],

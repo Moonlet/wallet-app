@@ -56,6 +56,7 @@ import { RedelegateSelectValidator } from '../screens/pos-actions/pos-action-red
 import { RedelegateEnterAmount } from '../screens/pos-actions/pos-action-redelegate/redelegate-enter-amount/redelegate-enter-amount';
 import { RedelegateConfirm } from '../screens/pos-actions/pos-action-redelegate/redelegate-confirm/redelegate-confirm';
 import { NotificationsScreen } from '../screens/notifications/notifications';
+import { ConnectedWebsitesScreen } from '../screens/connected-websites/connected-websites';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -169,6 +170,9 @@ export const WalletNavigation = createStackNavigator(
         },
         Notifications: {
             screen: NotificationsScreen
+        },
+        ConnectedWebsites: {
+            screen: ConnectedWebsitesScreen
         },
 
         PosQuickDelegate: {

@@ -16,11 +16,12 @@ import { LedgerConnectBottomSheet } from './ledger-connect-bottom-sheet/ledger-c
 import { WalletsBottomSheet } from './wallets-bottom-sheet/wallets-bottom-sheet';
 import bind from 'bind-decorator';
 
-const HEIGHT_1_ROW = normalize(132);
-// const HEIGHT_2_ROW = normalize(200);
+// const HEIGHT_1_ROW = normalize(132);
+const HEIGHT_2_ROWS = normalize(200);
 const HEIGHT_3_ROWS = normalize(280);
 // const HEIGHT_4_ROWS = normalize(360);
-const HEIGHT_5_ROWS = normalize(420);
+// const HEIGHT_5_ROWS = normalize(420);
+const HEIGHT_6_ROWS = normalize(500);
 const HEIGHT_BLOCKCHAIN_NAVIGATION = normalize(400);
 const HEIGHT_THREE_QUARTERS_SCREEN = (Dimensions.get('window').height * 3) / 4;
 
@@ -80,10 +81,10 @@ export class BottomSheetComponent extends React.Component<
                         />
                         <DashboardMenuBottomSheet
                             snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? HEIGHT_1_ROW : 0,
+                                initialSnap: Platform.OS === 'web' ? HEIGHT_2_ROWS : 0,
                                 bottomSheetHeight: Platform.select({
-                                    web: HEIGHT_1_ROW,
-                                    default: HEIGHT_5_ROWS
+                                    web: HEIGHT_2_ROWS,
+                                    default: HEIGHT_6_ROWS
                                 })
                             }}
                             onClose={this.handleClose}

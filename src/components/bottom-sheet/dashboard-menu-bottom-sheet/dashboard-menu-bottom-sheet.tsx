@@ -75,6 +75,11 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         NavigationService.navigate('Wallets', {});
     }
 
+    private connectedWebsites() {
+        this.props.onClose();
+        NavigationService.navigate('ConnectedWebsites', {});
+    }
+
     public renderRow(options: {
         title: string;
         description: string;
@@ -154,6 +159,14 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         iconName: IconValues.MONEY_WALLET,
                         onPress: () => this.manageWallets()
                     })}
+
+                    {Platform.OS !== 'web' &&
+                        this.renderRow({
+                            title: translate('Wallets.connectedWebsites'),
+                            description: translate('Wallets.manageWebsites'),
+                            iconName: IconValues.FLASH_OFF,
+                            onPress: () => this.connectedWebsites()
+                        })}
                 </ScrollView>
 
                 <QrModalReader

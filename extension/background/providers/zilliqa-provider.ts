@@ -82,15 +82,17 @@ export class ZilliqaProvider extends BaseProvider {
                 const network = networks.find(n => n.chainId === chainId);
 
                 const httpClient = new HttpClient(network.url);
-                return httpClient.jsonRpc(request.method, request.params).then(response => {
-                    return {
-                        ...response,
-                        req: {
-                            url: network.url,
-                            payload: request.params[0]
-                        }
-                    };
-                });
+                return httpClient
+                    .jsonRpc(request.params[0]?.method, request.params[0]?.params)
+                    .then(response => {
+                        return {
+                            ...response,
+                            req: {
+                                url: network.url,
+                                payload: request.params[0]
+                            }
+                        };
+                    });
         }
     }
 }

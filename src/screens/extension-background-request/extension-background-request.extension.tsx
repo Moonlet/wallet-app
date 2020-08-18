@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 import stylesProvider from './styles';
 import { bgPortRequest } from '../../core/communication/bg-port';
 import { IExtensionResponse, IExtensionRequest } from '../../core/communication/extension';
@@ -8,6 +8,8 @@ import bind from 'bind-decorator';
 import { NativeForwardComponent } from './native-forward/native-forward';
 import { IThemeProps, withTheme } from '../../core/theme/with-theme';
 import { smartConnect } from '../../core/utils/smart-connect';
+import { translate } from '../../core/i18n';
+import { Text, Button } from '../../library';
 
 interface IState {
     requestId: string;
@@ -56,6 +58,28 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
         window.close();
     }
 
+    private renderDefaultScreen() {
+        const { styles } = this.props;
+
+        return (
+            <View style={styles.defaultSreenContainer}>
+                <View style={styles.loadingHeaderContainer}>
+                    <Image
+                        source={require('../../assets/images/png/moonlet_logo.png')}
+                        style={styles.moonletLogo}
+                    />
+                    <Text style={styles.headerTitle}>{`Moonlet`}</Text>
+                </View>
+                <View style={this.props.styles.unknownOpContainer}>
+                    <Text style={this.props.styles.unknownOpText}>
+                        {translate('App.labels.unknownOp')}
+                    </Text>
+                </View>
+                <Button onPress={() => window.close()}>{translate('App.labels.cancel')}</Button>
+            </View>
+        );
+    }
+
     private renderScreen() {
         switch (this.state?.request?.params[0]?.method) {
             case 'GetAccounts':
@@ -70,8 +94,7 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
                     />
                 );
             default:
-                // what design should be here?
-                return null;
+                return this.renderDefaultScreen();
         }
     }
 

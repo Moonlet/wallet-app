@@ -117,6 +117,7 @@ export const translation: ITranslations = {
                 typeHere: 'Type here',
                 understand: 'I understand',
                 undelegate: 'Undelegate',
+                unknownOp: 'Unknown operation',
                 unvote: 'Unvote',
                 unlock: 'Unlock',
                 unlocking: 'Unlocking',

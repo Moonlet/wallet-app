@@ -69,5 +69,20 @@ export default (theme: ITheme) =>
             fontWeight: '500',
             letterSpacing: LETTER_SPACING,
             color: theme.colors.accent
+        },
+        firstRow: {
+            flexDirection: 'row',
+            marginBottom: BASE_DIMENSION / 4
+        },
+        amountContainer: {
+            flexDirection: 'row',
+            alignItems: 'baseline'
+        },
+        amountText: {
+            color: theme.colors.textSecondary
+        },
+        amountConvertedText: {
+            marginLeft: BASE_DIMENSION,
+            color: theme.colors.textSecondary
         }
     });

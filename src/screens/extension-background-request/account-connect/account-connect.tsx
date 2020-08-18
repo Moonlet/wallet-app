@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { Button, Text } from '../../../library';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -19,6 +19,9 @@ import { formatAddress } from '../../../core/utils/format-address';
 import { WalletType } from '../../../core/wallet/types';
 import { ListCard } from '../../../components/list-card/list-card';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
+import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { calculateBalance } from '../../../core/utils/balance';
+import { Amount } from '../../../components/amount/amount';
 
 interface IExternalProps {
     onResponse: (response: any) => any;
@@ -31,10 +34,12 @@ interface IReduxProps {
 }
 
 const mapStateToProps = (state: IReduxState) => {
+    const blockchain = Blockchain.ZILLIQA;
+
     return {
         wallets: state.wallets,
         exchangeRates: state.market.exchangeRates,
-        chainId: getChainId(state, Blockchain.ZILLIQA)
+        chainId: getChainId(state, blockchain)
     };
 };
 
@@ -102,17 +107,21 @@ export class AccountConnectComp extends React.Component<
     public render() {
         const { styles, theme } = this.props;
 
-        // TODO: move this
-        const learMoreUrl = 'https://moonlet.io/';
+        // TODO: maybe move this
         const platformUrl = 'https://www.zilliqa.com/platform';
 
         const blockchainPlatform = Blockchain.ZILLIQA;
-        const BlockchainIcon = getBlockchain(blockchainPlatform).config.iconComponent;
+
+        const blockchainConfig = getBlockchain(blockchainPlatform).config;
+        const BlockchainIcon = blockchainConfig.iconComponent;
+        const tokenConfig = getTokenConfig(blockchainPlatform, blockchainConfig.coin);
 
         return (
             <View style={styles.container}>
                 <View style={styles.headerContainer}>
-                    <Text style={styles.headerTitle}>{`Connect with Moonlet`}</Text>
+                    <Text style={styles.headerTitle}>
+                        {translate('ExtensionBackgroundRequest.connectMoonlet')}
+                    </Text>
                 </View>
 
                 <ScrollView
@@ -142,16 +151,46 @@ export class AccountConnectComp extends React.Component<
                                     const selected =
                                         this.state.selectedAccounts.indexOf(account.address) !== -1;
 
+                                    const balance = calculateBalance(
+                                        account,
+                                        this.props.chainId,
+                                        this.props.exchangeRates
+                                    );
+
                                     const label = (
-                                        <View style={{ flexDirection: 'row' }}>
-                                            <Text style={this.props.styles.accountName}>
-                                                {`${translate(
-                                                    'App.labels.account'
-                                                )} ${account.index + 1}`}
-                                            </Text>
-                                            <Text style={this.props.styles.accountAddress}>
-                                                {formatAddress(account.address, blockchainPlatform)}
-                                            </Text>
+                                        <View>
+                                            <View style={this.props.styles.firstRow}>
+                                                <Text style={this.props.styles.accountName}>
+                                                    {`${translate(
+                                                        'App.labels.account'
+                                                    )} ${account.index + 1}`}
+                                                </Text>
+                                                <Text style={this.props.styles.accountAddress}>
+                                                    {formatAddress(
+                                                        account.address,
+                                                        blockchainPlatform
+                                                    )}
+                                                </Text>
+                                            </View>
+                                            <View style={styles.amountContainer}>
+                                                <Amount
+                                                    style={this.props.styles.amountContainer}
+                                                    amount={balance}
+                                                    blockchain={blockchainPlatform}
+                                                    token={blockchainConfig.coin}
+                                                    tokenDecimals={tokenConfig.decimals}
+                                                    numberOfLines={1}
+                                                />
+                                                <Amount
+                                                    style={this.props.styles.amountConvertedText}
+                                                    amount={balance}
+                                                    blockchain={blockchainPlatform}
+                                                    token={blockchainConfig.coin}
+                                                    tokenDecimals={tokenConfig.decimals}
+                                                    convert
+                                                    numberOfLines={1}
+                                                />
+                                            </View>
                                         </View>
                                     );
 
@@ -175,7 +214,7 @@ export class AccountConnectComp extends React.Component<
                 </ScrollView>
 
                 <View>
-                    <TouchableOpacity onPress={() => window.open(learMoreUrl)}>
+                    {/* <TouchableOpacity onPress={() => window.open('https://moonlet.io/')}>
                         <Text>
                             <Text style={styles.bottomText}>
                                 {translate('ExtensionBackgroundRequest.makeSure')}
@@ -185,7 +224,7 @@ export class AccountConnectComp extends React.Component<
                                 {translate('App.labels.learnMore')}
                             </Text>
                         </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
 
                     <View style={styles.bottomButtonsContainer}>
                         <Button wrapperStyle={styles.bottomLeftButton} onPress={this.onCancel}>

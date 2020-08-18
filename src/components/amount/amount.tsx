@@ -18,12 +18,18 @@ interface IExternalProps {
     tokenDecimals: number;
     uiDecimals?: number;
     isAnimated?: boolean;
+    numberOfLines?: number;
 }
 
 export interface IReduxProps {
     exchangeRates: IExchangeRates;
     userCurrency: string;
 }
+
+const mapStateToProps = (state: IReduxState) => ({
+    exchangeRates: state.market.exchangeRates,
+    userCurrency: state.preferences.currency
+});
 
 export const AmountComponent = (props: IExternalProps & IReduxProps) => {
     const convertTo = props.convertTo || props.convert ? props.userCurrency : props.token;
@@ -46,16 +52,12 @@ export const AmountComponent = (props: IExternalProps & IReduxProps) => {
                 maximumFractionDigits: props.uiDecimals || 4
             }}
             isAnimated={props.isAnimated}
+            numberOfLines={props.numberOfLines}
         >
             {amount}
         </Text>
     );
 };
-
-const mapStateToProps = (state: IReduxState) => ({
-    exchangeRates: state.market.exchangeRates,
-    userCurrency: state.preferences.currency
-});
 
 export const Amount = smartConnect<IExternalProps>(AmountComponent, [
     connect(mapStateToProps, null)

@@ -518,6 +518,7 @@ export const translation: ITranslations = {
             withdrawText: 'Withdraw your {{coin}} now'
         },
         ExtensionBackgroundRequest: {
+            connectMoonlet: 'Connect with Moonlet',
             waiting:
                 'Waiting for confirmation from your mobile. If you changed your mind click on cancel below.',
             viewAddress: 'to view the addresses of your follwing accounts:',

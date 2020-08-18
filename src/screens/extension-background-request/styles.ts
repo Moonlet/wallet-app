@@ -41,8 +41,7 @@ export default (theme: ITheme) =>
         loadingText: {
             fontSize: normalize(17),
             lineHeight: normalize(22),
-            color: '#E6E4EA',
-            opacity: 0.67,
+            color: theme.colors.textSecondary,
             textAlign: 'center',
             marginTop: BASE_DIMENSION * 4
         }

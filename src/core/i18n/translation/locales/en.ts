@@ -304,7 +304,9 @@ export const translation: ITranslations = {
             connectLedger: 'Connect your Ledger!',
             quicklyConnectLedger: 'Quickly connect your Ledger and manage your assests',
             connectWallet: 'Manage your wallets',
-            quicklyConnectWallet: 'Quickly create or recover your wallet and manage your assets'
+            quicklyConnectWallet: 'Quickly create or recover your wallet and manage your assets',
+            connectedWebsites: 'Connected websites',
+            manageWebsites: 'Manage your connected websites'
         },
         Transaction: {
             transactionID: 'Transaction ID',
@@ -524,6 +526,13 @@ export const translation: ITranslations = {
                 'Waiting for confirmation from your mobile. If you changed your mind click on cancel below.',
             viewAddress: 'to view the addresses of your follwing accounts:',
             makeSure: 'Make sure you connect with websites you trust'
+        },
+        ConnectedWebsites: {
+            title: 'Connected websites',
+            connectedFollowing: 'is connected to the following websites:',
+            notConnected: 'You are not connected\nto any website',
+            disconnectTitle: 'Disconnect website',
+            disconnectBody: 'You’re about to disconnect from {{url}}'
         }
     },
     plural: (n: number, ord?: boolean) => {

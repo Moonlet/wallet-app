@@ -308,8 +308,9 @@ export class DialogComponent extends React.Component<
                             ? this.state.confirmButton?.text
                                 ? this.state.confirmButton.text
                                 : translate('App.labels.ok')
-                            : this.state.dialogType === DialogType.CONFIRM ||
-                              this.state.dialogType === DialogType.INFO
+                            : this.state.dialogType === DialogType.CONFIRM
+                            ? translate('App.labels.confirm')
+                            : this.state.dialogType === DialogType.INFO
                             ? translate('App.labels.ok')
                             : this.state.confirmButtonText
                     }

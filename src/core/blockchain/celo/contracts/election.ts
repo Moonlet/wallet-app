@@ -103,7 +103,7 @@ export class Election {
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
         transaction.data = {
-            method: 'revokeActive',
+            method: 'unvote',
             params: [groupAddress, tx.amount],
             raw
         };
@@ -157,7 +157,7 @@ export class Election {
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
         transaction.data = {
-            method: 'revokePending',
+            method: 'unvote',
             params: [groupAddress, tx.amount],
             raw
         };

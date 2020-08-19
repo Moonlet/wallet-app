@@ -32,7 +32,7 @@ export class LockedGold {
         transaction.amount = '0';
         transaction.data = {
             method: 'withdraw',
-            params: [index.toString()],
+            params: [contractAddress, tx.amount],
             raw
         };
 
@@ -61,7 +61,7 @@ export class LockedGold {
         transaction.toAddress = contractAddress;
         transaction.data = {
             method: 'lock',
-            params: [tx.amount],
+            params: [contractAddress, tx.amount],
             raw
         };
 
@@ -92,7 +92,7 @@ export class LockedGold {
         transaction.amount = '0';
         transaction.data = {
             method: 'unlock',
-            params: [tx.amount],
+            params: [contractAddress, tx.amount],
             raw
         };
 

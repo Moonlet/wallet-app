@@ -100,7 +100,6 @@ export class RedelegateConfirmComponent extends React.Component<
                 this.props.navigation,
                 { fromValidator: this.props.fromValidator }
             );
-            this.props.navigation.navigate('Token');
         } catch {
             //
         }

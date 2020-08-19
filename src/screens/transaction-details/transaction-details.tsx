@@ -23,6 +23,7 @@ import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { openURL } from '../../core/utils/linking-handler';
 import { IconValues } from '../../components/icon/values';
 import { TokenType } from '../../core/blockchain/types/token';
+import { Capitalize } from '../../core/utils/format-string';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -72,9 +73,14 @@ export class TransactionDetailsComponent extends React.Component<
         const tokenConfig = getTokenConfig(account.blockchain, transaction?.token?.symbol);
 
         const recipient =
-            transaction.token.type === TokenType.ZRC2
+            transaction.token.type === TokenType.ZRC2 || transaction.token.type === TokenType.ERC20
                 ? formatAddress(transaction.data.params[0], account.blockchain)
                 : formatAddress(transaction.toAddress, account.blockchain);
+
+        const transactionType =
+            transaction.token.type === TokenType.ZRC2 || transaction.token.type === TokenType.ERC20
+                ? Capitalize(transaction.data.method)
+                : translate('App.labels.transfer');
 
         return (
             <View style={styles.container}>
@@ -88,6 +94,13 @@ export class TransactionDetailsComponent extends React.Component<
                         </Text>
                         <Text style={styles.textSecondary}>
                             {translate('App.labels.dateAndTime')}
+                        </Text>
+                    </View>
+
+                    <View style={styles.rowContainer}>
+                        <Text style={styles.textPrimary}>{transactionType}</Text>
+                        <Text style={styles.textSecondary}>
+                            {translate('Transaction.transactionType')}
                         </Text>
                     </View>
 

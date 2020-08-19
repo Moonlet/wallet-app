@@ -3,7 +3,9 @@ import {
     getAccessSettings,
     resetAccessSettings,
     allowAccess,
-    declineAccess
+    declineAccess,
+    getDomainAccounts,
+    switchAccount
 } from '../utils/account-access';
 import { Runtime } from 'webextension-polyfill-ts';
 
@@ -49,5 +51,21 @@ export class AccountAccessController {
 
     reset(sender: Runtime.MessageSender, request: IExtensionRequest): Promise<IExtensionResponse> {
         return this.invoke(resetAccessSettings);
+    }
+
+    getDomainAccounts(
+        sender: Runtime.MessageSender,
+        request: IExtensionRequest
+    ): Promise<IExtensionResponse> {
+        return this.invoke(() => getDomainAccounts(request.params[0], request.params[1]));
+    }
+
+    switchAccount(
+        sender: Runtime.MessageSender,
+        request: IExtensionRequest
+    ): Promise<IExtensionResponse> {
+        return this.invoke(() =>
+            switchAccount(request.params[0], request.params[1], request.params[2])
+        );
     }
 }

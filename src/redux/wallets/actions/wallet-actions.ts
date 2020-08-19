@@ -38,7 +38,8 @@ import {
     getAccounts,
     getSelectedAccount,
     getWalletWithAddress,
-    getWalletAndTransactionForHash
+    getWalletAndTransactionForHash,
+    getSelectedBlockchain
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
 import { Client as NearClient } from '../../../core/blockchain/near/client';
@@ -63,6 +64,8 @@ import { ConnectExtension } from '../../../core/connect-extension/connect-extens
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { startNotificationsHandlers } from '../../notifications/actions';
+import { bgPortRequest } from '../../../core/communication/bg-port.extension';
+import { Platform } from 'react-native';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -148,6 +151,14 @@ export const setSelectedAccount = (account: IAccountState) => (
     if (wallet === undefined) {
         return;
     }
+
+    // send message to extension background script
+    bgPortRequest({
+        origin: Platform.OS === 'web' && document.location.hash,
+        controller: 'AccountAccessController',
+        method: 'switchAccount',
+        params: [wallet.walletPublicKey || wallet.id, getSelectedBlockchain(state), account.address]
+    });
 
     dispatch({
         type: WALLET_SELECT_ACCOUNT,

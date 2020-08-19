@@ -1,7 +1,7 @@
 // create communication port with bg script
 import { browser } from 'webextension-polyfill-ts';
 import { IExtensionMessage, IExtensionRequest } from '../../src/core/communication/extension';
-import { bgPortRequest } from '../../src/core/communication/bg-port';
+import { bgPortRequest } from '../../src/core/communication/bg-port.extension';
 
 browser.runtime.sendMessage('TEST');
 

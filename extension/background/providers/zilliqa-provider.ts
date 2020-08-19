@@ -8,6 +8,7 @@ import { IExtensionResponse, IExtensionRequest } from '../../../src/core/communi
 import { browser, Runtime } from 'webextension-polyfill-ts';
 import { getChainId } from '../../../src/redux/preferences/selectors';
 import { store } from '../../../src/redux/config';
+import { getDomainAccounts, allowAccess, declineAccess } from '../utils/account-access';
 // import { hasAccess } from '../utils/account-access';
 
 export class ZilliqaProvider extends BaseProvider {
@@ -63,13 +64,42 @@ export class ZilliqaProvider extends BaseProvider {
         });
     }
 
-    rpc(sender: Runtime.MessageSender, request: IExtensionRequest): Promise<any> {
+    async rpc(sender: Runtime.MessageSender, request: IExtensionRequest): Promise<any> {
         // TODO: check if sender has acess to the account that makes the request.
 
         const rpcRequest = request.params[0];
         switch (rpcRequest?.method) {
-            case 'GetAccounts':
-                return this._openConfirmationScreen(request);
+            case 'GetAccount':
+                if (rpcRequest?.params[0]) {
+                    return this._openConfirmationScreen(request).then(async res => {
+                        if (!res.error) {
+                            await declineAccess(request.origin);
+                            await allowAccess(request.origin, res.result);
+                            const acc = await getDomainAccounts(request.origin, Blockchain.ZILLIQA);
+                            res.result = acc[0].address;
+                        }
+
+                        return res;
+                    });
+                }
+
+                const accounts = await getDomainAccounts(request.origin, Blockchain.ZILLIQA);
+                if (Array.isArray(accounts) && accounts.length > 0) {
+                    return {
+                        id: rpcRequest.id || 0,
+                        jsonrpc: '2.0',
+                        result: accounts[0].address
+                    };
+                }
+                return this._openConfirmationScreen(request).then(async res => {
+                    if (!res.error) {
+                        await declineAccess(request.origin);
+                        await allowAccess(request.origin, res.result);
+                        const acc = await getDomainAccounts(request.origin, Blockchain.ZILLIQA);
+                        res.result = acc[0].address;
+                    }
+                    return res;
+                });
             case 'CreateTransaction':
                 // TODO: check permissions
                 return this._openConfirmationScreen(request);
@@ -83,13 +113,13 @@ export class ZilliqaProvider extends BaseProvider {
 
                 const httpClient = new HttpClient(network.url);
                 return httpClient
-                    .jsonRpc(request.params[0]?.method, request.params[0]?.params)
+                    .jsonRpc(rpcRequest.method, rpcRequest?.params || [])
                     .then(response => {
                         return {
                             ...response,
                             req: {
                                 url: network.url,
-                                payload: request.params[0]
+                                payload: rpcRequest
                             }
                         };
                     });

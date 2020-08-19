@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Image } from 'react-native';
 import stylesProvider from './styles';
-import { bgPortRequest } from '../../core/communication/bg-port';
+import { bgPortRequest } from '../../core/communication/bg-port.extension';
 import { IExtensionResponse, IExtensionRequest } from '../../core/communication/extension';
 import { AccountConnectComponent } from './account-connect/account-connect';
 import bind from 'bind-decorator';
@@ -82,8 +82,13 @@ export class ExtensionBackgroundRequestComponent extends React.Component<
 
     private renderScreen() {
         switch (this.state?.request?.params[0]?.method) {
-            case 'GetAccounts':
-                return <AccountConnectComponent onResponse={this.onResponse} />;
+            case 'GetAccount':
+                return (
+                    <AccountConnectComponent
+                        request={this.state.request}
+                        onResponse={this.onResponse}
+                    />
+                );
             case 'SignMessage':
             case 'CreateTransaction':
                 return (

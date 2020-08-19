@@ -22,8 +22,11 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { calculateBalance } from '../../../core/utils/balance';
 import { Amount } from '../../../components/amount/amount';
+import { IExtensionRequest } from '../../../core/communication/extension';
+import klona from 'klona';
 
 interface IExternalProps {
+    request: IExtensionRequest;
     onResponse: (response: any) => any;
 }
 
@@ -45,7 +48,11 @@ const mapStateToProps = (state: IReduxState) => {
 
 interface IState {
     selectedWallet: IWalletState;
-    selectedAccounts: string[];
+    selectedAccounts: {
+        walletPubKey: string;
+        blockchain: Blockchain;
+        address: string;
+    }[];
 }
 
 export class AccountConnectComp extends React.Component<
@@ -74,7 +81,7 @@ export class AccountConnectComp extends React.Component<
     }
 
     @bind
-    private onConnect() {
+    private async onConnect() {
         this.props.onResponse({
             jsonrpc: '2.0',
             result: this.state.selectedAccounts
@@ -84,16 +91,24 @@ export class AccountConnectComp extends React.Component<
     private onAccountSelect(account: IAccountState, wallet: IWalletState) {
         // Add or remove account
         const selectedAccounts =
-            this.state.selectedWallet === wallet ? this.state.selectedAccounts : [];
+            this.state.selectedWallet === wallet ? klona(this.state.selectedAccounts) : [];
 
-        const indexOfAccount = selectedAccounts.indexOf(account.address);
+        const indexOfAccount = selectedAccounts.findIndex(
+            acc =>
+                acc.address === account.address &&
+                [wallet.walletPublicKey, wallet.id].indexOf(acc.walletPubKey) >= 0
+        );
 
-        if (indexOfAccount === -1) {
+        if (indexOfAccount < 0) {
             // add address
-            selectedAccounts.push(account.address);
+            selectedAccounts.push({
+                walletPubKey: wallet.walletPublicKey || wallet.id,
+                address: account.address,
+                blockchain: account.blockchain
+            });
         } else {
+            selectedAccounts.splice(indexOfAccount, 1);
             // remove address
-            delete selectedAccounts[indexOfAccount];
         }
 
         this.setState({ selectedAccounts });
@@ -110,7 +125,7 @@ export class AccountConnectComp extends React.Component<
         // TODO: maybe move this
         const platformUrl = 'https://www.zilliqa.com/platform';
 
-        const blockchainPlatform = Blockchain.ZILLIQA;
+        const blockchainPlatform = this.props.request.blockchain;
 
         const blockchainConfig = getBlockchain(blockchainPlatform).config;
         const BlockchainIcon = blockchainConfig.iconComponent;
@@ -149,7 +164,14 @@ export class AccountConnectComp extends React.Component<
                                     }
 
                                     const selected =
-                                        this.state.selectedAccounts.indexOf(account.address) !== -1;
+                                        this.state.selectedAccounts.findIndex(
+                                            acc =>
+                                                acc.address === account.address &&
+                                                acc.blockchain === blockchainPlatform &&
+                                                [wallet.walletPublicKey, wallet.id].indexOf(
+                                                    acc.walletPubKey
+                                                ) >= 0
+                                        ) >= 0;
 
                                     const balance = calculateBalance(
                                         account,

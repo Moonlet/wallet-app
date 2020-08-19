@@ -1,8 +1,10 @@
 import { Blockchain } from '../../../src/core/blockchain/types';
 import klona from 'klona';
 import { browser } from 'webextension-polyfill-ts';
+import { store } from '../../../src/redux/config';
+import { getWalletWithAddress } from '../../../src/redux/wallets/selectors';
 
-interface IAccessAccount {
+export interface IAccessAccount {
     walletPubKey: string;
     blockchain: Blockchain;
     address: string;
@@ -14,6 +16,7 @@ export interface IAccessSettings {
 
 const STORAGE_KEY = 'accounts_access_settings';
 let accessSettings: IAccessSettings;
+const accountsMap: { [blockchain: string]: { [walletPubKey: string]: string[] } } = {};
 
 const loadFromStorage = async (): Promise<IAccessSettings> => {
     if (!accessSettings) {
@@ -109,4 +112,73 @@ export const resetAccessSettings = async (): Promise<boolean> => {
     accessSettings = {};
     await saveToStorage();
     return Promise.resolve(true);
+};
+
+export const getDomainAccounts = async (
+    domain: string,
+    blockchain: Blockchain
+): Promise<IAccessAccount[]> => {
+    await loadFromStorage();
+    if (!accountsMap[blockchain]) {
+        accountsMap[blockchain] = {};
+    }
+
+    if (Array.isArray(accessSettings[domain]) && accessSettings[domain].length > 0) {
+        const domainAccounts = (accessSettings[domain] || []).filter(
+            s => s.blockchain === blockchain
+        );
+        const walletPubKey = domainAccounts[0]?.walletPubKey;
+
+        // getting list of accounts stored locally (based on switch history)
+        let accounts = accountsMap[blockchain][walletPubKey] || [];
+        // add the list of all accounts from the same wallet, to be sure we have all accounts
+        const wallet =
+            getWalletWithAddress(
+                store.getState(),
+                domainAccounts.map(s => s.address),
+                blockchain
+            )[0] || null;
+
+        if (wallet) {
+            accounts.push(
+                wallet.accounts.find(acc => acc.selected && acc.blockchain === blockchain).address
+            );
+            accounts.push(
+                ...wallet?.accounts
+                    .filter(acc => acc.blockchain === blockchain)
+                    .map(acc => acc.address)
+            );
+
+            // remove duplicates
+            accounts = [...new Set(accounts)];
+
+            return accounts
+                .filter(addr => domainAccounts.map(s => s.address).indexOf(addr) >= 0)
+                .map(address => ({
+                    walletPubKey,
+                    address,
+                    blockchain
+                }));
+        }
+    }
+    return [];
+};
+
+export const switchAccount = async (
+    walletPubKey: string,
+    blockchain: Blockchain,
+    address: string
+) => {
+    await loadFromStorage();
+    if (!accountsMap[blockchain]) {
+        accountsMap[blockchain] = {};
+    }
+    // console.log(walletPubKey, blockchain, address);
+    const accounts = accountsMap[blockchain][walletPubKey] || [];
+    // add the list of all accounts from the same wallet, to be sure we have all accounts
+    accounts.unshift(address);
+    // remove duplicates
+    accountsMap[blockchain][walletPubKey] = [...new Set(accounts)];
+    // console.log(accountsMap);
+    return Promise.resolve();
 };

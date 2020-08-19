@@ -25,7 +25,7 @@ import {
     addBreadcrumb as SentryAddBreadcrumb
 } from '@sentry/browser';
 import { IExtensionMessage } from '../communication/extension';
-import { getBgPort } from '../communication/bg-port';
+import { getBgPort } from '../communication/bg-port.extension';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {

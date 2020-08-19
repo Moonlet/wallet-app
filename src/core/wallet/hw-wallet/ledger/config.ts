@@ -43,6 +43,9 @@ export const ledgerConfigInternal: ILedgerTransportConfig = {
     ios: {
         ETHEREUM: {
             NANO_X: nanoXConnectionConfigBLE
+        },
+        CELO: {
+            NANO_X: nanoXConnectionConfigBLE
         }
     },
     web: {

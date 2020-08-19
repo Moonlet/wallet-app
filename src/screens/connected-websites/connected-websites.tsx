@@ -46,7 +46,7 @@ export class ConnectedWebsitesScreenComponent extends React.Component<
         this.state = {
             connections: [
                 // {
-                //     url: 'https://www.zilliqa.com/platform',
+                //     domain: 'https://www.zilliqa.com/platform',
                 //     timestamp: 1597770116434
                 // }
             ]
@@ -58,7 +58,7 @@ export class ConnectedWebsitesScreenComponent extends React.Component<
             await Dialog.confirm(
                 translate('ConnectedWebsites.disconnectTitle'),
                 translate('ConnectedWebsites.disconnectBody', {
-                    url: connection.url
+                    domain: connection.domain
                 })
             )
         ) {
@@ -100,7 +100,7 @@ export class ConnectedWebsitesScreenComponent extends React.Component<
                                     />
                                     <View style={styles.connDetailscontainer}>
                                         <Text style={styles.connectionInfoText}>
-                                            {connection.url}
+                                            {connection.domain}
                                         </Text>
                                         <Text style={styles.extraInfo}>{date}</Text>
                                     </View>

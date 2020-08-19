@@ -24,7 +24,7 @@ export class HttpClient {
         });
     }
 
-    public async jsonRpc(method: string, params?: any): Promise<any> {
+    public async jsonRpc(method: string, params: any = []): Promise<any> {
         const id = this.lastId++;
 
         const body = {

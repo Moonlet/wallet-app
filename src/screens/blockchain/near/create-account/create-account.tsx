@@ -31,7 +31,7 @@ interface IReduxProps {
 }
 
 interface IState {
-    inputAccout: string;
+    inputAccount: string;
     isInputValid: boolean;
     isChecking: boolean;
     isUsernameNotAvailable: boolean;
@@ -66,7 +66,7 @@ export class CreateNearAccountComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            inputAccout: props.accountId || '',
+            inputAccount: props.accountId || '',
             isInputValid: false,
             isChecking: false,
             isUsernameNotAvailable: false,
@@ -75,14 +75,14 @@ export class CreateNearAccountComponent extends React.Component<
     }
 
     public componentDidMount() {
-        if (this.state.inputAccout !== '') {
-            this.checkAccountId(this.state.inputAccout);
+        if (this.state.inputAccount !== '') {
+            this.checkAccountId(this.state.inputAccount);
         }
     }
 
     private async checkAccountId(accountId: string) {
         this.setState({
-            inputAccout: accountId,
+            inputAccount: accountId,
             isChecking: true
         });
 
@@ -131,7 +131,7 @@ export class CreateNearAccountComponent extends React.Component<
         try {
             const password = await PasswordModal.getPassword();
             this.props.createNearAccount(
-                `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`,
+                `${this.state.inputAccount}.${NEAR_TESTNET_MASTER_ACCOUNT}`,
                 password
             );
         } catch (err) {
@@ -169,8 +169,8 @@ export class CreateNearAccountComponent extends React.Component<
                                 autoCorrect={false}
                                 selectionColor={theme.colors.accent}
                                 returnKeyType="done"
-                                value={this.state.inputAccout}
-                                onChangeText={inputAccout => this.checkAccountId(inputAccout)}
+                                value={this.state.inputAccount}
+                                onChangeText={inputAccount => this.checkAccountId(inputAccount)}
                             />
 
                             <Text style={styles.domain}>{`.${NEAR_TESTNET_MASTER_ACCOUNT}`}</Text>
@@ -194,7 +194,7 @@ export class CreateNearAccountComponent extends React.Component<
                                 ? translate('AddAccount.invalid')
                                 : this.state.isInputValid
                                 ? translate('CreateNearAccount.congrats', {
-                                      name: `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`
+                                      name: `${this.state.inputAccount}.${NEAR_TESTNET_MASTER_ACCOUNT}`
                                   })
                                 : ''}
                         </Text>

@@ -11,6 +11,6 @@ export interface IBlockchainNetwork {
         getAccountUrl: (address: string) => string;
     };
     links?: {
-        [name: string]: (publicKey: string) => void;
+        [name: string]: (publicKey: string) => string;
     };
 }

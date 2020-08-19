@@ -24,8 +24,6 @@ import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../../core/constants/app';
 import { LoadingModal } from '../../../../components/loading-modal/loading-modal';
 import { NavigationService } from '../../../../navigation/navigation-service';
 
-const NEAR_AUTH_URL = `https://wallet.testnet.near.org/login/?title=Moonlet&public_key=`;
-
 interface IReduxProps {
     chainId: ChainIdType;
     selectedWallet: IWalletState;
@@ -319,7 +317,10 @@ export class RecoverNearAccountComponent extends React.Component<
                         if (this.state.recoveredAccount) {
                             this.setState({ isAuthorizing: true });
 
-                            const url = NEAR_AUTH_URL + this.state.recoveredAccount.publicKey;
+                            const url = getBlockchain(this.state.recoveredAccount.blockchain)
+                                .networks.filter(n => n.chainId === this.props.chainId)[0]
+                                .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
+
                             Clipboard.setString(url);
                             this.startRecoveringAccount();
                         }
@@ -339,10 +340,15 @@ export class RecoverNearAccountComponent extends React.Component<
 
                         if (this.state.recoveredAccount) {
                             this.setState({ isAuthorizing: true });
-                            const url = NEAR_AUTH_URL + this.state.recoveredAccount.publicKey;
+
+                            const url = getBlockchain(this.state.recoveredAccount.blockchain)
+                                .networks.filter(n => n.chainId === this.props.chainId)[0]
+                                .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
+
                             Linking.canOpenURL(url).then(
                                 supported => supported && Linking.openURL(url)
                             );
+
                             this.startRecoveringAccount();
                         }
                     }}

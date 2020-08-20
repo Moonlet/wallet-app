@@ -33,7 +33,6 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { EnterAmount } from '../../send/components/enter-amount/enter-amount';
 import { FeeOptions } from '../../send/components/fee-options/fee-options';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
-import { NavigationService } from '../../../navigation/navigation-service';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { unlock, unvote } from '../../../redux/wallets/actions';
 import { valuePrimaryCtaField } from '../../../core/utils/format-string';
@@ -136,8 +135,6 @@ export class PosBasicActionComponent extends React.Component<
                     break;
                 }
             }
-
-            NavigationService.goBack();
         } catch {
             //
         }

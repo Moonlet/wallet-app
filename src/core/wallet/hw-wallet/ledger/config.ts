@@ -38,6 +38,12 @@ export const ledgerConfigInternal: ILedgerTransportConfig = {
         COSMOS: {
             NANO_S: nanosConnectionConfig,
             NANO_X: nanoXConnectionConfigUSB
+        },
+        CELO: {
+            NANO_S: nanosConnectionConfig,
+            NANO_X: {
+                connectionTypes: [HWConnection.BLE, HWConnection.USB]
+            }
         }
     },
     ios: {

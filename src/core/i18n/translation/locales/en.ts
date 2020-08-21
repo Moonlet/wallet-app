@@ -113,6 +113,7 @@ export const translation: ITranslations = {
                 tools: 'Tools',
                 theRequested: 'the requested',
                 transactions: 'Transactions',
+                transfer: 'Transfer',
                 tryAgain: 'Try again',
                 typeHere: 'Type here',
                 understand: 'I understand',
@@ -326,7 +327,8 @@ export const translation: ITranslations = {
             processTitleText: 'Please wait while each transaction is being processed!',
             processTitleTextLedger:
                 'Please sign each transaction from your Ledger and wait while is being processed!',
-            registerAccount: 'Registering account'
+            registerAccount: 'Registering account',
+            transactionType: 'Transaction Type'
         },
         Statistics: {
             launchingSoon: 'Launching soon!',

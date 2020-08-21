@@ -10,4 +10,7 @@ export interface IBlockchainNetwork {
         getTransactionUrl: (txn: string) => string;
         getAccountUrl: (address: string) => string;
     };
+    links?: {
+        [name: string]: (publicKey: string) => string;
+    };
 }

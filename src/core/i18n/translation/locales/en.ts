@@ -10,6 +10,7 @@ export const translation: ITranslations = {
                 account: 'Account',
                 accounts: 'Accounts',
                 activate: 'Activate',
+                add: 'Add',
                 addToken: 'Add token',
                 advanced: 'Advanced',
                 advancedSetup: 'Advanced setup',
@@ -83,6 +84,8 @@ export const translation: ITranslations = {
                 redelegate: 'Redelegate',
                 reinvest: 'Reinvest',
                 refreshing: 'Refreshing',
+                remove: 'Remove',
+                removeAccount: 'Remove account',
                 reset: 'Reset',
                 resetAll: 'Reset all',
                 restake: 'Restake',
@@ -401,16 +404,30 @@ export const translation: ITranslations = {
             noGiveUp: `But don't give up – check the search string you entered and give it one more try`,
             searchValidators: 'Search for validators'
         },
-        CreateAccount: {
-            createAccount: 'Create new account!',
-            chooseUsr: 'Just choose a username',
-            createNear: 'Create NEAR account!',
-            chooseUsername: 'Just choose a username and you’re all set.',
-            congrats: 'Congrats! This name is available.',
+        AddAccount: {
+            title: 'Add account',
             eg: 'e.g. johndoe',
-            errorMessage: 'Username is {{message}}. Try something else.',
-            taken: 'taken',
-            invalid: 'invalid'
+            addNearAccount: 'Add a new NEAR account',
+            checking: 'Checking availability ...',
+            removeAccountConfirm: 'You’re about to remove {{name}} from Moonlet',
+            invalid: 'Account name CANNOT contain characters "@" or "."',
+            notAvailable: 'Account name not available. Try something else.'
+        },
+        CreateNearAccount: {
+            title: 'Create account name',
+            chooseAccountName: 'Choose an account name and you’re all set.',
+            congrats: 'Congrats! {{name}} is available.'
+        },
+        RecoverNearAccount: {
+            title: 'Recover account name',
+            authMoonletUserAccount: 'Authorize Moonlet to use your existing account name',
+            copyAuthLink: 'Copy authorization link',
+            authMoonlet: 'Authorize Moonlet',
+            congrats: 'Congrats! {{name}} is registered. Please authorize Moonlet to use it.',
+            authProgress: 'Authorization in progress ...',
+            notRegistered:
+                'Account name not registered. If you want to use it, you need first to create it.',
+            createHere: 'Create one here!'
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',
@@ -516,6 +533,11 @@ export const translation: ITranslations = {
             waitTimeWithdraw: 'Wait {{timeFormat}} to withdraw',
             claimText: 'Claim your rewards now',
             withdrawText: 'Withdraw your {{coin}} now'
+        },
+        AddNearAccount: {
+            title: 'Create or recover\nan account name!',
+            recoverAccount: 'Recover an existing account name',
+            createAccount: 'Create a new account name'
         }
     },
     plural: (n: number, ord?: boolean) => {

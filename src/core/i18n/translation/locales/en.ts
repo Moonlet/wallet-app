@@ -103,6 +103,7 @@ export const translation: ITranslations = {
                 simpleSetup: 'Simple setup',
                 standard: 'Standard',
                 stake: 'Stake',
+                staked: 'Staked',
                 startConnect: 'Start connect',
                 statistics: 'Statistics',
                 status: 'Status',

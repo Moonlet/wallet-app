@@ -78,6 +78,15 @@ export class DelegateTokenScreenComponent extends React.Component<
         };
     }
 
+    public componentDidMount() {
+        const { navigation } = this.props;
+        navigation.addListener('willFocus', () => {
+            if (this.props.activeTab !== undefined) {
+                this.setState({ activeTab: this.props.activeTab });
+            }
+        });
+    }
+
     @bind
     tabPressed(tab: string) {
         this.setState({ activeTab: tab });

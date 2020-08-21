@@ -98,7 +98,6 @@ export class DelegateConfirmComponent extends React.Component<
                 this.props.navigation,
                 undefined
             );
-            this.props.navigation.navigate('Token');
         } catch {
             //
         }

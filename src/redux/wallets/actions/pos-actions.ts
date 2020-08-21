@@ -267,12 +267,16 @@ export const posAction = (
                 const client = getBlockchain(account.blockchain).getClient(chainId);
 
                 if (processNextTransaction === true) {
+                    processNextTransaction = false;
+                    txHash = undefined;
                     const transaction = await wallet.sign(
                         account.blockchain,
                         account.index,
                         txs[index]
                     );
+
                     txHash = await client.sendTransaction(transaction);
+
                     if (txHash) {
                         dispatch(updateProcessTransactionIdForIndex(index, txHash));
                         dispatch({
@@ -283,7 +287,6 @@ export const posAction = (
                                 walletId: appWallet.id
                             }
                         });
-                        processNextTransaction = false;
                     } else {
                         SentryAddBreadcrumb({
                             message: JSON.stringify({ transactions: txs[index] })

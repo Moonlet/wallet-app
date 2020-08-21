@@ -1,14 +1,12 @@
 import React from 'react';
+import stylesProvider from './styles';
 import { View, Animated, TouchableOpacity, Platform, ScrollView } from 'react-native';
 import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TokenDashboard } from '../../components/token-dashboard/token-dashboard';
-import { AccountCreate } from '../../components/account-create/account-create';
 import { IReduxState } from '../../redux/state';
 import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
-
-import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -50,6 +48,7 @@ import {
     startNotificationsHandlers,
     getUnseenNotifications
 } from '../../redux/notifications/actions';
+import { AddNearAccount } from '../../components/blockchain/near/add-account/add-account';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -63,7 +62,6 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
     selectedBlockchain: Blockchain;
     exchangeRates: IExchangeRates;
-    isCreateAccount: boolean;
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
     chainId: ChainIdType;
@@ -83,7 +81,6 @@ const mapStateToProps = (state: IReduxState) => {
         selectedBlockchain: getSelectedBlockchain(state),
         selectedAccount,
         exchangeRates: state.market.exchangeRates,
-        isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
         selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
         userCurrency: state.preferences.currency,
         chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
@@ -428,10 +425,7 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public render() {
-        const { styles, selectedBlockchain } = this.props;
-
-        const showCreateAccount =
-            this.props.isCreateAccount && this.props.selectedBlockchainAccounts?.length === 0;
+        const { styles } = this.props;
 
         if (Platform.OS === 'web' && this.state.isLoading) {
             return (
@@ -448,20 +442,17 @@ export class DashboardScreenComponent extends React.Component<
                     : 'calc(100vh - 122px)'
                 : 'auto';
 
+        const isNearAddAccount =
+            this.props.selectedBlockchain === Blockchain.NEAR &&
+            this.props.selectedBlockchainAccounts.length === 0;
+
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
                 <TestnetBadge />
 
                 <NavigationEvents onWillFocus={() => this.onFocus()} />
 
-                {showCreateAccount && (
-                    <AccountCreate
-                        blockchain={selectedBlockchain}
-                        navigation={this.props.navigation}
-                    />
-                )}
-
-                {!showCreateAccount && this.renderTokenDashboard()}
+                {isNearAddAccount ? <AddNearAccount /> : this.renderTokenDashboard()}
 
                 <BottomBlockchainNavigation />
             </View>

@@ -267,13 +267,16 @@ export const posAction = (
                 const client = getBlockchain(account.blockchain).getClient(chainId);
 
                 if (processNextTransaction === true) {
+                    processNextTransaction = false;
+                    txHash = undefined;
                     const transaction = await wallet.sign(
                         account.blockchain,
                         account.index,
                         txs[index]
                     );
-                    processNextTransaction = false;
+
                     txHash = await client.sendTransaction(transaction);
+
                     if (txHash) {
                         dispatch(updateProcessTransactionIdForIndex(index, txHash));
                         dispatch({

@@ -30,7 +30,7 @@ export class ValidatorsApiClient {
     public async getAccountDelegateStats(account: IAccountState, chainId: string) {
         try {
             const response = await this.apiClient.http.post('/walletUi/tokenScreen', {
-                blockchain: Blockchain.CELO,
+                blockchain: account.blockchain,
                 address: account.address,
                 chainId
             });
@@ -51,7 +51,7 @@ export class ValidatorsApiClient {
     public async fetchDelegatedValidators(account: IAccountState, chainId: string) {
         try {
             const response = await this.apiClient.http.post('/walletUi/tokenScreen/accountVotes', {
-                blockchain: Blockchain.CELO,
+                blockchain: account.blockchain,
                 address: account.address,
                 chainId
             });
@@ -72,7 +72,7 @@ export class ValidatorsApiClient {
     public async getBalance(account: IAccountState, chainId: string) {
         try {
             const response = await this.apiClient.http.post('/walletUi/account/balance', {
-                blockchain: Blockchain.CELO,
+                blockchain: account.blockchain,
                 address: account.address,
                 chainId
             });

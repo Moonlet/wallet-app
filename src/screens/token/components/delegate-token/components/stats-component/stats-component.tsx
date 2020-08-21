@@ -168,6 +168,7 @@ export class StatsComponentInternal extends React.Component<
                     </View>
                 )}
                 numColumns={2}
+                columnWrapperStyle={{ justifyContent: 'space-between' }}
             />
         );
 

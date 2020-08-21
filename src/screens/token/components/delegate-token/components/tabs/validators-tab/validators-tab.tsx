@@ -38,12 +38,13 @@ interface IState {
     validatorsFilteredList: IValidator[];
     unfilteredList: IValidator[];
 }
-let searchTimeoutTimer;
 
 export class ValidatorsTabComponent extends React.Component<
     IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
+    private searchTimeoutTimer;
+
     constructor(props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
@@ -55,8 +56,8 @@ export class ValidatorsTabComponent extends React.Component<
 
     @bind
     public onSearchInput(text: string) {
-        searchTimeoutTimer && clearTimeout(searchTimeoutTimer);
-        searchTimeoutTimer = setTimeout(async () => {
+        this.searchTimeoutTimer && clearTimeout(this.searchTimeoutTimer);
+        this.searchTimeoutTimer = setTimeout(async () => {
             const filteredList = this.state.unfilteredList.filter(
                 validator => validator.name.toLowerCase().includes(text.toLowerCase()) === true
             );

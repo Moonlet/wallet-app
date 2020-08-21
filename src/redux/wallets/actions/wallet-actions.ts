@@ -172,7 +172,6 @@ export const createHWWallet = (
     deviceModel: HWModel,
     connectionType: HWConnection,
     blockchain: Blockchain
-    // navigation: NavigationScreenProp<NavigationState>
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     try {
         const walletId: string = uuidv4();
@@ -198,7 +197,7 @@ export const createHWWallet = (
 
         const walletData: IWalletState = {
             id: walletId,
-            walletPublicKey: walletCredentials?.publicKey,
+            walletPublicKey: undefined,
             selected: false,
             selectedBlockchain: blockchain,
             hwOptions: {
@@ -211,6 +210,18 @@ export const createHWWallet = (
             type: WalletType.HW,
             accounts
         };
+
+        if (walletCredentials) {
+            try {
+                await setWalletCredentialsKey(
+                    walletCredentials.publicKey,
+                    walletCredentials.privateKey
+                );
+                walletData.walletPublicKey = walletCredentials.publicKey;
+            } catch {
+                // already handled the error
+            }
+        }
 
         dispatch(addWallet(walletData));
 
@@ -276,17 +287,31 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             const walletId = uuidv4();
             const accounts: IAccountState[] = data.reduce((out, acc) => out.concat(acc), []);
 
-            dispatch(
-                addWallet({
-                    id: walletId,
-                    walletPublicKey: (await wallet.getWalletCredentials())?.publicKey,
-                    selected: false,
-                    selectedBlockchain: Blockchain.ZILLIQA, // by default the first blockchain is selected
-                    name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
-                    type: WalletType.HD,
-                    accounts
-                })
-            );
+            const walletCredentials = await wallet.getWalletCredentials();
+
+            const walletData: IWalletState = {
+                id: walletId,
+                walletPublicKey: undefined,
+                selected: false,
+                selectedBlockchain: Blockchain.ZILLIQA, // by default the first blockchain is selected
+                name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
+                type: WalletType.HD,
+                accounts
+            };
+
+            if (walletCredentials) {
+                try {
+                    await setWalletCredentialsKey(
+                        walletCredentials.publicKey,
+                        walletCredentials.privateKey
+                    );
+                    walletData.walletPublicKey = walletCredentials.publicKey;
+                } catch {
+                    // already handled the error
+                }
+            }
+
+            dispatch(addWallet(walletData));
 
             const encryptionKey = await getEncryptionKey(password);
             await storeEncrypted(mnemonic, walletId, encryptionKey);
@@ -842,33 +867,36 @@ export const setWalletsCredentials = (password: string) => async (
 
     for (const wallet of Object.values(state.wallets)) {
         try {
-            const walletId = (wallet as IWalletState).id;
+            if (wallet.walletPublicKey) {
+                // credentials have been already set
+                return;
+            }
 
-            let walletCredentials: { publicKey: string; privateKey?: string };
+            let walletCredentials: { publicKey: string; privateKey: string };
 
-            if (wallet.type === WalletType.HD) {
-                const storageHDWallet = await HDWallet.loadFromStorage(walletId, password);
-                walletCredentials = await storageHDWallet.getWalletCredentials();
-            } else if (wallet.type === WalletType.HW) {
-                if (wallet.walletPublicKey) {
-                    walletCredentials = {
-                        publicKey: wallet.walletPublicKey
-                    };
-                } else {
-                    // Generate wallet credentials
+            // Generate wallet credentials
+            switch (wallet.type) {
+                case WalletType.HD:
+                    const storageHDWallet = await HDWallet.loadFromStorage(wallet.id, password);
+                    walletCredentials = await storageHDWallet.getWalletCredentials();
+                    break;
+
+                case WalletType.HW:
                     const walletHW: IWallet = await HWWalletFactory.get(
                         wallet.hwOptions.deviceVendor,
                         wallet.hwOptions.deviceModel,
                         wallet.hwOptions.deviceId,
                         wallet.hwOptions.connectionType
                     );
-
                     walletCredentials = await walletHW.getWalletCredentials();
-                }
+                    break;
+
+                default:
+                    break;
             }
 
             if (walletCredentials?.publicKey) {
-                setWalletPublicKey(walletId, walletCredentials.publicKey)(dispatch, getState);
+                setWalletPublicKey(wallet.id, walletCredentials.publicKey)(dispatch, getState);
 
                 const keychainWalletCredentials = await getWalletCredentialsKey(
                     walletCredentials.publicKey
@@ -881,19 +909,17 @@ export const setWalletsCredentials = (password: string) => async (
                     );
                 }
             } else {
-                SentryCaptureException(
-                    new Error(
-                        JSON.stringify({
-                            walletPublicKey: wallet?.walletPublicKey,
-                            walletType: wallet.type,
-                            walletHwOptions: wallet?.hwOptions,
-                            errorMessage: 'Undefined walletCredentials'
-                        })
-                    )
+                throw new Error(
+                    JSON.stringify({
+                        walletPublicKey: wallet?.walletPublicKey,
+                        walletType: wallet.type,
+                        walletHwOptions: wallet?.hwOptions,
+                        errorMessage: 'Undefined walletCredentials'
+                    })
                 );
             }
         } catch (err) {
-            SentryCaptureException(new Error(JSON.stringify(err)));
+            throw new Error(err);
         }
     }
 };

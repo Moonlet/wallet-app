@@ -173,6 +173,7 @@ export const setWalletCredentialsKey = async (
         });
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));
+        throw new Error(err);
     }
 };
 

@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { HDWallet } from '../../../core/wallet/hd-wallet/hd-wallet';
 import {
     Blockchain,
@@ -41,8 +42,6 @@ import {
     getWalletAndTransactionForHash
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
-import { Client as NearClient } from '../../../core/blockchain/near/client';
-import { enableCreateAccount, disableCreateAccount } from '../../ui/screens/dashboard/actions';
 import { formatAddress } from '../../../core/utils/format-address';
 import { updateAddressMonitorTokens } from '../../../core/address-monitor/index';
 import { Dialog } from '../../../components/dialog/dialog';
@@ -63,6 +62,9 @@ import { ConnectExtension } from '../../../core/connect-extension/connect-extens
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { startNotificationsHandlers } from '../../notifications/actions';
+import { ApiClient } from '../../../core/utils/api-client/api-client';
+import { Client as NearClient } from '../../../core/blockchain/near/client';
+import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../core/constants/app';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -114,15 +116,6 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
         }
     });
 
-    if (blockchain === Blockchain.NEAR) {
-        if (getAccounts(state, blockchain).length === 0) {
-            dispatch(enableCreateAccount());
-        } else {
-            dispatch(disableCreateAccount());
-        }
-    } else {
-        dispatch(disableCreateAccount());
-    }
     const selectedAccount = getSelectedAccount(getState());
     if (selectedAccount) {
         getBalance(
@@ -405,10 +398,15 @@ export const updateTransactionFromBlockchain = (
     const state = getState();
     const blockchainInstance = getBlockchain(blockchain);
     const client = blockchainInstance.getClient(chainId);
+    const selectedAccount = getSelectedAccount(state);
+
     let transaction;
 
     try {
-        transaction = await client.utils.getTransaction(transactionHash);
+        transaction = await client.utils.getTransaction(
+            transactionHash,
+            blockchain === Blockchain.NEAR && selectedAccount.address
+        );
     } catch (e) {
         const currentBlock = await client.getCurrentBlock();
         if (
@@ -717,17 +715,40 @@ export const addTokenToAccount = (
     getBalance(account.blockchain, account.address, undefined, true)(dispatch, getState);
 };
 
-export const createAccount = (
+export const deleteAccount = (
     blockchain: Blockchain,
-    newAccountId: string,
+    accountId: string,
+    accountIndex: number,
     password: string
 ) => async (dispatch: Dispatch<any>, getState: () => IReduxState) => {
+    const state = getState();
+    const selectedWallet: IWalletState = getSelectedWallet(state);
+
+    const hdWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
+        pass: password
+    });
+
+    const privateKey = hdWallet.getPrivateKey(blockchain, accountIndex);
+
+    const chainId = getChainId(state, blockchain);
+    const client = getBlockchain(blockchain).getClient(chainId) as NearClient;
+
+    await client.deleteNearAccount(accountId, NEAR_TESTNET_MASTER_ACCOUNT, privateKey);
+};
+
+export const createNearAccount = (newAccountId: string, password: string) => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    await LoadingModal.open();
+
     const state = getState();
     const selectedWallet: IWalletState = getSelectedWallet(state);
     const hdWallet: IWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
         pass: password
     });
-    blockchain = Blockchain.NEAR;
+    const blockchain = Blockchain.NEAR;
+
     const chainId = getChainId(state, blockchain);
 
     const numberOfAccounts = selectedWallet.accounts.filter(acc => acc.blockchain === blockchain)
@@ -735,29 +756,39 @@ export const createAccount = (
 
     const accounts = await hdWallet.getAccounts(blockchain, numberOfAccounts);
     const account = accounts[0];
-    const publicKey = account.publicKey;
 
-    const blockchainInstance = getBlockchain(blockchain);
-    const client = blockchainInstance.getClient(chainId) as NearClient;
+    const res = await new ApiClient().near.createAccount(
+        newAccountId,
+        account.publicKey,
+        String(chainId)
+    );
 
-    const txId = await client.createAccount(newAccountId, publicKey, chainId);
+    if (res?.result?.data?.status) {
+        const tx = res.result.data;
 
-    if (txId) {
-        account.address = newAccountId;
+        if (tx.status?.SuccessValue === '') {
+            account.address = newAccountId;
+            account.tokens[chainId][getBlockchain(blockchain).config.coin].balance = {
+                value: '0',
+                inProgress: false,
+                timestamp: undefined,
+                error: undefined
+            };
+            dispatch(addAccount(selectedWallet.id, blockchain, account));
+            dispatch(setSelectedAccount(account));
 
-        account.tokens[chainId][blockchainInstance.config.coin].balance = {
-            value: '0',
-            inProgress: false,
-            timestamp: undefined,
-            error: undefined
-        };
-
-        dispatch(addAccount(selectedWallet.id, blockchain, account));
-        dispatch(setSelectedAccount(account));
-        dispatch(disableCreateAccount());
+            NavigationService.navigate('Dashboard', {});
+        } else if (tx.status?.Failure) {
+            // TODO
+            Alert.alert('Failed', 'Create account has failed!');
+        } else {
+            Alert.alert('Invalid Status', 'Create account has failed!');
+        }
     } else {
-        // TODO - if client.createAccount crashes, dashboard (near create account section) will be stuck on loading indicator
+        Alert.alert('Create account has failed!', res?.message || res?.errorMessage || '');
     }
+
+    await LoadingModal.close();
 };
 
 export const changePIN = (newPassword: string, oldPassword: string) => async (

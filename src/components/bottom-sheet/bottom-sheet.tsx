@@ -15,16 +15,19 @@ import { normalize } from '../../styles/dimensions';
 import { LedgerConnectBottomSheet } from './ledger-connect-bottom-sheet/ledger-connect-bottom-sheet';
 import { WalletsBottomSheet } from './wallets-bottom-sheet/wallets-bottom-sheet';
 import bind from 'bind-decorator';
+import { getSelectedBlockchain } from '../../redux/wallets/selectors';
+import { Blockchain } from '../../core/blockchain/types';
 
 const HEIGHT_1_ROW = normalize(132);
 // const HEIGHT_2_ROW = normalize(200);
 const HEIGHT_3_ROWS = normalize(280);
-// const HEIGHT_4_ROWS = normalize(360);
+const HEIGHT_4_ROWS = normalize(360);
 const HEIGHT_5_ROWS = normalize(420);
 const HEIGHT_BLOCKCHAIN_NAVIGATION = normalize(400);
 const HEIGHT_THREE_QUARTERS_SCREEN = (Dimensions.get('window').height * 3) / 4;
 
 interface IReduxProps {
+    selectedBlockchain: Blockchain;
     bottomSheet: IBottomSheet;
     openBottomSheet: typeof openBottomSheet;
     closeBottomSheet: typeof closeBottomSheet;
@@ -32,7 +35,8 @@ interface IReduxProps {
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        bottomSheet: state.ui.bottomSheet
+        bottomSheet: state.ui.bottomSheet,
+        selectedBlockchain: getSelectedBlockchain(state)
     };
 };
 
@@ -83,7 +87,10 @@ export class BottomSheetComponent extends React.Component<
                                 initialSnap: Platform.OS === 'web' ? HEIGHT_1_ROW : 0,
                                 bottomSheetHeight: Platform.select({
                                     web: HEIGHT_1_ROW,
-                                    default: HEIGHT_5_ROWS
+                                    default:
+                                        this.props.selectedBlockchain === Blockchain.NEAR
+                                            ? HEIGHT_4_ROWS
+                                            : HEIGHT_5_ROWS
                                 })
                             }}
                             onClose={this.handleClose}

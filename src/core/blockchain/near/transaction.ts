@@ -6,10 +6,9 @@ import {
 } from '../types';
 import { INearTransactionAdditionalInfoType, NearTransactionActionType, Near } from './';
 import { TransactionStatus } from '../../wallet/types';
-
-import { transfer, createTransaction, signTransaction } from 'nearlib/src.ts/transaction';
-import { KeyPair, PublicKey } from 'nearlib/src.ts/utils/key_pair';
-import { base_decode } from 'nearlib/src.ts/utils/serialize';
+import { transfer, createTransaction, signTransaction } from 'near-api-js/lib/transaction';
+import { KeyPair, PublicKey } from 'near-api-js/lib/utils/key_pair';
+import { base_decode } from 'near-api-js/lib/utils/serialize';
 import BN from 'bn.js';
 import sha256 from 'js-sha256';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
@@ -101,15 +100,14 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     }
 
     public getTransactionStatusByCode(status: any): TransactionStatus {
-        switch (parseInt(status, 16)) {
-            case 0:
-                return TransactionStatus.FAILED;
-            case 1:
-                return TransactionStatus.SUCCESS;
-            case 2:
-                return TransactionStatus.PENDING;
-            default:
-                return TransactionStatus.FAILED;
+        // check for Pending ?
+
+        if (status.SuccessValue === '') {
+            return TransactionStatus.SUCCESS;
+        } else if (status?.Failure) {
+            return TransactionStatus.FAILED;
+        } else {
+            return TransactionStatus.FAILED;
         }
     }
 }

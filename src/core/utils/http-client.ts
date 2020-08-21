@@ -24,13 +24,14 @@ export class HttpClient {
         });
     }
 
-    public async jsonRpc(method: string, params: any[] = []): Promise<any> {
+    public async jsonRpc(method: string, params: any = []): Promise<any> {
         const id = this.lastId++;
+
         const body = {
             jsonrpc: '2.0',
             id,
             method,
-            params: Array.isArray(params) ? params : [params]
+            params: typeof params !== 'object' || params === null ? [params] : params
         };
 
         return this.post('', body).then(async res => {

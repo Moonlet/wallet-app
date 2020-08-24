@@ -9,5 +9,10 @@ export const getValidators = (
     chainId: ChainIdType,
     posAction?: PosBasicActionType
 ): IValidator[] => {
-    return state.ui.validators[blockchain][chainId as string];
+    return (
+        (state.ui.validators &&
+            state.ui.validators[blockchain] &&
+            state.ui.validators[blockchain][chainId as string]) ||
+        []
+    );
 };

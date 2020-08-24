@@ -22,6 +22,7 @@ import { formatNumber } from '../../../core/utils/format-number';
 import { getSelectedWallet } from '../../../redux/wallets/selectors';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { formatValidatorName } from '../../../core/utils/format-string';
+import { NavigationService } from '../../../navigation/navigation-service';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -251,6 +252,16 @@ export class ProcessTransactionsComponent extends React.Component<
                     <Button
                         primary
                         onPress={() => {
+                            if (this.props.transactions.length) {
+                                const blockchainInstance = getBlockchain(
+                                    this.props.transactions[0].blockchain
+                                );
+                                NavigationService.navigate('Token', {
+                                    activeTab:
+                                        blockchainInstance.config.ui?.token?.labels?.tabTransactions
+                                });
+                            }
+
                             this.props.closeProcessTransactions();
                         }}
                         wrapperStyle={styles.continueButton}

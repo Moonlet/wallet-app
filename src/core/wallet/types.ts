@@ -16,6 +16,7 @@ export enum TransactionStatus {
 export interface IWallet {
     getAccounts(blockchain: Blockchain, index: number, indexTo?: number): Promise<IAccountState[]>;
     sign(blockchain: Blockchain, accountIndex: number, tx: IBlockchainTransaction): Promise<string>;
+    signMessage(lockchain: Blockchain, accountIndex: number, message: string): Promise<string>;
     getPrivateKey(blockchain: Blockchain, accountIndex: number): string;
     getWalletCredentials(): Promise<{ publicKey: string; privateKey: string }>;
 }

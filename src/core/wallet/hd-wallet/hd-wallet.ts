@@ -109,6 +109,13 @@ export class HDWallet implements IWallet {
         );
     }
 
+    signMessage(blockchain: Blockchain, accountIndex: number, message: string): Promise<string> {
+        return getBlockchain(blockchain).transaction.signMessage(
+            message,
+            this.getPrivateKey(blockchain, accountIndex)
+        );
+    }
+
     public getMnemonic() {
         return this.mnemonic;
     }

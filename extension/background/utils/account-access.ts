@@ -58,6 +58,20 @@ export const hasAccess = async (
     return Promise.resolve(false);
 };
 
+export const getAccountInfo = async (
+    domain: string,
+    blockchain: Blockchain,
+    address: string
+): Promise<IAccessAccount> => {
+    await loadFromStorage();
+    if (accessSettings[domain]) {
+        return accessSettings[domain].find(
+            account => account.blockchain === blockchain && account.address === address
+        );
+    }
+    return Promise.resolve(undefined);
+};
+
 export const allowAccess = async (domain: string, accounts: IAccessAccount[]): Promise<boolean> => {
     await loadFromStorage();
     if (!accessSettings[domain]) {

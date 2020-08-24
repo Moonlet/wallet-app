@@ -10,6 +10,7 @@ import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
 import { ConnectExtensionWeb } from '../../../core/connect-extension/connect-extension-web';
+import { NotificationType } from '../../../core/messaging/types';
 
 interface IExternalProps {
     requestId: string;
@@ -20,24 +21,66 @@ interface IExternalProps {
 export class NativeForwardComp extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
+    private getRequestPayload() {
+        const rpcRequest = this.props.request.params[0];
+
+        let sendRequestPayload;
+
+        if (rpcRequest?.method && rpcRequest?.params) {
+            switch (rpcRequest.method) {
+                case 'CreateTransaction':
+                    // todo generate payload
+                    sendRequestPayload = {
+                        method: this.props.request.params[0].method,
+                        params: [this.props.requestId],
+                        notification: {
+                            title: translate('Notifications.extensionTx.title'),
+                            body: translate('Notifications.extensionTx.body', {
+                                formattedAmount: '1 ZIL',
+                                formattedAddress: 'novi'
+                            })
+                        }
+                    };
+                    break;
+                case 'SignMessage':
+                    sendRequestPayload = {
+                        method: NotificationType.MOONLET_SIGN_MESSAGE,
+                        params: [
+                            {
+                                walletPubKey: this.props.request.walletPubKey,
+                                blockchain: this.props.request.blockchain,
+                                accountAddress: rpcRequest.params[0],
+                                message: rpcRequest.params[1]
+                            }
+                        ],
+                        notification: {
+                            title: translate('Notifications.extensionSignMessage.title'),
+                            body: translate('Notifications.extensionSignMessage.body')
+                        }
+                    };
+                    break;
+            }
+        } else {
+            throw new Error('Invalid request');
+        }
+
+        return sendRequestPayload;
+    }
+
     public async componentDidMount() {
+        /**
+         * TODO:
+         * - check transaction type:
+         *      - Transfer native token / zrc 2
+         *      - Contract call
+         *      - Sign Message
+         */
+
         // console.log('method: ', this.props.request.params[0].method);
         // console.log('requestId: ', this.props.requestId);
 
-        const sendRequestPayload = {
-            method: this.props.request.params[0].method,
-            params: [this.props.requestId],
-            notification: {
-                title: translate('Notifications.extensionTx.title'),
-                body: translate('Notifications.extensionTx.body', {
-                    formattedAmount: '1 ZIL',
-                    formattedAddress: 'novi'
-                })
-            }
-        };
-
         try {
-            const sendRequestRes = await ConnectExtension.sendRequest(sendRequestPayload);
+            const sendRequestRes = await ConnectExtension.sendRequest(this.getRequestPayload());
             // console.log('sendRequestRes: ', sendRequestRes);
 
             if (sendRequestRes?.success) {
@@ -45,12 +88,27 @@ export class NativeForwardComp extends React.Component<
                     sendRequestRes.data.requestId,
                     async (res: { result: any; errorCode: string }) => {
                         if (res.errorCode) {
-                            // console.log('errorCode: ', res.errorCode);
-                        } else {
-                            // console.log('res: ', res);
-                        }
+                            this.props.onResponse({
+                                jsonrpc: '2.0',
+                                error: {
+                                    code: -1,
+                                    message: 'GENERIC_ERROR: ' + res.errorCode
+                                }
+                            });
 
-                        // this.onSign(res)
+                            window.close();
+                        } else {
+                            let result = res.result;
+                            if (res?.result?.rpcResponse) {
+                                result = res.result.rpcResponse;
+                            }
+
+                            this.props.onResponse({
+                                jsonrpc: '2.0',
+                                result
+                            });
+                            window.close();
+                        }
                     }
                 );
             }

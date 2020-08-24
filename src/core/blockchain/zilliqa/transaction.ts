@@ -34,6 +34,16 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
         return r + s;
     }
 
+    public async signMessage(message: string, privateKey: string): Promise<string> {
+        const publicKey = Zilliqa.account.privateToPublic(privateKey);
+        const signature = this.schnorrSign(Buffer.from(message, 'hex'), privateKey);
+        return JSON.stringify({
+            signature,
+            publicKey,
+            message
+        });
+    }
+
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const pubKey = Zilliqa.account.privateToPublic(privateKey);
         const transaction: any = {

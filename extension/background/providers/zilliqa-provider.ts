@@ -8,7 +8,12 @@ import { IExtensionResponse, IExtensionRequest } from '../../../src/core/communi
 import { browser, Runtime } from 'webextension-polyfill-ts';
 import { getChainId } from '../../../src/redux/preferences/selectors';
 import { store } from '../../../src/redux/config';
-import { getDomainAccounts, allowAccess, declineAccess } from '../utils/account-access';
+import {
+    getDomainAccounts,
+    allowAccess,
+    declineAccess,
+    getAccountInfo
+} from '../utils/account-access';
 // import { hasAccess } from '../utils/account-access';
 
 export class ZilliqaProvider extends BaseProvider {
@@ -105,7 +110,30 @@ export class ZilliqaProvider extends BaseProvider {
                 return this._openConfirmationScreen(request);
             case 'SignMessage':
                 // TODO: check permissions
-                return this._openConfirmationScreen(request);
+                const availableAccounts = await getDomainAccounts(
+                    request.origin,
+                    Blockchain.ZILLIQA
+                );
+                const address = rpcRequest.params[0] || availableAccounts[0]?.address;
+                const accountInfo = await getAccountInfo(
+                    request.origin,
+                    request.blockchain,
+                    address
+                );
+                if (accountInfo) {
+                    rpcRequest.params[0] = address;
+                    request.walletPubKey = accountInfo.walletPubKey;
+                    return this._openConfirmationScreen(request);
+                } else {
+                    return {
+                        jsonrpc: '2.0',
+                        error: {
+                            code: -1,
+                            message: `ACCESS_UNAUTHORIZED: User did not authorize ${address ||
+                                'any'} address for ${request.origin}`
+                        }
+                    };
+                }
             default:
                 // just do a http call
                 const chainId = getChainId(store.getState(), Blockchain.ZILLIQA);

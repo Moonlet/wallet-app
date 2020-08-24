@@ -64,7 +64,7 @@ import { ConnectExtension } from '../../../core/connect-extension/connect-extens
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { startNotificationsHandlers } from '../../notifications/actions';
-import { bgPortRequest } from '../../../core/communication/bg-port.extension';
+import { bgPortRequest } from '../../../core/communication/bg-port';
 import { Platform } from 'react-native';
 
 // actions consts
@@ -510,6 +510,92 @@ export const updateTransactionFromBlockchain = (
     }
 
     await LoadingModal.close();
+};
+
+export const signMessage = (
+    walletPublicKey: string,
+    blockchain: Blockchain,
+    address: string,
+    message: string,
+    password: string,
+    sendResponse?: { requestId: string }
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    try {
+        const state = getState();
+
+        const appWallet = Object.values(state.wallets).find(
+            w => w.id === walletPublicKey || w.walletPublicKey === walletPublicKey
+        );
+
+        if (!appWallet) {
+            throw new Error('GENERIC_ERROR');
+        }
+
+        const account = appWallet.accounts.find(
+            acc => acc.blockchain === blockchain && acc.address === address
+        );
+
+        if (!account) {
+            throw new Error('GENERIC_ERROR');
+        }
+
+        await LoadingModal.open({
+            type: TransactionMessageType.INFO,
+            text:
+                appWallet.type === WalletType.HW
+                    ? TransactionMessageText.CONNECTING_LEDGER
+                    : TransactionMessageText.SIGNING
+        });
+
+        const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
+            pass: password,
+            deviceVendor: appWallet.hwOptions?.deviceVendor,
+            deviceModel: appWallet.hwOptions?.deviceModel,
+            deviceId: appWallet.hwOptions?.deviceId,
+            connectionType: appWallet.hwOptions?.connectionType
+        }); // encrypted string: pass)
+
+        if (appWallet.type === WalletType.HW) {
+            await LoadingModal.showMessage({
+                text: TransactionMessageText.OPEN_APP,
+                type: TransactionMessageType.INFO
+            });
+
+            await (wallet as LedgerWallet).onAppOpened(blockchain);
+
+            await LoadingModal.showMessage({
+                text: TransactionMessageText.REVIEW_TRANSACTION,
+                type: TransactionMessageType.INFO
+            });
+        }
+
+        const signedMessage = await wallet.signMessage(account.blockchain, account.index, message);
+
+        if (signedMessage) {
+            if (sendResponse) {
+                let result;
+                try {
+                    result = JSON.parse(signedMessage);
+                } catch {
+                    result = signedMessage;
+                }
+                await ConnectExtension.sendResponse(sendResponse.requestId, {
+                    result
+                });
+
+                dispatch({ type: CLOSE_TX_REQUEST });
+            }
+
+            await LoadingModal.close();
+            dispatch(closeTransactionRequest());
+            return;
+        } else {
+            throw new Error('GENERIC_ERROR');
+        }
+    } catch (errorMessage) {
+        await LoadingModal.close();
+        Dialog.info(translate('LoadingModal.txFailed'), translate('LoadingModal.GENERIC_ERROR'));
+    }
 };
 
 export const sendTransferTransaction = (

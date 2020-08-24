@@ -26,6 +26,7 @@ import {
 } from '@sentry/browser';
 import { IExtensionMessage } from '../communication/extension';
 import { getBgPort } from '../communication/bg-port.extension';
+import klona from 'klona';
 
 export const ConnectExtensionWeb = (() => {
     const getRealtimeDBConnectionsRef = () => {
@@ -309,6 +310,10 @@ export const ConnectExtensionWeb = (() => {
         );
     };
 
+    const getRequestIdData = async (requestId: string): Promise<any> => {
+        //
+    };
+
     const getRequestIdParams = async (requestId: string): Promise<any> => {
         //
     };
@@ -331,11 +336,8 @@ export const ConnectExtensionWeb = (() => {
                     if (snapshot.exists()) {
                         const snap = await snapshot.val();
 
-                        const result = { txHash: undefined, tx: undefined };
-
-                        if (snap?.result) {
-                            result.txHash = snap.result.txHash;
-
+                        const result = klona(snap?.result) || {};
+                        if (snap?.result?.tx) {
                             const tx: IBlockchainTransaction = JSON.parse(
                                 await decrypt(snap.result.tx, connection.encKey)
                             );
@@ -363,6 +365,7 @@ export const ConnectExtensionWeb = (() => {
         downloadFileStorage,
         listenLastSync,
         listenLastSyncForConnect,
+        getRequestIdData,
         getRequestIdParams,
         listenerReqResponse
     };

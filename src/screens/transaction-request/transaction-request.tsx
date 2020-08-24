@@ -9,7 +9,11 @@ import { closeTransactionRequest } from '../../redux/ui/transaction-request/acti
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { sendTransferTransaction, setSelectedWallet } from '../../redux/wallets/actions';
+import {
+    sendTransferTransaction,
+    setSelectedWallet,
+    signMessage
+} from '../../redux/wallets/actions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import Icon from '../../components/icon/icon';
 import { normalize } from '../../styles/dimensions';
@@ -31,6 +35,7 @@ import bind from 'bind-decorator';
 import { IWalletState, IWalletsState } from '../../redux/wallets/state';
 import { IconValues } from '../../components/icon/values';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
+import { NotificationType } from '../../core/messaging/types';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -38,6 +43,7 @@ export interface IReduxProps {
     qrCode: string;
     closeTransactionRequest: typeof closeTransactionRequest;
     sendTransferTransaction: typeof sendTransferTransaction;
+    signMessage: typeof signMessage;
     selectedWallet: IWalletState;
     setSelectedWallet: typeof setSelectedWallet;
     wallets: IWalletsState;
@@ -56,6 +62,7 @@ export const mapStateToProps = (state: IReduxState) => {
 const mapDispatchToProps = {
     closeTransactionRequest,
     sendTransferTransaction,
+    signMessage,
     setSelectedWallet
 };
 
@@ -110,16 +117,22 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     private async getExtensionTxPayload() {
         try {
-            const payload = await ConnectExtensionWeb.getRequestIdParams(this.props.requestId);
-
+            const payload = await ConnectExtensionWeb.getRequestIdData(this.props.requestId);
             if (payload) {
-                const walletId = payload.walletId;
-                if (walletId !== this.props.selectedWallet.id) {
-                    if (
-                        Object.keys(this.props.wallets).filter(wId => wId === walletId).length === 1
-                    ) {
+                const payloadParams = payload?.params[0] || {};
+                const walletId = payloadParams.walletId || payloadParams.walletPubKey;
+
+                if (
+                    walletId !== this.props.selectedWallet.id &&
+                    walletId !== this.props.selectedWallet.walletPublicKey
+                ) {
+                    const wallet = Object.values(this.props.wallets).find(
+                        w => w.id === walletId || w.walletPublicKey === walletId
+                    );
+
+                    if (wallet) {
                         // Switch the wallet
-                        this.props.setSelectedWallet(walletId);
+                        this.props.setSelectedWallet(wallet.id);
 
                         this.setState({ extensionTxPayload: payload });
                     } else {
@@ -163,18 +176,26 @@ export class TransactionRequestScreenComponent extends React.Component<
         }
     }
 
-    @bind
-    private async confirm(options?: { qrCodeTransferData?: IQRCodeTransferData }) {
-        try {
-            const password = await PasswordModal.getPassword(
-                translate('Password.pinTitleUnlock'),
-                translate('Password.subtitleSignTransaction'),
-                { sensitive: true, showCloseButton: true }
-            );
+    private async sendExtensionTx() {
+        const { extensionTxPayload } = this.state;
+        const password = await PasswordModal.getPassword(
+            translate('Password.pinTitleUnlock'),
+            translate('Password.subtitleSignTransaction'),
+            { sensitive: true, showCloseButton: true }
+        );
 
-            const { extensionTxPayload } = this.state;
-
-            if (extensionTxPayload) {
+        switch (extensionTxPayload.method as NotificationType) {
+            case 'MOONLET_SIGN_MESSAGE':
+                this.props.signMessage(
+                    extensionTxPayload?.params[0]?.walletPubKey,
+                    extensionTxPayload?.params[0]?.blockchain,
+                    extensionTxPayload?.params[0]?.accountAddress,
+                    extensionTxPayload?.params[0]?.message,
+                    password,
+                    { requestId: this.props.requestId }
+                );
+                break;
+            default:
                 this.props.sendTransferTransaction(
                     extensionTxPayload.account,
                     extensionTxPayload.toAddress,
@@ -187,9 +208,24 @@ export class TransactionRequestScreenComponent extends React.Component<
                     false, // goBack
                     { requestId: this.props.requestId }
                 );
+        }
+    }
+
+    @bind
+    private async confirm(options?: { qrCodeTransferData?: IQRCodeTransferData }) {
+        try {
+            const { extensionTxPayload } = this.state;
+
+            if (extensionTxPayload) {
+                this.sendExtensionTx();
             }
 
             if (options?.qrCodeTransferData) {
+                const password = await PasswordModal.getPassword(
+                    translate('Password.pinTitleUnlock'),
+                    translate('Password.subtitleSignTransaction'),
+                    { sensitive: true, showCloseButton: true }
+                );
                 this.props.sendTransferTransaction(
                     options.qrCodeTransferData.account,
                     options.qrCodeTransferData.toAddress,

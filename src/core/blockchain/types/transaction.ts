@@ -10,6 +10,11 @@ export abstract class AbstractBlockchainTransactionUtils {
     public async sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string> {
         throw new Error('Not Implemented');
     }
+
+    public async signMessage(message: string, privateKey: string): Promise<string> {
+        throw new Error('Not Implemented');
+    }
+
     public async buildTransferTransaction(
         tx: ITransferTransaction
     ): Promise<IBlockchainTransaction> {

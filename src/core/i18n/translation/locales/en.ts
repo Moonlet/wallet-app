@@ -474,6 +474,10 @@ export const translation: ITranslations = {
                 body:
                     'Open Moonlet to confirm the following transaction: send {{formattedAmount}} to {{formattedAddress}}'
             },
+            extensionSignMessage: {
+                title: 'Sign message',
+                body: 'Open Moonlet to sign the message'
+            },
             notificationsCenter: {
                 emptyNotifTitle: 'No notifications available',
                 emptyNotifSubtitle:

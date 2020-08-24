@@ -20,6 +20,7 @@ export interface IExtensionResponse {
 
 export interface IExtensionRequest {
     origin: string;
+    walletPubKey?: string;
     controller: string;
     blockchain?: Blockchain;
     method: string;

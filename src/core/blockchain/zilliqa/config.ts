@@ -149,3 +149,7 @@ export const config: IBlockchainConfig = {
     },
     defaultOrder: 0
 };
+
+export enum Contracts {
+    STAKING = 'STAKING'
+}

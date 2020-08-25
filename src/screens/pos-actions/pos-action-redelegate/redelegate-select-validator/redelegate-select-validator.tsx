@@ -208,7 +208,6 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     bottomStats={validator.topStats}
                     actionTypeSelected={validator.actionTypeSelected || false}
                     borderColor={this.props.theme.colors.labelRedelegate}
-                    blockchain={this.props.blockchain}
                     onSelect={() => {
                         //
                     }}

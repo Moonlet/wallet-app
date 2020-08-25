@@ -63,7 +63,6 @@ export const ValidatorsListComponent = (
                             ? props.theme.colors.labelRedelegate
                             : props.theme.colors.accent
                     }
-                    blockchain={props.blockchain}
                     onSelect={() => {
                         props.redelegate?.validator.id !== item.id && props.onSelect(item);
                     }}

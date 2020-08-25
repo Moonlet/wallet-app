@@ -51,21 +51,12 @@ const validatorCTA = {
             iconName: IconValues.UNVOTE,
             navigateTo: {
                 screen: 'PosBasicAction',
-                params: { actionText: 'App.labels.unstake', basicAction: PosBasicActionType.UNVOTE }
+                params: {
+                    actionText: 'App.labels.unstake',
+                    basicAction: PosBasicActionType.UNSTAKE
+                }
             }
         }
-        // {
-        //     title: 'App.labels.unlock',
-        //     iconName: IconValues.UNLOCK,
-        //     navigateTo: {
-        //         screen: 'PosBasicAction',
-        //         params: {
-        //             actionText: 'App.labels.unlock',
-        //             basicAction: PosBasicActionType.UNLOCK,
-        //             unlockDays: '3 days'
-        //         }
-        //     }
-        // }
     ]
 };
 

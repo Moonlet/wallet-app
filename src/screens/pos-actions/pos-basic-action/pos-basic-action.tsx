@@ -34,7 +34,7 @@ import { EnterAmount } from '../../send/components/enter-amount/enter-amount';
 import { FeeOptions } from '../../send/components/fee-options/fee-options';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
-import { unlock, unvote } from '../../../redux/wallets/actions';
+import { unlock, unvote, unstake } from '../../../redux/wallets/actions';
 import { valuePrimaryCtaField } from '../../../core/utils/format-string';
 import BigNumber from 'bignumber.js';
 
@@ -43,6 +43,7 @@ export interface IReduxProps {
     chainId: ChainIdType;
     unlock: typeof unlock;
     unvote: typeof unvote;
+    unstake: typeof unstake;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -54,7 +55,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 
 const mapDispatchToProps = {
     unlock,
-    unvote
+    unvote,
+    unstake
 };
 
 export interface INavigationParams {
@@ -123,6 +125,19 @@ export class PosBasicActionComponent extends React.Component<
                 }
                 case PosBasicActionType.UNVOTE: {
                     this.props.unvote(
+                        this.props.account,
+                        this.state.amount,
+                        this.props.validators,
+                        this.props.token.symbol,
+                        this.state.feeOptions,
+                        password,
+                        this.props.navigation,
+                        undefined
+                    );
+                    break;
+                }
+                case PosBasicActionType.UNSTAKE: {
+                    this.props.unstake(
                         this.props.account,
                         this.state.amount,
                         this.props.validators,

@@ -42,6 +42,7 @@ export const translation: ITranslations = {
                 delegate: 'Delegate',
                 delegations: 'Delegations',
                 delete: 'Delete',
+                deposit: 'Deposit',
                 details: 'Details',
                 disconnect: 'Sign out',
                 dropped: 'Dropped',

@@ -2,16 +2,27 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    AbstractBlockchainTransactionUtils
+    AbstractBlockchainTransactionUtils,
+    IPosTransaction
 } from '../types';
 import { INearTransactionAdditionalInfoType, NearTransactionActionType, Near } from './';
 import { TransactionStatus } from '../../wallet/types';
-import { transfer, createTransaction, signTransaction } from 'near-api-js/lib/transaction';
+import {
+    transfer,
+    createTransaction,
+    signTransaction,
+    functionCall
+} from 'near-api-js/lib/transaction';
 import { KeyPair, PublicKey } from 'near-api-js/lib/utils/key_pair';
 import { base_decode } from 'near-api-js/lib/utils/serialize';
 import BN from 'bn.js';
 import sha256 from 'js-sha256';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { PosBasicActionType } from '../types/token';
+import { Client as NearClient } from './client';
+import cloneDeep from 'lodash/cloneDeep';
+
+const DEFAULT_FUNC_CALL_GAS = new BN('100000000000000');
 
 export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(
@@ -24,6 +35,24 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 switch (action.type) {
                     case NearTransactionActionType.TRANSFER:
                         return transfer(new BN(tx.amount));
+
+                    case NearTransactionActionType.FUNCTION_CALL:
+                        if (tx.data.method === 'deposit') {
+                            return functionCall(
+                                tx.data.method,
+                                {},
+                                DEFAULT_FUNC_CALL_GAS,
+                                new BN(tx.amount)
+                            );
+                        } else {
+                            return functionCall(
+                                tx.data.method,
+                                { amount: tx.amount },
+                                DEFAULT_FUNC_CALL_GAS,
+                                new BN('0')
+                            );
+                        }
+
                     default:
                         return false;
                 }
@@ -48,9 +77,14 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
             async signMessage(message) {
                 const hash = new Uint8Array(sha256.sha256.array(message));
                 return keyPair.sign(hash);
+            },
+            async getPublicKey() {
+                return keyPair.getPublicKey();
             }
         };
+
         const signedTx = await signTransaction(nearTx, signer, tx.address, tx.chainId as string);
+
         return Buffer.from(signedTx[1].encode()).toString('base64');
     }
 
@@ -95,13 +129,45 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
         };
     }
 
+    public async buildPosTransaction(
+        tx: IPosTransaction,
+        transactionType: PosBasicActionType
+    ): Promise<IBlockchainTransaction[]> {
+        const client = Near.getClient(tx.chainId);
+
+        const transactions: IBlockchainTransaction[] = [];
+
+        switch (transactionType) {
+            case PosBasicActionType.DELEGATE: {
+                for (const validator of tx.validators) {
+                    const txVote: IPosTransaction = cloneDeep(tx);
+
+                    // Deposit
+                    const depositTx: IBlockchainTransaction = await (client as NearClient).staking.deposit(
+                        txVote,
+                        validator
+                    );
+                    transactions.push(depositTx);
+
+                    // Stake
+                    const stakeTx: IBlockchainTransaction = await (client as NearClient).staking.stake(
+                        txVote,
+                        validator
+                    );
+                    stakeTx.nonce = stakeTx.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(stakeTx);
+                }
+            }
+        }
+
+        return transactions;
+    }
+
     public getTransactionAmount(tx: IBlockchainTransaction): string {
         return tx.amount;
     }
 
     public getTransactionStatusByCode(status: any): TransactionStatus {
-        // check for Pending ?
-
         if (status.SuccessValue === '') {
             return TransactionStatus.SUCCESS;
         } else if (status?.Failure) {

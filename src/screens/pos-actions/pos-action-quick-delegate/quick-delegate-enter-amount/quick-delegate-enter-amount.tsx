@@ -82,6 +82,7 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
             const data = await blockchainInstance
                 .getStats(this.props.chainId)
                 .getAvailableBalanceForDelegate(this.props.account);
+
             this.setState({
                 amount: blockchainInstance.account
                     .amountFromStd(new BigNumber(data), tokenConfig.decimals)

@@ -27,7 +27,8 @@ export const Near: IBlockchain = {
 };
 
 export enum NearTransactionActionType {
-    TRANSFER = 'TRANSFER'
+    TRANSFER = 'TRANSFER',
+    FUNCTION_CALL = 'FUNCTION_CALL'
 }
 
 export interface INearTransactionAction {

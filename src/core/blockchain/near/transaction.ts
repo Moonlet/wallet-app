@@ -21,6 +21,8 @@ import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { PosBasicActionType } from '../types/token';
 import { Client as NearClient } from './client';
 import cloneDeep from 'lodash/cloneDeep';
+import { ApiClient } from '../../utils/api-client/api-client';
+import BigNumber from 'bignumber.js';
 
 const DEFAULT_FUNC_CALL_GAS = new BN('100000000000000');
 
@@ -142,21 +144,45 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 for (const validator of tx.validators) {
                     const txDelegate: IPosTransaction = cloneDeep(tx);
 
-                    // Deposit
-                    const depositTx: IBlockchainTransaction = await (client as NearClient).staking.deposit(
-                        txDelegate,
-                        validator
+                    const res = await new ApiClient().validators.getBalance(
+                        tx.account,
+                        client.chainId.toString()
                     );
-                    transactions.push(depositTx);
+
+                    let hasToDeposit = false;
+
+                    if (
+                        new BigNumber(tx.amount).isGreaterThan(new BigNumber(res.balance.unstaked))
+                    ) {
+                        hasToDeposit = true;
+
+                        const depositAmount = new BigNumber(tx.amount).minus(
+                            new BigNumber(res.balance.unstaked)
+                        );
+
+                        // Deposit
+                        const depositTx: IBlockchainTransaction = await (client as NearClient).staking.deposit(
+                            txDelegate,
+                            validator
+                        );
+
+                        depositTx.amount = depositAmount.toFixed();
+                        transactions.push(depositTx);
+                    } else {
+                        // no need to deposit
+                    }
 
                     // Stake
                     const stakeTx: IBlockchainTransaction = await (client as NearClient).staking.stake(
                         txDelegate,
                         validator
                     );
-                    stakeTx.nonce = stakeTx.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    if (hasToDeposit) {
+                        stakeTx.nonce = stakeTx.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    }
                     transactions.push(stakeTx);
                 }
+                break;
             }
             case PosBasicActionType.UNSTAKE: {
                 for (const validator of tx.validators) {
@@ -169,6 +195,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                     );
                     transactions.push(unstakeTx);
                 }
+                break;
             }
 
             default:

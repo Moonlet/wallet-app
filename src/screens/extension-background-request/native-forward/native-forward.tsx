@@ -18,6 +18,8 @@ import { getChainId } from '../../../redux/preferences/selectors';
 import { IWalletsState } from '../../../redux/wallets/state';
 import { toBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
+import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
+import { BigNumber } from 'bignumber.js';
 
 interface IExternalProps {
     requestId: string;
@@ -43,6 +45,7 @@ export class NativeForwardComp extends React.Component<
 > {
     private async getRequestPayload() {
         const rpcRequest = this.props.request.params[0];
+        const blockchainInstance = getBlockchain(Blockchain.ZILLIQA);
 
         let sendRequestPayload;
 
@@ -132,7 +135,10 @@ export class NativeForwardComp extends React.Component<
                                     toAddress: isBech32(rpcParams.toAddr)
                                         ? rpcParams.toAddr
                                         : toBech32Address(rpcParams.toAddr),
-                                    amount: rpcParams.amount,
+                                    amount: blockchainInstance.account.amountFromStd(
+                                        new BigNumber(rpcParams.amount),
+                                        12
+                                    ),
                                     token: 'ZIL',
                                     feeOptions: {
                                         gasPrice: rpcParams.gasPrice,

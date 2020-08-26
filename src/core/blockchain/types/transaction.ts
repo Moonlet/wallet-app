@@ -65,7 +65,8 @@ export interface IBlockchainTransaction<IAdditionalInfoType = any> {
 
 export enum TransactionType {
     TRANSFER = 'TRANSFER',
-    CONTRACT_CALL = 'CONTRACT_CALL'
+    CONTRACT_CALL = 'CONTRACT_CALL',
+    CONTRACT_DEPLOY = 'CONTRACT_DEPLOY'
 }
 
 export interface IFeeOptions {

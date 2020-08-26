@@ -68,10 +68,13 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public sendTransaction(transaction): Promise<string> {
+    public sendTransaction(transaction): Promise<{ txHash: string; rawResponse: any }> {
         return this.http.jsonRpc('CreateTransaction', [transaction]).then(res => {
             if (res.result) {
-                return res.result.TranID;
+                return {
+                    txHash: res.result.TranID,
+                    rawResponse: res
+                };
             }
 
             const errorMessage: string = res.error.message;

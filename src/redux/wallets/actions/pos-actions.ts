@@ -273,7 +273,8 @@ export const posAction = (
                         txs[index]
                     );
                     processNextTransaction = false;
-                    txHash = await client.sendTransaction(transaction);
+                    const txRes = await client.sendTransaction(transaction);
+                    txHash = txRes.txHash;
                     if (txHash) {
                         dispatch(updateProcessTransactionIdForIndex(index, txHash));
                         dispatch({

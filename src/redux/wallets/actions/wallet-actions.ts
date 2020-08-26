@@ -668,9 +668,10 @@ export const sendTransferTransaction = (
             type: TransactionMessageType.INFO
         });
 
-        const txHash = await getBlockchain(account.blockchain)
+        const txRes = await getBlockchain(account.blockchain)
             .getClient(chainId)
             .sendTransaction(transaction);
+        const txHash = txRes.txHash;
 
         if (txHash) {
             dispatch({
@@ -685,7 +686,7 @@ export const sendTransferTransaction = (
             if (sendResponse) {
                 await ConnectExtension.sendResponse(sendResponse.requestId, {
                     result: {
-                        txHash,
+                        ...txRes,
                         tx
                     }
                 });

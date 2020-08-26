@@ -73,6 +73,10 @@ export class ZilliqaProvider extends BaseProvider {
         // TODO: check if sender has acess to the account that makes the request.
 
         const rpcRequest = request.params[0];
+        let availableAccounts;
+        let address;
+        let accountInfo;
+
         switch (rpcRequest?.method) {
             case 'GetAccount':
                 if (rpcRequest?.params[0]) {
@@ -107,19 +111,28 @@ export class ZilliqaProvider extends BaseProvider {
                 });
             case 'CreateTransaction':
                 // TODO: check permissions
-                return this._openConfirmationScreen(request);
+                availableAccounts = await getDomainAccounts(request.origin, Blockchain.ZILLIQA);
+                address = rpcRequest.params[0]?.fromAddr || availableAccounts[0]?.address;
+                accountInfo = await getAccountInfo(request.origin, request.blockchain, address);
+                if (accountInfo) {
+                    rpcRequest.params[0].fromAddr = address;
+                    request.walletPubKey = accountInfo.walletPubKey;
+                    return this._openConfirmationScreen(request);
+                } else {
+                    return {
+                        jsonrpc: '2.0',
+                        error: {
+                            code: -1,
+                            message: `ACCESS_UNAUTHORIZED: User did not authorize ${address ||
+                                'any'} address for ${request.origin}`
+                        }
+                    };
+                }
             case 'SignMessage':
                 // TODO: check permissions
-                const availableAccounts = await getDomainAccounts(
-                    request.origin,
-                    Blockchain.ZILLIQA
-                );
-                const address = rpcRequest.params[0] || availableAccounts[0]?.address;
-                const accountInfo = await getAccountInfo(
-                    request.origin,
-                    request.blockchain,
-                    address
-                );
+                availableAccounts = await getDomainAccounts(request.origin, Blockchain.ZILLIQA);
+                address = rpcRequest.params[0] || availableAccounts[0]?.address;
+                accountInfo = await getAccountInfo(request.origin, request.blockchain, address);
                 if (accountInfo) {
                     rpcRequest.params[0] = address;
                     request.walletPubKey = accountInfo.walletPubKey;

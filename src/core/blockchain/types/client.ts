@@ -34,7 +34,9 @@ export abstract class BlockchainGenericClient {
     public abstract getNonce(address: string, publicKey?: string): Promise<number>;
     public abstract getCurrentBlock(): Promise<IBlockInfo>;
 
-    public abstract sendTransaction(transaction: any): Promise<string>;
+    public abstract sendTransaction(
+        transaction: any
+    ): Promise<{ txHash: string; rawResponse: any }>;
 
     public abstract getFees(
         transactionType: TransactionType,

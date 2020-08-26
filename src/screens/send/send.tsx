@@ -163,6 +163,9 @@ export class SendScreenComponent extends React.Component<
                 feeOptions: this.state.feeOptions,
                 extraFields: { memo: this.state.memo },
                 walletId: this.props.selectedWallet.id // extra data needed for Tx Request Screen
+                // walletPubKey: this.props.selectedWallet.walletPublicKey,
+                // blockchain: account.blockchain,
+                // accountAddress: account.address
             };
 
             // add type to this

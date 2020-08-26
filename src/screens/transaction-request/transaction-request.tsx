@@ -197,14 +197,14 @@ export class TransactionRequestScreenComponent extends React.Component<
                 break;
             default:
                 this.props.sendTransferTransaction(
-                    extensionTxPayload.account,
-                    extensionTxPayload.toAddress,
-                    extensionTxPayload.amount,
-                    extensionTxPayload.token,
-                    extensionTxPayload.feeOptions,
+                    extensionTxPayload?.params[0]?.account,
+                    extensionTxPayload?.params[0]?.toAddress,
+                    extensionTxPayload?.params[0]?.amount,
+                    extensionTxPayload?.params[0]?.token,
+                    extensionTxPayload?.params[0]?.feeOptions,
                     password,
                     undefined, // navigation - not needed
-                    extensionTxPayload.extraFields,
+                    extensionTxPayload?.params[0]?.extraFields,
                     false, // goBack
                     { requestId: this.props.requestId }
                 );

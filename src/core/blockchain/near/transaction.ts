@@ -185,16 +185,25 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 break;
             }
             case PosBasicActionType.UNSTAKE: {
-                for (const validator of tx.validators) {
-                    const txUnstake: IPosTransaction = cloneDeep(tx);
+                const txUnstake: IPosTransaction = cloneDeep(tx);
 
-                    // Unstake
-                    const unstakeTx: IBlockchainTransaction = await (client as NearClient).staking.unstake(
-                        txUnstake,
-                        validator
-                    );
-                    transactions.push(unstakeTx);
-                }
+                // Unstake
+                const unstakeTx: IBlockchainTransaction = await (client as NearClient).staking.unstake(
+                    txUnstake,
+                    tx.validators[0]
+                );
+                transactions.push(unstakeTx);
+                break;
+            }
+            case PosBasicActionType.WITHDRAW: {
+                const txWithdraw: IPosTransaction = cloneDeep(tx);
+
+                // Withdraw
+                const withdrawTx: IBlockchainTransaction = await (client as NearClient).staking.withdraw(
+                    txWithdraw,
+                    tx.validators[0]
+                );
+                transactions.push(withdrawTx);
                 break;
             }
 

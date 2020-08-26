@@ -136,4 +136,34 @@ export class Staking {
 
         return transaction;
     }
+
+    public async withdraw(
+        tx: IPosTransaction,
+        validator: IValidator
+    ): Promise<IBlockchainTransaction> {
+        const transaction = await this.buildBaseTransaction(tx);
+
+        const contractAddress = validator.id;
+
+        transaction.amount = tx.amount;
+        transaction.toAddress = contractAddress;
+
+        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
+            from: tx.account.address,
+            to: validator.id,
+            amount: tx.amount,
+            contractAddress
+        });
+        transaction.feeOptions = fees;
+
+        transaction.data = {
+            method: 'withdraw',
+            params: [validator.id, tx.amount]
+        };
+
+        transaction.additionalInfo.posAction = PosBasicActionType.WITHDRAW;
+        transaction.additionalInfo.validatorName = validator.name;
+
+        return transaction;
+    }
 }

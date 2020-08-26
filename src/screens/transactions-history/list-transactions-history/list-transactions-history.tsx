@@ -6,7 +6,7 @@ import { Icon } from '../../../components/icon/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { Text } from '../../../library';
 import { IAccountState } from '../../../redux/wallets/state';
-import { ICON_SIZE, normalize } from '../../../styles/dimensions';
+import { normalize } from '../../../styles/dimensions';
 import { Amount } from '../../../components/amount/amount';
 import { translate } from '../../../core/i18n';
 import { formatAddress } from '../../../core/utils/format-address';
@@ -67,7 +67,10 @@ export class TransactionsHistoryListComponent extends React.Component<
                     toAddress = tx.data?.params && tx.data?.params[0];
                 }
 
-                if (accountAddress === address) {
+                if (tx.data?.method) {
+                    txIcon = IconValues.VOTE;
+                    txColor = theme.colors.accent;
+                } else if (accountAddress === address) {
                     txIcon = IconValues.OUTBOUND;
                     txColor = theme.colors.error;
                 } else if (accountAddress === toAddress) {
@@ -109,7 +112,7 @@ export class TransactionsHistoryListComponent extends React.Component<
             >
                 <Icon
                     name={txIcon}
-                    size={ICON_SIZE}
+                    size={normalize(30)}
                     style={[styles.transactionIcon, { color: txColor }]}
                 />
                 <View style={styles.transactionTextContainer}>

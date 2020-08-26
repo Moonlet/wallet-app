@@ -80,6 +80,8 @@ export class TransactionDetailsComponent extends React.Component<
         const transactionType =
             transaction.token.type === TokenType.ZRC2 || transaction.token.type === TokenType.ERC20
                 ? Capitalize(transaction.data.method)
+                : transaction.data?.method
+                ? Capitalize(transaction.data.method)
                 : translate('App.labels.transfer');
 
         return (

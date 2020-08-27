@@ -428,10 +428,9 @@ export const updateTransactionFromBlockchain = (
     let transaction;
 
     try {
-        transaction = await client.utils.getTransaction(
-            transactionHash,
-            blockchain === Blockchain.NEAR && selectedAccount.address
-        );
+        transaction = await client.utils.getTransaction(transactionHash, {
+            address: selectedAccount.address
+        });
     } catch (e) {
         const currentBlock = await client.getCurrentBlock();
         if (

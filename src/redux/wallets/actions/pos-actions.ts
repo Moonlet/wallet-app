@@ -1,8 +1,7 @@
 import { IAccountState } from '../state';
 import {
     IFeeOptions,
-    ITransactionExtraFields,
-    Blockchain
+    ITransactionExtraFields
     // TransactionMessageType,
     // TransactionMessageText,
     // IBlockchainTransaction
@@ -333,10 +332,9 @@ export const posAction = (
                     }
                 } else {
                     try {
-                        const transaction = await client.utils.getTransaction(
-                            txHash,
-                            account.blockchain === Blockchain.NEAR && account.address
-                        );
+                        const transaction = await client.utils.getTransaction(txHash, {
+                            address: account.address
+                        });
                         dispatch(updateProcessTransactionStatusForIndex(index, transaction.status));
                         index++;
                         processNextTransaction = true;

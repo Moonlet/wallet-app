@@ -102,7 +102,7 @@ export const config: IBlockchainConfig = {
             sendStepLabels: [
                 'Validator.selectValidator',
                 'App.labels.enterAmount',
-                'Validator.confirmVote'
+                'Validator.confirmStake'
             ],
             accountCTA,
             delegationCTA: {

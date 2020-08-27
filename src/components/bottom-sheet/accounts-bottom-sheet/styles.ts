@@ -24,7 +24,8 @@ export default (theme: ITheme) =>
         },
         firstRow: {
             flexDirection: 'row',
-            marginBottom: BASE_DIMENSION / 4
+            marginBottom: BASE_DIMENSION / 4,
+            width: '100%'
         },
         accountName: {
             fontSize: normalizeFontAndLineHeight(18),
@@ -39,7 +40,8 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(25),
             fontWeight: '500',
             letterSpacing: LETTER_SPACING,
-            color: theme.colors.accent
+            color: theme.colors.accent,
+            flexShrink: 1
         },
         fistAmountText: {
             color: theme.colors.textSecondary

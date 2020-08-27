@@ -153,6 +153,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                         { height: this.props.snapPoints.bottomSheetHeight }
                     ]}
                     showsVerticalScrollIndicator={false}
+                    scrollEnabled={Platform.OS === 'web' ? true : false}
                 >
                     {this.props.accounts.map((account: IAccountState, index: number) => {
                         const selected = selectedAccount.address === account.address;
@@ -171,7 +172,11 @@ export class AccountsBottomSheetComponent extends React.Component<
                                     <Text style={this.props.styles.accountName}>
                                         {`${translate('App.labels.account')} ${account.index + 1}`}
                                     </Text>
-                                    <Text style={this.props.styles.accountAddress}>
+                                    <Text
+                                        numberOfLines={1}
+                                        ellipsizeMode="tail"
+                                        style={this.props.styles.accountAddress}
+                                    >
                                         {formatAddress(account.address, blockchain)}
                                     </Text>
                                 </View>
@@ -226,24 +231,34 @@ export class AccountsBottomSheetComponent extends React.Component<
                         );
                     })}
 
-                    {blockchainConfig.ui.enableAccountCreation &&
-                        this.props.accounts.length < blockchainConfig.ui.maxAccountsNumber && (
-                            <ListAccount
-                                leftIcon={blockchainConfig.iconComponent}
-                                isCreate
-                                label={
-                                    <View style={this.props.styles.firstRow}>
-                                        <Text style={this.props.styles.accountName}>
-                                            {translate('AddAccount.addNearAccount')}
-                                        </Text>
-                                    </View>
-                                }
-                                onPress={() => {
-                                    this.props.onClose();
-                                    NavigationService.navigate('AddNearAccount', {});
-                                }}
-                            />
-                        )}
+                    {blockchainConfig.ui.enableAccountCreation && (
+                        <ListAccount
+                            leftIcon={blockchainConfig.iconComponent}
+                            isCreate
+                            disabled={
+                                this.props.accounts.length === blockchainConfig.ui.maxAccountsNumber
+                            }
+                            label={
+                                <View
+                                    style={[
+                                        this.props.styles.firstRow,
+                                        { justifyContent: 'center' }
+                                    ]}
+                                >
+                                    <Text style={this.props.styles.accountName}>
+                                        {translate('AddAccount.addNearAccount', {
+                                            activeAccountsNumber: this.props.accounts.length,
+                                            maxAccountsNumber: blockchainConfig.ui.maxAccountsNumber
+                                        })}
+                                    </Text>
+                                </View>
+                            }
+                            onPress={() => {
+                                this.props.onClose();
+                                NavigationService.navigate('AddNearAccount', {});
+                            }}
+                        />
+                    )}
                 </ScrollView>
             </View>
         );

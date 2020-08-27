@@ -409,7 +409,7 @@ export const translation: ITranslations = {
         AddAccount: {
             title: 'Add account',
             eg: 'e.g. johndoe',
-            addNearAccount: 'Add a new NEAR account',
+            addNearAccount: 'Add account ({{activeAccountsNumber}}/{{maxAccountsNumber}})',
             checking: 'Checking availability ...',
             removeAccountConfirm: 'You’re about to remove {{name}} from Moonlet',
             invalid: 'Account name CANNOT contain characters "@" or "."',
@@ -538,8 +538,8 @@ export const translation: ITranslations = {
         },
         AddNearAccount: {
             title: 'Create or recover\nan account name!',
-            recoverAccount: 'Recover an existing account name',
-            createAccount: 'Create a new account name'
+            recoverAccount: 'Recover account name',
+            createAccount: 'Create account name'
         }
     },
     plural: (n: number, ord?: boolean) => {

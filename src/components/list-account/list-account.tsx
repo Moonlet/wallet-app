@@ -18,6 +18,7 @@ export interface IProps {
     onPress?: any;
     style?: any;
     isCreate?: boolean;
+    disabled?: boolean;
 }
 
 export const ListAccountComponent = (
@@ -25,7 +26,9 @@ export const ListAccountComponent = (
 ) => {
     const label =
         typeof props.label === 'string' ? (
-            <Text style={props.styles.label}>{props.label}</Text>
+            <Text numberOfLines={1} ellipsizeMode="tail" style={props.styles.label}>
+                {props.label}
+            </Text>
         ) : (
             props.label
         );
@@ -37,6 +40,7 @@ export const ListAccountComponent = (
             testID={props.testID}
             onPress={props.onPress}
             underlayColor={props.theme.colors.bottomSheetBackground}
+            disabled={props.disabled}
         >
             <View style={[props.styles.card, props.selected && props.styles.selected, props.style]}>
                 {props.leftIcon && !props.isCreate && (
@@ -76,7 +80,14 @@ export const ListAccountComponent = (
 
                 {props.isCreate && (
                     <View>
-                        <Button style={props.styles.addButton} disabled>
+                        <Button
+                            style={
+                                props.disabled
+                                    ? props.styles.addButtonDisabled
+                                    : props.styles.addButton
+                            }
+                            disabled
+                        >
                             {translate('App.labels.add')}
                         </Button>
                     </View>

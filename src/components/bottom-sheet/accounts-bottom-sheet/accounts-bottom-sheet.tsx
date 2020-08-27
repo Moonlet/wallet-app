@@ -153,7 +153,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                         { height: this.props.snapPoints.bottomSheetHeight }
                     ]}
                     showsVerticalScrollIndicator={false}
-                    scrollEnabled={Platform.OS === 'web' ? true : false}
+                    scrollEnabled={Platform.OS === 'web'}
                 >
                     {this.props.accounts.map((account: IAccountState, index: number) => {
                         const selected = selectedAccount.address === account.address;

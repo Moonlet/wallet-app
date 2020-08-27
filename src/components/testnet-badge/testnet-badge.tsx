@@ -31,22 +31,15 @@ const mapStateToProps = (state: IReduxState) => {
 export const TestnetBadgeComponent = (
     props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    let label = translate('App.labels.youAreOn', {
-        blockchain: props.blockchain ? Capitalize(props.blockchain) : '',
-        networkName: props.networkName
-    });
-
-    if (props.blockchain === Blockchain.NEAR) {
-        // remove duplicate labeling
-        // reaplace 'You are on Near Testnet Testnet' to 'You are on Near Testnet'
-        // and replace 'You are on Near Betanet Testnet' to 'You are on Near Betanet'
-        label = label.substring(0, label.lastIndexOf(' '));
-    }
-
     if (props.testNet) {
         return (
             <View testID="testnet-badge" style={props.styles.container}>
-                <Text style={props.styles.text}>{label}</Text>
+                <Text style={props.styles.text}>
+                    {translate('App.labels.youAreOn', {
+                        blockchain: props.blockchain ? Capitalize(props.blockchain) : '',
+                        networkName: props.networkName
+                    })}
+                </Text>
             </View>
         );
     } else {

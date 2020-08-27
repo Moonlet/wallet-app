@@ -23,9 +23,6 @@ export class Stats extends GenericStats<Client> {
             this.client.chainId.toString()
         );
 
-        return new BigNumber(data.balance.available)
-            .plus(new BigNumber(data.balance.nonVotingLockedGold))
-            .minus(new BigNumber(data.balance.pendingActivationGold))
-            .toFixed();
+        return new BigNumber(data.balance.available).toFixed();
     }
 }

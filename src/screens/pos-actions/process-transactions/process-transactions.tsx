@@ -135,6 +135,30 @@ export class ProcessTransactionsComponent extends React.Component<
                 topText = translate('App.labels.unvoting') + ' ' + amount;
                 break;
             }
+            case PosBasicActionType.STAKE: {
+                topText = translate('App.labels.stake') + ' ' + amount;
+                middleText =
+                    translate('App.labels.to').toLowerCase() +
+                    ' ' +
+                    formatValidatorName(tx.additionalInfo?.validatorName, 20);
+                break;
+            }
+            case PosBasicActionType.CLAIM_REWARD: {
+                topText = translate('App.labels.claimingRewards');
+                middleText =
+                    translate('App.labels.from').toLowerCase() +
+                    ' ' +
+                    formatValidatorName(tx.additionalInfo?.validatorName, 20);
+                break;
+            }
+            case PosBasicActionType.UNSTAKE: {
+                topText = translate('App.labels.unstaking') + ' ' + amount;
+                middleText =
+                    translate('App.labels.from').toLowerCase() +
+                    ' ' +
+                    formatValidatorName(tx.additionalInfo?.validatorName, 20);
+                break;
+            }
             case PosBasicActionType.ACTIVATE: {
                 topText = translate('Validator.activatingVotes');
                 break;

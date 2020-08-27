@@ -94,6 +94,75 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
                     transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
                     transactions.push(transaction);
                 }
+                break;
+            }
+            case PosBasicActionType.REDELEGATE: {
+                const txUnvote = cloneDeep(tx);
+                txUnvote.validators = [tx.extraFields.fromValidator];
+
+                const shouldWithdraw = await client.contracts[
+                    Contracts.STAKING
+                ].canWithdrawStakeRewardsFromSsn(
+                    tx.account.address,
+                    tx.extraFields.fromValidator.id
+                );
+
+                if (shouldWithdraw) {
+                    const txClaimReward: IPosTransaction = cloneDeep(tx);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].withdrawStakRewards(txClaimReward, tx.extraFields.fromValidator);
+                    transactions.push(transaction);
+                }
+                const txUnStake: IPosTransaction = cloneDeep(tx);
+                const transactionUnStake: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].withdrawStakAmt(txUnStake, tx.extraFields.fromValidator);
+                transactionUnStake.nonce = transactionUnStake.nonce + transactions.length;
+                transactions.push(transactionUnStake);
+
+                const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
+
+                for (const validator of tx.validators) {
+                    const txStake: IPosTransaction = cloneDeep(tx);
+                    txStake.amount = splitAmount.toString();
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].delegateStake(txStake, validator);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
+                }
+                break;
+            }
+            case PosBasicActionType.UNSTAKE: {
+                const ssnAddress = tx.validators[0].id;
+                const shouldWithdraw = await client.contracts[
+                    Contracts.STAKING
+                ].canWithdrawStakeRewardsFromSsn(tx.account.address, ssnAddress);
+
+                if (shouldWithdraw) {
+                    const txClaimReward: IPosTransaction = cloneDeep(tx);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].withdrawStakRewards(txClaimReward, tx.validators[0]);
+                    transactions.push(transaction);
+                }
+
+                const txUnStake: IPosTransaction = cloneDeep(tx);
+                const transactionUnStake: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].withdrawStakAmt(txUnStake, tx.validators[0]);
+                transactionUnStake.nonce = transactionUnStake.nonce + transactions.length;
+                transactions.push(transactionUnStake);
+                break;
+            }
+            case PosBasicActionType.CLAIM_REWARD: {
+                const txClaimReward: IPosTransaction = cloneDeep(tx);
+                const transaction: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].withdrawStakRewards(txClaimReward, tx.validators[0]);
+                transactions.push(transaction);
+                break;
             }
         }
 

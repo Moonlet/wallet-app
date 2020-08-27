@@ -138,10 +138,11 @@ export class Client extends BlockchainGenericClient {
         field: string,
         subFields: string[] = []
     ) {
+        const address = isBech32(contractAddress)
+            ? fromBech32Address(contractAddress)
+            : contractAddress;
         return this.call('GetSmartContractSubState', [
-            fromBech32Address(contractAddress)
-                .replace('0x', '')
-                .toLowerCase(),
+            address.replace('0x', '').toLowerCase(),
             field,
             subFields
         ]).then(response => response?.result);

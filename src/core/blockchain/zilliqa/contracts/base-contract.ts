@@ -16,7 +16,9 @@ export const contracts = {
 export enum ContractFields {
     DEPOSIT_AMT_DELEG = 'deposit_amt_deleg',
     SSNLIST = 'ssnlist',
-    MINSTAKE = 'minstake'
+    MINSTAKE = 'minstake',
+    LAST_WITHDRAW_CYCLE_DELEG = 'last_withdraw_cycle_deleg',
+    LASTREWARDCYCLE = 'lastrewardcycle'
 }
 
 export const fetchContracts = async (chainId: ChainIdType) => {

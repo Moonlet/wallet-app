@@ -20,6 +20,7 @@ import {
 import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
 import bind from 'bind-decorator';
 import BigNumber from 'bignumber.js';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -88,8 +89,11 @@ export class RedelegateEnterAmountComponent extends React.Component<
                   .toFixed()
             : '0';
 
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
         this.state = {
-            amount: amountFromValidator
+            amount: blockchainInstance.account
+                .amountFromStd(new BigNumber(amountFromValidator), tokenConfig.decimals)
+                .toFixed()
         };
     }
 

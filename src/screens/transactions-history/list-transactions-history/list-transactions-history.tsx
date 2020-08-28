@@ -67,7 +67,10 @@ export class TransactionsHistoryListComponent extends React.Component<
                     toAddress = tx.data?.params && tx.data?.params[0];
                 }
 
-                if (tx.data?.method) {
+                if (
+                    tx.data?.method ||
+                    (tx.additionalInfo?.actions && tx.additionalInfo.actions[0]?.params)
+                ) {
                     txIcon = IconValues.VOTE;
                     txColor = theme.colors.accent;
                 } else if (accountAddress === address) {

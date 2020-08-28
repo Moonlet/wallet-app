@@ -5,7 +5,7 @@ import {
     AbstractBlockchainTransactionUtils,
     IPosTransaction
 } from '../types';
-import { INearTransactionAdditionalInfoType, NearTransactionActionType, Near } from './';
+import { Near } from './';
 import { TransactionStatus } from '../../wallet/types';
 import {
     transfer,
@@ -23,6 +23,7 @@ import { Client as NearClient } from './client';
 import cloneDeep from 'lodash/cloneDeep';
 import { ApiClient } from '../../utils/api-client/api-client';
 import BigNumber from 'bignumber.js';
+import { INearTransactionAdditionalInfoType, NearTransactionActionType } from './types';
 
 const DEFAULT_FUNC_CALL_GAS = new BN('100000000000000');
 

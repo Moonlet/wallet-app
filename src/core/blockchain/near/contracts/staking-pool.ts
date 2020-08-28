@@ -2,12 +2,13 @@ import { IPosTransaction, IBlockchainTransaction } from '../../types';
 import { IValidator } from '../../types/stats';
 import { PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction } from './base-contract';
+import { INearTransactionAdditionalInfoType } from '../types';
 
 export class StakingPool {
     public async deposit(
         tx: IPosTransaction,
         validator: IValidator
-    ): Promise<IBlockchainTransaction> {
+    ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const transaction = await buildBaseTransaction(tx);
 
         const contractAddress = validator.id;
@@ -29,7 +30,7 @@ export class StakingPool {
     public async stake(
         tx: IPosTransaction,
         validator: IValidator
-    ): Promise<IBlockchainTransaction> {
+    ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const transaction = await buildBaseTransaction(tx);
 
         const contractAddress = validator.id;
@@ -51,7 +52,7 @@ export class StakingPool {
     public async unstake(
         tx: IPosTransaction,
         validator: IValidator
-    ): Promise<IBlockchainTransaction> {
+    ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const transaction = await buildBaseTransaction(tx);
 
         const contractAddress = validator.id;
@@ -73,7 +74,7 @@ export class StakingPool {
     public async withdraw(
         tx: IPosTransaction,
         validator: IValidator
-    ): Promise<IBlockchainTransaction> {
+    ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const transaction = await buildBaseTransaction(tx);
 
         const contractAddress = validator.id;

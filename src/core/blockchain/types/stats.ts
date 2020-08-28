@@ -80,4 +80,8 @@ export interface IPosWidget {
     value: string;
     timestamp: string;
     index?: number;
+    validator?: {
+        id: string;
+        name: string;
+    };
 }

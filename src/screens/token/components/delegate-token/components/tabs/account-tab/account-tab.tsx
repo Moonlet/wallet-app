@@ -113,6 +113,7 @@ export class AccountTabComponent extends React.Component<
                 break;
             }
             case PosBasicActionType.WITHDRAW: {
+                // TODO
                 this.props.withdraw(
                     this.props.account,
                     widget.index,
@@ -171,10 +172,16 @@ export class AccountTabComponent extends React.Component<
                             title={translate('Widget.withdrawText', {
                                 coin: this.props.token.symbol
                             })}
-                            middleTitle={formatNumber(new BigNumber(amountFromStd), {
+                            middleTitle={`${formatNumber(new BigNumber(amountFromStd), {
                                 currency: this.props.token.symbol,
                                 minimumFractionDigits: 2
-                            })}
+                            })} ${
+                                widget?.validator?.name
+                                    ? `${String(
+                                          translate('App.labels.from').toLocaleLowerCase()
+                                      )} ${widget.validator.name}`
+                                    : ''
+                            }`}
                             bottomTitle={translate('Widget.waitTimeWithdraw', {
                                 timeFormat: timeString
                             })}

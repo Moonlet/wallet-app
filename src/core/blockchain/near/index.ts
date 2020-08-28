@@ -4,7 +4,6 @@ import { Client } from './client';
 import { NearTransactionUtils } from './transaction';
 import { NearAccountUtils } from './account';
 import { IBlockchain, ChainIdType } from '../types';
-import BigNumber from 'bignumber.js';
 import { Stats } from './stats';
 
 const account = new NearAccountUtils();
@@ -25,26 +24,3 @@ export const Near: IBlockchain = {
         return clients[chainId];
     }
 };
-
-export enum NearTransactionActionType {
-    TRANSFER = 'TRANSFER',
-    FUNCTION_CALL = 'FUNCTION_CALL'
-}
-
-export interface INearTransactionAction {
-    type: NearTransactionActionType;
-    params?: [];
-}
-
-export interface INearTransactionAdditionalInfoType {
-    currentBlockHash: string;
-    actions: INearTransactionAction[];
-}
-
-export interface INearAccount {
-    address: string;
-    name: string;
-    amount: BigNumber;
-    exists: boolean;
-    valid: boolean;
-}

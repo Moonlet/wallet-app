@@ -8,6 +8,6 @@ Object {
   "key": "root",
   "migrate": [Function],
   "storage": undefined,
-  "version": 3,
+  "version": 4,
 }
 `;

@@ -1,6 +1,5 @@
-Team's log. Stardate 2006.23:
+Team's log. Stardate 2008.28:
 
-This is another release with focus on tech side, increasing our efficiency. Hopefully will be making our engineers live easier and the customers happier in the end.
+This is quick release which improves XSGD token on Zilliqa network.
 
-Thank you,
 Moonlet Team

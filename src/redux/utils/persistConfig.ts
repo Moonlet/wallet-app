@@ -7,8 +7,10 @@ import { DAI_MAINNET } from '../../core/blockchain/ethereum/tokens/dai';
 import { IWalletState, IAccountState } from '../wallets/state';
 
 const migrations = {
+    /**
+     * Update removable key in tokens state
+     */
     2: (state: any) => {
-        // add removable to tokens from redux
         Object.keys(state.tokens).map(blockchain => {
             Object.keys(state.tokens[blockchain]).map(chainId => {
                 Object.keys(state.tokens[blockchain][chainId]).map(symbolKey => {
@@ -24,9 +26,10 @@ const migrations = {
         };
     },
 
+    /**
+     * Add XSGD and DAI Tokens for all users by default
+     */
     3: (state: any) => {
-        // Manage XSGD and DAI tokens
-
         const zilChainIdMain = '1';
 
         if (
@@ -35,12 +38,10 @@ const migrations = {
             state.tokens[Blockchain.ZILLIQA][zilChainIdMain][XSGD_MAINNET.symbol]
         ) {
             // Update XSGD contract address
-
             state.tokens[Blockchain.ZILLIQA][zilChainIdMain][XSGD_MAINNET.symbol].contractAddress =
                 XSGD_MAINNET.contractAddress;
         } else {
             // Add XSGD Token
-
             state.tokens = {
                 ...state.tokens,
                 [Blockchain.ZILLIQA]: {
@@ -120,12 +121,32 @@ const migrations = {
         return {
             ...state
         };
+    },
+    /**
+     * Update XSGD smartcontract address change
+     */
+    4: (state: any) => {
+        const zilChainIdMain = '1';
+
+        if (
+            state.tokens[Blockchain.ZILLIQA] &&
+            state.tokens[Blockchain.ZILLIQA][zilChainIdMain] &&
+            state.tokens[Blockchain.ZILLIQA][zilChainIdMain][XSGD_MAINNET.symbol]
+        ) {
+            // Update XSGD contract address
+            state.tokens[Blockchain.ZILLIQA][zilChainIdMain][XSGD_MAINNET.symbol].contractAddress =
+                XSGD_MAINNET.contractAddress;
+        }
+
+        return {
+            ...state
+        };
     }
 };
 
 export const persistConfig = {
     key: 'root',
-    version: 3,
+    version: 4,
     storage: AsyncStorage,
     blacklist: ['ui'],
     migrate: createMigrate(migrations, { debug: false })

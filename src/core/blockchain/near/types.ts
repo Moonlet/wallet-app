@@ -6,9 +6,16 @@ export enum NearTransactionActionType {
     FUNCTION_CALL = 'FUNCTION_CALL'
 }
 
+export enum NearFunctionCallMethods {
+    DEPOSIT = 'deposit',
+    STAKE = 'stake',
+    UNSTAKE = 'unstake',
+    WITHDRAW = 'withdraw'
+}
+
 export interface INearTransactionAction {
     type: NearTransactionActionType;
-    params?: [];
+    params?: any[];
 }
 
 export interface INearTransactionAdditionalInfoType {

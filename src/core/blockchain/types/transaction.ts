@@ -107,6 +107,7 @@ export interface ITransactionExtraFields {
     validatorId?: string;
     validatorName?: string;
     fromValidator?: IValidator;
+    amount?: string;
     //
 }
 

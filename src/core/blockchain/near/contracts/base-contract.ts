@@ -2,7 +2,6 @@ import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { Near } from '..';
 import { TransactionStatus } from '../../../wallet/types';
 import { IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
-import { NearTransactionActionType } from '../types';
 
 export const buildBaseTransaction = async (
     tx: IPosTransaction
@@ -36,13 +35,7 @@ export const buildBaseTransaction = async (
         data: {},
         additionalInfo: {
             ...tx.extraFields,
-            currentBlockHash: blockInfo.hash,
-            actions: [
-                // TODO: remove this
-                {
-                    type: NearTransactionActionType.FUNCTION_CALL
-                }
-            ]
+            currentBlockHash: blockInfo.hash
         }
     };
 };

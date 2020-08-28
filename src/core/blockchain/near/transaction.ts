@@ -25,8 +25,6 @@ import { ApiClient } from '../../utils/api-client/api-client';
 import BigNumber from 'bignumber.js';
 import { INearTransactionAdditionalInfoType, NearTransactionActionType } from './types';
 
-const DEFAULT_FUNC_CALL_GAS = new BN('100000000000000');
-
 export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(
         tx: IBlockchainTransaction<INearTransactionAdditionalInfoType>,
@@ -40,21 +38,8 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                         return transfer(new BN(tx.amount));
 
                     case NearTransactionActionType.FUNCTION_CALL:
-                        if (tx.data.method === 'deposit') {
-                            return functionCall(
-                                tx.data.method,
-                                {},
-                                DEFAULT_FUNC_CALL_GAS,
-                                new BN(tx.amount)
-                            );
-                        } else {
-                            return functionCall(
-                                tx.data.method,
-                                { amount: tx.amount },
-                                DEFAULT_FUNC_CALL_GAS,
-                                new BN('0')
-                            );
-                        }
+                        // @ts-ignore
+                        return functionCall(...tx.additionalInfo.actions[0].params);
 
                     default:
                         return false;
@@ -197,14 +182,11 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 break;
             }
             case PosBasicActionType.WITHDRAW: {
-                // const txWithdraw: IPosTransaction = cloneDeep(tx);
-
-                // TODO
+                const txWithdraw: IPosTransaction = cloneDeep(tx);
 
                 // Withdraw
                 const withdrawTx: IBlockchainTransaction = await (client as NearClient).stakingPool.withdraw(
-                    tx,
-                    tx.validators[0]
+                    txWithdraw
                 );
 
                 transactions.push(withdrawTx);

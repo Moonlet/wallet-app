@@ -113,13 +113,16 @@ export class AccountTabComponent extends React.Component<
                 break;
             }
             case PosBasicActionType.WITHDRAW: {
-                // TODO
                 this.props.withdraw(
                     this.props.account,
-                    widget.index,
                     this.props.token.symbol,
                     password,
                     this.props.navigation,
+                    {
+                        witdrawIndex: widget?.index,
+                        validatorId: widget?.validator?.id,
+                        amount: widget?.value
+                    },
                     undefined
                 );
                 break;

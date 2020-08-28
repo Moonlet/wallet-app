@@ -143,10 +143,10 @@ export const activate = (
 
 export const withdraw = (
     account: IAccountState,
-    index: number,
     token: string,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
+    extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
@@ -158,7 +158,7 @@ export const withdraw = (
         undefined,
         password,
         navigation,
-        { witdrawIndex: index },
+        extraFields,
         goBack,
         PosBasicActionType.WITHDRAW,
         sendResponse

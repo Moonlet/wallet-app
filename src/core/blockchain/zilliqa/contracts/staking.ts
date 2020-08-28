@@ -46,6 +46,10 @@ export class Staking {
                 this.client.getSmartContractSubState(
                     contract.implementation,
                     ContractFields.LASTREWARDCYCLE
+                ),
+                this.client.getSmartContractSubState(
+                    contract.implementation,
+                    ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG
                 )
             ];
 
@@ -54,11 +58,21 @@ export class Staking {
             const lastWithdrawCycleDeleg =
                 res[0][ContractFields.LAST_WITHDRAW_CYCLE_DELEG][address];
 
+            const lastBufferWithdrawCycleDeleg =
+                res[0][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG][address];
+            const lastRewardCycle = Number(res[1][ContractFields.LASTREWARDCYCLE]);
+
             if (lastWithdrawCycleDeleg && lastWithdrawCycleDeleg[ssnaddr]) {
                 const lastWithdrawCycleDelegValue = Number(lastWithdrawCycleDeleg[ssnaddr]);
-                const lastRewardCycle = Number(res[1][ContractFields.LASTREWARDCYCLE]);
 
                 if (lastRewardCycle > lastWithdrawCycleDelegValue) return true;
+            }
+            if (lastBufferWithdrawCycleDeleg && lastBufferWithdrawCycleDeleg[ssnaddr]) {
+                const lastBufferWithdrawCycleDelegValue = Number(
+                    lastBufferWithdrawCycleDeleg[ssnaddr]
+                );
+
+                if (lastRewardCycle > lastBufferWithdrawCycleDelegValue) return true;
             }
         } catch (error) {
             return false;

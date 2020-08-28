@@ -18,7 +18,8 @@ export enum ContractFields {
     SSNLIST = 'ssnlist',
     MINSTAKE = 'minstake',
     LAST_WITHDRAW_CYCLE_DELEG = 'last_withdraw_cycle_deleg',
-    LASTREWARDCYCLE = 'lastrewardcycle'
+    LASTREWARDCYCLE = 'lastrewardcycle',
+    LAST_BUF_DEPOSIT_CYCLE_DELEG = 'last_buf_deposit_cycle_deleg'
 }
 
 export const fetchContracts = async (chainId: ChainIdType) => {

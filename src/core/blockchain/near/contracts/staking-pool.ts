@@ -1,12 +1,9 @@
-import { Client } from '../client';
-import { IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
+import { IPosTransaction, IBlockchainTransaction } from '../../types';
 import { IValidator } from '../../types/stats';
 import { PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction } from './base-contract';
 
-export class Staking {
-    constructor(private client: Client) {}
-
+export class StakingPool {
     public async deposit(
         tx: IPosTransaction,
         validator: IValidator
@@ -17,14 +14,6 @@ export class Staking {
 
         transaction.amount = tx.amount;
         transaction.toAddress = contractAddress;
-
-        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
-            from: tx.account.address,
-            to: validator.id,
-            amount: tx.amount,
-            contractAddress
-        });
-        transaction.feeOptions = fees;
 
         transaction.data = {
             method: 'deposit',
@@ -48,14 +37,6 @@ export class Staking {
         transaction.amount = tx.amount;
         transaction.toAddress = contractAddress;
 
-        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
-            from: tx.account.address,
-            to: validator.id,
-            amount: tx.amount,
-            contractAddress
-        });
-        transaction.feeOptions = fees;
-
         transaction.data = {
             method: 'stake',
             params: [validator.id, tx.amount]
@@ -78,14 +59,6 @@ export class Staking {
         transaction.amount = tx.amount;
         transaction.toAddress = contractAddress;
 
-        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
-            from: tx.account.address,
-            to: validator.id,
-            amount: tx.amount,
-            contractAddress
-        });
-        transaction.feeOptions = fees;
-
         transaction.data = {
             method: 'unstake',
             params: [validator.id, tx.amount]
@@ -107,14 +80,6 @@ export class Staking {
 
         transaction.amount = tx.amount;
         transaction.toAddress = contractAddress;
-
-        const fees = await this.client.getFees(TransactionType.CONTRACT_CALL, {
-            from: tx.account.address,
-            to: validator.id,
-            amount: tx.amount,
-            contractAddress
-        });
-        transaction.feeOptions = fees;
 
         transaction.data = {
             method: 'withdraw',

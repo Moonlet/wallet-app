@@ -33,7 +33,7 @@ export enum NearTransactionActionType {
 
 export interface INearTransactionAction {
     type: NearTransactionActionType;
-    params?: {};
+    params?: [];
 }
 
 export interface INearTransactionAdditionalInfoType {

@@ -161,7 +161,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                         );
 
                         // Deposit
-                        const depositTx: IBlockchainTransaction = await (client as NearClient).staking.deposit(
+                        const depositTx: IBlockchainTransaction = await (client as NearClient).stakingPool.deposit(
                             txDelegate,
                             validator
                         );
@@ -173,7 +173,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                     }
 
                     // Stake
-                    const stakeTx: IBlockchainTransaction = await (client as NearClient).staking.stake(
+                    const stakeTx: IBlockchainTransaction = await (client as NearClient).stakingPool.stake(
                         txDelegate,
                         validator
                     );
@@ -188,7 +188,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 const txUnstake: IPosTransaction = cloneDeep(tx);
 
                 // Unstake
-                const unstakeTx: IBlockchainTransaction = await (client as NearClient).staking.unstake(
+                const unstakeTx: IBlockchainTransaction = await (client as NearClient).stakingPool.unstake(
                     txUnstake,
                     tx.validators[0]
                 );
@@ -196,13 +196,16 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 break;
             }
             case PosBasicActionType.WITHDRAW: {
-                const txWithdraw: IPosTransaction = cloneDeep(tx);
+                // const txWithdraw: IPosTransaction = cloneDeep(tx);
+
+                // TODO
 
                 // Withdraw
-                const withdrawTx: IBlockchainTransaction = await (client as NearClient).staking.withdraw(
-                    txWithdraw,
+                const withdrawTx: IBlockchainTransaction = await (client as NearClient).stakingPool.withdraw(
+                    tx,
                     tx.validators[0]
                 );
+
                 transactions.push(withdrawTx);
                 break;
             }

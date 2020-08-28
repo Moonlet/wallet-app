@@ -9,17 +9,17 @@ import { ClientUtils } from './client-utils';
 import { createTransaction, signTransaction, deleteAccount } from 'near-api-js/lib/transaction';
 import { KeyPair, serialize } from 'near-api-js/lib/utils';
 import sha256 from 'js-sha256';
-import { Staking } from './contracts/staking';
+import { StakingPool } from './contracts/staking-pool';
 
 export class Client extends BlockchainGenericClient {
-    public staking: Staking;
+    public stakingPool: StakingPool;
 
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
 
         this.nameService = new NameService(this);
         this.utils = new ClientUtils(this);
-        this.staking = new Staking(this);
+        this.stakingPool = new StakingPool();
     }
 
     public async getBalance(address: string): Promise<BigNumber> {

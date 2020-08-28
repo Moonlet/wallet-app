@@ -55,6 +55,10 @@ import { DelegateConfirm } from '../screens/pos-actions/pos-action-delegate/dele
 import { RedelegateSelectValidator } from '../screens/pos-actions/pos-action-redelegate/redelegate-select-validator/redelegate-select-validator';
 import { RedelegateEnterAmount } from '../screens/pos-actions/pos-action-redelegate/redelegate-enter-amount/redelegate-enter-amount';
 import { RedelegateConfirm } from '../screens/pos-actions/pos-action-redelegate/redelegate-confirm/redelegate-confirm';
+import { NotificationsScreen } from '../screens/notifications/notifications';
+import { CreateNearAccountScreen } from '../screens/blockchain/near/create-account/create-account';
+import { RecoverNearAccountScreen } from '../screens/blockchain/near/recover-account/recover-account';
+import { AddNearAccountScreen } from '../screens/blockchain/near/add-account/add-account';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -165,6 +169,18 @@ export const WalletNavigation = createStackNavigator(
         },
         DelegateConfirm: {
             screen: DelegateConfirm
+        },
+        Notifications: {
+            screen: NotificationsScreen
+        },
+        AddNearAccount: {
+            screen: AddNearAccountScreen
+        },
+        CreateNearAccount: {
+            screen: CreateNearAccountScreen
+        },
+        RecoverNearAccount: {
+            screen: RecoverNearAccountScreen
         },
 
         PosQuickDelegate: {

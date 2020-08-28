@@ -7,7 +7,6 @@ import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
-import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import {
     withNavigationParams,
     INavigationProps
@@ -34,17 +33,25 @@ import {
 import { Icon } from '../../../../components/icon/icon';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
 import { IconValues } from '../../../../components/icon/values';
+import { getValidators } from '../../../../redux/ui/validators/selectors';
+import { PosBasicActionType } from '../../../../core/blockchain/types/token';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+
+const defaultNumberOfValidators = 2;
 
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    validators: IValidator[];
     navigateToEnterAmountStep: typeof navigateToEnterAmountStep;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    const chainId = getChainId(state, ownProps.blockchain);
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        chainId: getChainId(state, ownProps.blockchain)
+        chainId,
+        validators: getValidators(state, ownProps.blockchain, chainId, PosBasicActionType.DELEGATE)
     };
 };
 
@@ -84,8 +91,11 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
         super(props);
 
         this.state = {
-            nrValidators: 1,
-            validatorsList: props.validators
+            nrValidators: defaultNumberOfValidators,
+            validatorsList:
+                props.validators.length > defaultNumberOfValidators
+                    ? props.validators.slice(0, defaultNumberOfValidators)
+                    : props.validators
         };
     }
 
@@ -106,6 +116,10 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
     private renderValidatorList() {
         const { styles } = this.props;
         const blockchainInstance = getBlockchain(this.props.blockchain);
+        const maximumNumberOfValidatorsReached =
+            blockchainInstance.config.ui.validator.maximumNumberOfValidators &&
+            blockchainInstance.config.ui.validator.maximumNumberOfValidators <=
+                this.state.nrValidators;
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
                 <TouchableOpacity
@@ -113,37 +127,33 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                     onPress={() => {
                         if (this.state.nrValidators > 1) {
                             const nrValidatorsNew = this.state.nrValidators - 1;
-                            blockchainInstance
-                                .getStats(this.props.chainId)
-                                .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                                .then(validators => {
-                                    this.setState({
-                                        nrValidators: nrValidatorsNew,
-                                        validatorsList: validators
-                                    });
-                                })
-                                .catch();
+
+                            this.setState({
+                                nrValidators: nrValidatorsNew,
+                                validatorsList: this.props.validators.slice(0, nrValidatorsNew)
+                            });
                         }
                         // decrease
                     }}
                 >
-                    <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
+                    <Icon name={IconValues.MINUS} size={normalize(16)} style={styles.actionIcon} />
                 </TouchableOpacity>
                 <Text style={styles.actionCounterText}>{this.state.nrValidators}</Text>
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
-                        const nrValidatorsNew = this.state.nrValidators + 1;
-                        blockchainInstance
-                            .getStats(this.props.chainId)
-                            .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                            .then(validators => {
-                                this.setState({
-                                    nrValidators: nrValidatorsNew,
-                                    validatorsList: validators
-                                });
-                            })
-                            .catch();
+                        if (
+                            this.props.validators.length > this.state.nrValidators + 1 &&
+                            !maximumNumberOfValidatorsReached
+                        ) {
+                            const nrValidatorsNew = this.state.nrValidators + 1;
+
+                            this.setState({
+                                nrValidators: nrValidatorsNew,
+                                validatorsList: this.props.validators.slice(0, nrValidatorsNew)
+                            });
+                        }
+                        // increase
                     }}
                 >
                     <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
@@ -153,6 +163,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                 <ValidatorsList
                     validators={this.state.validatorsList}
                     blockchain={this.props.blockchain}
+                    token={this.props.token}
                     onSelect={this.onSelect}
                     actionType={CardActionType.CHECKBOX}
                 />

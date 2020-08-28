@@ -5,13 +5,15 @@ import { store } from '../../../redux/config';
 import { setSelectedWallet, updateTransactionFromBlockchain } from '../../../redux/wallets/actions';
 import { takeOneAndSubscribeToStore } from '../../../redux/utils/helpers';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
+import { markSeenNotification, getUnseenNotifications } from '../../../redux/notifications/actions';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export const notificationHandler = async (
     notification: INotificationPayload,
     openedByNotification: boolean = false
 ) => {
-    // if openedByNotification, make sure state is loaded
     if (openedByNotification) {
+        // used this in order to make sure that state is loaded
         takeOneAndSubscribeToStore(store, (state, unsub) => {
             if (store.getState()._persist.rehydrated) {
                 unsub && unsub();
@@ -21,12 +23,24 @@ export const notificationHandler = async (
     } else {
         handleNotification(notification, openedByNotification);
     }
+
+    try {
+        const parsedData = JSON.parse(notification.data);
+
+        if (parsedData?.notification?._id) {
+            store.dispatch(markSeenNotification(parsedData.notification._id) as any);
+        }
+    } catch (err) {
+        SentryCaptureException(new Error(JSON.stringify(err)));
+    }
 };
 
 const handleNotification = (
     notification: INotificationPayload,
     openedByNotification: boolean = false
 ) => {
+    store.dispatch(getUnseenNotifications() as any);
+
     switch (notification.type) {
         case NotificationType.TRANSACTION:
             const data = JSON.parse(notification.data);
@@ -37,7 +51,6 @@ const handleNotification = (
              * if the app was opened by tapping on the notification then update the transaction from blockchain,
              * navigato to transaction page and dont display another transaction
              */
-
             store.dispatch(
                 // @ts-ignore
                 updateTransactionFromBlockchain(
@@ -64,12 +77,25 @@ const handleNotification = (
             break;
 
         case NotificationType.MOONLET_TRANSFER:
-            const requestId = JSON.parse(notification.data)?.requestId;
+            try {
+                const requestId = JSON.parse(notification.data)?.requestId;
 
-            if (requestId) {
-                store.dispatch(openTransactionRequest({ requestId }));
-            } else {
-                //
+                if (requestId) {
+                    store.dispatch(openTransactionRequest({ requestId }));
+                } else {
+                    // maybe find a way to handle this
+                    // show a message to the user or something
+                    SentryCaptureException(
+                        new Error(
+                            JSON.stringify({
+                                requestId,
+                                notificationType: NotificationType.MOONLET_TRANSFER
+                            })
+                        )
+                    );
+                }
+            } catch (err) {
+                SentryCaptureException(new Error(JSON.stringify(err)));
             }
 
             break;

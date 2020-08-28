@@ -1,10 +1,11 @@
+import { Alert } from 'react-native';
 import { HDWallet } from '../../../core/wallet/hd-wallet/hd-wallet';
 import {
     Blockchain,
     IFeeOptions,
     TransactionMessageText,
     TransactionMessageType,
-    ITransferTransactionExtraFields,
+    ITransactionExtraFields,
     ChainIdType,
     IBlockchainTransaction
 } from '../../../core/blockchain/types';
@@ -41,8 +42,6 @@ import {
     getWalletAndTransactionForHash
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
-import { Client as NearClient } from '../../../core/blockchain/near/client';
-import { enableCreateAccount, disableCreateAccount } from '../../ui/screens/dashboard/actions';
 import { formatAddress } from '../../../core/utils/format-address';
 import { updateAddressMonitorTokens } from '../../../core/address-monitor/index';
 import { Dialog } from '../../../components/dialog/dialog';
@@ -52,7 +51,9 @@ import {
     getEncryptionKey,
     generateEncryptionKey,
     clearEncryptionKey,
-    clearPinCode
+    clearPinCode,
+    getWalletCredentialsKey,
+    setWalletCredentialsKey
 } from '../../../core/secure/keychain/keychain';
 import { delay } from '../../../core/utils/time';
 import { toggleBiometricAuth } from '../../preferences/actions';
@@ -60,6 +61,10 @@ import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../../ui/transaction-
 import { ConnectExtension } from '../../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { startNotificationsHandlers } from '../../notifications/actions';
+import { ApiClient } from '../../../core/utils/api-client/api-client';
+import { Client as NearClient } from '../../../core/blockchain/near/client';
+import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../core/constants/app';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -77,6 +82,7 @@ export const ADD_TOKEN_TO_ACCOUNT = 'ADD_TOKEN_TO_ACCOUNT';
 export const WALLET_SELECT_ACCOUNT = 'WALLET_SELECT_ACCOUNT';
 export const WALLET_SELECT_BLOCKCHAIN = 'WALLET_SELECT_BLOCKCHAIN';
 export const SELECT_WALLET = 'SELECT_WALLET';
+export const SET_WALLET_PUBLIC_KEY = 'SET_WALLET_PUBLIC_KEY';
 
 // action creators
 export const addWallet = (walletData: IWalletState) => {
@@ -110,15 +116,6 @@ export const setSelectedBlockchain = (blockchain: Blockchain) => (
         }
     });
 
-    if (blockchain === Blockchain.NEAR) {
-        if (getAccounts(state, blockchain).length === 0) {
-            dispatch(enableCreateAccount());
-        } else {
-            dispatch(disableCreateAccount());
-        }
-    } else {
-        dispatch(disableCreateAccount());
-    }
     const selectedAccount = getSelectedAccount(getState());
     if (selectedAccount) {
         getBalance(
@@ -175,7 +172,6 @@ export const createHWWallet = (
     deviceModel: HWModel,
     connectionType: HWConnection,
     blockchain: Blockchain
-    // navigation: NavigationScreenProp<NavigationState>
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     try {
         const walletId: string = uuidv4();
@@ -184,7 +180,7 @@ export const createHWWallet = (
         dispatch(toInitialState());
         dispatch(setDisplayPasswordModal(false));
 
-        const wallet = await HWWalletFactory.get(
+        const wallet: IWallet = await HWWalletFactory.get(
             deviceVendor,
             deviceModel,
             deviceId,
@@ -196,8 +192,12 @@ export const createHWWallet = (
         dispatch(verifyAddressOnDevice(true));
         const accounts: IAccountState[] = await wallet.getAccounts(blockchain, 0);
         accounts[0].selected = true;
+
+        const walletCredentials = await wallet.getWalletCredentials();
+
         const walletData: IWalletState = {
             id: walletId,
+            walletPublicKey: undefined,
             selected: false,
             selectedBlockchain: blockchain,
             hwOptions: {
@@ -211,6 +211,18 @@ export const createHWWallet = (
             accounts
         };
 
+        if (walletCredentials) {
+            try {
+                await setWalletCredentialsKey(
+                    walletCredentials.publicKey,
+                    walletCredentials.privateKey
+                );
+                walletData.walletPublicKey = walletCredentials.publicKey;
+            } catch {
+                // already handled the error
+            }
+        }
+
         dispatch(addWallet(walletData));
 
         dispatch(setSelectedWallet(walletId));
@@ -221,6 +233,7 @@ export const createHWWallet = (
 
         dispatch(toInitialState());
         dispatch(setDisplayPasswordModal(true));
+        startNotificationsHandlers()(dispatch, getState);
     } catch (e) {
         dispatch(setDisplayPasswordModal(true));
 
@@ -274,16 +287,31 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             const walletId = uuidv4();
             const accounts: IAccountState[] = data.reduce((out, acc) => out.concat(acc), []);
 
-            dispatch(
-                addWallet({
-                    id: walletId,
-                    selected: false,
-                    selectedBlockchain: Blockchain.ZILLIQA, // by default the first blockchain is selected
-                    name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
-                    type: WalletType.HD,
-                    accounts
-                })
-            );
+            const walletCredentials = await wallet.getWalletCredentials();
+
+            const walletData: IWalletState = {
+                id: walletId,
+                walletPublicKey: undefined,
+                selected: false,
+                selectedBlockchain: Blockchain.ZILLIQA, // by default the first blockchain is selected
+                name: `Wallet ${Object.keys(getState().wallets).length + 1}`,
+                type: WalletType.HD,
+                accounts
+            };
+
+            if (walletCredentials) {
+                try {
+                    await setWalletCredentialsKey(
+                        walletCredentials.publicKey,
+                        walletCredentials.privateKey
+                    );
+                    walletData.walletPublicKey = walletCredentials.publicKey;
+                } catch {
+                    // already handled the error
+                }
+            }
+
+            dispatch(addWallet(walletData));
 
             const encryptionKey = await getEncryptionKey(password);
             await storeEncrypted(mnemonic, walletId, encryptionKey);
@@ -293,6 +321,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             await LoadingModal.close();
 
             updateAddressMonitorTokens(getState().wallets);
+            startNotificationsHandlers()(dispatch, getState);
         });
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));
@@ -394,10 +423,15 @@ export const updateTransactionFromBlockchain = (
     const state = getState();
     const blockchainInstance = getBlockchain(blockchain);
     const client = blockchainInstance.getClient(chainId);
+    const selectedAccount = getSelectedAccount(state);
+
     let transaction;
 
     try {
-        transaction = await client.utils.getTransaction(transactionHash);
+        transaction = await client.utils.getTransaction(
+            transactionHash,
+            blockchain === Blockchain.NEAR && selectedAccount.address
+        );
     } catch (e) {
         const currentBlock = await client.getCurrentBlock();
         if (
@@ -478,13 +512,16 @@ export const updateTransactionFromBlockchain = (
                 blockchain,
                 accountIndex: transactionAccount.index,
                 token: generateAccountTokenState(tokenConfig),
-                tokenLogo: tokenConfig.icon
+                tokenLogo: tokenConfig.icon,
+                activeTab: blockchainInstance.config.ui?.token?.labels?.tabTransactions
             };
 
             dispatch(setSelectedWallet(wallet.id));
             NavigationService.navigate('Token', navigationParams);
         }
     }
+
+    await LoadingModal.close();
 };
 
 export const sendTransferTransaction = (
@@ -495,7 +532,7 @@ export const sendTransferTransaction = (
     feeOptions: IFeeOptions,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
-    extraFields: ITransferTransactionExtraFields,
+    extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
@@ -703,17 +740,40 @@ export const addTokenToAccount = (
     getBalance(account.blockchain, account.address, undefined, true)(dispatch, getState);
 };
 
-export const createAccount = (
+export const deleteAccount = (
     blockchain: Blockchain,
-    newAccountId: string,
+    accountId: string,
+    accountIndex: number,
     password: string
 ) => async (dispatch: Dispatch<any>, getState: () => IReduxState) => {
+    const state = getState();
+    const selectedWallet: IWalletState = getSelectedWallet(state);
+
+    const hdWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
+        pass: password
+    });
+
+    const privateKey = hdWallet.getPrivateKey(blockchain, accountIndex);
+
+    const chainId = getChainId(state, blockchain);
+    const client = getBlockchain(blockchain).getClient(chainId) as NearClient;
+
+    await client.deleteNearAccount(accountId, NEAR_TESTNET_MASTER_ACCOUNT, privateKey);
+};
+
+export const createNearAccount = (newAccountId: string, password: string) => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    await LoadingModal.open();
+
     const state = getState();
     const selectedWallet: IWalletState = getSelectedWallet(state);
     const hdWallet: IWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
         pass: password
     });
-    blockchain = Blockchain.NEAR;
+    const blockchain = Blockchain.NEAR;
+
     const chainId = getChainId(state, blockchain);
 
     const numberOfAccounts = selectedWallet.accounts.filter(acc => acc.blockchain === blockchain)
@@ -721,29 +781,39 @@ export const createAccount = (
 
     const accounts = await hdWallet.getAccounts(blockchain, numberOfAccounts);
     const account = accounts[0];
-    const publicKey = account.publicKey;
 
-    const blockchainInstance = getBlockchain(blockchain);
-    const client = blockchainInstance.getClient(chainId) as NearClient;
+    const res = await new ApiClient().near.createAccount(
+        newAccountId,
+        account.publicKey,
+        String(chainId)
+    );
 
-    const txId = await client.createAccount(newAccountId, publicKey, chainId);
+    if (res?.result?.data?.status) {
+        const tx = res.result.data;
 
-    if (txId) {
-        account.address = newAccountId;
+        if (tx.status?.SuccessValue === '') {
+            account.address = newAccountId;
+            account.tokens[chainId][getBlockchain(blockchain).config.coin].balance = {
+                value: '0',
+                inProgress: false,
+                timestamp: undefined,
+                error: undefined
+            };
+            dispatch(addAccount(selectedWallet.id, blockchain, account));
+            dispatch(setSelectedAccount(account));
 
-        account.tokens[chainId][blockchainInstance.config.coin].balance = {
-            value: '0',
-            inProgress: false,
-            timestamp: undefined,
-            error: undefined
-        };
-
-        dispatch(addAccount(selectedWallet.id, blockchain, account));
-        dispatch(setSelectedAccount(account));
-        dispatch(disableCreateAccount());
+            NavigationService.navigate('Dashboard', {});
+        } else if (tx.status?.Failure) {
+            // TODO
+            Alert.alert('Failed', 'Create account has failed!');
+        } else {
+            Alert.alert('Invalid Status', 'Create account has failed!');
+        }
     } else {
-        // TODO - if client.createAccount crashes, dashboard (near create account section) will be stuck on loading indicator
+        Alert.alert('Create account has failed!', res?.message || res?.errorMessage || '');
     }
+
+    await LoadingModal.close();
 };
 
 export const changePIN = (newPassword: string, oldPassword: string) => async (
@@ -777,4 +847,99 @@ export const addPublishedTxToAccount = (
             walletId
         }
     });
+};
+
+export const setWalletPublicKey = (walletId: string, walletPublicKey: string) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    dispatch({
+        type: SET_WALLET_PUBLIC_KEY,
+        data: { walletId, walletPublicKey }
+    });
+};
+
+export const setWalletsCredentials = (password: string) => async (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
+
+    for (const wallet of Object.values(state.wallets)) {
+        try {
+            if (wallet.walletPublicKey) {
+                // credentials have been already set
+                return;
+            }
+
+            let walletCredentials: { publicKey: string; privateKey: string };
+
+            // Generate wallet credentials
+            switch (wallet.type) {
+                case WalletType.HD:
+                    const storageHDWallet = await HDWallet.loadFromStorage(wallet.id, password);
+                    walletCredentials = await storageHDWallet.getWalletCredentials();
+                    break;
+
+                case WalletType.HW:
+                    const walletHW: IWallet = await HWWalletFactory.get(
+                        wallet.hwOptions.deviceVendor,
+                        wallet.hwOptions.deviceModel,
+                        wallet.hwOptions.deviceId,
+                        wallet.hwOptions.connectionType
+                    );
+                    walletCredentials = await walletHW.getWalletCredentials();
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (walletCredentials?.publicKey) {
+                setWalletPublicKey(wallet.id, walletCredentials.publicKey)(dispatch, getState);
+
+                const keychainWalletCredentials = await getWalletCredentialsKey(
+                    walletCredentials.publicKey
+                );
+
+                if (!keychainWalletCredentials) {
+                    await setWalletCredentialsKey(
+                        walletCredentials.publicKey,
+                        walletCredentials.privateKey
+                    );
+                }
+            } else {
+                throw new Error(
+                    JSON.stringify({
+                        walletPublicKey: wallet?.walletPublicKey,
+                        walletType: wallet.type,
+                        walletHwOptions: wallet?.hwOptions,
+                        errorMessage: 'Undefined walletCredentials'
+                    })
+                );
+            }
+        } catch (err) {
+            throw new Error(err);
+        }
+    }
+};
+
+export const getWalletAndAccountNameByAddress = (address: string) => (
+    dispatch: Dispatch<any>,
+    getState: () => IReduxState
+): { walletName: string; accountName: string } => {
+    const state = getState();
+
+    for (const wallet of Object.values(state.wallets)) {
+        for (const account of wallet.accounts) {
+            if (account.address?.toLocaleLowerCase() === address?.toLocaleLowerCase()) {
+                return {
+                    walletName: wallet.name,
+                    accountName: account.name || `Account ${account.index + 1}`
+                };
+            }
+        }
+    }
+
+    return undefined;
 };

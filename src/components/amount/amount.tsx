@@ -8,6 +8,7 @@ import { convertAmount } from '../../core/utils/balance';
 import { IExchangeRates } from '../../redux/market/state';
 
 interface IExternalProps {
+    testID?: string;
     blockchain: Blockchain;
     amount: string;
     token: string;
@@ -38,6 +39,7 @@ export const AmountComponent = (props: IExternalProps & IReduxProps) => {
 
     return (
         <Text
+            testID={props.testID}
             style={props.style}
             format={{
                 currency: convertTo,

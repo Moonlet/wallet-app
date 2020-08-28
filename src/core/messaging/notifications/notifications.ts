@@ -5,6 +5,7 @@ import { notificationHandler } from '../handlers/notification';
 import { store } from '../../../redux/config';
 import { updateAddressMonitorTokens } from '../../address-monitor';
 import { themes } from '../../../navigation/navigation';
+import { getUnseenNotifications } from '../../../redux/notifications/actions';
 
 // this file is in this format for testing purposes
 export class NotificationService {
@@ -62,7 +63,7 @@ export class NotificationService {
         this.notificationDisplayedListener = firebase
             .notifications()
             .onNotificationDisplayed(notification => {
-                //
+                store.dispatch(getUnseenNotifications() as any);
             });
 
         // when app is opened or in background and user taps on a notification

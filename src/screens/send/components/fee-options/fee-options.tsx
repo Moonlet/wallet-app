@@ -8,7 +8,12 @@ import { translate } from '../../../../core/i18n';
 import { GasFeeAvanced } from '../gas-fee-advanced/gas-fee-advanced';
 import { FeeTotal } from '../fee-total/fee-total';
 import { FeePreset } from '../fee-preset/fee-preset';
-import { IBlockchainConfig, IFeeOptions, ChainIdType } from '../../../../core/blockchain/types';
+import {
+    IBlockchainConfig,
+    IFeeOptions,
+    ChainIdType,
+    TransactionType
+} from '../../../../core/blockchain/types';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { IReduxState } from '../../../../redux/state';
@@ -20,6 +25,7 @@ import { LoadingIndicator } from '../../../../components/loading-indicator/loadi
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export interface IExternalProps {
+    transactionType: TransactionType;
     token: ITokenState;
     sendingToken: ITokenState;
     account: IAccountState;
@@ -75,15 +81,16 @@ export class FeeOptionsComponent extends React.Component<
                 this.props.sendingToken.symbol
             );
 
-            const fees = await blockchainInstance
-                .getClient(this.props.chainId)
-                .calculateFees(
-                    this.props.account.address,
-                    this.props.toAddress,
-                    1,
-                    tokenSendingToken.contractAddress,
-                    tokenSendingToken.type
-                );
+            const fees = await blockchainInstance.getClient(this.props.chainId).getFees(
+                this.props.transactionType,
+                {
+                    from: this.props.account.address,
+                    to: this.props.toAddress,
+                    amount: '1',
+                    contractAddress: tokenSendingToken.contractAddress
+                },
+                tokenSendingToken.type
+            );
 
             this.setState({ feeOptions: fees, isLoading: false });
             this.props.onFeesChanged(fees);

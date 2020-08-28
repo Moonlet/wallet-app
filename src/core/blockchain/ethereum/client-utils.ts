@@ -18,12 +18,12 @@ export class ClientUtils implements IClientUtils {
         return Promise.all(rpcCalls).then(async res => {
             if (!res[0].result) {
                 throw new Error(
-                    res[0].error.message || `Error getting transaction info for ${hash}`
+                    res[0]?.error?.message || `Error getting transaction info for ${hash}`
                 );
             }
             if (!res[1].result) {
                 throw new Error(
-                    res[1].error.message || `Error getting transaction receipt for ${hash}`
+                    res[1]?.error?.message || `Error getting transaction receipt for ${hash}`
                 );
             }
 

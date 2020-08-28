@@ -55,19 +55,24 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         Platform.OS !== 'web' && this.bottomSheet.current.snapTo(1);
     }
 
-    public transactionHistoryPress() {
+    private transactionHistoryPress() {
         this.props.onClose();
         NavigationService.navigate('TransactonsHistory', {});
     }
 
-    public manageAccount() {
+    private manageAccount() {
         this.props.onClose();
         NavigationService.navigate('ManageAccount', {});
     }
 
-    public connectExtension() {
+    private connectExtension() {
         this.props.onClose();
         NavigationService.navigate('ConnectExtension', {});
+    }
+
+    private manageWallets() {
+        this.props.onClose();
+        NavigationService.navigate('Wallets', {});
     }
 
     public renderRow(options: {
@@ -114,31 +119,41 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     {this.renderRow({
                         title: translate('DashboardMenu.transactionHistory'),
                         description: translate('DashboardMenu.checkTransactions'),
-                        iconName: 'archive-locker',
+                        iconName: IconValues.ARCHIVE_LOCKER,
                         onPress: () => this.transactionHistoryPress()
                     })}
+
                     {Platform.OS !== 'web' &&
                         getBlockchain(this.props.blockchain).config.ui.enableTokenManagement &&
                         this.renderRow({
                             title: translate('DashboardMenu.manageAccount'),
                             description: translate('DashboardMenu.quicklyManage'),
-                            iconName: 'pencil',
+                            iconName: IconValues.PENCIL,
                             onPress: () => this.manageAccount()
                         })}
+
                     {Platform.OS !== 'web' &&
                         this.renderRow({
                             title: translate('DashboardMenu.connectExtension'),
                             description: translate('DashboardMenu.scanCode'),
-                            iconName: 'qr-code-scan',
+                            iconName: IconValues.QR_CODE_SCAN,
                             onPress: () => this.connectExtension()
                         })}
+
                     {Platform.OS !== 'web' &&
                         this.renderRow({
                             title: translate('DashboardMenu.scanPay'),
                             description: translate('DashboardMenu.scanReceive'),
-                            iconName: 'qr-code-scan',
+                            iconName: IconValues.QR_CODE_SCAN,
                             onPress: () => this.qrCodeScanner.open()
                         })}
+
+                    {this.renderRow({
+                        title: translate('Wallets.manageWallets'),
+                        description: translate('DashboardMenu.switchWallets'),
+                        iconName: IconValues.MONEY_WALLET,
+                        onPress: () => this.manageWallets()
+                    })}
                 </ScrollView>
 
                 <QrModalReader

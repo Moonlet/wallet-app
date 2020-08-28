@@ -3,6 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import CosmosIcon from '../../../assets/icons/blockchains/cosmos.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
+import { IconValues } from '../../../components/icon/values';
 
 export const ATOM_NATIVE: ITokenConfigState = {
     name: 'Atom',
@@ -30,7 +31,7 @@ export const ATOM_NATIVE: ITokenConfigState = {
 export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickDelegate',
-        iconName: 'vote',
+        iconName: IconValues.VOTE,
         navigateTo: {
             screen: 'PosQuickDelegate',
             params: { actionText: 'App.labels.delegate' }
@@ -41,7 +42,7 @@ export const accountCTA = {
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.delegate',
-        iconName: 'vote',
+        iconName: IconValues.VOTE,
         navigateTo: {
             screen: 'PosDelegate',
             params: { actionText: 'App.labels.delegate' }
@@ -50,7 +51,7 @@ const validatorCTA = {
     otherCtas: [
         {
             title: 'App.labels.claimReward',
-            iconName: 'claim-reward',
+            iconName: IconValues.CLAIM_REWARD,
             navigateTo: {
                 screen: 'PosBasicAction',
                 params: {
@@ -61,7 +62,7 @@ const validatorCTA = {
         },
         {
             title: 'App.labels.reinvest',
-            iconName: 'reinvest',
+            iconName: IconValues.REINVEST,
             navigateTo: {
                 screen: 'PosBasicAction',
                 params: {
@@ -72,7 +73,7 @@ const validatorCTA = {
         },
         {
             title: 'App.labels.redelegate',
-            iconName: 'revote',
+            iconName: IconValues.REVOTE,
             navigateTo: {
                 screen: 'PosRedelegate',
                 params: { actionText: 'App.labels.redelegate' }
@@ -80,7 +81,7 @@ const validatorCTA = {
         },
         {
             title: 'App.labels.undelegate',
-            iconName: 'unvote',
+            iconName: IconValues.UNVOTE,
             navigateTo: {
                 screen: 'PosBasicAction',
                 params: {

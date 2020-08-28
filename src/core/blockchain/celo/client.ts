@@ -1,6 +1,6 @@
 import { Client as EthereumClient } from '../ethereum/client';
 import { Erc20Client } from './tokens/erc20-client';
-import { ChainIdType, TransactionMessageText } from '../types';
+import { ChainIdType, TransactionMessageText, TransactionType } from '../types';
 import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
 import { networks } from './networks';
@@ -8,8 +8,11 @@ import { HttpClient } from '../../utils/http-client';
 import { NameService } from './name-service';
 import BigNumber from 'bignumber.js';
 import { config, Contracts } from './config';
-import abi from 'ethereumjs-abi';
 import { LockedGold } from './contracts/lockedgold';
+import { Election } from './contracts/election';
+import { Accounts } from './contracts/accounts';
+import abi from 'ethereumjs-abi';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export class Client extends EthereumClient {
     constructor(chainId: ChainIdType) {
@@ -18,6 +21,8 @@ export class Client extends EthereumClient {
         this.nameService = new NameService();
         this.utils = new ClientUtils(this);
         this.contracts[Contracts.LOCKED_GOLD] = new LockedGold(this);
+        this.contracts[Contracts.ELECTION] = new Election(this);
+        this.contracts[Contracts.ACCOUNTS] = new Accounts(this);
 
         let url = networks[0].url;
         const network = networks.filter(n => n.chainId === chainId)[0];
@@ -31,6 +36,8 @@ export class Client extends EthereumClient {
         return this.http.jsonRpc('eth_sendRawTransaction', [transaction]).then(res => {
             if (res.result) {
                 return res.result;
+            } else {
+                SentryCaptureException(new Error(JSON.stringify(res || 'no result from rpc')));
             }
 
             const errorMessage: string = res.error.message;
@@ -43,17 +50,52 @@ export class Client extends EthereumClient {
         });
     }
 
-    public async calculateFees(
-        from: string,
-        to: string,
-        amount: BigNumber = new BigNumber(1),
-        contractAddress?: string,
+    public async getFees(
+        transactionType: TransactionType,
+        data: {
+            from?: string;
+            to?: string;
+            amount?: string;
+            contractAddress?: string;
+            raw?: string;
+        },
         tokenType: TokenType = TokenType.NATIVE
     ) {
         try {
-            const results = contractAddress
-                ? await this.estimateGas(from, to, amount, contractAddress)
-                : await this.estimateGas(from, to);
+            let results = {};
+
+            const transferRawData =
+                '0x' +
+                abi
+                    .simpleEncode(
+                        'transfer(address,uint256)',
+                        data.to,
+                        new BigNumber(data.amount).toFixed()
+                    )
+                    .toString('hex');
+
+            switch (transactionType) {
+                case TransactionType.TRANSFER: {
+                    results = data.contractAddress
+                        ? await this.estimateGas(
+                              data.from,
+                              data.to,
+                              data.contractAddress,
+                              new BigNumber(data.amount),
+                              transferRawData
+                          )
+                        : await this.estimateGas(data.from, data.to);
+                }
+                case TransactionType.CONTRACT_CALL: {
+                    results = await this.estimateGas(
+                        data.from,
+                        data.to,
+                        data.contractAddress,
+                        new BigNumber(data.amount),
+                        data.raw ? data.raw : transferRawData
+                    );
+                }
+            }
 
             const gasPriceRpc = await this.getGasPrice();
 
@@ -65,20 +107,20 @@ export class Client extends EthereumClient {
                 : config.feeOptions.defaults.gasLimit[tokenType];
 
             return {
-                gasPrice: gasPrice.toString(),
-                gasLimit: gasLimit.toString(),
+                gasPrice: gasPrice.toFixed(0),
+                gasLimit: gasLimit.toFixed(0),
                 presets: {},
-                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+                feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
             };
         } catch {
             const gasPrice = config.feeOptions.defaults.gasPrice;
             const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
 
             return {
-                gasPrice: gasPrice.toString(),
-                gasLimit: gasLimit.toString(),
+                gasPrice: gasPrice.toFixed(),
+                gasLimit: gasLimit.toFixed(),
                 presets: {},
-                feeTotal: gasPrice.multipliedBy(gasLimit).toString()
+                feeTotal: gasPrice.multipliedBy(gasLimit).toFixed()
             };
         }
     }
@@ -92,20 +134,17 @@ export class Client extends EthereumClient {
     public async estimateGas(
         from: string,
         to: string,
+        contractAddress?: string,
         amount?: BigNumber,
-        contractAddress?: string
+        data?: string
     ): Promise<any> {
         let gasEstimatePromise;
-        if (contractAddress) {
+        if (data) {
             gasEstimatePromise = this.http.jsonRpc('eth_estimateGas', [
                 {
                     from,
                     to: contractAddress,
-                    data:
-                        '0x' +
-                        abi
-                            .simpleEncode('transfer(address,uint256)', to, amount.toString())
-                            .toString('hex')
+                    data
                 }
             ]);
         } else {

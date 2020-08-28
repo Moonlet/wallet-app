@@ -10,13 +10,11 @@ export class HttpClient {
     public async get(path: string): Promise<any> {
         return fetch(this.url + path).then(async res => {
             const response = await res.json();
-            // console.log('GET', 'response', response);
             return response;
         });
     }
 
     public async post(path: string, body: {}): Promise<any> {
-        // console.log('RPC client', 'request', request);
         return fetch(this.url + path, {
             method: 'POST',
             headers: defaultHeaders,
@@ -26,17 +24,17 @@ export class HttpClient {
         });
     }
 
-    public async jsonRpc(method: string, params: any[] = []): Promise<any> {
+    public async jsonRpc(method: string, params: any = []): Promise<any> {
         const id = this.lastId++;
+
         const body = {
             jsonrpc: '2.0',
             id,
             method,
-            params: Array.isArray(params) ? params : [params]
+            params: typeof params !== 'object' || params === null ? [params] : params
         };
 
         return this.post('', body).then(async res => {
-            //            console.log('response', res, this.url);
             return res;
         });
     }

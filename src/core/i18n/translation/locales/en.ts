@@ -9,6 +9,8 @@ export const translation: ITranslations = {
                 accept: 'Accept',
                 account: 'Account',
                 accounts: 'Accounts',
+                activate: 'Activate',
+                add: 'Add',
                 addToken: 'Add token',
                 advanced: 'Advanced',
                 advancedSetup: 'Advanced setup',
@@ -17,9 +19,11 @@ export const translation: ITranslations = {
                 average: 'Average',
                 balance: 'Balance',
                 cancel: 'Cancel',
+                canceled: 'Canceled',
                 cheap: 'Cheap',
                 check: 'Check',
                 close: 'Close',
+                claim: 'Claim',
                 claimReward: 'Claim reward',
                 comingSoon: 'Coming soon!',
                 confirm: 'Confirm',
@@ -40,6 +44,7 @@ export const translation: ITranslations = {
                 delete: 'Delete',
                 details: 'Details',
                 disconnect: 'Sign out',
+                dropped: 'Dropped',
                 enterAmount: 'Enter\namount',
                 editToken: 'Edit token',
                 error: 'Error',
@@ -56,6 +61,7 @@ export const translation: ITranslations = {
                 holdUnveil: 'Hold to unveil',
                 ledgerType: 'Ledger type',
                 legal: 'Legal',
+                locking: 'Locking',
                 low: 'Low',
                 maybeLater: 'Maybe later',
                 mnemonicNotValid: 'Your mnemonic is not valid!',
@@ -64,8 +70,10 @@ export const translation: ITranslations = {
                 network: 'Network',
                 next: 'Next',
                 nextWord: 'Next word',
+                notifications: 'Notifications',
                 ok: 'OK',
                 paste: 'Paste',
+                processing: 'Processing',
                 privacyPolicy: 'Privacy policy',
                 quickDelegate: 'Quick Delegate',
                 quickVote: 'Quick Vote',
@@ -75,6 +83,9 @@ export const translation: ITranslations = {
                 recover: 'Recover',
                 redelegate: 'Redelegate',
                 reinvest: 'Reinvest',
+                refreshing: 'Refreshing',
+                remove: 'Remove',
+                removeAccount: 'Remove account',
                 reset: 'Reset',
                 resetAll: 'Reset all',
                 restake: 'Restake',
@@ -103,18 +114,23 @@ export const translation: ITranslations = {
                 tools: 'Tools',
                 theRequested: 'the requested',
                 transactions: 'Transactions',
+                transfer: 'Transfer',
                 tryAgain: 'Try again',
                 typeHere: 'Type here',
                 understand: 'I understand',
                 undelegate: 'Undelegate',
                 unvote: 'Unvote',
                 unlock: 'Unlock',
+                unlocking: 'Unlocking',
+                unvoting: 'Unvoting',
                 unstake: 'Unstake',
                 validators: 'Validators',
                 vote: 'Vote',
+                voting: 'Voting',
                 wallets: 'Wallets',
                 warning: 'Warning',
                 watch: 'Watch mode',
+                withdraw: 'Withdraw',
                 youAreOn: 'You are on {{blockchain}} {{networkName}} Testnet'
                 // please try to add keys in alphabetic order
             },
@@ -305,7 +321,12 @@ export const translation: ITranslations = {
             signTransaction: 'Sign transaction',
             signExtensionTransaction:
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
-            signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}'
+            signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
+            processTitleText: 'Please wait while each transaction is being processed!',
+            processTitleTextLedger:
+                'Please sign each transaction from your Ledger and wait while is being processed!',
+            registerAccount: 'Registering account',
+            transactionType: 'Transaction Type'
         },
         Statistics: {
             launchingSoon: 'Launching soon!',
@@ -360,7 +381,8 @@ export const translation: ITranslations = {
             connectExtension: 'Connect to extension',
             scanCode: 'Scan the QR code on extension',
             scanPay: 'Scan to pay',
-            scanReceive: 'Scan and receive a transaction request'
+            scanReceive: 'Scan and receive a transaction request',
+            switchWallets: 'Switch between the wallets anytime'
         },
         BackupWallet: {
             title: 'Backup Wallet',
@@ -382,16 +404,30 @@ export const translation: ITranslations = {
             noGiveUp: `But don't give up – check the search string you entered and give it one more try`,
             searchValidators: 'Search for validators'
         },
-        CreateAccount: {
-            createAccount: 'Create new account!',
-            chooseUsr: 'Just choose a username',
-            createNear: 'Create NEAR account!',
-            chooseUsername: 'Just choose a username and you’re all set.',
-            congrats: 'Congrats! This name is available.',
+        AddAccount: {
+            title: 'Add account',
             eg: 'e.g. johndoe',
-            errorMessage: 'Username is {{message}}. Try something else.',
-            taken: 'taken',
-            invalid: 'invalid'
+            addNearAccount: 'Add a new NEAR account',
+            checking: 'Checking availability ...',
+            removeAccountConfirm: 'You’re about to remove {{name}} from Moonlet',
+            invalid: 'Account name CANNOT contain characters "@" or "."',
+            notAvailable: 'Account name not available. Try something else.'
+        },
+        CreateNearAccount: {
+            title: 'Create account name',
+            chooseAccountName: 'Choose an account name and you’re all set.',
+            congrats: 'Congrats! {{name}} is available.'
+        },
+        RecoverNearAccount: {
+            title: 'Recover account name',
+            authMoonletUserAccount: 'Authorize Moonlet to use your existing account name',
+            copyAuthLink: 'Copy authorization link',
+            authMoonlet: 'Authorize Moonlet',
+            congrats: 'Congrats! {{name}} is registered. Please authorize Moonlet to use it.',
+            authProgress: 'Authorization in progress ...',
+            notRegistered:
+                'Account name not registered. If you want to use it, you need first to create it.',
+            createHere: 'Create one here!'
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',
@@ -414,25 +450,26 @@ export const translation: ITranslations = {
         },
         SecurityChecks: {
             title: 'Security Warning!',
+            ownRisk: 'Use Moonlet on your own risk!',
             ios: {
                 emulator:
-                    'You are running the application in iOS simulator, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                    'You are running the application in iOS simulator, therefore we cannot guarantee the safety of the data.',
                 jailBreak:
-                    'Your device might be jail broken, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                    'Your device might be jail broken, therefore we cannot guarantee the safety of the data.',
                 debugged:
-                    "We've detected a debugger proccess connected to Moonlet, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.",
+                    "We've detected a debugger proccess connected to Moonlet, therefore we cannot guarantee the safety of the data.",
                 hookDetected:
-                    "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk."
+                    "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data."
             },
             android: {
                 emulator:
-                    'You are running the application in emulator, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                    'You are running the application in emulator, therefore we cannot guarantee the safety of the data.',
                 jailBreak:
-                    'Your device might be rooted, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.',
+                    'Your device might be rooted, therefore we cannot guarantee the safety of the data.',
                 debugged:
-                    "We've detected a debugger proccess connected to Moonlet, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk.",
+                    "We've detected a debugger proccess connected to Moonlet, therefore we cannot guarantee the safety of the data.",
                 hookDetected:
-                    "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data.\n\nUse Moonlet on your own risk."
+                    "We've detected the presence of reverse engeneering tools on your system, therefore we cannot guarantee the safety of the data."
             }
         },
         ConnectExtension: {
@@ -450,6 +487,11 @@ export const translation: ITranslations = {
                 title: 'Confirm transaction',
                 body:
                     'Open Moonlet to confirm the following transaction: send {{formattedAmount}} to {{formattedAddress}}'
+            },
+            notificationsCenter: {
+                emptyNotifTitle: 'No notifications available',
+                emptyNotifSubtitle:
+                    'Notifications will appear here once you start to make transactions'
             }
         },
         TransactionRequest: {
@@ -469,7 +511,9 @@ export const translation: ITranslations = {
             selectValidator: 'Select\nvalidator(s)',
             confirmVote: 'Confirm\nvote(s)',
             confirmStake: 'Confirm\nstake(s)',
-            totalStake: 'Total Stake',
+            totalStakes: 'Total Stakes',
+            totalVotes: 'Total Votes',
+            activatingVotes: 'Activating votes',
             totalDelegated: 'Total Delegated',
             myStake: 'My Stake',
             delegation: 'Delegation',
@@ -482,6 +526,18 @@ export const translation: ITranslations = {
                 'It takes {{duration}} in order to unlock the amount and will be automatically withdrawn then deposited into your available balance.',
             claimRewardBottomText:
                 'The claimed reward you receive may be equal to or grater than what it displayed nou since rewards are accumulated each block.'
+        },
+        Widget: {
+            activateVotesTitle: 'Activate your votes now',
+            waitTimeActivate: 'Wait {{timeFormat}} until next epoch',
+            waitTimeWithdraw: 'Wait {{timeFormat}} to withdraw',
+            claimText: 'Claim your rewards now',
+            withdrawText: 'Withdraw your {{coin}} now'
+        },
+        AddNearAccount: {
+            title: 'Create or recover\nan account name!',
+            recoverAccount: 'Recover an existing account name',
+            createAccount: 'Create a new account name'
         }
     },
     plural: (n: number, ord?: boolean) => {

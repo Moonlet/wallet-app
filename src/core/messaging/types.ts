@@ -1,9 +1,11 @@
+// TODO: refactor this, too many types
 export enum NotificationType {
     EXTENSION_TRANSACTION = 'EXTENSION_TRANSACTION',
     TRANSACTION_UPDATE = 'TRANSACTION_UPDATE',
     TRANSACTION = 'TRANSACTION',
     INFO = 'INFO',
-    MOONLET_TRANSFER = 'MOONLET_TRANSFER'
+    MOONLET_TRANSFER = 'MOONLET_TRANSFER',
+    EXTENSION_SIGN_TX = 'EXTENSION_SIGN_TX'
 }
 
 export enum SilentMessageType {
@@ -23,4 +25,9 @@ export interface INotificationInfo extends INotificationPayload {
 export interface ISilentMessage {
     type: SilentMessageType;
     data: any;
+}
+
+export enum PushNotifTokenType {
+    FCM = 'FCM',
+    APN = 'APN'
 }

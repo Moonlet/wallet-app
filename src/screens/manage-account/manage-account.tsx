@@ -127,6 +127,7 @@ export class ManageAccountComponent extends React.Component<
         return (
             <View style={styles.leftActionsContainer}>
                 <TouchableOpacity
+                    testID={`delete-${token.symbol.toLocaleLowerCase()}`}
                     style={styles.action}
                     onPress={() => {
                         this.props.removeTokenFromAccount(
@@ -180,6 +181,7 @@ export class ManageAccountComponent extends React.Component<
                 onSwipeableWillOpen={() => this.onSwipeableWillOpen(index)}
             >
                 <View
+                    testID={item.value.symbol}
                     style={[
                         styles.rowContainer,
                         {

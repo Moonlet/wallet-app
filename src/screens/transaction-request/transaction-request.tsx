@@ -12,7 +12,8 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import {
     sendTransferTransaction,
     setSelectedWallet,
-    signMessage
+    signMessage,
+    sendTransaction
 } from '../../redux/wallets/actions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import Icon from '../../components/icon/icon';
@@ -43,6 +44,7 @@ export interface IReduxProps {
     qrCode: string;
     closeTransactionRequest: typeof closeTransactionRequest;
     sendTransferTransaction: typeof sendTransferTransaction;
+    sendTransaction: typeof sendTransaction;
     signMessage: typeof signMessage;
     selectedWallet: IWalletState;
     setSelectedWallet: typeof setSelectedWallet;
@@ -62,6 +64,7 @@ export const mapStateToProps = (state: IReduxState) => {
 const mapDispatchToProps = {
     closeTransactionRequest,
     sendTransferTransaction,
+    sendTransaction,
     signMessage,
     setSelectedWallet
 };
@@ -196,18 +199,12 @@ export class TransactionRequestScreenComponent extends React.Component<
                 );
                 break;
             default:
-                this.props.sendTransferTransaction(
-                    extensionTxPayload?.params[0]?.account,
-                    extensionTxPayload?.params[0]?.toAddress,
-                    extensionTxPayload?.params[0]?.amount,
-                    extensionTxPayload?.params[0]?.token,
-                    extensionTxPayload?.params[0]?.feeOptions,
-                    password,
-                    undefined, // navigation - not needed
-                    extensionTxPayload?.params[0]?.extraFields,
-                    false, // goBack
-                    { requestId: this.props.requestId }
-                );
+                this.props.sendTransaction(extensionTxPayload?.params[0], password, {
+                    goBack: false,
+                    sendResponse: {
+                        requestId: this.props.requestId
+                    }
+                });
         }
     }
 

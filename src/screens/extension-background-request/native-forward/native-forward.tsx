@@ -11,7 +11,12 @@ import stylesProvider from './styles';
 import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
 import { ConnectExtensionWeb } from '../../../core/connect-extension/connect-extension-web';
 import { NotificationType } from '../../../core/messaging/types';
-import { Blockchain, ChainIdType } from '../../../core/blockchain/types';
+import {
+    Blockchain,
+    ChainIdType,
+    TransactionType,
+    IBlockchainTransaction
+} from '../../../core/blockchain/types';
 import { connect } from 'react-redux';
 import { IReduxState } from '../../../redux/state';
 import { getChainId } from '../../../redux/preferences/selectors';
@@ -20,6 +25,8 @@ import { toBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { BigNumber } from 'bignumber.js';
+import { TransactionStatus } from '../../../core/wallet/types';
+import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 
 interface IExternalProps {
     requestId: string;
@@ -53,7 +60,7 @@ export class NativeForwardComp extends React.Component<
             switch (rpcRequest.method) {
                 case 'CreateTransaction':
                     const rpcParams = this.props.request?.params[0]?.params[0] || {};
-                    let method = NotificationType.MOONLET_TRANSFER;
+                    let method = NotificationType.MOONLET_TRANSACTION;
 
                     if (rpcParams.data) {
                         // todo check if toAddr needs to be verified
@@ -117,36 +124,47 @@ export class NativeForwardComp extends React.Component<
                             // }
                         }
                     } else {
+                        const account = Object.values(this.props.wallets)
+                            .find(w => w.walletPublicKey === this.props.request?.walletPubKey)
+                            ?.accounts?.find(
+                                acc =>
+                                    acc.address === rpcParams.fromAddr &&
+                                    acc.blockchain === Blockchain.ZILLIQA
+                            );
+
+                        const transaction: IBlockchainTransaction = {
+                            walletPubKey: this.props.request?.walletPubKey,
+                            date: {
+                                created: Date.now(),
+                                signed: undefined,
+                                broadcasted: undefined,
+                                confirmed: undefined
+                            },
+                            blockchain: account.blockchain,
+                            chainId: this.props.request?.chainId,
+                            type: TransactionType.TRANSFER,
+                            token: getTokenConfig(account.blockchain, 'ZIL'),
+
+                            address: account.address,
+                            publicKey: account.publicKey,
+
+                            toAddress: isBech32(rpcParams.toAddr)
+                                ? rpcParams.toAddr
+                                : toBech32Address(rpcParams.toAddr),
+                            amount: blockchainInstance.account
+                                .amountFromStd(new BigNumber(rpcParams.amount), 12)
+                                .toFixed(),
+                            feeOptions: {
+                                gasPrice: rpcParams.gasPrice,
+                                gasLimit: rpcParams.gasLimit
+                            },
+                            broadcastedOnBlock: undefined,
+                            nonce: undefined,
+                            status: TransactionStatus.PENDING
+                        };
                         sendRequestPayload = {
                             method,
-                            params: [
-                                {
-                                    account: Object.values(this.props.wallets)
-                                        .find(
-                                            w =>
-                                                w.walletPublicKey ===
-                                                this.props.request?.walletPubKey
-                                        )
-                                        ?.accounts?.find(
-                                            acc =>
-                                                acc.address === rpcParams.fromAddr &&
-                                                acc.blockchain === Blockchain.ZILLIQA
-                                        ),
-                                    toAddress: isBech32(rpcParams.toAddr)
-                                        ? rpcParams.toAddr
-                                        : toBech32Address(rpcParams.toAddr),
-                                    amount: blockchainInstance.account.amountFromStd(
-                                        new BigNumber(rpcParams.amount),
-                                        12
-                                    ),
-                                    token: 'ZIL',
-                                    feeOptions: {
-                                        gasPrice: rpcParams.gasPrice,
-                                        gasLimit: rpcParams.gasLimit
-                                    },
-                                    walletPubKey: this.props.request?.walletPubKey
-                                }
-                            ],
+                            params: [transaction],
                             notification: {
                                 title: translate('Notifications.extensionSignMessage.title'),
                                 body: translate('Notifications.extensionSignMessage.body')

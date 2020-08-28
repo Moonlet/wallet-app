@@ -37,6 +37,7 @@ export abstract class AbstractBlockchainTransactionUtils {
 // tslint:disable-next-line:no-shadowed-variable
 export interface IBlockchainTransaction<IAdditionalInfoType = any> {
     id?: string;
+    walletPubKey?: string;
     date: {
         created: number;
         signed: number;

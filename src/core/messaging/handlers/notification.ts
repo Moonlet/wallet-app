@@ -78,6 +78,7 @@ const handleNotification = (
 
         case NotificationType.MOONLET_SIGN_MESSAGE:
         case NotificationType.MOONLET_TRANSFER:
+        case NotificationType.MOONLET_TRANSACTION:
             try {
                 const requestId = JSON.parse(notification.data)?.requestId;
 

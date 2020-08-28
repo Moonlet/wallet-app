@@ -25,6 +25,14 @@ export const getSelectedWallet = createSelector(
     }
 );
 
+export const getWalletByPubKey = (reduxState: IReduxState, walletPubKey: string): IWalletState =>
+    createSelector(
+        (state: IReduxState) => state.wallets,
+        (wallets: IWalletsState) => {
+            return Object.values(wallets)?.find(w => w.walletPublicKey === walletPubKey);
+        }
+    )(reduxState);
+
 export const getSelectedAccount = createSelector(
     (state: IReduxState): IWalletState => getSelectedWallet(state),
     (state: IReduxState): Blockchain => getSelectedBlockchain(state),

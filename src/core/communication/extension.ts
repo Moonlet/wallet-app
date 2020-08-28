@@ -1,4 +1,4 @@
-import { Blockchain } from '../blockchain/types';
+import { Blockchain, ChainIdType } from '../blockchain/types';
 
 export enum ConnectionPort {
     BACKGROUND = 'BACKGROUND'
@@ -21,8 +21,9 @@ export interface IExtensionResponse {
 export interface IExtensionRequest {
     origin: string;
     walletPubKey?: string;
-    controller: string;
     blockchain?: Blockchain;
+    chainId?: ChainIdType;
+    controller: string;
     method: string;
     params: any[];
 }

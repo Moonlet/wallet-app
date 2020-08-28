@@ -77,6 +77,11 @@ export class ZilliqaProvider extends BaseProvider {
         let address;
         let accountInfo;
 
+        if (request.blockchain && !request.chainId) {
+            const chainId = getChainId(store.getState(), request.blockchain);
+            request.chainId = chainId;
+        }
+
         switch (rpcRequest?.method) {
             case 'GetAccount':
                 if (rpcRequest?.params[0]) {

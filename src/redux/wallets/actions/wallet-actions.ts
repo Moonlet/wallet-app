@@ -39,7 +39,8 @@ import {
     getSelectedAccount,
     getWalletWithAddress,
     getWalletAndTransactionForHash,
-    getSelectedBlockchain
+    getSelectedBlockchain,
+    getWalletByPubKey
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
 import { Client as NearClient } from '../../../core/blockchain/near/client';
@@ -602,13 +603,15 @@ export const sendTransaction = (
     tx: IBlockchainTransaction,
     password: string,
     options: {
-        navigation: NavigationScreenProp<NavigationState>;
-        goBack: boolean;
+        navigation?: NavigationScreenProp<NavigationState>;
+        goBack?: boolean;
         sendResponse?: { requestId: string };
     }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
     const state = getState();
-    const appWallet = getSelectedWallet(state);
+    const appWallet = tx.walletPubKey
+        ? getWalletByPubKey(state, tx.walletPubKey)
+        : getSelectedWallet(state);
 
     try {
         await LoadingModal.open({
@@ -618,6 +621,19 @@ export const sendTransaction = (
                     ? TransactionMessageText.CONNECTING_LEDGER
                     : TransactionMessageText.SIGNING
         });
+
+        if (!tx.nonce) {
+            tx.nonce = await getBlockchain(tx.blockchain)
+                .getClient(tx.chainId)
+                .getNonce(tx.address, tx.publicKey);
+        }
+
+        if (!tx.broadcastedOnBlock) {
+            const blockInfo = await getBlockchain(tx.blockchain)
+                .getClient(tx.chainId)
+                .getCurrentBlock();
+            tx.broadcastedOnBlock = blockInfo.number;
+        }
 
         const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
             pass: password,

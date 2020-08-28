@@ -60,12 +60,12 @@ export class NativeForwardComp extends React.Component<
             switch (rpcRequest.method) {
                 case 'CreateTransaction':
                     const rpcParams = this.props.request?.params[0]?.params[0] || {};
-                    let method = NotificationType.MOONLET_TRANSACTION;
+                    const method = NotificationType.MOONLET_TRANSACTION;
 
                     if (rpcParams.data) {
                         // todo check if toAddr needs to be verified
                         if (rpcParams.code) {
-                            method = NotificationType.MOONLET_CONTRACT_DEPLOY;
+                            // todo...
                         } else {
                             // let data: any = {};
                             // try {

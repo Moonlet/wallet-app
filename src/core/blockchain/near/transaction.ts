@@ -135,13 +135,9 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                         client.chainId.toString()
                     );
 
-                    let hasToDeposit = false;
-
                     if (
                         new BigNumber(tx.amount).isGreaterThan(new BigNumber(res.balance.unstaked))
                     ) {
-                        hasToDeposit = true;
-
                         const depositAmount = new BigNumber(tx.amount).minus(
                             new BigNumber(res.balance.unstaked)
                         );
@@ -163,9 +159,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                         txDelegate,
                         validator
                     );
-                    if (hasToDeposit) {
-                        stakeTx.nonce = stakeTx.nonce + transactions.length; // increase nonce with the number of previous transactions
-                    }
+                    stakeTx.nonce = stakeTx.nonce + transactions.length;
                     transactions.push(stakeTx);
                 }
                 break;

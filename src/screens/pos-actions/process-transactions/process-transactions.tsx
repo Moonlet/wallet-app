@@ -168,16 +168,6 @@ export class ProcessTransactionsComponent extends React.Component<
                 middleText = translate('App.labels.to').toLowerCase() + ' ' + tx.toAddress;
                 break;
             }
-            case PosBasicActionType.STAKE: {
-                topText = translate('App.labels.stake') + ' ' + amount;
-                middleText = translate('App.labels.to').toLowerCase() + ' ' + tx.toAddress;
-                break;
-            }
-            case PosBasicActionType.UNSTAKE: {
-                topText = translate('App.labels.unstake') + ' ' + amount;
-                middleText = translate('App.labels.from').toLowerCase() + ' ' + tx.toAddress;
-                break;
-            }
             case PosBasicActionType.WITHDRAW: {
                 topText = translate('App.labels.withdraw') + ' ' + amount;
                 middleText = translate('App.labels.from').toLowerCase() + ' ' + tx.toAddress;

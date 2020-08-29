@@ -219,33 +219,6 @@ export const unvote = (
     )(dispatch, getState);
 };
 
-export const unstake = (
-    account: IAccountState,
-    amount: string,
-    validators: IValidator[],
-    token: string,
-    feeOptions: IFeeOptions,
-    password: string,
-    navigation: NavigationScreenProp<NavigationState>,
-    extraFields: ITransactionExtraFields,
-    goBack: boolean = true,
-    sendResponse?: { requestId: string }
-) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    posAction(
-        account,
-        amount,
-        validators,
-        token,
-        feeOptions,
-        password,
-        navigation,
-        extraFields,
-        goBack,
-        PosBasicActionType.UNSTAKE,
-        sendResponse
-    )(dispatch, getState);
-};
-
 export const posAction = (
     account: IAccountState,
     amount: string,

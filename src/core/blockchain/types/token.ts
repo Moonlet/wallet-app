@@ -31,7 +31,6 @@ export enum PosBasicActionType {
     UNLOCK = 'UNLOCK',
     UNDELEGATE = 'UNDELEGATE',
     UNVOTE = 'UNVOTE',
-    STAKE = 'STAKE',
     UNSTAKE = 'UNSTAKE',
     ACTIVATE = 'ACTIVATE',
     CLAIM_REWARD = 'CLAIM_REWARD',

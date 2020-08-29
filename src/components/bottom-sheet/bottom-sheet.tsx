@@ -15,9 +15,17 @@ import { normalize } from '../../styles/dimensions';
 import { LedgerConnectBottomSheet } from './ledger-connect-bottom-sheet/ledger-connect-bottom-sheet';
 import { WalletsBottomSheet } from './wallets-bottom-sheet/wallets-bottom-sheet';
 import bind from 'bind-decorator';
-import { getSelectedBlockchain } from '../../redux/wallets/selectors';
+import {
+    getSelectedBlockchain,
+    getSelectedAccount,
+    getAccounts
+} from '../../redux/wallets/selectors';
 import { Blockchain } from '../../core/blockchain/types';
+import { IAccountState } from '../../redux/wallets/state';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
+const ACCOUNT_CARD_HEIGHT = normalize(100);
+const ACCOUNT_CARD_MARGINS = normalize(60);
 const HEIGHT_1_ROW = normalize(132);
 // const HEIGHT_2_ROW = normalize(200);
 const HEIGHT_3_ROWS = normalize(280);
@@ -28,15 +36,21 @@ const HEIGHT_THREE_QUARTERS_SCREEN = (Dimensions.get('window').height * 3) / 4;
 
 interface IReduxProps {
     selectedBlockchain: Blockchain;
+    accounts: IAccountState[];
+    selectedAccount: IAccountState;
     bottomSheet: IBottomSheet;
     openBottomSheet: typeof openBottomSheet;
     closeBottomSheet: typeof closeBottomSheet;
 }
 
 const mapStateToProps = (state: IReduxState) => {
+    const selectedAccount = getSelectedAccount(state);
+
     return {
         bottomSheet: state.ui.bottomSheet,
-        selectedBlockchain: getSelectedBlockchain(state)
+        selectedBlockchain: getSelectedBlockchain(state),
+        selectedAccount,
+        accounts: selectedAccount ? getAccounts(state, selectedAccount.blockchain) : []
     };
 };
 
@@ -54,6 +68,10 @@ export class BottomSheetComponent extends React.Component<
     }
 
     public render() {
+        const enableAccountCreation =
+            this.props.selectedAccount &&
+            getBlockchain(this.props.selectedAccount.blockchain).config.ui.enableAccountCreation;
+
         switch (this.props.bottomSheet?.type) {
             case BottomSheetType.ACCOUNTS:
                 return (
@@ -67,7 +85,14 @@ export class BottomSheetComponent extends React.Component<
                             snapPoints={{
                                 initialSnap:
                                     Platform.OS === 'web' ? HEIGHT_THREE_QUARTERS_SCREEN : 0,
-                                bottomSheetHeight: HEIGHT_THREE_QUARTERS_SCREEN
+                                bottomSheetHeight:
+                                    Platform.OS === 'web'
+                                        ? HEIGHT_THREE_QUARTERS_SCREEN
+                                        : enableAccountCreation
+                                        ? ACCOUNT_CARD_HEIGHT * (this.props.accounts.length + 1) +
+                                          ACCOUNT_CARD_MARGINS
+                                        : ACCOUNT_CARD_HEIGHT * this.props.accounts.length +
+                                          ACCOUNT_CARD_MARGINS
                             }}
                             onClose={this.handleClose}
                         />

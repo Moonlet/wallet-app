@@ -3,19 +3,23 @@ import { networks } from './networks';
 import BigNumber from 'bignumber.js';
 import { config } from './config';
 import { NameService } from './name-service';
-import { INearAccount } from '.';
 import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
 import { createTransaction, signTransaction, deleteAccount } from 'near-api-js/lib/transaction';
 import { KeyPair, serialize } from 'near-api-js/lib/utils';
 import sha256 from 'js-sha256';
+import { StakingPool } from './contracts/staking-pool';
+import { INearAccount } from './types';
 
 export class Client extends BlockchainGenericClient {
+    public stakingPool: StakingPool;
+
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
 
         this.nameService = new NameService(this);
         this.utils = new ClientUtils(this);
+        this.stakingPool = new StakingPool();
     }
 
     public async getBalance(address: string): Promise<BigNumber> {

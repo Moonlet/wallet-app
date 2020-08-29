@@ -78,7 +78,10 @@ export class TransactionDetailsComponent extends React.Component<
                 : formatAddress(transaction.toAddress, account.blockchain);
 
         const transactionType =
-            transaction.token.type === TokenType.ZRC2 || transaction.token.type === TokenType.ERC20
+            transaction.additionalInfo?.actions && transaction.additionalInfo.actions[0]?.params
+                ? Capitalize(transaction.additionalInfo.actions[0]?.params[0])
+                : transaction.token.type === TokenType.ZRC2 ||
+                  transaction.token.type === TokenType.ERC20
                 ? Capitalize(transaction.data.method)
                 : translate('App.labels.transfer');
 

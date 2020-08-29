@@ -170,10 +170,10 @@ export const activate = (
 
 export const withdraw = (
     account: IAccountState,
-    index: number,
     token: string,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
+    extraFields: ITransactionExtraFields,
     goBack: boolean = true,
     sendResponse?: { requestId: string }
 ) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
@@ -185,7 +185,7 @@ export const withdraw = (
         undefined,
         password,
         navigation,
-        { witdrawIndex: index },
+        extraFields,
         goBack,
         PosBasicActionType.WITHDRAW,
         sendResponse
@@ -215,6 +215,33 @@ export const unvote = (
         extraFields,
         goBack,
         PosBasicActionType.UNVOTE,
+        sendResponse
+    )(dispatch, getState);
+};
+
+export const unstake = (
+    account: IAccountState,
+    amount: string,
+    validators: IValidator[],
+    token: string,
+    feeOptions: IFeeOptions,
+    password: string,
+    navigation: NavigationScreenProp<NavigationState>,
+    extraFields: ITransactionExtraFields,
+    goBack: boolean = true,
+    sendResponse?: { requestId: string }
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    posAction(
+        account,
+        amount,
+        validators,
+        token,
+        feeOptions,
+        password,
+        navigation,
+        extraFields,
+        goBack,
+        PosBasicActionType.UNSTAKE,
         sendResponse
     )(dispatch, getState);
 };
@@ -332,7 +359,9 @@ export const posAction = (
                     }
                 } else {
                     try {
-                        const transaction = await client.utils.getTransaction(txHash);
+                        const transaction = await client.utils.getTransaction(txHash, {
+                            address: account.address
+                        });
                         dispatch(updateProcessTransactionStatusForIndex(index, transaction.status));
                         index++;
                         processNextTransaction = true;

@@ -91,7 +91,10 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
         super(props);
 
         this.state = {
-            nrValidators: defaultNumberOfValidators,
+            nrValidators:
+                props.validators.length < defaultNumberOfValidators
+                    ? props.validators.length
+                    : defaultNumberOfValidators,
             validatorsList:
                 props.validators.length > defaultNumberOfValidators
                     ? props.validators.slice(0, defaultNumberOfValidators)

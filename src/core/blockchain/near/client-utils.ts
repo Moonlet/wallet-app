@@ -7,8 +7,11 @@ import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
 
-    async getTransaction(hash: string, address?: string): Promise<IBlockchainTransaction> {
-        const res = await this.client.http.jsonRpc('tx', [hash, address]);
+    async getTransaction(
+        hash: string,
+        options: { address: string }
+    ): Promise<IBlockchainTransaction> {
+        const res = await this.client.http.jsonRpc('tx', [hash, options.address]);
 
         return this.buildTransactionFromBlockchain(
             res.result.transaction,

@@ -23,6 +23,8 @@ import { DelegationsTab } from './components/tabs/delegations-tab/delegations-ta
 import { ValidatorsTab } from './components/tabs/validators-tab/validators-tab';
 import { TransactionsTab } from './components/tabs/transactions-tab/transactions-tab';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import { TransactionStatus } from '../../../../core/wallet/types';
+import { updateTransactionFromBlockchain } from '../../../../redux/wallets/actions';
 
 export interface IExternalProps {
     accountIndex: number;
@@ -37,11 +39,16 @@ export interface IReduxProps {
     transactions: IBlockchainTransaction[];
     wallet: IWalletState;
     chainId: ChainIdType;
+    updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
 }
 
 export interface IState {
     activeTab: string;
 }
+
+const mapDispatchToProps = {
+    updateTransactionFromBlockchain
+};
 
 export const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
@@ -80,9 +87,26 @@ export class DelegateTokenScreenComponent extends React.Component<
 
     public componentDidMount() {
         const { navigation } = this.props;
+
         navigation.addListener('willFocus', () => {
             if (this.props.activeTab !== undefined) {
                 this.setState({ activeTab: this.props.activeTab });
+
+                if (
+                    this.props.activeTab ===
+                    getBlockchain(this.props.blockchain).config.ui.token.labels.tabTransactions
+                ) {
+                    this.props.transactions?.map((transaction: IBlockchainTransaction) => {
+                        if (transaction.status === TransactionStatus.PENDING) {
+                            this.props.updateTransactionFromBlockchain(
+                                transaction.id,
+                                transaction.blockchain,
+                                transaction.chainId,
+                                transaction.broadcastedOnBlock
+                            );
+                        }
+                    });
+                }
             }
         });
     }
@@ -183,6 +207,6 @@ export class DelegateTokenScreenComponent extends React.Component<
 }
 
 export const DelegateTokenScreen = smartConnect<IExternalProps>(DelegateTokenScreenComponent, [
-    connect(mapStateToProps, null),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

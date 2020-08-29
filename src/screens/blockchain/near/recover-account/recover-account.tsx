@@ -23,6 +23,7 @@ import { INavigationProps } from '../../../../navigation/with-navigation-params'
 import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../../core/constants/app';
 import { LoadingModal } from '../../../../components/loading-modal/loading-modal';
 import { NavigationService } from '../../../../navigation/navigation-service';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface IReduxProps {
     chainId: ChainIdType;
@@ -219,142 +220,150 @@ export class RecoverNearAccountComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                    <Image
-                        source={require('../../../../assets/images/png/moonlet_space_gray.png')}
-                        style={styles.moonletImage}
-                    />
+                <KeyboardAwareScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={false}
+                    alwaysBounceVertical={false}
+                >
+                    <View style={{ flex: 1 }}>
+                        <Image
+                            source={require('../../../../assets/images/png/moonlet_space_gray.png')}
+                            style={styles.moonletImage}
+                        />
 
-                    <Text style={styles.authMoonletUserAccountText}>
-                        {translate('RecoverNearAccount.authMoonletUserAccount')}
-                    </Text>
+                        <Text style={styles.authMoonletUserAccountText}>
+                            {translate('RecoverNearAccount.authMoonletUserAccount')}
+                        </Text>
 
-                    <View style={styles.inputContainer}>
-                        <View style={styles.inputBox}>
-                            <TextInput
-                                style={styles.inputText}
-                                placeholderTextColor={theme.colors.textTertiary}
-                                placeholder={translate('AddAccount.eg')}
-                                autoCapitalize={'none'}
-                                autoCorrect={false}
-                                selectionColor={theme.colors.accent}
-                                returnKeyType="done"
-                                value={this.state.inputAccout}
-                                onChangeText={inputAccout => {
-                                    this.checkAccountId(inputAccout);
-                                }}
-                            />
+                        <View style={styles.inputContainer}>
+                            <View style={styles.inputBox}>
+                                <TextInput
+                                    style={styles.inputText}
+                                    placeholderTextColor={theme.colors.textTertiary}
+                                    placeholder={translate('AddAccount.eg')}
+                                    autoCapitalize={'none'}
+                                    autoCorrect={false}
+                                    selectionColor={theme.colors.accent}
+                                    returnKeyType="done"
+                                    value={this.state.inputAccout}
+                                    onChangeText={inputAccout => {
+                                        this.checkAccountId(inputAccout);
+                                    }}
+                                />
 
-                            <Text style={styles.domain}>{`.${NEAR_TESTNET_MASTER_ACCOUNT}`}</Text>
+                                <Text
+                                    style={styles.domain}
+                                >{`.${NEAR_TESTNET_MASTER_ACCOUNT}`}</Text>
+                            </View>
+
+                            {!isAuthorizing && (
+                                <TouchableOpacity
+                                    onPress={() =>
+                                        NavigationService.navigate('CreateNearAccount', {
+                                            accountId: this.state.inputAccout
+                                        })
+                                    }
+                                    disabled={!isCreateAccountActive}
+                                >
+                                    <Text>
+                                        <Text
+                                            style={[
+                                                styles.infoText,
+                                                (isUsernameNotRegistered ||
+                                                    isInvalidUsername ||
+                                                    isUsernameNotAvailable) &&
+                                                    styles.errorText,
+                                                isChecking && styles.checkingText,
+                                                this.state.isInputValid && styles.congratsText
+                                            ]}
+                                        >
+                                            {isChecking
+                                                ? translate('AddAccount.checking')
+                                                : isUsernameNotRegistered
+                                                ? translate('RecoverNearAccount.notRegistered')
+                                                : isInvalidUsername
+                                                ? translate('AddAccount.invalid')
+                                                : isUsernameNotAvailable
+                                                ? translate('AddAccount.notAvailable')
+                                                : this.state.isInputValid
+                                                ? translate('RecoverNearAccount.congrats', {
+                                                      name: `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`
+                                                  })
+                                                : ''}
+                                        </Text>
+
+                                        <Text style={[styles.infoText, styles.createHereText]}>
+                                            {isCreateAccountActive
+                                                ? ` ${translate('RecoverNearAccount.createHere')}`
+                                                : ''}
+                                        </Text>
+                                    </Text>
+                                </TouchableOpacity>
+                            )}
                         </View>
 
-                        {!isAuthorizing && (
-                            <TouchableOpacity
-                                onPress={() =>
-                                    NavigationService.navigate('CreateNearAccount', {
-                                        accountId: this.state.inputAccout
-                                    })
-                                }
-                                disabled={!isCreateAccountActive}
-                            >
-                                <Text>
-                                    <Text
-                                        style={[
-                                            styles.infoText,
-                                            (isUsernameNotRegistered ||
-                                                isInvalidUsername ||
-                                                isUsernameNotAvailable) &&
-                                                styles.errorText,
-                                            isChecking && styles.checkingText,
-                                            this.state.isInputValid && styles.congratsText
-                                        ]}
-                                    >
-                                        {isChecking
-                                            ? translate('AddAccount.checking')
-                                            : isUsernameNotRegistered
-                                            ? translate('RecoverNearAccount.notRegistered')
-                                            : isInvalidUsername
-                                            ? translate('AddAccount.invalid')
-                                            : isUsernameNotAvailable
-                                            ? translate('AddAccount.notAvailable')
-                                            : this.state.isInputValid
-                                            ? translate('RecoverNearAccount.congrats', {
-                                                  name: `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`
-                                              })
-                                            : ''}
-                                    </Text>
-
-                                    <Text style={[styles.infoText, styles.createHereText]}>
-                                        {isCreateAccountActive
-                                            ? ` ${translate('RecoverNearAccount.createHere')}`
-                                            : ''}
-                                    </Text>
+                        {isAuthorizing && (
+                            <View style={styles.authProgressContainer}>
+                                <View style={styles.loadingContainer}>
+                                    <LoadingIndicator />
+                                </View>
+                                <Text style={styles.authProgressText}>
+                                    {translate('RecoverNearAccount.authProgress')}
                                 </Text>
-                            </TouchableOpacity>
+                            </View>
                         )}
                     </View>
 
-                    {isAuthorizing && (
-                        <View style={styles.authProgressContainer}>
-                            <View style={styles.loadingContainer}>
-                                <LoadingIndicator />
-                            </View>
-                            <Text style={styles.authProgressText}>
-                                {translate('RecoverNearAccount.authProgress')}
-                            </Text>
-                        </View>
-                    )}
-                </View>
+                    <Button
+                        wrapperStyle={styles.copyAuthButton}
+                        disabledSecondary={!this.state.isInputValid}
+                        onPress={async () => {
+                            if (!this.state.recoveredAccount) {
+                                await this.generatePublicKey();
+                            }
 
-                <Button
-                    wrapperStyle={styles.copyAuthButton}
-                    disabledSecondary={!this.state.isInputValid}
-                    onPress={async () => {
-                        if (!this.state.recoveredAccount) {
-                            await this.generatePublicKey();
-                        }
+                            if (this.state.recoveredAccount) {
+                                this.setState({ isAuthorizing: true });
 
-                        if (this.state.recoveredAccount) {
-                            this.setState({ isAuthorizing: true });
+                                const url = getBlockchain(this.state.recoveredAccount.blockchain)
+                                    .networks.filter(n => n.chainId === this.props.chainId)[0]
+                                    .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
 
-                            const url = getBlockchain(this.state.recoveredAccount.blockchain)
-                                .networks.filter(n => n.chainId === this.props.chainId)[0]
-                                .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
+                                Clipboard.setString(url);
+                                this.startRecoveringAccount();
+                            }
+                        }}
+                    >
+                        {translate('RecoverNearAccount.copyAuthLink')}
+                    </Button>
 
-                            Clipboard.setString(url);
-                            this.startRecoveringAccount();
-                        }
-                    }}
-                >
-                    {translate('RecoverNearAccount.copyAuthLink')}
-                </Button>
+                    <Button
+                        wrapperStyle={styles.authButton}
+                        primary
+                        disabled={!this.state.isInputValid}
+                        onPress={async () => {
+                            if (!this.state.recoveredAccount) {
+                                await this.generatePublicKey();
+                            }
 
-                <Button
-                    wrapperStyle={styles.authButton}
-                    primary
-                    disabled={!this.state.isInputValid}
-                    onPress={async () => {
-                        if (!this.state.recoveredAccount) {
-                            await this.generatePublicKey();
-                        }
+                            if (this.state.recoveredAccount) {
+                                this.setState({ isAuthorizing: true });
 
-                        if (this.state.recoveredAccount) {
-                            this.setState({ isAuthorizing: true });
+                                const url = getBlockchain(this.state.recoveredAccount.blockchain)
+                                    .networks.filter(n => n.chainId === this.props.chainId)[0]
+                                    .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
 
-                            const url = getBlockchain(this.state.recoveredAccount.blockchain)
-                                .networks.filter(n => n.chainId === this.props.chainId)[0]
-                                .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
+                                Linking.canOpenURL(url).then(
+                                    supported => supported && Linking.openURL(url)
+                                );
 
-                            Linking.canOpenURL(url).then(
-                                supported => supported && Linking.openURL(url)
-                            );
-
-                            this.startRecoveringAccount();
-                        }
-                    }}
-                >
-                    {translate('RecoverNearAccount.authMoonlet')}
-                </Button>
+                                this.startRecoveringAccount();
+                            }
+                        }}
+                    >
+                        {translate('RecoverNearAccount.authMoonlet')}
+                    </Button>
+                </KeyboardAwareScrollView>
             </View>
         );
     }

@@ -60,7 +60,10 @@ import { toggleBiometricAuth } from '../../preferences/actions';
 import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../../ui/transaction-request/actions';
 import { ConnectExtension } from '../../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
+import {
+    addBreadcrumb as SentryAddBreadcrumb,
+    captureException as SentryCaptureException
+} from '@sentry/react-native';
 import { startNotificationsHandlers } from '../../notifications/actions';
 import { ApiClient } from '../../../core/utils/api-client/api-client';
 import { Client as NearClient } from '../../../core/blockchain/near/client';
@@ -428,10 +431,9 @@ export const updateTransactionFromBlockchain = (
     let transaction;
 
     try {
-        transaction = await client.utils.getTransaction(
-            transactionHash,
-            blockchain === Blockchain.NEAR && selectedAccount.address
-        );
+        transaction = await client.utils.getTransaction(transactionHash, {
+            address: selectedAccount.address
+        });
     } catch (e) {
         const currentBlock = await client.getCurrentBlock();
         if (
@@ -791,7 +793,7 @@ export const createNearAccount = (newAccountId: string, password: string) => asy
     if (res?.result?.data?.status) {
         const tx = res.result.data;
 
-        if (tx.status?.SuccessValue === '') {
+        if (tx.status && tx.status.SuccessValue === '') {
             account.address = newAccountId;
             account.tokens[chainId][getBlockchain(blockchain).config.coin].balance = {
                 value: '0',
@@ -803,14 +805,42 @@ export const createNearAccount = (newAccountId: string, password: string) => asy
             dispatch(setSelectedAccount(account));
 
             NavigationService.navigate('Dashboard', {});
-        } else if (tx.status?.Failure) {
-            // TODO
+        } else if (tx.status && tx.status.Failure) {
             Alert.alert('Failed', 'Create account has failed!');
+
+            SentryAddBreadcrumb({ message: JSON.stringify(tx) });
+            SentryCaptureException(
+                new Error(
+                    JSON.stringify({
+                        errorMessage: `NEAR create account has failed, account id: ${newAccountId}`
+                    })
+                )
+            );
         } else {
             Alert.alert('Invalid Status', 'Create account has failed!');
+
+            SentryAddBreadcrumb({ message: JSON.stringify(tx) });
+            SentryCaptureException(
+                new Error(
+                    JSON.stringify({
+                        errorMessage: `NEAR create account has failed, account id: ${newAccountId}`
+                    })
+                )
+            );
         }
     } else {
         Alert.alert('Create account has failed!', res?.message || res?.errorMessage || '');
+
+        SentryAddBreadcrumb({ message: JSON.stringify({ res, accountId: newAccountId }) });
+        SentryCaptureException(
+            new Error(
+                JSON.stringify(
+                    res?.message ||
+                        res?.errorMessage ||
+                        `NEAR create account has failed, account id: ${newAccountId}`
+                )
+            )
+        );
     }
 
     await LoadingModal.close();

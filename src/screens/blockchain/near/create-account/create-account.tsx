@@ -19,6 +19,7 @@ import {
     withNavigationParams
 } from '../../../../navigation/with-navigation-params';
 import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../../core/constants/app';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface INavigationParams {
     accountId?: string;
@@ -149,66 +150,74 @@ export class CreateNearAccountComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                    <Image
-                        source={require('../../../../assets/images/png/moonlet_space_gray.png')}
-                        style={styles.moonletImage}
-                    />
-
-                    <Text style={styles.chooseUsernameText}>
-                        {translate('CreateNearAccount.chooseAccountName')}
-                    </Text>
-
-                    <View style={styles.inputContainer}>
-                        <View style={styles.inputBox}>
-                            <TextInput
-                                style={styles.inputText}
-                                placeholderTextColor={theme.colors.textTertiary}
-                                placeholder={translate('AddAccount.eg')}
-                                autoCapitalize={'none'}
-                                autoCorrect={false}
-                                selectionColor={theme.colors.accent}
-                                returnKeyType="done"
-                                value={this.state.inputAccount}
-                                onChangeText={inputAccount => this.checkAccountId(inputAccount)}
-                            />
-
-                            <Text style={styles.domain}>{`.${NEAR_TESTNET_MASTER_ACCOUNT}`}</Text>
-                        </View>
-
-                        <Text
-                            style={[
-                                styles.infoText,
-                                isUsernameNotAvailable && styles.errorText,
-                                isInvalidUsername && styles.errorText,
-                                isChecking && styles.checkingText,
-
-                                this.state.isInputValid && styles.congratsText
-                            ]}
-                        >
-                            {isChecking
-                                ? translate('AddAccount.checking')
-                                : isUsernameNotAvailable
-                                ? translate('AddAccount.notAvailable')
-                                : isInvalidUsername
-                                ? translate('AddAccount.invalid')
-                                : this.state.isInputValid
-                                ? translate('CreateNearAccount.congrats', {
-                                      name: `${this.state.inputAccount}.${NEAR_TESTNET_MASTER_ACCOUNT}`
-                                  })
-                                : ''}
-                        </Text>
-                    </View>
-                </View>
-
-                <Button
-                    wrapperStyle={styles.createButton}
-                    primary
-                    disabled={!this.state.isInputValid}
-                    onPress={() => this.createAccount()}
+                <KeyboardAwareScrollView
+                    contentContainerStyle={{ flexGrow: 1 }}
+                    showsVerticalScrollIndicator={false}
+                    alwaysBounceVertical={false}
                 >
-                    {translate('CreateNearAccount.title')}
-                </Button>
+                    <View style={{ flex: 1 }}>
+                        <Image
+                            source={require('../../../../assets/images/png/moonlet_space_gray.png')}
+                            style={styles.moonletImage}
+                        />
+
+                        <Text style={styles.chooseUsernameText}>
+                            {translate('CreateNearAccount.chooseAccountName')}
+                        </Text>
+
+                        <View style={styles.inputContainer}>
+                            <View style={styles.inputBox}>
+                                <TextInput
+                                    style={styles.inputText}
+                                    placeholderTextColor={theme.colors.textTertiary}
+                                    placeholder={translate('AddAccount.eg')}
+                                    autoCapitalize={'none'}
+                                    autoCorrect={false}
+                                    selectionColor={theme.colors.accent}
+                                    returnKeyType="done"
+                                    value={this.state.inputAccount}
+                                    onChangeText={inputAccount => this.checkAccountId(inputAccount)}
+                                />
+
+                                <Text
+                                    style={styles.domain}
+                                >{`.${NEAR_TESTNET_MASTER_ACCOUNT}`}</Text>
+                            </View>
+
+                            <Text
+                                style={[
+                                    styles.infoText,
+                                    isUsernameNotAvailable && styles.errorText,
+                                    isInvalidUsername && styles.errorText,
+                                    isChecking && styles.checkingText,
+
+                                    this.state.isInputValid && styles.congratsText
+                                ]}
+                            >
+                                {isChecking
+                                    ? translate('AddAccount.checking')
+                                    : isUsernameNotAvailable
+                                    ? translate('AddAccount.notAvailable')
+                                    : isInvalidUsername
+                                    ? translate('AddAccount.invalid')
+                                    : this.state.isInputValid
+                                    ? translate('CreateNearAccount.congrats', {
+                                          name: `${this.state.inputAccount}.${NEAR_TESTNET_MASTER_ACCOUNT}`
+                                      })
+                                    : ''}
+                            </Text>
+                        </View>
+                    </View>
+
+                    <Button
+                        wrapperStyle={styles.createButton}
+                        primary
+                        disabled={!this.state.isInputValid}
+                        onPress={() => this.createAccount()}
+                    >
+                        {translate('CreateNearAccount.title')}
+                    </Button>
+                </KeyboardAwareScrollView>
             </View>
         );
     }

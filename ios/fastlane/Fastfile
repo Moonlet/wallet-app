@@ -114,7 +114,8 @@ platform :ios do
         compileBitcode: false
       })
     
-      upload_to_app_store(force: true, app_identifier: "com.moonlet", submit_for_review: true, phased_release: false, automatic_release: false)
+      upload_to_app_store(force: true, app_identifier: "com.moonlet", submit_for_review: true, phased_release: false, automatic_release: false, 
+        submission_information: { add_id_info_uses_idfa: false })
   
 
   end

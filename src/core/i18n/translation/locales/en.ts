@@ -33,6 +33,11 @@ export const translation: ITranslations = {
                 continue: 'Continue',
                 contract: 'Contract',
                 contractAddress: 'Contract address',
+                contractCall: 'Contract call',
+                contractCallParams: 'Contract call params',
+                contractCode: 'Contract code',
+                contractDeploy: 'Contract deploy',
+                contractInit: 'Contract init',
                 copy: 'Copy',
                 create: 'Create',
                 createTicket: 'Create a ticket',
@@ -57,7 +62,9 @@ export const translation: ITranslations = {
                 find: 'Find',
                 for: 'For',
                 from: 'From',
+                function: 'Function',
                 half: 'Half',
+                hideDetails: 'Hide details',
                 holdUnveil: 'Hold to unveil',
                 learnMore: 'Learn more',
                 ledgerType: 'Ledger type',
@@ -98,6 +105,7 @@ export const translation: ITranslations = {
                 settings: 'Settings',
                 setup: 'Setup',
                 sign: 'Sign',
+                signMessage: 'Sign message',
                 simple: 'Simple',
                 simpleSetup: 'Simple setup',
                 standard: 'Standard',
@@ -125,6 +133,7 @@ export const translation: ITranslations = {
                 unvoting: 'Unvoting',
                 unstake: 'Unstake',
                 validators: 'Validators',
+                viewDetails: 'View details',
                 vote: 'Vote',
                 voting: 'Voting',
                 wallets: 'Wallets',
@@ -479,6 +488,14 @@ export const translation: ITranslations = {
             extensionSignMessage: {
                 title: 'Sign message',
                 body: 'Open Moonlet to sign the message'
+            },
+            extensionContractCall: {
+                title: 'Contract call',
+                body: 'Open Moonlet to sign the contract call transaction'
+            },
+            extensionContractDeploy: {
+                title: 'New contract deploy',
+                body: 'Open Moonlet to sign the contract deploy transaction'
             },
             notificationsCenter: {
                 emptyNotifTitle: 'No notifications available',

@@ -37,6 +37,7 @@ import { IWalletState, IWalletsState } from '../../redux/wallets/state';
 import { IconValues } from '../../components/icon/values';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
 import { NotificationType } from '../../core/messaging/types';
+import { IBlockchainTransaction, TransactionType } from '../../core/blockchain/types';
 
 export interface IReduxProps {
     isVisible: boolean;
@@ -192,7 +193,7 @@ export class TransactionRequestScreenComponent extends React.Component<
                 this.props.signMessage(
                     extensionTxPayload?.params[0]?.walletPubKey,
                     extensionTxPayload?.params[0]?.blockchain,
-                    extensionTxPayload?.params[0]?.accountAddress,
+                    extensionTxPayload?.params[0]?.address,
                     extensionTxPayload?.params[0]?.message,
                     password,
                     { requestId: this.props.requestId }
@@ -441,6 +442,30 @@ export class TransactionRequestScreenComponent extends React.Component<
         }
     }
 
+    private getTitle() {
+        let title = translate('TransactionRequest.title');
+        if (this.state.extensionTxPayload) {
+            switch (this.state.extensionTxPayload?.method) {
+                case NotificationType.MOONLET_SIGN_MESSAGE:
+                    title = translate('App.labels.signMessage');
+                    break;
+                case NotificationType.MOONLET_TRANSACTION:
+                    const tx: IBlockchainTransaction = (this.state.extensionTxPayload?.params ||
+                        [])[0];
+                    switch (tx.type) {
+                        case TransactionType.CONTRACT_CALL:
+                            title = translate('App.labels.contractCall');
+                            break;
+                        case TransactionType.CONTRACT_DEPLOY:
+                            title = translate('App.labels.contractDeploy');
+                            break;
+                    }
+                    break;
+            }
+        }
+        return title;
+    }
+
     @bind
     private closeTxRequest() {
         this.props.closeTransactionRequest();
@@ -474,7 +499,7 @@ export class TransactionRequestScreenComponent extends React.Component<
         if (this.props.isVisible) {
             return (
                 <View style={styles.container}>
-                    <Text style={styles.title}>{translate('TransactionRequest.title')}</Text>
+                    <Text style={styles.title}>{this.getTitle()}</Text>
 
                     {showTestnetBadge && <TestnetBadge />}
 

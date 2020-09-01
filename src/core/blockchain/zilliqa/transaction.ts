@@ -57,7 +57,7 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
             amount: new BN(tx.amount),
             gasPrice: new BN(tx.feeOptions.gasPrice.toString()),
             gasLimit: Long.fromString(tx.feeOptions.gasLimit.toString()),
-            code: '',
+            code: tx.code || '',
             data: tx.data?.raw || '',
             signature: '',
             priority: true

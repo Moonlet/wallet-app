@@ -57,6 +57,7 @@ export interface IBlockchainTransaction<IAdditionalInfoType = any> {
         params?: string[];
         raw?: string;
     };
+    code?: string;
     feeOptions: IFeeOptions;
     broadcastedOnBlock: number;
     nonce: number;

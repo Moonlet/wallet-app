@@ -27,6 +27,8 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { BigNumber } from 'bignumber.js';
 import { TransactionStatus } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { formatNumber } from '../../../core/utils/format-number';
+import { formatAddress } from '../../../core/utils/format-address';
 
 interface IExternalProps {
     requestId: string;
@@ -61,77 +63,111 @@ export class NativeForwardComp extends React.Component<
                 case 'CreateTransaction':
                     const rpcParams = this.props.request?.params[0]?.params[0] || {};
                     const method = NotificationType.MOONLET_TRANSACTION;
+                    const account = Object.values(this.props.wallets)
+                        .find(w => w.walletPublicKey === this.props.request?.walletPubKey)
+                        ?.accounts?.find(
+                            acc =>
+                                acc.address === rpcParams.fromAddr &&
+                                acc.blockchain === Blockchain.ZILLIQA
+                        );
 
                     if (rpcParams.data) {
                         // todo check if toAddr needs to be verified
                         if (rpcParams.code) {
-                            // todo...
+                            // contract deploy
+                            const transaction: IBlockchainTransaction = {
+                                walletPubKey: this.props.request?.walletPubKey,
+                                date: {
+                                    created: Date.now(),
+                                    signed: undefined,
+                                    broadcasted: undefined,
+                                    confirmed: undefined
+                                },
+                                blockchain: account.blockchain,
+                                chainId: this.props.request?.chainId,
+                                type: TransactionType.CONTRACT_DEPLOY,
+
+                                address: account.address,
+                                publicKey: account.publicKey,
+
+                                toAddress: isBech32(rpcParams.toAddr)
+                                    ? rpcParams.toAddr
+                                    : toBech32Address(rpcParams.toAddr),
+                                amount: blockchainInstance.account
+                                    .amountFromStd(new BigNumber(rpcParams.amount), 12)
+                                    .toFixed(),
+                                feeOptions: {
+                                    gasPrice: rpcParams.gasPrice,
+                                    gasLimit: rpcParams.gasLimit
+                                },
+
+                                code: rpcParams.code,
+                                data: {
+                                    raw: rpcParams.data
+                                },
+
+                                broadcastedOnBlock: undefined,
+                                nonce: undefined,
+                                status: TransactionStatus.PENDING
+                            };
+                            sendRequestPayload = {
+                                method,
+                                params: [transaction],
+                                notification: {
+                                    title: translate('Notifications.extensionContractDeploy.title'),
+                                    body: translate('Notifications.extensionContractDeploy.body')
+                                }
+                            };
                         } else {
-                            // let data: any = {};
-                            // try {
-                            //     data = JSON.parse(rpcParams.data);
-                            // } catch {
-                            //     //
-                            // }
-                            // if (
-                            //     data._tag === 'Transfer' &&
-                            //     data.params[0]?.vname === 'to' &&
-                            //     data.params[0]?.type === 'ByStr20' &&
-                            //     data.params[1]?.vname === 'amount' &&
-                            //     data.params[1]?.type === 'Uint128'
-                            // ) {
-                            //     const client = getBlockchain(Blockchain.ZILLIQA).getClient(
-                            //         this.props.chainId
-                            //     );
-                            //     const token = await client.tokens[TokenType.ZRC2].getTokenInfo(
-                            //         rpcParams.toAddr
-                            //     );
-                            //     sendRequestPayload = {
-                            //         method,
-                            //         params: [
-                            //             {
-                            //                 account: Object.values(this.props.wallets)
-                            //                     .find(
-                            //                         w =>
-                            //                             w.walletPublicKey ===
-                            //                             this.props.request?.walletPubKey
-                            //                     )
-                            //                     ?.accounts?.find(
-                            //                         acc => acc.address === rpcParams.fromAddr
-                            //                     ),
-                            //                 toAddress: isBech32(rpcParams.toAddr)
-                            //                     ? rpcParams.toAddr
-                            //                     : toBech32Address(rpcParams.toAddr),
-                            //                 amount: data.params[1]?.value,
-                            //                 token: token.symbol,
-                            //                 feeOptions: {
-                            //                     gasPrice: rpcParams.gasPrice,
-                            //                     gasLimit: rpcParams.gasLimit
-                            //                 },
-                            //                 walletPubKey: this.props.request?.walletPubKey
-                            //             }
-                            //         ],
-                            //         notification: {
-                            //             title: translate(
-                            //                 'Notifications.extensionSignMessage.title'
-                            //             ),
-                            //             body: translate('Notifications.extensionSignMessage.body')
-                            //         }
-                            //     };
-                            // } else {
-                            //     // not a ZRC2 call
-                            //     method = NotificationType.MOONLET_CONTRACT_CALL;
-                            // }
+                            const transaction: IBlockchainTransaction = {
+                                walletPubKey: this.props.request?.walletPubKey,
+                                date: {
+                                    created: Date.now(),
+                                    signed: undefined,
+                                    broadcasted: undefined,
+                                    confirmed: undefined
+                                },
+                                blockchain: account.blockchain,
+                                chainId: this.props.request?.chainId,
+                                type: TransactionType.CONTRACT_CALL,
+
+                                address: account.address,
+                                publicKey: account.publicKey,
+
+                                toAddress: isBech32(rpcParams.toAddr)
+                                    ? rpcParams.toAddr
+                                    : toBech32Address(rpcParams.toAddr),
+                                amount: blockchainInstance.account
+                                    .amountFromStd(new BigNumber(rpcParams.amount), 12)
+                                    .toFixed(),
+                                feeOptions: {
+                                    gasPrice: rpcParams.gasPrice,
+                                    gasLimit: rpcParams.gasLimit
+                                },
+
+                                data: {
+                                    method: rpcParams.data?._tag,
+                                    params: (rpcParams.data?.params || []).map(p => p?.value || p),
+                                    raw: rpcParams.data
+                                },
+
+                                broadcastedOnBlock: undefined,
+                                nonce: undefined,
+                                status: TransactionStatus.PENDING
+                            };
+                            sendRequestPayload = {
+                                method,
+                                params: [transaction],
+                                notification: {
+                                    title: translate('Notifications.extensionContractCall.title'),
+                                    body: translate('Notifications.extensionContractCall.body')
+                                }
+                            };
                         }
                     } else {
-                        const account = Object.values(this.props.wallets)
-                            .find(w => w.walletPublicKey === this.props.request?.walletPubKey)
-                            ?.accounts?.find(
-                                acc =>
-                                    acc.address === rpcParams.fromAddr &&
-                                    acc.blockchain === Blockchain.ZILLIQA
-                            );
-
+                        const amount = blockchainInstance.account
+                            .amountFromStd(new BigNumber(rpcParams.amount), 12)
+                            .toFixed();
                         const transaction: IBlockchainTransaction = {
                             walletPubKey: this.props.request?.walletPubKey,
                             date: {
@@ -151,9 +187,7 @@ export class NativeForwardComp extends React.Component<
                             toAddress: isBech32(rpcParams.toAddr)
                                 ? rpcParams.toAddr
                                 : toBech32Address(rpcParams.toAddr),
-                            amount: blockchainInstance.account
-                                .amountFromStd(new BigNumber(rpcParams.amount), 12)
-                                .toFixed(),
+                            amount,
                             feeOptions: {
                                 gasPrice: rpcParams.gasPrice,
                                 gasLimit: rpcParams.gasLimit
@@ -162,12 +196,21 @@ export class NativeForwardComp extends React.Component<
                             nonce: undefined,
                             status: TransactionStatus.PENDING
                         };
+                        const formattedAmount = formatNumber(new BigNumber(amount), {
+                            currency: getBlockchain(account.blockchain).config.coin
+                        });
+
+                        const formattedAddress = formatAddress(account.address, account.blockchain);
+
                         sendRequestPayload = {
                             method,
                             params: [transaction],
                             notification: {
-                                title: translate('Notifications.extensionSignMessage.title'),
-                                body: translate('Notifications.extensionSignMessage.body')
+                                title: translate('Notifications.extensionTx.title'),
+                                body: translate('Notifications.extensionTx.body', {
+                                    formattedAmount,
+                                    formattedAddress
+                                })
                             }
                         };
                     }
@@ -179,7 +222,7 @@ export class NativeForwardComp extends React.Component<
                             {
                                 walletPubKey: this.props.request.walletPubKey,
                                 blockchain: this.props.request.blockchain,
-                                accountAddress: rpcRequest.params[0],
+                                address: rpcRequest.params[0],
                                 message: rpcRequest.params[1]
                             }
                         ],

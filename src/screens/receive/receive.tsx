@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Clipboard } from 'react-native';
+import { View, Clipboard, Platform } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { Text, Button } from '../../library';
@@ -47,15 +47,23 @@ export const ReceiveScreenComponent = (
     return (
         <View style={props.styles.container}>
             <AccountAddress account={props.account} token={props.navigation.state.params.token} />
-            <View style={props.styles.qrCodeContainer}>
-                <View style={props.styles.qrCode}>
-                    <QRCode
-                        value={props.account.address}
-                        size={SCREEN_WIDTH - BASE_DIMENSION * 10}
-                    />
+            <View style={props.styles.content}>
+                <View style={props.styles.qrCodeContainer}>
+                    <View style={props.styles.qrCode}>
+                        <QRCode
+                            value={props.account.address}
+                            size={
+                                Platform.OS === 'web'
+                                    ? (SCREEN_WIDTH * 2) / 3
+                                    : SCREEN_WIDTH - BASE_DIMENSION * 10
+                            }
+                        />
+                    </View>
                 </View>
 
-                <Text style={props.styles.fullAddress}>{props.account.address}</Text>
+                <View style={props.styles.fullAddressContainer}>
+                    <Text style={props.styles.fullAddress}>{props.account.address}</Text>
+                </View>
             </View>
 
             <Button

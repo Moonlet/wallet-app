@@ -23,12 +23,15 @@ import { DelegationsTab } from './components/tabs/delegations-tab/delegations-ta
 import { ValidatorsTab } from './components/tabs/validators-tab/validators-tab';
 import { TransactionsTab } from './components/tabs/transactions-tab/transactions-tab';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import { TransactionStatus } from '../../../../core/wallet/types';
+import { updateTransactionFromBlockchain } from '../../../../redux/wallets/actions';
 
-export interface IProps {
+export interface IExternalProps {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
     navigation: NavigationScreenProp<NavigationState>;
+    activeTab?: string;
 }
 
 export interface IReduxProps {
@@ -36,13 +39,18 @@ export interface IReduxProps {
     transactions: IBlockchainTransaction[];
     wallet: IWalletState;
     chainId: ChainIdType;
+    updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
 }
 
 export interface IState {
     activeTab: string;
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
+const mapDispatchToProps = {
+    updateTransactionFromBlockchain
+};
+
+export const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         transactions: getAccountFilteredTransactions(
@@ -57,12 +65,15 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
 };
 
 export class DelegateTokenScreenComponent extends React.Component<
-    INavigationProps & IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IExternalProps &
+        INavigationProps &
+        IReduxProps &
+        IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
     constructor(
-        props: INavigationProps &
-            IProps &
+        props: IExternalProps &
+            INavigationProps &
             IReduxProps &
             IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
@@ -70,8 +81,34 @@ export class DelegateTokenScreenComponent extends React.Component<
 
         const config = getBlockchain(this.props.blockchain).config;
         this.state = {
-            activeTab: config.ui.token.labels.tabAccount
+            activeTab: props?.activeTab || config.ui.token.labels.tabAccount
         };
+    }
+
+    public componentDidMount() {
+        const { navigation } = this.props;
+
+        navigation.addListener('willFocus', () => {
+            if (this.props.activeTab !== undefined) {
+                this.setState({ activeTab: this.props.activeTab });
+
+                if (
+                    this.props.activeTab ===
+                    getBlockchain(this.props.blockchain).config.ui.token.labels.tabTransactions
+                ) {
+                    this.props.transactions?.map((transaction: IBlockchainTransaction) => {
+                        if (transaction.status === TransactionStatus.PENDING) {
+                            this.props.updateTransactionFromBlockchain(
+                                transaction.id,
+                                transaction.blockchain,
+                                transaction.chainId,
+                                transaction.broadcastedOnBlock
+                            );
+                        }
+                    });
+                }
+            }
+        });
     }
 
     @bind
@@ -88,6 +125,7 @@ export class DelegateTokenScreenComponent extends React.Component<
                         accountIndex={this.props.accountIndex}
                         blockchain={this.props.blockchain}
                         token={this.props.token}
+                        navigation={this.props.navigation}
                     />
                 );
             case config.ui.token.labels.tabDelegations:
@@ -109,101 +147,56 @@ export class DelegateTokenScreenComponent extends React.Component<
                     />
                 );
             case config.ui.token.labels.tabTransactions:
-                return <TransactionsTab />;
+                return (
+                    <TransactionsTab
+                        accountIndex={this.props.accountIndex}
+                        blockchain={this.props.blockchain}
+                        token={this.props.token}
+                        navigation={this.props.navigation}
+                    />
+                );
         }
     }
 
-    private renderTabButtons() {
+    private renderTabButton(tabConfig: string) {
         const { styles } = this.props;
+        const { activeTab } = this.state;
+
         const stylesTabActive = [styles.tabInactive, styles.tabActive];
         const stylesTabInactive = [styles.tabInactive];
         const stylesTextActive = [styles.tabTextInactive, styles.tabTextActive];
         const stylesTextInactive = [styles.tabTextInactive];
 
+        return (
+            <TouchableOpacity
+                style={activeTab === tabConfig ? stylesTabActive : stylesTabInactive}
+                onPress={() => this.tabPressed(tabConfig)}
+            >
+                <Text style={activeTab === tabConfig ? stylesTextActive : stylesTextInactive}>
+                    {translate(tabConfig)}
+                </Text>
+            </TouchableOpacity>
+        );
+    }
+
+    private renderTabButtons() {
+        const { styles } = this.props;
+
         const config = getBlockchain(this.props.blockchain).config;
 
         return (
             <View style={styles.tabContainer}>
-                <TouchableOpacity
-                    style={
-                        this.state.activeTab === config.ui.token.labels.tabAccount
-                            ? stylesTabActive
-                            : stylesTabInactive
-                    }
-                    onPress={() => this.tabPressed(config.ui.token.labels.tabAccount)}
-                >
-                    <Text
-                        style={
-                            this.state.activeTab === config.ui.token.labels.tabAccount
-                                ? stylesTextActive
-                                : stylesTextInactive
-                        }
-                    >
-                        {translate(config.ui.token.labels.tabAccount)}
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={
-                        this.state.activeTab === config.ui.token.labels.tabDelegations
-                            ? stylesTabActive
-                            : stylesTabInactive
-                    }
-                    onPress={() => this.tabPressed(config.ui.token.labels.tabDelegations)}
-                >
-                    <Text
-                        style={
-                            this.state.activeTab === config.ui.token.labels.tabDelegations
-                                ? stylesTextActive
-                                : stylesTextInactive
-                        }
-                    >
-                        {translate(config.ui.token.labels.tabDelegations)}
-                    </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                    style={
-                        this.state.activeTab === config.ui.token.labels.tabValidators
-                            ? stylesTabActive
-                            : stylesTabInactive
-                    }
-                    onPress={() => this.tabPressed(config.ui.token.labels.tabValidators)}
-                >
-                    <Text
-                        style={
-                            this.state.activeTab === config.ui.token.labels.tabValidators
-                                ? stylesTextActive
-                                : stylesTextInactive
-                        }
-                    >
-                        {translate(config.ui.token.labels.tabValidators)}
-                    </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    style={
-                        this.state.activeTab === config.ui.token.labels.tabTransactions
-                            ? stylesTabActive
-                            : stylesTabInactive
-                    }
-                    onPress={() => this.tabPressed(config.ui.token.labels.tabTransactions)}
-                >
-                    <Text
-                        style={
-                            this.state.activeTab === config.ui.token.labels.tabTransactions
-                                ? stylesTextActive
-                                : stylesTextInactive
-                        }
-                    >
-                        {translate(config.ui.token.labels.tabTransactions)}
-                    </Text>
-                </TouchableOpacity>
+                {this.renderTabButton(config.ui.token.labels.tabAccount)}
+                {this.renderTabButton(config.ui.token.labels.tabDelegations)}
+                {this.renderTabButton(config.ui.token.labels.tabValidators)}
+                {this.renderTabButton(config.ui.token.labels.tabTransactions)}
             </View>
         );
     }
 
     public render() {
         const { styles } = this.props;
+
         return (
             <View testID="delegate-token-screen" style={styles.container}>
                 {this.renderTabButtons()}
@@ -213,7 +206,7 @@ export class DelegateTokenScreenComponent extends React.Component<
     }
 }
 
-export const DelegateTokenScreen = smartConnect<IProps>(DelegateTokenScreenComponent, [
-    connect(mapStateToProps, null),
+export const DelegateTokenScreen = smartConnect<IExternalProps>(DelegateTokenScreenComponent, [
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

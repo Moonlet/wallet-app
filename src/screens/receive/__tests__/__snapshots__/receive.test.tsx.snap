@@ -5,11 +5,15 @@ exports[`SendScreen renders correctly - button should show Copied in title 1`] =
   <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
   <View style={{...}}>
     <View style={{...}}>
-      <QRCode value=\\"value\\" size={600} />
+      <View style={{...}}>
+        <QRCode value=\\"value\\" size={600} />
+      </View>
     </View>
-    <withTheme(TextComponent) style={{...}}>
-      value
-    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <withTheme(TextComponent) style={{...}}>
+        value
+      </withTheme(TextComponent)>
+    </View>
   </View>
   <withTheme(ButtonComponent) testID=\\"copy-clipboard\\" style={{...}} onPress={[Function: onPress]}>
     Copied
@@ -22,11 +26,15 @@ exports[`SendScreen renders correctly 1`] = `
   <withTheme(AccountAddressComponent) account={{...}} token={{...}} />
   <View style={{...}}>
     <View style={{...}}>
-      <QRCode value=\\"value\\" size={600} />
+      <View style={{...}}>
+        <QRCode value=\\"value\\" size={600} />
+      </View>
     </View>
-    <withTheme(TextComponent) style={{...}}>
-      value
-    </withTheme(TextComponent)>
+    <View style={{...}}>
+      <withTheme(TextComponent) style={{...}}>
+        value
+      </withTheme(TextComponent)>
+    </View>
   </View>
   <withTheme(ButtonComponent) testID=\\"copy-clipboard\\" style={{...}} onPress={[Function: onPress]}>
     Copy to clipboard

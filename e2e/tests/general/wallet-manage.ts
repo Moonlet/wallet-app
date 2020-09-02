@@ -10,7 +10,8 @@ export const walletManagementTest = () => {
         it('wallet management', async () => {
             // Dashboard Screen
             await utils.expectElementByLabelVisible('Wallet 1');
-            await utils.tapElementById('wallets-icon');
+            await utils.tapElementById('dashboard-menu-icon');
+            await utils.tapElementById('manage-wallets');
 
             // Wallets Screen
             await utils.expectElementVisible('wallets-screen');
@@ -21,7 +22,8 @@ export const walletManagementTest = () => {
             // Dashboard Screen
             await utils.expectDashboardScreenVisible();
             await utils.expectElementByLabelVisible('Wallet 2');
-            await utils.tapElementById('wallets-icon');
+            await utils.tapElementById('dashboard-menu-icon');
+            await utils.tapElementById('manage-wallets');
 
             // Wallets Screen
             await utils.expectElementVisible('wallets-screen');

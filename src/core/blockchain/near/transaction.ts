@@ -2,17 +2,28 @@ import {
     IBlockchainTransaction,
     ITransferTransaction,
     TransactionType,
-    AbstractBlockchainTransactionUtils
+    AbstractBlockchainTransactionUtils,
+    IPosTransaction
 } from '../types';
-import { INearTransactionAdditionalInfoType, NearTransactionActionType, Near } from './';
+import { Near } from './';
 import { TransactionStatus } from '../../wallet/types';
-
-import { transfer, createTransaction, signTransaction } from 'nearlib/src.ts/transaction';
-import { KeyPair, PublicKey } from 'nearlib/src.ts/utils/key_pair';
-import { base_decode } from 'nearlib/src.ts/utils/serialize';
+import {
+    transfer,
+    createTransaction,
+    signTransaction,
+    functionCall
+} from 'near-api-js/lib/transaction';
+import { KeyPair, PublicKey } from 'near-api-js/lib/utils/key_pair';
+import { base_decode } from 'near-api-js/lib/utils/serialize';
 import BN from 'bn.js';
 import sha256 from 'js-sha256';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { PosBasicActionType } from '../types/token';
+import { Client as NearClient } from './client';
+import cloneDeep from 'lodash/cloneDeep';
+import { ApiClient } from '../../utils/api-client/api-client';
+import BigNumber from 'bignumber.js';
+import { INearTransactionAdditionalInfoType, NearTransactionActionType } from './types';
 
 export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(
@@ -25,6 +36,11 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 switch (action.type) {
                     case NearTransactionActionType.TRANSFER:
                         return transfer(new BN(tx.amount));
+
+                    case NearTransactionActionType.FUNCTION_CALL:
+                        // @ts-ignore
+                        return functionCall(...tx.additionalInfo.actions[0].params);
+
                     default:
                         return false;
                 }
@@ -49,9 +65,14 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
             async signMessage(message) {
                 const hash = new Uint8Array(sha256.sha256.array(message));
                 return keyPair.sign(hash);
+            },
+            async getPublicKey() {
+                return keyPair.getPublicKey();
             }
         };
+
         const signedTx = await signTransaction(nearTx, signer, tx.address, tx.chainId as string);
+
         return Buffer.from(signedTx[1].encode()).toString('base64');
     }
 
@@ -96,20 +117,94 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
         };
     }
 
+    public async buildPosTransaction(
+        tx: IPosTransaction,
+        transactionType: PosBasicActionType
+    ): Promise<IBlockchainTransaction[]> {
+        const client = Near.getClient(tx.chainId);
+
+        const transactions: IBlockchainTransaction[] = [];
+
+        switch (transactionType) {
+            case PosBasicActionType.DELEGATE: {
+                for (const validator of tx.validators) {
+                    const txDelegate: IPosTransaction = cloneDeep(tx);
+
+                    const res = await new ApiClient().validators.getBalance(
+                        tx.account,
+                        client.chainId.toString()
+                    );
+
+                    if (
+                        new BigNumber(tx.amount).isGreaterThan(new BigNumber(res.balance.unstaked))
+                    ) {
+                        const depositAmount = new BigNumber(tx.amount).minus(
+                            new BigNumber(res.balance.unstaked)
+                        );
+
+                        // Deposit
+                        const depositTx: IBlockchainTransaction = await (client as NearClient).stakingPool.deposit(
+                            txDelegate,
+                            validator
+                        );
+
+                        depositTx.amount = depositAmount.toFixed();
+                        transactions.push(depositTx);
+                    } else {
+                        // no need to deposit
+                    }
+
+                    // Stake
+                    const stakeTx: IBlockchainTransaction = await (client as NearClient).stakingPool.stake(
+                        txDelegate,
+                        validator
+                    );
+                    stakeTx.nonce = stakeTx.nonce + transactions.length;
+                    transactions.push(stakeTx);
+                }
+                break;
+            }
+            case PosBasicActionType.UNSTAKE: {
+                const txUnstake: IPosTransaction = cloneDeep(tx);
+
+                // Unstake
+                const unstakeTx: IBlockchainTransaction = await (client as NearClient).stakingPool.unstake(
+                    txUnstake,
+                    tx.validators[0]
+                );
+                transactions.push(unstakeTx);
+                break;
+            }
+            case PosBasicActionType.WITHDRAW: {
+                const txWithdraw: IPosTransaction = cloneDeep(tx);
+
+                // Withdraw
+                const withdrawTx: IBlockchainTransaction = await (client as NearClient).stakingPool.withdraw(
+                    txWithdraw
+                );
+
+                transactions.push(withdrawTx);
+                break;
+            }
+
+            default:
+                break;
+        }
+
+        return transactions;
+    }
+
     public getTransactionAmount(tx: IBlockchainTransaction): string {
         return tx.amount;
     }
 
     public getTransactionStatusByCode(status: any): TransactionStatus {
-        switch (parseInt(status, 16)) {
-            case 0:
-                return TransactionStatus.FAILED;
-            case 1:
-                return TransactionStatus.SUCCESS;
-            case 2:
-                return TransactionStatus.PENDING;
-            default:
-                return TransactionStatus.FAILED;
+        if (status.SuccessValue === '') {
+            return TransactionStatus.SUCCESS;
+        } else if (status?.Failure) {
+            return TransactionStatus.FAILED;
+        } else {
+            return TransactionStatus.FAILED;
         }
     }
 }

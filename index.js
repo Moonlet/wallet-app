@@ -1,6 +1,5 @@
 // tbd - ios swipe back fix - not sure - only on release it crashes
 import 'react-native-gesture-handler';
-
 import DeviceInfo from 'react-native-device-info';
 import { init } from '@sentry/react-native';
 import { sanitizeSentryBreadcrumb } from './src/core/utils/object-sanitise';
@@ -40,6 +39,9 @@ import androidBgMessagingHandler from './src/core/messaging/silent/android-backg
 // TODO remove this when fixed
 import { YellowBox } from 'react-native';
 YellowBox.ignoreWarnings(['RCTRootView cancelTouches', 'Require cycle']);
+YellowBox.ignoreWarnings([
+    'VirtualizedLists should never be nested' // TODO: Remove when fixed
+]);
 
 // console.disableYellowBox = true;
 

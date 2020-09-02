@@ -1,19 +1,16 @@
 import React from 'react';
+import stylesProvider from './styles';
 import { View, Animated, TouchableOpacity, Platform, ScrollView } from 'react-native';
 import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TokenDashboard } from '../../components/token-dashboard/token-dashboard';
-import { AccountCreate } from '../../components/account-create/account-create';
 import { IReduxState } from '../../redux/state';
-import { IWalletState, IAccountState } from '../../redux/wallets/state';
+import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
-import LinearGradient from 'react-native-linear-gradient';
-
-import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { getBalance, setSelectedBlockchain } from '../../redux/wallets/actions';
+import { getBalance } from '../../redux/wallets/actions';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import {
     getSelectedWallet,
@@ -29,7 +26,6 @@ import {
     ICON_CONTAINER_SIZE,
     BASE_DIMENSION,
     normalize,
-    SCREEN_WIDTH,
     SCREEN_HEIGHT,
     normalizeFontAndLineHeight,
     LETTER_SPACING
@@ -44,16 +40,21 @@ import { TestnetBadge } from '../../components/testnet-badge/testnet-badge';
 import { IExchangeRates } from '../../redux/market/state';
 import { formatAddress } from '../../core/utils/format-address';
 import { Amount } from '../../components/amount/amount';
-import { WalletType } from '../../core/wallet/types';
 import { LoadingIndicator } from '../../components/loading-indicator/loading-indicator';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { IconValues } from '../../components/icon/values';
+import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
+import {
+    startNotificationsHandlers,
+    getUnseenNotifications
+} from '../../redux/notifications/actions';
+import { AddNearAccount } from '../../components/blockchain/near/add-account/add-account';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
 
 export interface IReduxProps {
-    wallet: IWalletState;
+    walletId: string;
     walletsNr: number;
     getBalance: typeof getBalance;
     blockchains: Blockchain[];
@@ -61,38 +62,41 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
     selectedBlockchain: Blockchain;
     exchangeRates: IExchangeRates;
-    setSelectedBlockchain: typeof setSelectedBlockchain;
-    isCreateAccount: boolean;
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
     chainId: ChainIdType;
+    deviceId: string;
+    startNotificationsHandlers: typeof startNotificationsHandlers;
+    unseenNotifications: number;
+    getUnseenNotifications: typeof getUnseenNotifications;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
 
     return {
-        wallet: getSelectedWallet(state),
+        walletId: getSelectedWallet(state)?.id,
         walletsNr: Object.keys(state.wallets).length,
         blockchains: getBlockchains(state),
         selectedBlockchain: getSelectedBlockchain(state),
-        selectedAccount: getSelectedAccount(state),
+        selectedAccount,
         exchangeRates: state.market.exchangeRates,
-        isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
         selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
         userCurrency: state.preferences.currency,
-        chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : ''
+        chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
+        deviceId: state.preferences.deviceId,
+        unseenNotifications: state.notifications.unseenNotifications
     };
 };
 
 const mapDispatchToProps = {
     getBalance,
     openBottomSheet,
-    setSelectedBlockchain
+    startNotificationsHandlers,
+    getUnseenNotifications
 };
 
 interface IState {
-    extraSelectedBlockchain: Blockchain;
     isLoading: boolean;
 }
 
@@ -113,22 +117,47 @@ const MyConnectedTitle = connect((state: IReduxState) => ({
     text: (getSelectedWallet(state) || {}).name
 }))(MyTitle);
 
-const navigationOptions = ({ navigation }: any) => ({
+const UnreadNotifCircle = () => (
+    <View
+        style={{
+            position: 'absolute',
+            top: -BASE_DIMENSION / 2,
+            left: BASE_DIMENSION + BASE_DIMENSION / 2,
+            backgroundColor: themes.dark.colors.appBackground,
+            padding: BASE_DIMENSION / 4
+        }}
+    >
+        <View
+            style={{
+                flex: 1,
+                width: normalize(14),
+                height: normalize(14),
+                borderRadius: normalize(14),
+                backgroundColor: themes.dark.colors.negative
+            }}
+        />
+    </View>
+);
+
+const navigationOptions = ({ navigation, theme }: any) => ({
     headerTitle: () => <MyConnectedTitle />,
     headerLeft: <HeaderIcon />,
     headerRight: (
         <View style={{ flexDirection: 'row' }}>
-            <TouchableOpacity
-                testID="wallets-icon"
-                style={{ width: ICON_CONTAINER_SIZE }}
-                onPress={() => navigation.navigate('Wallets')}
-            >
-                <Icon
-                    name={IconValues.MONEY_WALLET}
-                    size={ICON_SIZE}
-                    style={{ color: themes.dark.colors.accent }}
-                />
-            </TouchableOpacity>
+            <View>
+                <TouchableOpacity
+                    testID="notifications-icon"
+                    style={{ width: ICON_CONTAINER_SIZE }}
+                    onPress={() => navigation.navigate('Notifications')}
+                >
+                    <Icon
+                        name={IconValues.ALARM_BELL}
+                        size={ICON_SIZE}
+                        style={{ color: themes[theme].colors.accent }}
+                    />
+                    {navigation.state.params?.unseenNotifications > 0 && <UnreadNotifCircle />}
+                </TouchableOpacity>
+            </View>
             <TouchableOpacity
                 testID="dashboard-menu-icon"
                 style={{ width: ICON_CONTAINER_SIZE }}
@@ -137,7 +166,7 @@ const navigationOptions = ({ navigation }: any) => ({
                 <Icon
                     name={IconValues.NAVIGATION_MENU_VERTICAL}
                     size={ICON_SIZE}
-                    style={{ color: themes.dark.colors.accent }}
+                    style={{ color: themes[theme].colors.accent }}
                 />
             </TouchableOpacity>
         </View>
@@ -156,7 +185,6 @@ export class DashboardScreenComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            extraSelectedBlockchain: undefined,
             isLoading: false
         };
     }
@@ -182,94 +210,35 @@ export class DashboardScreenComponent extends React.Component<
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
+
+        this.props.startNotificationsHandlers();
+
+        this.props.navigation.setParams({
+            unseenNotifications: this.props.unseenNotifications
+        });
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.selectedBlockchain !== prevProps.selectedBlockchain) {
-            const blockchainNotFound =
-                this.props.blockchains.slice(0, 4).indexOf(this.props.selectedBlockchain) === -1;
-
-            if (blockchainNotFound) {
-                this.setState({ extraSelectedBlockchain: this.props.selectedBlockchain });
-            }
-        }
-
         if (this.props.selectedAccount !== prevProps.selectedAccount && Platform.OS === 'web') {
             // Used on web to get balances when selectedAccount is changed
             // NavigationEvents is not enough for the web in order to get balances
             this.onFocus();
+        }
+
+        if (this.props.walletId !== prevProps.walletId) {
+            this.props.getUnseenNotifications();
+        }
+
+        if (this.props.unseenNotifications !== prevProps.unseenNotifications) {
+            this.props.navigation.setParams({
+                unseenNotifications: this.props.unseenNotifications
+            });
         }
     }
 
     public setDashboardMenuBottomSheet = () => {
         this.props.openBottomSheet(BottomSheetType.DASHBOARD_MENU);
     };
-
-    private renderBlockchain(blockchain: Blockchain) {
-        const { styles, blockchains } = this.props;
-
-        return (
-            <TouchableOpacity
-                key={blockchain}
-                style={[
-                    styles.blockchainButton,
-                    this.props.selectedBlockchain === blockchain && styles.blockchainButtonActive,
-                    { width: blockchains.length > 4 ? SCREEN_WIDTH / 4 : 0 }
-                ]}
-                onPress={() => this.props.setSelectedBlockchain(blockchain)}
-            >
-                <Text
-                    style={
-                        this.props.selectedBlockchain === blockchain &&
-                        styles.blockchainButtonTextActive
-                    }
-                >
-                    {blockchain && getBlockchain(blockchain).config.ui.displayName}
-                </Text>
-            </TouchableOpacity>
-        );
-    }
-
-    public renderBottomBlockchainNav() {
-        const { styles, blockchains } = this.props;
-        const { extraSelectedBlockchain } = this.state;
-
-        return (
-            <LinearGradient
-                colors={this.props.theme.shadowGradient}
-                locations={[0, 0.5]}
-                style={styles.selectorGradientContainer}
-            >
-                <View style={styles.blockchainSelectorContainer} testID="blockchainSelector">
-                    <View style={styles.bottomBlockchainContainer}>
-                        {blockchains
-                            .slice(0, 4)
-                            .map(blockchain => this.renderBlockchain(blockchain))}
-
-                        {extraSelectedBlockchain !== undefined &&
-                            this.renderBlockchain(extraSelectedBlockchain)}
-
-                        {blockchains.length > 4 && (
-                            <TouchableOpacity
-                                onPress={() =>
-                                    this.props.openBottomSheet(
-                                        BottomSheetType.BLOCKCHAIN_NAVIGATION
-                                    )
-                                }
-                                style={styles.expandIconContainer}
-                            >
-                                <Icon
-                                    name={IconValues.EXPAND}
-                                    size={normalize(28)}
-                                    style={styles.expandIcon}
-                                />
-                            </TouchableOpacity>
-                        )}
-                    </View>
-                </View>
-            </LinearGradient>
-        );
-    }
 
     public onFocus() {
         if (this.props.selectedAccount) {
@@ -339,11 +308,14 @@ export class DashboardScreenComponent extends React.Component<
 
         const tokenConfig = getTokenConfig(blockchain, config.coin);
 
+        const defaultAccountName = selectedAccount && `Account ${selectedAccount.index + 1}`;
+
         return (
             <Animated.View
                 style={[styles.coinBalanceCard, { height: animateCoinBalanceCardHeight }]}
             >
                 <TouchableOpacity
+                    testID="coin-balance-card"
                     onPress={() =>
                         this.props.openBottomSheet(BottomSheetType.ACCOUNTS, { blockchain })
                     }
@@ -361,8 +333,15 @@ export class DashboardScreenComponent extends React.Component<
                                 }
                             ]}
                         >
-                            <Text style={styles.account}>
-                                {selectedAccount.name || `Account ${selectedAccount.index + 1}`}
+                            <Text
+                                testID={
+                                    blockchain.toLocaleLowerCase() +
+                                    '-' +
+                                    defaultAccountName.replace(/ /g, '-').toLowerCase()
+                                }
+                                style={styles.account}
+                            >
+                                {selectedAccount.name || defaultAccountName}
                             </Text>
                             <Text style={styles.address}>
                                 {formatAddress(selectedAccount.address, blockchain)}
@@ -393,6 +372,7 @@ export class DashboardScreenComponent extends React.Component<
                     </View>
                     <View style={styles.row}>
                         <Amount
+                            testID={this.props.userCurrency}
                             style={[
                                 styles.secondaryText,
                                 { fontSize: animateConvertedAmountFontSize }
@@ -445,15 +425,7 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public render() {
-        const { blockchains, styles } = this.props;
-        const blockchain: Blockchain = this.props.selectedBlockchain;
-        const showCreateAccount =
-            this.props.isCreateAccount && this.props.selectedBlockchainAccounts?.length === 0;
-
-        /* Hardware wallets can have only one blockchain active */
-        let renderBottomNav = false;
-        const isHWWallet = this.props.wallet ? this.props.wallet.type === WalletType.HW : false;
-        if (blockchains.length > 1 && !isHWWallet) renderBottomNav = true;
+        const { styles } = this.props;
 
         if (Platform.OS === 'web' && this.state.isLoading) {
             return (
@@ -465,24 +437,24 @@ export class DashboardScreenComponent extends React.Component<
 
         const containerHeight =
             Platform.OS === 'web'
-                ? blockchains.length === 1
+                ? this.props.blockchains.length === 1
                     ? SCREEN_HEIGHT
                     : 'calc(100vh - 122px)'
                 : 'auto';
+
+        const isNearAddAccount =
+            this.props.selectedBlockchain === Blockchain.NEAR &&
+            this.props.selectedBlockchainAccounts.length === 0;
 
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
                 <TestnetBadge />
 
-                <NavigationEvents onWillFocus={payload => this.onFocus()} />
+                <NavigationEvents onWillFocus={() => this.onFocus()} />
 
-                {showCreateAccount && (
-                    <AccountCreate blockchain={blockchain} navigation={this.props.navigation} />
-                )}
+                {isNearAddAccount ? <AddNearAccount /> : this.renderTokenDashboard()}
 
-                {!showCreateAccount && this.renderTokenDashboard()}
-
-                {renderBottomNav && this.renderBottomBlockchainNav()}
+                <BottomBlockchainNavigation />
             </View>
         );
     }

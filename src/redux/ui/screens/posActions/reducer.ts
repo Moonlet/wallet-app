@@ -32,7 +32,7 @@ export default (state: IPosActionsState = intialState, action: IAction): IPosAct
         case REDELEGATE_ENTER_AMOUNT:
             return {
                 ...state,
-                delegateEnterAmount: action.data
+                redelegateEnterAmount: action.data
             };
         case DELEGATE_CONFIRMATION:
             return {

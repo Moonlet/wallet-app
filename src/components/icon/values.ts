@@ -1,7 +1,8 @@
 export enum IconValues {
     // please try to add keys in alphabetic order
-    ADD_CIRCLE = 'add-circle',
     ADD = 'add',
+    ADD_CIRCLE = 'add-circle',
+    ALARM_BELL = 'alarm-bell',
     ARCHIVE_LOCKER = 'archive-locker',
     ARROW_BUTTON_DOWN = 'arrow-button-down',
     ARROW_DOWN = 'arrow-down',
@@ -36,6 +37,7 @@ export enum IconValues {
     LEDGER_LOOGO = 'ledger-logo',
     MONEY_WALLET = 'money-wallet',
     MONITOR = 'monitor',
+    MINUS = 'minus',
     NAVIGATION_MENU_HORIZONTAL = 'navigation-menu-horizontal',
     NAVIGATION_MENU_VERTICAL = 'navigation-menu-vertical',
     NAVIGATION_MENU = 'navigation-menu',

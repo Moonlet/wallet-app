@@ -10,6 +10,7 @@ import { SmartImage } from '../../library/image/smart-image';
 import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 
 export interface IProps {
+    testID?: string;
     label: string | JSX.Element;
     leftIcon?: React.ComponentType<any>;
     rightIcon?: string;
@@ -17,6 +18,7 @@ export interface IProps {
     onPress?: any;
     style?: any;
     isCreate?: boolean;
+    disabled?: boolean;
 }
 
 export const ListAccountComponent = (
@@ -24,7 +26,9 @@ export const ListAccountComponent = (
 ) => {
     const label =
         typeof props.label === 'string' ? (
-            <Text style={props.styles.label}>{props.label}</Text>
+            <Text numberOfLines={1} ellipsizeMode="tail" style={props.styles.label}>
+                {props.label}
+            </Text>
         ) : (
             props.label
         );
@@ -33,11 +37,13 @@ export const ListAccountComponent = (
 
     return (
         <TouchableHighlight
+            testID={props.testID}
             onPress={props.onPress}
             underlayColor={props.theme.colors.bottomSheetBackground}
+            disabled={props.disabled}
         >
             <View style={[props.styles.card, props.selected && props.styles.selected, props.style]}>
-                {props.leftIcon && (
+                {props.leftIcon && !props.isCreate && (
                     <SmartImage
                         source={{ iconComponent: BlockchainIcon }}
                         style={{
@@ -53,7 +59,14 @@ export const ListAccountComponent = (
                     />
                 )}
 
-                <View style={props.styles.labelContainer}>{label}</View>
+                <View
+                    style={[
+                        props.styles.labelContainer,
+                        { alignItems: props.isCreate ? 'center' : 'flex-start' }
+                    ]}
+                >
+                    {label}
+                </View>
 
                 {props.rightIcon && !props.isCreate && (
                     <View style={props.styles.iconRightContainer}>
@@ -66,9 +79,18 @@ export const ListAccountComponent = (
                 )}
 
                 {props.isCreate && (
-                    <Button style={props.styles.createButton} disabled>
-                        {translate('App.labels.create')}
-                    </Button>
+                    <View>
+                        <Button
+                            style={
+                                props.disabled
+                                    ? props.styles.addButtonDisabled
+                                    : props.styles.addButton
+                            }
+                            disabled
+                        >
+                            {translate('App.labels.add')}
+                        </Button>
+                    </View>
                 )}
             </View>
         </TouchableHighlight>

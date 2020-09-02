@@ -1,5 +1,5 @@
 import { IBlockchainTransaction } from './transaction';
 
 export interface IClientUtils {
-    getTransaction(hash: string): Promise<IBlockchainTransaction>;
+    getTransaction(hash: string, options?: { address?: string }): Promise<IBlockchainTransaction>;
 }

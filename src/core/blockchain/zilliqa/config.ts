@@ -4,6 +4,7 @@ import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../type
 import ZilIcon from '../../../assets/icons/blockchains/zil.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { XSGD_MAINNET } from './tokens/xsgd';
+import { IconValues } from '../../../components/icon/values';
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -29,7 +30,7 @@ export const ZIL_NATIVE: ITokenConfigState = {
 export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickStake',
-        iconName: 'vote',
+        iconName: IconValues.VOTE,
         navigateTo: {
             screen: 'PosQuickDelegate',
             params: { actionText: 'App.labels.quickStake' }
@@ -40,7 +41,7 @@ export const accountCTA = {
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.stake',
-        iconName: 'vote',
+        iconName: IconValues.VOTE,
         navigateTo: {
             screen: 'PosDelegate',
             params: { actionText: 'App.labels.stake' }
@@ -49,7 +50,7 @@ const validatorCTA = {
     otherCtas: [
         {
             title: 'App.labels.claimReward',
-            iconName: 'claim-reward',
+            iconName: IconValues.CLAIM_REWARD,
             navigateTo: {
                 screen: 'PosBasicAction',
                 params: {
@@ -61,7 +62,7 @@ const validatorCTA = {
         },
         {
             title: 'App.labels.restake',
-            iconName: 'revote',
+            iconName: IconValues.REVOTE,
             navigateTo: {
                 screen: 'PosRedelegate',
                 params: { actionText: 'App.labels.restake' }
@@ -69,7 +70,7 @@ const validatorCTA = {
         },
         {
             title: 'App.labels.unstake',
-            iconName: 'unvote',
+            iconName: IconValues.UNVOTE,
             navigateTo: {
                 screen: 'PosBasicAction',
                 params: {
@@ -114,8 +115,9 @@ export const config: IBlockchainConfig = {
     },
     ui: {
         validator: {
-            totalLabel: 'Validator.totalStake',
-            amountCardLabel: 'Validator.myStake'
+            totalLabel: 'Validator.totalStakes',
+            amountCardLabel: 'Validator.myStake',
+            maximumNumberOfValidators: 5 // TBD
         },
         token: {
             labels: {

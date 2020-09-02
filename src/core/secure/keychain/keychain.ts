@@ -15,10 +15,13 @@ const defaultOptions = {
 
 export const KEY_PIN_SAMPLE = 'moonletPinSample';
 
-export const iosClearKeychainOnInstall = async () => {
+export const iosClearKeychainOnInstall = async (options?: { walletPublicKey?: string }) => {
     if (Platform.OS === 'ios') {
         const Settings = require('react-native').Settings;
         if (!Settings.get('appIsInstalled')) {
+            if (options?.walletPublicKey) {
+                await clearWalletCredentialsKey(options.walletPublicKey);
+            }
             clearPinCode();
             await clearEncryptionKey();
             Settings.set({
@@ -151,6 +154,55 @@ export const getPinCode = async () => {
 export const clearPinCode = async () => {
     try {
         await Keychain.resetGenericPassword({ service: defaultOptions.servicePin });
+    } catch (err) {
+        SentryCaptureException(new Error(JSON.stringify(err)));
+    }
+};
+
+export const setWalletCredentialsKey = async (
+    walletPublicKey: string,
+    privateKey: string
+): Promise<void> => {
+    try {
+        await Keychain.setGenericPassword(`${walletPublicKey}-username`, privateKey, {
+            service: walletPublicKey,
+            storage: Keychain.STORAGE_TYPE.AES,
+            accessible: Keychain.ACCESSIBLE.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+            securityLevel: Keychain.SECURITY_LEVEL.SECURE_HARDWARE,
+            rules: Keychain.SECURITY_RULES.AUTOMATIC_UPGRADE
+        });
+    } catch (err) {
+        SentryCaptureException(new Error(JSON.stringify(err)));
+        throw new Error(err);
+    }
+};
+
+export const getWalletCredentialsKey = async (walletPublicKey: string): Promise<string> => {
+    await iosClearKeychainOnInstall({ walletPublicKey });
+    let password = null;
+    try {
+        // Retrieve the credentials
+        const credentials = await Keychain.getGenericPassword({
+            service: walletPublicKey
+        });
+
+        if (credentials) {
+            password = credentials.password;
+        } else {
+            throw new Error(
+                'getWalletCredentialsKey: Keychain.getGenericPassword returns falsy value'
+            );
+        }
+    } catch (err) {
+        SentryCaptureException(new Error(JSON.stringify(err)));
+    }
+
+    return password;
+};
+
+export const clearWalletCredentialsKey = async (walletPublicKey: string) => {
+    try {
+        await Keychain.resetGenericPassword({ service: walletPublicKey });
     } catch (err) {
         SentryCaptureException(new Error(JSON.stringify(err)));
     }

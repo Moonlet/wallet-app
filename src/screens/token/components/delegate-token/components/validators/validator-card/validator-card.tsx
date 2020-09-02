@@ -18,6 +18,7 @@ import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { translate } from '../../../../../../../core/i18n';
 import { IconValues } from '../../../../../../../components/icon/values';
+import { formatValidatorName } from '../../../../../../../core/utils/format-string';
 
 export interface IExternalProps {
     icon: string;
@@ -72,7 +73,7 @@ export const ValidatorCardComponent = (
                                         { paddingRight: BASE_DIMENSION / 2 }
                                     ]}
                                 >
-                                    {props.leftSmallLabel}
+                                    {formatValidatorName(props.leftLabel, 15)}
                                 </Text>
                                 <Text style={props.styles.tertiaryText}>
                                     {props.leftSmallLabel}

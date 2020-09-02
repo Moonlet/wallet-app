@@ -21,7 +21,12 @@ import {
 import { IReduxState } from '../../../redux/state';
 import { getSelectedWallet, getSelectedAccount } from '../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
-import { ChainIdType, IFeeOptions, Blockchain } from '../../../core/blockchain/types';
+import {
+    ChainIdType,
+    IFeeOptions,
+    Blockchain,
+    TransactionType
+} from '../../../core/blockchain/types';
 import { IExchangeRates } from '../../../redux/market/state';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { FeeOptions } from '../../send/components/fee-options/fee-options';
@@ -604,6 +609,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
                     )}
 
                     <FeeOptions
+                        transactionType={TransactionType.TRANSFER}
                         token={token}
                         sendingToken={sendingToken}
                         account={selectedAccount}

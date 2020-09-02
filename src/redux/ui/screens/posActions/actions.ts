@@ -19,7 +19,8 @@ export const navigateToEnterAmountStep = (
     validators: IValidator[],
     actionText: string,
     screen: string,
-    actionType: string
+    actionType: string,
+    fromValidator?: IValidator
 ) => (dispatch: Dispatch<any>) => {
     dispatch({
         type: actionType,
@@ -28,7 +29,8 @@ export const navigateToEnterAmountStep = (
             blockchain,
             token,
             validators,
-            actionText
+            actionText,
+            fromValidator
         }
     });
 
@@ -44,7 +46,8 @@ export const navigateToConfirmationStep = (
     screen: string,
     actionType: string,
     amount: string,
-    feeOptions: IFeeOptions
+    feeOptions: IFeeOptions,
+    fromValidator?: IValidator
 ) => (dispatch: Dispatch<any>) => {
     dispatch({
         type: actionType,
@@ -55,7 +58,8 @@ export const navigateToConfirmationStep = (
             validators,
             actionText,
             amount,
-            feeOptions
+            feeOptions,
+            fromValidator
         }
     });
     NavigationService.navigate(screen, {});

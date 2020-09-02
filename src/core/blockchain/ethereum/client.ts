@@ -1,4 +1,10 @@
-import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionMessageText } from '../types';
+import {
+    BlockchainGenericClient,
+    ChainIdType,
+    IBlockInfo,
+    TransactionMessageText,
+    TransactionType
+} from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
@@ -8,6 +14,7 @@ import { TokenType } from '../types/token';
 import { NameService } from './name-service';
 import { ClientUtils } from './client-utils';
 import { Ethereum } from '.';
+import { fixEthAddress } from '../../utils/format-address';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -18,16 +25,14 @@ export class Client extends BlockchainGenericClient {
     }
 
     public getBalance(address: string): Promise<BigNumber> {
-        return this.http
-            .jsonRpc('eth_getBalance', [this.fixAddress(address), 'latest'])
-            .then(res => {
-                return new BigNumber(res.result, 16);
-            });
+        return this.http.jsonRpc('eth_getBalance', [fixEthAddress(address), 'latest']).then(res => {
+            return new BigNumber(res.result, 16);
+        });
     }
 
     public getNonce(address: string): Promise<number> {
         return this.http
-            .jsonRpc('eth_getTransactionCount', [this.fixAddress(address), 'latest'])
+            .jsonRpc('eth_getTransactionCount', [fixEthAddress(address), 'latest'])
             .then(res => {
                 return new BigNumber(res.result, 16).toNumber();
             });
@@ -89,17 +94,40 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public async calculateFees(
-        from: string,
-        to: string,
-        amount: BigNumber = new BigNumber(1),
-        contractAddress?: string,
+    public async getFees(
+        transactionType: TransactionType,
+        data: {
+            from?: string;
+            to?: string;
+            amount?: string;
+            contractAddress?: string;
+            raw?: string;
+        },
         tokenType: TokenType = TokenType.NATIVE
     ) {
         try {
-            const results = contractAddress
-                ? await this.estimateFees(from, to, amount, contractAddress)
-                : await this.estimateFees(from, to);
+            let results = {};
+
+            switch (transactionType) {
+                case TransactionType.TRANSFER: {
+                    results = data.contractAddress
+                        ? await this.estimateGas(
+                              data.from,
+                              data.to,
+                              data.contractAddress,
+                              new BigNumber(data.amount),
+                              '0x' +
+                                  abi
+                                      .simpleEncode(
+                                          'transfer(address,uint256)',
+                                          data.to,
+                                          new BigNumber(data.amount).toFixed()
+                                      )
+                                      .toString('hex')
+                          )
+                        : await this.estimateGas(data.from, data.to);
+                }
+            }
             let presets: {
                 cheap: BigNumber;
                 standard: BigNumber;
@@ -157,11 +185,12 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public async estimateFees(
+    public async estimateGas(
         from: string,
         to: string,
+        contractAddress?: string,
         amount?: BigNumber,
-        contractAddress?: string
+        data?: string
     ): Promise<any> {
         let gasEstimatePromise;
         if (contractAddress) {
@@ -170,11 +199,7 @@ export class Client extends BlockchainGenericClient {
                     {
                         from,
                         to: contractAddress,
-                        data:
-                            '0x' +
-                            abi
-                                .simpleEncode('transfer(address,uint256)', to, amount.toString())
-                                .toString('hex')
+                        data
                     }
                 ])
                 .then(res => {
@@ -193,12 +218,5 @@ export class Client extends BlockchainGenericClient {
             // TODO: extract url in a constant, also create a firebase function to be sure that this service is up
             fetch('https://ethgasstation.info/json/ethgasAPI.json')
         ]);
-    }
-
-    private fixAddress(address: string): string {
-        if (address.indexOf('0x') < 0) {
-            address = '0x' + address;
-        }
-        return address;
     }
 }

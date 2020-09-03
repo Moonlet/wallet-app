@@ -117,21 +117,10 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
                 const txUnStake: IPosTransaction = cloneDeep(tx);
                 const transactionUnStake: IBlockchainTransaction = await client.contracts[
                     Contracts.STAKING
-                ].withdrawStakAmt(txUnStake, tx.extraFields.fromValidator);
+                ].reDelegateStake(txUnStake, tx.extraFields.fromValidator, tx.validators[0]);
                 transactionUnStake.nonce = transactionUnStake.nonce + transactions.length;
                 transactions.push(transactionUnStake);
 
-                const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
-
-                for (const validator of tx.validators) {
-                    const txStake: IPosTransaction = cloneDeep(tx);
-                    txStake.amount = splitAmount.toString();
-                    const transaction: IBlockchainTransaction = await client.contracts[
-                        Contracts.STAKING
-                    ].delegateStake(txStake, validator);
-                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
-                    transactions.push(transaction);
-                }
                 break;
             }
             case PosBasicActionType.UNSTAKE: {
@@ -162,6 +151,15 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
                     Contracts.STAKING
                 ].withdrawStakRewards(txClaimReward, tx.validators[0]);
                 transactions.push(transaction);
+                break;
+            }
+            case PosBasicActionType.WITHDRAW: {
+                const txWithdraw = cloneDeep(tx);
+                const transaction = await client.contracts[Contracts.STAKING].completeWithdrawal(
+                    txWithdraw
+                );
+                if (transaction) transactions.push(transaction);
+
                 break;
             }
         }

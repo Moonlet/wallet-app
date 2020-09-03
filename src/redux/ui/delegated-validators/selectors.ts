@@ -7,5 +7,10 @@ export const getDelegatedValidators = (
     blockchain: Blockchain,
     chainId: ChainIdType
 ): IValidator[] => {
-    return state.ui.delegatedValidators[blockchain][chainId as string];
+    return (
+        (state.ui.delegatedValidators &&
+            state.ui.delegatedValidators[blockchain] &&
+            state.ui.delegatedValidators[blockchain][chainId as string]) ||
+        []
+    );
 };

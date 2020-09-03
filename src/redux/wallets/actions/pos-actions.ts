@@ -238,14 +238,6 @@ export const posAction = (
     const appWallet = getSelectedWallet(state);
 
     try {
-        // await LoadingModal.open({
-        //     type: TransactionMessageType.INFO,
-        //     text:
-        //         appWallet.type === WalletType.HW
-        //             ? TransactionMessageText.CONNECTING_LEDGER
-        //             : TransactionMessageText.SIGNING
-        // });
-
         const extra: ITransactionExtraFields = {
             ...extraFields,
             posAction: type
@@ -285,66 +277,34 @@ export const posAction = (
 
         dispatch(setProcessTransactions(cloneDeep(txs)));
 
-        let index = 0;
-        let processNextTransaction = true;
-        let txHash = '';
+        for (let index = 0; index < txs.length; index++) {
+            const client = getBlockchain(account.blockchain).getClient(chainId);
+            const transaction = await wallet.sign(account.blockchain, account.index, txs[index]);
+            const txHash = await client.sendTransaction(transaction);
 
-        const interval = setInterval(async () => {
-            if (txs.length > index) {
-                const client = getBlockchain(account.blockchain).getClient(chainId);
-
-                if (processNextTransaction === true) {
-                    processNextTransaction = false;
-                    txHash = undefined;
-                    const transaction = await wallet.sign(
-                        account.blockchain,
-                        account.index,
-                        txs[index]
-                    );
-
-                    txHash = await client.sendTransaction(transaction);
-
-                    if (txHash) {
-                        dispatch(updateProcessTransactionIdForIndex(index, txHash));
-                        dispatch({
-                            type: TRANSACTION_PUBLISHED,
-                            data: {
-                                hash: txHash,
-                                tx: txs[index],
-                                walletId: appWallet.id
-                            }
-                        });
-                    } else {
-                        SentryAddBreadcrumb({
-                            message: JSON.stringify({ transactions: txs[index] })
-                        });
-
-                        dispatch(
-                            updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
-                        );
-                        for (let i = index + 1; i < txs.length; i++) {
-                            dispatch(
-                                updateProcessTransactionStatusForIndex(i, TransactionStatus.DROPPED)
-                            );
-                        }
-
-                        clearInterval(interval);
+            if (txHash) {
+                dispatch(updateProcessTransactionIdForIndex(index, txHash));
+                dispatch({
+                    type: TRANSACTION_PUBLISHED,
+                    data: {
+                        hash: txHash,
+                        tx: txs[index],
+                        walletId: appWallet.id
                     }
-                } else {
-                    try {
-                        const transaction = await client.utils.getTransaction(txHash, {
-                            address: account.address
-                        });
-                        dispatch(updateProcessTransactionStatusForIndex(index, transaction.status));
-                        index++;
-                        processNextTransaction = true;
-                        if (index === txs.length) clearInterval(interval);
-                    } catch (e) {
-                        // transaction not yet published - do nothing
-                    }
+                });
+                dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.PENDING));
+            } else {
+                SentryAddBreadcrumb({
+                    message: JSON.stringify({ transactions: txs[index] })
+                });
+
+                dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED));
+                for (let i = index + 1; i < txs.length; i++) {
+                    dispatch(updateProcessTransactionStatusForIndex(i, TransactionStatus.DROPPED));
                 }
-            } else clearInterval(interval);
-        }, 2000);
+                break;
+            }
+        }
     } catch (errorMessage) {
         SentryCaptureException(new Error(JSON.stringify(errorMessage)));
         await LoadingModal.close();

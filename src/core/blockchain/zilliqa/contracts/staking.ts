@@ -58,25 +58,90 @@ export class Staking {
             const lastWithdrawCycleDeleg =
                 res[0][ContractFields.LAST_WITHDRAW_CYCLE_DELEG][address];
 
-            const lastBufferWithdrawCycleDeleg =
-                res[0][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG][address];
             const lastRewardCycle = Number(res[1][ContractFields.LASTREWARDCYCLE]);
 
-            if (lastWithdrawCycleDeleg && lastWithdrawCycleDeleg[ssnaddr]) {
-                const lastWithdrawCycleDelegValue = Number(lastWithdrawCycleDeleg[ssnaddr]);
+            const lastBufferWithdrawCycleDeleg =
+                res[2][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG][address];
 
-                if (lastRewardCycle > lastWithdrawCycleDelegValue) return true;
-            }
             if (lastBufferWithdrawCycleDeleg && lastBufferWithdrawCycleDeleg[ssnaddr]) {
                 const lastBufferWithdrawCycleDelegValue = Number(
                     lastBufferWithdrawCycleDeleg[ssnaddr]
                 );
 
-                if (lastRewardCycle > lastBufferWithdrawCycleDelegValue) return true;
+                if (lastRewardCycle > lastBufferWithdrawCycleDelegValue) {
+                    if (lastWithdrawCycleDeleg && lastWithdrawCycleDeleg[ssnaddr]) {
+                        const lastWithdrawCycleDelegValue = Number(lastWithdrawCycleDeleg[ssnaddr]);
+
+                        if (lastRewardCycle !== lastWithdrawCycleDelegValue) return true;
+                    }
+                }
             }
         } catch (error) {
             return false;
         }
+    }
+
+    public async reDelegateStake(
+        tx: IPosTransaction,
+        fromValidator: IValidator,
+        toValidator: IValidator
+    ): Promise<IBlockchainTransaction> {
+        const transaction = await buildBaseTransaction(tx);
+        const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
+
+        transaction.toAddress = contractAddress;
+        transaction.amount = '0';
+        const toAddress = isBech32(toValidator.id)
+            ? fromBech32Address(toValidator.id).toLowerCase()
+            : toValidator.id.toLowerCase();
+        const fromAddress = isBech32(fromValidator.id)
+            ? fromBech32Address(fromValidator.id).toLowerCase()
+            : fromValidator.id.toLowerCase();
+
+        const raw = JSON.stringify({
+            _tag: 'ReDelegateStake',
+            params: [
+                {
+                    vname: 'ssnaddr',
+                    type: 'ByStr20',
+                    value: fromAddress
+                },
+                {
+                    vname: 'to_ssn',
+                    type: 'ByStr20',
+                    value: toAddress
+                },
+                {
+                    vname: 'amount',
+                    type: 'Uint128',
+                    value: tx.amount
+                }
+            ]
+        });
+
+        const fees = await this.client.getFees(
+            TransactionType.CONTRACT_CALL,
+            {
+                from: tx.account.address,
+                to: toValidator.id,
+                amount: tx.amount,
+                contractAddress,
+                raw
+            },
+            TokenType.ZRC2
+        );
+        transaction.feeOptions = fees;
+
+        transaction.data = {
+            method: 'Stake',
+            params: [toValidator.id, tx.amount],
+            raw
+        };
+
+        transaction.additionalInfo.posAction = PosBasicActionType.STAKE;
+        transaction.additionalInfo.validatorName = toValidator.name;
+
+        return transaction;
     }
 
     public async delegateStake(
@@ -226,6 +291,50 @@ export class Staking {
 
         transaction.additionalInfo.posAction = PosBasicActionType.CLAIM_REWARD;
         transaction.additionalInfo.validatorName = validator.name;
+
+        return transaction;
+    }
+
+    public async completeWithdrawal(tx: IPosTransaction): Promise<IBlockchainTransaction> {
+        const transaction = await buildBaseTransaction(tx);
+        const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
+
+        transaction.toAddress = contractAddress;
+        const fromAddress = isBech32(tx.account.address)
+            ? fromBech32Address(tx.account.address).toLowerCase()
+            : tx.account.address.toLowerCase();
+
+        const raw = JSON.stringify({
+            _tag: 'CompleteWithdrawal',
+            params: [
+                {
+                    vname: 'initiator',
+                    type: 'ByStr20',
+                    value: fromAddress
+                }
+            ]
+        });
+
+        const fees = await this.client.getFees(
+            TransactionType.CONTRACT_CALL,
+            {
+                from: tx.account.address,
+                to: '',
+                amount: tx.amount,
+                contractAddress,
+                raw
+            },
+            TokenType.ZRC2
+        );
+        transaction.feeOptions = fees;
+
+        transaction.data = {
+            method: 'withdraw',
+            params: [contractAddress, tx.amount],
+            raw
+        };
+
+        transaction.additionalInfo.posAction = PosBasicActionType.WITHDRAW;
 
         return transaction;
     }

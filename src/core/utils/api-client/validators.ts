@@ -3,7 +3,6 @@ import { captureException as SentryCaptureException } from '@sentry/react-native
 import { Blockchain } from '../../blockchain/types';
 import { PosBasicActionType } from '../../blockchain/types/token';
 import { IAccountState } from '../../../redux/wallets/state';
-
 export class ValidatorsApiClient {
     constructor(private apiClient: ApiClient) {}
 

@@ -174,12 +174,6 @@ export class EnterAmountComponentComponent extends React.Component<
     private renderEnterAmount() {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
 
-        const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
-
-        const balance = blockchainInstance.account
-            .amountFromStd(new BigNumber(this.props.balanceForDelegate), tokenConfig.decimals)
-            .toFixed();
-
         return (
             <View key="enterAmount" style={this.props.styles.amountContainer}>
                 <EnterAmount
@@ -187,7 +181,7 @@ export class EnterAmountComponentComponent extends React.Component<
                         this.props.account,
                         this.props.token,
                         this.state.feeOptions,
-                        balance
+                        this.props.balanceForDelegate
                     )}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}

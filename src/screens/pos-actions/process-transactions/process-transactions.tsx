@@ -19,7 +19,10 @@ import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../../core/utils/format-number';
-import { getSelectedWallet } from '../../../redux/wallets/selectors';
+import {
+    getSelectedWallet,
+    getSelectedAccountTransactions
+} from '../../../redux/wallets/selectors';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { formatValidatorName } from '../../../core/utils/format-string';
 import { NavigationService } from '../../../navigation/navigation-service';
@@ -29,13 +32,15 @@ export interface IReduxProps {
     transactions: IBlockchainTransaction[];
     closeProcessTransactions: typeof closeProcessTransactions;
     walletType: WalletType;
+    accountTransactions: IBlockchainTransaction[];
 }
 
 export const mapStateToProps = (state: IReduxState) => {
     return {
         isVisible: state.ui.processTransactions.isVisible,
         transactions: state.ui.processTransactions.data.txs,
-        walletType: getSelectedWallet(state)?.type
+        walletType: getSelectedWallet(state)?.type,
+        accountTransactions: getSelectedAccountTransactions(state)
     };
 };
 
@@ -61,20 +66,23 @@ export class ProcessTransactionsComponent extends React.Component<
         };
     }
 
+    public isTransactionPublished(transaction: IBlockchainTransaction): boolean {
+        const filteredTransactions = this.props.accountTransactions.filter(
+            tx => tx.id === transaction.id
+        );
+
+        return filteredTransactions.length > 0;
+    }
+
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.transactions !== prevProps.transactions) {
-            let hasPending = false;
-            let disabledButton = true;
+            let allTransactionPublished = 0;
             for (const tx of this.props.transactions) {
-                if (
-                    tx.status === TransactionStatus.FAILED ||
-                    tx.status === TransactionStatus.DROPPED
-                )
-                    disabledButton = false;
-                if (tx.status === TransactionStatus.PENDING) hasPending = true;
+                if (this.isTransactionPublished(tx)) allTransactionPublished++;
             }
-            if (!hasPending) disabledButton = false;
-            this.setState({ disabledButton });
+            this.setState({
+                disabledButton: !(allTransactionPublished === this.props.transactions.length)
+            });
         }
     }
 
@@ -135,6 +143,30 @@ export class ProcessTransactionsComponent extends React.Component<
                 topText = translate('App.labels.unvoting') + ' ' + amount;
                 break;
             }
+            case PosBasicActionType.STAKE: {
+                topText = translate('App.labels.stake') + ' ' + amount;
+                middleText =
+                    translate('App.labels.to').toLowerCase() +
+                    ' ' +
+                    formatValidatorName(tx.additionalInfo?.validatorName, 20);
+                break;
+            }
+            case PosBasicActionType.CLAIM_REWARD: {
+                topText = translate('App.labels.claimingRewards');
+                middleText =
+                    translate('App.labels.from').toLowerCase() +
+                    ' ' +
+                    formatValidatorName(tx.additionalInfo?.validatorName, 20);
+                break;
+            }
+            case PosBasicActionType.UNSTAKE: {
+                topText = translate('App.labels.unstaking') + ' ' + amount;
+                middleText =
+                    translate('App.labels.from').toLowerCase() +
+                    ' ' +
+                    formatValidatorName(tx.additionalInfo?.validatorName, 20);
+                break;
+            }
             case PosBasicActionType.ACTIVATE: {
                 topText = translate('Validator.activatingVotes');
                 break;
@@ -142,16 +174,6 @@ export class ProcessTransactionsComponent extends React.Component<
             case PosBasicActionType.DEPOSIT: {
                 topText = translate('App.labels.deposit') + ' ' + amount;
                 middleText = translate('App.labels.to').toLowerCase() + ' ' + tx.toAddress;
-                break;
-            }
-            case PosBasicActionType.STAKE: {
-                topText = translate('App.labels.stake') + ' ' + amount;
-                middleText = translate('App.labels.to').toLowerCase() + ' ' + tx.toAddress;
-                break;
-            }
-            case PosBasicActionType.UNSTAKE: {
-                topText = translate('App.labels.unstake') + ' ' + amount;
-                middleText = translate('App.labels.from').toLowerCase() + ' ' + tx.toAddress;
                 break;
             }
             case PosBasicActionType.WITHDRAW: {
@@ -229,16 +251,20 @@ export class ProcessTransactionsComponent extends React.Component<
                     </Text>
                 </View>
 
-                {status === TransactionStatus.PENDING && (
+                {this.isTransactionPublished(tx) ? (
+                    status === TransactionStatus.PENDING || status === TransactionStatus.SUCCESS ? (
+                        <Icon
+                            name={IconValues.CHECK}
+                            size={normalize(16)}
+                            style={styles.successIcon}
+                        />
+                    ) : (
+                        <Text style={styles.failedText}>{rightText}</Text>
+                    )
+                ) : (
                     <View>
                         <LoadingIndicator />
                     </View>
-                )}
-
-                {status === TransactionStatus.SUCCESS ? (
-                    <Icon name={IconValues.CHECK} size={normalize(16)} style={styles.successIcon} />
-                ) : (
-                    <Text style={styles.failedText}>{rightText}</Text>
                 )}
             </View>
         );

@@ -12,9 +12,13 @@ import * as schnorr from '@zilliqa-js/crypto/dist/schnorr';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { toChecksumAddress } from '@zilliqa-js/crypto/dist/util';
 import { TransactionStatus } from '../../wallet/types';
-import { TokenType } from '../types/token';
+import { TokenType, PosBasicActionType } from '../types/token';
 import { Zilliqa } from '.';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
+import { Contracts } from './config';
+import BigNumber from 'bignumber.js';
+import { cloneDeep } from 'lodash';
+import { isBech32 } from '@zilliqa-js/util/dist/validation';
 
 export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils {
     public schnorrSign(msg: Buffer, privateKey: string): string {
@@ -36,12 +40,13 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
 
     public async sign(tx: IBlockchainTransaction, privateKey: string): Promise<any> {
         const pubKey = Zilliqa.account.privateToPublic(privateKey);
+        const toAddress = isBech32(tx.toAddress)
+            ? fromBech32Address(tx.toAddress).toLowerCase()
+            : tx.toAddress.toLowerCase();
         const transaction: any = {
             // tslint:disable-next-line: no-bitwise
             version: (Number(tx.chainId) << 16) + 1, // add replay protection
-            toAddr: fromBech32Address(tx.toAddress)
-                .replace('0x', '')
-                .toLowerCase(),
+            toAddr: toAddress.replace('0x', ''),
             nonce: tx.nonce,
             pubKey,
             amount: new BN(tx.amount),
@@ -68,8 +73,98 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
         return transaction;
     }
 
-    public async buildPosTransaction(tx: IPosTransaction): Promise<IBlockchainTransaction[]> {
-        return;
+    public async buildPosTransaction(
+        tx: IPosTransaction,
+        transactionType: PosBasicActionType
+    ): Promise<IBlockchainTransaction[]> {
+        const client = Zilliqa.getClient(tx.chainId);
+
+        const transactions: IBlockchainTransaction[] = [];
+
+        switch (transactionType) {
+            case PosBasicActionType.DELEGATE: {
+                const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
+
+                for (const validator of tx.validators) {
+                    const txStake: IPosTransaction = cloneDeep(tx);
+                    txStake.amount = splitAmount.toString();
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].delegateStake(txStake, validator);
+                    transaction.nonce = transaction.nonce + transactions.length; // increase nonce with the number of previous transactions
+                    transactions.push(transaction);
+                }
+                break;
+            }
+            case PosBasicActionType.REDELEGATE: {
+                const txUnvote = cloneDeep(tx);
+                txUnvote.validators = [tx.extraFields.fromValidator];
+
+                const shouldWithdraw = await client.contracts[
+                    Contracts.STAKING
+                ].canWithdrawStakeRewardsFromSsn(
+                    tx.account.address,
+                    tx.extraFields.fromValidator.id
+                );
+
+                if (shouldWithdraw) {
+                    const txClaimReward: IPosTransaction = cloneDeep(tx);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].withdrawStakRewards(txClaimReward, tx.extraFields.fromValidator);
+                    transactions.push(transaction);
+                }
+                const txUnStake: IPosTransaction = cloneDeep(tx);
+                const transactionUnStake: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].reDelegateStake(txUnStake, tx.extraFields.fromValidator, tx.validators[0]);
+                transactionUnStake.nonce = transactionUnStake.nonce + transactions.length;
+                transactions.push(transactionUnStake);
+
+                break;
+            }
+            case PosBasicActionType.UNSTAKE: {
+                const ssnAddress = tx.validators[0].id;
+                const shouldWithdraw = await client.contracts[
+                    Contracts.STAKING
+                ].canWithdrawStakeRewardsFromSsn(tx.account.address, ssnAddress);
+
+                if (shouldWithdraw) {
+                    const txClaimReward: IPosTransaction = cloneDeep(tx);
+                    const transaction: IBlockchainTransaction = await client.contracts[
+                        Contracts.STAKING
+                    ].withdrawStakRewards(txClaimReward, tx.validators[0]);
+                    transactions.push(transaction);
+                }
+
+                const txUnStake: IPosTransaction = cloneDeep(tx);
+                const transactionUnStake: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].withdrawStakAmt(txUnStake, tx.validators[0]);
+                transactionUnStake.nonce = transactionUnStake.nonce + transactions.length;
+                transactions.push(transactionUnStake);
+                break;
+            }
+            case PosBasicActionType.CLAIM_REWARD: {
+                const txClaimReward: IPosTransaction = cloneDeep(tx);
+                const transaction: IBlockchainTransaction = await client.contracts[
+                    Contracts.STAKING
+                ].withdrawStakRewards(txClaimReward, tx.validators[0]);
+                transactions.push(transaction);
+                break;
+            }
+            case PosBasicActionType.WITHDRAW: {
+                const txWithdraw = cloneDeep(tx);
+                const transaction = await client.contracts[Contracts.STAKING].completeWithdrawal(
+                    txWithdraw
+                );
+                if (transaction) transactions.push(transaction);
+
+                break;
+            }
+        }
+
+        return transactions;
     }
 
     public async buildTransferTransaction(

@@ -55,7 +55,7 @@ const validatorCTA = {
                 screen: 'PosBasicAction',
                 params: {
                     actionText: 'App.labels.claimReward',
-                    basicAction: PosBasicActionType.CLAIM_REWARD,
+                    basicAction: PosBasicActionType.CLAIM_REWARD_NO_INPUT,
                     unlockDays: '3 days'
                 }
             }
@@ -149,3 +149,7 @@ export const config: IBlockchainConfig = {
     },
     defaultOrder: 0
 };
+
+export enum Contracts {
+    STAKING = 'STAKING'
+}

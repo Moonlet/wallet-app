@@ -37,8 +37,11 @@ export class StatsComponentInternal extends React.Component<
             case IStatValueType.STRING:
                 return stat.data.value;
             case IStatValueType.AMOUNT: {
-                const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
-                const blockchainInstance = getBlockchain(this.props.blockchain);
+                const tokenConfig = getTokenConfig(
+                    stat.data.blockchain as Blockchain,
+                    stat.data.tokenSymbol
+                );
+                const blockchainInstance = getBlockchain(stat.data.blockchain as Blockchain);
 
                 const amountFromStd = blockchainInstance.account.amountFromStd(
                     new BigNumber(stat.data.value),
@@ -51,14 +54,7 @@ export class StatsComponentInternal extends React.Component<
             }
         }
     }
-    getValue(stat: IStatValue) {
-        switch (stat.type) {
-            case IStatValueType.STRING:
-                return stat.data.value;
-            case IStatValueType.AMOUNT:
-                return stat.data.value;
-        }
-    }
+
     renderTopStats() {
         const styles = this.props.styles;
         return this.props.accountStats.topStats.map((stat: IStatValue, i: number) => (

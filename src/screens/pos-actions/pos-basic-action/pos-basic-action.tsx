@@ -159,6 +159,7 @@ export class PosBasicActionComponent extends React.Component<
                 case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
                     this.props.claimRewardNoInput(
                         this.props.account,
+                        this.props.validators,
                         this.props.token.symbol,
                         password,
                         this.props.navigation,

@@ -66,6 +66,7 @@ export const redelegate = (
 
 export const claimRewardNoInput = (
     account: IAccountState,
+    validators: IValidator[],
     token: string,
     password: string,
     navigation: NavigationScreenProp<NavigationState>,
@@ -76,7 +77,7 @@ export const claimRewardNoInput = (
     posAction(
         account,
         undefined,
-        undefined,
+        validators,
         token,
         undefined,
         password,

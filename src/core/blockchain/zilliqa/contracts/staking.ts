@@ -76,6 +76,7 @@ export class Staking {
                     }
                 }
             }
+            return false;
         } catch (error) {
             return false;
         }

@@ -300,19 +300,13 @@ export class Staking {
         const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
 
         transaction.toAddress = contractAddress;
-        const fromAddress = isBech32(tx.account.address)
-            ? fromBech32Address(tx.account.address).toLowerCase()
-            : tx.account.address.toLowerCase();
+        // const fromAddress = isBech32(tx.account.address)
+        //     ? fromBech32Address(tx.account.address).toLowerCase()
+        //     : tx.account.address.toLowerCase();
 
         const raw = JSON.stringify({
             _tag: 'CompleteWithdrawal',
-            params: [
-                {
-                    vname: 'initiator',
-                    type: 'ByStr20',
-                    value: fromAddress
-                }
-            ]
+            params: []
         });
 
         const fees = await this.client.getFees(

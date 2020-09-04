@@ -34,9 +34,10 @@ import { EnterAmount } from '../../send/components/enter-amount/enter-amount';
 import { FeeOptions } from '../../send/components/fee-options/fee-options';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
-import { unlock, unvote, unstake } from '../../../redux/wallets/actions';
+import { unlock, unvote, unstake, claimRewardNoInput } from '../../../redux/wallets/actions';
 import { valuePrimaryCtaField } from '../../../core/utils/format-string';
 import BigNumber from 'bignumber.js';
+import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -44,6 +45,7 @@ export interface IReduxProps {
     unlock: typeof unlock;
     unvote: typeof unvote;
     unstake: typeof unstake;
+    claimRewardNoInput: typeof claimRewardNoInput;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -56,7 +58,8 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 const mapDispatchToProps = {
     unlock,
     unvote,
-    unstake
+    unstake,
+    claimRewardNoInput
 };
 
 export interface INavigationParams {
@@ -100,6 +103,10 @@ export class PosBasicActionComponent extends React.Component<
             feeOptions: undefined,
             insufficientFundsFees: false
         };
+
+        if (props.basicAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT) {
+            this.onPressConfirm();
+        }
     }
 
     private async onPressConfirm() {
@@ -149,6 +156,16 @@ export class PosBasicActionComponent extends React.Component<
                     );
                     break;
                 }
+                case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
+                    this.props.claimRewardNoInput(
+                        this.props.account,
+                        this.props.token.symbol,
+                        password,
+                        this.props.navigation,
+                        undefined
+                    );
+                    break;
+                }
             }
         } catch {
             //
@@ -173,7 +190,8 @@ export class PosBasicActionComponent extends React.Component<
                 labelColor = theme.colors.labelUndelegate;
                 break;
             }
-            case PosBasicActionType.CLAIM_REWARD: {
+            case PosBasicActionType.CLAIM_REWARD:
+            case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
                 labelColor = theme.colors.labelReward;
                 break;
             }
@@ -342,6 +360,9 @@ export class PosBasicActionComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
+
+        if (this.props.basicAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT)
+            return <LoadingIndicator />;
 
         return (
             <View style={styles.container}>

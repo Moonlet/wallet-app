@@ -145,7 +145,7 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
                 transactions.push(transactionUnStake);
                 break;
             }
-            case PosBasicActionType.CLAIM_REWARD: {
+            case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
                 const txClaimReward: IPosTransaction = cloneDeep(tx);
                 const transaction: IBlockchainTransaction = await client.contracts[
                     Contracts.STAKING

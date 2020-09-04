@@ -163,7 +163,7 @@ export class DelegateSelectValidatorComponent extends React.Component<
                     style={styles.actionIconContainer}
                     onPress={() => {
                         if (
-                            this.props.allValidators.length > this.state.nrValidators &&
+                            this.props.allValidators.length >= this.state.nrValidators &&
                             !maximumNumberOfValidatorsReached
                         ) {
                             const nrValidatorsNew = this.state.nrValidators + 1;

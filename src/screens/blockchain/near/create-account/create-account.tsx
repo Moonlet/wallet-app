@@ -179,9 +179,9 @@ export class CreateNearAccountComponent extends React.Component<
                                     onChangeText={inputAccount => this.checkAccountId(inputAccount)}
                                 />
 
-                                <Text
-                                    style={styles.domain}
-                                >{`.${NEAR_TESTNET_MASTER_ACCOUNT}`}</Text>
+                                <Text style={styles.domain}>
+                                    {`.${NEAR_TESTNET_MASTER_ACCOUNT}`}
+                                </Text>
                             </View>
 
                             <Text

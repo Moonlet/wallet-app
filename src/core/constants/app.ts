@@ -27,3 +27,4 @@ export const CONN_EXT_RETRY_ATTEMPTS = 3;
 
 // TODO: move this to a config, maybe firebase?
 export const NEAR_TESTNET_MASTER_ACCOUNT = 'moonlet-test.testnet';
+export const NEAR_TESTNET_RECOVER_EXTENSION = 'testnet';

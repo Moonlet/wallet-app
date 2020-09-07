@@ -778,10 +778,7 @@ export const createNearAccount = (newAccountId: string, password: string) => asy
 
     const chainId = getChainId(state, blockchain);
 
-    const numberOfAccounts = selectedWallet.accounts.filter(acc => acc.blockchain === blockchain)
-        .length;
-
-    const accounts = await hdWallet.getAccounts(blockchain, numberOfAccounts);
+    const accounts = await hdWallet.getAccounts(blockchain, 0);
     const account = accounts[0];
 
     const res = await new ApiClient().near.createAccount(
@@ -794,6 +791,11 @@ export const createNearAccount = (newAccountId: string, password: string) => asy
         const tx = res.result.data;
 
         if (tx.status && tx.status.SuccessValue === '') {
+            const numberOfAccounts = selectedWallet.accounts.filter(
+                acc => acc.blockchain === blockchain
+            ).length;
+
+            account.index = numberOfAccounts;
             account.address = newAccountId;
             account.tokens[chainId][getBlockchain(blockchain).config.coin].balance = {
                 value: '0',

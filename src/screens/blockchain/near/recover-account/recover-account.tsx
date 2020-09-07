@@ -41,6 +41,7 @@ interface IState {
     isInvalidUsername: boolean;
     isAuthorizing: boolean;
     recoveredAccount: IAccountState;
+    openWalletLoginUrl: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -76,7 +77,8 @@ export class RecoverNearAccountComponent extends React.Component<
             isUsernameNotAvailable: false,
             isInvalidUsername: false,
             isAuthorizing: false,
-            recoveredAccount: undefined
+            recoveredAccount: undefined,
+            openWalletLoginUrl: false
         };
     }
 
@@ -149,32 +151,47 @@ export class RecoverNearAccountComponent extends React.Component<
         }
     }
 
-    private startRecoveringAccount() {
-        const { recoveredAccount } = this.state;
+    private async startRecoveringAccount(options?: { shouldOpenWalletLoginUrl: boolean }) {
         const client = getBlockchain(Blockchain.NEAR).getClient(this.props.chainId) as NearClient;
+
+        await this.recoverAccount(client);
+
+        if (options?.shouldOpenWalletLoginUrl && this.state.openWalletLoginUrl) {
+            const url = getBlockchain(this.state.recoveredAccount.blockchain)
+                .networks.filter(n => n.chainId === this.props.chainId)[0]
+                .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
+
+            Linking.canOpenURL(url).then(supported => supported && Linking.openURL(url));
+        }
 
         clearInterval(this.startRecoveringAccountInterval);
         this.startRecoveringAccountInterval = setInterval(async () => {
-            const res = await client.viewAccountAccessKey(
-                recoveredAccount.address,
-                recoveredAccount.publicKey
-            );
-
-            if (res && (res?.permission || res?.nonce)) {
-                this.props.addAccount(
-                    this.props.selectedWallet.id,
-                    Blockchain.NEAR,
-                    recoveredAccount
-                );
-                this.props.setSelectedAccount(recoveredAccount);
-                NavigationService.navigate('Dashboard', {});
-            }
+            this.recoverAccount(client);
         }, 1000);
+    }
+
+    private async recoverAccount(client: NearClient) {
+        const { recoveredAccount } = this.state;
+
+        const res = await client.viewAccountAccessKey(
+            recoveredAccount.address,
+            recoveredAccount.publicKey
+        );
+
+        if (res && (res?.permission || res?.nonce)) {
+            this.props.addAccount(this.props.selectedWallet.id, Blockchain.NEAR, recoveredAccount);
+            this.props.setSelectedAccount(recoveredAccount);
+            NavigationService.navigate('Dashboard', {});
+        } else {
+            this.setState({ openWalletLoginUrl: true });
+        }
     }
 
     private async generatePublicKey() {
         try {
-            const password = await PasswordModal.getPassword();
+            const password = await PasswordModal.getPassword(undefined, undefined, {
+                showCloseButton: true
+            });
 
             await LoadingModal.open();
 
@@ -352,15 +369,7 @@ export class RecoverNearAccountComponent extends React.Component<
                             if (this.state.recoveredAccount) {
                                 this.setState({ isAuthorizing: true });
 
-                                const url = getBlockchain(this.state.recoveredAccount.blockchain)
-                                    .networks.filter(n => n.chainId === this.props.chainId)[0]
-                                    .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
-
-                                Linking.canOpenURL(url).then(
-                                    supported => supported && Linking.openURL(url)
-                                );
-
-                                this.startRecoveringAccount();
+                                this.startRecoveringAccount({ shouldOpenWalletLoginUrl: true });
                             }
                         }}
                     >

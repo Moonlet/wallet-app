@@ -171,7 +171,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                     style={styles.actionIconContainer}
                     onPress={() => {
                         if (
-                            this.props.allValidators.length > this.state.nrValidators + 1 &&
+                            this.props.allValidators.length >= this.state.nrValidators + 1 &&
                             !maximumNumberOfValidatorsReached
                         ) {
                             const nrValidatorsNew = this.state.nrValidators + 1;

@@ -64,6 +64,31 @@ export const redelegate = (
     )(dispatch, getState);
 };
 
+export const claimRewardNoInput = (
+    account: IAccountState,
+    validators: IValidator[],
+    token: string,
+    password: string,
+    navigation: NavigationScreenProp<NavigationState>,
+    extraFields: ITransactionExtraFields,
+    goBack: boolean = true,
+    sendResponse?: { requestId: string }
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    posAction(
+        account,
+        undefined,
+        validators,
+        token,
+        undefined,
+        password,
+        navigation,
+        extraFields,
+        goBack,
+        PosBasicActionType.CLAIM_REWARD_NO_INPUT,
+        sendResponse
+    )(dispatch, getState);
+};
+
 export const delegate = (
     account: IAccountState,
     amount: string,

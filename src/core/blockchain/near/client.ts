@@ -9,7 +9,7 @@ import { createTransaction, signTransaction, deleteAccount } from 'near-api-js/l
 import { KeyPair, serialize } from 'near-api-js/lib/utils';
 import sha256 from 'js-sha256';
 import { StakingPool } from './contracts/staking-pool';
-import { INearAccount } from './types';
+import { INearAccount, NearAccountType } from './types';
 
 export class Client extends BlockchainGenericClient {
     public stakingPool: StakingPool;
@@ -98,7 +98,11 @@ export class Client extends BlockchainGenericClient {
                     name: accountId,
                     amount: new BigNumber(res.result.amount),
                     exists: true,
-                    valid: true
+                    valid: true,
+                    type:
+                        res.result.code_hash === '11111111111111111111111111111111'
+                            ? NearAccountType.DEFAULT
+                            : NearAccountType.CONTRACT
                 };
             } else if (res?.error) {
                 // Account does not exist | it's not created

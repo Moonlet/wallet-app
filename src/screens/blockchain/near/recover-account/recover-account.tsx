@@ -23,6 +23,7 @@ import { INavigationProps } from '../../../../navigation/with-navigation-params'
 import { LoadingModal } from '../../../../components/loading-modal/loading-modal';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { NearAccountType } from '../../../../core/blockchain/near/types';
 
 interface IReduxProps {
     chainId: ChainIdType;
@@ -39,6 +40,7 @@ interface IState {
     isUsernameNotAvailable: boolean;
     isInvalidUsername: boolean;
     isAuthorizing: boolean;
+    isNotSupported: boolean;
     recoveredAccount: IAccountState;
     openWalletLoginUrl: boolean;
 }
@@ -76,6 +78,7 @@ export class RecoverNearAccountComponent extends React.Component<
             isUsernameNotAvailable: false,
             isInvalidUsername: false,
             isAuthorizing: false,
+            isNotSupported: false,
             recoveredAccount: undefined,
             openWalletLoginUrl: false
         };
@@ -99,6 +102,7 @@ export class RecoverNearAccountComponent extends React.Component<
                 isInvalidUsername: true,
                 isUsernameNotRegistered: false,
                 isUsernameNotAvailable: false,
+                isNotSupported: false,
                 isChecking: false
             });
             return;
@@ -111,19 +115,32 @@ export class RecoverNearAccountComponent extends React.Component<
             const account = await client.getAccount(accountId);
 
             if (account.exists === true && account.valid === true) {
-                this.setState({
-                    isInputValid: true,
-                    isInvalidUsername: false,
-                    isUsernameNotRegistered: false,
-                    isUsernameNotAvailable: false,
-                    isChecking: false
-                });
+                if (account.type !== NearAccountType.DEFAULT) {
+                    this.setState({
+                        isInputValid: false,
+                        isInvalidUsername: false,
+                        isUsernameNotRegistered: false,
+                        isUsernameNotAvailable: false,
+                        isNotSupported: true,
+                        isChecking: false
+                    });
+                } else {
+                    this.setState({
+                        isInputValid: true,
+                        isInvalidUsername: false,
+                        isUsernameNotRegistered: false,
+                        isUsernameNotAvailable: false,
+                        isNotSupported: false,
+                        isChecking: false
+                    });
+                }
             } else if (account.exists === false && account.valid === true) {
                 this.setState({
                     isInputValid: false,
                     isInvalidUsername: false,
                     isUsernameNotRegistered: true,
                     isUsernameNotAvailable: false,
+                    isNotSupported: false,
                     isChecking: false
                 });
             } else {
@@ -132,6 +149,7 @@ export class RecoverNearAccountComponent extends React.Component<
                     isInvalidUsername: false,
                     isUsernameNotRegistered: false,
                     isUsernameNotAvailable: true,
+                    isNotSupported: false,
                     isChecking: false
                 });
             }
@@ -141,6 +159,7 @@ export class RecoverNearAccountComponent extends React.Component<
                 isInvalidUsername: false,
                 isUsernameNotRegistered: false,
                 isUsernameNotAvailable: true,
+                isNotSupported: false,
                 isChecking: false
             });
 
@@ -231,6 +250,7 @@ export class RecoverNearAccountComponent extends React.Component<
         const isInvalidUsername = this.state.isInvalidUsername && !this.state.isInputValid;
         const isUsernameNotAvailable =
             this.state.isUsernameNotAvailable && !this.state.isInputValid;
+        const isNotSupported = this.state.isNotSupported && !this.state.isInputValid;
         const isAuthorizing = this.state.isAuthorizing && this.state.isInputValid;
 
         const isCreateAccountActive = !isChecking && isUsernameNotRegistered;
@@ -284,7 +304,8 @@ export class RecoverNearAccountComponent extends React.Component<
                                                 styles.infoText,
                                                 (isUsernameNotRegistered ||
                                                     isInvalidUsername ||
-                                                    isUsernameNotAvailable) &&
+                                                    isUsernameNotAvailable ||
+                                                    isNotSupported) &&
                                                     styles.errorText,
                                                 isChecking && styles.checkingText,
                                                 this.state.isInputValid && styles.congratsText
@@ -298,6 +319,8 @@ export class RecoverNearAccountComponent extends React.Component<
                                                 ? translate('AddAccount.invalid')
                                                 : isUsernameNotAvailable
                                                 ? translate('AddAccount.notAvailable')
+                                                : isNotSupported
+                                                ? translate('RecoverNearAccount.notSupported')
                                                 : this.state.isInputValid
                                                 ? translate('RecoverNearAccount.congrats', {
                                                       name: this.state.inputAccout

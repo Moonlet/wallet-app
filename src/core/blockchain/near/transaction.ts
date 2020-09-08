@@ -39,7 +39,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                     case NearTransactionActionType.FUNCTION_CALL:
                         // @ts-ignore
-                        return functionCall(...tx.additionalInfo.actions[0].params);
+                        return functionCall(...action.params);
 
                     default:
                         return false;

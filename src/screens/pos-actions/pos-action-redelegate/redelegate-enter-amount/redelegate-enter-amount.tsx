@@ -103,9 +103,15 @@ export class RedelegateEnterAmountComponent extends React.Component<
     public async componentDidMount() {
         this.props.navigation.setParams({ actionText: this.props.actionText });
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
-        const minimumDelegateAmountValue = await blockchainInstance
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+        const response = await blockchainInstance
             .getClient(this.props.chainId)
             .getMinimumAmountDelegate();
+
+        const minimumDelegateAmountValue = blockchainInstance.account.amountFromStd(
+            new BigNumber(response),
+            tokenConfig.decimals
+        );
         this.setState({
             minimumDelegateAmount: minimumDelegateAmountValue || new BigNumber(0)
         });

@@ -99,9 +99,15 @@ export class DelegateEnterAmountComponent extends React.Component<
                 .getStats(this.props.chainId)
                 .getAvailableBalanceForDelegate(this.props.account);
 
-            const minimumDelegateAmountValue = await blockchainInstance
+            const response = await blockchainInstance
                 .getClient(this.props.chainId)
                 .getMinimumAmountDelegate();
+
+            const minimumDelegateAmountValue = blockchainInstance.account.amountFromStd(
+                new BigNumber(response),
+                tokenConfig.decimals
+            );
+
             this.setState({
                 amount: blockchainInstance.account
                     .amountFromStd(new BigNumber(data), tokenConfig.decimals)

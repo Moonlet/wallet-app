@@ -1,4 +1,3 @@
-import { Alert } from 'react-native';
 import { HDWallet } from '../../../core/wallet/hd-wallet/hd-wallet';
 import {
     Blockchain,
@@ -811,7 +810,10 @@ export const createNearAccount = (name: string, extension: string, password: str
 
             NavigationService.navigate('Dashboard', {});
         } else if (tx.status && tx.status.Failure) {
-            Alert.alert('Failed', 'Create account has failed!');
+            Dialog.info(
+                translate('CreateNearAccount.failed'),
+                translate('CreateNearAccount.tryAgain')
+            );
 
             SentryAddBreadcrumb({ message: JSON.stringify(tx) });
             SentryCaptureException(
@@ -822,7 +824,10 @@ export const createNearAccount = (name: string, extension: string, password: str
                 )
             );
         } else {
-            Alert.alert('Invalid Status', 'Create account has failed!');
+            Dialog.info(
+                translate('CreateNearAccount.failed'),
+                translate('CreateNearAccount.tryAgain')
+            );
 
             SentryAddBreadcrumb({ message: JSON.stringify(tx) });
             SentryCaptureException(
@@ -834,7 +839,10 @@ export const createNearAccount = (name: string, extension: string, password: str
             );
         }
     } else {
-        Alert.alert('Create account has failed!', res?.message || res?.errorMessage || '');
+        Dialog.info(
+            translate('CreateNearAccount.failed'),
+            res?.message || res?.errorMessage || translate('CreateNearAccount.tryAgain')
+        );
 
         SentryAddBreadcrumb({ message: JSON.stringify({ res, accountId: newAccountId }) });
         SentryCaptureException(

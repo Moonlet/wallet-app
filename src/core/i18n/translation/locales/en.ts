@@ -420,7 +420,9 @@ export const translation: ITranslations = {
         CreateNearAccount: {
             title: 'Create account name',
             chooseAccountName: 'Choose an account name and you’re all set.',
-            congrats: 'Congrats! {{name}} is available.'
+            congrats: 'Congrats! {{name}} is available.',
+            failed: 'Create account has failed',
+            tryAgain: 'Try again!'
         },
         RecoverNearAccount: {
             title: 'Recover account name',

@@ -132,7 +132,8 @@ export class CreateNearAccountComponent extends React.Component<
         try {
             const password = await PasswordModal.getPassword();
             this.props.createNearAccount(
-                `${this.state.inputAccount}.${NEAR_TESTNET_MASTER_ACCOUNT}`,
+                this.state.inputAccount,
+                NEAR_TESTNET_MASTER_ACCOUNT,
                 password
             );
         } catch (err) {

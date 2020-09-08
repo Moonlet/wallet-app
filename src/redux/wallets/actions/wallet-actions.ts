@@ -763,7 +763,7 @@ export const deleteAccount = (
     await client.deleteNearAccount(accountId, NEAR_TESTNET_MASTER_ACCOUNT, privateKey);
 };
 
-export const createNearAccount = (newAccountId: string, password: string) => async (
+export const createNearAccount = (name: string, extension: string, password: string) => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
@@ -782,10 +782,13 @@ export const createNearAccount = (newAccountId: string, password: string) => asy
     const account = accounts[0];
 
     const res = await new ApiClient().near.createAccount(
-        newAccountId,
+        name,
+        extension,
         account.publicKey,
         String(chainId)
     );
+
+    const newAccountId = `${name}.${extension}`;
 
     if (res?.result?.data?.status) {
         const tx = res.result.data;

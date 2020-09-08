@@ -127,8 +127,11 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
 
         switch (transactionType) {
             case PosBasicActionType.DELEGATE: {
+                const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
+
                 for (const validator of tx.validators) {
                     const txDelegate: IPosTransaction = cloneDeep(tx);
+                    txDelegate.amount = splitAmount.toFixed();
 
                     const res = await new ApiClient().validators.getBalance(
                         tx.account,
@@ -136,9 +139,11 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                     );
 
                     if (
-                        new BigNumber(tx.amount).isGreaterThan(new BigNumber(res.balance.unstaked))
+                        new BigNumber(txDelegate.amount).isGreaterThan(
+                            new BigNumber(res.balance.unstaked)
+                        )
                     ) {
-                        const depositAmount = new BigNumber(tx.amount).minus(
+                        const depositAmount = new BigNumber(txDelegate.amount).minus(
                             new BigNumber(res.balance.unstaked)
                         );
 
@@ -148,6 +153,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                             validator
                         );
 
+                        depositTx.nonce = depositTx.nonce + transactions.length;
                         depositTx.amount = depositAmount.toFixed();
                         transactions.push(depositTx);
                     } else {

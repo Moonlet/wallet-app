@@ -20,7 +20,6 @@ import { IWallet } from '../../../../core/wallet/types';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
-import { NEAR_TESTNET_RECOVER_EXTENSION } from '../../../../core/constants/app';
 import { LoadingModal } from '../../../../components/loading-modal/loading-modal';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -109,9 +108,7 @@ export class RecoverNearAccountComponent extends React.Component<
             const blockchainInstance = getBlockchain(Blockchain.NEAR);
             const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
 
-            const account = await client.getAccount(
-                `${accountId}.${NEAR_TESTNET_RECOVER_EXTENSION}`
-            );
+            const account = await client.getAccount(accountId);
 
             if (account.exists === true && account.valid === true) {
                 this.setState({
@@ -213,7 +210,7 @@ export class RecoverNearAccountComponent extends React.Component<
                 this.setState({
                     recoveredAccount: {
                         ...account,
-                        address: `${this.state.inputAccout}.${NEAR_TESTNET_RECOVER_EXTENSION}`,
+                        address: this.state.inputAccout,
                         index: numberOfAccounts
                     }
                 });
@@ -270,10 +267,6 @@ export class RecoverNearAccountComponent extends React.Component<
                                         this.checkAccountId(inputAccout);
                                     }}
                                 />
-
-                                <Text style={styles.domain}>
-                                    {`.${NEAR_TESTNET_RECOVER_EXTENSION}`}
-                                </Text>
                             </View>
 
                             {!isAuthorizing && (
@@ -307,7 +300,7 @@ export class RecoverNearAccountComponent extends React.Component<
                                                 ? translate('AddAccount.notAvailable')
                                                 : this.state.isInputValid
                                                 ? translate('RecoverNearAccount.congrats', {
-                                                      name: `${this.state.inputAccout}.${NEAR_TESTNET_RECOVER_EXTENSION}`
+                                                      name: this.state.inputAccout
                                                   })
                                                 : ''}
                                         </Text>

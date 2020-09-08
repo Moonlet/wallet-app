@@ -146,7 +146,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                     style={styles.actionIconContainer}
                     onPress={() => {
                         if (
-                            this.props.validators.length > this.state.nrValidators + 1 &&
+                            this.props.validators.length >= this.state.nrValidators + 1 &&
                             !maximumNumberOfValidatorsReached
                         ) {
                             const nrValidatorsNew = this.state.nrValidators + 1;

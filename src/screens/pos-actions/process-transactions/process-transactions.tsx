@@ -40,7 +40,7 @@ export const mapStateToProps = (state: IReduxState) => {
         isVisible: state.ui.processTransactions.isVisible,
         transactions: state.ui.processTransactions.data.txs,
         walletType: getSelectedWallet(state)?.type,
-        accountTransactions: getSelectedAccountTransactions(state)
+        accountTransactions: getSelectedAccountTransactions(state) || []
     };
 };
 

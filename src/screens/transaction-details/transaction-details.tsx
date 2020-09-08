@@ -11,7 +11,12 @@ import { translate } from '../../core/i18n';
 import { withNavigationParams, INavigationProps } from '../../navigation/with-navigation-params';
 import { IAccountState } from '../../redux/wallets/state';
 import { formatAddress } from '../../core/utils/format-address';
-import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
+import {
+    Blockchain,
+    IBlockchainTransaction,
+    ChainIdType,
+    TransactionType
+} from '../../core/blockchain/types';
 import { getAccount } from '../../redux/wallets/selectors';
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { Amount } from '../../components/amount/amount';
@@ -77,11 +82,13 @@ export class TransactionDetailsComponent extends React.Component<
                 ? formatAddress(transaction.data.params[0], account.blockchain)
                 : formatAddress(transaction.toAddress, account.blockchain);
 
+        // TODO - refactor this :)
         const transactionType =
             transaction.additionalInfo?.actions && transaction.additionalInfo.actions[0]?.params
                 ? Capitalize(transaction.additionalInfo.actions[0]?.params[0])
                 : transaction.token.type === TokenType.ZRC2 ||
-                  transaction.token.type === TokenType.ERC20
+                  transaction.token.type === TokenType.ERC20 ||
+                  transaction.type === TransactionType.CONTRACT_CALL
                 ? Capitalize(transaction.data.method)
                 : translate('App.labels.transfer');
 

@@ -164,4 +164,8 @@ export class Client extends BlockchainGenericClient {
     private async estimateFees(): Promise<any> {
         return this.http.jsonRpc('GetMinimumGasPrice', []);
     }
+
+    public async getMinimumAmountDelegate(): Promise<BigNumber> {
+        return this.contracts[Contracts.STAKING].getMinDelegateStake();
+    }
 }

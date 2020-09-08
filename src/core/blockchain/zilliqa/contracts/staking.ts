@@ -6,6 +6,7 @@ import { TokenType, PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction, getContract, ContractFields } from './base-contract';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
+import BigNumber from 'bignumber.js';
 
 export class Staking {
     private contractImplementation;
@@ -21,6 +22,21 @@ export class Staking {
                 );
             }
             return this.contractImplementation;
+        } catch (error) {
+            return Promise.reject(error);
+        }
+    }
+
+    public async getMinDelegateStake(): Promise<BigNumber> {
+        try {
+            const contract = await this.getContractImplementation();
+
+            const response = await this.client.getSmartContractSubState(
+                contract.implementation,
+                ContractFields.MINDELEGATESTAKE
+            );
+
+            return response && response[ContractFields.MINDELEGATESTAKE];
         } catch (error) {
             return Promise.reject(error);
         }

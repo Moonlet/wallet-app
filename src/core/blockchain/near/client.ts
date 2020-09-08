@@ -196,4 +196,8 @@ export class Client extends BlockchainGenericClient {
 
         return res?.result || res?.error;
     }
+
+    public async getMinimumAmountDelegate(): Promise<BigNumber> {
+        return new BigNumber(0);
+    }
 }

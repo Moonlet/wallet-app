@@ -45,6 +45,7 @@ export interface IProps {
     showSteps: boolean;
     fromValidator?: IValidator;
     balanceForDelegate: string;
+    minimumDelegateAmount: BigNumber;
     onPressNext(amount: string, feeOptions: IFeeOptions): void;
 }
 
@@ -208,7 +209,6 @@ export class EnterAmountComponentComponent extends React.Component<
 
     public render() {
         const { styles, showSteps } = this.props;
-
         return (
             <View style={styles.container}>
                 <TestnetBadge />

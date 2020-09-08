@@ -16,7 +16,7 @@ export const contracts = {
 export enum ContractFields {
     DEPOSIT_AMT_DELEG = 'deposit_amt_deleg',
     SSNLIST = 'ssnlist',
-    MINSTAKE = 'minstake',
+    MINDELEGATESTAKE = 'mindelegstake',
     LAST_WITHDRAW_CYCLE_DELEG = 'last_withdraw_cycle_deleg',
     LASTREWARDCYCLE = 'lastrewardcycle',
     LAST_BUF_DEPOSIT_CYCLE_DELEG = 'last_buf_deposit_cycle_deleg'

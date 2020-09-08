@@ -51,6 +51,7 @@ const mapDispatchToProps = {
 
 interface IState {
     amount: string;
+    minimumDelegateAmount: BigNumber;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -69,7 +70,8 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
         super(props);
 
         this.state = {
-            amount: undefined
+            amount: undefined,
+            minimumDelegateAmount: undefined
         };
     }
 
@@ -83,7 +85,12 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
                 .getStats(this.props.chainId)
                 .getAvailableBalanceForDelegate(this.props.account);
 
+            const minimumDelegateAmountValue = await blockchainInstance
+                .getClient(this.props.chainId)
+                .getMinimumAmountDelegate();
+
             this.setState({
+                minimumDelegateAmount: minimumDelegateAmountValue || new BigNumber(0),
                 amount: blockchainInstance.account
                     .amountFromStd(new BigNumber(data), tokenConfig.decimals)
                     .toFixed()
@@ -130,6 +137,7 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
                 bottomActionText={'App.labels.for'}
                 bottomButtonText={'App.labels.confirm'}
                 showSteps={false}
+                minimumDelegateAmount={this.state.minimumDelegateAmount}
                 onPressNext={this.onPressConfirm}
             />
         );

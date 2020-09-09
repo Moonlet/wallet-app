@@ -311,7 +311,7 @@ export class ProcessTransactionsComponent extends React.Component<
                             this.props.closeProcessTransactions();
                         }}
                         wrapperStyle={styles.continueButton}
-                        disabled={this.state.disabledButton}
+                        disabled={this.props.transactions.length === 0 || this.state.disabledButton}
                     >
                         {translate('App.labels.continue')}
                     </Button>

@@ -10,13 +10,11 @@ import { translate } from '../../../core/i18n';
 import { ICON_SIZE, normalize } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 import { NavigationService } from '../../../navigation/navigation-service';
-import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { Blockchain } from '../../../core/blockchain/types';
 import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
-import { QrModalReader } from '../../qr-modal/qr-modal';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
 import { IconValues } from '../../icon/values';
 
@@ -55,31 +53,21 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         Platform.OS !== 'web' && this.bottomSheet.current.snapTo(1);
     }
 
-    private transactionHistoryPress() {
+    private addToken() {
         this.props.onClose();
-        NavigationService.navigate('TransactonsHistory', {});
+        NavigationService.navigate('AddToken', {});
     }
 
-    private manageAccount() {
+    private connectedWebsites() {
         this.props.onClose();
-        NavigationService.navigate('ManageAccount', {});
-    }
-
-    private connectExtension() {
-        this.props.onClose();
-        NavigationService.navigate('ConnectExtension', {});
-    }
-
-    private manageWallets() {
-        this.props.onClose();
-        NavigationService.navigate('Wallets', {});
+        NavigationService.navigate('ConnectedWebsites', {});
     }
 
     public renderRow(options: {
         title: string;
-        description: string;
         iconName: string;
-        onPress: () => void;
+        onPress?: () => void;
+        disabled?: boolean;
     }) {
         const { styles, theme } = this.props;
 
@@ -88,19 +76,48 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                 testID={options.title.replace(/ /g, '-').toLowerCase()}
                 onPress={() => options.onPress()}
                 underlayColor={theme.colors.bottomSheetBackground}
+                disabled={options.disabled}
             >
                 <View style={styles.rowContainer}>
                     <View style={styles.iconContainer}>
-                        <Icon name={options.iconName} size={ICON_SIZE} style={styles.icon} />
+                        <Icon
+                            name={options.iconName}
+                            size={ICON_SIZE}
+                            style={[
+                                styles.icon,
+                                {
+                                    color: options.disabled
+                                        ? theme.colors.textTertiary
+                                        : theme.colors.accent
+                                }
+                            ]}
+                        />
                     </View>
                     <View style={styles.textContainer}>
-                        <Text style={styles.title}>{options.title}</Text>
-                        <Text style={styles.description}>{options.description}</Text>
+                        <Text
+                            style={[
+                                styles.title,
+                                {
+                                    color: options.disabled
+                                        ? theme.colors.textTertiary
+                                        : theme.colors.text
+                                }
+                            ]}
+                        >
+                            {options.title}
+                        </Text>
                     </View>
                     <Icon
                         name={IconValues.CHEVRON_RIGHT}
                         size={normalize(16)}
-                        style={styles.arrowRight}
+                        style={[
+                            styles.arrowRight,
+                            {
+                                color: options.disabled
+                                    ? theme.colors.textTertiary
+                                    : theme.colors.accent
+                            }
+                        ]}
                     />
                 </View>
             </TouchableHighlight>
@@ -116,53 +133,36 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     showsVerticalScrollIndicator={false}
                     alwaysBounceVertical={false}
                 >
-                    {this.renderRow({
-                        title: translate('DashboardMenu.transactionHistory'),
-                        description: translate('DashboardMenu.checkTransactions'),
-                        iconName: IconValues.ARCHIVE_LOCKER,
-                        onPress: () => this.transactionHistoryPress()
-                    })}
-
                     {Platform.OS !== 'web' &&
-                        getBlockchain(this.props.blockchain).config.ui.enableTokenManagement &&
                         this.renderRow({
-                            title: translate('DashboardMenu.manageAccount'),
-                            description: translate('DashboardMenu.quicklyManage'),
-                            iconName: IconValues.PENCIL,
-                            onPress: () => this.manageAccount()
+                            title: translate('DashboardMenu.tokenSwap'),
+                            iconName: IconValues.CLAIM_REWARD,
+                            disabled: true
                         })}
 
                     {Platform.OS !== 'web' &&
                         this.renderRow({
-                            title: translate('DashboardMenu.connectExtension'),
-                            description: translate('DashboardMenu.scanCode'),
-                            iconName: IconValues.QR_CODE_SCAN,
-                            onPress: () => this.connectExtension()
+                            title: translate('App.labels.addToken'),
+                            iconName: IconValues.CLAIM_REWARD,
+                            onPress: () => this.addToken()
                         })}
 
-                    {Platform.OS !== 'web' &&
+                    {Platform.OS === 'web' &&
                         this.renderRow({
-                            title: translate('DashboardMenu.scanPay'),
-                            description: translate('DashboardMenu.scanReceive'),
-                            iconName: IconValues.QR_CODE_SCAN,
-                            onPress: () => this.qrCodeScanner.open()
+                            title: translate('DashboardMenu.connectedWebsites'),
+                            iconName: IconValues.FLASH_OFF,
+                            onPress: () => this.connectedWebsites()
                         })}
-
-                    {this.renderRow({
-                        title: translate('Wallets.manageWallets'),
-                        description: translate('DashboardMenu.switchWallets'),
-                        iconName: IconValues.MONEY_WALLET,
-                        onPress: () => this.manageWallets()
-                    })}
                 </ScrollView>
 
-                <QrModalReader
+                {/* TODO: move this */}
+                {/* <QrModalReader
                     obRef={ref => (this.qrCodeScanner = ref)}
                     onQrCodeScanned={value => {
                         this.props.onClose();
                         this.props.openTransactionRequest({ qrCode: value });
                     }}
-                />
+                /> */}
             </View>
         );
     }

@@ -14,6 +14,6 @@ export default (theme: ITheme) =>
         },
         icon: {
             alignSelf: 'center',
-            color: theme.colors.textTertiary
+            color: '#000'
         }
     });

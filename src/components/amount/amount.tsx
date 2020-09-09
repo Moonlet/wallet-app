@@ -18,6 +18,7 @@ interface IExternalProps {
     tokenDecimals: number;
     uiDecimals?: number;
     isAnimated?: boolean;
+    smallFontToken?: boolean;
 }
 
 export interface IReduxProps {
@@ -36,6 +37,24 @@ export const AmountComponent = (props: IExternalProps & IReduxProps) => {
         convertTo,
         props.tokenDecimals
     );
+
+    if (props.smallFontToken) {
+        return (
+            <Text>
+                <Text
+                    testID={props.testID}
+                    style={props.style}
+                    format={{
+                        maximumFractionDigits: props.uiDecimals || 4
+                    }}
+                    isAnimated={props.isAnimated}
+                >
+                    {amount}
+                </Text>
+                <Text style={{ color: '#FFFFFF' }}>{` ${convertTo}`}</Text>
+            </Text>
+        );
+    }
 
     return (
         <Text

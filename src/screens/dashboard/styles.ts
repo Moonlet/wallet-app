@@ -41,7 +41,7 @@ export default (theme: ITheme) =>
         account: {
             fontSize: normalizeFontAndLineHeight(15),
             lineHeight: normalizeFontAndLineHeight(20),
-            color: theme.colors.text,
+            color: theme.colors.textSecondary,
             marginRight: BASE_DIMENSION
         },
         address: {
@@ -52,7 +52,7 @@ export default (theme: ITheme) =>
         mainText: {
             fontWeight: 'bold',
             letterSpacing: LETTER_SPACING,
-            color: theme.colors.textSecondary,
+            color: '#FFFFFF',
             marginRight: BASE_DIMENSION * 2
         },
         secondaryText: {
@@ -61,7 +61,8 @@ export default (theme: ITheme) =>
         },
         icon: {
             alignSelf: 'center',
-            color: theme.colors.accent,
-            fontWeight: 'bold'
+            color: theme.colors.textSecondary,
+            fontWeight: 'bold',
+            marginLeft: BASE_DIMENSION * 2
         }
     });

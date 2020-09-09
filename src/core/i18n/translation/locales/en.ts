@@ -379,14 +379,12 @@ export const translation: ITranslations = {
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',
-            checkTransactions: 'Check all your transactions',
             manageAccount: 'Manage account',
-            quicklyManage: 'Quickly edit, order or hide your accounts',
             connectExtension: 'Connect to extension',
-            scanCode: 'Scan the QR code on extension',
             scanPay: 'Scan to pay',
-            scanReceive: 'Scan and receive a transaction request',
-            switchWallets: 'Switch between the wallets anytime'
+            switchWallets: 'Switch between the wallets anytime',
+            connectedWebsites: 'Connected websites',
+            tokenSwap: 'Token swap (coming soon)'
         },
         BackupWallet: {
             title: 'Backup Wallet',

@@ -66,7 +66,7 @@ import {
 import { startNotificationsHandlers } from '../../notifications/actions';
 import { ApiClient } from '../../../core/utils/api-client/api-client';
 import { Client as NearClient } from '../../../core/blockchain/near/client';
-import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../core/constants/app';
+import { NEAR_ACCOUNT_EXTENSIONS } from '../../../core/constants/app';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -759,7 +759,7 @@ export const deleteAccount = (
     const chainId = getChainId(state, blockchain);
     const client = getBlockchain(blockchain).getClient(chainId) as NearClient;
 
-    await client.deleteNearAccount(accountId, NEAR_TESTNET_MASTER_ACCOUNT, privateKey);
+    await client.deleteNearAccount(accountId, NEAR_ACCOUNT_EXTENSIONS[chainId], privateKey);
 };
 
 export const createNearAccount = (name: string, extension: string, password: string) => async (

@@ -18,7 +18,7 @@ import {
     INavigationProps,
     withNavigationParams
 } from '../../../../navigation/with-navigation-params';
-import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../../core/constants/app';
+import { NEAR_ACCOUNT_EXTENSIONS } from '../../../../core/constants/app';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface INavigationParams {
@@ -101,7 +101,9 @@ export class CreateNearAccountComponent extends React.Component<
             const blockchainInstance = getBlockchain(Blockchain.NEAR);
             const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
 
-            const account = await client.getAccount(`${accountId}.${NEAR_TESTNET_MASTER_ACCOUNT}`);
+            const account = await client.getAccount(
+                `${accountId}.${NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]}`
+            );
 
             if (account.exists === false && account.valid === true) {
                 this.setState({
@@ -133,7 +135,7 @@ export class CreateNearAccountComponent extends React.Component<
             const password = await PasswordModal.getPassword();
             this.props.createNearAccount(
                 this.state.inputAccount,
-                NEAR_TESTNET_MASTER_ACCOUNT,
+                NEAR_ACCOUNT_EXTENSIONS[this.props.chainId],
                 password
             );
         } catch (err) {
@@ -181,7 +183,7 @@ export class CreateNearAccountComponent extends React.Component<
                                 />
 
                                 <Text style={styles.domain}>
-                                    {`.${NEAR_TESTNET_MASTER_ACCOUNT}`}
+                                    {`.${NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]}`}
                                 </Text>
                             </View>
 
@@ -203,7 +205,9 @@ export class CreateNearAccountComponent extends React.Component<
                                     ? translate('AddAccount.invalid')
                                     : this.state.isInputValid
                                     ? translate('CreateNearAccount.congrats', {
-                                          name: `${this.state.inputAccount}.${NEAR_TESTNET_MASTER_ACCOUNT}`
+                                          name: `${this.state.inputAccount}.${
+                                              NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]
+                                          }`
                                       })
                                     : ''}
                             </Text>

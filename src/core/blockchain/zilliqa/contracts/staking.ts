@@ -227,7 +227,7 @@ export class Staking {
             _tag: 'WithdrawStakeAmt',
             params: [
                 {
-                    vname: 'ssn',
+                    vname: 'ssnaddr',
                     type: 'ByStr20',
                     value: toAddress
                 },
@@ -280,7 +280,7 @@ export class Staking {
             _tag: 'WithdrawStakeRewards',
             params: [
                 {
-                    vname: 'ssn_operator',
+                    vname: 'ssnaddr',
                     type: 'ByStr20',
                     value: toAddress
                 }

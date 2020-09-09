@@ -144,6 +144,7 @@ export default (state: IWalletsState = intialState, action: IAction) => {
         }
 
         case TRANSACTION_PUBLISHED:
+            // console.log('reducer', TRANSACTION_PUBLISHED);
             const transaction: IBlockchainTransaction = {
                 ...action.data.tx,
                 id: action.data.hash

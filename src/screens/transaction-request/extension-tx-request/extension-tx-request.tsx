@@ -269,9 +269,32 @@ const renderContractDeployTransaction = (props: IProps, { showDetails, setShowDe
 };
 
 const renderSignMessage = (props: IProps) => {
+    const account = props.account;
+    const message = (props?.extensionTxPayload?.params || [])[0]?.message;
+    const from = formatAddress(account.address, account.blockchain);
+
     return (
-        <View>
-            <Text>SignMessage</Text>
+        <View style={{ flex: 1, paddingBottom: 100 }}>
+            <ScrollView style={props.styles.container}>
+                {renderField(props, translate('TransactionRequest.walletName'), props.walletName)}
+                {renderField(
+                    props,
+                    translate('TransactionRequest.accountName'),
+                    account?.name || `Account ${account.index + 1}`
+                )}
+                {renderField(props, translate('App.labels.from'), from)}
+
+                <Text large>{translate('App.labels.message')}</Text>
+                <Text darker style={{ fontVariant: ['tabular-nums'] }}>
+                    {message}
+                </Text>
+            </ScrollView>
+
+            <BottomCta
+                label={translate('App.labels.confirm')}
+                disabled={props.extensionTxPayload === undefined}
+                onPress={() => props.callback()}
+            ></BottomCta>
         </View>
     );
 };

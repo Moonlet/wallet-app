@@ -114,7 +114,7 @@ export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainT
             )
             .sort(
                 (tx1: IBlockchainTransaction, tx2: IBlockchainTransaction) =>
-                    tx2.date?.signed - tx1.date?.signed
+                    tx2.date?.created - tx1.date?.created
             );
     }
 };

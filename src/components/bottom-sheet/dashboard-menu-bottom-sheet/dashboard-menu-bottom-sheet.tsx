@@ -160,7 +160,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         onPress: () => this.manageWallets()
                     })}
 
-                    {Platform.OS !== 'web' &&
+                    {Platform.OS === 'web' &&
                         this.renderRow({
                             title: translate('Wallets.connectedWebsites'),
                             description: translate('Wallets.manageWebsites'),

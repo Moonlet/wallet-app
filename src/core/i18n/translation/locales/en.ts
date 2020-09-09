@@ -72,6 +72,7 @@ export const translation: ITranslations = {
                 locking: 'Locking',
                 low: 'Low',
                 maybeLater: 'Maybe later',
+                message: 'Message',
                 mnemonicNotValid: 'Your mnemonic is not valid!',
                 myVotes: 'My Votes',
                 myStakes: 'My Stakes',

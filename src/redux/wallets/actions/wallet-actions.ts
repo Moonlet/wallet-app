@@ -669,7 +669,6 @@ export const sendTransaction = (
             .getClient(tx.chainId)
             .sendTransaction(transaction);
         const txHash = txRes?.txHash;
-
         if (txHash) {
             dispatch({
                 type: TRANSACTION_PUBLISHED,

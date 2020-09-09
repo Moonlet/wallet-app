@@ -123,7 +123,7 @@ export class AccountConnectComp extends React.Component<
         const { styles, theme } = this.props;
 
         // TODO: maybe move this
-        const platformUrl = 'https://www.zilliqa.com/platform';
+        const platformUrl = this.props.request.origin;
 
         const blockchainPlatform = this.props.request.blockchain;
 

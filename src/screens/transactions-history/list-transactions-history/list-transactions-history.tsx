@@ -35,7 +35,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 : translate('App.labels.from').toLowerCase();
 
         const toAddress =
-            tx.token.type === TokenType.ZRC2 || tx.token.type === TokenType.ERC20
+            tx.token?.type === TokenType.ZRC2 || tx.token?.type === TokenType.ERC20
                 ? formatAddress(tx.data.params[0], account.blockchain)
                 : formatAddress(tx.toAddress, account.blockchain);
 
@@ -48,7 +48,7 @@ export class TransactionsHistoryListComponent extends React.Component<
         const blockchainInstance = getBlockchain(account.blockchain);
         const amount = blockchainInstance.transaction.getTransactionAmount(tx);
 
-        const date = new Date(tx.date.signed);
+        const date = new Date(tx.date.created);
 
         let txIcon: string;
         let txColor: string;
@@ -63,7 +63,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 const address = tx.address.toLowerCase();
                 let toAddress = tx.toAddress.toLowerCase();
 
-                if (tx.token.type === TokenType.ZRC2 || tx.token.type === TokenType.ERC20) {
+                if (tx.token?.type === TokenType.ZRC2 || tx.token?.type === TokenType.ERC20) {
                     toAddress = tx.data?.params && tx.data?.params[0];
                 }
 
@@ -87,7 +87,7 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         const coin = blockchainInstance.config.coin;
 
-        const txTokenConfig = getTokenConfig(tx.blockchain, tx?.token?.symbol);
+        const txTokenConfig = getTokenConfig(tx.blockchain, tx?.token?.symbol || coin);
 
         return (
             <TouchableOpacity

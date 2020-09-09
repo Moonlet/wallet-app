@@ -64,23 +64,26 @@ export class TransactionDetailsComponent extends React.Component<
         const transaction = this.props.transaction;
         const account = this.props.account;
 
-        const date = new Date(transaction.date.signed);
+        const date = new Date(transaction.date.created);
 
         const blockchainInstance = getBlockchain(account.blockchain);
         const coin = blockchainInstance.config.coin;
         const amount = blockchainInstance.transaction.getTransactionAmount(transaction);
 
-        const tokenConfig = getTokenConfig(account.blockchain, transaction?.token?.symbol);
+        const tokenConfig = getTokenConfig(account.blockchain, transaction?.token?.symbol || coin);
 
         const recipient =
-            transaction.token.type === TokenType.ZRC2 || transaction.token.type === TokenType.ERC20
+            transaction.token?.type === TokenType.ZRC2 ||
+            transaction.token?.type === TokenType.ERC20
                 ? formatAddress(transaction.data.params[0], account.blockchain)
                 : formatAddress(transaction.toAddress, account.blockchain);
 
-        const transactionType =
-            transaction.token.type === TokenType.ZRC2 || transaction.token.type === TokenType.ERC20
-                ? Capitalize(transaction.data.method)
-                : translate('App.labels.transfer');
+        const transactionType = translate(
+            `App.labels.${transaction.type
+                .split('_')
+                .map((v, i) => (i > 0 ? Capitalize(v) : v.toLowerCase()))
+                .join('')}`
+        );
 
         return (
             <View style={styles.container}>

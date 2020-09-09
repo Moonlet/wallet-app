@@ -133,7 +133,7 @@ export class StatsComponentInternal extends React.Component<
         const chart = (
             <View style={styles.chartView}>
                 {Platform.OS === 'web' ? (
-                    <View style={styles.dummyView}></View>
+                    <View style={styles.dummyView} />
                 ) : (
                     <Pie
                         ref={this.pie}
@@ -143,7 +143,7 @@ export class StatsComponentInternal extends React.Component<
                         innerRadius={25}
                         data={pieData}
                         animate
-                    ></Pie>
+                    />
                 )}
             </View>
         );
@@ -156,10 +156,12 @@ export class StatsComponentInternal extends React.Component<
                     <View style={styles.percentageSquareContainer}>
                         <View style={[styles.percentageSquare, { backgroundColor: item.color }]} />
                         <Text style={styles.percentageText}>
-                            {new BigNumber(item.data.value)
-                                .multipliedBy(100)
-                                .dividedBy(totalCount)
-                                .toFixed(2) + '%'}
+                            {totalCount.toFixed() === '0'
+                                ? 0 + '%'
+                                : new BigNumber(item.data.value)
+                                      .multipliedBy(100)
+                                      .dividedBy(totalCount)
+                                      .toFixed(2) + '%'}
                         </Text>
                     </View>
                 )}

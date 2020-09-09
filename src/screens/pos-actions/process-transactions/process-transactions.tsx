@@ -171,11 +171,6 @@ export class ProcessTransactionsComponent extends React.Component<
                 topText = translate('Validator.activatingVotes');
                 break;
             }
-            case PosBasicActionType.DEPOSIT: {
-                topText = translate('App.labels.deposit') + ' ' + amount;
-                middleText = translate('App.labels.to').toLowerCase() + ' ' + tx.toAddress;
-                break;
-            }
             case PosBasicActionType.WITHDRAW: {
                 topText = translate('App.labels.withdraw') + ' ' + amount;
                 middleText = translate('App.labels.from').toLowerCase() + ' ' + tx.toAddress;
@@ -311,7 +306,7 @@ export class ProcessTransactionsComponent extends React.Component<
                             this.props.closeProcessTransactions();
                         }}
                         wrapperStyle={styles.continueButton}
-                        disabled={this.state.disabledButton}
+                        disabled={this.props.transactions.length === 0 || this.state.disabledButton}
                     >
                         {translate('App.labels.continue')}
                     </Button>

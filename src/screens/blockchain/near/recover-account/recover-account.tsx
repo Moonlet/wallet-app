@@ -20,10 +20,10 @@ import { IWallet } from '../../../../core/wallet/types';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
-import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../../core/constants/app';
 import { LoadingModal } from '../../../../components/loading-modal/loading-modal';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { NearAccountType } from '../../../../core/blockchain/near/types';
 
 interface IReduxProps {
     chainId: ChainIdType;
@@ -40,7 +40,9 @@ interface IState {
     isUsernameNotAvailable: boolean;
     isInvalidUsername: boolean;
     isAuthorizing: boolean;
+    isNotSupported: boolean;
     recoveredAccount: IAccountState;
+    openWalletLoginUrl: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -76,7 +78,9 @@ export class RecoverNearAccountComponent extends React.Component<
             isUsernameNotAvailable: false,
             isInvalidUsername: false,
             isAuthorizing: false,
-            recoveredAccount: undefined
+            isNotSupported: false,
+            recoveredAccount: undefined,
+            openWalletLoginUrl: false
         };
     }
 
@@ -92,12 +96,13 @@ export class RecoverNearAccountComponent extends React.Component<
             recoveredAccount: undefined
         });
 
-        if (accountId.includes('.') || accountId.includes('@')) {
+        if (accountId.includes('@')) {
             this.setState({
                 isInputValid: false,
                 isInvalidUsername: true,
                 isUsernameNotRegistered: false,
                 isUsernameNotAvailable: false,
+                isNotSupported: false,
                 isChecking: false
             });
             return;
@@ -107,22 +112,35 @@ export class RecoverNearAccountComponent extends React.Component<
             const blockchainInstance = getBlockchain(Blockchain.NEAR);
             const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
 
-            const account = await client.getAccount(`${accountId}.${NEAR_TESTNET_MASTER_ACCOUNT}`);
+            const account = await client.getAccount(accountId);
 
             if (account.exists === true && account.valid === true) {
-                this.setState({
-                    isInputValid: true,
-                    isInvalidUsername: false,
-                    isUsernameNotRegistered: false,
-                    isUsernameNotAvailable: false,
-                    isChecking: false
-                });
+                if (account.type !== NearAccountType.DEFAULT) {
+                    this.setState({
+                        isInputValid: false,
+                        isInvalidUsername: false,
+                        isUsernameNotRegistered: false,
+                        isUsernameNotAvailable: false,
+                        isNotSupported: true,
+                        isChecking: false
+                    });
+                } else {
+                    this.setState({
+                        isInputValid: true,
+                        isInvalidUsername: false,
+                        isUsernameNotRegistered: false,
+                        isUsernameNotAvailable: false,
+                        isNotSupported: false,
+                        isChecking: false
+                    });
+                }
             } else if (account.exists === false && account.valid === true) {
                 this.setState({
                     isInputValid: false,
                     isInvalidUsername: false,
                     isUsernameNotRegistered: true,
                     isUsernameNotAvailable: false,
+                    isNotSupported: false,
                     isChecking: false
                 });
             } else {
@@ -131,6 +149,7 @@ export class RecoverNearAccountComponent extends React.Component<
                     isInvalidUsername: false,
                     isUsernameNotRegistered: false,
                     isUsernameNotAvailable: true,
+                    isNotSupported: false,
                     isChecking: false
                 });
             }
@@ -140,6 +159,7 @@ export class RecoverNearAccountComponent extends React.Component<
                 isInvalidUsername: false,
                 isUsernameNotRegistered: false,
                 isUsernameNotAvailable: true,
+                isNotSupported: false,
                 isChecking: false
             });
 
@@ -147,32 +167,47 @@ export class RecoverNearAccountComponent extends React.Component<
         }
     }
 
-    private startRecoveringAccount() {
-        const { recoveredAccount } = this.state;
+    private async startRecoveringAccount(options?: { shouldOpenWalletLoginUrl: boolean }) {
         const client = getBlockchain(Blockchain.NEAR).getClient(this.props.chainId) as NearClient;
+
+        await this.recoverAccount(client);
+
+        if (options?.shouldOpenWalletLoginUrl && this.state.openWalletLoginUrl) {
+            const url = getBlockchain(this.state.recoveredAccount.blockchain)
+                .networks.filter(n => n.chainId === this.props.chainId)[0]
+                .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
+
+            Linking.canOpenURL(url).then(supported => supported && Linking.openURL(url));
+        }
 
         clearInterval(this.startRecoveringAccountInterval);
         this.startRecoveringAccountInterval = setInterval(async () => {
-            const res = await client.viewAccountAccessKey(
-                recoveredAccount.address,
-                recoveredAccount.publicKey
-            );
-
-            if (res && (res?.permission || res?.nonce)) {
-                this.props.addAccount(
-                    this.props.selectedWallet.id,
-                    Blockchain.NEAR,
-                    recoveredAccount
-                );
-                this.props.setSelectedAccount(recoveredAccount);
-                NavigationService.navigate('Dashboard', {});
-            }
+            this.recoverAccount(client);
         }, 1000);
+    }
+
+    private async recoverAccount(client: NearClient) {
+        const { recoveredAccount } = this.state;
+
+        const res = await client.viewAccountAccessKey(
+            recoveredAccount.address,
+            recoveredAccount.publicKey
+        );
+
+        if (res && (res?.permission || res?.nonce)) {
+            this.props.addAccount(this.props.selectedWallet.id, Blockchain.NEAR, recoveredAccount);
+            this.props.setSelectedAccount(recoveredAccount);
+            NavigationService.navigate('Dashboard', {});
+        } else {
+            this.setState({ openWalletLoginUrl: true });
+        }
     }
 
     private async generatePublicKey() {
         try {
-            const password = await PasswordModal.getPassword();
+            const password = await PasswordModal.getPassword(undefined, undefined, {
+                showCloseButton: true
+            });
 
             await LoadingModal.open();
 
@@ -183,18 +218,19 @@ export class RecoverNearAccountComponent extends React.Component<
                 { pass: password }
             );
 
-            const numberOfAccounts = selectedWallet.accounts.filter(
-                acc => acc.blockchain === Blockchain.NEAR
-            ).length;
-
-            const accounts = await hdWallet.getAccounts(Blockchain.NEAR, numberOfAccounts);
+            const accounts = await hdWallet.getAccounts(Blockchain.NEAR, 0);
             const account = accounts[0];
 
             if (account) {
+                const numberOfAccounts = selectedWallet.accounts.filter(
+                    acc => acc.blockchain === Blockchain.NEAR
+                ).length;
+
                 this.setState({
                     recoveredAccount: {
                         ...account,
-                        address: `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`
+                        address: this.state.inputAccout,
+                        index: numberOfAccounts
                     }
                 });
             }
@@ -214,6 +250,7 @@ export class RecoverNearAccountComponent extends React.Component<
         const isInvalidUsername = this.state.isInvalidUsername && !this.state.isInputValid;
         const isUsernameNotAvailable =
             this.state.isUsernameNotAvailable && !this.state.isInputValid;
+        const isNotSupported = this.state.isNotSupported && !this.state.isInputValid;
         const isAuthorizing = this.state.isAuthorizing && this.state.isInputValid;
 
         const isCreateAccountActive = !isChecking && isUsernameNotRegistered;
@@ -250,10 +287,6 @@ export class RecoverNearAccountComponent extends React.Component<
                                         this.checkAccountId(inputAccout);
                                     }}
                                 />
-
-                                <Text
-                                    style={styles.domain}
-                                >{`.${NEAR_TESTNET_MASTER_ACCOUNT}`}</Text>
                             </View>
 
                             {!isAuthorizing && (
@@ -271,7 +304,8 @@ export class RecoverNearAccountComponent extends React.Component<
                                                 styles.infoText,
                                                 (isUsernameNotRegistered ||
                                                     isInvalidUsername ||
-                                                    isUsernameNotAvailable) &&
+                                                    isUsernameNotAvailable ||
+                                                    isNotSupported) &&
                                                     styles.errorText,
                                                 isChecking && styles.checkingText,
                                                 this.state.isInputValid && styles.congratsText
@@ -285,9 +319,11 @@ export class RecoverNearAccountComponent extends React.Component<
                                                 ? translate('AddAccount.invalid')
                                                 : isUsernameNotAvailable
                                                 ? translate('AddAccount.notAvailable')
+                                                : isNotSupported
+                                                ? translate('RecoverNearAccount.notSupported')
                                                 : this.state.isInputValid
                                                 ? translate('RecoverNearAccount.congrats', {
-                                                      name: `${this.state.inputAccout}.${NEAR_TESTNET_MASTER_ACCOUNT}`
+                                                      name: this.state.inputAccout
                                                   })
                                                 : ''}
                                         </Text>
@@ -349,15 +385,7 @@ export class RecoverNearAccountComponent extends React.Component<
                             if (this.state.recoveredAccount) {
                                 this.setState({ isAuthorizing: true });
 
-                                const url = getBlockchain(this.state.recoveredAccount.blockchain)
-                                    .networks.filter(n => n.chainId === this.props.chainId)[0]
-                                    .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
-
-                                Linking.canOpenURL(url).then(
-                                    supported => supported && Linking.openURL(url)
-                                );
-
-                                this.startRecoveringAccount();
+                                this.startRecoveringAccount({ shouldOpenWalletLoginUrl: true });
                             }
                         }}
                     >

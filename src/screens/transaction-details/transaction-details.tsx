@@ -84,8 +84,8 @@ export class TransactionDetailsComponent extends React.Component<
 
         // TODO - refactor this :)
         const transactionType =
-            transaction.additionalInfo?.actions && transaction.additionalInfo.actions[0]?.params
-                ? Capitalize(transaction.additionalInfo.actions[0]?.params[0])
+            transaction.additionalInfo && transaction.additionalInfo.posAction
+                ? Capitalize(transaction.additionalInfo.posAction)
                 : transaction.token.type === TokenType.ZRC2 ||
                   transaction.token.type === TokenType.ERC20 ||
                   transaction.type === TransactionType.CONTRACT_CALL

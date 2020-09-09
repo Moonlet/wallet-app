@@ -25,5 +25,8 @@ export enum AppStateStatus {
 
 export const CONN_EXT_RETRY_ATTEMPTS = 3;
 
-// TODO: move this to a config, maybe firebase?
-export const NEAR_TESTNET_MASTER_ACCOUNT = 'moonlet-test.testnet';
+// TODO: move this to a config, maybe firebase or db?
+export const NEAR_ACCOUNT_EXTENSIONS = {
+    mainnet: 'moonlet.near',
+    testnet: 'moonlet.testnet'
+};

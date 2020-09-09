@@ -17,7 +17,6 @@ import { INavigationProps } from '../../../../navigation/with-navigation-params'
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../../../core/blockchain/types';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import bind from 'bind-decorator';
 import { AccountTab } from './components/tabs/account-tab/account-tab';
 import { DelegationsTab } from './components/tabs/delegations-tab/delegations-tab';
 import { ValidatorsTab } from './components/tabs/validators-tab/validators-tab';
@@ -96,24 +95,31 @@ export class DelegateTokenScreenComponent extends React.Component<
                     this.props.activeTab ===
                     getBlockchain(this.props.blockchain).config.ui.token.labels.tabTransactions
                 ) {
-                    this.props.transactions?.map((transaction: IBlockchainTransaction) => {
-                        if (transaction.status === TransactionStatus.PENDING) {
-                            this.props.updateTransactionFromBlockchain(
-                                transaction.id,
-                                transaction.blockchain,
-                                transaction.chainId,
-                                transaction.broadcastedOnBlock
-                            );
-                        }
-                    });
+                    this.updateTransactionFromBlockchain();
                 }
             }
         });
     }
 
-    @bind
-    tabPressed(tab: string) {
+    private updateTransactionFromBlockchain() {
+        this.props.transactions?.map((transaction: IBlockchainTransaction) => {
+            if (transaction.status === TransactionStatus.PENDING) {
+                this.props.updateTransactionFromBlockchain(
+                    transaction.id,
+                    transaction.blockchain,
+                    transaction.chainId,
+                    transaction.broadcastedOnBlock
+                );
+            }
+        });
+    }
+
+    private tabPressed(tab: string) {
         this.setState({ activeTab: tab });
+
+        if (tab === getBlockchain(this.props.blockchain).config.ui.token.labels.tabTransactions) {
+            this.updateTransactionFromBlockchain();
+        }
     }
 
     private renderTabs() {

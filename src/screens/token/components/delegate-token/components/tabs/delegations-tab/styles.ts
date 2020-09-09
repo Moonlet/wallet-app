@@ -5,6 +5,7 @@ import {
     LETTER_SPACING
 } from '../../../../../../../styles/dimensions';
 import { ITheme } from '../../../../../../../core/theme/itheme';
+import { ph, pw } from '../../../../../../../styles';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -23,7 +24,6 @@ export default (theme: ITheme) =>
             marginTop: BASE_DIMENSION * 3,
             marginHorizontal: BASE_DIMENSION * 2
         },
-
         text: {
             fontWeight: 'bold',
             fontSize: normalizeFontAndLineHeight(22),
@@ -31,6 +31,18 @@ export default (theme: ITheme) =>
             textAlign: 'center',
             letterSpacing: LETTER_SPACING,
             color: theme.colors.text,
+            marginBottom: BASE_DIMENSION * 2
+        },
+        emptySection: {
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'center'
+        },
+        logoImage: {
+            height: ph(20),
+            width: pw(50),
+            alignSelf: 'center',
+            resizeMode: 'contain',
             marginBottom: BASE_DIMENSION * 2
         }
     });

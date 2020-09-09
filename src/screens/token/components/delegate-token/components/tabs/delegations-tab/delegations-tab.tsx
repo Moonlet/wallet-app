@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
@@ -100,6 +100,13 @@ export class DelegationsTabComponent extends React.Component<
                     </View>
                     {!this.state.myValidatorsLoaded ? (
                         <LoadingIndicator />
+                    ) : this.state.validatorsFilteredList.length === 0 ? (
+                        <View style={styles.emptySection}>
+                            <Image
+                                style={styles.logoImage}
+                                source={require('../../../../../../../assets/images/png/moonlet_space_gray.png')}
+                            />
+                        </View>
                     ) : (
                         <ValidatorsList
                             validators={this.state.validatorsFilteredList}

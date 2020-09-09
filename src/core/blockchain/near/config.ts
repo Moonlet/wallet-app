@@ -115,6 +115,7 @@ export const config: IBlockchainConfig = {
         displayName: 'NEAR'
     },
     networks: {
+        mainNet: 'mainnet',
         testNet: 'testnet'
     },
     defaultOrder: 2

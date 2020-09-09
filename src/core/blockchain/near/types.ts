@@ -25,10 +25,16 @@ export interface INearTransactionAdditionalInfoType {
     validatorName?: string;
 }
 
+export enum NearAccountType {
+    DEFAULT = 'DEFAULT',
+    CONTRACT = 'CONTRACT'
+}
+
 export interface INearAccount {
     address: string;
     name: string;
     amount: BigNumber;
     exists: boolean;
     valid: boolean;
+    type?: NearAccountType;
 }

@@ -8,7 +8,7 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { createNearAccount, addAccount } from '../../../../redux/wallets/actions';
+import { createNearAccount } from '../../../../redux/wallets/actions';
 import { IReduxState } from '../../../../redux/state';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { Client as NearClient } from '../../../../core/blockchain/near/client';
@@ -28,7 +28,6 @@ interface INavigationParams {
 interface IReduxProps {
     createNearAccount: typeof createNearAccount;
     chainId: ChainIdType;
-    addAccount: typeof addAccount;
 }
 
 interface IState {
@@ -46,8 +45,7 @@ const mapStateToProps = (state: IReduxState) => {
 };
 
 const mapDispatchToProps = {
-    createNearAccount,
-    addAccount
+    createNearAccount
 };
 
 const navigationOptions = () => ({ title: translate('CreateNearAccount.title') });

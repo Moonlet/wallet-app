@@ -131,40 +131,22 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                 for (const validator of tx.validators) {
                     const txDelegate: IPosTransaction = cloneDeep(tx);
-                    txDelegate.amount = splitAmount.toFixed(); // stake amount
+                    txDelegate.amount = splitAmount.toFixed();
 
                     const res = await new ApiClient().validators.getBalance(
                         tx.account,
                         client.chainId.toString()
                     );
 
-                    if (
-                        new BigNumber(txDelegate.amount).isGreaterThan(
-                            new BigNumber(res.balance.unstaked)
-                        )
-                    ) {
-                        const depositAmount = new BigNumber(txDelegate.amount).minus(
-                            new BigNumber(res.balance.unstaked)
-                        );
-
-                        txDelegate.extraFields.amount = depositAmount.toFixed(); // deposit amount
-
-                        // Deposit and stake
-                        const depositAndStakeTx: IBlockchainTransaction = await (client as NearClient).stakingPool.depositAndStake(
-                            txDelegate,
-                            validator
-                        );
-                        depositAndStakeTx.nonce = depositAndStakeTx.nonce + transactions.length;
-                        transactions.push(depositAndStakeTx);
-                    } else {
-                        // Stake
-                        const stakeTx: IBlockchainTransaction = await (client as NearClient).stakingPool.stake(
-                            txDelegate,
-                            validator
-                        );
-                        stakeTx.nonce = stakeTx.nonce + transactions.length;
-                        transactions.push(stakeTx);
-                    }
+                    // Stake
+                    const stakeTx: IBlockchainTransaction = await (client as NearClient).stakingPool.stake(
+                        txDelegate,
+                        validator,
+                        new BigNumber(txDelegate.amount).minus(new BigNumber(res.balance.unstaked))
+                        // Deposit amount
+                    );
+                    stakeTx.nonce = stakeTx.nonce + transactions.length;
+                    transactions.push(stakeTx);
                 }
                 break;
             }

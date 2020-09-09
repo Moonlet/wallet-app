@@ -171,11 +171,6 @@ export class ProcessTransactionsComponent extends React.Component<
                 topText = translate('Validator.activatingVotes');
                 break;
             }
-            case PosBasicActionType.DEPOSIT: {
-                topText = translate('App.labels.deposit') + ' ' + amount;
-                middleText = translate('App.labels.to').toLowerCase() + ' ' + tx.toAddress;
-                break;
-            }
             case PosBasicActionType.WITHDRAW: {
                 topText = translate('App.labels.withdraw') + ' ' + amount;
                 middleText = translate('App.labels.from').toLowerCase() + ' ' + tx.toAddress;

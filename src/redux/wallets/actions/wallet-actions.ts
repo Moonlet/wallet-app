@@ -793,11 +793,15 @@ export const createNearAccount = (name: string, extension: string, password: str
         const tx = res.result.data;
 
         if (tx.status && tx.status.SuccessValue === '') {
-            const numberOfAccounts = selectedWallet.accounts.filter(
-                acc => acc.blockchain === blockchain
-            ).length;
+            let index = -1;
 
-            account.index = numberOfAccounts;
+            for (const acc of selectedWallet.accounts) {
+                if (acc.blockchain === Blockchain.NEAR && acc.index >= index) {
+                    index = acc.index + 1;
+                }
+            }
+
+            account.index = index === -1 ? 0 : index;
             account.address = newAccountId;
             account.tokens[chainId][getBlockchain(blockchain).config.coin].balance = {
                 value: '0',

@@ -1,4 +1,3 @@
-import { Alert } from 'react-native';
 import { HDWallet } from '../../../core/wallet/hd-wallet/hd-wallet';
 import {
     Blockchain,
@@ -67,7 +66,7 @@ import {
 import { startNotificationsHandlers } from '../../notifications/actions';
 import { ApiClient } from '../../../core/utils/api-client/api-client';
 import { Client as NearClient } from '../../../core/blockchain/near/client';
-import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../core/constants/app';
+import { NEAR_ACCOUNT_EXTENSIONS } from '../../../core/constants/app';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -760,10 +759,10 @@ export const deleteAccount = (
     const chainId = getChainId(state, blockchain);
     const client = getBlockchain(blockchain).getClient(chainId) as NearClient;
 
-    await client.deleteNearAccount(accountId, NEAR_TESTNET_MASTER_ACCOUNT, privateKey);
+    await client.deleteNearAccount(accountId, NEAR_ACCOUNT_EXTENSIONS[chainId], privateKey);
 };
 
-export const createNearAccount = (newAccountId: string, password: string) => async (
+export const createNearAccount = (name: string, extension: string, password: string) => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
@@ -778,22 +777,27 @@ export const createNearAccount = (newAccountId: string, password: string) => asy
 
     const chainId = getChainId(state, blockchain);
 
-    const numberOfAccounts = selectedWallet.accounts.filter(acc => acc.blockchain === blockchain)
-        .length;
-
-    const accounts = await hdWallet.getAccounts(blockchain, numberOfAccounts);
+    const accounts = await hdWallet.getAccounts(blockchain, 0);
     const account = accounts[0];
 
     const res = await new ApiClient().near.createAccount(
-        newAccountId,
+        name,
+        extension,
         account.publicKey,
         String(chainId)
     );
+
+    const newAccountId = `${name}.${extension}`;
 
     if (res?.result?.data?.status) {
         const tx = res.result.data;
 
         if (tx.status && tx.status.SuccessValue === '') {
+            const numberOfAccounts = selectedWallet.accounts.filter(
+                acc => acc.blockchain === blockchain
+            ).length;
+
+            account.index = numberOfAccounts;
             account.address = newAccountId;
             account.tokens[chainId][getBlockchain(blockchain).config.coin].balance = {
                 value: '0',
@@ -806,7 +810,10 @@ export const createNearAccount = (newAccountId: string, password: string) => asy
 
             NavigationService.navigate('Dashboard', {});
         } else if (tx.status && tx.status.Failure) {
-            Alert.alert('Failed', 'Create account has failed!');
+            Dialog.info(
+                translate('CreateNearAccount.failed'),
+                translate('CreateNearAccount.tryAgain')
+            );
 
             SentryAddBreadcrumb({ message: JSON.stringify(tx) });
             SentryCaptureException(
@@ -817,7 +824,10 @@ export const createNearAccount = (newAccountId: string, password: string) => asy
                 )
             );
         } else {
-            Alert.alert('Invalid Status', 'Create account has failed!');
+            Dialog.info(
+                translate('CreateNearAccount.failed'),
+                translate('CreateNearAccount.tryAgain')
+            );
 
             SentryAddBreadcrumb({ message: JSON.stringify(tx) });
             SentryCaptureException(
@@ -829,7 +839,10 @@ export const createNearAccount = (newAccountId: string, password: string) => asy
             );
         }
     } else {
-        Alert.alert('Create account has failed!', res?.message || res?.errorMessage || '');
+        Dialog.info(
+            translate('CreateNearAccount.failed'),
+            res?.message || res?.errorMessage || translate('CreateNearAccount.tryAgain')
+        );
 
         SentryAddBreadcrumb({ message: JSON.stringify({ res, accountId: newAccountId }) });
         SentryCaptureException(

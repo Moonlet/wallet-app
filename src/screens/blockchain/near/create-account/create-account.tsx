@@ -8,7 +8,7 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
-import { createNearAccount, addAccount } from '../../../../redux/wallets/actions';
+import { createNearAccount } from '../../../../redux/wallets/actions';
 import { IReduxState } from '../../../../redux/state';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { Client as NearClient } from '../../../../core/blockchain/near/client';
@@ -18,7 +18,7 @@ import {
     INavigationProps,
     withNavigationParams
 } from '../../../../navigation/with-navigation-params';
-import { NEAR_TESTNET_MASTER_ACCOUNT } from '../../../../core/constants/app';
+import { NEAR_ACCOUNT_EXTENSIONS } from '../../../../core/constants/app';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface INavigationParams {
@@ -28,7 +28,6 @@ interface INavigationParams {
 interface IReduxProps {
     createNearAccount: typeof createNearAccount;
     chainId: ChainIdType;
-    addAccount: typeof addAccount;
 }
 
 interface IState {
@@ -46,8 +45,7 @@ const mapStateToProps = (state: IReduxState) => {
 };
 
 const mapDispatchToProps = {
-    createNearAccount,
-    addAccount
+    createNearAccount
 };
 
 const navigationOptions = () => ({ title: translate('CreateNearAccount.title') });
@@ -101,7 +99,9 @@ export class CreateNearAccountComponent extends React.Component<
             const blockchainInstance = getBlockchain(Blockchain.NEAR);
             const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
 
-            const account = await client.getAccount(`${accountId}.${NEAR_TESTNET_MASTER_ACCOUNT}`);
+            const account = await client.getAccount(
+                `${accountId}.${NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]}`
+            );
 
             if (account.exists === false && account.valid === true) {
                 this.setState({
@@ -132,7 +132,8 @@ export class CreateNearAccountComponent extends React.Component<
         try {
             const password = await PasswordModal.getPassword();
             this.props.createNearAccount(
-                `${this.state.inputAccount}.${NEAR_TESTNET_MASTER_ACCOUNT}`,
+                this.state.inputAccount,
+                NEAR_ACCOUNT_EXTENSIONS[this.props.chainId],
                 password
             );
         } catch (err) {
@@ -179,9 +180,9 @@ export class CreateNearAccountComponent extends React.Component<
                                     onChangeText={inputAccount => this.checkAccountId(inputAccount)}
                                 />
 
-                                <Text
-                                    style={styles.domain}
-                                >{`.${NEAR_TESTNET_MASTER_ACCOUNT}`}</Text>
+                                <Text style={styles.domain}>
+                                    {`.${NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]}`}
+                                </Text>
                             </View>
 
                             <Text
@@ -202,7 +203,9 @@ export class CreateNearAccountComponent extends React.Component<
                                     ? translate('AddAccount.invalid')
                                     : this.state.isInputValid
                                     ? translate('CreateNearAccount.congrats', {
-                                          name: `${this.state.inputAccount}.${NEAR_TESTNET_MASTER_ACCOUNT}`
+                                          name: `${this.state.inputAccount}.${
+                                              NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]
+                                          }`
                                       })
                                     : ''}
                             </Text>

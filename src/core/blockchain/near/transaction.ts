@@ -39,7 +39,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
 
                     case NearTransactionActionType.FUNCTION_CALL:
                         // @ts-ignore
-                        return functionCall(...tx.additionalInfo.actions[0].params);
+                        return functionCall(...action.params);
 
                     default:
                         return false;
@@ -127,37 +127,23 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
 
         switch (transactionType) {
             case PosBasicActionType.DELEGATE: {
+                const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
+
                 for (const validator of tx.validators) {
                     const txDelegate: IPosTransaction = cloneDeep(tx);
+                    txDelegate.amount = splitAmount.toFixed();
 
                     const res = await new ApiClient().validators.getBalance(
                         tx.account,
                         client.chainId.toString()
                     );
 
-                    if (
-                        new BigNumber(tx.amount).isGreaterThan(new BigNumber(res.balance.unstaked))
-                    ) {
-                        const depositAmount = new BigNumber(tx.amount).minus(
-                            new BigNumber(res.balance.unstaked)
-                        );
-
-                        // Deposit
-                        const depositTx: IBlockchainTransaction = await (client as NearClient).stakingPool.deposit(
-                            txDelegate,
-                            validator
-                        );
-
-                        depositTx.amount = depositAmount.toFixed();
-                        transactions.push(depositTx);
-                    } else {
-                        // no need to deposit
-                    }
-
                     // Stake
                     const stakeTx: IBlockchainTransaction = await (client as NearClient).stakingPool.stake(
                         txDelegate,
-                        validator
+                        validator,
+                        new BigNumber(txDelegate.amount).minus(new BigNumber(res.balance.unstaked))
+                        // Deposit amount
                     );
                     stakeTx.nonce = stakeTx.nonce + transactions.length;
                     transactions.push(stakeTx);

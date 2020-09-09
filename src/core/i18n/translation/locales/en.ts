@@ -420,7 +420,9 @@ export const translation: ITranslations = {
         CreateNearAccount: {
             title: 'Create account name',
             chooseAccountName: 'Choose an account name and you’re all set.',
-            congrats: 'Congrats! {{name}} is available.'
+            congrats: 'Congrats! {{name}} is available.',
+            failed: 'Create account has failed',
+            tryAgain: 'Try again!'
         },
         RecoverNearAccount: {
             title: 'Recover account name',
@@ -431,7 +433,8 @@ export const translation: ITranslations = {
             authProgress: 'Authorization in progress ...',
             notRegistered:
                 'Account name not registered. If you want to use it, you need first to create it.',
-            createHere: 'Create one here!'
+            createHere: 'Create one here!',
+            notSupported: 'Account name not supported yet. Try something else.'
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',

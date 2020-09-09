@@ -39,6 +39,5 @@ export enum PosBasicActionType {
     REINVEST = 'REINVEST',
     LOCK = 'LOCK',
     CREATE_ACCOUNT = 'CREATE_ACCOUNT',
-    DEPOSIT = 'DEPOSIT',
     STAKE = 'STAKE'
 }

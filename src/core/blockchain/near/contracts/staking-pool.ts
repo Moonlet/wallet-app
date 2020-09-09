@@ -8,42 +8,15 @@ import {
     NearFunctionCallMethods
 } from '../types';
 import BN from 'bn.js';
+import BigNumber from 'bignumber.js';
 
 const DEFAULT_FUNC_CALL_GAS = new BN('100000000000000');
 
 export class StakingPool {
-    public async deposit(
-        tx: IPosTransaction,
-        validator: IValidator
-    ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
-        const transaction: IBlockchainTransaction<INearTransactionAdditionalInfoType> = await buildBaseTransaction(
-            tx
-        );
-
-        transaction.toAddress = validator.id;
-        transaction.feeOptions = { feeTotal: DEFAULT_FUNC_CALL_GAS.toString() };
-
-        transaction.additionalInfo.posAction = PosBasicActionType.DEPOSIT;
-        transaction.additionalInfo.validatorName = validator.name;
-
-        transaction.additionalInfo.actions = [
-            {
-                type: NearTransactionActionType.FUNCTION_CALL,
-                params: [
-                    NearFunctionCallMethods.DEPOSIT,
-                    {},
-                    DEFAULT_FUNC_CALL_GAS,
-                    new BN(tx.amount)
-                ]
-            }
-        ];
-
-        return transaction;
-    }
-
     public async stake(
         tx: IPosTransaction,
-        validator: IValidator
+        validator: IValidator,
+        depositAmount: BigNumber
     ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const transaction = await buildBaseTransaction(tx);
 
@@ -64,6 +37,21 @@ export class StakingPool {
                 ]
             }
         ];
+
+        if (depositAmount.isGreaterThan(new BigNumber(0))) {
+            // DEPOSIT
+            transaction.additionalInfo.actions = [
+                {
+                    type: NearTransactionActionType.FUNCTION_CALL,
+                    params: [
+                        NearFunctionCallMethods.DEPOSIT,
+                        {},
+                        DEFAULT_FUNC_CALL_GAS,
+                        new BN(depositAmount.toFixed())
+                    ]
+                }
+            ].concat(transaction.additionalInfo.actions);
+        }
 
         return transaction;
     }

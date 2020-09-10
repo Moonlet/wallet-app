@@ -792,7 +792,7 @@ export const createNearAccount = (name: string, extension: string, password: str
     if (res?.result?.data?.status) {
         const tx = res.result.data;
 
-        if (tx.status && tx.status.SuccessValue === '') {
+        if (tx.status && tx.status.SuccessValue && tx.status.SuccessValue === '') {
             let newAccountIndex = -1;
 
             for (const acc of selectedWallet.accounts) {

@@ -8,7 +8,7 @@ import { Zilliqa } from '..';
 
 export const contracts = {
     '333': {
-        [Contracts.STAKING]: '0x312afa7be156e1e7f29677b1e51ebf0beee8e8c8'
+        [Contracts.STAKING]: 'zil1nu6rvj49ljjr5xwk0yjffuyu2sdz5a36vvzfc5'
     },
     '1': {}
 };
@@ -16,7 +16,7 @@ export const contracts = {
 export enum ContractFields {
     DEPOSIT_AMT_DELEG = 'deposit_amt_deleg',
     SSNLIST = 'ssnlist',
-    MINSTAKE = 'minstake',
+    MINDELEGATESTAKE = 'mindelegstake',
     LAST_WITHDRAW_CYCLE_DELEG = 'last_withdraw_cycle_deleg',
     LASTREWARDCYCLE = 'lastrewardcycle',
     LAST_BUF_DEPOSIT_CYCLE_DELEG = 'last_buf_deposit_cycle_deleg'

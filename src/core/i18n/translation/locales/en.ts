@@ -262,6 +262,7 @@ export const translation: ITranslations = {
             recipientNotValid: 'Recipient address is invalid',
             genericError: 'Operation could not be completed. Check internet connection',
             insufficientFunds: 'Insufficient funds',
+            mimimumAmount: 'Minimum amount is {{value}} {{coin}}',
             insufficientFundsFees: 'Insufficient funds for fees',
             receipientWarning: 'Warning: recipient address is not checksumed',
             allBalance: 'All balance: ',

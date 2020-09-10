@@ -315,8 +315,8 @@ export class SettingsScreenComponent extends React.Component<
                 >
                     {Platform.OS !== 'web' && this.renderSecuritySection()}
                     {Platform.OS !== 'web' && this.renderSetupSection()}
-                    {this.renderSupportSection()}
                     {Platform.OS !== 'web' && this.renderToolsSection()}
+                    {this.renderSupportSection()}
                     {this.renderAboutSection()}
                     {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
                         <TouchableOpacity

@@ -155,7 +155,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         })}
                 </ScrollView>
 
-                {/* TODO: move this */}
+                {/* TODO: move this - implement smart scan */}
                 {/* <QrModalReader
                     obRef={ref => (this.qrCodeScanner = ref)}
                     onQrCodeScanned={value => {

@@ -222,15 +222,19 @@ export class RecoverNearAccountComponent extends React.Component<
             const account = accounts[0];
 
             if (account) {
-                const numberOfAccounts = selectedWallet.accounts.filter(
-                    acc => acc.blockchain === Blockchain.NEAR
-                ).length;
+                let recoveredAccountIndex = -1;
+
+                for (const acc of selectedWallet.accounts) {
+                    if (acc.blockchain === Blockchain.NEAR && acc.index >= recoveredAccountIndex) {
+                        recoveredAccountIndex = acc.index + 1;
+                    }
+                }
 
                 this.setState({
                     recoveredAccount: {
                         ...account,
                         address: this.state.inputAccout,
-                        index: numberOfAccounts
+                        index: recoveredAccountIndex === -1 ? 0 : recoveredAccountIndex
                     }
                 });
             }

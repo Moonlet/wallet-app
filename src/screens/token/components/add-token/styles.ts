@@ -4,7 +4,8 @@ import {
     BASE_DIMENSION,
     SCREEN_HEIGHT,
     normalizeFontAndLineHeight,
-    LETTER_SPACING
+    LETTER_SPACING,
+    normalize
 } from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -28,5 +29,31 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(16),
             lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary
+        },
+
+        // Swipeable left actions
+        leftActionsContainer: {
+            flexDirection: 'row'
+        },
+        action: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: normalize(72)
+        },
+        iconActionPositive: {
+            height: normalize(40),
+            color: theme.colors.accent
+        },
+        iconActionNegative: {
+            height: normalize(40),
+            color: theme.colors.error
+        },
+        textActionPositive: {
+            fontSize: normalizeFontAndLineHeight(10),
+            color: theme.colors.accent
+        },
+        textActionNegative: {
+            fontSize: normalizeFontAndLineHeight(10),
+            color: theme.colors.error
         }
     });

@@ -231,7 +231,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                         );
                     })}
 
-                    {Platform.OS !== 'web' && blockchainConfig.ui.enableAccountCreation && (
+                    {Platform.OS !== 'web' && (
                         <ListAccount
                             leftIcon={blockchainConfig.iconComponent}
                             isCreate

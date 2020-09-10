@@ -56,7 +56,7 @@ export const TokenDashboardComponent = (
                 {renderCard({
                     title: translate('Account.manageAccounts'),
                     icon: IconValues.PENCIL,
-                    onPress: () => NavigationService.navigate('ManageAccount', {})
+                    onPress: () => NavigationService.navigate('ManageAccounts', {})
                 })}
                 {renderCard({
                     title: translate('DashboardMenu.transactionHistory'),

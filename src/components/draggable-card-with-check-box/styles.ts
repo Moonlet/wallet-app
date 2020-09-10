@@ -19,11 +19,10 @@ export default (theme: ITheme) =>
             paddingVertical: BASE_DIMENSION * 2,
             borderWidth: 2,
             borderColor: theme.colors.cardBackground,
-            backgroundColor: theme.colors.appBackground
+            backgroundColor: theme.colors.cardBackground
         },
         containerActive: {
-            borderColor: theme.colors.accentSecondary,
-            backgroundColor: theme.colors.cardBackground
+            borderColor: theme.colors.accentSecondary
         },
         imageIcon: {
             marginLeft: BASE_DIMENSION,

@@ -22,7 +22,6 @@ import {
 } from '../../redux/wallets/selectors';
 import { Blockchain } from '../../core/blockchain/types';
 import { IAccountState } from '../../redux/wallets/state';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 const ACCOUNT_CARD_HEIGHT = normalize(100);
 const ACCOUNT_CARD_MARGINS = normalize(60);
@@ -68,10 +67,6 @@ export class BottomSheetComponent extends React.Component<
     }
 
     public render() {
-        const enableAccountCreation =
-            this.props.selectedAccount &&
-            getBlockchain(this.props.selectedAccount.blockchain).config.ui.enableAccountCreation;
-
         switch (this.props.bottomSheet?.type) {
             case BottomSheetType.ACCOUNTS:
                 return (
@@ -88,10 +83,7 @@ export class BottomSheetComponent extends React.Component<
                                 bottomSheetHeight:
                                     Platform.OS === 'web'
                                         ? HEIGHT_THREE_QUARTERS_SCREEN
-                                        : enableAccountCreation
-                                        ? ACCOUNT_CARD_HEIGHT * (this.props.accounts.length + 1) +
-                                          ACCOUNT_CARD_MARGINS
-                                        : ACCOUNT_CARD_HEIGHT * this.props.accounts.length +
+                                        : ACCOUNT_CARD_HEIGHT * (this.props.accounts.length + 1) +
                                           ACCOUNT_CARD_MARGINS
                             }}
                             onClose={this.handleClose}

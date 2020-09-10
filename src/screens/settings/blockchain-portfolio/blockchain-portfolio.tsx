@@ -61,22 +61,31 @@ export class BlockchainPortfolioComponent extends React.Component<
             <DraggableCardWithCheckbox
                 mainText={item.key}
                 isActive={item.value.active}
-                onPressCheckBox={() => {
-                    if (!networkAvailable) {
-                        Dialog.info(
-                            translate('Settings.networkNotAvailable'),
-                            translate('Settings.switchNetwork')
-                        );
-                    } else {
-                        if (item.value.active === true && this.props.nrActiveBlockchains === 1) {
+                checkBox={{
+                    visible: true,
+                    onPress: () => {
+                        if (!networkAvailable) {
                             Dialog.info(
-                                translate('App.labels.warning'),
-                                translate('Settings.cannotDeactivateAllBlockchains')
+                                translate('Settings.networkNotAvailable'),
+                                translate('Settings.switchNetwork')
                             );
-                        } else this.props.setBlockchainActive(item.key, !item.value.active);
+                        } else {
+                            if (
+                                item.value.active === true &&
+                                this.props.nrActiveBlockchains === 1
+                            ) {
+                                Dialog.info(
+                                    translate('App.labels.warning'),
+                                    translate('Settings.cannotDeactivateAllBlockchains')
+                                );
+                            } else this.props.setBlockchainActive(item.key, !item.value.active);
+                        }
                     }
                 }}
-                onLongPress={move}
+                draggable={{
+                    visible: true,
+                    onPress: move
+                }}
                 imageIcon={{ iconComponent: BlockchainIcon }}
                 extraData={{
                     networkAvailable

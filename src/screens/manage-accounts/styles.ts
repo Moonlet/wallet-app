@@ -64,6 +64,35 @@ export default (theme: ITheme) =>
             marginLeft: BASE_DIMENSION
         },
 
+        firstRow: {
+            flexDirection: 'row',
+            marginBottom: BASE_DIMENSION / 4,
+            width: '100%'
+        },
+        accountName: {
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
+            fontWeight: '500',
+            letterSpacing: LETTER_SPACING,
+            color: theme.colors.text,
+            marginRight: BASE_DIMENSION
+        },
+        accountAddress: {
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
+            fontWeight: '500',
+            letterSpacing: LETTER_SPACING,
+            color: theme.colors.accent,
+            flexShrink: 1
+        },
+        fistAmountText: {
+            color: theme.colors.textSecondary
+        },
+        secondAmountText: {
+            marginLeft: BASE_DIMENSION,
+            color: theme.colors.textSecondary
+        },
+
         // Swipeable left actions
         leftActionsContainer: {
             flexDirection: 'row'

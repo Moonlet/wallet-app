@@ -351,8 +351,8 @@ export const translation: ITranslations = {
             mainnetTestnet: 'Mainnet/Testnet',
             deviceId: 'Device ID',
             copied: 'Device ID copied!',
-            blockchainHasNoNetwork:
-                'Network not availble. Please switch network to activate blockchain',
+            networkNotAvailable: 'Network not available',
+            switchNetwork: 'Please switch network to activate blockchain',
             cannotDeactivateAllBlockchains: 'You cannot deactivate all active blockchains',
             changePin: 'Change PIN',
             successChangePin: 'PIN has been changed!'
@@ -375,11 +375,10 @@ export const translation: ITranslations = {
             noTransactions: 'No transactions available',
             transactionHistory:
                 'Transaction history will appear here once you start to send tokens to other accounts',
-            manageAccount: 'Manage account'
+            manageAccounts: 'Manage accounts'
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',
-            manageAccount: 'Manage account',
             connectExtension: 'Connect to extension',
             scanPay: 'Scan to pay',
             switchWallets: 'Switch between the wallets anytime',

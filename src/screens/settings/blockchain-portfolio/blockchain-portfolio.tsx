@@ -1,11 +1,9 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { INavigationProps } from '../../../navigation/with-navigation-params';
-import { Text } from '../../../library';
 import { IReduxState } from '../../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
-import { Icon } from '../../../components/icon/icon';
 import { smartConnect } from '../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../../core/i18n';
@@ -20,9 +18,7 @@ import {
     getNrActiveBlockchains
 } from '../../../redux/preferences/selectors';
 import { Dialog } from '../../../components/dialog/dialog';
-import { BASE_DIMENSION, normalize } from '../../../styles/dimensions';
-import { SmartImage } from '../../../library/image/smart-image';
-import { IconValues } from '../../../components/icon/values';
+import { DraggableCardWithCheckbox } from '../../../components/draggable-card-with-check-box/draggable-card-with-check-box';
 
 export interface IReduxProps {
     blockchains: [{ key: Blockchain; value: IBlockchainOptions }];
@@ -54,87 +50,38 @@ export class BlockchainPortfolioComponent extends React.Component<
 > {
     public static navigationOptions = navigationOptions;
 
-    constructor(
-        props: INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
-    ) {
-        super(props);
-    }
-
-    public renderBlockchain(
+    private renderBlockchain(
         item: { key: Blockchain; value: IBlockchainOptions },
-        move: () => void,
-        isActive: boolean
+        move: () => void
     ) {
-        const { styles, theme } = this.props;
-
         const networkAvailable = hasNetwork(item.key, this.props.testNet);
-
         const BlockchainIcon = getBlockchain(item.key).config.iconComponent;
 
         return (
-            <View
-                style={[
-                    styles.rowContainer,
-                    {
-                        borderColor:
-                            item.value.active && networkAvailable
-                                ? theme.colors.accentSecondary
-                                : theme.colors.cardBackground,
-                        backgroundColor: isActive
-                            ? theme.colors.appBackground
-                            : theme.colors.cardBackground
+            <DraggableCardWithCheckbox
+                mainText={item.key}
+                isActive={item.value.active}
+                onPressCheckBox={() => {
+                    if (!networkAvailable) {
+                        Dialog.info(
+                            translate('Settings.networkNotAvailable'),
+                            translate('Settings.switchNetwork')
+                        );
+                    } else {
+                        if (item.value.active === true && this.props.nrActiveBlockchains === 1) {
+                            Dialog.info(
+                                translate('App.labels.warning'),
+                                translate('Settings.cannotDeactivateAllBlockchains')
+                            );
+                        } else this.props.setBlockchainActive(item.key, !item.value.active);
                     }
-                ]}
-            >
-                <View style={styles.infoContainer}>
-                    <SmartImage
-                        source={{ iconComponent: BlockchainIcon }}
-                        style={{ marginHorizontal: BASE_DIMENSION }}
-                    />
-                    <Text style={styles.blockchainName}>{item.key}</Text>
-                </View>
-                <TouchableOpacity
-                    style={styles.iconContainer}
-                    onPressOut={() => {
-                        if (!networkAvailable) {
-                            Dialog.info(translate('Settings.blockchainHasNoNetwork'), '');
-                        } else {
-                            if (
-                                item.value.active === true &&
-                                this.props.nrActiveBlockchains === 1
-                            ) {
-                                Dialog.info(
-                                    translate('Settings.cannotDeactivateAllBlockchains'),
-                                    ''
-                                );
-                            } else this.props.setBlockchainActive(item.key, !item.value.active);
-                        }
-                    }}
-                >
-                    <Icon
-                        size={normalize(18)}
-                        name={
-                            item.value.active && networkAvailable
-                                ? IconValues.CHECK_BOX_THICKED
-                                : IconValues.CHECK_BOX
-                        }
-                        style={[
-                            {
-                                color: item.value.active
-                                    ? theme.colors.accent
-                                    : theme.colors.textSecondary
-                            }
-                        ]}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconContainer} onLongPress={move}>
-                    <Icon
-                        size={normalize(18)}
-                        name={IconValues.NAVIGATION_MENU}
-                        style={styles.menuIcon}
-                    />
-                </TouchableOpacity>
-            </View>
+                }}
+                onLongPress={move}
+                imageIcon={{ iconComponent: BlockchainIcon }}
+                extraData={{
+                    networkAvailable
+                }}
+            />
         );
     }
 
@@ -145,9 +92,7 @@ export class BlockchainPortfolioComponent extends React.Component<
             <View style={styles.container}>
                 <DraggableFlatList
                     data={this.props.blockchains}
-                    renderItem={({ item, drag, isActive }) =>
-                        this.renderBlockchain(item, drag, isActive)
-                    }
+                    renderItem={({ item, drag }) => this.renderBlockchain(item, drag)}
                     keyExtractor={(item: { key: Blockchain; value: IBlockchainOptions }) =>
                         `${item.key}`
                     }

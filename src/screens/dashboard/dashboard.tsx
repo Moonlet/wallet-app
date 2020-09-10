@@ -146,11 +146,8 @@ const navigationOptions = ({ navigation, theme }: any) => ({
         <View style={{ flexDirection: 'row' }}>
             <TouchableOpacity
                 testID="wallets-icon"
-                // testID="dashboard-menu-icon"
                 style={{ width: ICON_CONTAINER_SIZE }}
-                onPress={() => {
-                    // navigation.state.params.setDashboardMenuBottomSheet();
-                }}
+                onPress={() => navigation.navigate('Wallets')}
             >
                 <Icon
                     name={IconValues.MONEY_WALLET}

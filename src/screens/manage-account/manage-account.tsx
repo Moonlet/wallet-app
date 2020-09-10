@@ -10,8 +10,7 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { translate } from '../../core/i18n';
 import DraggableFlatList from 'react-native-draggable-flatlist';
-import { ICON_SIZE, BASE_DIMENSION, normalize } from '../../styles/dimensions';
-import { themes } from '../../navigation/navigation';
+import { normalize } from '../../styles/dimensions';
 import { getSelectedAccount, getSelectedWallet } from '../../redux/wallets/selectors';
 import { IAccountState, IWalletState, ITokenState } from '../../redux/wallets/state';
 import { Amount } from '../../components/amount/amount';
@@ -20,7 +19,6 @@ import {
     updateTokenOrder,
     removeTokenFromAccount
 } from '../../redux/wallets/actions';
-import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { SmartImage } from '../../library/image/smart-image';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
@@ -70,22 +68,7 @@ const mapStateToProps = (state: IReduxState) => {
 };
 
 export const navigationOptions = ({ navigation, theme }: any) => ({
-    title: translate('Account.manageAccount'),
-
-    headerRight: navigation.state.params?.blockchain &&
-        getBlockchain(navigation.state.params.blockchain).config.ui.enableTokenManagement && (
-            <TouchableOpacity testID="add-icon" onPress={() => navigation.navigate('ManageToken')}>
-                <Icon
-                    name={IconValues.ADD}
-                    size={ICON_SIZE}
-                    style={{
-                        color: themes[theme].colors.accent,
-                        alignSelf: 'center',
-                        marginRight: BASE_DIMENSION * 2
-                    }}
-                />
-            </TouchableOpacity>
-        )
+    title: translate('Account.manageAccounts')
 });
 
 export class ManageAccountComponent extends React.Component<

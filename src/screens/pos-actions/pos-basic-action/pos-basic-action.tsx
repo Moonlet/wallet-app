@@ -302,9 +302,11 @@ export class PosBasicActionComponent extends React.Component<
                         activeBalance
                     )}
                     value={this.state.amount}
+                    insufficientMinimumAmount={false}
                     insufficientFunds={this.state.insufficientFunds}
                     token={this.props.token}
                     account={this.props.account}
+                    minimumAmount={'0.001'}
                     onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions

@@ -55,6 +55,7 @@ const mapDispatchToProps = {
 
 interface IState {
     amount: string;
+    minimumDelegateAmount: BigNumber;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -90,7 +91,9 @@ export class RedelegateEnterAmountComponent extends React.Component<
             : '0';
 
         const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+
         this.state = {
+            minimumDelegateAmount: undefined,
             amount: blockchainInstance.account
                 .amountFromStd(new BigNumber(amountFromValidator), tokenConfig.decimals)
                 .toFixed()
@@ -99,6 +102,19 @@ export class RedelegateEnterAmountComponent extends React.Component<
 
     public async componentDidMount() {
         this.props.navigation.setParams({ actionText: this.props.actionText });
+        const blockchainInstance = getBlockchain(this.props.account.blockchain);
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+        const response = await blockchainInstance
+            .getClient(this.props.chainId)
+            .getMinimumAmountDelegate();
+
+        const minimumDelegateAmountValue = blockchainInstance.account.amountFromStd(
+            new BigNumber(response),
+            tokenConfig.decimals
+        );
+        this.setState({
+            minimumDelegateAmount: minimumDelegateAmountValue || new BigNumber(0)
+        });
     }
 
     @bind
@@ -130,6 +146,7 @@ export class RedelegateEnterAmountComponent extends React.Component<
                 bottomActionText={'App.labels.from'}
                 bottomButtonText={'App.labels.next'}
                 showSteps={true}
+                minimumDelegateAmount={this.state.minimumDelegateAmount}
                 onPressNext={this.onPressNext}
             />
         );

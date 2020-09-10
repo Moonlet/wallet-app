@@ -45,6 +45,7 @@ export interface IProps {
     showSteps: boolean;
     fromValidator?: IValidator;
     balanceForDelegate: string;
+    minimumDelegateAmount: BigNumber;
     onPressNext(amount: string, feeOptions: IFeeOptions): void;
 }
 
@@ -52,6 +53,7 @@ interface IState {
     headerSteps: IHeaderStep[];
     amount: string;
     insufficientFunds: boolean;
+    insufficientMinimumAmount: boolean;
     feeOptions: IFeeOptions;
     insufficientFundsFees: boolean;
 }
@@ -80,7 +82,8 @@ export class EnterAmountComponentComponent extends React.Component<
             amount: '',
             insufficientFunds: false,
             feeOptions: undefined,
-            insufficientFundsFees: false
+            insufficientFundsFees: false,
+            insufficientMinimumAmount: false
         };
     }
 
@@ -93,7 +96,8 @@ export class EnterAmountComponentComponent extends React.Component<
             this.state.insufficientFunds ||
             this.state.insufficientFundsFees ||
             isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
-            isNaN(Number(this.state.feeOptions?.gasPrice))
+            isNaN(Number(this.state.feeOptions?.gasPrice)) ||
+            this.state.insufficientMinimumAmount
         )
             disableButton = true;
 
@@ -167,7 +171,15 @@ export class EnterAmountComponentComponent extends React.Component<
                 this.state.feeOptions
             );
 
-            this.setState({ insufficientFunds, insufficientFundsFees });
+            let insufficientMinimumAmount = false;
+
+            if (
+                this.props.minimumDelegateAmount &&
+                new BigNumber(this.props.minimumDelegateAmount).isGreaterThan(amount)
+            )
+                insufficientMinimumAmount = true;
+
+            this.setState({ insufficientFunds, insufficientFundsFees, insufficientMinimumAmount });
         });
     }
 
@@ -185,8 +197,14 @@ export class EnterAmountComponentComponent extends React.Component<
                     )}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}
+                    insufficientMinimumAmount={this.state.insufficientMinimumAmount}
                     token={this.props.token}
                     account={this.props.account}
+                    minimumAmount={
+                        this.props.minimumDelegateAmount
+                            ? this.props.minimumDelegateAmount.toString()
+                            : '0'
+                    }
                     onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions
@@ -208,7 +226,6 @@ export class EnterAmountComponentComponent extends React.Component<
 
     public render() {
         const { styles, showSteps } = this.props;
-
         return (
             <View style={styles.container}>
                 <TestnetBadge />

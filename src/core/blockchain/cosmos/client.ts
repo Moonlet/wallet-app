@@ -103,4 +103,8 @@ export class Client extends BlockchainGenericClient {
             feeTotal
         };
     }
+
+    public async getMinimumAmountDelegate(): Promise<BigNumber> {
+        return new BigNumber(0);
+    }
 }

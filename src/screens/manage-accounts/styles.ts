@@ -6,17 +6,18 @@ import {
     ICON_CONTAINER_SIZE,
     normalize,
     normalizeFontAndLineHeight,
-    LETTER_SPACING
+    LETTER_SPACING,
+    SCREEN_HEIGHT
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
+            backgroundColor: theme.colors.appBackground,
+            paddingVertical: BASE_DIMENSION * 6,
             paddingHorizontal: BASE_DIMENSION * 2,
-            paddingVertical: BASE_DIMENSION * 3,
-            flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground
+            height: SCREEN_HEIGHT
         },
         rowContainer: {
             flex: 1,

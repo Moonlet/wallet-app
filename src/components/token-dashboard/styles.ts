@@ -34,5 +34,8 @@ export default (theme: ITheme) =>
         icon: {
             alignSelf: 'center',
             color: theme.colors.textSecondary
+        },
+        quickActionCardContainer: {
+            marginTop: BASE_DIMENSION
         }
     });

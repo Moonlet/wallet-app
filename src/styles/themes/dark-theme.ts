@@ -20,6 +20,8 @@ export const darkTheme: ITheme = {
         textTertiary: COLORS.DIM_GRAY,
 
         positive: COLORS.HOT_GREEN,
+        positiveSecondary: COLORS.LIME_GREEN,
+
         negative: COLORS.HOT_RED,
         error: COLORS.LIGHT_RED,
         warning: COLORS.YELLOW,

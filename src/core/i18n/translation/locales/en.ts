@@ -547,6 +547,15 @@ export const translation: ITranslations = {
             title: 'Create or recover\nan account name!',
             recoverAccount: 'Recover account name',
             createAccount: 'Create account name'
+        },
+        QuickActionCard: {
+            mainText: {
+                ZILLIQA: 'Stake now!',
+                CELO: 'Vote now!',
+                NEAR: 'Stake now!',
+                COSMOS: 'Delegate now!'
+            },
+            availableAmount: 'you got {{amount}} available'
         }
     },
     plural: (n: number, ord?: boolean) => {

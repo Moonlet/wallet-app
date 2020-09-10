@@ -17,6 +17,8 @@ export interface ITheme {
         textTertiary: string;
 
         positive: string;
+        positiveSecondary: string;
+
         negative: string;
         error: string;
         warning: string;

@@ -340,6 +340,10 @@ export const translation: ITranslations = {
         Watch: {
             newSection: 'A new section to watch accounts is in the work.'
         },
+        SmartScan: {
+            title: 'Smart scan',
+            newSection: 'A new section of smart scannig is in the work.'
+        },
         Settings: {
             appVersion: 'Application version',
             backupWallet: 'Backup wallet',

@@ -403,8 +403,10 @@ export class SendScreenComponent extends React.Component<
                         this.props.token,
                         this.state.feeOptions
                     )}
+                    minimumAmount={'0'}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}
+                    insufficientMinimumAmount={false}
                     token={this.props.token}
                     account={this.props.account}
                     onChange={amount => this.addAmount(amount)}

@@ -24,6 +24,9 @@ export default (theme: ITheme) =>
         containerActive: {
             borderColor: theme.colors.accentSecondary
         },
+        containerDragging: {
+            backgroundColor: theme.colors.appBackground
+        },
         imageIcon: {
             marginLeft: BASE_DIMENSION,
             marginEnd: BASE_DIMENSION * 2

@@ -52,7 +52,8 @@ export class BlockchainPortfolioComponent extends React.Component<
 
     private renderBlockchain(
         item: { key: Blockchain; value: IBlockchainOptions },
-        move: () => void
+        move: () => void,
+        isActive: boolean
     ) {
         const networkAvailable = hasNetwork(item.key, this.props.testNet);
         const BlockchainIcon = getBlockchain(item.key).config.iconComponent;
@@ -84,7 +85,8 @@ export class BlockchainPortfolioComponent extends React.Component<
                 }}
                 draggable={{
                     visible: true,
-                    onPress: move
+                    onPress: move,
+                    isDragging: isActive
                 }}
                 imageIcon={{ iconComponent: BlockchainIcon }}
                 extraData={{
@@ -101,7 +103,9 @@ export class BlockchainPortfolioComponent extends React.Component<
             <View style={styles.container}>
                 <DraggableFlatList
                     data={this.props.blockchains}
-                    renderItem={({ item, drag }) => this.renderBlockchain(item, drag)}
+                    renderItem={({ item, drag, isActive }) =>
+                        this.renderBlockchain(item, drag, isActive)
+                    }
                     keyExtractor={(item: { key: Blockchain; value: IBlockchainOptions }) =>
                         `${item.key}`
                     }

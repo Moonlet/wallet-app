@@ -117,7 +117,11 @@ export class AddTokenScreenComponent extends React.Component<
         );
     }
 
-    public renderToken(item: { key: string; value: ITokenState }, drag: () => void) {
+    public renderToken(
+        item: { key: string; value: ITokenState },
+        drag: () => void,
+        isActive: boolean
+    ) {
         const { styles } = this.props;
 
         const token = item.value;
@@ -167,7 +171,8 @@ export class AddTokenScreenComponent extends React.Component<
                     }}
                     draggable={{
                         visible: true,
-                        onPress: drag
+                        onPress: drag,
+                        isDragging: isActive
                     }}
                     imageIcon={tokenConfig.icon}
                 />
@@ -183,7 +188,9 @@ export class AddTokenScreenComponent extends React.Component<
                 <View style={{ flex: 1 }}>
                     <DraggableFlatList
                         data={this.props.tokens}
-                        renderItem={({ item, drag }) => this.renderToken(item, drag)}
+                        renderItem={({ item, drag, isActive }) =>
+                            this.renderToken(item, drag, isActive)
+                        }
                         keyExtractor={(item: { key: string; value: ITokenState }) =>
                             `token-${
                                 getTokenConfig(this.props.account.blockchain, item.value.symbol)

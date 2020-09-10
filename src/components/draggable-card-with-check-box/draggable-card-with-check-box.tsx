@@ -21,6 +21,7 @@ export interface IExternalProps {
     draggable?: {
         visible: boolean;
         onPress?: () => void;
+        isDragging?: boolean;
     };
     imageIcon: ITokenIcon;
     extraData?: {
@@ -60,7 +61,13 @@ export const DraggableCardWithCheckboxComponent = (
     }
 
     return (
-        <View style={[styles.container, props.isActive && styles.containerActive]}>
+        <View
+            style={[
+                styles.container,
+                props.isActive && styles.containerActive,
+                props?.draggable?.isDragging && styles.containerDragging
+            ]}
+        >
             <View style={styles.infoContainer}>
                 <SmartImage source={props.imageIcon} style={styles.imageIcon} />
                 <View style={styles.textContainer}>

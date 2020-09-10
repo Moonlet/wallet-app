@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform, TouchableHighlight } from 'react-native';
+import { View, Platform, TouchableHighlight, ScrollView } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -14,7 +14,7 @@ import { Blockchain } from '../../../core/blockchain/types';
 import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
-import { ScrollView } from 'react-native-gesture-handler';
+import { QrModalReader } from '../../qr-modal/qr-modal';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
 import { IconValues } from '../../icon/values';
 
@@ -147,6 +147,14 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             onPress: () => this.addToken()
                         })}
 
+                    {/* TODO: move this - implement smart scan */}
+                    {Platform.OS !== 'web' &&
+                        this.renderRow({
+                            title: translate('DashboardMenu.scanPay'),
+                            iconName: IconValues.QR_CODE_SCAN,
+                            onPress: () => this.qrCodeScanner.open()
+                        })}
+
                     {Platform.OS === 'web' &&
                         this.renderRow({
                             title: translate('DashboardMenu.connectedWebsites'),
@@ -156,13 +164,13 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                 </ScrollView>
 
                 {/* TODO: move this - implement smart scan */}
-                {/* <QrModalReader
+                <QrModalReader
                     obRef={ref => (this.qrCodeScanner = ref)}
                     onQrCodeScanned={value => {
                         this.props.onClose();
                         this.props.openTransactionRequest({ qrCode: value });
                     }}
-                /> */}
+                />
             </View>
         );
     }

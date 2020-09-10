@@ -21,8 +21,10 @@ import { getChainId } from '../../redux/preferences/selectors';
 import { IExchangeRates } from '../../redux/market/state';
 import { ChainIdType } from '../../core/blockchain/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { NavigationService } from '../../navigation/navigation-service';
 
 interface IReduxProps {
+    selectedAccount: IAccountState;
     exchangeRates: IExchangeRates;
     accounts: IAccountState[];
     chainId: ChainIdType;
@@ -32,6 +34,7 @@ const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
 
     return {
+        selectedAccount,
         accounts: selectedAccount ? getAccounts(state, selectedAccount.blockchain) : [],
         exchangeRates: state.market.exchangeRates,
         chainId: getChainId(state, selectedAccount.blockchain)
@@ -105,10 +108,11 @@ export class ManageAccountsComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
+
         return (
             <View style={styles.container}>
                 <ScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
+                    contentContainerStyle={{ flexGrow: 1, paddingBottom: BASE_DIMENSION * 2 }}
                     showsVerticalScrollIndicator={false}
                 >
                     {this.props.accounts.map((account: IAccountState) =>
@@ -118,10 +122,15 @@ export class ManageAccountsComponent extends React.Component<
                 <Button
                     primary
                     onPress={() => {
-                        // TODO
+                        // TODO: update this based on blockchain
+                        NavigationService.navigate('AddNearAccount', {});
                     }}
                     wrapperStyle={{ marginHorizontal: BASE_DIMENSION * 2 }}
-                    disabled={true}
+                    disabled={
+                        this.props.accounts.length ===
+                        getBlockchain(this.props.selectedAccount.blockchain).config.ui
+                            .maxAccountsNumber
+                    }
                 >
                     {translate('AddAccount.title')}
                 </Button>

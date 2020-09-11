@@ -262,7 +262,7 @@ export class RecoverNearAccountComponent extends React.Component<
         return (
             <View style={styles.container}>
                 <KeyboardAwareScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
+                    contentContainerStyle={styles.scrollContainer}
                     showsVerticalScrollIndicator={false}
                     alwaysBounceVertical={false}
                 >

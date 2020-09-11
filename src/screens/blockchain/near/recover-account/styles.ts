@@ -11,7 +11,10 @@ export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: theme.colors.appBackground,
+            backgroundColor: theme.colors.appBackground
+        },
+        scrollContainer: {
+            flexGrow: 1,
             paddingHorizontal: BASE_DIMENSION * 2,
             paddingBottom: BASE_DIMENSION * 7
         },

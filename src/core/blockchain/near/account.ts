@@ -11,6 +11,8 @@ import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
 
 export class NearAccountUtils implements IBlockchainAccountUtils {
     public getAccountDerivationPath(accountIndex: number): string {
+        // all accounts are created / recovered using the first public-private key pair
+        accountIndex = 0;
         return `${accountIndex}'`;
     }
 

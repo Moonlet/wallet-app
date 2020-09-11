@@ -19,9 +19,15 @@ export const AddNearAccountComponent = (props: IThemeProps<ReturnType<typeof sty
 
             <Text style={[styles.title, Platform.OS === 'web' && styles.titleWeb]}>
                 {Platform.OS === 'web'
-                    ? translate('AddNearAccount.openMobile')
+                    ? translate('AddNearAccount.noAccounts')
                     : translate('AddNearAccount.title')}
             </Text>
+
+            {Platform.OS === 'web' && (
+                <Text style={styles.subtitleWeb}>
+                    {translate('AddNearAccount.enableSectionWeb')}
+                </Text>
+            )}
 
             {Platform.OS !== 'web' && (
                 <Button

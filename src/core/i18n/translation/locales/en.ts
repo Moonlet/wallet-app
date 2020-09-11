@@ -549,7 +549,9 @@ export const translation: ITranslations = {
             title: 'Create or recover\nan account name!',
             recoverAccount: 'Recover account name',
             createAccount: 'Create account name',
-            openMobile: 'This section will be enabled once you create an account from mobile app.'
+            noAccounts: 'No accounts name available',
+            enableSectionWeb:
+                'This section will be enabled once you create an account name from mobile app.'
         },
         QuickDelegateBanner: {
             mainText: {

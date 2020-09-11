@@ -32,6 +32,12 @@ export const QuickDelegateBannerComponent = (
     const { styles } = props;
 
     const blockchainConfig = getBlockchain(props.blockchain);
+
+    if (!props.account) {
+        // account is not setup
+        return null;
+    }
+
     const token: ITokenState = props.account.tokens[props.chainId][blockchainConfig.config.coin];
     const tokenConfig = getTokenConfig(props.blockchain, token.symbol);
 

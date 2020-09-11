@@ -16,7 +16,7 @@ import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { NavigationService } from '../../navigation/navigation-service';
-import { QuickDelegateBanner } from '../quick-action-card/quick-action-card';
+import { QuickDelegateBanner } from '../quick-delegate-banner/quick-delegate-banner';
 
 interface IExternalProps {
     blockchain: Blockchain;

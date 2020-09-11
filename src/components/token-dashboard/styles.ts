@@ -35,7 +35,7 @@ export default (theme: ITheme) =>
             alignSelf: 'center',
             color: theme.colors.textSecondary
         },
-        quickActionCardContainer: {
+        quickDelegateBannerContainer: {
             marginTop: BASE_DIMENSION
         }
     });

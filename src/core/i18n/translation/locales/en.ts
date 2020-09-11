@@ -548,7 +548,7 @@ export const translation: ITranslations = {
             recoverAccount: 'Recover account name',
             createAccount: 'Create account name'
         },
-        QuickActionCard: {
+        QuickDelegateBanner: {
             mainText: {
                 ZILLIQA: 'Stake now!',
                 CELO: 'Vote now!',

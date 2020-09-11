@@ -16,7 +16,7 @@ import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { NavigationService } from '../../navigation/navigation-service';
-import { QuickActionCard } from '../quick-action-card/quick-action-card';
+import { QuickDelegateBanner } from '../quick-action-card/quick-action-card';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -92,11 +92,11 @@ export const TokenDashboardComponent = (
                             )
                     )}
 
-                <QuickActionCard
+                <QuickDelegateBanner
                     blockchain={props.blockchain}
                     account={props.account}
                     chainId={props.chainId}
-                    style={props.styles.quickActionCardContainer}
+                    style={props.styles.quickDelegateBannerContainer}
                 />
             </View>
         </View>

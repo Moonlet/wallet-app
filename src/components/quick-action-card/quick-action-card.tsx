@@ -26,7 +26,7 @@ interface IExternalProps {
     style?: any;
 }
 
-export const QuickActionCardComponent = (
+export const QuickDelegateBannerComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     const { styles } = props;
@@ -64,10 +64,10 @@ export const QuickActionCardComponent = (
                     <View style={[styles.container, props?.style]}>
                         <View style={styles.textContainer}>
                             <Text style={styles.mainText}>
-                                {translate(`QuickActionCard.mainText.${props.blockchain}`)}
+                                {translate(`QuickDelegateBanner.mainText.${props.blockchain}`)}
                             </Text>
                             <Text style={styles.secondaryText}>
-                                {translate('QuickActionCard.availableAmount', {
+                                {translate('QuickDelegateBanner.availableAmount', {
                                     amount: formatAmount
                                 })}
                             </Text>
@@ -80,6 +80,6 @@ export const QuickActionCardComponent = (
     } else return null;
 };
 
-export const QuickActionCard = smartConnect<IExternalProps>(QuickActionCardComponent, [
+export const QuickDelegateBanner = smartConnect<IExternalProps>(QuickDelegateBannerComponent, [
     withTheme(stylesProvider)
 ]);

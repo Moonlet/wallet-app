@@ -29,6 +29,14 @@ export default (theme: ITheme) =>
             textAlign: 'center',
             marginBottom: BASE_DIMENSION * 6
         },
+        titleWeb: {
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(21),
+            fontWeight: 'bold',
+            letterSpacing: LETTER_SPACING,
+            textAlign: 'center',
+            paddingHorizontal: BASE_DIMENSION * 2
+        },
         recoverButton: {
             marginBottom: BASE_DIMENSION * 3
         }

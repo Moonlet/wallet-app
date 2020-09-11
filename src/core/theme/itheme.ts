@@ -38,5 +38,8 @@ export interface ITheme {
         labelUndelegate: string;
         labelRedelegate: string;
         labelReward: string;
+
+        black: string;
+        white: string;
     };
 }

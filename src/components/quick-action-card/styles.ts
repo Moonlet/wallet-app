@@ -24,16 +24,16 @@ export default (theme: ITheme) =>
         mainText: {
             fontSize: normalizeFontAndLineHeight(34),
             lineHeight: normalizeFontAndLineHeight(41),
-            color: '#FFFFFF',
+            color: theme.colors.white,
             letterSpacing: LETTER_SPACING
         },
         secondaryText: {
             fontSize: normalizeFontAndLineHeight(15),
             lineHeight: normalizeFontAndLineHeight(20),
-            color: '#FFFFFF'
+            color: theme.colors.white
         },
         icon: {
-            color: '#FFFFFF',
+            color: theme.colors.white,
             alignSelf: 'center'
         }
     });

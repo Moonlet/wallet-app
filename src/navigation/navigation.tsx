@@ -295,7 +295,7 @@ export const SettingsNavigation = createStackNavigator(
     }
 );
 
-// TODO
+// TODO: refactor this to create Smart Scan
 export const ScanNavigation = createStackNavigator(
     {
         SmartScan: {

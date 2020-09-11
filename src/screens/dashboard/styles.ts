@@ -52,7 +52,7 @@ export default (theme: ITheme) =>
         mainText: {
             fontWeight: 'bold',
             letterSpacing: LETTER_SPACING,
-            color: '#FFFFFF',
+            color: theme.colors.white,
             marginRight: BASE_DIMENSION * 2
         },
         secondaryText: {

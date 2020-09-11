@@ -35,7 +35,7 @@ export default (theme: ITheme) =>
         title: {
             fontSize: normalizeFontAndLineHeight(17),
             lineHeight: normalizeFontAndLineHeight(22),
-            color: '#FFFFFF',
+            color: theme.colors.white,
             fontWeight: '600',
             alignSelf: 'center'
         },

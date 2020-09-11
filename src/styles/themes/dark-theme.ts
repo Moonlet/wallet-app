@@ -40,6 +40,9 @@ export const darkTheme: ITheme = {
 
         labelUndelegate: COLORS.LIGHT_RED,
         labelRedelegate: COLORS.HOT_RED,
-        labelReward: COLORS.GREEN
+        labelReward: COLORS.GREEN,
+
+        white: COLORS.WHITE,
+        black: COLORS.BLACK
     }
 };

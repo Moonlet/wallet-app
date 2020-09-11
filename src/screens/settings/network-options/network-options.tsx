@@ -68,12 +68,6 @@ export class NetworkOptionsComponent extends React.Component<
                 {networksOptions &&
                     Object.keys(networksOptions).map((blockchain: Blockchain, index: number) => {
                         if (
-                            blockchain === Blockchain.NEAR &&
-                            isFeatureActive(RemoteFeature.NEAR) === false
-                        ) {
-                            return <View key={index} />;
-                        }
-                        if (
                             blockchain === Blockchain.COSMOS &&
                             isFeatureActive(RemoteFeature.COSMOS) === false
                         ) {

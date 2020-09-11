@@ -1,4 +1,5 @@
 export interface IAppConfig {
+    walletApiBaseUrl: string;
     supportUrl: string;
     env: string;
     tokensUrl: string;

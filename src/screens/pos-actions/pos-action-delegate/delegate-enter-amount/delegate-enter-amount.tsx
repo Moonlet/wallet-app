@@ -18,6 +18,9 @@ import {
 } from '../../../../redux/ui/screens/posActions/actions';
 import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
 import bind from 'bind-decorator';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
+import BigNumber from 'bignumber.js';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -50,9 +53,7 @@ const mapDispatchToProps = {
 
 interface IState {
     amount: string;
-    insufficientFunds: boolean;
-    feeOptions: IFeeOptions;
-    insufficientFundsFees: boolean;
+    minimumDelegateAmount: BigNumber;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -82,15 +83,41 @@ export class DelegateEnterAmountComponent extends React.Component<
         });
 
         this.state = {
-            amount: '',
-            insufficientFunds: false,
-            feeOptions: undefined,
-            insufficientFundsFees: false
+            amount: undefined,
+            minimumDelegateAmount: undefined
         };
     }
 
-    public componentDidMount() {
+    public async componentDidMount() {
         this.props.navigation.setParams({ actionText: this.props.actionText });
+
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+
+        try {
+            const data = await blockchainInstance
+                .getStats(this.props.chainId)
+                .getAvailableBalanceForDelegate(this.props.account);
+
+            const response = await blockchainInstance
+                .getClient(this.props.chainId)
+                .getMinimumAmountDelegate();
+
+            const minimumDelegateAmountValue = blockchainInstance.account.amountFromStd(
+                new BigNumber(response),
+                tokenConfig.decimals
+            );
+
+            this.setState({
+                amount: blockchainInstance.account
+                    .amountFromStd(new BigNumber(data), tokenConfig.decimals)
+                    .toFixed(),
+                minimumDelegateAmount: minimumDelegateAmountValue || new BigNumber(0)
+            });
+        } catch (err) {
+            this.setState({ amount: this.props.token.balance.value }); // set balance to the available balance at least
+            SentryCaptureException(new Error(JSON.stringify(err)));
+        }
     }
 
     @bind
@@ -114,12 +141,14 @@ export class DelegateEnterAmountComponent extends React.Component<
                 account={this.props.account}
                 chainId={this.props.chainId}
                 token={this.props.token}
+                balanceForDelegate={this.state.amount}
                 validators={this.props.validators}
                 actionText={this.props.actionText}
                 bottomColor={this.props.theme.colors.accent}
                 bottomActionText={'App.labels.for'}
                 bottomButtonText={'App.labels.next'}
                 showSteps={true}
+                minimumDelegateAmount={this.state.minimumDelegateAmount}
                 onPressNext={this.onPressNext}
             />
         );

@@ -20,6 +20,8 @@ export const darkTheme: ITheme = {
         textTertiary: COLORS.DIM_GRAY,
 
         positive: COLORS.HOT_GREEN,
+        positiveSecondary: COLORS.LIME_GREEN,
+
         negative: COLORS.HOT_RED,
         error: COLORS.LIGHT_RED,
         warning: COLORS.YELLOW,
@@ -38,6 +40,9 @@ export const darkTheme: ITheme = {
 
         labelUndelegate: COLORS.LIGHT_RED,
         labelRedelegate: COLORS.HOT_RED,
-        labelReward: COLORS.GREEN
+        labelReward: COLORS.GREEN,
+
+        white: COLORS.WHITE,
+        black: COLORS.BLACK
     }
 };

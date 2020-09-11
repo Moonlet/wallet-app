@@ -37,15 +37,11 @@ export const TokenCardComponent = (
                 style={{ marginTop: props.index === 0 ? 0 : BASE_DIMENSION }}
                 underlayColor={props.theme.colors.appBackground}
                 onPress={() => {
-                    NavigationService.navigate(
-                        'Token',
-                        {
-                            accountIndex: props.account.index,
-                            blockchain: props.account.blockchain,
-                            token: props.token
-                        },
-                        'TokenScreen-key'
-                    );
+                    NavigationService.navigate('Token', {
+                        accountIndex: props.account.index,
+                        blockchain: props.account.blockchain,
+                        token: props.token
+                    });
                 }}
             >
                 <View style={props.styles.container}>

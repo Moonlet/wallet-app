@@ -11,10 +11,17 @@ import {
 } from '../../../../../../core/blockchain/types/stats';
 import Pie from '../../../../../../library/pie-chart/pie-chart';
 import BigNumber from 'bignumber.js';
+import { Blockchain } from '../../../../../../core/blockchain/types';
+import { getBlockchain } from '../../../../../../core/blockchain/blockchain-factory';
+import { ITokenState } from '../../../../../../redux/wallets/state';
+import { getTokenConfig } from '../../../../../../redux/tokens/static-selectors';
+import { formatNumber } from '../../../../../../core/utils/format-number';
 // TODO - fork and move ART library(will be removed in the future warning) to react-native-comunity OR add library within project
 
 export interface IProps {
     accountStats: AccountStats;
+    blockchain: Blockchain;
+    token: ITokenState;
 }
 
 export class StatsComponentInternal extends React.Component<
@@ -29,18 +36,25 @@ export class StatsComponentInternal extends React.Component<
         switch (stat.type) {
             case IStatValueType.STRING:
                 return stat.data.value;
-            case IStatValueType.AMOUNT:
-                return stat.data.value + ' ' + stat.data.tokenSymbol; // TODO format text based on blockchain
+            case IStatValueType.AMOUNT: {
+                const tokenConfig = getTokenConfig(
+                    stat.data.blockchain as Blockchain,
+                    stat.data.tokenSymbol
+                );
+                const blockchainInstance = getBlockchain(stat.data.blockchain as Blockchain);
+
+                const amountFromStd = blockchainInstance.account.amountFromStd(
+                    new BigNumber(stat.data.value),
+                    tokenConfig.decimals
+                );
+                return formatNumber(new BigNumber(amountFromStd), {
+                    currency: blockchainInstance.config.coin,
+                    maximumFractionDigits: 4
+                });
+            }
         }
     }
-    getValue(stat: IStatValue) {
-        switch (stat.type) {
-            case IStatValueType.STRING:
-                return stat.data.value;
-            case IStatValueType.AMOUNT:
-                return stat.data.value;
-        }
-    }
+
     renderTopStats() {
         const styles = this.props.styles;
         return this.props.accountStats.topStats.map((stat: IStatValue, i: number) => (
@@ -119,7 +133,7 @@ export class StatsComponentInternal extends React.Component<
         const chart = (
             <View style={styles.chartView}>
                 {Platform.OS === 'web' ? (
-                    <View style={styles.dummyView}></View>
+                    <View style={styles.dummyView} />
                 ) : (
                     <Pie
                         ref={this.pie}
@@ -129,7 +143,7 @@ export class StatsComponentInternal extends React.Component<
                         innerRadius={25}
                         data={pieData}
                         animate
-                    ></Pie>
+                    />
                 )}
             </View>
         );
@@ -142,14 +156,17 @@ export class StatsComponentInternal extends React.Component<
                     <View style={styles.percentageSquareContainer}>
                         <View style={[styles.percentageSquare, { backgroundColor: item.color }]} />
                         <Text style={styles.percentageText}>
-                            {new BigNumber(item.data.value)
-                                .multipliedBy(100)
-                                .dividedBy(totalCount)
-                                .toFixed(2) + '%'}
+                            {totalCount.toFixed() === '0'
+                                ? 0 + '%'
+                                : new BigNumber(item.data.value)
+                                      .multipliedBy(100)
+                                      .dividedBy(totalCount)
+                                      .toFixed(2) + '%'}
                         </Text>
                     </View>
                 )}
                 numColumns={2}
+                columnWrapperStyle={{ justifyContent: 'space-between' }}
             />
         );
 
@@ -173,7 +190,9 @@ export class StatsComponentInternal extends React.Component<
 
         return (
             <View style={styles.container}>
-                <View style={styles.topStatsContainer}>{this.renderTopStats()}</View>
+                {this.props.accountStats.topStats.length > 0 && (
+                    <View style={styles.topStatsContainer}>{this.renderTopStats()}</View>
+                )}
                 <View style={styles.chartRowContainer}>{this.renderChartStats()}</View>
             </View>
         );

@@ -13,7 +13,9 @@ import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
 import { ITokenState } from '../../../../../../../redux/wallets/state';
-import { moonletValidator } from '../../../../../../../core/blockchain/celo/stats';
+import { IReduxState } from '../../../../../../../redux/state';
+import { getValidators } from '../../../../../../../redux/ui/validators/selectors';
+import { connect } from 'react-redux';
 
 export interface IProps {
     accountIndex: number;
@@ -22,40 +24,40 @@ export interface IProps {
     chainId: ChainIdType;
 }
 
+export interface IReduxProps {
+    validators: IValidator[];
+}
+
+export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
+    return {
+        validators: getValidators(state, ownProps.blockchain, ownProps.chainId)
+    };
+};
+
 interface IState {
     validatorsFilteredList: IValidator[];
     unfilteredList: IValidator[];
 }
-let searchTimeoutTimer;
 
 export class ValidatorsTabComponent extends React.Component<
-    IProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    constructor(props: IProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    private searchTimeoutTimer;
+
+    constructor(props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
         this.state = {
-            validatorsFilteredList: [],
-            unfilteredList: []
+            validatorsFilteredList: this.props.validators || [],
+            unfilteredList: this.props.validators || []
         };
-    }
-
-    public componentDidMount() {
-        const blockchainInstance = getBlockchain(this.props.blockchain);
-        blockchainInstance
-            .getStats(this.props.chainId)
-            .getValidatorList(CardActionType.NAVIGATE, -1)
-            .then(validators => {
-                this.setState({ validatorsFilteredList: validators, unfilteredList: validators });
-            })
-            .catch();
     }
 
     @bind
     public onSearchInput(text: string) {
-        searchTimeoutTimer && clearTimeout(searchTimeoutTimer);
-        searchTimeoutTimer = setTimeout(async () => {
+        this.searchTimeoutTimer && clearTimeout(this.searchTimeoutTimer);
+        this.searchTimeoutTimer = setTimeout(async () => {
             const filteredList = this.state.unfilteredList.filter(
                 validator => validator.name.toLowerCase().includes(text.toLowerCase()) === true
             );
@@ -96,6 +98,7 @@ export class ValidatorsTabComponent extends React.Component<
                     <ValidatorsList
                         validators={this.state.validatorsFilteredList}
                         blockchain={this.props.blockchain}
+                        token={this.props.token}
                         onSelect={this.onSelect}
                         actionType={CardActionType.NAVIGATE}
                     />
@@ -107,7 +110,7 @@ export class ValidatorsTabComponent extends React.Component<
                             accountIndex: this.props.accountIndex,
                             blockchain: this.props.blockchain,
                             token: this.props.token,
-                            validators: [moonletValidator]
+                            validators: []
                         }}
                     />
                 </View>
@@ -117,5 +120,6 @@ export class ValidatorsTabComponent extends React.Component<
 }
 
 export const ValidatorsTab = smartConnect<IProps>(ValidatorsTabComponent, [
+    connect(mapStateToProps, null),
     withTheme(stylesProvider)
 ]);

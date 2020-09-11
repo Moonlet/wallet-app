@@ -15,6 +15,8 @@ export const COLORS = {
     GUN_POWDER_GRAY: '#4E4E53', // input background
 
     HOT_GREEN: '#00E676',
+    LIME_GREEN: '#27AE60',
+
     HOT_RED: '#E91E63',
     LIGHT_RED: '#FFAB91',
     YELLOW: '#F2C94C',

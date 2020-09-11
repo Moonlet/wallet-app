@@ -29,7 +29,7 @@ export default (theme: ITheme) =>
         },
         qrCode: {
             padding: BASE_DIMENSION * 2,
-            backgroundColor: '#FFFFFF'
+            color: theme.colors.white
         },
         bottomButton: {
             marginHorizontal: BASE_DIMENSION * 2,

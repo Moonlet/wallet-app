@@ -93,7 +93,7 @@ export class SettingsScreenComponent extends React.Component<
             });
     }
 
-    public reportIssueTouch() {
+    private reportIssueTouch() {
         openURL(CONFIG.supportUrl);
     }
 
@@ -122,7 +122,7 @@ export class SettingsScreenComponent extends React.Component<
         );
     }
 
-    public renderSecuritySection() {
+    private renderSecuritySection() {
         const { styles, navigation, theme } = this.props;
 
         return (
@@ -205,7 +205,7 @@ export class SettingsScreenComponent extends React.Component<
         );
     }
 
-    public renderSetupSection() {
+    private renderSetupSection() {
         const { styles, navigation } = this.props;
 
         return (
@@ -223,7 +223,7 @@ export class SettingsScreenComponent extends React.Component<
         );
     }
 
-    public renderSupportSection() {
+    private renderSupportSection() {
         const { styles } = this.props;
 
         return (
@@ -237,7 +237,7 @@ export class SettingsScreenComponent extends React.Component<
         );
     }
 
-    public renderToolsSection() {
+    private renderToolsSection() {
         const { styles, navigation } = this.props;
 
         return (
@@ -247,11 +247,15 @@ export class SettingsScreenComponent extends React.Component<
                 {this.renderRow(translate('Settings.mainnetTestnet'), () =>
                     navigation.navigate('NetworkOptions')
                 )}
+
+                {this.renderRow(translate('ConnectExtension.title'), () =>
+                    navigation.navigate('ConnectExtension')
+                )}
             </View>
         );
     }
 
-    public renderAboutSection() {
+    private renderAboutSection() {
         const { styles, navigation } = this.props;
 
         return (
@@ -311,8 +315,8 @@ export class SettingsScreenComponent extends React.Component<
                 >
                     {Platform.OS !== 'web' && this.renderSecuritySection()}
                     {Platform.OS !== 'web' && this.renderSetupSection()}
-                    {this.renderSupportSection()}
                     {Platform.OS !== 'web' && this.renderToolsSection()}
+                    {this.renderSupportSection()}
                     {this.renderAboutSection()}
                     {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
                         <TouchableOpacity

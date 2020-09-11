@@ -10,6 +10,7 @@ export const translation: ITranslations = {
                 account: 'Account',
                 accounts: 'Accounts',
                 activate: 'Activate',
+                add: 'Add',
                 addToken: 'Add token',
                 advanced: 'Advanced',
                 advancedSetup: 'Advanced setup',
@@ -18,11 +19,13 @@ export const translation: ITranslations = {
                 average: 'Average',
                 balance: 'Balance',
                 cancel: 'Cancel',
+                canceled: 'Canceled',
                 cheap: 'Cheap',
                 check: 'Check',
                 close: 'Close',
                 claim: 'Claim',
                 claimReward: 'Claim reward',
+                claimingRewards: 'Claiming rewards',
                 comingSoon: 'Coming soon!',
                 confirm: 'Confirm',
                 confirmPayment: 'Confirm payment',
@@ -40,8 +43,10 @@ export const translation: ITranslations = {
                 delegate: 'Delegate',
                 delegations: 'Delegations',
                 delete: 'Delete',
+                deposit: 'Deposit',
                 details: 'Details',
                 disconnect: 'Sign out',
+                dropped: 'Dropped',
                 enterAmount: 'Enter\namount',
                 editToken: 'Edit token',
                 error: 'Error',
@@ -58,6 +63,7 @@ export const translation: ITranslations = {
                 holdUnveil: 'Hold to unveil',
                 ledgerType: 'Ledger type',
                 legal: 'Legal',
+                locking: 'Locking',
                 low: 'Low',
                 maybeLater: 'Maybe later',
                 mnemonicNotValid: 'Your mnemonic is not valid!',
@@ -69,6 +75,7 @@ export const translation: ITranslations = {
                 notifications: 'Notifications',
                 ok: 'OK',
                 paste: 'Paste',
+                processing: 'Processing',
                 privacyPolicy: 'Privacy policy',
                 quickDelegate: 'Quick Delegate',
                 quickVote: 'Quick Vote',
@@ -78,6 +85,9 @@ export const translation: ITranslations = {
                 recover: 'Recover',
                 redelegate: 'Redelegate',
                 reinvest: 'Reinvest',
+                refreshing: 'Refreshing',
+                remove: 'Remove',
+                removeAccount: 'Remove account',
                 reset: 'Reset',
                 resetAll: 'Reset all',
                 restake: 'Restake',
@@ -95,6 +105,7 @@ export const translation: ITranslations = {
                 simpleSetup: 'Simple setup',
                 standard: 'Standard',
                 stake: 'Stake',
+                staked: 'Staked',
                 startConnect: 'Start connect',
                 statistics: 'Statistics',
                 status: 'Status',
@@ -106,15 +117,20 @@ export const translation: ITranslations = {
                 tools: 'Tools',
                 theRequested: 'the requested',
                 transactions: 'Transactions',
+                transfer: 'Transfer',
                 tryAgain: 'Try again',
                 typeHere: 'Type here',
                 understand: 'I understand',
                 undelegate: 'Undelegate',
                 unvote: 'Unvote',
                 unlock: 'Unlock',
+                unlocking: 'Unlocking',
+                unvoting: 'Unvoting',
                 unstake: 'Unstake',
+                unstaking: 'Unstaking',
                 validators: 'Validators',
                 vote: 'Vote',
+                voting: 'Voting',
                 wallets: 'Wallets',
                 warning: 'Warning',
                 watch: 'Watch mode',
@@ -246,6 +262,7 @@ export const translation: ITranslations = {
             recipientNotValid: 'Recipient address is invalid',
             genericError: 'Operation could not be completed. Check internet connection',
             insufficientFunds: 'Insufficient funds',
+            mimimumAmount: 'Minimum amount is {{value}} {{coin}}',
             insufficientFundsFees: 'Insufficient funds for fees',
             receipientWarning: 'Warning: recipient address is not checksumed',
             allBalance: 'All balance: ',
@@ -309,7 +326,12 @@ export const translation: ITranslations = {
             signTransaction: 'Sign transaction',
             signExtensionTransaction:
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
-            signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}'
+            signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
+            processTitleText: 'Please wait while each transaction is being processed!',
+            processTitleTextLedger:
+                'Please sign each transaction from your Ledger and wait while is being processed!',
+            registerAccount: 'Registering account',
+            transactionType: 'Transaction Type'
         },
         Statistics: {
             launchingSoon: 'Launching soon!',
@@ -317,6 +339,10 @@ export const translation: ITranslations = {
         },
         Watch: {
             newSection: 'A new section to watch accounts is in the work.'
+        },
+        SmartScan: {
+            title: 'Smart scan',
+            newSection: 'A new section of smart scannig is in the work.'
         },
         Settings: {
             appVersion: 'Application version',
@@ -330,8 +356,8 @@ export const translation: ITranslations = {
             mainnetTestnet: 'Mainnet/Testnet',
             deviceId: 'Device ID',
             copied: 'Device ID copied!',
-            blockchainHasNoNetwork:
-                'Network not availble. Please switch network to activate blockchain',
+            networkNotAvailable: 'Network not available',
+            switchNetwork: 'Please switch network to activate blockchain',
             cannotDeactivateAllBlockchains: 'You cannot deactivate all active blockchains',
             changePin: 'Change PIN',
             successChangePin: 'PIN has been changed!'
@@ -354,18 +380,15 @@ export const translation: ITranslations = {
             noTransactions: 'No transactions available',
             transactionHistory:
                 'Transaction history will appear here once you start to send tokens to other accounts',
-            manageAccount: 'Manage account'
+            manageAccounts: 'Manage accounts'
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',
-            checkTransactions: 'Check all your transactions',
-            manageAccount: 'Manage account',
-            quicklyManage: 'Quickly edit, order or hide your accounts',
             connectExtension: 'Connect to extension',
-            scanCode: 'Scan the QR code on extension',
             scanPay: 'Scan to pay',
-            scanReceive: 'Scan and receive a transaction request',
-            switchWallets: 'Switch between the wallets anytime'
+            switchWallets: 'Switch between the wallets anytime',
+            connectedWebsites: 'Connected websites',
+            tokenSwap: 'Token swap (coming soon)'
         },
         BackupWallet: {
             title: 'Backup Wallet',
@@ -387,16 +410,33 @@ export const translation: ITranslations = {
             noGiveUp: `But don't give up – check the search string you entered and give it one more try`,
             searchValidators: 'Search for validators'
         },
-        CreateAccount: {
-            createAccount: 'Create new account!',
-            chooseUsr: 'Just choose a username',
-            createNear: 'Create NEAR account!',
-            chooseUsername: 'Just choose a username and you’re all set.',
-            congrats: 'Congrats! This name is available.',
+        AddAccount: {
+            title: 'Add account',
             eg: 'e.g. johndoe',
-            errorMessage: 'Username is {{message}}. Try something else.',
-            taken: 'taken',
-            invalid: 'invalid'
+            addNearAccount: 'Add account ({{activeAccountsNumber}}/{{maxAccountsNumber}})',
+            checking: 'Checking availability ...',
+            removeAccountConfirm: 'You’re about to remove {{name}} from Moonlet',
+            invalid: 'Account name CANNOT contain characters "@" or "."',
+            notAvailable: 'Account name not available. Try something else.'
+        },
+        CreateNearAccount: {
+            title: 'Create account name',
+            chooseAccountName: 'Choose an account name and you’re all set.',
+            congrats: 'Congrats! {{name}} is available.',
+            failed: 'Create account has failed',
+            tryAgain: 'Try again!'
+        },
+        RecoverNearAccount: {
+            title: 'Recover account name',
+            authMoonletUserAccount: 'Authorize Moonlet to use your existing account name',
+            copyAuthLink: 'Copy authorization link',
+            authMoonlet: 'Authorize Moonlet',
+            congrats: 'Congrats! {{name}} is registered. Please authorize Moonlet to use it.',
+            authProgress: 'Authorization in progress ...',
+            notRegistered:
+                'Account name not registered. If you want to use it, you need first to create it.',
+            createHere: 'Create one here!',
+            notSupported: 'Account name not supported yet. Try something else.'
         },
         LoadingModal: {
             txFailed: 'Transaction has failed!',
@@ -482,6 +522,7 @@ export const translation: ITranslations = {
             confirmStake: 'Confirm\nstake(s)',
             totalStakes: 'Total Stakes',
             totalVotes: 'Total Votes',
+            activatingVotes: 'Activating votes',
             totalDelegated: 'Total Delegated',
             myStake: 'My Stake',
             delegation: 'Delegation',
@@ -497,9 +538,24 @@ export const translation: ITranslations = {
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',
-            nextEpochText: 'until next epoch',
+            waitTimeActivate: 'Wait {{timeFormat}} until next epoch',
+            waitTimeWithdraw: 'Wait {{timeFormat}} to withdraw',
             claimText: 'Claim your rewards now',
             withdrawText: 'Withdraw your {{coin}} now'
+        },
+        AddNearAccount: {
+            title: 'Create or recover\nan account name!',
+            recoverAccount: 'Recover account name',
+            createAccount: 'Create account name'
+        },
+        QuickDelegateBanner: {
+            mainText: {
+                ZILLIQA: 'Stake now!',
+                CELO: 'Vote now!',
+                NEAR: 'Stake now!',
+                COSMOS: 'Delegate now!'
+            },
+            availableAmount: 'you got {{amount}} available'
         }
     },
     plural: (n: number, ord?: boolean) => {

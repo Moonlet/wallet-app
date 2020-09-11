@@ -4,7 +4,8 @@ import {
     BORDER_RADIUS,
     ICON_CONTAINER_SIZE,
     normalizeFontAndLineHeight,
-    LETTER_SPACING
+    LETTER_SPACING,
+    normalize
 } from '../../styles/dimensions';
 import { ITheme } from '../../core/theme/itheme';
 
@@ -29,7 +30,8 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(25),
             fontWeight: '500',
             letterSpacing: LETTER_SPACING,
-            color: theme.colors.text
+            color: theme.colors.text,
+            flexShrink: 1
         },
         selected: {
             borderColor: theme.colors.accentSecondary
@@ -47,9 +49,12 @@ export default (theme: ITheme) =>
             height: ICON_CONTAINER_SIZE,
             width: ICON_CONTAINER_SIZE
         },
-        createButton: {
+        addButton: {
+            width: normalize(110),
             backgroundColor: theme.colors.accent,
-            borderColor: theme.colors.accent,
-            paddingHorizontal: BASE_DIMENSION * 2
+            borderColor: theme.colors.accent
+        },
+        addButtonDisabled: {
+            width: normalize(110)
         }
     });

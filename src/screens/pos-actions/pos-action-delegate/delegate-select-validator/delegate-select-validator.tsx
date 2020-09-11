@@ -35,6 +35,7 @@ import {
 import { Icon } from '../../../../components/icon/icon';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
 import { IconValues } from '../../../../components/icon/values';
+import { getValidators } from '../../../../redux/ui/validators/selectors';
 
 interface IHeaderStep {
     step: number;
@@ -45,13 +46,18 @@ interface IHeaderStep {
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    allValidators: IValidator[];
     navigateToEnterAmountStep: typeof navigateToEnterAmountStep;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+    const chainId = getChainId(state, ownProps.blockchain);
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        chainId: getChainId(state, ownProps.blockchain)
+        chainId,
+        allValidators: getValidators(state, ownProps.blockchain, chainId).filter(
+            el => el.id !== ownProps.validators[0].id
+        )
     };
 };
 
@@ -104,8 +110,8 @@ export class DelegateSelectValidatorComponent extends React.Component<
 
         this.state = {
             nrValidators: 1,
-            headerSteps: stepList,
-            validatorsList: props.validators
+            validatorsList: props.validators,
+            headerSteps: stepList
         };
     }
 
@@ -126,6 +132,10 @@ export class DelegateSelectValidatorComponent extends React.Component<
     private renderValidatorList() {
         const { styles } = this.props;
         const blockchainInstance = getBlockchain(this.props.blockchain);
+        const maximumNumberOfValidatorsReached =
+            blockchainInstance.config.ui.validator.maximumNumberOfValidators &&
+            blockchainInstance.config.ui.validator.maximumNumberOfValidators <=
+                this.state.nrValidators;
         return [
             <View key={'increase-list'} style={styles.actionContainer}>
                 <TouchableOpacity
@@ -133,37 +143,42 @@ export class DelegateSelectValidatorComponent extends React.Component<
                     onPress={() => {
                         if (this.state.nrValidators > 1) {
                             const nrValidatorsNew = this.state.nrValidators - 1;
-                            blockchainInstance
-                                .getStats(this.props.chainId)
-                                .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                                .then(validators => {
-                                    this.setState({
-                                        nrValidators: nrValidatorsNew,
-                                        validatorsList: validators
-                                    });
-                                })
-                                .catch();
+
+                            const aditionalValidators = this.props.allValidators.slice(
+                                0,
+                                nrValidatorsNew - 1
+                            );
+                            this.setState({
+                                nrValidators: nrValidatorsNew,
+                                validatorsList: this.props.validators.concat(aditionalValidators)
+                            });
                         }
                         // decrease
                     }}
                 >
-                    <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
+                    <Icon name={IconValues.MINUS} size={normalize(16)} style={styles.actionIcon} />
                 </TouchableOpacity>
                 <Text style={styles.actionCounterText}>{this.state.nrValidators}</Text>
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
-                        const nrValidatorsNew = this.state.nrValidators + 1;
-                        blockchainInstance
-                            .getStats(this.props.chainId)
-                            .getValidatorList(CardActionType.NAVIGATE, nrValidatorsNew)
-                            .then(validators => {
-                                this.setState({
-                                    nrValidators: nrValidatorsNew,
-                                    validatorsList: validators
-                                });
-                            })
-                            .catch();
+                        if (
+                            this.props.allValidators.length >= this.state.nrValidators &&
+                            !maximumNumberOfValidatorsReached
+                        ) {
+                            const nrValidatorsNew = this.state.nrValidators + 1;
+
+                            const aditionalValidators =
+                                this.props.allValidators.length > nrValidatorsNew - 1
+                                    ? this.props.allValidators.slice(0, nrValidatorsNew - 1)
+                                    : this.props.allValidators;
+
+                            this.setState({
+                                nrValidators: nrValidatorsNew,
+                                validatorsList: this.props.validators.concat(aditionalValidators)
+                            });
+                        }
+                        // increase
                     }}
                 >
                     <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
@@ -173,6 +188,7 @@ export class DelegateSelectValidatorComponent extends React.Component<
                 <ValidatorsList
                     validators={this.state.validatorsList}
                     blockchain={this.props.blockchain}
+                    token={this.props.token}
                     onSelect={this.onSelect}
                     actionType={CardActionType.CHECKBOX}
                 />

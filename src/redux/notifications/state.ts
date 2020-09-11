@@ -1,12 +1,38 @@
 export interface INotificationType {
+    id: string;
+    walletId: string;
     title: string;
-    subtitle: string;
-    // cta: any;
-    read: boolean;
+    body: string;
+    seen: boolean;
+    data: {
+        action: string;
+        blockchain: string;
+        // other data
+
+        address?: string;
+
+        // TRANSACTION extra data
+        transactionHash?: string;
+        chainId?: string;
+        broadcastedOnBlock?: string;
+        tokenSymbol?: string;
+
+        // EXTENSION_SIGN_TX extra data
+        requestId?: string;
+
+        // OPEN_URL extra data
+        url?: string;
+    };
+
+    createdAt?: Date;
+    updatedAt?: Date;
+}
+
+export interface INotificationState {
+    [notifId: string]: INotificationType;
 }
 
 export interface INotificationsState {
-    [blockchain: string]: {
-        [notifId: string]: INotificationType;
-    };
+    unseenNotifications: number;
+    notifications: INotificationState;
 }

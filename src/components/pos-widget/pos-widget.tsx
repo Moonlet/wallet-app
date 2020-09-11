@@ -32,7 +32,9 @@ export const PosWidgetComponent = (
         <View style={props.styles.container}>
             <View style={props.styles.textContainer}>
                 <Text style={props.styles.title}>{props.title}</Text>
-                <Text style={props.styles.secondaryText}>{props.middleTitle}</Text>
+                <Text numberOfLines={1} ellipsizeMode="tail" style={props.styles.secondaryText}>
+                    {props.middleTitle}
+                </Text>
                 {props.bottomTitle && (
                     <Text style={props.styles.secondaryText}>{props.bottomTitle}</Text>
                 )}

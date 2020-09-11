@@ -1,35 +1,25 @@
-import {
-    BlockchainGenericClient,
-    IFeeOptions,
-    ChainIdType,
-    IBlockInfo,
-    TransactionType
-} from '../types';
+import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionType } from '../types';
 import { networks } from './networks';
-import {
-    createAccount,
-    transfer,
-    addKey,
-    fullAccessKey,
-    createTransaction,
-    signTransaction
-} from 'nearlib/src.ts/transaction';
-import { PublicKey, KeyPair, serialize } from 'nearlib/src.ts/utils';
-import BN from 'bn.js';
 import BigNumber from 'bignumber.js';
-import sha256 from 'js-sha256';
 import { config } from './config';
 import { NameService } from './name-service';
-import { INearAccount } from '.';
 import { TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
+import { createTransaction, signTransaction, deleteAccount } from 'near-api-js/lib/transaction';
+import { KeyPair, serialize } from 'near-api-js/lib/utils';
+import sha256 from 'js-sha256';
+import { StakingPool } from './contracts/staking-pool';
+import { INearAccount, NearAccountType } from './types';
 
 export class Client extends BlockchainGenericClient {
+    public stakingPool: StakingPool;
+
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
 
         this.nameService = new NameService(this);
-        this.utils = new ClientUtils();
+        this.utils = new ClientUtils(this);
+        this.stakingPool = new StakingPool();
     }
 
     public async getBalance(address: string): Promise<BigNumber> {
@@ -41,10 +31,15 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public async getNonce(address: string, publicKey?: string): Promise<number> {
-        const res = await this.http.jsonRpc('query', [`access_key/${address}/${publicKey}`, '']);
+    public async getNonce(address: string, publicKey: string): Promise<number> {
+        const res = await this.http.jsonRpc('query', {
+            request_type: 'view_access_key',
+            finality: 'final',
+            account_id: address,
+            public_key: publicKey
+        });
 
-        return res.result.nonce + 1;
+        return res?.result?.nonce + 1 || 1;
     }
 
     public async getCurrentBlock(): Promise<IBlockInfo> {
@@ -57,9 +52,9 @@ export class Client extends BlockchainGenericClient {
     }
 
     public async sendTransaction(signedTransaction): Promise<string> {
-        const res = await this.http.jsonRpc('broadcast_tx_commit', [signedTransaction]);
+        const res = await this.http.jsonRpc('broadcast_tx_async', [signedTransaction]);
 
-        return res?.result?.transaction?.hash;
+        return res.result;
     }
 
     public async getFees(
@@ -84,27 +79,17 @@ export class Client extends BlockchainGenericClient {
         };
     }
 
-    public async getFeesForPosTransaction(
-        from: string,
-        to: string,
-        amount: string,
-        data: string,
-        tokenType: TokenType = TokenType.NATIVE
-    ): Promise<IFeeOptions> {
-        const gasPrice = config.feeOptions.defaults.gasPrice.toFixed();
-        const gasLimit = config.feeOptions.defaults.gasLimit[tokenType].toFixed();
-        const feeTotal = new BigNumber(gasPrice).multipliedBy(new BigNumber(gasLimit)).toFixed();
-
-        return {
-            gasPrice,
-            gasLimit,
-            feeTotal
-        };
-    }
-
+    /**
+     * Get Account
+     * @param accountId
+     */
     public async getAccount(accountId: string): Promise<INearAccount> {
         try {
-            const res = await this.http.jsonRpc('query', [`account/${accountId}`, '']);
+            const res = await this.http.jsonRpc('query', {
+                request_type: 'view_account',
+                finality: 'final',
+                account_id: accountId
+            });
 
             if (res?.result) {
                 // Account exists
@@ -113,7 +98,11 @@ export class Client extends BlockchainGenericClient {
                     name: accountId,
                     amount: new BigNumber(res.result.amount),
                     exists: true,
-                    valid: true
+                    valid: true,
+                    type:
+                        res.result.code_hash === '11111111111111111111111111111111'
+                            ? NearAccountType.DEFAULT
+                            : NearAccountType.CONTRACT
                 };
             } else if (res?.error) {
                 // Account does not exist | it's not created
@@ -139,42 +128,57 @@ export class Client extends BlockchainGenericClient {
                         exists: false,
                         valid: false
                     };
+                } else {
+                    return Promise.reject(res.error);
                 }
             }
         } catch (err) {
-            Promise.reject(err);
+            return Promise.reject(err);
         }
     }
 
-    public async createAccount(
-        newAccountId: string,
-        publicKey: string,
-        chainId: ChainIdType
-    ): Promise<any> {
-        const SENDER_ACCOUNT_ID = 'tibi';
-        const SENDER_PRIVATE_KEY =
-            'ed25519:47XC2WW9NWmnvpAE48Jjy8qdgrEjHaovXFDGUrFhKnvvD1mv8PAtSav97wroJx5E8fd3Z2zQGZwRA7e3krzQAm49';
+    /**
+     * Recover Account
+     * @param accountId
+     * @param publicKey
+     */
+    public async viewAccountAccessKey(accountId: string, publicKey: string): Promise<any> {
+        const res = await this.http.jsonRpc('query', {
+            request_type: 'view_access_key',
+            finality: 'final',
+            account_id: accountId,
+            public_key: publicKey
+        });
 
+        return res.result;
+    }
+
+    /**
+     * Delete Account
+     * @param accountId
+     * @param beneficiaryId
+     * @param senderPrivateKey
+     */
+    public async deleteNearAccount(
+        accountId: string,
+        beneficiaryId: string,
+        senderPrivateKey: string
+    ) {
         const status = await this.http.jsonRpc('status');
-        const amount = new BN('10000000000000000000000');
 
         // transaction actions
-        const actions = [
-            createAccount(),
-            transfer(amount),
-            addKey(PublicKey.fromString(publicKey), fullAccessKey())
-        ];
+        const actions = [deleteAccount(beneficiaryId)];
 
         // setup KeyPair
-        const keyPair = KeyPair.fromString(SENDER_PRIVATE_KEY);
+        const keyPair = KeyPair.fromString(senderPrivateKey);
 
-        let nonce = await this.getNonce(SENDER_ACCOUNT_ID, keyPair.getPublicKey().toString());
+        let nonce = await this.getNonce(accountId, keyPair.getPublicKey().toString());
 
         // create transaction
         const tx = createTransaction(
-            SENDER_ACCOUNT_ID,
+            accountId,
             keyPair.getPublicKey(),
-            newAccountId,
+            accountId,
             ++nonce,
             actions,
             serialize.base_decode(status.result.sync_info.latest_block_hash)
@@ -187,13 +191,17 @@ export class Client extends BlockchainGenericClient {
                 return keyPair.sign(hash);
             }
         };
-        const signedTx = await signTransaction(tx, signer, SENDER_ACCOUNT_ID, chainId.toString());
+        const signedTx = await signTransaction(tx, signer, accountId, this.chainId.toString());
 
         // send transaction
         const res = await this.http.jsonRpc('broadcast_tx_commit', [
             Buffer.from(signedTx[1].encode()).toString('base64')
         ]);
 
-        return res.result;
+        return res?.result || res?.error;
+    }
+
+    public async getMinimumAmountDelegate(): Promise<BigNumber> {
+        return new BigNumber(0);
     }
 }

@@ -2,6 +2,8 @@ import { IBlockchainConfig } from './config';
 import { BlockchainGenericClient } from './client';
 import { Blockchain } from './blockchain';
 import { PosBasicActionType } from './token';
+import BigNumber from 'bignumber.js';
+import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 
 export enum IStatValueType {
     STRING = 'STRING',
@@ -25,6 +27,8 @@ export interface AccountStats {
     topStats: IStatValue[];
     chartStats: IStatValue[];
     secondaryStats: IStatValue[];
+    totalAmount: BigNumber;
+    widgets: IPosWidget[];
 }
 
 export abstract class GenericStats<Client = BlockchainGenericClient> {
@@ -35,14 +39,14 @@ export abstract class GenericStats<Client = BlockchainGenericClient> {
         this.config = config;
     }
 
-    public async getAccountDelegateStats(): Promise<AccountStats> {
+    public async getAccountDelegateStats(
+        account: IAccountState,
+        token: ITokenState
+    ): Promise<AccountStats> {
         throw new Error('Not Implemented');
     }
 
-    public async getValidatorList(
-        actionType: CardActionType,
-        numberValidators: number
-    ): Promise<IValidator[]> {
+    public async getAvailableBalanceForDelegate(account: IAccountState): Promise<string> {
         throw new Error('Not Implemented');
     }
 }
@@ -59,8 +63,11 @@ export interface IValidator {
     name: string;
     rank: string;
     website: string;
-    amountDelegated: string;
-    cardStats: IStatValue[];
+    totalVotes: string;
+    amountDelegated: {
+        pending: string;
+        active: string;
+    };
     topStats: IStatValue[];
     chartStats: IStatValue[];
     secondaryStats: IStatValue[];
@@ -72,4 +79,9 @@ export interface IPosWidget {
     type: PosBasicActionType;
     value: string;
     timestamp: string;
+    index?: number;
+    validator?: {
+        id: string;
+        name: string;
+    };
 }

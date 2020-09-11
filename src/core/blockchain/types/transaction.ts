@@ -79,7 +79,7 @@ export interface IFeeOptions {
 
 export interface IPosTransaction {
     account: IAccountState;
-    chainId: ChainIdType; // needed???
+    chainId: ChainIdType;
     validators: IValidator[];
     amount: string;
     token: string;
@@ -89,7 +89,7 @@ export interface IPosTransaction {
 
 export interface ITransferTransaction {
     account: IAccountState;
-    chainId: ChainIdType; // needed???
+    chainId: ChainIdType;
     toAddress: string;
     amount: string;
     token: string;
@@ -103,6 +103,11 @@ export interface ITransferTransaction {
 export interface ITransactionExtraFields {
     memo?: string;
     witdrawIndex?: number;
+    posAction?: PosBasicActionType;
+    validatorId?: string;
+    validatorName?: string;
+    fromValidator?: IValidator;
+    amount?: string;
     //
 }
 

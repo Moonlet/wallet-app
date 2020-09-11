@@ -32,20 +32,35 @@ export const CtaGroupComponent = (
         <View style={props.styles.container}>
             {props?.otherCtas && (
                 <View style={props.styles.topContainer}>
-                    {props.otherCtas.map((cta: IButtonCTA, index: number) => (
+                    {props.otherCtas.length === 1 ? (
                         <Button
-                            key={`cta-${index}`}
-                            leftIcon={cta.iconName}
+                            leftIcon={props.otherCtas[0].iconName}
                             onPress={() =>
-                                NavigationService.navigate(cta.navigateTo.screen, {
-                                    ...cta.navigateTo.params,
+                                NavigationService.navigate(props.otherCtas[0].navigateTo.screen, {
+                                    ...props.otherCtas[0].navigateTo.params,
                                     ...props.params
                                 })
                             }
-                            bottomLabel={translate(cta.title)}
-                            style={{ borderRadius: BORDER_RADIUS + BORDER_RADIUS / 2 }}
-                        />
-                    ))}
+                            wrapperStyle={{ width: '100%' }}
+                        >
+                            {translate(props.otherCtas[0].title)}
+                        </Button>
+                    ) : (
+                        props.otherCtas.map((cta: IButtonCTA, index: number) => (
+                            <Button
+                                key={`cta-${index}`}
+                                leftIcon={cta.iconName}
+                                onPress={() =>
+                                    NavigationService.navigate(cta.navigateTo.screen, {
+                                        ...cta.navigateTo.params,
+                                        ...props.params
+                                    })
+                                }
+                                bottomLabel={translate(cta.title)}
+                                style={{ borderRadius: BORDER_RADIUS + BORDER_RADIUS / 2 }}
+                            />
+                        ))
+                    )}
                 </View>
             )}
             <Button

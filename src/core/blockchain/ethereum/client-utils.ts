@@ -6,8 +6,6 @@ import { TokenType, TokenScreenComponentType } from '../types/token';
 import { config } from './config';
 import abi from 'ethereumjs-abi';
 import { Ethereum } from '.';
-import { IAccountState } from '../../../redux/wallets/state';
-import { IPosWidget } from '../types/stats';
 
 export class ClientUtils implements IClientUtils {
     constructor(private client: Client) {}
@@ -20,21 +18,17 @@ export class ClientUtils implements IClientUtils {
         return Promise.all(rpcCalls).then(async res => {
             if (!res[0].result) {
                 throw new Error(
-                    res[0].error.message || `Error getting transaction info for ${hash}`
+                    res[0]?.error?.message || `Error getting transaction info for ${hash}`
                 );
             }
             if (!res[1].result) {
                 throw new Error(
-                    res[1].error.message || `Error getting transaction receipt for ${hash}`
+                    res[1]?.error?.message || `Error getting transaction receipt for ${hash}`
                 );
             }
 
             return this.buildTransactionFromBlockchain(res[0].result, res[1].result);
         });
-    }
-
-    getWidgets(account: IAccountState): Promise<IPosWidget[]> {
-        throw new Error('Method not implemented.');
     }
 
     async buildTransactionFromBlockchain(txInfo, txReceipt) {

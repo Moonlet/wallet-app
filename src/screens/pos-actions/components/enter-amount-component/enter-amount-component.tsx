@@ -44,6 +44,8 @@ export interface IProps {
     bottomButtonText: string;
     showSteps: boolean;
     fromValidator?: IValidator;
+    balanceForDelegate: string;
+    minimumDelegateAmount: BigNumber;
     onPressNext(amount: string, feeOptions: IFeeOptions): void;
 }
 
@@ -51,6 +53,7 @@ interface IState {
     headerSteps: IHeaderStep[];
     amount: string;
     insufficientFunds: boolean;
+    insufficientMinimumAmount: boolean;
     feeOptions: IFeeOptions;
     insufficientFundsFees: boolean;
 }
@@ -79,7 +82,8 @@ export class EnterAmountComponentComponent extends React.Component<
             amount: '',
             insufficientFunds: false,
             feeOptions: undefined,
-            insufficientFundsFees: false
+            insufficientFundsFees: false,
+            insufficientMinimumAmount: false
         };
     }
 
@@ -92,9 +96,14 @@ export class EnterAmountComponentComponent extends React.Component<
             this.state.insufficientFunds ||
             this.state.insufficientFundsFees ||
             isNaN(Number(this.state.feeOptions?.gasLimit)) === true ||
-            isNaN(Number(this.state.feeOptions?.gasPrice))
+            isNaN(Number(this.state.feeOptions?.gasPrice)) ||
+            this.state.insufficientMinimumAmount
         )
             disableButton = true;
+
+        const textPrimaryCtaField = this.props.fromValidator
+            ? valuePrimaryCtaField([this.props.fromValidator])
+            : valuePrimaryCtaField(this.props.validators);
 
         return (
             <BottomCta
@@ -108,7 +117,7 @@ export class EnterAmountComponentComponent extends React.Component<
                     label={translate(this.props.actionText)}
                     labelColor={this.props.bottomColor}
                     action={translate(this.props.bottomActionText).toLowerCase()}
-                    value={valuePrimaryCtaField(this.props.validators)}
+                    value={textPrimaryCtaField}
                 />
                 <AmountCtaField
                     tokenConfig={tokenConfig}
@@ -162,12 +171,20 @@ export class EnterAmountComponentComponent extends React.Component<
                 this.state.feeOptions
             );
 
-            this.setState({ insufficientFunds, insufficientFundsFees });
+            let insufficientMinimumAmount = false;
+
+            if (
+                this.props.minimumDelegateAmount &&
+                new BigNumber(this.props.minimumDelegateAmount).isGreaterThan(amount)
+            )
+                insufficientMinimumAmount = true;
+
+            this.setState({ insufficientFunds, insufficientFundsFees, insufficientMinimumAmount });
         });
     }
 
     private renderEnterAmount() {
-        const config = getBlockchain(this.props.account.blockchain).config;
+        const blockchainInstance = getBlockchain(this.props.account.blockchain);
 
         return (
             <View key="enterAmount" style={this.props.styles.amountContainer}>
@@ -175,17 +192,28 @@ export class EnterAmountComponentComponent extends React.Component<
                     availableAmount={availableAmount(
                         this.props.account,
                         this.props.token,
-                        this.state.feeOptions
+                        this.state.feeOptions,
+                        this.props.balanceForDelegate
                     )}
                     value={this.state.amount}
                     insufficientFunds={this.state.insufficientFunds}
+                    insufficientMinimumAmount={this.state.insufficientMinimumAmount}
                     token={this.props.token}
                     account={this.props.account}
+                    minimumAmount={
+                        this.props.minimumDelegateAmount
+                            ? this.props.minimumDelegateAmount.toString()
+                            : '0'
+                    }
                     onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions
                     transactionType={TransactionType.CONTRACT_CALL}
-                    token={this.props.account.tokens[this.props.chainId][config.coin]}
+                    token={
+                        this.props.account.tokens[this.props.chainId][
+                            blockchainInstance.config.coin
+                        ]
+                    }
                     sendingToken={this.props.token}
                     account={this.props.account}
                     toAddress={''}
@@ -198,7 +226,6 @@ export class EnterAmountComponentComponent extends React.Component<
 
     public render() {
         const { styles, showSteps } = this.props;
-
         return (
             <View style={styles.container}>
                 <TestnetBadge />

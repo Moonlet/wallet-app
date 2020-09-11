@@ -17,6 +17,8 @@ export interface ITheme {
         textTertiary: string;
 
         positive: string;
+        positiveSecondary: string;
+
         negative: string;
         error: string;
         warning: string;
@@ -36,5 +38,8 @@ export interface ITheme {
         labelUndelegate: string;
         labelRedelegate: string;
         labelReward: string;
+
+        black: string;
+        white: string;
     };
 }

@@ -19,6 +19,8 @@ import {
 } from '../../../../redux/ui/screens/posActions/actions';
 import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
 import bind from 'bind-decorator';
+import BigNumber from 'bignumber.js';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -28,20 +30,22 @@ export interface IReduxProps {
     blockchain: Blockchain;
     token: ITokenState;
     validators: IValidator[];
+    fromValidator: IValidator;
     actionText: string;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
-    const accountIndex = state.ui.screens.posActions.delegateEnterAmount.accountIndex;
-    const blockchain = state.ui.screens.posActions.delegateEnterAmount.blockchain;
+    const accountIndex = state.ui.screens.posActions.redelegateEnterAmount.accountIndex;
+    const blockchain = state.ui.screens.posActions.redelegateEnterAmount.blockchain;
     return {
         account: getAccount(state, accountIndex, blockchain),
         chainId: getChainId(state, blockchain),
         accountIndex,
         blockchain,
-        token: state.ui.screens.posActions.delegateEnterAmount.token,
-        validators: state.ui.screens.posActions.delegateEnterAmount.validators,
-        actionText: state.ui.screens.posActions.delegateEnterAmount.actionText
+        token: state.ui.screens.posActions.redelegateEnterAmount.token,
+        validators: state.ui.screens.posActions.redelegateEnterAmount.validators,
+        actionText: state.ui.screens.posActions.redelegateEnterAmount.actionText,
+        fromValidator: state.ui.screens.posActions.redelegateEnterAmount.fromValidator
     };
 };
 
@@ -51,9 +55,7 @@ const mapDispatchToProps = {
 
 interface IState {
     amount: string;
-    insufficientFunds: boolean;
-    feeOptions: IFeeOptions;
-    insufficientFundsFees: boolean;
+    minimumDelegateAmount: BigNumber;
 }
 
 export const navigationOptions = ({ navigation }: any) => ({
@@ -82,16 +84,37 @@ export class RedelegateEnterAmountComponent extends React.Component<
             });
         });
 
+        const amountFromValidator = props.fromValidator
+            ? new BigNumber(props.fromValidator.amountDelegated.active)
+                  .plus(props.fromValidator.amountDelegated.pending)
+                  .toFixed()
+            : '0';
+
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+
         this.state = {
-            amount: '',
-            insufficientFunds: false,
-            feeOptions: undefined,
-            insufficientFundsFees: false
+            minimumDelegateAmount: undefined,
+            amount: blockchainInstance.account
+                .amountFromStd(new BigNumber(amountFromValidator), tokenConfig.decimals)
+                .toFixed()
         };
     }
 
-    public componentDidMount() {
+    public async componentDidMount() {
         this.props.navigation.setParams({ actionText: this.props.actionText });
+        const blockchainInstance = getBlockchain(this.props.account.blockchain);
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+        const response = await blockchainInstance
+            .getClient(this.props.chainId)
+            .getMinimumAmountDelegate();
+
+        const minimumDelegateAmountValue = blockchainInstance.account.amountFromStd(
+            new BigNumber(response),
+            tokenConfig.decimals
+        );
+        this.setState({
+            minimumDelegateAmount: minimumDelegateAmountValue || new BigNumber(0)
+        });
     }
 
     @bind
@@ -115,12 +138,15 @@ export class RedelegateEnterAmountComponent extends React.Component<
                 account={this.props.account}
                 chainId={this.props.chainId}
                 token={this.props.token}
+                balanceForDelegate={this.state.amount}
                 validators={this.props.validators}
+                fromValidator={this.props.fromValidator}
                 actionText={this.props.actionText}
                 bottomColor={this.props.theme.colors.labelRedelegate}
                 bottomActionText={'App.labels.from'}
                 bottomButtonText={'App.labels.next'}
                 showSteps={true}
+                minimumDelegateAmount={this.state.minimumDelegateAmount}
                 onPressNext={this.onPressNext}
             />
         );

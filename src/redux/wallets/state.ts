@@ -8,6 +8,7 @@ export interface IWalletsState {
 
 export interface IWalletState {
     id: string;
+    walletPublicKey: string;
     name: string;
     deviceId?: string;
     selected: boolean;
@@ -33,6 +34,7 @@ export interface ITokensAccountState {
 
 export interface IAccountState {
     index: number;
+    order?: number; // TODO: implement this
     selected: boolean;
     name?: string;
     blockchain: Blockchain;

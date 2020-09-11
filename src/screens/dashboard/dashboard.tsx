@@ -1,14 +1,12 @@
 import React from 'react';
+import stylesProvider from './styles';
 import { View, Animated, TouchableOpacity, Platform, ScrollView } from 'react-native';
 import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TokenDashboard } from '../../components/token-dashboard/token-dashboard';
-import { AccountCreate } from '../../components/account-create/account-create';
 import { IReduxState } from '../../redux/state';
 import { IAccountState } from '../../redux/wallets/state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
-
-import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
@@ -46,12 +44,17 @@ import { LoadingIndicator } from '../../components/loading-indicator/loading-ind
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { IconValues } from '../../components/icon/values';
 import { BottomBlockchainNavigation } from '../../components/bottom-blockchain-navigation/bottom-blockchain-navigation';
-import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import {
+    startNotificationsHandlers,
+    getUnseenNotifications
+} from '../../redux/notifications/actions';
+import { AddNearAccount } from '../../components/blockchain/near/add-account/add-account';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
 
-export interface IReduxProps {
+interface IReduxProps {
+    walletId: string;
     walletsNr: number;
     getBalance: typeof getBalance;
     blockchains: Blockchain[];
@@ -59,31 +62,38 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
     selectedBlockchain: Blockchain;
     exchangeRates: IExchangeRates;
-    isCreateAccount: boolean;
     selectedBlockchainAccounts: IAccountState[];
     userCurrency: string;
     chainId: ChainIdType;
+    deviceId: string;
+    startNotificationsHandlers: typeof startNotificationsHandlers;
+    unseenNotifications: number;
+    getUnseenNotifications: typeof getUnseenNotifications;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
 
     return {
+        walletId: getSelectedWallet(state)?.id,
         walletsNr: Object.keys(state.wallets).length,
         blockchains: getBlockchains(state),
         selectedBlockchain: getSelectedBlockchain(state),
-        selectedAccount: getSelectedAccount(state),
+        selectedAccount,
         exchangeRates: state.market.exchangeRates,
-        isCreateAccount: state.ui.screens.dashboard.isCreateAccount,
         selectedBlockchainAccounts: getSelectedBlockchainAccounts(state),
         userCurrency: state.preferences.currency,
-        chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : ''
+        chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
+        deviceId: state.preferences.deviceId,
+        unseenNotifications: state.notifications.unseenNotifications
     };
 };
 
 const mapDispatchToProps = {
     getBalance,
-    openBottomSheet
+    openBottomSheet,
+    startNotificationsHandlers,
+    getUnseenNotifications
 };
 
 interface IState {
@@ -111,14 +121,22 @@ const UnreadNotifCircle = () => (
     <View
         style={{
             position: 'absolute',
-            top: 0,
+            top: -BASE_DIMENSION / 2,
             left: BASE_DIMENSION + BASE_DIMENSION / 2,
-            width: normalize(14),
-            height: normalize(14),
-            borderRadius: normalize(14),
-            backgroundColor: themes.dark.colors.negative
+            backgroundColor: themes.dark.colors.appBackground,
+            padding: BASE_DIMENSION / 4
         }}
-    />
+    >
+        <View
+            style={{
+                flex: 1,
+                width: normalize(14),
+                height: normalize(14),
+                borderRadius: normalize(14),
+                backgroundColor: themes.dark.colors.negative
+            }}
+        />
+    </View>
 );
 
 const navigationOptions = ({ navigation, theme }: any) => ({
@@ -126,40 +144,31 @@ const navigationOptions = ({ navigation, theme }: any) => ({
     headerLeft: <HeaderIcon />,
     headerRight: (
         <View style={{ flexDirection: 'row' }}>
-            <View>
-                <TouchableOpacity
-                    testID="notifications-icon"
-                    style={{ width: ICON_CONTAINER_SIZE }}
-                    onPress={() =>
-                        isFeatureActive(RemoteFeature.NOTIF_CENTER)
-                            ? navigation.navigate('Notifications')
-                            : navigation.navigate('Wallets')
-                    }
-                >
-                    <Icon
-                        name={
-                            isFeatureActive(RemoteFeature.NOTIF_CENTER)
-                                ? IconValues.ALARM_BELL
-                                : IconValues.MONEY_WALLET
-                        }
-                        size={ICON_SIZE}
-                        style={{ color: themes[theme].colors.accent }}
-                    />
-                    {/* TODO: link this to redux */}
-                    {isFeatureActive(RemoteFeature.NOTIF_CENTER) && <UnreadNotifCircle />}
-                </TouchableOpacity>
-            </View>
             <TouchableOpacity
-                testID="dashboard-menu-icon"
+                testID="wallets-icon"
                 style={{ width: ICON_CONTAINER_SIZE }}
-                onPress={() => navigation.state.params.setDashboardMenuBottomSheet()}
+                onPress={() => navigation.navigate('Wallets')}
             >
                 <Icon
-                    name={IconValues.NAVIGATION_MENU_VERTICAL}
+                    name={IconValues.MONEY_WALLET}
                     size={ICON_SIZE}
                     style={{ color: themes[theme].colors.accent }}
                 />
             </TouchableOpacity>
+            <View>
+                <TouchableOpacity
+                    testID="notifications-icon"
+                    style={{ width: ICON_CONTAINER_SIZE }}
+                    onPress={() => navigation.navigate('Notifications')}
+                >
+                    <Icon
+                        name={IconValues.ALARM_BELL}
+                        size={ICON_SIZE}
+                        style={{ color: themes[theme].colors.accent }}
+                    />
+                    {navigation.state.params?.unseenNotifications > 0 && <UnreadNotifCircle />}
+                </TouchableOpacity>
+            </View>
         </View>
     )
 });
@@ -201,6 +210,12 @@ export class DashboardScreenComponent extends React.Component<
         this.props.navigation.setParams({
             setDashboardMenuBottomSheet: this.setDashboardMenuBottomSheet
         });
+
+        this.props.startNotificationsHandlers();
+
+        this.props.navigation.setParams({
+            unseenNotifications: this.props.unseenNotifications
+        });
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
@@ -208,6 +223,16 @@ export class DashboardScreenComponent extends React.Component<
             // Used on web to get balances when selectedAccount is changed
             // NavigationEvents is not enough for the web in order to get balances
             this.onFocus();
+        }
+
+        if (this.props.walletId !== prevProps.walletId) {
+            this.props.getUnseenNotifications();
+        }
+
+        if (this.props.unseenNotifications !== prevProps.unseenNotifications) {
+            this.props.navigation.setParams({
+                unseenNotifications: this.props.unseenNotifications
+            });
         }
     }
 
@@ -324,27 +349,28 @@ export class DashboardScreenComponent extends React.Component<
                         </Animated.View>
                     )}
 
-                    <View style={styles.row}>
+                    <Animated.View
+                        style={[
+                            styles.row,
+                            { paddingVertical: animateParimaryAmountVerticalPadding }
+                        ]}
+                    >
                         <Amount
-                            style={[
-                                styles.mainText,
-                                {
-                                    fontSize: animatePrimaryAmountFontSize,
-                                    paddingVertical: animateParimaryAmountVerticalPadding
-                                }
-                            ]}
+                            style={[styles.mainText, { fontSize: animatePrimaryAmountFontSize }]}
                             amount={String(balance)}
                             token={tokenConfig.symbol}
                             tokenDecimals={tokenConfig.decimals}
                             blockchain={blockchain}
                             isAnimated={true}
+                            smallFontToken={true}
                         />
                         <Icon
                             name={IconValues.CHEVRON_DOWN}
                             size={normalize(18)}
                             style={styles.icon}
                         />
-                    </View>
+                    </Animated.View>
+
                     <View style={styles.row}>
                         <Amount
                             testID={this.props.userCurrency}
@@ -400,10 +426,7 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public render() {
-        const { styles, selectedBlockchain } = this.props;
-
-        const showCreateAccount =
-            this.props.isCreateAccount && this.props.selectedBlockchainAccounts?.length === 0;
+        const { styles } = this.props;
 
         if (Platform.OS === 'web' && this.state.isLoading) {
             return (
@@ -420,20 +443,17 @@ export class DashboardScreenComponent extends React.Component<
                     : 'calc(100vh - 122px)'
                 : 'auto';
 
+        const isNearAddAccount =
+            this.props.selectedBlockchain === Blockchain.NEAR &&
+            this.props.selectedBlockchainAccounts.length === 0;
+
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
                 <TestnetBadge />
 
-                <NavigationEvents onWillFocus={payload => this.onFocus()} />
+                <NavigationEvents onWillFocus={() => this.onFocus()} />
 
-                {showCreateAccount && (
-                    <AccountCreate
-                        blockchain={selectedBlockchain}
-                        navigation={this.props.navigation}
-                    />
-                )}
-
-                {!showCreateAccount && this.renderTokenDashboard()}
+                {isNearAddAccount ? <AddNearAccount /> : this.renderTokenDashboard()}
 
                 <BottomBlockchainNavigation />
             </View>

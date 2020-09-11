@@ -33,15 +33,19 @@ import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { EnterAmount } from '../../send/components/enter-amount/enter-amount';
 import { FeeOptions } from '../../send/components/fee-options/fee-options';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
-import { NavigationService } from '../../../navigation/navigation-service';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
-import { unlock, unvote } from '../../../redux/wallets/actions';
+import { unlock, unvote, unstake, claimRewardNoInput } from '../../../redux/wallets/actions';
+import { valuePrimaryCtaField } from '../../../core/utils/format-string';
+import BigNumber from 'bignumber.js';
+import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
 
 export interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
     unlock: typeof unlock;
     unvote: typeof unvote;
+    unstake: typeof unstake;
+    claimRewardNoInput: typeof claimRewardNoInput;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
@@ -53,7 +57,9 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 
 const mapDispatchToProps = {
     unlock,
-    unvote
+    unvote,
+    unstake,
+    claimRewardNoInput
 };
 
 export interface INavigationParams {
@@ -97,6 +103,10 @@ export class PosBasicActionComponent extends React.Component<
             feeOptions: undefined,
             insufficientFundsFees: false
         };
+
+        if (props.basicAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT) {
+            this.onPressConfirm();
+        }
     }
 
     private async onPressConfirm() {
@@ -133,9 +143,31 @@ export class PosBasicActionComponent extends React.Component<
                     );
                     break;
                 }
+                case PosBasicActionType.UNSTAKE: {
+                    this.props.unstake(
+                        this.props.account,
+                        this.state.amount,
+                        this.props.validators,
+                        this.props.token.symbol,
+                        this.state.feeOptions,
+                        password,
+                        this.props.navigation,
+                        undefined
+                    );
+                    break;
+                }
+                case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
+                    this.props.claimRewardNoInput(
+                        this.props.account,
+                        this.props.validators,
+                        this.props.token.symbol,
+                        password,
+                        this.props.navigation,
+                        undefined
+                    );
+                    break;
+                }
             }
-
-            NavigationService.goBack();
         } catch {
             //
         }
@@ -159,7 +191,8 @@ export class PosBasicActionComponent extends React.Component<
                 labelColor = theme.colors.labelUndelegate;
                 break;
             }
-            case PosBasicActionType.CLAIM_REWARD: {
+            case PosBasicActionType.CLAIM_REWARD:
+            case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
                 labelColor = theme.colors.labelReward;
                 break;
             }
@@ -195,7 +228,7 @@ export class PosBasicActionComponent extends React.Component<
                     label={translate(this.props.actionText)}
                     labelColor={labelColor}
                     action={translate('App.labels.from').toLowerCase()}
-                    value={this.props.validators[0].name}
+                    value={valuePrimaryCtaField(this.props.validators)}
                 />
                 <AmountCtaField
                     tokenConfig={tokenConfig}
@@ -218,7 +251,7 @@ export class PosBasicActionComponent extends React.Component<
                 this.props.token,
                 this.props.chainId,
                 feeOptions,
-                this.props.validators[0].amountDelegated
+                this.props.validators[0].totalVotes
             );
 
             this.setState({ insufficientFunds, insufficientFundsFees });
@@ -234,7 +267,7 @@ export class PosBasicActionComponent extends React.Component<
                 this.props.token,
                 this.props.chainId,
                 this.state.feeOptions,
-                this.props.validators[0].amountDelegated
+                this.props.validators[0].totalVotes
             );
 
             this.setState({ insufficientFunds, insufficientFundsFees });
@@ -242,7 +275,22 @@ export class PosBasicActionComponent extends React.Component<
     }
 
     private renderEnterAmount() {
-        const config = getBlockchain(this.props.account.blockchain).config;
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+
+        const activeBalance = blockchainInstance.account
+            .amountFromStd(
+                new BigNumber(this.props.validators[0].amountDelegated.active),
+                tokenConfig.decimals
+            )
+            .toFixed();
+        // const pendingBalance = blockchainInstance.account
+        //     .amountFromStd(
+        //         new BigNumber(this.props.validators[0].amountDelegated.pending),
+        //         tokenConfig.decimals
+        //     )
+        //     .toFixed();
 
         return (
             <View key="enterAmount" style={this.props.styles.amountContainer}>
@@ -251,17 +299,23 @@ export class PosBasicActionComponent extends React.Component<
                         this.props.account,
                         this.props.token,
                         this.state.feeOptions,
-                        this.props.validators[0].amountDelegated
+                        activeBalance
                     )}
                     value={this.state.amount}
+                    insufficientMinimumAmount={false}
                     insufficientFunds={this.state.insufficientFunds}
                     token={this.props.token}
                     account={this.props.account}
+                    minimumAmount={'0.001'}
                     onChange={amount => this.addAmount(amount)}
                 />
                 <FeeOptions
                     transactionType={TransactionType.CONTRACT_CALL}
-                    token={this.props.account.tokens[this.props.chainId][config.coin]}
+                    token={
+                        this.props.account.tokens[this.props.chainId][
+                            blockchainInstance.config.coin
+                        ]
+                    }
                     sendingToken={this.props.token}
                     account={this.props.account}
                     toAddress={''}
@@ -309,6 +363,9 @@ export class PosBasicActionComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
+
+        if (this.props.basicAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT)
+            return <LoadingIndicator />;
 
         return (
             <View style={styles.container}>

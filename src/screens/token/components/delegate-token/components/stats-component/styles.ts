@@ -103,7 +103,6 @@ export default (theme: ITheme) =>
             marginRight: BASE_DIMENSION / 2
         },
         percentageSquareContainer: {
-            flex: 0.5,
             flexDirection: 'row',
             justifyContent: 'center',
             marginBottom: BASE_DIMENSION

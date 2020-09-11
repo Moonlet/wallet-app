@@ -25,25 +25,17 @@ export default (theme: ITheme) =>
             borderRadius: BORDER_RADIUS
         },
         icon: {
-            alignSelf: 'center',
-            color: theme.colors.accent
+            alignSelf: 'center'
         },
         textContainer: {
             flex: 1,
             flexDirection: 'column',
-            justifyContent: 'space-between'
+            justifyContent: 'center'
         },
         title: {
-            lineHeight: normalizeFontAndLineHeight(21),
-            color: theme.colors.text
-        },
-        description: {
-            fontSize: normalizeFontAndLineHeight(13),
-            lineHeight: normalizeFontAndLineHeight(18),
-            color: theme.colors.textSecondary
+            lineHeight: normalizeFontAndLineHeight(21)
         },
         arrowRight: {
-            color: theme.colors.accent,
             alignSelf: 'center'
         },
         scrollArea: {

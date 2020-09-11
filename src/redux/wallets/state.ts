@@ -34,6 +34,7 @@ export interface ITokensAccountState {
 
 export interface IAccountState {
     index: number;
+    order?: number; // TODO: implement this
     selected: boolean;
     name?: string;
     blockchain: Blockchain;

@@ -1,53 +1,33 @@
 import { StyleSheet } from 'react-native';
-import { ITheme } from '../../../core/theme/itheme';
+import { ITheme } from '../../../../core/theme/itheme';
 import {
     BASE_DIMENSION,
+    SCREEN_HEIGHT,
     normalizeFontAndLineHeight,
     LETTER_SPACING,
     normalize
-} from '../../../styles/dimensions';
+} from '../../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            backgroundColor: theme.colors.bottomSheetBackground,
-            padding: BASE_DIMENSION * 2
+            flex: 1,
+            backgroundColor: theme.colors.appBackground,
+            paddingVertical: BASE_DIMENSION * 6,
+            paddingHorizontal: BASE_DIMENSION * 2,
+            height: SCREEN_HEIGHT
         },
-        scrollContainer: {
-            flexGrow: 1,
-            backgroundColor: theme.colors.bottomSheetBackground,
-            marginBottom: BASE_DIMENSION * 4
-        },
-        icon: {
-            color: theme.colors.accent,
-            alignSelf: 'center'
-        },
-        firstRow: {
-            flexDirection: 'row',
-            marginBottom: BASE_DIMENSION / 4,
-            width: '100%'
-        },
-        accountName: {
+        amountText: {
             fontSize: normalizeFontAndLineHeight(18),
             lineHeight: normalizeFontAndLineHeight(25),
-            fontWeight: '500',
             letterSpacing: LETTER_SPACING,
             color: theme.colors.text,
-            marginRight: BASE_DIMENSION
-        },
-        accountAddress: {
-            fontSize: normalizeFontAndLineHeight(18),
-            lineHeight: normalizeFontAndLineHeight(25),
             fontWeight: '500',
-            letterSpacing: LETTER_SPACING,
-            color: theme.colors.accent,
-            flexShrink: 1
+            alignSelf: 'center'
         },
-        fistAmountText: {
-            color: theme.colors.textSecondary,
-            marginRight: BASE_DIMENSION
-        },
-        secondAmountText: {
+        amountConvertedText: {
+            fontSize: normalizeFontAndLineHeight(16),
+            lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.textSecondary
         },
 

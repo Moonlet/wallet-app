@@ -340,6 +340,10 @@ export const translation: ITranslations = {
         Watch: {
             newSection: 'A new section to watch accounts is in the work.'
         },
+        SmartScan: {
+            title: 'Smart scan',
+            newSection: 'A new section of smart scannig is in the work.'
+        },
         Settings: {
             appVersion: 'Application version',
             backupWallet: 'Backup wallet',
@@ -352,8 +356,8 @@ export const translation: ITranslations = {
             mainnetTestnet: 'Mainnet/Testnet',
             deviceId: 'Device ID',
             copied: 'Device ID copied!',
-            blockchainHasNoNetwork:
-                'Network not availble. Please switch network to activate blockchain',
+            networkNotAvailable: 'Network not available',
+            switchNetwork: 'Please switch network to activate blockchain',
             cannotDeactivateAllBlockchains: 'You cannot deactivate all active blockchains',
             changePin: 'Change PIN',
             successChangePin: 'PIN has been changed!'
@@ -376,18 +380,15 @@ export const translation: ITranslations = {
             noTransactions: 'No transactions available',
             transactionHistory:
                 'Transaction history will appear here once you start to send tokens to other accounts',
-            manageAccount: 'Manage account'
+            manageAccounts: 'Manage accounts'
         },
         DashboardMenu: {
             transactionHistory: 'Transaction history',
-            checkTransactions: 'Check all your transactions',
-            manageAccount: 'Manage account',
-            quicklyManage: 'Quickly edit, order or hide your accounts',
             connectExtension: 'Connect to extension',
-            scanCode: 'Scan the QR code on extension',
             scanPay: 'Scan to pay',
-            scanReceive: 'Scan and receive a transaction request',
-            switchWallets: 'Switch between the wallets anytime'
+            switchWallets: 'Switch between the wallets anytime',
+            connectedWebsites: 'Connected websites',
+            tokenSwap: 'Token swap (coming soon)'
         },
         BackupWallet: {
             title: 'Backup Wallet',
@@ -546,6 +547,15 @@ export const translation: ITranslations = {
             title: 'Create or recover\nan account name!',
             recoverAccount: 'Recover account name',
             createAccount: 'Create account name'
+        },
+        QuickDelegateBanner: {
+            mainText: {
+                ZILLIQA: 'Stake now!',
+                CELO: 'Vote now!',
+                NEAR: 'Stake now!',
+                COSMOS: 'Delegate now!'
+            },
+            availableAmount: 'you got {{amount}} available'
         }
     },
     plural: (n: number, ord?: boolean) => {

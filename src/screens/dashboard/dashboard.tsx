@@ -53,7 +53,7 @@ import { AddNearAccount } from '../../components/blockchain/near/add-account/add
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
 
-export interface IReduxProps {
+interface IReduxProps {
     walletId: string;
     walletsNr: number;
     getBalance: typeof getBalance;
@@ -144,6 +144,17 @@ const navigationOptions = ({ navigation, theme }: any) => ({
     headerLeft: <HeaderIcon />,
     headerRight: (
         <View style={{ flexDirection: 'row' }}>
+            <TouchableOpacity
+                testID="wallets-icon"
+                style={{ width: ICON_CONTAINER_SIZE }}
+                onPress={() => navigation.navigate('Wallets')}
+            >
+                <Icon
+                    name={IconValues.MONEY_WALLET}
+                    size={ICON_SIZE}
+                    style={{ color: themes[theme].colors.accent }}
+                />
+            </TouchableOpacity>
             <View>
                 <TouchableOpacity
                     testID="notifications-icon"
@@ -158,17 +169,6 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                     {navigation.state.params?.unseenNotifications > 0 && <UnreadNotifCircle />}
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity
-                testID="dashboard-menu-icon"
-                style={{ width: ICON_CONTAINER_SIZE }}
-                onPress={() => navigation.state.params.setDashboardMenuBottomSheet()}
-            >
-                <Icon
-                    name={IconValues.NAVIGATION_MENU_VERTICAL}
-                    size={ICON_SIZE}
-                    style={{ color: themes[theme].colors.accent }}
-                />
-            </TouchableOpacity>
         </View>
     )
 });
@@ -349,27 +349,28 @@ export class DashboardScreenComponent extends React.Component<
                         </Animated.View>
                     )}
 
-                    <View style={styles.row}>
+                    <Animated.View
+                        style={[
+                            styles.row,
+                            { paddingVertical: animateParimaryAmountVerticalPadding }
+                        ]}
+                    >
                         <Amount
-                            style={[
-                                styles.mainText,
-                                {
-                                    fontSize: animatePrimaryAmountFontSize,
-                                    paddingVertical: animateParimaryAmountVerticalPadding
-                                }
-                            ]}
+                            style={[styles.mainText, { fontSize: animatePrimaryAmountFontSize }]}
                             amount={String(balance)}
                             token={tokenConfig.symbol}
                             tokenDecimals={tokenConfig.decimals}
                             blockchain={blockchain}
                             isAnimated={true}
+                            smallFontToken={true}
                         />
                         <Icon
                             name={IconValues.CHEVRON_DOWN}
                             size={normalize(18)}
                             style={styles.icon}
                         />
-                    </View>
+                    </Animated.View>
+
                     <View style={styles.row}>
                         <Amount
                             testID={this.props.userCurrency}

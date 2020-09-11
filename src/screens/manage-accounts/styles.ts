@@ -6,17 +6,18 @@ import {
     ICON_CONTAINER_SIZE,
     normalize,
     normalizeFontAndLineHeight,
-    LETTER_SPACING
+    LETTER_SPACING,
+    SCREEN_HEIGHT
 } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
+            backgroundColor: theme.colors.appBackground,
+            paddingVertical: BASE_DIMENSION * 6,
             paddingHorizontal: BASE_DIMENSION * 2,
-            paddingVertical: BASE_DIMENSION * 3,
-            flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground
+            height: SCREEN_HEIGHT
         },
         rowContainer: {
             flex: 1,
@@ -62,6 +63,35 @@ export default (theme: ITheme) =>
             display: 'flex',
             flexDirection: 'column',
             marginLeft: BASE_DIMENSION
+        },
+
+        firstRow: {
+            flexDirection: 'row',
+            marginBottom: BASE_DIMENSION / 4,
+            width: '100%'
+        },
+        accountName: {
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
+            fontWeight: '500',
+            letterSpacing: LETTER_SPACING,
+            color: theme.colors.text,
+            marginRight: BASE_DIMENSION
+        },
+        accountAddress: {
+            fontSize: normalizeFontAndLineHeight(18),
+            lineHeight: normalizeFontAndLineHeight(25),
+            fontWeight: '500',
+            letterSpacing: LETTER_SPACING,
+            color: theme.colors.accent,
+            flexShrink: 1
+        },
+        fistAmountText: {
+            color: theme.colors.textSecondary
+        },
+        secondAmountText: {
+            marginLeft: BASE_DIMENSION,
+            color: theme.colors.textSecondary
         },
 
         // Swipeable left actions

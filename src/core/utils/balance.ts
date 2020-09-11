@@ -21,7 +21,7 @@ export const calculateBalance = (
 
         const tokenBalanceValue = new BigNumber(token.balance?.value);
 
-        if (token.active) {
+        if (tokenConfig && token.active) {
             if (tokenConfig.removable === false) {
                 balance = balance.plus(tokenBalanceValue);
             } else {

@@ -86,6 +86,9 @@ export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainT
     const blockchain = getSelectedBlockchain(state);
     const chainId = getChainId(state, blockchain);
 
+    if (selectedWallet === undefined || selectedAccount === undefined || blockchain === undefined)
+        return [];
+
     const account: IAccountState = selectedWallet.accounts.find(
         acc => acc.index === selectedAccount.index && acc.blockchain === selectedAccount.blockchain
     );

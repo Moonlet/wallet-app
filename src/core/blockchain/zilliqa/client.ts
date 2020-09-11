@@ -1,13 +1,20 @@
-import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionMessageText } from '../types';
+import {
+    BlockchainGenericClient,
+    ChainIdType,
+    IBlockInfo,
+    TransactionMessageText,
+    TransactionType
+} from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
-import { config } from './config';
+import { config, Contracts } from './config';
 import { NameService } from './name-service';
 import { TokenType } from '../types/token';
 import { Zrc2Client } from './tokens/zrc2-client';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { ClientUtils } from './client-utils';
+import { Staking } from './contracts/staking';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -16,6 +23,7 @@ export class Client extends BlockchainGenericClient {
         this.nameService = new NameService();
         this.tokens[TokenType.ZRC2] = new Zrc2Client(this);
         this.utils = new ClientUtils(this);
+        this.contracts[Contracts.STAKING] = new Staking(this);
     }
 
     public async getBalance(address: string): Promise<BigNumber> {
@@ -90,11 +98,15 @@ export class Client extends BlockchainGenericClient {
         }
     }
 
-    public async calculateFees(
-        from: string,
-        to: string,
-        amount?,
-        contractAddress?,
+    public async getFees(
+        transactionType: TransactionType,
+        data: {
+            from?: string;
+            to?: string;
+            amount?: string;
+            contractAddress?: string;
+            raw?: string;
+        },
         tokenType: TokenType = TokenType.NATIVE
     ) {
         const gasLimit = config.feeOptions.defaults.gasLimit[tokenType];
@@ -126,10 +138,11 @@ export class Client extends BlockchainGenericClient {
         field: string,
         subFields: string[] = []
     ) {
+        const address = isBech32(contractAddress)
+            ? fromBech32Address(contractAddress)
+            : contractAddress;
         return this.call('GetSmartContractSubState', [
-            fromBech32Address(contractAddress)
-                .replace('0x', '')
-                .toLowerCase(),
+            address.replace('0x', '').toLowerCase(),
             field,
             subFields
         ]).then(response => response?.result);
@@ -150,5 +163,9 @@ export class Client extends BlockchainGenericClient {
 
     private async estimateFees(): Promise<any> {
         return this.http.jsonRpc('GetMinimumGasPrice', []);
+    }
+
+    public async getMinimumAmountDelegate(): Promise<BigNumber> {
+        return this.contracts[Contracts.STAKING].getMinDelegateStake();
     }
 }

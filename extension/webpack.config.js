@@ -154,7 +154,7 @@ module.exports = (env, argv) => ({
             'lottie-react-native$': 'react-native-web-lottie',
             'react-native-device-info$': path.resolve(
                 __dirname,
-                'modules-mocks/react-native-device-info'
+                '../src/react-native-web/react-native-device-info'
             )
         },
         // If you're working on a multi-platform React Native app, web-specific

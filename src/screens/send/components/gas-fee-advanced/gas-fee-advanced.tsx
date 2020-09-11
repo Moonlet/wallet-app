@@ -106,6 +106,7 @@ export class GasFeeAvancedComponent extends React.Component<
         const gasLimit = new BigNumber(this.props.gasLimit);
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const gasPriceUnit = blockchainInstance.config.feeOptions.ui.gasPriceUnit;
+        const defaultUnit = blockchainInstance.config.defaultUnit;
 
         return (
             <View style={styles.container}>
@@ -158,7 +159,7 @@ export class GasFeeAvancedComponent extends React.Component<
                     >
                         {translate('Fee.gasLimit')}
                     </Text>
-                    <Text style={styles.gasPriceUnit}>{`(${gasPriceUnit})`}</Text>
+                    <Text style={styles.gasPriceUnit}>{`(${defaultUnit})`}</Text>
                 </View>
 
                 <View style={styles.inputBox}>

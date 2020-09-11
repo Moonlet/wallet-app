@@ -13,17 +13,28 @@ import { getInputAmountToStd } from '../../../../core/utils/available-funds';
 
 export interface IExternalProps {
     availableAmount: string;
+    minimumAmount: string;
     account: IAccountState;
     token: ITokenState;
     value: string;
     onChange: (value: string) => any;
     insufficientFunds: boolean;
+    insufficientMinimumAmount: boolean;
 }
 
 export const EnterAmountComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    const { value, theme, styles, insufficientFunds, onChange, availableAmount } = props;
+    const {
+        value,
+        theme,
+        styles,
+        insufficientFunds,
+        onChange,
+        availableAmount,
+        insufficientMinimumAmount,
+        minimumAmount
+    } = props;
 
     const onAddAmount = (amount: string) => {
         let valueState = value;
@@ -58,7 +69,14 @@ export const EnterAmountComponent = (
 
             <View style={styles.buttonRightOptions}>
                 <Text style={styles.displayError}>
-                    {insufficientFunds ? translate('Send.insufficientFunds') : ''}
+                    {insufficientFunds
+                        ? translate('Send.insufficientFunds')
+                        : insufficientMinimumAmount
+                        ? translate('Send.mimimumAmount', {
+                              value: minimumAmount,
+                              coin: props.token.symbol
+                          })
+                        : ''}
                 </Text>
 
                 <View style={{ flexDirection: 'row' }}>

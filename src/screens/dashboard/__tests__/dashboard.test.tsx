@@ -131,7 +131,7 @@ describe('dashboard screen component', () => {
     //         scrollTo: jest.fn()
     //     };
 
-    //     const selectionButton = wrapper.find('[testID="blockchainSelector"]').childAt(2);
+    //     const selectionButton = wrapper.find('[testID="blockchain-selector"]').childAt(2);
     //     selectionButton.simulate('press');
     //     // @ts-ignore
     //     expect(wrapper.state().coinIndex).toBe(2);

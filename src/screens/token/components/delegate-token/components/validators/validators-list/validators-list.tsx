@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { FlatList } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { ValidatorCard } from '../validator-card/validator-card';
@@ -9,6 +9,8 @@ import { Blockchain } from '../../../../../../../core/blockchain/types';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
+import { ITokenState } from '../../../../../../../redux/wallets/state';
+import { getTokenConfig } from '../../../../../../../redux/tokens/static-selectors';
 
 interface IExternalProps {
     validators: IValidator[];
@@ -16,6 +18,7 @@ interface IExternalProps {
         validator: IValidator;
         color: string;
     };
+    token: ITokenState;
     blockchain: Blockchain;
     onSelect: (validator: IValidator) => void;
     actionType: CardActionType;
@@ -24,44 +27,49 @@ interface IExternalProps {
 export const ValidatorsListComponent = (
     props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    const config = getBlockchain(props.blockchain).config;
+    const blockchainInstance = getBlockchain(props.blockchain);
+
+    const tokenConfig = getTokenConfig(props.blockchain, props.token.symbol);
 
     return (
-        <ScrollView
-            contentContainerStyle={props.styles.container}
-            showsVerticalScrollIndicator={false}
-        >
-            {props.validators.map((validator: IValidator, index: number) => (
+        <FlatList
+            data={props.validators}
+            renderItem={({ item, index }) => (
                 <ValidatorCard
                     key={index}
-                    icon={validator.icon}
-                    leftLabel={validator.name}
-                    leftSmallLabel={validator.rank}
-                    leftSubLabel={validator.website}
-                    rightTitle={config.ui.validator.amountCardLabel}
-                    rightSubtitle={formatNumber(new BigNumber(validator.amountDelegated), {
-                        currency: config.coin
-                    })}
+                    icon={item.icon}
+                    leftLabel={item.name}
+                    leftSmallLabel={item.rank}
+                    leftSubLabel={item.website}
+                    rightTitle={blockchainInstance.config.ui.validator.amountCardLabel}
+                    rightSubtitle={formatNumber(
+                        blockchainInstance.account.amountFromStd(
+                            new BigNumber(item.amountDelegated.active),
+                            tokenConfig.decimals
+                        ),
+                        {
+                            currency: blockchainInstance.config.coin
+                        }
+                    )}
                     actionType={
-                        props.redelegate?.validator.id === validator.id
+                        props.redelegate?.validator.id === item.id
                             ? CardActionType.DEFAULT
                             : props.actionType
                     }
-                    bottomStats={validator.cardStats}
-                    actionTypeSelected={validator.actionTypeSelected || false}
+                    bottomStats={item.topStats}
+                    actionTypeSelected={item.actionTypeSelected || false}
                     borderColor={
-                        props.redelegate?.validator.id === validator.id
+                        props.redelegate?.validator.id === item.id
                             ? props.theme.colors.labelRedelegate
                             : props.theme.colors.accent
                     }
-                    blockchain={props.blockchain}
                     onSelect={() => {
-                        props.redelegate?.validator.id !== validator.id &&
-                            props.onSelect(validator);
+                        props.redelegate?.validator.id !== item.id && props.onSelect(item);
                     }}
                 />
-            ))}
-        </ScrollView>
+            )}
+            keyExtractor={(item, index) => `device-${index}`}
+        />
     );
 };
 

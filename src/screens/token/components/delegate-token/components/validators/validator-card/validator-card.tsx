@@ -12,12 +12,13 @@ import {
     IStatValueType,
     CardActionType
 } from '../../../../../../../core/blockchain/types/stats';
-import { Blockchain } from '../../../../../../../core/blockchain/types/blockchain';
 import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { translate } from '../../../../../../../core/i18n';
 import { IconValues } from '../../../../../../../components/icon/values';
+import { formatValidatorName } from '../../../../../../../core/utils/format-string';
+import { getTokenConfig } from '../../../../../../../redux/tokens/static-selectors';
 
 export interface IExternalProps {
     icon: string;
@@ -30,17 +31,24 @@ export interface IExternalProps {
     actionTypeSelected: boolean;
     borderColor: string;
     bottomStats: IStatValue[];
-    blockchain: Blockchain;
     onSelect: () => void;
 }
 
-export function getValueString(stat: IStatValue, blockchain: Blockchain) {
+export function getValueString(stat: IStatValue) {
     switch (stat.type) {
         case IStatValueType.STRING:
             return stat.data.value;
         case IStatValueType.AMOUNT:
-            return formatNumber(new BigNumber(stat.data.value), {
-                currency: getBlockchain(blockchain).config.coin
+            const tokenConfig = getTokenConfig(stat.data.blockchain, stat.data.tokenSymbol);
+            const blockchainInstance = getBlockchain(stat.data.blockchain);
+
+            const amountFromStd = blockchainInstance.account.amountFromStd(
+                new BigNumber(stat.data.value),
+                tokenConfig.decimals
+            );
+            return formatNumber(new BigNumber(amountFromStd), {
+                currency: blockchainInstance.config.coin,
+                maximumFractionDigits: 4
             });
     }
 }
@@ -72,7 +80,7 @@ export const ValidatorCardComponent = (
                                         { paddingRight: BASE_DIMENSION / 2 }
                                     ]}
                                 >
-                                    {props.leftSmallLabel}
+                                    {formatValidatorName(props.leftLabel, 15)}
                                 </Text>
                                 <Text style={props.styles.tertiaryText}>
                                     {props.leftSmallLabel}
@@ -113,7 +121,7 @@ export const ValidatorCardComponent = (
                         <View key={i}>
                             <Text style={props.styles.bottomSecondaryText}>{stat.title}</Text>
                             <Text style={[props.styles.bottomPrimaryText, { color: stat.color }]}>
-                                {getValueString(stat, props.blockchain)}
+                                {getValueString(stat)}
                             </Text>
                         </View>
                     ))}

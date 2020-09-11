@@ -31,9 +31,7 @@ import { ReceiveScreen } from '../screens/receive/receive';
 import { ViewWalletMnemonicScreen } from '../screens/view-wallet-mnemonic/view-wallet-mnemonic';
 import { TransactionsHistoryScreen } from '../screens/transactions-history/transactions-history';
 import { TransactionDetails } from '../screens/transaction-details/transaction-details';
-import { StatisticsScreen } from '../screens/statistics/statistics';
-import { WatchScreen } from '../screens/watch/watch';
-import { ManageAccountScreen } from '../screens/manage-account/manage-account';
+import { ManageAccountsScreen } from '../screens/manage-accounts/manage-accounts';
 import {
     BASE_DIMENSION,
     normalize,
@@ -55,6 +53,12 @@ import { DelegateConfirm } from '../screens/pos-actions/pos-action-delegate/dele
 import { RedelegateSelectValidator } from '../screens/pos-actions/pos-action-redelegate/redelegate-select-validator/redelegate-select-validator';
 import { RedelegateEnterAmount } from '../screens/pos-actions/pos-action-redelegate/redelegate-enter-amount/redelegate-enter-amount';
 import { RedelegateConfirm } from '../screens/pos-actions/pos-action-redelegate/redelegate-confirm/redelegate-confirm';
+import { NotificationsScreen } from '../screens/notifications/notifications';
+import { CreateNearAccountScreen } from '../screens/blockchain/near/create-account/create-account';
+import { RecoverNearAccountScreen } from '../screens/blockchain/near/recover-account/recover-account';
+import { AddNearAccountScreen } from '../screens/blockchain/near/add-account/add-account';
+import { AddTokenScreen } from '../screens/token/components/add-token/add-token';
+import { SmartScanScreen } from '../screens/smart-scan/smart-scan';
 
 interface IDefaultNavOptions {
     navigation: any;
@@ -145,8 +149,11 @@ export const WalletNavigation = createStackNavigator(
         TransactionDetails: {
             screen: TransactionDetails
         },
-        ManageAccount: {
-            screen: ManageAccountScreen
+        ManageAccounts: {
+            screen: ManageAccountsScreen
+        },
+        AddToken: {
+            screen: AddTokenScreen
         },
         ManageToken: {
             screen: ManageTokenScreen
@@ -165,6 +172,18 @@ export const WalletNavigation = createStackNavigator(
         },
         DelegateConfirm: {
             screen: DelegateConfirm
+        },
+        Notifications: {
+            screen: NotificationsScreen
+        },
+        AddNearAccount: {
+            screen: AddNearAccountScreen
+        },
+        CreateNearAccount: {
+            screen: CreateNearAccountScreen
+        },
+        RecoverNearAccount: {
+            screen: RecoverNearAccountScreen
         },
 
         PosQuickDelegate: {
@@ -276,32 +295,20 @@ export const SettingsNavigation = createStackNavigator(
     }
 );
 
-// rewards navigation stack
-export const StatisticsNavigation = createStackNavigator(
+// TODO: refactor this to create Smart Scan
+export const ScanNavigation = createStackNavigator(
     {
-        Statistics: {
-            screen: StatisticsScreen
+        SmartScan: {
+            screen: SmartScanScreen
         }
     },
     {
-        initialRouteName: 'Statistics',
+        initialRouteName: 'SmartScan',
         defaultNavigationOptions: defaultStackNavigationOptions,
         headerLayoutPreset: 'center',
-        transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
-    }
-);
-
-// watch navigation stack
-export const WatchNavigation = createStackNavigator(
-    {
-        Watch: {
-            screen: WatchScreen
-        }
-    },
-    {
-        initialRouteName: 'Watch',
-        defaultNavigationOptions: defaultStackNavigationOptions,
-        headerLayoutPreset: 'center',
+        navigationOptions: ({ navigation }) => ({
+            tabBarVisible: navigation.state.index < 1
+        }),
         transitionConfig: () => StackViewTransitionConfigs.SlideFromRightIOS
     }
 );
@@ -314,18 +321,11 @@ export const navigationConfig = {
             tabBarIcon: menuIcon(IconValues.DASHBOARD)
         })
     },
-    Statistics: {
-        screen: StatisticsNavigation,
+    Scan: {
+        screen: ScanNavigation,
         headerTransparent: true,
         navigationOptions: () => ({
-            tabBarIcon: menuIcon(IconValues.REINVEST)
-        })
-    },
-    Watch: {
-        screen: WatchNavigation,
-        headerTransparent: true,
-        navigationOptions: () => ({
-            tabBarIcon: menuIcon(IconValues.VIEW)
+            tabBarIcon: menuIcon(IconValues.QR_CODE_SCAN)
         })
     },
     Settings: {

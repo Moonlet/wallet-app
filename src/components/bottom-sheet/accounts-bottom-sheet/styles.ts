@@ -3,7 +3,8 @@ import { ITheme } from '../../../core/theme/itheme';
 import {
     BASE_DIMENSION,
     normalizeFontAndLineHeight,
-    LETTER_SPACING
+    LETTER_SPACING,
+    normalize
 } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
@@ -23,7 +24,8 @@ export default (theme: ITheme) =>
         },
         firstRow: {
             flexDirection: 'row',
-            marginBottom: BASE_DIMENSION / 4
+            marginBottom: BASE_DIMENSION / 4,
+            width: '100%'
         },
         accountName: {
             fontSize: normalizeFontAndLineHeight(18),
@@ -38,13 +40,40 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(25),
             fontWeight: '500',
             letterSpacing: LETTER_SPACING,
-            color: theme.colors.accent
+            color: theme.colors.accent,
+            flexShrink: 1
         },
         fistAmountText: {
-            color: theme.colors.textSecondary
+            color: theme.colors.textSecondary,
+            marginRight: BASE_DIMENSION
         },
         secondAmountText: {
-            marginLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
+        },
+
+        // Swipeable left actions
+        leftActionsContainer: {
+            flexDirection: 'row'
+        },
+        action: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: normalize(72)
+        },
+        iconActionPositive: {
+            height: normalize(40),
+            color: theme.colors.accent
+        },
+        iconActionNegative: {
+            height: normalize(40),
+            color: theme.colors.error
+        },
+        textActionPositive: {
+            fontSize: normalizeFontAndLineHeight(10),
+            color: theme.colors.accent
+        },
+        textActionNegative: {
+            fontSize: normalizeFontAndLineHeight(10),
+            color: theme.colors.error
         }
     });

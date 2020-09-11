@@ -7,17 +7,18 @@ import {
     CELO_GOLD_MAINNET,
     CELO_GOLD_TESTNET_ALFAJORES,
     CELO_GOLD_TESTNET_BAKLAVA
-} from './tokens/cGLD';
+} from './tokens/celo';
 import {
     CELO_USD_MAINNET,
     CELO_USD_TESTNET_ALFAJORES,
     CELO_USD_TESTNET_BAKLAVA
 } from './tokens/cUSD';
+import { IconValues } from '../../../components/icon/values';
 
 export const accountCTA = {
     mainCta: {
         title: 'App.labels.quickVote',
-        iconName: 'vote',
+        iconName: IconValues.VOTE,
         navigateTo: {
             screen: 'PosQuickDelegate',
             params: { actionText: 'App.labels.quickVote' }
@@ -28,7 +29,7 @@ export const accountCTA = {
 const validatorCTA = {
     mainCta: {
         title: 'App.labels.vote',
-        iconName: 'vote',
+        iconName: IconValues.VOTE,
         navigateTo: {
             screen: 'PosDelegate',
             params: { actionText: 'App.labels.vote' }
@@ -37,7 +38,7 @@ const validatorCTA = {
     otherCtas: [
         {
             title: 'App.labels.revote',
-            iconName: 'revote',
+            iconName: IconValues.REVOTE,
             navigateTo: {
                 screen: 'PosRedelegate',
                 params: { actionText: 'App.labels.revote' }
@@ -45,7 +46,7 @@ const validatorCTA = {
         },
         {
             title: 'App.labels.unvote',
-            iconName: 'unvote',
+            iconName: IconValues.UNVOTE,
             navigateTo: {
                 screen: 'PosBasicAction',
                 params: { actionText: 'App.labels.unvote', basicAction: PosBasicActionType.UNVOTE }
@@ -53,7 +54,7 @@ const validatorCTA = {
         },
         {
             title: 'App.labels.unlock',
-            iconName: 'unlock',
+            iconName: IconValues.UNLOCK,
             navigateTo: {
                 screen: 'PosBasicAction',
                 params: {
@@ -69,33 +70,33 @@ const validatorCTA = {
 export const config: IBlockchainConfig = {
     derivationPath: `m/44'/52752'/0'/0`,
     derivationType: DerivationType.HD_KEY,
-    coin: 'cGLD',
+    coin: 'CELO',
     defaultUnit: 'WEI',
     iconComponent: CeloIcon,
     droppedTxBlocksThreshold: 50,
     autoAddedTokensSymbols: {
         42220: {
-            cGLD: CELO_GOLD_MAINNET,
+            CELO: CELO_GOLD_MAINNET,
             cUSD: CELO_USD_MAINNET
         },
-        44786: {
-            cGLD: CELO_GOLD_TESTNET_ALFAJORES,
+        44787: {
+            CELO: CELO_GOLD_TESTNET_ALFAJORES,
             cUSD: CELO_USD_TESTNET_ALFAJORES
         },
-        40120: {
-            cGLD: CELO_GOLD_TESTNET_BAKLAVA,
+        62320: {
+            CELO: CELO_GOLD_TESTNET_BAKLAVA,
             cUSD: CELO_USD_TESTNET_BAKLAVA
         }
     },
     tokens: {
-        cGLD: CELO_GOLD_NATIVE
+        CELO: CELO_GOLD_NATIVE
     },
     feeOptions: {
-        gasPriceToken: 'cGLD',
+        gasPriceToken: 'CELO',
         defaults: {
             gasPrice: new BigNumber(5000000000),
             gasLimit: {
-                [TokenType.ERC20]: new BigNumber(100000)
+                [TokenType.ERC20]: new BigNumber(400000)
             }
         },
         ui: {
@@ -108,8 +109,9 @@ export const config: IBlockchainConfig = {
     },
     ui: {
         validator: {
-            totalLabel: 'Validator.totalStake',
-            amountCardLabel: 'Validator.myStake'
+            totalLabel: 'Validator.totalVotes',
+            amountCardLabel: 'App.labels.myVotes',
+            maximumNumberOfValidators: 5
         },
         token: {
             labels: {
@@ -136,7 +138,7 @@ export const config: IBlockchainConfig = {
         displayName: 'CELO'
     },
     networks: {
-        testNet: 44786,
+        testNet: 44787,
         mainNet: 42220
     },
     defaultOrder: 1
@@ -145,5 +147,5 @@ export const config: IBlockchainConfig = {
 export enum Contracts {
     LOCKED_GOLD = 'LOCKED_GOLD',
     ELECTION = 'ELECTION',
-    ACCOUNT = 'ACCOUNT'
+    ACCOUNTS = 'ACCOUNTS'
 }

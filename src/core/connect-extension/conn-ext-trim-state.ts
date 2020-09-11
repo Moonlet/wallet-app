@@ -56,6 +56,7 @@ export const trimWallets = (wallets: IWalletsState) => {
 
         const trimmedWallet: IExtStorage.IStorageWallet = {
             name: wallet.name,
+            walletPublicKey: wallet.walletPublicKey,
             selected: wallet.selected,
             selectedBlockchain: wallet.selectedBlockchain,
             type: wallet.type,

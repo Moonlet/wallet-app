@@ -17,23 +17,31 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground,
             height: SCREEN_HEIGHT // used for web
         },
-        qrCodeContainer: {
+        content: {
             flex: 1,
+            justifyContent: 'center'
+        },
+        qrCodeContainer: {
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
-            marginBottom: BASE_DIMENSION * 4
+            marginBottom: BASE_DIMENSION * 2
         },
         qrCode: {
             padding: BASE_DIMENSION * 2,
-            backgroundColor: '#FFFFFF',
-            marginBottom: BASE_DIMENSION + BASE_DIMENSION / 2
+            color: theme.colors.white
         },
         bottomButton: {
             marginHorizontal: BASE_DIMENSION * 2,
             marginBottom: BASE_DIMENSION * 3
         },
+        fullAddressContainer: {
+            justifyContent: 'center',
+            marginBottom: BASE_DIMENSION * 2
+        },
         fullAddress: {
+            flexShrink: 1,
+            flexWrap: 'wrap',
             fontSize: normalizeFontAndLineHeight(18),
             lineHeight: normalizeFontAndLineHeight(25),
             letterSpacing: LETTER_SPACING,

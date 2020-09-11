@@ -8,6 +8,8 @@ import appReducer from './app/reducer';
 import marketReducer from './market/reducer';
 import prefReducer from './preferences/reducer';
 import contactsReducer from './contacts/reducer';
+import notificationsReducer from './notifications/reducer';
+import validatorsReducer from './ui/validators/reducer';
 import { uiReducer } from './ui/reducer';
 import tokensReducer from './tokens/reducer';
 import { connectExtensionMiddleware } from './utils/connect-extension-middleware';
@@ -24,7 +26,9 @@ export const rootReducer = combineReducers({
     market: marketReducer,
     preferences: prefReducer,
     ui: uiReducer,
-    contacts: contactsReducer
+    contacts: contactsReducer,
+    notifications: notificationsReducer,
+    validators: validatorsReducer
 });
 
 const configureStore = () => {

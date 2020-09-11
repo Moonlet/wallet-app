@@ -29,7 +29,7 @@ export default (theme: ITheme) =>
         title: {
             fontSize: normalizeFontAndLineHeight(30),
             lineHeight: normalizeFontAndLineHeight(41),
-            color: '#FFFFFF',
+            color: theme.colors.white,
             letterSpacing: LETTER_SPACING,
             textAlign: 'center',
             marginVertical: BASE_DIMENSION
@@ -37,7 +37,7 @@ export default (theme: ITheme) =>
         token: {
             fontSize: normalizeFontAndLineHeight(16),
             lineHeight: normalizeFontAndLineHeight(21),
-            color: '#FFFFFF'
+            color: theme.colors.white
         },
         subTitle: {
             fontSize: normalizeFontAndLineHeight(16),
@@ -62,7 +62,7 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(28),
             fontWeight: 'bold',
             letterSpacing: LETTER_SPACING,
-            color: '#FFFFFF',
+            color: theme.colors.white,
             textAlign: 'center'
         },
         website: {

@@ -1,12 +1,6 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../../core/theme/itheme';
-import {
-    BASE_DIMENSION,
-    BORDER_RADIUS,
-    ICON_CONTAINER_SIZE,
-    normalizeFontAndLineHeight,
-    LETTER_SPACING
-} from '../../../styles/dimensions';
+import { BASE_DIMENSION, SCREEN_HEIGHT } from '../../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -15,40 +9,7 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 2,
             paddingVertical: BASE_DIMENSION * 3,
             flexDirection: 'column',
-            backgroundColor: theme.colors.appBackground
-        },
-        rowContainer: {
-            flex: 1,
-            flexDirection: 'row',
-            backgroundColor: theme.colors.cardBackground,
-            borderRadius: BORDER_RADIUS,
-            padding: BASE_DIMENSION,
-            alignItems: 'center',
-            marginBottom: BASE_DIMENSION,
-            paddingVertical: BASE_DIMENSION * 2,
-            borderWidth: 2
-        },
-        blockchainName: {
-            fontWeight: '500',
-            fontSize: normalizeFontAndLineHeight(18),
-            lineHeight: normalizeFontAndLineHeight(25),
-            letterSpacing: LETTER_SPACING,
-            color: theme.colors.text,
-            textTransform: 'capitalize',
-            marginLeft: BASE_DIMENSION,
-            alignSelf: 'center'
-        },
-        menuIcon: {
-            color: theme.colors.accent
-        },
-        infoContainer: {
-            flex: 1,
-            flexDirection: 'row'
-        },
-        iconContainer: {
-            width: ICON_CONTAINER_SIZE,
-            height: ICON_CONTAINER_SIZE,
-            justifyContent: 'center',
-            alignItems: 'center'
+            backgroundColor: theme.colors.appBackground,
+            height: SCREEN_HEIGHT
         }
     });

@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js';
 import { IBlockchainNetwork, ChainIdType } from './network';
-import { IFeeOptions } from './transaction';
+import { IFeeOptions, TransactionType } from './transaction';
 import { IBlockchainNameService } from '.';
 import { HttpClient } from '../../utils/http-client';
 import { TokenType } from './token';
@@ -33,14 +33,19 @@ export abstract class BlockchainGenericClient {
     public abstract getBalance(address: string): Promise<BigNumber>;
     public abstract getNonce(address: string, publicKey?: string): Promise<number>;
     public abstract getCurrentBlock(): Promise<IBlockInfo>;
+    public abstract getMinimumAmountDelegate(): Promise<BigNumber>;
 
     public abstract sendTransaction(transaction: any): Promise<string>;
 
-    public abstract calculateFees(
-        from: string,
-        to: string,
-        amount?,
-        contractAddress?,
+    public abstract getFees(
+        transactionType: TransactionType,
+        data: {
+            from?: string;
+            to?: string;
+            amount?: string;
+            contractAddress?: string;
+            raw?: string;
+        },
         tokenType?: TokenType
     ): Promise<IFeeOptions>;
 }

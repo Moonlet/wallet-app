@@ -44,10 +44,10 @@ export default (theme: ITheme) =>
             flexShrink: 1
         },
         fistAmountText: {
-            color: theme.colors.textSecondary
+            color: theme.colors.textSecondary,
+            marginRight: BASE_DIMENSION
         },
         secondAmountText: {
-            marginLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
         },
 

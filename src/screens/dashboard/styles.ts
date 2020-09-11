@@ -53,7 +53,7 @@ export default (theme: ITheme) =>
             fontWeight: 'bold',
             letterSpacing: LETTER_SPACING,
             color: theme.colors.white,
-            marginRight: BASE_DIMENSION * 2
+            marginRight: BASE_DIMENSION
         },
         secondaryText: {
             fontSize: normalizeFontAndLineHeight(16),
@@ -63,6 +63,6 @@ export default (theme: ITheme) =>
             alignSelf: 'center',
             color: theme.colors.textSecondary,
             fontWeight: 'bold',
-            marginLeft: BASE_DIMENSION * 2
+            marginLeft: BASE_DIMENSION + BASE_DIMENSION / 2
         }
     });

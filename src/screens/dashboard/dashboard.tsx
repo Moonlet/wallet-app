@@ -349,15 +349,14 @@ export class DashboardScreenComponent extends React.Component<
                         </Animated.View>
                     )}
 
-                    <View style={styles.row}>
+                    <Animated.View
+                        style={[
+                            styles.row,
+                            { paddingVertical: animateParimaryAmountVerticalPadding }
+                        ]}
+                    >
                         <Amount
-                            style={[
-                                styles.mainText,
-                                {
-                                    fontSize: animatePrimaryAmountFontSize,
-                                    paddingVertical: animateParimaryAmountVerticalPadding
-                                }
-                            ]}
+                            style={[styles.mainText, { fontSize: animatePrimaryAmountFontSize }]}
                             amount={String(balance)}
                             token={tokenConfig.symbol}
                             tokenDecimals={tokenConfig.decimals}
@@ -370,7 +369,8 @@ export class DashboardScreenComponent extends React.Component<
                             size={normalize(18)}
                             style={styles.icon}
                         />
-                    </View>
+                    </Animated.View>
+
                     <View style={styles.row}>
                         <Amount
                             testID={this.props.userCurrency}

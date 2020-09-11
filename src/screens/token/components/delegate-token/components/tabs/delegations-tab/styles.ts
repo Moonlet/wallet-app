@@ -44,5 +44,21 @@ export default (theme: ITheme) =>
             alignSelf: 'center',
             resizeMode: 'contain',
             marginBottom: BASE_DIMENSION * 2
+        },
+        noValidatorsText: {
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
+            fontWeight: 'bold',
+            textAlign: 'center',
+            letterSpacing: LETTER_SPACING,
+            color: theme.colors.textSecondary,
+            marginBottom: BASE_DIMENSION * 2
+        },
+        sectionAvailableText: {
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
+            textAlign: 'center',
+            color: theme.colors.textTertiary,
+            paddingHorizontal: BASE_DIMENSION * 2
         }
     });

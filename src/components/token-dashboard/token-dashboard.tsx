@@ -37,15 +37,24 @@ const mapDispatchToProps = {
 export const TokenDashboardComponent = (
     props: IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    const renderCard = (options: { title?: string; icon: IconValues; onPress: () => void }) => {
+    const renderCard = (options: {
+        title?: string;
+        icon: IconValues;
+        onPress: () => void;
+        style?: any;
+    }) => {
         return (
             <TouchableHighlight
                 onPress={() => options.onPress()}
                 underlayColor={props.theme.colors.appBackground}
             >
-                <View style={props.styles.cardContainer}>
+                <View style={[props.styles.cardContainer, options?.style]}>
                     <Icon name={options.icon} size={normalize(16)} style={props.styles.icon} />
-                    {options.title && <Text style={props.styles.cardText}>{options.title}</Text>}
+                    {options.title && (
+                        <Text style={props.styles.cardText} numberOfLines={1} ellipsizeMode="tail">
+                            {options.title}
+                        </Text>
+                    )}
                 </View>
             </TouchableHighlight>
         );
@@ -54,19 +63,22 @@ export const TokenDashboardComponent = (
     return (
         <View style={props.styles.container}>
             <View style={props.styles.cardWrapper}>
-                {renderCard({
-                    title: translate('Account.manageAccounts'),
-                    icon: IconValues.PENCIL,
-                    onPress: () => NavigationService.navigate('ManageAccounts', {})
-                })}
-                {renderCard({
-                    title: translate('DashboardMenu.transactionHistory'),
-                    icon: IconValues.ARCHIVE_LOCKER,
-                    onPress: () => NavigationService.navigate('TransactonsHistory', {})
-                })}
+                <View style={{ flexDirection: 'row' }}>
+                    {renderCard({
+                        title: translate('Account.manageAccounts'),
+                        icon: IconValues.PENCIL,
+                        onPress: () => NavigationService.navigate('ManageAccounts', {})
+                    })}
+                    {renderCard({
+                        title: translate('DashboardMenu.transactionHistory'),
+                        icon: IconValues.ARCHIVE_LOCKER,
+                        onPress: () => NavigationService.navigate('TransactonsHistory', {})
+                    })}
+                </View>
                 {renderCard({
                     icon: IconValues.NAVIGATION_MENU_HORIZONTAL,
-                    onPress: () => props.openBottomSheet(BottomSheetType.DASHBOARD_MENU)
+                    onPress: () => props.openBottomSheet(BottomSheetType.DASHBOARD_MENU),
+                    style: { marginRight: 0 }
                 })}
             </View>
 

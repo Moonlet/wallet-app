@@ -9,6 +9,17 @@ Object {
   "selected": false,
   "tokens": Object {
     "1": Object {
+      "GZIL": Object {
+        "active": true,
+        "balance": Object {
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "value": "0",
+        },
+        "order": 999,
+        "symbol": "GZIL",
+      },
       "XSGD": Object {
         "active": true,
         "balance": Object {
@@ -33,6 +44,17 @@ Object {
       },
     },
     "333": Object {
+      "GZIL": Object {
+        "active": true,
+        "balance": Object {
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "value": "0",
+        },
+        "order": 999,
+        "symbol": "GZIL",
+      },
       "ZIL": Object {
         "active": true,
         "balance": Object {

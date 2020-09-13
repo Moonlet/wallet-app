@@ -5,6 +5,7 @@ import { Blockchain } from '../../core/blockchain/types';
 import { XSGD_MAINNET } from '../../core/blockchain/zilliqa/tokens/xsgd';
 import { DAI_MAINNET } from '../../core/blockchain/ethereum/tokens/dai';
 import { IWalletState, IAccountState } from '../wallets/state';
+import { GZIL_MAINNET } from '../../core/blockchain/zilliqa/tokens/gzil';
 
 const migrations = {
     /**
@@ -137,6 +138,59 @@ const migrations = {
             state.tokens[Blockchain.ZILLIQA][zilChainIdMain][XSGD_MAINNET.symbol].contractAddress =
                 XSGD_MAINNET.contractAddress;
         }
+
+        return {
+            ...state
+        };
+    },
+    /**
+     * Add gZil Token to all users - 12 September 2020
+     */ 5: (state: any) => {
+        const zilChainIdMain = '1';
+
+        if (
+            state.tokens[Blockchain.ZILLIQA] &&
+            state.tokens[Blockchain.ZILLIQA][zilChainIdMain] &&
+            state.tokens[Blockchain.ZILLIQA][zilChainIdMain][GZIL_MAINNET.symbol]
+        ) {
+            // Update gZIL contract address
+            state.tokens[Blockchain.ZILLIQA][zilChainIdMain][GZIL_MAINNET.symbol].contractAddress =
+                GZIL_MAINNET.contractAddress;
+        } else {
+            // Add gZIL Token
+            state.tokens = {
+                ...state.tokens,
+                [Blockchain.ZILLIQA]: {
+                    ...(state.tokens && state.tokens[Blockchain.ZILLIQA]),
+                    [zilChainIdMain]: {
+                        ...(state.tokens &&
+                            state.tokens[Blockchain.ZILLIQA] &&
+                            state.tokens[Blockchain.ZILLIQA][zilChainIdMain]),
+                        [GZIL_MAINNET.symbol]: GZIL_MAINNET
+                    }
+                }
+            };
+        }
+        // Add tokens on accounts
+        Object.values(state.wallets).map((wallet: IWalletState) => {
+            wallet.accounts.map((account: IAccountState) => {
+                // Zilliqa
+                if (account.blockchain === Blockchain.ZILLIQA) {
+                    if (
+                        account.tokens[zilChainIdMain] &&
+                        account.tokens[zilChainIdMain][GZIL_MAINNET.symbol]
+                    ) {
+                        // gZIL has been already added
+                    } else {
+                        // Add gZIL Token
+                        account.tokens[zilChainIdMain][GZIL_MAINNET.symbol] = accountToken(
+                            GZIL_MAINNET.symbol,
+                            999
+                        );
+                    }
+                }
+            });
+        });
 
         return {
             ...state

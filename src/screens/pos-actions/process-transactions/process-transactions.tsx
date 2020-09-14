@@ -13,7 +13,7 @@ import { LoadingIndicator } from '../../../components/loading-indicator/loading-
 import { closeProcessTransactions } from '../../../redux/ui/process-transactions/actions';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
-import { IBlockchainTransaction } from '../../../core/blockchain/types';
+import { IBlockchainTransaction, ChainIdType } from '../../../core/blockchain/types';
 import { TransactionStatus, WalletType } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
@@ -21,25 +21,33 @@ import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../../core/utils/format-number';
 import {
     getSelectedWallet,
-    getSelectedAccountTransactions
+    getSelectedAccountTransactions,
+    getSelectedAccount
 } from '../../../redux/wallets/selectors';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { formatValidatorName } from '../../../core/utils/format-string';
 import { NavigationService } from '../../../navigation/navigation-service';
+import { IAccountState, ITokenState } from '../../../redux/wallets/state';
+import { getChainId } from '../../../redux/preferences/selectors';
 
 export interface IReduxProps {
     isVisible: boolean;
     transactions: IBlockchainTransaction[];
     closeProcessTransactions: typeof closeProcessTransactions;
     walletType: WalletType;
+    selectedAccount: IAccountState;
     accountTransactions: IBlockchainTransaction[];
+    chainId: ChainIdType;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
+    const selectedAccount = getSelectedAccount(state);
     return {
         isVisible: state.ui.processTransactions.isVisible,
         transactions: state.ui.processTransactions.data.txs,
         walletType: getSelectedWallet(state)?.type,
+        selectedAccount,
+        chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
         accountTransactions: getSelectedAccountTransactions(state) || []
     };
 };
@@ -297,7 +305,14 @@ export class ProcessTransactionsComponent extends React.Component<
                                 const blockchainInstance = getBlockchain(
                                     this.props.transactions[0].blockchain
                                 );
+                                const token: ITokenState = this.props.selectedAccount.tokens[
+                                    this.props.chainId
+                                ][blockchainInstance.config.coin];
+                                NavigationService.popToTop();
                                 NavigationService.navigate('Token', {
+                                    blockchain: this.props.selectedAccount.blockchain,
+                                    accountIndex: this.props.selectedAccount.index,
+                                    token,
                                     activeTab:
                                         blockchainInstance.config.ui?.token?.labels?.tabTransactions
                                 });

@@ -59,5 +59,9 @@ export default (theme: ITheme) =>
         actionIcon: {
             color: theme.colors.accent,
             alignSelf: 'center'
+        },
+        loadingContainer: {
+            flex: 1,
+            justifyContent: 'center'
         }
     });

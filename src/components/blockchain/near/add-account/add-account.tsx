@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, Platform } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { Button, Text } from '../../../../library';
@@ -17,18 +17,32 @@ export const AddNearAccountComponent = (props: IThemeProps<ReturnType<typeof sty
                 style={styles.moonletImage}
             />
 
-            <Text style={styles.title}>{translate('AddNearAccount.title')}</Text>
+            <Text style={[styles.title, Platform.OS === 'web' && styles.titleWeb]}>
+                {Platform.OS === 'web'
+                    ? translate('AddNearAccount.noAccounts')
+                    : translate('AddNearAccount.title')}
+            </Text>
 
-            <Button
-                onPress={() => NavigationService.navigate('RecoverNearAccount', {})}
-                wrapperStyle={styles.recoverButton}
-            >
-                {translate('AddNearAccount.recoverAccount')}
-            </Button>
+            {Platform.OS === 'web' && (
+                <Text style={styles.subtitleWeb}>
+                    {translate('AddNearAccount.enableSectionWeb')}
+                </Text>
+            )}
 
-            <Button primary onPress={() => NavigationService.navigate('CreateNearAccount', {})}>
-                {translate('AddNearAccount.createAccount')}
-            </Button>
+            {Platform.OS !== 'web' && (
+                <Button
+                    onPress={() => NavigationService.navigate('RecoverNearAccount', {})}
+                    wrapperStyle={styles.recoverButton}
+                >
+                    {translate('AddNearAccount.recoverAccount')}
+                </Button>
+            )}
+
+            {Platform.OS !== 'web' && (
+                <Button primary onPress={() => NavigationService.navigate('CreateNearAccount', {})}>
+                    {translate('AddNearAccount.createAccount')}
+                </Button>
+            )}
         </View>
     );
 };

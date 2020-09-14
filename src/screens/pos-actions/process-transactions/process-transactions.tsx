@@ -38,14 +38,12 @@ export interface IReduxProps {
     selectedAccount: IAccountState;
     accountTransactions: IBlockchainTransaction[];
     chainId: ChainIdType;
-    tokenSymbol: string;
 }
 
 export const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
     return {
         isVisible: state.ui.processTransactions.isVisible,
-        tokenSymbol: state.ui.processTransactions.data.tokenSymbol,
         transactions: state.ui.processTransactions.data.txs,
         walletType: getSelectedWallet(state)?.type,
         selectedAccount,
@@ -303,13 +301,13 @@ export class ProcessTransactionsComponent extends React.Component<
                     <Button
                         primary
                         onPress={() => {
-                            const token: ITokenState = this.props.selectedAccount.tokens[
-                                this.props.chainId
-                            ][this.props.tokenSymbol];
                             if (this.props.transactions.length) {
                                 const blockchainInstance = getBlockchain(
                                     this.props.transactions[0].blockchain
                                 );
+                                const token: ITokenState = this.props.selectedAccount.tokens[
+                                    this.props.chainId
+                                ][blockchainInstance.config.coin];
                                 NavigationService.popToTop();
                                 NavigationService.navigate('Token', {
                                     blockchain: this.props.selectedAccount.blockchain,

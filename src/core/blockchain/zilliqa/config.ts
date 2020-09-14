@@ -5,6 +5,7 @@ import ZilIcon from '../../../assets/icons/blockchains/zil.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { XSGD_MAINNET } from './tokens/xsgd';
 import { IconValues } from '../../../components/icon/values';
+import { GZIL_MAINNET, GZIL_TESTNET } from './tokens/gzil';
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -91,7 +92,11 @@ export const config: IBlockchainConfig = {
     iconComponent: ZilIcon,
     autoAddedTokensSymbols: {
         '1': {
-            XSGD: XSGD_MAINNET
+            XSGD: XSGD_MAINNET,
+            GZIL: GZIL_MAINNET
+        },
+        '333': {
+            GZIL: GZIL_TESTNET
         }
     },
     tokens: {

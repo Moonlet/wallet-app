@@ -108,7 +108,7 @@ export const config: IBlockchainConfig = {
             gasPrice: new BigNumber(1000000000),
             gasLimit: {
                 [TokenType.NATIVE]: new BigNumber(1),
-                [TokenType.ZRC2]: new BigNumber(10000)
+                [TokenType.ZRC2]: new BigNumber(25000)
             }
         },
         ui: {

@@ -83,6 +83,9 @@ export class Client extends BlockchainGenericClient {
             if (errorMessage.includes("Contract account won't accept normal txn")) {
                 return Promise.reject(TransactionMessageText.CONTRACT_TX_NORMAL_NOT_ALLOWED);
             }
+            if (errorMessage.includes('Insufficient funds in source account!')) {
+                return Promise.reject(TransactionMessageText.INSUFFICIENT_FUNDS_SOURCE_ACCOUNT);
+            }
         });
     }
 

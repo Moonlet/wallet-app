@@ -36,17 +36,22 @@ import { IconValues } from '../../../../components/icon/values';
 import { getValidators } from '../../../../redux/ui/validators/selectors';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
+import { fetchValidators } from '../../../../redux/ui/validators/actions';
+import { fetchDelegatedValidators } from '../../../../redux/ui/delegated-validators/actions';
+import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 
 const defaultNumberOfValidators = 2;
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
     validators: IValidator[];
     navigateToEnterAmountStep: typeof navigateToEnterAmountStep;
+    fetchValidators: typeof fetchValidators;
+    fetchDelegatedValidators: typeof fetchDelegatedValidators;
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     const chainId = getChainId(state, ownProps.blockchain);
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
@@ -56,7 +61,9 @@ export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams)
 };
 
 const mapDispatchToProps = {
-    navigateToEnterAmountStep
+    navigateToEnterAmountStep,
+    fetchValidators,
+    fetchDelegatedValidators
 };
 
 export interface INavigationParams {
@@ -100,6 +107,26 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                     ? props.validators.slice(0, defaultNumberOfValidators)
                     : props.validators
         };
+    }
+
+    public componentDidMount() {
+        this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
+        this.props.fetchDelegatedValidators(this.props.account);
+    }
+
+    public componentDidUpdate(prevProps: IReduxProps) {
+        if (this.props.validators !== prevProps.validators) {
+            this.setState({
+                nrValidators:
+                    this.props.validators.length < defaultNumberOfValidators
+                        ? this.props.validators.length
+                        : defaultNumberOfValidators,
+                validatorsList:
+                    this.props.validators.length > defaultNumberOfValidators
+                        ? this.props.validators.slice(0, defaultNumberOfValidators)
+                        : this.props.validators
+            });
+        }
     }
 
     @bind
@@ -227,7 +254,13 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                     alwaysBounceVertical={false}
                 >
                     <View style={styles.content}>
-                        <View>{this.renderValidatorList()}</View>
+                        {this.props.validators.length === 0 ? (
+                            <View style={styles.loadingContainer}>
+                                <LoadingIndicator />
+                            </View>
+                        ) : (
+                            <View>{this.renderValidatorList()}</View>
+                        )}
                     </View>
                 </KeyboardAwareScrollView>
 

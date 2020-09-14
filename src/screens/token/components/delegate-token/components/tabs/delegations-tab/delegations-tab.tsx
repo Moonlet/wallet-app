@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { getAccount } from '../../../../../../../redux/wallets/selectors';
 import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { getDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/selectors';
+import { Text } from '../../../../../../../library';
 
 export interface IProps {
     accountIndex: number;
@@ -106,6 +107,12 @@ export class DelegationsTabComponent extends React.Component<
                                 style={styles.logoImage}
                                 source={require('../../../../../../../assets/images/png/moonlet_space_gray.png')}
                             />
+                            <Text style={styles.noValidatorsText}>
+                                {translate('Validator.noValidators')}
+                            </Text>
+                            <Text style={styles.sectionAvailableText}>
+                                {translate('Validator.stakeSection')}
+                            </Text>
                         </View>
                     ) : (
                         <ValidatorsList

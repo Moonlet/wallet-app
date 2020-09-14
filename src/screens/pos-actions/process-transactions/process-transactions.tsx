@@ -49,7 +49,7 @@ export const mapStateToProps = (state: IReduxState) => {
         transactions: state.ui.processTransactions.data.txs,
         walletType: getSelectedWallet(state)?.type,
         selectedAccount,
-        chainId: getChainId(state, selectedAccount.blockchain),
+        chainId: selectedAccount ? getChainId(state, selectedAccount.blockchain) : '',
         accountTransactions: getSelectedAccountTransactions(state) || []
     };
 };

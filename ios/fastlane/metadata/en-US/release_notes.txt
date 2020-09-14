@@ -1,5 +1,5 @@
-Team's log. Stardate 2008.28:
+Team's log. Stardate 2009.11:
 
-This is quick release which improves XSGD token on Zilliqa network.
+We're thrilled to announce that you can use both Moonlet and Ledger S/X wallets all-together to manage and spend securely your $ZIL.
 
 Moonlet Team

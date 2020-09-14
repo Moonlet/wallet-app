@@ -27,7 +27,10 @@ const nanoXConnectionConfigUSB = {
 export const ledgerConfigInternal: ILedgerTransportConfig = {
     android: {
         ZILLIQA: {
-            NANO_S: nanosConnectionConfig
+            NANO_S: nanosConnectionConfig,
+            NANO_X: {
+                connectionTypes: [HWConnection.BLE, HWConnection.USB]
+            }
         },
         ETHEREUM: {
             NANO_S: nanosConnectionConfig,
@@ -48,6 +51,9 @@ export const ledgerConfigInternal: ILedgerTransportConfig = {
     },
     ios: {
         ETHEREUM: {
+            NANO_X: nanoXConnectionConfigBLE
+        },
+        ZILLIQA: {
             NANO_X: nanoXConnectionConfigBLE
         },
         CELO: {

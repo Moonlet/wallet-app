@@ -11,7 +11,8 @@ import {
 const intialState: IProcessTransactionsState = {
     isVisible: false,
     data: {
-        txs: []
+        txs: [],
+        tokenSymbol: undefined
     }
 };
 
@@ -33,6 +34,7 @@ export default (
             return {
                 ...state,
                 data: {
+                    tokenSymbol: state.data.tokenSymbol,
                     txs
                 }
             };
@@ -45,6 +47,7 @@ export default (
             return {
                 ...state,
                 data: {
+                    tokenSymbol: state.data.tokenSymbol,
                     txs
                 }
             };
@@ -53,6 +56,7 @@ export default (
             return {
                 ...state,
                 data: {
+                    tokenSymbol: action.data.tokenSymbol,
                     txs: action.data.txs
                 }
             };

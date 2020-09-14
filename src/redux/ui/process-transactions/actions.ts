@@ -14,10 +14,11 @@ export const openProcessTransactions = () => {
     };
 };
 
-export const setProcessTransactions = (txs: IBlockchainTransaction[]) => {
+export const setProcessTransactions = (txs: IBlockchainTransaction[], tokenSymbol: string) => {
     return {
         type: SET_PROCESS_TXS,
         data: {
+            tokenSymbol,
             txs
         }
     };

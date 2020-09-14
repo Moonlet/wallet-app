@@ -300,7 +300,7 @@ export const posAction = (
             type
         );
 
-        dispatch(setProcessTransactions(cloneDeep(txs)));
+        dispatch(setProcessTransactions(cloneDeep(txs), tokenConfig.symbol));
 
         for (let index = 0; index < txs.length; index++) {
             const client = getBlockchain(account.blockchain).getClient(chainId);

@@ -4,5 +4,6 @@ export interface IProcessTransactionsState {
     isVisible: boolean;
     data: {
         txs: IBlockchainTransaction[];
+        tokenSymbol: string;
     };
 }

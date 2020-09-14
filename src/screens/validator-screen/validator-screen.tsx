@@ -17,6 +17,7 @@ import { IValidator, CardActionType } from '../../core/blockchain/types/stats';
 import { ITokenState } from '../../redux/wallets/state';
 import BigNumber from 'bignumber.js';
 import { formatValidatorName } from '../../core/utils/format-string';
+import { BASE_DIMENSION } from '../../styles/dimensions';
 
 export interface INavigationParams {
     validator: IValidator;
@@ -80,6 +81,12 @@ export class ValidatorScreenComponent extends React.Component<
                         token={token.symbol}
                         tokenDecimals={token.decimals}
                         blockchain={blockchain}
+                        smallFontToken={{
+                            visible: true,
+                            wrapperStyle: {
+                                marginVertical: BASE_DIMENSION
+                            }
+                        }}
                     />
                     <Amount
                         style={styles.subTitle}

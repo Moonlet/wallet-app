@@ -17,9 +17,9 @@ export class Zil {
      * @param {number} path derivation path, values accepted: live, legacy
      */
     public getAddress(index: number, derivationIndex: number = 0, path: string) {
-        return this.app.getPublicKey(`${index}`).then(data => {
+        return this.app.getPublicAddress(`${index}`).then(data => {
             return {
-                address: zcrypto.toBech32Address(zcrypto.getAddressFromPublicKey(data.publicKey)),
+                address: data.pubAddr,
                 publicKey: data.publicKey
             };
         });

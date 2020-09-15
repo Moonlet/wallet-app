@@ -89,6 +89,8 @@ export class RecoverNearAccountComponent extends React.Component<
     }
 
     private async checkAccountId(accountId: string) {
+        clearInterval(this.startRecoveringAccountInterval);
+
         this.setState({
             inputAccout: accountId,
             isChecking: true,
@@ -287,9 +289,7 @@ export class RecoverNearAccountComponent extends React.Component<
                                     selectionColor={theme.colors.accent}
                                     returnKeyType="done"
                                     value={this.state.inputAccout}
-                                    onChangeText={inputAccout => {
-                                        this.checkAccountId(inputAccout);
-                                    }}
+                                    onChangeText={inputAccout => this.checkAccountId(inputAccout)}
                                 />
                             </View>
 

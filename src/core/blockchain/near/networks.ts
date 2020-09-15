@@ -24,7 +24,7 @@ export const networks: IBlockchainNetwork[] = [
         },
         links: {
             getWalletLoginUrl: (publicKey: string) =>
-                `https://wallet.testnet.near.org/login/?title=Moonlet&public_key=${publicKey}`
+                `https://wallet.testnet.near.org/login/?title=Moonlet&referrer=Moonlet&public_key=${publicKey}`
         }
     },
     {

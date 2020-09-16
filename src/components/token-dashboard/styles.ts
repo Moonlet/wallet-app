@@ -1,6 +1,12 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { normalizeFontAndLineHeight, BASE_DIMENSION, BORDER_RADIUS } from '../../styles/dimensions';
+import {
+    normalizeFontAndLineHeight,
+    BASE_DIMENSION,
+    BORDER_RADIUS,
+    normalize,
+    SCALE
+} from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
@@ -29,7 +35,11 @@ export default (theme: ITheme) =>
             fontSize: normalizeFontAndLineHeight(13),
             fontWeight: '500',
             color: theme.colors.textSecondary,
-            marginLeft: BASE_DIMENSION
+            marginLeft: BASE_DIMENSION,
+            maxWidth: Platform.select({
+                web: normalize(104),
+                default: SCALE < 1 || Platform.OS === 'web' ? normalize(110) : null
+            })
         },
         icon: {
             alignSelf: 'center',

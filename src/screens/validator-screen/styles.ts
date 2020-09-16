@@ -18,7 +18,8 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 3
         },
         topContainer: {
-            flexDirection: 'column'
+            flexDirection: 'column',
+            marginBottom: BASE_DIMENSION * 3
         },
         topText: {
             fontSize: normalizeFontAndLineHeight(15),

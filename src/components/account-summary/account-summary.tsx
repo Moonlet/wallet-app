@@ -20,6 +20,7 @@ interface IExternalProps {
     blockchain: Blockchain;
     token: ITokenState;
     enableExpand: boolean;
+    style?: any;
 }
 
 interface IState {
@@ -106,7 +107,7 @@ export class AccountSummaryComponent extends React.Component<
         );
 
         return (
-            <View style={styles.container}>
+            <View style={[styles.container, this.props?.style]}>
                 <View style={styles.summaryContainer}>
                     <View style={styles.topContainer}>
                         <Text

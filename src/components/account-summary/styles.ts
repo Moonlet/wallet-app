@@ -11,9 +11,7 @@ import { ITheme } from '../../core/theme/itheme';
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
-            flexDirection: 'column',
-            marginTop: BASE_DIMENSION * 2,
-            marginBottom: BASE_DIMENSION * 3
+            flexDirection: 'column'
         },
         summaryContainer: {
             backgroundColor: theme.colors.cardBackground,

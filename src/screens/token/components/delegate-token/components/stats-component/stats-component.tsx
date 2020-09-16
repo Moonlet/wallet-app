@@ -45,6 +45,7 @@ export class StatsComponentInternal extends React.Component<
                     blockchain={this.props.blockchain}
                     token={this.props.token}
                     enableExpand={false}
+                    style={styles.accountSummary}
                 />
             </View>
         );

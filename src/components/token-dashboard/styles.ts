@@ -36,6 +36,9 @@ export default (theme: ITheme) =>
             color: theme.colors.textSecondary
         },
         quickDelegateBannerContainer: {
-            marginTop: BASE_DIMENSION
+            marginBottom: BASE_DIMENSION
+        },
+        accountSummary: {
+            marginBottom: BASE_DIMENSION
         }
     });

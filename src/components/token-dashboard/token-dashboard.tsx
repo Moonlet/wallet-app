@@ -17,6 +17,10 @@ import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
 import { NavigationService } from '../../navigation/navigation-service';
 import { QuickDelegateBanner } from '../quick-delegate-banner/quick-delegate-banner';
+import { AccountSummary } from '../account-summary/account-summary';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
+import { AccountStats } from '../../core/blockchain/types/stats';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -34,74 +38,128 @@ const mapDispatchToProps = {
     openBottomSheet
 };
 
-export const TokenDashboardComponent = (
-    props: IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
-) => {
-    const renderCard = (options: { title?: string; icon: IconValues; onPress: () => void }) => {
+interface IState {
+    accountStats: AccountStats;
+    token: ITokenState;
+}
+
+export class TokenDashboardComponent extends React.Component<
+    IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
+> {
+    constructor(
+        props: IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
+        super(props);
+
+        this.state = {
+            accountStats: undefined,
+            token: undefined
+        };
+    }
+
+    public componentDidMount() {
+        const { blockchain } = this.props;
+
+        const blockchainConfig = getBlockchain(blockchain);
+
+        const token: ITokenState = this.props.account.tokens[this.props.chainId][
+            blockchainConfig.config.coin
+        ];
+
+        this.setState({ token });
+
+        blockchainConfig
+            .getStats(this.props.chainId)
+            .getAccountDelegateStats(this.props.account, token)
+            .then(accStats => this.setState({ accountStats: accStats }))
+            .catch(e => SentryCaptureException(new Error(JSON.stringify(e))));
+    }
+
+    private renderCard(options: { title?: string; icon: IconValues; onPress: () => void }) {
+        const { styles, theme } = this.props;
+
         return (
             <TouchableHighlight
                 onPress={() => options.onPress()}
-                underlayColor={props.theme.colors.appBackground}
+                underlayColor={theme.colors.appBackground}
             >
-                <View style={props.styles.cardContainer}>
-                    <Icon name={options.icon} size={normalize(16)} style={props.styles.icon} />
-                    {options.title && <Text style={props.styles.cardText}>{options.title}</Text>}
+                <View style={styles.cardContainer}>
+                    <Icon name={options.icon} size={normalize(16)} style={styles.icon} />
+                    {options.title && <Text style={styles.cardText}>{options.title}</Text>}
                 </View>
             </TouchableHighlight>
         );
-    };
+    }
 
-    return (
-        <View style={props.styles.container}>
-            <View style={props.styles.cardWrapper}>
-                {renderCard({
-                    title: translate('Account.manageAccounts'),
-                    icon: IconValues.PENCIL,
-                    onPress: () => NavigationService.navigate('ManageAccounts', {})
-                })}
-                {renderCard({
-                    title: translate('DashboardMenu.transactionHistory'),
-                    icon: IconValues.ARCHIVE_LOCKER,
-                    onPress: () => NavigationService.navigate('TransactonsHistory', {})
-                })}
-                {renderCard({
-                    icon: IconValues.NAVIGATION_MENU_HORIZONTAL,
-                    onPress: () => props.openBottomSheet(BottomSheetType.DASHBOARD_MENU)
-                })}
-            </View>
+    public render() {
+        const { styles } = this.props;
 
-            <View
-                style={[
-                    props.styles.tokensContainer,
-                    { paddingBottom: props.showBottomPadding ? normalize(70) : 0 }
-                ]}
-            >
-                {props.account?.tokens &&
-                    props.chainId &&
-                    Object.values(props.account.tokens[props.chainId]).map(
-                        (token: ITokenState, index: number) =>
-                            token.active && (
-                                <TokenCard
-                                    account={props.account}
-                                    token={token}
-                                    navigation={props.navigation}
-                                    key={`token-${index}`}
-                                    blockchain={props.blockchain}
-                                    index={index}
-                                />
-                            )
+        return (
+            <View style={styles.container}>
+                <View style={styles.cardWrapper}>
+                    {this.renderCard({
+                        title: translate('Account.manageAccounts'),
+                        icon: IconValues.PENCIL,
+                        onPress: () => NavigationService.navigate('ManageAccounts', {})
+                    })}
+
+                    {this.renderCard({
+                        title: translate('DashboardMenu.transactionHistory'),
+                        icon: IconValues.ARCHIVE_LOCKER,
+                        onPress: () => NavigationService.navigate('TransactonsHistory', {})
+                    })}
+
+                    {this.renderCard({
+                        icon: IconValues.NAVIGATION_MENU_HORIZONTAL,
+                        onPress: () => this.props.openBottomSheet(BottomSheetType.DASHBOARD_MENU)
+                    })}
+                </View>
+
+                <View
+                    style={[
+                        styles.tokensContainer,
+                        { paddingBottom: this.props.showBottomPadding ? normalize(70) : 0 }
+                    ]}
+                >
+                    {/* TODO: implement loading */}
+                    {this.state.accountStats && (
+                        <AccountSummary
+                            accountStats={this.state.accountStats}
+                            blockchain={this.props.blockchain}
+                            token={this.state.token}
+                            enableExpand={true}
+                            style={styles.accountSummary}
+                        />
                     )}
 
-                <QuickDelegateBanner
-                    blockchain={props.blockchain}
-                    account={props.account}
-                    chainId={props.chainId}
-                    style={props.styles.quickDelegateBannerContainer}
-                />
+                    <QuickDelegateBanner
+                        blockchain={this.props.blockchain}
+                        account={this.props.account}
+                        chainId={this.props.chainId}
+                        style={styles.quickDelegateBannerContainer}
+                    />
+
+                    {this.props.account?.tokens &&
+                        this.props.chainId &&
+                        Object.values(this.props.account.tokens[this.props.chainId]).map(
+                            (token: ITokenState, index: number) =>
+                                token.active && (
+                                    <TokenCard
+                                        account={this.props.account}
+                                        token={token}
+                                        navigation={this.props.navigation}
+                                        key={`token-${index}`}
+                                        blockchain={this.props.blockchain}
+                                        index={index}
+                                    />
+                                )
+                        )}
+                </View>
             </View>
-        </View>
-    );
-};
+        );
+    }
+}
 export const TokenDashboard = smartConnect<IExternalProps>(TokenDashboardComponent, [
     connect(null, mapDispatchToProps),
     withTheme(stylesProvider)

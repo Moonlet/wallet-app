@@ -34,5 +34,8 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(22),
             fontWeight: '600',
             color: theme.colors.text
+        },
+        accountSummary: {
+            marginVertical: BASE_DIMENSION * 2
         }
     });

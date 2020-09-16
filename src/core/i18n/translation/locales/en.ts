@@ -110,6 +110,7 @@ export const translation: ITranslations = {
                 statistics: 'Statistics',
                 status: 'Status',
                 success: 'Success',
+                summary: 'Summary',
                 support: 'Support',
                 symbol: 'Symbol',
                 tc: 'Terms of Service',

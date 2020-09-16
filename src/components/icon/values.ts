@@ -17,6 +17,7 @@ export enum IconValues {
     CHECK_BOX = 'check-box',
     CHECK = 'check',
     CHEVRON_DOWN = 'chevron-down',
+    CHEVRON_DOWN_BIGGER = 'chevron-down-2',
     CHEVRON_RIGHT = 'chevron-right',
     CHEVRON_UP = 'chevron-up',
     CLAIM_REWARD = 'claim-reward',

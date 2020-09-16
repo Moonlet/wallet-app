@@ -2,7 +2,7 @@ import namehash from 'eth-ens-namehash';
 import { rawDecode, simpleEncode } from 'ethereumjs-abi';
 
 import { IResolveTextResponse, ResolveTextType, ResolveTextCode, ResolveTextError } from '../types';
-import { IBlockchainNameService } from '../types/name-service';
+import { IBlockchainNameService, IResolveNameResponse } from '../types/name-service';
 import { Ethereum } from '.';
 import { Client } from './client';
 
@@ -23,7 +23,7 @@ export class NameService implements IBlockchainNameService {
                 name: ''
             });
         } else {
-            const address = await this.resolveName(text);
+            const { address } = await this.resolveName(text);
             if (address === '0x0000000000000000000000000000000000000000') {
                 return Promise.reject({
                     error: ResolveTextError.INVALID
@@ -39,7 +39,7 @@ export class NameService implements IBlockchainNameService {
         }
     }
 
-    public async resolveName(name: string): Promise<string> {
+    public async resolveName(name: string): Promise<IResolveNameResponse> {
         const node = namehash.hash(name);
         let data = await this.client.http.jsonRpc('eth_call', [
             {
@@ -59,6 +59,6 @@ export class NameService implements IBlockchainNameService {
         ]);
         const address =
             '0x' + rawDecode(['address'], Buffer.from(data.result.replace('0x', ''), 'hex'))[0];
-        return Promise.resolve(address);
+        return Promise.resolve({ address });
     }
 }

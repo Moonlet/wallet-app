@@ -12,7 +12,7 @@ export default (theme: ITheme) =>
         },
         cardWrapper: {
             flexDirection: 'row',
-            marginBottom: BASE_DIMENSION * 2 + BASE_DIMENSION / 2
+            marginBottom: BASE_DIMENSION
         },
         cardContainer: {
             flexDirection: 'row',

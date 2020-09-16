@@ -1,10 +1,4 @@
-import {
-    IResolveTextResponse,
-    IResolveNameResponse,
-    ResolveTextType,
-    ResolveTextCode,
-    ResolveTextError
-} from '../types';
+import { IResolveTextResponse, ResolveTextType, ResolveTextCode, ResolveTextError } from '../types';
 import { IBlockchainNameService } from '../types/name-service';
 import { Cosmos } from '.';
 
@@ -27,9 +21,7 @@ export class NameService implements IBlockchainNameService {
         }
     }
 
-    public resolveName(text: string): Promise<IResolveNameResponse> {
-        return Promise.resolve({
-            address: text
-        });
+    public resolveName(text: string): Promise<string> {
+        return Promise.resolve(text);
     }
 }

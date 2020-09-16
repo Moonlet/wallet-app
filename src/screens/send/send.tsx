@@ -92,6 +92,7 @@ export interface INavigationParams {
 
 interface IState {
     toAddress: string;
+    nameService: string;
     amount: string;
     insufficientFunds: boolean;
     feeOptions: IFeeOptions;
@@ -121,6 +122,7 @@ export class SendScreenComponent extends React.Component<
         super(props);
 
         this.state = {
+            nameService: '',
             toAddress: '',
             amount: '',
             insufficientFunds: false,
@@ -316,12 +318,15 @@ export class SendScreenComponent extends React.Component<
                 account={this.props.account}
                 blockchain={this.props.blockchain}
                 chainId={this.props.chainId}
-                onChange={(toAddress: string) => this.setState({ toAddress })}
+                onChange={(toAddress: string, nameService?: string) =>
+                    this.setState({ toAddress, nameService })
+                }
             />
         );
     }
 
     private renderBottomConfirm() {
+        const { nameService } = this.state;
         const activeIndex = findIndex(this.state.headerSteps, ['active', true]);
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
@@ -375,7 +380,11 @@ export class SendScreenComponent extends React.Component<
                 <PrimaryCtaField
                     label={translate('App.labels.send')}
                     action={translate('App.labels.to')}
-                    value={formatAddress(this.state.toAddress, this.props.account.blockchain)}
+                    value={
+                        nameService
+                            ? nameService
+                            : formatAddress(this.state.toAddress, this.props.account.blockchain)
+                    }
                 />
                 {(activeIndex === 1 || activeIndex === 2) && (
                     <AmountCtaField
@@ -425,6 +434,7 @@ export class SendScreenComponent extends React.Component<
     }
 
     private renderConfirmTransaction() {
+        const { nameService, toAddress } = this.state;
         const { account, chainId, styles } = this.props;
         const { blockchain } = account;
         const config = getBlockchain(blockchain).config;
@@ -439,12 +449,19 @@ export class SendScreenComponent extends React.Component<
         return (
             <View key="confirmTransaction" style={styles.confirmTransactionContainer}>
                 <Text style={styles.receipientLabel}>{translate('Send.recipientLabel')}</Text>
-                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
+                <View
+                    style={[
+                        styles.inputBox,
+                        nameService ? null : { marginBottom: BASE_DIMENSION * 2 }
+                    ]}
+                >
                     <Text style={styles.confirmTransactionText}>
-                        {formatAddress(this.state.toAddress, blockchain)}
+                        {nameService
+                            ? nameService
+                            : formatAddress(this.state.toAddress, blockchain)}
                     </Text>
                 </View>
-
+                {nameService !== '' && <Text style={styles.displayAddress}>{toAddress}</Text>}
                 <Text style={styles.receipientLabel}>{translate('Send.amount')}</Text>
                 <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Text style={styles.confirmTransactionText}>

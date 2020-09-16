@@ -150,16 +150,17 @@ export class AccountSummaryComponent extends React.Component<
                                     styles.barCard,
                                     {
                                         backgroundColor: stat.color,
-                                        width: this.state.barWidth // TODO: on zil is crashing
-                                            ? Number(
-                                                  new BigNumber(stat.data.value)
-                                                      .multipliedBy(100)
-                                                      .dividedBy(totalCount)
-                                                      .multipliedBy(this.state.barWidth)
-                                                      .dividedBy(100)
-                                                      .toFixed(0)
-                                              )
-                                            : 0
+                                        width:
+                                            this.state.barWidth && stat.data.value !== '0'
+                                                ? Number(
+                                                      new BigNumber(stat.data.value)
+                                                          .multipliedBy(100)
+                                                          .dividedBy(totalCount)
+                                                          .multipliedBy(this.state.barWidth)
+                                                          .dividedBy(100)
+                                                          .toFixed(0)
+                                                  )
+                                                : 0
                                     }
                                 ]}
                             />

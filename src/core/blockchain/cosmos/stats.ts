@@ -1,8 +1,9 @@
-import { GenericStats, IStatValueType, AccountStats, IValidator } from '../types/stats';
+import { GenericStats, IStatValueType, AccountStats, IValidator, IStatValue } from '../types/stats';
 import { Client } from './client';
 import { Blockchain } from '../types/blockchain';
 import BigNumber from 'bignumber.js';
 import { IAccountState, ITokenState } from '../../../redux/wallets/state';
+import { IconValues } from '../../../components/icon/values';
 
 export class Stats extends GenericStats<Client> {
     public async getAccountDelegateStats(
@@ -54,25 +55,14 @@ export const secondaryStatsValues = [
     }
 ];
 
-export const chartStatsValues = [
+export const chartStatsValues: IStatValue[] = [
     {
         title: 'Available',
-        color: '#FFFFFF',
+        color: '#9A99A2',
         type: IStatValueType.AMOUNT,
-        chartDisplay: true,
+        icon: IconValues.MONEY_WALLET,
         data: {
             value: '1000.00',
-            tokenSymbol: 'ATOM',
-            blockchain: Blockchain.COSMOS
-        }
-    },
-    {
-        title: 'Delegated',
-        color: '#00DAFF',
-        type: IStatValueType.AMOUNT,
-        chartDisplay: true,
-        data: {
-            value: '10000.00',
             tokenSymbol: 'ATOM',
             blockchain: Blockchain.COSMOS
         }
@@ -81,9 +71,20 @@ export const chartStatsValues = [
         title: 'Undelegated',
         color: '#FFAB91',
         type: IStatValueType.AMOUNT,
-        chartDisplay: true,
+        icon: IconValues.KEY_LOCK,
         data: {
             value: '1500.00',
+            tokenSymbol: 'ATOM',
+            blockchain: Blockchain.COSMOS
+        }
+    },
+    {
+        title: 'Delegated',
+        color: '#00DAFF',
+        type: IStatValueType.AMOUNT,
+        icon: IconValues.VOTE,
+        data: {
+            value: '10000.00',
             tokenSymbol: 'ATOM',
             blockchain: Blockchain.COSMOS
         }
@@ -92,7 +93,7 @@ export const chartStatsValues = [
         title: 'Reward',
         color: '#00E676',
         type: IStatValueType.AMOUNT,
-        chartDisplay: true,
+        icon: IconValues.CLAIM_REWARD,
         data: {
             value: '700.00',
             tokenSymbol: 'ATOM',
@@ -101,7 +102,7 @@ export const chartStatsValues = [
     }
 ];
 
-export const topStatsValues = [
+export const topStatsValues: IStatValue[] = [
     {
         title: 'No. of Validators',
         color: '#FFFFFF',

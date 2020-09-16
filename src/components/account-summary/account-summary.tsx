@@ -53,7 +53,7 @@ export class AccountSummaryComponent extends React.Component<
                             <View style={styles.detailsStatContainer}>
                                 <View style={styles.detailsStatIconContainer}>
                                     <Icon
-                                        name={IconValues.VOTE}
+                                        name={item.icon}
                                         size={normalize(25)}
                                         style={{
                                             color: item.color,
@@ -97,11 +97,8 @@ export class AccountSummaryComponent extends React.Component<
     }
 
     public render() {
-        const { styles } = this.props;
-
-        const chartStats = this.props.accountStats.chartStats.filter(
-            stat => stat.chartDisplay && stat.chartDisplay === true
-        );
+        const { accountStats, styles } = this.props;
+        const { chartStats } = accountStats;
 
         const totalCount = chartStats.reduce(
             (sum, value) => new BigNumber(sum).plus(new BigNumber(value.data.value)),
@@ -153,7 +150,7 @@ export class AccountSummaryComponent extends React.Component<
                                     styles.barCard,
                                     {
                                         backgroundColor: stat.color,
-                                        width: this.state.barWidth
+                                        width: this.state.barWidth // TODO: on zil is crashing
                                             ? Number(
                                                   new BigNumber(stat.data.value)
                                                       .multipliedBy(100)

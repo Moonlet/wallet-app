@@ -59,6 +59,19 @@ export class TokenDashboardComponent extends React.Component<
     }
 
     public componentDidMount() {
+        this.fetchAccountStats();
+    }
+
+    public componentDidUpdate(prevProps: IExternalProps) {
+        if (
+            this.props.blockchain !== prevProps.blockchain ||
+            this.props.account !== prevProps.account
+        ) {
+            this.fetchAccountStats();
+        }
+    }
+
+    private fetchAccountStats() {
         const { blockchain } = this.props;
 
         const blockchainConfig = getBlockchain(blockchain);

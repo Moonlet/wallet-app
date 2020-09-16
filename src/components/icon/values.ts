@@ -31,6 +31,7 @@ export enum IconValues {
     FLASH_OFF = 'flash-off',
     FLASH = 'flash',
     INBOUND = 'inbound',
+    KEY_LOCK = 'key-lock',
     KEY = 'key',
     KEYBOARD_DELETE = 'keyboard-delete',
     KEYBOARD_SHIFT = 'keyboard-shift',

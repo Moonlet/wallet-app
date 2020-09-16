@@ -39,11 +39,15 @@ export default (theme: ITheme) =>
             padding: BASE_DIMENSION + BASE_DIMENSION / 2
         },
         barContainer: {
+            flexDirection: 'row',
             width: '100%',
-            backgroundColor: theme.colors.white,
+            backgroundColor: theme.colors.textSecondary,
             height: normalize(20),
             marginBottom: BASE_DIMENSION * 2,
-            borderRadius: BORDER_RADIUS / 2
+            borderRadius: BORDER_RADIUS
+        },
+        barCard: {
+            height: normalize(20)
         },
         topStatsContainer: {
             flexDirection: 'row',

@@ -7,7 +7,7 @@ import { normalize } from '../../styles/dimensions';
 import { translate } from '../../core/i18n/translation/translate';
 import { Blockchain } from '../../core/blockchain/types';
 import { ITokenState } from '../../redux/wallets/state';
-import { AccountStats } from '../../core/blockchain/types/stats';
+import { AccountStats, IStatValue } from '../../core/blockchain/types/stats';
 import BigNumber from 'bignumber.js';
 import Icon from '../icon/icon';
 import { ExpandableContainer } from '../expandable-container/expandable-container';
@@ -25,6 +25,7 @@ interface IExternalProps {
 
 interface IState {
     expanded: boolean;
+    barWidth: number;
 }
 
 export class AccountSummaryComponent extends React.Component<
@@ -34,7 +35,8 @@ export class AccountSummaryComponent extends React.Component<
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.state = {
-            expanded: false
+            expanded: false,
+            barWidth: undefined
         };
     }
 
@@ -138,10 +140,37 @@ export class AccountSummaryComponent extends React.Component<
                         )}
                     </View>
 
-                    <View style={styles.barContainer} />
+                    <View
+                        style={styles.barContainer}
+                        onLayout={event =>
+                            this.setState({ barWidth: event.nativeEvent.layout.width })
+                        }
+                    >
+                        {chartStats.map((stat: IStatValue, index: number) => (
+                            <View
+                                key={`stat-bar-${index}`}
+                                style={[
+                                    styles.barCard,
+                                    {
+                                        backgroundColor: stat.color,
+                                        width: this.state.barWidth
+                                            ? Number(
+                                                  new BigNumber(stat.data.value)
+                                                      .multipliedBy(100)
+                                                      .dividedBy(totalCount)
+                                                      .multipliedBy(this.state.barWidth)
+                                                      .dividedBy(100)
+                                                      .toFixed(0)
+                                              )
+                                            : 0
+                                    }
+                                ]}
+                            />
+                        ))}
+                    </View>
 
                     <View style={styles.topStatsContainer}>
-                        {chartStats.map((stat: any, index: number) => (
+                        {chartStats.map((stat: IStatValue, index: number) => (
                             <View style={styles.percentageSquareContainer} key={`stat-${index}`}>
                                 <View
                                     style={[

@@ -18,11 +18,13 @@ import { SkeletonPlaceholder } from '../skeleton-placeholder/skeleton-placeholde
 
 interface IExternalProps {
     isLoading: boolean;
-    accountStats: AccountStats;
-    blockchain: Blockchain;
-    token: ITokenState;
     enableExpand: boolean;
     style?: any;
+    data: {
+        accountStats: AccountStats;
+        blockchain: Blockchain;
+        token: ITokenState;
+    };
 }
 
 interface IState {
@@ -43,7 +45,8 @@ export class AccountSummaryComponent extends React.Component<
     }
 
     private renderDetailsSection() {
-        const { accountStats, blockchain, styles } = this.props;
+        const { data, styles } = this.props;
+        const { accountStats, blockchain } = data;
 
         if (this.props.isLoading) {
             return (
@@ -136,7 +139,8 @@ export class AccountSummaryComponent extends React.Component<
     }
 
     public render() {
-        const { accountStats, isLoading, styles } = this.props;
+        const { data, isLoading, styles } = this.props;
+        const { accountStats } = data;
 
         const totalCount =
             !isLoading &&

@@ -145,12 +145,14 @@ export class TokenDashboardComponent extends React.Component<
                     ]}
                 >
                     <AccountSummary
-                        accountStats={this.state.accountStats}
-                        blockchain={this.props.blockchain}
-                        token={this.state.token}
-                        enableExpand={true}
-                        style={styles.accountSummary}
                         isLoading={this.state.loadingAccountStats}
+                        style={styles.accountSummary}
+                        data={{
+                            accountStats: this.state.accountStats,
+                            blockchain: this.props.blockchain,
+                            token: this.state.token
+                        }}
+                        enableExpand={true}
                     />
 
                     <QuickDelegateBanner

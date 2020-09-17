@@ -41,12 +41,14 @@ export class StatsComponentInternal extends React.Component<
                 )}
 
                 <AccountSummary
-                    accountStats={this.props.accountStats}
-                    blockchain={this.props.blockchain}
-                    token={this.props.token}
-                    enableExpand={false}
-                    style={styles.accountSummary}
                     isLoading={!this.props.accountStats}
+                    style={styles.accountSummary}
+                    data={{
+                        accountStats: this.props.accountStats,
+                        blockchain: this.props.blockchain,
+                        token: this.props.token
+                    }}
+                    enableExpand={false}
                 />
             </View>
         );

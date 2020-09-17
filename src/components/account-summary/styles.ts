@@ -50,17 +50,18 @@ export default (theme: ITheme) =>
         },
         topStatsContainer: {
             flexDirection: 'row',
-            flexWrap: 'wrap'
+            flexWrap: 'wrap',
+            justifyContent: 'space-between'
         },
         percentageSquareContainer: {
             flexDirection: 'row',
             justifyContent: 'center',
-            marginBottom: BASE_DIMENSION,
-            marginRight: BASE_DIMENSION * 2
+            marginBottom: BASE_DIMENSION
         },
         percentageSquare: {
             padding: BASE_DIMENSION / 1.3,
-            marginRight: BASE_DIMENSION / 2
+            marginRight: BASE_DIMENSION / 2,
+            borderRadius: BORDER_RADIUS / 4
         },
         percentageText: {
             fontSize: normalizeFontAndLineHeight(9),
@@ -68,11 +69,15 @@ export default (theme: ITheme) =>
             color: theme.colors.text,
             alignSelf: 'center'
         },
+        percengateSkeletonContainer: {
+            flexDirection: 'row',
+            width: '100%',
+            justifyContent: 'space-between'
+        },
         percengateSkeleton: {
             height: normalize(20),
-            width: normalize(80),
             marginBottom: BASE_DIMENSION,
-            marginRight: BASE_DIMENSION * 2
+            borderRadius: BORDER_RADIUS / 2
         },
         detailsContainer: {
             flexDirection: 'row',
@@ -136,10 +141,12 @@ export default (theme: ITheme) =>
         },
         detailsSkeletonPrimaryValue: {
             height: normalize(14),
-            width: normalize(100)
+            width: normalize(100),
+            borderRadius: BORDER_RADIUS / 2
         },
         detailsSkeletonSecondaryValue: {
             height: normalize(12),
-            width: normalize(80)
+            width: normalize(80),
+            borderRadius: BORDER_RADIUS / 2
         }
     });

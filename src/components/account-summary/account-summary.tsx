@@ -3,7 +3,7 @@ import { FlatList, TouchableHighlight, View } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
 import { translate } from '../../core/i18n/translation/translate';
 import { Blockchain } from '../../core/blockchain/types';
 import { ITokenState } from '../../redux/wallets/state';
@@ -43,7 +43,7 @@ export class AccountSummaryComponent extends React.Component<
     }
 
     private renderDetailsSection() {
-        const { blockchain, styles } = this.props;
+        const { accountStats, blockchain, styles } = this.props;
 
         if (this.props.isLoading) {
             return (
@@ -63,11 +63,15 @@ export class AccountSummaryComponent extends React.Component<
             );
         }
 
+        if (!accountStats?.chartStats) {
+            return null;
+        }
+
         return (
             <View>
                 <View style={styles.detailsContainer}>
                     <FlatList
-                        data={this.props.accountStats.chartStats}
+                        data={accountStats.chartStats}
                         keyExtractor={(_, index) => `${index}`}
                         renderItem={({ item }) => (
                             <View style={styles.detailsStatContainer}>
@@ -116,12 +120,27 @@ export class AccountSummaryComponent extends React.Component<
         );
     }
 
+    private renderPercengateSkeleton() {
+        return (
+            <View
+                style={[
+                    this.props.styles.percengateSkeleton,
+                    {
+                        width: this.state.barWidth
+                            ? normalize(this.state.barWidth / 4) - BASE_DIMENSION * 2
+                            : normalize(40)
+                    }
+                ]}
+            />
+        );
+    }
+
     public render() {
         const { accountStats, isLoading, styles } = this.props;
 
         const totalCount =
             !isLoading &&
-            accountStats.chartStats.reduce(
+            accountStats?.chartStats.reduce(
                 (sum, value) => new BigNumber(sum).plus(new BigNumber(value.data.value)),
                 new BigNumber(0)
             );
@@ -160,7 +179,9 @@ export class AccountSummaryComponent extends React.Component<
 
                     {isLoading ? (
                         <SkeletonPlaceholder>
-                            <View style={styles.barContainer} />
+                            <View
+                                style={[styles.barContainer, { borderRadius: BORDER_RADIUS / 2 }]}
+                            />
                         </SkeletonPlaceholder>
                     ) : (
                         <View
@@ -169,7 +190,7 @@ export class AccountSummaryComponent extends React.Component<
                                 this.setState({ barWidth: event.nativeEvent.layout.width })
                             }
                         >
-                            {accountStats.chartStats.map((stat: IStatValue, index: number) => (
+                            {accountStats?.chartStats.map((stat: IStatValue, index: number) => (
                                 <View
                                     key={`stat-bar-${index}`}
                                     style={[
@@ -196,13 +217,21 @@ export class AccountSummaryComponent extends React.Component<
 
                     <View style={styles.topStatsContainer}>
                         {isLoading ? (
-                            <SkeletonPlaceholder>
-                                <View style={styles.percengateSkeleton} />
-                                <View style={styles.percengateSkeleton} />
-                                <View style={styles.percengateSkeleton} />
-                            </SkeletonPlaceholder>
+                            <View
+                                style={styles.percengateSkeletonContainer}
+                                onLayout={event =>
+                                    this.setState({ barWidth: event.nativeEvent.layout.width })
+                                }
+                            >
+                                <SkeletonPlaceholder>
+                                    {this.renderPercengateSkeleton()}
+                                    {this.renderPercengateSkeleton()}
+                                    {this.renderPercengateSkeleton()}
+                                    {this.renderPercengateSkeleton()}
+                                </SkeletonPlaceholder>
+                            </View>
                         ) : (
-                            accountStats.chartStats.map((stat: IStatValue, index: number) => (
+                            accountStats?.chartStats.map((stat: IStatValue, index: number) => (
                                 <View
                                     style={styles.percentageSquareContainer}
                                     key={`stat-${index}`}
@@ -219,7 +248,7 @@ export class AccountSummaryComponent extends React.Component<
                                             : new BigNumber(stat.data.value)
                                                   .multipliedBy(100)
                                                   .dividedBy(totalCount)
-                                                  .toFixed(2) + `% ${stat.title}`}
+                                                  .toFixed(0) + `% ${stat.title}`}
                                     </Text>
                                 </View>
                             ))

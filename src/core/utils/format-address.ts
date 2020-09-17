@@ -1,7 +1,10 @@
 import { Blockchain } from '../blockchain/types';
 import { getBlockchain } from '../blockchain/blockchain-factory';
 
-export const formatAddress = (text: string, blockchain: Blockchain) => {
+export const formatAddress = (text: string, blockchain: Blockchain, nameService?: string) => {
+    if (nameService !== '') {
+        return nameService;
+    }
     switch (getBlockchain(blockchain).config.ui.addressDisplay) {
         case 'stripped':
             if (text.length === 0) {

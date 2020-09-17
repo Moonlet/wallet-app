@@ -380,11 +380,11 @@ export class SendScreenComponent extends React.Component<
                 <PrimaryCtaField
                     label={translate('App.labels.send')}
                     action={translate('App.labels.to')}
-                    value={
+                    value={formatAddress(
+                        this.state.toAddress,
+                        this.props.account.blockchain,
                         nameService
-                            ? nameService
-                            : formatAddress(this.state.toAddress, this.props.account.blockchain)
-                    }
+                    )}
                 />
                 {(activeIndex === 1 || activeIndex === 2) && (
                     <AmountCtaField
@@ -456,9 +456,7 @@ export class SendScreenComponent extends React.Component<
                     ]}
                 >
                     <Text style={styles.confirmTransactionText}>
-                        {nameService
-                            ? nameService
-                            : formatAddress(this.state.toAddress, blockchain)}
+                        {formatAddress(this.state.toAddress, blockchain, nameService)}
                     </Text>
                 </View>
                 {nameService !== '' && <Text style={styles.displayAddress}>{toAddress}</Text>}

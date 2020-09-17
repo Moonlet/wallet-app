@@ -20,7 +20,7 @@ export class StatsComponentInternal extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     private renderTopStats() {
-        const styles = this.props.styles;
+        const { styles } = this.props;
         return this.props.accountStats.topStats.map((stat: IStatValue, i: number) => (
             <View key={i} style={styles.statContainer}>
                 <Text style={styles.statLabelText}>{stat.title}</Text>
@@ -36,7 +36,7 @@ export class StatsComponentInternal extends React.Component<
 
         return (
             <View style={styles.container}>
-                {this.props.accountStats.topStats.length > 0 && (
+                {this.props.accountStats?.topStats.length > 0 && (
                     <View style={styles.topStatsContainer}>{this.renderTopStats()}</View>
                 )}
 
@@ -46,6 +46,7 @@ export class StatsComponentInternal extends React.Component<
                     token={this.props.token}
                     enableExpand={false}
                     style={styles.accountSummary}
+                    isLoading={!this.props.accountStats}
                 />
             </View>
         );

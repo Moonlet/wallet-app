@@ -14,8 +14,10 @@ import { ExpandableContainer } from '../expandable-container/expandable-containe
 import { IconValues } from '../icon/values';
 import { Text } from '../../library';
 import { statGetValueString } from '../../core/utils/stats-get-value';
+import { SkeletonPlaceholder } from '../skeleton-placeholder/skeleton-placeholder';
 
 interface IExternalProps {
+    isLoading: boolean;
     accountStats: AccountStats;
     blockchain: Blockchain;
     token: ITokenState;
@@ -42,6 +44,24 @@ export class AccountSummaryComponent extends React.Component<
 
     private renderDetailsSection() {
         const { blockchain, styles } = this.props;
+
+        if (this.props.isLoading) {
+            return (
+                <View style={styles.detailsContainer}>
+                    <SkeletonPlaceholder>
+                        {new Array(4).fill('').map(_ => (
+                            <View style={styles.detailsSkeletonComp}>
+                                <View style={styles.detailsSkeletonIcon} />
+                                <View style={{ justifyContent: 'space-between' }}>
+                                    <View style={styles.detailsSkeletonPrimaryValue} />
+                                    <View style={styles.detailsSkeletonSecondaryValue} />
+                                </View>
+                            </View>
+                        ))}
+                    </SkeletonPlaceholder>
+                </View>
+            );
+        }
 
         return (
             <View>
@@ -97,13 +117,14 @@ export class AccountSummaryComponent extends React.Component<
     }
 
     public render() {
-        const { accountStats, styles } = this.props;
-        const { chartStats } = accountStats;
+        const { accountStats, isLoading, styles } = this.props;
 
-        const totalCount = chartStats.reduce(
-            (sum, value) => new BigNumber(sum).plus(new BigNumber(value.data.value)),
-            new BigNumber(0)
-        );
+        const totalCount =
+            !isLoading &&
+            accountStats.chartStats.reduce(
+                (sum, value) => new BigNumber(sum).plus(new BigNumber(value.data.value)),
+                new BigNumber(0)
+            );
 
         return (
             <View style={[styles.container, this.props?.style]}>
@@ -137,55 +158,72 @@ export class AccountSummaryComponent extends React.Component<
                         )}
                     </View>
 
-                    <View
-                        style={styles.barContainer}
-                        onLayout={event =>
-                            this.setState({ barWidth: event.nativeEvent.layout.width })
-                        }
-                    >
-                        {chartStats.map((stat: IStatValue, index: number) => (
-                            <View
-                                key={`stat-bar-${index}`}
-                                style={[
-                                    styles.barCard,
-                                    {
-                                        backgroundColor: stat.color,
-                                        width:
-                                            this.state.barWidth && stat.data.value !== '0'
-                                                ? Number(
-                                                      new BigNumber(stat.data.value)
-                                                          .multipliedBy(100)
-                                                          .dividedBy(totalCount)
-                                                          .multipliedBy(this.state.barWidth)
-                                                          .dividedBy(100)
-                                                          .toFixed(0)
-                                                  )
-                                                : 0
-                                    }
-                                ]}
-                            />
-                        ))}
-                    </View>
-
-                    <View style={styles.topStatsContainer}>
-                        {chartStats.map((stat: IStatValue, index: number) => (
-                            <View style={styles.percentageSquareContainer} key={`stat-${index}`}>
+                    {isLoading ? (
+                        <SkeletonPlaceholder>
+                            <View style={styles.barContainer} />
+                        </SkeletonPlaceholder>
+                    ) : (
+                        <View
+                            style={styles.barContainer}
+                            onLayout={event =>
+                                this.setState({ barWidth: event.nativeEvent.layout.width })
+                            }
+                        >
+                            {accountStats.chartStats.map((stat: IStatValue, index: number) => (
                                 <View
+                                    key={`stat-bar-${index}`}
                                     style={[
-                                        styles.percentageSquare,
-                                        { backgroundColor: stat.color }
+                                        styles.barCard,
+                                        {
+                                            backgroundColor: stat.color,
+                                            width:
+                                                this.state.barWidth && stat.data.value !== '0'
+                                                    ? Number(
+                                                          new BigNumber(stat.data.value)
+                                                              .multipliedBy(100)
+                                                              .dividedBy(totalCount)
+                                                              .multipliedBy(this.state.barWidth)
+                                                              .dividedBy(100)
+                                                              .toFixed(0)
+                                                      )
+                                                    : 0
+                                        }
                                     ]}
                                 />
-                                <Text style={styles.percentageText}>
-                                    {totalCount.toFixed() === '0'
-                                        ? 0 + '%'
-                                        : new BigNumber(stat.data.value)
-                                              .multipliedBy(100)
-                                              .dividedBy(totalCount)
-                                              .toFixed(2) + `% ${stat.title}`}
-                                </Text>
-                            </View>
-                        ))}
+                            ))}
+                        </View>
+                    )}
+
+                    <View style={styles.topStatsContainer}>
+                        {isLoading ? (
+                            <SkeletonPlaceholder>
+                                <View style={styles.percengateSkeleton} />
+                                <View style={styles.percengateSkeleton} />
+                                <View style={styles.percengateSkeleton} />
+                            </SkeletonPlaceholder>
+                        ) : (
+                            accountStats.chartStats.map((stat: IStatValue, index: number) => (
+                                <View
+                                    style={styles.percentageSquareContainer}
+                                    key={`stat-${index}`}
+                                >
+                                    <View
+                                        style={[
+                                            styles.percentageSquare,
+                                            { backgroundColor: stat.color }
+                                        ]}
+                                    />
+                                    <Text style={styles.percentageText}>
+                                        {totalCount.toFixed() === '0'
+                                            ? 0 + '%'
+                                            : new BigNumber(stat.data.value)
+                                                  .multipliedBy(100)
+                                                  .dividedBy(totalCount)
+                                                  .toFixed(2) + `% ${stat.title}`}
+                                    </Text>
+                                </View>
+                            ))
+                        )}
                     </View>
 
                     {this.props.enableExpand ? (

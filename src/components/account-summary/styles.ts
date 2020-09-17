@@ -43,8 +43,7 @@ export default (theme: ITheme) =>
             width: '100%',
             backgroundColor: theme.colors.textSecondary,
             height: normalize(20),
-            marginBottom: BASE_DIMENSION * 2,
-            borderRadius: BORDER_RADIUS
+            marginBottom: BASE_DIMENSION * 2
         },
         barCard: {
             height: normalize(20)
@@ -68,6 +67,12 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(13),
             color: theme.colors.text,
             alignSelf: 'center'
+        },
+        percengateSkeleton: {
+            height: normalize(20),
+            width: normalize(80),
+            marginBottom: BASE_DIMENSION,
+            marginRight: BASE_DIMENSION * 2
         },
         detailsContainer: {
             flexDirection: 'row',
@@ -117,5 +122,24 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(34),
             color: theme.colors.white,
             letterSpacing: LETTER_SPACING
+        },
+        detailsSkeletonComp: {
+            flexDirection: 'row',
+            marginBottom: BASE_DIMENSION * 2,
+            marginRight: BASE_DIMENSION * 2
+        },
+        detailsSkeletonIcon: {
+            width: normalize(36),
+            height: normalize(36),
+            borderRadius: BORDER_RADIUS,
+            marginRight: BASE_DIMENSION
+        },
+        detailsSkeletonPrimaryValue: {
+            height: normalize(14),
+            width: normalize(100)
+        },
+        detailsSkeletonSecondaryValue: {
+            height: normalize(12),
+            width: normalize(80)
         }
     });

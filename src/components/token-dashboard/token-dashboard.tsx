@@ -41,6 +41,7 @@ const mapDispatchToProps = {
 interface IState {
     accountStats: AccountStats;
     token: ITokenState;
+    loadingAccountStats: boolean;
 }
 
 export class TokenDashboardComponent extends React.Component<
@@ -54,7 +55,8 @@ export class TokenDashboardComponent extends React.Component<
 
         this.state = {
             accountStats: undefined,
-            token: undefined
+            token: undefined,
+            loadingAccountStats: true
         };
     }
 
@@ -74,6 +76,8 @@ export class TokenDashboardComponent extends React.Component<
     private fetchAccountStats() {
         const { blockchain } = this.props;
 
+        this.setState({ loadingAccountStats: true });
+
         const blockchainConfig = getBlockchain(blockchain);
 
         const token: ITokenState = this.props.account.tokens[this.props.chainId][
@@ -85,7 +89,12 @@ export class TokenDashboardComponent extends React.Component<
         blockchainConfig
             .getStats(this.props.chainId)
             .getAccountDelegateStats(this.props.account, token)
-            .then(accStats => this.setState({ accountStats: accStats }))
+            .then(accStats =>
+                this.setState({
+                    accountStats: accStats,
+                    loadingAccountStats: false
+                })
+            )
             .catch(e => SentryCaptureException(new Error(JSON.stringify(e))));
     }
 
@@ -135,16 +144,14 @@ export class TokenDashboardComponent extends React.Component<
                         { paddingBottom: this.props.showBottomPadding ? normalize(70) : 0 }
                     ]}
                 >
-                    {/* TODO: implement loading */}
-                    {this.state.accountStats && (
-                        <AccountSummary
-                            accountStats={this.state.accountStats}
-                            blockchain={this.props.blockchain}
-                            token={this.state.token}
-                            enableExpand={true}
-                            style={styles.accountSummary}
-                        />
-                    )}
+                    <AccountSummary
+                        accountStats={this.state.accountStats}
+                        blockchain={this.props.blockchain}
+                        token={this.state.token}
+                        enableExpand={true}
+                        style={styles.accountSummary}
+                        isLoading={this.state.loadingAccountStats}
+                    />
 
                     <QuickDelegateBanner
                         blockchain={this.props.blockchain}

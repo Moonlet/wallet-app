@@ -52,8 +52,8 @@ export class AccountSummaryComponent extends React.Component<
             return (
                 <View style={styles.detailsContainer}>
                     <SkeletonPlaceholder>
-                        {new Array(4).fill('').map(_ => (
-                            <View style={styles.detailsSkeletonComp}>
+                        {new Array(4).fill('').map((_, index: number) => (
+                            <View key={`skelet-${index}`} style={styles.detailsSkeletonComp}>
                                 <View style={styles.detailsSkeletonIcon} />
                                 <View style={{ justifyContent: 'space-between' }}>
                                     <View style={styles.detailsSkeletonPrimaryValue} />

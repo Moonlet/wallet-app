@@ -14,6 +14,7 @@ interface IExternalProps {
     accountStats: AccountStats;
     blockchain: Blockchain;
     token: ITokenState;
+    extraToken?: ITokenState;
 }
 
 export class StatsComponentInternal extends React.Component<
@@ -46,7 +47,8 @@ export class StatsComponentInternal extends React.Component<
                     data={{
                         accountStats: this.props.accountStats,
                         blockchain: this.props.blockchain,
-                        token: this.props.token
+                        token: this.props.token,
+                        extraToken: this.props.extraToken
                     }}
                     enableExpand={false}
                 />

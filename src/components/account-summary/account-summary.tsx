@@ -17,6 +17,7 @@ import { statGetValueString } from '../../core/utils/stats-get-value';
 import { SkeletonPlaceholder } from '../skeleton-placeholder/skeleton-placeholder';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { TokenScreenComponentType } from '../../core/blockchain/types/token';
+import { formatNumber } from '../../core/utils/format-number';
 
 interface IExternalProps {
     isLoading: boolean;
@@ -26,6 +27,7 @@ interface IExternalProps {
         accountStats: AccountStats;
         blockchain: Blockchain;
         token: ITokenState;
+        extraToken?: ITokenState;
     };
 }
 
@@ -72,7 +74,7 @@ export class AccountSummaryComponent extends React.Component<
 
     private renderDetailsSection() {
         const { data, styles } = this.props;
-        const { accountStats, blockchain } = data;
+        const { accountStats } = data;
 
         if (this.props.isLoading) {
             return (
@@ -126,7 +128,7 @@ export class AccountSummaryComponent extends React.Component<
                     />
                 </View>
 
-                {blockchain === Blockchain.ZILLIQA && (
+                {this.props.data.extraToken && (
                     <View style={styles.detailsExtraContainer}>
                         <View style={styles.divider} />
                         <View style={styles.detailsExtraTextContainer}>
@@ -140,8 +142,14 @@ export class AccountSummaryComponent extends React.Component<
                                     }}
                                 />
                             </View>
-                            {/* TODO: fix this gZil */}
-                            <Text style={styles.detailsExtraText}>{`0.000000000000 gZIL`}</Text>
+
+                            <Text style={styles.detailsExtraText}>
+                                {`${formatNumber(Number(this.props.data.extraToken.balance.value), {
+                                    currency: this.props.data.extraToken.symbol,
+                                    maximumFractionDigits: 12,
+                                    minimumFractionDigits: 12
+                                })}`}
+                            </Text>
                         </View>
                     </View>
                 )}

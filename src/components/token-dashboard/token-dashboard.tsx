@@ -74,21 +74,23 @@ export class TokenDashboardComponent extends React.Component<
     }
 
     private fetchAccountStats() {
-        const { blockchain } = this.props;
+        const { account, blockchain, chainId } = this.props;
+
+        if (!account) {
+            return;
+        }
 
         this.setState({ loadingAccountStats: true });
 
         const blockchainConfig = getBlockchain(blockchain);
 
-        const token: ITokenState = this.props.account.tokens[this.props.chainId][
-            blockchainConfig.config.coin
-        ];
+        const token: ITokenState = account.tokens[chainId][blockchainConfig.config.coin];
 
         this.setState({ token });
 
         blockchainConfig
-            .getStats(this.props.chainId)
-            .getAccountDelegateStats(this.props.account, token)
+            .getStats(chainId)
+            .getAccountDelegateStats(account, token)
             .then(accStats =>
                 this.setState({
                     accountStats: accStats,

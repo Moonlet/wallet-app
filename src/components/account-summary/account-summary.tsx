@@ -15,6 +15,8 @@ import { IconValues } from '../icon/values';
 import { Text } from '../../library';
 import { statGetValueString } from '../../core/utils/stats-get-value';
 import { SkeletonPlaceholder } from '../skeleton-placeholder/skeleton-placeholder';
+import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { TokenScreenComponentType } from '../../core/blockchain/types/token';
 
 interface IExternalProps {
     isLoading: boolean;
@@ -30,6 +32,7 @@ interface IExternalProps {
 interface IState {
     expanded: boolean;
     barWidth: number;
+    hideComponent: boolean;
 }
 
 export class AccountSummaryComponent extends React.Component<
@@ -40,8 +43,31 @@ export class AccountSummaryComponent extends React.Component<
         super(props);
         this.state = {
             expanded: false,
-            barWidth: undefined
+            barWidth: undefined,
+            hideComponent: true
         };
+    }
+
+    public componentDidMount() {
+        this.handleComponentVisibility();
+    }
+
+    public componentDidUpdate(prevProps: IExternalProps) {
+        if (this.props.data !== prevProps.data) {
+            this.handleComponentVisibility();
+        }
+    }
+
+    private handleComponentVisibility() {
+        const tokenConfig =
+            this.props.data?.token &&
+            getTokenConfig(this.props.data.blockchain, this.props.data.token.symbol);
+
+        if (tokenConfig?.ui.tokenScreenComponent === TokenScreenComponentType.DELEGATE) {
+            this.setState({ hideComponent: false });
+        } else {
+            this.setState({ hideComponent: true });
+        }
     }
 
     private renderDetailsSection() {
@@ -141,6 +167,10 @@ export class AccountSummaryComponent extends React.Component<
     public render() {
         const { data, isLoading, styles } = this.props;
         const { accountStats } = data;
+
+        if (this.state.hideComponent) {
+            return null;
+        }
 
         const totalCount =
             !isLoading &&

@@ -49,6 +49,7 @@ import {
     getUnseenNotifications
 } from '../../redux/notifications/actions';
 import { AddNearAccount } from '../../components/blockchain/near/add-account/add-account';
+import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -155,20 +156,23 @@ const navigationOptions = ({ navigation, theme }: any) => ({
                     style={{ color: themes[theme].colors.accent }}
                 />
             </TouchableOpacity>
-            <View>
-                <TouchableOpacity
-                    testID="notifications-icon"
-                    style={{ width: ICON_CONTAINER_SIZE }}
-                    onPress={() => navigation.navigate('Notifications')}
-                >
-                    <Icon
-                        name={IconValues.ALARM_BELL}
-                        size={ICON_SIZE}
-                        style={{ color: themes[theme].colors.accent }}
-                    />
-                    {navigation.state.params?.unseenNotifications > 0 && <UnreadNotifCircle />}
-                </TouchableOpacity>
-            </View>
+
+            {isFeatureActive(RemoteFeature.DEV_TOOLS) && (
+                <View>
+                    <TouchableOpacity
+                        testID="notifications-icon"
+                        style={{ width: ICON_CONTAINER_SIZE }}
+                        onPress={() => navigation.navigate('Notifications')}
+                    >
+                        <Icon
+                            name={IconValues.ALARM_BELL}
+                            size={ICON_SIZE}
+                            style={{ color: themes[theme].colors.accent }}
+                        />
+                        {navigation.state.params?.unseenNotifications > 0 && <UnreadNotifCircle />}
+                    </TouchableOpacity>
+                </View>
+            )}
         </View>
     )
 });

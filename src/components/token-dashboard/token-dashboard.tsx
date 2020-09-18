@@ -108,7 +108,11 @@ export class TokenDashboardComponent extends React.Component<
             >
                 <View style={styles.cardContainer}>
                     <Icon name={options.icon} size={normalize(16)} style={styles.icon} />
-                    {options.title && <Text style={styles.cardText}>{options.title}</Text>}
+                    {options.title && (
+                        <Text style={styles.cardText} numberOfLines={1}>
+                            {options.title}
+                        </Text>
+                    )}
                 </View>
             </TouchableHighlight>
         );

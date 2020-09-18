@@ -19,20 +19,19 @@ export default (theme: ITheme) =>
         },
         topContainer: {
             flexDirection: 'column',
-            marginBottom: BASE_DIMENSION * 3
+            marginBottom: BASE_DIMENSION * 3,
+            alignItems: 'center'
         },
         topText: {
             fontSize: normalizeFontAndLineHeight(15),
             lineHeight: normalizeFontAndLineHeight(20),
-            color: theme.colors.textSecondary,
-            textAlign: 'center'
+            color: theme.colors.textSecondary
         },
         title: {
             fontSize: normalizeFontAndLineHeight(30),
             lineHeight: normalizeFontAndLineHeight(41),
             color: theme.colors.white,
             letterSpacing: LETTER_SPACING,
-            textAlign: 'center',
             marginVertical: BASE_DIMENSION
         },
         token: {

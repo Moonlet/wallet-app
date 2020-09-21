@@ -9,9 +9,9 @@ const sha256Function = (
     }: { hexPrefix?: boolean; inputEnc?: 'hex'; outputEnc?: 'hex' } = {}
 ): string => {
     const created = createHash('sha256');
-    const result =
-        (hexPrefix ? '0x' : '') + created.update(Buffer.from(message, inputEnc)).digest(outputEnc);
-    return result;
+    return (
+        (hexPrefix ? '0x' : '') + created.update(Buffer.from(message, inputEnc)).digest(outputEnc)
+    );
 };
 
 const childhash = (

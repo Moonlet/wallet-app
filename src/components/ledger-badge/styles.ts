@@ -12,7 +12,7 @@ export default (theme: ITheme) =>
             justifyContent: 'center'
         },
         text: {
-            fontSize: normalizeFontAndLineHeight(15),
+            fontSize: normalizeFontAndLineHeight(14),
             lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.black,
             textAlign: 'center'

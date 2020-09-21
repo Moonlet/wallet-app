@@ -14,7 +14,7 @@ import Icon from '../icon/icon';
 import { IconValues } from '../icon/values';
 import { normalize } from '../../styles/dimensions';
 
-export interface IReduxProps {
+interface IReduxProps {
     wallet: IWalletState;
 }
 
@@ -25,16 +25,16 @@ const mapStateToProps = (state: IReduxState) => ({
 export const LedgerBadgeComponent = (
     props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
-    if (props?.wallet.type === WalletType.HW) {
+    const { wallet, styles } = props;
+
+    if (wallet && wallet.type === WalletType.HW) {
         return (
-            <View testID="ledger-badge" style={props.styles.container}>
+            <View testID="ledger-badge" style={styles.container}>
                 <Text style={props.styles.text}>{translate('App.labels.youAreUsingLedger')}</Text>
-                <Icon
-                    name={IconValues.LEDGER_LOOGO}
-                    size={normalize(16)}
-                    style={props.styles.icon}
-                />
-                <Text style={props.styles.text}>{`Ledger`}</Text>
+                <Icon name={IconValues.LEDGER_LOOGO} size={normalize(16)} style={styles.icon} />
+                <Text style={styles.text}>
+                    {translate(`CreateHardwareWallet.${wallet.hwOptions.deviceModel}`)}
+                </Text>
             </View>
         );
     } else {

@@ -92,7 +92,7 @@ export interface INavigationParams {
 
 interface IState {
     toAddress: string;
-    nameService: string;
+    resolvedAddress: string;
     amount: string;
     insufficientFunds: boolean;
     feeOptions: IFeeOptions;
@@ -122,7 +122,7 @@ export class SendScreenComponent extends React.Component<
         super(props);
 
         this.state = {
-            nameService: '',
+            resolvedAddress: '',
             toAddress: '',
             amount: '',
             insufficientFunds: false,
@@ -318,15 +318,14 @@ export class SendScreenComponent extends React.Component<
                 account={this.props.account}
                 blockchain={this.props.blockchain}
                 chainId={this.props.chainId}
-                onChange={(toAddress: string, nameService?: string) =>
-                    this.setState({ toAddress, nameService })
+                onChange={(toAddress: string, resolvedAddress?: string) =>
+                    this.setState({ toAddress, resolvedAddress })
                 }
             />
         );
     }
 
     private renderBottomConfirm() {
-        const { nameService } = this.state;
         const activeIndex = findIndex(this.state.headerSteps, ['active', true]);
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
@@ -380,11 +379,7 @@ export class SendScreenComponent extends React.Component<
                 <PrimaryCtaField
                     label={translate('App.labels.send')}
                     action={translate('App.labels.to')}
-                    value={formatAddress(
-                        this.state.toAddress,
-                        this.props.account.blockchain,
-                        nameService
-                    )}
+                    value={formatAddress(this.state.toAddress, this.props.account.blockchain)}
                 />
                 {(activeIndex === 1 || activeIndex === 2) && (
                     <AmountCtaField
@@ -434,7 +429,7 @@ export class SendScreenComponent extends React.Component<
     }
 
     private renderConfirmTransaction() {
-        const { nameService, toAddress } = this.state;
+        const { resolvedAddress, toAddress } = this.state;
         const { account, chainId, styles } = this.props;
         const { blockchain } = account;
         const config = getBlockchain(blockchain).config;
@@ -452,14 +447,17 @@ export class SendScreenComponent extends React.Component<
                 <View
                     style={[
                         styles.inputBox,
-                        nameService ? null : { marginBottom: BASE_DIMENSION * 2 }
+                        resolvedAddress ? null : { marginBottom: BASE_DIMENSION * 2 }
                     ]}
                 >
                     <Text style={styles.confirmTransactionText}>
-                        {formatAddress(this.state.toAddress, blockchain, nameService)}
+                        {formatAddress(
+                            resolvedAddress ? resolvedAddress : this.state.toAddress,
+                            blockchain
+                        )}
                     </Text>
                 </View>
-                {nameService !== '' && <Text style={styles.displayAddress}>{toAddress}</Text>}
+                {resolvedAddress !== '' && <Text style={styles.displayAddress}>{toAddress}</Text>}
                 <Text style={styles.receipientLabel}>{translate('Send.amount')}</Text>
                 <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Text style={styles.confirmTransactionText}>

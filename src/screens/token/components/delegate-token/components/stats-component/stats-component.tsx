@@ -9,6 +9,7 @@ import { Blockchain } from '../../../../../../core/blockchain/types';
 import { ITokenState } from '../../../../../../redux/wallets/state';
 import { AccountSummary } from '../../../../../../components/account-summary/account-summary';
 import { statGetValueString } from '../../../../../../core/utils/stats-get-value';
+import { getTokenConfig } from '../../../../../../redux/tokens/static-selectors';
 
 interface IExternalProps {
     accountStats: AccountStats;
@@ -21,12 +22,14 @@ export class StatsComponentInternal extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     private renderTopStats() {
-        const { styles } = this.props;
+        const { blockchain, token, styles } = this.props;
+        const tokenConfig = token && getTokenConfig(blockchain, token.symbol);
+
         return this.props.accountStats.topStats.map((stat: IStatValue, i: number) => (
             <View key={i} style={styles.statContainer}>
                 <Text style={styles.statLabelText}>{stat.title}</Text>
                 <Text style={[styles.statValueText, { color: stat.color }]}>
-                    {statGetValueString(stat)}
+                    {statGetValueString(stat, tokenConfig)}
                 </Text>
             </View>
         ));

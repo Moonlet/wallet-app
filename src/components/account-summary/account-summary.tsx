@@ -98,6 +98,10 @@ export class AccountSummaryComponent extends React.Component<
             return null;
         }
 
+        const tokenConfig =
+            this.props.data?.token &&
+            getTokenConfig(this.props.data.blockchain, this.props.data.token.symbol);
+
         return (
             <View>
                 <View style={styles.detailsContainer}>
@@ -118,7 +122,7 @@ export class AccountSummaryComponent extends React.Component<
                                 </View>
                                 <View>
                                     <Text style={styles.detailsPrimaryText}>
-                                        {statGetValueString(item)}
+                                        {statGetValueString(item, tokenConfig)}
                                     </Text>
                                     <Text style={styles.detailsSecondaryText}>{item.title}</Text>
                                 </View>

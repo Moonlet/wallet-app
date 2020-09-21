@@ -75,10 +75,11 @@ class Zilliqa {
 
         return this.transport.send(CLA, INS.getPublicAddress, P1, P2, payload).then(response => {
             // After the first PubKeyByteLen bytes, the remaining is the bech32 address string.
+            const publicKey = response.toString('hex').slice(0, PubKeyByteLen * 2);
             const pubAddr = response
                 .slice(PubKeyByteLen, PubKeyByteLen + Bech32AddrLen)
                 .toString('utf-8');
-            return { pubAddr };
+            return { pubAddr, publicKey };
         });
     }
 

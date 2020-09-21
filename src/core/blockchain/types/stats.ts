@@ -15,7 +15,7 @@ export interface IStatValue {
     subtitle?: string;
     color: string;
     type: IStatValueType;
-    chartDisplay?: boolean;
+    icon?: string;
     data: {
         value: string;
         tokenSymbol?: string;

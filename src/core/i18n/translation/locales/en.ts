@@ -110,6 +110,7 @@ export const translation: ITranslations = {
                 statistics: 'Statistics',
                 status: 'Status',
                 success: 'Success',
+                summary: 'Summary',
                 support: 'Support',
                 symbol: 'Symbol',
                 tc: 'Terms of Service',
@@ -451,6 +452,7 @@ export const translation: ITranslations = {
             NOT_ENOUGH_TOKENS: 'Insufficient funds for transaction',
             COSMOS_ERROR_12: 'Insufficient fee',
             COSMOS_ERROR_14: 'Insufficient funds for transaction',
+            INSUFFICIENT_FUNDS_SOURCE_ACCOUNT: 'Insufficient funds in source account!',
             CONTRACT_TX_NORMAL_NOT_ALLOWED:
                 "{{address}} is a smart contract that doesn't accept normal transactions",
             WAITING_TX_CONFIRM: 'Waiting for transaction confirmation from your mobile.',

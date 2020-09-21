@@ -3,7 +3,10 @@ import { ITheme } from '../../core/theme/itheme';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
-        smallToken: {
-            color: theme.colors.white
+        container: {
+            overflow: 'hidden'
+        },
+        animatedView: {
+            overflow: 'scroll'
         }
     });

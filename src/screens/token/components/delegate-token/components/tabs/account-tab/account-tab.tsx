@@ -253,7 +253,7 @@ export class AccountTabComponent extends React.Component<
                             accountStats={this.state.accountStats}
                             blockchain={this.props.blockchain}
                             token={this.props.token}
-                            extraToken={this.props.account.tokens[this.props.chainId].GZIL}
+                            extraToken={this.props.account?.tokens[this.props.chainId].GZIL}
                         />
                     </ScrollView>
                 </View>

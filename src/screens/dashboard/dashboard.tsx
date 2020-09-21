@@ -49,6 +49,7 @@ import {
     getUnseenNotifications
 } from '../../redux/notifications/actions';
 import { AddNearAccount } from '../../components/blockchain/near/add-account/add-account';
+import { LedgerBadge } from '../../components/ledger-badge/ledger-badge';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -450,6 +451,7 @@ export class DashboardScreenComponent extends React.Component<
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
                 <TestnetBadge />
+                <LedgerBadge />
 
                 <NavigationEvents onWillFocus={() => this.onFocus()} />
 

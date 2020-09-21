@@ -1,7 +1,8 @@
 import { IAccountState } from '../state';
 import {
     IFeeOptions,
-    ITransactionExtraFields
+    ITransactionExtraFields,
+    TransactionMessageText
     // TransactionMessageType,
     // TransactionMessageText,
     // IBlockchainTransaction
@@ -305,34 +306,62 @@ export const posAction = (
         for (let index = 0; index < txs.length; index++) {
             const client = getBlockchain(account.blockchain).getClient(chainId);
             const transaction = await wallet.sign(account.blockchain, account.index, txs[index]);
-            const txHash = await client.sendTransaction(transaction);
 
-            if (txHash) {
-                dispatch(updateProcessTransactionIdForIndex(index, txHash));
-                dispatch({
-                    type: TRANSACTION_PUBLISHED,
-                    data: {
-                        hash: txHash,
-                        tx: txs[index],
-                        walletId: appWallet.id
+            try {
+                const txHash = await client.sendTransaction(transaction);
+
+                if (txHash) {
+                    dispatch(updateProcessTransactionIdForIndex(index, txHash));
+                    dispatch({
+                        type: TRANSACTION_PUBLISHED,
+                        data: {
+                            hash: txHash,
+                            tx: txs[index],
+                            walletId: appWallet.id
+                        }
+                    });
+                    dispatch(
+                        updateProcessTransactionStatusForIndex(index, TransactionStatus.PENDING)
+                    );
+                } else {
+                    SentryAddBreadcrumb({
+                        message: JSON.stringify({ transactions: txs[index] })
+                    });
+
+                    dispatch(
+                        updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
+                    );
+                    for (let i = index + 1; i < txs.length; i++) {
+                        dispatch(
+                            updateProcessTransactionStatusForIndex(i, TransactionStatus.DROPPED)
+                        );
                     }
-                });
-                dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.PENDING));
-            } else {
-                SentryAddBreadcrumb({
-                    message: JSON.stringify({ transactions: txs[index] })
-                });
-
+                    break;
+                }
+            } catch (error) {
                 dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED));
+
+                // TODO  we should stop all other transactions? if one fails?
                 for (let i = index + 1; i < txs.length; i++) {
                     dispatch(updateProcessTransactionStatusForIndex(i, TransactionStatus.DROPPED));
                 }
-                break;
+                throw error;
             }
         }
     } catch (errorMessage) {
         SentryCaptureException(new Error(JSON.stringify(errorMessage)));
         await LoadingModal.close();
-        Dialog.info(translate('LoadingModal.txFailed'), translate('LoadingModal.GENERIC_ERROR'));
+
+        if (TransactionMessageText[errorMessage]) {
+            Dialog.info(
+                translate('LoadingModal.txFailed'),
+                translate(`LoadingModal.${errorMessage}`)
+            );
+        } else {
+            Dialog.info(
+                translate('LoadingModal.txFailed'),
+                translate('LoadingModal.GENERIC_ERROR')
+            );
+        }
     }
 };

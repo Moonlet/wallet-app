@@ -85,12 +85,25 @@ export class ProcessTransactionsComponent extends React.Component<
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.transactions !== prevProps.transactions) {
             let allTransactionPublished = 0;
+            let transactionsFailed = 0;
             for (const tx of this.props.transactions) {
                 if (this.isTransactionPublished(tx)) allTransactionPublished++;
+                if (
+                    tx.status === TransactionStatus.DROPPED ||
+                    tx.status === TransactionStatus.FAILED
+                )
+                    transactionsFailed++;
             }
-            this.setState({
-                disabledButton: !(allTransactionPublished === this.props.transactions.length)
-            });
+
+            if (transactionsFailed !== 0) {
+                this.setState({
+                    disabledButton: false
+                });
+            } else {
+                this.setState({
+                    disabledButton: !(allTransactionPublished === this.props.transactions.length)
+                });
+            }
         }
     }
 
@@ -181,7 +194,6 @@ export class ProcessTransactionsComponent extends React.Component<
             }
             case PosBasicActionType.WITHDRAW: {
                 topText = translate('App.labels.withdraw') + ' ' + amount;
-                middleText = translate('App.labels.from').toLowerCase() + ' ' + tx.toAddress;
                 break;
             }
             default: {
@@ -233,6 +245,11 @@ export class ProcessTransactionsComponent extends React.Component<
             }
         }
 
+        const dontDisplayActivityIndicator =
+            this.isTransactionPublished(tx) ||
+            status === TransactionStatus.FAILED ||
+            status === TransactionStatus.DROPPED;
+
         return (
             <View key={index + '-view-key'} style={styles.cardContainer}>
                 <Icon
@@ -254,7 +271,7 @@ export class ProcessTransactionsComponent extends React.Component<
                     </Text>
                 </View>
 
-                {this.isTransactionPublished(tx) ? (
+                {dontDisplayActivityIndicator ? (
                     status === TransactionStatus.PENDING || status === TransactionStatus.SUCCESS ? (
                         <Icon
                             name={IconValues.CHECK}

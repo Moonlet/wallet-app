@@ -4,7 +4,8 @@ import {
     IWalletState,
     IAccountState,
     ITokensAccountState,
-    ITokenState
+    ITokenState,
+    IWalletHWOptions
 } from '../../../redux/wallets/state';
 import { ChainIdType } from '../../blockchain/types';
 import { accountToken } from '../../../redux/tokens/static-selectors';
@@ -54,7 +55,7 @@ export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets): IWall
             selected: wallet.selected,
             selectedBlockchain: wallet.selectedBlockchain,
             type: wallet.type,
-            hwOptions: wallet?.hwOptions as any,
+            hwOptions: wallet?.hwOptions as IWalletHWOptions,
             accounts,
             transactions: {}
         };

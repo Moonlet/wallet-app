@@ -24,7 +24,11 @@ export const BottomSheetHeaderComponent = (
             }}
             style={props.styles.header}
         >
-            <Icon name={IconValues.CHEVRON_UP} size={ICON_SIZE / 2} style={props.styles.icon} />
+            <Icon
+                name={IconValues.CHEVRON_DOWN_BIGGER}
+                size={ICON_SIZE / 2}
+                style={props.styles.icon}
+            />
         </TouchableWithoutFeedback>
     );
 };

@@ -27,7 +27,6 @@ import { withdraw, activate } from '../../../../../../../redux/wallets/actions';
 import { PasswordModal } from '../../../../../../../components/password-modal/password-modal';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
-import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import moment from 'moment';
@@ -247,16 +246,15 @@ export class AccountTabComponent extends React.Component<
                                 {translate('App.labels.receive')}
                             </Button>
                         </View>
+
                         {this.state.accountStats && this.renderWidgets()}
-                        {this.state.accountStats === undefined ? (
-                            <LoadingIndicator />
-                        ) : (
-                            <StatsComponent
-                                accountStats={this.state.accountStats}
-                                blockchain={this.props.blockchain}
-                                token={this.props.token}
-                            />
-                        )}
+
+                        <StatsComponent
+                            accountStats={this.state.accountStats}
+                            blockchain={this.props.blockchain}
+                            token={this.props.token}
+                            extraToken={this.props.account?.tokens[this.props.chainId].GZIL}
+                        />
                     </ScrollView>
                 </View>
                 <View style={styles.bottomContainer}>

@@ -5,6 +5,7 @@ export const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 // based on iPhone 11's scale
 const scale = SCREEN_WIDTH / 414;
+export const SCALE = scale;
 
 // can be used for width, height, top, bottom, fontSize, borderRadius, margin, padding, etc.
 export const normalize = (size: number) => Math.round(PixelRatio.roundToNearestPixel(size * scale));

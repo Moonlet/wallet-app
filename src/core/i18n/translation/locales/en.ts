@@ -110,6 +110,7 @@ export const translation: ITranslations = {
                 statistics: 'Statistics',
                 status: 'Status',
                 success: 'Success',
+                summary: 'Summary',
                 support: 'Support',
                 symbol: 'Symbol',
                 tc: 'Terms of Service',
@@ -451,6 +452,7 @@ export const translation: ITranslations = {
             NOT_ENOUGH_TOKENS: 'Insufficient funds for transaction',
             COSMOS_ERROR_12: 'Insufficient fee',
             COSMOS_ERROR_14: 'Insufficient funds for transaction',
+            INSUFFICIENT_FUNDS_SOURCE_ACCOUNT: 'Insufficient funds in source account!',
             CONTRACT_TX_NORMAL_NOT_ALLOWED:
                 "{{address}} is a smart contract that doesn't accept normal transactions",
             WAITING_TX_CONFIRM: 'Waiting for transaction confirmation from your mobile.',
@@ -534,7 +536,9 @@ export const translation: ITranslations = {
             unlockBottomText:
                 'It takes {{duration}} in order to unlock the amount and will be automatically withdrawn then deposited into your available balance.',
             claimRewardBottomText:
-                'The claimed reward you receive may be equal to or grater than what it displayed nou since rewards are accumulated each block.'
+                'The claimed reward you receive may be equal to or grater than what it displayed nou since rewards are accumulated each block.',
+            noValidators: 'No validators available',
+            stakeSection: 'This section will become available once you start to stake your tokens.'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',
@@ -546,7 +550,10 @@ export const translation: ITranslations = {
         AddNearAccount: {
             title: 'Create or recover\nan account name!',
             recoverAccount: 'Recover account name',
-            createAccount: 'Create account name'
+            createAccount: 'Create account name',
+            noAccounts: 'No accounts name available',
+            enableSectionWeb:
+                'This section will be enabled once you create an account name from mobile app.'
         },
         QuickDelegateBanner: {
             mainText: {

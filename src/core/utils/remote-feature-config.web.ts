@@ -1,6 +1,6 @@
 export enum RemoteFeature {
-    COSMOS = 'feature_cosmos',
     NEAR = 'feature_near',
+    COSMOS = 'feature_cosmos',
     CELO = 'feature_celo',
     DEV_TOOLS = 'dev_tools',
     TC_VERSION = 'tcVersion'

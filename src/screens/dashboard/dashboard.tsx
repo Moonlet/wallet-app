@@ -230,7 +230,7 @@ export class DashboardScreenComponent extends React.Component<
             this.onFocus();
         }
 
-        if (this.props.wallet.id !== prevProps.wallet.id) {
+        if (this.props.wallet?.id !== prevProps.wallet?.id) {
             this.props.getUnseenNotifications();
         }
 

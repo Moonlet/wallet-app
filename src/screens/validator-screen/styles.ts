@@ -32,7 +32,8 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(41),
             color: theme.colors.white,
             letterSpacing: LETTER_SPACING,
-            marginVertical: BASE_DIMENSION
+            marginVertical: BASE_DIMENSION,
+            textAlign: 'center'
         },
         token: {
             fontSize: normalizeFontAndLineHeight(16),

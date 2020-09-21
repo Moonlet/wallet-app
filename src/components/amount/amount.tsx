@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 import { Text } from '../../library';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
@@ -21,13 +20,21 @@ interface IExternalProps {
     tokenDecimals: number;
     uiDecimals?: number;
     isAnimated?: boolean;
-    smallFontToken?: boolean;
+    smallFontToken?: {
+        visible: boolean;
+        wrapperStyle?: any;
+    };
 }
 
-export interface IReduxProps {
+interface IReduxProps {
     exchangeRates: IExchangeRates;
     userCurrency: string;
 }
+
+const mapStateToProps = (state: IReduxState) => ({
+    exchangeRates: state.market.exchangeRates,
+    userCurrency: state.preferences.currency
+});
 
 export const AmountComponent = (
     props: IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
@@ -43,28 +50,31 @@ export const AmountComponent = (
         props.tokenDecimals
     );
 
-    return (
-        <View style={props.styles.container}>
-            <Text
-                testID={props.testID}
-                style={props.style}
-                format={{
-                    currency: !props.smallFontToken && convertTo,
-                    maximumFractionDigits: props.uiDecimals || 4
-                }}
-                isAnimated={props.isAnimated}
-            >
-                {amount}
-            </Text>
-            {props.smallFontToken && <Text style={props.styles.smallToken}>{convertTo}</Text>}
-        </View>
+    const renderPrimaryAmountComp = () => (
+        <Text
+            testID={props.testID}
+            style={props.style}
+            format={{
+                currency: !props.smallFontToken?.visible === true && convertTo,
+                maximumFractionDigits: props.uiDecimals || 4
+            }}
+            isAnimated={props.isAnimated}
+        >
+            {amount}
+        </Text>
     );
-};
 
-const mapStateToProps = (state: IReduxState) => ({
-    exchangeRates: state.market.exchangeRates,
-    userCurrency: state.preferences.currency
-});
+    if (props.smallFontToken?.visible === true) {
+        return (
+            <Text style={props.smallFontToken?.wrapperStyle}>
+                {renderPrimaryAmountComp()}
+                {<Text style={props.styles.smallToken}>{` ${convertTo}`}</Text>}
+            </Text>
+        );
+    } else {
+        return renderPrimaryAmountComp();
+    }
+};
 
 export const Amount = smartConnect<IExternalProps>(AmountComponent, [
     connect(mapStateToProps, null),

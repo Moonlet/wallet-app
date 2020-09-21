@@ -5,6 +5,7 @@ import { IPasswordModalState } from './password-modal/state';
 import { ITransactionRequestState } from './transaction-request/state';
 import { IValidatorsState } from './validators/state';
 import { IProcessTransactionsState } from './process-transactions/state';
+import { ILedgerConnectState } from './ledger-connect/state';
 
 export interface IUiState {
     screens: IScreensState;
@@ -15,4 +16,5 @@ export interface IUiState {
     processTransactions: IProcessTransactionsState;
     validators: IValidatorsState;
     delegatedValidators: IValidatorsState;
+    ledgerConnect: ILedgerConnectState;
 }

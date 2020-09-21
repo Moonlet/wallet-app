@@ -35,6 +35,7 @@ import { isEqual } from 'lodash';
 import { filterObjectProps } from './core/utils/object-sanitise';
 import { setWalletsCredentials } from './redux/wallets/actions/wallet-actions';
 import { ProcessTransactions } from './screens/pos-actions/process-transactions/process-transactions';
+import { LedgerConnect } from './screens/ledger/ledger-connect';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -226,6 +227,7 @@ export default class App extends React.Component<{}, IState> {
                             {Platform.OS !== 'web' && <Dialog.Component />}
                             <LoadingModal.Component />
                             <LegalModal navigationState={this.state.navigationState} />
+                            <LedgerConnect />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

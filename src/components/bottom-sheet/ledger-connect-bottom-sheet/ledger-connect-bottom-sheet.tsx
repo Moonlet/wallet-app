@@ -129,7 +129,7 @@ export class LedgerConnectBottomSheetComponent extends React.Component<
         const name =
             item.localName !== undefined
                 ? item.localName
-                : translate(`CreateHardwareWallet.${this.props.deviceModel}`);
+                : translate(`LedgerConnect.${this.props.deviceModel}`);
 
         return (
             <TouchableOpacity

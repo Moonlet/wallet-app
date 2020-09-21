@@ -32,7 +32,7 @@ export interface IExternalProps {
     account: IAccountState;
     blockchain: Blockchain;
     chainId: ChainIdType;
-    onChange: (address: string, nameService?: string) => void;
+    onChange: (address: string, resolvedAddress?: string) => void;
 }
 
 interface IState {
@@ -41,7 +41,7 @@ interface IState {
     showOwnAccounts: boolean;
     errorResponseText: string;
     warningResponseText: string;
-    nameServiceAddress: string;
+    resolvedAddress: string;
 }
 
 export interface IReduxProps {
@@ -73,7 +73,7 @@ export class AddAddressComponent extends React.Component<
         super(props);
         this.state = {
             toAddress: '',
-            nameServiceAddress: '',
+            resolvedAddress: '',
             isValidText: false,
             showOwnAccounts: false,
             errorResponseText: undefined,
@@ -166,7 +166,7 @@ export class AddAddressComponent extends React.Component<
             const response = await blockchainInstance
                 .getClient(this.props.chainId)
                 .nameService.resolveText(text);
-            this.setState({ nameServiceAddress: response.address });
+            this.setState({ resolvedAddress: response.address });
             switch (response.code) {
                 case ResolveTextCode.OK: {
                     if (response.type === ResolveTextType.ADDRESS) {
@@ -293,7 +293,7 @@ export class AddAddressComponent extends React.Component<
     }
 
     public render() {
-        const { nameServiceAddress } = this.state;
+        const { resolvedAddress } = this.state;
         const { styles, theme } = this.props;
         const inputPlaceholder =
             Platform.OS === 'web'
@@ -324,8 +324,8 @@ export class AddAddressComponent extends React.Component<
                     />
                     {this.renderRightAddressIcon()}
                 </View>
-                {nameServiceAddress !== '' && (
-                    <Text style={styles.displayAddress}>{nameServiceAddress}</Text>
+                {resolvedAddress !== '' && (
+                    <Text style={styles.displayAddress}>{resolvedAddress}</Text>
                 )}
                 {this.state.errorResponseText && (
                     <Text style={styles.displayError}>{this.state.errorResponseText}</Text>

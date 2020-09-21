@@ -18,8 +18,7 @@ export default (theme: ITheme) =>
         },
         cardWrapper: {
             flexDirection: 'row',
-            marginBottom: BASE_DIMENSION * 2 + BASE_DIMENSION / 2,
-            justifyContent: 'space-between'
+            marginBottom: BASE_DIMENSION
         },
         cardContainer: {
             flexDirection: 'row',
@@ -47,6 +46,9 @@ export default (theme: ITheme) =>
             color: theme.colors.textSecondary
         },
         quickDelegateBannerContainer: {
-            marginTop: BASE_DIMENSION
+            marginBottom: BASE_DIMENSION
+        },
+        accountSummary: {
+            marginBottom: BASE_DIMENSION
         }
     });

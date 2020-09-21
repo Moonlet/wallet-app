@@ -366,7 +366,9 @@ export class DashboardScreenComponent extends React.Component<
                             tokenDecimals={tokenConfig.decimals}
                             blockchain={blockchain}
                             isAnimated={true}
-                            smallFontToken={true}
+                            smallFontToken={{
+                                visible: true
+                            }}
                         />
                         <Icon
                             name={IconValues.CHEVRON_DOWN}

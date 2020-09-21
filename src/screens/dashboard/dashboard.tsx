@@ -5,7 +5,7 @@ import { Text } from '../../library';
 import { INavigationProps } from '../../navigation/with-navigation-params';
 import { TokenDashboard } from '../../components/token-dashboard/token-dashboard';
 import { IReduxState } from '../../redux/state';
-import { IAccountState } from '../../redux/wallets/state';
+import { IAccountState, IWalletState } from '../../redux/wallets/state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { smartConnect } from '../../core/utils/smart-connect';
 import { connect } from 'react-redux';
@@ -56,7 +56,7 @@ const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
 
 interface IReduxProps {
-    walletId: string;
+    wallet: IWalletState;
     walletsNr: number;
     getBalance: typeof getBalance;
     blockchains: Blockchain[];
@@ -77,7 +77,7 @@ const mapStateToProps = (state: IReduxState) => {
     const selectedAccount = getSelectedAccount(state);
 
     return {
-        walletId: getSelectedWallet(state)?.id,
+        wallet: getSelectedWallet(state),
         walletsNr: Object.keys(state.wallets).length,
         blockchains: getBlockchains(state),
         selectedBlockchain: getSelectedBlockchain(state),
@@ -230,7 +230,7 @@ export class DashboardScreenComponent extends React.Component<
             this.onFocus();
         }
 
-        if (this.props.walletId !== prevProps.walletId) {
+        if (this.props.wallet.id !== prevProps.wallet.id) {
             this.props.getUnseenNotifications();
         }
 
@@ -433,7 +433,7 @@ export class DashboardScreenComponent extends React.Component<
     }
 
     public render() {
-        const { styles } = this.props;
+        const { wallet, styles } = this.props;
 
         if (Platform.OS === 'web' && this.state.isLoading) {
             return (
@@ -457,7 +457,7 @@ export class DashboardScreenComponent extends React.Component<
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
                 <TestnetBadge />
-                <LedgerBadge />
+                <LedgerBadge hwOptions={wallet?.hwOptions} />
 
                 <NavigationEvents onWillFocus={() => this.onFocus()} />
 

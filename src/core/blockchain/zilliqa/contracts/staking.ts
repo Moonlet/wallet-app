@@ -318,9 +318,7 @@ export class Staking {
         const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
 
         transaction.toAddress = contractAddress;
-        // const fromAddress = isBech32(tx.account.address)
-        //     ? fromBech32Address(tx.account.address).toLowerCase()
-        //     : tx.account.address.toLowerCase();
+        transaction.amount = '0';
 
         const raw = JSON.stringify({
             _tag: 'CompleteWithdrawal',
@@ -342,7 +340,7 @@ export class Staking {
 
         transaction.data = {
             method: 'withdraw',
-            params: [contractAddress, tx.amount],
+            params: [contractAddress, tx.extraFields.amount],
             raw
         };
 

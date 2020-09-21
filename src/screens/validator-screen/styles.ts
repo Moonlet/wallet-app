@@ -18,21 +18,22 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 3
         },
         topContainer: {
-            flexDirection: 'column'
+            flexDirection: 'column',
+            marginBottom: BASE_DIMENSION * 3,
+            alignItems: 'center'
         },
         topText: {
             fontSize: normalizeFontAndLineHeight(15),
             lineHeight: normalizeFontAndLineHeight(20),
-            color: theme.colors.textSecondary,
-            textAlign: 'center'
+            color: theme.colors.textSecondary
         },
         title: {
             fontSize: normalizeFontAndLineHeight(30),
             lineHeight: normalizeFontAndLineHeight(41),
             color: theme.colors.white,
             letterSpacing: LETTER_SPACING,
-            textAlign: 'center',
-            marginVertical: BASE_DIMENSION
+            marginVertical: BASE_DIMENSION,
+            textAlign: 'center'
         },
         token: {
             fontSize: normalizeFontAndLineHeight(16),

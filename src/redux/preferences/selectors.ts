@@ -49,7 +49,11 @@ export const getNetworks = createSelector(
                     : preferences.networks[blockchain];
 
             if (hasNetwork(blockchain, preferences.testNet)) {
-                if (blockchain === Blockchain.COSMOS) {
+                if (blockchain === Blockchain.NEAR) {
+                    if (isFeatureActive(RemoteFeature.NEAR) === true) {
+                        networks[blockchain] = network;
+                    }
+                } else if (blockchain === Blockchain.COSMOS) {
                     if (isFeatureActive(RemoteFeature.COSMOS) === true) {
                         networks[blockchain] = network;
                     }
@@ -92,7 +96,11 @@ export const getBlockchainsPortfolio = createSelector(
                 blockchainObject = option;
             }
 
-            if (blockchain === Blockchain.COSMOS) {
+            if (blockchain === Blockchain.NEAR) {
+                if (isFeatureActive(RemoteFeature.NEAR) === true) {
+                    list[blockchain] = blockchainObject;
+                }
+            } else if (blockchain === Blockchain.COSMOS) {
                 if (isFeatureActive(RemoteFeature.COSMOS) === true) {
                     list[blockchain] = blockchainObject;
                 }

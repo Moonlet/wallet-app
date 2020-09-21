@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-community/async-storage';
 import CONFIG from '../../config';
 
 export enum RemoteFeature {
+    NEAR = 'feature_near',
     COSMOS = 'feature_cosmos',
     CELO = 'feature_celo',
     DEV_TOOLS = 'dev_tools',
@@ -25,6 +26,7 @@ export const getRemoteConfigFeatures = async () => {
         const objects = await firebase
             .config()
             .getValues([
+                RemoteFeature.NEAR,
                 RemoteFeature.COSMOS,
                 RemoteFeature.CELO,
                 RemoteFeature.DEV_TOOLS,
@@ -38,6 +40,7 @@ export const getRemoteConfigFeatures = async () => {
     } catch (err) {
         // Set default values
         featuresConfig = {
+            [RemoteFeature.NEAR]: JSON.stringify([]),
             [RemoteFeature.DEV_TOOLS]: JSON.stringify([]),
             [RemoteFeature.COSMOS]: JSON.stringify([]),
             [RemoteFeature.CELO]: JSON.stringify([]),
@@ -62,7 +65,8 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
     }
 
     if (
-        (feature === RemoteFeature.COSMOS ||
+        (feature === RemoteFeature.NEAR ||
+            feature === RemoteFeature.COSMOS ||
             feature === RemoteFeature.CELO ||
             feature === RemoteFeature.DEV_TOOLS) &&
         featuresConfig

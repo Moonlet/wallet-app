@@ -1,4 +1,5 @@
 export enum RemoteFeature {
+    NEAR = 'feature_near',
     COSMOS = 'feature_cosmos',
     CELO = 'feature_celo',
     DEV_TOOLS = 'dev_tools',

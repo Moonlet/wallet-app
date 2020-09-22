@@ -40,9 +40,9 @@ export class NameService implements IBlockchainNameService {
 
     public async resolveName(name: string): Promise<IResolveNameResponse> {
         const node = namehash(name);
-        const znsToBech32 = fromBech32Address(ZNS);
+        const znsFromBech = fromBech32Address(ZNS);
         const data = await this.client.getSmartContractSubState(
-            znsToBech32.split('0x')[1],
+            znsFromBech.split('0x')[1],
             'records',
             [node]
         );

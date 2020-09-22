@@ -3,7 +3,7 @@ import { FlatList, TouchableHighlight, View } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { translate } from '../../core/i18n/translation/translate';
 import { Blockchain } from '../../core/blockchain/types';
 import { ITokenState } from '../../redux/wallets/state';
@@ -225,9 +225,7 @@ export class AccountSummaryComponent extends React.Component<
 
                     {isLoading ? (
                         <SkeletonPlaceholder>
-                            <View
-                                style={[styles.barContainer, { borderRadius: BORDER_RADIUS / 2 }]}
-                            />
+                            <View style={styles.barContainer} />
                         </SkeletonPlaceholder>
                     ) : (
                         <View

@@ -3,6 +3,7 @@
 exports[`Wallet screen renders correctly 1`] = `
 "<View testID=\\"wallets-screen\\" style={{...}}>
   <withTheme(TabSelectComponent) options={{...}} onSelectionChange={[Function: onSelectionChange]} selected=\\"HD\\" />
+  <withTheme(AffiliateBannerComponent) type={{...}} style={{...}} />
   <View style={{...}}>
     <ScrollViewMock contentContainerStyle={{...}} showsVerticalScrollIndicator={false}>
       <Swipeable renderLeftActions={[Function: renderLeftActions]} onSwipeableWillOpen={[Function: onSwipeableWillOpen]} friction={1} overshootFriction={1} useNativeAnimations={true}>

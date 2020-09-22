@@ -5,7 +5,7 @@ import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { Text } from '../../../../library';
 import { normalize } from '../../../../styles/dimensions';
-import { svgDimmensions } from '../../ledger-connect';
+import { svgDimmensions } from '../../ledger-connect-component';
 import Img from '../../../../assets/icons/ledger/image_3.svg';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { HWModel, HWConnection } from '../../../../core/wallet/hw-wallet/types';

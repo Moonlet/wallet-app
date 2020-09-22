@@ -227,7 +227,7 @@ export default class App extends React.Component<{}, IState> {
                             {Platform.OS !== 'web' && <Dialog.Component />}
                             <LoadingModal.Component />
                             <LegalModal navigationState={this.state.navigationState} />
-                            <LedgerConnect />
+                            <LedgerConnect.Component />
                         </ThemeContext.Provider>
                     </PersistGate>
                 </Provider>

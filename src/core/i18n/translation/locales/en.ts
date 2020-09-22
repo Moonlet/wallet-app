@@ -584,7 +584,11 @@ export const translation: ITranslations = {
             confirmBothDevices:
                 'Confirm on both your phone and your {{deviceModel}} if the code matches.',
             openApp: 'Opening {{blockchain}} application',
-            openAppOnDevice: 'Please open your {{blockchain}} app\non your {{deviceModel}}.'
+            openAppOnDevice:
+                'Please open your {{blockchain}} app on your {{deviceModel}} and wait a few seconds to have the connection established. Please be patient!',
+            verifyAddressOnDevice:
+                'Verify your {{blockchain}} address on your {{deviceModel}} and confirm it.',
+            verifyAddress: 'Verifing your address'
         }
     },
     plural: (n: number, ord?: boolean) => {

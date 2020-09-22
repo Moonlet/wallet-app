@@ -22,11 +22,7 @@ import {
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { HWVendor, HWModel, HWConnection } from '../../../core/wallet/hw-wallet/types';
-import {
-    verifyAddressOnDevice,
-    featureNotSupported,
-    toInitialState
-} from '../../ui/screens/connectHardwareWallet/actions';
+
 import { HWWalletFactory } from '../../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { LedgerWallet } from '../../../core/wallet/hw-wallet/ledger/ledger-wallet';
@@ -45,7 +41,11 @@ import { formatAddress } from '../../../core/utils/format-address';
 import { updateAddressMonitorTokens } from '../../../core/address-monitor/index';
 import { Dialog } from '../../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../../ui/password-modal/actions';
-import { getTokenConfig, generateAccountTokenState } from '../../tokens/static-selectors';
+import {
+    getTokenConfig,
+    generateAccountTokenState,
+    generateTokensConfig
+} from '../../tokens/static-selectors';
 import {
     getEncryptionKey,
     generateEncryptionKey,
@@ -67,6 +67,7 @@ import { startNotificationsHandlers } from '../../notifications/actions';
 import { ApiClient } from '../../../core/utils/api-client/api-client';
 import { Client as NearClient } from '../../../core/blockchain/near/client';
 import { NEAR_ACCOUNT_EXTENSIONS } from '../../../core/constants/app';
+import { LedgerConnect } from '../../../screens/ledger/ledger-connect';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -169,7 +170,7 @@ export const removeAccount = (walletId: string, blockchain: Blockchain, account:
 };
 
 export const createHWWallet = (
-    deviceId: string,
+    // deviceId: string,
     deviceVendor: HWVendor,
     deviceModel: HWModel,
     connectionType: HWConnection,
@@ -178,9 +179,18 @@ export const createHWWallet = (
     try {
         const walletId: string = uuidv4();
 
-        // in case you replace your connected ledger reset message
-        dispatch(toInitialState());
-        dispatch(setDisplayPasswordModal(false));
+        const accountsAndDeviceId = await LedgerConnect.getAccountsAndDeviceId(
+            blockchain,
+            deviceModel,
+            connectionType
+        );
+
+        const deviceId = accountsAndDeviceId.deviceId;
+        accountsAndDeviceId.accounts[0].selected = true;
+
+        const accounts = accountsAndDeviceId.accounts.map(v => {
+            return { ...v, tokens: generateTokensConfig(blockchain) };
+        });
 
         const wallet: IWallet = await HWWalletFactory.get(
             deviceVendor,
@@ -188,13 +198,6 @@ export const createHWWallet = (
             deviceId,
             connectionType
         );
-
-        await (wallet as LedgerWallet).onAppOpened(blockchain);
-
-        dispatch(verifyAddressOnDevice(true));
-        const accounts: IAccountState[] = await wallet.getAccounts(blockchain, 0);
-        accounts[0].selected = true;
-
         const walletCredentials = await wallet.getWalletCredentials();
 
         const walletData: IWalletState = {
@@ -233,18 +236,12 @@ export const createHWWallet = (
         NavigationService.navigate('MainNavigation', {});
         NavigationService.navigate('Dashboard', {});
 
-        dispatch(toInitialState());
         dispatch(setDisplayPasswordModal(true));
         startNotificationsHandlers()(dispatch, getState);
     } catch (e) {
         dispatch(setDisplayPasswordModal(true));
 
-        // this might not be the best place
-        if (e === translate('CreateHardwareWallet.notSupported')) {
-            dispatch(featureNotSupported());
-        } else {
-            SentryCaptureException(new Error(JSON.stringify(e)));
-        }
+        SentryCaptureException(new Error(JSON.stringify(e)));
         throw new Error(e);
     }
 };

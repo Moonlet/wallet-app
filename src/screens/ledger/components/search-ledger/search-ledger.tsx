@@ -14,7 +14,7 @@ import { ListCard } from '../../../../components/list-card/list-card';
 import ImgNanoS from '../../../../assets/icons/ledger/image_1.svg';
 import ImgNanoX from '../../../../assets/icons/ledger/image_7.svg';
 import { normalize } from '../../../../styles/dimensions';
-import { svgDimmensions } from '../../ledger-connect';
+import { svgDimmensions } from '../../ledger-connect-component';
 
 interface IExternalProps {
     blockchain: Blockchain;

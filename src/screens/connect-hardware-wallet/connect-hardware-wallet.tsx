@@ -7,7 +7,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
+import { HWModel, HWConnection, HWVendor } from '../../core/wallet/hw-wallet/types';
 import { ledgerConfig } from '../../core/wallet/hw-wallet/ledger/config';
 import { Blockchain } from '../../core/blockchain/types';
 import { ListCard } from '../../components/list-card/list-card';
@@ -18,10 +18,10 @@ import { PasswordModal } from '../../components/password-modal/password-modal';
 import { Capitalize } from '../../core/utils/format-string';
 import { IconValues } from '../../components/icon/values';
 import bind from 'bind-decorator';
-import { setDisplayLedgerConnect } from '../../redux/ui/ledger-connect/actions';
+import { createHWWallet } from '../../redux/wallets/actions';
 
 export interface IReduxProps {
-    setDisplayLedgerConnect: typeof setDisplayLedgerConnect;
+    createHWWallet: typeof createHWWallet;
 }
 
 export interface IState {
@@ -34,7 +34,7 @@ export interface IState {
 }
 
 const mapDispatchToProps = {
-    setDisplayLedgerConnect
+    createHWWallet
 };
 
 const navigationOptions = ({ navigation, theme }: any) => ({
@@ -289,11 +289,11 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
     }
 
     private async displayLedgerConnect() {
-        this.props.setDisplayLedgerConnect(
-            true,
-            this.state.blockchain,
+        this.props.createHWWallet(
+            HWVendor.LEDGER,
             this.state.device,
-            this.state.connection
+            this.state.connection,
+            this.state.blockchain
         );
     }
 

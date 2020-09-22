@@ -9,7 +9,7 @@ import { Blockchain } from '../../../../core/blockchain/types';
 import { HWModel, HWConnection } from '../../../../core/wallet/hw-wallet/types';
 import Img from '../../../../assets/icons/ledger/image_2.svg';
 import { normalize } from '../../../../styles/dimensions';
-import { svgDimmensions } from '../../ledger-connect';
+import { svgDimmensions } from '../../ledger-connect-component';
 
 interface IExternalProps {
     blockchain: Blockchain;

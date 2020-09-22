@@ -28,7 +28,7 @@ export interface IExternalProps {
 export class TransactionsHistoryListComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    public spinValue = new Animated.Value(0);
+    public iconSpinValue = new Animated.Value(0);
 
     public getTransactionPrimaryText(tx: IBlockchainTransaction, account: IAccountState) {
         const formattedAmount =
@@ -46,11 +46,10 @@ export class TransactionsHistoryListComponent extends React.Component<
 
     private startIconSpin() {
         Animated.loop(
-            Animated.timing(this.spinValue, {
+            Animated.timing(this.iconSpinValue, {
                 toValue: 1,
                 duration: 2000,
-                easing: Easing.linear,
-                useNativeDriver: true
+                easing: Easing.linear
             })
         ).start();
     }
@@ -111,7 +110,7 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         const txTokenConfig = getTokenConfig(tx.blockchain, tx?.token?.symbol);
 
-        const iconSpin = this.spinValue.interpolate({
+        const iconSpin = this.iconSpinValue.interpolate({
             inputRange: [0, 1],
             outputRange: ['360deg', '0deg']
         });

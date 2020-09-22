@@ -92,6 +92,7 @@ export interface INavigationParams {
 
 interface IState {
     toAddress: string;
+    resolvedAddress: string;
     amount: string;
     insufficientFunds: boolean;
     feeOptions: IFeeOptions;
@@ -121,6 +122,7 @@ export class SendScreenComponent extends React.Component<
         super(props);
 
         this.state = {
+            resolvedAddress: '',
             toAddress: '',
             amount: '',
             insufficientFunds: false,
@@ -316,7 +318,9 @@ export class SendScreenComponent extends React.Component<
                 account={this.props.account}
                 blockchain={this.props.blockchain}
                 chainId={this.props.chainId}
-                onChange={(toAddress: string) => this.setState({ toAddress })}
+                onChange={(toAddress: string, resolvedAddress?: string) =>
+                    this.setState({ toAddress, resolvedAddress })
+                }
             />
         );
     }
@@ -425,6 +429,7 @@ export class SendScreenComponent extends React.Component<
     }
 
     private renderConfirmTransaction() {
+        const { resolvedAddress, toAddress } = this.state;
         const { account, chainId, styles } = this.props;
         const { blockchain } = account;
         const config = getBlockchain(blockchain).config;
@@ -439,12 +444,20 @@ export class SendScreenComponent extends React.Component<
         return (
             <View key="confirmTransaction" style={styles.confirmTransactionContainer}>
                 <Text style={styles.receipientLabel}>{translate('Send.recipientLabel')}</Text>
-                <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
+                <View
+                    style={[
+                        styles.inputBox,
+                        resolvedAddress ? null : { marginBottom: BASE_DIMENSION * 2 }
+                    ]}
+                >
                     <Text style={styles.confirmTransactionText}>
-                        {formatAddress(this.state.toAddress, blockchain)}
+                        {formatAddress(
+                            resolvedAddress ? resolvedAddress : this.state.toAddress,
+                            blockchain
+                        )}
                     </Text>
                 </View>
-
+                {resolvedAddress !== '' && <Text style={styles.displayAddress}>{toAddress}</Text>}
                 <Text style={styles.receipientLabel}>{translate('Send.amount')}</Text>
                 <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Text style={styles.confirmTransactionText}>

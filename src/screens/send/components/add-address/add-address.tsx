@@ -32,7 +32,7 @@ export interface IExternalProps {
     account: IAccountState;
     blockchain: Blockchain;
     chainId: ChainIdType;
-    onChange: (address: string) => void;
+    onChange: (address: string, resolvedAddress?: string) => void;
 }
 
 interface IState {
@@ -41,6 +41,7 @@ interface IState {
     showOwnAccounts: boolean;
     errorResponseText: string;
     warningResponseText: string;
+    resolvedAddress: string;
 }
 
 export interface IReduxProps {
@@ -72,6 +73,7 @@ export class AddAddressComponent extends React.Component<
         super(props);
         this.state = {
             toAddress: '',
+            resolvedAddress: '',
             isValidText: false,
             showOwnAccounts: false,
             errorResponseText: undefined,
@@ -160,12 +162,11 @@ export class AddAddressComponent extends React.Component<
     public async verifyInputText(text: string) {
         const blockchainInstance = getBlockchain(this.props.account.blockchain);
         this.setState({ toAddress: text });
-
         try {
             const response = await blockchainInstance
                 .getClient(this.props.chainId)
                 .nameService.resolveText(text);
-
+            this.setState({ resolvedAddress: response.address });
             switch (response.code) {
                 case ResolveTextCode.OK: {
                     if (response.type === ResolveTextType.ADDRESS) {
@@ -185,7 +186,7 @@ export class AddAddressComponent extends React.Component<
                                 errorResponseText: undefined,
                                 warningResponseText: undefined
                             },
-                            () => this.props.onChange(this.state.toAddress)
+                            () => this.props.onChange(response.address, this.state.toAddress)
                         );
                     }
                     break;
@@ -292,6 +293,7 @@ export class AddAddressComponent extends React.Component<
     }
 
     public render() {
+        const { resolvedAddress } = this.state;
         const { styles, theme } = this.props;
         const inputPlaceholder =
             Platform.OS === 'web'
@@ -322,7 +324,9 @@ export class AddAddressComponent extends React.Component<
                     />
                     {this.renderRightAddressIcon()}
                 </View>
-
+                {resolvedAddress !== '' && (
+                    <Text style={styles.displayAddress}>{resolvedAddress}</Text>
+                )}
                 {this.state.errorResponseText && (
                     <Text style={styles.displayError}>{this.state.errorResponseText}</Text>
                 )}

@@ -60,6 +60,7 @@
         "elliptic": "^6.5.3",
         "enzyme": "^3.10.0",
         "enzyme-adapter-react-16": "^1.14.0",
+        "eth-ens-namehash": "^2.0.8",
         "eth-lib": "^0.1.29",
         "ethereumjs-abi": "^0.6.8",
         "ethereumjs-tx": "^2.1.1",

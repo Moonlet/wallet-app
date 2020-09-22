@@ -5,7 +5,7 @@ export const GZIL_TESTNET: ITokenConfigState = {
     name: 'gZil',
     symbol: 'GZIL',
     icon: {
-        uri: 'https://fire.moonlet.io/static/tokens/icons/xsgd.png'
+        uri: 'https://fire.moonlet.io/static/tokens/icons/zilliqa/gzil.png'
     },
     contractAddress: 'zil16qufswtegzw23zu84cu6dxhvxy6hrs0xkc4ke6',
     removable: true,
@@ -22,7 +22,7 @@ export const GZIL_MAINNET: ITokenConfigState = {
     name: 'gZil',
     symbol: 'GZIL',
     icon: {
-        uri: 'https://fire.moonlet.io/static/tokens/icons/xsgd.png'
+        uri: 'https://fire.moonlet.io/static/tokens/icons/zilliqa/gzil.png'
     },
     contractAddress: 'zil16qufswtegzw23zu84cu6dxhvxy6hrs0xkc4ke6', // TODO Must be updated
     removable: true,

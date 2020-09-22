@@ -18,7 +18,7 @@ export class Client extends EthereumClient {
     constructor(chainId: ChainIdType) {
         super(chainId);
         this.tokens[TokenType.ERC20] = new Erc20Client(this);
-        this.nameService = new NameService();
+        this.nameService = new NameService(this);
         this.utils = new ClientUtils(this);
         this.contracts[Contracts.LOCKED_GOLD] = new LockedGold(this);
         this.contracts[Contracts.ELECTION] = new Election(this);

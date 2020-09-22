@@ -39,6 +39,13 @@ export default (theme: ITheme) =>
             justifyContent: 'space-between',
             alignItems: 'center'
         },
+        displayAddress: {
+            paddingLeft: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION,
+            color: theme.colors.textSecondary,
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(19)
+        },
         icon: {
             color: theme.colors.accent
         },

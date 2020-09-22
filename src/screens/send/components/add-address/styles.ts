@@ -56,6 +56,14 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.accent
         },
+        displayAddress: {
+            marginTop: BASE_DIMENSION,
+            paddingLeft: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION,
+            color: theme.colors.textSecondary,
+            fontSize: normalizeFontAndLineHeight(15),
+            lineHeight: normalizeFontAndLineHeight(19)
+        },
         displayError: {
             paddingLeft: BASE_DIMENSION,
             marginBottom: BASE_DIMENSION,

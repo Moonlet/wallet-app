@@ -5,7 +5,7 @@ export const XSGD_MAINNET: ITokenConfigState = {
     name: 'Xsgd',
     symbol: 'XSGD',
     icon: {
-        uri: 'https://fire.moonlet.io/static/tokens/icons/xsgd.png'
+        uri: 'https://fire.moonlet.io/static/tokens/icons/zilliqa/xsgd.png'
     },
     contractAddress: 'zil1zu72vac254htqpg3mtywdcfm84l3dfd9qzww8t',
     removable: true,

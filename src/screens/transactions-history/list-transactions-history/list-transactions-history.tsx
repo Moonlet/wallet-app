@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import { View, TouchableOpacity, ScrollView, Image, RefreshControl } from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import { Icon } from '../../../components/icon/icon';
@@ -18,16 +18,31 @@ import { TransactionStatus } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { IconValues } from '../../../components/icon/values';
 import { TokenType } from '../../../core/blockchain/types/token';
+import bind from 'bind-decorator';
 
-export interface IExternalProps {
+interface IExternalProps {
     transactions: IBlockchainTransaction[];
     account: IAccountState;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    onRefresh: () => void;
+}
+
+interface IState {
+    refreshing: boolean;
 }
 
 export class TransactionsHistoryListComponent extends React.Component<
-    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
+    constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+        super(props);
+
+        this.state = {
+            refreshing: false
+        };
+    }
+
     public getTransactionPrimaryText(tx: IBlockchainTransaction, account: IAccountState) {
         const formattedAmount =
             tx.address === account.address
@@ -144,8 +159,17 @@ export class TransactionsHistoryListComponent extends React.Component<
         );
     }
 
+    @bind
+    private onRefresh() {
+        this.props.onRefresh();
+
+        this.setState({ refreshing: true }, () => {
+            setTimeout(() => this.setState({ refreshing: false }), 1500);
+        });
+    }
+
     public render() {
-        const { transactions, styles } = this.props;
+        const { transactions, styles, theme } = this.props;
 
         return (
             <View style={styles.transactionsContainer}>
@@ -167,6 +191,15 @@ export class TransactionsHistoryListComponent extends React.Component<
                     <ScrollView
                         contentContainerStyle={{ flexGrow: 1 }}
                         showsVerticalScrollIndicator={false}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh}
+                                tintColor={theme.colors.accent}
+                                title={`${translate('App.labels.refreshing')}...`}
+                                titleColor={theme.colors.accent}
+                            />
+                        }
                     >
                         {transactions.map((tx: IBlockchainTransaction, index: number) =>
                             this.transactionItem(tx, index)

@@ -39,7 +39,7 @@ const mapDispatchToProps = {
 export const TransactionsHistoryScreenComponent = (
     props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & INavigationProps
 ) => {
-    React.useEffect(() => {
+    const updateTransactions = () => {
         props.transactions?.map((transaction: IBlockchainTransaction) => {
             if (transaction.status === TransactionStatus.PENDING) {
                 props.updateTransactionFromBlockchain(
@@ -50,7 +50,9 @@ export const TransactionsHistoryScreenComponent = (
                 );
             }
         });
-    });
+    };
+
+    React.useEffect(() => updateTransactions());
 
     return (
         <View style={props.styles.container}>
@@ -59,6 +61,7 @@ export const TransactionsHistoryScreenComponent = (
                 transactions={props.transactions}
                 account={props.selectedAccount}
                 navigation={props.navigation}
+                onRefresh={() => updateTransactions()}
             />
         </View>
     );

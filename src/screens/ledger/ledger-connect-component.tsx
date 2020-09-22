@@ -78,13 +78,13 @@ export class LedgerConnectComponent extends React.Component<
         return this.resultDeferred.promise;
     };
 
-    public static async walletCreated() {
+    public static async walletCreated(walletId: string) {
         return waitForInstance<LedgerConnectComponent>(LedgerConnectComponent).then(ref =>
-            ref.walletCreated()
+            ref.walletCreated(walletId)
         );
     }
 
-    public walletCreated() {
+    public walletCreated(walletId: string) {
         this.resultDeferred = new Deferred();
         this.modalOnHideDeffered = new Deferred();
         this.setState({

@@ -8,7 +8,7 @@ import { translate } from '../../core/i18n';
 import { Deferred } from '../../core/utils/deferred';
 import { IReduxState } from '../../redux/state';
 import { Blockchain } from '../../core/blockchain/types';
-import { HWConnection, HWModel } from '../../core/wallet/hw-wallet/types';
+import { HWConnection, HWModel, HWVendor } from '../../core/wallet/hw-wallet/types';
 import { connect } from 'react-redux';
 import { SearchLedger } from './components/search-ledger/search-ledger';
 import { IconValues } from '../../components/icon/values';
@@ -17,6 +17,10 @@ import { bind } from 'bind-decorator';
 import { FailedComponent } from './components/failed-component/failed-component';
 import { ConfirmConnection } from './components/confirm-connections/confirm-connection';
 import { OpenApp } from './components/open-app/open-app';
+import { VerifyAddress } from './components/verify-address/verify-address';
+import { HWWalletFactory } from '../../core/wallet/hw-wallet/hw-wallet-factory';
+import { LedgerWallet } from '../../core/wallet/hw-wallet/ledger/ledger-wallet';
+import { IWallet } from '../../core/wallet/types';
 
 export const svgDimmensions = {
     width: 345,
@@ -27,9 +31,17 @@ const navigationOptions = () => ({
     title: translate('App.labels.connect')
 });
 
+enum ScreenStep {
+    SEARCH_LEDGER = 'SEARCH_LEDGER',
+    CONFIRM_CONNECTION = 'CONFIRM_CONNECTION',
+    OPEN_APP = 'OPEN_APP',
+    VERIFY_ADDRESS = 'VERIFY_ADDRESS'
+}
+
 export interface IState {
-    currentStep: number;
+    currentStep: ScreenStep;
     showErrorScreen: boolean;
+    ledgerDevice: any;
 }
 
 export interface IReduxProps {
@@ -56,8 +68,9 @@ export class LedgerConnectComponent extends React.Component<
     constructor(props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
         this.state = {
-            currentStep: 1,
-            showErrorScreen: false
+            currentStep: ScreenStep.SEARCH_LEDGER,
+            showErrorScreen: false,
+            ledgerDevice: undefined
         };
     }
 
@@ -67,17 +80,66 @@ export class LedgerConnectComponent extends React.Component<
         }
     }
 
-    @bind
-    private onConnectedDevice(item: any) {
-        this.setState({ currentStep: 3 });
-    }
+    private onConnectedDevice = async (item: any) => {
+        this.setState({ currentStep: ScreenStep.OPEN_APP, ledgerDevice: item });
+
+        const wallet: IWallet = await HWWalletFactory.get(
+            HWVendor.LEDGER,
+            this.props.deviceModel,
+            item.id,
+            this.props.connectionType
+        );
+        await (wallet as LedgerWallet).onAppOpened(this.props.blockchain);
+
+        this.setState({ currentStep: ScreenStep.VERIFY_ADDRESS });
+    };
     @bind
     private onSelectDevice() {
-        this.setState({ currentStep: 2 });
+        this.setState({ currentStep: ScreenStep.CONFIRM_CONNECTION });
     }
     @bind
     private onErrorConnection(error: any) {
         this.setState({ showErrorScreen: true });
+    }
+
+    private displaySteps() {
+        switch (this.state.currentStep) {
+            case ScreenStep.SEARCH_LEDGER:
+                return (
+                    <SearchLedger
+                        blockchain={this.props.blockchain}
+                        deviceModel={this.props.deviceModel}
+                        connectionType={this.props.connectionType}
+                        onSelect={this.onSelectDevice}
+                        onConnect={this.onConnectedDevice}
+                        onError={this.onErrorConnection}
+                    />
+                );
+            case ScreenStep.CONFIRM_CONNECTION:
+                return (
+                    <ConfirmConnection
+                        blockchain={this.props.blockchain}
+                        deviceModel={this.props.deviceModel}
+                        connectionType={this.props.connectionType}
+                    />
+                );
+            case ScreenStep.OPEN_APP:
+                return (
+                    <OpenApp
+                        blockchain={this.props.blockchain}
+                        deviceModel={this.props.deviceModel}
+                        connectionType={this.props.connectionType}
+                    />
+                );
+            case ScreenStep.VERIFY_ADDRESS:
+                return (
+                    <VerifyAddress
+                        blockchain={this.props.blockchain}
+                        deviceModel={this.props.deviceModel}
+                        connectionType={this.props.connectionType}
+                    />
+                );
+        }
     }
 
     public render() {
@@ -100,42 +162,15 @@ export class LedgerConnectComponent extends React.Component<
                         }}
                     />
 
-                    {this.state.currentStep === 3 && (
-                        <SearchLedger
-                            blockchain={this.props.blockchain}
-                            deviceModel={this.props.deviceModel}
-                            connectionType={this.props.connectionType}
-                            onSelect={this.onSelectDevice}
-                            onConnect={this.onConnectedDevice}
-                            onError={this.onErrorConnection}
-                        />
-                    )}
-                    {this.state.currentStep === 2 && (
-                        <ConfirmConnection
-                            blockchain={this.props.blockchain}
-                            deviceModel={this.props.deviceModel}
-                            connectionType={this.props.connectionType}
-                        />
-                    )}
-                    {this.state.currentStep === 1 && (
-                        <OpenApp
-                            blockchain={this.props.blockchain}
-                            deviceModel={this.props.deviceModel}
-                            connectionType={this.props.connectionType}
-                        />
-                    )}
-                    {/* <S10_X12 /> */}
-                    {/* <S15_S16 /> */}
-                    {/* <S11_S14_X13 /> */}
-                    {/* <S12_S13_X14 /> */}
-
-                    {this.state.showErrorScreen && (
+                    {this.state.showErrorScreen ? (
                         <FailedComponent
-                            isVerification={false}
+                            isVerification={false} // display if verificationscreen
                             blockchain={this.props.blockchain}
                             deviceModel={this.props.deviceModel}
                             connectionType={this.props.connectionType}
                         />
+                    ) : (
+                        this.displaySteps()
                     )}
                 </View>
             </Modal>

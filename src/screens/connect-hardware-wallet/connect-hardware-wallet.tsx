@@ -16,7 +16,6 @@ import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensi
 import { themes } from '../../navigation/navigation';
 import { PasswordModal } from '../../components/password-modal/password-modal';
 import { Capitalize } from '../../core/utils/format-string';
-import { delay } from '../../core/utils/time';
 import { IconValues } from '../../components/icon/values';
 import bind from 'bind-decorator';
 import { setDisplayLedgerConnect } from '../../redux/ui/ledger-connect/actions';
@@ -289,8 +288,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
         );
     }
 
-    private async openBottomSheet() {
-        await delay(500); // TODO: check here and find a solution to fix
+    private async displayLedgerConnect() {
         this.props.setDisplayLedgerConnect(
             true,
             this.state.blockchain,
@@ -304,11 +302,11 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
             await PasswordModal.getPassword(undefined, undefined, {
                 shouldCreatePassword: true
             });
-            this.openBottomSheet();
+            this.displayLedgerConnect();
         } catch (err) {
             try {
                 await PasswordModal.createPassword();
-                this.openBottomSheet();
+                this.displayLedgerConnect();
             } catch (err) {
                 //
             }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, TouchableOpacity } from 'react-native';
+import { View, TouchableOpacity } from 'react-native';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
@@ -7,6 +7,9 @@ import { Text, Button } from '../../../../library';
 import { translate } from '../../../../core/i18n';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { HWModel, HWConnection } from '../../../../core/wallet/hw-wallet/types';
+import Img from '../../../../assets/icons/ledger/image_2.svg';
+import { normalize } from '../../../../styles/dimensions';
+import { svgDimmensions } from '../../ledger-connect';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -23,10 +26,9 @@ export class FailedComponentComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <Image
-                    source={require('../../../../assets/icons/staking/staking_image_1.png')}
-                    style={styles.image}
-                    resizeMode="contain"
+                <Img
+                    width={normalize(svgDimmensions.width)}
+                    height={normalize(svgDimmensions.height)}
                 />
 
                 <Text style={styles.primaryText}>

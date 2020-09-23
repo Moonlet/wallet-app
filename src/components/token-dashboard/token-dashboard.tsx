@@ -47,12 +47,9 @@ interface IReduxProps {
 
 const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
-        accountStats: getAccountStats(
-            state,
-            ownProps.blockchain,
-            ownProps.chainId,
-            ownProps.account.address
-        )
+        accountStats:
+            ownProps.account &&
+            getAccountStats(state, ownProps.blockchain, ownProps.chainId, ownProps.account.address)
     };
 };
 

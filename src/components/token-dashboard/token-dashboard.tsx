@@ -19,11 +19,12 @@ import { NavigationService } from '../../navigation/navigation-service';
 import { QuickDelegateBanner } from '../quick-delegate-banner/quick-delegate-banner';
 import { AccountSummary } from '../account-summary/account-summary';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { AffiliateBanner } from '../affiliate-banner/affiliate-banner';
 import { AffiliateBannerType } from '../affiliate-banner/types';
 import { AccountStats } from '../../redux/ui/stats/state';
 import { fetchAccountDelegateStats } from '../../redux/ui/stats/actions';
+import { IReduxState } from '../../redux/state';
+import { getAccountStats } from '../../redux/ui/stats/selectors';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -34,9 +35,21 @@ interface IExternalProps {
 }
 
 interface IReduxProps {
+    accountStats: AccountStats;
     openBottomSheet: typeof openBottomSheet;
     fetchAccountDelegateStats: typeof fetchAccountDelegateStats;
 }
+
+const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    return {
+        accountStats: getAccountStats(
+            state,
+            ownProps.blockchain,
+            ownProps.chainId,
+            ownProps.account.address
+        )
+    };
+};
 
 const mapDispatchToProps = {
     openBottomSheet,
@@ -59,9 +72,9 @@ export class TokenDashboardComponent extends React.Component<
         super(props);
 
         this.state = {
-            accountStats: undefined,
+            accountStats: props.accountStats,
             token: undefined,
-            loadingAccountStats: true
+            loadingAccountStats: props.accountStats === undefined
         };
     }
 
@@ -69,12 +82,19 @@ export class TokenDashboardComponent extends React.Component<
         this.fetchAccountStats();
     }
 
-    public componentDidUpdate(prevProps: IExternalProps) {
+    public componentDidUpdate(prevProps: IExternalProps & IReduxProps) {
         if (
             this.props.blockchain !== prevProps.blockchain ||
             this.props.account !== prevProps.account
         ) {
             this.fetchAccountStats();
+        }
+
+        if (this.props.accountStats && this.props.accountStats !== prevProps.accountStats) {
+            this.setState({
+                accountStats: this.props.accountStats,
+                loadingAccountStats: false
+            });
         }
     }
 
@@ -85,27 +105,13 @@ export class TokenDashboardComponent extends React.Component<
             return;
         }
 
-        this.setState({ loadingAccountStats: true });
+        if (!this.props.accountStats) {
+            this.setState({ loadingAccountStats: true });
+        }
 
-        const blockchainConfig = getBlockchain(blockchain);
-
-        const token: ITokenState = account.tokens[chainId][blockchainConfig.config.coin];
-
+        const token: ITokenState = account.tokens[chainId][getBlockchain(blockchain).config.coin];
         this.setState({ token });
-
-        // update this section
         this.props.fetchAccountDelegateStats(this.props.account, token);
-
-        blockchainConfig
-            .getStats(chainId)
-            .getAccountDelegateStats(account, token)
-            .then(accStats =>
-                this.setState({
-                    accountStats: accStats,
-                    loadingAccountStats: false
-                })
-            )
-            .catch(e => SentryCaptureException(new Error(JSON.stringify(e))));
     }
 
     private renderCard(options: { title?: string; icon: IconValues; onPress: () => void }) {
@@ -203,6 +209,6 @@ export class TokenDashboardComponent extends React.Component<
     }
 }
 export const TokenDashboard = smartConnect<IExternalProps>(TokenDashboardComponent, [
-    connect(null, mapDispatchToProps),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

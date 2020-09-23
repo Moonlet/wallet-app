@@ -5,7 +5,7 @@ import { IReduxState } from '../../state';
 import { IAccountState, ITokenState } from '../../wallets/state';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 
-export const ADD_ACCOUNT_DELEGATE_STATS = 'ADD_ACCOUNT_DELEGATE_STATS';
+export const ADD_ACCOUNT_STATS = 'ADD_ACCOUNT_STATS';
 
 export const fetchAccountDelegateStats = (account: IAccountState, token: ITokenState) => async (
     dispatch: Dispatch<any>,
@@ -22,7 +22,7 @@ export const fetchAccountDelegateStats = (account: IAccountState, token: ITokenS
 
         if (accountStats) {
             dispatch({
-                type: ADD_ACCOUNT_DELEGATE_STATS,
+                type: ADD_ACCOUNT_STATS,
                 data: {
                     blockchain,
                     chainId,

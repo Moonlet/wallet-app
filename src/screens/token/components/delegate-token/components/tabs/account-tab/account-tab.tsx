@@ -27,31 +27,38 @@ import { PasswordModal } from '../../../../../../../components/password-modal/pa
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
 import moment from 'moment';
 import { AffiliateBanner } from '../../../../../../../components/affiliate-banner/affiliate-banner';
 import { AccountStats, IPosWidget } from '../../../../../../../redux/ui/stats/state';
+import { fetchAccountDelegateStats } from '../../../../../../../redux/ui/stats/actions';
+import { getAccountStats } from '../../../../../../../redux/ui/stats/selectors';
 
-export interface IProps {
+interface IExternalProps {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    accountStats: AccountStats;
     withdraw: typeof withdraw;
     activate: typeof activate;
     fetchValidators: typeof fetchValidators;
     fetchDelegatedValidators: typeof fetchDelegatedValidators;
+    fetchAccountDelegateStats: typeof fetchAccountDelegateStats;
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
+const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    const account = getAccount(state, ownProps.accountIndex, ownProps.blockchain);
+    const chainId = getChainId(state, ownProps.blockchain);
+
     return {
-        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        chainId: getChainId(state, ownProps.blockchain)
+        account,
+        chainId,
+        accountStats: getAccountStats(state, ownProps.blockchain, chainId, account.address)
     };
 };
 
@@ -59,7 +66,8 @@ const mapDispatchToProps = {
     withdraw,
     activate,
     fetchValidators,
-    fetchDelegatedValidators
+    fetchDelegatedValidators,
+    fetchAccountDelegateStats
 };
 
 interface IState {
@@ -67,30 +75,30 @@ interface IState {
 }
 
 export class AccountTabComponent extends React.Component<
-    IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    constructor(props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+    constructor(
+        props: IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    ) {
         super(props);
 
         this.state = {
-            accountStats: undefined
+            accountStats: props.accountStats
         };
     }
     public componentDidMount() {
-        const blockchainInstance = getBlockchain(this.props.blockchain);
-        blockchainInstance
-            .getStats(this.props.chainId)
-            .getAccountDelegateStats(this.props.account, this.props.token)
-            .then(accStats => {
-                this.setState({ accountStats: accStats });
-            })
-            .catch(e => {
-                SentryCaptureException(new Error(JSON.stringify(e)));
-            });
-
         this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
         this.props.fetchDelegatedValidators(this.props.account);
+        this.props.fetchAccountDelegateStats(this.props.account, this.props.token);
+    }
+
+    public componentDidUpdate(prevProps: IReduxProps) {
+        if (this.props.accountStats && this.props.accountStats !== prevProps.accountStats) {
+            this.setState({
+                accountStats: this.props.accountStats
+            });
+        }
     }
 
     @bind
@@ -277,7 +285,7 @@ export class AccountTabComponent extends React.Component<
     }
 }
 
-export const AccountTab = smartConnect<IProps>(AccountTabComponent, [
+export const AccountTab = smartConnect<IExternalProps>(AccountTabComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

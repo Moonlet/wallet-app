@@ -17,7 +17,7 @@ import { delegate } from '../../../../redux/wallets/actions';
 import { bind } from 'bind-decorator';
 import { IValidator } from '../../../../redux/ui/stats/state';
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
     accountIndex: number;
@@ -30,7 +30,7 @@ export interface IReduxProps {
     delegate: typeof delegate;
 }
 
-export const mapStateToProps = (state: IReduxState) => {
+const mapStateToProps = (state: IReduxState) => {
     const accountIndex = state.ui.screens.posActions.delegateConfirm.accountIndex;
     const blockchain = state.ui.screens.posActions.delegateConfirm.blockchain;
     return {

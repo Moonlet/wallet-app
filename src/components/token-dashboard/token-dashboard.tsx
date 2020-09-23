@@ -4,7 +4,12 @@ import { IAccountState, ITokenState } from '../../redux/wallets/state';
 import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
-import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
+import {
+    NavigationScreenProp,
+    NavigationState,
+    NavigationParams,
+    NavigationEvents
+} from 'react-navigation';
 import { TokenCard } from '../token-card/token-card';
 import { normalize } from '../../styles/dimensions';
 import { Text } from '../../library';
@@ -204,6 +209,8 @@ export class TokenDashboardComponent extends React.Component<
                                 )
                         )}
                 </View>
+
+                <NavigationEvents onWillFocus={() => this.fetchAccountStats()} />
             </View>
         );
     }

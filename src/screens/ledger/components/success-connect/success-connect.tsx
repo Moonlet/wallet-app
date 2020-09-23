@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View } from 'react-native';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
@@ -9,6 +9,9 @@ import { IconValues } from '../../../../components/icon/values';
 import { translate } from '../../../../core/i18n';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { HWModel, HWConnection } from '../../../../core/wallet/hw-wallet/types';
+import Img from '../../../../assets/icons/ledger/success-connect.svg';
+import { normalize } from '../../../../styles/dimensions';
+import { svgDimmensions } from '../../ledger-connect-component';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -35,10 +38,9 @@ export class SuccessConnectComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <Image
-                    source={require('../../../../assets/icons/staking/staking_image_1.png')}
-                    style={styles.image}
-                    resizeMode="contain"
+                <Img
+                    width={normalize(svgDimmensions.width)}
+                    height={normalize(svgDimmensions.height)}
                 />
 
                 <View style={{ flex: 1 }}>

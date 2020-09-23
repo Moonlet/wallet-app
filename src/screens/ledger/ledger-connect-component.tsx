@@ -21,6 +21,7 @@ import { IWallet } from '../../core/wallet/types';
 import { setInstance, waitForInstance } from '../../core/utils/class-registry';
 import { IAccountState } from '../../redux/wallets/state';
 import { SuccessConnect } from './components/success-connect/success-connect';
+import { VerificationFailed } from './components/verification-failed/verification-failed';
 
 export const svgDimmensions = {
     width: 345,
@@ -201,7 +202,6 @@ export class LedgerConnectComponent extends React.Component<
             case ScreenStep.ERROR_SCREEN:
                 return (
                     <FailedComponent
-                        isVerification={false}
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}
@@ -209,8 +209,7 @@ export class LedgerConnectComponent extends React.Component<
                 );
             case ScreenStep.VERIFICATION_FAILED:
                 return (
-                    <FailedComponent
-                        isVerification={true}
+                    <VerificationFailed
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}
@@ -238,17 +237,7 @@ export class LedgerConnectComponent extends React.Component<
                             //
                         }}
                     />
-
-                    {this.state.showErrorScreen ? (
-                        <FailedComponent
-                            isVerification={false} // display if verificationscreen
-                            blockchain={this.state.blockchain}
-                            deviceModel={this.state.deviceModel}
-                            connectionType={this.state.connectionType}
-                        />
-                    ) : (
-                        this.displaySteps()
-                    )}
+                    {this.displaySteps()}
                 </View>
             </Modal>
         );

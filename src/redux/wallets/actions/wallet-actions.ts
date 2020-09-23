@@ -230,6 +230,8 @@ export const createHWWallet = (
 
         dispatch(addWallet(walletData));
 
+        LedgerConnect.walletCreated(walletId);
+
         dispatch(setSelectedWallet(walletId));
         updateAddressMonitorTokens(getState().wallets);
 

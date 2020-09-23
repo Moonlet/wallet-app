@@ -7,7 +7,7 @@ import { Blockchain } from '../../../../core/blockchain/types';
 import { HWModel, HWConnection } from '../../../../core/wallet/hw-wallet/types';
 import { normalize } from '../../../../styles/dimensions';
 import { svgDimmensions } from '../../ledger-connect-component';
-import Img from '../../../../assets/icons/ledger/image_8.svg';
+import Img from '../../../../assets/icons/ledger/bluetooth-pairing.svg';
 import { View } from 'react-native';
 import { translate } from '../../../../core/i18n';
 

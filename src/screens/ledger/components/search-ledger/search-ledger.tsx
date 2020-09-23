@@ -11,8 +11,8 @@ import { translate } from '../../../../core/i18n';
 import { TransportFactory } from '../../../../core/wallet/hw-wallet/ledger/transport-factory';
 import { IconValues } from '../../../../components/icon/values';
 import { ListCard } from '../../../../components/list-card/list-card';
-import ImgNanoS from '../../../../assets/icons/ledger/image_1.svg';
-import ImgNanoX from '../../../../assets/icons/ledger/image_7.svg';
+import ImgNanoS from '../../../../assets/icons/ledger/connect-nano-s.svg';
+import ImgNanoX from '../../../../assets/icons/ledger/search-bluetooth.svg';
 import { normalize } from '../../../../styles/dimensions';
 import { svgDimmensions } from '../../ledger-connect-component';
 

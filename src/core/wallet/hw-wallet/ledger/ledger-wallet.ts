@@ -35,12 +35,7 @@ export class LedgerWallet implements IWallet {
             let opened = false;
             while (opened === false) {
                 try {
-                    const transport = await this.getTransport();
-                    const app = await AppFactory.get(blockchain, transport);
-                    const info = await app.getInfo();
-                    if (info) {
-                        opened = true;
-                    }
+                    opened = await this.isAppOpened(blockchain);
                 } catch {
                     // dont handle error - keep trying until user opens the app
                 }

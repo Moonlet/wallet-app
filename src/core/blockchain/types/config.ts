@@ -2,6 +2,7 @@ import { BigNumber } from 'bignumber.js';
 import { TokenType, IButtonCTA } from './token';
 import { ChainIdType } from '.';
 import { ITokenConfigState } from '../../../redux/tokens/state';
+import { IAffiliateBannerType } from '../../../components/affiliate-banner/types';
 
 export enum DerivationType {
     HD_KEY = 'HD_KEY',
@@ -77,6 +78,9 @@ export interface IBlockchainConfig {
         maxAccountsNumber: number;
         extraFields?: string[];
         displayName: string;
+        affiliateBanners: {
+            account: IAffiliateBannerType;
+        };
     };
     networks: {
         testNet: ChainIdType;

@@ -4,6 +4,7 @@ import { TokenType, TokenScreenComponentType } from '../types/token';
 import EthIcon from '../../../assets/icons/blockchains/eth.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { DAI_MAINNET } from './tokens/dai';
+import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 
 export const ETH_NATIVE: ITokenConfigState = {
     name: 'Ethereum',
@@ -69,7 +70,10 @@ export const config: IBlockchainConfig = {
         enableTokenManagement: true,
         enableAccountCreation: false,
         maxAccountsNumber: 5,
-        displayName: 'ETH'
+        displayName: 'ETH',
+        affiliateBanners: {
+            account: AffiliateBannerType.UNSTOPPABLE_DOMAINS
+        }
     },
     networks: {
         testNet: 4,

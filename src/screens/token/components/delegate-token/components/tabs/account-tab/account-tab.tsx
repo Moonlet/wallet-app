@@ -30,6 +30,7 @@ import { fetchValidators } from '../../../../../../../redux/ui/validators/action
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import moment from 'moment';
+import { AffiliateBanner } from '../../../../../../../components/affiliate-banner/affiliate-banner';
 
 export interface IProps {
     accountIndex: number;
@@ -206,6 +207,7 @@ export class AccountTabComponent extends React.Component<
 
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const tokenUiConfig = blockchainInstance.config.ui.token;
+        const affiliateBanner = blockchainInstance.config.ui.affiliateBanners.account;
 
         return (
             <View style={styles.container}>
@@ -246,6 +248,8 @@ export class AccountTabComponent extends React.Component<
                                 {translate('App.labels.receive')}
                             </Button>
                         </View>
+
+                        <AffiliateBanner type={affiliateBanner} style={styles.affiliateBanner} />
 
                         {this.state.accountStats && this.renderWidgets()}
 

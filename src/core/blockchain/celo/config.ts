@@ -14,6 +14,7 @@ import {
     CELO_USD_TESTNET_BAKLAVA
 } from './tokens/cUSD';
 import { IconValues } from '../../../components/icon/values';
+import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 
 export const accountCTA = {
     mainCta: {
@@ -135,7 +136,10 @@ export const config: IBlockchainConfig = {
         enableTokenManagement: true,
         enableAccountCreation: false,
         maxAccountsNumber: 5,
-        displayName: 'CELO'
+        displayName: 'CELO',
+        affiliateBanners: {
+            account: AffiliateBannerType.LEDGER_NANO_X
+        }
     },
     networks: {
         testNet: 44787,

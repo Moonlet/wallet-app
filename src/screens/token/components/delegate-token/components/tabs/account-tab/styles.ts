@@ -35,5 +35,9 @@ export default (theme: ITheme) =>
         },
         button: {
             marginHorizontal: BASE_DIMENSION / 2
+        },
+        affiliateBanner: {
+            marginTop: BASE_DIMENSION,
+            marginBottom: BASE_DIMENSION * 2
         }
     });

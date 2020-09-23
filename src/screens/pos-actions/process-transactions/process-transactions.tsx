@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Animated, Easing, View } from 'react-native';
 import { Text, Button } from '../../../library';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
@@ -64,6 +64,8 @@ export class ProcessTransactionsComponent extends React.Component<
     INavigationProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
+    public iconSpinValue = new Animated.Value(0);
+
     constructor(
         props: INavigationProps & IThemeProps<ReturnType<typeof stylesProvider>> & IReduxProps
     ) {
@@ -205,6 +207,16 @@ export class ProcessTransactionsComponent extends React.Component<
         return { topText, middleText, bottomText: fees };
     }
 
+    private startIconSpin() {
+        Animated.loop(
+            Animated.timing(this.iconSpinValue, {
+                toValue: 1,
+                duration: 2000,
+                easing: Easing.linear
+            })
+        ).start();
+    }
+
     private renderCard(tx: IBlockchainTransaction, index: number) {
         const { styles, theme } = this.props;
         const status = tx.status;
@@ -214,6 +226,7 @@ export class ProcessTransactionsComponent extends React.Component<
         let leftIcon = '';
         let rightText = '';
         let iconColor = '';
+        let enableAnimation = false;
 
         switch (status) {
             case TransactionStatus.FAILED: {
@@ -236,12 +249,16 @@ export class ProcessTransactionsComponent extends React.Component<
             case TransactionStatus.PENDING: {
                 leftIcon = IconValues.PENDING;
                 iconColor = theme.colors.warning;
+                this.startIconSpin();
+                enableAnimation = true;
                 break;
             }
             default: {
                 leftIcon = IconValues.PENDING;
                 rightText = '';
                 iconColor = theme.colors.warning;
+                this.startIconSpin();
+                enableAnimation = true;
             }
         }
 
@@ -250,18 +267,25 @@ export class ProcessTransactionsComponent extends React.Component<
             status === TransactionStatus.FAILED ||
             status === TransactionStatus.DROPPED;
 
+        const iconSpin = this.iconSpinValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['360deg', '0deg']
+        });
+
         return (
             <View key={index + '-view-key'} style={styles.cardContainer}>
-                <Icon
-                    name={leftIcon}
-                    size={normalize(30)}
+                <Animated.View
                     style={[
-                        styles.cardLeftIcon,
-                        {
-                            color: iconColor
-                        }
+                        styles.transactionIconContainer,
+                        enableAnimation && { transform: [{ rotate: iconSpin }] }
                     ]}
-                />
+                >
+                    <Icon
+                        name={leftIcon}
+                        size={normalize(30)}
+                        style={[styles.cardLeftIcon, { color: iconColor }]}
+                    />
+                </Animated.View>
 
                 <View style={styles.cardTextContainer}>
                     <Text style={styles.topText}>{topText}</Text>

@@ -43,7 +43,9 @@ export default (theme: ITheme) =>
             width: '100%',
             backgroundColor: theme.colors.textSecondary,
             height: normalize(20),
-            marginBottom: BASE_DIMENSION * 2
+            marginBottom: BASE_DIMENSION * 2,
+            borderRadius: BORDER_RADIUS / 2,
+            overflow: 'hidden'
         },
         barCard: {
             height: normalize(20)

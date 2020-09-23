@@ -9,7 +9,7 @@ Object {
   "selected": false,
   "tokens": Object {
     "1": Object {
-      "GZIL": Object {
+      "gZIL": Object {
         "active": true,
         "balance": Object {
           "error": undefined,
@@ -18,7 +18,7 @@ Object {
           "value": "0",
         },
         "order": 999,
-        "symbol": "GZIL",
+        "symbol": "gZIL",
       },
       "XSGD": Object {
         "active": true,
@@ -44,7 +44,7 @@ Object {
       },
     },
     "333": Object {
-      "GZIL": Object {
+      "gZIL": Object {
         "active": true,
         "balance": Object {
           "error": undefined,
@@ -53,7 +53,7 @@ Object {
           "value": "0",
         },
         "order": 999,
-        "symbol": "GZIL",
+        "symbol": "gZIL",
       },
       "ZIL": Object {
         "active": true,

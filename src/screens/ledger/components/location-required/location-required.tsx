@@ -10,7 +10,7 @@ import { HWModel, HWConnection } from '../../../../core/wallet/hw-wallet/types';
 import Img from '../../../../assets/icons/ledger/verification-failed.svg';
 import { normalize } from '../../../../styles/dimensions';
 import { svgDimmensions } from '../../ledger-connect-component';
-import AndroidOpenSettings from 'react-native-android-open-settings';
+import AndroidOpenSettings from '../../../../library/open-settings/open-settings';
 
 interface IExternalProps {
     blockchain: Blockchain;

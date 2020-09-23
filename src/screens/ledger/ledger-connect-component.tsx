@@ -30,10 +30,6 @@ export const svgDimmensions = {
     height: 253
 };
 
-const navigationOptions = () => ({
-    title: translate('App.labels.connect')
-});
-
 export enum ScreenStep {
     SEARCH_LEDGER = 'SEARCH_LEDGER',
     CONFIRM_CONNECTION = 'CONFIRM_CONNECTION',
@@ -59,7 +55,6 @@ export class LedgerConnectComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    public static navigationOptions = navigationOptions;
     private modalOnHideDeffered: Deferred;
     private resultDeferred: Deferred;
 

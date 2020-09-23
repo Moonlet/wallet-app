@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import {
+    View,
+    TouchableOpacity,
+    ScrollView,
+    Image,
+    Animated,
+    Easing,
+    RefreshControl
+} from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import { Icon } from '../../../components/icon/icon';
@@ -18,16 +26,32 @@ import { TransactionStatus } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { IconValues } from '../../../components/icon/values';
 import { TokenType } from '../../../core/blockchain/types/token';
+import bind from 'bind-decorator';
 
-export interface IExternalProps {
+interface IExternalProps {
     transactions: IBlockchainTransaction[];
     account: IAccountState;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    onRefresh: () => void;
+}
+
+interface IState {
+    refreshing: boolean;
 }
 
 export class TransactionsHistoryListComponent extends React.Component<
-    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
+    public iconSpinValue = new Animated.Value(0);
+    constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+        super(props);
+
+        this.state = {
+            refreshing: false
+        };
+    }
+
     public getTransactionPrimaryText(tx: IBlockchainTransaction, account: IAccountState) {
         const formattedAmount =
             tx.address === account.address
@@ -42,6 +66,16 @@ export class TransactionsHistoryListComponent extends React.Component<
         return ` ${formattedAmount} ${toAddress}`;
     }
 
+    private startIconSpin() {
+        Animated.loop(
+            Animated.timing(this.iconSpinValue, {
+                toValue: 1,
+                duration: 2000,
+                easing: Easing.linear
+            })
+        ).start();
+    }
+
     private transactionItem(tx: IBlockchainTransaction, index: number) {
         const { account, styles, theme } = this.props;
 
@@ -52,11 +86,14 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         let txIcon: string;
         let txColor: string;
+        let enableAnimation = false;
 
         switch (tx.status) {
             case TransactionStatus.PENDING:
                 txIcon = IconValues.PENDING;
                 txColor = theme.colors.warning;
+                this.startIconSpin();
+                enableAnimation = true;
                 break;
             case TransactionStatus.SUCCESS:
                 const accountAddress = account.address.toLowerCase();
@@ -95,6 +132,11 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         const txTokenConfig = getTokenConfig(tx.blockchain, tx?.token?.symbol);
 
+        const iconSpin = this.iconSpinValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['360deg', '0deg']
+        });
+
         return (
             <TouchableOpacity
                 testID={`transaction-${index}`}
@@ -113,11 +155,18 @@ export class TransactionsHistoryListComponent extends React.Component<
                     })
                 }
             >
-                <Icon
-                    name={txIcon}
-                    size={normalize(30)}
-                    style={[styles.transactionIcon, { color: txColor }]}
-                />
+                <Animated.View
+                    style={[
+                        styles.transactionIconContainer,
+                        enableAnimation && { transform: [{ rotate: iconSpin }] }
+                    ]}
+                >
+                    <Icon
+                        name={txIcon}
+                        size={normalize(30)}
+                        style={[styles.transactionIcon, { color: txColor }]}
+                    />
+                </Animated.View>
                 <View style={styles.transactionTextContainer}>
                     <View style={styles.transactionAmountContainer}>
                         <Amount
@@ -144,8 +193,17 @@ export class TransactionsHistoryListComponent extends React.Component<
         );
     }
 
+    @bind
+    private onRefresh() {
+        this.props.onRefresh();
+
+        this.setState({ refreshing: true }, () => {
+            setTimeout(() => this.setState({ refreshing: false }), 1500);
+        });
+    }
+
     public render() {
-        const { transactions, styles } = this.props;
+        const { transactions, styles, theme } = this.props;
 
         return (
             <View style={styles.transactionsContainer}>
@@ -167,6 +225,15 @@ export class TransactionsHistoryListComponent extends React.Component<
                     <ScrollView
                         contentContainerStyle={{ flexGrow: 1 }}
                         showsVerticalScrollIndicator={false}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh}
+                                tintColor={theme.colors.accent}
+                                title={`${translate('App.labels.refreshing')}...`}
+                                titleColor={theme.colors.accent}
+                            />
+                        }
                     >
                         {transactions.map((tx: IBlockchainTransaction, index: number) =>
                             this.transactionItem(tx, index)

@@ -20,9 +20,12 @@ export default (theme: ITheme) =>
             borderRadius: BORDER_RADIUS,
             marginBottom: BASE_DIMENSION
         },
-        transactionIcon: {
-            alignSelf: 'center',
+        transactionIconContainer: {
+            justifyContent: 'center',
             marginRight: BASE_DIMENSION
+        },
+        transactionIcon: {
+            alignSelf: 'center'
         },
         transactionTextContainer: {
             flex: 1,

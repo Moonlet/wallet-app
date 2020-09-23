@@ -14,20 +14,23 @@ import {
     getAccount,
     getAccountFilteredTransactions
 } from '../../../../../../../redux/wallets/selectors';
+import { TransactionStatus } from '../../../../../../../core/wallet/types';
+import { updateTransactionFromBlockchain } from '../../../../../../../redux/wallets/actions';
 
-export interface IProps {
+interface IExternalProps {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
     navigation: NavigationScreenProp<NavigationState>;
 }
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
     transactions: IBlockchainTransaction[];
+    updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
+const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         transactions: getAccountFilteredTransactions(
@@ -39,9 +42,26 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
     };
 };
 
+const mapDispatchToProps = {
+    updateTransactionFromBlockchain
+};
+
 export class TransactionsTabComponent extends React.Component<
-    IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & INavigationProps
+    IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>> & INavigationProps
 > {
+    private updateTransactionFromBlockchain() {
+        this.props.transactions?.map((transaction: IBlockchainTransaction) => {
+            if (transaction.status === TransactionStatus.PENDING) {
+                this.props.updateTransactionFromBlockchain(
+                    transaction.id,
+                    transaction.blockchain,
+                    transaction.chainId,
+                    transaction.broadcastedOnBlock
+                );
+            }
+        });
+    }
+
     public render() {
         const { styles, navigation, account, transactions } = this.props;
 
@@ -51,13 +71,14 @@ export class TransactionsTabComponent extends React.Component<
                     transactions={transactions}
                     account={account}
                     navigation={navigation}
+                    onRefresh={() => this.updateTransactionFromBlockchain()}
                 />
             </View>
         );
     }
 }
 
-export const TransactionsTab = smartConnect<IProps>(TransactionsTabComponent, [
-    connect(mapStateToProps, undefined),
+export const TransactionsTab = smartConnect<IExternalProps>(TransactionsTabComponent, [
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

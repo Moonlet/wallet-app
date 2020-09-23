@@ -50,5 +50,9 @@ export default (theme: ITheme) =>
         },
         accountSummary: {
             marginBottom: BASE_DIMENSION
+        },
+        affiliateBanner: {
+            marginTop: BASE_DIMENSION / 2,
+            marginBottom: BASE_DIMENSION
         }
     });

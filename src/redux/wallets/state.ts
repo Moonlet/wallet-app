@@ -13,17 +13,19 @@ export interface IWalletState {
     deviceId?: string;
     selected: boolean;
     selectedBlockchain: Blockchain;
-    hwOptions?: {
-        deviceId: string;
-        deviceVendor: HWVendor;
-        deviceModel: HWModel;
-        connectionType: HWConnection;
-    };
+    hwOptions?: IWalletHWOptions;
     type: WalletType;
     accounts: IAccountState[];
     transactions?: {
         [id: string]: IBlockchainTransaction;
     };
+}
+
+export interface IWalletHWOptions {
+    deviceId: string;
+    deviceVendor: HWVendor;
+    deviceModel: HWModel;
+    connectionType: HWConnection;
 }
 
 export interface ITokensAccountState {

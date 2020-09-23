@@ -6,6 +6,7 @@ import { ITokenConfigState } from '../../../redux/tokens/state';
 import { XSGD_MAINNET } from './tokens/xsgd';
 import { IconValues } from '../../../components/icon/values';
 import { GZIL_MAINNET, GZIL_TESTNET } from './tokens/gzil';
+import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 
 export const ZIL_NATIVE: ITokenConfigState = {
     name: 'Zilliqa',
@@ -146,7 +147,10 @@ export const config: IBlockchainConfig = {
         enableTokenManagement: true,
         enableAccountCreation: false,
         maxAccountsNumber: 5,
-        displayName: 'ZIL'
+        displayName: 'ZIL',
+        affiliateBanners: {
+            account: AffiliateBannerType.UNSTOPPABLE_DOMAINS
+        }
     },
     networks: {
         testNet: 333,

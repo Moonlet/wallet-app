@@ -17,8 +17,6 @@ import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
 import { NavigationService } from '../../navigation/navigation-service';
 
-const MIN_STAKE = '0.01';
-
 interface IExternalProps {
     blockchain: Blockchain;
     account: IAccountState;
@@ -41,13 +39,37 @@ export const QuickDelegateBannerComponent = (
     const token: ITokenState = props.account.tokens[props.chainId][blockchainConfig.config.coin];
     const tokenConfig = getTokenConfig(props.blockchain, token.symbol);
 
+    const [minimumAmountDelegate, setMinimumAmountDelegate] = React.useState<BigNumber>(null);
+
+    React.useEffect(() => {
+        (async () => {
+            // Minimum Amount Delegate
+
+            const clientMinAmount = await blockchainConfig
+                .getClient(props.chainId)
+                .getMinimumAmountDelegate();
+
+            const gasLimit = blockchainConfig.config.feeOptions.defaults.gasLimit[tokenConfig.type];
+            const gasPrice = blockchainConfig.config.feeOptions.defaults.gasPrice;
+            const fees = gasPrice.multipliedBy(gasLimit).toFixed();
+
+            const minAmount = new BigNumber(clientMinAmount).plus(new BigNumber(fees));
+
+            // getMinimumAmountDelegate + fees + 1%
+            setMinimumAmountDelegate(minAmount.plus(minAmount.dividedBy(100)));
+        })();
+    }, [props.blockchain, props.account.address, props.chainId]);
+
     if (tokenConfig.ui.tokenScreenComponent === TokenScreenComponentType.DELEGATE) {
         const amount = blockchainConfig.account.amountFromStd(
             new BigNumber(token.balance.value),
             tokenConfig.decimals
         );
 
-        if (new BigNumber(amount).isGreaterThanOrEqualTo(new BigNumber(MIN_STAKE))) {
+        if (
+            minimumAmountDelegate &&
+            new BigNumber(token.balance.value).isGreaterThanOrEqualTo(minimumAmountDelegate)
+        ) {
             const formatAmount = formatNumber(amount, {
                 currency: blockchainConfig.config.coin,
                 maximumFractionDigits: 4

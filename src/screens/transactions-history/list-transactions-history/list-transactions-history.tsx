@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, TouchableOpacity, ScrollView, Image, RefreshControl } from 'react-native';
+import {
+    View,
+    TouchableOpacity,
+    ScrollView,
+    Image,
+    Animated,
+    Easing,
+    RefreshControl
+} from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import { Icon } from '../../../components/icon/icon';
@@ -35,6 +43,7 @@ export class TransactionsHistoryListComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
+    public iconSpinValue = new Animated.Value(0);
     constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
         super(props);
 
@@ -57,6 +66,16 @@ export class TransactionsHistoryListComponent extends React.Component<
         return ` ${formattedAmount} ${toAddress}`;
     }
 
+    private startIconSpin() {
+        Animated.loop(
+            Animated.timing(this.iconSpinValue, {
+                toValue: 1,
+                duration: 2000,
+                easing: Easing.linear
+            })
+        ).start();
+    }
+
     private transactionItem(tx: IBlockchainTransaction, index: number) {
         const { account, styles, theme } = this.props;
 
@@ -67,11 +86,14 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         let txIcon: string;
         let txColor: string;
+        let enableAnimation = false;
 
         switch (tx.status) {
             case TransactionStatus.PENDING:
                 txIcon = IconValues.PENDING;
                 txColor = theme.colors.warning;
+                this.startIconSpin();
+                enableAnimation = true;
                 break;
             case TransactionStatus.SUCCESS:
                 const accountAddress = account.address.toLowerCase();
@@ -110,6 +132,11 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         const txTokenConfig = getTokenConfig(tx.blockchain, tx?.token?.symbol);
 
+        const iconSpin = this.iconSpinValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['360deg', '0deg']
+        });
+
         return (
             <TouchableOpacity
                 testID={`transaction-${index}`}
@@ -128,11 +155,18 @@ export class TransactionsHistoryListComponent extends React.Component<
                     })
                 }
             >
-                <Icon
-                    name={txIcon}
-                    size={normalize(30)}
-                    style={[styles.transactionIcon, { color: txColor }]}
-                />
+                <Animated.View
+                    style={[
+                        styles.transactionIconContainer,
+                        enableAnimation && { transform: [{ rotate: iconSpin }] }
+                    ]}
+                >
+                    <Icon
+                        name={txIcon}
+                        size={normalize(30)}
+                        style={[styles.transactionIcon, { color: txColor }]}
+                    />
+                </Animated.View>
                 <View style={styles.transactionTextContainer}>
                     <View style={styles.transactionAmountContainer}>
                         <Amount

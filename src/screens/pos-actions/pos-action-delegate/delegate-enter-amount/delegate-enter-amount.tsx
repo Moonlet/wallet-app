@@ -10,7 +10,6 @@ import { getAccount } from '../../../../redux/wallets/selectors';
 import { Blockchain, ChainIdType, IFeeOptions } from '../../../../core/blockchain/types';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { getChainId } from '../../../../redux/preferences/selectors';
-import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import {
     DELEGATE_CONFIRMATION,
@@ -21,8 +20,9 @@ import bind from 'bind-decorator';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import BigNumber from 'bignumber.js';
+import { IValidator } from '../../../../redux/ui/stats/state';
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
     navigateToConfirmationStep: typeof navigateToConfirmationStep;

@@ -1,8 +1,9 @@
-import { GenericStats, AccountStats } from '../types/stats';
+import { GenericStats } from '../types/stats';
 import { Client } from './client';
 import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { BigNumber } from 'bignumber.js';
+import { AccountStats } from '../../../redux/ui/stats/state';
 
 export class Stats extends GenericStats<Client> {
     public async getAccountDelegateStats(

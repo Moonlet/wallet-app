@@ -7,11 +7,6 @@ import { BASE_DIMENSION, normalize } from '../../../../../../../styles/dimension
 import { Icon } from '../../../../../../../components/icon/icon';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
 import { Text } from '../../../../../../../library';
-import {
-    IStatValue,
-    IStatValueType,
-    CardActionType
-} from '../../../../../../../core/blockchain/types/stats';
 import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
@@ -19,6 +14,11 @@ import { translate } from '../../../../../../../core/i18n';
 import { IconValues } from '../../../../../../../components/icon/values';
 import { formatValidatorName } from '../../../../../../../core/utils/format-string';
 import { getTokenConfig } from '../../../../../../../redux/tokens/static-selectors';
+import {
+    CardActionType,
+    IStatValue,
+    IStatValueType
+} from '../../../../../../../redux/ui/stats/state';
 
 export interface IExternalProps {
     icon: string;

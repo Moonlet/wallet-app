@@ -13,13 +13,13 @@ import { SmartImage } from '../../library/image/smart-image';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { translate } from '../../core/i18n';
 import { StatsComponent } from '../token/components/delegate-token/components/stats-component/stats-component';
-import { IValidator, CardActionType } from '../../core/blockchain/types/stats';
 import { ITokenState } from '../../redux/wallets/state';
 import BigNumber from 'bignumber.js';
 import { formatValidatorName } from '../../core/utils/format-string';
 import { BASE_DIMENSION } from '../../styles/dimensions';
+import { CardActionType, IValidator } from '../../redux/ui/stats/state';
 
-export interface INavigationParams {
+interface INavigationParams {
     validator: IValidator;
     blockchain: Blockchain;
     accountIndex: number;

@@ -1,4 +1,4 @@
-import { IValidator } from '../blockchain/types/stats';
+import { IValidator } from '../../redux/ui/stats/state';
 import { translate } from '../i18n';
 
 export const Capitalize = (str: string) => {

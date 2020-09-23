@@ -1,4 +1,4 @@
-import { IValidator } from '../../../core/blockchain/types/stats';
+import { IValidator } from '../stats/state';
 
 export interface IValidatorsState {
     [blockchain: string]: {

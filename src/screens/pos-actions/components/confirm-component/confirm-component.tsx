@@ -12,7 +12,6 @@ import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { HeaderStepByStep } from '../../../send/components/header-step-by-step/header-step-by-step';
-import { IValidator } from '../../../../core/blockchain/types/stats';
 import { BottomCta } from '../../../../components/bottom-cta/bottom-cta';
 import { PrimaryCtaField } from '../../../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { AmountCtaField } from '../../../../components/bottom-cta/amount-cta-field/amount-cta-field';
@@ -24,6 +23,7 @@ import { formatAddress } from '../../../../core/utils/format-address';
 import { valuePrimaryCtaField, formatValidatorName } from '../../../../core/utils/format-string';
 import { formatNumber } from '../../../../core/utils/format-number';
 import { BigNumber } from 'bignumber.js';
+import { IValidator } from '../../../../redux/ui/stats/state';
 
 interface IHeaderStep {
     step: number;
@@ -31,7 +31,7 @@ interface IHeaderStep {
     active: boolean;
 }
 
-export interface IProps {
+interface IProps {
     account: IAccountState;
     chainId: ChainIdType;
     token: ITokenState;

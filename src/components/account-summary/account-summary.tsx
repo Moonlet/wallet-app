@@ -7,7 +7,6 @@ import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { translate } from '../../core/i18n/translation/translate';
 import { Blockchain } from '../../core/blockchain/types';
 import { ITokenState } from '../../redux/wallets/state';
-import { AccountStats, IStatValue } from '../../core/blockchain/types/stats';
 import BigNumber from 'bignumber.js';
 import Icon from '../icon/icon';
 import { ExpandableContainer } from '../expandable-container/expandable-container';
@@ -18,6 +17,7 @@ import { SkeletonPlaceholder } from '../skeleton-placeholder/skeleton-placeholde
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { TokenScreenComponentType } from '../../core/blockchain/types/token';
 import { formatNumber } from '../../core/utils/format-number';
+import { AccountStats, IStatValue } from '../../redux/ui/stats/state';
 
 interface IExternalProps {
     isLoading: boolean;

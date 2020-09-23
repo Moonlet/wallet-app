@@ -5,12 +5,12 @@ import { Text } from '../../../../library';
 import { IThemeProps, withTheme } from '../../../../core/theme/with-theme';
 import { SmartImage } from '../../../../library/image/smart-image';
 import { smartConnect } from '../../../../core/utils/smart-connect';
-import { IValidator } from '../../../../core/blockchain/types/stats';
 import { formatNumber } from '../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { formatValidatorName } from '../../../../core/utils/format-string';
+import { IValidator } from '../../../../redux/ui/stats/state';
 
-export interface IExternalProps {
+interface IExternalProps {
     validator: IValidator;
     amount: string;
     symbol: string;

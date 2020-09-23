@@ -4,12 +4,12 @@ import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../../../core/utils/smart-connect';
 import { Text } from '../../../../../../library';
-import { IStatValue, AccountStats } from '../../../../../../core/blockchain/types/stats';
 import { Blockchain } from '../../../../../../core/blockchain/types';
 import { ITokenState } from '../../../../../../redux/wallets/state';
 import { AccountSummary } from '../../../../../../components/account-summary/account-summary';
 import { statGetValueString } from '../../../../../../core/utils/stats-get-value';
 import { getTokenConfig } from '../../../../../../redux/tokens/static-selectors';
+import { AccountStats, IStatValue } from '../../../../../../redux/ui/stats/state';
 
 interface IExternalProps {
     accountStats: AccountStats;

@@ -8,7 +8,6 @@ import { getAccount } from '../../../../redux/wallets/selectors';
 import { Blockchain, ChainIdType, IFeeOptions } from '../../../../core/blockchain/types';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { getChainId } from '../../../../redux/preferences/selectors';
-import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { ConfirmComponent } from '../../components/confirm-component/confirm-component';
 import { PasswordModal } from '../../../../components/password-modal/password-modal';
@@ -16,6 +15,7 @@ import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { delegate } from '../../../../redux/wallets/actions';
 import { bind } from 'bind-decorator';
+import { IValidator } from '../../../../redux/ui/stats/state';
 
 export interface IReduxProps {
     account: IAccountState;

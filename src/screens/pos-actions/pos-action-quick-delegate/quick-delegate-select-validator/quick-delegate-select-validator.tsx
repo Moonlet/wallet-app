@@ -20,7 +20,6 @@ import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { getChainId } from '../../../../redux/preferences/selectors';
-import { IValidator, CardActionType } from '../../../../core/blockchain/types/stats';
 import { ValidatorsList } from '../../../token/components/delegate-token/components/validators/validators-list/validators-list';
 import { bind } from 'bind-decorator';
 import { BottomCta } from '../../../../components/bottom-cta/bottom-cta';
@@ -39,6 +38,7 @@ import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { fetchValidators } from '../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../redux/ui/delegated-validators/actions';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
+import { IValidator, CardActionType } from '../../../../redux/ui/stats/state';
 
 const defaultNumberOfValidators = 2;
 

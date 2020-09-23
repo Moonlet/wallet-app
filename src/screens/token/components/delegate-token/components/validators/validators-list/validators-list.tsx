@@ -4,13 +4,13 @@ import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { ValidatorCard } from '../validator-card/validator-card';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
-import { IValidator, CardActionType } from '../../../../../../../core/blockchain/types/stats';
 import { Blockchain } from '../../../../../../../core/blockchain/types';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
 import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { ITokenState } from '../../../../../../../redux/wallets/state';
 import { getTokenConfig } from '../../../../../../../redux/tokens/static-selectors';
+import { IValidator, CardActionType } from '../../../../../../../redux/ui/stats/state';
 
 interface IExternalProps {
     validators: IValidator[];

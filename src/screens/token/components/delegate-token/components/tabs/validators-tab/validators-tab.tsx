@@ -7,7 +7,6 @@ import { ValidatorsList } from '../../validators/validators-list/validators-list
 import { SearchInput } from '../../../../../../../components/search-input/search-input';
 import { translate } from '../../../../../../../core/i18n';
 import { bind } from 'bind-decorator';
-import { IValidator, CardActionType } from '../../../../../../../core/blockchain/types/stats';
 import { Blockchain, ChainIdType } from '../../../../../../../core/blockchain/types';
 import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { getBlockchain } from '../../../../../../../core/blockchain/blockchain-factory';
@@ -16,19 +15,20 @@ import { ITokenState } from '../../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../../redux/state';
 import { getValidators } from '../../../../../../../redux/ui/validators/selectors';
 import { connect } from 'react-redux';
+import { IValidator, CardActionType } from '../../../../../../../redux/ui/stats/state';
 
-export interface IProps {
+interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
     chainId: ChainIdType;
 }
 
-export interface IReduxProps {
+interface IReduxProps {
     validators: IValidator[];
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
+const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
     return {
         validators: getValidators(state, ownProps.blockchain, ownProps.chainId)
     };

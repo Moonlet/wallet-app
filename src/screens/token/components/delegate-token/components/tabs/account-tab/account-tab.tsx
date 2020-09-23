@@ -16,7 +16,6 @@ import { getChainId } from '../../../../../../../redux/preferences/selectors';
 import { Button } from '../../../../../../../library';
 import { translate } from '../../../../../../../core/i18n';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
-import { AccountStats, IPosWidget } from '../../../../../../../core/blockchain/types/stats';
 import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { PosWidget } from '../../../../../../../components/pos-widget/pos-widget';
 import { PosBasicActionType } from '../../../../../../../core/blockchain/types/token';
@@ -31,6 +30,7 @@ import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegate
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import moment from 'moment';
 import { AffiliateBanner } from '../../../../../../../components/affiliate-banner/affiliate-banner';
+import { AccountStats, IPosWidget } from '../../../../../../../redux/ui/stats/state';
 
 export interface IProps {
     accountIndex: number;

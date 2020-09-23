@@ -10,16 +10,16 @@ import { NavigationService } from '../../navigation/navigation-service';
 import { translate } from '../../core/i18n/translation/translate';
 import { Blockchain } from '../../core/blockchain/types';
 import { ITokenState } from '../../redux/wallets/state';
-import { IValidator } from '../../core/blockchain/types/stats';
+import { IValidator } from '../../redux/ui/stats/state';
 
-export interface INavParams {
+interface INavParams {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
     validators: IValidator[];
 }
 
-export interface IExternalProps {
+interface IExternalProps {
     mainCta: IButtonCTA;
     otherCtas?: IButtonCTA[];
     params: INavParams;

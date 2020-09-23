@@ -20,9 +20,10 @@ import { QuickDelegateBanner } from '../quick-delegate-banner/quick-delegate-ban
 import { AccountSummary } from '../account-summary/account-summary';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
-import { AccountStats } from '../../core/blockchain/types/stats';
 import { AffiliateBanner } from '../affiliate-banner/affiliate-banner';
 import { AffiliateBannerType } from '../affiliate-banner/types';
+import { AccountStats } from '../../redux/ui/stats/state';
+import { fetchAccountDelegateStats } from '../../redux/ui/stats/actions';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -34,10 +35,12 @@ interface IExternalProps {
 
 interface IReduxProps {
     openBottomSheet: typeof openBottomSheet;
+    fetchAccountDelegateStats: typeof fetchAccountDelegateStats;
 }
 
 const mapDispatchToProps = {
-    openBottomSheet
+    openBottomSheet,
+    fetchAccountDelegateStats
 };
 
 interface IState {
@@ -89,6 +92,9 @@ export class TokenDashboardComponent extends React.Component<
         const token: ITokenState = account.tokens[chainId][blockchainConfig.config.coin];
 
         this.setState({ token });
+
+        // update this section
+        this.props.fetchAccountDelegateStats(this.props.account, token);
 
         blockchainConfig
             .getStats(chainId)

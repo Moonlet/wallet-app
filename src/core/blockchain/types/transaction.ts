@@ -4,7 +4,7 @@ import { TransactionStatus } from '../../wallet/types';
 import BigNumber from 'bignumber.js';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { PosBasicActionType } from './token';
-import { IValidator } from './stats';
+import { IValidator } from '../../../redux/ui/stats/state';
 
 export abstract class AbstractBlockchainTransactionUtils {
     public async sign(transaction: IBlockchainTransaction, privateKey: string): Promise<string> {

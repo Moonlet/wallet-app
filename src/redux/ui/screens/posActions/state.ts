@@ -1,6 +1,6 @@
 import { Blockchain, IFeeOptions } from '../../../../core/blockchain/types';
 import { ITokenState } from '../../../wallets/state';
-import { IValidator } from '../../../../core/blockchain/types/stats';
+import { IValidator } from '../../stats/state';
 
 export interface IPosActionsState {
     quickDelegateEnterAmount: {

@@ -6,7 +6,7 @@ import { Contracts } from '../config';
 import BigNumber from 'bignumber.js';
 import { fixEthAddress } from '../../../utils/format-address';
 import { PosBasicActionType, TokenType } from '../../types/token';
-import { IValidator } from '../../types/stats';
+import { IValidator } from '../../../../redux/ui/stats/state';
 
 export class Election {
     constructor(private client: Client) {}

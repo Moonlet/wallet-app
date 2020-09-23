@@ -20,7 +20,6 @@ import { TestnetBadge } from '../../../components/testnet-badge/testnet-badge';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { getChainId } from '../../../redux/preferences/selectors';
-import { IValidator } from '../../../core/blockchain/types/stats';
 import { BottomCta } from '../../../components/bottom-cta/bottom-cta';
 import { PrimaryCtaField } from '../../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { AmountCtaField } from '../../../components/bottom-cta/amount-cta-field/amount-cta-field';
@@ -38,8 +37,9 @@ import { unlock, unvote, unstake, claimRewardNoInput } from '../../../redux/wall
 import { valuePrimaryCtaField } from '../../../core/utils/format-string';
 import BigNumber from 'bignumber.js';
 import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
+import { IValidator } from '../../../redux/ui/stats/state';
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
     unlock: typeof unlock;
@@ -48,7 +48,7 @@ export interface IReduxProps {
     claimRewardNoInput: typeof claimRewardNoInput;
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
+const mapStateToProps = (state: IReduxState, ownProps: INavigationParams) => {
     return {
         account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
         chainId: getChainId(state, ownProps.blockchain)
@@ -62,7 +62,7 @@ const mapDispatchToProps = {
     claimRewardNoInput
 };
 
-export interface INavigationParams {
+interface INavigationParams {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;

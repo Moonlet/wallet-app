@@ -23,7 +23,6 @@ import { getTokenConfig } from '../../tokens/static-selectors';
 import { translate } from '../../../core/i18n';
 import { Dialog } from '../../../components/dialog/dialog';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
-import { IValidator } from '../../../core/blockchain/types/stats';
 import {
     openProcessTransactions,
     setProcessTransactions,
@@ -37,6 +36,7 @@ import {
     captureException as SentryCaptureException,
     addBreadcrumb as SentryAddBreadcrumb
 } from '@sentry/react-native';
+import { IValidator } from '../../ui/stats/state';
 
 export const redelegate = (
     account: IAccountState,

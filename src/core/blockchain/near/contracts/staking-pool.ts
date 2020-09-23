@@ -1,5 +1,4 @@
 import { IPosTransaction, IBlockchainTransaction } from '../../types';
-import { IValidator } from '../../types/stats';
 import { PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction } from './base-contract';
 import {
@@ -9,6 +8,7 @@ import {
 } from '../types';
 import BN from 'bn.js';
 import BigNumber from 'bignumber.js';
+import { IValidator } from '../../../../redux/ui/stats/state';
 
 const DEFAULT_FUNC_CALL_GAS = new BN('100000000000000');
 

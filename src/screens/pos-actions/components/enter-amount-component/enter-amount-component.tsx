@@ -12,7 +12,6 @@ import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { HeaderStepByStep } from '../../../send/components/header-step-by-step/header-step-by-step';
-import { IValidator } from '../../../../core/blockchain/types/stats';
 import { BottomCta } from '../../../../components/bottom-cta/bottom-cta';
 import { PrimaryCtaField } from '../../../../components/bottom-cta/primary-cta-field/primary-cta-field';
 import { AmountCtaField } from '../../../../components/bottom-cta/amount-cta-field/amount-cta-field';
@@ -26,6 +25,7 @@ import {
 import { EnterAmount } from '../../../send/components/enter-amount/enter-amount';
 import { FeeOptions } from '../../../send/components/fee-options/fee-options';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
+import { IValidator } from '../../../../redux/ui/stats/state';
 
 interface IHeaderStep {
     step: number;

@@ -1,35 +1,7 @@
 import { IBlockchainConfig } from './config';
 import { BlockchainGenericClient } from './client';
-import { Blockchain } from './blockchain';
-import { PosBasicActionType } from './token';
-import BigNumber from 'bignumber.js';
 import { IAccountState, ITokenState } from '../../../redux/wallets/state';
-
-export enum IStatValueType {
-    STRING = 'STRING',
-    AMOUNT = 'AMOUNT'
-}
-
-export interface IStatValue {
-    title: string;
-    subtitle?: string;
-    color: string;
-    type: IStatValueType;
-    icon?: string;
-    data: {
-        value: string;
-        tokenSymbol?: string;
-        blockchain?: Blockchain;
-    };
-}
-
-export interface AccountStats {
-    topStats: IStatValue[];
-    chartStats: IStatValue[];
-    secondaryStats: IStatValue[];
-    totalAmount: BigNumber;
-    widgets: IPosWidget[];
-}
+import { AccountStats } from '../../../redux/ui/stats/state';
 
 export abstract class GenericStats<Client = BlockchainGenericClient> {
     protected client: Client;
@@ -49,39 +21,4 @@ export abstract class GenericStats<Client = BlockchainGenericClient> {
     public async getAvailableBalanceForDelegate(account: IAccountState): Promise<string> {
         throw new Error('Not Implemented');
     }
-}
-
-export enum CardActionType {
-    CHECKBOX = 'CHECKBOX',
-    NAVIGATE = 'NAVIGATE',
-    DEFAULT = 'DEFAULT'
-}
-
-export interface IValidator {
-    id: string;
-    icon: string;
-    name: string;
-    rank: string;
-    website: string;
-    totalVotes: string;
-    amountDelegated: {
-        pending: string;
-        active: string;
-    };
-    topStats: IStatValue[];
-    chartStats: IStatValue[];
-    secondaryStats: IStatValue[];
-    actionType?: CardActionType;
-    actionTypeSelected?: boolean;
-}
-
-export interface IPosWidget {
-    type: PosBasicActionType;
-    value: string;
-    timestamp: string;
-    index?: number;
-    validator?: {
-        id: string;
-        name: string;
-    };
 }

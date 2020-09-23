@@ -22,7 +22,6 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import { HeaderStepByStep } from '../../../send/components/header-step-by-step/header-step-by-step';
 import { getChainId } from '../../../../redux/preferences/selectors';
-import { IValidator, CardActionType } from '../../../../core/blockchain/types/stats';
 import { ValidatorsList } from '../../../token/components/delegate-token/components/validators/validators-list/validators-list';
 import { bind } from 'bind-decorator';
 import { BottomCta } from '../../../../components/bottom-cta/bottom-cta';
@@ -36,6 +35,7 @@ import { Icon } from '../../../../components/icon/icon';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
 import { IconValues } from '../../../../components/icon/values';
 import { getValidators } from '../../../../redux/ui/validators/selectors';
+import { IValidator, CardActionType } from '../../../../redux/ui/stats/state';
 
 interface IHeaderStep {
     step: number;

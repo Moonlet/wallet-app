@@ -1,8 +1,8 @@
 import { Blockchain, IFeeOptions } from '../../../../core/blockchain/types';
 import { ITokenState } from '../../../wallets/state';
-import { IValidator } from '../../../../core/blockchain/types/stats';
 import { Dispatch } from 'react';
 import { NavigationService } from '../../../../navigation/navigation-service';
+import { IValidator } from '../../stats/state';
 
 // actions consts
 export const QUICK_DELEGATE_ENTER_AMOUNT = 'QUICK_DELEGATE_ENTER_AMOUNT';

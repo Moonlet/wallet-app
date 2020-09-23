@@ -1,9 +1,15 @@
-import { GenericStats, IStatValueType, AccountStats, IValidator, IStatValue } from '../types/stats';
+import { GenericStats } from '../types/stats';
 import { Client } from './client';
 import { Blockchain } from '../types/blockchain';
 import BigNumber from 'bignumber.js';
 import { IAccountState, ITokenState } from '../../../redux/wallets/state';
 import { IconValues } from '../../../components/icon/values';
+import {
+    AccountStats,
+    IStatValueType,
+    IStatValue,
+    IValidator
+} from '../../../redux/ui/stats/state';
 
 export class Stats extends GenericStats<Client> {
     public async getAccountDelegateStats(

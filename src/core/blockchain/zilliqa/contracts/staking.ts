@@ -1,12 +1,12 @@
 import { Client } from '../client';
 import { IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
-import { IValidator } from '../../types/stats';
 import { Contracts } from '../config';
 import { TokenType, PosBasicActionType } from '../../types/token';
 import { buildBaseTransaction, getContract, ContractFields } from './base-contract';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import BigNumber from 'bignumber.js';
+import { IValidator } from '../../../../redux/ui/stats/state';
 
 export class Staking {
     private contractImplementation;

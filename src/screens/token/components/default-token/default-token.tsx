@@ -17,9 +17,13 @@ import { INavigationProps } from '../../../../navigation/with-navigation-params'
 import { AccountAddress } from '../../../../components/account-address/account-address';
 import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../../../core/blockchain/types';
 import { TransactionsHistoryList } from '../../../transactions-history/list-transactions-history/list-transactions-history';
-import { sendTransferTransaction } from '../../../../redux/wallets/actions';
+import {
+    sendTransferTransaction,
+    updateTransactionFromBlockchain
+} from '../../../../redux/wallets/actions';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
+import { TransactionStatus } from '../../../../core/wallet/types';
 
 export interface IProps {
     accountIndex: number;
@@ -35,6 +39,7 @@ export interface IReduxProps {
     sendTransferTransaction: typeof sendTransferTransaction;
     chainId: ChainIdType;
     canSend: boolean;
+    updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
 }
 
 export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
@@ -53,12 +58,26 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
 };
 
 const mapDispatchToProps = {
-    sendTransferTransaction
+    sendTransferTransaction,
+    updateTransactionFromBlockchain
 };
 
 export class DefaultTokenScreenComponent extends React.Component<
     INavigationProps & IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
+    private updateTransactionFromBlockchain() {
+        this.props.transactions?.map((transaction: IBlockchainTransaction) => {
+            if (transaction.status === TransactionStatus.PENDING) {
+                this.props.updateTransactionFromBlockchain(
+                    transaction.id,
+                    transaction.blockchain,
+                    transaction.chainId,
+                    transaction.broadcastedOnBlock
+                );
+            }
+        });
+    }
+
     public render() {
         const { styles, navigation, account, transactions, token } = this.props;
 
@@ -110,6 +129,7 @@ export class DefaultTokenScreenComponent extends React.Component<
                             transactions={transactions}
                             account={account}
                             navigation={navigation}
+                            onRefresh={() => this.updateTransactionFromBlockchain()}
                         />
                     </View>
                 </ScrollView>

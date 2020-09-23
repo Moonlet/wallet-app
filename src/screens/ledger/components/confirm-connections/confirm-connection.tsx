@@ -10,6 +10,7 @@ import { svgDimmensions } from '../../ledger-connect-component';
 import Img from '../../../../assets/icons/ledger/bluetooth-pairing.svg';
 import { View } from 'react-native';
 import { translate } from '../../../../core/i18n';
+import { SmartImage } from '../../../../library/image/smart-image';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -25,9 +26,12 @@ export class ConfirmConnectionComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <Img
-                    width={normalize(svgDimmensions.width)}
-                    height={normalize(svgDimmensions.height)}
+                <SmartImage
+                    source={{ iconComponent: Img }}
+                    style={{
+                        width: normalize(svgDimmensions.width),
+                        height: normalize(svgDimmensions.height)
+                    }}
                 />
 
                 <View style={{ flex: 1 }}>

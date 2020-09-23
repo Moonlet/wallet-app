@@ -11,6 +11,7 @@ import Img from '../../../../assets/icons/ledger/verification-failed.svg';
 import { normalize } from '../../../../styles/dimensions';
 import { svgDimmensions } from '../../ledger-connect-component';
 import AndroidOpenSettings from '../../../../library/open-settings/open-settings';
+import { SmartImage } from '../../../../library/image/smart-image';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -27,9 +28,12 @@ export class LocationRequiredComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <Img
-                    width={normalize(svgDimmensions.width)}
-                    height={normalize(svgDimmensions.height)}
+                <SmartImage
+                    source={{ iconComponent: Img }}
+                    style={{
+                        width: normalize(svgDimmensions.width),
+                        height: normalize(svgDimmensions.height)
+                    }}
                 />
                 <Text style={styles.primaryText}>
                     {translate('LedgerConnect.locationRequired')}

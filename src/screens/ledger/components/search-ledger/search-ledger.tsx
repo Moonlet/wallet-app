@@ -15,6 +15,7 @@ import ImgNanoS from '../../../../assets/icons/ledger/connect-nano-s.svg';
 import ImgNanoX from '../../../../assets/icons/ledger/search-bluetooth.svg';
 import { normalize } from '../../../../styles/dimensions';
 import { svgDimmensions } from '../../ledger-connect-component';
+import { SmartImage } from '../../../../library/image/smart-image';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -108,14 +109,20 @@ export class SearchLedgerComponent extends React.Component<
         return (
             <View style={styles.container}>
                 {isNanoS ? (
-                    <ImgNanoS
-                        width={normalize(svgDimmensions.width)}
-                        height={normalize(svgDimmensions.height)}
+                    <SmartImage
+                        source={{ iconComponent: ImgNanoS }}
+                        style={{
+                            width: normalize(svgDimmensions.width),
+                            height: normalize(svgDimmensions.height)
+                        }}
                     />
                 ) : (
-                    <ImgNanoX
-                        width={normalize(svgDimmensions.width)}
-                        height={normalize(svgDimmensions.height)}
+                    <SmartImage
+                        source={{ iconComponent: ImgNanoX }}
+                        style={{
+                            width: normalize(svgDimmensions.width),
+                            height: normalize(svgDimmensions.height)
+                        }}
                     />
                 )}
 

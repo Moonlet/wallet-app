@@ -11,6 +11,7 @@ import { Blockchain } from '../../../../core/blockchain/types';
 import { HWModel, HWConnection } from '../../../../core/wallet/hw-wallet/types';
 import { translate } from '../../../../core/i18n';
 import { Capitalize } from '../../../../core/utils/format-string';
+import { SmartImage } from '../../../../library/image/smart-image';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -26,9 +27,12 @@ export class VerifyAddressComponent extends React.Component<
 
         return (
             <View style={styles.container}>
-                <Img
-                    width={normalize(svgDimmensions.width)}
-                    height={normalize(svgDimmensions.height)}
+                <SmartImage
+                    source={{ iconComponent: Img }}
+                    style={{
+                        width: normalize(svgDimmensions.width),
+                        height: normalize(svgDimmensions.height)
+                    }}
                 />
 
                 <View style={{ flex: 1 }}>

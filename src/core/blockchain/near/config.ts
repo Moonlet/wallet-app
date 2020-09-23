@@ -4,6 +4,7 @@ import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../type
 import NearIcon from '../../../assets/icons/blockchains/near.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { IconValues } from '../../../components/icon/values';
+import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 
 export const NEAR_NATIVE: ITokenConfigState = {
     name: 'Near',
@@ -112,7 +113,10 @@ export const config: IBlockchainConfig = {
         enableTokenManagement: false,
         enableAccountCreation: true,
         maxAccountsNumber: 5,
-        displayName: 'NEAR'
+        displayName: 'NEAR',
+        affiliateBanners: {
+            account: AffiliateBannerType.LEDGER_NANO_X
+        }
     },
     networks: {
         mainNet: 'mainnet',

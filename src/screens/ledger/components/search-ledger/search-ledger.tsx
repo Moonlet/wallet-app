@@ -48,12 +48,22 @@ export class SearchLedgerComponent extends React.Component<
     });
 
     public async componentDidMount() {
-        this.scannerUnsubscribe = await TransportFactory.scan(this.props.connectionType, event => {
-            this.setState(this.deviceAddition(event.data));
-            if (this.props.connectionType === HWConnection.USB) {
-                this.connect(event.data);
-            }
-        });
+        const permissionsEnabled = await TransportFactory.requestPermissions(
+            this.props.connectionType
+        );
+
+        if (!permissionsEnabled) {
+            this.props.onError(new Error('Location disabled'));
+        } else
+            this.scannerUnsubscribe = await TransportFactory.scan(
+                this.props.connectionType,
+                event => {
+                    this.setState(this.deviceAddition(event.data));
+                    if (this.props.connectionType === HWConnection.USB) {
+                        this.connect(event.data);
+                    }
+                }
+            );
     }
 
     public async connect(item) {
@@ -61,7 +71,9 @@ export class SearchLedgerComponent extends React.Component<
             if (this.props.connectionType === HWConnection.BLE) {
                 this.props.onSelect();
             }
+
             await TransportFactory.connect(this.props.connectionType, item);
+
             this.scannerUnsubscribe.unsubscribe();
             this.props.onConnect(item);
         } catch (error) {

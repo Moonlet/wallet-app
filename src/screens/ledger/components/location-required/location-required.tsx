@@ -7,18 +7,19 @@ import { Text, Button } from '../../../../library';
 import { translate } from '../../../../core/i18n';
 import { Blockchain } from '../../../../core/blockchain/types';
 import { HWModel, HWConnection } from '../../../../core/wallet/hw-wallet/types';
-import Img from '../../../../assets/icons/ledger/error.svg';
+import Img from '../../../../assets/icons/ledger/verification-failed.svg';
 import { normalize } from '../../../../styles/dimensions';
 import { svgDimmensions } from '../../ledger-connect-component';
+import AndroidOpenSettings from 'react-native-android-open-settings';
 
 interface IExternalProps {
     blockchain: Blockchain;
     deviceModel: HWModel;
     connectionType: HWConnection;
-    onRetry: () => void;
+    onPress: () => void;
 }
 
-export class FailedComponentComponent extends React.Component<
+export class LocationRequiredComponent extends React.Component<
     IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
     public render() {
@@ -30,23 +31,28 @@ export class FailedComponentComponent extends React.Component<
                     width={normalize(svgDimmensions.width)}
                     height={normalize(svgDimmensions.height)}
                 />
-
                 <Text style={styles.primaryText}>
-                    {translate('LedgerConnect.somethingWentWrong')}
+                    {translate('LedgerConnect.locationRequired')}
+                </Text>
+                <Text style={styles.secondaryText}>
+                    {translate('LedgerConnect.locationRequiredSubtitle')}
                 </Text>
 
-                <Text style={styles.secondaryText}>{translate('LedgerConnect.tryAgain')}</Text>
-
                 <View style={{ flex: 1 }} />
-
-                <Button primary onPress={() => this.props.onRetry()}>
-                    {translate('App.labels.retry')}
+                <Button
+                    primary
+                    onPress={() => {
+                        AndroidOpenSettings.locationSourceSettings();
+                        this.props.onPress();
+                    }}
+                >
+                    {translate('LedgerConnect.openSettings')}
                 </Button>
             </View>
         );
     }
 }
 
-export const FailedComponent = smartConnect<IExternalProps>(FailedComponentComponent, [
+export const LocationRequired = smartConnect<IExternalProps>(LocationRequiredComponent, [
     withTheme(stylesProvider)
 ]);

@@ -4,6 +4,7 @@ import Modal from '../../library/modal/modal';
 import stylesProvider from './styles';
 import { IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
+import { Text } from '../../library';
 import { Deferred } from '../../core/utils/deferred';
 import { Blockchain } from '../../core/blockchain/types';
 import { HWConnection, HWModel, HWVendor } from '../../core/wallet/hw-wallet/types';
@@ -22,6 +23,7 @@ import { setInstance, waitForInstance } from '../../core/utils/class-registry';
 import { IAccountState } from '../../redux/wallets/state';
 import { SuccessConnect } from './components/success-connect/success-connect';
 import { VerificationFailed } from './components/verification-failed/verification-failed';
+import { LocationRequired } from './components/location-required/location-required';
 
 export const svgDimmensions = {
     width: 345,
@@ -32,7 +34,7 @@ const navigationOptions = () => ({
     title: translate('App.labels.connect')
 });
 
-enum ScreenStep {
+export enum ScreenStep {
     SEARCH_LEDGER = 'SEARCH_LEDGER',
     CONFIRM_CONNECTION = 'CONFIRM_CONNECTION',
     OPEN_APP = 'OPEN_APP',
@@ -44,7 +46,7 @@ enum ScreenStep {
 }
 
 export interface IState {
-    currentStep: ScreenStep;
+    step: ScreenStep;
     showErrorScreen: boolean;
     ledgerDevice: any;
     visible: boolean;
@@ -61,11 +63,11 @@ export class LedgerConnectComponent extends React.Component<
     private modalOnHideDeffered: Deferred;
     private resultDeferred: Deferred;
 
-    public getAccountsAndDeviceId = (
+    public getAccountsAndDeviceId(
         blockchain: Blockchain,
         deviceModel: HWModel,
         connectionType: HWConnection
-    ): Promise<{ accounts: IAccountState[]; deviceId: string }> => {
+    ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
         this.resultDeferred = new Deferred();
         this.modalOnHideDeffered = new Deferred();
         this.setState({
@@ -73,11 +75,11 @@ export class LedgerConnectComponent extends React.Component<
             deviceModel,
             connectionType,
             visible: true,
-            currentStep: ScreenStep.SEARCH_LEDGER
+            step: ScreenStep.SEARCH_LEDGER
         });
 
         return this.resultDeferred.promise;
-    };
+    }
 
     public static async walletCreated(walletId: string) {
         return waitForInstance<LedgerConnectComponent>(LedgerConnectComponent).then(ref =>
@@ -89,7 +91,7 @@ export class LedgerConnectComponent extends React.Component<
         this.resultDeferred = new Deferred();
         this.modalOnHideDeffered = new Deferred();
         this.setState({
-            currentStep: ScreenStep.SUCCESS_CONNECT
+            step: ScreenStep.SUCCESS_CONNECT
         });
     }
 
@@ -107,7 +109,7 @@ export class LedgerConnectComponent extends React.Component<
         super(props);
         setInstance(LedgerConnectComponent, this);
         this.state = {
-            currentStep: ScreenStep.SEARCH_LEDGER,
+            step: ScreenStep.SEARCH_LEDGER,
             showErrorScreen: false,
             ledgerDevice: undefined,
             visible: false,
@@ -117,6 +119,10 @@ export class LedgerConnectComponent extends React.Component<
         };
     }
 
+    public componentWillUnmount() {
+        //
+    }
+
     private onConnectedDevice = async (item: any) => {
         const wallet: IWallet = await HWWalletFactory.get(
             HWVendor.LEDGER,
@@ -124,31 +130,52 @@ export class LedgerConnectComponent extends React.Component<
             item.id,
             this.state.connectionType
         );
-        const appOpened = await (wallet as LedgerWallet).isAppOpened(this.state.blockchain);
+        let appOpened = false;
+        try {
+            appOpened = await (wallet as LedgerWallet).isAppOpened(this.state.blockchain);
+        } catch {
+            appOpened = false;
+        }
+        if (!appOpened) {
+            this.setState({ step: ScreenStep.OPEN_APP, ledgerDevice: item });
+            await (wallet as LedgerWallet).onAppOpened(this.state.blockchain);
+        }
+        this.setState({ step: ScreenStep.VERIFY_ADDRESS });
 
-        if (!appOpened) this.setState({ currentStep: ScreenStep.OPEN_APP, ledgerDevice: item });
-        else {
-            this.setState({ currentStep: ScreenStep.VERIFY_ADDRESS });
-
+        try {
             const accounts: IAccountState[] = await wallet.getAccounts(this.state.blockchain, 0);
 
             if (accounts) this.resultDeferred.resolve({ accounts, deviceId: item.id });
             else {
-                this.setState({ currentStep: ScreenStep.VERIFICATION_FAILED });
+                this.resultDeferred.reject();
+                this.setState({ step: ScreenStep.VERIFICATION_FAILED });
             }
+        } catch {
+            this.resultDeferred.reject();
+            this.setState({ step: ScreenStep.VERIFICATION_FAILED });
         }
     };
     @bind
     private onSelectDevice() {
-        this.setState({ currentStep: ScreenStep.CONFIRM_CONNECTION });
+        this.setState({ step: ScreenStep.CONFIRM_CONNECTION });
     }
     @bind
     private onErrorConnection(error: any) {
-        this.setState({ showErrorScreen: true });
+        if (error.message === 'Location disabled')
+            this.setState({ step: ScreenStep.LOCATION_REQUIRED });
+        else this.setState({ step: ScreenStep.ERROR_SCREEN });
+    }
+    @bind
+    private onContinue() {
+        this.setState({ visible: false });
+    }
+    @bind
+    private onRetry() {
+        this.setState({ visible: false });
     }
 
     private displaySteps() {
-        switch (this.state.currentStep) {
+        switch (this.state.step) {
             case ScreenStep.SEARCH_LEDGER:
                 return (
                     <SearchLedger
@@ -166,6 +193,15 @@ export class LedgerConnectComponent extends React.Component<
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}
+                    />
+                );
+            case ScreenStep.LOCATION_REQUIRED:
+                return (
+                    <LocationRequired
+                        blockchain={this.state.blockchain}
+                        deviceModel={this.state.deviceModel}
+                        connectionType={this.state.connectionType}
+                        onPress={this.onRetry}
                     />
                 );
             case ScreenStep.OPEN_APP:
@@ -196,6 +232,7 @@ export class LedgerConnectComponent extends React.Component<
                                 ? this.state.ledgerDevice?.localName
                                 : translate(`LedgerConnect.${this.state.deviceModel}`)
                         }
+                        onContinue={this.onContinue}
                         // Pass entire wallet  - to be able to rename it
                     />
                 );
@@ -205,6 +242,7 @@ export class LedgerConnectComponent extends React.Component<
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}
+                        onRetry={this.onRetry}
                     />
                 );
             case ScreenStep.VERIFICATION_FAILED:
@@ -213,12 +251,19 @@ export class LedgerConnectComponent extends React.Component<
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}
+                        onRetry={this.onRetry}
                     />
                 );
         }
     }
 
     public render() {
+        const displayTopHeader =
+            this.state.step !==
+            (ScreenStep.SUCCESS_CONNECT ||
+                ScreenStep.ERROR_SCREEN ||
+                ScreenStep.VERIFICATION_FAILED);
+
         return (
             <Modal
                 isVisible={Platform.select({
@@ -230,13 +275,22 @@ export class LedgerConnectComponent extends React.Component<
                 onModalHide={() => this.modalOnHideDeffered?.resolve()}
             >
                 <View style={this.props.styles.container}>
-                    <HeaderLeft
-                        testID="go-back"
-                        icon={IconValues.ARROW_LEFT}
-                        onPress={() => {
-                            //
-                        }}
-                    />
+                    {displayTopHeader && (
+                        <View style={this.props.styles.header}>
+                            <HeaderLeft
+                                style={{ flex: 1 }}
+                                testID="go-back"
+                                icon={IconValues.ARROW_LEFT}
+                                onPress={() => {
+                                    this.setState({ visible: false });
+                                }}
+                            />
+                            <Text style={this.props.styles.headerTitleStyle}>
+                                {translate('App.labels.connect')}
+                            </Text>
+                            <View style={{ flex: 1 }} />
+                        </View>
+                    )}
                     {this.displaySteps()}
                 </View>
             </Modal>

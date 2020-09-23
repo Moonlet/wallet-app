@@ -19,6 +19,7 @@ interface IExternalProps {
     connectionType: HWConnection;
     deviceName: string;
     walletName: string;
+    onContinue: () => void;
 }
 
 export class SuccessConnectComponent extends React.Component<
@@ -44,10 +45,14 @@ export class SuccessConnectComponent extends React.Component<
                 />
 
                 <View style={{ flex: 1 }}>
-                    <Text style={styles.primaryText}>{'Pairing successful'}</Text>
+                    <Text style={styles.primaryText}>
+                        {translate('LedgerConnect.pairingSuccess')}
+                    </Text>
 
                     <Text style={styles.secondaryText}>
-                        {'You Ledger Nano S is ready\nto be used with Moonlet.'}
+                        {translate('LedgerConnect.readyToUse', {
+                            deviceModel: translate(`LedgerConnect.${this.props.deviceModel}`)
+                        })}
                     </Text>
 
                     <View style={{ flex: 1 }}>
@@ -64,12 +69,7 @@ export class SuccessConnectComponent extends React.Component<
                         />
                     </View>
 
-                    <Button
-                        primary
-                        onPress={() => {
-                            //
-                        }}
-                    >
+                    <Button primary onPress={() => this.props.onContinue()}>
                         {translate('App.labels.continue')}
                     </Button>
                 </View>

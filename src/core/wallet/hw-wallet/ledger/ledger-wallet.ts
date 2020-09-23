@@ -22,12 +22,16 @@ export class LedgerWallet implements IWallet {
     }
 
     public async isAppOpened(blockchain: Blockchain): Promise<boolean> {
-        const transport = await this.getTransport();
-        const app = await AppFactory.get(blockchain, transport);
-        const info = await app.getInfo();
+        try {
+            const transport = await this.getTransport();
+            const app = await AppFactory.get(blockchain, transport);
+            const info = await app.getInfo();
 
-        if (info) return true;
-        return false;
+            if (info) return true;
+            return false;
+        } catch {
+            return false;
+        }
     }
 
     public onAppOpened(blockchain: Blockchain): Promise<void> {

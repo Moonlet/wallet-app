@@ -15,6 +15,7 @@ interface IExternalProps {
     blockchain: Blockchain;
     deviceModel: HWModel;
     connectionType: HWConnection;
+    onRetry: () => void;
 }
 
 export class VerificationFailedComponent extends React.Component<
@@ -47,14 +48,9 @@ export class VerificationFailedComponent extends React.Component<
                         {translate('LedgerConnect.troubleshooting')}
                     </Text>
                 </TouchableOpacity>
-                )
+
                 <View style={{ flex: 1 }} />
-                <Button
-                    primary
-                    onPress={() => {
-                        //
-                    }}
-                >
+                <Button primary onPress={() => this.props.onRetry()}>
                     {translate('App.labels.retry')}
                 </Button>
             </View>

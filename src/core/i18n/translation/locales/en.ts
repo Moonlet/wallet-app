@@ -588,7 +588,13 @@ export const translation: ITranslations = {
                 'Please open your {{blockchain}} app on your {{deviceModel}} and wait a few seconds to have the connection established. Please be patient!',
             verifyAddressOnDevice:
                 'Verify your {{blockchain}} address on your {{deviceModel}} and confirm it.',
-            verifyAddress: 'Verifing your address'
+            verifyAddress: 'Verifing your address',
+            pairingSuccess: 'Pairing successful',
+            readyToUse: 'Your {{deviceModel}} is ready\nto be used with Moonlet.',
+            locationRequired: 'Location required',
+            openSettings: 'Open location settings',
+            locationRequiredSubtitle:
+                'Location is disabled, therefore Moonlet is not able to scan for nearby Bluetooth devices. Enable Location from Settings and try again.'
         }
     },
     plural: (n: number, ord?: boolean) => {

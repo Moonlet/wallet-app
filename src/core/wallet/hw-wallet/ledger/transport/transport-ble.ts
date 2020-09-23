@@ -1,5 +1,6 @@
 import TransportBLE from '@ledgerhq/react-native-hw-transport-ble';
 import { Platform, PermissionsAndroid } from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
 
 export class BLE {
     public static async get(deviceId): Promise<Transport> {
@@ -28,19 +29,31 @@ export class BLE {
         });
     }
 
-    private static async requestPermissions(): Promise<boolean> {
+    public static async requestPermissions(): Promise<boolean> {
         if (Platform.OS === 'android') {
             const granted = await PermissionsAndroid.check(
-                PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
+                PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
             );
-            if (granted) {
-                return true;
-            } else {
-                const requested = await PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION
+
+            return new Promise(resolve => {
+                Geolocation.getCurrentPosition(
+                    async info => {
+                        if (info) {
+                            if (granted) resolve(true);
+                            else {
+                                const requested = await PermissionsAndroid.request(
+                                    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+                                );
+                                resolve(requested === PermissionsAndroid.RESULTS.GRANTED);
+                            }
+                        } else resolve(false);
+                    },
+                    error => {
+                        resolve(false);
+                    },
+                    { enableHighAccuracy: false, timeout: 20000, maximumAge: 1000 }
                 );
-                return requested === PermissionsAndroid.RESULTS.GRANTED;
-            }
+            });
         }
         return true;
     }

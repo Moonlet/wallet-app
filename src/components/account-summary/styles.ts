@@ -122,7 +122,7 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             marginTop: BASE_DIMENSION * 2 + BASE_DIMENSION / 2,
             justifyContent: 'center',
-            marginBottom: BASE_DIMENSION * 2
+            marginBottom: BASE_DIMENSION
         },
         detailsExtraText: {
             fontSize: normalizeFontAndLineHeight(23),

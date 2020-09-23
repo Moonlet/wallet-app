@@ -15,8 +15,13 @@ export const calculateBalance = (
     const tokenKeys = Object.keys((account?.tokens || {})[chainId] || {});
     let balance = new BigNumber(0);
 
-    tokenKeys.map(key => {
-        const token = account.tokens[chainId][key];
+    const nativeTokenConfig = getTokenConfig(
+        account.blockchain,
+        getBlockchain(account.blockchain).config.coin
+    );
+
+    for (const tokenKey of tokenKeys) {
+        const token = account.tokens[chainId][tokenKey];
         const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
 
         const tokenBalanceValue = new BigNumber(token.balance?.value);
@@ -28,16 +33,21 @@ export const calculateBalance = (
                 const amount = convertAmount(
                     account.blockchain,
                     exchangeRates,
-                    tokenBalanceValue.toString(),
-                    key,
-                    tokenConfig.symbol,
+                    tokenBalanceValue.toFixed(),
+                    tokenKey,
+                    nativeTokenConfig.symbol,
                     tokenConfig.decimals
                 );
-                balance = balance.plus(amount);
+                const amountStd = getBlockchain(account.blockchain).account.amountToStd(
+                    new BigNumber(amount),
+                    nativeTokenConfig.decimals
+                );
+                balance = balance.plus(amountStd);
             }
         }
-    });
-    return balance.toString();
+    }
+
+    return balance.toFixed();
 };
 
 export const convertAmount = (

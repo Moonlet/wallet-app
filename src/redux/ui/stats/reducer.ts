@@ -14,7 +14,10 @@ export default (state: IStatsState = initialState, action: IAction): IStatsState
                     [action.data.chainId]: {
                         ...(state[action.data.blockchain] &&
                             state[action.data.blockchain][action.data.chainId]),
-                        [action.data.address]: action.data.accountStats
+                        [action.data.address]: {
+                            accountStats: action.data.accountStats,
+                            timestamp: new Date().getTime()
+                        }
                     }
                 }
             };

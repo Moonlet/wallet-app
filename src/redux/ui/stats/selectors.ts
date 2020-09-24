@@ -12,7 +12,22 @@ export const getAccountStats = (
         (state.ui.stats &&
             state.ui.stats[blockchain] &&
             state.ui.stats[blockchain][chainId] &&
-            state.ui.stats[blockchain][chainId][address]) ||
+            state.ui.stats[blockchain][chainId][address]?.accountStats) ||
+        undefined
+    );
+};
+
+export const getAccountStatsTimestamp = (
+    state: IReduxState,
+    blockchain: Blockchain,
+    chainId: ChainIdType,
+    address: string
+): number => {
+    return (
+        (state.ui.stats &&
+            state.ui.stats[blockchain] &&
+            state.ui.stats[blockchain][chainId] &&
+            state.ui.stats[blockchain][chainId][address]?.timestamp) ||
         undefined
     );
 };

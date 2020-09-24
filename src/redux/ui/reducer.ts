@@ -7,6 +7,7 @@ import transactionRequestReducer from './transaction-request/reducer';
 import validatorsReducer from './validators/reducer';
 import delegatedValidatorsReducer from './delegated-validators/reducer';
 import processTransactionsReducer from './process-transactions/reducer';
+import statsReducer from './stats/reducer';
 
 export const uiReducer = combineReducers({
     screens: screensReducer,
@@ -16,5 +17,6 @@ export const uiReducer = combineReducers({
     transactionRequest: transactionRequestReducer,
     processTransactions: processTransactionsReducer,
     validators: validatorsReducer,
-    delegatedValidators: delegatedValidatorsReducer
+    delegatedValidators: delegatedValidatorsReducer,
+    stats: statsReducer
 });

@@ -1,21 +1,27 @@
 import { StyleSheet } from 'react-native';
 import { ITheme } from '../../core/theme/itheme';
-import { BASE_DIMENSION, LETTER_SPACING, normalize } from '../../styles/dimensions';
+import { LETTER_SPACING, normalizeFontAndLineHeight } from '../../styles/dimensions';
 
 export default (theme: ITheme) =>
     StyleSheet.create({
         container: {
             flex: 1,
-            backgroundColor: theme.colors.appBackground,
-            paddingTop: BASE_DIMENSION * 6
+            backgroundColor: theme.colors.appBackground
         },
         header: {
-            flexDirection: 'row'
+            flexDirection: 'row',
+            width: '100%'
+        },
+        defaultHeaderContainer: {
+            flex: 1
+        },
+        headerTitleContainer: {
+            flex: 1,
+            justifyContent: 'center'
         },
         headerTitleStyle: {
-            flex: 1,
-            fontSize: normalize(22),
-            lineHeight: normalize(28),
+            fontSize: normalizeFontAndLineHeight(22),
+            lineHeight: normalizeFontAndLineHeight(28),
             color: theme.colors.text,
             letterSpacing: LETTER_SPACING,
             textAlign: 'center',

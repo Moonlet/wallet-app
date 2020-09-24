@@ -25,7 +25,7 @@ import { IBlockchainTransaction } from '../../../core/blockchain/types';
 import { TransactionStatus } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { IconValues } from '../../../components/icon/values';
-import { TokenType } from '../../../core/blockchain/types/token';
+import { PosBasicActionType, TokenType } from '../../../core/blockchain/types/token';
 import bind from 'bind-decorator';
 
 interface IExternalProps {
@@ -53,17 +53,55 @@ export class TransactionsHistoryListComponent extends React.Component<
     }
 
     public getTransactionPrimaryText(tx: IBlockchainTransaction, account: IAccountState) {
-        const formattedAmount =
+        let formattedAmount =
             tx.address === account.address
                 ? translate('App.labels.to').toLowerCase()
                 : translate('App.labels.from').toLowerCase();
 
-        const toAddress =
+        let toAddress =
             tx.token.type === TokenType.ZRC2 || tx.token.type === TokenType.ERC20
                 ? formatAddress(tx.data.params[0], account.blockchain)
                 : formatAddress(tx.toAddress, account.blockchain);
 
-        return ` ${formattedAmount} ${toAddress}`;
+        if (tx.additionalInfo?.validatorName) {
+            toAddress = tx.additionalInfo.validatorName;
+        }
+
+        let primaryText = '';
+
+        switch (tx.additionalInfo?.posAction) {
+            case PosBasicActionType.DELEGATE: {
+                formattedAmount = translate('App.labels.to').toLowerCase();
+                primaryText = ` ${formattedAmount} ${toAddress}`;
+                break;
+            }
+            case PosBasicActionType.UNVOTE: {
+                formattedAmount = translate('App.labels.from').toLowerCase();
+                primaryText = ` ${formattedAmount} ${toAddress}`;
+                break;
+            }
+            case PosBasicActionType.STAKE: {
+                formattedAmount = translate('App.labels.to').toLowerCase();
+                primaryText = ` ${formattedAmount} ${toAddress}`;
+                break;
+            }
+            case PosBasicActionType.UNSTAKE: {
+                formattedAmount = translate('App.labels.from').toLowerCase();
+                primaryText = ` ${formattedAmount} ${toAddress}`;
+                break;
+            }
+            case PosBasicActionType.CLAIM_REWARD:
+            case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
+                formattedAmount = translate('App.labels.from').toLowerCase();
+                primaryText =
+                    translate('App.labels.claimingRewards') + ` ${formattedAmount} ${toAddress}`;
+                break;
+            }
+            default:
+                primaryText = `${formattedAmount} ${toAddress}`;
+        }
+
+        return primaryText;
     }
 
     private startIconSpin() {
@@ -78,6 +116,8 @@ export class TransactionsHistoryListComponent extends React.Component<
 
     private transactionItem(tx: IBlockchainTransaction, index: number) {
         const { account, styles, theme } = this.props;
+
+        // console.log('transaction', tx);
 
         const blockchainInstance = getBlockchain(account.blockchain);
         const amount = blockchainInstance.transaction.getTransactionAmount(tx);
@@ -98,6 +138,7 @@ export class TransactionsHistoryListComponent extends React.Component<
             case TransactionStatus.SUCCESS:
                 const accountAddress = account.address.toLowerCase();
                 const address = tx.address.toLowerCase();
+
                 let toAddress = tx.toAddress.toLowerCase();
 
                 if (tx.token.type === TokenType.ZRC2 || tx.token.type === TokenType.ERC20) {
@@ -169,12 +210,14 @@ export class TransactionsHistoryListComponent extends React.Component<
                 </Animated.View>
                 <View style={styles.transactionTextContainer}>
                     <View style={styles.transactionAmountContainer}>
-                        <Amount
-                            amount={amount}
-                            blockchain={account.blockchain}
-                            token={txTokenConfig.symbol || coin}
-                            tokenDecimals={txTokenConfig.decimals}
-                        />
+                        {amount && (
+                            <Amount
+                                amount={amount}
+                                blockchain={account.blockchain}
+                                token={txTokenConfig.symbol || coin}
+                                tokenDecimals={txTokenConfig.decimals}
+                            />
+                        )}
 
                         <Text style={styles.transactionTextPrimary}>
                             {this.getTransactionPrimaryText(tx, account)}

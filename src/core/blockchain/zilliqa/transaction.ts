@@ -252,7 +252,7 @@ export class ZilliqaTransactionUtils extends AbstractBlockchainTransactionUtils 
 
     public getTransactionAmount(tx: IBlockchainTransaction): string {
         const tokenInfo = getTokenConfig(tx.blockchain, tx.token?.symbol);
-        if (tokenInfo.type === TokenType.ZRC2) {
+        if (tokenInfo.type === TokenType.ZRC2 || tx?.data?.params) {
             return tx?.data?.params[1];
         } else {
             return tx.amount;

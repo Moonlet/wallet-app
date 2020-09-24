@@ -303,7 +303,7 @@ export class Staking {
 
         transaction.data = {
             method: 'Claim Rewards',
-            params: [validator.id, tx.amount],
+            params: [validator.id, undefined],
             raw
         };
 

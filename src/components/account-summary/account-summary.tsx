@@ -18,6 +18,7 @@ import { SkeletonPlaceholder } from '../skeleton-placeholder/skeleton-placeholde
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { TokenScreenComponentType } from '../../core/blockchain/types/token';
 import { formatNumber } from '../../core/utils/format-number';
+import { SmartImage } from '../../library/image/smart-image';
 
 interface IExternalProps {
     isLoading: boolean;
@@ -102,6 +103,10 @@ export class AccountSummaryComponent extends React.Component<
             this.props.data?.token &&
             getTokenConfig(this.props.data.blockchain, this.props.data.token.symbol);
 
+        const extraTokenConfig =
+            this.props.data?.extraToken &&
+            getTokenConfig(this.props.data.blockchain, this.props.data.extraToken.symbol);
+
         return (
             <View>
                 <View style={styles.detailsContainer}>
@@ -136,16 +141,10 @@ export class AccountSummaryComponent extends React.Component<
                     <View style={styles.detailsExtraContainer}>
                         <View style={styles.divider} />
                         <View style={styles.detailsExtraTextContainer}>
-                            <View style={styles.detailsStatIconContainer}>
-                                <Icon
-                                    name={IconValues.VOTE}
-                                    size={normalize(25)}
-                                    style={{
-                                        color: this.props.theme.colors.warning,
-                                        alignSelf: 'center'
-                                    }}
-                                />
-                            </View>
+                            <SmartImage
+                                source={extraTokenConfig.icon}
+                                style={styles.extraTokenIcon}
+                            />
 
                             <Text style={styles.detailsExtraText}>
                                 {`${formatNumber(Number(this.props.data.extraToken.balance.value), {

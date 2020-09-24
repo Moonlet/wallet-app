@@ -7,7 +7,7 @@ import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
 import { connect } from 'react-redux';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
+import { HWModel, HWConnection, HWVendor } from '../../core/wallet/hw-wallet/types';
 import { ledgerConfig } from '../../core/wallet/hw-wallet/ledger/config';
 import { Blockchain } from '../../core/blockchain/types';
 import { ListCard } from '../../components/list-card/list-card';
@@ -15,15 +15,13 @@ import { INavigationProps } from '../../navigation/with-navigation-params';
 import { BASE_DIMENSION, normalizeFontAndLineHeight } from '../../styles/dimensions';
 import { themes } from '../../navigation/navigation';
 import { PasswordModal } from '../../components/password-modal/password-modal';
-import { openBottomSheet } from '../../redux/ui/bottomSheet/actions';
-import { BottomSheetType } from '../../redux/ui/bottomSheet/state';
 import { Capitalize } from '../../core/utils/format-string';
-import { delay } from '../../core/utils/time';
 import { IconValues } from '../../components/icon/values';
 import bind from 'bind-decorator';
+import { createHWWallet } from '../../redux/wallets/actions';
 
 export interface IReduxProps {
-    openBottomSheet: typeof openBottomSheet;
+    createHWWallet: typeof createHWWallet;
 }
 
 export interface IState {
@@ -36,7 +34,7 @@ export interface IState {
 }
 
 const mapDispatchToProps = {
-    openBottomSheet
+    createHWWallet
 };
 
 const navigationOptions = ({ navigation, theme }: any) => ({
@@ -211,7 +209,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                         {this.state.device !== undefined && (
                             <ListCard
                                 key={`key-${this.state.device}`}
-                                label={translate(`CreateHardwareWallet.${this.state.device}`)}
+                                label={translate(`LedgerConnect.${this.state.device}`)}
                                 leftIcon={IconValues.LEDGER_LOOGO}
                                 rightIcon={IconValues.CHECK}
                                 selected={true}
@@ -260,7 +258,7 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
                                         connectionActive: true
                                     })
                                 }
-                                label={translate(`CreateHardwareWallet.${key}`)}
+                                label={translate(`LedgerConnect.${key}`)}
                                 leftIcon={IconValues.LEDGER_LOOGO}
                                 rightIcon={this.state.device === key && IconValues.CHECK}
                                 selected={this.state.device === key}
@@ -290,13 +288,13 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
         );
     }
 
-    private async openBottomSheet() {
-        await delay(500); // TODO: check here and find a solution to fix
-        this.props.openBottomSheet(BottomSheetType.LEDGER_CONNECT, {
-            blockchain: this.state.blockchain,
-            deviceModel: this.state.device,
-            connectionType: this.state.connection
-        });
+    private async displayLedgerConnect() {
+        this.props.createHWWallet(
+            HWVendor.LEDGER,
+            this.state.device,
+            this.state.connection,
+            this.state.blockchain
+        );
     }
 
     private async connect() {
@@ -304,11 +302,11 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
             await PasswordModal.getPassword(undefined, undefined, {
                 shouldCreatePassword: true
             });
-            this.openBottomSheet();
+            this.displayLedgerConnect();
         } catch (err) {
             try {
                 await PasswordModal.createPassword();
-                this.openBottomSheet();
+                this.displayLedgerConnect();
             } catch (err) {
                 //
             }

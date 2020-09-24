@@ -77,10 +77,14 @@ export class TransactionDetailsComponent extends React.Component<
 
         const tokenConfig = getTokenConfig(account.blockchain, transaction?.token?.symbol);
 
-        const recipient =
+        let recipient =
             transaction.token.type === TokenType.ZRC2 || transaction.token.type === TokenType.ERC20
                 ? formatAddress(transaction.data.params[0], account.blockchain)
                 : formatAddress(transaction.toAddress, account.blockchain);
+
+        if (transaction.additionalInfo?.validatorName) {
+            recipient = transaction.additionalInfo.validatorName;
+        }
 
         // TODO - refactor this :)
         const transactionType =

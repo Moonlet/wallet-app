@@ -16,13 +16,15 @@ export default (theme: ITheme) =>
         rowContainer: {
             flexDirection: 'row',
             paddingVertical: BASE_DIMENSION,
-            marginBottom: BASE_DIMENSION * 2
+            marginBottom: BASE_DIMENSION * 2,
+            alignItems: 'center'
         },
         iconContainer: {
             backgroundColor: theme.colors.appBackground,
             padding: BASE_DIMENSION,
             marginRight: BASE_DIMENSION * 2,
-            borderRadius: BORDER_RADIUS
+            borderRadius: BORDER_RADIUS,
+            maxHeight: BASE_DIMENSION * 6
         },
         icon: {
             alignSelf: 'center'
@@ -34,6 +36,10 @@ export default (theme: ITheme) =>
         },
         title: {
             lineHeight: normalizeFontAndLineHeight(21)
+        },
+        subtitle: {
+            lineHeight: normalizeFontAndLineHeight(21),
+            fontSize: 11
         },
         arrowRight: {
             alignSelf: 'center'

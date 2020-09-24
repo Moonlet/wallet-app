@@ -27,7 +27,7 @@ const ACCOUNT_CARD_MARGINS = normalize(60);
 const HEIGHT_1_ROW = normalize(132);
 // const HEIGHT_2_ROWS = normalize(220);
 const HEIGHT_3_ROWS = normalize(280);
-// const HEIGHT_4_ROWS = normalize(360);
+const HEIGHT_4_ROWS = normalize(360);
 // const HEIGHT_5_ROWS = normalize(420);
 const HEIGHT_BLOCKCHAIN_NAVIGATION = normalize(400);
 const HEIGHT_THREE_QUARTERS_SCREEN = (Dimensions.get('window').height * 3) / 4;
@@ -99,11 +99,12 @@ export class BottomSheetComponent extends React.Component<
                             activeOpacity={1}
                         />
                         <DashboardMenuBottomSheet
+                            selectedAccount={this.props.selectedAccount}
                             snapPoints={{
                                 initialSnap: Platform.OS === 'web' ? HEIGHT_1_ROW : 0,
                                 bottomSheetHeight: Platform.select({
                                     web: HEIGHT_1_ROW,
-                                    default: HEIGHT_3_ROWS
+                                    default: HEIGHT_4_ROWS
                                 })
                             }}
                             onClose={this.handleClose}

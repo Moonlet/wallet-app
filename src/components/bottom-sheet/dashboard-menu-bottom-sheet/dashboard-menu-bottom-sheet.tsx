@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform, TouchableHighlight, ScrollView } from 'react-native';
+import { View, Platform, TouchableHighlight, ScrollView, Clipboard } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -17,14 +17,17 @@ import { connect } from 'react-redux';
 import { QrModalReader } from '../../qr-modal/qr-modal';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
 import { IconValues } from '../../icon/values';
+import { IAccountState } from '../../../redux/wallets/state';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
     onClose: () => void;
+    selectedAccount: IAccountState;
 }
 
 export interface IReduxProps {
     blockchain: Blockchain;
+    address: string;
     openTransactionRequest: typeof openTransactionRequest;
 }
 
@@ -65,9 +68,11 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
 
     public renderRow(options: {
         title: string;
+        subtitle?: string;
         iconName: string;
         onPress?: () => void;
         disabled?: boolean;
+        hideArrow?: boolean;
     }) {
         const { styles, theme } = this.props;
 
@@ -106,19 +111,31 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         >
                             {options.title}
                         </Text>
+                        <Text
+                            style={[
+                                styles.subtitle,
+                                {
+                                    color: theme.colors.textTertiary
+                                }
+                            ]}
+                        >
+                            {options.subtitle}
+                        </Text>
                     </View>
-                    <Icon
-                        name={IconValues.CHEVRON_RIGHT}
-                        size={normalize(16)}
-                        style={[
-                            styles.arrowRight,
-                            {
-                                color: options.disabled
-                                    ? theme.colors.textTertiary
-                                    : theme.colors.accent
-                            }
-                        ]}
-                    />
+                    {!options.hideArrow && (
+                        <Icon
+                            name={IconValues.CHEVRON_RIGHT}
+                            size={normalize(16)}
+                            style={[
+                                styles.arrowRight,
+                                {
+                                    color: options.disabled
+                                        ? theme.colors.textTertiary
+                                        : theme.colors.accent
+                                }
+                            ]}
+                        />
+                    )}
                 </View>
             </TouchableHighlight>
         );
@@ -160,6 +177,16 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             title: translate('DashboardMenu.connectedWebsites'),
                             iconName: IconValues.FLASH_OFF,
                             onPress: () => this.connectedWebsites()
+                        })}
+                    {Platform.OS !== 'web' &&
+                        this.renderRow({
+                            title: translate('DashboardMenu.copyToClipboard'),
+                            subtitle: this.props.selectedAccount.address,
+                            iconName: IconValues.NOTES_LIST,
+                            onPress: () => {
+                                Clipboard.setString(this.props.selectedAccount.address);
+                            },
+                            hideArrow: true
                         })}
                 </ScrollView>
 

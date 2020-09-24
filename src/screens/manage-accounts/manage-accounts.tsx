@@ -56,7 +56,8 @@ export class ManageAccountsComponent extends React.Component<
         const blockchainConfig = getBlockchain(account.blockchain).config;
         const tokenConfig = getTokenConfig(account.blockchain, blockchainConfig.coin);
         const balance =
-            account && calculateBalance(account, this.props.chainId, this.props.exchangeRates);
+            account &&
+            calculateBalance(account, this.props.chainId, this.props.exchangeRates, tokenConfig);
 
         return (
             <DraggableCardWithCheckbox

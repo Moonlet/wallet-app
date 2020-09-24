@@ -13,27 +13,27 @@ export default (theme: ITheme) =>
         },
         topStatsContainer: {
             flexDirection: 'row',
-            flexWrap: 'wrap',
             backgroundColor: theme.colors.cardBackground,
             borderRadius: BORDER_RADIUS,
-            paddingVertical: BASE_DIMENSION
+            paddingVertical: BASE_DIMENSION,
+            justifyContent: 'space-evenly'
         },
         statContainer: {
-            flex: 1,
-            flexDirection: 'column',
-            alignItems: 'center'
+            flexDirection: 'column'
         },
         statLabelText: {
             fontSize: normalizeFontAndLineHeight(11),
             lineHeight: normalizeFontAndLineHeight(13),
             color: theme.colors.textSecondary,
-            marginBottom: BASE_DIMENSION / 2
+            marginBottom: BASE_DIMENSION / 2,
+            textAlign: 'center'
         },
         statValueText: {
             fontSize: normalizeFontAndLineHeight(17),
             lineHeight: normalizeFontAndLineHeight(22),
             fontWeight: '600',
-            color: theme.colors.text
+            color: theme.colors.text,
+            textAlign: 'center'
         },
         accountSummary: {
             marginVertical: BASE_DIMENSION * 2

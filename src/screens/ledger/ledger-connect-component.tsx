@@ -72,7 +72,7 @@ export class LedgerConnectComponent extends React.Component<
             deviceModel,
             connectionType,
             visible: true,
-            step: ScreenStep.ERROR_SCREEN
+            step: ScreenStep.SEARCH_LEDGER
         });
 
         return this.resultDeferred.promise;

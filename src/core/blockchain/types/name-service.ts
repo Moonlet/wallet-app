@@ -1,3 +1,5 @@
+import { Blockchain } from '.';
+
 export enum ResolveTextCode {
     OK = 'OK',
     WARN_CHECKSUM = 'WARN_CHECKSUM'
@@ -23,6 +25,6 @@ export interface IResolveTextResponse {
 }
 
 export interface IBlockchainNameService {
-    resolveText(text: string): Promise<IResolveTextResponse>;
-    resolveName(text: string): Promise<IResolveNameResponse>;
+    resolveText(blockchain: Blockchain, text: string): Promise<IResolveTextResponse>;
+    resolveName(blockchain: Blockchain, text: string): Promise<IResolveNameResponse>;
 }

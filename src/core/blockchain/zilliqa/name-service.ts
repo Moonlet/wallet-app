@@ -1,16 +1,16 @@
-import { IResolveTextResponse, ResolveTextType, ResolveTextCode, ResolveTextError } from '../types';
+import {
+    IResolveTextResponse,
+    ResolveTextType,
+    ResolveTextCode,
+    ResolveTextError,
+    Blockchain
+} from '../types';
 import { IBlockchainNameService, IResolveNameResponse } from '../types/name-service';
 import { Zilliqa } from '.';
-import { Client } from './client';
-import { fromBech32Address } from '@zilliqa-js/crypto';
-import { namehash } from './name-services-utils';
-
-const ZNS = 'zil1jcgu2wlx6xejqk9jw3aaankw6lsjzeunx2j0jz';
+import { resolveNameForBlockchain } from '../../utils/nameResolver';
 
 export class NameService implements IBlockchainNameService {
-    constructor(private client: Client) {}
-
-    public async resolveText(text: string): Promise<IResolveTextResponse> {
+    public async resolveText(blockchain: Blockchain, text: string): Promise<IResolveTextResponse> {
         const validAddress = Zilliqa.account.isValidAddress(text);
         const validChecksumAddress = Zilliqa.account.isValidChecksumAddress(text);
 
@@ -22,8 +22,12 @@ export class NameService implements IBlockchainNameService {
                 name: ''
             });
         } else {
-            const { address } = await this.resolveName(text);
-            if (address === '0x0000000000000000000000000000000000000000' || address === '') {
+            const { address } = await this.resolveName(blockchain, text);
+            if (
+                address === '0x0000000000000000000000000000000000000000' ||
+                address === '' ||
+                address === undefined
+            ) {
                 return Promise.reject({
                     error: ResolveTextError.INVALID
                 });
@@ -38,15 +42,8 @@ export class NameService implements IBlockchainNameService {
         }
     }
 
-    public async resolveName(name: string): Promise<IResolveNameResponse> {
-        const node = namehash(name);
-        const znsFromBech = fromBech32Address(ZNS);
-        const data = await this.client.getSmartContractSubState(
-            znsFromBech.split('0x')[1],
-            'records',
-            [node]
-        );
-        const [ownerAddress] = data.records[node].arguments;
-        return { address: ownerAddress };
+    public async resolveName(blockchain, name: string): Promise<IResolveNameResponse> {
+        const address = await resolveNameForBlockchain(blockchain, name);
+        return Promise.resolve({ ...address });
     }
 }

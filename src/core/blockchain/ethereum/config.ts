@@ -1,4 +1,4 @@
-import { IBlockchainConfig, DerivationType } from '../types';
+import { IBlockchainConfig, DerivationType, BlockchainNameService } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType } from '../types/token';
 import EthIcon from '../../../assets/icons/blockchains/eth.svg';
@@ -75,5 +75,21 @@ export const config: IBlockchainConfig = {
         testNet: 4,
         mainNet: 1
     },
-    defaultOrder: 1
+    defaultOrder: 1,
+    nameServices: [
+        {
+            tld: 'eth',
+            service: BlockchainNameService.ENS
+        },
+        {
+            tld: 'zil',
+            service: BlockchainNameService.ZNS,
+            record: ['crypto.ETH.address']
+        },
+        {
+            tld: 'crypto',
+            service: BlockchainNameService.CNS,
+            record: ['crypto.ETH.address']
+        }
+    ]
 };

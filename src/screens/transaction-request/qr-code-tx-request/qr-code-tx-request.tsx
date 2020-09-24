@@ -232,7 +232,7 @@ export class QRCodeTransferRequestComponent extends React.Component<
         try {
             await blockchainInstance
                 .getClient(qrCodeTxPayload?.chainId || this.state.chainId)
-                .nameService.resolveText(toAddress);
+                .nameService.resolveText(blockchain, toAddress);
         } catch (err) {
             // Invalid address
             this.props.showError();

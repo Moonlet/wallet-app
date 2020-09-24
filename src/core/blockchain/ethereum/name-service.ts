@@ -1,17 +1,16 @@
-import namehash from 'eth-ens-namehash';
-import { rawDecode, simpleEncode } from 'ethereumjs-abi';
-
-import { IResolveTextResponse, ResolveTextType, ResolveTextCode, ResolveTextError } from '../types';
+import {
+    IResolveTextResponse,
+    ResolveTextType,
+    ResolveTextCode,
+    ResolveTextError,
+    Blockchain
+} from '../types';
 import { IBlockchainNameService, IResolveNameResponse } from '../types/name-service';
 import { Ethereum } from '.';
-import { Client } from './client';
-
-// Ethereum name service address
-const ENS = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e';
+import { resolveNameForBlockchain } from '../../utils/nameResolver';
 
 export class NameService implements IBlockchainNameService {
-    constructor(private client: Client) {}
-    public async resolveText(text: string): Promise<IResolveTextResponse> {
+    public async resolveText(blockchain: Blockchain, text: string): Promise<IResolveTextResponse> {
         const validAddress = Ethereum.account.isValidAddress(text);
         const validChecksumAddress = Ethereum.account.isValidChecksumAddress(text);
 
@@ -23,7 +22,7 @@ export class NameService implements IBlockchainNameService {
                 name: ''
             });
         } else {
-            const { address } = await this.resolveName(text);
+            const { address } = await this.resolveName(blockchain, text);
             if (address === '0x0000000000000000000000000000000000000000') {
                 return Promise.reject({
                     error: ResolveTextError.INVALID
@@ -39,26 +38,8 @@ export class NameService implements IBlockchainNameService {
         }
     }
 
-    public async resolveName(name: string): Promise<IResolveNameResponse> {
-        const node = namehash.hash(name);
-        let data = await this.client.http.jsonRpc('eth_call', [
-            {
-                to: ENS,
-                data: '0x' + simpleEncode('resolver(bytes32)', node).toString('hex')
-            },
-            'latest'
-        ]);
-        const resolverAddress =
-            '0x' + rawDecode(['address'], Buffer.from(data.result.replace('0x', ''), 'hex'))[0];
-        data = await this.client.http.jsonRpc('eth_call', [
-            {
-                to: resolverAddress,
-                data: '0x' + simpleEncode('addr(bytes32)', node).toString('hex')
-            },
-            'latest'
-        ]);
-        const address =
-            '0x' + rawDecode(['address'], Buffer.from(data.result.replace('0x', ''), 'hex'))[0];
-        return Promise.resolve({ address });
+    public async resolveName(blockchain: Blockchain, name: string): Promise<IResolveNameResponse> {
+        const address = await resolveNameForBlockchain(blockchain, name);
+        return Promise.resolve({ ...address });
     }
 }

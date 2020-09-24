@@ -30,4 +30,5 @@ export interface ITokenConfigState {
     symbolMap?: {
         [testnet: string]: string;
     };
+    resolvers?: string[];
 }

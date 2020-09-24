@@ -20,7 +20,7 @@ export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
 
-        this.nameService = new NameService(this);
+        this.nameService = new NameService();
         this.tokens[TokenType.ZRC2] = new Zrc2Client(this);
         this.utils = new ClientUtils(this);
         this.contracts[Contracts.STAKING] = new Staking(this);

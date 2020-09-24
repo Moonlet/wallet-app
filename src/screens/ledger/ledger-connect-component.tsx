@@ -34,7 +34,7 @@ export const svgDimmensions = {
     height: 253
 };
 
-export enum ScreenStep {
+enum ScreenStep {
     SEARCH_LEDGER = 'SEARCH_LEDGER',
     CONFIRM_CONNECTION = 'CONFIRM_CONNECTION',
     OPEN_APP = 'OPEN_APP',
@@ -46,7 +46,7 @@ export enum ScreenStep {
     TROUBLESHOOTING = 'TROUBLESHOOTING'
 }
 
-export interface IState {
+interface IState {
     step: ScreenStep;
     showErrorScreen: boolean;
     ledgerDevice: any;

@@ -94,10 +94,10 @@ export const config: IBlockchainConfig = {
     autoAddedTokensSymbols: {
         '1': {
             XSGD: XSGD_MAINNET,
-            GZIL: GZIL_MAINNET
+            gZIL: GZIL_MAINNET
         },
         '333': {
-            GZIL: GZIL_TESTNET
+            gZIL: GZIL_TESTNET
         }
     },
     tokens: {

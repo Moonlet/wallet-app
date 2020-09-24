@@ -9,17 +9,6 @@ Object {
   "selected": false,
   "tokens": Object {
     "1": Object {
-      "GZIL": Object {
-        "active": true,
-        "balance": Object {
-          "error": undefined,
-          "inProgress": false,
-          "timestamp": undefined,
-          "value": "0",
-        },
-        "order": 999,
-        "symbol": "GZIL",
-      },
       "XSGD": Object {
         "active": true,
         "balance": Object {
@@ -42,9 +31,7 @@ Object {
         "order": 0,
         "symbol": "ZIL",
       },
-    },
-    "333": Object {
-      "GZIL": Object {
+      "gZIL": Object {
         "active": true,
         "balance": Object {
           "error": undefined,
@@ -53,8 +40,10 @@ Object {
           "value": "0",
         },
         "order": 999,
-        "symbol": "GZIL",
+        "symbol": "gZIL",
       },
+    },
+    "333": Object {
       "ZIL": Object {
         "active": true,
         "balance": Object {
@@ -65,6 +54,17 @@ Object {
         },
         "order": 0,
         "symbol": "ZIL",
+      },
+      "gZIL": Object {
+        "active": true,
+        "balance": Object {
+          "error": undefined,
+          "inProgress": false,
+          "timestamp": undefined,
+          "value": "0",
+        },
+        "order": 999,
+        "symbol": "gZIL",
       },
     },
   },

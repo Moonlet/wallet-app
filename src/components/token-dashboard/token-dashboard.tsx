@@ -175,7 +175,7 @@ export class TokenDashboardComponent extends React.Component<
                             accountStats: this.props.accountStats,
                             blockchain: this.props.blockchain,
                             token: this.state.token,
-                            extraToken: this.props.account?.tokens[this.props.chainId].GZIL
+                            extraToken: this.props.account?.tokens[this.props.chainId].gZIL
                         }}
                         enableExpand={true}
                     />

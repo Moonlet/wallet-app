@@ -6,19 +6,16 @@ import { getBlockchain } from '../blockchain/blockchain-factory';
 import { Blockchain, ChainIdType } from '../blockchain/types';
 import { IExchangeRates } from '../../redux/market/state';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
+import { ITokenConfigState } from '../../redux/tokens/state';
 
 export const calculateBalance = (
     account: IAccountState,
     chainId: ChainIdType,
-    exchangeRates: IExchangeRates
+    exchangeRates: IExchangeRates,
+    blockchainCoinTokenConfig: ITokenConfigState
 ) => {
     const tokenKeys = Object.keys((account?.tokens || {})[chainId] || {});
     let balance = new BigNumber(0);
-
-    const blockchainCoinTokenConfig = getTokenConfig(
-        account.blockchain,
-        getBlockchain(account.blockchain).config.coin
-    );
 
     for (const tokenSymbol of tokenKeys) {
         const token = account.tokens[chainId][tokenSymbol];

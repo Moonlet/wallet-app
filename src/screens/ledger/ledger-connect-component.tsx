@@ -24,6 +24,7 @@ import { IAccountState } from '../../redux/wallets/state';
 import { SuccessConnect } from './components/success-connect/success-connect';
 import { VerificationFailed } from './components/verification-failed/verification-failed';
 import { LocationRequired } from './components/location-required/location-required';
+import { Troubleshooting } from './components/troubleshooting/troubleshooting';
 
 export const svgDimmensions = {
     width: 345,
@@ -38,7 +39,8 @@ export enum ScreenStep {
     ERROR_SCREEN = 'ERROR_SCREEN',
     LOCATION_REQUIRED = 'LOCATION_REQUIRED',
     VERIFICATION_FAILED = 'VERIFICATION_FAILED',
-    SUCCESS_CONNECT = 'SUCCESS_CONNECT'
+    SUCCESS_CONNECT = 'SUCCESS_CONNECT',
+    TROUBLESHOOTING = 'TROUBLESHOOTING'
 }
 
 export interface IState {
@@ -70,7 +72,7 @@ export class LedgerConnectComponent extends React.Component<
             deviceModel,
             connectionType,
             visible: true,
-            step: ScreenStep.SEARCH_LEDGER
+            step: ScreenStep.ERROR_SCREEN
         });
 
         return this.resultDeferred.promise;
@@ -168,6 +170,10 @@ export class LedgerConnectComponent extends React.Component<
     private onRetry() {
         this.setState({ visible: false });
     }
+    @bind
+    private showTroubleShootPage() {
+        this.setState({ step: ScreenStep.TROUBLESHOOTING });
+    }
 
     private displaySteps() {
         switch (this.state.step) {
@@ -238,8 +244,11 @@ export class LedgerConnectComponent extends React.Component<
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}
                         onRetry={this.onRetry}
+                        onTroubleshootPress={this.showTroubleShootPage}
                     />
                 );
+            case ScreenStep.TROUBLESHOOTING:
+                return <Troubleshooting />;
             case ScreenStep.VERIFICATION_FAILED:
                 return (
                     <VerificationFailed

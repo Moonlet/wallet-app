@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
@@ -17,6 +17,7 @@ interface IExternalProps {
     deviceModel: HWModel;
     connectionType: HWConnection;
     onRetry: () => void;
+    onTroubleshootPress: () => void;
 }
 
 export class FailedComponentComponent extends React.Component<
@@ -40,6 +41,11 @@ export class FailedComponentComponent extends React.Component<
                 </Text>
 
                 <Text style={styles.secondaryText}>{translate('LedgerConnect.tryAgain')}</Text>
+                <TouchableOpacity onPress={() => this.props.onTroubleshootPress()}>
+                    <Text style={[styles.secondaryText, styles.troubleshooText]}>
+                        {translate('LedgerConnect.troubleshooting')}
+                    </Text>
+                </TouchableOpacity>
 
                 <View style={{ flex: 1 }} />
 

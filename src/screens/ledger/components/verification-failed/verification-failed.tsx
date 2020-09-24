@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../../core/utils/smart-connect';
@@ -43,15 +43,6 @@ export class VerificationFailedComponent extends React.Component<
                         deviceModel: translate(`LedgerConnect.${this.props.deviceModel}`)
                     })}
                 </Text>
-                <TouchableOpacity
-                    onPress={() => {
-                        //
-                    }}
-                >
-                    <Text style={[styles.secondaryText, styles.troubleshooText]}>
-                        {translate('LedgerConnect.troubleshooting')}
-                    </Text>
-                </TouchableOpacity>
 
                 <View style={{ flex: 1 }} />
                 <Button primary onPress={() => this.props.onRetry()}>

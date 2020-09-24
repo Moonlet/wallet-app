@@ -8,4 +8,7 @@ export class BLE {
     public static async scan(callback: (event: { name: string; data?: any }) => any): Promise<any> {
         return;
     }
+    public static async requestPermissions(): Promise<boolean> {
+        return false;
+    }
 }

@@ -309,6 +309,8 @@ PODS:
   - react-native-ble-plx-swift (1.1.1)
   - react-native-camera-kit (8.0.4):
     - React
+  - react-native-geolocation (2.0.2):
+    - React
   - react-native-netinfo (5.8.0):
     - React
   - react-native-randombytes (3.5.3):
@@ -430,6 +432,7 @@ DEPENDENCIES:
   - react-native-ble-plx (from `../node_modules/react-native-ble-plx`)
   - react-native-ble-plx-swift (from `../node_modules/react-native-ble-plx`)
   - react-native-camera-kit (from `../node_modules/react-native-camera-kit`)
+  - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-randombytes (from `../node_modules/react-native-randombytes`)
   - react-native-udp (from `../node_modules/react-native-udp`)
@@ -534,6 +537,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-ble-plx"
   react-native-camera-kit:
     :path: "../node_modules/react-native-camera-kit"
+  react-native-geolocation:
+    :path: "../node_modules/@react-native-community/geolocation"
   react-native-netinfo:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-randombytes:
@@ -636,6 +641,7 @@ SPEC CHECKSUMS:
   react-native-ble-plx: 304c7bee074a05581672c9990f375b3906808718
   react-native-ble-plx-swift: eb64f02b988becb84a60164aba9fab5d6ddb6dc8
   react-native-camera-kit: ded127598a48890a360fbf5e26cf7c44fcc5b873
+  react-native-geolocation: cbd9d6bd06bac411eed2671810f454d4908484a8
   react-native-netinfo: 6458a467af4b3b7b0b87a179776ba6ba469e4f22
   react-native-randombytes: 991545e6eaaf700b4ee384c291ef3d572e0b2ca8
   react-native-udp: 70de81f5db94503d112f6d9ca08f27adb1c2c7af

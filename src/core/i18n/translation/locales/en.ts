@@ -88,6 +88,7 @@ export const translation: ITranslations = {
                 refreshing: 'Refreshing',
                 remove: 'Remove',
                 removeAccount: 'Remove account',
+                retry: 'Retry',
                 reset: 'Reset',
                 resetAll: 'Reset all',
                 restake: 'Restake',
@@ -169,8 +170,6 @@ export const translation: ITranslations = {
         },
         CreateHardwareWallet: {
             device: 'Device: {{device}}',
-            NANO_X: 'Ledger Nano X',
-            NANO_S: 'Ledger Nano S',
             app:
                 'Make sure you have opened {{app}} app on your Ledger before starting the connect.',
             verifyAddress: 'Verify {{app}} address on your Ledger',
@@ -564,6 +563,39 @@ export const translation: ITranslations = {
                 COSMOS: 'Delegate now!'
             },
             availableAmount: 'you got {{amount}} available'
+        },
+        LedgerConnect: {
+            searchFor: 'Searching for',
+            NANO_X: 'Ledger Nano X',
+            NANO_S: 'Ledger Nano S',
+            onlyAndroid:
+                'NOTE: Only Android devices are compatible with cables or adapters connectivity.',
+            NANO_S_CONNECTED:
+                'Please make sure your Ledger Nano S is unlocked with cable connected.',
+            NANO_X_CONNECTED:
+                'Please make sure your Ledger Nano X is unlocked with Bluetooth enabled.',
+            somethingWentWrong: 'Oops, something went wrong...',
+            verificationFailed: 'Verifcation failed',
+            tryAgain:
+                'Please try again. If the problem continues, check this troubleshooting guideline:',
+            confirmFailed:
+                'You need to confirm your {{blockchain}} address on your {{deviceModel}} for a successful pairing.\nPlease try again.',
+            troubleshooting: 'Troubleshoot problems setting up Ledger.',
+            confirmConnection: 'Confirming your connection',
+            confirmBothDevices:
+                'Confirm on both your phone and your {{deviceModel}} if the code matches.',
+            openApp: 'Opening {{blockchain}} application',
+            openAppOnDevice:
+                'Please open your {{blockchain}} app on your {{deviceModel}} and wait a few seconds to have the connection established. Please be patient!',
+            verifyAddressOnDevice:
+                'Verify your {{blockchain}} address on your {{deviceModel}} and confirm it.',
+            verifyAddress: 'Verifing your address',
+            pairingSuccess: 'Pairing successful',
+            readyToUse: 'Your {{deviceModel}} is ready\nto be used with Moonlet.',
+            locationRequired: 'Location required',
+            openSettings: 'Open location settings',
+            locationRequiredSubtitle:
+                'Location is disabled, therefore Moonlet is not able to scan for nearby Bluetooth devices. Enable Location from Settings and try again.'
         }
     },
     plural: (n: number, ord?: boolean) => {

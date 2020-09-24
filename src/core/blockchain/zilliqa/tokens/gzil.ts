@@ -3,7 +3,7 @@ import { TokenScreenComponentType, TokenType } from '../../types/token';
 
 export const GZIL_TESTNET: ITokenConfigState = {
     name: 'gZil',
-    symbol: 'GZIL',
+    symbol: 'gZIL',
     icon: {
         uri: 'https://fire.moonlet.io/static/tokens/icons/zilliqa/gzil.png'
     },
@@ -20,7 +20,7 @@ export const GZIL_TESTNET: ITokenConfigState = {
 
 export const GZIL_MAINNET: ITokenConfigState = {
     name: 'gZil',
-    symbol: 'GZIL',
+    symbol: 'gZIL',
     icon: {
         uri: 'https://fire.moonlet.io/static/tokens/icons/zilliqa/gzil.png'
     },

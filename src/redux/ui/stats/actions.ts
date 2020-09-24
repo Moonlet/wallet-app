@@ -6,7 +6,6 @@ import { IAccountState, ITokenState } from '../../wallets/state';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { getAccountStatsTimestamp } from './selectors';
 import { FETCH_ACCOUNT_STATS_SECONDS } from '../../../core/constants/app';
-import moment from 'moment';
 
 export const ADD_ACCOUNT_STATS = 'ADD_ACCOUNT_STATS';
 
@@ -21,10 +20,7 @@ export const fetchAccountDelegateStats = (account: IAccountState, token: ITokenS
     try {
         const timestamp = getAccountStatsTimestamp(state, blockchain, chainId, account.address);
 
-        if (
-            !timestamp ||
-            moment().isAfter(moment(timestamp).add(FETCH_ACCOUNT_STATS_SECONDS, 'seconds'))
-        ) {
+        if (!timestamp || timestamp < Date.now() - FETCH_ACCOUNT_STATS_SECONDS * 1000) {
             const accountStats = await getBlockchain(blockchain)
                 .getStats(chainId)
                 .getAccountDelegateStats(account, token);

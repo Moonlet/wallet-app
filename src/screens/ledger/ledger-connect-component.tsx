@@ -122,11 +122,6 @@ export class LedgerConnectComponent extends React.Component<
         //
     }
 
-    private async handleWalletGetAccountError() {
-        this.resultDeferred.reject();
-        await this.selectStep(ScreenStep.VERIFICATION_FAILED);
-    }
-
     private onConnectedDevice = async (item: any) => {
         const wallet: IWallet = await HWWalletFactory.get(
             HWVendor.LEDGER,

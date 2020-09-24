@@ -5,7 +5,6 @@ import { HWModel, HWConnection } from '../types';
 import { AppFactory } from './apps-factory';
 import { TransportFactory } from './transport-factory';
 import { delay } from '../../../utils/time';
-import { generateTokensConfig } from '../../../../redux/tokens/static-selectors';
 import { HDKeyFactory } from '../../hd-wallet/hd-key/hdkey-factory';
 import { getBlockchain } from '../../../blockchain/blockchain-factory';
 import { Mnemonic } from '../../hd-wallet/mnemonic';
@@ -22,17 +21,25 @@ export class LedgerWallet implements IWallet {
         this.connectionType = connectionType;
     }
 
+    public async isAppOpened(blockchain: Blockchain): Promise<boolean> {
+        try {
+            const transport = await this.getTransport();
+            const app = await AppFactory.get(blockchain, transport);
+            const info = await app.getInfo();
+
+            if (info) return true;
+            return false;
+        } catch {
+            return false;
+        }
+    }
+
     public onAppOpened(blockchain: Blockchain): Promise<void> {
         return new Promise(async resolve => {
             let opened = false;
             while (opened === false) {
                 try {
-                    const transport = await this.getTransport();
-                    const app = await AppFactory.get(blockchain, transport);
-                    const info = await app.getInfo();
-                    if (info) {
-                        opened = true;
-                    }
+                    opened = await this.isAppOpened(blockchain);
                 } catch {
                     // dont handle error - keep trying until user opens the app
                 }
@@ -63,7 +70,7 @@ export class LedgerWallet implements IWallet {
                 publicKey: address.publicKey,
                 address: address.address,
                 blockchain,
-                tokens: generateTokensConfig(blockchain)
+                tokens: null
             };
             accounts.push(account);
             return Promise.resolve(accounts);

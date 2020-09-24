@@ -31,4 +31,12 @@ export class TransportFactory {
             return USB.connect(device);
         }
     }
+
+    public static async requestPermissions(connectionType: HWConnection): Promise<boolean> {
+        if (connectionType === HWConnection.BLE) {
+            return BLE.requestPermissions();
+        } else {
+            return true;
+        }
+    }
 }

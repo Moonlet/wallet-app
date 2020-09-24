@@ -12,6 +12,7 @@ export const CONFIG_BETA: IAppConfig = {
     termsAndConditionsUrl:
         'https://fire.moonlet.dev/static/terms/terms-of-service.html?v=' + Date.now(),
     privacyPolicyUrl: 'https://fire.moonlet.dev/static/terms/privacy-policy.html?v=' + Date.now(),
+    troubleshootingUrl: 'https://fire.moonlet.dev/static/ledger/troubleshooting.html',
     firebaseConfigFetchInterval: 0,
     ntpServer: 'pool.ntp.org',
     ntpPort: 123,

@@ -275,7 +275,7 @@ export class LedgerConnectComponent extends React.Component<
             <Modal
                 isVisible={Platform.select({
                     web: false,
-                    default: true // this.state.visible || false
+                    default: this.state.visible || false
                 })}
                 animationInTiming={5}
                 animationOutTiming={5}

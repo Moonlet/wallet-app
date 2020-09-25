@@ -99,7 +99,6 @@ export class BottomSheetComponent extends React.Component<
                             activeOpacity={1}
                         />
                         <DashboardMenuBottomSheet
-                            selectedAccount={this.props.selectedAccount}
                             snapPoints={{
                                 initialSnap: Platform.OS === 'web' ? HEIGHT_1_ROW : 0,
                                 bottomSheetHeight: Platform.select({

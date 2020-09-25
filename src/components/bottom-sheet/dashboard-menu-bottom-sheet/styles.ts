@@ -39,7 +39,7 @@ export default (theme: ITheme) =>
         },
         subtitle: {
             lineHeight: normalizeFontAndLineHeight(21),
-            fontSize: 11
+            fontSize: normalizeFontAndLineHeight(11)
         },
         arrowRight: {
             alignSelf: 'center'

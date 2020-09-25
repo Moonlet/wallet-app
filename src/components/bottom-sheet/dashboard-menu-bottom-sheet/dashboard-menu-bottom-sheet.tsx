@@ -11,7 +11,7 @@ import { ICON_SIZE, normalize } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { Blockchain } from '../../../core/blockchain/types';
-import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
+import { getSelectedAccount, getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { QrModalReader } from '../../qr-modal/qr-modal';
@@ -22,17 +22,17 @@ import { IAccountState } from '../../../redux/wallets/state';
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
     onClose: () => void;
-    selectedAccount: IAccountState;
 }
 
 export interface IReduxProps {
     blockchain: Blockchain;
-    address: string;
     openTransactionRequest: typeof openTransactionRequest;
+    selectedAccount: IAccountState;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
-    blockchain: getSelectedBlockchain(state)
+    blockchain: getSelectedBlockchain(state),
+    selectedAccount: getSelectedAccount(state)
 });
 
 const mapDispatchToProps = {
@@ -178,16 +178,15 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             iconName: IconValues.FLASH_OFF,
                             onPress: () => this.connectedWebsites()
                         })}
-                    {Platform.OS !== 'web' &&
-                        this.renderRow({
-                            title: translate('DashboardMenu.copyToClipboard'),
-                            subtitle: this.props.selectedAccount.address,
-                            iconName: IconValues.NOTES_LIST,
-                            onPress: () => {
-                                Clipboard.setString(this.props.selectedAccount.address);
-                            },
-                            hideArrow: true
-                        })}
+                    {this.renderRow({
+                        title: translate('DashboardMenu.copyToClipboard'),
+                        subtitle: this.props.selectedAccount.address,
+                        iconName: IconValues.NOTES_LIST,
+                        onPress: () => {
+                            Clipboard.setString(this.props.selectedAccount.address);
+                        },
+                        hideArrow: true
+                    })}
                 </ScrollView>
 
                 {/* TODO: move this - implement smart scan */}

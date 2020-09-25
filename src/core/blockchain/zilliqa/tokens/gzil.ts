@@ -7,7 +7,7 @@ export const GZIL_TESTNET: ITokenConfigState = {
     icon: {
         uri: 'https://fire.moonlet.io/static/tokens/icons/zilliqa/gzil.png'
     },
-    contractAddress: 'zil16qufswtegzw23zu84cu6dxhvxy6hrs0xkc4ke6',
+    contractAddress: 'zil10w2fwf5kdwqvjd2zyv6nr7da2d2z63g5dvtvsy',
     removable: true,
     defaultOrder: 999,
     decimals: 6,
@@ -24,7 +24,7 @@ export const GZIL_MAINNET: ITokenConfigState = {
     icon: {
         uri: 'https://fire.moonlet.io/static/tokens/icons/zilliqa/gzil.png'
     },
-    contractAddress: 'zil16qufswtegzw23zu84cu6dxhvxy6hrs0xkc4ke6', // TODO Must be updated
+    contractAddress: 'zil10w2fwf5kdwqvjd2zyv6nr7da2d2z63g5dvtvsy', // TODO Must be updated
     removable: true,
     defaultOrder: 999,
     decimals: 6,

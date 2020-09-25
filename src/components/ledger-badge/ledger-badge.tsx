@@ -25,7 +25,7 @@ export const LedgerBadgeComponent = (
                 <Text style={props.styles.text}>{translate('App.labels.youAreUsing')}</Text>
                 <Icon name={IconValues.LEDGER_LOOGO} size={normalize(16)} style={styles.icon} />
                 <Text style={styles.text}>
-                    {translate(`CreateHardwareWallet.${hwOptions.deviceModel}`)}
+                    {translate(`LedgerConnect.${hwOptions.deviceModel}`)}
                 </Text>
             </View>
         );

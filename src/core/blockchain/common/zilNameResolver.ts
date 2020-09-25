@@ -1,15 +1,23 @@
-import { namehash } from '../blockchain/zilliqa/name-services-utils';
+import { namehash } from '../zilliqa/name-services-utils';
 import { fromBech32Address } from '@zilliqa-js/crypto';
-import { getBlockchain } from '../blockchain/blockchain-factory';
-import { Blockchain, BlockchainNameService, IResolveNameResponse } from '../blockchain/types';
-import { Client as ZiliqaClient } from '../blockchain/zilliqa/client';
+import { getBlockchain } from '../blockchain-factory';
+import { Blockchain, BlockchainNameService, IResolveNameResponse } from '../types';
+import { Client as ZiliqaClient } from '../zilliqa/client';
+
+const chainID = {
+    mainNet: 1,
+    testNet: 333
+};
 
 export const zilNameResolver = async (
     name: string,
     service: BlockchainNameService,
-    record: string[]
+    record: string[],
+    mainNet: boolean = true
 ): Promise<IResolveNameResponse> => {
-    const zilClient = getBlockchain(Blockchain.ZILLIQA).getClient(1) as ZiliqaClient;
+    const zilClient = getBlockchain(Blockchain.ZILLIQA).getClient(
+        mainNet ? chainID.mainNet : chainID.testNet
+    ) as ZiliqaClient;
     const node = namehash(name);
     const znsFromBech = fromBech32Address(service);
     const data = await zilClient.getSmartContractSubState(znsFromBech.split('0x')[1], 'records', [

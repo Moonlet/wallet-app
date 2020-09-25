@@ -1,13 +1,21 @@
 import namehash from 'eth-ens-namehash';
 import { simpleEncode, rawDecode } from 'ethereumjs-abi';
-import { getBlockchain } from '../blockchain/blockchain-factory';
-import { Blockchain, BlockchainNameService, IResolveNameResponse } from '../blockchain/types';
+import { getBlockchain } from '../blockchain-factory';
+import { Blockchain, BlockchainNameService, IResolveNameResponse } from '../types';
+
+const chainID = {
+    mainnet: 1,
+    testnet: 3
+};
 
 export const ethNameResolver = async (
     name: string,
-    service: BlockchainNameService
+    service: BlockchainNameService,
+    mainnet: boolean = true
 ): Promise<IResolveNameResponse> => {
-    const ethClient = getBlockchain(Blockchain.ETHEREUM).getClient(1);
+    const ethClient = getBlockchain(Blockchain.ETHEREUM).getClient(
+        mainnet ? chainID.mainnet : chainID.testnet
+    );
     const node = namehash.hash(name);
     let data = await ethClient.http.jsonRpc('eth_call', [
         {

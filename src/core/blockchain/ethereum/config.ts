@@ -78,7 +78,7 @@ export const config: IBlockchainConfig = {
     defaultOrder: 1,
     nameServices: [
         {
-            tld: 'eth',
+            tld: /^(xyz|kred|art|luxe|eth)$/gi,
             service: BlockchainNameService.ENS
         },
         {

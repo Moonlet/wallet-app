@@ -3,17 +3,20 @@ import {
     ResolveTextType,
     ResolveTextCode,
     ResolveTextError,
-    Blockchain
+    Blockchain,
+    GenericNameService
 } from '../types';
-import { IBlockchainNameService, IResolveNameResponse } from '../types/name-service';
 import { Zilliqa } from '.';
-import { resolveNameForBlockchain } from '../../utils/nameResolver';
+import { Client } from './client';
 
-export class NameService implements IBlockchainNameService {
-    public async resolveText(blockchain: Blockchain, text: string): Promise<IResolveTextResponse> {
+export class NameService extends GenericNameService {
+    constructor(client: Client) {
+        super(client, Blockchain.ZILLIQA);
+    }
+
+    public async resolveText(text: string): Promise<IResolveTextResponse> {
         const validAddress = Zilliqa.account.isValidAddress(text);
         const validChecksumAddress = Zilliqa.account.isValidChecksumAddress(text);
-
         if (validAddress) {
             return Promise.resolve({
                 code: validChecksumAddress ? ResolveTextCode.OK : ResolveTextCode.WARN_CHECKSUM,
@@ -22,7 +25,7 @@ export class NameService implements IBlockchainNameService {
                 name: ''
             });
         } else {
-            const { address } = await this.resolveName(blockchain, text);
+            const { address } = await this.resolveName(text);
             if (
                 address === '0x0000000000000000000000000000000000000000' ||
                 address === '' ||
@@ -40,10 +43,5 @@ export class NameService implements IBlockchainNameService {
                 });
             }
         }
-    }
-
-    public async resolveName(blockchain, name: string): Promise<IResolveNameResponse> {
-        const address = await resolveNameForBlockchain(blockchain, name);
-        return Promise.resolve({ ...address });
     }
 }

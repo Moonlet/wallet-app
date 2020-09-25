@@ -161,7 +161,7 @@ export class ManageTokenComponent extends React.Component<
         try {
             const response = await blockchainInstance
                 .getClient(this.props.chainId)
-                .nameService.resolveText(this.props.selectedAccount.blockchain, input);
+                .nameService.resolveText(input);
             if (response.code === ResolveTextCode.OK || ResolveTextCode.WARN_CHECKSUM) {
                 if (response.type === ResolveTextType.ADDRESS) {
                     return true;

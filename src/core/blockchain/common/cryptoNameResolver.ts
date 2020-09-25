@@ -1,16 +1,24 @@
 import namehash from 'eth-ens-namehash';
 import { AbiCoder } from '@ethersproject/abi';
 import { simpleEncode, rawDecode } from 'ethereumjs-abi';
-import { keccak256 } from '../blockchain/celo/library/hash';
-import { Blockchain, BlockchainNameService } from '../blockchain/types';
-import { getBlockchain } from '../blockchain/blockchain-factory';
+import { keccak256 } from '../celo/library/hash';
+import { Blockchain, BlockchainNameService } from '../types';
+import { getBlockchain } from '../blockchain-factory';
+
+const chainID = {
+    mainNet: 1,
+    testNet: 3
+};
 
 export const cryptoNameResolver = async (
     name: string,
     service: BlockchainNameService,
-    record: string[]
+    record: string[],
+    mainNet: boolean = true
 ) => {
-    const ethClient = getBlockchain(Blockchain.ETHEREUM).getClient(1);
+    const ethClient = getBlockchain(Blockchain.ETHEREUM).getClient(
+        mainNet ? chainID.mainNet : chainID.testNet
+    );
     const coder = new AbiCoder();
     const node = namehash.hash(name);
     const data = await ethClient.http.jsonRpc('eth_call', [

@@ -2,13 +2,16 @@ import {
     IResolveTextResponse,
     IResolveNameResponse,
     ResolveTextType,
-    ResolveTextCode
+    ResolveTextCode,
+    Blockchain
 } from '../types';
 import { Client as NearClient, Client } from './client';
-import { IBlockchainNameService, ResolveTextError } from '../types/name-service';
+import { GenericNameService, ResolveTextError } from '../types/name-service';
 
-export class NameService implements IBlockchainNameService {
-    constructor(private client: Client) {}
+export class NameService extends GenericNameService {
+    constructor(client: Client) {
+        super(client, Blockchain.NEAR);
+    }
 
     public async resolveText(text: string): Promise<IResolveTextResponse> {
         try {

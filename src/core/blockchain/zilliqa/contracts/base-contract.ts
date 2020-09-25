@@ -8,7 +8,7 @@ import { Zilliqa } from '..';
 
 export const contracts = {
     '333': {
-        [Contracts.STAKING]: 'zil1nu6rvj49ljjr5xwk0yjffuyu2sdz5a36vvzfc5'
+        [Contracts.STAKING]: 'zil1a66ptrg3rhy6eyqwe463dpvk9z0qhksz48afdt'
     },
     '1': {}
 };

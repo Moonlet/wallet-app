@@ -68,11 +68,11 @@ export class ValidatorsApiClient {
         }
     }
 
-    public async getBalance(account: IAccountState, chainId: string) {
+    public async getBalance(address: string, blockchain: Blockchain, chainId: string) {
         try {
             const response = await this.apiClient.http.post('/walletUi/account/balance', {
-                blockchain: account.blockchain,
-                address: account.address,
+                blockchain,
+                address,
                 chainId
             });
 

@@ -134,7 +134,8 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                     txDelegate.amount = splitAmount.toFixed();
 
                     const res = await new ApiClient().validators.getBalance(
-                        tx.account,
+                        tx.account.address,
+                        tx.account.blockchain,
                         client.chainId.toString()
                     );
 

@@ -11,4 +11,7 @@ export class LedgerConnect {
     public static getAccountsAndDeviceId = LedgerConnectComponent.getAccountsAndDeviceId;
 
     public static walletCreated = LedgerConnectComponent.walletCreated;
+
+    // TODO
+    // public static signTransaction = LedgerConnectComponent.signTransaction
 }

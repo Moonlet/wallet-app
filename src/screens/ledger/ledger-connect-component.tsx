@@ -25,6 +25,7 @@ import { SuccessConnect } from './components/success-connect/success-connect';
 import { VerificationFailed } from './components/verification-failed/verification-failed';
 import { LocationRequired } from './components/location-required/location-required';
 import { Troubleshooting } from './components/troubleshooting/troubleshooting';
+import { ReviewTransaction } from './components/review-transaction/review-transaction';
 import { SafeAreaView } from 'react-navigation';
 
 export const svgDimmensions = {
@@ -41,7 +42,8 @@ export enum ScreenStep {
     LOCATION_REQUIRED = 'LOCATION_REQUIRED',
     VERIFICATION_FAILED = 'VERIFICATION_FAILED',
     SUCCESS_CONNECT = 'SUCCESS_CONNECT',
-    TROUBLESHOOTING = 'TROUBLESHOOTING'
+    TROUBLESHOOTING = 'TROUBLESHOOTING',
+    REVIEW_TRANSACTION = 'REVIEW_TRANSACTION'
 }
 
 export interface IState {
@@ -257,6 +259,14 @@ export class LedgerConnectComponent extends React.Component<
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}
                         onRetry={this.onRetry}
+                    />
+                );
+            case ScreenStep.REVIEW_TRANSACTION:
+                return (
+                    <ReviewTransaction
+                        blockchain={this.state.blockchain}
+                        deviceModel={this.state.deviceModel}
+                        connectionType={this.state.connectionType}
                     />
                 );
         }

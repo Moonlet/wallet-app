@@ -595,7 +595,10 @@ export const translation: ITranslations = {
             locationRequired: 'Location required',
             openSettings: 'Open location settings',
             locationRequiredSubtitle:
-                'Location is disabled, therefore Moonlet is not able to scan for nearby Bluetooth devices. Enable Location from Settings and try again.'
+                'Location is disabled, therefore Moonlet is not able to scan for nearby Bluetooth devices. Enable Location from Settings and try again.',
+            reviewTransaction: 'Review transaction',
+            reviewTransactionDevice:
+                'Review {{blockchain}} transaction on your {{deviceModel}} and confirm it.'
         }
     },
     plural: (n: number, ord?: boolean) => {

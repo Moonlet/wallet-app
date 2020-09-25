@@ -19,7 +19,8 @@ export class Stats extends GenericStats<Client> {
 
     public async getAvailableBalanceForDelegate(account: IAccountState): Promise<string> {
         const data = await new ApiClient().validators.getBalance(
-            account,
+            account.address,
+            account.blockchain,
             this.client.chainId.toString()
         );
 

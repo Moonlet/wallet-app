@@ -1,4 +1,5 @@
 import {
+    Blockchain,
     BlockchainGenericClient,
     ChainIdType,
     IBlockInfo,
@@ -15,6 +16,7 @@ import { Zrc2Client } from './tokens/zrc2-client';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { ClientUtils } from './client-utils';
 import { Staking } from './contracts/staking';
+import { ApiClient } from '../../utils/api-client/api-client';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -28,17 +30,15 @@ export class Client extends BlockchainGenericClient {
 
     public async getBalance(address: string): Promise<BigNumber> {
         try {
-            const response = await this.call('GetBalance', [
-                fromBech32Address(address)
-                    .replace('0x', '')
-                    .toLowerCase()
-            ]);
-            return new BigNumber(response.result.balance);
-        } catch (result) {
-            if (result?.error?.message === 'Account is not created') {
-                return Promise.resolve(new BigNumber(0));
-            }
-            return Promise.reject(result);
+            const data = await new ApiClient().validators.getBalance(
+                address,
+                Blockchain.ZILLIQA,
+                this.chainId.toString()
+            );
+
+            return data?.balance?.total || new BigNumber(0);
+        } catch {
+            return new BigNumber(0);
         }
     }
 

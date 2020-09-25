@@ -1,4 +1,10 @@
-import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionType } from '../types';
+import {
+    Blockchain,
+    BlockchainGenericClient,
+    ChainIdType,
+    IBlockInfo,
+    TransactionType
+} from '../types';
 import { networks } from './networks';
 import BigNumber from 'bignumber.js';
 import { config } from './config';
@@ -10,6 +16,7 @@ import { KeyPair, serialize } from 'near-api-js/lib/utils';
 import sha256 from 'js-sha256';
 import { StakingPool } from './contracts/staking-pool';
 import { INearAccount, NearAccountType } from './types';
+import { ApiClient } from '../../utils/api-client/api-client';
 
 export class Client extends BlockchainGenericClient {
     public stakingPool: StakingPool;
@@ -24,8 +31,13 @@ export class Client extends BlockchainGenericClient {
 
     public async getBalance(address: string): Promise<BigNumber> {
         try {
-            const res = await this.getAccount(address);
-            return res.amount;
+            const data = await new ApiClient().validators.getBalance(
+                address,
+                Blockchain.NEAR,
+                this.chainId.toString()
+            );
+
+            return data?.balance?.total || new BigNumber(0);
         } catch {
             return new BigNumber(0);
         }

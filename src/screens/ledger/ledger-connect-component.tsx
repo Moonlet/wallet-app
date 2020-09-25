@@ -26,6 +26,7 @@ import { VerificationFailed } from './components/verification-failed/verificatio
 import { LocationRequired } from './components/location-required/location-required';
 import { Troubleshooting } from './components/troubleshooting/troubleshooting';
 import { delay } from '../../core/utils/time';
+import { SafeAreaView } from 'react-navigation';
 
 const FADE_ANIMATION_TIME = 300;
 
@@ -299,6 +300,8 @@ export class LedgerConnectComponent extends React.Component<
     }
 
     public render() {
+        const { styles } = this.props;
+
         const displayTopHeader =
             this.state.step !==
             (ScreenStep.SUCCESS_CONNECT ||
@@ -315,27 +318,30 @@ export class LedgerConnectComponent extends React.Component<
                 animationOutTiming={300}
                 onModalHide={() => this.modalOnHideDeffered?.resolve()}
             >
-                <View style={this.props.styles.container}>
+                <SafeAreaView style={styles.container}>
                     {displayTopHeader && (
-                        <View style={this.props.styles.header}>
-                            <HeaderLeft
-                                style={{ flex: 1 }}
-                                testID="go-back"
-                                icon={IconValues.ARROW_LEFT}
-                                onPress={() => {
-                                    this.setState({ visible: false });
-                                }}
-                            />
-                            <Text style={this.props.styles.headerTitleStyle}>
-                                {translate('App.labels.connect')}
-                            </Text>
-                            <View style={{ flex: 1 }} />
+                        <View style={styles.header}>
+                            <View style={styles.defaultHeaderContainer}>
+                                <HeaderLeft
+                                    testID="go-back"
+                                    icon={IconValues.ARROW_LEFT}
+                                    onPress={() => {
+                                        this.setState({ visible: false });
+                                    }}
+                                />
+                            </View>
+                            <View style={styles.headerTitleContainer}>
+                                <Text style={styles.headerTitleStyle}>
+                                    {translate('App.labels.connect')}
+                                </Text>
+                            </View>
+                            <View style={styles.defaultHeaderContainer} />
                         </View>
                     )}
                     <Animated.View style={{ flex: 1, opacity: this.stepContainetFadeAnimation }}>
                         {this.displaySteps()}
                     </Animated.View>
-                </View>
+                </SafeAreaView>
             </Modal>
         );
     }

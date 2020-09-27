@@ -30,3 +30,5 @@ export const NEAR_ACCOUNT_EXTENSIONS = {
     mainnet: 'moonlet.near',
     testnet: 'moonlet.testnet'
 };
+
+export const FETCH_ACCOUNT_STATS_SECONDS = 5;

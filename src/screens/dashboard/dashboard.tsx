@@ -260,9 +260,12 @@ export class DashboardScreenComponent extends React.Component<
         const { styles, selectedAccount, chainId } = this.props;
         const blockchain: Blockchain = this.props.selectedBlockchain;
 
+        const blockchainConfig = blockchain && getBlockchain(blockchain).config;
+        const tokenConfig = getTokenConfig(blockchain, blockchainConfig.coin);
+
         const balance =
-            selectedAccount && calculateBalance(selectedAccount, chainId, this.props.exchangeRates);
-        const config = blockchain && getBlockchain(blockchain).config;
+            selectedAccount &&
+            calculateBalance(selectedAccount, chainId, this.props.exchangeRates, tokenConfig);
 
         const animatePrimaryAmountFontSize = this.animationValue.interpolate({
             inputRange: [0, ANIMATION_MAX_HEIGHT, ANIMATION_MAX_HEIGHT + 1],
@@ -310,8 +313,6 @@ export class DashboardScreenComponent extends React.Component<
             outputRange: [BASE_DIMENSION, BASE_DIMENSION / 2, 0],
             extrapolate: 'clamp'
         });
-
-        const tokenConfig = getTokenConfig(blockchain, config.coin);
 
         const defaultAccountName = selectedAccount && `Account ${selectedAccount.index + 1}`;
 
@@ -386,7 +387,7 @@ export class DashboardScreenComponent extends React.Component<
                                 { fontSize: animateConvertedAmountFontSize }
                             ]}
                             amount={String(balance)}
-                            token={config.coin}
+                            token={blockchainConfig.coin}
                             tokenDecimals={tokenConfig.decimals}
                             blockchain={blockchain}
                             convert

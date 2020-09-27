@@ -4,6 +4,7 @@ import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../type
 import CosmosIcon from '../../../assets/icons/blockchains/cosmos.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { IconValues } from '../../../components/icon/values';
+import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
 
 export const ATOM_NATIVE: ITokenConfigState = {
     name: 'Atom',
@@ -152,7 +153,10 @@ export const config: IBlockchainConfig = {
         enableAccountCreation: false,
         maxAccountsNumber: 5,
         extraFields: ['Memo'],
-        displayName: 'COSMOS'
+        displayName: 'COSMOS',
+        affiliateBanners: {
+            account: AffiliateBannerType.LEDGER_NANO_X
+        }
     },
     networks: {
         testNet: 'gaia-13007',

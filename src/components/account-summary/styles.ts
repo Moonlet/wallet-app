@@ -43,7 +43,9 @@ export default (theme: ITheme) =>
             width: '100%',
             backgroundColor: theme.colors.textSecondary,
             height: normalize(20),
-            marginBottom: BASE_DIMENSION * 2
+            marginBottom: BASE_DIMENSION * 2,
+            borderRadius: BORDER_RADIUS / 2,
+            overflow: 'hidden'
         },
         barCard: {
             height: normalize(20)
@@ -120,7 +122,7 @@ export default (theme: ITheme) =>
             flexDirection: 'row',
             marginTop: BASE_DIMENSION * 2 + BASE_DIMENSION / 2,
             justifyContent: 'center',
-            marginBottom: BASE_DIMENSION * 2
+            marginBottom: BASE_DIMENSION
         },
         detailsExtraText: {
             fontSize: normalizeFontAndLineHeight(23),
@@ -148,5 +150,10 @@ export default (theme: ITheme) =>
             height: normalize(12),
             width: normalize(80),
             borderRadius: BORDER_RADIUS / 2
+        },
+        extraTokenIcon: {
+            width: normalize(38),
+            height: normalize(38),
+            marginRight: BASE_DIMENSION
         }
     });

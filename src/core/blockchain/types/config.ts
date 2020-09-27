@@ -2,6 +2,7 @@ import { BigNumber } from 'bignumber.js';
 import { TokenType, IButtonCTA } from './token';
 import { ChainIdType } from '.';
 import { ITokenConfigState } from '../../../redux/tokens/state';
+import { IAffiliateBannerType } from '../../../components/affiliate-banner/types';
 
 export enum BlockchainNameService {
     ENS = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
@@ -90,6 +91,9 @@ export interface IBlockchainConfig {
         maxAccountsNumber: number;
         extraFields?: string[];
         displayName: string;
+        affiliateBanners: {
+            account: IAffiliateBannerType;
+        };
     };
     networks: {
         testNet: ChainIdType;

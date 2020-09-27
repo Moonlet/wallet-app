@@ -7,6 +7,7 @@ export interface IAppConfig {
     firebaseConfigFetchInterval: number;
     termsAndConditionsUrl: string;
     privacyPolicyUrl: string;
+    troubleshootingUrl: string;
     ntpServer: string;
     ntpPort: number;
     extSync: {

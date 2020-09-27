@@ -19,7 +19,7 @@ export default (theme: ITheme) =>
         },
         scrollContainer: {
             flex: 1,
-            marginVertical: BASE_DIMENSION * 2
+            marginBottom: BASE_DIMENSION * 2
         },
         walletList: {
             flexGrow: 1,
@@ -83,5 +83,8 @@ export default (theme: ITheme) =>
             alignSelf: 'center',
             resizeMode: 'contain',
             marginBottom: BASE_DIMENSION * 6
+        },
+        affiliateBanner: {
+            marginTop: BASE_DIMENSION * 4
         }
     });

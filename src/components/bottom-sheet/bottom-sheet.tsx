@@ -12,7 +12,6 @@ import { IBottomSheet, BottomSheetType } from '../../redux/ui/bottomSheet/state'
 import { openBottomSheet, closeBottomSheet } from '../../redux/ui/bottomSheet/actions';
 import { BlockchainNavigationBottomSheet } from './blockchain-navigation-bottom-sheet/blockchain-navigation-bottom-sheet';
 import { normalize } from '../../styles/dimensions';
-import { LedgerConnectBottomSheet } from './ledger-connect-bottom-sheet/ledger-connect-bottom-sheet';
 import { WalletsBottomSheet } from './wallets-bottom-sheet/wallets-bottom-sheet';
 import bind from 'bind-decorator';
 import {
@@ -107,24 +106,6 @@ export class BottomSheetComponent extends React.Component<
                                     default: HEIGHT_3_ROWS
                                 })
                             }}
-                            onClose={this.handleClose}
-                        />
-                    </View>
-                );
-
-            case BottomSheetType.LEDGER_CONNECT:
-                return (
-                    <View style={this.props.styles.container}>
-                        <TouchableOpacity
-                            onPress={this.handleClose}
-                            style={this.props.styles.container}
-                            activeOpacity={1}
-                        />
-                        <LedgerConnectBottomSheet
-                            snapPoints={{ initialSnap: 0, bottomSheetHeight: normalize(300) }}
-                            blockchain={this.props.bottomSheet?.blockchain}
-                            deviceModel={this.props.bottomSheet?.deviceModel}
-                            connectionType={this.props.bottomSheet?.connectionType}
                             onClose={this.handleClose}
                         />
                     </View>

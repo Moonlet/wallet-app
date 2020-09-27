@@ -3,7 +3,7 @@ import { FlatList, TouchableHighlight, View } from 'react-native';
 import { withTheme, IThemeProps } from '../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../core/utils/smart-connect';
-import { BASE_DIMENSION, BORDER_RADIUS, normalize } from '../../styles/dimensions';
+import { BASE_DIMENSION, normalize } from '../../styles/dimensions';
 import { translate } from '../../core/i18n/translation/translate';
 import { Blockchain } from '../../core/blockchain/types';
 import { ITokenState } from '../../redux/wallets/state';
@@ -18,6 +18,7 @@ import { SkeletonPlaceholder } from '../skeleton-placeholder/skeleton-placeholde
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { TokenScreenComponentType } from '../../core/blockchain/types/token';
 import { formatNumber } from '../../core/utils/format-number';
+import { SmartImage } from '../../library/image/smart-image';
 
 interface IExternalProps {
     isLoading: boolean;
@@ -102,6 +103,10 @@ export class AccountSummaryComponent extends React.Component<
             this.props.data?.token &&
             getTokenConfig(this.props.data.blockchain, this.props.data.token.symbol);
 
+        const extraTokenConfig =
+            this.props.data?.extraToken &&
+            getTokenConfig(this.props.data.blockchain, this.props.data.extraToken.symbol);
+
         return (
             <View>
                 <View style={styles.detailsContainer}>
@@ -136,16 +141,10 @@ export class AccountSummaryComponent extends React.Component<
                     <View style={styles.detailsExtraContainer}>
                         <View style={styles.divider} />
                         <View style={styles.detailsExtraTextContainer}>
-                            <View style={styles.detailsStatIconContainer}>
-                                <Icon
-                                    name={IconValues.VOTE}
-                                    size={normalize(25)}
-                                    style={{
-                                        color: this.props.theme.colors.warning,
-                                        alignSelf: 'center'
-                                    }}
-                                />
-                            </View>
+                            <SmartImage
+                                source={extraTokenConfig.icon}
+                                style={styles.extraTokenIcon}
+                            />
 
                             <Text style={styles.detailsExtraText}>
                                 {`${formatNumber(Number(this.props.data.extraToken.balance.value), {
@@ -225,9 +224,7 @@ export class AccountSummaryComponent extends React.Component<
 
                     {isLoading ? (
                         <SkeletonPlaceholder>
-                            <View
-                                style={[styles.barContainer, { borderRadius: BORDER_RADIUS / 2 }]}
-                            />
+                            <View style={styles.barContainer} />
                         </SkeletonPlaceholder>
                     ) : (
                         <View

@@ -34,6 +34,7 @@
         "@ledgerhq/react-native-hid": "^4.78.0",
         "@ledgerhq/react-native-hw-transport-ble": "^4.78.0",
         "@react-native-community/async-storage": "^1.6.2",
+        "@react-native-community/geolocation": "^2.0.2",
         "@react-native-community/netinfo": "^5.7.0",
         "@sentry/browser": "^5.17.0",
         "@sentry/react-native": "^1.4.5",

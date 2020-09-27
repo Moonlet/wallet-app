@@ -1,5 +1,13 @@
 import React from 'react';
-import { View, TouchableOpacity, ScrollView, Image } from 'react-native';
+import {
+    View,
+    TouchableOpacity,
+    ScrollView,
+    Image,
+    Animated,
+    Easing,
+    RefreshControl
+} from 'react-native';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import { Icon } from '../../../components/icon/icon';
@@ -17,33 +25,99 @@ import { IBlockchainTransaction } from '../../../core/blockchain/types';
 import { TransactionStatus } from '../../../core/wallet/types';
 import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { IconValues } from '../../../components/icon/values';
-import { TokenType } from '../../../core/blockchain/types/token';
+import { PosBasicActionType, TokenType } from '../../../core/blockchain/types/token';
+import bind from 'bind-decorator';
 
-export interface IExternalProps {
+interface IExternalProps {
     transactions: IBlockchainTransaction[];
     account: IAccountState;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
+    onRefresh: () => void;
+}
+
+interface IState {
+    refreshing: boolean;
 }
 
 export class TransactionsHistoryListComponent extends React.Component<
-    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>
+    IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>,
+    IState
 > {
+    public iconSpinValue = new Animated.Value(0);
+    constructor(props: IExternalProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
+        super(props);
+
+        this.state = {
+            refreshing: false
+        };
+    }
+
     public getTransactionPrimaryText(tx: IBlockchainTransaction, account: IAccountState) {
-        const formattedAmount =
+        let formattedAmount =
             tx.address === account.address
                 ? translate('App.labels.to').toLowerCase()
                 : translate('App.labels.from').toLowerCase();
 
-        const toAddress =
+        let toAddress =
             tx.token.type === TokenType.ZRC2 || tx.token.type === TokenType.ERC20
                 ? formatAddress(tx.data.params[0], account.blockchain)
                 : formatAddress(tx.toAddress, account.blockchain);
 
-        return ` ${formattedAmount} ${toAddress}`;
+        if (tx.additionalInfo?.validatorName) {
+            toAddress = tx.additionalInfo.validatorName;
+        }
+
+        let primaryText = '';
+
+        switch (tx.additionalInfo?.posAction) {
+            case PosBasicActionType.DELEGATE: {
+                formattedAmount = translate('App.labels.to').toLowerCase();
+                primaryText = ` ${formattedAmount} ${toAddress}`;
+                break;
+            }
+            case PosBasicActionType.UNVOTE: {
+                formattedAmount = translate('App.labels.from').toLowerCase();
+                primaryText = ` ${formattedAmount} ${toAddress}`;
+                break;
+            }
+            case PosBasicActionType.STAKE: {
+                formattedAmount = translate('App.labels.to').toLowerCase();
+                primaryText = ` ${formattedAmount} ${toAddress}`;
+                break;
+            }
+            case PosBasicActionType.UNSTAKE: {
+                formattedAmount = translate('App.labels.from').toLowerCase();
+                primaryText = ` ${formattedAmount} ${toAddress}`;
+                break;
+            }
+            case PosBasicActionType.CLAIM_REWARD:
+            case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
+                formattedAmount = translate('App.labels.from').toLowerCase();
+                primaryText =
+                    translate('App.labels.claimingRewards') + ` ${formattedAmount} ${toAddress}`;
+                break;
+            }
+            default:
+                primaryText = `${formattedAmount} ${toAddress}`;
+        }
+
+        return primaryText;
+    }
+
+    private startIconSpin() {
+        Animated.loop(
+            Animated.timing(this.iconSpinValue, {
+                toValue: 1,
+                duration: 2000,
+                easing: Easing.linear
+            })
+        ).start();
     }
 
     private transactionItem(tx: IBlockchainTransaction, index: number) {
         const { account, styles, theme } = this.props;
+
+        // console.log('transaction', tx);
 
         const blockchainInstance = getBlockchain(account.blockchain);
         const amount = blockchainInstance.transaction.getTransactionAmount(tx);
@@ -52,15 +126,19 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         let txIcon: string;
         let txColor: string;
+        let enableAnimation = false;
 
         switch (tx.status) {
             case TransactionStatus.PENDING:
                 txIcon = IconValues.PENDING;
                 txColor = theme.colors.warning;
+                this.startIconSpin();
+                enableAnimation = true;
                 break;
             case TransactionStatus.SUCCESS:
                 const accountAddress = account.address.toLowerCase();
                 const address = tx.address.toLowerCase();
+
                 let toAddress = tx.toAddress.toLowerCase();
 
                 if (tx.token.type === TokenType.ZRC2 || tx.token.type === TokenType.ERC20) {
@@ -95,6 +173,11 @@ export class TransactionsHistoryListComponent extends React.Component<
 
         const txTokenConfig = getTokenConfig(tx.blockchain, tx?.token?.symbol);
 
+        const iconSpin = this.iconSpinValue.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['360deg', '0deg']
+        });
+
         return (
             <TouchableOpacity
                 testID={`transaction-${index}`}
@@ -113,19 +196,28 @@ export class TransactionsHistoryListComponent extends React.Component<
                     })
                 }
             >
-                <Icon
-                    name={txIcon}
-                    size={normalize(30)}
-                    style={[styles.transactionIcon, { color: txColor }]}
-                />
+                <Animated.View
+                    style={[
+                        styles.transactionIconContainer,
+                        enableAnimation && { transform: [{ rotate: iconSpin }] }
+                    ]}
+                >
+                    <Icon
+                        name={txIcon}
+                        size={normalize(30)}
+                        style={[styles.transactionIcon, { color: txColor }]}
+                    />
+                </Animated.View>
                 <View style={styles.transactionTextContainer}>
                     <View style={styles.transactionAmountContainer}>
-                        <Amount
-                            amount={amount}
-                            blockchain={account.blockchain}
-                            token={txTokenConfig.symbol || coin}
-                            tokenDecimals={txTokenConfig.decimals}
-                        />
+                        {amount && (
+                            <Amount
+                                amount={amount}
+                                blockchain={account.blockchain}
+                                token={txTokenConfig.symbol || coin}
+                                tokenDecimals={txTokenConfig.decimals}
+                            />
+                        )}
 
                         <Text style={styles.transactionTextPrimary}>
                             {this.getTransactionPrimaryText(tx, account)}
@@ -144,8 +236,17 @@ export class TransactionsHistoryListComponent extends React.Component<
         );
     }
 
+    @bind
+    private onRefresh() {
+        this.props.onRefresh();
+
+        this.setState({ refreshing: true }, () => {
+            setTimeout(() => this.setState({ refreshing: false }), 1500);
+        });
+    }
+
     public render() {
-        const { transactions, styles } = this.props;
+        const { transactions, styles, theme } = this.props;
 
         return (
             <View style={styles.transactionsContainer}>
@@ -167,6 +268,15 @@ export class TransactionsHistoryListComponent extends React.Component<
                     <ScrollView
                         contentContainerStyle={{ flexGrow: 1 }}
                         showsVerticalScrollIndicator={false}
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={this.state.refreshing}
+                                onRefresh={this.onRefresh}
+                                tintColor={theme.colors.accent}
+                                title={`${translate('App.labels.refreshing')}...`}
+                                titleColor={theme.colors.accent}
+                            />
+                        }
                     >
                         {transactions.map((tx: IBlockchainTransaction, index: number) =>
                             this.transactionItem(tx, index)

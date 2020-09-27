@@ -51,8 +51,7 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION
         },
         cardLeftIcon: {
-            alignSelf: 'center',
-            marginRight: BASE_DIMENSION * 2
+            alignSelf: 'center'
         },
         cardTextContainer: {
             flex: 1,
@@ -88,5 +87,9 @@ export default (theme: ITheme) =>
         successIcon: {
             alignSelf: 'center',
             color: theme.colors.accent
+        },
+        transactionIconContainer: {
+            justifyContent: 'center',
+            marginRight: BASE_DIMENSION * 2
         }
     });

@@ -16,7 +16,6 @@ import { getChainId } from '../../../../../../../redux/preferences/selectors';
 import { Button } from '../../../../../../../library';
 import { translate } from '../../../../../../../core/i18n';
 import { NavigationService } from '../../../../../../../navigation/navigation-service';
-import { AccountStats, IPosWidget } from '../../../../../../../core/blockchain/types/stats';
 import { CtaGroup } from '../../../../../../../components/cta-group/cta-group';
 import { PosWidget } from '../../../../../../../components/pos-widget/pos-widget';
 import { PosBasicActionType } from '../../../../../../../core/blockchain/types/token';
@@ -28,29 +27,38 @@ import { PasswordModal } from '../../../../../../../components/password-modal/pa
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
-import { captureException as SentryCaptureException } from '@sentry/react-native';
 import moment from 'moment';
+import { AffiliateBanner } from '../../../../../../../components/affiliate-banner/affiliate-banner';
+import { fetchAccountDelegateStats } from '../../../../../../../redux/ui/stats/actions';
+import { getAccountStats } from '../../../../../../../redux/ui/stats/selectors';
+import { AccountStats, IPosWidget } from '../../../../../../../core/blockchain/types/stats';
 
-export interface IProps {
+interface IExternalProps {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
     navigation: NavigationScreenProp<NavigationState, NavigationParams>;
 }
 
-export interface IReduxProps {
+interface IReduxProps {
     account: IAccountState;
     chainId: ChainIdType;
+    accountStats: AccountStats;
     withdraw: typeof withdraw;
     activate: typeof activate;
     fetchValidators: typeof fetchValidators;
     fetchDelegatedValidators: typeof fetchDelegatedValidators;
+    fetchAccountDelegateStats: typeof fetchAccountDelegateStats;
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
+const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
+    const account = getAccount(state, ownProps.accountIndex, ownProps.blockchain);
+    const chainId = getChainId(state, ownProps.blockchain);
+
     return {
-        account: getAccount(state, ownProps.accountIndex, ownProps.blockchain),
-        chainId: getChainId(state, ownProps.blockchain)
+        account,
+        chainId,
+        accountStats: getAccountStats(state, ownProps.blockchain, chainId, account.address)
     };
 };
 
@@ -58,38 +66,17 @@ const mapDispatchToProps = {
     withdraw,
     activate,
     fetchValidators,
-    fetchDelegatedValidators
+    fetchDelegatedValidators,
+    fetchAccountDelegateStats
 };
 
-interface IState {
-    accountStats: AccountStats;
-}
-
 export class AccountTabComponent extends React.Component<
-    IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>,
-    IState
+    IExternalProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 > {
-    constructor(props: IProps & IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>) {
-        super(props);
-
-        this.state = {
-            accountStats: undefined
-        };
-    }
     public componentDidMount() {
-        const blockchainInstance = getBlockchain(this.props.blockchain);
-        blockchainInstance
-            .getStats(this.props.chainId)
-            .getAccountDelegateStats(this.props.account, this.props.token)
-            .then(accStats => {
-                this.setState({ accountStats: accStats });
-            })
-            .catch(e => {
-                SentryCaptureException(new Error(JSON.stringify(e)));
-            });
-
         this.props.fetchValidators(this.props.account, PosBasicActionType.DELEGATE);
         this.props.fetchDelegatedValidators(this.props.account);
+        this.props.fetchAccountDelegateStats(this.props.account, this.props.token);
     }
 
     @bind
@@ -130,7 +117,7 @@ export class AccountTabComponent extends React.Component<
     }
 
     public renderWidgets() {
-        return this.state.accountStats.widgets.map((widget, index) => {
+        return this.props.accountStats.widgets.map((widget, index) => {
             const widgetTimestamp = Number(widget.timestamp) * 1000;
             const isActive = widgetTimestamp < Date.now() || widget.timestamp === '' ? true : false;
             const blockchainInstance = getBlockchain(this.props.blockchain);
@@ -206,6 +193,7 @@ export class AccountTabComponent extends React.Component<
 
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const tokenUiConfig = blockchainInstance.config.ui.token;
+        const affiliateBanner = blockchainInstance.config.ui.affiliateBanners.account;
 
         return (
             <View style={styles.container}>
@@ -247,13 +235,15 @@ export class AccountTabComponent extends React.Component<
                             </Button>
                         </View>
 
-                        {this.state.accountStats && this.renderWidgets()}
+                        <AffiliateBanner type={affiliateBanner} style={styles.affiliateBanner} />
+
+                        {this.props.accountStats && this.renderWidgets()}
 
                         <StatsComponent
-                            accountStats={this.state.accountStats}
+                            accountStats={this.props.accountStats}
                             blockchain={this.props.blockchain}
                             token={this.props.token}
-                            extraToken={this.props.account?.tokens[this.props.chainId].GZIL}
+                            extraToken={this.props.account?.tokens[this.props.chainId].gZIL}
                         />
                     </ScrollView>
                 </View>
@@ -273,7 +263,7 @@ export class AccountTabComponent extends React.Component<
     }
 }
 
-export const AccountTab = smartConnect<IProps>(AccountTabComponent, [
+export const AccountTab = smartConnect<IExternalProps>(AccountTabComponent, [
     connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

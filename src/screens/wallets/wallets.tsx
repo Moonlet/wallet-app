@@ -26,6 +26,8 @@ import { updateDisplayedHint } from '../../redux/app/actions';
 import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
 import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
 import { IconValues } from '../../components/icon/values';
+import { AffiliateBanner } from '../../components/affiliate-banner/affiliate-banner';
+import { AffiliateBannerType } from '../../components/affiliate-banner/types';
 
 export interface IReduxProps {
     wallets: {
@@ -267,6 +269,12 @@ export class WalletsScreenComponent extends React.Component<
                     onSelectionChange={key => this.setState({ selectedTab: key })}
                     selected={selectedTab}
                 />
+
+                <AffiliateBanner
+                    type={AffiliateBannerType.LEDGER_NANO_X}
+                    style={styles.affiliateBanner}
+                />
+
                 <View style={styles.scrollContainer}>
                     <ScrollView
                         contentContainerStyle={styles.walletList}

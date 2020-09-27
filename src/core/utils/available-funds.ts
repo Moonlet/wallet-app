@@ -76,10 +76,9 @@ export const availableAmount = (
     let balance: BigNumber = balanceAvailable
         ? getInputAmountToStd(account, token, balanceAvailable)
         : new BigNumber(token.balance?.value);
+
     if (feeOptions) {
-        if (tokenConfig.type === TokenType.NATIVE) {
-            balance = balance.minus(feeOptions?.feeTotal);
-        }
+        balance = balance.minus(feeOptions?.feeTotal);
     }
 
     if (balance.isGreaterThanOrEqualTo(0)) {
@@ -88,7 +87,7 @@ export const availableAmount = (
             new BigNumber(balance),
             tokenConfig.decimals
         );
-        return amountFromStd.toString();
+        return amountFromStd.toFixed(tokenConfig.ui.decimals);
     } else {
         return new BigNumber(0).toString();
     }

@@ -24,8 +24,8 @@ import { IAccountState } from '../../redux/wallets/state';
 
 const ACCOUNT_CARD_HEIGHT = normalize(100);
 const ACCOUNT_CARD_MARGINS = normalize(60);
-const HEIGHT_1_ROW = normalize(132);
-// const HEIGHT_2_ROWS = normalize(220);
+// const HEIGHT_1_ROW = normalize(132);
+const HEIGHT_2_ROWS = normalize(220);
 const HEIGHT_3_ROWS = normalize(280);
 const HEIGHT_4_ROWS = normalize(360);
 // const HEIGHT_5_ROWS = normalize(420);
@@ -100,9 +100,9 @@ export class BottomSheetComponent extends React.Component<
                         />
                         <DashboardMenuBottomSheet
                             snapPoints={{
-                                initialSnap: Platform.OS === 'web' ? HEIGHT_1_ROW : 0,
+                                initialSnap: Platform.OS === 'web' ? HEIGHT_2_ROWS : 0,
                                 bottomSheetHeight: Platform.select({
-                                    web: HEIGHT_1_ROW,
+                                    web: HEIGHT_2_ROWS,
                                     default: HEIGHT_4_ROWS
                                 })
                             }}

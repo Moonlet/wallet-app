@@ -66,6 +66,11 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         NavigationService.navigate('ConnectedWebsites', {});
     }
 
+    private copyToClipboard() {
+        this.props.onClose();
+        Clipboard.setString(this.props.selectedAccount.address);
+    }
+
     public renderRow(options: {
         title: string;
         subtitle?: string;
@@ -182,9 +187,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         title: translate('DashboardMenu.copyToClipboard'),
                         subtitle: this.props.selectedAccount.address,
                         iconName: IconValues.NOTES_LIST,
-                        onPress: () => {
-                            Clipboard.setString(this.props.selectedAccount.address);
-                        },
+                        onPress: () => this.copyToClipboard(),
                         hideArrow: true
                     })}
                 </ScrollView>

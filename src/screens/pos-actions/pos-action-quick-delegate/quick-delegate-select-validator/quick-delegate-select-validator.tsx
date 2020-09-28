@@ -34,6 +34,7 @@ import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 import { fetchValidators } from '../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../redux/ui/delegated-validators/actions';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
+import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 
 interface IReduxProps {
     account: IAccountState;
@@ -89,10 +90,10 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
             IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
         super(props);
-
+        const { validators } = props;
         this.state = {
             nrValidators: props.validators.length,
-            validatorsList: props.validators
+            validatorsList: validators
         };
     }
 
@@ -102,10 +103,16 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
+        const { maximumNumberOfValidators } = getBlockchain(
+            this.props.blockchain
+        ).config.ui.validator;
         if (this.props.validators !== prevProps.validators) {
             this.setState({
                 nrValidators: this.props.validators.length,
-                validatorsList: this.props.validators
+                validatorsList:
+                    maximumNumberOfValidators > this.props.validators.length
+                        ? this.props.validators
+                        : this.props.validators.slice(0, maximumNumberOfValidators)
             });
         }
     }
@@ -180,7 +187,6 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
-
         return (
             <View style={styles.container}>
                 <TestnetBadge />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Platform, View } from 'react-native';
+import { Animated, Platform, View } from 'react-native';
 import Modal from '../../library/modal/modal';
 import stylesProvider from './styles';
 import { IThemeProps } from '../../core/theme/with-theme';
@@ -25,14 +25,17 @@ import { SuccessConnect } from './components/success-connect/success-connect';
 import { VerificationFailed } from './components/verification-failed/verification-failed';
 import { LocationRequired } from './components/location-required/location-required';
 import { Troubleshooting } from './components/troubleshooting/troubleshooting';
+import { delay } from '../../core/utils/time';
 import { SafeAreaView } from 'react-navigation';
+
+const FADE_ANIMATION_TIME = 300;
 
 export const svgDimmensions = {
     width: 345,
     height: 253
 };
 
-export enum ScreenStep {
+enum ScreenStep {
     SEARCH_LEDGER = 'SEARCH_LEDGER',
     CONFIRM_CONNECTION = 'CONFIRM_CONNECTION',
     OPEN_APP = 'OPEN_APP',
@@ -44,7 +47,7 @@ export enum ScreenStep {
     TROUBLESHOOTING = 'TROUBLESHOOTING'
 }
 
-export interface IState {
+interface IState {
     step: ScreenStep;
     showErrorScreen: boolean;
     ledgerDevice: any;
@@ -60,6 +63,7 @@ export class LedgerConnectComponent extends React.Component<
 > {
     private modalOnHideDeffered: Deferred;
     private resultDeferred: Deferred;
+    private stepContainetFadeAnimation = new Animated.Value(1);
 
     public getAccountsAndDeviceId(
         blockchain: Blockchain,
@@ -85,12 +89,10 @@ export class LedgerConnectComponent extends React.Component<
         );
     }
 
-    public walletCreated(walletId: string) {
+    public async walletCreated(walletId: string) {
         this.resultDeferred = new Deferred();
         this.modalOnHideDeffered = new Deferred();
-        this.setState({
-            step: ScreenStep.SUCCESS_CONNECT
-        });
+        await this.selectStep(ScreenStep.SUCCESS_CONNECT);
     }
 
     public static async getAccountsAndDeviceId(
@@ -128,52 +130,87 @@ export class LedgerConnectComponent extends React.Component<
             item.id,
             this.state.connectionType
         );
+
         let appOpened = false;
         try {
             appOpened = await (wallet as LedgerWallet).isAppOpened(this.state.blockchain);
         } catch {
             appOpened = false;
         }
+
         if (!appOpened) {
-            this.setState({ step: ScreenStep.OPEN_APP, ledgerDevice: item });
+            this.setState({ ledgerDevice: item }, async () => {
+                await this.selectStep(ScreenStep.OPEN_APP);
+            });
             await (wallet as LedgerWallet).onAppOpened(this.state.blockchain);
         }
-        this.setState({ step: ScreenStep.VERIFY_ADDRESS });
+
+        await this.selectStep(ScreenStep.VERIFY_ADDRESS);
 
         try {
             const accounts: IAccountState[] = await wallet.getAccounts(this.state.blockchain, 0);
 
-            if (accounts) this.resultDeferred.resolve({ accounts, deviceId: item.id });
-            else {
+            if (accounts) {
+                this.resultDeferred.resolve({ accounts, deviceId: item.id });
+            } else {
                 this.resultDeferred.reject();
-                this.setState({ step: ScreenStep.VERIFICATION_FAILED });
+                await this.selectStep(ScreenStep.VERIFICATION_FAILED);
             }
         } catch {
             this.resultDeferred.reject();
-            this.setState({ step: ScreenStep.VERIFICATION_FAILED });
+            await this.selectStep(ScreenStep.VERIFICATION_FAILED);
         }
     };
+
     @bind
-    private onSelectDevice() {
-        this.setState({ step: ScreenStep.CONFIRM_CONNECTION });
+    private async onSelectDevice() {
+        await this.selectStep(ScreenStep.CONFIRM_CONNECTION);
     }
+
     @bind
-    private onErrorConnection(error: any) {
-        if (error.message === 'Location disabled')
-            this.setState({ step: ScreenStep.LOCATION_REQUIRED });
-        else this.setState({ step: ScreenStep.ERROR_SCREEN });
+    private async onErrorConnection(error: any) {
+        if (error.message === 'Location disabled') {
+            await this.selectStep(ScreenStep.LOCATION_REQUIRED);
+        } else {
+            await this.selectStep(ScreenStep.ERROR_SCREEN);
+        }
     }
+
     @bind
     private onContinue() {
         this.setState({ visible: false });
     }
+
     @bind
     private onRetry() {
         this.setState({ visible: false });
     }
+
     @bind
-    private showTroubleShootPage() {
-        this.setState({ step: ScreenStep.TROUBLESHOOTING });
+    private async showTroubleShootPage() {
+        await this.selectStep(ScreenStep.TROUBLESHOOTING);
+    }
+
+    private async selectStep(step: ScreenStep) {
+        await this.stepContainerFadeOut();
+        this.setState({ step });
+        await this.stepContainerFadeIn();
+    }
+
+    private async stepContainerFadeIn() {
+        Animated.timing(this.stepContainetFadeAnimation, {
+            toValue: 1,
+            duration: FADE_ANIMATION_TIME
+        }).start();
+        await delay(FADE_ANIMATION_TIME);
+    }
+
+    private async stepContainerFadeOut() {
+        Animated.timing(this.stepContainetFadeAnimation, {
+            toValue: 0,
+            duration: FADE_ANIMATION_TIME
+        }).start();
+        await delay(FADE_ANIMATION_TIME);
     }
 
     private displaySteps() {
@@ -277,8 +314,8 @@ export class LedgerConnectComponent extends React.Component<
                     web: false,
                     default: this.state.visible || false
                 })}
-                animationInTiming={5}
-                animationOutTiming={5}
+                animationInTiming={300}
+                animationOutTiming={300}
                 onModalHide={() => this.modalOnHideDeffered?.resolve()}
             >
                 <SafeAreaView style={styles.container}>
@@ -301,7 +338,9 @@ export class LedgerConnectComponent extends React.Component<
                             <View style={styles.defaultHeaderContainer} />
                         </View>
                     )}
-                    {this.displaySteps()}
+                    <Animated.View style={{ flex: 1, opacity: this.stepContainetFadeAnimation }}>
+                        {this.displaySteps()}
+                    </Animated.View>
                 </SafeAreaView>
             </Modal>
         );

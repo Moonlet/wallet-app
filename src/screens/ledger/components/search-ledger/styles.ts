@@ -14,7 +14,6 @@ export default (theme: ITheme) =>
             paddingHorizontal: BASE_DIMENSION * 4,
             paddingBottom: BASE_DIMENSION * 4
         },
-
         primaryText: {
             fontSize: normalizeFontAndLineHeight(22),
             lineHeight: normalizeFontAndLineHeight(28),
@@ -22,7 +21,8 @@ export default (theme: ITheme) =>
             letterSpacing: LETTER_SPACING,
             textAlign: 'center',
             color: theme.colors.text,
-            marginBottom: BASE_DIMENSION
+            marginBottom: BASE_DIMENSION,
+            marginTop: BASE_DIMENSION * 2
         },
         secondaryText: {
             fontSize: normalizeFontAndLineHeight(17),

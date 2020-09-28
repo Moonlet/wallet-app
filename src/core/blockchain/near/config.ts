@@ -112,7 +112,7 @@ export const config: IBlockchainConfig = {
         },
         enableTokenManagement: false,
         enableAccountCreation: true,
-        maxAccountsNumber: 5,
+        maxAccountsNumber: 9999,
         displayName: 'NEAR',
         affiliateBanners: {
             account: AffiliateBannerType.LEDGER_NANO_X

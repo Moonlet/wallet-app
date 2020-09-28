@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Platform, TouchableHighlight, ScrollView } from 'react-native';
+import { View, Platform, TouchableHighlight, ScrollView, Clipboard } from 'react-native';
 import { withTheme, IThemeProps } from '../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { smartConnect } from '../../../core/utils/smart-connect';
@@ -7,16 +7,17 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import { Icon } from '../../icon/icon';
 import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
-import { ICON_SIZE, normalize } from '../../../styles/dimensions';
+import { normalize } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { Blockchain } from '../../../core/blockchain/types';
-import { getSelectedBlockchain } from '../../../redux/wallets/selectors';
+import { getSelectedAccount, getSelectedBlockchain } from '../../../redux/wallets/selectors';
 import { IReduxState } from '../../../redux/state';
 import { connect } from 'react-redux';
 import { QrModalReader } from '../../qr-modal/qr-modal';
 import { openTransactionRequest } from '../../../redux/ui/transaction-request/actions';
 import { IconValues } from '../../icon/values';
+import { IAccountState } from '../../../redux/wallets/state';
 
 interface IExternalProps {
     snapPoints: { initialSnap: number; bottomSheetHeight: number };
@@ -26,10 +27,12 @@ interface IExternalProps {
 export interface IReduxProps {
     blockchain: Blockchain;
     openTransactionRequest: typeof openTransactionRequest;
+    selectedAccount: IAccountState;
 }
 
 const mapStateToProps = (state: IReduxState) => ({
-    blockchain: getSelectedBlockchain(state)
+    blockchain: getSelectedBlockchain(state),
+    selectedAccount: getSelectedAccount(state)
 });
 
 const mapDispatchToProps = {
@@ -63,11 +66,18 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
         NavigationService.navigate('ConnectedWebsites', {});
     }
 
+    private copyToClipboard() {
+        this.props.onClose();
+        Clipboard.setString(this.props.selectedAccount.address);
+    }
+
     public renderRow(options: {
         title: string;
+        subtitle?: string;
         iconName: string;
         onPress?: () => void;
         disabled?: boolean;
+        hideArrow?: boolean;
     }) {
         const { styles, theme } = this.props;
 
@@ -82,7 +92,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     <View style={styles.iconContainer}>
                         <Icon
                             name={options.iconName}
-                            size={ICON_SIZE}
+                            size={normalize(20)}
                             style={[
                                 styles.icon,
                                 {
@@ -106,19 +116,33 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         >
                             {options.title}
                         </Text>
+                        {options.subtitle && (
+                            <Text
+                                style={[
+                                    styles.subtitle,
+                                    {
+                                        color: theme.colors.textTertiary
+                                    }
+                                ]}
+                            >
+                                {options.subtitle}
+                            </Text>
+                        )}
                     </View>
-                    <Icon
-                        name={IconValues.CHEVRON_RIGHT}
-                        size={normalize(16)}
-                        style={[
-                            styles.arrowRight,
-                            {
-                                color: options.disabled
-                                    ? theme.colors.textTertiary
-                                    : theme.colors.accent
-                            }
-                        ]}
-                    />
+                    {!options.hideArrow && (
+                        <Icon
+                            name={IconValues.CHEVRON_RIGHT}
+                            size={normalize(16)}
+                            style={[
+                                styles.arrowRight,
+                                {
+                                    color: options.disabled
+                                        ? theme.colors.textTertiary
+                                        : theme.colors.accent
+                                }
+                            ]}
+                        />
+                    )}
                 </View>
             </TouchableHighlight>
         );
@@ -161,6 +185,13 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                             iconName: IconValues.FLASH_OFF,
                             onPress: () => this.connectedWebsites()
                         })}
+                    {this.renderRow({
+                        title: translate('DashboardMenu.copyToClipboard'),
+                        subtitle: this.props.selectedAccount.address,
+                        iconName: IconValues.NOTES_LIST,
+                        onPress: () => this.copyToClipboard(),
+                        hideArrow: true
+                    })}
                 </ScrollView>
 
                 {/* TODO: move this - implement smart scan */}

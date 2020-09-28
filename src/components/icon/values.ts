@@ -43,6 +43,7 @@ export enum IconValues {
     NAVIGATION_MENU_HORIZONTAL = 'navigation-menu-horizontal',
     NAVIGATION_MENU_VERTICAL = 'navigation-menu-vertical',
     NAVIGATION_MENU = 'navigation-menu',
+    NOTES_LIST = 'notes-list',
     OUTBOUND = 'outbound',
     PENCIL = 'pencil',
     PENDING = 'pending',

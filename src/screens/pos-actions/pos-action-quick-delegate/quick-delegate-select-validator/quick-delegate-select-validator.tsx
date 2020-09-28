@@ -69,7 +69,6 @@ export interface INavigationParams {
 }
 
 interface IState {
-    nrValidators: number;
     validatorsList: IValidator[];
 }
 
@@ -92,7 +91,6 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
         super(props);
 
         this.state = {
-            nrValidators: props.validators.length,
             validatorsList: props.validators
         };
     }
@@ -108,7 +106,6 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
         ).config.ui.validator;
         if (this.props.validators !== prevProps.validators) {
             this.setState({
-                nrValidators: this.props.validators.length,
                 validatorsList:
                     maximumNumberOfValidators > this.props.validators.length
                         ? this.props.validators

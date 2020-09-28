@@ -25,7 +25,6 @@ import { HWVendor, HWModel, HWConnection } from '../../../core/wallet/hw-wallet/
 
 import { HWWalletFactory } from '../../../core/wallet/hw-wallet/hw-wallet-factory';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
-import { LedgerWallet } from '../../../core/wallet/hw-wallet/ledger/ledger-wallet';
 import { translate } from '../../../core/i18n';
 import { TokenType } from '../../../core/blockchain/types/token';
 import { NavigationService } from '../../../navigation/navigation-service';
@@ -542,13 +541,18 @@ export const sendTransferTransaction = (
     const appWallet = getSelectedWallet(state);
 
     try {
-        await LoadingModal.open({
-            type: TransactionMessageType.INFO,
-            text:
-                appWallet.type === WalletType.HW
-                    ? TransactionMessageText.CONNECTING_LEDGER
-                    : TransactionMessageText.SIGNING
-        });
+        if (appWallet.type === WalletType.HD) {
+            await LoadingModal.open({
+                type: TransactionMessageType.INFO,
+                text: TransactionMessageText.SIGNING
+            });
+        } else {
+            await LedgerConnect.signTransaction(
+                account.blockchain,
+                appWallet.hwOptions?.deviceModel,
+                appWallet.hwOptions?.connectionType
+            );
+        }
 
         const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
             pass: password,
@@ -573,26 +577,14 @@ export const sendTransferTransaction = (
             extraFields
         });
 
-        if (appWallet.type === WalletType.HW) {
-            await LoadingModal.showMessage({
-                text: TransactionMessageText.OPEN_APP,
-                type: TransactionMessageType.INFO
-            });
+        const transaction = await wallet.sign(account.blockchain, account.index, tx);
 
-            await (wallet as LedgerWallet).onAppOpened(account.blockchain);
-
+        if (appWallet.type === WalletType.HD) {
             await LoadingModal.showMessage({
-                text: TransactionMessageText.REVIEW_TRANSACTION,
+                text: TransactionMessageText.BROADCASTING,
                 type: TransactionMessageType.INFO
             });
         }
-
-        const transaction = await wallet.sign(account.blockchain, account.index, tx);
-
-        await LoadingModal.showMessage({
-            text: TransactionMessageText.BROADCASTING,
-            type: TransactionMessageType.INFO
-        });
 
         const txHash = await getBlockchain(account.blockchain)
             .getClient(chainId)
@@ -619,7 +611,11 @@ export const sendTransferTransaction = (
                 dispatch({ type: CLOSE_TX_REQUEST });
             }
 
-            await LoadingModal.close();
+            if (appWallet.type === WalletType.HD) {
+                await LoadingModal.close();
+            } else {
+                await LedgerConnect.close();
+            }
             dispatch(closeTransactionRequest());
             goBack && navigation.goBack();
             return;
@@ -627,7 +623,11 @@ export const sendTransferTransaction = (
             throw new Error('GENERIC_ERROR');
         }
     } catch (errorMessage) {
-        await LoadingModal.close();
+        if (appWallet.type === WalletType.HD) {
+            await LoadingModal.close();
+        } else {
+            await LedgerConnect.close();
+        }
 
         const message =
             translate('LoadingModal.' + errorMessage, {

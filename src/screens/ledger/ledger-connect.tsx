@@ -12,6 +12,7 @@ export class LedgerConnect {
 
     public static walletCreated = LedgerConnectComponent.walletCreated;
 
-    // TODO
-    // public static signTransaction = LedgerConnectComponent.signTransaction
+    public static signTransaction = LedgerConnectComponent.signTransaction;
+
+    public static close = LedgerConnectComponent.close;
 }

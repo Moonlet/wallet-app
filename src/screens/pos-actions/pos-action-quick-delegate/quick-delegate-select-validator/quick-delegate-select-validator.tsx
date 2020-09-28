@@ -90,10 +90,10 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
             IThemeProps<ReturnType<typeof stylesProvider>>
     ) {
         super(props);
-        const { validators } = props;
+
         this.state = {
             nrValidators: props.validators.length,
-            validatorsList: validators
+            validatorsList: props.validators
         };
     }
 

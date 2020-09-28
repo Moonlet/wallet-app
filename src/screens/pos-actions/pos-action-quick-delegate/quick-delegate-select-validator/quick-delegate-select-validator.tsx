@@ -1,11 +1,10 @@
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 import { IReduxState } from '../../../../redux/state';
 import stylesProvider from './styles';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../core/utils/smart-connect';
 import { connect } from 'react-redux';
-import { Text } from '../../../../library';
 import { translate } from '../../../../core/i18n';
 import {
     withNavigationParams,
@@ -14,7 +13,6 @@ import {
 import { getAccount } from '../../../../redux/wallets/selectors';
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
-import { normalize } from '../../../../styles/dimensions';
 import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -30,17 +28,12 @@ import {
     navigateToEnterAmountStep,
     QUICK_DELEGATE_ENTER_AMOUNT
 } from '../../../../redux/ui/screens/posActions/actions';
-import { Icon } from '../../../../components/icon/icon';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
-import { IconValues } from '../../../../components/icon/values';
 import { getValidators } from '../../../../redux/ui/validators/selectors';
 import { PosBasicActionType } from '../../../../core/blockchain/types/token';
-import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { fetchValidators } from '../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../redux/ui/delegated-validators/actions';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
-
-const defaultNumberOfValidators = 2;
 
 interface IReduxProps {
     account: IAccountState;
@@ -98,14 +91,8 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
         super(props);
 
         this.state = {
-            nrValidators:
-                props.validators.length < defaultNumberOfValidators
-                    ? props.validators.length
-                    : defaultNumberOfValidators,
-            validatorsList:
-                props.validators.length > defaultNumberOfValidators
-                    ? props.validators.slice(0, defaultNumberOfValidators)
-                    : props.validators
+            nrValidators: props.validators.length,
+            validatorsList: props.validators
         };
     }
 
@@ -117,14 +104,8 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.validators !== prevProps.validators) {
             this.setState({
-                nrValidators:
-                    this.props.validators.length < defaultNumberOfValidators
-                        ? this.props.validators.length
-                        : defaultNumberOfValidators,
-                validatorsList:
-                    this.props.validators.length > defaultNumberOfValidators
-                        ? this.props.validators.slice(0, defaultNumberOfValidators)
-                        : this.props.validators
+                nrValidators: this.props.validators.length,
+                validatorsList: this.props.validators
             });
         }
     }
@@ -144,51 +125,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
     }
 
     private renderValidatorList() {
-        const { styles } = this.props;
-        const blockchainInstance = getBlockchain(this.props.blockchain);
-        const maximumNumberOfValidatorsReached =
-            blockchainInstance.config.ui.validator.maximumNumberOfValidators &&
-            blockchainInstance.config.ui.validator.maximumNumberOfValidators <=
-                this.state.nrValidators;
-        return [
-            <View key={'increase-list'} style={styles.actionContainer}>
-                <TouchableOpacity
-                    style={styles.actionIconContainer}
-                    onPress={() => {
-                        if (this.state.nrValidators > 1) {
-                            const nrValidatorsNew = this.state.nrValidators - 1;
-
-                            this.setState({
-                                nrValidators: nrValidatorsNew,
-                                validatorsList: this.props.validators.slice(0, nrValidatorsNew)
-                            });
-                        }
-                        // decrease
-                    }}
-                >
-                    <Icon name={IconValues.MINUS} size={normalize(16)} style={styles.actionIcon} />
-                </TouchableOpacity>
-                <Text style={styles.actionCounterText}>{this.state.nrValidators}</Text>
-                <TouchableOpacity
-                    style={styles.actionIconContainer}
-                    onPress={() => {
-                        if (
-                            this.props.validators.length >= this.state.nrValidators + 1 &&
-                            !maximumNumberOfValidatorsReached
-                        ) {
-                            const nrValidatorsNew = this.state.nrValidators + 1;
-
-                            this.setState({
-                                nrValidators: nrValidatorsNew,
-                                validatorsList: this.props.validators.slice(0, nrValidatorsNew)
-                            });
-                        }
-                        // increase
-                    }}
-                >
-                    <Icon name={IconValues.PLUS} size={normalize(16)} style={styles.actionIcon} />
-                </TouchableOpacity>
-            </View>,
+        return (
             <View key={'validator-list'} style={this.props.styles.listContainer}>
                 <ValidatorsList
                     validators={this.state.validatorsList}
@@ -198,7 +135,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                     actionType={CardActionType.CHECKBOX}
                 />
             </View>
-        ];
+        );
     }
 
     private renderBottomConfirm() {

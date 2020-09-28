@@ -1,16 +1,10 @@
-import {
-    IResolveTextResponse,
-    ResolveTextType,
-    ResolveTextCode,
-    ResolveTextError,
-    Blockchain
-} from '../types';
+import { IResolveTextResponse, ResolveTextType, ResolveTextCode, ResolveTextError } from '../types';
 import { GenericNameService, IResolveNameResponse } from '../types/name-service';
 import { Cosmos } from '.';
 
 export class NameService extends GenericNameService {
     constructor(client) {
-        super(client, Blockchain.COSMOS);
+        super(client);
     }
     public resolveText(text: string): Promise<IResolveTextResponse> {
         const validAddress = Cosmos.account.isValidAddress(text);

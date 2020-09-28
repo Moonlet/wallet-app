@@ -1,16 +1,24 @@
-import namehash from 'eth-ens-namehash';
-import { rawDecode, simpleEncode } from 'ethereumjs-abi';
-
-import { IResolveTextResponse, ResolveTextType, ResolveTextCode, ResolveTextError } from '../types';
-import { IBlockchainNameService, IResolveNameResponse } from '../types/name-service';
+import {
+    IResolveTextResponse,
+    ResolveTextType,
+    ResolveTextCode,
+    ResolveTextError,
+    GenericNameService,
+    BlockchainNameService,
+    IResolveNameResponse
+} from '../types';
 import { Ethereum } from '.';
 import { Client } from './client';
+import { cryptoNameResolver } from '../common/cryptoNameResolver';
+import { ethNameResolver } from '../common/ethNameResolver';
+import { zilNameResolver } from '../common/zilNameResolver';
+import { config } from './config';
 
-// Ethereum name service address
-const ENS = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e';
+export class NameService extends GenericNameService {
+    constructor(client: Client) {
+        super(client);
+    }
 
-export class NameService implements IBlockchainNameService {
-    constructor(private client: Client) {}
     public async resolveText(text: string): Promise<IResolveTextResponse> {
         const validAddress = Ethereum.account.isValidAddress(text);
         const validChecksumAddress = Ethereum.account.isValidChecksumAddress(text);
@@ -38,27 +46,19 @@ export class NameService implements IBlockchainNameService {
             }
         }
     }
-
-    public async resolveName(name: string): Promise<IResolveNameResponse> {
-        const node = namehash.hash(name);
-        let data = await this.client.http.jsonRpc('eth_call', [
-            {
-                to: ENS,
-                data: '0x' + simpleEncode('resolver(bytes32)', node).toString('hex')
-            },
-            'latest'
-        ]);
-        const resolverAddress =
-            '0x' + rawDecode(['address'], Buffer.from(data.result.replace('0x', ''), 'hex'))[0];
-        data = await this.client.http.jsonRpc('eth_call', [
-            {
-                to: resolverAddress,
-                data: '0x' + simpleEncode('addr(bytes32)', node).toString('hex')
-            },
-            'latest'
-        ]);
-        const address =
-            '0x' + rawDecode(['address'], Buffer.from(data.result.replace('0x', ''), 'hex'))[0];
-        return Promise.resolve({ address });
+    public resolveName(name: string): Promise<IResolveNameResponse> {
+        const { mainNet } = this.client.network;
+        const ending = name.split('.').pop();
+        const { service, record } = config.nameServices.find(item =>
+            typeof item.tld === 'string' ? item.tld === ending : !!ending.match(item.tld)
+        );
+        switch (service) {
+            case BlockchainNameService.ENS:
+                return ethNameResolver(name, service, mainNet);
+            case BlockchainNameService.ZNS:
+                return zilNameResolver(name, service, record, mainNet);
+            case BlockchainNameService.CNS:
+                return cryptoNameResolver(name, service, record, mainNet);
+        }
     }
 }

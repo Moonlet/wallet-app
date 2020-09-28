@@ -326,6 +326,7 @@ export class SendScreenComponent extends React.Component<
     }
 
     private renderBottomConfirm() {
+        const { resolvedAddress } = this.state;
         const activeIndex = findIndex(this.state.headerSteps, ['active', true]);
         const tokenConfig = getTokenConfig(this.props.account.blockchain, this.props.token.symbol);
 
@@ -379,7 +380,10 @@ export class SendScreenComponent extends React.Component<
                 <PrimaryCtaField
                     label={translate('App.labels.send')}
                     action={translate('App.labels.to')}
-                    value={formatAddress(this.state.toAddress, this.props.account.blockchain)}
+                    value={formatAddress(
+                        resolvedAddress ? resolvedAddress : this.state.toAddress,
+                        this.props.account.blockchain
+                    )}
                 />
                 {(activeIndex === 1 || activeIndex === 2) && (
                     <AmountCtaField
@@ -484,7 +488,6 @@ export class SendScreenComponent extends React.Component<
     public render() {
         const { styles } = this.props;
         const { headerSteps } = this.state;
-
         return (
             <View style={styles.container}>
                 <TestnetBadge />

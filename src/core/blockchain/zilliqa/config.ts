@@ -1,4 +1,4 @@
-import { IBlockchainConfig, DerivationType } from '../types';
+import { IBlockchainConfig, DerivationType, BlockchainNameService } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { TokenType, TokenScreenComponentType, PosBasicActionType } from '../types/token';
 import ZilIcon from '../../../assets/icons/blockchains/zil.svg';
@@ -106,7 +106,7 @@ export const config: IBlockchainConfig = {
     feeOptions: {
         gasPriceToken: 'ZIL',
         defaults: {
-            gasPrice: new BigNumber(1000000000),
+            gasPrice: new BigNumber(2000000000),
             gasLimit: {
                 [TokenType.NATIVE]: new BigNumber(1),
                 [TokenType.ZRC2]: new BigNumber(25000)
@@ -156,7 +156,19 @@ export const config: IBlockchainConfig = {
         testNet: 333,
         mainNet: 1
     },
-    defaultOrder: 0
+    defaultOrder: 0,
+    nameServices: [
+        {
+            tld: 'zil',
+            service: BlockchainNameService.ZNS,
+            record: ['crypto.ZIL.address']
+        },
+        {
+            tld: 'crypto',
+            service: BlockchainNameService.CNS,
+            record: ['crypto.ZIL.address']
+        }
+    ]
 };
 
 export enum Contracts {

@@ -7,7 +7,7 @@ import BottomSheet from 'reanimated-bottom-sheet';
 import { Icon } from '../../icon/icon';
 import { Text } from '../../../library';
 import { translate } from '../../../core/i18n';
-import { ICON_SIZE, normalize } from '../../../styles/dimensions';
+import { normalize } from '../../../styles/dimensions';
 import { BottomSheetHeader } from '../header/header';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { Blockchain } from '../../../core/blockchain/types';
@@ -92,7 +92,7 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                     <View style={styles.iconContainer}>
                         <Icon
                             name={options.iconName}
-                            size={ICON_SIZE}
+                            size={normalize(20)}
                             style={[
                                 styles.icon,
                                 {

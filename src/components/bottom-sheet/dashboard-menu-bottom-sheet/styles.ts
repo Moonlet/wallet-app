@@ -3,6 +3,7 @@ import { ITheme } from '../../../core/theme/itheme';
 import {
     BASE_DIMENSION,
     BORDER_RADIUS,
+    normalize,
     normalizeFontAndLineHeight
 } from '../../../styles/dimensions';
 
@@ -23,8 +24,8 @@ export default (theme: ITheme) =>
             backgroundColor: theme.colors.appBackground,
             marginRight: BASE_DIMENSION * 2,
             borderRadius: BORDER_RADIUS,
-            height: BASE_DIMENSION * 5,
-            width: BASE_DIMENSION * 5,
+            height: normalize(40),
+            width: normalize(40),
             justifyContent: 'center'
         },
         icon: {

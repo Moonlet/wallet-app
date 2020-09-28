@@ -19,6 +19,7 @@ import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { TokenScreenComponentType } from '../../core/blockchain/types/token';
 import { formatNumber } from '../../core/utils/format-number';
 import { SmartImage } from '../../library/image/smart-image';
+import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 
 interface IExternalProps {
     isLoading: boolean;
@@ -107,6 +108,12 @@ export class AccountSummaryComponent extends React.Component<
             this.props.data?.extraToken &&
             getTokenConfig(this.props.data.blockchain, this.props.data.extraToken.symbol);
 
+        const blockchainInstance = getBlockchain(this.props.data.blockchain);
+        const amountFromStd = blockchainInstance.account.amountFromStd(
+            new BigNumber(this.props.data.extraToken.balance.value),
+            extraTokenConfig.decimals
+        );
+
         return (
             <View>
                 <View style={styles.detailsContainer}>
@@ -147,10 +154,9 @@ export class AccountSummaryComponent extends React.Component<
                             />
 
                             <Text style={styles.detailsExtraText}>
-                                {`${formatNumber(Number(this.props.data.extraToken.balance.value), {
+                                {`${formatNumber(new BigNumber(amountFromStd), {
                                     currency: this.props.data.extraToken.symbol,
-                                    maximumFractionDigits: 12,
-                                    minimumFractionDigits: 12
+                                    maximumFractionDigits: 4
                                 })}`}
                             </Text>
                         </View>

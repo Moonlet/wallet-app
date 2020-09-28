@@ -10,7 +10,7 @@ export const GZIL_TESTNET: ITokenConfigState = {
     contractAddress: 'zil10w2fwf5kdwqvjd2zyv6nr7da2d2z63g5dvtvsy',
     removable: true,
     defaultOrder: 999,
-    decimals: 6,
+    decimals: 15,
     ui: {
         decimals: 3,
         tokenScreenComponent: TokenScreenComponentType.DEFAULT
@@ -27,7 +27,7 @@ export const GZIL_MAINNET: ITokenConfigState = {
     contractAddress: 'zil10w2fwf5kdwqvjd2zyv6nr7da2d2z63g5dvtvsy', // TODO Must be updated
     removable: true,
     defaultOrder: 999,
-    decimals: 6,
+    decimals: 15,
     ui: {
         decimals: 3,
         tokenScreenComponent: TokenScreenComponentType.DEFAULT

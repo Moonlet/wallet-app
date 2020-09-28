@@ -50,7 +50,7 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>This allows you to securely login to Moonlet.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>This allows you to securely connect your ledger to Moonlet</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Moonlet need to access photo library to read qr-code</string>
 	<key>UIAppFonts</key>

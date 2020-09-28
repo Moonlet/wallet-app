@@ -1,17 +1,12 @@
 import { ChainIdType, IPosTransaction, IBlockchainTransaction, TransactionType } from '../../types';
-
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
-
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { TransactionStatus } from '../../../wallet/types';
 import { Contracts } from '../config';
 import { Zilliqa } from '..';
+import { ApiClient } from '../../../utils/api-client/api-client';
 
-export const contracts = {
-    '333': {
-        [Contracts.STAKING]: 'zil1a66ptrg3rhy6eyqwe463dpvk9z0qhksz48afdt'
-    },
-    '1': {}
-};
+const contracts = {};
 
 export enum ContractFields {
     DEPOSIT_AMT_DELEG = 'deposit_amt_deleg',
@@ -24,6 +19,19 @@ export enum ContractFields {
 
 export const fetchContracts = async (chainId: ChainIdType) => {
     // TODO - fetch from blockchain
+
+    const key = `zilliqa.${chainId}.staking.contract`;
+    try {
+        const configs = await new ApiClient().configs.getConfigs([]);
+        const values = {
+            ...contracts[chainId],
+            [Contracts.STAKING]: configs.result[key]
+        };
+        return values;
+    } catch (error) {
+        SentryCaptureException(new Error(JSON.stringify(error)));
+    }
+
     return contracts;
 };
 

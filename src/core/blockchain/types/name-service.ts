@@ -1,3 +1,5 @@
+import { Blockchain } from './blockchain';
+
 export enum ResolveTextCode {
     OK = 'OK',
     WARN_CHECKSUM = 'WARN_CHECKSUM'
@@ -22,7 +24,12 @@ export interface IResolveTextResponse {
     name: string;
 }
 
-export interface IBlockchainNameService {
-    resolveText(text: string): Promise<IResolveTextResponse>;
-    resolveName(text: string): Promise<IResolveNameResponse>;
+export abstract class GenericNameService {
+    public blockchain: Blockchain;
+    constructor(protected client) {
+        this.client = client;
+    }
+    public abstract resolveText(text: string): Promise<IResolveTextResponse>;
+
+    public abstract resolveName(name: string): Promise<IResolveNameResponse>;
 }

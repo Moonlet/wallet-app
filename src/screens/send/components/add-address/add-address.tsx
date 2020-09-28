@@ -210,12 +210,13 @@ export class AddAddressComponent extends React.Component<
                                 errorResponseText: translate('Send.recipientNotValid'),
                                 warningResponseText: undefined
                             },
-                            () => this.props.onChange('')
+                            () => this.props.onChange('', '')
                         );
                     }
                     break;
             }
         } catch (error) {
+            this.setState({ resolvedAddress: '' });
             switch (error.error) {
                 case ResolveTextError.INVALID: {
                     this.setState(
@@ -224,7 +225,7 @@ export class AddAddressComponent extends React.Component<
                             errorResponseText: translate('Send.recipientNotValid'),
                             warningResponseText: undefined
                         },
-                        () => this.props.onChange('')
+                        () => this.props.onChange('', '')
                     );
                     break;
                 }
@@ -235,7 +236,7 @@ export class AddAddressComponent extends React.Component<
                             errorResponseText: translate('Send.genericError'),
                             warningResponseText: undefined
                         },
-                        () => this.props.onChange('')
+                        () => this.props.onChange('', '')
                     );
                     break;
                 }
@@ -246,7 +247,7 @@ export class AddAddressComponent extends React.Component<
                             errorResponseText: translate('Send.recipientNotValid'),
                             warningResponseText: undefined
                         },
-                        () => this.props.onChange('')
+                        () => this.props.onChange('', '')
                     );
                     break;
                 }

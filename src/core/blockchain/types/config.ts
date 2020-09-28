@@ -4,10 +4,23 @@ import { ChainIdType } from '.';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { IAffiliateBannerType } from '../../../components/affiliate-banner/types';
 
+export enum BlockchainNameService {
+    ENS = '0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e',
+    ZNS = 'zil1jcgu2wlx6xejqk9jw3aaankw6lsjzeunx2j0jz',
+    CNS = '0x7ea9ee21077f84339eda9c80048ec6db678642b1'
+}
+
+export type INameService = {
+    tld: string | RegExp;
+    service: BlockchainNameService;
+    record?: string[];
+};
+
 export enum DerivationType {
     HD_KEY = 'HD_KEY',
     HD_KEY_ED25519 = 'HD_KEY_ED25519'
 }
+
 export interface IBlockchainConfig {
     derivationPath: string;
     derivationType: DerivationType;
@@ -87,4 +100,5 @@ export interface IBlockchainConfig {
         mainNet?: ChainIdType;
     };
     defaultOrder: number;
+    nameServices?: INameService[];
 }

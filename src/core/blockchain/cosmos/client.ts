@@ -9,7 +9,7 @@ import { ClientUtils } from './client-utils';
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
-        this.nameService = new NameService();
+        this.nameService = new NameService(this);
         this.utils = new ClientUtils();
     }
 

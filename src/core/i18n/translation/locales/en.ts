@@ -389,7 +389,8 @@ export const translation: ITranslations = {
             scanPay: 'Scan to pay',
             switchWallets: 'Switch between the wallets anytime',
             connectedWebsites: 'Connected websites',
-            tokenSwap: 'Token swap (coming soon)'
+            tokenSwap: 'Token swap (coming soon)',
+            copyToClipboard: 'Copy address to clipboard'
         },
         BackupWallet: {
             title: 'Backup Wallet',

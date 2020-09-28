@@ -25,6 +25,7 @@ import { SuccessConnect } from './components/success-connect/success-connect';
 import { VerificationFailed } from './components/verification-failed/verification-failed';
 import { LocationRequired } from './components/location-required/location-required';
 import { Troubleshooting } from './components/troubleshooting/troubleshooting';
+import { ReviewTransaction } from './components/review-transaction/review-transaction';
 import { delay } from '../../core/utils/time';
 import { SafeAreaView } from 'react-navigation';
 
@@ -44,7 +45,8 @@ enum ScreenStep {
     LOCATION_REQUIRED = 'LOCATION_REQUIRED',
     VERIFICATION_FAILED = 'VERIFICATION_FAILED',
     SUCCESS_CONNECT = 'SUCCESS_CONNECT',
-    TROUBLESHOOTING = 'TROUBLESHOOTING'
+    TROUBLESHOOTING = 'TROUBLESHOOTING',
+    REVIEW_TRANSACTION = 'REVIEW_TRANSACTION'
 }
 
 interface IState {
@@ -55,6 +57,7 @@ interface IState {
     blockchain: Blockchain;
     deviceModel: HWModel;
     connectionType: HWConnection;
+    currentFlow: ScreenStep;
 }
 
 export class LedgerConnectComponent extends React.Component<
@@ -64,6 +67,16 @@ export class LedgerConnectComponent extends React.Component<
     private modalOnHideDeffered: Deferred;
     private resultDeferred: Deferred;
     private stepContainetFadeAnimation = new Animated.Value(1);
+
+    public static async getAccountsAndDeviceId(
+        blockchain: Blockchain,
+        deviceModel: HWModel,
+        connectionType: HWConnection
+    ) {
+        return waitForInstance<LedgerConnectComponent>(LedgerConnectComponent).then(ref =>
+            ref.getAccountsAndDeviceId(blockchain, deviceModel, connectionType)
+        );
+    }
 
     public getAccountsAndDeviceId(
         blockchain: Blockchain,
@@ -95,14 +108,43 @@ export class LedgerConnectComponent extends React.Component<
         await this.selectStep(ScreenStep.SUCCESS_CONNECT);
     }
 
-    public static async getAccountsAndDeviceId(
+    public static async signTransaction(
         blockchain: Blockchain,
         deviceModel: HWModel,
         connectionType: HWConnection
     ) {
         return waitForInstance<LedgerConnectComponent>(LedgerConnectComponent).then(ref =>
-            ref.getAccountsAndDeviceId(blockchain, deviceModel, connectionType)
+            ref.signTransaction(blockchain, deviceModel, connectionType)
         );
+    }
+
+    public signTransaction(
+        blockchain: Blockchain,
+        deviceModel: HWModel,
+        connectionType: HWConnection
+    ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
+        this.resultDeferred = new Deferred();
+        this.modalOnHideDeffered = new Deferred();
+        this.setState({
+            blockchain,
+            deviceModel,
+            connectionType,
+            visible: true,
+            step: ScreenStep.SEARCH_LEDGER,
+            currentFlow: ScreenStep.REVIEW_TRANSACTION
+        });
+
+        return this.resultDeferred.promise;
+    }
+
+    public static async close() {
+        return waitForInstance<LedgerConnectComponent>(LedgerConnectComponent).then(ref =>
+            ref.close()
+        );
+    }
+
+    public close() {
+        this.setState({ visible: false });
     }
 
     constructor(props: IThemeProps<ReturnType<typeof stylesProvider>>) {
@@ -115,15 +157,16 @@ export class LedgerConnectComponent extends React.Component<
             visible: false,
             blockchain: undefined,
             connectionType: undefined,
-            deviceModel: undefined
+            deviceModel: undefined,
+            currentFlow: undefined
         };
     }
 
     public componentWillUnmount() {
         //
     }
-
-    private onConnectedDevice = async (item: any) => {
+    @bind
+    private async onConnectedDevice(item: any) {
         const wallet: IWallet = await HWWalletFactory.get(
             HWVendor.LEDGER,
             this.state.deviceModel,
@@ -145,22 +188,33 @@ export class LedgerConnectComponent extends React.Component<
             await (wallet as LedgerWallet).onAppOpened(this.state.blockchain);
         }
 
-        await this.selectStep(ScreenStep.VERIFY_ADDRESS);
+        if (this.state.currentFlow === ScreenStep.REVIEW_TRANSACTION) {
+            // Review Transaction Flow
 
-        try {
-            const accounts: IAccountState[] = await wallet.getAccounts(this.state.blockchain, 0);
+            await this.selectStep(ScreenStep.REVIEW_TRANSACTION);
+            this.resultDeferred.resolve();
+        } else {
+            // Connect Ledger - default flow
+            await this.selectStep(ScreenStep.VERIFY_ADDRESS);
 
-            if (accounts) {
-                this.resultDeferred.resolve({ accounts, deviceId: item.id });
-            } else {
+            try {
+                const accounts: IAccountState[] = await wallet.getAccounts(
+                    this.state.blockchain,
+                    0
+                );
+
+                if (accounts) {
+                    this.resultDeferred.resolve({ accounts, deviceId: item.id });
+                } else {
+                    this.resultDeferred.reject();
+                    await this.selectStep(ScreenStep.VERIFICATION_FAILED);
+                }
+            } catch {
                 this.resultDeferred.reject();
                 await this.selectStep(ScreenStep.VERIFICATION_FAILED);
             }
-        } catch {
-            this.resultDeferred.reject();
-            await this.selectStep(ScreenStep.VERIFICATION_FAILED);
         }
-    };
+    }
 
     @bind
     private async onSelectDevice() {
@@ -294,6 +348,14 @@ export class LedgerConnectComponent extends React.Component<
                         deviceModel={this.state.deviceModel}
                         connectionType={this.state.connectionType}
                         onRetry={this.onRetry}
+                    />
+                );
+            case ScreenStep.REVIEW_TRANSACTION:
+                return (
+                    <ReviewTransaction
+                        blockchain={this.state.blockchain}
+                        deviceModel={this.state.deviceModel}
+                        connectionType={this.state.connectionType}
                     />
                 );
         }

@@ -116,16 +116,18 @@ export class DashboardMenuBottomSheetComponent extends React.Component<
                         >
                             {options.title}
                         </Text>
-                        <Text
-                            style={[
-                                styles.subtitle,
-                                {
-                                    color: theme.colors.textTertiary
-                                }
-                            ]}
-                        >
-                            {options.subtitle}
-                        </Text>
+                        {options.subtitle && (
+                            <Text
+                                style={[
+                                    styles.subtitle,
+                                    {
+                                        color: theme.colors.textTertiary
+                                    }
+                                ]}
+                            >
+                                {options.subtitle}
+                            </Text>
+                        )}
                     </View>
                     {!options.hideArrow && (
                         <Icon

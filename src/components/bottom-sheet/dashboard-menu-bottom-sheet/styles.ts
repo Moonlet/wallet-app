@@ -21,18 +21,18 @@ export default (theme: ITheme) =>
         },
         iconContainer: {
             backgroundColor: theme.colors.appBackground,
-            padding: BASE_DIMENSION,
             marginRight: BASE_DIMENSION * 2,
             borderRadius: BORDER_RADIUS,
-            maxHeight: BASE_DIMENSION * 6
+            height: BASE_DIMENSION * 5,
+            width: BASE_DIMENSION * 5,
+            justifyContent: 'center'
         },
         icon: {
             alignSelf: 'center'
         },
         textContainer: {
             flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'center'
+            flexDirection: 'column'
         },
         title: {
             lineHeight: normalizeFontAndLineHeight(21)

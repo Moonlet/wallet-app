@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { IBlockchainNetwork, ChainIdType } from './network';
 import { IFeeOptions, TransactionType } from './transaction';
-import { IBlockchainNameService } from '.';
+import { GenericNameService } from '.';
 import { HttpClient } from '../../utils/http-client';
 import { TokenType } from './token';
 import { IClientUtils } from './client-utils';
@@ -13,11 +13,12 @@ export interface IBlockInfo {
 
 export abstract class BlockchainGenericClient {
     public readonly tokens: { [type: string]: any } = {};
-    public nameService: IBlockchainNameService;
+    public nameService: GenericNameService;
     public http: HttpClient;
     public readonly chainId: ChainIdType;
     public utils: IClientUtils;
     public contracts: { [type: string]: any } = {};
+    public network: IBlockchainNetwork;
 
     constructor(chainId: ChainIdType, networks: IBlockchainNetwork[]) {
         let url = networks[0].url;
@@ -25,7 +26,7 @@ export abstract class BlockchainGenericClient {
         if (network) {
             url = network.url;
         }
-
+        this.network = network;
         this.chainId = chainId;
         this.http = new HttpClient(url);
     }

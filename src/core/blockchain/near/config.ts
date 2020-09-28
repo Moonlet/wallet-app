@@ -90,7 +90,8 @@ export const config: IBlockchainConfig = {
     ui: {
         validator: {
             totalLabel: 'Validator.totalStakes',
-            amountCardLabel: 'App.labels.staked'
+            amountCardLabel: 'App.labels.staked',
+            maximumNumberOfValidators: 9999 // TBD
         },
         token: {
             labels: {
@@ -112,7 +113,7 @@ export const config: IBlockchainConfig = {
         },
         enableTokenManagement: false,
         enableAccountCreation: true,
-        maxAccountsNumber: 9999,
+        maxAccountsNumber: 5,
         displayName: 'NEAR',
         affiliateBanners: {
             account: AffiliateBannerType.LEDGER_NANO_X

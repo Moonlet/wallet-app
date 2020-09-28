@@ -11,6 +11,7 @@ import Img from '../../../../assets/icons/ledger/bluetooth-pairing.svg';
 import { View } from 'react-native';
 import { translate } from '../../../../core/i18n';
 import { SmartImage } from '../../../../library/image/smart-image';
+import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -44,6 +45,10 @@ export class ConfirmConnectionComponent extends React.Component<
                             deviceModel: translate(`LedgerConnect.${this.props.deviceModel}`)
                         })}
                     </Text>
+
+                    <View style={{ flex: 1 }}>
+                        <LoadingIndicator />
+                    </View>
                 </View>
             </View>
         );

@@ -12,6 +12,7 @@ import { HWModel, HWConnection } from '../../../../core/wallet/hw-wallet/types';
 import { translate } from '../../../../core/i18n';
 import { Capitalize } from '../../../../core/utils/format-string';
 import { SmartImage } from '../../../../library/image/smart-image';
+import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 
 interface IExternalProps {
     blockchain: Blockchain;
@@ -48,6 +49,10 @@ export class OpenAppComponent extends React.Component<
                             deviceModel: translate(`LedgerConnect.${this.props.deviceModel}`)
                         })}
                     </Text>
+
+                    <View style={{ flex: 1 }}>
+                        <LoadingIndicator />
+                    </View>
                 </View>
             </View>
         );

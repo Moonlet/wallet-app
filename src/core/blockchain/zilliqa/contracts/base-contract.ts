@@ -22,7 +22,7 @@ export const fetchContracts = async (chainId: ChainIdType) => {
 
     const key = `zilliqa.${chainId}.staking.contract`;
     try {
-        const configs = await new ApiClient().configs.getConfigs([]);
+        const configs = await new ApiClient().configs.getConfigs([key]);
         const values = {
             ...contracts[chainId],
             [Contracts.STAKING]: configs.result[key]

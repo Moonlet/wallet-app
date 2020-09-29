@@ -93,8 +93,8 @@ export const config: IBlockchainConfig = {
     iconComponent: ZilIcon,
     autoAddedTokensSymbols: {
         '1': {
-            XSGD: XSGD_MAINNET,
-            gZIL: GZIL_MAINNET
+            gZIL: GZIL_MAINNET,
+            XSGD: XSGD_MAINNET
         },
         '333': {
             gZIL: GZIL_TESTNET

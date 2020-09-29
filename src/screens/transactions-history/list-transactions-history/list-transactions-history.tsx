@@ -98,7 +98,7 @@ export class TransactionsHistoryListComponent extends React.Component<
                 break;
             }
             default:
-                primaryText = `${formattedAmount} ${toAddress}`;
+                primaryText = ` ${formattedAmount} ${toAddress}`;
         }
 
         return primaryText;

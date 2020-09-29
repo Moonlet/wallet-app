@@ -44,12 +44,14 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
 
     public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
         const keyPair = nacl.sign.keyPair.fromSecretKey(bs58.decode(privateKey));
+        const pk = bs58.encode(Buffer.from(keyPair.publicKey));
+        const address = Buffer.from(bs58.decode(pk)).toString('hex');
 
         return {
             index,
             selected: false,
-            publicKey: 'ed25519:' + bs58.encode(Buffer.from(keyPair.publicKey)),
-            address: 'ed25519:' + bs58.encode(Buffer.from(keyPair.publicKey)),
+            publicKey: 'ed25519:' + pk,
+            address,
             blockchain: Blockchain.NEAR,
             tokens: generateTokensConfig(Blockchain.NEAR)
         };

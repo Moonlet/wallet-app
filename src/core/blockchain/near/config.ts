@@ -111,6 +111,7 @@ export const config: IBlockchainConfig = {
             },
             validatorCTA
         },
+        addressDisplay: 'stripped',
         enableTokenManagement: false,
         enableAccountCreation: true,
         maxAccountsNumber: 5,

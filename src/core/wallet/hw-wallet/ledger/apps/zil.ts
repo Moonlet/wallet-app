@@ -46,7 +46,7 @@ export class Zil {
             signature: '',
             code: '',
             data: tx.data.raw,
-            priority: false
+            priority: true
         };
         const signed = await this.app.signTxn(index, transaction);
 

@@ -36,6 +36,7 @@ import { filterObjectProps } from './core/utils/object-sanitise';
 import { setWalletsCredentials } from './redux/wallets/actions/wallet-actions';
 import { ProcessTransactions } from './screens/pos-actions/process-transactions/process-transactions';
 import { LedgerConnect } from './screens/ledger/ledger-connect';
+import { updateTokenContracts } from './redux/tokens/actions';
 
 const AppContainer = createAppContainer(RootNavigation);
 
@@ -129,6 +130,8 @@ export default class App extends React.Component<{}, IState> {
             if (store.getState()._persist.rehydrated) {
                 if (!this.reduxStateLoaded) {
                     this.reduxStateLoaded = true;
+
+                    setTimeout(() => updateTokenContracts()(store.dispatch, store.getState), 3000);
 
                     subscribeExchangeRates((exchangeRates: IExchangeRates) => {
                         if (exchangeRates) {

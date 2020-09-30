@@ -76,7 +76,7 @@ export class AccountSummaryComponent extends React.Component<
 
     private renderDetailsSection() {
         const { data, styles } = this.props;
-        const { accountStats } = data;
+        const { accountStats, blockchain } = data;
 
         if (this.props.isLoading) {
             return (
@@ -105,15 +105,14 @@ export class AccountSummaryComponent extends React.Component<
             getTokenConfig(this.props.data.blockchain, this.props.data.token.symbol);
 
         const extraTokenConfig =
-            this.props.data?.extraToken &&
-            getTokenConfig(this.props.data.blockchain, this.props.data.extraToken.symbol);
+            data?.extraToken && getTokenConfig(blockchain, data.extraToken.symbol);
 
-        const blockchainInstance = getBlockchain(this.props.data.blockchain);
-        const amountFromStd = blockchainInstance.account.amountFromStd(
-            new BigNumber(this.props.data.extraToken.balance.value),
-            extraTokenConfig.decimals
-        );
-
+        const amountFromStd =
+            data?.extraToken &&
+            getBlockchain(blockchain).account.amountFromStd(
+                new BigNumber(data.extraToken.balance.value),
+                extraTokenConfig.decimals
+            );
         return (
             <View>
                 <View style={styles.detailsContainer}>

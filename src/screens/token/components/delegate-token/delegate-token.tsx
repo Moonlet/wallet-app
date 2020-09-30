@@ -24,6 +24,7 @@ import { TransactionsTab } from './components/tabs/transactions-tab/transactions
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { TransactionStatus } from '../../../../core/wallet/types';
 import { updateTransactionFromBlockchain } from '../../../../redux/wallets/actions';
+import { fetchDelegatedValidators } from '../../../../redux/ui/delegated-validators/actions';
 
 export interface IExternalProps {
     accountIndex: number;
@@ -39,6 +40,7 @@ export interface IReduxProps {
     wallet: IWalletState;
     chainId: ChainIdType;
     updateTransactionFromBlockchain: typeof updateTransactionFromBlockchain;
+    fetchDelegatedValidators: typeof fetchDelegatedValidators;
 }
 
 export interface IState {
@@ -46,7 +48,8 @@ export interface IState {
 }
 
 const mapDispatchToProps = {
-    updateTransactionFromBlockchain
+    updateTransactionFromBlockchain,
+    fetchDelegatedValidators
 };
 
 export const mapStateToProps = (state: IReduxState, ownProps: IExternalProps) => {
@@ -91,11 +94,13 @@ export class DelegateTokenScreenComponent extends React.Component<
             if (this.props.activeTab !== undefined) {
                 this.setState({ activeTab: this.props.activeTab });
 
-                if (
-                    this.props.activeTab ===
-                    getBlockchain(this.props.blockchain).config.ui.token.labels.tabTransactions
-                ) {
+                const blockchainConfigTokenLabels = getBlockchain(this.props.blockchain).config.ui
+                    .token.labels;
+
+                if (this.props.activeTab === blockchainConfigTokenLabels.tabTransactions) {
                     this.updateTransactionFromBlockchain();
+                } else if (this.props.activeTab === blockchainConfigTokenLabels.tabDelegations) {
+                    this.props.fetchDelegatedValidators(this.props.account);
                 }
             }
         });
@@ -117,8 +122,13 @@ export class DelegateTokenScreenComponent extends React.Component<
     private tabPressed(tab: string) {
         this.setState({ activeTab: tab });
 
-        if (tab === getBlockchain(this.props.blockchain).config.ui.token.labels.tabTransactions) {
+        const blockchainConfigTokenLabels = getBlockchain(this.props.blockchain).config.ui.token
+            .labels;
+
+        if (tab === blockchainConfigTokenLabels.tabTransactions) {
             this.updateTransactionFromBlockchain();
+        } else if (tab === blockchainConfigTokenLabels.tabDelegations) {
+            this.props.fetchDelegatedValidators(this.props.account);
         }
     }
 

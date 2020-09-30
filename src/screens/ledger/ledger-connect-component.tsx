@@ -366,15 +366,6 @@ export class LedgerConnectComponent extends React.Component<
 
         if (this.state.visible) {
             return (
-                // <Modal
-                //     isVisible={Platform.select({
-                //         web: false,
-                //         default: this.state.visible || false
-                //     })}
-                //     animationInTiming={300}
-                //     animationOutTiming={300}
-                //     onModalHide={() => this.modalOnHideDeffered?.resolve()}
-                // >
                 <View style={styles.container}>
                     {displayTopHeader && (
                         <View style={styles.header}>
@@ -399,7 +390,6 @@ export class LedgerConnectComponent extends React.Component<
                         {this.displaySteps()}
                     </Animated.View>
                 </View>
-                // </Modal>
             );
         } else {
             return null;

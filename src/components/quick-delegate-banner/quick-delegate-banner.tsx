@@ -33,7 +33,7 @@ export const QuickDelegateBannerComponent = (
 
     const blockchainConfig = getBlockchain(props.blockchain);
 
-    if (!props.account && !props.accountStats.chartStats) {
+    if (!props.account && !props.accountStats?.chartStats) {
         // account is not setup
         return null;
     }

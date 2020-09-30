@@ -39,8 +39,8 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(21)
         },
         subtitle: {
-            lineHeight: normalizeFontAndLineHeight(21),
-            fontSize: normalizeFontAndLineHeight(11)
+            fontSize: normalizeFontAndLineHeight(11),
+            marginTop: BASE_DIMENSION / 2
         },
         arrowRight: {
             alignSelf: 'center'

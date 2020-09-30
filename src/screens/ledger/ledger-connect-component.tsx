@@ -1,6 +1,5 @@
 import React from 'react';
-import { Animated, Platform, View } from 'react-native';
-import Modal from '../../library/modal/modal';
+import { Animated, View } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
@@ -27,7 +26,6 @@ import { LocationRequired } from './components/location-required/location-requir
 import { Troubleshooting } from './components/troubleshooting/troubleshooting';
 import { ReviewTransaction } from './components/review-transaction/review-transaction';
 import { delay } from '../../core/utils/time';
-import { SafeAreaView } from 'react-navigation';
 
 const FADE_ANIMATION_TIME = 300;
 
@@ -64,7 +62,6 @@ export class LedgerConnectComponent extends React.Component<
     IThemeProps<ReturnType<typeof stylesProvider>>,
     IState
 > {
-    private modalOnHideDeffered: Deferred;
     private resultDeferred: Deferred;
     private stepContainetFadeAnimation = new Animated.Value(1);
 
@@ -84,7 +81,6 @@ export class LedgerConnectComponent extends React.Component<
         connectionType: HWConnection
     ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
         this.resultDeferred = new Deferred();
-        this.modalOnHideDeffered = new Deferred();
         this.setState({
             blockchain,
             deviceModel,
@@ -104,7 +100,6 @@ export class LedgerConnectComponent extends React.Component<
 
     public async walletCreated(walletId: string) {
         this.resultDeferred = new Deferred();
-        this.modalOnHideDeffered = new Deferred();
         await this.selectStep(ScreenStep.SUCCESS_CONNECT);
     }
 
@@ -124,7 +119,6 @@ export class LedgerConnectComponent extends React.Component<
         connectionType: HWConnection
     ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
         this.resultDeferred = new Deferred();
-        this.modalOnHideDeffered = new Deferred();
         this.setState({
             blockchain,
             deviceModel,
@@ -370,17 +364,9 @@ export class LedgerConnectComponent extends React.Component<
                 ScreenStep.ERROR_SCREEN ||
                 ScreenStep.VERIFICATION_FAILED);
 
-        return (
-            <Modal
-                isVisible={Platform.select({
-                    web: false,
-                    default: this.state.visible || false
-                })}
-                animationInTiming={300}
-                animationOutTiming={300}
-                onModalHide={() => this.modalOnHideDeffered?.resolve()}
-            >
-                <SafeAreaView style={styles.container}>
+        if (this.state.visible) {
+            return (
+                <View style={styles.container}>
                     {displayTopHeader && (
                         <View style={styles.header}>
                             <View style={styles.defaultHeaderContainer}>
@@ -403,8 +389,10 @@ export class LedgerConnectComponent extends React.Component<
                     <Animated.View style={{ flex: 1, opacity: this.stepContainetFadeAnimation }}>
                         {this.displaySteps()}
                     </Animated.View>
-                </SafeAreaView>
-            </Modal>
-        );
+                </View>
+            );
+        } else {
+            return null;
+        }
     }
 }

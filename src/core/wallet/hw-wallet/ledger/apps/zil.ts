@@ -45,7 +45,7 @@ export class Zil {
             gasLimit: new BigNumber(tx.feeOptions.gasLimit).toNumber(),
             signature: '',
             code: '',
-            data: '',
+            data: tx.data.raw,
             priority: false
         };
         const signed = await this.app.signTxn(index, transaction);

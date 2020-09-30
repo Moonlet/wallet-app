@@ -61,7 +61,10 @@ export const QuickDelegateBannerComponent = (
     }, [props.blockchain, props.account.address, props.chainId]);
 
     if (tokenConfig.ui.tokenScreenComponent === TokenScreenComponentType.DELEGATE) {
-        const availableToStakeAmount = props.accountStats?.chartStats[0].data.value;
+        const avaialableChartData = props.accountStats?.chartStats.find(
+            item => item.title === 'Available'
+        );
+        const availableToStakeAmount = avaialableChartData.data.value;
         const amount = blockchainConfig.account.amountFromStd(
             new BigNumber(availableToStakeAmount),
             tokenConfig.decimals

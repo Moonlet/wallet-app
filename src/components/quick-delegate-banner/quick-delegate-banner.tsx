@@ -16,12 +16,14 @@ import { TokenScreenComponentType } from '../../core/blockchain/types/token';
 import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../core/utils/format-number';
 import { NavigationService } from '../../navigation/navigation-service';
+import { AccountStats } from '../../core/blockchain/types/stats';
 
 interface IExternalProps {
     blockchain: Blockchain;
     account: IAccountState;
     chainId: ChainIdType;
     style?: any;
+    accountStats: AccountStats;
 }
 
 export const QuickDelegateBannerComponent = (
@@ -31,7 +33,7 @@ export const QuickDelegateBannerComponent = (
 
     const blockchainConfig = getBlockchain(props.blockchain);
 
-    if (!props.account) {
+    if (!props.account && !props.accountStats.chartStats) {
         // account is not setup
         return null;
     }
@@ -48,27 +50,25 @@ export const QuickDelegateBannerComponent = (
             const clientMinAmount = await blockchainConfig
                 .getClient(props.chainId)
                 .getMinimumAmountDelegate();
-
             const gasLimit = blockchainConfig.config.feeOptions.defaults.gasLimit[tokenConfig.type];
             const gasPrice = blockchainConfig.config.feeOptions.defaults.gasPrice;
             const fees = gasPrice.multipliedBy(gasLimit).toFixed();
 
             const minAmount = new BigNumber(clientMinAmount).plus(new BigNumber(fees));
-
             // getMinimumAmountDelegate + fees + 1%
             setMinimumAmountDelegate(minAmount.plus(minAmount.dividedBy(100)));
         })();
     }, [props.blockchain, props.account.address, props.chainId]);
 
     if (tokenConfig.ui.tokenScreenComponent === TokenScreenComponentType.DELEGATE) {
+        const availableToStakeAmount = props.accountStats?.chartStats[0].data.value;
         const amount = blockchainConfig.account.amountFromStd(
-            new BigNumber(token.balance.value),
+            new BigNumber(availableToStakeAmount),
             tokenConfig.decimals
         );
-
         if (
             minimumAmountDelegate &&
-            new BigNumber(token.balance.value).isGreaterThanOrEqualTo(minimumAmountDelegate)
+            new BigNumber(availableToStakeAmount).isGreaterThanOrEqualTo(minimumAmountDelegate)
         ) {
             const formatAmount = formatNumber(amount, {
                 currency: blockchainConfig.config.coin,

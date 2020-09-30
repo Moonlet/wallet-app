@@ -39,11 +39,14 @@ export default (state: ITokensConfigState = initialState, action: IAction) => {
                 [action.data.blockchain]: {
                     ...state[action.data.blockchain],
                     [action.data.chainId]: {
-                        ...state[action.data.blockchain][action.data.chainId],
+                        ...(state[action.data.blockchain] &&
+                            state[action.data.blockchain][action.data.chainId]),
                         [action.data.tokenSymbol]: {
-                            ...state[action.data.blockchain][action.data.chainId][
-                                action.data.tokenSymbol
-                            ],
+                            ...(state[action.data.blockchain] &&
+                                state[action.data.blockchain][action.data.chainId] &&
+                                state[action.data.blockchain][action.data.chainId][
+                                    action.data.tokenSymbol
+                                ]),
                             contractAddress: action.data.contractAddress
                         }
                     }

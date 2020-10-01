@@ -69,6 +69,12 @@ export class Client extends BlockchainGenericClient {
         return res.result;
     }
 
+    public async sendTransactionCommit(signedTransaction): Promise<any> {
+        const res = await this.http.jsonRpc('broadcast_tx_commit', [signedTransaction]);
+
+        return res;
+    }
+
     public async getFees(
         transactionType: TransactionType,
         data: {

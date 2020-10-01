@@ -18,7 +18,7 @@ import {
     INavigationProps,
     withNavigationParams
 } from '../../../../navigation/with-navigation-params';
-import { NEAR_ACCOUNT_EXTENSIONS } from '../../../../core/constants/app';
+import { NEAR_TLD } from '../../../../core/constants/app';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 interface INavigationParams {
@@ -99,9 +99,7 @@ export class CreateNearAccountComponent extends React.Component<
             const blockchainInstance = getBlockchain(Blockchain.NEAR);
             const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
 
-            const account = await client.getAccount(
-                `${accountId}.${NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]}`
-            );
+            const account = await client.getAccount(`${accountId}.${NEAR_TLD[this.props.chainId]}`);
 
             if (account.exists === false && account.valid === true) {
                 this.setState({
@@ -133,7 +131,7 @@ export class CreateNearAccountComponent extends React.Component<
             const password = await PasswordModal.getPassword();
             this.props.createNearAccount(
                 this.state.inputAccount,
-                NEAR_ACCOUNT_EXTENSIONS[this.props.chainId],
+                NEAR_TLD[this.props.chainId],
                 password
             );
         } catch (err) {
@@ -181,7 +179,7 @@ export class CreateNearAccountComponent extends React.Component<
                                 />
 
                                 <Text style={styles.domain}>
-                                    {`.${NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]}`}
+                                    {`.${NEAR_TLD[this.props.chainId]}`}
                                 </Text>
                             </View>
 
@@ -204,7 +202,7 @@ export class CreateNearAccountComponent extends React.Component<
                                     : this.state.isInputValid
                                     ? translate('CreateNearAccount.congrats', {
                                           name: `${this.state.inputAccount}.${
-                                              NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]
+                                              NEAR_TLD[this.props.chainId]
                                           }`
                                       })
                                     : ''}

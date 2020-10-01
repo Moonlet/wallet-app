@@ -281,7 +281,7 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             wallet.getAccounts(Blockchain.COSMOS, 2),
             wallet.getAccounts(Blockchain.COSMOS, 3),
             wallet.getAccounts(Blockchain.COSMOS, 4),
-            wallet.getAccounts(Blockchain.NEAR, 0)
+            wallet.getAccounts(Blockchain.NEAR, 1)
         ]).then(async data => {
             data[0][0].selected = true; // first zil account
             //   data[5][0].selected = true; // first eth account

@@ -59,7 +59,7 @@ import { CLOSE_TX_REQUEST, closeTransactionRequest } from '../../ui/transaction-
 import { ConnectExtension } from '../../../core/connect-extension/connect-extension';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import {
-    // addBreadcrumb as SentryAddBreadcrumb,
+    addBreadcrumb as SentryAddBreadcrumb,
     captureException as SentryCaptureException
 } from '@sentry/react-native';
 import { startNotificationsHandlers } from '../../notifications/actions';
@@ -774,7 +774,6 @@ export const createNearAccount = (name: string, extension: string, password: str
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
-    // await LoadingModal.open();
     const state = getState();
     const blockchain = Blockchain.NEAR;
 
@@ -864,14 +863,21 @@ export const createNearAccount = (name: string, extension: string, password: str
                         updateProcessTransactionStatusForIndex(index, TransactionStatus.SUCCESS)
                     );
                 } else {
+                    handleCreateAccountError(
+                        `Invalid hashPolling: ${hashPolling}, txHash: ${txHash}`,
+                        newAccountId
+                    );
                     dispatch(
                         updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
                     );
                 }
             } else {
+                handleCreateAccountError(`No txHash`, newAccountId);
                 dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED));
             }
         } catch (error) {
+            handleCreateAccountError(JSON.stringify(error), newAccountId);
+
             dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED));
 
             for (let i = index + 1; i < txs.length; i++) {
@@ -880,6 +886,18 @@ export const createNearAccount = (name: string, extension: string, password: str
             throw error;
         }
     }
+};
+
+const handleCreateAccountError = (errorMessage: any, newAccountId: string) => {
+    SentryAddBreadcrumb({ message: JSON.stringify(errorMessage) });
+
+    SentryCaptureException(
+        new Error(
+            JSON.stringify({
+                errorMessage: `NEAR create account has failed, account id: ${newAccountId}`
+            })
+        )
+    );
 };
 
 export const changePIN = (newPassword: string, oldPassword: string) => async (

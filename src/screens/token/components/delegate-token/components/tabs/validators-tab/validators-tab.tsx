@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Image, Text } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-theme';
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
@@ -16,7 +16,6 @@ import { ITokenState } from '../../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../../redux/state';
 import { getValidators } from '../../../../../../../redux/ui/validators/selectors';
 import { connect } from 'react-redux';
-import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 
 interface IProps {
     accountIndex: number;
@@ -106,8 +105,12 @@ export class ValidatorsTabComponent extends React.Component<
                         />
                     </View>
                     {this.state.validatorsFilteredList.length === 0 ? (
-                        <View style={{ flex: 1 }}>
-                            <LoadingIndicator />
+                        <View style={styles.emptySection}>
+                            <Image
+                                style={styles.logoImage}
+                                source={require('../../../../../../../assets/images/png/moonlet_space_gray.png')}
+                            />
+                            <Text style={styles.noNodesText}>{translate('Validator.noNodes')}</Text>
                         </View>
                     ) : (
                         <ValidatorsList

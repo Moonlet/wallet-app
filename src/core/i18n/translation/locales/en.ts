@@ -538,6 +538,7 @@ export const translation: ITranslations = {
                 'It takes {{duration}} in order to unlock the amount and will be automatically withdrawn then deposited into your available balance.',
             claimRewardBottomText:
                 'The claimed reward you receive may be equal to or grater than what it displayed nou since rewards are accumulated each block.',
+            noNodes: 'No nodes available',
             noValidators: 'No validators available',
             stakeSection: 'This section will become available once you start to stake your tokens.'
         },

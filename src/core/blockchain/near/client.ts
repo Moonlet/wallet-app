@@ -234,10 +234,9 @@ export class Client extends BlockchainGenericClient {
                 const res = await this.http.jsonRpc('tx', [txHash, accountId]);
 
                 if (
-                    res.result &&
-                    res.result.status &&
-                    res.result.status.SuccessValue &&
-                    (res.result.status.SuccessValue === '' || res.result.status.SuccessValue !== '')
+                    res?.result?.status &&
+                    (res?.result?.status?.SuccessValue === '' ||
+                        res?.result?.status?.SuccessValue !== '')
                 ) {
                     resolve(txHash);
                     clearInterval(interval);
@@ -248,7 +247,7 @@ export class Client extends BlockchainGenericClient {
                     return;
                 } else {
                     // continue
-                    // TODO: maybe set a limit when to stop this?
+                    // TODO: maybe set a timeout when to stop this?
                 }
             }, 1000);
         });

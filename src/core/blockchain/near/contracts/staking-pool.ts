@@ -9,8 +9,7 @@ import {
 } from '../types';
 import BN from 'bn.js';
 import BigNumber from 'bignumber.js';
-
-export const NEAR_DEFAULT_FUNC_CALL_GAS = new BN('100000000000000');
+import { NEAR_DEFAULT_FUNC_CALL_GAS } from '../consts';
 
 export class StakingPool {
     public async stake(

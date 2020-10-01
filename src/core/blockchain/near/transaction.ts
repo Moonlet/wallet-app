@@ -28,9 +28,9 @@ import {
     NearFunctionCallMethods,
     NearTransactionActionType
 } from './types';
-import { NEAR_DEFAULT_FUNC_CALL_GAS } from './contracts/staking-pool';
 import { IAccountState } from '../../../redux/wallets/state';
 import { NEAR_TLD } from '../../constants/app';
+import { NEAR_DEFAULT_FUNC_CALL_GAS, NEAR_CREATE_ACCOUNT_MIN_BALANCE } from './consts';
 
 export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     public async sign(
@@ -245,7 +245,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                             NearFunctionCallMethods.SEND,
                             { public_key: tx.newPublicKey },
                             NEAR_DEFAULT_FUNC_CALL_GAS,
-                            new BN('1200000000000000000000000')
+                            NEAR_CREATE_ACCOUNT_MIN_BALANCE
                         ]
                     }
                 ],

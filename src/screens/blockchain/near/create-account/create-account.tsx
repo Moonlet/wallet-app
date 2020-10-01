@@ -20,6 +20,13 @@ import {
 } from '../../../../navigation/with-navigation-params';
 import { NEAR_TLD } from '../../../../core/constants/app';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
+import BigNumber from 'bignumber.js';
+import { formatNumber } from '../../../../core/utils/format-number';
+import {
+    CREATE_ACCOUNT_NEAR_DEPOSIT,
+    CREATE_ACCOUNT_NEAR_FEES
+} from '../../../../core/blockchain/near/consts';
 
 interface INavigationParams {
     accountId?: string;
@@ -36,6 +43,8 @@ interface IState {
     isChecking: boolean;
     isUsernameNotAvailable: boolean;
     isInvalidUsername: boolean;
+    nearFees: string;
+    depositAmount: string;
 }
 
 const mapStateToProps = (state: IReduxState) => {
@@ -69,7 +78,9 @@ export class CreateNearAccountComponent extends React.Component<
             isInputValid: false,
             isChecking: false,
             isUsernameNotAvailable: false,
-            isInvalidUsername: false
+            isInvalidUsername: false,
+            nearFees: undefined,
+            depositAmount: undefined
         };
     }
 
@@ -77,6 +88,28 @@ export class CreateNearAccountComponent extends React.Component<
         if (this.state.inputAccount !== '') {
             this.checkAccountId(this.state.inputAccount);
         }
+
+        const blockchainInstance = getBlockchain(Blockchain.NEAR);
+
+        // CREATE_ACCOUNT_NEAR_FEES
+        const nearFees = blockchainInstance.account.amountFromStd(
+            new BigNumber(CREATE_ACCOUNT_NEAR_FEES.toString()),
+            getTokenConfig(Blockchain.NEAR, Blockchain.NEAR).decimals
+        );
+        const nearFeesAmount = formatNumber(new BigNumber(nearFees), {
+            currency: blockchainInstance.config.coin
+        });
+        this.setState({ nearFees: nearFeesAmount });
+
+        // CREATE_ACCOUNT_NEAR_DEPOSIT
+        const nearDeposit = blockchainInstance.account.amountFromStd(
+            new BigNumber(CREATE_ACCOUNT_NEAR_DEPOSIT.toString()),
+            getTokenConfig(Blockchain.NEAR, Blockchain.NEAR).decimals
+        );
+        const nearDepositAmount = formatNumber(new BigNumber(nearDeposit), {
+            currency: blockchainInstance.config.coin
+        });
+        this.setState({ depositAmount: nearDepositAmount });
     }
 
     private async checkAccountId(accountId: string) {
@@ -203,7 +236,9 @@ export class CreateNearAccountComponent extends React.Component<
                                     ? translate('CreateNearAccount.congrats', {
                                           name: `${this.state.inputAccount}.${
                                               NEAR_TLD[this.props.chainId]
-                                          }`
+                                          }`,
+                                          nearFees: this.state.nearFees,
+                                          depositAmount: this.state.depositAmount
                                       })
                                     : ''}
                             </Text>

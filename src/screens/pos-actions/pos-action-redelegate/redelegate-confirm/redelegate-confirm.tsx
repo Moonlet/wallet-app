@@ -15,7 +15,6 @@ import { INavigationProps } from '../../../../navigation/with-navigation-params'
 import { ConfirmComponent } from '../../components/confirm-component/confirm-component';
 import { redelegate } from '../../../../redux/wallets/actions';
 import { bind } from 'bind-decorator';
-import { PasswordModal } from '../../../../components/password-modal/password-modal';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -84,25 +83,15 @@ export class RedelegateConfirmComponent extends React.Component<
 
     @bind
     private async onPressConfirm(amount: string, feeOptions: IFeeOptions) {
-        try {
-            const password = await PasswordModal.getPassword(
-                translate('Password.pinTitleUnlock'),
-                translate('Password.subtitleSignTransaction'),
-                { sensitive: true, showCloseButton: true }
-            );
-            this.props.redelegate(
-                this.props.account,
-                amount,
-                this.props.validators,
-                this.props.token.symbol,
-                feeOptions,
-                password,
-                this.props.navigation,
-                { fromValidator: this.props.fromValidator }
-            );
-        } catch {
-            //
-        }
+        this.props.redelegate(
+            this.props.account,
+            amount,
+            this.props.validators,
+            this.props.token.symbol,
+            feeOptions,
+            this.props.navigation,
+            { fromValidator: this.props.fromValidator }
+        );
     }
 
     public render() {

@@ -64,6 +64,7 @@ import {
 } from '@sentry/react-native';
 import { startNotificationsHandlers } from '../../notifications/actions';
 import { Client as NearClient } from '../../../core/blockchain/near/client';
+import { NearTransactionUtils } from '../../../core/blockchain/near/transaction';
 import { NEAR_TLD } from '../../../core/constants/app';
 import { LedgerConnect } from '../../../screens/ledger/ledger-connect';
 import {
@@ -788,6 +789,7 @@ export const createNearAccount = (name: string, extension: string, password: str
     const account = accounts[0];
     const blockchainInstance = getBlockchain(blockchain);
     const client = blockchainInstance.getClient(chainId) as NearClient;
+    const transactionInstance = blockchainInstance.transaction as NearTransactionUtils;
 
     const txs = [];
 
@@ -797,29 +799,24 @@ export const createNearAccount = (name: string, extension: string, password: str
         // key already exists
         // continue
     } else {
-        // @ts-ignore
-        const txSendCreate = await blockchainInstance.transaction.buildSendTransactionForCreateAccount(
-            {
-                account,
-                newPublicKey: account.publicKey,
-                tokenSymbol: blockchain,
-                chainId
-            }
-        );
+        const txSendCreate = await transactionInstance.buildSendTransactionForCreateAccount({
+            account,
+            newPublicKey: account.publicKey,
+            tokenSymbol: blockchain,
+            chainId: String(chainId)
+        });
         txs.push(txSendCreate);
     }
 
     const newAccountId = `${name}.${extension}`;
-    // @ts-ignore
-    const txCreateAccountClaim = await blockchainInstance.transaction.buildCreateAccountAndClaimTransaction(
-        {
-            account,
-            newAccountId,
-            newPublicKey: account.publicKey,
-            tokenSymbol: blockchain,
-            chainId
-        }
-    );
+
+    const txCreateAccountClaim = await transactionInstance.buildCreateAccountAndClaimTransaction({
+        account,
+        newAccountId,
+        newPublicKey: account.publicKey,
+        tokenSymbol: blockchain,
+        chainId: String(chainId)
+    });
     txs.push(txCreateAccountClaim);
 
     dispatch(setProcessTransactions(cloneDeep(txs)));

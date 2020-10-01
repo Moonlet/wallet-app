@@ -69,12 +69,6 @@ export class Client extends BlockchainGenericClient {
         return res.result;
     }
 
-    public async sendTransactionCommit(signedTransaction): Promise<any> {
-        const res = await this.http.jsonRpc('broadcast_tx_commit', [signedTransaction]);
-
-        return res;
-    }
-
     public async getFees(
         transactionType: TransactionType,
         data: {
@@ -221,5 +215,42 @@ export class Client extends BlockchainGenericClient {
 
     public async getMinimumAmountDelegate(): Promise<BigNumber> {
         return new BigNumber(0);
+    }
+
+    public async viewAccessKey(publicKey: string, accountId: string) {
+        const res = await this.http.jsonRpc('query', {
+            request_type: 'view_access_key',
+            finality: 'final',
+            account_id: accountId,
+            public_key: publicKey
+        });
+
+        return res;
+    }
+
+    public async getTransactionStatusPolling(txHash: string, accountId: string) {
+        return new Promise((resolve, reject) => {
+            const interval = setInterval(async () => {
+                const res = await this.http.jsonRpc('tx', [txHash, accountId]);
+
+                if (
+                    res.result &&
+                    res.result.status &&
+                    res.result.status.SuccessValue &&
+                    (res.result.status.SuccessValue === '' || res.result.status.SuccessValue !== '')
+                ) {
+                    resolve(txHash);
+                    clearInterval(interval);
+                    return;
+                } else if (res?.result?.status?.Failure) {
+                    reject(`Error: ${res}`);
+                    clearInterval(interval);
+                    return;
+                } else {
+                    // continue
+                    // TODO: maybe set a limit when to stop this?
+                }
+            }, 1000);
+        });
     }
 }

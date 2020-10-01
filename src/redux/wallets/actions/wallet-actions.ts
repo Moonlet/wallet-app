@@ -787,17 +787,27 @@ export const createNearAccount = (name: string, extension: string, password: str
     const accounts = await hdWallet.getAccounts(blockchain, 0);
     const account = accounts[0];
     const blockchainInstance = getBlockchain(blockchain);
+    const client = blockchainInstance.getClient(chainId) as NearClient;
 
     const txs = [];
 
-    // @ts-ignore
-    const txSendCreate = await blockchainInstance.transaction.buildSendTransactionForCreateAccount({
-        account,
-        newPublicKey: account.publicKey,
-        tokenSymbol: blockchain,
-        chainId
-    });
-    txs.push(txSendCreate);
+    const viewKeyRes = await client.viewAccessKey(account.publicKey, NEAR_TLD[chainId]);
+
+    if (viewKeyRes && viewKeyRes.result && viewKeyRes.result.permission) {
+        // key already exists
+        // continue
+    } else {
+        // @ts-ignore
+        const txSendCreate = await blockchainInstance.transaction.buildSendTransactionForCreateAccount(
+            {
+                account,
+                newPublicKey: account.publicKey,
+                tokenSymbol: blockchain,
+                chainId
+            }
+        );
+        txs.push(txSendCreate);
+    }
 
     const newAccountId = `${name}.${extension}`;
     // @ts-ignore
@@ -835,30 +845,32 @@ export const createNearAccount = (name: string, extension: string, password: str
         try {
             const transaction = await hdWallet.sign(blockchain, account.index, txs[index]);
 
-            const txSendRes = await blockchainInstance
-                .getClient(chainId)
-                // @ts-ignore
-                .sendTransactionCommit(transaction);
+            const txHash = await client.sendTransaction(transaction);
 
-            // console.log('txSendRes: ', txSendRes);
+            if (txHash) {
+                const hashPolling = await client.getTransactionStatusPolling(
+                    txHash,
+                    NEAR_TLD[chainId]
+                );
 
-            if (
-                // txSendRes?.result?.transaction?.hash &&
-                txSendRes?.result?.status?.SuccessValue === '' ||
-                txSendRes?.result?.status?.SuccessValue !== ''
-            ) {
-                const txHash = txSendRes.result.transaction.hash;
-
-                dispatch(updateProcessTransactionIdForIndex(index, txHash));
-                dispatch({
-                    type: TRANSACTION_PUBLISHED,
-                    data: {
-                        hash: txHash,
-                        tx: txs[index],
-                        walletId: selectedWallet.id
-                    }
-                });
-                dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.SUCCESS));
+                if (hashPolling && hashPolling === txHash) {
+                    dispatch(updateProcessTransactionIdForIndex(index, txHash));
+                    dispatch({
+                        type: TRANSACTION_PUBLISHED,
+                        data: {
+                            hash: txHash,
+                            tx: txs[index],
+                            walletId: selectedWallet.id
+                        }
+                    });
+                    dispatch(
+                        updateProcessTransactionStatusForIndex(index, TransactionStatus.SUCCESS)
+                    );
+                } else {
+                    dispatch(
+                        updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
+                    );
+                }
             } else {
                 dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED));
             }

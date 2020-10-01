@@ -95,7 +95,9 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
             );
 
             this.setState({
-                minimumDelegateAmount: minimumDelegateAmountValue || new BigNumber(0),
+                minimumDelegateAmount:
+                    minimumDelegateAmountValue.multipliedBy(this.props.validators.length) ||
+                    new BigNumber(0),
                 amount: blockchainInstance.account
                     .amountFromStd(new BigNumber(data), tokenConfig.decimals)
                     .toFixed()

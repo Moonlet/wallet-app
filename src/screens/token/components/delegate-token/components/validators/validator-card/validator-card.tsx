@@ -64,7 +64,7 @@ export const ValidatorCardComponent = (
             <View
                 style={[
                     props.styles.cardContainer,
-                    props.actionTypeSelected
+                    props.actionTypeSelected && props.actionType !== CardActionType.NAVIGATE
                         ? { borderColor: props.borderColor, borderWidth: 1.5 }
                         : null
                 ]}

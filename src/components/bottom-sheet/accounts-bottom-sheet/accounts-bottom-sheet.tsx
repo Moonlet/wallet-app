@@ -260,8 +260,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                             }
                             onPress={() => {
                                 this.props.onClose();
-                                // TODO: update this based on blockchain
-                                NavigationService.navigate('AddNearAccount', {});
+                                NavigationService.navigate('ManageAccounts', {});
                             }}
                         />
                     )}

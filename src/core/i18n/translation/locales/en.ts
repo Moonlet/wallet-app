@@ -539,7 +539,10 @@ export const translation: ITranslations = {
             claimRewardBottomText:
                 'The claimed reward you receive may be equal to or grater than what it displayed nou since rewards are accumulated each block.',
             noValidators: 'No validators available',
-            stakeSection: 'This section will become available once you start to stake your tokens.'
+            stakeSection: 'This section will become available once you start to stake your tokens.',
+            operationNotAvailable: 'Operation not available',
+            operationNotAvailableMessage:
+                'This operation can not be performed. Please try again next network cycle'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

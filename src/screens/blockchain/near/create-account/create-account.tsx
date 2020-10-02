@@ -30,6 +30,7 @@ import {
 } from '../../../../core/blockchain/near/consts';
 import { getSelectedAccount } from '../../../../redux/wallets/selectors';
 import { IAccountState } from '../../../../redux/wallets/state';
+import BN from 'bn.js';
 
 interface INavigationParams {
     accountId?: string;
@@ -109,39 +110,26 @@ export class CreateNearAccountComponent extends React.Component<
                 new BigNumber(NEAR_CREATE_ACCOUNT_MIN_BALANCE.toString())
             )
         ) {
-            // NEAR_CREATE_ACCOUNT_MIN_BALANCE
-            const nearCreateAccountFees = blockchainInstance.account.amountFromStd(
-                new BigNumber(NEAR_CREATE_ACCOUNT_MIN_BALANCE.toString()),
-                getTokenConfig(Blockchain.NEAR, Blockchain.NEAR).decimals
-            );
-            const nearCreateAccountFeesAmount = formatNumber(new BigNumber(nearCreateAccountFees), {
-                currency: blockchainInstance.config.coin
-            });
-            this.setState({
-                nearCreateAccountFees: nearCreateAccountFeesAmount,
-                insufficientFunds: true
-            });
+            this.getNearFees('nearCreateAccountFees', NEAR_CREATE_ACCOUNT_MIN_BALANCE);
+            this.setState({ insufficientFunds: true });
         }
 
-        // CREATE_ACCOUNT_NEAR_FEES
-        const nearFees = blockchainInstance.account.amountFromStd(
-            new BigNumber(CREATE_ACCOUNT_NEAR_FEES.toString()),
-            getTokenConfig(Blockchain.NEAR, Blockchain.NEAR).decimals
-        );
-        const nearFeesAmount = formatNumber(new BigNumber(nearFees), {
-            currency: blockchainInstance.config.coin
-        });
-        this.setState({ nearFees: nearFeesAmount });
+        this.getNearFees('nearFees', CREATE_ACCOUNT_NEAR_FEES);
+        this.getNearFees('depositAmount', CREATE_ACCOUNT_NEAR_DEPOSIT);
+    }
 
-        // CREATE_ACCOUNT_NEAR_DEPOSIT
-        const nearDeposit = blockchainInstance.account.amountFromStd(
-            new BigNumber(CREATE_ACCOUNT_NEAR_DEPOSIT.toString()),
+    private getNearFees(name: string, fee: BN) {
+        const blockchainInstance = getBlockchain(Blockchain.NEAR);
+
+        const feeAmount = blockchainInstance.account.amountFromStd(
+            new BigNumber(fee.toString()),
             getTokenConfig(Blockchain.NEAR, Blockchain.NEAR).decimals
         );
-        const nearDepositAmount = formatNumber(new BigNumber(nearDeposit), {
+        const formatedAmount: string = formatNumber(new BigNumber(feeAmount), {
             currency: blockchainInstance.config.coin
         });
-        this.setState({ depositAmount: nearDepositAmount });
+        // @ts-ignore
+        this.setState({ [name]: formatedAmount });
     }
 
     private async checkAccountId(accountId: string) {

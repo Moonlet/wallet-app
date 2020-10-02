@@ -25,8 +25,11 @@ import BigNumber from 'bignumber.js';
 import { formatNumber } from '../../../../core/utils/format-number';
 import {
     CREATE_ACCOUNT_NEAR_DEPOSIT,
-    CREATE_ACCOUNT_NEAR_FEES
+    CREATE_ACCOUNT_NEAR_FEES,
+    NEAR_CREATE_ACCOUNT_MIN_BALANCE
 } from '../../../../core/blockchain/near/consts';
+import { getSelectedAccount } from '../../../../redux/wallets/selectors';
+import { IAccountState } from '../../../../redux/wallets/state';
 
 interface INavigationParams {
     accountId?: string;
@@ -35,6 +38,7 @@ interface INavigationParams {
 interface IReduxProps {
     createNearAccount: typeof createNearAccount;
     chainId: ChainIdType;
+    selectedAccount: IAccountState;
 }
 
 interface IState {
@@ -45,11 +49,14 @@ interface IState {
     isInvalidUsername: boolean;
     nearFees: string;
     depositAmount: string;
+    nearCreateAccountFees: string;
+    insufficientFunds: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        chainId: getChainId(state, Blockchain.NEAR)
+        chainId: getChainId(state, Blockchain.NEAR),
+        selectedAccount: getSelectedAccount(state)
     };
 };
 
@@ -80,7 +87,9 @@ export class CreateNearAccountComponent extends React.Component<
             isUsernameNotAvailable: false,
             isInvalidUsername: false,
             nearFees: undefined,
-            depositAmount: undefined
+            depositAmount: undefined,
+            nearCreateAccountFees: undefined,
+            insufficientFunds: false
         };
     }
 
@@ -90,6 +99,29 @@ export class CreateNearAccountComponent extends React.Component<
         }
 
         const blockchainInstance = getBlockchain(Blockchain.NEAR);
+
+        const balance = this.props.selectedAccount.tokens[this.props.chainId][
+            blockchainInstance.config.coin
+        ].balance.value;
+
+        if (
+            new BigNumber(balance).isLessThan(
+                new BigNumber(NEAR_CREATE_ACCOUNT_MIN_BALANCE.toString())
+            )
+        ) {
+            // NEAR_CREATE_ACCOUNT_MIN_BALANCE
+            const nearCreateAccountFees = blockchainInstance.account.amountFromStd(
+                new BigNumber(NEAR_CREATE_ACCOUNT_MIN_BALANCE.toString()),
+                getTokenConfig(Blockchain.NEAR, Blockchain.NEAR).decimals
+            );
+            const nearCreateAccountFeesAmount = formatNumber(new BigNumber(nearCreateAccountFees), {
+                currency: blockchainInstance.config.coin
+            });
+            this.setState({
+                nearCreateAccountFees: nearCreateAccountFeesAmount,
+                insufficientFunds: true
+            });
+        }
 
         // CREATE_ACCOUNT_NEAR_FEES
         const nearFees = blockchainInstance.account.amountFromStd(
@@ -174,6 +206,7 @@ export class CreateNearAccountComponent extends React.Component<
 
     public render() {
         const { styles, theme } = this.props;
+        const { insufficientFunds } = this.state;
 
         const isChecking = this.state.isChecking && !this.state.isInputValid;
         const isUsernameNotAvailable =
@@ -209,6 +242,7 @@ export class CreateNearAccountComponent extends React.Component<
                                     returnKeyType="done"
                                     value={this.state.inputAccount}
                                     onChangeText={inputAccount => this.checkAccountId(inputAccount)}
+                                    editable={!insufficientFunds}
                                 />
 
                                 <Text style={styles.domain}>
@@ -219,6 +253,7 @@ export class CreateNearAccountComponent extends React.Component<
                             <Text
                                 style={[
                                     styles.infoText,
+                                    insufficientFunds && styles.errorText,
                                     isUsernameNotAvailable && styles.errorText,
                                     isInvalidUsername && styles.errorText,
                                     isChecking && styles.checkingText,
@@ -226,7 +261,11 @@ export class CreateNearAccountComponent extends React.Component<
                                     this.state.isInputValid && styles.congratsText
                                 ]}
                             >
-                                {isChecking
+                                {insufficientFunds
+                                    ? translate('CreateNearAccount.insufficientFunds', {
+                                          amount: this.state.nearCreateAccountFees
+                                      })
+                                    : isChecking
                                     ? translate('AddAccount.checking')
                                     : isUsernameNotAvailable
                                     ? translate('AddAccount.notAvailable')

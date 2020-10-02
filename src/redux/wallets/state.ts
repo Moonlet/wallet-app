@@ -35,6 +35,7 @@ export interface ITokensAccountState {
 }
 
 export interface IAccountState {
+    account?: any;
     index: number;
     order?: number; // TODO: implement this
     selected: boolean;
@@ -55,5 +56,7 @@ export interface ITokenState {
         inProgress: boolean;
         timestamp: number;
         error: any;
+        available: string;
+        total: string;
     };
 }

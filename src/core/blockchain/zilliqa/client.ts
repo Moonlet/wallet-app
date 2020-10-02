@@ -4,7 +4,8 @@ import {
     ChainIdType,
     IBlockInfo,
     TransactionMessageText,
-    TransactionType
+    TransactionType,
+    IBalance
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
@@ -27,17 +28,21 @@ export class Client extends BlockchainGenericClient {
         this.contracts[Contracts.STAKING] = new Staking(this);
     }
 
-    public async getBalance(address: string): Promise<BigNumber> {
+    public async getBalance(address: string): Promise<IBalance> {
         try {
             const data = await new ApiClient().validators.getBalance(
                 address,
                 Blockchain.ZILLIQA,
                 this.chainId.toString()
             );
-
-            return data?.balance?.total || new BigNumber(0);
+            return (
+                { total: data?.balance?.total, available: data?.balance?.available } || {
+                    total: new BigNumber(0),
+                    available: new BigNumber(0)
+                }
+            );
         } catch {
-            return new BigNumber(0);
+            return { total: new BigNumber(0), available: new BigNumber(0) };
         }
     }
 

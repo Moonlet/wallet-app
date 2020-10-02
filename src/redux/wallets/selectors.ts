@@ -115,9 +115,13 @@ export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainT
 };
 
 export const getAccounts = (state: IReduxState, blockchain: Blockchain): IAccountState[] => {
-    const accounts = getSelectedWallet(state).accounts.filter(acc => {
-        if (acc.blockchain === blockchain) {
-            return acc;
+    const chainId = getChainId(state, blockchain);
+    const accounts = getSelectedWallet(state).accounts.filter(account => {
+        if (
+            account.blockchain === blockchain &&
+            (chainId === account?.chainId || account?.chainId === undefined)
+        ) {
+            return account;
         }
     });
 

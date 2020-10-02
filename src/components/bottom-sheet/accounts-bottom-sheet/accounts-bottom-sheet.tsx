@@ -241,7 +241,9 @@ export class AccountsBottomSheetComponent extends React.Component<
                             leftIcon={blockchainConfig.iconComponent}
                             isCreate
                             disabled={
-                                this.props.accounts.length === blockchainConfig.ui.maxAccountsNumber
+                                this.props.accounts.length ===
+                                    blockchainConfig.ui.maxAccountsNumber ||
+                                selectedAccount.blockchain !== Blockchain.NEAR
                             }
                             label={
                                 <View

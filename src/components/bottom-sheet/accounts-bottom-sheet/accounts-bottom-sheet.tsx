@@ -237,6 +237,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                     })}
 
                     {Platform.OS !== 'web' && (
+                        // For now this this is only implemented on NEAR
                         <ListAccount
                             leftIcon={blockchainConfig.iconComponent}
                             isCreate

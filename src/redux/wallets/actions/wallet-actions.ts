@@ -33,7 +33,8 @@ import {
     getAccounts,
     getSelectedAccount,
     getWalletWithAddress,
-    getWalletAndTransactionForHash
+    getWalletAndTransactionForHash,
+    generateAccountConfig
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
 import { formatAddress } from '../../../core/utils/format-address';
@@ -784,11 +785,15 @@ export const createNearAccount = (name: string, extension: string, password: str
         pass: password
     });
     const chainId = getChainId(state, blockchain);
-    const accounts = await hdWallet.getAccounts(blockchain, 0);
-    const account = accounts[0];
+
     const blockchainInstance = getBlockchain(blockchain);
     const client = blockchainInstance.getClient(chainId) as NearClient;
     const transactionInstance = blockchainInstance.transaction as NearTransactionUtils;
+
+    const selectedAccount = getSelectedAccount(state);
+    const account = generateAccountConfig(blockchain);
+    account.address = selectedAccount.address; // used to transfer tokens for creating account
+    account.publicKey = selectedAccount.publicKey;
 
     const txs = [];
 

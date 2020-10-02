@@ -186,11 +186,7 @@ export class AddAddressComponent extends React.Component<
                                 errorResponseText: undefined,
                                 warningResponseText: undefined
                             },
-                            () =>
-                                this.props.onChange(
-                                    response.address === text ? '' : response.address,
-                                    this.state.toAddress
-                                )
+                            () => this.props.onChange(response.address, this.state.toAddress)
                         );
                     }
                     break;

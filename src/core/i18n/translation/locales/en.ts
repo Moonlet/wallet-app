@@ -430,10 +430,12 @@ export const translation: ITranslations = {
         },
         RecoverNearAccount: {
             title: 'Recover account name',
+            checkStatus: 'Check your existing account name',
             authMoonletUserAccount: 'Authorize Moonlet to use your existing account name',
             copyAuthLink: 'Copy authorization link',
             authMoonlet: 'Authorize Moonlet',
-            congrats: 'Congrats! {{name}} is registered. Please authorize Moonlet to use it.',
+            congrats: 'Congrats! {{name}} can be added to Moonlet.',
+            needAuthorize: 'You need to authorize Moonlet to add {{name}}.',
             authProgress: 'Authorization in progress ...',
             notRegistered:
                 'Account name not registered. If you want to use it, you need first to create it.',

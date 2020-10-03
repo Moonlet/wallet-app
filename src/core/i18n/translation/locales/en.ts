@@ -430,10 +430,12 @@ export const translation: ITranslations = {
         },
         RecoverNearAccount: {
             title: 'Recover account name',
+            checkStatus: 'Check your existing account name',
             authMoonletUserAccount: 'Authorize Moonlet to use your existing account name',
             copyAuthLink: 'Copy authorization link',
             authMoonlet: 'Authorize Moonlet',
-            congrats: 'Congrats! {{name}} is registered. Please authorize Moonlet to use it.',
+            congrats: 'Congrats! {{name}} can be added to Moonlet.',
+            needAuthorize: 'You need to authorize Moonlet to add {{name}}.',
             authProgress: 'Authorization in progress ...',
             notRegistered:
                 'Account name not registered. If you want to use it, you need first to create it.',
@@ -539,7 +541,10 @@ export const translation: ITranslations = {
             claimRewardBottomText:
                 'The claimed reward you receive may be equal to or grater than what it displayed nou since rewards are accumulated each block.',
             noValidators: 'No validators available',
-            stakeSection: 'This section will become available once you start to stake your tokens.'
+            stakeSection: 'This section will become available once you start to stake your tokens.',
+            operationNotAvailable: 'Operation not available',
+            operationNotAvailableMessage:
+                'This operation can not be performed. Please try again next network cycle'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

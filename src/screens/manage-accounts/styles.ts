@@ -15,9 +15,13 @@ export default (theme: ITheme) =>
         container: {
             flex: 1,
             backgroundColor: theme.colors.appBackground,
-            paddingVertical: BASE_DIMENSION * 6,
             paddingHorizontal: BASE_DIMENSION * 2,
             height: SCREEN_HEIGHT
+        },
+        scrollView: {
+            flexGrow: 1,
+            paddingTop: BASE_DIMENSION * 4,
+            paddingBottom: BASE_DIMENSION * 2
         },
         rowContainer: {
             flex: 1,
@@ -92,6 +96,13 @@ export default (theme: ITheme) =>
         secondAmountText: {
             marginLeft: BASE_DIMENSION,
             color: theme.colors.textSecondary
+        },
+        bottomContainer: {
+            marginBottom: BASE_DIMENSION * 4
+        },
+        bottomButton: {
+            marginHorizontal: BASE_DIMENSION * 2,
+            marginTop: BASE_DIMENSION * 2
         },
 
         // Swipeable left actions

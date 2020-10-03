@@ -11,7 +11,6 @@ import { getChainId } from '../../../../redux/preferences/selectors';
 import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { ConfirmComponent } from '../../components/confirm-component/confirm-component';
-import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { withTheme, IThemeProps } from '../../../../core/theme/with-theme';
 import stylesProvider from './styles';
 import { delegate } from '../../../../redux/wallets/actions';
@@ -82,25 +81,15 @@ export class DelegateConfirmComponent extends React.Component<
 
     @bind
     private async onPressConfirm(amount: string, feeOptions: IFeeOptions) {
-        try {
-            const password = await PasswordModal.getPassword(
-                translate('Password.pinTitleUnlock'),
-                translate('Password.subtitleSignTransaction'),
-                { sensitive: true, showCloseButton: true }
-            );
-            this.props.delegate(
-                this.props.account,
-                amount,
-                this.props.validators,
-                this.props.token.symbol,
-                feeOptions,
-                password,
-                this.props.navigation,
-                undefined
-            );
-        } catch {
-            //
-        }
+        this.props.delegate(
+            this.props.account,
+            amount,
+            this.props.validators,
+            this.props.token.symbol,
+            feeOptions,
+            this.props.navigation,
+            undefined
+        );
     }
 
     public render() {

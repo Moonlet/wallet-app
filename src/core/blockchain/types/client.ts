@@ -3,7 +3,7 @@ import { IBlockchainNetwork, ChainIdType } from './network';
 import { IFeeOptions, TransactionType } from './transaction';
 import { GenericNameService } from '.';
 import { HttpClient } from '../../utils/http-client';
-import { TokenType } from './token';
+import { PosBasicActionType, TokenType } from './token';
 import { IClientUtils } from './client-utils';
 
 export interface IBlockInfo {
@@ -35,6 +35,16 @@ export abstract class BlockchainGenericClient {
     public abstract getNonce(address: string, publicKey?: string): Promise<number>;
     public abstract getCurrentBlock(): Promise<IBlockInfo>;
     public abstract getMinimumAmountDelegate(): Promise<BigNumber>;
+
+    public canPerformAction(
+        action: PosBasicActionType,
+        options: {
+            address: string;
+            validatorAddress: string[];
+        }
+    ): Promise<{ value: boolean; message: string }> {
+        return Promise.resolve({ value: true, message: '' });
+    }
 
     public abstract sendTransaction(transaction: any): Promise<string>;
 

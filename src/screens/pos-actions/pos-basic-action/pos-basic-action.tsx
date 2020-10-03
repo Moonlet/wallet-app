@@ -32,12 +32,12 @@ import {
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { EnterAmount } from '../../send/components/enter-amount/enter-amount';
 import { FeeOptions } from '../../send/components/fee-options/fee-options';
-import { PasswordModal } from '../../../components/password-modal/password-modal';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
 import { unlock, unvote, unstake, claimRewardNoInput } from '../../../redux/wallets/actions';
 import { valuePrimaryCtaField } from '../../../core/utils/format-string';
 import BigNumber from 'bignumber.js';
 import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
+import { Dialog } from '../../../components/dialog/dialog';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -109,67 +109,78 @@ export class PosBasicActionComponent extends React.Component<
         }
     }
 
-    private async onPressConfirm() {
-        try {
-            const password = await PasswordModal.getPassword(
-                translate('Password.pinTitleUnlock'),
-                translate('Password.subtitleSignTransaction'),
-                { sensitive: true, showCloseButton: true }
-            );
+    async componentDidMount() {
+        const performAction: { value: boolean; message: string } = await getBlockchain(
+            this.props.blockchain
+        )
+            .getClient(this.props.chainId)
+            .canPerformAction(this.props.basicAction, {
+                address: this.props.account.address,
+                validatorAddress: Object.values(this.props.validators).map(value =>
+                    value.id.toLowerCase()
+                )
+            });
 
-            switch (this.props.basicAction) {
-                case PosBasicActionType.UNLOCK: {
-                    this.props.unlock(
-                        this.props.account,
-                        this.state.amount,
-                        this.props.token.symbol,
-                        this.state.feeOptions,
-                        password,
-                        this.props.navigation,
-                        undefined
-                    );
-                    break;
+        if (performAction && performAction.value === false) {
+            Dialog.alert(
+                translate('Validator.operationNotAvailable'),
+                performAction.message,
+                undefined,
+                {
+                    text: translate('App.labels.ok'),
+                    onPress: () => this.props.navigation.goBack()
                 }
-                case PosBasicActionType.UNVOTE: {
-                    this.props.unvote(
-                        this.props.account,
-                        this.state.amount,
-                        this.props.validators,
-                        this.props.token.symbol,
-                        this.state.feeOptions,
-                        password,
-                        this.props.navigation,
-                        undefined
-                    );
-                    break;
-                }
-                case PosBasicActionType.UNSTAKE: {
-                    this.props.unstake(
-                        this.props.account,
-                        this.state.amount,
-                        this.props.validators,
-                        this.props.token.symbol,
-                        this.state.feeOptions,
-                        password,
-                        this.props.navigation,
-                        undefined
-                    );
-                    break;
-                }
-                case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
-                    this.props.claimRewardNoInput(
-                        this.props.account,
-                        this.props.validators,
-                        this.props.token.symbol,
-                        password,
-                        this.props.navigation,
-                        undefined
-                    );
-                    break;
-                }
+            );
+        }
+    }
+
+    private async onPressConfirm() {
+        switch (this.props.basicAction) {
+            case PosBasicActionType.UNLOCK: {
+                this.props.unlock(
+                    this.props.account,
+                    this.state.amount,
+                    this.props.token.symbol,
+                    this.state.feeOptions,
+                    this.props.navigation,
+                    undefined
+                );
+                break;
             }
-        } catch {
-            //
+            case PosBasicActionType.UNVOTE: {
+                this.props.unvote(
+                    this.props.account,
+                    this.state.amount,
+                    this.props.validators,
+                    this.props.token.symbol,
+                    this.state.feeOptions,
+                    this.props.navigation,
+                    undefined
+                );
+                break;
+            }
+            case PosBasicActionType.UNSTAKE: {
+                this.props.unstake(
+                    this.props.account,
+                    this.state.amount,
+                    this.props.validators,
+                    this.props.token.symbol,
+                    this.state.feeOptions,
+                    this.props.navigation,
+                    undefined
+                );
+                break;
+            }
+            case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
+                this.props.claimRewardNoInput(
+                    this.props.account,
+                    this.props.validators,
+                    this.props.token.symbol,
+                    this.props.navigation,
+                    undefined
+                );
+                break;
+            }
         }
     }
 

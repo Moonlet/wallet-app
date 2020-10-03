@@ -440,7 +440,9 @@ export class SendScreenComponent extends React.Component<
                 <View
                     style={[
                         styles.inputBox,
-                        resolvedAddress ? null : { marginBottom: BASE_DIMENSION * 2 }
+                        resolvedAddress && resolvedAddress !== toAddress
+                            ? null
+                            : { marginBottom: BASE_DIMENSION * 2 }
                     ]}
                 >
                     <Text style={styles.confirmTransactionText}>
@@ -450,7 +452,9 @@ export class SendScreenComponent extends React.Component<
                         )}
                     </Text>
                 </View>
-                {resolvedAddress !== '' && <Text style={styles.displayAddress}>{toAddress}</Text>}
+                {resolvedAddress && resolvedAddress !== '' && resolvedAddress !== toAddress && (
+                    <Text style={styles.displayAddress}>{toAddress}</Text>
+                )}
                 <Text style={styles.receipientLabel}>{translate('Send.amount')}</Text>
                 <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Text style={styles.confirmTransactionText}>

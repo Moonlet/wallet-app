@@ -24,7 +24,6 @@ import {
 import { HeaderLeftClose } from '../../components/header-left-close/header-left-close';
 import { FeeOptions } from './components/fee-options/fee-options';
 import BigNumber from 'bignumber.js';
-import { PasswordModal } from '../../components/password-modal/password-modal';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 import { IAccountState, ITokenState, IWalletState } from '../../redux/wallets/state';
 import { formatNumber } from '../../core/utils/format-number';
@@ -246,25 +245,15 @@ export class SendScreenComponent extends React.Component<
         } else {
             // Mobile App
 
-            try {
-                const password = await PasswordModal.getPassword(
-                    translate('Password.pinTitleUnlock'),
-                    translate('Password.subtitleSignTransaction'),
-                    { sensitive: true, showCloseButton: true }
-                );
-                this.props.sendTransferTransaction(
-                    this.props.account,
-                    this.state.toAddress,
-                    this.state.amount,
-                    this.props.token.symbol,
-                    this.state.feeOptions,
-                    password,
-                    this.props.navigation,
-                    { memo: this.state.memo }
-                );
-            } catch (err) {
-                //
-            }
+            this.props.sendTransferTransaction(
+                this.props.account,
+                this.state.toAddress,
+                this.state.amount,
+                this.props.token.symbol,
+                this.state.feeOptions,
+                this.props.navigation,
+                { memo: this.state.memo }
+            );
         }
     }
 
@@ -451,7 +440,9 @@ export class SendScreenComponent extends React.Component<
                 <View
                     style={[
                         styles.inputBox,
-                        resolvedAddress ? null : { marginBottom: BASE_DIMENSION * 2 }
+                        resolvedAddress && resolvedAddress !== toAddress
+                            ? null
+                            : { marginBottom: BASE_DIMENSION * 2 }
                     ]}
                 >
                     <Text style={styles.confirmTransactionText}>
@@ -461,7 +452,9 @@ export class SendScreenComponent extends React.Component<
                         )}
                     </Text>
                 </View>
-                {resolvedAddress !== '' && <Text style={styles.displayAddress}>{toAddress}</Text>}
+                {resolvedAddress && resolvedAddress !== '' && resolvedAddress !== toAddress && (
+                    <Text style={styles.displayAddress}>{toAddress}</Text>
+                )}
                 <Text style={styles.receipientLabel}>{translate('Send.amount')}</Text>
                 <View style={[styles.inputBox, { marginBottom: BASE_DIMENSION * 2 }]}>
                     <Text style={styles.confirmTransactionText}>

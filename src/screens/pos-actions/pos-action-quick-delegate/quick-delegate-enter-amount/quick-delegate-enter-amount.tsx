@@ -13,7 +13,6 @@ import { IValidator } from '../../../../core/blockchain/types/stats';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { EnterAmountComponent } from '../../components/enter-amount-component/enter-amount-component';
 import { bind } from 'bind-decorator';
-import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { delegate } from '../../../../redux/wallets/actions';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
@@ -110,25 +109,15 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
 
     @bind
     private async onPressConfirm(amount: string, feeOptions: IFeeOptions) {
-        try {
-            const password = await PasswordModal.getPassword(
-                translate('Password.pinTitleUnlock'),
-                translate('Password.subtitleSignTransaction'),
-                { sensitive: true, showCloseButton: true }
-            );
-            this.props.delegate(
-                this.props.account,
-                amount,
-                this.props.validators,
-                this.props.token.symbol,
-                feeOptions,
-                password,
-                this.props.navigation,
-                undefined
-            );
-        } catch {
-            //
-        }
+        this.props.delegate(
+            this.props.account,
+            amount,
+            this.props.validators,
+            this.props.token.symbol,
+            feeOptions,
+            this.props.navigation,
+            undefined
+        );
     }
 
     public render() {

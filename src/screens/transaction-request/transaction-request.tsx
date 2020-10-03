@@ -8,7 +8,6 @@ import { Button, Text } from '../../library';
 import { closeTransactionRequest } from '../../redux/ui/transaction-request/actions';
 import { IReduxState } from '../../redux/state';
 import { connect } from 'react-redux';
-import { PasswordModal } from '../../components/password-modal/password-modal';
 import { sendTransferTransaction, setSelectedWallet } from '../../redux/wallets/actions';
 import { ConnectExtensionWeb } from '../../core/connect-extension/connect-extension-web';
 import Icon from '../../components/icon/icon';
@@ -165,45 +164,33 @@ export class TransactionRequestScreenComponent extends React.Component<
 
     @bind
     private async confirm(options?: { qrCodeTransferData?: IQRCodeTransferData }) {
-        try {
-            const password = await PasswordModal.getPassword(
-                translate('Password.pinTitleUnlock'),
-                translate('Password.subtitleSignTransaction'),
-                { sensitive: true, showCloseButton: true }
+        const { extensionTxPayload } = this.state;
+
+        if (extensionTxPayload) {
+            this.props.sendTransferTransaction(
+                extensionTxPayload.account,
+                extensionTxPayload.toAddress,
+                extensionTxPayload.amount,
+                extensionTxPayload.token,
+                extensionTxPayload.feeOptions,
+                undefined, // navigation - not needed
+                extensionTxPayload.extraFields,
+                false, // goBack
+                { requestId: this.props.requestId }
             );
+        }
 
-            const { extensionTxPayload } = this.state;
-
-            if (extensionTxPayload) {
-                this.props.sendTransferTransaction(
-                    extensionTxPayload.account,
-                    extensionTxPayload.toAddress,
-                    extensionTxPayload.amount,
-                    extensionTxPayload.token,
-                    extensionTxPayload.feeOptions,
-                    password,
-                    undefined, // navigation - not needed
-                    extensionTxPayload.extraFields,
-                    false, // goBack
-                    { requestId: this.props.requestId }
-                );
-            }
-
-            if (options?.qrCodeTransferData) {
-                this.props.sendTransferTransaction(
-                    options.qrCodeTransferData.account,
-                    options.qrCodeTransferData.toAddress,
-                    options.qrCodeTransferData.amount,
-                    options.qrCodeTransferData.token,
-                    options.qrCodeTransferData.feeOptions,
-                    password,
-                    undefined, // navigation - not needed
-                    undefined, // extraFields - TODO
-                    false // goBack
-                );
-            }
-        } catch {
-            //
+        if (options?.qrCodeTransferData) {
+            this.props.sendTransferTransaction(
+                options.qrCodeTransferData.account,
+                options.qrCodeTransferData.toAddress,
+                options.qrCodeTransferData.amount,
+                options.qrCodeTransferData.token,
+                options.qrCodeTransferData.feeOptions,
+                undefined, // navigation - not needed
+                undefined, // extraFields - TODO
+                false // goBack
+            );
         }
     }
 

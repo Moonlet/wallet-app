@@ -19,7 +19,7 @@ import BigNumber from 'bignumber.js';
 import { formatValidatorName } from '../../core/utils/format-string';
 import { BASE_DIMENSION } from '../../styles/dimensions';
 
-export interface INavigationParams {
+interface INavigationParams {
     validator: IValidator;
     blockchain: Blockchain;
     accountIndex: number;
@@ -64,7 +64,10 @@ export class ValidatorScreenComponent extends React.Component<
         const { styles, blockchain, validator } = this.props;
         const config = getBlockchain(blockchain).config;
 
-        const textTop = `${translate(config.ui.validator.totalLabel)} (${validator.rank})`;
+        const textTop =
+            `${translate(config.ui.validator.totalLabel)}` +
+            `${validator.rank ? ` (${validator.rank})` : ''}`;
+
         const amount = validator.totalVotes;
         const token = getTokenConfig(blockchain, config.coin);
 

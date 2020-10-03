@@ -17,11 +17,15 @@ export class Stats extends GenericStats<Client> {
         return data;
     }
 
-    public async getAvailableBalanceForDelegate(account: IAccountState): Promise<string> {
+    public async getAvailableBalanceForDelegate(
+        account: IAccountState,
+        validatorId: string
+    ): Promise<string> {
         const data = await new ApiClient().validators.getBalance(
             account.address,
             account.blockchain,
-            this.client.chainId.toString()
+            this.client.chainId.toString(),
+            validatorId
         );
 
         return new BigNumber(data.balance.available)

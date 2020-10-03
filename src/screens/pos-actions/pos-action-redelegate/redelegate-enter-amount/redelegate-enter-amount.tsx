@@ -113,7 +113,9 @@ export class RedelegateEnterAmountComponent extends React.Component<
             tokenConfig.decimals
         );
         this.setState({
-            minimumDelegateAmount: minimumDelegateAmountValue || new BigNumber(0)
+            minimumDelegateAmount:
+                minimumDelegateAmountValue.multipliedBy(this.props.validators.length) ||
+                new BigNumber(0)
         });
     }
 

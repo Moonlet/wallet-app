@@ -32,6 +32,12 @@ export const ledgerConfigInternal: ILedgerTransportConfig = {
                 connectionTypes: [HWConnection.BLE, HWConnection.USB]
             }
         },
+        NEAR: {
+            NANO_S: nanosConnectionConfig,
+            NANO_X: {
+                connectionTypes: [HWConnection.BLE, HWConnection.USB]
+            }
+        },
         ETHEREUM: {
             NANO_S: nanosConnectionConfig,
             NANO_X: {
@@ -50,10 +56,13 @@ export const ledgerConfigInternal: ILedgerTransportConfig = {
         }
     },
     ios: {
-        ETHEREUM: {
+        ZILLIQA: {
             NANO_X: nanoXConnectionConfigBLE
         },
-        ZILLIQA: {
+        NEAR: {
+            NANO_X: nanoXConnectionConfigBLE
+        },
+        ETHEREUM: {
             NANO_X: nanoXConnectionConfigBLE
         },
         CELO: {

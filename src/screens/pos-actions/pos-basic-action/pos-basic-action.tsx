@@ -37,6 +37,7 @@ import { unlock, unvote, unstake, claimRewardNoInput } from '../../../redux/wall
 import { valuePrimaryCtaField } from '../../../core/utils/format-string';
 import BigNumber from 'bignumber.js';
 import { LoadingIndicator } from '../../../components/loading-indicator/loading-indicator';
+import { Dialog } from '../../../components/dialog/dialog';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -105,6 +106,31 @@ export class PosBasicActionComponent extends React.Component<
 
         if (props.basicAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT) {
             this.onPressConfirm();
+        }
+    }
+
+    async componentDidMount() {
+        const performAction: { value: boolean; message: string } = await getBlockchain(
+            this.props.blockchain
+        )
+            .getClient(this.props.chainId)
+            .canPerformAction(this.props.basicAction, {
+                address: this.props.account.address,
+                validatorAddress: Object.values(this.props.validators).map(value =>
+                    value.id.toLowerCase()
+                )
+            });
+
+        if (performAction && performAction.value === false) {
+            Dialog.alert(
+                translate('Validator.operationNotAvailable'),
+                performAction.message,
+                undefined,
+                {
+                    text: translate('App.labels.ok'),
+                    onPress: () => this.props.navigation.goBack()
+                }
+            );
         }
     }
 

@@ -38,6 +38,8 @@ import { ValidatorCard } from '../../../token/components/delegate-token/componen
 import { formatNumber } from '../../../../core/utils/format-number';
 import { getValidators } from '../../../../redux/ui/validators/selectors';
 import { formatValidatorName } from '../../../../core/utils/format-string';
+import { Dialog } from '../../../../components/dialog/dialog';
+import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 
 interface IHeaderStep {
     step: number;
@@ -269,6 +271,29 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                 />
             </BottomCta>
         );
+    }
+
+    async componentDidMount() {
+        const performAction: { value: boolean; message: string } = await getBlockchain(
+            this.props.blockchain
+        )
+            .getClient(this.props.chainId)
+            .canPerformAction(PosBasicActionType.REDELEGATE, {
+                address: this.props.account.address,
+                validatorAddress: [this.state.fromValidator.id.toLowerCase()]
+            });
+
+        if (performAction && performAction.value === false) {
+            Dialog.alert(
+                translate('Validator.operationNotAvailable'),
+                performAction.message,
+                undefined,
+                {
+                    text: translate('App.labels.ok'),
+                    onPress: () => this.props.navigation.goBack()
+                }
+            );
+        }
     }
 
     public render() {

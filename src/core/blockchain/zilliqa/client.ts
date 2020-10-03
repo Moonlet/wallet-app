@@ -11,12 +11,13 @@ import { networks } from './networks';
 import { fromBech32Address } from '@zilliqa-js/crypto/dist/bech32';
 import { config, Contracts } from './config';
 import { NameService } from './name-service';
-import { TokenType } from '../types/token';
+import { PosBasicActionType, TokenType } from '../types/token';
 import { Zrc2Client } from './tokens/zrc2-client';
 import { isBech32 } from '@zilliqa-js/util/dist/validation';
 import { ClientUtils } from './client-utils';
 import { Staking } from './contracts/staking';
 import { ApiClient } from '../../utils/api-client/api-client';
+import { translate } from '../../i18n';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -66,6 +67,36 @@ export class Client extends BlockchainGenericClient {
             };
         } catch (result) {
             return Promise.reject(result);
+        }
+    }
+
+    public async canPerformAction(
+        action: PosBasicActionType,
+        options: {
+            address: string;
+            validatorAddress: string[];
+        }
+    ): Promise<{ value: boolean; message: string }> {
+        switch (action) {
+            case PosBasicActionType.UNSTAKE:
+            case PosBasicActionType.REDELEGATE:
+                const canUnstake = await this.contracts[Contracts.STAKING].canUnstakeFromSsn(
+                    options.address,
+                    options.validatorAddress[0]
+                );
+                if (canUnstake === false)
+                    return Promise.resolve({
+                        value: false,
+                        message: translate('Validator.operationNotAvailableMessage')
+                    });
+                else
+                    return Promise.resolve({
+                        value: true,
+                        message: ''
+                    });
+
+            default:
+                return Promise.resolve({ value: true, message: '' });
         }
     }
 

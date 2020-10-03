@@ -67,6 +67,7 @@ import { ApiClient } from '../../../core/utils/api-client/api-client';
 import { Client as NearClient } from '../../../core/blockchain/near/client';
 import { NEAR_ACCOUNT_EXTENSIONS } from '../../../core/constants/app';
 import { LedgerConnect } from '../../../screens/ledger/ledger-connect';
+import { PasswordModal } from '../../../components/password-modal/password-modal';
 
 // actions consts
 export const WALLET_ADD = 'WALLET_ADD';
@@ -530,7 +531,6 @@ export const sendTransferTransaction = (
     amount: string,
     token: string,
     feeOptions: IFeeOptions,
-    password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
@@ -540,9 +540,15 @@ export const sendTransferTransaction = (
     const chainId = getChainId(state, account.blockchain);
 
     const appWallet = getSelectedWallet(state);
+    let password = '';
 
     try {
         if (appWallet.type === WalletType.HD) {
+            password = await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleSignTransaction'),
+                { sensitive: true, showCloseButton: true }
+            );
             await LoadingModal.open({
                 type: TransactionMessageType.INFO,
                 text: TransactionMessageText.SIGNING

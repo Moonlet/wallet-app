@@ -211,6 +211,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                                 ref={ref => (this.accountsSwipeableRef[swipeIndex] = ref)}
                                 renderLeftActions={() =>
                                     account.blockchain === Blockchain.NEAR &&
+                                    this.props.accounts.length > 1 && // should not delete all the accounts, need min 1 account to be available
                                     this.renderLeftActions(account)
                                 }
                                 onSwipeableWillOpen={() => this.onSwipeableWillOpen(swipeIndex)}
@@ -260,8 +261,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                             }
                             onPress={() => {
                                 this.props.onClose();
-                                // TODO: update this based on blockchain
-                                NavigationService.navigate('AddNearAccount', {});
+                                NavigationService.navigate('ManageAccounts', {});
                             }}
                         />
                     )}

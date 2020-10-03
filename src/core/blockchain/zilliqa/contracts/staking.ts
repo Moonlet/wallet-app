@@ -42,6 +42,46 @@ export class Staking {
         }
     }
 
+    public async canUnstakeFromSsn(accountAddress: string, ssnaddr: string): Promise<boolean> {
+        const address = isBech32(accountAddress)
+            ? fromBech32Address(accountAddress).toLowerCase()
+            : accountAddress.toLowerCase();
+
+        try {
+            const contract = await this.getContractImplementation();
+
+            const cycleCalls = [
+                this.client.getSmartContractSubState(
+                    contract.implementation,
+                    ContractFields.LASTREWARDCYCLE
+                ),
+                this.client.getSmartContractSubState(
+                    contract.implementation,
+                    ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG,
+                    [address]
+                )
+            ];
+
+            const res = await Promise.all(cycleCalls);
+
+            const lastRewardCycle = Number(res[0][ContractFields.LASTREWARDCYCLE]);
+
+            const lastBufferDepositCycleDeleg =
+                res[1][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG][address];
+
+            let lastBufferDepositCycleDelegValue = 0;
+            if (lastBufferDepositCycleDeleg && lastBufferDepositCycleDeleg[ssnaddr]) {
+                lastBufferDepositCycleDelegValue = Number(lastBufferDepositCycleDeleg[ssnaddr]);
+            }
+
+            if (lastRewardCycle <= lastBufferDepositCycleDelegValue) return false;
+
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
     public async canWithdrawStakeRewardsFromSsn(
         accountAddress: string,
         ssnaddr: string
@@ -77,19 +117,19 @@ export class Staking {
 
             const lastRewardCycle = Number(res[1][ContractFields.LASTREWARDCYCLE]);
 
-            const lastBufferWithdrawCycleDeleg =
+            const lastBufferDepositCycleDeleg =
                 res[2][ContractFields.LAST_BUF_DEPOSIT_CYCLE_DELEG][address];
 
-            let lastBufferWithdrawCycleDelegValue = 0;
-            if (lastBufferWithdrawCycleDeleg && lastBufferWithdrawCycleDeleg[ssnaddr]) {
-                lastBufferWithdrawCycleDelegValue = Number(lastBufferWithdrawCycleDeleg[ssnaddr]);
+            let lastBufferDepositCycleDelegValue = 0;
+            if (lastBufferDepositCycleDeleg && lastBufferDepositCycleDeleg[ssnaddr]) {
+                lastBufferDepositCycleDelegValue = Number(lastBufferDepositCycleDeleg[ssnaddr]);
             }
             let lastWithdrawCycleDelegValue = 0;
             if (lastWithdrawCycleDeleg && lastWithdrawCycleDeleg[ssnaddr]) {
                 lastWithdrawCycleDelegValue = Number(lastWithdrawCycleDeleg[ssnaddr]);
             }
 
-            if (lastRewardCycle > lastBufferWithdrawCycleDelegValue) {
+            if (lastRewardCycle > lastBufferDepositCycleDelegValue) {
                 if (lastRewardCycle !== lastWithdrawCycleDelegValue) return true;
             }
 

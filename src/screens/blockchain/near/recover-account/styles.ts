@@ -16,7 +16,7 @@ export default (theme: ITheme) =>
         scrollContainer: {
             flexGrow: 1,
             paddingHorizontal: BASE_DIMENSION * 2,
-            paddingBottom: BASE_DIMENSION * 7
+            paddingBottom: BASE_DIMENSION * 4
         },
         moonletImage: {
             height: ph(20),
@@ -31,14 +31,17 @@ export default (theme: ITheme) =>
             color: theme.colors.text,
             fontWeight: 'bold',
             textAlign: 'center',
-            marginBottom: BASE_DIMENSION * 5,
-            marginHorizontal: BASE_DIMENSION * 6
+            marginBottom: BASE_DIMENSION * 5
         },
         copyAuthButton: {
             marginHorizontal: BASE_DIMENSION * 2,
-            marginBottom: BASE_DIMENSION * 2
+            marginTop: BASE_DIMENSION * 2
         },
-        authButton: {
+        defaultButtonContainer: {
+            flex: 1,
+            justifyContent: 'flex-end'
+        },
+        defaultButton: {
             marginHorizontal: BASE_DIMENSION * 2
         },
         domain: {

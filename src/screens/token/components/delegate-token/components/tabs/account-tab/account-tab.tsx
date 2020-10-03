@@ -23,7 +23,6 @@ import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getTokenConfig } from '../../../../../../../redux/tokens/static-selectors';
 import { withdraw, activate } from '../../../../../../../redux/wallets/actions';
-import { PasswordModal } from '../../../../../../../components/password-modal/password-modal';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
@@ -81,18 +80,11 @@ export class AccountTabComponent extends React.Component<
 
     @bind
     public async onPress(widget: IPosWidget) {
-        const password = await PasswordModal.getPassword(
-            translate('Password.pinTitleUnlock'),
-            translate('Password.subtitleSignTransaction'),
-            { sensitive: true, showCloseButton: true }
-        );
-
         switch (widget.type) {
             case PosBasicActionType.ACTIVATE: {
                 this.props.activate(
                     this.props.account,
                     this.props.token.symbol,
-                    password,
                     this.props.navigation,
                     undefined
                 );
@@ -102,7 +94,6 @@ export class AccountTabComponent extends React.Component<
                 this.props.withdraw(
                     this.props.account,
                     this.props.token.symbol,
-                    password,
                     this.props.navigation,
                     {
                         witdrawIndex: widget?.index,

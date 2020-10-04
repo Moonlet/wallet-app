@@ -19,9 +19,11 @@ import { Capitalize } from '../../core/utils/format-string';
 import { IconValues } from '../../components/icon/values';
 import bind from 'bind-decorator';
 import { createHWWallet } from '../../redux/wallets/actions';
+import { IReduxState } from '../../redux/state';
 
 export interface IReduxProps {
     createHWWallet: typeof createHWWallet;
+    walletsExist: boolean;
 }
 
 export interface IState {
@@ -32,6 +34,12 @@ export interface IState {
     ledgerTypeActive: boolean;
     connectionActive: boolean;
 }
+
+const mapStateToProps = (state: IReduxState) => {
+    return {
+        walletsExist: Object.keys(state.wallets).length > 0
+    };
+};
 
 const mapDispatchToProps = {
     createHWWallet
@@ -298,12 +306,9 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
     }
 
     private async connect() {
-        try {
-            await PasswordModal.getPassword(undefined, undefined, {
-                shouldCreatePassword: true
-            });
+        if (this.props.walletsExist) {
             this.displayLedgerConnect();
-        } catch (err) {
+        } else {
             try {
                 await PasswordModal.createPassword();
                 this.displayLedgerConnect();
@@ -342,6 +347,6 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
 }
 
 export const ConnectHardwareWallet = smartConnect(ConnectHardwareWalletScreenComponent, [
-    connect(null, mapDispatchToProps),
+    connect(mapStateToProps, mapDispatchToProps),
     withTheme(stylesProvider)
 ]);

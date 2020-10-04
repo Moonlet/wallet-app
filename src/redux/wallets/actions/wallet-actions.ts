@@ -815,6 +815,8 @@ export const createNearAccount = (name: string, extension: string, password: str
                 timestamp: undefined,
                 error: undefined
             };
+            account.chainId = chainId;
+
             dispatch(addAccount(selectedWallet.id, blockchain, account));
             dispatch(setSelectedAccount(account));
 

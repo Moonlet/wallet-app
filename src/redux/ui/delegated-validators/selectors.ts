@@ -11,6 +11,6 @@ export const getDelegatedValidators = (
         (state.ui.delegatedValidators &&
             state.ui.delegatedValidators[blockchain] &&
             state.ui.delegatedValidators[blockchain][chainId as string]) ||
-        []
+        undefined
     );
 };

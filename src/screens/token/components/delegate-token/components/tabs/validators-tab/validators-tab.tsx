@@ -15,6 +15,7 @@ import { NavigationService } from '../../../../../../../navigation/navigation-se
 import { ITokenState } from '../../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../../redux/state';
 import { getValidators } from '../../../../../../../redux/ui/validators/selectors';
+import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 import { connect } from 'react-redux';
 
 interface IProps {
@@ -104,7 +105,12 @@ export class ValidatorsTabComponent extends React.Component<
                             onClose={this.onClose}
                         />
                     </View>
-                    {this.state.validatorsFilteredList.length === 0 ? (
+                    {!this.state.validatorsFilteredList && (
+                        <View style={{ flex: 1 }}>
+                            <LoadingIndicator />
+                        </View>
+                    )}
+                    {this.state.validatorsFilteredList?.length === 0 ? (
                         <View style={styles.emptySection}>
                             <Image
                                 style={styles.logoImage}

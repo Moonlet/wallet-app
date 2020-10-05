@@ -26,7 +26,8 @@ import { RESET_ALL_DATA, EXTENSION_UPDATE_STATE } from '../app/actions';
 const intialState: IWalletsState = {};
 
 const newBalance = (oldBalance: any, action: any) => ({
-    value: action.data.balance ? action.data.balance.total : oldBalance?.value,
+    // TODO migration and change value to actual avaialble and total values
+    value: action.data.balance ? action.data.balance.available : oldBalance?.value,
     inProgress: action.inProgress !== undefined ? action.inProgress : false,
     timestamp: action.data.balance ? new Date() : oldBalance?.timestamp,
     error: action.error !== undefined ? action.error : undefined,

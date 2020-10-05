@@ -24,6 +24,7 @@ import {
 import { ApiClient } from '../../utils/api-client/api-client';
 import { Lockup } from './contracts/lockup';
 import { translate } from '../../i18n';
+import { AccountType, IAccountState } from '../../../redux/wallets/state';
 
 export class Client extends BlockchainGenericClient {
     public stakingPool: StakingPool;
@@ -294,7 +295,7 @@ export class Client extends BlockchainGenericClient {
     public async canPerformAction(
         action: PosBasicActionType,
         options: {
-            address: string;
+            account: IAccountState;
             validatorAddress: string[];
         }
     ): Promise<{ value: boolean; message: string }> {
@@ -303,7 +304,10 @@ export class Client extends BlockchainGenericClient {
             case PosBasicActionType.STAKE:
             case PosBasicActionType.UNSTAKE:
                 try {
-                    if (options.validatorAddress.length > 1) {
+                    if (
+                        options.account.type === AccountType.LOCKUP_CONTRACT &&
+                        options.validatorAddress.length > 1
+                    ) {
                         return Promise.resolve({
                             value: false,
                             message: translate('Validator.multipleNodes')
@@ -311,7 +315,7 @@ export class Client extends BlockchainGenericClient {
                     }
 
                     const stakingAccountId = await this.contractCall({
-                        contractName: options.address,
+                        contractName: options.account.address,
                         methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
                     });
 

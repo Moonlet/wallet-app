@@ -115,7 +115,7 @@ export class PosBasicActionComponent extends React.Component<
         )
             .getClient(this.props.chainId)
             .canPerformAction(this.props.basicAction, {
-                address: this.props.account.address,
+                account: this.props.account,
                 validatorAddress: Object.values(this.props.validators).map(value =>
                     value.id.toLowerCase()
                 )

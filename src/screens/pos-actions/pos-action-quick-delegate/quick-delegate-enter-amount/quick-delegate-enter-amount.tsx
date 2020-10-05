@@ -18,6 +18,8 @@ import { captureException as SentryCaptureException } from '@sentry/react-native
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
 import BigNumber from 'bignumber.js';
+import { PosBasicActionType } from '../../../../core/blockchain/types/token';
+import { Dialog } from '../../../../components/dialog/dialog';
 
 export interface IReduxProps {
     account: IAccountState;
@@ -104,6 +106,29 @@ export class QuickDelegateEnterAmountComponent extends React.Component<
         } catch (err) {
             this.setState({ amount: this.props.token.balance.value }); // set balance to the available balance at least
             SentryCaptureException(new Error(JSON.stringify(err)));
+        }
+
+        const performAction: { value: boolean; message: string } = await getBlockchain(
+            this.props.blockchain
+        )
+            .getClient(this.props.chainId)
+            .canPerformAction(PosBasicActionType.DELEGATE, {
+                address: this.props.account.address,
+                validatorAddress: Object.values(this.props.validators).map(value =>
+                    value.id.toLowerCase()
+                )
+            });
+
+        if (performAction && performAction.value === false) {
+            Dialog.alert(
+                translate('Validator.operationNotAvailable'),
+                performAction.message,
+                undefined,
+                {
+                    text: translate('App.labels.ok'),
+                    onPress: () => this.props.navigation.goBack()
+                }
+            );
         }
     }
 

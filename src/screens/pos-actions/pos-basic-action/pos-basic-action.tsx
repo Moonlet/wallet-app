@@ -109,7 +109,7 @@ export class PosBasicActionComponent extends React.Component<
         }
     }
 
-    async componentDidMount() {
+    public async componentDidMount() {
         const performAction: { value: boolean; message: string } = await getBlockchain(
             this.props.blockchain
         )

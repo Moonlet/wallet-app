@@ -547,7 +547,9 @@ export const translation: ITranslations = {
             stakeSection: 'This section will become available once you start to stake your tokens.',
             operationNotAvailable: 'Operation not available',
             operationNotAvailableMessage:
-                'This operation can not be performed. Please try again next network cycle'
+                'This operation can not be performed. Please try again next network cycle',
+            alreadyStaked:
+                'You have already staked to another validator from this lockup contract. Either you stake the full amount to that validator or unstake and withdraw your current funds and stake to {{validator}}.'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

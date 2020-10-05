@@ -9,15 +9,21 @@ import { networks } from './networks';
 import BigNumber from 'bignumber.js';
 import { config } from './config';
 import { NameService } from './name-service';
-import { TokenType } from '../types/token';
+import { PosBasicActionType, TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
 import { createTransaction, signTransaction, deleteAccount } from 'near-api-js/lib/transaction';
 import { KeyPair, serialize } from 'near-api-js/lib/utils';
 import sha256 from 'js-sha256';
 import { StakingPool } from './contracts/staking-pool';
-import { INearAccount, NearAccountType, NearQueryRequestTypes } from './types';
+import {
+    INearAccount,
+    NearAccountType,
+    NearAccountViewMethods,
+    NearQueryRequestTypes
+} from './types';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { Lockup } from './contracts/lockup';
+import { translate } from '../../i18n';
 
 export class Client extends BlockchainGenericClient {
     public stakingPool: StakingPool;
@@ -282,6 +288,45 @@ export class Client extends BlockchainGenericClient {
                     args: options.args
                 })
             );
+        }
+    }
+
+    public async canPerformAction(
+        action: PosBasicActionType,
+        options: {
+            address: string;
+            validatorAddress: string[];
+        }
+    ): Promise<{ value: boolean; message: string }> {
+        switch (action) {
+            case PosBasicActionType.DELEGATE:
+            case PosBasicActionType.STAKE:
+            case PosBasicActionType.UNSTAKE:
+                try {
+                    const stakingAccountId = await this.contractCall({
+                        contractName: options.address,
+                        methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
+                    });
+
+                    if (stakingAccountId && stakingAccountId !== options.validatorAddress[0]) {
+                        return Promise.resolve({
+                            value: false,
+                            message: translate('Validator.alreadyStaked', {
+                                validator: options.validatorAddress[0]
+                            })
+                        });
+                    }
+                } catch (err) {
+                    // no need to handle this
+                }
+
+                return Promise.resolve({
+                    value: true,
+                    message: ''
+                });
+
+            default:
+                return Promise.resolve({ value: true, message: '' });
         }
     }
 }

@@ -36,6 +36,8 @@ import { Icon } from '../../../../components/icon/icon';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
 import { IconValues } from '../../../../components/icon/values';
 import { getValidators } from '../../../../redux/ui/validators/selectors';
+import { Dialog } from '../../../../components/dialog/dialog';
+import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 
 interface IHeaderStep {
     step: number;
@@ -113,6 +115,31 @@ export class DelegateSelectValidatorComponent extends React.Component<
             validatorsList: props.validators,
             headerSteps: stepList
         };
+    }
+
+    public async componentDidMount() {
+        const performAction: { value: boolean; message: string } = await getBlockchain(
+            this.props.blockchain
+        )
+            .getClient(this.props.chainId)
+            .canPerformAction(PosBasicActionType.DELEGATE, {
+                address: this.props.account.address,
+                validatorAddress: Object.values(this.props.validators).map(value =>
+                    value.id.toLowerCase()
+                )
+            });
+
+        if (performAction && performAction.value === false) {
+            Dialog.alert(
+                translate('Validator.operationNotAvailable'),
+                performAction.message,
+                undefined,
+                {
+                    text: translate('App.labels.ok'),
+                    onPress: () => this.props.navigation.goBack()
+                }
+            );
+        }
     }
 
     @bind

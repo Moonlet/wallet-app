@@ -809,7 +809,7 @@ export const createNearAccount = (name: string, extension: string, password: str
         // key already exists
         // continue
     } else {
-        const txSendCreate = await transactionInstance.buildSendTransactionForCreateAccount({
+        const txSendCreate = await transactionInstance.buildDropLinkTransaction({
             account,
             newPublicKey: account.publicKey,
             tokenSymbol: blockchain,
@@ -820,7 +820,7 @@ export const createNearAccount = (name: string, extension: string, password: str
 
     const newAccountId = `${name}.${extension}`;
 
-    const txCreateAccountClaim = await transactionInstance.buildCreateAccountAndClaimTransaction({
+    const txCreateAccountClaim = await transactionInstance.buildClaimAccountTransaction({
         account,
         newAccountId,
         newPublicKey: account.publicKey,

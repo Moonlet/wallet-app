@@ -203,7 +203,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
         }
     }
 
-    public async buildSendTransactionForCreateAccount(tx: {
+    public async buildDropLinkTransaction(tx: {
         account: IAccountState;
         newPublicKey: string;
         tokenSymbol: string;
@@ -254,7 +254,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
         };
     }
 
-    public async buildCreateAccountAndClaimTransaction(tx: {
+    public async buildClaimAccountTransaction(tx: {
         account: IAccountState;
         newAccountId: string;
         newPublicKey: string;

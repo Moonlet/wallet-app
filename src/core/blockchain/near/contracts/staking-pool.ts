@@ -9,8 +9,7 @@ import {
 } from '../types';
 import BN from 'bn.js';
 import BigNumber from 'bignumber.js';
-
-const DEFAULT_FUNC_CALL_GAS = new BN('100000000000000');
+import { NEAR_DEFAULT_FUNC_CALL_GAS } from '../consts';
 
 export class StakingPool {
     public async stake(
@@ -21,7 +20,7 @@ export class StakingPool {
         const transaction = await buildBaseTransaction(tx);
 
         transaction.toAddress = validator.id;
-        transaction.feeOptions = { feeTotal: DEFAULT_FUNC_CALL_GAS.toString() };
+        transaction.feeOptions = { feeTotal: NEAR_DEFAULT_FUNC_CALL_GAS.toString() };
 
         transaction.additionalInfo.posAction = PosBasicActionType.STAKE;
         transaction.additionalInfo.validatorName = validator.name;
@@ -32,7 +31,7 @@ export class StakingPool {
                 params: [
                     NearFunctionCallMethods.STAKE,
                     { amount: tx.amount },
-                    DEFAULT_FUNC_CALL_GAS,
+                    NEAR_DEFAULT_FUNC_CALL_GAS,
                     new BN(0)
                 ]
             }
@@ -46,7 +45,7 @@ export class StakingPool {
                     params: [
                         NearFunctionCallMethods.DEPOSIT,
                         {},
-                        DEFAULT_FUNC_CALL_GAS,
+                        NEAR_DEFAULT_FUNC_CALL_GAS,
                         new BN(depositAmount.toFixed())
                     ]
                 }
@@ -63,7 +62,7 @@ export class StakingPool {
         const transaction = await buildBaseTransaction(tx);
 
         transaction.toAddress = validator.id;
-        transaction.feeOptions = { feeTotal: DEFAULT_FUNC_CALL_GAS.toString() };
+        transaction.feeOptions = { feeTotal: NEAR_DEFAULT_FUNC_CALL_GAS.toString() };
 
         transaction.additionalInfo.posAction = PosBasicActionType.UNSTAKE;
         transaction.additionalInfo.validatorName = validator.name;
@@ -74,7 +73,7 @@ export class StakingPool {
                 params: [
                     NearFunctionCallMethods.UNSTAKE,
                     { amount: tx.amount },
-                    DEFAULT_FUNC_CALL_GAS,
+                    NEAR_DEFAULT_FUNC_CALL_GAS,
                     new BN(0)
                 ]
             }
@@ -91,7 +90,7 @@ export class StakingPool {
         transaction.toAddress = tx.extraFields.validatorId;
         transaction.amount = tx.extraFields.amount;
 
-        transaction.feeOptions = { feeTotal: DEFAULT_FUNC_CALL_GAS.toString() };
+        transaction.feeOptions = { feeTotal: NEAR_DEFAULT_FUNC_CALL_GAS.toString() };
 
         transaction.additionalInfo.posAction = PosBasicActionType.WITHDRAW;
 
@@ -101,7 +100,7 @@ export class StakingPool {
                 params: [
                     NearFunctionCallMethods.WITHDRAW,
                     { amount: tx.extraFields.amount },
-                    DEFAULT_FUNC_CALL_GAS,
+                    NEAR_DEFAULT_FUNC_CALL_GAS,
                     new BN(0)
                 ]
             }

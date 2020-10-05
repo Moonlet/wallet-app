@@ -5,13 +5,15 @@ import {
     CLOSE_PROCESS_TXS,
     SET_PROCESS_TXS,
     UPDATE_PROCESS_TX_ID,
-    UPDATE_PROCESS_TX_STATUS
+    UPDATE_PROCESS_TX_STATUS,
+    SET_CREATE_ACCOUNT
 } from './actions';
 
 const intialState: IProcessTransactionsState = {
     isVisible: false,
     data: {
-        txs: []
+        txs: [],
+        createAccount: undefined
     }
 };
 
@@ -33,6 +35,7 @@ export default (
             return {
                 ...state,
                 data: {
+                    ...state.data,
                     txs
                 }
             };
@@ -45,6 +48,7 @@ export default (
             return {
                 ...state,
                 data: {
+                    ...state.data,
                     txs
                 }
             };
@@ -53,12 +57,22 @@ export default (
             return {
                 ...state,
                 data: {
+                    ...state.data,
                     txs: action.data.txs
                 }
             };
 
         case CLOSE_PROCESS_TXS:
             return intialState;
+
+        case SET_CREATE_ACCOUNT:
+            return {
+                ...state,
+                data: {
+                    ...state.data,
+                    createAccount: action.data.account
+                }
+            };
 
         default:
             break;

@@ -33,7 +33,8 @@ import {
     getAccounts,
     getSelectedAccount,
     getWalletWithAddress,
-    getWalletAndTransactionForHash
+    getWalletAndTransactionForHash,
+    generateAccountConfig
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
 import { formatAddress } from '../../../core/utils/format-address';
@@ -63,10 +64,18 @@ import {
     captureException as SentryCaptureException
 } from '@sentry/react-native';
 import { startNotificationsHandlers } from '../../notifications/actions';
-import { ApiClient } from '../../../core/utils/api-client/api-client';
 import { Client as NearClient } from '../../../core/blockchain/near/client';
-import { NEAR_ACCOUNT_EXTENSIONS } from '../../../core/constants/app';
+import { NearTransactionUtils } from '../../../core/blockchain/near/transaction';
+import { NEAR_TLD } from '../../../core/constants/app';
 import { LedgerConnect } from '../../../screens/ledger/ledger-connect';
+import {
+    openProcessTransactions,
+    setProcessTransactions,
+    setProcessTxCreateAccount,
+    updateProcessTransactionIdForIndex,
+    updateProcessTransactionStatusForIndex
+} from '../../ui/process-transactions/actions';
+import cloneDeep from 'lodash/cloneDeep';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
 
 // actions consts
@@ -765,110 +774,143 @@ export const deleteAccount = (
     const chainId = getChainId(state, blockchain);
     const client = getBlockchain(blockchain).getClient(chainId) as NearClient;
 
-    await client.deleteNearAccount(accountId, NEAR_ACCOUNT_EXTENSIONS[chainId], privateKey);
+    await client.deleteNearAccount(accountId, NEAR_TLD[chainId], privateKey);
 };
 
 export const createNearAccount = (name: string, extension: string, password: string) => async (
     dispatch: Dispatch<any>,
     getState: () => IReduxState
 ) => {
-    await LoadingModal.open();
-
     const state = getState();
+    const blockchain = Blockchain.NEAR;
+
+    dispatch(openProcessTransactions());
+
     const selectedWallet: IWalletState = getSelectedWallet(state);
     const hdWallet: IWallet = await WalletFactory.get(selectedWallet.id, selectedWallet.type, {
         pass: password
     });
-    const blockchain = Blockchain.NEAR;
-
     const chainId = getChainId(state, blockchain);
 
-    const accounts = await hdWallet.getAccounts(blockchain, 0);
-    const account = accounts[0];
+    const blockchainInstance = getBlockchain(blockchain);
+    const client = blockchainInstance.getClient(chainId) as NearClient;
+    const transactionInstance = blockchainInstance.transaction as NearTransactionUtils;
 
-    const res = await new ApiClient().near.createAccount(
-        name,
-        extension,
-        account.publicKey,
-        String(chainId)
-    );
+    const selectedAccount = getSelectedAccount(state);
+    const account = generateAccountConfig(blockchain);
+    account.chainId = chainId;
+    account.address = selectedAccount.address; // used to transfer tokens for creating account
+    account.publicKey = selectedAccount.publicKey;
+
+    const txs = [];
+
+    const viewKeyRes = await client.viewAccessKey(account.publicKey, NEAR_TLD[chainId]);
+
+    if (viewKeyRes && viewKeyRes.result && viewKeyRes.result.permission) {
+        // key already exists
+        // continue
+    } else {
+        const txDropLink = await transactionInstance.buildDropLinkTransaction({
+            account,
+            newPublicKey: account.publicKey,
+            tokenSymbol: blockchain,
+            chainId: String(chainId)
+        });
+        txs.push(txDropLink);
+    }
 
     const newAccountId = `${name}.${extension}`;
 
-    if (res?.result?.data?.status) {
-        const tx = res.result.data;
+    const txClaimAccount = await transactionInstance.buildClaimAccountTransaction({
+        account,
+        newAccountId,
+        newPublicKey: account.publicKey,
+        tokenSymbol: blockchain,
+        chainId: String(chainId)
+    });
+    txs.push(txClaimAccount);
 
-        if (tx.status && tx.status?.SuccessValue === '') {
-            let newAccountIndex = -1;
+    dispatch(setProcessTransactions(cloneDeep(txs)));
 
-            for (const acc of selectedWallet.accounts) {
-                if (acc.blockchain === Blockchain.NEAR && acc.index >= newAccountIndex) {
-                    newAccountIndex = acc.index + 1;
-                }
-            }
+    let newAccountIndex = -1;
 
-            account.index = newAccountIndex === -1 ? 0 : newAccountIndex;
-            account.address = newAccountId;
-            account.tokens[chainId][getBlockchain(blockchain).config.coin].balance = {
-                value: '0',
-                inProgress: false,
-                timestamp: undefined,
-                error: undefined
-            };
-            account.chainId = chainId;
-
-            dispatch(addAccount(selectedWallet.id, blockchain, account));
-            dispatch(setSelectedAccount(account));
-
-            NavigationService.navigate('Dashboard', {});
-        } else if (tx.status && tx.status.Failure) {
-            Dialog.info(
-                translate('CreateNearAccount.failed'),
-                translate('CreateNearAccount.tryAgain')
-            );
-
-            SentryAddBreadcrumb({ message: JSON.stringify(tx) });
-            SentryCaptureException(
-                new Error(
-                    JSON.stringify({
-                        errorMessage: `NEAR create account has failed, account id: ${newAccountId}`
-                    })
-                )
-            );
-        } else {
-            Dialog.info(
-                translate('CreateNearAccount.failed'),
-                translate('CreateNearAccount.tryAgain')
-            );
-
-            SentryAddBreadcrumb({ message: JSON.stringify(tx) });
-            SentryCaptureException(
-                new Error(
-                    JSON.stringify({
-                        errorMessage: `NEAR create account has failed, account id: ${newAccountId}`
-                    })
-                )
-            );
+    for (const acc of selectedWallet.accounts) {
+        if (acc.blockchain === Blockchain.NEAR && acc.index >= newAccountIndex) {
+            newAccountIndex = acc.index + 1;
         }
-    } else {
-        Dialog.info(
-            translate('CreateNearAccount.failed'),
-            res?.message || res?.errorMessage || translate('CreateNearAccount.tryAgain')
-        );
-
-        SentryAddBreadcrumb({ message: JSON.stringify({ res, accountId: newAccountId }) });
-        SentryCaptureException(
-            new Error(
-                JSON.stringify(
-                    res?.message ||
-                        res?.errorMessage ||
-                        `NEAR create account has failed, account id: ${newAccountId}`
-                )
-            )
-        );
     }
+    account.index = newAccountIndex === -1 ? 0 : newAccountIndex;
+    account.address = newAccountId;
+    account.tokens[chainId][getBlockchain(blockchain).config.coin].balance = {
+        value: '0',
+        inProgress: false,
+        timestamp: undefined,
+        error: undefined
+    };
 
-    await LoadingModal.close();
+    dispatch(setProcessTxCreateAccount(account));
+
+    for (let index = 0; index < txs.length; index++) {
+        try {
+            const transaction = await hdWallet.sign(blockchain, account.index, txs[index]);
+
+            const txHash = await client.sendTransaction(transaction);
+
+            if (txHash) {
+                const hashPolling = await client.getTransactionStatusPolling(
+                    txHash,
+                    NEAR_TLD[chainId]
+                );
+
+                if (hashPolling && hashPolling === txHash) {
+                    dispatch(updateProcessTransactionIdForIndex(index, txHash));
+                    dispatch({
+                        type: TRANSACTION_PUBLISHED,
+                        data: {
+                            hash: txHash,
+                            tx: txs[index],
+                            walletId: selectedWallet.id
+                        }
+                    });
+                    dispatch(
+                        updateProcessTransactionStatusForIndex(index, TransactionStatus.SUCCESS)
+                    );
+                } else {
+                    handleCreateAccountError(
+                        `Invalid hashPolling: ${hashPolling}, txHash: ${txHash}`,
+                        newAccountId
+                    );
+                    dispatch(
+                        updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
+                    );
+                }
+            } else {
+                handleCreateAccountError(`No txHash`, newAccountId);
+                dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED));
+            }
+        } catch (error) {
+            handleCreateAccountError(JSON.stringify(error), newAccountId);
+
+            dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED));
+
+            for (let i = index + 1; i < txs.length; i++) {
+                dispatch(updateProcessTransactionStatusForIndex(i, TransactionStatus.DROPPED));
+            }
+            throw error;
+        }
+    }
+};
+
+const handleCreateAccountError = (errorMessage: any, newAccountId: string) => {
+    SentryAddBreadcrumb({ message: JSON.stringify(errorMessage) });
+
+    SentryCaptureException(
+        new Error(
+            JSON.stringify({
+                errorMessage: `NEAR create account has failed, account id: ${newAccountId}`
+            })
+        )
+    );
 };
 
 export const changePIN = (newPassword: string, oldPassword: string) => async (

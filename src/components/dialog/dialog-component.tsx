@@ -166,6 +166,9 @@ export class DialogComponent extends React.Component<
 
         this.setState({
             visible: true,
+            cancelButton: {
+                text: translate('App.labels.cancel')
+            },
             dialogType: DialogType.CONFIRM,
             title,
             message

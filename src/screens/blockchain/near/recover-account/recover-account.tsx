@@ -120,7 +120,8 @@ export class RecoverNearAccountComponent extends React.Component<
             recoveredAccount: {
                 ...this.state.recoveredAccount,
                 publicKey: this.props.selectedAccount.publicKey, // on NEAR we use the same publicKey on all accounts
-                index: recoveredAccountIndex === -1 ? 0 : recoveredAccountIndex
+                index: recoveredAccountIndex === -1 ? 0 : recoveredAccountIndex,
+                chainId: this.props.chainId
             }
         });
     }

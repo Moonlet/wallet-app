@@ -424,9 +424,12 @@ export const translation: ITranslations = {
         CreateNearAccount: {
             title: 'Create account name',
             chooseAccountName: 'Choose an account name and you’re all set.',
-            congrats: 'Congrats! {{name}} is available.',
+            congrats:
+                'Congrats! {{name}} is available. It costs {{nearFees}} to create it, and you will transfer {{depositAmount}} to the new account.',
             failed: 'Create account has failed',
-            tryAgain: 'Try again!'
+            tryAgain: 'Try again!',
+            insufficientFunds:
+                'Insufficient funds! You need at least {{amount}} to create a NEAR account.'
         },
         RecoverNearAccount: {
             title: 'Recover account name',

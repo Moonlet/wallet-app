@@ -809,25 +809,25 @@ export const createNearAccount = (name: string, extension: string, password: str
         // key already exists
         // continue
     } else {
-        const txSendCreate = await transactionInstance.buildDropLinkTransaction({
+        const txDropLink = await transactionInstance.buildDropLinkTransaction({
             account,
             newPublicKey: account.publicKey,
             tokenSymbol: blockchain,
             chainId: String(chainId)
         });
-        txs.push(txSendCreate);
+        txs.push(txDropLink);
     }
 
     const newAccountId = `${name}.${extension}`;
 
-    const txCreateAccountClaim = await transactionInstance.buildClaimAccountTransaction({
+    const txClaimAccount = await transactionInstance.buildClaimAccountTransaction({
         account,
         newAccountId,
         newPublicKey: account.publicKey,
         tokenSymbol: blockchain,
         chainId: String(chainId)
     });
-    txs.push(txCreateAccountClaim);
+    txs.push(txClaimAccount);
 
     dispatch(setProcessTransactions(cloneDeep(txs)));
 

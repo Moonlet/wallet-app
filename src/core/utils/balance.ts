@@ -21,7 +21,7 @@ export const calculateBalance = (
         const token = account.tokens[chainId][tokenSymbol];
         const tokenConfig = getTokenConfig(account.blockchain, token.symbol);
 
-        const tokenBalanceValue = new BigNumber(token.balance?.value);
+        const tokenBalanceValue = new BigNumber(token.balance?.total);
 
         if (tokenConfig && token.active) {
             if (tokenConfig.removable === false) {

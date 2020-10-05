@@ -17,9 +17,11 @@ import sha256 from 'js-sha256';
 import { StakingPool } from './contracts/staking-pool';
 import { INearAccount, NearAccountType, NearQueryRequestTypes } from './types';
 import { ApiClient } from '../../utils/api-client/api-client';
+import { Lockup } from './contracts/lockup';
 
 export class Client extends BlockchainGenericClient {
     public stakingPool: StakingPool;
+    public lockup: Lockup;
 
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
@@ -27,6 +29,7 @@ export class Client extends BlockchainGenericClient {
         this.nameService = new NameService(this);
         this.utils = new ClientUtils(this);
         this.stakingPool = new StakingPool();
+        this.lockup = new Lockup();
     }
 
     public async getBalance(address: string): Promise<BigNumber> {

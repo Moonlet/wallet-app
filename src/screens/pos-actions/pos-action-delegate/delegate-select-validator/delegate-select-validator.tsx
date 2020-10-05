@@ -16,7 +16,7 @@ import { getAccount } from '../../../../redux/wallets/selectors';
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 import { normalize } from '../../../../styles/dimensions';
-import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
+import { AccountType, IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
@@ -189,6 +189,17 @@ export class DelegateSelectValidatorComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
+                        if (
+                            this.props.account.type === AccountType.LOCKUP_CONTRACT &&
+                            this.state.nrValidators === 1
+                        ) {
+                            Dialog.info(
+                                translate('Validator.operationNotAvailable'),
+                                translate('Validator.multipleNodes')
+                            );
+                            return;
+                        }
+
                         if (
                             this.props.allValidators.length >= this.state.nrValidators &&
                             !maximumNumberOfValidatorsReached

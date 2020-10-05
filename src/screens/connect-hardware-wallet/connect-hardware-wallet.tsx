@@ -20,6 +20,7 @@ import { IconValues } from '../../components/icon/values';
 import bind from 'bind-decorator';
 import { createHWWallet } from '../../redux/wallets/actions';
 import { IReduxState } from '../../redux/state';
+import { captureException as SentryCaptureException } from '@sentry/react-native';
 
 export interface IReduxProps {
     createHWWallet: typeof createHWWallet;
@@ -306,15 +307,13 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
     }
 
     private async connect() {
-        if (this.props.walletsExist) {
-            this.displayLedgerConnect();
-        } else {
-            try {
+        try {
+            if (!this.props.walletsExist) {
                 await PasswordModal.createPassword();
                 this.displayLedgerConnect();
-            } catch (err) {
-                //
             }
+        } catch (error) {
+            SentryCaptureException(new Error(JSON.stringify(error)));
         }
     }
 

@@ -254,7 +254,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     }
 
     public getTransactionStatusByCode(status: any): TransactionStatus {
-        if (status.SuccessValue === '') {
+        if (status?.SuccessValue === '' || status?.SuccessValue !== '') {
             return TransactionStatus.SUCCESS;
         } else if (status?.Failure) {
             return TransactionStatus.FAILED;

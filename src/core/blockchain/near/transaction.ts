@@ -25,6 +25,7 @@ import { ApiClient } from '../../utils/api-client/api-client';
 import BigNumber from 'bignumber.js';
 import {
     INearTransactionAdditionalInfoType,
+    NearAccountViewMethods,
     NearFunctionCallMethods,
     NearTransactionActionType
 } from './types';
@@ -150,14 +151,15 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                             validator.id
                         );
 
+                        const depositAmount = new BigNumber(txDelegate.amount).minus(
+                            new BigNumber(res.balance.unstaked)
+                        );
+
                         // Stake
                         const stakeTx: IBlockchainTransaction = await client.stakingPool.stake(
                             txDelegate,
                             validator,
-                            new BigNumber(txDelegate.amount).minus(
-                                new BigNumber(res.balance.unstaked)
-                            )
-                            // Deposit amount
+                            depositAmount
                         );
                         stakeTx.nonce = stakeTx.nonce + transactions.length;
                         transactions.push(stakeTx);
@@ -165,10 +167,24 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 } else if (accountType === AccountType.LOCKUP_CONTRACT) {
                     // LOCKUP_CONTRACT
 
-                    // TODO: select_staking_pool
+                    const validator = tx.validators[0];
+
+                    const stakingPoolId = await client.contractCall({
+                        contractName: tx.account.address,
+                        methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
+                    });
+
+                    if (stakingPoolId !== validator.id) {
+                        // cannot perform this operation
+                    }
 
                     // Can stake to only 1 staking pool
-                    const stakeTx = await client.lockup.stake(txDelegate, tx.validators[0]);
+                    const stakeTx = await client.lockup.stake(
+                        txDelegate,
+                        validator,
+                        new BigNumber(0), // TODO
+                        stakingPoolId
+                    );
                     const nonce = await client.getNonce(stakeTx.address, tx.account.publicKey);
                     stakeTx.nonce = nonce;
                     transactions.push(stakeTx);

@@ -798,6 +798,7 @@ export const createNearAccount = (name: string, extension: string, password: str
 
     const selectedAccount = getSelectedAccount(state);
     const account = generateAccountConfig(blockchain);
+    account.chainId = chainId;
     account.address = selectedAccount.address; // used to transfer tokens for creating account
     account.publicKey = selectedAccount.publicKey;
 

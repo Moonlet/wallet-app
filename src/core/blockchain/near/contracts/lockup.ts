@@ -14,11 +14,39 @@ import BigNumber from 'bignumber.js';
 const BASE_GAS = new BN('25000000000000');
 
 export class Lockup {
+    public async selectStakingPool(
+        tx: IPosTransaction,
+        validator: IValidator
+    ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
+        const transaction = await buildBaseTransaction(tx);
+        const gas = BASE_GAS.mul(new BN(3));
+
+        transaction.address = tx.account.meta.owner;
+        transaction.toAddress = tx.account.address;
+        transaction.feeOptions = { feeTotal: gas.toString() };
+
+        transaction.additionalInfo.posAction = PosBasicActionType.SELECT_STAKING_POOL;
+        transaction.additionalInfo.validatorName = validator.name;
+
+        transaction.additionalInfo.actions = [
+            {
+                type: NearTransactionActionType.FUNCTION_CALL,
+                params: [
+                    NearFunctionCallMethods.SELECT_STAKING_POOL,
+                    { staking_pool_account_id: validator.id },
+                    gas,
+                    new BN(0)
+                ]
+            }
+        ];
+
+        return transaction;
+    }
+
     public async stake(
         tx: IPosTransaction,
         validator: IValidator,
-        depositAmount: BigNumber, // TODO: implement this
-        stakingPoolId: string
+        depositAmount: BigNumber // TODO: implement this
     ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const transaction = await buildBaseTransaction(tx);
 
@@ -43,20 +71,6 @@ export class Lockup {
         ];
 
         // TODO: stake without deposit if unstaked is available
-
-        if (!stakingPoolId) {
-            transaction.additionalInfo.actions = [
-                {
-                    type: NearTransactionActionType.FUNCTION_CALL,
-                    params: [
-                        NearFunctionCallMethods.SELECT_STAKING_POOL,
-                        { staking_pool_account_id: validator.id },
-                        BASE_GAS.mul(new BN(3)),
-                        new BN(0)
-                    ]
-                }
-            ].concat(transaction.additionalInfo.actions);
-        }
 
         return transaction;
     }

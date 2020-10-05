@@ -167,26 +167,36 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 } else if (accountType === AccountType.LOCKUP_CONTRACT) {
                     // LOCKUP_CONTRACT
 
-                    const validator = tx.validators[0];
+                    const validator = tx.validators[0]; // Can stake to only 1 staking pool
+                    const nonce = await client.getNonce(
+                        tx.account.meta.owner,
+                        tx.account.publicKey
+                    );
 
-                    const stakingPoolId = await client.contractCall({
-                        contractName: tx.account.address,
-                        methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
-                    });
+                    try {
+                        const stakingPoolId = await client.contractCall({
+                            contractName: tx.account.address,
+                            methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
+                        });
 
-                    if (stakingPoolId !== validator.id) {
-                        // cannot perform this operation
+                        if (!stakingPoolId) {
+                            const selectSPTx = await client.lockup.selectStakingPool(
+                                txDelegate,
+                                validator
+                            );
+                            selectSPTx.nonce = nonce + transactions.length;
+                            transactions.push(selectSPTx);
+                        }
+                    } catch (err) {
+                        // no need to handed?
                     }
 
-                    // Can stake to only 1 staking pool
                     const stakeTx = await client.lockup.stake(
                         txDelegate,
                         validator,
-                        new BigNumber(0), // TODO
-                        stakingPoolId
+                        new BigNumber(0) // TODO
                     );
-                    const nonce = await client.getNonce(stakeTx.address, tx.account.publicKey);
-                    stakeTx.nonce = nonce;
+                    stakeTx.nonce = nonce + transactions.length;
                     transactions.push(stakeTx);
                 } else {
                     // future account types

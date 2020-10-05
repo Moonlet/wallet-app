@@ -303,6 +303,13 @@ export class Client extends BlockchainGenericClient {
             case PosBasicActionType.STAKE:
             case PosBasicActionType.UNSTAKE:
                 try {
+                    if (options.validatorAddress.length > 1) {
+                        return Promise.resolve({
+                            value: false,
+                            message: translate('Validator.multipleNodes')
+                        });
+                    }
+
                     const stakingAccountId = await this.contractCall({
                         contractName: options.address,
                         methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID

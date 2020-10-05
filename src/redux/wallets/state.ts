@@ -35,7 +35,6 @@ export interface ITokensAccountState {
 }
 
 export interface IAccountState {
-    account?: any;
     index: number;
     order?: number; // TODO: implement this
     selected: boolean;

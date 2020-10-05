@@ -87,7 +87,7 @@ export class Lockup {
         validator: IValidator
     ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const transaction = await buildBaseTransaction(tx);
-        const gas = NEAR_LOCKUP_BASE_GAS.mul(new BN(3));
+        const gas = NEAR_LOCKUP_BASE_GAS.mul(new BN(5));
 
         transaction.address = tx.account.meta.owner;
         transaction.toAddress = tx.account.address;

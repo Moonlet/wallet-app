@@ -252,9 +252,6 @@ export class AccountTabComponent extends React.Component<
                                         token: this.props.token
                                     })
                                 }
-                                disabledSecondary={
-                                    this.props.account.type === AccountType.LOCKUP_CONTRACT
-                                }
                             >
                                 {translate('App.labels.receive')}
                             </Button>

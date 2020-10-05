@@ -270,6 +270,8 @@ export class RecoverNearAccountComponent extends React.Component<
     }
 
     private startAuthorizing() {
+        const { recoveredAccount } = this.state;
+
         this.setState({
             action: { ...this.state.action, authorizing: true, loading: false }
         });
@@ -278,10 +280,11 @@ export class RecoverNearAccountComponent extends React.Component<
 
         clearInterval(this.startRecoveringAccountInterval);
         this.startRecoveringAccountInterval = setInterval(async () => {
-            const res = await client.viewAccountAccessKey(
-                this.state.recoveredAccount.address,
-                this.state.recoveredAccount.publicKey
-            );
+            const address = recoveredAccount?.meta?.owner
+                ? recoveredAccount.meta.owner
+                : recoveredAccount.address;
+
+            const res = await client.viewAccountAccessKey(address, recoveredAccount.publicKey);
 
             if (res && (res?.permission || res?.nonce)) {
                 this.recoverAccount();

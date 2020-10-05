@@ -129,8 +129,8 @@ export class RecoverNearAccountComponent extends React.Component<
         clearInterval(this.startRecoveringAccountInterval);
     }
 
-    private async getLockupContractOwner(accountId: string, client: NearClient) {
-        let ownerAccountId;
+    private async getLockupContractOwner(accountId: string, client: NearClient): Promise<string> {
+        let ownerAccountId: string;
 
         try {
             ownerAccountId = await client.contractCall({

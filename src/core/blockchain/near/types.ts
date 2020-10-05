@@ -51,5 +51,6 @@ export enum NearQueryRequestTypes {
 
 export enum NearAccountViewMethods {
     GET_OWNER_ACCOUNT_ID = 'get_owner_account_id',
-    GET_STAKING_POOL_ACCOUNT_ID = 'get_staking_pool_account_id'
+    GET_STAKING_POOL_ACCOUNT_ID = 'get_staking_pool_account_id',
+    GET_ACCOUNT_UNSTAKED_BALANCE = 'get_account_unstaked_balance'
 }

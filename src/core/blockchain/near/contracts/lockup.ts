@@ -8,10 +8,8 @@ import {
     NearFunctionCallMethods
 } from '../types';
 import BN from 'bn.js';
-import { NEAR_DEFAULT_FUNC_CALL_GAS } from '../consts';
 import BigNumber from 'bignumber.js';
-
-const BASE_GAS = new BN('25000000000000');
+import { NEAR_LOCKUP_BASE_GAS } from '../consts';
 
 export class Lockup {
     public async selectStakingPool(
@@ -19,7 +17,7 @@ export class Lockup {
         validator: IValidator
     ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const transaction = await buildBaseTransaction(tx);
-        const gas = BASE_GAS.mul(new BN(3));
+        const gas = NEAR_LOCKUP_BASE_GAS.mul(new BN(3));
 
         transaction.address = tx.account.meta.owner;
         transaction.toAddress = tx.account.address;
@@ -46,31 +44,40 @@ export class Lockup {
     public async stake(
         tx: IPosTransaction,
         validator: IValidator,
-        depositAmount: BigNumber // TODO: implement this
+        unstakedAmount: BigNumber
     ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const transaction = await buildBaseTransaction(tx);
+        const gas = NEAR_LOCKUP_BASE_GAS.mul(new BN(5));
 
         transaction.address = tx.account.meta.owner;
         transaction.toAddress = tx.account.address;
-        transaction.feeOptions = { feeTotal: NEAR_DEFAULT_FUNC_CALL_GAS.toString() }; // TODO: fix this, not accurate
+        transaction.feeOptions = { feeTotal: gas.toString() };
 
         transaction.additionalInfo.posAction = PosBasicActionType.STAKE;
         transaction.additionalInfo.validatorName = validator.name;
 
-        // DEPOSIT_AND_STAKE
-        transaction.additionalInfo.actions = [
-            {
-                type: NearTransactionActionType.FUNCTION_CALL,
-                params: [
-                    NearFunctionCallMethods.DEPOSIT_AND_STAKE,
-                    { amount: tx.amount },
-                    BASE_GAS.mul(new BN(5)),
-                    new BN(0)
-                ]
-            }
-        ];
-
-        // TODO: stake without deposit if unstaked is available
+        if (unstakedAmount.isGreaterThan(new BigNumber(tx.amount))) {
+            // STAKE
+            transaction.additionalInfo.actions = [
+                {
+                    type: NearTransactionActionType.FUNCTION_CALL,
+                    params: [NearFunctionCallMethods.STAKE, { amount: tx.amount }, gas, new BN(0)]
+                }
+            ];
+        } else {
+            // DEPOSIT_AND_STAKE
+            transaction.additionalInfo.actions = [
+                {
+                    type: NearTransactionActionType.FUNCTION_CALL,
+                    params: [
+                        NearFunctionCallMethods.DEPOSIT_AND_STAKE,
+                        { amount: tx.amount },
+                        gas,
+                        new BN(0)
+                    ]
+                }
+            ];
+        }
 
         return transaction;
     }
@@ -80,10 +87,11 @@ export class Lockup {
         validator: IValidator
     ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
         const transaction = await buildBaseTransaction(tx);
+        const gas = NEAR_LOCKUP_BASE_GAS.mul(new BN(3));
 
         transaction.address = tx.account.meta.owner;
         transaction.toAddress = tx.account.address;
-        transaction.feeOptions = { feeTotal: NEAR_DEFAULT_FUNC_CALL_GAS.toString() };
+        transaction.feeOptions = { feeTotal: gas.toString() };
 
         transaction.additionalInfo.posAction = PosBasicActionType.UNSTAKE;
         transaction.additionalInfo.validatorName = validator.name;
@@ -91,12 +99,7 @@ export class Lockup {
         transaction.additionalInfo.actions = [
             {
                 type: NearTransactionActionType.FUNCTION_CALL,
-                params: [
-                    NearFunctionCallMethods.UNSTAKE,
-                    { amount: tx.amount },
-                    BASE_GAS.mul(new BN(3)),
-                    new BN(0)
-                ]
+                params: [NearFunctionCallMethods.UNSTAKE, { amount: tx.amount }, gas, new BN(0)]
             }
         ];
 

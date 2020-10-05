@@ -167,7 +167,7 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 } else if (accountType === AccountType.LOCKUP_CONTRACT) {
                     // LOCKUP_CONTRACT
 
-                    const validator = tx.validators[0]; // Can stake to only 1 staking pool
+                    const validator = tx.validators[0]; // Can stake to only 1 validator
                     const nonce = await client.getNonce(
                         tx.account.meta.owner,
                         tx.account.publicKey
@@ -191,10 +191,23 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                         // no need to handed?
                     }
 
+                    let unstakedAmount = new BigNumber(0);
+                    try {
+                        const unstaked = await client.contractCall({
+                            contractName: validator.id,
+                            methodName: NearAccountViewMethods.GET_ACCOUNT_UNSTAKED_BALANCE,
+                            args: { account_id: tx.account.address }
+                        });
+                        unstakedAmount = new BigNumber(unstaked);
+                    } catch (err) {
+                        // no need to handle this
+                        // maybe sentry?
+                    }
+
                     const stakeTx = await client.lockup.stake(
                         txDelegate,
                         validator,
-                        new BigNumber(0) // TODO
+                        unstakedAmount
                     );
                     stakeTx.nonce = nonce + transactions.length;
                     transactions.push(stakeTx);

@@ -310,8 +310,8 @@ export class ConnectHardwareWalletScreenComponent extends React.Component<
         try {
             if (!this.props.walletsExist) {
                 await PasswordModal.createPassword();
-                this.displayLedgerConnect();
             }
+            this.displayLedgerConnect();
         } catch (error) {
             SentryCaptureException(new Error(JSON.stringify(error)));
         }

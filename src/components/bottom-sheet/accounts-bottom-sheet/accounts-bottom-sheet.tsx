@@ -238,11 +238,14 @@ export class AccountsBottomSheetComponent extends React.Component<
                     })}
 
                     {Platform.OS !== 'web' && (
+                        // For now this this is only implemented on NEAR
                         <ListAccount
                             leftIcon={blockchainConfig.iconComponent}
                             isCreate
                             disabled={
-                                this.props.accounts.length === blockchainConfig.ui.maxAccountsNumber
+                                this.props.accounts.length ===
+                                    blockchainConfig.ui.maxAccountsNumber ||
+                                selectedAccount.blockchain !== Blockchain.NEAR
                             }
                             label={
                                 <View

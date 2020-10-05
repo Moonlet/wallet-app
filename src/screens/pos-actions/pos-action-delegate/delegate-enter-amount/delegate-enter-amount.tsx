@@ -112,7 +112,9 @@ export class DelegateEnterAmountComponent extends React.Component<
                 amount: blockchainInstance.account
                     .amountFromStd(new BigNumber(data), tokenConfig.decimals)
                     .toFixed(),
-                minimumDelegateAmount: minimumDelegateAmountValue || new BigNumber(0)
+                minimumDelegateAmount:
+                    minimumDelegateAmountValue.multipliedBy(this.props.validators.length) ||
+                    new BigNumber(0)
             });
         } catch (err) {
             this.setState({ amount: this.props.token.balance.value }); // set balance to the available balance at least

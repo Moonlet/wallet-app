@@ -9,9 +9,7 @@ import { connect } from 'react-redux';
 import { translate } from '../../core/i18n';
 import { getSelectedAccount, getAccounts } from '../../redux/wallets/selectors';
 import { IAccountState } from '../../redux/wallets/state';
-import {} from 'react-native-gesture-handler';
 import { Button, Text } from '../../library';
-import { BASE_DIMENSION } from '../../styles/dimensions';
 import { DraggableCardWithCheckbox } from '../../components/draggable-card-with-check-box/draggable-card-with-check-box';
 import { getBlockchain } from '../../core/blockchain/blockchain-factory';
 import { Amount } from '../../components/amount/amount';
@@ -19,7 +17,7 @@ import { formatAddress } from '../../core/utils/format-address';
 import { calculateBalance } from '../../core/utils/balance';
 import { getChainId } from '../../redux/preferences/selectors';
 import { IExchangeRates } from '../../redux/market/state';
-import { ChainIdType } from '../../core/blockchain/types';
+import { Blockchain, ChainIdType } from '../../core/blockchain/types';
 import { getTokenConfig } from '../../redux/tokens/static-selectors';
 import { NavigationService } from '../../navigation/navigation-service';
 
@@ -109,32 +107,41 @@ export class ManageAccountsComponent extends React.Component<
 
     public render() {
         const { styles } = this.props;
+        const { blockchain } = this.props.selectedAccount;
+        const disableButton =
+            this.props.accounts.length === getBlockchain(blockchain).config.ui.maxAccountsNumber;
 
         return (
             <View style={styles.container}>
                 <ScrollView
-                    contentContainerStyle={{ flexGrow: 1, paddingBottom: BASE_DIMENSION * 2 }}
+                    contentContainerStyle={styles.scrollView}
                     showsVerticalScrollIndicator={false}
                 >
                     {this.props.accounts.map((account: IAccountState) =>
                         this.renderAccount(account)
                     )}
                 </ScrollView>
-                <Button
-                    primary
-                    onPress={() => {
-                        // TODO: update this based on blockchain
-                        NavigationService.navigate('AddNearAccount', {});
-                    }}
-                    wrapperStyle={{ marginHorizontal: BASE_DIMENSION * 2 }}
-                    disabled={
-                        this.props.accounts.length ===
-                        getBlockchain(this.props.selectedAccount.blockchain).config.ui
-                            .maxAccountsNumber
-                    }
-                >
-                    {translate('AddAccount.title')}
-                </Button>
+
+                {blockchain === Blockchain.NEAR && (
+                    <View style={styles.bottomContainer}>
+                        <Button
+                            onPress={() => NavigationService.navigate('RecoverNearAccount', {})}
+                            wrapperStyle={styles.bottomButton}
+                            disabled={disableButton}
+                        >
+                            {translate('AddNearAccount.recoverAccount')}
+                        </Button>
+
+                        <Button
+                            primary
+                            onPress={() => NavigationService.navigate('CreateNearAccount', {})}
+                            wrapperStyle={styles.bottomButton}
+                            disabled={disableButton}
+                        >
+                            {translate('AddNearAccount.createAccount')}
+                        </Button>
+                    </View>
+                )}
             </View>
         );
     }

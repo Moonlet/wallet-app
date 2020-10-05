@@ -46,7 +46,10 @@ export abstract class GenericStats<Client = BlockchainGenericClient> {
         throw new Error('Not Implemented');
     }
 
-    public async getAvailableBalanceForDelegate(account: IAccountState): Promise<string> {
+    public async getAvailableBalanceForDelegate(
+        account: IAccountState,
+        validatorId?: string
+    ): Promise<string> {
         throw new Error('Not Implemented');
     }
 }
@@ -80,8 +83,5 @@ export interface IPosWidget {
     value: string;
     timestamp: string;
     index?: number;
-    validator?: {
-        id: string;
-        name: string;
-    };
+    validator?: IValidator;
 }

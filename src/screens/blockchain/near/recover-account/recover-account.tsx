@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, View, TextInput, Clipboard, Linking, TouchableOpacity } from 'react-native';
+import { Image, View, TextInput, Clipboard, TouchableOpacity } from 'react-native';
 import { Text, Button } from '../../../../library';
 import stylesProvider from './styles';
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
@@ -10,45 +10,58 @@ import { connect } from 'react-redux';
 import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { addAccount, setSelectedAccount } from '../../../../redux/wallets/actions';
 import { IReduxState } from '../../../../redux/state';
-import { PasswordModal } from '../../../../components/password-modal/password-modal';
 import { Client as NearClient } from '../../../../core/blockchain/near/client';
 import { getChainId } from '../../../../redux/preferences/selectors';
-import { WalletFactory } from '../../../../core/wallet/wallet-factory';
-import { getSelectedWallet } from '../../../../redux/wallets/selectors';
+import {
+    generateAccountConfig,
+    getSelectedAccount,
+    getSelectedWallet
+} from '../../../../redux/wallets/selectors';
 import { IWalletState, IAccountState } from '../../../../redux/wallets/state';
-import { IWallet } from '../../../../core/wallet/types';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
-import { LoadingModal } from '../../../../components/loading-modal/loading-modal';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NearAccountType } from '../../../../core/blockchain/near/types';
+import { openURL } from '../../../../core/utils/linking-handler';
 
 interface IReduxProps {
     chainId: ChainIdType;
+    selectedAccount: IAccountState;
     selectedWallet: IWalletState;
     addAccount: typeof addAccount;
     setSelectedAccount: typeof setSelectedAccount;
 }
 
 interface IState {
-    inputAccout: string;
-    isInputValid: boolean;
-    isChecking: boolean;
-    isUsernameNotRegistered: boolean;
-    isUsernameNotAvailable: boolean;
-    isInvalidUsername: boolean;
-    isAuthorizing: boolean;
-    isNotSupported: boolean;
+    input: {
+        name: string;
+        valid: boolean;
+        shouldAuthorize: boolean;
+    };
+
     recoveredAccount: IAccountState;
-    openWalletLoginUrl: boolean;
+
+    action: {
+        authorizing: boolean;
+        checking: boolean;
+        loading: boolean;
+    };
+
+    usernameError: {
+        notAvailable: boolean;
+        notRegistered: boolean;
+        notSupported: boolean;
+        invalid: boolean;
+    };
 }
 
 const mapStateToProps = (state: IReduxState) => {
     return {
         chainId: getChainId(state, Blockchain.NEAR),
-        selectedWallet: getSelectedWallet(state)
+        selectedWallet: getSelectedWallet(state),
+        selectedAccount: getSelectedAccount(state)
     };
 };
 
@@ -71,17 +84,45 @@ export class RecoverNearAccountComponent extends React.Component<
     ) {
         super(props);
         this.state = {
-            inputAccout: '',
-            isInputValid: false,
-            isChecking: false,
-            isUsernameNotRegistered: false,
-            isUsernameNotAvailable: false,
-            isInvalidUsername: false,
-            isAuthorizing: false,
-            isNotSupported: false,
-            recoveredAccount: undefined,
-            openWalletLoginUrl: false
+            input: {
+                name: '',
+                valid: false,
+                shouldAuthorize: false
+            },
+
+            recoveredAccount: generateAccountConfig(Blockchain.NEAR),
+
+            action: {
+                authorizing: false,
+                checking: false,
+                loading: false
+            },
+
+            usernameError: {
+                notAvailable: false,
+                notRegistered: false,
+                notSupported: false,
+                invalid: false
+            }
         };
+    }
+
+    public componentDidMount() {
+        let recoveredAccountIndex = -1;
+
+        for (const acc of this.props.selectedWallet.accounts) {
+            if (acc.blockchain === Blockchain.NEAR && acc.index >= recoveredAccountIndex) {
+                recoveredAccountIndex = acc.index + 1;
+            }
+        }
+
+        this.setState({
+            recoveredAccount: {
+                ...this.state.recoveredAccount,
+                publicKey: this.props.selectedAccount.publicKey, // on NEAR we use the same publicKey on all accounts
+                index: recoveredAccountIndex === -1 ? 0 : recoveredAccountIndex
+            }
+        });
     }
 
     public componentWillUnmount() {
@@ -92,172 +133,200 @@ export class RecoverNearAccountComponent extends React.Component<
         clearInterval(this.startRecoveringAccountInterval);
 
         this.setState({
-            inputAccout: accountId,
-            isChecking: true,
-            isAuthorizing: false,
-            recoveredAccount: undefined
+            input: {
+                name: accountId,
+                valid: false,
+                shouldAuthorize: false
+            },
+
+            action: {
+                authorizing: false,
+                checking: true,
+                loading: false
+            },
+
+            // reset error to default
+            usernameError: {
+                notAvailable: false,
+                notRegistered: false,
+                notSupported: false,
+                invalid: false
+            }
         });
 
         if (accountId.includes('@')) {
             this.setState({
-                isInputValid: false,
-                isInvalidUsername: true,
-                isUsernameNotRegistered: false,
-                isUsernameNotAvailable: false,
-                isNotSupported: false,
-                isChecking: false
+                action: { ...this.state.action, checking: false },
+                usernameError: { ...this.state.usernameError, invalid: true }
             });
             return;
         }
 
         try {
-            const blockchainInstance = getBlockchain(Blockchain.NEAR);
-            const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
+            const client = getBlockchain(Blockchain.NEAR).getClient(
+                this.props.chainId
+            ) as NearClient;
 
             const account = await client.getAccount(accountId);
 
             if (account.exists === true && account.valid === true) {
                 if (account.type !== NearAccountType.DEFAULT) {
+                    // Not supported
                     this.setState({
-                        isInputValid: false,
-                        isInvalidUsername: false,
-                        isUsernameNotRegistered: false,
-                        isUsernameNotAvailable: false,
-                        isNotSupported: true,
-                        isChecking: false
+                        usernameError: { ...this.state.usernameError, notSupported: true }
                     });
                 } else {
+                    // Input is valid
                     this.setState({
-                        isInputValid: true,
-                        isInvalidUsername: false,
-                        isUsernameNotRegistered: false,
-                        isUsernameNotAvailable: false,
-                        isNotSupported: false,
-                        isChecking: false
+                        recoveredAccount: { ...this.state.recoveredAccount, address: accountId }
                     });
+
+                    const res = await client.viewAccountAccessKey(
+                        accountId,
+                        this.state.recoveredAccount.publicKey
+                    );
+
+                    if (res && (res?.permission || res?.nonce)) {
+                        // Recover automatically
+                        this.setState({
+                            input: { ...this.state.input, valid: true, shouldAuthorize: false }
+                        });
+                    } else {
+                        // Needs authorization
+                        this.setState({
+                            input: { ...this.state.input, valid: true, shouldAuthorize: true }
+                        });
+                    }
                 }
             } else if (account.exists === false && account.valid === true) {
+                // Not registered
                 this.setState({
-                    isInputValid: false,
-                    isInvalidUsername: false,
-                    isUsernameNotRegistered: true,
-                    isUsernameNotAvailable: false,
-                    isNotSupported: false,
-                    isChecking: false
+                    usernameError: { ...this.state.usernameError, notRegistered: true }
                 });
             } else {
+                // Not available
                 this.setState({
-                    isInputValid: false,
-                    isInvalidUsername: false,
-                    isUsernameNotRegistered: false,
-                    isUsernameNotAvailable: true,
-                    isNotSupported: false,
-                    isChecking: false
+                    usernameError: { ...this.state.usernameError, notAvailable: true }
                 });
             }
         } catch (error) {
+            // Not available
             this.setState({
-                isInputValid: false,
-                isInvalidUsername: false,
-                isUsernameNotRegistered: false,
-                isUsernameNotAvailable: true,
-                isNotSupported: false,
-                isChecking: false
+                usernameError: { ...this.state.usernameError, notAvailable: true }
             });
 
             SentryCaptureException(new Error(JSON.stringify(error)));
         }
+
+        // Stop checking
+        this.setState({ action: { ...this.state.action, checking: false } });
     }
 
-    private async startRecoveringAccount(options?: { shouldOpenWalletLoginUrl: boolean }) {
+    private startAuthorizing() {
+        this.setState({
+            action: { ...this.state.action, authorizing: true, loading: false }
+        });
+
         const client = getBlockchain(Blockchain.NEAR).getClient(this.props.chainId) as NearClient;
-
-        await this.recoverAccount(client);
-
-        if (options?.shouldOpenWalletLoginUrl && this.state.openWalletLoginUrl) {
-            const url = getBlockchain(this.state.recoveredAccount.blockchain)
-                .networks.filter(n => n.chainId === this.props.chainId)[0]
-                .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
-
-            Linking.canOpenURL(url).then(supported => supported && Linking.openURL(url));
-        }
 
         clearInterval(this.startRecoveringAccountInterval);
         this.startRecoveringAccountInterval = setInterval(async () => {
-            this.recoverAccount(client);
+            const res = await client.viewAccountAccessKey(
+                this.state.recoveredAccount.address,
+                this.state.recoveredAccount.publicKey
+            );
+
+            if (res && (res?.permission || res?.nonce)) {
+                this.recoverAccount();
+            }
         }, 1000);
     }
 
-    private async recoverAccount(client: NearClient) {
-        const { recoveredAccount } = this.state;
-
-        const res = await client.viewAccountAccessKey(
-            recoveredAccount.address,
-            recoveredAccount.publicKey
-        );
-
-        if (res && (res?.permission || res?.nonce)) {
-            this.props.addAccount(this.props.selectedWallet.id, Blockchain.NEAR, recoveredAccount);
-            this.props.setSelectedAccount(recoveredAccount);
-            NavigationService.navigate('Dashboard', {});
-        } else {
-            this.setState({ openWalletLoginUrl: true });
-        }
+    private getWalletLoginUrl(): string {
+        return getBlockchain(this.state.recoveredAccount.blockchain)
+            .networks.filter(n => n.chainId === this.props.chainId)[0]
+            .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
     }
 
-    private async generatePublicKey() {
-        try {
-            const password = await PasswordModal.getPassword(undefined, undefined, {
-                showCloseButton: true
-            });
+    private recoverAccount() {
+        this.props.addAccount(
+            this.props.selectedWallet.id,
+            Blockchain.NEAR,
+            this.state.recoveredAccount
+        );
+        this.props.setSelectedAccount(this.state.recoveredAccount);
+        NavigationService.navigate('Dashboard', {});
+    }
 
-            await LoadingModal.open();
+    private renderBottomContainer() {
+        const { styles } = this.props;
 
-            const selectedWallet: IWalletState = this.props.selectedWallet;
-            const hdWallet: IWallet = await WalletFactory.get(
-                selectedWallet.id,
-                selectedWallet.type,
-                { pass: password }
-            );
-
-            const accounts = await hdWallet.getAccounts(Blockchain.NEAR, 0);
-            const account = accounts[0];
-
-            if (account) {
-                let recoveredAccountIndex = -1;
-
-                for (const acc of selectedWallet.accounts) {
-                    if (acc.blockchain === Blockchain.NEAR && acc.index >= recoveredAccountIndex) {
-                        recoveredAccountIndex = acc.index + 1;
-                    }
-                }
-
-                this.setState({
-                    recoveredAccount: {
-                        ...account,
-                        address: this.state.inputAccout,
-                        index: recoveredAccountIndex === -1 ? 0 : recoveredAccountIndex
-                    }
-                });
-            }
-        } catch (err) {
-            SentryCaptureException(new Error(JSON.stringify(err)));
+        if (this.state.action.loading) {
+            return <LoadingIndicator />;
         }
 
-        await LoadingModal.close();
+        if (this.state.action.authorizing) {
+            return (
+                <View style={{ flex: 1 }}>
+                    <View style={{ flex: 1 }}>
+                        <LoadingIndicator />
+                    </View>
+
+                    <Button
+                        wrapperStyle={styles.copyAuthButton}
+                        onPress={() => Clipboard.setString(this.getWalletLoginUrl())}
+                    >
+                        {translate('RecoverNearAccount.copyAuthLink')}
+                    </Button>
+
+                    <Button
+                        wrapperStyle={styles.copyAuthButton}
+                        primary
+                        onPress={() => openURL(this.getWalletLoginUrl())}
+                    >
+                        {translate('RecoverNearAccount.authMoonlet')}
+                    </Button>
+                </View>
+            );
+        }
+
+        return (
+            <View style={styles.defaultButtonContainer}>
+                <Button
+                    wrapperStyle={styles.defaultButton}
+                    primary
+                    disabled={!this.state.input.valid}
+                    onPress={async () => {
+                        this.setState({ action: { ...this.state.action, loading: true } }, () => {
+                            if (this.state.input.shouldAuthorize) {
+                                // start authorization
+                                this.startAuthorizing();
+                            } else {
+                                // recover account automatically
+                                this.recoverAccount();
+                            }
+                        });
+                    }}
+                >
+                    {translate('App.labels.continue')}
+                </Button>
+            </View>
+        );
     }
 
     public render() {
         const { styles, theme } = this.props;
+        const { action, usernameError, input } = this.state;
+        const { name, valid, shouldAuthorize } = input;
+        const { authorizing, checking } = action;
+        const { notAvailable, notRegistered, notSupported, invalid } = usernameError;
 
-        const isChecking = this.state.isChecking && !this.state.isInputValid;
-        const isUsernameNotRegistered =
-            this.state.isUsernameNotRegistered && !this.state.isInputValid;
-        const isInvalidUsername = this.state.isInvalidUsername && !this.state.isInputValid;
-        const isUsernameNotAvailable =
-            this.state.isUsernameNotAvailable && !this.state.isInputValid;
-        const isNotSupported = this.state.isNotSupported && !this.state.isInputValid;
-        const isAuthorizing = this.state.isAuthorizing && this.state.isInputValid;
+        const isChecking = checking && !valid;
+        const isUsernameNotRegistered = notRegistered && !valid;
+        const isInvalidUsername = invalid && !valid;
+        const isUsernameNotAvailable = notAvailable && !valid;
+        const isNotSupported = notSupported && !valid;
+        const isAuthorizing = authorizing && valid;
 
         const isCreateAccountActive = !isChecking && isUsernameNotRegistered;
 
@@ -275,7 +344,7 @@ export class RecoverNearAccountComponent extends React.Component<
                         />
 
                         <Text style={styles.authMoonletUserAccountText}>
-                            {translate('RecoverNearAccount.authMoonletUserAccount')}
+                            {translate('RecoverNearAccount.checkStatus')}
                         </Text>
 
                         <View style={styles.inputContainer}>
@@ -288,7 +357,7 @@ export class RecoverNearAccountComponent extends React.Component<
                                     autoCorrect={false}
                                     selectionColor={theme.colors.accent}
                                     returnKeyType="done"
-                                    value={this.state.inputAccout}
+                                    value={name}
                                     onChangeText={inputAccout => this.checkAccountId(inputAccout)}
                                 />
                             </View>
@@ -297,7 +366,7 @@ export class RecoverNearAccountComponent extends React.Component<
                                 <TouchableOpacity
                                     onPress={() =>
                                         NavigationService.navigate('CreateNearAccount', {
-                                            accountId: this.state.inputAccout
+                                            accountId: name
                                         })
                                     }
                                     disabled={!isCreateAccountActive}
@@ -312,7 +381,9 @@ export class RecoverNearAccountComponent extends React.Component<
                                                     isNotSupported) &&
                                                     styles.errorText,
                                                 isChecking && styles.checkingText,
-                                                this.state.isInputValid && styles.congratsText
+                                                valid && shouldAuthorize
+                                                    ? styles.checkingText
+                                                    : styles.congratsText
                                             ]}
                                         >
                                             {isChecking
@@ -325,9 +396,11 @@ export class RecoverNearAccountComponent extends React.Component<
                                                 ? translate('AddAccount.notAvailable')
                                                 : isNotSupported
                                                 ? translate('RecoverNearAccount.notSupported')
-                                                : this.state.isInputValid
-                                                ? translate('RecoverNearAccount.congrats', {
-                                                      name: this.state.inputAccout
+                                                : valid && !shouldAuthorize
+                                                ? translate('RecoverNearAccount.congrats', { name })
+                                                : valid && shouldAuthorize
+                                                ? translate('RecoverNearAccount.needAuthorize', {
+                                                      name
                                                   })
                                                 : ''}
                                         </Text>
@@ -342,59 +415,8 @@ export class RecoverNearAccountComponent extends React.Component<
                             )}
                         </View>
 
-                        {isAuthorizing && (
-                            <View style={styles.authProgressContainer}>
-                                <View style={styles.loadingContainer}>
-                                    <LoadingIndicator />
-                                </View>
-                                <Text style={styles.authProgressText}>
-                                    {translate('RecoverNearAccount.authProgress')}
-                                </Text>
-                            </View>
-                        )}
+                        <View style={{ flex: 1 }}>{this.renderBottomContainer()}</View>
                     </View>
-
-                    <Button
-                        wrapperStyle={styles.copyAuthButton}
-                        disabledSecondary={!this.state.isInputValid}
-                        onPress={async () => {
-                            if (!this.state.recoveredAccount) {
-                                await this.generatePublicKey();
-                            }
-
-                            if (this.state.recoveredAccount) {
-                                this.setState({ isAuthorizing: true });
-
-                                const url = getBlockchain(this.state.recoveredAccount.blockchain)
-                                    .networks.filter(n => n.chainId === this.props.chainId)[0]
-                                    .links.getWalletLoginUrl(this.state.recoveredAccount.publicKey);
-
-                                Clipboard.setString(url);
-                                this.startRecoveringAccount();
-                            }
-                        }}
-                    >
-                        {translate('RecoverNearAccount.copyAuthLink')}
-                    </Button>
-
-                    <Button
-                        wrapperStyle={styles.authButton}
-                        primary
-                        disabled={!this.state.isInputValid}
-                        onPress={async () => {
-                            if (!this.state.recoveredAccount) {
-                                await this.generatePublicKey();
-                            }
-
-                            if (this.state.recoveredAccount) {
-                                this.setState({ isAuthorizing: true });
-
-                                this.startRecoveringAccount({ shouldOpenWalletLoginUrl: true });
-                            }
-                        }}
-                    >
-                        {translate('RecoverNearAccount.authMoonlet')}
-                    </Button>
                 </KeyboardAwareScrollView>
             </View>
         );

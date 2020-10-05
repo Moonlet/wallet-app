@@ -48,7 +48,7 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
         const address = Buffer.from(bs58.decode(pk)).toString('hex');
 
         return {
-            index,
+            index: 0,
             selected: false,
             publicKey: 'ed25519:' + pk,
             address,

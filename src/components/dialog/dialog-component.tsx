@@ -166,6 +166,9 @@ export class DialogComponent extends React.Component<
 
         this.setState({
             visible: true,
+            cancelButton: {
+                text: translate('App.labels.cancel')
+            },
             dialogType: DialogType.CONFIRM,
             title,
             message
@@ -272,7 +275,9 @@ export class DialogComponent extends React.Component<
                     onBackdropPress: this.onBackCloseDialog
                 }}
             >
-                <RNDialog.Title style={styles.titleStyle}>{this.state.title}</RNDialog.Title>
+                {this.state.title && (
+                    <RNDialog.Title style={styles.titleStyle}>{this.state.title}</RNDialog.Title>
+                )}
                 <RNDialog.Description style={styles.descriptionStyle}>
                     {this.state.message}
                 </RNDialog.Description>
@@ -287,7 +292,7 @@ export class DialogComponent extends React.Component<
                         label={this.state.defaultInputValue}
                     />
                 )}
-                {this.state.dialogType !== DialogType.INFO && (
+                {this.state.cancelButton && (
                     <RNDialog.Button
                         label={
                             this.state.dialogType === DialogType.ALERT

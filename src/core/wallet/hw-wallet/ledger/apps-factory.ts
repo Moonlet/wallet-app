@@ -4,6 +4,7 @@ import { Zil } from './apps/zil';
 import { Cosmos } from './apps/cosmos';
 import { IHardwareWalletApp } from './types';
 import { Celo } from './apps/celo';
+import { Near } from './apps/near';
 
 export class AppFactory {
     public static async get(
@@ -19,6 +20,8 @@ export class AppFactory {
                 return new Cosmos(transport);
             case Blockchain.CELO:
                 return new Celo(transport);
+            case Blockchain.NEAR:
+                return new Near(transport);
             default:
                 return Promise.reject();
         }

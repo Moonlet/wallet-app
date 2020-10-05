@@ -10,7 +10,9 @@ export enum NearFunctionCallMethods {
     DEPOSIT = 'deposit',
     STAKE = 'stake',
     UNSTAKE = 'unstake',
-    WITHDRAW = 'withdraw'
+    WITHDRAW = 'withdraw',
+    SEND = 'send',
+    CREATE_ACCOUNT_AND_CLAIM = 'create_account_and_claim'
 }
 
 export interface INearTransactionAction {

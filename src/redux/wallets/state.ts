@@ -1,5 +1,5 @@
 import { WalletType } from '../../core/wallet/types';
-import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
+import { Blockchain, IBlockchainTransaction, ChainIdType } from '../../core/blockchain/types';
 import { HWVendor, HWModel, HWConnection } from '../../core/wallet/hw-wallet/types';
 
 export interface IWalletsState {
@@ -45,6 +45,7 @@ export interface IAccountState {
     publicKey: string;
     nonce?: number;
     tokens: ITokensAccountState;
+    chainId?: ChainIdType;
 }
 
 export interface ITokenState {

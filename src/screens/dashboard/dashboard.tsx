@@ -48,7 +48,6 @@ import {
     startNotificationsHandlers,
     getUnseenNotifications
 } from '../../redux/notifications/actions';
-import { AddNearAccount } from '../../components/blockchain/near/add-account/add-account';
 import { LedgerBadge } from '../../components/ledger-badge/ledger-badge';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
 
@@ -451,10 +450,6 @@ export class DashboardScreenComponent extends React.Component<
                     : 'calc(100vh - 122px)'
                 : 'auto';
 
-        const isNearAddAccount =
-            this.props.selectedBlockchain === Blockchain.NEAR &&
-            this.props.selectedBlockchainAccounts.length === 0;
-
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
                 <TestnetBadge />
@@ -462,7 +457,7 @@ export class DashboardScreenComponent extends React.Component<
 
                 <NavigationEvents onWillFocus={() => this.onFocus()} />
 
-                {isNearAddAccount ? <AddNearAccount /> : this.renderTokenDashboard()}
+                {this.renderTokenDashboard()}
 
                 <BottomBlockchainNavigation />
             </View>

@@ -22,8 +22,7 @@ import { PosBasicActionType } from '../../../../../../../core/blockchain/types/t
 import { formatNumber } from '../../../../../../../core/utils/format-number';
 import BigNumber from 'bignumber.js';
 import { getTokenConfig } from '../../../../../../../redux/tokens/static-selectors';
-import { withdraw, activate } from '../../../../../../../redux/wallets/actions';
-import { PasswordModal } from '../../../../../../../components/password-modal/password-modal';
+import { withdraw, activate, claimRewardNoInput } from '../../../../../../../redux/wallets/actions';
 import { NavigationScreenProp, NavigationState, NavigationParams } from 'react-navigation';
 import { fetchValidators } from '../../../../../../../redux/ui/validators/actions';
 import { fetchDelegatedValidators } from '../../../../../../../redux/ui/delegated-validators/actions';
@@ -45,6 +44,7 @@ interface IReduxProps {
     chainId: ChainIdType;
     accountStats: AccountStats;
     withdraw: typeof withdraw;
+    claimRewardNoInput: typeof claimRewardNoInput;
     activate: typeof activate;
     fetchValidators: typeof fetchValidators;
     fetchDelegatedValidators: typeof fetchDelegatedValidators;
@@ -66,6 +66,7 @@ const mapDispatchToProps = {
     withdraw,
     activate,
     fetchValidators,
+    claimRewardNoInput,
     fetchDelegatedValidators,
     fetchAccountDelegateStats
 };
@@ -81,28 +82,31 @@ export class AccountTabComponent extends React.Component<
 
     @bind
     public async onPress(widget: IPosWidget) {
-        const password = await PasswordModal.getPassword(
-            translate('Password.pinTitleUnlock'),
-            translate('Password.subtitleSignTransaction'),
-            { sensitive: true, showCloseButton: true }
-        );
-
         switch (widget.type) {
             case PosBasicActionType.ACTIVATE: {
                 this.props.activate(
                     this.props.account,
                     this.props.token.symbol,
-                    password,
                     this.props.navigation,
                     undefined
                 );
                 break;
             }
+            case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
+                this.props.claimRewardNoInput(
+                    this.props.account,
+                    [widget.validator],
+                    this.props.token.symbol,
+                    this.props.navigation,
+                    undefined
+                );
+                break;
+            }
+
             case PosBasicActionType.WITHDRAW: {
                 this.props.withdraw(
                     this.props.account,
                     this.props.token.symbol,
-                    password,
                     this.props.navigation,
                     {
                         witdrawIndex: widget?.index,
@@ -150,6 +154,21 @@ export class AccountTabComponent extends React.Component<
                             buttonText={translate('App.labels.activate')}
                             buttonColor={this.props.theme.colors.labelReward}
                             buttonDisabled={!isActive}
+                            onPress={() => this.onPress(widget)}
+                        />
+                    );
+                }
+                case PosBasicActionType.CLAIM_REWARD_NO_INPUT: {
+                    return (
+                        <PosWidget
+                            key={`widget-${index}`}
+                            title={translate('Widget.claimText')}
+                            middleTitle={`${translate('App.labels.from').toLowerCase()} ${
+                                widget.validator?.name
+                            }`}
+                            buttonText={translate('App.labels.claim')}
+                            buttonColor={this.props.theme.colors.labelReward}
+                            buttonDisabled={false}
                             onPress={() => this.onPress(widget)}
                         />
                     );

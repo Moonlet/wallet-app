@@ -16,19 +16,20 @@ import { ITokenState } from '../../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../../redux/state';
 import { getValidators } from '../../../../../../../redux/ui/validators/selectors';
 import { connect } from 'react-redux';
+import { LoadingIndicator } from '../../../../../../../components/loading-indicator/loading-indicator';
 
-export interface IProps {
+interface IProps {
     accountIndex: number;
     blockchain: Blockchain;
     token: ITokenState;
     chainId: ChainIdType;
 }
 
-export interface IReduxProps {
+interface IReduxProps {
     validators: IValidator[];
 }
 
-export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
+const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
     return {
         validators: getValidators(state, ownProps.blockchain, ownProps.chainId)
     };
@@ -49,9 +50,18 @@ export class ValidatorsTabComponent extends React.Component<
         super(props);
 
         this.state = {
-            validatorsFilteredList: this.props.validators || [],
-            unfilteredList: this.props.validators || []
+            validatorsFilteredList: this.props.validators,
+            unfilteredList: this.props.validators
         };
+    }
+
+    public componentDidUpdate(prevProps: IReduxProps) {
+        if (this.props.validators !== prevProps.validators) {
+            this.setState({
+                validatorsFilteredList: this.props.validators,
+                unfilteredList: this.props.validators
+            });
+        }
     }
 
     @bind
@@ -83,7 +93,7 @@ export class ValidatorsTabComponent extends React.Component<
     }
 
     public render() {
-        const styles = this.props.styles;
+        const { styles } = this.props;
         const tokenUiConfig = getBlockchain(this.props.blockchain).config.ui.token;
         return (
             <View style={styles.container}>
@@ -95,13 +105,19 @@ export class ValidatorsTabComponent extends React.Component<
                             onClose={this.onClose}
                         />
                     </View>
-                    <ValidatorsList
-                        validators={this.state.validatorsFilteredList}
-                        blockchain={this.props.blockchain}
-                        token={this.props.token}
-                        onSelect={this.onSelect}
-                        actionType={CardActionType.NAVIGATE}
-                    />
+                    {this.state.validatorsFilteredList.length === 0 ? (
+                        <View style={{ flex: 1 }}>
+                            <LoadingIndicator />
+                        </View>
+                    ) : (
+                        <ValidatorsList
+                            validators={this.state.validatorsFilteredList}
+                            blockchain={this.props.blockchain}
+                            token={this.props.token}
+                            onSelect={this.onSelect}
+                            actionType={CardActionType.NAVIGATE}
+                        />
+                    )}
                 </View>
                 <View style={styles.bottomContainer}>
                     <CtaGroup

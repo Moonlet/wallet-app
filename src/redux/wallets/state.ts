@@ -45,6 +45,9 @@ export interface IAccountState {
     nonce?: number;
     tokens: ITokensAccountState;
     chainId?: ChainIdType;
+    meta?: {
+        owner?: string;
+    };
 }
 
 export interface ITokenState {

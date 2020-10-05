@@ -40,3 +40,14 @@ export interface INearAccount {
     valid: boolean;
     type?: NearAccountType;
 }
+
+export enum NearQueryRequestTypes {
+    CALL_FUNCTION = 'call_function',
+    VIEW_ACCOUNT = 'view_account',
+    VIEW_ACCESS_KEY = 'view_access_key'
+}
+
+export enum NearAccountViewMethods {
+    GET_OWNER_ACCOUNT_ID = 'get_owner_account_id',
+    GET_STAKING_POOL_ACCOUNT_ID = 'get_staking_pool_account_id'
+}

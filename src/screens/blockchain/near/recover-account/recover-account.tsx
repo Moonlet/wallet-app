@@ -23,7 +23,7 @@ import { LoadingIndicator } from '../../../../components/loading-indicator/loadi
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
 import { NavigationService } from '../../../../navigation/navigation-service';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { NearAccountType } from '../../../../core/blockchain/near/types';
+import { NearAccountType, NearAccountViewMethods } from '../../../../core/blockchain/near/types';
 import { openURL } from '../../../../core/utils/linking-handler';
 
 interface IReduxProps {
@@ -129,6 +129,45 @@ export class RecoverNearAccountComponent extends React.Component<
         clearInterval(this.startRecoveringAccountInterval);
     }
 
+    private async getLockupContractOwner(accountId: string, client: NearClient) {
+        let ownerAccountId;
+
+        try {
+            ownerAccountId = await client.contractCall({
+                contractName: accountId,
+                methodName: NearAccountViewMethods.GET_OWNER_ACCOUNT_ID
+            });
+
+            await client.contractCall({
+                contractName: accountId,
+                methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
+            });
+        } catch (err) {
+            // no need to handle this
+        }
+
+        return ownerAccountId;
+    }
+
+    private async validAccountStartRecovering(accountId: string, client: NearClient) {
+        const res = await client.viewAccountAccessKey(
+            accountId,
+            this.state.recoveredAccount.publicKey
+        );
+
+        if (res && (res?.permission || res?.nonce)) {
+            // Recover automatically
+            this.setState({
+                input: { ...this.state.input, valid: true, shouldAuthorize: false }
+            });
+        } else {
+            // Needs authorization
+            this.setState({
+                input: { ...this.state.input, valid: true, shouldAuthorize: true }
+            });
+        }
+    }
+
     private async checkAccountId(accountId: string) {
         clearInterval(this.startRecoveringAccountInterval);
 
@@ -171,32 +210,40 @@ export class RecoverNearAccountComponent extends React.Component<
 
             if (account.exists === true && account.valid === true) {
                 if (account.type !== NearAccountType.DEFAULT) {
-                    // Not supported
-                    this.setState({
-                        usernameError: { ...this.state.usernameError, notSupported: true }
-                    });
-                } else {
-                    // Input is valid
-                    this.setState({
-                        recoveredAccount: { ...this.state.recoveredAccount, address: accountId }
-                    });
-
-                    const res = await client.viewAccountAccessKey(
-                        accountId,
-                        this.state.recoveredAccount.publicKey
-                    );
-
-                    if (res && (res?.permission || res?.nonce)) {
-                        // Recover automatically
-                        this.setState({
-                            input: { ...this.state.input, valid: true, shouldAuthorize: false }
-                        });
+                    const ownerAccountId = await this.getLockupContractOwner(accountId, client);
+                    if (ownerAccountId) {
+                        // Lockup contract
+                        // Input is valid
+                        this.setState(
+                            {
+                                recoveredAccount: {
+                                    ...this.state.recoveredAccount,
+                                    address: accountId,
+                                    meta: {
+                                        owner: ownerAccountId
+                                    }
+                                }
+                            },
+                            () =>
+                                this.validAccountStartRecovering(
+                                    this.state.recoveredAccount.meta.owner,
+                                    client
+                                )
+                        );
                     } else {
-                        // Needs authorization
+                        // Not supported
                         this.setState({
-                            input: { ...this.state.input, valid: true, shouldAuthorize: true }
+                            usernameError: { ...this.state.usernameError, notSupported: true }
                         });
                     }
+                } else {
+                    // Input is valid
+                    this.setState(
+                        {
+                            recoveredAccount: { ...this.state.recoveredAccount, address: accountId }
+                        },
+                        () => this.validAccountStartRecovering(accountId, client)
+                    );
                 }
             } else if (account.exists === false && account.valid === true) {
                 // Not registered

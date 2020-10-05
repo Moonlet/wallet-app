@@ -15,7 +15,7 @@ import { createTransaction, signTransaction, deleteAccount } from 'near-api-js/l
 import { KeyPair, serialize } from 'near-api-js/lib/utils';
 import sha256 from 'js-sha256';
 import { StakingPool } from './contracts/staking-pool';
-import { INearAccount, NearAccountType } from './types';
+import { INearAccount, NearAccountType, NearQueryRequestTypes } from './types';
 import { ApiClient } from '../../utils/api-client/api-client';
 
 export class Client extends BlockchainGenericClient {
@@ -251,5 +251,34 @@ export class Client extends BlockchainGenericClient {
                 }
             }, 1000);
         });
+    }
+
+    public async contractCall(options: { contractName: string; methodName: string; args?: any }) {
+        const res = await this.http.jsonRpc('query', {
+            request_type: NearQueryRequestTypes.CALL_FUNCTION,
+            finality: 'final',
+            account_id: options.contractName,
+            method_name: options.methodName,
+            args_base64: Buffer.from(JSON.stringify(options.args || {})).toString('base64')
+        });
+
+        if (res?.result?.result) {
+            try {
+                const decodedData = Buffer.from(res.result.result).toString();
+                return JSON.parse(decodedData);
+            } catch (err) {
+                throw new Error(err);
+            }
+        } else {
+            throw new Error(
+                JSON.stringify({
+                    event: 'contractCall',
+                    errorMessage: 'Invalid contract call response result',
+                    contractName: options.contractName,
+                    methodName: options.methodName,
+                    args: options.args
+                })
+            );
+        }
     }
 }

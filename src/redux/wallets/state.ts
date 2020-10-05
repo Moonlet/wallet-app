@@ -36,6 +36,7 @@ export interface ITokensAccountState {
 
 export interface IAccountState {
     index: number;
+    type: AccountType;
     order?: number; // TODO: implement this
     selected: boolean;
     name?: string;
@@ -60,4 +61,9 @@ export interface ITokenState {
         timestamp: number;
         error: any;
     };
+}
+
+export enum AccountType {
+    DEFAULT = 'DEFAULT',
+    LOCKUP_CONTRACT = 'LOCKUP_CONTRACT'
 }

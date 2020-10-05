@@ -17,7 +17,7 @@ import {
     getSelectedAccount,
     getSelectedWallet
 } from '../../../../redux/wallets/selectors';
-import { IWalletState, IAccountState } from '../../../../redux/wallets/state';
+import { IWalletState, IAccountState, AccountType } from '../../../../redux/wallets/state';
 import { captureException as SentryCaptureException } from '@sentry/react-native';
 import { LoadingIndicator } from '../../../../components/loading-indicator/loading-indicator';
 import { INavigationProps } from '../../../../navigation/with-navigation-params';
@@ -218,6 +218,7 @@ export class RecoverNearAccountComponent extends React.Component<
                             {
                                 recoveredAccount: {
                                     ...this.state.recoveredAccount,
+                                    type: AccountType.LOCKUP_CONTRACT,
                                     address: accountId,
                                     meta: {
                                         owner: ownerAccountId

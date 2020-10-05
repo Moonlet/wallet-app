@@ -18,8 +18,19 @@ import {
     INavigationProps,
     withNavigationParams
 } from '../../../../navigation/with-navigation-params';
-import { NEAR_ACCOUNT_EXTENSIONS } from '../../../../core/constants/app';
+import { NEAR_TLD } from '../../../../core/constants/app';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
+import BigNumber from 'bignumber.js';
+import { formatNumber } from '../../../../core/utils/format-number';
+import {
+    CREATE_ACCOUNT_NEAR_DEPOSIT,
+    CREATE_ACCOUNT_NEAR_FEES,
+    NEAR_CREATE_ACCOUNT_MIN_BALANCE
+} from '../../../../core/blockchain/near/consts';
+import { getSelectedAccount } from '../../../../redux/wallets/selectors';
+import { IAccountState } from '../../../../redux/wallets/state';
+import BN from 'bn.js';
 
 interface INavigationParams {
     accountId?: string;
@@ -28,6 +39,7 @@ interface INavigationParams {
 interface IReduxProps {
     createNearAccount: typeof createNearAccount;
     chainId: ChainIdType;
+    selectedAccount: IAccountState;
 }
 
 interface IState {
@@ -36,11 +48,16 @@ interface IState {
     isChecking: boolean;
     isUsernameNotAvailable: boolean;
     isInvalidUsername: boolean;
+    nearFees: string;
+    depositAmount: string;
+    nearCreateAccountFees: string;
+    insufficientFunds: boolean;
 }
 
 const mapStateToProps = (state: IReduxState) => {
     return {
-        chainId: getChainId(state, Blockchain.NEAR)
+        chainId: getChainId(state, Blockchain.NEAR),
+        selectedAccount: getSelectedAccount(state)
     };
 };
 
@@ -69,7 +86,11 @@ export class CreateNearAccountComponent extends React.Component<
             isInputValid: false,
             isChecking: false,
             isUsernameNotAvailable: false,
-            isInvalidUsername: false
+            isInvalidUsername: false,
+            nearFees: undefined,
+            depositAmount: undefined,
+            nearCreateAccountFees: undefined,
+            insufficientFunds: false
         };
     }
 
@@ -77,6 +98,38 @@ export class CreateNearAccountComponent extends React.Component<
         if (this.state.inputAccount !== '') {
             this.checkAccountId(this.state.inputAccount);
         }
+
+        const blockchainInstance = getBlockchain(Blockchain.NEAR);
+
+        const balance = this.props.selectedAccount.tokens[this.props.chainId][
+            blockchainInstance.config.coin
+        ].balance.value;
+
+        if (
+            new BigNumber(balance).isLessThan(
+                new BigNumber(NEAR_CREATE_ACCOUNT_MIN_BALANCE.toString())
+            )
+        ) {
+            this.getNearFees('nearCreateAccountFees', NEAR_CREATE_ACCOUNT_MIN_BALANCE);
+            this.setState({ insufficientFunds: true });
+        }
+
+        this.getNearFees('nearFees', CREATE_ACCOUNT_NEAR_FEES);
+        this.getNearFees('depositAmount', CREATE_ACCOUNT_NEAR_DEPOSIT);
+    }
+
+    private getNearFees(name: string, fee: BN) {
+        const blockchainInstance = getBlockchain(Blockchain.NEAR);
+
+        const feeAmount = blockchainInstance.account.amountFromStd(
+            new BigNumber(fee.toString()),
+            getTokenConfig(Blockchain.NEAR, Blockchain.NEAR).decimals
+        );
+        const formatedAmount: string = formatNumber(new BigNumber(feeAmount), {
+            currency: blockchainInstance.config.coin
+        });
+        // @ts-ignore
+        this.setState({ [name]: formatedAmount });
     }
 
     private async checkAccountId(accountId: string) {
@@ -99,9 +152,7 @@ export class CreateNearAccountComponent extends React.Component<
             const blockchainInstance = getBlockchain(Blockchain.NEAR);
             const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
 
-            const account = await client.getAccount(
-                `${accountId}.${NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]}`
-            );
+            const account = await client.getAccount(`${accountId}.${NEAR_TLD[this.props.chainId]}`);
 
             if (account.exists === false && account.valid === true) {
                 this.setState({
@@ -133,7 +184,7 @@ export class CreateNearAccountComponent extends React.Component<
             const password = await PasswordModal.getPassword();
             this.props.createNearAccount(
                 this.state.inputAccount,
-                NEAR_ACCOUNT_EXTENSIONS[this.props.chainId],
+                NEAR_TLD[this.props.chainId],
                 password
             );
         } catch (err) {
@@ -143,6 +194,7 @@ export class CreateNearAccountComponent extends React.Component<
 
     public render() {
         const { styles, theme } = this.props;
+        const { insufficientFunds } = this.state;
 
         const isChecking = this.state.isChecking && !this.state.isInputValid;
         const isUsernameNotAvailable =
@@ -178,16 +230,18 @@ export class CreateNearAccountComponent extends React.Component<
                                     returnKeyType="done"
                                     value={this.state.inputAccount}
                                     onChangeText={inputAccount => this.checkAccountId(inputAccount)}
+                                    editable={!insufficientFunds}
                                 />
 
                                 <Text style={styles.domain}>
-                                    {`.${NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]}`}
+                                    {`.${NEAR_TLD[this.props.chainId]}`}
                                 </Text>
                             </View>
 
                             <Text
                                 style={[
                                     styles.infoText,
+                                    insufficientFunds && styles.errorText,
                                     isUsernameNotAvailable && styles.errorText,
                                     isInvalidUsername && styles.errorText,
                                     isChecking && styles.checkingText,
@@ -195,7 +249,11 @@ export class CreateNearAccountComponent extends React.Component<
                                     this.state.isInputValid && styles.congratsText
                                 ]}
                             >
-                                {isChecking
+                                {insufficientFunds
+                                    ? translate('CreateNearAccount.insufficientFunds', {
+                                          amount: this.state.nearCreateAccountFees
+                                      })
+                                    : isChecking
                                     ? translate('AddAccount.checking')
                                     : isUsernameNotAvailable
                                     ? translate('AddAccount.notAvailable')
@@ -204,8 +262,10 @@ export class CreateNearAccountComponent extends React.Component<
                                     : this.state.isInputValid
                                     ? translate('CreateNearAccount.congrats', {
                                           name: `${this.state.inputAccount}.${
-                                              NEAR_ACCOUNT_EXTENSIONS[this.props.chainId]
-                                          }`
+                                              NEAR_TLD[this.props.chainId]
+                                          }`,
+                                          nearFees: this.state.nearFees,
+                                          depositAmount: this.state.depositAmount
                                       })
                                     : ''}
                             </Text>

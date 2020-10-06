@@ -8,6 +8,7 @@ export const WC = {
 };
 export const CONN_EXTENSION = 'connectExtension';
 export const RESET_APP_FAILED_LOGINS = 15;
+export const DISPLAY_HINTS_TIMES = 3;
 export const FAILED_LOGIN_BLOCKING = {
     3: 5 * 60 * 1000, // 5 min
     6: 20 * 60 * 1000, // 20 min

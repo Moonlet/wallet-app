@@ -10,9 +10,8 @@ export const getValidators = (
     posAction?: PosBasicActionType
 ): IValidator[] => {
     return (
-        (state.ui.validators &&
-            state.ui.validators[blockchain] &&
-            state.ui.validators[blockchain][chainId as string]) ||
-        undefined
+        state.ui.validators &&
+        state.ui.validators[blockchain] &&
+        state.ui.validators[blockchain][chainId as string]
     );
 };

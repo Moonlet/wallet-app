@@ -1,4 +1,4 @@
-import { IAccountState } from '../../../redux/wallets/state';
+import { AccountType, IAccountState } from '../../../redux/wallets/state';
 import { Blockchain, IBlockchainAccountUtils } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
@@ -49,6 +49,7 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
 
         return {
             index: 0,
+            type: AccountType.DEFAULT,
             selected: false,
             publicKey: 'ed25519:' + pk,
             address,

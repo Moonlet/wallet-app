@@ -36,6 +36,7 @@ export interface ITokensAccountState {
 
 export interface IAccountState {
     index: number;
+    type: AccountType;
     order?: number; // TODO: implement this
     selected: boolean;
     name?: string;
@@ -45,6 +46,9 @@ export interface IAccountState {
     nonce?: number;
     tokens: ITokensAccountState;
     chainId?: ChainIdType;
+    meta?: {
+        owner?: string;
+    };
 }
 
 export interface ITokenState {
@@ -59,4 +63,9 @@ export interface ITokenState {
         available: string;
         total: string;
     };
+}
+
+export enum AccountType {
+    DEFAULT = 'DEFAULT',
+    LOCKUP_CONTRACT = 'LOCKUP_CONTRACT'
 }

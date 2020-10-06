@@ -1,4 +1,4 @@
-import { IAccountState } from '../../../redux/wallets/state';
+import { AccountType, IAccountState } from '../../../redux/wallets/state';
 import { Blockchain, IBlockchainAccountUtils } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
@@ -52,6 +52,7 @@ export class CosmosAccountUtils implements IBlockchainAccountUtils {
     public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
         return {
             index,
+            type: AccountType.DEFAULT,
             selected: false,
             publicKey: this.privateToPublic(privateKey),
             address: this.privateToAddress(privateKey),

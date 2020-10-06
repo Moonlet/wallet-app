@@ -25,10 +25,11 @@ import { ApiClient } from '../../utils/api-client/api-client';
 import BigNumber from 'bignumber.js';
 import {
     INearTransactionAdditionalInfoType,
+    NearAccountViewMethods,
     NearFunctionCallMethods,
     NearTransactionActionType
 } from './types';
-import { IAccountState } from '../../../redux/wallets/state';
+import { AccountType, IAccountState } from '../../../redux/wallets/state';
 import { NEAR_TLD } from '../../constants/app';
 import { NEAR_DEFAULT_FUNC_CALL_GAS, NEAR_CREATE_ACCOUNT_MIN_BALANCE } from './consts';
 
@@ -128,7 +129,8 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
         tx: IPosTransaction,
         transactionType: PosBasicActionType
     ): Promise<IBlockchainTransaction[]> {
-        const client = Near.getClient(tx.chainId);
+        const client = Near.getClient(tx.chainId) as NearClient;
+        const accountType = tx.account.type;
 
         const transactions: IBlockchainTransaction[] = [];
 
@@ -136,37 +138,103 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
             case PosBasicActionType.DELEGATE: {
                 const splitAmount = new BigNumber(tx.amount).dividedBy(tx.validators.length);
 
-                for (const validator of tx.validators) {
-                    const txDelegate: IPosTransaction = cloneDeep(tx);
-                    txDelegate.amount = splitAmount.toFixed();
+                const txDelegate: IPosTransaction = cloneDeep(tx);
+                txDelegate.amount = splitAmount.toFixed();
 
-                    const res = await new ApiClient().validators.getBalance(
-                        tx.account.address,
-                        tx.account.blockchain,
-                        client.chainId.toString(),
-                        validator.id
+                if (accountType === AccountType.DEFAULT) {
+                    // DEFAULT
+                    for (const validator of tx.validators) {
+                        const res = await new ApiClient().validators.getBalance(
+                            tx.account.address,
+                            tx.account.blockchain,
+                            client.chainId.toString(),
+                            validator.id
+                        );
+
+                        const depositAmount = new BigNumber(txDelegate.amount).minus(
+                            new BigNumber(res.balance.unstaked)
+                        );
+
+                        // Stake
+                        const stakeTx: IBlockchainTransaction = await client.stakingPool.stake(
+                            txDelegate,
+                            validator,
+                            depositAmount
+                        );
+                        stakeTx.nonce = stakeTx.nonce + transactions.length;
+                        transactions.push(stakeTx);
+                    }
+                } else if (accountType === AccountType.LOCKUP_CONTRACT) {
+                    // LOCKUP_CONTRACT
+
+                    const validator = tx.validators[0]; // Can stake to only 1 validator
+                    const nonce = await client.getNonce(
+                        tx.account.meta.owner,
+                        tx.account.publicKey
                     );
 
-                    // Stake
-                    const stakeTx: IBlockchainTransaction = await (client as NearClient).stakingPool.stake(
+                    try {
+                        const stakingPoolId = await client.contractCall({
+                            contractName: tx.account.address,
+                            methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
+                        });
+
+                        if (!stakingPoolId) {
+                            const selectSPTx = await client.lockup.selectStakingPool(
+                                txDelegate,
+                                validator
+                            );
+                            selectSPTx.nonce = nonce + transactions.length;
+                            transactions.push(selectSPTx);
+                        }
+                    } catch (err) {
+                        // no need to handed?
+                    }
+
+                    let unstakedAmount = new BigNumber(0);
+                    try {
+                        const unstaked = await client.contractCall({
+                            contractName: validator.id,
+                            methodName: NearAccountViewMethods.GET_ACCOUNT_UNSTAKED_BALANCE,
+                            args: { account_id: tx.account.address }
+                        });
+                        unstakedAmount = new BigNumber(unstaked);
+                    } catch (err) {
+                        // no need to handle this
+                        // maybe sentry?
+                    }
+
+                    const stakeTx = await client.lockup.stake(
                         txDelegate,
                         validator,
-                        new BigNumber(txDelegate.amount).minus(new BigNumber(res.balance.unstaked))
-                        // Deposit amount
+                        unstakedAmount
                     );
-                    stakeTx.nonce = stakeTx.nonce + transactions.length;
+                    stakeTx.nonce = nonce + transactions.length;
                     transactions.push(stakeTx);
+                } else {
+                    // future account types
                 }
+
                 break;
             }
             case PosBasicActionType.UNSTAKE: {
                 const txUnstake: IPosTransaction = cloneDeep(tx);
 
                 // Unstake
-                const unstakeTx: IBlockchainTransaction = await (client as NearClient).stakingPool.unstake(
-                    txUnstake,
-                    tx.validators[0]
-                );
+                let unstakeTx: IBlockchainTransaction;
+
+                if (accountType === AccountType.DEFAULT) {
+                    // DEFAULT
+                    unstakeTx = await client.stakingPool.unstake(txUnstake, tx.validators[0]);
+                } else if (accountType === AccountType.LOCKUP_CONTRACT) {
+                    // LOCKUP_CONTRACT
+                    unstakeTx = await client.lockup.unstake(txUnstake, tx.validators[0]);
+                    const nonce = await client.getNonce(unstakeTx.address, tx.account.publicKey);
+                    unstakeTx.nonce = nonce;
+                } else {
+                    // future account types
+                }
+
                 transactions.push(unstakeTx);
                 break;
             }
@@ -174,9 +242,14 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 const txWithdraw: IPosTransaction = cloneDeep(tx);
 
                 // Withdraw
-                const withdrawTx: IBlockchainTransaction = await (client as NearClient).stakingPool.withdraw(
-                    txWithdraw
-                );
+                let withdrawTx: IBlockchainTransaction;
+
+                if (accountType === AccountType.DEFAULT) {
+                    // DEFAULT
+                    withdrawTx = await client.stakingPool.withdraw(txWithdraw);
+                } else {
+                    // future account types
+                }
 
                 transactions.push(withdrawTx);
                 break;
@@ -194,10 +267,8 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
     }
 
     public getTransactionStatusByCode(status: any): TransactionStatus {
-        if (status.SuccessValue === '') {
+        if (status?.SuccessValue || status?.SuccessValue === '') {
             return TransactionStatus.SUCCESS;
-        } else if (status?.Failure) {
-            return TransactionStatus.FAILED;
         } else {
             return TransactionStatus.FAILED;
         }

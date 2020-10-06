@@ -22,16 +22,14 @@ import { Blockchain } from '../../../../core/blockchain/types';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { deleteContact, updateContactName } from '../../../../redux/contacts/actions';
 import { ICON_SIZE, normalize } from '../../../../styles/dimensions';
-import { IHints, HintsScreen, HintsComponent } from '../../../../redux/app/state';
+import { HintsScreen, HintsComponent } from '../../../../redux/app/state';
 import { updateDisplayedHint } from '../../../../redux/app/actions';
-import { DISPLAY_HINTS_TIMES } from '../../../../core/constants/app';
 import { IconValues } from '../../../../components/icon/values';
 
 export interface IReduxProps {
     contacts: ReadonlyArray<SectionListData<IContactState>>;
     deleteContact: typeof deleteContact;
     updateContactName: typeof updateContactName;
-    hints: IHints;
     updateDisplayedHint: typeof updateDisplayedHint;
 }
 
@@ -43,8 +41,7 @@ export interface IExternalProps {
 
 export const mapStateToProps = (state: IReduxState, ownprops: IExternalProps) => {
     return {
-        contacts: selectContacts(state, ownprops.blockchain),
-        hints: state.app.hints
+        contacts: selectContacts(state, ownprops.blockchain)
     };
 };
 
@@ -65,11 +62,7 @@ export class AddressBookComponent extends React.Component<
     }
 
     private showHints() {
-        if (
-            this.props.contacts &&
-            this.props.contacts.length !== 0 &&
-            this.props.hints.SEND_SCREEN.ADDRESS_BOOK < DISPLAY_HINTS_TIMES
-        ) {
+        if (this.props.contacts && this.props.contacts.length !== 0) {
             const contacts = Object.values(this.props.contacts[0]);
             const contact = contacts[1][0];
             const index = `${contact.blockchain}|${contact.address}`;

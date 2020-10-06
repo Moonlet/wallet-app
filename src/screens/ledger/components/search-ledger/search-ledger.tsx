@@ -21,6 +21,7 @@ interface IExternalProps {
     blockchain: Blockchain;
     deviceModel: HWModel;
     connectionType: HWConnection;
+    deviceId: string;
     onSelect: () => void;
     onConnect: (item: any) => void;
     onError: (error: any) => void;
@@ -61,7 +62,15 @@ export class SearchLedgerComponent extends React.Component<
                 event => {
                     this.setState(this.deviceAddition(event.data));
                     if (this.props.connectionType === HWConnection.USB) {
-                        this.connect(event.data);
+                        //
+                    } else {
+                        if (
+                            event.data?.id &&
+                            this.props.deviceId &&
+                            this.props.deviceId === event.data?.id
+                        ) {
+                            this.connect(event.data);
+                        }
                     }
                 }
             );

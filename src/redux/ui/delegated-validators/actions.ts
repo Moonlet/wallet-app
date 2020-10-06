@@ -14,6 +14,11 @@ export const fetchDelegatedValidators = (account: IAccountState) => async (
     const blockchain = account.blockchain;
     const chainId = getChainId(state, blockchain).toString();
 
+    dispatch({
+        type: ADD_DELEGATED_VALIDATORS,
+        data: { validators: undefined, chainId, blockchain }
+    });
+
     const data = await new ApiClient().validators.fetchDelegatedValidators(account, chainId);
 
     if (data) {

@@ -55,6 +55,7 @@ interface IState {
     visible: boolean;
     blockchain: Blockchain;
     deviceModel: HWModel;
+    deviceId: string;
     connectionType: HWConnection;
     currentFlow: ScreenStep;
     stepContainerFadeAnimation: AnimatedValue;
@@ -108,22 +109,25 @@ export class LedgerConnectComponent extends React.Component<
     public static async signTransaction(
         blockchain: Blockchain,
         deviceModel: HWModel,
-        connectionType: HWConnection
+        connectionType: HWConnection,
+        deviceId: string
     ) {
         return waitForInstance<LedgerConnectComponent>(LedgerConnectComponent).then(ref =>
-            ref.signTransaction(blockchain, deviceModel, connectionType)
+            ref.signTransaction(blockchain, deviceModel, connectionType, deviceId)
         );
     }
 
     public signTransaction(
         blockchain: Blockchain,
         deviceModel: HWModel,
-        connectionType: HWConnection
+        connectionType: HWConnection,
+        deviceId: string
     ): Promise<{ accounts: IAccountState[]; deviceId: string }> {
         this.resultDeferred = new Deferred();
         this.setState({
             blockchain,
             deviceModel,
+            deviceId,
             connectionType,
             visible: true,
             step: ScreenStep.SEARCH_LEDGER,
@@ -156,7 +160,8 @@ export class LedgerConnectComponent extends React.Component<
             deviceModel: undefined,
             currentFlow: undefined,
             stepContainerFadeAnimation: new Animated.Value(1),
-            stepContainerTranslateAnimation: new Animated.Value(0)
+            stepContainerTranslateAnimation: new Animated.Value(0),
+            deviceId: undefined
         };
     }
     public componentWillUnmount() {
@@ -292,6 +297,7 @@ export class LedgerConnectComponent extends React.Component<
                     <SearchLedger
                         blockchain={this.state.blockchain}
                         deviceModel={this.state.deviceModel}
+                        deviceId={this.state.deviceId}
                         connectionType={this.state.connectionType}
                         onSelect={this.onSelectDevice}
                         onConnect={this.onConnectedDevice}

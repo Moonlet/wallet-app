@@ -63,5 +63,17 @@ export default (theme: ITheme) =>
         actionIcon: {
             color: theme.colors.accent,
             alignSelf: 'center'
+        },
+        bottomText: {
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            paddingBottom: 100,
+            backgroundColor: theme.colors.appBackground,
+            color: theme.colors.textSecondary,
+            fontSize: normalizeFontAndLineHeight(13),
+            lineHeight: normalizeFontAndLineHeight(16),
+            marginHorizontal: BASE_DIMENSION * 2
         }
     });

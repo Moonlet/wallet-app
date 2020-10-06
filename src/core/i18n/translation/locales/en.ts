@@ -548,7 +548,11 @@ export const translation: ITranslations = {
             stakeSection: 'This section will become available once you start to stake your tokens.',
             operationNotAvailable: 'Operation not available',
             operationNotAvailableMessage:
-                'This operation can not be performed. Please try again next network cycle'
+                'This operation can not be performed. Please try again next network cycle',
+            restakeScreenMessageZil:
+                'The accumulated ZIL rewards will be automatically claimed and deposited into your available balance, as well gZIL.',
+            unstakeScreenMessageZil:
+                'It takes 14 days in order to receive the amount. The accumulated ZIL rewards will be automatically claimed and deposited into your available balance, as well gZIL.'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

@@ -137,7 +137,7 @@ export const translation: ITranslations = {
                 warning: 'Warning',
                 watch: 'Watch mode',
                 withdraw: 'Withdraw',
-                youAreOn: 'You are on {{blockchain}} {{networkName}} Testnet',
+                youAreOn: 'You are on {{blockchain}} {{networkName}}{{space}}Testnet',
                 youAreUsing: 'You are now using your'
                 // please try to add keys in alphabetic order
             },

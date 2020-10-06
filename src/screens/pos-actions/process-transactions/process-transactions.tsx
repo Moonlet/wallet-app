@@ -329,7 +329,7 @@ export class ProcessTransactionsComponent extends React.Component<
                     {middleText !== '' && <Text style={styles.middleText}>{middleText}</Text>}
                     {bottomText !== '' && (
                         <Text style={styles.bottomText}>
-                            {translate('App.labels.fees') + ': ' + bottomText}
+                            {translate('App.labels.maxFees') + ': ' + bottomText}
                         </Text>
                     )}
                 </View>

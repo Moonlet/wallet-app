@@ -65,6 +65,7 @@ export const translation: ITranslations = {
                 legal: 'Legal',
                 locking: 'Locking',
                 low: 'Low',
+                maxFees: 'Max.Fees',
                 maybeLater: 'Maybe later',
                 mnemonicNotValid: 'Your mnemonic is not valid!',
                 myVotes: 'My Votes',

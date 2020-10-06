@@ -433,7 +433,7 @@ export const translation: ITranslations = {
         },
         RecoverNearAccount: {
             title: 'Recover account name',
-            checkStatus: 'Check your existing account name',
+            checkStatus: 'Check your existing account name or lockup contract',
             authMoonletUserAccount: 'Authorize Moonlet to use your existing account name',
             copyAuthLink: 'Copy authorization link',
             authMoonlet: 'Authorize Moonlet',

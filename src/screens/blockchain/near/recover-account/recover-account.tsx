@@ -25,6 +25,7 @@ import { NavigationService } from '../../../../navigation/navigation-service';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NearAccountType, NearAccountViewMethods } from '../../../../core/blockchain/near/types';
 import { openURL } from '../../../../core/utils/linking-handler';
+import { NEAR_TLD } from '../../../../core/constants/app';
 
 interface IReduxProps {
     chainId: ChainIdType;
@@ -404,7 +405,9 @@ export class RecoverNearAccountComponent extends React.Component<
                                 <TextInput
                                     style={styles.inputText}
                                     placeholderTextColor={theme.colors.textTertiary}
-                                    placeholder={translate('AddAccount.eg')}
+                                    placeholder={`${translate('AddAccount.eg')}.${
+                                        NEAR_TLD[this.props.chainId]
+                                    }`}
                                     autoCapitalize={'none'}
                                     autoCorrect={false}
                                     selectionColor={theme.colors.accent}

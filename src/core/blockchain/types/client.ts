@@ -5,6 +5,7 @@ import { GenericNameService } from '.';
 import { HttpClient } from '../../utils/http-client';
 import { PosBasicActionType, TokenType } from './token';
 import { IClientUtils } from './client-utils';
+import { IAccountState } from '../../../redux/wallets/state';
 
 export interface IBlockInfo {
     number: number;
@@ -39,7 +40,7 @@ export abstract class BlockchainGenericClient {
     public canPerformAction(
         action: PosBasicActionType,
         options: {
-            address: string;
+            account: IAccountState;
             validatorAddress: string[];
         }
     ): Promise<{ value: boolean; message: string }> {

@@ -1,4 +1,4 @@
-import { IAccountState } from '../../../redux/wallets/state';
+import { AccountType, IAccountState } from '../../../redux/wallets/state';
 import { Blockchain, IBlockchainAccountUtils } from '../types';
 import * as Util from 'ethereumjs-util';
 import { BigNumber } from 'bignumber.js';
@@ -43,6 +43,7 @@ export class EthereumAccountUtils implements IBlockchainAccountUtils {
     public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
         return {
             index,
+            type: AccountType.DEFAULT,
             selected: false,
             publicKey: this.privateToPublic(privateKey),
             address: this.privateToAddress(privateKey),

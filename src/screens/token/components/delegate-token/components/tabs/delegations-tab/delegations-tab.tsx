@@ -43,7 +43,6 @@ export const mapStateToProps = (state: IReduxState, ownProps: IProps) => {
 interface IState {
     validatorsFilteredList: IValidator[];
     unfilteredList: IValidator[];
-    myValidatorsLoaded: boolean;
 }
 let searchTimeoutTimer: any;
 
@@ -56,8 +55,7 @@ export class DelegationsTabComponent extends React.Component<
 
         this.state = {
             validatorsFilteredList: this.props.validators || [],
-            unfilteredList: this.props.validators || [],
-            myValidatorsLoaded: true
+            unfilteredList: this.props.validators || []
         };
     }
 
@@ -99,7 +97,7 @@ export class DelegationsTabComponent extends React.Component<
                             onClose={this.onClose}
                         />
                     </View>
-                    {!this.state.myValidatorsLoaded ? (
+                    {!this.props.validators ? (
                         <LoadingIndicator />
                     ) : this.state.validatorsFilteredList.length === 0 ? (
                         <View style={styles.emptySection}>

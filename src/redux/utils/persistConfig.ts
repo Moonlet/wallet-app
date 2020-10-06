@@ -4,7 +4,7 @@ import { getTokenConfig, accountToken } from '../tokens/static-selectors';
 import { Blockchain } from '../../core/blockchain/types';
 import { XSGD_MAINNET } from '../../core/blockchain/zilliqa/tokens/xsgd';
 import { DAI_MAINNET } from '../../core/blockchain/ethereum/tokens/dai';
-import { IWalletState, IAccountState } from '../wallets/state';
+import { IWalletState, IAccountState, AccountType } from '../wallets/state';
 import { GZIL_MAINNET } from '../../core/blockchain/zilliqa/tokens/gzil';
 
 const migrations = {
@@ -144,8 +144,23 @@ const migrations = {
         };
     },
     /**
+     * Add Account Default Type
+     */
+    5: (state: any) => {
+        Object.values(state.wallets).map((wallet: IWalletState) => {
+            wallet.accounts.map((account: IAccountState) => {
+                account.type = AccountType.DEFAULT;
+            });
+        });
+
+        return {
+            ...state
+        };
+    },
+    /**
      * Add gZil Token to all users - 12 September 2020
-     */ 5: (state: any) => {
+     */
+    6: (state: any) => {
         const zilChainIdMain = '1';
 
         if (
@@ -200,7 +215,7 @@ const migrations = {
 
 export const persistConfig = {
     key: 'root',
-    version: 4,
+    version: 5,
     storage: AsyncStorage,
     blacklist: ['ui'],
     migrate: createMigrate(migrations, { debug: false })

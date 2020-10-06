@@ -279,7 +279,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
         )
             .getClient(this.props.chainId)
             .canPerformAction(PosBasicActionType.REDELEGATE, {
-                address: this.props.account.address,
+                account: this.props.account,
                 validatorAddress: [this.state.fromValidator.id.toLowerCase()]
             });
 

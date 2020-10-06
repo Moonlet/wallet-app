@@ -12,7 +12,9 @@ export enum NearFunctionCallMethods {
     UNSTAKE = 'unstake',
     WITHDRAW = 'withdraw',
     SEND = 'send',
-    CREATE_ACCOUNT_AND_CLAIM = 'create_account_and_claim'
+    CREATE_ACCOUNT_AND_CLAIM = 'create_account_and_claim',
+    DEPOSIT_AND_STAKE = 'deposit_and_stake',
+    SELECT_STAKING_POOL = 'select_staking_pool'
 }
 
 export interface INearTransactionAction {
@@ -39,4 +41,16 @@ export interface INearAccount {
     exists: boolean;
     valid: boolean;
     type?: NearAccountType;
+}
+
+export enum NearQueryRequestTypes {
+    CALL_FUNCTION = 'call_function',
+    VIEW_ACCOUNT = 'view_account',
+    VIEW_ACCESS_KEY = 'view_access_key'
+}
+
+export enum NearAccountViewMethods {
+    GET_OWNER_ACCOUNT_ID = 'get_owner_account_id',
+    GET_STAKING_POOL_ACCOUNT_ID = 'get_staking_pool_account_id',
+    GET_ACCOUNT_UNSTAKED_BALANCE = 'get_account_unstaked_balance'
 }

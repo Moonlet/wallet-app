@@ -434,7 +434,7 @@ export const translation: ITranslations = {
         },
         RecoverNearAccount: {
             title: 'Recover account name',
-            checkStatus: 'Check your existing account name',
+            checkStatus: 'Check your existing account name or lockup contract',
             authMoonletUserAccount: 'Authorize Moonlet to use your existing account name',
             copyAuthLink: 'Copy authorization link',
             authMoonlet: 'Authorize Moonlet',
@@ -544,6 +544,7 @@ export const translation: ITranslations = {
                 'It takes {{duration}} in order to unlock the amount and will be automatically withdrawn then deposited into your available balance.',
             claimRewardBottomText:
                 'The claimed reward you receive may be equal to or grater than what it displayed nou since rewards are accumulated each block.',
+            noNodes: 'No nodes available',
             noValidators: 'No validators available',
             stakeSection: 'This section will become available once you start to stake your tokens.',
             operationNotAvailable: 'Operation not available',
@@ -552,7 +553,10 @@ export const translation: ITranslations = {
             restakeScreenMessageZil:
                 'The accumulated ZIL rewards will be automatically claimed and deposited into your available balance, as well gZIL.',
             unstakeScreenMessageZil:
-                'It takes 14 days in order to receive the amount. The accumulated ZIL rewards will be automatically claimed and deposited into your available balance, as well gZIL.'
+                'It takes 14 days in order to receive the amount. The accumulated ZIL rewards will be automatically claimed and deposited into your available balance, as well gZIL.',
+            alreadyStaked:
+                'You have already staked to {{stakedValidator}} from this lockup contract.\nEither you stake the full amount to {{stakedValidator}} or unstake and withdraw your current funds and stake to {{selectedValidator}}.',
+            multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

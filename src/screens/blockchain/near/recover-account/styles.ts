@@ -31,7 +31,8 @@ export default (theme: ITheme) =>
             color: theme.colors.text,
             fontWeight: 'bold',
             textAlign: 'center',
-            marginBottom: BASE_DIMENSION * 5
+            marginBottom: BASE_DIMENSION * 5,
+            marginHorizontal: BASE_DIMENSION
         },
         copyAuthButton: {
             marginHorizontal: BASE_DIMENSION * 2,

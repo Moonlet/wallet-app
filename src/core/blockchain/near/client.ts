@@ -323,7 +323,8 @@ export class Client extends BlockchainGenericClient {
                         return Promise.resolve({
                             value: false,
                             message: translate('Validator.alreadyStaked', {
-                                validator: options.validatorAddress[0]
+                                stakedValidator: stakingAccountId,
+                                selectedValidator: options.validatorAddress[0]
                             })
                         });
                     }

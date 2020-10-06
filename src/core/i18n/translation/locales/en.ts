@@ -549,7 +549,7 @@ export const translation: ITranslations = {
             operationNotAvailableMessage:
                 'This operation can not be performed. Please try again next network cycle',
             alreadyStaked:
-                'You have already staked to another validator from this lockup contract. Either you stake the full amount to that validator or unstake and withdraw your current funds and stake to {{validator}}.',
+                'You have already staked to {{stakedValidator}} from this lockup contract.\nEither you stake the full amount to {{stakedValidator}} or unstake and withdraw your current funds and stake to {{selectedValidator}}.',
             multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`
         },
         Widget: {

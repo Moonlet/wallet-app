@@ -91,7 +91,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
         super(props);
 
         this.state = {
-            validatorsList: props.validators
+            validatorsList: props.validators || []
         };
     }
 
@@ -105,12 +105,17 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
             this.props.blockchain
         ).config.ui.validator;
         if (this.props.validators !== prevProps.validators) {
-            this.setState({
-                validatorsList:
-                    maximumNumberOfValidators > this.props.validators.length
-                        ? this.props.validators
-                        : this.props.validators.slice(0, maximumNumberOfValidators)
-            });
+            if (this.props.validators === undefined) {
+                this.setState({
+                    validatorsList: []
+                });
+            } else
+                this.setState({
+                    validatorsList:
+                        maximumNumberOfValidators > this.props.validators.length
+                            ? this.props.validators
+                            : this.props.validators.slice(0, maximumNumberOfValidators)
+                });
         }
     }
 
@@ -194,7 +199,7 @@ export class QuickDelegateSelectValidatorComponent extends React.Component<
                     alwaysBounceVertical={false}
                 >
                     <View style={styles.content}>
-                        {this.props.validators.length === 0 ? (
+                        {!this.props.validators ? (
                             <View style={styles.loadingContainer}>
                                 <LoadingIndicator />
                             </View>

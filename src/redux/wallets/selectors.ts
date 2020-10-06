@@ -1,5 +1,5 @@
 import { IReduxState } from '../state';
-import { IAccountState, IWalletsState, IWalletState } from './state';
+import { AccountType, IAccountState, IWalletsState, IWalletState } from './state';
 import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types';
 
 import { createSelector } from 'reselect';
@@ -181,6 +181,7 @@ export const getWalletAndTransactionForHash = (
 export const generateAccountConfig = (blockchain: Blockchain): IAccountState => {
     return {
         index: 0,
+        type: AccountType.DEFAULT,
         selected: false,
         publicKey: undefined,
         address: undefined,

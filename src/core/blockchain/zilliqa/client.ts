@@ -18,6 +18,7 @@ import { ClientUtils } from './client-utils';
 import { Staking } from './contracts/staking';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { translate } from '../../i18n';
+import { IAccountState } from '../../../redux/wallets/state';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -73,7 +74,7 @@ export class Client extends BlockchainGenericClient {
     public async canPerformAction(
         action: PosBasicActionType,
         options: {
-            address: string;
+            account: IAccountState;
             validatorAddress: string[];
         }
     ): Promise<{ value: boolean; message: string }> {
@@ -81,7 +82,7 @@ export class Client extends BlockchainGenericClient {
             case PosBasicActionType.UNSTAKE:
             case PosBasicActionType.REDELEGATE:
                 const canUnstake = await this.contracts[Contracts.STAKING].canUnstakeFromSsn(
-                    options.address,
+                    options.account.address,
                     options.validatorAddress[0]
                 );
                 if (canUnstake === false)

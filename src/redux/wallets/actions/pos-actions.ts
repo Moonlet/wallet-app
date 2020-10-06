@@ -38,6 +38,7 @@ import {
     addBreadcrumb as SentryAddBreadcrumb
 } from '@sentry/react-native';
 import { LedgerConnect } from '../../../screens/ledger/ledger-connect';
+import { PasswordModal } from '../../../components/password-modal/password-modal';
 
 export const redelegate = (
     account: IAccountState,
@@ -45,7 +46,6 @@ export const redelegate = (
     validators: IValidator[],
     token: string,
     feeOptions: IFeeOptions,
-    password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
@@ -57,7 +57,6 @@ export const redelegate = (
         validators,
         token,
         feeOptions,
-        password,
         navigation,
         extraFields,
         goBack,
@@ -70,7 +69,6 @@ export const claimRewardNoInput = (
     account: IAccountState,
     validators: IValidator[],
     token: string,
-    password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
@@ -82,7 +80,6 @@ export const claimRewardNoInput = (
         validators,
         token,
         undefined,
-        password,
         navigation,
         extraFields,
         goBack,
@@ -97,7 +94,6 @@ export const delegate = (
     validators: IValidator[],
     token: string,
     feeOptions: IFeeOptions,
-    password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
@@ -109,7 +105,6 @@ export const delegate = (
         validators,
         token,
         feeOptions,
-        password,
         navigation,
         extraFields,
         goBack,
@@ -124,7 +119,6 @@ export const unstake = (
     validators: IValidator[],
     token: string,
     feeOptions: IFeeOptions,
-    password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
@@ -136,7 +130,6 @@ export const unstake = (
         validators,
         token,
         feeOptions,
-        password,
         navigation,
         extraFields,
         goBack,
@@ -150,7 +143,6 @@ export const unlock = (
     amount: string,
     token: string,
     feeOptions: IFeeOptions,
-    password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
@@ -162,7 +154,6 @@ export const unlock = (
         [],
         token,
         feeOptions,
-        password,
         navigation,
         extraFields,
         goBack,
@@ -174,7 +165,6 @@ export const unlock = (
 export const activate = (
     account: IAccountState,
     token: string,
-    password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
@@ -186,7 +176,6 @@ export const activate = (
         undefined,
         token,
         undefined,
-        password,
         navigation,
         extraFields,
         goBack,
@@ -198,7 +187,6 @@ export const activate = (
 export const withdraw = (
     account: IAccountState,
     token: string,
-    password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
@@ -210,7 +198,6 @@ export const withdraw = (
         undefined,
         token,
         undefined,
-        password,
         navigation,
         extraFields,
         goBack,
@@ -225,7 +212,6 @@ export const unvote = (
     validators: IValidator[],
     token: string,
     feeOptions: IFeeOptions,
-    password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
@@ -237,7 +223,6 @@ export const unvote = (
         validators,
         token,
         feeOptions,
-        password,
         navigation,
         extraFields,
         goBack,
@@ -252,7 +237,6 @@ export const posAction = (
     validators: IValidator[],
     token: string,
     feeOptions: IFeeOptions,
-    password: string,
     navigation: NavigationScreenProp<NavigationState>,
     extraFields: ITransactionExtraFields,
     goBack: boolean = true,
@@ -263,8 +247,16 @@ export const posAction = (
     const chainId = getChainId(state, account.blockchain);
 
     const appWallet = getSelectedWallet(state);
-
+    let password = '';
     try {
+        if (appWallet.type === WalletType.HD) {
+            password = await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleSignTransaction'),
+                { sensitive: true, showCloseButton: true }
+            );
+        }
+
         const extra: ITransactionExtraFields = {
             ...extraFields,
             posAction: type

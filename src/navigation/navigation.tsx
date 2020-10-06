@@ -56,7 +56,6 @@ import { RedelegateConfirm } from '../screens/pos-actions/pos-action-redelegate/
 import { NotificationsScreen } from '../screens/notifications/notifications';
 import { CreateNearAccountScreen } from '../screens/blockchain/near/create-account/create-account';
 import { RecoverNearAccountScreen } from '../screens/blockchain/near/recover-account/recover-account';
-import { AddNearAccountScreen } from '../screens/blockchain/near/add-account/add-account';
 import { AddTokenScreen } from '../screens/token/components/add-token/add-token';
 import { SmartScanScreen } from '../screens/smart-scan/smart-scan';
 
@@ -175,9 +174,6 @@ export const WalletNavigation = createStackNavigator(
         },
         Notifications: {
             screen: NotificationsScreen
-        },
-        AddNearAccount: {
-            screen: AddNearAccountScreen
         },
         CreateNearAccount: {
             screen: CreateNearAccountScreen

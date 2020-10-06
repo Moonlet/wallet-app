@@ -5,6 +5,7 @@ import { Blockchain, IBlockchainTransaction } from '../../core/blockchain/types'
 import { createSelector } from 'reselect';
 import { getChainId, getBlockchains } from '../preferences/selectors';
 import { ITokenState } from '../wallets/state';
+import { generateTokensConfig } from '../tokens/static-selectors';
 
 export const getWalletSelectedBlockchain = createSelector(
     (state: IReduxState): IWalletState => getSelectedWallet(state),
@@ -115,9 +116,13 @@ export const getSelectedAccountTransactions = (state: IReduxState): IBlockchainT
 };
 
 export const getAccounts = (state: IReduxState, blockchain: Blockchain): IAccountState[] => {
-    const accounts = getSelectedWallet(state).accounts.filter(acc => {
-        if (acc.blockchain === blockchain) {
-            return acc;
+    const chainId = getChainId(state, blockchain);
+    const accounts = getSelectedWallet(state).accounts.filter(account => {
+        if (
+            account.blockchain === blockchain &&
+            (chainId === account?.chainId || account.chainId === undefined)
+        ) {
+            return account;
         }
     });
 
@@ -171,4 +176,15 @@ export const getWalletAndTransactionForHash = (
     });
     if (wallets.length) return { walletId: wallets[0].id, transaction };
     return undefined;
+};
+
+export const generateAccountConfig = (blockchain: Blockchain): IAccountState => {
+    return {
+        index: 0,
+        selected: false,
+        publicKey: undefined,
+        address: undefined,
+        blockchain,
+        tokens: generateTokensConfig(blockchain)
+    };
 };

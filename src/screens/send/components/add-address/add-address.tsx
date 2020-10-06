@@ -166,7 +166,7 @@ export class AddAddressComponent extends React.Component<
             const response = await blockchainInstance
                 .getClient(this.props.chainId)
                 .nameService.resolveText(text);
-            this.setState({ resolvedAddress: response.address });
+            if (text !== response.address) this.setState({ resolvedAddress: response.address });
             switch (response.code) {
                 case ResolveTextCode.OK: {
                     if (response.type === ResolveTextType.ADDRESS) {

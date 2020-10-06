@@ -81,6 +81,18 @@ export class AccountsBottomSheetComponent extends React.Component<
         this.props.accounts.map(acc => {
             this.props.getBalance(acc.blockchain, acc.address, undefined, false);
         });
+        setTimeout(() => this.showHints(), 500);
+    }
+
+    private showHints() {
+        if (this.props.accounts && this.props.accounts.length > 1) {
+            const accountIndex = `account-0`;
+            this.onSwipeableWillOpen(accountIndex);
+            this.accountsSwipeableRef[accountIndex] &&
+                this.accountsSwipeableRef[accountIndex].openLeft();
+
+            setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
+        }
     }
 
     public closeCurrentOpenedSwipable() {

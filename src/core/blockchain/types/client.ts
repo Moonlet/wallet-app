@@ -36,7 +36,7 @@ export abstract class BlockchainGenericClient {
         this.http = new HttpClient(url);
     }
 
-    public abstract getBalance(address: string): Promise<IBalance | BigNumber>;
+    public abstract getBalance(address: string): Promise<IBalance>;
     public abstract getNonce(address: string, publicKey?: string): Promise<number>;
     public abstract getCurrentBlock(): Promise<IBlockInfo>;
     public abstract getMinimumAmountDelegate(): Promise<BigNumber>;

@@ -36,12 +36,10 @@ export class Client extends BlockchainGenericClient {
                 Blockchain.ZILLIQA,
                 this.chainId.toString()
             );
-            if (data.balance.total && data.balance.available) {
-                return {
-                    total: data.balance.total,
-                    available: data.balance.available
-                };
-            } else return { total: new BigNumber(0), available: new BigNumber(0) };
+            return {
+                total: data?.balance.total || new BigNumber(0),
+                available: data?.balance.available || new BigNumber(0)
+            };
         } catch {
             return { total: new BigNumber(0), available: new BigNumber(0) };
         }

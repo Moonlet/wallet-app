@@ -3,7 +3,8 @@ import {
     ChainIdType,
     IBlockInfo,
     TransactionMessageText,
-    TransactionType
+    TransactionType,
+    IBalance
 } from '../types';
 import { networks } from './networks';
 import { BigNumber } from 'bignumber.js';
@@ -24,9 +25,9 @@ export class Client extends BlockchainGenericClient {
         this.utils = new ClientUtils(this);
     }
 
-    public getBalance(address: string): Promise<BigNumber> {
+    public getBalance(address: string): Promise<IBalance> {
         return this.http.jsonRpc('eth_getBalance', [fixEthAddress(address), 'latest']).then(res => {
-            return new BigNumber(res.result, 16);
+            return { total: new BigNumber(res.result, 16), available: new BigNumber(0) };
         });
     }
 

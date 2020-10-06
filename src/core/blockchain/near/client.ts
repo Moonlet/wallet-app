@@ -37,13 +37,10 @@ export class Client extends BlockchainGenericClient {
                 Blockchain.NEAR,
                 this.chainId.toString()
             );
-            if (data.balance.total !== undefined && data.balance.available !== undefined)
-                return { total: data?.balance?.total, available: data?.balance?.available };
-            else
-                return {
-                    total: new BigNumber(0),
-                    available: new BigNumber(0)
-                };
+            return {
+                total: data?.balance.total || new BigNumber(0),
+                available: data?.balance.available || new BigNumber(0)
+            };
         } catch {
             return { total: new BigNumber(0), available: new BigNumber(0) };
         }

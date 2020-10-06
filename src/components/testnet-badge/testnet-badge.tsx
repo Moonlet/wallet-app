@@ -37,8 +37,7 @@ export const TestnetBadgeComponent = (
                 <Text style={props.styles.text}>
                     {translate('App.labels.youAreOn', {
                         blockchain: props.blockchain ? Capitalize(props.blockchain) : '',
-                        networkName: props.networkName === 'Testnet' ? '' : props.networkName,
-                        space: props.networkName === 'Testnet' ? '' : ' '
+                        networkName: props.networkName.split('Testnet').join('') // TODO remove spacing on Near  Testnet
                     })}
                 </Text>
             </View>

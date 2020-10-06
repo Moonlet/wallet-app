@@ -16,6 +16,11 @@ export const fetchValidators = (account: IAccountState, posAction: PosBasicActio
     const chainId = getChainId(state, blockchain).toString();
     const address = account.address.toLowerCase();
 
+    dispatch({
+        type: ADD_VALIDATORS,
+        data: { validators: undefined, chainId, blockchain }
+    });
+
     const data = await new ApiClient().validators.fetchValidators(
         blockchain,
         chainId,

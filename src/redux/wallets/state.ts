@@ -60,6 +60,8 @@ export interface ITokenState {
         inProgress: boolean;
         timestamp: number;
         error: any;
+        available: string;
+        total: string;
     };
 }
 

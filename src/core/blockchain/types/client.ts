@@ -12,6 +12,11 @@ export interface IBlockInfo {
     hash?: string;
 }
 
+export interface IBalance {
+    total: BigNumber;
+    available: BigNumber;
+}
+
 export abstract class BlockchainGenericClient {
     public readonly tokens: { [type: string]: any } = {};
     public nameService: GenericNameService;
@@ -32,7 +37,7 @@ export abstract class BlockchainGenericClient {
         this.http = new HttpClient(url);
     }
 
-    public abstract getBalance(address: string): Promise<BigNumber>;
+    public abstract getBalance(address: string): Promise<IBalance>;
     public abstract getNonce(address: string, publicKey?: string): Promise<number>;
     public abstract getCurrentBlock(): Promise<IBlockInfo>;
     public abstract getMinimumAmountDelegate(): Promise<BigNumber>;

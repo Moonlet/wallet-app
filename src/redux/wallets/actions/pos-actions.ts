@@ -304,7 +304,8 @@ export const posAction = (
                 await LedgerConnect.signTransaction(
                     account.blockchain,
                     appWallet.hwOptions?.deviceModel,
-                    appWallet.hwOptions?.connectionType
+                    appWallet.hwOptions?.connectionType,
+                    appWallet.hwOptions?.deviceId
                 );
             }
 

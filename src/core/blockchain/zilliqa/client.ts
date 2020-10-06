@@ -18,6 +18,7 @@ import { ClientUtils } from './client-utils';
 import { Staking } from './contracts/staking';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { translate } from '../../i18n';
+import { Capitalize } from '../../utils/format-string';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -87,7 +88,9 @@ export class Client extends BlockchainGenericClient {
                 if (canUnstake === false)
                     return Promise.resolve({
                         value: false,
-                        message: translate('Validator.operationNotAvailableMessage')
+                        message: translate('Validator.operationNotAvailableMessage', {
+                            operation: Capitalize(action.toLowerCase())
+                        })
                     });
                 else
                     return Promise.resolve({

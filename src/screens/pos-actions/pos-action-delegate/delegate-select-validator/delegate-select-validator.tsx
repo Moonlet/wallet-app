@@ -16,7 +16,7 @@ import { getAccount } from '../../../../redux/wallets/selectors';
 import { Blockchain, ChainIdType } from '../../../../core/blockchain/types';
 import BigNumber from 'bignumber.js';
 import { normalize } from '../../../../styles/dimensions';
-import { IAccountState, ITokenState } from '../../../../redux/wallets/state';
+import { AccountType, IAccountState, ITokenState } from '../../../../redux/wallets/state';
 import { TestnetBadge } from '../../../../components/testnet-badge/testnet-badge';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { getTokenConfig } from '../../../../redux/tokens/static-selectors';
@@ -36,6 +36,8 @@ import { Icon } from '../../../../components/icon/icon';
 import { valuePrimaryCtaField } from '../../../../core/utils/format-string';
 import { IconValues } from '../../../../components/icon/values';
 import { getValidators } from '../../../../redux/ui/validators/selectors';
+import { Dialog } from '../../../../components/dialog/dialog';
+import { PosBasicActionType } from '../../../../core/blockchain/types/token';
 
 interface IHeaderStep {
     step: number;
@@ -115,6 +117,31 @@ export class DelegateSelectValidatorComponent extends React.Component<
         };
     }
 
+    public async componentDidMount() {
+        const performAction: { value: boolean; message: string } = await getBlockchain(
+            this.props.blockchain
+        )
+            .getClient(this.props.chainId)
+            .canPerformAction(PosBasicActionType.DELEGATE, {
+                account: this.props.account,
+                validatorAddress: Object.values(this.props.validators).map(value =>
+                    value.id.toLowerCase()
+                )
+            });
+
+        if (performAction && performAction.value === false) {
+            Dialog.alert(
+                translate('Validator.operationNotAvailable'),
+                performAction.message,
+                undefined,
+                {
+                    text: translate('App.labels.ok'),
+                    onPress: () => this.props.navigation.goBack()
+                }
+            );
+        }
+    }
+
     @bind
     public onSelect(validator: IValidator) {
         let selected = true;
@@ -162,6 +189,17 @@ export class DelegateSelectValidatorComponent extends React.Component<
                 <TouchableOpacity
                     style={styles.actionIconContainer}
                     onPress={() => {
+                        if (
+                            this.props.account.type === AccountType.LOCKUP_CONTRACT &&
+                            this.state.nrValidators === 1
+                        ) {
+                            Dialog.info(
+                                translate('Validator.operationNotAvailable'),
+                                translate('Validator.multipleNodes')
+                            );
+                            return;
+                        }
+
                         if (
                             this.props.allValidators.length >= this.state.nrValidators &&
                             !maximumNumberOfValidatorsReached

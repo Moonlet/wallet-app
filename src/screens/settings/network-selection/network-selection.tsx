@@ -15,7 +15,7 @@ import { getNetworks } from '../../../redux/preferences/selectors';
 import { normalize } from '../../../styles/dimensions';
 import { IconValues } from '../../../components/icon/values';
 
-export interface INavigationParams {
+interface INavigationParams {
     blockchain: Blockchain;
     testNet: boolean;
     appNetworks: INetworksOptions;

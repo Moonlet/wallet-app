@@ -36,6 +36,7 @@ export const buildWallets = (trimmedWallets: IExtStorage.IStorageWallets): IWall
 
             const acc: IAccountState = {
                 index: account.index,
+                type: account.type,
                 selected: account.selected,
                 name: account?.name,
                 blockchain: account.blockchain,

@@ -5,7 +5,7 @@ import { IThemeProps, withTheme } from '../../../../../../../core/theme/with-the
 import { smartConnect } from '../../../../../../../core/utils/smart-connect';
 import { Blockchain, ChainIdType } from '../../../../../../../core/blockchain/types';
 import { AccountAddress } from '../../../../../../../components/account-address/account-address';
-import { IAccountState, ITokenState } from '../../../../../../../redux/wallets/state';
+import { AccountType, IAccountState, ITokenState } from '../../../../../../../redux/wallets/state';
 import { IReduxState } from '../../../../../../../redux/state';
 import { getAccount } from '../../../../../../../redux/wallets/selectors';
 import { connect } from 'react-redux';
@@ -208,7 +208,7 @@ export class AccountTabComponent extends React.Component<
     }
 
     public render() {
-        const styles = this.props.styles;
+        const { styles } = this.props;
 
         const blockchainInstance = getBlockchain(this.props.blockchain);
         const tokenUiConfig = blockchainInstance.config.ui.token;
@@ -234,6 +234,9 @@ export class AccountTabComponent extends React.Component<
                                         blockchain: this.props.account.blockchain,
                                         token: this.props.token
                                     })
+                                }
+                                disabledSecondary={
+                                    this.props.account.type === AccountType.LOCKUP_CONTRACT
                                 }
                             >
                                 {translate('App.labels.send')}

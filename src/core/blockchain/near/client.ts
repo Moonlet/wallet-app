@@ -9,17 +9,26 @@ import { networks } from './networks';
 import BigNumber from 'bignumber.js';
 import { config } from './config';
 import { NameService } from './name-service';
-import { TokenType } from '../types/token';
+import { PosBasicActionType, TokenType } from '../types/token';
 import { ClientUtils } from './client-utils';
 import { createTransaction, signTransaction, deleteAccount } from 'near-api-js/lib/transaction';
 import { KeyPair, serialize } from 'near-api-js/lib/utils';
 import sha256 from 'js-sha256';
 import { StakingPool } from './contracts/staking-pool';
-import { INearAccount, NearAccountType } from './types';
+import {
+    INearAccount,
+    NearAccountType,
+    NearAccountViewMethods,
+    NearQueryRequestTypes
+} from './types';
 import { ApiClient } from '../../utils/api-client/api-client';
+import { Lockup } from './contracts/lockup';
+import { translate } from '../../i18n';
+import { AccountType, IAccountState } from '../../../redux/wallets/state';
 
 export class Client extends BlockchainGenericClient {
     public stakingPool: StakingPool;
+    public lockup: Lockup;
 
     constructor(chainId: ChainIdType) {
         super(chainId, networks);
@@ -27,6 +36,7 @@ export class Client extends BlockchainGenericClient {
         this.nameService = new NameService(this);
         this.utils = new ClientUtils(this);
         this.stakingPool = new StakingPool();
+        this.lockup = new Lockup();
     }
 
     public async getBalance(address: string): Promise<BigNumber> {
@@ -251,5 +261,84 @@ export class Client extends BlockchainGenericClient {
                 }
             }, 1000);
         });
+    }
+
+    public async contractCall(options: { contractName: string; methodName: string; args?: any }) {
+        const res = await this.http.jsonRpc('query', {
+            request_type: NearQueryRequestTypes.CALL_FUNCTION,
+            finality: 'final',
+            account_id: options.contractName,
+            method_name: options.methodName,
+            args_base64: Buffer.from(JSON.stringify(options.args || {})).toString('base64')
+        });
+
+        if (res?.result?.result) {
+            try {
+                const decodedData = Buffer.from(res.result.result).toString();
+                return JSON.parse(decodedData);
+            } catch (err) {
+                throw new Error(err);
+            }
+        } else {
+            throw new Error(
+                JSON.stringify({
+                    event: 'contractCall',
+                    errorMessage: 'Invalid contract call response result',
+                    contractName: options.contractName,
+                    methodName: options.methodName,
+                    args: options.args
+                })
+            );
+        }
+    }
+
+    public async canPerformAction(
+        action: PosBasicActionType,
+        options: {
+            account: IAccountState;
+            validatorAddress: string[];
+        }
+    ): Promise<{ value: boolean; message: string }> {
+        switch (action) {
+            case PosBasicActionType.DELEGATE:
+            case PosBasicActionType.STAKE:
+            case PosBasicActionType.UNSTAKE:
+                try {
+                    if (
+                        options.account.type === AccountType.LOCKUP_CONTRACT &&
+                        options.validatorAddress.length > 1
+                    ) {
+                        return Promise.resolve({
+                            value: false,
+                            message: translate('Validator.multipleNodes')
+                        });
+                    }
+
+                    const stakingAccountId = await this.contractCall({
+                        contractName: options.account.address,
+                        methodName: NearAccountViewMethods.GET_STAKING_POOL_ACCOUNT_ID
+                    });
+
+                    if (stakingAccountId && stakingAccountId !== options.validatorAddress[0]) {
+                        return Promise.resolve({
+                            value: false,
+                            message: translate('Validator.alreadyStaked', {
+                                stakedValidator: stakingAccountId,
+                                selectedValidator: options.validatorAddress[0]
+                            })
+                        });
+                    }
+                } catch (err) {
+                    // no need to handle this
+                }
+
+                return Promise.resolve({
+                    value: true,
+                    message: ''
+                });
+
+            default:
+                return Promise.resolve({ value: true, message: '' });
+        }
     }
 }

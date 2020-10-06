@@ -433,7 +433,7 @@ export const translation: ITranslations = {
         },
         RecoverNearAccount: {
             title: 'Recover account name',
-            checkStatus: 'Check your existing account name',
+            checkStatus: 'Check your existing account name or lockup contract',
             authMoonletUserAccount: 'Authorize Moonlet to use your existing account name',
             copyAuthLink: 'Copy authorization link',
             authMoonlet: 'Authorize Moonlet',
@@ -548,7 +548,10 @@ export const translation: ITranslations = {
             stakeSection: 'This section will become available once you start to stake your tokens.',
             operationNotAvailable: 'Operation not available',
             operationNotAvailableMessage:
-                'This operation can not be performed. Please try again next network cycle'
+                'This operation can not be performed. Please try again next network cycle',
+            alreadyStaked:
+                'You have already staked to {{stakedValidator}} from this lockup contract.\nEither you stake the full amount to {{stakedValidator}} or unstake and withdraw your current funds and stake to {{selectedValidator}}.',
+            multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

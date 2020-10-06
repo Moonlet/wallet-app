@@ -3,7 +3,8 @@ import {
     BlockchainGenericClient,
     ChainIdType,
     IBlockInfo,
-    TransactionType
+    TransactionType,
+    IBalance
 } from '../types';
 import { networks } from './networks';
 import BigNumber from 'bignumber.js';
@@ -39,17 +40,19 @@ export class Client extends BlockchainGenericClient {
         this.lockup = new Lockup();
     }
 
-    public async getBalance(address: string): Promise<BigNumber> {
+    public async getBalance(address: string): Promise<IBalance> {
         try {
             const data = await new ApiClient().validators.getBalance(
                 address,
                 Blockchain.NEAR,
                 this.chainId.toString()
             );
-
-            return data?.balance?.total || new BigNumber(0);
+            return {
+                total: data?.balance.total || new BigNumber(0),
+                available: data?.balance.available || new BigNumber(0)
+            };
         } catch {
-            return new BigNumber(0);
+            return { total: new BigNumber(0), available: new BigNumber(0) };
         }
     }
 

@@ -846,7 +846,9 @@ export const createNearAccount = (name: string, extension: string, password: str
         value: '0',
         inProgress: false,
         timestamp: undefined,
-        error: undefined
+        error: undefined,
+        available: '0',
+        total: '0'
     };
 
     dispatch(setProcessTxCreateAccount(account));

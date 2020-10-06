@@ -27,7 +27,10 @@ export class Client extends BlockchainGenericClient {
 
     public getBalance(address: string): Promise<IBalance> {
         return this.http.jsonRpc('eth_getBalance', [fixEthAddress(address), 'latest']).then(res => {
-            return { total: new BigNumber(res.result, 16), available: new BigNumber(0) };
+            return {
+                total: new BigNumber(res.result, 16),
+                available: new BigNumber(res.result, 16)
+            };
         });
     }
 

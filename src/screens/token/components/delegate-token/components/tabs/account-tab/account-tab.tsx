@@ -163,7 +163,11 @@ export class AccountTabComponent extends React.Component<
                         <PosWidget
                             key={`widget-${index}`}
                             title={translate('Widget.claimText')}
-                            middleTitle={`${translate('App.labels.from').toLowerCase()} ${
+                            middleTitle={formatNumber(new BigNumber(amountFromStd), {
+                                currency: this.props.token.symbol,
+                                minimumFractionDigits: 2
+                            })}
+                            bottomTitle={`${translate('App.labels.from').toLowerCase()} ${
                                 widget.validator?.name
                             }`}
                             buttonText={translate('App.labels.claim')}

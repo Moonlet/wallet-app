@@ -195,7 +195,6 @@ export class RecoverNearAccountComponent extends React.Component<
             recoveredAccount: {
                 ...this.state.recoveredAccount,
                 type: AccountType.DEFAULT,
-                address: accountId,
                 meta: undefined
             },
 

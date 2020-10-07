@@ -74,6 +74,7 @@ export interface IBlockchainConfig {
                 tabTransactions?: string;
             };
             sendStepLabels: string[];
+            actionScreenLabels: {};
             accountCTA: {
                 mainCta: IButtonCTA;
             };

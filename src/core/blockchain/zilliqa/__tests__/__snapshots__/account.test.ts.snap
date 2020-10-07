@@ -12,9 +12,11 @@ Object {
       "XSGD": Object {
         "active": true,
         "balance": Object {
+          "available": "0",
           "error": undefined,
           "inProgress": false,
           "timestamp": undefined,
+          "total": "0",
           "value": "0",
         },
         "order": 999,
@@ -23,9 +25,11 @@ Object {
       "ZIL": Object {
         "active": true,
         "balance": Object {
+          "available": "0",
           "error": undefined,
           "inProgress": false,
           "timestamp": undefined,
+          "total": "0",
           "value": "0",
         },
         "order": 0,
@@ -34,9 +38,11 @@ Object {
       "gZIL": Object {
         "active": true,
         "balance": Object {
+          "available": "0",
           "error": undefined,
           "inProgress": false,
           "timestamp": undefined,
+          "total": "0",
           "value": "0",
         },
         "order": 999,
@@ -47,9 +53,11 @@ Object {
       "ZIL": Object {
         "active": true,
         "balance": Object {
+          "available": "0",
           "error": undefined,
           "inProgress": false,
           "timestamp": undefined,
+          "total": "0",
           "value": "0",
         },
         "order": 0,
@@ -58,9 +66,11 @@ Object {
       "gZIL": Object {
         "active": true,
         "balance": Object {
+          "available": "0",
           "error": undefined,
           "inProgress": false,
           "timestamp": undefined,
+          "total": "0",
           "value": "0",
         },
         "order": 999,
@@ -68,5 +78,6 @@ Object {
       },
     },
   },
+  "type": "DEFAULT",
 }
 `;

@@ -5,10 +5,16 @@ import { GenericNameService } from '.';
 import { HttpClient } from '../../utils/http-client';
 import { PosBasicActionType, TokenType } from './token';
 import { IClientUtils } from './client-utils';
+import { IAccountState } from '../../../redux/wallets/state';
 
 export interface IBlockInfo {
     number: number;
     hash?: string;
+}
+
+export interface IBalance {
+    total: BigNumber;
+    available: BigNumber;
 }
 
 export abstract class BlockchainGenericClient {
@@ -31,7 +37,7 @@ export abstract class BlockchainGenericClient {
         this.http = new HttpClient(url);
     }
 
-    public abstract getBalance(address: string): Promise<BigNumber>;
+    public abstract getBalance(address: string): Promise<IBalance>;
     public abstract getNonce(address: string, publicKey?: string): Promise<number>;
     public abstract getCurrentBlock(): Promise<IBlockInfo>;
     public abstract getMinimumAmountDelegate(): Promise<BigNumber>;
@@ -39,7 +45,7 @@ export abstract class BlockchainGenericClient {
     public canPerformAction(
         action: PosBasicActionType,
         options: {
-            address: string;
+            account: IAccountState;
             validatorAddress: string[];
         }
     ): Promise<{ value: boolean; message: string }> {

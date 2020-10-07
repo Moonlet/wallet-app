@@ -1,6 +1,6 @@
 import { IWallet } from '../../types';
 import { Blockchain, IBlockchainTransaction, DerivationType } from '../../../blockchain/types';
-import { IAccountState } from '../../../../redux/wallets/state';
+import { AccountType, IAccountState } from '../../../../redux/wallets/state';
 import { HWModel, HWConnection } from '../types';
 import { AppFactory } from './apps-factory';
 import { TransportFactory } from './transport-factory';
@@ -66,6 +66,7 @@ export class LedgerWallet implements IWallet {
 
             const account: IAccountState = {
                 index,
+                type: AccountType.DEFAULT,
                 selected: false,
                 publicKey: address.publicKey,
                 address: address.address,

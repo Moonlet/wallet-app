@@ -3,6 +3,7 @@ import { HWConnection } from '../wallet/hw-wallet/types';
 import { WalletType } from '../wallet/types';
 import { TokenType } from '../blockchain/types/token';
 import { IBlockchainsOptions } from '../../redux/preferences/state';
+import { AccountType } from '../../redux/wallets/state';
 
 export interface IQRCodeConn {
     connectionId: string;
@@ -60,6 +61,7 @@ export interface IStorageWallet {
     };
     accounts: {
         index: number;
+        type: AccountType;
         selected: boolean;
         name?: string;
         blockchain: Blockchain;

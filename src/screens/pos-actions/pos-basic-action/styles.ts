@@ -36,6 +36,9 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(18)
         },
         bottomText: {
+            position: 'absolute',
+            bottom: 0,
+            marginBottom: 100,
             color: theme.colors.textSecondary,
             fontSize: normalizeFontAndLineHeight(13),
             lineHeight: normalizeFontAndLineHeight(16),

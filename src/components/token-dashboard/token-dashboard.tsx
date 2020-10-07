@@ -185,6 +185,7 @@ export class TokenDashboardComponent extends React.Component<
                         account={this.props.account}
                         chainId={this.props.chainId}
                         style={styles.quickDelegateBannerContainer}
+                        accountStats={this.props.accountStats}
                     />
 
                     {this.props.account?.tokens &&

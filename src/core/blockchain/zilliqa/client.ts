@@ -4,7 +4,8 @@ import {
     ChainIdType,
     IBlockInfo,
     TransactionMessageText,
-    TransactionType
+    TransactionType,
+    IBalance
 } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
@@ -18,6 +19,8 @@ import { ClientUtils } from './client-utils';
 import { Staking } from './contracts/staking';
 import { ApiClient } from '../../utils/api-client/api-client';
 import { translate } from '../../i18n';
+import { Capitalize } from '../../utils/format-string';
+import { IAccountState } from '../../../redux/wallets/state';
 
 export class Client extends BlockchainGenericClient {
     constructor(chainId: ChainIdType) {
@@ -28,17 +31,19 @@ export class Client extends BlockchainGenericClient {
         this.contracts[Contracts.STAKING] = new Staking(this);
     }
 
-    public async getBalance(address: string): Promise<BigNumber> {
+    public async getBalance(address: string): Promise<IBalance> {
         try {
             const data = await new ApiClient().validators.getBalance(
                 address,
                 Blockchain.ZILLIQA,
                 this.chainId.toString()
             );
-
-            return data?.balance?.total || new BigNumber(0);
+            return {
+                total: data?.balance.total || new BigNumber(0),
+                available: data?.balance.available || new BigNumber(0)
+            };
         } catch {
-            return new BigNumber(0);
+            return { total: new BigNumber(0), available: new BigNumber(0) };
         }
     }
 
@@ -73,7 +78,7 @@ export class Client extends BlockchainGenericClient {
     public async canPerformAction(
         action: PosBasicActionType,
         options: {
-            address: string;
+            account: IAccountState;
             validatorAddress: string[];
         }
     ): Promise<{ value: boolean; message: string }> {
@@ -81,13 +86,15 @@ export class Client extends BlockchainGenericClient {
             case PosBasicActionType.UNSTAKE:
             case PosBasicActionType.REDELEGATE:
                 const canUnstake = await this.contracts[Contracts.STAKING].canUnstakeFromSsn(
-                    options.address,
+                    options.account.address,
                     options.validatorAddress[0]
                 );
                 if (canUnstake === false)
                     return Promise.resolve({
                         value: false,
-                        message: translate('Validator.operationNotAvailableMessage')
+                        message: translate('Validator.operationNotAvailableMessage', {
+                            operation: Capitalize(action.toLowerCase())
+                        })
                     });
                 else
                     return Promise.resolve({

@@ -226,7 +226,7 @@ export class AccountsBottomSheetComponent extends React.Component<
                                 ref={ref => (this.accountsSwipeableRef[swipeIndex] = ref)}
                                 renderLeftActions={() =>
                                     account.blockchain === Blockchain.NEAR &&
-                                    account.index !== 0 && // cannot delete index on position 0
+                                    account.index !== 0 && // cannot delete account of index 0
                                     this.renderLeftActions(account)
                                 }
                                 onSwipeableWillOpen={() => this.onSwipeableWillOpen(swipeIndex)}

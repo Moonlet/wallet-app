@@ -441,6 +441,8 @@ export const translation: ITranslations = {
             authMoonlet: 'Authorize Moonlet',
             congrats: 'Congrats! {{name}} can be added to Moonlet.',
             needAuthorize: 'You need to authorize Moonlet to add {{name}}.',
+            needAuthorizeLockup:
+                'You need to authorize Moonlet the owner account {{owner}} in order to add {{lockup}}.',
             authProgress: 'Authorization in progress ...',
             notRegistered:
                 'Account name not registered. If you want to use it, you need first to create it.',

@@ -184,11 +184,19 @@ export class RecoverNearAccountComponent extends React.Component<
     private async checkAccountId(accountId: string) {
         clearInterval(this.startRecoveringAccountInterval);
 
+        // Reset state to default
         this.setState({
             input: {
                 name: accountId,
                 valid: false,
                 shouldAuthorize: false
+            },
+
+            recoveredAccount: {
+                ...this.state.recoveredAccount,
+                type: AccountType.DEFAULT,
+                address: accountId,
+                meta: undefined
             },
 
             action: {
@@ -460,7 +468,7 @@ export class RecoverNearAccountComponent extends React.Component<
 
     public render() {
         const { styles, theme } = this.props;
-        const { action, usernameError, input } = this.state;
+        const { action, usernameError, input, recoveredAccount } = this.state;
         const { name, valid, shouldAuthorize } = input;
         const { authorizing, checking } = action;
         const { notAvailable, notRegistered, notSupported, invalid } = usernameError;
@@ -545,11 +553,37 @@ export class RecoverNearAccountComponent extends React.Component<
                                                 : isNotSupported
                                                 ? translate('RecoverNearAccount.notSupported')
                                                 : valid && !shouldAuthorize
-                                                ? translate('RecoverNearAccount.congrats', { name })
-                                                : valid && shouldAuthorize
-                                                ? translate('RecoverNearAccount.needAuthorize', {
-                                                      name
+                                                ? translate('RecoverNearAccount.congrats', {
+                                                      name: formatAddress(
+                                                          name,
+                                                          recoveredAccount.blockchain
+                                                      )
                                                   })
+                                                : valid && shouldAuthorize
+                                                ? recoveredAccount.type ===
+                                                  AccountType.LOCKUP_CONTRACT
+                                                    ? translate(
+                                                          'RecoverNearAccount.needAuthorizeLockup',
+                                                          {
+                                                              owner: formatAddress(
+                                                                  recoveredAccount.meta.owner,
+                                                                  recoveredAccount.blockchain
+                                                              ),
+                                                              lockup: formatAddress(
+                                                                  name,
+                                                                  recoveredAccount.blockchain
+                                                              )
+                                                          }
+                                                      )
+                                                    : translate(
+                                                          'RecoverNearAccount.needAuthorize',
+                                                          {
+                                                              name: formatAddress(
+                                                                  name,
+                                                                  recoveredAccount.blockchain
+                                                              )
+                                                          }
+                                                      )
                                                 : ''}
                                         </Text>
 

@@ -50,6 +50,7 @@ import {
 } from '../../redux/notifications/actions';
 import { LedgerBadge } from '../../components/ledger-badge/ledger-badge';
 import { isFeatureActive, RemoteFeature } from '../../core/utils/remote-feature-config';
+import { StakingBetaBadge } from '../../components/staking-beta-badge/staking-beta-badge';
 
 const ANIMATION_MAX_HEIGHT = normalize(160);
 const ANIMATION_MIN_HEIGHT = normalize(70);
@@ -452,6 +453,7 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
+                <StakingBetaBadge />
                 <TestnetBadge />
                 <LedgerBadge hwOptions={wallet?.hwOptions} />
 

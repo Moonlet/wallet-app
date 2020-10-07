@@ -32,14 +32,17 @@ export const TestnetBadgeComponent = (
     props: IReduxProps & IThemeProps<ReturnType<typeof stylesProvider>>
 ) => {
     if (props.testNet) {
+        const text = [
+            ...new Set(
+                translate('App.labels.youAreOn', {
+                    blockchain: props.blockchain ? Capitalize(props.blockchain) : '',
+                    networkName: props.networkName // TODO remove spacing on Near  Testnet
+                }).split(' ')
+            )
+        ].join(' ');
         return (
             <View testID="testnet-badge" style={props.styles.container}>
-                <Text style={props.styles.text}>
-                    {translate('App.labels.youAreOn', {
-                        blockchain: props.blockchain ? Capitalize(props.blockchain) : '',
-                        networkName: props.networkName.split('Testnet').join('') // TODO remove spacing on Near  Testnet
-                    })}
-                </Text>
+                <Text style={props.styles.text}>{text}</Text>
             </View>
         );
     } else {

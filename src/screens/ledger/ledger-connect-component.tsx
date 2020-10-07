@@ -28,7 +28,7 @@ import { ReviewTransaction } from './components/review-transaction/review-transa
 import { delay } from '../../core/utils/time';
 import { AnimatedValue } from 'react-navigation';
 
-const FADE_ANIMATION_TIME = 300;
+const ANIMATION_TIME = 300;
 
 export const svgDimmensions = {
     width: 345,
@@ -257,37 +257,37 @@ export class LedgerConnectComponent extends React.Component<
         Animated.parallel([
             Animated.timing(this.state.stepContainerFadeAnimation, {
                 toValue: 1,
-                duration: FADE_ANIMATION_TIME,
+                duration: ANIMATION_TIME,
                 useNativeDriver: true,
                 easing: Easing.ease
             }),
             Animated.timing(this.state.stepContainerTranslateAnimation, {
                 toValue: 0,
-                duration: FADE_ANIMATION_TIME,
+                duration: ANIMATION_TIME,
                 useNativeDriver: true,
                 easing: Easing.ease
             })
         ]).start();
 
-        await delay(FADE_ANIMATION_TIME);
+        await delay(ANIMATION_TIME);
     }
 
     private async stepContainerFadeOut(step: ScreenStep) {
         Animated.parallel([
             Animated.timing(this.state.stepContainerFadeAnimation, {
                 toValue: 0,
-                duration: FADE_ANIMATION_TIME,
+                duration: ANIMATION_TIME,
                 useNativeDriver: true
                 // easing: Easing.out(Easing.exp)
             }),
             Animated.timing(this.state.stepContainerTranslateAnimation, {
                 toValue: -300,
-                duration: FADE_ANIMATION_TIME,
+                duration: ANIMATION_TIME,
                 useNativeDriver: true
             })
         ]).start();
 
-        await delay(FADE_ANIMATION_TIME);
+        await delay(ANIMATION_TIME);
     }
 
     private displaySteps() {

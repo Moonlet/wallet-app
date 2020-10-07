@@ -70,15 +70,7 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
         return true;
     }
 
-    if (
-        (feature === RemoteFeature.BETA_BADGE ||
-            feature === RemoteFeature.ZIL ||
-            feature === RemoteFeature.NEAR ||
-            feature === RemoteFeature.COSMOS ||
-            feature === RemoteFeature.CELO ||
-            feature === RemoteFeature.DEV_TOOLS) &&
-        featuresConfig
-    ) {
+    if (featuresConfig) {
         const values = featuresConfig[feature] || [];
         if (values.length > 0) {
             return (

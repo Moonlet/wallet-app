@@ -81,7 +81,10 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
     ) {
         const values = featuresConfig[feature] || [];
         if (values.length > 0) {
-            return values.indexOf(DeviceInfo.getUniqueId()) >= 0;
+            return (
+                values.indexOf(DeviceInfo.getUniqueId()) >= 0 ||
+                values.filter(e => e === '*').length > 0
+            );
         }
     }
     return false;

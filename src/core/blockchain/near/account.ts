@@ -1,5 +1,5 @@
 import { AccountType, IAccountState } from '../../../redux/wallets/state';
-import { Blockchain, IBlockchainAccountUtils } from '../types';
+import { Blockchain, ChainIdType, IBlockchainAccountUtils } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
@@ -8,6 +8,8 @@ import bs58 from 'bs58';
 import * as nacl from 'tweetnacl';
 import { HDKeyEd25519 } from '../../wallet/hd-wallet/hd-key/hd-key-ed25519';
 import { generateTokensConfig } from '../../../redux/tokens/static-selectors';
+import { sha256 } from 'js-sha256';
+import { NEAR_LOCKUP_SUFFIX } from '../../constants/app';
 
 export class NearAccountUtils implements IBlockchainAccountUtils {
     public getAccountDerivationPath(accountIndex: number): string {
@@ -68,5 +70,9 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
 
     public convertUnit(value: BigNumber, from: string, to: string): BigNumber {
         return convert(value, from, to, config);
+    }
+
+    public getLockupContract(accountId: string, chainId: ChainIdType): string {
+        return sha256(Buffer.from(accountId)).substring(0, 40) + NEAR_LOCKUP_SUFFIX[chainId];
     }
 }

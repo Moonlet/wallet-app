@@ -56,7 +56,7 @@ export class ValidatorsTabComponent extends React.Component<
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
-        if (this.props.validators !== prevProps.validators) {
+        if (this.props.validators && this.props.validators !== prevProps.validators) {
             this.setState({ validators: this.props.validators });
         }
     }

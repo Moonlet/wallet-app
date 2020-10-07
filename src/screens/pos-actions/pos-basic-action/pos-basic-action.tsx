@@ -271,6 +271,16 @@ export class PosBasicActionComponent extends React.Component<
 
     public addAmount(value: string) {
         const amount = value.replace(/,/g, '.');
+        const blockchainInstance = getBlockchain(this.props.blockchain);
+
+        const tokenConfig = getTokenConfig(this.props.blockchain, this.props.token.symbol);
+
+        const activeBalance = blockchainInstance.account
+            .amountFromStd(
+                new BigNumber(this.props.validators[0].amountDelegated.active),
+                tokenConfig.decimals
+            )
+            .toFixed();
         this.setState({ amount }, () => {
             const { insufficientFunds, insufficientFundsFees } = availableFunds(
                 amount,
@@ -278,7 +288,7 @@ export class PosBasicActionComponent extends React.Component<
                 this.props.token,
                 this.props.chainId,
                 this.state.feeOptions,
-                this.props.validators[0].totalVotes
+                activeBalance
             );
 
             this.setState({ insufficientFunds, insufficientFundsFees });
@@ -296,6 +306,7 @@ export class PosBasicActionComponent extends React.Component<
                 tokenConfig.decimals
             )
             .toFixed();
+
         // const pendingBalance = blockchainInstance.account
         //     .amountFromStd(
         //         new BigNumber(this.props.validators[0].amountDelegated.pending),

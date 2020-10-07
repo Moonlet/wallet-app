@@ -231,6 +231,11 @@ export class ProcessTransactionsComponent extends React.Component<
                 middleText = tx.additionalInfo.actions[0].params[1].new_account_id;
                 break;
             }
+            case PosBasicActionType.SELECT_STAKING_POOL: {
+                topText = 'Selecting staking pool';
+                middleText = formatValidatorName(tx.additionalInfo?.validatorName, 20);
+                break;
+            }
             default: {
                 middleText = '';
                 topText = amount;
@@ -329,7 +334,7 @@ export class ProcessTransactionsComponent extends React.Component<
                     {middleText !== '' && <Text style={styles.middleText}>{middleText}</Text>}
                     {bottomText !== '' && (
                         <Text style={styles.bottomText}>
-                            {translate('App.labels.fees') + ': ' + bottomText}
+                            {translate('App.labels.maxFees') + ': ' + bottomText}
                         </Text>
                     )}
                 </View>

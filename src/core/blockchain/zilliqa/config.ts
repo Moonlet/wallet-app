@@ -132,6 +132,10 @@ export const config: IBlockchainConfig = {
                 tabValidators: 'App.labels.validators',
                 tabTransactions: 'App.labels.transactions'
             },
+            actionScreenLabels: {
+                unstake: 'Validator.unstakeScreenMessageZil',
+                redelegate: 'Validator.restakeScreenMessageZil'
+            },
             sendStepLabels: [
                 'Validator.selectValidator',
                 'App.labels.enterAmount',

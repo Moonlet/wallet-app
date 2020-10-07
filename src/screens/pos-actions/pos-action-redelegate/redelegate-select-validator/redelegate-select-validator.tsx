@@ -279,7 +279,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
         )
             .getClient(this.props.chainId)
             .canPerformAction(PosBasicActionType.REDELEGATE, {
-                address: this.props.account.address,
+                account: this.props.account,
                 validatorAddress: [this.state.fromValidator.id.toLowerCase()]
             });
 
@@ -299,6 +299,7 @@ export class RedelegateSelectValidatorComponent extends React.Component<
     public render() {
         const { styles } = this.props;
         const { headerSteps } = this.state;
+        const config = getBlockchain(this.props.blockchain).config;
 
         return (
             <View style={styles.container}>
@@ -316,6 +317,17 @@ export class RedelegateSelectValidatorComponent extends React.Component<
                         {this.renderValidatorList()}
                     </View>
                 </KeyboardAwareScrollView>
+                {config.ui.token.actionScreenLabels[
+                    PosBasicActionType.REDELEGATE.toLowerCase()
+                ] && (
+                    <Text style={styles.bottomText}>
+                        {translate(
+                            config.ui.token.actionScreenLabels[
+                                PosBasicActionType.REDELEGATE.toLowerCase()
+                            ]
+                        )}
+                    </Text>
+                )}
 
                 {this.renderBottomConfirm()}
             </View>

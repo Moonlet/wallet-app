@@ -109,13 +109,13 @@ export class PosBasicActionComponent extends React.Component<
         }
     }
 
-    async componentDidMount() {
+    public async componentDidMount() {
         const performAction: { value: boolean; message: string } = await getBlockchain(
             this.props.blockchain
         )
             .getClient(this.props.chainId)
             .canPerformAction(this.props.basicAction, {
-                address: this.props.account.address,
+                account: this.props.account,
                 validatorAddress: Object.values(this.props.validators).map(value =>
                     value.id.toLowerCase()
                 )
@@ -375,6 +375,8 @@ export class PosBasicActionComponent extends React.Component<
     public render() {
         const { styles } = this.props;
 
+        const config = getBlockchain(this.props.blockchain).config;
+
         if (this.props.basicAction === PosBasicActionType.CLAIM_REWARD_NO_INPUT)
             return <LoadingIndicator />;
 
@@ -403,6 +405,18 @@ export class PosBasicActionComponent extends React.Component<
                             })}
                         </Text>
                     )}
+                    {this.props.basicAction === PosBasicActionType.UNSTAKE &&
+                        config.ui.token.actionScreenLabels[
+                            PosBasicActionType.UNSTAKE.toLowerCase()
+                        ] && (
+                            <Text style={styles.bottomText}>
+                                {translate(
+                                    config.ui.token.actionScreenLabels[
+                                        PosBasicActionType.UNSTAKE.toLowerCase()
+                                    ]
+                                )}
+                            </Text>
+                        )}
                     {this.props.basicAction === PosBasicActionType.CLAIM_REWARD && (
                         <Text style={styles.bottomText}>
                             {translate('Validator.claimRewardBottomText')}

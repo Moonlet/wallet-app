@@ -1,4 +1,10 @@
-import { BlockchainGenericClient, ChainIdType, IBlockInfo, TransactionType } from '../types';
+import {
+    BlockchainGenericClient,
+    ChainIdType,
+    IBlockInfo,
+    TransactionType,
+    IBalance
+} from '../types';
 import { BigNumber } from 'bignumber.js';
 import { networks } from './networks';
 import { config } from './config';
@@ -13,7 +19,7 @@ export class Client extends BlockchainGenericClient {
         this.utils = new ClientUtils();
     }
 
-    public async getBalance(address: string): Promise<BigNumber> {
+    public async getBalance(address: string): Promise<IBalance> {
         try {
             const symbolMap = config.tokens[config.coin].symbolMap;
             let denom = config.defaultUnit.toLowerCase();
@@ -26,10 +32,13 @@ export class Client extends BlockchainGenericClient {
             }
             const res = await this.http.get('/bank/balances/' + address);
             if (res.result) {
-                return new BigNumber(res.result.filter(i => i.denom === denom)[0]?.amount);
+                return {
+                    total: new BigNumber(res.result.filter(i => i.denom === denom)[0]?.amount),
+                    available: new BigNumber(0)
+                };
             }
         } catch {
-            return new BigNumber(0);
+            return { total: new BigNumber(0), available: new BigNumber(0) };
         }
     }
 

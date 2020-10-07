@@ -1,4 +1,4 @@
-import { IAccountState } from '../../../redux/wallets/state';
+import { AccountType, IAccountState } from '../../../redux/wallets/state';
 import {
     getPubKeyFromPrivateKey,
     getAddressFromPrivateKey,
@@ -45,6 +45,7 @@ export class ZilliqaAccountUtils implements IBlockchainAccountUtils {
     public getAccountFromPrivateKey(privateKey: string, index: number): IAccountState {
         return {
             index,
+            type: AccountType.DEFAULT,
             selected: false,
             publicKey: this.privateToPublic(privateKey),
             address: this.privateToAddress(privateKey),

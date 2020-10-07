@@ -561,7 +561,8 @@ export const translation: ITranslations = {
                 'It takes 14 days in order to receive the amount. The accumulated ZIL rewards will be automatically claimed and deposited into your available balance, as well gZIL.',
             alreadyStaked:
                 'You have already staked to {{stakedValidator}} from this lockup contract.\nEither you stake the full amount to {{stakedValidator}} or unstake and withdraw your current funds and stake to {{selectedValidator}}.',
-            multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`
+            multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`,
+            selectStakingPool: 'Selecting staking pool'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

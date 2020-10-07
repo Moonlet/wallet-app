@@ -232,7 +232,7 @@ export class ProcessTransactionsComponent extends React.Component<
                 break;
             }
             case PosBasicActionType.SELECT_STAKING_POOL: {
-                topText = 'Selecting staking pool';
+                topText = translate('Validator.selectStakingPool');
                 middleText = formatValidatorName(tx.additionalInfo?.validatorName, 20);
                 break;
             }

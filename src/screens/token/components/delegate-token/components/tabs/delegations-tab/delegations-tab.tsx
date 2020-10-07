@@ -117,6 +117,7 @@ export class DelegationsTabComponent extends React.Component<
                             onClose={this.onClose}
                         />
                     </View>
+
                     {!validators ? (
                         <LoadingIndicator />
                     ) : validators.length === 0 ? (

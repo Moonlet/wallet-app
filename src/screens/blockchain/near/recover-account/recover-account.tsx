@@ -26,6 +26,8 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { NearAccountType, NearAccountViewMethods } from '../../../../core/blockchain/near/types';
 import { openURL } from '../../../../core/utils/linking-handler';
 import { NEAR_TLD } from '../../../../core/constants/app';
+import { BASE_DIMENSION } from '../../../../styles/dimensions';
+import { formatAddress } from '../../../../core/utils/format-address';
 
 interface IReduxProps {
     chainId: ChainIdType;
@@ -48,6 +50,10 @@ interface IState {
         authorizing: boolean;
         checking: boolean;
         loading: boolean;
+        continueWith: {
+            ownerId: string;
+            lockupId: string;
+        };
     };
 
     usernameError: {
@@ -96,7 +102,11 @@ export class RecoverNearAccountComponent extends React.Component<
             action: {
                 authorizing: false,
                 checking: false,
-                loading: false
+                loading: false,
+                continueWith: {
+                    ownerId: undefined,
+                    lockupId: undefined
+                }
             },
 
             usernameError: {
@@ -183,7 +193,11 @@ export class RecoverNearAccountComponent extends React.Component<
             action: {
                 authorizing: false,
                 checking: true,
-                loading: false
+                loading: false,
+                continueWith: {
+                    ownerId: undefined,
+                    lockupId: undefined
+                }
             },
 
             // reset error to default
@@ -204,9 +218,9 @@ export class RecoverNearAccountComponent extends React.Component<
         }
 
         try {
-            const client = getBlockchain(Blockchain.NEAR).getClient(
-                this.props.chainId
-            ) as NearClient;
+            const blockchainInstance = getBlockchain(Blockchain.NEAR);
+            const client = blockchainInstance.getClient(this.props.chainId) as NearClient;
+            const accountInstance = blockchainInstance.account as NearAccountUtils;
 
             const account = await client.getAccount(accountId);
 
@@ -241,6 +255,25 @@ export class RecoverNearAccountComponent extends React.Component<
                     }
                 } else {
                     // Input is valid
+                    // Search for lockup id on the owner
+                    const lockupId = accountInstance.getLockupContract(
+                        accountId,
+                        String(this.props.chainId)
+                    );
+                    const ownerAccountId = await this.getLockupContractOwner(lockupId, client);
+
+                    if (accountId === ownerAccountId) {
+                        this.setState({
+                            action: {
+                                ...this.state.action,
+                                continueWith: {
+                                    ownerId: accountId,
+                                    lockupId
+                                }
+                            }
+                        });
+                    }
+
                     this.setState(
                         {
                             recoveredAccount: { ...this.state.recoveredAccount, address: accountId }
@@ -311,14 +344,28 @@ export class RecoverNearAccountComponent extends React.Component<
         NavigationService.navigate('Dashboard', {});
     }
 
+    private onPressContinue() {
+        if (this.state.input.shouldAuthorize) {
+            // start authorization
+            this.startAuthorizing();
+        } else {
+            // recover account automatically
+            this.recoverAccount();
+        }
+    }
+
     private renderBottomContainer() {
         const { styles } = this.props;
+        const { action } = this.state;
 
-        if (this.state.action.loading) {
+        if (action.loading) {
             return <LoadingIndicator />;
         }
 
-        if (this.state.action.authorizing) {
+        // Authorizing
+        // Copy auth link
+        // Auth Moonlet
+        if (action.authorizing) {
             return (
                 <View style={{ flex: 1 }}>
                     <View style={{ flex: 1 }}>
@@ -343,6 +390,55 @@ export class RecoverNearAccountComponent extends React.Component<
             );
         }
 
+        // Continue with lockup id
+        // Continue with owner id
+        if (action.continueWith.lockupId && action.continueWith.ownerId) {
+            return (
+                <View style={styles.defaultButtonContainer}>
+                    <Text style={styles.continueWith}>{translate('App.labels.continueWith')}</Text>
+
+                    <Button
+                        wrapperStyle={[styles.defaultButton, { marginBottom: BASE_DIMENSION * 2 }]}
+                        disabled={!this.state.input.valid}
+                        onPress={async () => {
+                            this.setState(
+                                {
+                                    action: { ...action, loading: true },
+                                    recoveredAccount: {
+                                        ...this.state.recoveredAccount,
+                                        type: AccountType.LOCKUP_CONTRACT,
+                                        address: action.continueWith.lockupId,
+                                        meta: {
+                                            owner: action.continueWith.ownerId
+                                        }
+                                    }
+                                },
+                                () => this.onPressContinue()
+                            );
+                        }}
+                    >
+                        {formatAddress(
+                            action.continueWith.lockupId,
+                            this.state.recoveredAccount.blockchain
+                        )}
+                    </Button>
+
+                    <Button
+                        wrapperStyle={styles.defaultButton}
+                        primary
+                        disabled={!this.state.input.valid}
+                        onPress={async () => this.onPressContinue()}
+                    >
+                        {formatAddress(
+                            action.continueWith.ownerId,
+                            this.state.recoveredAccount.blockchain
+                        )}
+                    </Button>
+                </View>
+            );
+        }
+
+        // Continue with normal account
         return (
             <View style={styles.defaultButtonContainer}>
                 <Button
@@ -350,15 +446,9 @@ export class RecoverNearAccountComponent extends React.Component<
                     primary
                     disabled={!this.state.input.valid}
                     onPress={async () => {
-                        this.setState({ action: { ...this.state.action, loading: true } }, () => {
-                            if (this.state.input.shouldAuthorize) {
-                                // start authorization
-                                this.startAuthorizing();
-                            } else {
-                                // recover account automatically
-                                this.recoverAccount();
-                            }
-                        });
+                        this.setState({ action: { ...action, loading: true } }, () =>
+                            this.onPressContinue()
+                        );
                     }}
                 >
                     {translate('App.labels.continue')}
@@ -397,7 +487,9 @@ export class RecoverNearAccountComponent extends React.Component<
                         />
 
                         <Text style={styles.authMoonletUserAccountText}>
-                            {translate('RecoverNearAccount.checkStatus')}
+                            {isAuthorizing
+                                ? translate('RecoverNearAccount.authMoonletUserAccount')
+                                : translate('RecoverNearAccount.checkStatus')}
                         </Text>
 
                         <View style={styles.inputContainer}>

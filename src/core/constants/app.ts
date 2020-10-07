@@ -30,5 +30,9 @@ export const NEAR_TLD = {
     mainnet: 'near',
     testnet: 'testnet'
 };
+export const NEAR_LOCKUP_SUFFIX = {
+    mainnet: '.lockup.near',
+    testnet: '.testnet'
+};
 
 export const FETCH_ACCOUNT_STATS_SECONDS = 5;

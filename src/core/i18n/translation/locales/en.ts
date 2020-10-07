@@ -32,6 +32,7 @@ export const translation: ITranslations = {
                 connect: 'Connect',
                 connection: 'Connection',
                 continue: 'Continue',
+                continueWith: 'Continue with',
                 contract: 'Contract',
                 contractAddress: 'Contract address',
                 copy: 'Copy',

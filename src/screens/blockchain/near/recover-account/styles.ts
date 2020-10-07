@@ -100,5 +100,13 @@ export default (theme: ITheme) =>
             lineHeight: normalizeFontAndLineHeight(20),
             color: theme.colors.accent,
             textAlign: 'center'
+        },
+        continueWith: {
+            fontSize: normalizeFontAndLineHeight(17),
+            lineHeight: normalizeFontAndLineHeight(22),
+            color: theme.colors.text,
+            fontWeight: 'bold',
+            marginBottom: BASE_DIMENSION,
+            marginLeft: BASE_DIMENSION * 2
         }
     });

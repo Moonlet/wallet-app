@@ -11,6 +11,7 @@ import { getBlockchain } from '../../../../core/blockchain/blockchain-factory';
 import { addAccount, setSelectedAccount } from '../../../../redux/wallets/actions';
 import { IReduxState } from '../../../../redux/state';
 import { Client as NearClient } from '../../../../core/blockchain/near/client';
+import { NearAccountUtils } from '../../../../core/blockchain/near/account';
 import { getChainId } from '../../../../redux/preferences/selectors';
 import {
     generateAccountConfig,

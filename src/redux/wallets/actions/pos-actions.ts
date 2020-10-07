@@ -316,11 +316,7 @@ export const posAction = (
                 const { additionalInfo } = txs[index];
                 if (account.blockchain === Blockchain.NEAR && additionalInfo && txs.length > 1) {
                     for (const action of additionalInfo?.actions || []) {
-                        if (
-                            action &&
-                            action.params[0] &&
-                            action.params[0] === NearFunctionCallMethods.SELECT_STAKING_POOL
-                        ) {
+                        if (action?.params[0] === NearFunctionCallMethods.SELECT_STAKING_POOL) {
                             await delay(2000);
                         }
                     }

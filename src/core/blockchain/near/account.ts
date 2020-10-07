@@ -1,5 +1,5 @@
 import { AccountType, IAccountState } from '../../../redux/wallets/state';
-import { Blockchain, IBlockchainAccountUtils } from '../types';
+import { Blockchain, ChainIdType, IBlockchainAccountUtils } from '../types';
 import { BigNumber } from 'bignumber.js';
 import { config } from './config';
 import { convert } from '../common/account';
@@ -72,7 +72,7 @@ export class NearAccountUtils implements IBlockchainAccountUtils {
         return convert(value, from, to, config);
     }
 
-    public getLockupContract(accountId: string, chainId: string): string {
+    public getLockupContract(accountId: string, chainId: ChainIdType): string {
         return sha256(Buffer.from(accountId)).substring(0, 40) + NEAR_LOCKUP_SUFFIX[chainId];
     }
 }

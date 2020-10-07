@@ -266,7 +266,7 @@ export class RecoverNearAccountComponent extends React.Component<
                     // Search for lockup id on the owner
                     const lockupId = accountInstance.getLockupContract(
                         accountId,
-                        this.props.chainId as string
+                        this.props.chainId
                     );
                     const ownerAccountId = await this.getLockupContractOwner(lockupId, client);
 

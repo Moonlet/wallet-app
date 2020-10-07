@@ -6,8 +6,7 @@ import {
     SET_PROCESS_TXS,
     UPDATE_PROCESS_TX_ID,
     UPDATE_PROCESS_TX_STATUS,
-    SET_CREATE_ACCOUNT,
-    UPDATE_TRANSACTION_SIGNATURE
+    SET_CREATE_ACCOUNT
 } from './actions';
 
 const intialState: IProcessTransactionsState = {
@@ -31,7 +30,7 @@ export default (
         case UPDATE_PROCESS_TX_STATUS: {
             const txs = [...state.data.txs];
             const tx = txs[action.data.index];
-            tx.transaction.status = action.data.status;
+            tx.status = action.data.status;
             txs[action.data.index] = tx;
             return {
                 ...state,
@@ -41,23 +40,11 @@ export default (
                 }
             };
         }
-        case UPDATE_TRANSACTION_SIGNATURE: {
-            const txs = [...state.data.txs];
-            const tx = txs[action.data.index];
-            tx.signature = action.data.signature;
-            txs[action.data.index] = tx;
-            return {
-                ...state,
-                data: {
-                    ...state.data,
-                    txs
-                }
-            };
-        }
+
         case UPDATE_PROCESS_TX_ID: {
             const txs = [...state.data.txs];
             const tx = txs[action.data.index];
-            tx.transaction.id = action.data.id;
+            tx.id = action.data.id;
             txs[action.data.index] = tx;
             return {
                 ...state,

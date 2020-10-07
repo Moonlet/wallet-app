@@ -19,8 +19,7 @@ import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { getTokenConfig } from '../../tokens/static-selectors';
-// import { LedgerWallet } from '../../../core/wallet/hw-wallet/ledger/ledger-wallet';
-// import { TRANSACTION_PUBLISHED } from '../actions';
+import { TRANSACTION_PUBLISHED } from '../actions';
 import { translate } from '../../../core/i18n';
 import { Dialog } from '../../../components/dialog/dialog';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
@@ -29,10 +28,8 @@ import {
     openProcessTransactions,
     setProcessTransactions,
     updateProcessTransactionIdForIndex,
-    updateProcessTransactionSignatureForIndex,
     updateProcessTransactionStatusForIndex
 } from '../../ui/process-transactions/actions';
-import { TRANSACTION_PUBLISHED } from './wallet-actions';
 import { TransactionStatus, WalletType } from '../../../core/wallet/types';
 import { cloneDeep } from 'lodash';
 import {
@@ -248,22 +245,11 @@ export const posAction = (
     const state = getState();
     const chainId = getChainId(state, account.blockchain);
 
-    const appWallet = getSelectedWallet(state);
-    let password = '';
     try {
-        if (appWallet.type === WalletType.HD) {
-            password = await PasswordModal.getPassword(
-                translate('Password.pinTitleUnlock'),
-                translate('Password.subtitleSignTransaction'),
-                { sensitive: true, showCloseButton: true }
-            );
-        }
-
         const extra: ITransactionExtraFields = {
             ...extraFields,
             posAction: type
         };
-
         const blockchainInstance = getBlockchain(account.blockchain);
         const tokenConfig = getTokenConfig(account.blockchain, token);
 
@@ -288,20 +274,29 @@ export const posAction = (
             },
             type
         );
+        dispatch(setProcessTransactions(cloneDeep(txs)));
+    } catch (errorMessage) {
+        SentryCaptureException(new Error(JSON.stringify(errorMessage)));
+    }
+};
 
-        const unsignedTransactions = [];
-        txs.map(tx => {
-            const txUnsigned = {
-                transaction: tx,
-                signature: undefined
-            };
-            unsignedTransactions.push(txUnsigned);
-        });
+export const signAndSendTransactions = (transactions: IBlockchainTransaction[]) => async (
+    dispatch: Dispatch<IAction<any>>,
+    getState: () => IReduxState
+) => {
+    const state = getState();
 
-        dispatch(setProcessTransactions(cloneDeep(unsignedTransactions)));
-
-        return;
-
+    const appWallet = getSelectedWallet(state);
+    const account = getSelectedAccount(state); // Not sure its ok...
+    let password = '';
+    try {
+        if (appWallet.type === WalletType.HD) {
+            password = await PasswordModal.getPassword(
+                translate('Password.pinTitleUnlock'),
+                translate('Password.subtitleSignTransaction'),
+                { sensitive: true, showCloseButton: true }
+            );
+        }
         const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
             pass: password,
             deviceVendor: appWallet.hwOptions?.deviceVendor,
@@ -310,22 +305,23 @@ export const posAction = (
             connectionType: appWallet.hwOptions?.connectionType
         }); // encrypted string: pass)
 
-        for (let index = 0; index < txs.length; index++) {
-            const client = getBlockchain(account.blockchain).getClient(chainId);
+        if (appWallet.type === WalletType.HW) {
+            await LedgerConnect.signTransaction(
+                account.blockchain,
+                appWallet.hwOptions?.deviceModel,
+                appWallet.hwOptions?.connectionType,
+                appWallet.hwOptions?.deviceId
+            );
+        }
 
-            if (appWallet.type === WalletType.HW) {
-                await LedgerConnect.signTransaction(
-                    account.blockchain,
-                    appWallet.hwOptions?.deviceModel,
-                    appWallet.hwOptions?.connectionType,
-                    appWallet.hwOptions?.deviceId
-                );
-            }
+        for (let index = 0; index < transactions.length; index++) {
+            const transaction = transactions[index];
 
-            const transaction = await wallet.sign(account.blockchain, account.index, txs[index]);
+            const signed = await wallet.sign(transaction.blockchain, account.index, transaction);
 
+            const client = getBlockchain(transaction.blockchain).getClient(transaction.chainId);
             try {
-                const txHash = await client.sendTransaction(transaction);
+                const txHash = await client.sendTransaction(signed);
 
                 if (txHash) {
                     dispatch(updateProcessTransactionIdForIndex(index, txHash));
@@ -333,7 +329,7 @@ export const posAction = (
                         type: TRANSACTION_PUBLISHED,
                         data: {
                             hash: txHash,
-                            tx: txs[index],
+                            tx: transaction,
                             walletId: appWallet.id
                         }
                     });
@@ -349,29 +345,16 @@ export const posAction = (
                         await LedgerConnect.close();
                     }
                     SentryAddBreadcrumb({
-                        message: JSON.stringify({ transactions: txs[index] })
+                        message: JSON.stringify({ transactions: transaction })
                     });
 
                     dispatch(
                         updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED)
                     );
-                    for (let i = index + 1; i < txs.length; i++) {
-                        dispatch(
-                            updateProcessTransactionStatusForIndex(i, TransactionStatus.DROPPED)
-                        );
-                    }
-                    break;
                 }
             } catch (error) {
-                if (appWallet.type === WalletType.HW) {
-                    await LedgerConnect.close();
-                }
                 dispatch(updateProcessTransactionStatusForIndex(index, TransactionStatus.FAILED));
 
-                // TODO  we should stop all other transactions? if one fails?
-                for (let i = index + 1; i < txs.length; i++) {
-                    dispatch(updateProcessTransactionStatusForIndex(i, TransactionStatus.DROPPED));
-                }
                 throw error;
             }
         }
@@ -394,46 +377,5 @@ export const posAction = (
                 translate('LoadingModal.GENERIC_ERROR')
             );
         }
-    }
-};
-
-export const signHWWalletTransaction = (
-    transaction: IBlockchainTransaction,
-    index: number
-) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
-    const state = getState();
-
-    const appWallet = getSelectedWallet(state);
-    const selectedAccount = getSelectedAccount(state); // Not sure its ok...
-    try {
-        const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
-            pass: '',
-            deviceVendor: appWallet.hwOptions?.deviceVendor,
-            deviceModel: appWallet.hwOptions?.deviceModel,
-            deviceId: appWallet.hwOptions?.deviceId,
-            connectionType: appWallet.hwOptions?.connectionType
-        }); // encrypted string: pass)
-
-        await LedgerConnect.signTransaction(
-            transaction.blockchain,
-            appWallet.hwOptions?.deviceModel,
-            appWallet.hwOptions?.connectionType,
-            appWallet.hwOptions?.deviceId
-        );
-
-        const signed = await wallet.sign(
-            transaction.blockchain,
-            selectedAccount.index,
-            transaction
-        );
-
-        // console.log('signed', signed);
-
-        dispatch(updateProcessTransactionSignatureForIndex(index, signed));
-        await LedgerConnect.close();
-    } catch (errorMessage) {
-        SentryCaptureException(new Error(JSON.stringify(errorMessage)));
-
-        await LedgerConnect.close();
     }
 };

@@ -33,15 +33,15 @@ import { bind } from 'bind-decorator';
 import {
     addAccount,
     setSelectedAccount,
-    signHWWalletTransaction
+    signAndSendTransactions
 } from '../../../redux/wallets/actions';
 import { HeaderLeft } from '../../../components/header-left/header-left';
 
 interface IReduxProps {
     isVisible: boolean;
-    transactions: { transaction: IBlockchainTransaction; signature: string }[];
+    transactions: IBlockchainTransaction[];
     closeProcessTransactions: typeof closeProcessTransactions;
-    signHWWalletTransaction: typeof signHWWalletTransaction;
+    signAndSendTransactions: typeof signAndSendTransactions;
     selectedWallet: IWalletState;
     selectedAccount: IAccountState;
     accountTransactions: IBlockchainTransaction[];
@@ -68,11 +68,11 @@ const mapDispatchToProps = {
     closeProcessTransactions,
     addAccount,
     setSelectedAccount,
-    signHWWalletTransaction
+    signAndSendTransactions
 };
 
 interface IState {
-    disabledButton: boolean;
+    currentIndex: number;
 }
 
 export class ProcessTransactionsComponent extends React.Component<
@@ -87,73 +87,39 @@ export class ProcessTransactionsComponent extends React.Component<
         super(props);
 
         this.state = {
-            disabledButton: true
+            currentIndex: 0
         };
     }
 
-    public isTransactionPublished(object: {
-        transaction: IBlockchainTransaction;
-        signature: string;
-    }): boolean {
+    public isTransactionPublished(transaction: IBlockchainTransaction): boolean {
         const filteredTransactions = this.props.accountTransactions.filter(
-            tx =>
-                tx.id === object.transaction.id ||
-                object.transaction.status === TransactionStatus.SUCCESS
+            tx => tx.id === transaction.id || transaction.status === TransactionStatus.SUCCESS
         );
 
         return filteredTransactions.length > 0;
     }
 
-    public isSigned(object: { transaction: IBlockchainTransaction; signature: string }): boolean {
-        object.signature;
-        return object.signature !== undefined;
-    }
-
-    public getIndexTransactionNotSigned(): number {
-        let notSignedIndex = -1;
-        for (let index = 0; index < this.props.transactions.length; index++) {
-            if (!this.isSigned(this.props.transactions[index])) {
-                notSignedIndex = index;
-                break;
-            }
-        }
-        return notSignedIndex;
-    }
-
     public componentDidUpdate(prevProps: IReduxProps) {
         if (this.props.transactions !== prevProps.transactions) {
-            let allTransactionPublished = 0;
-            let transactionsFailed = 0;
-
-            for (const tx of this.props.transactions) {
-                if (this.isTransactionPublished(tx)) {
-                    allTransactionPublished++;
-                }
+            let lastIndexPublished = -1;
+            for (let index = 0; index < this.props.transactions.length; index++) {
+                const tx = this.props.transactions[index];
                 if (
-                    tx.transaction.status === TransactionStatus.DROPPED ||
-                    tx.transaction.status === TransactionStatus.FAILED
+                    this.isTransactionPublished(tx) ||
+                    tx.status === TransactionStatus.DROPPED ||
+                    tx.status === TransactionStatus.FAILED
                 ) {
-                    transactionsFailed++;
+                    lastIndexPublished = index;
                 }
             }
 
-            if (transactionsFailed !== 0) {
-                this.setState({
-                    disabledButton: false
-                });
-            } else {
-                this.setState({
-                    disabledButton: !(allTransactionPublished === this.props.transactions.length)
-                });
-            }
+            this.setState({ currentIndex: lastIndexPublished + 1 });
         }
     }
 
-    private formatTopMiddleAndBottomText(object: {
-        transaction: IBlockchainTransaction;
-        signature: string;
-    }): { topText: string; middleText: string; bottomText: string } {
-        const tx = object.transaction;
+    private formatTopMiddleAndBottomText(
+        tx: IBlockchainTransaction
+    ): { topText: string; middleText: string; bottomText: string } {
         const tokenConfig = getTokenConfig(tx.blockchain, tx.token.symbol);
         const blockchainInstance = getBlockchain(tx.blockchain);
         const feesNumber =
@@ -285,12 +251,9 @@ export class ProcessTransactionsComponent extends React.Component<
         ).start();
     }
 
-    private renderCard(
-        tx: { transaction: IBlockchainTransaction; signature: string },
-        index: number
-    ) {
+    private renderCard(tx: IBlockchainTransaction, index: number) {
         const { styles, theme } = this.props;
-        const status = tx.transaction.status;
+        const status = tx.status;
 
         const { topText, middleText, bottomText } = this.formatTopMiddleAndBottomText(tx);
 
@@ -308,9 +271,8 @@ export class ProcessTransactionsComponent extends React.Component<
             }
             case TransactionStatus.SUCCESS: {
                 leftIcon =
-                    tx.transaction.additionalInfo?.posAction === PosBasicActionType.SEND ||
-                    tx.transaction.additionalInfo?.posAction ===
-                        PosBasicActionType.CREATE_ACCOUNT_AND_CLAIM
+                    tx.additionalInfo?.posAction === PosBasicActionType.SEND ||
+                    tx.additionalInfo?.posAction === PosBasicActionType.CREATE_ACCOUNT_AND_CLAIM
                         ? IconValues.OUTBOUND
                         : IconValues.VOTE;
                 iconColor = theme.colors.accent;
@@ -338,8 +300,12 @@ export class ProcessTransactionsComponent extends React.Component<
             }
         }
 
-        const isSigned = this.isSigned(tx);
         const isPublished = this.isTransactionPublished(tx);
+
+        const dontDisplayActivityIndicator =
+            this.isTransactionPublished(tx) ||
+            status === TransactionStatus.FAILED ||
+            status === TransactionStatus.DROPPED;
 
         const iconSpin = this.iconSpinValue.interpolate({
             inputRange: [0, 1],
@@ -381,14 +347,12 @@ export class ProcessTransactionsComponent extends React.Component<
                     ) : (
                         <Text style={styles.failedText}>{rightText}</Text>
                     )
-                ) : isSigned ? (
-                    <Icon
-                        name={IconValues.SIGNED}
-                        size={normalize(24)}
-                        style={styles.successIcon}
-                    />
-                ) : (
+                ) : dontDisplayActivityIndicator ? (
                     <View />
+                ) : (
+                    <View>
+                        <LoadingIndicator />
+                    </View>
                 )}
             </View>
         );
@@ -406,9 +370,7 @@ export class ProcessTransactionsComponent extends React.Component<
                 this.props.setSelectedAccount(this.props.createAccount);
                 NavigationService.navigate('Dashboard', {});
             } else {
-                const blockchainInstance = getBlockchain(
-                    this.props.transactions[0].transaction.blockchain
-                );
+                const blockchainInstance = getBlockchain(this.props.transactions[0].blockchain);
                 const token: ITokenState = this.props.selectedAccount.tokens[this.props.chainId][
                     blockchainInstance.config.coin
                 ];
@@ -425,25 +387,21 @@ export class ProcessTransactionsComponent extends React.Component<
         this.props.closeProcessTransactions();
     }
 
-    private onPressSignTransaction(
-        object: {
-            transaction: IBlockchainTransaction;
-            signature: string;
-        },
-        index: number
-    ) {
-        // sign next transaction
-        this.props.signHWWalletTransaction(object.transaction, index);
+    @bind
+    private onPressSignTransaction(transaction: IBlockchainTransaction) {
+        this.props.signAndSendTransactions([transaction]);
     }
+
+    @bind
     private signAllTransactions() {
         // sign all transactions - HD wallet
+        this.props.signAndSendTransactions(this.props.transactions);
     }
 
     public renderBottomButton() {
         const { styles } = this.props;
         if (this.props.transactions.length === 0) return <View />;
 
-        const indexSigned = this.getIndexTransactionNotSigned();
         let allTransactionPublished = 0;
         let transactionsFailed = 0;
 
@@ -451,29 +409,14 @@ export class ProcessTransactionsComponent extends React.Component<
             if (this.isTransactionPublished(tx)) {
                 allTransactionPublished++;
             }
-            if (
-                tx.transaction.status === TransactionStatus.DROPPED ||
-                tx.transaction.status === TransactionStatus.FAILED
-            ) {
+            if (tx.status === TransactionStatus.DROPPED || tx.status === TransactionStatus.FAILED) {
                 transactionsFailed++;
             }
         }
 
         if (this.props.selectedWallet.type === WalletType.HD) {
             // is HD wallet
-            if (indexSigned !== -1) {
-                // transactions not signed
-                return (
-                    <Button
-                        primary
-                        onPress={this.signAllTransactions}
-                        wrapperStyle={styles.continueButton}
-                        disabled={false}
-                    >
-                        {translate('Transaction.signAll')}
-                    </Button>
-                );
-            }
+
             if (allTransactionPublished === this.props.transactions.length) {
                 const disabledButton =
                     transactionsFailed !== 0
@@ -490,44 +433,45 @@ export class ProcessTransactionsComponent extends React.Component<
                         {translate('App.labels.continue')}
                     </Button>
                 );
-            }
+            } else
+                return (
+                    <Button
+                        primary
+                        onPress={this.signAllTransactions}
+                        wrapperStyle={styles.continueButton}
+                        disabled={false}
+                    >
+                        {translate('Transaction.signAll')}
+                    </Button>
+                );
         } else {
             // is Ledger wallet
-            if (indexSigned === -1) {
+            if (this.state.currentIndex < this.props.transactions.length) {
                 return (
                     <Button
                         primary
                         onPress={() =>
                             this.onPressSignTransaction(
-                                this.props.transactions[indexSigned],
-                                indexSigned
+                                this.props.transactions[this.state.currentIndex]
                             )
                         }
                         wrapperStyle={styles.continueButton}
                         disabled={false}
                     >
                         {`${translate('App.labels.sign')} ${formatPlural(
-                            indexSigned + 1
+                            this.state.currentIndex + 1
                         )} ${translate('App.labels.transaction')}`}
                     </Button>
                 );
-            }
-            if (indexSigned < this.props.transactions.length) {
+            } else {
                 return (
                     <Button
                         primary
-                        onPress={() =>
-                            this.onPressSignTransaction(
-                                this.props.transactions[indexSigned],
-                                indexSigned
-                            )
-                        }
+                        onPress={this.onPressContinue}
                         wrapperStyle={styles.continueButton}
                         disabled={false}
                     >
-                        {`${translate('App.labels.sign')} ${formatPlural(
-                            indexSigned + 1
-                        )} ${translate('App.labels.transaction')}`}
+                        {translate('App.labels.continue')}
                     </Button>
                 );
             }

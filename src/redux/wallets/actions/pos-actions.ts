@@ -1,5 +1,6 @@
 import { IAccountState } from '../state';
 import {
+    IBlockchainTransaction,
     IFeeOptions,
     ITransactionExtraFields,
     TransactionMessageText
@@ -12,7 +13,7 @@ import { Dispatch } from 'react';
 import { IAction } from '../../types';
 import { IReduxState } from '../../state';
 import { getChainId } from '../../preferences/selectors';
-import { getSelectedWallet } from '../selectors';
+import { getSelectedAccount, getSelectedWallet } from '../selectors';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
 // import { WalletType } from '../../../core/wallet/types';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
@@ -28,6 +29,7 @@ import {
     openProcessTransactions,
     setProcessTransactions,
     updateProcessTransactionIdForIndex,
+    updateProcessTransactionSignatureForIndex,
     updateProcessTransactionStatusForIndex
 } from '../../ui/process-transactions/actions';
 import { TRANSACTION_PUBLISHED } from './wallet-actions';
@@ -287,7 +289,18 @@ export const posAction = (
             type
         );
 
-        dispatch(setProcessTransactions(cloneDeep(txs)));
+        const unsignedTransactions = [];
+        txs.map(tx => {
+            const txUnsigned = {
+                transaction: tx,
+                signature: undefined
+            };
+            unsignedTransactions.push(txUnsigned);
+        });
+
+        dispatch(setProcessTransactions(cloneDeep(unsignedTransactions)));
+
+        return;
 
         const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
             pass: password,
@@ -381,5 +394,46 @@ export const posAction = (
                 translate('LoadingModal.GENERIC_ERROR')
             );
         }
+    }
+};
+
+export const signHWWalletTransaction = (
+    transaction: IBlockchainTransaction,
+    index: number
+) => async (dispatch: Dispatch<IAction<any>>, getState: () => IReduxState) => {
+    const state = getState();
+
+    const appWallet = getSelectedWallet(state);
+    const selectedAccount = getSelectedAccount(state); // Not sure its ok...
+    try {
+        const wallet = await WalletFactory.get(appWallet.id, appWallet.type, {
+            pass: '',
+            deviceVendor: appWallet.hwOptions?.deviceVendor,
+            deviceModel: appWallet.hwOptions?.deviceModel,
+            deviceId: appWallet.hwOptions?.deviceId,
+            connectionType: appWallet.hwOptions?.connectionType
+        }); // encrypted string: pass)
+
+        await LedgerConnect.signTransaction(
+            transaction.blockchain,
+            appWallet.hwOptions?.deviceModel,
+            appWallet.hwOptions?.connectionType,
+            appWallet.hwOptions?.deviceId
+        );
+
+        const signed = await wallet.sign(
+            transaction.blockchain,
+            selectedAccount.index,
+            transaction
+        );
+
+        // console.log('signed', signed);
+
+        dispatch(updateProcessTransactionSignatureForIndex(index, signed));
+        await LedgerConnect.close();
+    } catch (errorMessage) {
+        SentryCaptureException(new Error(JSON.stringify(errorMessage)));
+
+        await LedgerConnect.close();
     }
 };

@@ -25,17 +25,23 @@ import {
     getSelectedAccount
 } from '../../../redux/wallets/selectors';
 import { PosBasicActionType } from '../../../core/blockchain/types/token';
-import { formatValidatorName } from '../../../core/utils/format-string';
+import { formatPlural, formatValidatorName } from '../../../core/utils/format-string';
 import { NavigationService } from '../../../navigation/navigation-service';
 import { IAccountState, ITokenState, IWalletState } from '../../../redux/wallets/state';
 import { getChainId } from '../../../redux/preferences/selectors';
 import { bind } from 'bind-decorator';
-import { addAccount, setSelectedAccount } from '../../../redux/wallets/actions';
+import {
+    addAccount,
+    setSelectedAccount,
+    signHWWalletTransaction
+} from '../../../redux/wallets/actions';
+import { HeaderLeft } from '../../../components/header-left/header-left';
 
 interface IReduxProps {
     isVisible: boolean;
-    transactions: IBlockchainTransaction[];
+    transactions: { transaction: IBlockchainTransaction; signature: string }[];
     closeProcessTransactions: typeof closeProcessTransactions;
+    signHWWalletTransaction: typeof signHWWalletTransaction;
     selectedWallet: IWalletState;
     selectedAccount: IAccountState;
     accountTransactions: IBlockchainTransaction[];
@@ -61,7 +67,8 @@ const mapStateToProps = (state: IReduxState) => {
 const mapDispatchToProps = {
     closeProcessTransactions,
     addAccount,
-    setSelectedAccount
+    setSelectedAccount,
+    signHWWalletTransaction
 };
 
 interface IState {
@@ -84,12 +91,33 @@ export class ProcessTransactionsComponent extends React.Component<
         };
     }
 
-    public isTransactionPublished(transaction: IBlockchainTransaction): boolean {
+    public isTransactionPublished(object: {
+        transaction: IBlockchainTransaction;
+        signature: string;
+    }): boolean {
         const filteredTransactions = this.props.accountTransactions.filter(
-            tx => tx.id === transaction.id || transaction.status === TransactionStatus.SUCCESS
+            tx =>
+                tx.id === object.transaction.id ||
+                object.transaction.status === TransactionStatus.SUCCESS
         );
 
         return filteredTransactions.length > 0;
+    }
+
+    public isSigned(object: { transaction: IBlockchainTransaction; signature: string }): boolean {
+        object.signature;
+        return object.signature !== undefined;
+    }
+
+    public getIndexTransactionNotSigned(): number {
+        let notSignedIndex = -1;
+        for (let index = 0; index < this.props.transactions.length; index++) {
+            if (!this.isSigned(this.props.transactions[index])) {
+                notSignedIndex = index;
+                break;
+            }
+        }
+        return notSignedIndex;
     }
 
     public componentDidUpdate(prevProps: IReduxProps) {
@@ -102,8 +130,8 @@ export class ProcessTransactionsComponent extends React.Component<
                     allTransactionPublished++;
                 }
                 if (
-                    tx.status === TransactionStatus.DROPPED ||
-                    tx.status === TransactionStatus.FAILED
+                    tx.transaction.status === TransactionStatus.DROPPED ||
+                    tx.transaction.status === TransactionStatus.FAILED
                 ) {
                     transactionsFailed++;
                 }
@@ -121,9 +149,11 @@ export class ProcessTransactionsComponent extends React.Component<
         }
     }
 
-    private formatTopMiddleAndBottomText(
-        tx: IBlockchainTransaction
-    ): { topText: string; middleText: string; bottomText: string } {
+    private formatTopMiddleAndBottomText(object: {
+        transaction: IBlockchainTransaction;
+        signature: string;
+    }): { topText: string; middleText: string; bottomText: string } {
+        const tx = object.transaction;
         const tokenConfig = getTokenConfig(tx.blockchain, tx.token.symbol);
         const blockchainInstance = getBlockchain(tx.blockchain);
         const feesNumber =
@@ -255,9 +285,12 @@ export class ProcessTransactionsComponent extends React.Component<
         ).start();
     }
 
-    private renderCard(tx: IBlockchainTransaction, index: number) {
+    private renderCard(
+        tx: { transaction: IBlockchainTransaction; signature: string },
+        index: number
+    ) {
         const { styles, theme } = this.props;
-        const status = tx.status;
+        const status = tx.transaction.status;
 
         const { topText, middleText, bottomText } = this.formatTopMiddleAndBottomText(tx);
 
@@ -275,8 +308,9 @@ export class ProcessTransactionsComponent extends React.Component<
             }
             case TransactionStatus.SUCCESS: {
                 leftIcon =
-                    tx.additionalInfo?.posAction === PosBasicActionType.SEND ||
-                    tx.additionalInfo?.posAction === PosBasicActionType.CREATE_ACCOUNT_AND_CLAIM
+                    tx.transaction.additionalInfo?.posAction === PosBasicActionType.SEND ||
+                    tx.transaction.additionalInfo?.posAction ===
+                        PosBasicActionType.CREATE_ACCOUNT_AND_CLAIM
                         ? IconValues.OUTBOUND
                         : IconValues.VOTE;
                 iconColor = theme.colors.accent;
@@ -304,10 +338,8 @@ export class ProcessTransactionsComponent extends React.Component<
             }
         }
 
-        const dontDisplayActivityIndicator =
-            this.isTransactionPublished(tx) ||
-            status === TransactionStatus.FAILED ||
-            status === TransactionStatus.DROPPED;
+        const isSigned = this.isSigned(tx);
+        const isPublished = this.isTransactionPublished(tx);
 
         const iconSpin = this.iconSpinValue.interpolate({
             inputRange: [0, 1],
@@ -339,7 +371,7 @@ export class ProcessTransactionsComponent extends React.Component<
                     )}
                 </View>
 
-                {dontDisplayActivityIndicator ? (
+                {isPublished ? (
                     status === TransactionStatus.PENDING || status === TransactionStatus.SUCCESS ? (
                         <Icon
                             name={IconValues.CHECK}
@@ -349,10 +381,14 @@ export class ProcessTransactionsComponent extends React.Component<
                     ) : (
                         <Text style={styles.failedText}>{rightText}</Text>
                     )
+                ) : isSigned ? (
+                    <Icon
+                        name={IconValues.SIGNED}
+                        size={normalize(24)}
+                        style={styles.successIcon}
+                    />
                 ) : (
-                    <View>
-                        <LoadingIndicator />
-                    </View>
+                    <View />
                 )}
             </View>
         );
@@ -370,7 +406,9 @@ export class ProcessTransactionsComponent extends React.Component<
                 this.props.setSelectedAccount(this.props.createAccount);
                 NavigationService.navigate('Dashboard', {});
             } else {
-                const blockchainInstance = getBlockchain(this.props.transactions[0].blockchain);
+                const blockchainInstance = getBlockchain(
+                    this.props.transactions[0].transaction.blockchain
+                );
                 const token: ITokenState = this.props.selectedAccount.tokens[this.props.chainId][
                     blockchainInstance.config.coin
                 ];
@@ -387,6 +425,115 @@ export class ProcessTransactionsComponent extends React.Component<
         this.props.closeProcessTransactions();
     }
 
+    private onPressSignTransaction(
+        object: {
+            transaction: IBlockchainTransaction;
+            signature: string;
+        },
+        index: number
+    ) {
+        // sign next transaction
+        this.props.signHWWalletTransaction(object.transaction, index);
+    }
+    private signAllTransactions() {
+        // sign all transactions - HD wallet
+    }
+
+    public renderBottomButton() {
+        const { styles } = this.props;
+        if (this.props.transactions.length === 0) return <View />;
+
+        const indexSigned = this.getIndexTransactionNotSigned();
+        let allTransactionPublished = 0;
+        let transactionsFailed = 0;
+
+        for (const tx of this.props.transactions) {
+            if (this.isTransactionPublished(tx)) {
+                allTransactionPublished++;
+            }
+            if (
+                tx.transaction.status === TransactionStatus.DROPPED ||
+                tx.transaction.status === TransactionStatus.FAILED
+            ) {
+                transactionsFailed++;
+            }
+        }
+
+        if (this.props.selectedWallet.type === WalletType.HD) {
+            // is HD wallet
+            if (indexSigned !== -1) {
+                // transactions not signed
+                return (
+                    <Button
+                        primary
+                        onPress={this.signAllTransactions}
+                        wrapperStyle={styles.continueButton}
+                        disabled={false}
+                    >
+                        {translate('Transaction.signAll')}
+                    </Button>
+                );
+            }
+            if (allTransactionPublished === this.props.transactions.length) {
+                const disabledButton =
+                    transactionsFailed !== 0
+                        ? false
+                        : !(allTransactionPublished === this.props.transactions.length);
+
+                return (
+                    <Button
+                        primary
+                        onPress={this.onPressContinue}
+                        wrapperStyle={styles.continueButton}
+                        disabled={disabledButton}
+                    >
+                        {translate('App.labels.continue')}
+                    </Button>
+                );
+            }
+        } else {
+            // is Ledger wallet
+            if (indexSigned === -1) {
+                return (
+                    <Button
+                        primary
+                        onPress={() =>
+                            this.onPressSignTransaction(
+                                this.props.transactions[indexSigned],
+                                indexSigned
+                            )
+                        }
+                        wrapperStyle={styles.continueButton}
+                        disabled={false}
+                    >
+                        {`${translate('App.labels.sign')} ${formatPlural(
+                            indexSigned + 1
+                        )} ${translate('App.labels.transaction')}`}
+                    </Button>
+                );
+            }
+            if (indexSigned < this.props.transactions.length) {
+                return (
+                    <Button
+                        primary
+                        onPress={() =>
+                            this.onPressSignTransaction(
+                                this.props.transactions[indexSigned],
+                                indexSigned
+                            )
+                        }
+                        wrapperStyle={styles.continueButton}
+                        disabled={false}
+                    >
+                        {`${translate('App.labels.sign')} ${formatPlural(
+                            indexSigned + 1
+                        )} ${translate('App.labels.transaction')}`}
+                    </Button>
+                );
+            }
+        }
+    }
+
     public render() {
         const { styles } = this.props;
 
@@ -398,7 +545,23 @@ export class ProcessTransactionsComponent extends React.Component<
         if (this.props.isVisible) {
             return (
                 <View style={styles.container}>
-                    <Text style={styles.screenTitle}>{translate('App.labels.processing')}</Text>
+                    <View style={styles.header}>
+                        <View style={styles.defaultHeaderContainer}>
+                            <HeaderLeft
+                                testID="go-back"
+                                icon={IconValues.ARROW_LEFT}
+                                onPress={() => {
+                                    this.props.closeProcessTransactions();
+                                }}
+                            />
+                        </View>
+                        <View style={styles.headerTitleContainer}>
+                            <Text style={styles.headerTitleStyle}>
+                                {translate('App.labels.processing')}
+                            </Text>
+                        </View>
+                        <View style={styles.defaultHeaderContainer} />
+                    </View>
 
                     <Text style={styles.title}>{title}</Text>
 
@@ -412,14 +575,7 @@ export class ProcessTransactionsComponent extends React.Component<
                         <LoadingIndicator />
                     )}
 
-                    <Button
-                        primary
-                        onPress={this.onPressContinue}
-                        wrapperStyle={styles.continueButton}
-                        disabled={this.props.transactions.length === 0 || this.state.disabledButton}
-                    >
-                        {translate('App.labels.continue')}
-                    </Button>
+                    {this.renderBottomButton()}
                 </View>
             );
         } else {

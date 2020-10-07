@@ -4,7 +4,7 @@ import { IAccountState } from '../../wallets/state';
 export interface IProcessTransactionsState {
     isVisible: boolean;
     data: {
-        txs: IBlockchainTransaction[];
+        txs: { transaction: IBlockchainTransaction; signature: string }[];
         createAccount: IAccountState;
     };
 }

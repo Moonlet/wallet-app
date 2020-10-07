@@ -119,6 +119,7 @@ export const translation: ITranslations = {
                 to: 'To',
                 tools: 'Tools',
                 theRequested: 'the requested',
+                transaction: 'transaction',
                 transactions: 'Transactions',
                 transfer: 'Transfer',
                 tryAgain: 'Try again',
@@ -326,6 +327,7 @@ export const translation: ITranslations = {
                 Success: 'Success'
             },
             signTransaction: 'Sign transaction',
+            signAll: 'Sign all transactions',
             signExtensionTransaction:
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',

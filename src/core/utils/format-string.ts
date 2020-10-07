@@ -21,3 +21,10 @@ export const valuePrimaryCtaField = (validators: IValidator[]): string => {
 export const formatValidatorName = (str: string, length: number): string => {
     return str.length > length ? str.slice(0, length) + '...' : str;
 };
+
+export const formatPlural = (value: number): string => {
+    if (value === 1) return '1st';
+    if (value === 2) return '2nd';
+    if (value === 3) return '3rd';
+    if (value > 3) return `${value}th`;
+};

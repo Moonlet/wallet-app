@@ -5,11 +5,7 @@ const stripAddress = (text: string) => {
     if (text.length === 0) {
         return '';
     }
-    let convertedStr = '';
-    convertedStr += text.substring(0, 5);
-    convertedStr += '.'.repeat(3);
-    convertedStr += text.substring(text.length - 5, text.length);
-    return convertedStr;
+    return text.substring(0, 5) + '...' + text.substring(text.length - 5, text.length);
 };
 
 export const formatAddress = (text: string, blockchain: Blockchain) => {

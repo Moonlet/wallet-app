@@ -21,7 +21,6 @@ import { getTokenConfig } from '../../../redux/tokens/static-selectors';
 import { PosBasicActionType } from '../types/token';
 import { Client as NearClient } from './client';
 import cloneDeep from 'lodash/cloneDeep';
-import { ApiClient } from '../../utils/api-client/api-client';
 import BigNumber from 'bignumber.js';
 import {
     INearTransactionAdditionalInfoType,
@@ -144,16 +143,20 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 if (accountType === AccountType.DEFAULT) {
                     // DEFAULT
                     for (const validator of tx.validators) {
-                        const res = await new ApiClient().validators.getBalance(
-                            tx.account.address,
-                            tx.account.blockchain,
-                            client.chainId.toString(),
-                            validator.id
-                        );
-
-                        const depositAmount = new BigNumber(txDelegate.amount).minus(
-                            new BigNumber(res.balance.unstaked)
-                        );
+                        let depositAmount = new BigNumber(0);
+                        try {
+                            const unstaked = await client.contractCall({
+                                contractName: validator.id,
+                                methodName: NearAccountViewMethods.GET_ACCOUNT_UNSTAKED_BALANCE,
+                                args: { account_id: tx.account.address }
+                            });
+                            depositAmount = new BigNumber(txDelegate.amount).minus(
+                                new BigNumber(unstaked)
+                            );
+                        } catch (err) {
+                            // no need to handle this
+                            // maybe sentry?
+                        }
 
                         // Stake
                         const stakeTx: IBlockchainTransaction = await client.stakingPool.stake(

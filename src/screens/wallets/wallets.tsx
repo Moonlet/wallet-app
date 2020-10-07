@@ -23,8 +23,7 @@ import { Dialog } from '../../components/dialog/dialog';
 import { getSelectedWallet } from '../../redux/wallets/selectors';
 import { normalize } from '../../styles/dimensions';
 import { updateDisplayedHint } from '../../redux/app/actions';
-import { HintsScreen, HintsComponent, IHints } from '../../redux/app/state';
-import { DISPLAY_HINTS_TIMES } from '../../core/constants/app';
+import { HintsScreen, HintsComponent } from '../../redux/app/state';
 import { IconValues } from '../../components/icon/values';
 import { AffiliateBanner } from '../../components/affiliate-banner/affiliate-banner';
 import { AffiliateBannerType } from '../../components/affiliate-banner/types';
@@ -39,7 +38,6 @@ export interface IReduxProps {
     deleteWallet: typeof deleteWallet;
     walletsNr: number;
     updateWalletName: typeof updateWalletName;
-    hints: IHints;
     updateDisplayedHint: typeof updateDisplayedHint;
 }
 
@@ -59,8 +57,7 @@ const mapStateToProps = (state: IReduxState) => {
                 .sort((w1, w2) => (w1.name > w2.name ? 1 : -1))
         },
         walletsNr: Object.keys(state.wallets).length,
-        selectedWallet: getSelectedWallet(state),
-        hints: state.app.hints
+        selectedWallet: getSelectedWallet(state)
     };
 };
 
@@ -100,11 +97,7 @@ export class WalletsScreenComponent extends React.Component<
     }
 
     private showHints() {
-        if (
-            this.props.wallets &&
-            this.props.wallets[this.state.selectedTab].length !== 0 &&
-            this.props.hints.WALLETS_SCREEN.WALLETS_LIST < DISPLAY_HINTS_TIMES
-        ) {
+        if (this.props.wallets && this.props.wallets[this.state.selectedTab].length !== 0) {
             const id = this.props.wallets[this.state.selectedTab][0].id;
 
             this.onSwipeableWillOpen(id);

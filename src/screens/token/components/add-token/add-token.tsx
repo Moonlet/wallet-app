@@ -79,6 +79,21 @@ export class AddTokenScreenComponent extends React.Component<
             this.tokensSwipeableRef[this.currentlyOpenSwipeable].close();
     }
 
+    public componentDidMount() {
+        setTimeout(() => this.showHints(), 500);
+    }
+
+    private showHints() {
+        if (this.props.tokens && this.props.tokens.length > 1) {
+            const tokens = Object.values(this.props.tokens);
+            const index = tokens[1].value.symbol;
+            this.onSwipeableWillOpen(index);
+            this.tokensSwipeableRef[index] && this.tokensSwipeableRef[index].openLeft();
+
+            setTimeout(() => this.closeCurrentOpenedSwipable(), 1000);
+        }
+    }
+
     private onSwipeableWillOpen(index: string) {
         if (
             index !== this.currentlyOpenSwipeable &&
@@ -86,7 +101,6 @@ export class AddTokenScreenComponent extends React.Component<
         ) {
             this.closeCurrentOpenedSwipable();
         }
-
         this.currentlyOpenSwipeable = index;
     }
 
@@ -128,7 +142,6 @@ export class AddTokenScreenComponent extends React.Component<
         const tokenConfig = getTokenConfig(this.props.account.blockchain, token.symbol);
 
         const index = token.symbol;
-
         return (
             <Swipeable
                 key={index}

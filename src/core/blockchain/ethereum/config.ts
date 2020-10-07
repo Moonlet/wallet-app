@@ -4,7 +4,17 @@ import { TokenType, TokenScreenComponentType } from '../types/token';
 import EthIcon from '../../../assets/icons/blockchains/eth.svg';
 import { ITokenConfigState } from '../../../redux/tokens/state';
 import { DAI_MAINNET } from './tokens/dai';
+import { LINK_MAINNET } from './tokens/chainLink';
 import { AffiliateBannerType } from '../../../components/affiliate-banner/types';
+import { COMP_MAINNET } from './tokens/compoundFinance';
+import { LEND_MAINNET } from './tokens/ethLend';
+import { MKR_MAINNET } from './tokens/maker';
+import { OMG_MAINNET } from './tokens/omgNetwork';
+import { SNX_MAINNET } from './tokens/syntheticNetwork';
+import { USDT_MAINNET } from './tokens/theter';
+import { UNI_MAINNET } from './tokens/uniSwap';
+import { USDC_MAINNET } from './tokens/usdCoin';
+import { YFI_MAINNET } from './tokens/yearnFinance';
 
 export const ETH_NATIVE: ITokenConfigState = {
     name: 'Ethereum',
@@ -36,7 +46,17 @@ export const config: IBlockchainConfig = {
     droppedTxBlocksThreshold: 50,
     autoAddedTokensSymbols: {
         '1': {
-            DAI: DAI_MAINNET
+            DAI: DAI_MAINNET,
+            USDT: USDT_MAINNET,
+            LINK: LINK_MAINNET,
+            COMP: COMP_MAINNET,
+            LEND: LEND_MAINNET,
+            MKR: MKR_MAINNET,
+            OMG: OMG_MAINNET,
+            SNX: SNX_MAINNET,
+            UNI: UNI_MAINNET,
+            USDC: USDC_MAINNET,
+            YFI: YFI_MAINNET
         }
     },
     tokens: {

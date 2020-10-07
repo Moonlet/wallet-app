@@ -4,6 +4,8 @@ import AsyncStorage from '@react-native-community/async-storage';
 import CONFIG from '../../config';
 
 export enum RemoteFeature {
+    BETA_BADGE = 'beta_badge',
+    ZIL = 'feature_zil',
     NEAR = 'feature_near',
     COSMOS = 'feature_cosmos',
     CELO = 'feature_celo',
@@ -26,6 +28,8 @@ export const getRemoteConfigFeatures = async () => {
         const objects = await firebase
             .config()
             .getValues([
+                RemoteFeature.BETA_BADGE,
+                RemoteFeature.ZIL,
                 RemoteFeature.NEAR,
                 RemoteFeature.COSMOS,
                 RemoteFeature.CELO,
@@ -40,6 +44,8 @@ export const getRemoteConfigFeatures = async () => {
     } catch (err) {
         // Set default values
         featuresConfig = {
+            [RemoteFeature.BETA_BADGE]: JSON.stringify([]),
+            [RemoteFeature.ZIL]: JSON.stringify([]),
             [RemoteFeature.NEAR]: JSON.stringify([]),
             [RemoteFeature.DEV_TOOLS]: JSON.stringify([]),
             [RemoteFeature.COSMOS]: JSON.stringify([]),
@@ -65,7 +71,9 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
     }
 
     if (
-        (feature === RemoteFeature.NEAR ||
+        (feature === RemoteFeature.BETA_BADGE ||
+            feature === RemoteFeature.ZIL ||
+            feature === RemoteFeature.NEAR ||
             feature === RemoteFeature.COSMOS ||
             feature === RemoteFeature.CELO ||
             feature === RemoteFeature.DEV_TOOLS) &&

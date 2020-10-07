@@ -453,7 +453,7 @@ export class DashboardScreenComponent extends React.Component<
 
         return (
             <View testID="dashboard-screen" style={[styles.container, { height: containerHeight }]}>
-                <StakingBetaBadge />
+                {isFeatureActive(RemoteFeature.BETA_BADGE) && <StakingBetaBadge />}
                 <TestnetBadge />
                 <LedgerBadge hwOptions={wallet?.hwOptions} />
 

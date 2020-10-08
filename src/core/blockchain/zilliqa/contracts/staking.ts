@@ -312,6 +312,8 @@ export class Staking {
         const transaction = await buildBaseTransaction(tx);
         const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
 
+        const chartData = tx.validators[0].chartStats.find(chart => chart.title === 'Reward');
+
         transaction.toAddress = contractAddress;
         transaction.amount = '0';
         const toAddress = isBech32(validator.id)
@@ -344,7 +346,7 @@ export class Staking {
 
         transaction.data = {
             method: 'Claim Rewards',
-            params: [validator.id, undefined],
+            params: [validator.id, chartData.data.value],
             raw
         };
 

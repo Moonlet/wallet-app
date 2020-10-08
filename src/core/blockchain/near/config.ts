@@ -126,5 +126,5 @@ export const config: IBlockchainConfig = {
         testNet: 'testnet'
     },
     defaultOrder: 2,
-    amountToKeepInAccount: new BigNumber(Math.pow(10, 24))
+    amountToKeepInAccount: new BigNumber(10).pow(24)
 };

@@ -173,7 +173,7 @@ export const config: IBlockchainConfig = {
             record: ['crypto.ZIL.address']
         }
     ],
-    amountToKeepInAccount: new BigNumber(Math.pow(10, 14))
+    amountToKeepInAccount: new BigNumber(10).pow(14)
 };
 
 export enum Contracts {

@@ -28,9 +28,12 @@ export class Stats extends GenericStats<Client> {
             validatorId
         );
 
-        return new BigNumber(data.balance.available)
-            .plus(new BigNumber(data.balance.unstaked))
-            .minus(new BigNumber(config.amountToKeepInAccount))
-            .toFixed();
+        let availableToDelegate = new BigNumber(data.balance.unstaked);
+        if (availableToDelegate > config.amountToKeepInAccount) {
+            availableToDelegate = availableToDelegate.plus(
+                new BigNumber(data.balance.available).minus(config.amountToKeepInAccount)
+            );
+        }
+        return availableToDelegate.toFixed();
     }
 }

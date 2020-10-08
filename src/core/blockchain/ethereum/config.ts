@@ -95,5 +95,6 @@ export const config: IBlockchainConfig = {
             service: BlockchainNameService.CNS,
             record: ['crypto.ETH.address']
         }
-    ]
+    ],
+    amountToKeepInAccount: new BigNumber(0)
 };

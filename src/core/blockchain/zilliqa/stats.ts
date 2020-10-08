@@ -25,6 +25,12 @@ export class Stats extends GenericStats<Client> {
             this.client.chainId.toString()
         );
 
-        return new BigNumber(data.balance.available).minus(config.amountToKeepInAccount).toFixed();
+        let availableToDelegate = new BigNumber(data.balance.unstaked);
+        if (availableToDelegate > config.amountToKeepInAccount) {
+            availableToDelegate = availableToDelegate.plus(
+                new BigNumber(data.balance.available).minus(config.amountToKeepInAccount)
+            );
+        }
+        return availableToDelegate.toFixed();
     }
 }

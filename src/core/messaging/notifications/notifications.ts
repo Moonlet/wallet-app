@@ -3,7 +3,6 @@ import { dataMessageHandler } from '../handlers/data-message';
 import { INotificationPayload, NotificationType } from '../types';
 import { notificationHandler } from '../handlers/notification';
 import { store } from '../../../redux/config';
-import { updateAddressMonitorTokens } from '../../address-monitor';
 import { themes } from '../../../navigation/navigation';
 import { getUnseenNotifications } from '../../../redux/notifications/actions';
 
@@ -35,10 +34,6 @@ export class NotificationService {
     }
 
     public async createListeners() {
-        this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(async fcmToken => {
-            updateAddressMonitorTokens(store.getState().wallets);
-        });
-
         this.messageListener = firebase.messaging().onMessage(message => {
             // received data message
             dataMessageHandler(message.data);

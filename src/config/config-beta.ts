@@ -8,7 +8,6 @@ export const CONFIG_BETA: IAppConfig = {
     supportUrl: 'https://moonlet.uvdesk.com/en/customer/create-ticket',
     env: process.env.MOONLET_SOME_KEY,
     tokensUrl: 'https://fire.moonlet.dev/static/tokens/',
-    dataApiUrl: 'https://api.moonlet.dev/data',
     termsAndConditionsUrl:
         'https://fire.moonlet.dev/static/terms/terms-of-service.html?v=' + Date.now(),
     privacyPolicyUrl: 'https://fire.moonlet.dev/static/terms/privacy-policy.html?v=' + Date.now(),

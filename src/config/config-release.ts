@@ -4,11 +4,10 @@ import { firebaseConfig } from './firebase-web-release';
 const extSyncBaseUrl = 'https://fire.moonlet.io/functions/extensionSync';
 
 export const CONFIG_RELEASE: IAppConfig = {
-    walletApiBaseUrl: 'https://api.moonlet.io',
+    walletApiBaseUrl: 'https://api.moonlet.app',
     supportUrl: 'https://moonlet.uvdesk.com/en/customer/create-ticket',
     env: process.env.MOONLET_SOME_KEY,
     tokensUrl: 'https://fire.moonlet.io/static/tokens/',
-    dataApiUrl: 'https://api.moonlet.io/data',
     termsAndConditionsUrl:
         'https://fire.moonlet.io/static/terms/terms-of-service.html?v=' + Date.now(),
     privacyPolicyUrl: 'https://fire.moonlet.io/static/terms/privacy-policy.html?v=' + Date.now(),

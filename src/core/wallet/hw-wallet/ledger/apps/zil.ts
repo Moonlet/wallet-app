@@ -39,7 +39,7 @@ export class Zil {
                 .fromBech32Address(tx.toAddress)
                 .replace('0x', '')
                 .toLowerCase(),
-            amount: tx.amount.toString(),
+            amount: tx.amount ? new BigNumber(tx.amount).toFixed() : '0',
             pubKey: tx.publicKey,
             gasPrice: new BigNumber(tx.feeOptions.gasPrice).toString(),
             gasLimit: new BigNumber(tx.feeOptions.gasLimit).toNumber(),

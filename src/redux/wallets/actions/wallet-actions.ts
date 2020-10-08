@@ -38,7 +38,6 @@ import {
 } from '../selectors';
 import { getChainId } from '../../preferences/selectors';
 import { formatAddress } from '../../../core/utils/format-address';
-import { updateAddressMonitorTokens } from '../../../core/address-monitor/index';
 import { Dialog } from '../../../components/dialog/dialog';
 import { setDisplayPasswordModal } from '../../ui/password-modal/actions';
 import {
@@ -242,7 +241,6 @@ export const createHWWallet = (
         LedgerConnect.walletCreated(walletId);
 
         dispatch(setSelectedWallet(walletId));
-        updateAddressMonitorTokens(getState().wallets);
 
         NavigationService.navigate('MainNavigation', {});
         NavigationService.navigate('Dashboard', {});
@@ -331,7 +329,6 @@ export const createHDWallet = (mnemonic: string, password: string, callback?: ()
             callback && callback();
             await LoadingModal.close();
 
-            updateAddressMonitorTokens(getState().wallets);
             startNotificationsHandlers()(dispatch, getState);
         });
     } catch (err) {

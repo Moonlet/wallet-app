@@ -119,7 +119,8 @@ export const config: IBlockchainConfig = {
         displayName: 'NEAR',
         affiliateBanners: {
             account: AffiliateBannerType.LEDGER_NANO_X
-        }
+        },
+        fetchAccountStatsSec: 1
     },
     networks: {
         mainNet: 'mainnet',

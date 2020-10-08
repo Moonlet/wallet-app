@@ -95,6 +95,7 @@ export interface IBlockchainConfig {
         affiliateBanners: {
             account: IAffiliateBannerType;
         };
+        fetchAccountStatsSec: number;
     };
     networks: {
         testNet: ChainIdType;

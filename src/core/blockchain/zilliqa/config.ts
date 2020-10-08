@@ -154,7 +154,8 @@ export const config: IBlockchainConfig = {
         displayName: 'ZIL',
         affiliateBanners: {
             account: AffiliateBannerType.UNSTOPPABLE_DOMAINS
-        }
+        },
+        fetchAccountStatsSec: 5
     },
     networks: {
         testNet: 333,

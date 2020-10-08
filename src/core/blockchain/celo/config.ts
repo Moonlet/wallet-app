@@ -140,7 +140,8 @@ export const config: IBlockchainConfig = {
         displayName: 'CELO',
         affiliateBanners: {
             account: AffiliateBannerType.LEDGER_NANO_X
-        }
+        },
+        fetchAccountStatsSec: 5
     },
     networks: {
         testNet: 44787,

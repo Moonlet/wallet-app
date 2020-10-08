@@ -11,6 +11,7 @@ export enum NearFunctionCallMethods {
     STAKE = 'stake',
     UNSTAKE = 'unstake',
     WITHDRAW = 'withdraw',
+    WITHDRAW_ALL_FROM_STAKING_POOL = 'withdraw_all_from_staking_pool',
     SEND = 'send',
     CREATE_ACCOUNT_AND_CLAIM = 'create_account_and_claim',
     DEPOSIT_AND_STAKE = 'deposit_and_stake',

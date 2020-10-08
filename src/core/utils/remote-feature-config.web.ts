@@ -1,4 +1,6 @@
 export enum RemoteFeature {
+    BETA_BADGE = 'beta_badge',
+    ZIL = 'feature_zil',
     NEAR = 'feature_near',
     COSMOS = 'feature_cosmos',
     CELO = 'feature_celo',

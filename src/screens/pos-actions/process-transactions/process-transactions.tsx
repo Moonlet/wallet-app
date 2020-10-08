@@ -423,17 +423,12 @@ export class ProcessTransactionsComponent extends React.Component<
         }
 
         if (allTransactionPublished + transactionsFailed === this.props.transactions.length) {
-            const disabledButton =
-                transactionsFailed !== 0
-                    ? false
-                    : !(allTransactionPublished === this.props.transactions.length);
-
             return (
                 <Button
                     primary
                     onPress={this.onPressContinue}
                     wrapperStyle={styles.continueButton}
-                    disabled={disabledButton}
+                    disabled={false}
                 >
                     {translate('App.labels.continue')}
                 </Button>
@@ -480,7 +475,7 @@ export class ProcessTransactionsComponent extends React.Component<
                     text: translate('App.labels.no')
                 },
                 {
-                    text: translate('App.labels.cancel'),
+                    text: translate('App.labels.yes'),
                     onPress: () => this.props.closeProcessTransactions()
                 }
             );

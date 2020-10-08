@@ -25,6 +25,7 @@ export const translation: ITranslations = {
                 close: 'Close',
                 claim: 'Claim',
                 claimReward: 'Claim reward',
+                claimingAccount: 'Claiming account',
                 claimingRewards: 'Claiming rewards',
                 comingSoon: 'Coming soon!',
                 confirm: 'Confirm',
@@ -32,6 +33,7 @@ export const translation: ITranslations = {
                 connect: 'Connect',
                 connection: 'Connection',
                 continue: 'Continue',
+                continueWith: 'Continue with',
                 contract: 'Contract',
                 contractAddress: 'Contract address',
                 copy: 'Copy',
@@ -100,6 +102,7 @@ export const translation: ITranslations = {
                 secure: 'Secure',
                 security: 'Security',
                 send: 'Send',
+                sendingTokens: 'Sending tokens',
                 sender: 'Sender',
                 settings: 'Settings',
                 setup: 'Setup',
@@ -443,6 +446,8 @@ export const translation: ITranslations = {
             authMoonlet: 'Authorize Moonlet',
             congrats: 'Congrats! {{name}} can be added to Moonlet.',
             needAuthorize: 'You need to authorize Moonlet to add {{name}}.',
+            needAuthorizeLockup:
+                'You need to authorize Moonlet the owner account {{owner}} in order to add {{lockup}}.',
             authProgress: 'Authorization in progress ...',
             notRegistered:
                 'Account name not registered. If you want to use it, you need first to create it.',
@@ -559,7 +564,8 @@ export const translation: ITranslations = {
                 'It takes 14 days in order to receive the amount. The accumulated ZIL rewards will be automatically claimed and deposited into your available balance, as well gZIL.',
             alreadyStaked:
                 'You have already staked to {{stakedValidator}} from this lockup contract.\nEither you stake the full amount to {{stakedValidator}} or unstake and withdraw your current funds and stake to {{selectedValidator}}.',
-            multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`
+            multipleNodes: `This operation can not be performed for lockup contracts. Currently you can't stake to multiple nodes from a lockup contract. Please select only one node.`,
+            selectStakingPool: 'Selecting staking pool'
         },
         Widget: {
             activateVotesTitle: 'Activate your votes now',

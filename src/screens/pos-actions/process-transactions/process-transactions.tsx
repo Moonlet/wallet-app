@@ -220,17 +220,17 @@ export class ProcessTransactionsComponent extends React.Component<
                 break;
             }
             case PosBasicActionType.SEND: {
-                topText = 'Sending tokens';
+                topText = translate('App.labels.sendingTokens');
                 middleText = `${amount}`;
                 break;
             }
             case PosBasicActionType.CREATE_ACCOUNT_AND_CLAIM: {
-                topText = 'Claiming account';
+                topText = translate('App.labels.claimingAccount');
                 middleText = tx.additionalInfo.actions[0].params[1].new_account_id;
                 break;
             }
             case PosBasicActionType.SELECT_STAKING_POOL: {
-                topText = 'Selecting staking pool';
+                topText = translate('Validator.selectStakingPool');
                 middleText = formatValidatorName(tx.additionalInfo?.validatorName, 20);
                 break;
             }

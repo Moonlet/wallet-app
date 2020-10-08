@@ -1,12 +1,10 @@
 import { IAccountState } from '../state';
 import {
+    Blockchain,
     IBlockchainTransaction,
     IFeeOptions,
     ITransactionExtraFields,
     TransactionMessageText
-    // TransactionMessageType,
-    // TransactionMessageText,
-    // IBlockchainTransaction
 } from '../../../core/blockchain/types';
 import { NavigationScreenProp, NavigationState } from 'react-navigation';
 import { Dispatch } from 'react';
@@ -15,7 +13,6 @@ import { IReduxState } from '../../state';
 import { getChainId } from '../../preferences/selectors';
 import { getSelectedAccount, getSelectedWallet } from '../selectors';
 import { LoadingModal } from '../../../components/loading-modal/loading-modal';
-// import { WalletType } from '../../../core/wallet/types';
 import { WalletFactory } from '../../../core/wallet/wallet-factory';
 import { getBlockchain } from '../../../core/blockchain/blockchain-factory';
 import { getTokenConfig } from '../../tokens/static-selectors';
@@ -38,6 +35,8 @@ import {
 } from '@sentry/react-native';
 import { LedgerConnect } from '../../../screens/ledger/ledger-connect';
 import { PasswordModal } from '../../../components/password-modal/password-modal';
+import { delay } from '../../../core/utils/time';
+import { NearFunctionCallMethods } from '../../../core/blockchain/near/types';
 
 export const redelegate = (
     account: IAccountState,
@@ -251,6 +250,7 @@ export const posAction = (
             posAction: type
         };
         const blockchainInstance = getBlockchain(account.blockchain);
+
         const tokenConfig = getTokenConfig(account.blockchain, token);
 
         dispatch(openProcessTransactions());
@@ -322,6 +322,22 @@ export const signAndSendTransactions = (
             const client = getBlockchain(transaction.blockchain).getClient(transaction.chainId);
             try {
                 const txHash = await client.sendTransaction(signed);
+
+                // SELECT_STAKING_POOL: delay 2 seconds
+                // Needed only if there are multiple operations, such as select_staking_pool and deposit_and_stake
+                // Need to increase the number of blocks between transactions
+                const { additionalInfo } = transaction;
+                if (
+                    account.blockchain === Blockchain.NEAR &&
+                    additionalInfo &&
+                    transactions.length > 1
+                ) {
+                    for (const action of additionalInfo?.actions || []) {
+                        if (action?.params[0] === NearFunctionCallMethods.SELECT_STAKING_POOL) {
+                            await delay(2000);
+                        }
+                    }
+                }
 
                 if (txHash) {
                     dispatch(updateProcessTransactionIdForIndex(specificIndex || index, txHash));

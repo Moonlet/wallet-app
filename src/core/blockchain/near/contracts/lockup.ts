@@ -105,4 +105,26 @@ export class Lockup {
 
         return transaction;
     }
+
+    public async withdraw(
+        tx: IPosTransaction
+    ): Promise<IBlockchainTransaction<INearTransactionAdditionalInfoType>> {
+        const transaction = await buildBaseTransaction(tx);
+        const gas = NEAR_LOCKUP_BASE_GAS.mul(new BN(7));
+
+        transaction.address = tx.account.meta.owner;
+        transaction.toAddress = tx.account.address;
+
+        transaction.feeOptions = { feeTotal: gas.toString() };
+
+        transaction.additionalInfo.posAction = PosBasicActionType.WITHDRAW;
+        transaction.additionalInfo.actions = [
+            {
+                type: NearTransactionActionType.FUNCTION_CALL,
+                params: [NearFunctionCallMethods.WITHDRAW_ALL_FROM_STAKING_POOL, {}, gas, new BN(0)]
+            }
+        ];
+
+        return transaction;
+    }
 }

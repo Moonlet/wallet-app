@@ -250,6 +250,11 @@ export class NearTransactionUtils extends AbstractBlockchainTransactionUtils {
                 if (accountType === AccountType.DEFAULT) {
                     // DEFAULT
                     withdrawTx = await client.stakingPool.withdraw(txWithdraw);
+                } else if (accountType === AccountType.LOCKUP_CONTRACT) {
+                    // LOCKUP_CONTRACT
+                    withdrawTx = await client.lockup.withdraw(txWithdraw);
+                    const nonce = await client.getNonce(withdrawTx.address, tx.account.publicKey);
+                    withdrawTx.nonce = nonce;
                 } else {
                     // future account types
                 }

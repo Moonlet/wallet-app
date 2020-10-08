@@ -52,7 +52,7 @@ export const TransactionsHistoryScreenComponent = (
         });
     };
 
-    React.useEffect(() => updateTransactions());
+    React.useEffect(() => updateTransactions(), []);
 
     return (
         <View style={props.styles.container}>

@@ -13,30 +13,13 @@ export class ClientUtils implements IClientUtils {
     ): Promise<IBlockchainTransaction> {
         const res = await this.client.http.jsonRpc('tx', [hash, options.address]);
 
-        return this.buildTransactionFromBlockchain(
-            res.result.transaction,
-            res.result.status,
-            res.result.transaction_outcome
-        );
+        return this.buildTransactionFromBlockchain(res.result);
     }
 
-    async buildTransactionFromBlockchain(
-        txInfo,
-        txStatus,
-        txOutcome
-    ): Promise<IBlockchainTransaction> {
-        let amount = '0';
-
-        for (const action of txInfo.actions) {
-            if (action?.Transfer?.deposit) {
-                amount = String(action.Transfer.deposit);
-            }
-        }
-
-        // const gasBurnt = txOutcome?.outcome?.gas_burnt;
-
-        return {
-            id: txInfo.hash,
+    async buildTransactionFromBlockchain(txData: any): Promise<IBlockchainTransaction> {
+        const transaction: IBlockchainTransaction = {
+            id: txData.transaction.hash,
+            type: TransactionType.TRANSFER,
             date: {
                 created: Date.now(),
                 signed: Date.now(),
@@ -45,24 +28,53 @@ export class ClientUtils implements IClientUtils {
             },
             blockchain: Blockchain.NEAR,
             chainId: this.client.chainId,
-            type: TransactionType.TRANSFER,
 
-            address: txInfo.signer_id,
-            publicKey: txInfo.public_key,
+            address: txData.transaction.signer_id,
+            toAddress: txData.transaction.receiver_id,
+            publicKey: txData.transaction.public_key,
 
-            toAddress: txInfo.receiver_id,
-            amount,
-            data: undefined,
+            amount: '0',
+            data: null,
             feeOptions: null,
-            // feeOptions: {
-            //     gasPrice: txInfo.gasPrice,
-            //     gasLimit: txInfo.gas,
-            //     feeTotal: txReceipt.gasUsed
-            // },
-            broadcastedOnBlock: undefined, // TODO
-            nonce: txInfo.nonce,
-            status: Near.transaction.getTransactionStatusByCode(txStatus),
-            token: getTokenConfig(Blockchain.NEAR, 'NEAR')
+            broadcastedOnBlock: undefined, // TODO: use txData.receipts_outcome.block_hash
+            status: Near.transaction.getTransactionStatusByCode(txData.status),
+            token: getTokenConfig(Blockchain.NEAR, 'NEAR'),
+            nonce: txData.transaction.nonce
         };
+
+        for (const action of txData.transaction.actions) {
+            if (action?.Transfer) {
+                transaction.amount = action.Transfer.deposit;
+            } else if (action?.FunctionCall) {
+                transaction.type = TransactionType.CONTRACT_CALL;
+
+                const nearReceiptsOutcomeLogsRegex = [
+                    /The deposit and stake of ([^ ]*) to @?([^ ]*) succeeded/i,
+                    /The deposit of ([^ ]*) to @?([^ ]*) succeeded/i,
+                    /Staking of ([^ ]*) at @?([^ ]*) succeeded/i,
+                    /The withdrawal of ([^ ]*) from @?([^ ]*) succeeded/i
+                ];
+
+                for (const receiptsOutcome of txData?.receipts_outcome || []) {
+                    for (const log of receiptsOutcome?.outcome?.logs || []) {
+                        for (const regex of nearReceiptsOutcomeLogsRegex) {
+                            const outcome = log.match(regex);
+                            if (outcome && outcome[1] && outcome[2]) {
+                                transaction.amount = outcome[1];
+                                transaction.toAddress = outcome[2]; // validatorId
+                                transaction.address = txData.transaction.receiver_id;
+                            }
+                        }
+
+                        const outcomeAmount = log.match(/^@?[^ ]* staking ([0-9]*)\./);
+                        if (outcomeAmount && outcomeAmount[1]) {
+                            transaction.amount = outcomeAmount[1];
+                        }
+                    }
+                }
+            }
+        }
+
+        return transaction;
     }
 }

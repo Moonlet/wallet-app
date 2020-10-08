@@ -5,7 +5,7 @@ const extSyncBaseUrl = 'https://fire.moonlet.io/functions/extensionSync';
 
 export const CONFIG_RELEASE: IAppConfig = {
     walletApiBaseUrl: 'https://api.moonlet.app',
-    supportUrl: 'https://moonlet.uvdesk.com/en/customer/create-ticket',
+    supportUrl: 'https://fire.moonlet.io/static/support/webview.html',
     env: process.env.MOONLET_SOME_KEY,
     tokensUrl: 'https://fire.moonlet.io/static/tokens/',
     termsAndConditionsUrl:

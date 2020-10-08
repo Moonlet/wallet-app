@@ -117,8 +117,6 @@ export class TransactionsHistoryListComponent extends React.Component<
     private transactionItem(tx: IBlockchainTransaction, index: number) {
         const { account, styles, theme } = this.props;
 
-        // console.log('transaction', tx);
-
         const blockchainInstance = getBlockchain(account.blockchain);
         const amount = blockchainInstance.transaction.getTransactionAmount(tx);
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, View } from 'react-native';
+import { Animated, View, Easing } from 'react-native';
 import stylesProvider from './styles';
 import { IThemeProps } from '../../core/theme/with-theme';
 import { translate } from '../../core/i18n';
@@ -26,8 +26,9 @@ import { LocationRequired } from './components/location-required/location-requir
 import { Troubleshooting } from './components/troubleshooting/troubleshooting';
 import { ReviewTransaction } from './components/review-transaction/review-transaction';
 import { delay } from '../../core/utils/time';
+import { AnimatedValue } from 'react-navigation';
 
-const FADE_ANIMATION_TIME = 300;
+const ANIMATION_TIME = 300;
 
 export const svgDimmensions = {
     width: 345,
@@ -49,7 +50,6 @@ enum ScreenStep {
 
 interface IState {
     step: ScreenStep;
-    showErrorScreen: boolean;
     ledgerDevice: any;
     visible: boolean;
     blockchain: Blockchain;
@@ -57,6 +57,8 @@ interface IState {
     deviceId: string;
     connectionType: HWConnection;
     currentFlow: ScreenStep;
+    stepContainerFadeAnimation: AnimatedValue;
+    stepContainerTranslateAnimation: AnimatedValue;
 }
 
 export class LedgerConnectComponent extends React.Component<
@@ -64,7 +66,6 @@ export class LedgerConnectComponent extends React.Component<
     IState
 > {
     private resultDeferred: Deferred;
-    private stepContainetFadeAnimation = new Animated.Value(1);
 
     public static async getAccountsAndDeviceId(
         blockchain: Blockchain,
@@ -150,17 +151,17 @@ export class LedgerConnectComponent extends React.Component<
         setInstance(LedgerConnectComponent, this);
         this.state = {
             step: ScreenStep.SEARCH_LEDGER,
-            showErrorScreen: false,
             ledgerDevice: undefined,
             visible: false,
             blockchain: undefined,
             connectionType: undefined,
             deviceModel: undefined,
-            deviceId: undefined,
-            currentFlow: undefined
+            currentFlow: undefined,
+            stepContainerFadeAnimation: new Animated.Value(1),
+            stepContainerTranslateAnimation: new Animated.Value(0),
+            deviceId: undefined
         };
     }
-
     public componentWillUnmount() {
         //
     }
@@ -246,24 +247,44 @@ export class LedgerConnectComponent extends React.Component<
 
     private async selectStep(step: ScreenStep) {
         await this.stepContainerFadeOut();
-        this.setState({ step });
+        this.setState({ step, stepContainerTranslateAnimation: new Animated.Value(400) });
         await this.stepContainerFadeIn();
     }
 
     private async stepContainerFadeIn() {
-        Animated.timing(this.stepContainetFadeAnimation, {
-            toValue: 1,
-            duration: FADE_ANIMATION_TIME
-        }).start();
-        await delay(FADE_ANIMATION_TIME);
+        Animated.parallel([
+            Animated.timing(this.state.stepContainerFadeAnimation, {
+                toValue: 1,
+                duration: ANIMATION_TIME,
+                useNativeDriver: true,
+                easing: Easing.ease
+            }),
+            Animated.timing(this.state.stepContainerTranslateAnimation, {
+                toValue: 0,
+                duration: ANIMATION_TIME,
+                useNativeDriver: true,
+                easing: Easing.ease
+            })
+        ]).start();
+
+        await delay(ANIMATION_TIME);
     }
 
     private async stepContainerFadeOut() {
-        Animated.timing(this.stepContainetFadeAnimation, {
-            toValue: 0,
-            duration: FADE_ANIMATION_TIME
-        }).start();
-        await delay(FADE_ANIMATION_TIME);
+        Animated.parallel([
+            Animated.timing(this.state.stepContainerFadeAnimation, {
+                toValue: 0,
+                duration: ANIMATION_TIME,
+                useNativeDriver: true
+            }),
+            Animated.timing(this.state.stepContainerTranslateAnimation, {
+                toValue: -300,
+                duration: ANIMATION_TIME,
+                useNativeDriver: true
+            })
+        ]).start();
+
+        await delay(ANIMATION_TIME);
     }
 
     private displaySteps() {
@@ -392,7 +413,17 @@ export class LedgerConnectComponent extends React.Component<
                             <View style={styles.defaultHeaderContainer} />
                         </View>
                     )}
-                    <Animated.View style={{ flex: 1, opacity: this.stepContainetFadeAnimation }}>
+                    <Animated.View
+                        style={{
+                            flex: 1,
+                            opacity: this.state.stepContainerFadeAnimation,
+                            transform: [
+                                {
+                                    translateX: this.state.stepContainerTranslateAnimation
+                                }
+                            ]
+                        }}
+                    >
                         {this.displaySteps()}
                     </Animated.View>
                 </View>

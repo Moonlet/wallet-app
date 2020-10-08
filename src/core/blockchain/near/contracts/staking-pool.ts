@@ -25,20 +25,8 @@ export class StakingPool {
         transaction.additionalInfo.posAction = PosBasicActionType.STAKE;
         transaction.additionalInfo.validatorName = validator.name;
 
-        transaction.additionalInfo.actions = [
-            {
-                type: NearTransactionActionType.FUNCTION_CALL,
-                params: [
-                    NearFunctionCallMethods.STAKE,
-                    { amount: tx.amount },
-                    NEAR_DEFAULT_FUNC_CALL_GAS,
-                    new BN(0)
-                ]
-            }
-        ];
-
         if (depositAmount.isGreaterThan(new BigNumber(0))) {
-            // DEPOSIT
+            // DEPOSIT and STAKE_ALL
             transaction.additionalInfo.actions = [
                 {
                     type: NearTransactionActionType.FUNCTION_CALL,
@@ -48,8 +36,30 @@ export class StakingPool {
                         NEAR_DEFAULT_FUNC_CALL_GAS,
                         new BN(depositAmount.toFixed())
                     ]
+                },
+                {
+                    type: NearTransactionActionType.FUNCTION_CALL,
+                    params: [
+                        NearFunctionCallMethods.STAKE_ALL,
+                        {},
+                        NEAR_DEFAULT_FUNC_CALL_GAS,
+                        new BN(0)
+                    ]
                 }
-            ].concat(transaction.additionalInfo.actions);
+            ];
+        } else {
+            // STAKE
+            transaction.additionalInfo.actions = [
+                {
+                    type: NearTransactionActionType.FUNCTION_CALL,
+                    params: [
+                        NearFunctionCallMethods.STAKE,
+                        { amount: tx.amount },
+                        NEAR_DEFAULT_FUNC_CALL_GAS,
+                        new BN(0)
+                    ]
+                }
+            ];
         }
 
         return transaction;

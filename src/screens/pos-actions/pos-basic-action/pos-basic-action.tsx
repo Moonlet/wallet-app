@@ -179,6 +179,8 @@ export class PosBasicActionComponent extends React.Component<
                     this.props.navigation,
                     undefined
                 );
+                setTimeout(() => this.props.navigation.goBack(), 500);
+
                 break;
             }
         }

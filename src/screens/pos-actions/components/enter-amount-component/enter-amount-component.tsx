@@ -168,7 +168,8 @@ export class EnterAmountComponentComponent extends React.Component<
                 this.props.account,
                 this.props.token,
                 this.props.chainId,
-                this.state.feeOptions
+                this.state.feeOptions,
+                this.props.balanceForDelegate
             );
 
             let insufficientMinimumAmount = false;

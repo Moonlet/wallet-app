@@ -173,7 +173,8 @@ export const config: IBlockchainConfig = {
             service: BlockchainNameService.CNS,
             record: ['crypto.ZIL.address']
         }
-    ]
+    ],
+    amountToKeepInAccount: new BigNumber(10).pow(14)
 };
 
 export enum Contracts {

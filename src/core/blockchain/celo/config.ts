@@ -147,7 +147,8 @@ export const config: IBlockchainConfig = {
         testNet: 44787,
         mainNet: 42220
     },
-    defaultOrder: 1
+    defaultOrder: 1,
+    amountToKeepInAccount: new BigNumber(0)
 };
 
 export enum Contracts {

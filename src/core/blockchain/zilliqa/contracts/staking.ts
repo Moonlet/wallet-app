@@ -313,6 +313,7 @@ export class Staking {
         const contractAddress = await getContract(this.client.chainId, Contracts.STAKING);
 
         transaction.toAddress = contractAddress;
+        transaction.amount = '0';
         const toAddress = isBech32(validator.id)
             ? fromBech32Address(validator.id).toLowerCase()
             : validator.id.toLowerCase();

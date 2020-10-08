@@ -479,7 +479,7 @@ export class ProcessTransactionsComponent extends React.Component<
                     onPress: () => this.props.closeProcessTransactions()
                 }
             );
-        }
+        } else this.props.closeProcessTransactions();
     }
 
     public render() {

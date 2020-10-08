@@ -70,16 +70,13 @@ export const isFeatureActive = (feature: RemoteFeature): boolean => {
         return true;
     }
 
-    if (featuresConfig) {
-        const values = featuresConfig[feature] || [];
-        if (values.length > 0) {
-            return (
-                values.indexOf(DeviceInfo.getUniqueId()) >= 0 ||
-                values.filter(e => e === '*').length > 0
-            );
-        }
-    }
-    return false;
+    if (feature !== RemoteFeature.TC_VERSION)
+        return (
+            featuresConfig[feature]?.length > 0 &&
+            !!featuresConfig[feature].find(
+                element => element === '*' || element === DeviceInfo.getUniqueId()
+            )
+        );
 };
 
 export const getFirebaseTCVersion = async (): Promise<number> => {

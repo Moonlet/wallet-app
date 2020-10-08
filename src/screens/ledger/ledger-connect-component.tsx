@@ -248,7 +248,7 @@ export class LedgerConnectComponent extends React.Component<
     }
 
     private async selectStep(step: ScreenStep) {
-        await this.stepContainerFadeOut(step);
+        await this.stepContainerFadeOut();
         this.setState({ step, stepContainerTranslateAnimation: new Animated.Value(400) });
         await this.stepContainerFadeIn();
     }
@@ -272,13 +272,12 @@ export class LedgerConnectComponent extends React.Component<
         await delay(ANIMATION_TIME);
     }
 
-    private async stepContainerFadeOut(step: ScreenStep) {
+    private async stepContainerFadeOut() {
         Animated.parallel([
             Animated.timing(this.state.stepContainerFadeAnimation, {
                 toValue: 0,
                 duration: ANIMATION_TIME,
                 useNativeDriver: true
-                // easing: Easing.out(Easing.exp)
             }),
             Animated.timing(this.state.stepContainerTranslateAnimation, {
                 toValue: -300,

@@ -50,7 +50,6 @@ enum ScreenStep {
 
 interface IState {
     step: ScreenStep;
-    showErrorScreen: boolean;
     ledgerDevice: any;
     visible: boolean;
     blockchain: Blockchain;
@@ -152,7 +151,6 @@ export class LedgerConnectComponent extends React.Component<
         setInstance(LedgerConnectComponent, this);
         this.state = {
             step: ScreenStep.SEARCH_LEDGER,
-            showErrorScreen: false,
             ledgerDevice: undefined,
             visible: false,
             blockchain: undefined,

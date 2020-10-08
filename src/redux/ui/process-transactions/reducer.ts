@@ -40,6 +40,7 @@ export default (
                 }
             };
         }
+
         case UPDATE_PROCESS_TX_ID: {
             const txs = [...state.data.txs];
             const tx = txs[action.data.index];

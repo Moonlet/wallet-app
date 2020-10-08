@@ -125,5 +125,6 @@ export const config: IBlockchainConfig = {
         mainNet: 'mainnet',
         testNet: 'testnet'
     },
-    defaultOrder: 2
+    defaultOrder: 2,
+    amountToKeepInAccount: new BigNumber(10).pow(24)
 };

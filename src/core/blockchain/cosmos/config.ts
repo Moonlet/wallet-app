@@ -163,5 +163,6 @@ export const config: IBlockchainConfig = {
         testNet: 'gaia-13007',
         mainNet: 'cosmoshub-3'
     },
-    defaultOrder: 3
+    defaultOrder: 3,
+    amountToKeepInAccount: new BigNumber(0)
 };

@@ -14,7 +14,8 @@ export enum NearFunctionCallMethods {
     SEND = 'send',
     CREATE_ACCOUNT_AND_CLAIM = 'create_account_and_claim',
     DEPOSIT_AND_STAKE = 'deposit_and_stake',
-    SELECT_STAKING_POOL = 'select_staking_pool'
+    SELECT_STAKING_POOL = 'select_staking_pool',
+    STAKE_ALL = 'stake_all'
 }
 
 export interface INearTransactionAction {

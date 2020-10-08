@@ -75,6 +75,7 @@ export const translation: ITranslations = {
                 network: 'Network',
                 next: 'Next',
                 nextWord: 'Next word',
+                no: 'No',
                 notifications: 'Notifications',
                 ok: 'OK',
                 paste: 'Paste',
@@ -122,6 +123,7 @@ export const translation: ITranslations = {
                 to: 'To',
                 tools: 'Tools',
                 theRequested: 'the requested',
+                transaction: 'transaction',
                 transactions: 'Transactions',
                 transfer: 'Transfer',
                 tryAgain: 'Try again',
@@ -142,7 +144,8 @@ export const translation: ITranslations = {
                 watch: 'Watch mode',
                 withdraw: 'Withdraw',
                 youAreOn: 'You are on {{blockchain}} {{networkName}} Testnet',
-                youAreUsing: 'You are now using your'
+                youAreUsing: 'You are now using your',
+                yes: 'Yes'
                 // please try to add keys in alphabetic order
             },
             buttons: {
@@ -329,6 +332,7 @@ export const translation: ITranslations = {
                 Success: 'Success'
             },
             signTransaction: 'Sign transaction',
+            signAll: 'Sign all transactions',
             signExtensionTransaction:
                 'You are about to send {{amount}} from {{fromAccount}} to {{toAccount}}. Please review this request before taking any further action',
             signTransactionNotification: 'Send {{amount}} from {{fromAccount}} to {{toAccount}}',
@@ -623,6 +627,21 @@ export const translation: ITranslations = {
             reviewTransaction: 'Review transaction',
             reviewTransactionDevice:
                 'Review {{blockchain}} transaction on your {{deviceModel}} and confirm it.'
+        },
+        ProcessTransactions: {
+            ledgerSignButton: {
+                ordinal: true,
+                text: 'Sign {{txNumber}}th transaction',
+                forms: {
+                    one: 'Sign {{txNumber}}st transaction',
+                    two: 'Sign {{txNumber}}nd transaction',
+                    few: 'Sign {{txNumber}}rd transaction',
+                    other: 'Sign {{txNumber}}th transaction' // this is not needed since we have the default text above
+                }
+            },
+            alertCancelTitle: 'Transactions pending',
+            alertCancelMessage:
+                'There are transaction pending signing. Are you sure you want to cancel?'
         }
     },
     plural: (n: number, ord?: boolean) => {

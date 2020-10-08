@@ -1,21 +1,30 @@
 import { Client } from '../client';
 import BigNumber from 'bignumber.js';
 import { fromBech32Address } from '@zilliqa-js/crypto';
+import { IBalance } from '../../types';
 
 export class Zrc2Client {
     constructor(private client: Client) {}
 
-    public async getBalance(contractAddress: string, accountAddress: string): Promise<BigNumber> {
+    public async getBalance(contractAddress: string, accountAddress: string): Promise<IBalance> {
         const address = fromBech32Address(accountAddress).toLowerCase();
 
-        const smartContractSubState = await this.client.getSmartContractSubState(
-            contractAddress,
-            'balances',
-            [address]
-        );
+        try {
+            const smartContractSubState = await this.client.getSmartContractSubState(
+                contractAddress,
+                'balances',
+                [address]
+            );
 
-        const balance = (smartContractSubState?.balances || {})[address] || 0;
-        return new BigNumber(balance as string);
+            const balance = (smartContractSubState?.balances || {})[address] || 0;
+
+            return {
+                total: new BigNumber(balance as string) || new BigNumber(0),
+                available: new BigNumber(balance as string) || new BigNumber(0)
+            };
+        } catch {
+            return { total: new BigNumber(0), available: new BigNumber(0) };
+        }
     }
 
     public async getSymbol(contractAddress) {

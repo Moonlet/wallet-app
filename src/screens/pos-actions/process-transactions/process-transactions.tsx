@@ -422,7 +422,7 @@ export class ProcessTransactionsComponent extends React.Component<
             }
         }
 
-        if (allTransactionPublished === this.props.transactions.length) {
+        if (allTransactionPublished + transactionsFailed === this.props.transactions.length) {
             const disabledButton =
                 transactionsFailed !== 0
                     ? false
